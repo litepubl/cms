@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+  <head profile="http://gmpg.org/xfn/11">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>$title</title>
+<style>
+	* { 	margin: 0; 	padding: 0; }
+	body {background:#f0f6f7 url(/themes/default/images/bg7.png) repeat-x;font:12px Arial, Verdana, sans-serif;}
+	#header {width:960px;background: url(/themes/default/images/logo.png) no-repeat 30px 20px;margin:11px auto 0;height:125px;position:relative;display:block;}
+	#logo {font:14px Trebuchet MS, Tahoma, Verdana, sans-serif;color:#fff;padding:30px 0 0 150px;}
+	#logo .name {font:48px Trebuchet MS, Tahoma, Verdana, sans-serif;height:95px;display:inline-block;float:left;text-shadow:1px 1px 0 #5fa9c1;padding:0 30px 0 0;}
+	#logo .slogan {top:16px;position:relative;}
+	#out {width:960px;margin:11px auto 10px;background-color:#fff;position:relative;padding:1px;}
+	#middle {width:950px;position:relative;display:block;background-color:#fff;border:5px solid #f3f3f3;overflow: hidden;}
+	#content {width:650px;padding:30px 0 30px 30px;position:relative;float:left;font-size:14px;line-height:1.3;color:#303030;}
+	.rubric {font:24px Trebuchet MS, Tahoma, Verdana, sans-serif;color:#737373;margin:0 0 10px 0;}
+	a {color:#0394d3;}
+	a:hover{color:#0c588a;}
+	#content .install p {margin:20px 0 10px;}
+	#showhost {margin:20px 0}
+	#showhost a {border-bottom:1px dashed #737373; cursor:pointer;}
+	#content p, dl, dd {margin:0 0 10px 0}
+	</style>
+	<!--[if IE 6]>
+		<script src="/themes/default/css/DD_belatedPNG.js"></script>
+		<script>		
+		  DD_belatedPNG.fix('.rss, .rss-comments, .foaf, #lastcomments li, #lastposts li, .post-comments, .post-cat, .post-time, .post-tags, #header');
+		 </script>
+	<![endif]--> 
+  </head>
+  <body>
+
+<div id="header"><div id="logo"><span class="name">Lite Publisher</span><span class="slogan">
+$site.name<br />
+$site.description
+</span>
+</div></div>
+	
+<div id="out">
+<div id="middle">
+	<div id="content">
+
+<h1 class="rubric">$lang.success</h1>
+
+   <p>$lang.canlogin: <a href='$site.url/admin/'>$site.url/admin/</a> $lang.uselogin
+<strong>E-Mail</strong>: <code>$options.email</code> <strong>$lang.password</strong>: <code>$password</code></p>
+   <p>$lang.passnote</p>
+   
+   <dl>
+   <dt>E-Mail</dt>
+   <dd><code>$options.email</code></dd>
+   <dt>$lang.password</dt>
+   <dd><code>$password</code></dd>
+   </dl>
+  <p>$lang.lostpass:  <strong><a href='$site.url/admin/password/'>$site.url/admin/password/</a></strong></p>
+
+   <p>$lang.moresteps</p>
+
+<!--
+<div><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2F$likeurl%2F&amp;layout=button_count&amp;show_faces=true&amp;width=450&amp;action=like&amp;font=segoe+ui&amp;colorscheme=light" frameborder="0"></iframe></div>
+
+<div><iframe allowtransparency="true" frameborder="0" scrolling="no" src="http://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2F$likeurl%2F&amp;text=LitePublisher" style="width:130px; height:20px;"></iframe></div>
+
+</div>	
+-->
+</div>
+</div>
+</div>	
+
+</body>
+  </html>

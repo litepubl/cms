@@ -1,0 +1,79 @@
+/* star rating code - use lists because its more semantic */
+/* No javascript required */
+/* all the stars are contained in one matrix to solve rollover problems with delay */
+/* the background position is just shifted to reveal the correct image. */
+/* the images are 16px by 16px and the background position will be shifted in negative 16px increments */
+/*  key:  B=Blank : O=Orange : G = Green * /
+/*..... The Matrix ....... */
+/* colours ....Background position */
+/* B B B B B - (0 0)*/
+/* G B B B B - (0 -16px)*/
+/* G G B B B - (0 -32px)*/
+/* G G G B B - (0 -48px)*/
+/* G G G G B - (0 -64px)*/
+/* G G G G G - (0 -80px)*/
+/* O B B B B - (0 -96px)*/
+/* O O B B B - (0 -112px)*/
+/* O O O B B - (0 -128px)*/
+/* O O O O B - (0 -144px)*/
+/* O O O O O - (0 -160px)*/
+
+
+/* the default rating is placed as a background image in the ul */
+/* use the background position according to the table above to display the required images*/
+.rating, .fav{
+  width:80px;
+  height:16px;
+  margin:0 0 20px 0;
+  padding:0;
+  list-style:none;
+  clear:both;
+  position:relative;
+  background: url(star-matrix.gif) no-repeat 0 0;
+}
+.fav{width:16px;}
+/* add these classes to the ul to effect the change to the correct number of stars */
+.star_0 {background-position:0 0}
+.star_1 {background-position:0 -16px}
+.star_2 {background-position:0 -32px}
+.star_3 {background-position:0 -48px}
+.star_4 {background-position:0 -64px}
+.star_5 {background-position:0 -80px}
+li.indicator {display: none;}
+ul.rating li, ul.fav li  {
+  cursor: pointer;
+ /*ie5 mac doesn't like it if the list is floated\*/
+  float:left;
+  /* end hide*/
+  text-indent:-999em;
+}
+ul.rating li.indicator {float: right; text-indent: 0; position: relative; left: 18px;}
+ul.fav li a, ul.rating li a {
+  position:absolute;
+  left:0;
+  top:0;
+  width:16px;
+  height:16px;
+  text-decoration:none;
+  z-index: 200;
+}
+ul.rating li span, ul.fav li span {text-decoration:none; position:absolute; width:16px; height:16px;}
+ul.fav li.s_1 a, ul.rating li.s_1 a {left:0;-moz-outline:none;}
+ul.rating li.s_2 a {left:16px;-moz-outline:none;}
+ul.rating li.s_3 a {left:32px;-moz-outline:none;}
+ul.rating li.s_4 a {left:48px;-moz-outline:none;}
+ul.rating li.s_5 a {left:64px;-moz-outline:none;}
+ul.fav li a:hover, ul.rating li a:hover {
+  z-index:2;
+  width:80px;
+  height:16px;
+  overflow:hidden;
+  left:0; 
+  background: url(star-matrix.gif) no-repeat 0 0;
+}
+ul.fav li a:hover {width:16px;}
+ul.fav li.s_1 a:hover, ul.rating li.s_1 a:hover {background-position:0 -96px;}
+ul.rating li.s_2 a:hover {background-position:0 -112px;}
+ul.rating li.s_3 a:hover {background-position:0 -128px}
+ul.rating li.s_4 a:hover {background-position:0 -144px}
+ul.rating li.s_5 a:hover {background-position:0 -160px}

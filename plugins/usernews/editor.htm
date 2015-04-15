@@ -1,0 +1,20 @@
+<form name='form' id='form' action='$site.url/admin/posts/editor/' method='post'>
+[text=title]
+[text=sourceurl]
+
+<div id='categoriestab'>$categories</div>
+
+<div id='posteditor-filelist'>$posteditor.filelist</div>
+
+<div id='posteditor-content'>
+<span id='posteditor-visual'></span>
+<div id='posteditor-raw'>
+[editor=raw]
+</div>
+</div>
+
+<p>
+[hidden=id]
+<input type='submit' name='submit-button' value='$lang.save' />
+</p>
+</form>

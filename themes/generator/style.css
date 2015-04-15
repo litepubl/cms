@@ -1,0 +1,133 @@
+/*Theme Name: Generator
+* Author: SeoDiz
+* Author URI: http://seodiz.ru/
+*/
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{border:0;font:inherit;font-size:100%;margin:0;padding:0;vertical-align:baseline}
+body{color:#333;font:14px/1.4 "Helvetica Neue",Helvetica,Arial,sans-serif;background:#7E7E7E;width:100%}
+a,button{cursor:pointer}
+a,a:link,a:visited{color:#002362;text-decoration:none}
+#content a,#content a:link,#content a:visited{color:#039}
+a:hover,#content a:hover{color:#FF4B33;text-decoration:underline}
+:focus{outline:0}
+a:active{color:#f00}
+p,pre,code,blockquote,dt,ol,ul,h1,h2,h3,h4,h5,h6,fieldset,form,table,address,hr{margin:10px 0}
+h1,h2,h3,h4,h5,h6{clear:both;color:#444;font-family:"Droid Serif",Georgia,Sans-serif;font-weight:bold;line-height:1.2em;}
+h1{font-size:21px}
+h2{font-size:18px}
+h3{font-size:16px}
+h4{font-size:14px}
+h5,h6{font-size:12px}
+dd,ol,ul,blockquote,q{margin-left:2em}
+ol,ul{list-style:none}
+#content ol{list-style:decimal}
+#content ul{list-style:disc}
+#tabs ul,.sbar ul{list-style:none}
+.div-table{max-width:565px;overflow:auto}
+table{border:1px solid #ddd;border-collapse:collapse;border-spacing:0;vertical-align:baseline}
+.classictable{font-size:11px}
+caption,thead,tfoot,tbody,tr,th,td{border:1px solid #ddd;padding:2px;vertical-align:middle}
+caption,th{text-align:center}
+abbr,acronym{border-bottom:1px dotted;cursor:help}
+cite,dfn,em,i,var{font-style:italic;color:#444}
+b,strong,dt,th{font-weight:bold}
+code,kbd,samp,tt,var,pre{font-family:"Courier New", Courier, monospace}
+code{background:#ffebff;;border:1px solid #ddd;color:#444;display:block;max-height:500px;padding:5px;white-space:pre;*white-space:normal;overflow:auto}
+pre{display:inline;white-space:normal}
+sub,sup{font-size:9px}
+sub{margin-bottom:-5px}
+sup{margin-top:-5px}
+del{text-decoration:line-through}
+ins{text-decoration:none}
+blockquote,q,cite{quotes:none;color:#666}
+blockquote:before,blockquote:after,q:before,q:after{content:none}
+button,input[type="submit"],input[type="reset"],input[type="button"]{cursor:pointer;font-size:11px}
+button,input,select,textarea{margin:2px 2px 2px 0;padding:1px 2px}
+form#moderateform input,.quote input{font-size:11px}
+#wrapper{width:980px;margin:0 auto;min-height:100%;height:auto !important;height:100%;background:#dfe9f5;position:relative;}
+
+#main{width:100%;float:left;min-height:400px;position:relative;overflow:hidden;}
+#main:after,#ls:after,#rs:after,#top:after,ul#nav:after,.entry:after{clear:both;content:'.';display:block;height:0;visibility:hidden}
+#content{position:relative;width:565px;padding:10px 15px;margin:0 220px 0 165px;background:#fff;min-height:400px;overflow:hidden;}
+#ls{float:left;width:150px;margin-left:-980px;padding:10px 10px 0 5px;position:relative;}
+#rs{float:left;width:205px;margin-left:-220px;margin-right:-3px;padding:10px 5px 0 10px;position:relative;}
+#btm{clear:both;background:#bebebe;border-top:1px solid #7E7E7E;color:#222;font-size:10px;margin:0 auto;padding:10px 20px;text-align:center;width:940px}
+.post{clear:both;border-bottom:1px dotted #cdcdcd;position:relative}
+.meta{clear:both;color:#666;font-size:11px;line-height:16px;margin:15px 0}
+.hreview{margin:20px 0}
+.hreview ins{display:block;padding:10px 0;border-top:1px solid #cfcfcf;line-height:18px}
+.moderate{margin-top:10px;text-align:right}
+
+.image{float:left;margin:5px 15px 5px 0}
+.ui-tabs-panel .file{clear:both;display:block}
+.ui-tabs-panel .photo{height:120px;width:120px}
+.ui-tabs-panel p{clear:both}
+#prevnext{border-bottom:1px dotted #cdcdcd;padding:15px 0;margin-bottom:20px}
+#prev{margin-bottom:5px}
+#next{margin-top:5px;text-align:right}
+#paginator{margin:25px auto;text-align:center}
+#paginator span,#paginator a{margin:0 2px;padding:0 2px}
+#paginator a{background:#dfe9f5;border:1px dotted #cdcdcd;display:inline-block}
+#paginator a:hover{background:#fff;border:1px solid #cdcdcd;}
+.sbar{font-size:12px;line-height:1.2em;color:#555}
+.sbar h3{color:#444;margin:5px 0 8px}
+.sbar h3 a{display:block}
+#ls h3{text-align:right}
+.sbar ul{margin-left:0;max-height:400px;overflow:auto}
+.sbar ul ul{margin:0 0 0 10px}
+.sbar ul li a{border-bottom:1px dotted #fff;display:block;padding:2px 0}
+.sbar ul li a:hover{background:#fff;text-decoration:none}
+
+#top {width:980px;padding-top:10px;background:url(images/top1.jpg) repeat-x top center #002362;position:relative;z-index:2}
+#logo {
+display:block;
+margin-left: 10px;
+padding-left:100px;
+background: url("images/logo90x90.png") no-repeat scroll left center transparent;
+overflow:hidden;
+}
+#logo h1 {
+color: #FFFFFF;
+    display: block;
+    font: italic 28px Georgia,Serif;
+    margin:20px 0;
+    text-decoration: none;
+    text-shadow: 2px 2px 2px #6699CC;
+}
+
+#logo p {
+    clear: left;
+color: #FFFFFF;
+    font-size: 20px;
+margin-left: 20px;
+    margin-bottom:15px;
+}
+
+ul#nav{display:block;list-style:none;margin:0 20px;width:940px;position:relative;z-index:2}
+#nav li{float:left;position:relative}
+#nav a{color:#fff;display:block;float:left;height:23px;line-height:23px;padding:0 12px}
+#nav a:hover,#nav li.jshover a{background:#fff;color:#c60;text-decoration:none;border-radius:10px 10px 0 0}
+#nav li a.current_page_link{background:#fff;color:#000;border-radius:10px 10px 0 0}
+#nav li.jshover ul li a.current_page_link{border-radius:0 0 0 0}
+#nav li a.current_page_link:hover,#nav li.jshover a.current_page_link{background:#fff;color:#c60;text-decoration:none;border-radius:10px 10px 0 0}
+#nav li ul{border:1px solid #002362;background:#dfe9f5;border-top:0;display:none;left:-29px;list-style:none;position:absolute;top:13px;width:200px}
+#nav li ul li{float:none}
+#nav li ul li a,#nav li.jshover ul li a{background:#dfe9f5;border-bottom:1px dotted #fff;color:#36c;display:block;float:none;height:22px;line-height:22px;border-radius:0 0 0 0}
+#nav li ul li a:hover,#nav li ul li.jshover,#nav li.jshover ul li a:hover{background:#fff;color:#c60}
+#nav li ul li a:hover,#nav li ul li:hover,#nav li ul li.jshover{color:#c60}
+#nav li:hover ul,#nav li.jshover ul,#nav li ul:hover,#nav li ul.jshover li,#nav li ul:hover li,#nav li ul.jshover{display:block}
+
+.categories,.tags,.dtreviewed{float:right;text-align:right;line-height:16px;font-size:11px}
+.date{background:transparent url(images/icons.png) no-repeat scroll 0 0;padding-left:18px}
+.author,.reviewer{background:transparent url(images/icons.png) no-repeat scroll 0 -72px;padding-left:18px}
+.tags{background:transparent url(images/icons.png) no-repeat scroll 0 -34px;padding-left:18px}
+.categories{background:transparent url(images/icons.png) no-repeat scroll 0 -17px;padding-left:18px}
+.votes{background:transparent url(images/icons.png) no-repeat scroll 0 -56px;padding-left:18px}
+
+.left{float:left;text-align:left}
+.right{float:right;text-align:right}
+.center{text-align:center}
+.clear{clear:both}
+div.clear{font-size:0}
+.red{color:red}
+.hidden {display: none}
+label {font-weight: bold;}

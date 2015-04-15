@@ -1,0 +1,19 @@
+  .form-inline label,
+    .form-inline p,
+    .form-inline button {
+    display: inline-block;
+margin-left: 14px;
+  }
+
+.date-edit,
+.date-range input {
+width: 10em;
+}
+
+.time-edit {
+width: 5em;
+}
+
+#text-phone {
+width: 10em;
+}

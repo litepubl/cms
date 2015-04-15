@@ -1,0 +1,11 @@
+
+<form name="options" method="post" action="">
+<p><strong>$maplabel:</strong><br />
+[area:tagsmap]</p>
+
+<p><strong>$scriptlabel:</strong><br />
+[area:script]</p>
+
+<input type=hidden name="form" value="options" />
+    <p><input type="submit" name="submit" value="$lang.update"/></p>
+</form>

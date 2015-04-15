@@ -1,0 +1,10 @@
+<form name="options" method="post" action="">
+<p><input type='checkbox' name='ignorelink' id='ignorelink' $ignorelink/>
+<label for='ignorelink'>$ignorelinklabel</label></p>
+
+<p><strong>$scriptlabel:</strong><br />
+[area:script]</p>
+
+<input type=hidden name="form" value="options" />
+    <p><input type="submit" name="submit" value="$lang.update"/></p>
+</form>

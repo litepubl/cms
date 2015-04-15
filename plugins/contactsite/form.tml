@@ -1,0 +1,17 @@
+<p>$lang.contactform</p>
+  <form action="" method="post" name="contactsite">
+<p><input type="text" name="email" id="email" value="" size="22" />
+<label for="email"><strong>E-Mail</strong></label></p>
+
+<p><input type="text" name="site" id="site" value="" size="22" />
+<label for="site"><strong>$site</strong></label></p>
+
+<p><input type="text" name="sitetitle" id="sitetitle" value="" size="22" />
+<label for="sitetitle"><strong>$sitetitle</strong></label></p>
+
+<p><strong>$yourmessage:</strong><br />
+<textarea  name="content" style="width: 98%;" rows="15" cols="60"></textarea  ></p>
+
+<input type="hidden" name="contactvalue" value="_contactform<?php echo strtotime ("+1 hour"); ?>" />
+  <p><input type="submit" name="submit" value="$lang.send" /></p>
+  </form>

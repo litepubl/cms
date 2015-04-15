@@ -1,0 +1,82 @@
+.file-item {
+border-top: 1px solid black;
+border-right: 1px solid black;
+border-bottom: 1px solid black;
+	float: left;
+	overflow: hidden;
+display:inline;
+margin: 0;
+padding: 0;
+width:140px;
+height:172px;
+}
+
+.border-left{border-left: 1px solid black;}
+
+.file-toolbar {
+display: block;
+		overflow:hidden; 
+margin: 5px 0 0 5px;
+}
+
+div.file-toolbar:after {clear:both;content:'.';display:block;height:0;visibility:hidden}
+
+.file-toolbar  a {
+    background: url(../icons/all.png) no-repeat 0 0;
+display: bblock;
+float: left;
+		overflow:hidden; 
+width: 24px;
+height: 24px;
+margin: 5px;
+}
+
+a.add-toolbutton{ background-position: 0 0;  } 
+a.left-toolbutton{ background-position: 0 -25px;  } 
+a.right-toolbutton{ background-position: 0 -50px;  } 
+a.delete-toolbutton{ background-position: 0 -75px;  } 
+a.property-toolbutton{ background-position: 0 -100px;  } 
+
+.file-content {
+display: block;
+margin: 5px 5px 5px 5px;
+padding: 0;
+}
+
+.file-content img {
+vertical-align:bottom;
+height:130px;
+width:130px;
+}
+
+.file-content p {
+font-size:12px;
+}
+
+.file-content .text-right {
+text-align: right;
+}
+
+.files-tab .delete-toolbutton {display: none}
+#current-files .add-toolbutton {display: none}
+
+.text-right {text-align:right;}
+
+.file-items {
+display: block;
+margin: 5px;
+}
+
+.file-items-after {
+clear: both;
+}
+
+	#dropzone { border: solid 1px blue;}
+	#dropzone.drag { border: solid 3px green;}
+
+.flash-hidden {
+     position: absolute;
+     left: -10000px; 
+  width: 0;
+   height: 0; 
+}

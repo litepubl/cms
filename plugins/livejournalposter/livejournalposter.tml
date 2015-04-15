@@ -1,0 +1,5 @@
+<p>Originally published at <a href="$site.url/" title="$site.name">$site.name</a>
+where it was originally posted
+$post.excerpt
+$post.morelink
+<p>Please leave comments $post.commentslink</p>

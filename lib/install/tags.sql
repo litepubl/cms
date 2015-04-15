@@ -1,0 +1,17 @@
+  id int unsigned NOT NULL auto_increment,
+  parent int unsigned NOT NULL default '0',
+  idurl int unsigned NOT NULL default '0',
+  customorder int unsigned NOT NULL default '0',
+  itemscount int unsigned NOT NULL default '0',
+  icon int unsigned NOT NULL default '0',
+  idview int unsigned NOT NULL default '1',
+  idperm int unsigned NOT NULL default '0',
+  title text NOT NULL,
+  includeparents boolean default false,
+  includechilds boolean default false,
+  invertorder boolean default false,
+  lite boolean default false,
+  liteperpage int unsigned NOT NULL default '1000',
+
+  PRIMARY KEY  (id),
+  KEY parent (parent)

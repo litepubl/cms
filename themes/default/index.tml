@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html version="XHTML+RDFa 1.0" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>$template.title</title>
+	<link rel="stylesheet" href="$template.url/css/style.css" type="text/css" media="all" />
+	$template.head
+	<!--[if IE 6]>
+		<script type="text/javascript">
+$.load_script("$template.url/css/DD_belatedPNG.js", function() {
+$(document).ready(function() {
+		  DD_belatedPNG.fix('.rss, .rss-comments, .foaf, .lastcomments li, .lastposts li, .post-comments, .post-cat, .post-time, .post-tags, #header');
+}); });
+		 </script>
+	<![endif]--> 
+</head>
+<body>
+<!--default:header-->
+	<div id="header"><div id="logo"><span class="name"><a href="$site.url/">$site.name</a></span><span class="slogan">$site.description</span>
+</div></div>
+<!--default:menu-->
+	<div id="topmenu">
+	 $template.menu
+</div>
+<!--default:content-->
+<div id="out">
+<div id="middle">
+	<div id="content">
+		$template.content
+	</div>
+	<div id="sidebar">
+		$template.sidebar
+	</div>
+		
+	<div id="footer">
+	<div id="bottom">
+	<ul id="footerbar">
+		$template.sidebar
+	</ul>
+		
+			<div id="copyright"><span class="blogolet"><a href="$site.url/">$site.name</a></span>$template.footer</div>
+	</div>
+</div>
+</div>
+</div>	
+</body>
+</html>

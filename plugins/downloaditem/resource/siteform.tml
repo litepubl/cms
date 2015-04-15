@@ -1,0 +1,14 @@
+<script type="text/javascript">
+ltoptions.siteurl_dialog = {
+title: "$lang.changeurl",
+html: '<p><label>$lang.editsite:<br />\
+<input type="text" name="text_download_site" value="" size="22" /></label></p>'
+};
+</script>
+
+<div id="changeurl">
+<h4>$lang.yoursite:
+<a id="yoursite" href="" title="">$lang.nosite</a>
+(<a id="change_url" href="#" title="$lang.changeurl">$lang.changeurl</a>)
+</h4>
+</div>

@@ -1,0 +1,62 @@
+<h3>$lang.formtitle</h3>
+<p>$lang.note</p>
+<form name="colorform" id="colorform" action="" method="post">
+$body 
+$bodybackground
+$link
+$linkcontent
+$hoverlink
+$h
+$headerbackground
+<div id="imagefiles">
+<p>$lang.imagenotes</p>
+<div id="uploadbutton"></div>
+<div id="progress_image" class="hidden">$lang.uploadedpercent: <strong class="uploadedpercent"></strong></div>
+
+<p>
+$lang.logonotes
+     <input type="hidden" name="color_logourl" id="text-color-logourl" value="$logourl" />
+     <input type="hidden" name="color_logowidth" id="text-color-logowidth" value="$llogowidth" />
+     <input type="hidden" name="color_headerurl" id="text-color-headerurl" value="$headerurl" />
+</p>
+<div id="uploadlogo"></div>
+<div id="progress_logo" class="hidden">$lang.uploadedpercent: <strong class="uploadedpercent"></strong></div>
+</div>
+
+$logo
+
+<h4><a href="" id="menucolors">$lang.showmenucolors</a></h4>
+<div id="menucolors_toggle" class="hidden">
+$menu
+$menubackground
+$menuhover
+$submenu
+$hoversubmenubackground
+$currentmenu
+$currentmenubackground
+$hovercurrentmenubackground
+</div>
+
+$contentbackground
+$sidebar
+$sidebarbackground
+$footer
+$footerbackground
+<p><input type="text" name="themename" id="text-themename" value="" size="22" />
+<label for="text-themename"><strong>$lang.themename</strong></label></p>
+
+<p>
+<input type="hidden" name="formtype" value="colors" />
+<input type="submit" name="submitcolors" value="$lang.submitcolors" /></p>
+</form>
+
+<h4><a href="" id="ini_colors">$lang.showinicolors</a></h4>
+<div id="ini_colors_toggle" class="hidden">
+<form name="uploadcolor" id="uploadcolor" action="" method="post" ENCTYPE="multipart/form-data">
+<p>$lang.inicolors:</ br>
+<textarea name="inicolors" id="inicolors" rows="10" cols="62%"></textarea></p>
+<p>
+<input type="hidden" name="formtype" value="uploadcolors" />
+<input type="submit" name="uploadcolors" value="$lang.uploadcolorsini" /></p>
+</form>
+</div>

@@ -1,0 +1,24 @@
+#adminview-sidebars{
+	width: 100%;
+	overflow: hidden;
+display: block;
+}
+
+#adminview-sidebars:after {
+  content: " ";
+  display: table;
+}
+
+.adminview-sidebar {
+float:left;
+	overflow: hidden;
+display: block;
+width:33.33%;
+height:100%;
+min-height: 30px;
+}
+
+.adminview-sidebar ul {
+min-width: 70px;
+min-height: 30px;
+}

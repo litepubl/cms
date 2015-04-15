@@ -1,0 +1,23 @@
+.slides_container {
+	overflow:hidden;
+	height:400px;
+}
+
+.slides_container img {
+	display:block;
+}
+
+
+.slides_navi {
+    position:relative;
+    left:50%;
+    margin-left:-50px;
+    width:100px;
+}
+
+.next_slide,.prev_slide {
+	width:24px;
+	height:43px;
+}
+
+.next_slide {text-align:right;}

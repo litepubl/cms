@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>$template.title</title>
+<link rel="stylesheet" href="$template.url/style.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="$template.url/print.css" type="text/css" media="print" />
+$template.head
+</head>
+<body>
+<div id="page_wrapper">
+<div id="header_wrapper">
+	<div id="header">
+		<h1><a href="$site.url/">$site.name</a></h1>
+	</div>
+	<div id="navcontainer">
+		<div>
+			$template.menu
+		</div>
+	</div>
+</div>
+ <div id="left_side">
+$template.sidebar
+ </div>
+ <div id="right_side">
+$template.sidebar
+ </div>
+ <div id="content">
+$template.content
+	 </div>
+	 </div>
+ <div id="footer">
+<p>$template.footer</p>
+ </div>
+</div>
+</body>
+</html>

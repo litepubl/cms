@@ -1,0 +1,7 @@
+		<div class="post" id="post-$post.id">
+			<h2><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.iconlink$post.title</a></h2>
+			<div class="post-content">
+				$post.excerptfilelist
+$post.excerptcontent
+			</div>
+		</div>

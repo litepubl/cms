@@ -1,0 +1,17 @@
+<h2>Настройка аккаунта<a href="http://www.sape.ru/r.97609359bd.php">sape.ru</a></h2>
+<form name='sapeform' action='' method='post'>
+<p><input type="text" name="user" id="user" value="$user" size="22" />
+<label for="user"><strong>Имя пользователя в sape (много букв и цифр)</strong></label></p>
+
+<p><input type="checkbox" name="force" id="force" $force/>
+<label for="force">Показывать код  подверждения (требуется только при добавлении площадки в sape)</label></p>
+
+<input type='hidden' name='sapeoptions' value='1' />
+
+ <p><input type='submit' name='setoptions' value='Сохранить настройки'/></p>
+</form>
+
+<h2>Вы можете иметь несколько виджетов плагина в сайтбаре. Для добавления нового виджета нажмите кнопку добавить</h2>
+<form name='addform' action='' method='post'>
+ <p><input type='submit' name='addwidget' value='Добавить'/></p>
+</form>

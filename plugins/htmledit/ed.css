@@ -1,0 +1,37 @@
+.toolbar a {
+float: left;
+display: block;
+border: solid 1px #ccc;
+height:27px;
+width:33px;
+text-align:center;
+line-height:27px;
+color:#788;
+text-decoration:none;
+font-size:16px;
+font-weight:bold;
+background-color:#fff;
+font-family:Arial;
+margin:0 2px 2px 0;
+}
+
+.toolbar a:hover {background:#f5f5f5; text-decoration:none;color:#464646;}
+.toolbar a span {display:none; padding:2px 3px; margin-left:0px;margin-top:30px;font-size:12px;line-height:14px;text-align:left;}
+.toolbar a:hover span{display:inline; position:absolute; background:#f5f5f5; border:1px solid #cccccc; color:#6c6c6c;}
+
+.ed{
+width:500px;
+border:1px solid #ccc;
+height:300px;
+}
+
+.htmlbutton {
+margin: 1px;
+padding: 2px;
+}
+
+.htmlbutton:hover {
+opacity:.60;
+filter: alpha(opacity=60); 
+-moz-opacity: 0.60;
+}
