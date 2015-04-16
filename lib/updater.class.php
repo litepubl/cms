@@ -143,8 +143,10 @@ class tupdater extends tevents {
   
   public function downloadreleases() {
     if (isset($this->releases)) return $this->releases;
-    if (($s = http::get('http://litepublisher.com/service/versions.txt'))  ||
-    ($s = http::get('http://litepublisher.googlecode.com/svn/trunk/lib/install/versions.txt') )) {
+    if (
+    ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt') ) ||
+($s = http::get('http://litepublisher.com/service/versions.txt')) 
+) {
       $this->releases = strtoarray($s);
       return $this->releases;
     }
@@ -161,10 +163,10 @@ class tupdater extends tevents {
     }
     
     if (!(
-    ($s = http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")) ||
-    ($s = http::get("http://litepublisher.googlecode.com/files/litepublisher.$version.tar.gz"))
-    
-    )) {
+    ($s = http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version")) ||
+    ($s = http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz")) ||
+    ($s = http::get("http:/litepublisher.com/download/litepublisher.$version.tar.gz"))
+        )) {
       $this->result = $lang->errordownload;
       return  false;
     }
