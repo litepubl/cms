@@ -9,8 +9,8 @@ Minimum System Requirements:
 - apache server with rewrite module
 
 Installation. If you have a shell access to the server you can upload files:
-wget http://litepublisher.com/download/litepublisher.x.xx.tar.gz
-tar -xf litepublisher.x.xx.tar.gz -p
+wget https://github.com/litepubl/cms/releases/latest
+tar -xf cms.x.xx.tar.gz -p
 
 where x.xx is current version.
 
