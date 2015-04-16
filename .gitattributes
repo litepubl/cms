@@ -1,0 +1,9 @@
+# used to remove files from deployment using `git archive`
+# git files
+.gitattributes export-ignore
+.gitignore export-ignore
+
+#DEVELOPER PLUGINS
+PLUGINS/TICKETS* export-ignore
+PLUGINS/
+PLUGINS/CODEDOC* export-ignore

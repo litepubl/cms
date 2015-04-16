@@ -1,5 +1,8 @@
 *.log
+PLUGINS/SHOP*
+PLUGINS/IMGRESIZE
 temp/
 storage/backup/
 storage/cache/
 storage/data/
+THEMES/SHOP
