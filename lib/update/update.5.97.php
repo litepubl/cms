@@ -65,17 +65,76 @@ $js->replacefile('default',
 '/js/prettyphoto/litepubl/youtubefix.min.js'
 );
 
-$js->replacefile('default',
+$js->replacefile('admin',
 '/js/litepublisher/admin.min.js',
 '/js/admin/admin.min.js'
 );
 
-$js->replacefile('default',
+$js->replacefile('admin',
+'/js/litepublisher/calendar.min.js',
+'/js/admin/calendar.min.js'
+);
+
+$js->replacefile('adminviews',
+'/js/litepublisher/admin.views.min.js',
+'/js/admin/admin.views.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/uploader.min.js',
+'/js/admin/uploader.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/uploader.html.min.js',
+'/js/admin/uploader.html.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/uploader.flash.min.js',
+'/js/admin/uploader.flash.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/posteditor.min.js',
+'/js/admin/posteditor.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/fileman.min.js',
+'/js/admin/fileman.min.js'
+);
+
+$js->replacefile('posteditor',
+'/js/litepublisher/fileman.templates.min.js',
+'/js/admin/fileman.templates.min.js'
+);
 
 $js->unlock();
 
 $css = tcssmerger::i();
-//$css->add('default', '/js/litepublisher/css/hover.css');
+$css->lock();
+$css->replacefile('default',
+'/js/litepublisher/css/prettyphoto.dialog.min.css',
+'/js/prettyphoto/litepubl/dialog.pretty.js'
+);
+
+$css->replacefile('admin',
+'/js/litepublisher/css/fileman.min.css',
+'/js/admin/css/fileman.min.css'
+);
+
+$css->replacefile('admin',
+'/js/litepublisher/css/calendar.css',
+'/js/admin/css/calendar.css'
+);
+
+$css->replacefile('admin',
+'/js/litepublisher/css/admin.views.min.css',
+'/js/admin/css/admin.views.min.css'
+);
+
+$css->unlock();
 
 if (litepublisher::$classes->exists('ulogin')) {
 $ulogin = ulogin::i();
@@ -97,11 +156,12 @@ $ulogin->save();
 
 $t = ttemplate::i();
 $t->footer = str_replace('2014', '2015', $t->footer);
-    $template = ttemplate::i();
+$t->footer = str_replace('2013', '2015', $t->footer);
+
       $t->data[$js->basename] = $js->revision;
       $t->data[$css->basename] = $css->revision;
-$t->save();
 
+$t->save();
 
 //$a = tprefetchtxt::i()->items;
 $data = new tdata();

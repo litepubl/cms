@@ -53,8 +53,8 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/jquery/ui/position.min.js');
   $self->add($section, '/js/jquery/ui/effect.min.js');
   $self->add($section, '/js/jquery/ui/tabs.min.js');
-  $self->add($section, '/js/litepublisher/admin.min.js');
-  $self->add($section, '/js/litepublisher/calendar.min.js');
+  $self->add($section, '/js/admin/admin.min.js');
+  $self->add($section, '/js/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
   
   $section = 'adminviews';
@@ -63,16 +63,16 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/jquery/ui/resizable.min.js');
   $self->add($section, '/js/jquery/ui/selectable.min.js');
   $self->add($section, '/js/jquery/ui/sortable.min.js');
-  $self->add($section, '/js/litepublisher/admin.views.min.js');
+  $self->add($section, '/js/admin/admin.views.min.js');
   
   $section = 'posteditor';
+  $self->add($section, '/js/jquery/ui/progressbar.min.js');
   $self->add($section, '/js/swfupload/swfupload.min.js');
   $self->add($section, '/js/plugins/filereader.min.js');
-  $self->add($section, '/js/litepublisher/uploader.min.js');
-  $self->add($section, '/js/litepublisher/uploader.html.min.js');
-  $self->add($section, '/js/litepublisher/uploader.flash.min.js');
-  $self->add($section, '/js/jquery/ui/progressbar.min.js');
-  $self->add($section, '/js/litepublisher/posteditor.min.js');
+  $self->add($section, '/js/admin/uploader.min.js');
+  $self->add($section, '/js/admin/uploader.html.min.js');
+  $self->add($section, '/js/admin/uploader.flash.min.js');
+  $self->add($section, '/js/admin/posteditor.min.js');
   $self->add($section, '/js/litepublisher/fileman.min.js');
   $self->add($section, '/js/litepublisher/fileman.templates.min.js');
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
