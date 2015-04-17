@@ -1,4 +1,21 @@
 <?php
+
+function jsafter($section, $src, $dst) {
+$js = tjsmerger::i();
+    if (!isset($js->items[$section])) return false;
+    if (!($src = $js->normfilename($src))) return false;
+      if (in_array($dst, $js->items[$section]['files'])) return false;
+    if (!($dst = $js->normfilename($dst))) return false;
+    if (false === ($i = array_search($src, $js->items[$section]['files']))) {
+      //simple add
+      $js->items[$section]['files'][] = $dst;
+    } else {
+      //insert after
+      array_splice($js->items[$section]['files'], $i + 1, 0, array($dst));
+    }
+    $js->save();
+  }
+
 function update597() {
   litepublisher::$site->jquery_version = '1.11.2';
 litepublisher::$site->jqueryui_version = '1.11.4';
@@ -6,21 +23,54 @@ litepublisher::$site->save();
 
 $js = tjsmerger::i();
 $js->lock();
-$js->after('default', 
+jsafter('default', 
 '/js/plugins/jquery.cookie.min.js',
 '/js/plugins/tojson.min.js');
 
-  $js->after('default', 
+  jsafter('default', 
 '/js/litepublisher/litepublisher.utils.min.js',
 '/js/litepublisher/ready2.min.js');
 
-  $js->after('default', 
+  jsafter('default', 
 '/js/litepublisher/ready2.min.js',
 '/js/litepublisher/css-loader.min.js');
 
-  $js->after('default', 
+  jsafter('default', 
 '/js/litepublisher/css-loader.min.js',
 '/js/litepublisher/json-rpc.min.js');
+
+//move files
+$js->replacefile('default',
+'/js/litepublisher/widgets.bootstrap.min.js',
+'/js/bootstrap/widgets.bootstrap.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/dialog.pretty.min.js',
+'/js/prettyphoto/litepubl/dialog.pretty.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/dialog.bootstrap.min.js',
+'/js/bootstrap/dialog.bootstrap.min.js',
+);
+
+$js->replacefile('default',
+'/js/litepublisher/pretty.init.min.js',
+'/js/prettyphoto/litepubl/pretty.init.min.js',
+);
+
+$js->replacefile('default',
+'/js/litepublisher/youtubefix.min.js',
+'/js/prettyphoto/litepubl/youtubefix.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/admin.min.js',
+'/js/admin/admin.min.js'
+);
+
+$js->replacefile('default',
 
 $js->unlock();
 
