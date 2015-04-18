@@ -20,39 +20,48 @@
     clicked: false,
     tmplink: false,
     script: false,
-    
-    ready: function(callback) {
-      if (this.script) {
-        this.script.done(callback);
-      } else {
-        $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
-        this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
-      }
-    },
-    
+
     init: function(audio, video) {
       this.width = ltoptions.video_width;
       this.height = ltoptions.video_height;
       
       if (audio.length) {
         var self = this;
-        this.ready(function() {
+        this.load(function() {
           self.init_audio(audio);
         });
       }
       
       if (video.length) this.init_video(video);
     },
+
+    load: function(callback) {
+      if (this.script) return this.script.done(callback);
+
+        $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
+        this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
+    },
+
+player: function(elem, options) {
+return elem.mediaelementplayer($.extend(
+options ? options : {}, 
+{
+ features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
+pluginPath: ltoptions.files + "/js/mediaelement/"
+},
+"mediaplayer" in lang ? lang.mediaplayer : {}
+)));
+},
     
-    init_audio: function(links) {
-      links.videoplayer({
+    audio: function(links) {
+      return this.player(links, {
         audioWidth: 400,
         audioHeight: 30,
         startVolume: 1
       });
     },
     
-    init_video: function(links) {
+    video: function(links) {
       this.tmplink = $('<a href="#custom=true&width=' + this.width + '&height=' + this.height + '"></a>').appendTo($('<div class="hidden"></div>').appendTo("body").hide());
       
       var self = this;
@@ -90,7 +99,7 @@
       });
     },
     
-    init_mediaelement: function() {
+    mediaelement: function() {
       var tml = this.tml;
       var html = $.simpletml(tml.video, {
         file: this.clicked.data("file"),
