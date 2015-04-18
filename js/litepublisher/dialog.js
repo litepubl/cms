@@ -54,10 +54,11 @@
   
   $.fn.litedialog = function(buttons) {
     $.litedialog({
-      title: $(this).attr("title"),
-      html: $(this).html(),
+      title: this.attr("title"),
+      html: this.html(),
       buttons: buttons
     });
+
     return this;
   };
   

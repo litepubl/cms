@@ -73,6 +73,13 @@
         this.style = false;
       }
     },
+
+addstyle: function() {
+      var css = "";
+      if (this.options.width) css = css + "width:" + (this.options.width + 32) + "px;";
+      if (this.options.height) css = css + "height:" + this.options.height + "px;";
+    if (css) this.style = $('<style type="text/css">.modal-dialog{' + css + '}</style>').appendTo("head:first");
+},
     
     open: function(o) {
       if (this.dialog) return alert('Dialog already opened');
@@ -99,12 +106,8 @@
         body: this.options.html,
         buttons: html_buttons
       });
-      
-      var css = "";
-      if (this.options.width) css = css + "width:" + (this.options.width + 32) + "px;";
-      if (this.options.height) css = css + "height:" + this.options.height + "px;";
-    if (css) this.style = $('<style type="text/css">.modal-dialog{' + css + '}</style>').appendTo("head:first");
-      
+
+this.addstyle();      
       this.dialog = $(html).appendTo("body");
       this.footer =       $(".modal-footer:first", this.dialog);
       for (var i =0, l= buttons.length;  i < l; i++) {
