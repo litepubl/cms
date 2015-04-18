@@ -12,18 +12,24 @@
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
+#images
 *.png binary
 *.jpg binary
 *.jpeg binary
 *.gif binary
 *.ico binary
-*.mov binary
 
+#audio video
+*.mov binary
 *.mp4 binary
 *.mp3 binary
 *.flv binary
 *.fla binary
 *.swf binary
+*.ogv binary
+*.webm binary
+
+#archives
 *.gz binary
 *.zip binary
 *.7z binary
