@@ -5,7 +5,7 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-;(function( $, document, window){
+;(function( $){
   'use strict';
   
   litepubl.Mediaplayer= Class.extend({
@@ -28,11 +28,11 @@
       if (audio.length) {
         var self = this;
         this.load(function() {
-          self.init_audio(audio);
+          self.audio(audio);
         });
       }
       
-      if (video.length) this.init_video(video);
+      if (video.length) this.video(video);
     },
 
     load: function(callback) {
@@ -50,7 +50,7 @@ options ? options : {},
 pluginPath: ltoptions.files + "/js/mediaelement/"
 },
 "mediaplayer" in lang ? lang.mediaplayer : {}
-)));
+));
 },
     
     audio: function(links) {
@@ -93,7 +93,7 @@ pluginPath: ltoptions.files + "/js/mediaelement/"
         changepicturecallback: function(){
           $.onEscape($.prettyPhoto.close);
           self.ready(function() {
-            self.init_mediaelement();
+            self.mediaelement();
           });
         }
       });
@@ -115,4 +115,4 @@ pluginPath: ltoptions.files + "/js/mediaelement/"
   $(document).ready(function() {
     litepubl.mediaplayer = new litepubl.Mediaplayer($("audio"), $(".videofile"));
   });
-})( jQuery, document, window);
+})( jQuery);

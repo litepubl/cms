@@ -32,12 +32,12 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepublisher/simpletml.min.js');
   $self->add($section, '/js/litepublisher/templates.min.js');
   $self->add($section, '/js/litepublisher/filelist.min.js');
-  $self->add($section, '/js/litepublisher/players.min.js');
   $self->add($section, '/js/litepublisher/dialog.min.js');
   $self->add($section, '/js/prettyphoto/litepubl/dialog.pretty.min.js');
   $self->add($section, '/js/bootstrap/dialog.bootstrap.min.js');
   $self->add($section, '/js/prettyphoto/litepubl/pretty.init.min.js');
-  $self->add($section, '/js/litepublisher/youtubefix.min.js');
+  $self->add($section, '/js/prettyphoto/litepubl/youtubefix.min.js');
+  $self->add($section, '/js/litepublisher/players.min.js');
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
@@ -45,6 +45,10 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepublisher/confirmcomment.min.js');
   $self->add($section, '/js/litepublisher/moderate.min.js');
   $self->add($section, "/lib/languages/$language/comments.min.js");
+
+  $section = 'media';
+  $self->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
+  if ($language != 'en') $self->add($section, "/lib/languages/$language/mediaplayer.min.js");
   
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/core.min.js');

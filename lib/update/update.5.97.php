@@ -110,6 +110,11 @@ $js->replacefile('posteditor',
 '/js/admin/fileman.templates.min.js'
 );
 
+  $section = 'media';
+  $js->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
+  $language = litepublisher::$options->language;
+  if ($language != 'en') $js->add($section, "/lib/languages/$language/mediaplayer.min.js");
+
 $js->unlock();
 
 $css = tcssmerger::i();
