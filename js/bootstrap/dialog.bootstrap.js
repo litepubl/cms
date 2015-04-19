@@ -34,6 +34,7 @@
       this.default_options = {
         title: "",
         html: "",
+css: "",
         width: false,
         height: false,
         open: $.noop,
@@ -75,8 +76,8 @@
     },
 
 addstyle: function() {
-      var css = "";
 var options = this.options;
+      var css = options.css;
       if (options.width) css = css + ".modal-dialog{width:" + (options.width + 32) + "px}";
       if (options.height) css = css + ".modal-dialog{height:" + options.height + "px}";
 if (!options.buttons.length) css = css + '.modal-footer{display:none}';
@@ -116,7 +117,6 @@ this.addstyle();
         this.getbutton(i).on("click.dialog", buttons[i].click);
       }
       
-      var self = this;
       return this.dialog
 .on("shown.bs.modal", $.proxy(this.opened, this))
       .on("hidden.bs.modal", $.proxy(this.doclose, this))

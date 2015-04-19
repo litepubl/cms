@@ -22,40 +22,26 @@
 open: function(link) {
 //preload script when animate opening dialog
           this.load($.noop);
-if (!this.dialog) this.dialog = new litepubl.Videodialog();
-
-var html = $.simpletml(this.dialog_tml, {
+var self = this;
+if (!this.dialog) this.dialog = new $.Simplerdialog();
+this.dialog.open({
+html:  $.simpletml(this.tml, {
         file: link.data("file"),
         siteurl: ltoptions.files
-      });
+      }),
 
+width: this.width,
+height: this.height,
+open: function(dialog) {
+self.load(function() {
+self.player(dialog.find("video:first"));
+});
+}
+});
 }
 
   });//class
 
-litepubl.Videodialog = $.BootstrapDialog.extend({
-tml: '<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">' + 
-    '<div class="modal-dialog center-block"><div class="modal-content">' +
-    '<button type="button" class="close" data-dismiss="modal" aria-label="%%close%%"><span aria-hidden="true">&times;</span></button>' +
-    '<div class="modal-body">' + '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>' +
-'</div>' +
-    '<div class="modal-footer"></div>' +
-    '</div></div></div>',
-
-    init: function() {
-      this.default_options = {
-        title: "",
-        html: "",
-        width: false,
-        height: false,
-        open: $.noop,
-        close: $.noop,
-        buttons: []
-};
-},
-
-});
-  
   $(document).ready(function() {
     litepubl.mediaplayer = new litepubl.Bootstrapplayer($("audio"), $(".videofile"));
   });

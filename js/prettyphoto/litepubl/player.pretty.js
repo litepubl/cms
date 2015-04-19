@@ -9,7 +9,6 @@
   'use strict';
   
   litepubl.Prettyplayer= litepubl.Mediaplayer.extend({
-    video_tml: '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>',
       pretty_tml: '<div id="pretty-video-holder"></div>',
       holder: "#pretty-video-holder",
     linkclicked: false,

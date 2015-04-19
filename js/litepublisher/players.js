@@ -12,6 +12,7 @@
     width: 450,
     height: 300,
     script: false,
+    video_tml: '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>',
 
     init: function(audio, video) {
       this.width = ltoptions.video_width;
