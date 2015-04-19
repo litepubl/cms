@@ -19,7 +19,6 @@ function tjsmergerInstall($self) {
   $self->items = array();
   $section = 'default';
   $self->add($section, '/js/jquery/jquery-$site.jquery_version.min.js');
-  $self->add($section, '/js/prettyphoto/js/jquery.prettyPhoto.js');
   $self->add($section, '/js/plugins/class-extend.min.js');
   $self->add($section, '/js/plugins/jquery.cookie.min.js');
   $self->add($section, '/js/plugins/tojson.min.js');
@@ -28,16 +27,13 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepublisher/css-loader.min.js');
   $self->add($section, '/js/litepublisher/json-rpc.min.js');
   $self->add($section, '/js/litepublisher/widgets.min.js');
-  $self->add($section, '/js/bootstrap/widgets.bootstrap.min.js');
   $self->add($section, '/js/litepublisher/simpletml.min.js');
   $self->add($section, '/js/litepublisher/templates.min.js');
   $self->add($section, '/js/litepublisher/filelist.min.js');
   $self->add($section, '/js/litepublisher/dialog.min.js');
-  $self->add($section, '/js/prettyphoto/litepubl/dialog.pretty.min.js');
-  $self->add($section, '/js/bootstrap/dialog.bootstrap.min.js');
-  $self->add($section, '/js/prettyphoto/litepubl/pretty.init.min.js');
-  $self->add($section, '/js/prettyphoto/litepubl/youtubefix.min.js');
   $self->add($section, '/js/litepublisher/players.min.js');
+tjsmerger_switch($self, tjsmerger_pretty_files(), array());
+//tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
@@ -92,4 +88,40 @@ function tjsmergerInstall($self) {
 
 function tjsmergerUninstall($self) {
   tupdater::i()->unbind($self);
+}
+
+function tjsmerger_pretty_files() {
+return array(
+   '/js/prettyphoto/js/jquery.prettyPhoto.js',
+   '/js/prettyphoto/litepubl/dialog.pretty.min.js',
+   '/js/prettyphoto/litepubl/pretty.init.min.js',
+   '/js/prettyphoto/litepubl/youtubefix.min.js',
+   '/js/prettyphoto/litepubl/player.pretty.min.js',
+);
+}
+
+function tjsmerger_bootstrap_files() {
+return array(
+'/js/bootstrap/widgets.bootstrap.min.js',
+'/js/bootstrap/dialog.bootstrap.min.js',
+'/js/bootstrap/dialog.simpler.min.js',
+'/js/bootstrap/player.bootstrap.min.js',
+'/js/bootstrap/popimage.min.js',
+'/js/bootstrap/single-popover.min.js',
+'/js/bootstrap/youtube.bootstrap.min.js',
+);
+}
+
+function tjsmerger_switch($self, $add, $delete) {
+
+$self->lock();
+foreach ($delete as $filename) {
+$self->deletefile('default', $filename);
+}
+
+foreach ($add as $filename) {
+$self->add('default', $filename);
+}
+
+$self->unlock();
 }

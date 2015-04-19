@@ -13,6 +13,8 @@
     footer: false,
     style: false,
     options: false,
+padwidth: 32,
+padheight: 0,
     
     tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-title-%%id%%">' +
     '<div class="modal-dialog center-block"><div class="modal-content">' +
@@ -78,8 +80,8 @@ css: "",
 addstyle: function() {
 var options = this.options;
       var css = options.css;
-      if (options.width) css = css + ".modal-dialog{width:" + (options.width + 32) + "px}";
-      if (options.height) css = css + ".modal-dialog{height:" + options.height + "px}";
+      if (options.width) css = css + ".modal-dialog{width:" + (options.width + this.padwidth) + "px}";
+      if (options.height) css = css + ".modal-dialog{height:" + (options.height + this.padheight) + "px}";
 if (!options.buttons.length) css = css + '.modal-footer{display:none}';
     if (css) this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
 },

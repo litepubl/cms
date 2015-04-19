@@ -16,6 +16,7 @@
     '</div></div></div>',
     
     init: function() {
+this.padheight = 32;
       this.default_options = {
         title: "",
         html: "",

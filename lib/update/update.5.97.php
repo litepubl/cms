@@ -115,6 +115,10 @@ $js->replacefile('posteditor',
   $language = litepublisher::$options->language;
   if ($language != 'en') $js->add($section, "/lib/languages/$language/mediaplayer.min.js");
 
+      if (in_array('/js/prettyphoto/js/jquery.prettyPhoto.js', $js->items['default']['files'])) {
+$js->add('default',    '/js/prettyphoto/litepubl/player.pretty.min.js');
+}
+
 $js->unlock();
 
 $css = tcssmerger::i();
