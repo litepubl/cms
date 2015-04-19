@@ -9,55 +9,52 @@
   'use strict';
   
   litepubl.Bootstrapplayer= litepubl.Mediaplayer.extend({
-    video_tml: '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>',
-    clicked: false,
+    dialog: false,
 
     video: function(links) {
       var self = this;
-      links.on("click.playvideo", function(event) {
+      return links.on("click.playvideo", function(event) {
         event.preventDefault();
-        self.clicked = $(this);
+        self.open($(this));
       });
-      
-      this.tmplink.prettyPhoto({
-        custom_markup: tml.pretty,
-        default_width: this.width,
-        default_height: this.height,
-        opacity: 0.80, /* Value between 0 and 1 */
-        modal: true, /* If set to true, only the close button will close the window */
-        deeplinking: false, /* Allow prettyPhoto to update the url to enable deeplinking. */
-        keyboard_shortcuts: false, /* Set to false if you open forms inside prettyPhoto */
-        show_title: false, /* true/false */
-        social_tools: false,
-        //hideflash: true,
-        
-        /* Called when prettyPhoto is closed */
-        callback: function(){
-          $(document).off('keydown.onEscape');
-          self.clicked = false;
-        },
-        
-        changepicturecallback: function(){
-          $.onEscape($.prettyPhoto.close);
-          self.ready(function() {
-            self.mediaelement();
-          });
-        }
-      });
-    },
-    
-    mediaelement: function() {
-      var tml = this.tml;
-      var html = $.simpletml(tml.video, {
-        file: this.clicked.data("file"),
+      },
+
+open: function(link) {
+//preload script when animate opening dialog
+          this.load($.noop);
+if (!this.dialog) this.dialog = new litepubl.Videodialog();
+
+var html = $.simpletml(this.dialog_tml, {
+        file: link.data("file"),
         siteurl: ltoptions.files
       });
-      
-      $(html).appendTo(tml.holder).videoplayer({
-      });//mediaelement
-    }
-    
+
+}
+
   });//class
+
+litepubl.Videodialog = $.BootstrapDialog.extend({
+tml: '<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">' + 
+    '<div class="modal-dialog center-block"><div class="modal-content">' +
+    '<button type="button" class="close" data-dismiss="modal" aria-label="%%close%%"><span aria-hidden="true">&times;</span></button>' +
+    '<div class="modal-body">' + '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>' +
+'</div>' +
+    '<div class="modal-footer"></div>' +
+    '</div></div></div>',
+
+    init: function() {
+      this.default_options = {
+        title: "",
+        html: "",
+        width: false,
+        height: false,
+        open: $.noop,
+        close: $.noop,
+        buttons: []
+};
+},
+
+});
   
   $(document).ready(function() {
     litepubl.mediaplayer = new litepubl.Bootstrapplayer($("audio"), $(".videofile"));
