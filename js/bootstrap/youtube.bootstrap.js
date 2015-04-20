@@ -5,68 +5,76 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-;(function ($, document, window) {
+;(function ($) {
   'use strict';
   
   $.YoutubeBootstrap = Class.extend({
-    id: 0,
     vid: '',
     width: 500,
     height: 344,
-    tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true">' +
-    '<div class="modal-dialog"><div class="modal-content">' +
-    '<div class="modal-body">' +
-    '<button type="button" class="close" data-dismiss="modal" aria-label="%%close%%"><span aria-hidden="true">&times;</span></button>' +
-    '<div>' +
-    '<iframe src=http://www.youtube.com/embed/%%vid%%?autoplay=1&html5=1" width="%%width%%" height="%%height%%" border="0"></iframe>' +
-    '</div>' +
-    '</div>' +
-    '</div></div></div>',
-    
+    tml: '<iframe src=https://www.youtube.com/embed/%%vid%%?autoplay=1&html5=1" width="%%width%%" height="%%height%%" border="0"></iframe>' ,
+dialog: false,
+
     init: function() {
       var self = this;
-      $("a[href^='http://youtu.be/'], a[href^='http://www.youtube.com/watch?v=']").on("click.youtube", function() {
-        var url = $(this).attr("href");
+      $("a[href^='http://youtu.be/'], a[href^='http://www.youtube.com/watch?v='], a[href^='https://youtu.be/'], a[href^='https://www.youtube.com/watch?v=']").on("click.youtube", function() {
+        self.open(self.getvid($(this).attr("href")));
+return false;
+});
+},
+
+open: function(vid) {
+this.vid = vid;
+
+if (!this.dialog) {
+this.dialog = new $.Simplerdialog();
+//wait 100ms to clean iframe
+this.dialog.removeOnclose = false;
+}
+
+var self = this;
+this.dialog.open({
+          width: this.width,
+          height: this.height,
+html: $.simpletml(this.tml, {
+          vid: vid,
+          width: this.width,
+          height: this.height
+}),
+
+open: function(dialog) {
+dialog.removeClass('in');
+        },
+
+close: function(dialog) {
+          var iframe = dialog.find('iframe:first');
+          iframe.attr("src", "");
+          setTimeout(function() {
+            self.dialog.remove();
+          }, 100);
+}
+
+        });
+        
+    },
+
+getvid: function(url) {
         var vid = get_get('v', url);
-        if (!vid) {
+if (vid) return vid;
+
           vid = url.split('youtu.be/').pop();
           var i = vid.indexOf('?');
           if(i> 0) vid = vid.substring(0, i);
+
           i = vid.indexOf('&');
           if(i> 0) vid = vid.substring(0, i);
-        }
-        
-        self.vid = vid;
-        var html = $.simpletml(self.tml, {
-          vid: vid,
-          id: litepubl.guid++,
-          width: self.width,
-          height: self.height,
-          close: lang.dialog.close
-        });
-        
-        $(html).appendTo("body")
-        .on('shown.bs.modal', function () {
-          $(this).removeClass('in');
-        })
-        .modal()
-        .on("hide.bs.modal", function() {
-          var dialog = $(this);
-          var iframe = dialog.find('iframe:first');
-          iframe.attr("src", "");
-          window.setTimeout(function() {
-            dialog.modal("destroy");
-            dialog.remove();
-          }, 100);
-        });
-        
-        return false;
-      });
-    }
+
+return vid;
+}
     
   });
   
   $.ready2(function() {
     if ("modal" in $.fn) $.youtubeBootstrap = new $.YoutubeBootstrap();
   });
-}(jQuery, document, window));
+}(jQuery));

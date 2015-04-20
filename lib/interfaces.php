@@ -32,7 +32,3 @@ interface iposts {
   public function edit(tpost $post);
   public function delete($id);
 }
-
-interface imenu {
-  public function getcurrent();
-}

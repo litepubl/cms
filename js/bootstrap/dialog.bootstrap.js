@@ -15,6 +15,7 @@
     options: false,
 padwidth: 32,
 padheight: 0,
+removeOnclose: true,
     
     tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-title-%%id%%">' +
     '<div class="modal-dialog center-block"><div class="modal-content">' +
@@ -64,9 +65,12 @@ css: "",
     },
     
     doclose: function() {
+      if (this.dialog && $.isFunction(this.options.close)) this.options.close(this.dialog);
+if (this.removeOnclose) this.remove();
+},
+
+remove: function() {
       if (!this.dialog) return false;
-      
-      if ($.isFunction(this.options.close)) this.options.close(this.dialog);
       this.options = false;
       this.footer = false;
       this.dialog.remove();
@@ -120,8 +124,8 @@ this.addstyle();
       }
       
       return this.dialog
-.on("shown.bs.modal", $.proxy(this.opened, this))
-      .on("hidden.bs.modal", $.proxy(this.doclose, this))
+.on("shown.bs.modal.dialog", $.proxy(this.opened, this))
+      .on("hidden.bs.modal.dialog", $.proxy(this.doclose, this))
       .modal();
     },
 

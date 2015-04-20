@@ -33,8 +33,9 @@ html:  $.simpletml(this.tml, {
 width: this.width,
 height: this.height,
 open: function(dialog) {
+dialog.removeClass('in');
 self.load(function() {
-self.player(dialog.find("video:first"));
+self.player(self.dialog.dialog.find("video:first"));
 });
 }
 });
