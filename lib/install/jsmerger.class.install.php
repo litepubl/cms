@@ -37,9 +37,9 @@ tjsmerger_switch($self, tjsmerger_pretty_files(), array());
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
-  $self->add($section, '/js/litepublisher/comments.min.js');
-  $self->add($section, '/js/litepublisher/confirmcomment.min.js');
-  $self->add($section, '/js/litepublisher/moderate.min.js');
+  $self->add($section, '/js/litepubl/comments/comments.min.js');
+  $self->add($section, '/js/litepubl/comments/confirmcomment.min.js');
+  $self->add($section, '/js/litepubl/comments/moderate.min.js');
   $self->add($section, "/lib/languages/$language/comments.min.js");
 
   $section = 'media';
@@ -53,8 +53,8 @@ tjsmerger_switch($self, tjsmerger_pretty_files(), array());
   $self->add($section, '/js/jquery/ui/position.min.js');
   $self->add($section, '/js/jquery/ui/effect.min.js');
   $self->add($section, '/js/jquery/ui/tabs.min.js');
-  $self->add($section, '/js/admin/admin.min.js');
-  $self->add($section, '/js/admin/calendar.min.js');
+  $self->add($section, '/js/litepubl/admin/admin.min.js');
+  $self->add($section, '/js/litepubl/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
   
   $section = 'adminviews';
@@ -63,16 +63,16 @@ tjsmerger_switch($self, tjsmerger_pretty_files(), array());
   $self->add($section, '/js/jquery/ui/resizable.min.js');
   $self->add($section, '/js/jquery/ui/selectable.min.js');
   $self->add($section, '/js/jquery/ui/sortable.min.js');
-  $self->add($section, '/js/admin/admin.views.min.js');
+  $self->add($section, '/js/litepubl/admin/admin.views.min.js');
   
   $section = 'posteditor';
   $self->add($section, '/js/jquery/ui/progressbar.min.js');
   $self->add($section, '/js/swfupload/swfupload.min.js');
   $self->add($section, '/js/plugins/filereader.min.js');
-  $self->add($section, '/js/admin/uploader.min.js');
-  $self->add($section, '/js/admin/uploader.html.min.js');
-  $self->add($section, '/js/admin/uploader.flash.min.js');
-  $self->add($section, '/js/admin/posteditor.min.js');
+  $self->add($section, '/js/litepubl/admin/uploader.min.js');
+  $self->add($section, '/js/litepubl/admin/uploader.html.min.js');
+  $self->add($section, '/js/litepubl/admin/uploader.flash.min.js');
+  $self->add($section, '/js/litepubl/admin/posteditor.min.js');
   $self->add($section, '/js/litepublisher/fileman.min.js');
   $self->add($section, '/js/litepublisher/fileman.templates.min.js');
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
@@ -93,22 +93,23 @@ function tjsmergerUninstall($self) {
 function tjsmerger_pretty_files() {
 return array(
    '/js/prettyphoto/js/jquery.prettyPhoto.js',
-   '/js/prettyphoto/litepubl/dialog.pretty.min.js',
-   '/js/prettyphoto/litepubl/pretty.init.min.js',
-   '/js/prettyphoto/litepubl/youtubefix.min.js',
-   '/js/prettyphoto/litepubl/player.pretty.min.js',
+   '/js/litepubl/pretty/dialog.pretty.min.js',
+   '/js/litepubl/pretty/pretty.init.min.js',
+   '/js/litepubl/pretty/youtubefix.min.js',
+   '/js/litepubl/pretty/player.pretty.min.js',
 );
 }
 
 function tjsmerger_bootstrap_files() {
 return array(
-'/js/bootstrap/widgets.bootstrap.min.js',
-'/js/bootstrap/dialog.bootstrap.min.js',
-'/js/bootstrap/dialog.simpler.min.js',
-'/js/bootstrap/player.bootstrap.min.js',
-'/js/bootstrap/popimage.min.js',
-'/js/bootstrap/single-popover.min.js',
-'/js/bootstrap/youtube.bootstrap.min.js',
+'/js/litepubl/bootstrap/tooltip.init.min.js',
+'/js/litepubl/bootstrap/widgets.bootstrap.min.js',
+'/js/litepubl/bootstrap/dialog.bootstrap.min.js',
+'/js/litepubl/bootstrap/dialog.simpler.min.js',
+'/js/litepubl/bootstrap/player.bootstrap.min.js',
+'/js/litepubl/bootstrap/popimage.min.js',
+'/js/litepubl/bootstrap/single-popover.min.js',
+'/js/litepubl/bootstrap/youtube.bootstrap.min.js',
 );
 }
 

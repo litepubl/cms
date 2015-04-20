@@ -42,72 +42,87 @@ jsafter('default',
 //move files
 $js->replacefile('default',
 '/js/litepublisher/widgets.bootstrap.min.js',
-'/js/bootstrap/widgets.bootstrap.min.js'
+'/js/litepubl/bootstrap/widgets.bootstrap.min.js'
 );
 
 $js->replacefile('default',
 '/js/litepublisher/dialog.pretty.min.js',
-'/js/prettyphoto/litepubl/dialog.pretty.min.js'
+'/js/litepubl/pretty/dialog.pretty.min.js'
 );
 
 $js->replacefile('default',
 '/js/litepublisher/dialog.bootstrap.min.js',
-'/js/bootstrap/dialog.bootstrap.min.js',
+'/js/litepubl/bootstrap/dialog.bootstrap.min.js',
 );
 
 $js->replacefile('default',
 '/js/litepublisher/pretty.init.min.js',
-'/js/prettyphoto/litepubl/pretty.init.min.js',
+'/js/litepubl/pretty/pretty.init.min.js',
 );
 
 $js->replacefile('default',
 '/js/litepublisher/youtubefix.min.js',
-'/js/prettyphoto/litepubl/youtubefix.min.js'
+'/js/litepubl/pretty/youtubefix.min.js'
+);
+
+$js->replacefile('comments',
+'/js/litepublisher/comments.min.js',
+'/js/litepubl/coments/comments.min.js',
+);
+
+$js->replacefile('comments',
+'/js/litepublisher/confirmcomment.min.js',
+'/js/litepubl/comments/confirmcomment.min.js'
+);
+
+$js->replacefile('comments',
+'/js/litepublisher/moderate.min.js',
+'/js/litepubl/comments/moderate.min.js'
 );
 
 $js->replacefile('admin',
 '/js/litepublisher/admin.min.js',
-'/js/admin/admin.min.js'
+'/js/litepubl/admin/admin.min.js'
 );
 
 $js->replacefile('admin',
 '/js/litepublisher/calendar.min.js',
-'/js/admin/calendar.min.js'
+'/js/litepubl/admin/calendar.min.js'
 );
 
 $js->replacefile('adminviews',
 '/js/litepublisher/admin.views.min.js',
-'/js/admin/admin.views.min.js'
+'/js/litepubl/admin/admin.views.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/uploader.min.js',
-'/js/admin/uploader.min.js'
+'/js/litepubl/admin/uploader.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/uploader.html.min.js',
-'/js/admin/uploader.html.min.js'
+'/js/litepubl/admin/uploader.html.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/uploader.flash.min.js',
-'/js/admin/uploader.flash.min.js'
+'/js/litepubl/admin/uploader.flash.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/posteditor.min.js',
-'/js/admin/posteditor.min.js'
+'/js/litepubl/admin/posteditor.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/fileman.min.js',
-'/js/admin/fileman.min.js'
+'/js/litepubl/admin/fileman.min.js'
 );
 
 $js->replacefile('posteditor',
 '/js/litepublisher/fileman.templates.min.js',
-'/js/admin/fileman.templates.min.js'
+'/js/litepubl/admin/fileman.templates.min.js'
 );
 
   $section = 'media';
@@ -116,7 +131,7 @@ $js->replacefile('posteditor',
   if ($language != 'en') $js->add($section, "/lib/languages/$language/mediaplayer.min.js");
 
       if (in_array('/js/prettyphoto/js/jquery.prettyPhoto.js', $js->items['default']['files'])) {
-$js->add('default',    '/js/prettyphoto/litepubl/player.pretty.min.js');
+$js->add('default',    '/js/litepubl/pretty/player.pretty.min.js');
 }
 
 $js->unlock();
@@ -130,17 +145,17 @@ $css->replacefile('default',
 
 $css->replacefile('admin',
 '/js/litepublisher/css/fileman.min.css',
-'/js/admin/css/fileman.min.css'
+'/js/litepubl/admin/css/fileman.min.css'
 );
 
 $css->replacefile('admin',
 '/js/litepublisher/css/calendar.css',
-'/js/admin/css/calendar.css'
+'/js/litepubl/admin/css/calendar.css'
 );
 
 $css->replacefile('admin',
 '/js/litepublisher/css/admin.views.min.css',
-'/js/admin/css/admin.views.min.css'
+'/js/litepubl/admin/css/admin.views.min.css'
 );
 
 $css->unlock();
