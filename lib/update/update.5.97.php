@@ -27,19 +27,57 @@ jsafter('default',
 '/js/plugins/jquery.cookie.min.js',
 '/js/plugins/tojson.min.js');
 
-  jsafter('default', 
+$js->replacefile('default',
 '/js/litepublisher/litepublisher.utils.min.js',
-'/js/litepublisher/ready2.min.js');
+'/js/litepubl/common/litepubl.namespace.min.js'
+);
 
   jsafter('default', 
-'/js/litepublisher/ready2.min.js',
-'/js/litepublisher/css-loader.min.js');
+'/js/litepubl/common/litepubl.namespace.min.js',
+'/js/litepubl/system/ready2.min.js'
+);
 
   jsafter('default', 
-'/js/litepublisher/css-loader.min.js',
-'/js/litepublisher/json-rpc.min.js');
+'/js/litepubl/system/ready2.min.js',
+'/js/litepubl/system/css-loader.min.js'
+);
+
+  jsafter('default', 
+'/js/litepubl/system/css-loader.min.js',
+'/js/litepubl/system/json-rpc.min.js'
+);
 
 //move files
+$js->replacefile('default',
+'/js/litepublisher/simpletml.min.js',
+'/js/litepubl/system/parsetml.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/templates.min.js',
+'/js/litepubl/common/templates.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/filelist.min.js',
+'/js/litepubl/common/filelist.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/dialog.min.js',
+'/js/litepubl/common/dialog.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/players.min.js',
+'/js/litepubl/common/players.min.js'
+);
+
+$js->replacefile('default',
+'/js/litepublisher/widgets.min.js',
+'/js/litepubl/common/widgets.min.js'
+);
+
 $js->replacefile('default',
 '/js/litepublisher/widgets.bootstrap.min.js',
 '/js/litepubl/bootstrap/widgets.bootstrap.min.js'

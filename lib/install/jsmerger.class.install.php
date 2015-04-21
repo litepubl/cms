@@ -22,16 +22,17 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/plugins/class-extend.min.js');
   $self->add($section, '/js/plugins/jquery.cookie.min.js');
   $self->add($section, '/js/plugins/tojson.min.js');
-  $self->add($section, '/js/litepublisher/litepublisher.utils.min.js');
-  $self->add($section, '/js/litepublisher/ready2.min.js');
-  $self->add($section, '/js/litepublisher/css-loader.min.js');
-  $self->add($section, '/js/litepublisher/json-rpc.min.js');
-  $self->add($section, '/js/litepublisher/widgets.min.js');
-  $self->add($section, '/js/litepublisher/simpletml.min.js');
-  $self->add($section, '/js/litepublisher/templates.min.js');
-  $self->add($section, '/js/litepublisher/filelist.min.js');
-  $self->add($section, '/js/litepublisher/dialog.min.js');
-  $self->add($section, '/js/litepublisher/players.min.js');
+  $self->add($section, '/js/litepubl/common/litepubl.namespace.min.js')
+  $self->add($section, '/js/litepubl/system/ready2.min.js');
+  $self->add($section, '/js/litepubl/system/css-loader.min.js');
+  $self->add($section, '/js/litepubl/system/json-rpc.min.js');
+  $self->add($section, '/js/litepubl/common/widgets.min.js');
+  $self->add($section, '/js/litepubl/system/parsetml.min.js');
+  $self->add($section, '/js/litepubl/common/templates.min.js');
+  $self->add($section, '/js/litepubl/common/filelist.min.js');
+  $self->add($section, '/js/litepubl/common/dialog.min.js');
+  $self->add($section, '/js/litepubl/common/players.min.js');
+
 tjsmerger_switch($self, tjsmerger_pretty_files(), array());
 //tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
   $self->add($section, "/lib/languages/$language/default.min.js");
