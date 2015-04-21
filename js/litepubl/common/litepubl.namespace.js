@@ -115,16 +115,6 @@
         dataType: "script",
         cache: true
       });
-    },
-    
-    onEscape: function (callback) {
-      $(document).off('keydown.onEscape').on('keydown.onEscape',function(e){
-        if (e.keyCode == 27) {
-          if ($.isFunction(callback)) callback();
-          e.preventDefault();
-          $(document).off('keydown.onEscape');
-        }
-      });
     }
     
   });

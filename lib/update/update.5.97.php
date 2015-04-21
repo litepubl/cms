@@ -52,6 +52,11 @@ $js->replacefile('default',
 '/js/litepubl/system/html-comments.min.js'
 );
 
+  jsafter('default', 
+'/js/litepubl/system/html-comments.min.js',
+'/js/litepubl/system/escape.min.js'
+);
+
 //move files
 $js->replacefile('default',
 '/js/litepublisher/simpletml.min.js',
