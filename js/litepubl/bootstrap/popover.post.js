@@ -5,7 +5,7 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-(function( $, window){
+(function( $){
   'use strict';
   
   $.fn.poppost = function() {
@@ -64,26 +64,7 @@ return s;
         return holder.data("popcontent") || holder.html();
       }
     })
-    .off('mouseleave.popover')
-    .on('mouseleave.pophelp', function(event) {
-      var self = $(this);
-      if (!self.data("pophelp.clicked")) self.data("bs.popover").leave(event);
-    })
-    .on("click.pophelp", function(event) {
-      var self = $(this);
-      var clicked = self.data("pophelp.clicked");
-      var popover = self.data("bs.popover");
-      if (popover.tip().hasClass('in')) {
-        if (clicked) popover.leave(event);
-        clicked = !clicked;
-      } else {
-        popover.enter(event);
-        clicked = true;
-      }
-      
-      self.data("pophelp.clicked", clicked);
-      return false;
-    });
+.pophoverclick();
   };
   
-})( jQuery, window);
+})( jQuery);

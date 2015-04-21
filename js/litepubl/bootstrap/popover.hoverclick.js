@@ -5,73 +5,19 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-(function( $, window){
+/*  This plugin solve popover problen when trigger = "hover click". */
+(function( $){
   'use strict';
   
-  $.fn.poppost = function() {
-    return this.popover({
-      container: 'body',
-      delay: 120,
-      html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover',
-      title: function() {
-        return $(this).find("poptitle:first").text();
-      },
-      
-      content: function() {
-        return $(this).find(".poptext:first").html();
-      }
-    });
-  };
-  
-  $.fn.poptext = function() {
-    return this.popover({
-      container: 'body',
-      delay: 120,
-      html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover focus click',
-      content: function() {
-        var self = $(this);
-        return $(self.attr("data-holder") || self.attr("href")).html();
-      }
-    });
-  };
-  
-  $.fn.pophelp = function() {
-    return this.popover({
-      container: 'body',
-      delay: 120,
-      html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover focus click',
-      title: lang.dialog.help,
-      content: function() {
-        var self = $(this);
-        var holder = self.data("pophelp.holder");
-        if (!holder) {
-          holder = $(self.attr("data-holder") || self.attr("href"));
-          self.data("pophelp.holder", holder);
-if (holder.hasClass("text-to-list")) {
-var s = holder.text();
-s = "<ul><li>" + s.replace("\n", "</li><li>") + "</li></ul>";
-holder.data("popcontent", s);
-return s;
-}
-        }
-        
-        return holder.data("popcontent") || holder.html();
-      }
-    })
-    .off('mouseleave.popover')
-    .on('mouseleave.pophelp', function(event) {
+$.fn.pophoverclick = function() {
+    return this.off('mouseleave.popover')
+    .on('mouseleave.hoverclick', function(event) {
       var self = $(this);
-      if (!self.data("pophelp.clicked")) self.data("bs.popover").leave(event);
+      if (!self.data("hoverclicked")) self.data("bs.popover").leave(event);
     })
-    .on("click.pophelp", function(event) {
+    .on("click.hoverclick", function(event) {
       var self = $(this);
-      var clicked = self.data("pophelp.clicked");
+      var clicked = self.data("hoverclicked");
       var popover = self.data("bs.popover");
       if (popover.tip().hasClass('in')) {
         if (clicked) popover.leave(event);
@@ -81,9 +27,9 @@ return s;
         clicked = true;
       }
       
-      self.data("pophelp.clicked", clicked);
+      self.data("hoverclicked", clicked);
       return false;
     });
   };
   
-})( jQuery, window);
+})( jQuery);
