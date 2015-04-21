@@ -26,6 +26,7 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepubl/system/ready2.min.js');
   $self->add($section, '/js/litepubl/system/css-loader.min.js');
   $self->add($section, '/js/litepubl/system/json-rpc.min.js');
+  $self->add($section, '/js/litepubl/system/html-comments.min.js');
   $self->add($section, '/js/litepubl/common/widgets.min.js');
   $self->add($section, '/js/litepubl/system/parsetml.min.js');
   $self->add($section, '/js/litepubl/common/templates.min.js');

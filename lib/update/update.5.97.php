@@ -47,6 +47,11 @@ $js->replacefile('default',
 '/js/litepubl/system/json-rpc.min.js'
 );
 
+  jsafter('default', 
+'/js/litepubl/system/json-rpc.min.js'
+'/js/litepubl/system/html-comments.min.js'
+);
+
 //move files
 $js->replacefile('default',
 '/js/litepublisher/simpletml.min.js',
