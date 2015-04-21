@@ -9,15 +9,8 @@
   'use strict';
 
   $(document).ready(function() {
-var tipoptions = {
-selector: "button",
-title: function() {
-return $(this).attr("title");
-}
-};
-
 var comtheme = ltoptions.theme.comments;
-comtheme.comments.tooltip(tipoptions);
-comtheme.holdcomments.tooltip(tipoptions);
+comtheme.comments.settooltip();
+comtheme.holdcomments.settooltip();
   });
 }(jQuery, document, window));

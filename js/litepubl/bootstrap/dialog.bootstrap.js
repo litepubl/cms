@@ -73,6 +73,7 @@ remove: function() {
       if (!this.dialog) return false;
       this.options = false;
       this.footer = false;
+this.dialog.removetooltip();
       this.dialog.remove();
       this.dialog = false;
       if (this.style) {
@@ -117,13 +118,14 @@ if (!options.buttons.length) css = css + '.modal-footer{display:none}';
       });
 
 this.addstyle();      
-      this.dialog = $(html).appendTo("body");
-      this.footer =       $(".modal-footer:first", this.dialog);
+      var dialog = this.dialog = $(html).appendTo("body");
+dialog.settooltip();
+      this.footer =       $(".modal-footer:first", dialog);
       for (var i =0, l= buttons.length;  i < l; i++) {
         this.getbutton(i).on("click.dialog", buttons[i].click);
       }
       
-      return this.dialog
+      return dialog
 .on("shown.bs.modal.dialog", $.proxy(this.opened, this))
       .on("hidden.bs.modal.dialog", $.proxy(this.doclose, this))
       .modal();
@@ -131,12 +133,6 @@ this.addstyle();
 
 opened: function() {
         if ($.isFunction(this.options.open)) this.options.open(self.dialog);
-        if ("tooltip" in $.fn) {
-          $(".tooltip-toggle", this.dialog).tooltip({
-            container: 'body',
-            placement: 'auto top'
-          });
-        }
 },
     
     getbutton: function(index) {
