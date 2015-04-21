@@ -47,8 +47,13 @@ $js->replacefile('default',
 '/js/litepubl/system/json-rpc.min.js'
 );
 
-  jsafter('default', 
+  jsafter('default',
 '/js/litepubl/system/json-rpc.min.js'
+'/js/litepubl/system/load-script.min.js'
+);
+
+  jsafter('default',
+'/js/litepubl/system/load-script.min.js',
 '/js/litepubl/system/html-comments.min.js'
 );
 

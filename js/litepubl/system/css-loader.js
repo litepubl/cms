@@ -58,4 +58,5 @@ maxcounter: 60,
   };
   
   $.load_css = $.proxy($.css_loader.add, $.css_loader);
+
 }(jQuery, document));
