@@ -50,18 +50,7 @@
     },
     
     //forward declaration for future plugins as yandex metrika or google analitik
-  stat: function(name, param) {},
-    getjson: function(data, callback) {
-      return $.ajax({
-        type: "get",
-        url: ltoptions.ajaxurl + "/admin/jsonserver.php",
-        data: data,
-        success: callback,
-        dataType: "json",
-        cache: ("cache" in data ? data.cache : true)
-      });
-    }
-    
+  stat: function(name, param) {}
   };
   
   window.dump = function(obj) {
