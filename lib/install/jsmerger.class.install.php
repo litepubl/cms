@@ -119,6 +119,16 @@ return array(
 
 function tjsmerger_bootstrap_files() {
 return array(
+// fix
+'/js/fix/ie10.min.js',
+
+// bootstrap
+'/js/bootstrap/transition.min.js',
+'/js/bootstrap/collapse.min.js',
+'/js/bootstrap/dropdown.min.js',
+'/js/bootstrap/modal.min.js',
+'/js/bootstrap/tooltip.min.js',
+'/js/bootstrap/popover.min.js',
 
 // litepubl/bootstrap
 '/js/litepubl/bootstrap/tooltip.init.min.js',
