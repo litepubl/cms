@@ -119,6 +119,8 @@ return array(
 
 function tjsmerger_bootstrap_files() {
 return array(
+
+// litepubl/bootstrap
 '/js/litepubl/bootstrap/tooltip.init.min.js',
 '/js/litepubl/bootstrap/popover.single.min.js',
 '/js/litepubl/bootstrap/widgets.bootstrap.min.js',
@@ -129,6 +131,10 @@ return array(
 '/js/litepubl/bootstrap/popover.post.min.js',
 '/js/litepubl/bootstrap/youtube.bootstrap.min.js',
 '/js/litepubl/bootstrap/theme.init.min.js',
+
+// fonts
+'/js/fonts/css/lobster.min.js',
+'/js/fonts/css/font-awesome.min.js',
 );
 }
 
