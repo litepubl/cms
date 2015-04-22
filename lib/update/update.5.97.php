@@ -23,75 +23,48 @@ litepublisher::$site->save();
 
 $js = tjsmerger::i();
 $js->lock();
-jsafter('default', 
-'/js/plugins/jquery.cookie.min.js',
-'/js/plugins/tojson.min.js');
 
-$js->replacefile('default',
-'/js/litepublisher/litepublisher.utils.min.js',
-'/js/litepubl/common/litepubl.namespace.min.js'
-);
+$system = array
+'/js/plugins/tojson.min.js',
 
-  jsafter('default', 
-'/js/litepubl/common/litepubl.namespace.min.js',
-'/js/litepubl/system/ready2.min.js'
-);
-
-  jsafter('default', 
-'/js/litepubl/system/ready2.min.js',
-'/js/litepubl/system/css-loader.min.js'
-);
-
-  jsafter('default', 
+// litepubl/system
 '/js/litepubl/system/css-loader.min.js',
-'/js/litepubl/system/json-rpc.min.js'
-);
-
-  jsafter('default',
-'/js/litepubl/system/json-rpc.min.js'
-'/js/litepubl/system/load-script.min.js'
-);
-
-  jsafter('default',
-'/js/litepubl/system/load-script.min.js',
-'/js/litepubl/system/html-comments.min.js'
-);
-
-  jsafter('default', 
+'/js/litepubl/system/escape.min.js',
+'/js/litepubl/system/get_get.min.js',
 '/js/litepubl/system/html-comments.min.js',
-'/js/litepubl/system/escape.min.js'
+'/js/litepubl/system/json-rpc.min.js',
+'/js/litepubl/system/load-script.min.js',
+'/js/litepubl/system/parsetml.min.js',
+
+//litepubl/common
+'/js/litepubl/common/litepubl.namespace.min.js',
+'/js/litepubl/common/litepubl.init.min.js',
+'/js/litepubl/common/dialog.min.js',
+'/js/litepubl/common/filelist.min.js',
+'/js/litepubl/common/players.min.js',
+'/js/litepubl/common/templates.min.js',
+'/js/litepubl/common/widgets.min.js');
 );
 
-//move files
-$js->replacefile('default',
+$prev = '/js/plugins/jquery.cookie.min.js';
+foreach ($system as $filename) {
+  jsafter('default', $prev, $filename);
+$prev = $filename;
+}'/js/litepubl/system/ready2.min.js',
+
+$delete = array(
+'/js/litepublisher/litepublisher.utils.min.js',
 '/js/litepublisher/simpletml.min.js',
-'/js/litepubl/system/parsetml.min.js'
-);
-
-$js->replacefile('default',
 '/js/litepublisher/templates.min.js',
-'/js/litepubl/common/templates.min.js'
-);
-
-$js->replacefile('default',
 '/js/litepublisher/filelist.min.js',
-'/js/litepubl/common/filelist.min.js'
-);
-
-$js->replacefile('default',
 '/js/litepublisher/dialog.min.js',
-'/js/litepubl/common/dialog.min.js'
-);
-
-$js->replacefile('default',
 '/js/litepublisher/players.min.js',
-'/js/litepubl/common/players.min.js'
+'/js/litepublisher/widgets.min.js',
 );
 
-$js->replacefile('default',
-'/js/litepublisher/widgets.min.js',
-'/js/litepubl/common/widgets.min.js'
-);
+foreach ($delete as $filename) {
+$js->deletefile('default', $filename);
+}
 
 $js->replacefile('default',
 '/js/litepublisher/widgets.bootstrap.min.js',
