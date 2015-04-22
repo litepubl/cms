@@ -126,6 +126,7 @@ dialog.settooltip();
       }
       
       return dialog
+.fixAndroid()
 .on("shown.bs.modal.dialog", $.proxy(this.opened, this))
       .on("hidden.bs.modal.dialog", $.proxy(this.doclose, this))
       .modal();

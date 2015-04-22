@@ -121,6 +121,7 @@ function tjsmerger_bootstrap_files() {
 return array(
 // fix
 '/js/fix/ie10.min.js',
+'/js/fix/android-select.min.js',
 
 // bootstrap
 '/js/bootstrap/transition.min.js',
