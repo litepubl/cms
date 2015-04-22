@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Lobster';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/js/fonts/lobster/lobster.eot');
+  src: local('Lobster'), local('Lobster-Regular'), url('/js/fonts/lobster/lobster.eot?#iefix') format('embedded-opentype'),url('/js/fonts/lobster/lobster.woff2') format('woff2'),url('/js/fonts/lobster/lobster.woff') format('woff'), url('/js/fonts/lobster/lobster.ttf') format('truetype'),url('/js/fonts/lobster/lobster.svg#Lobster') format('svg');
+}
