@@ -8,7 +8,6 @@
 (function ($, document, window) {
   'use strict';
   
-  //litepublisher namespace
   window.litepubl = {
     guid: $.now(),
   tml: {}, //namespace for templates

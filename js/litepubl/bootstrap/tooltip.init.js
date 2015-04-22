@@ -9,8 +9,9 @@
   'use strict';
   
   $.fn.settooltip = function() {
-return this.on("mouseenter.settooltip focus.settooltip",".tooltip-toggle",  function(event) {
+return this.on("mouseenter.settooltip focus.settooltip",".tooltip-toggle:not(.tooltip-ready)",  function(event) {
 var self = $(this);
+self.addClass("tooltip-ready");
 if (self.data("bs.tooltip")) return;
 
     self.tooltip({
