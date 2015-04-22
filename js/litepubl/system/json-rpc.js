@@ -10,16 +10,8 @@
   
 var jsonrpcSettings  = $.jsonrpcSettings = {
 guid: $.now(),
-url: ltoptions.ajaxurl + "/admin/jsonserver.php",
-onargs: function(args) {
-      var user = litepubl.getuser();
-      if (user.id) {
-var params = args.params;
-        params.litepubl_user_id = user.id;
-        params.litepubl_user = user.pass;
-        params.litepubl_user_regservice = user.regservice;
-      }
-}
+url: "",
+onargs: $.noop
 };
 
 $.jsonrpc = function(args) {

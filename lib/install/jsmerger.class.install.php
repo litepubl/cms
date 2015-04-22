@@ -18,23 +18,36 @@ function tjsmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-  $self->add($section, '/js/jquery/jquery-$site.jquery_version.min.js');
-  $self->add($section, '/js/plugins/class-extend.min.js');
-  $self->add($section, '/js/plugins/jquery.cookie.min.js');
-  $self->add($section, '/js/plugins/tojson.min.js');
-  $self->add($section, '/js/litepubl/common/litepubl.namespace.min.js')
-  $self->add($section, '/js/litepubl/system/ready2.min.js');
-  $self->add($section, '/js/litepubl/system/css-loader.min.js');
-  $self->add($section, '/js/litepubl/system/json-rpc.min.js');
-  $self->add($section, '/js/litepubl/system/load-script.min.js');
-  $self->add($section, '/js/litepubl/system/html-comments.min.js');
-  $self->add($section, '/js/litepubl/system/escape.min.js');
-  $self->add($section, '/js/litepubl/common/widgets.min.js');
-  $self->add($section, '/js/litepubl/system/parsetml.min.js');
-  $self->add($section, '/js/litepubl/common/templates.min.js');
-  $self->add($section, '/js/litepubl/common/filelist.min.js');
-  $self->add($section, '/js/litepubl/common/dialog.min.js');
-  $self->add($section, '/js/litepubl/common/players.min.js');
+
+$defaults = array(
+'/js/jquery/jquery-$site.jquery_version.min.js',
+'/js/plugins/class-extend.min.js',
+'/js/plugins/jquery.cookie.min.js',
+'/js/plugins/tojson.min.js',
+
+// litepubl/system
+'/js/litepubl/system/css-loader.min.js',
+'/js/litepubl/system/escape.min.js',
+'/js/litepubl/system/get_get.min.js',
+'/js/litepubl/system/html-comments.min.js',
+'/js/litepubl/system/json-rpc.min.js',
+'/js/litepubl/system/load-script.min.js',
+'/js/litepubl/system/parsetml.min.js',
+'/js/litepubl/system/ready2.min.js',
+
+//litepubl/common
+'/js/litepubl/common/litepubl.namespace.min.js',
+'/js/litepubl/common/litepubl.init.min.js',
+'/js/litepubl/common/dialog.min.js',
+'/js/litepubl/common/filelist.min.js',
+'/js/litepubl/common/widgets.min.js');
+'/js/litepubl/common/templates.min.js',
+'/js/litepubl/common/players.min.js',
+);
+
+foreach ($defaults as $filename) {
+  $self->add($section, $filename);
+}
 
 tjsmerger_switch($self, tjsmerger_pretty_files(), array());
 //tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
