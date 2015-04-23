@@ -9,14 +9,16 @@
   'use strict';
   
   litepubl.BootstrapWidgets = Class.extend({
-    toggleclass: "",
+
+    toggleclass: "fa-expand fa-collapse",
+tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title="%%lang.clickme%%"></a>',
     
     init: function(options) {
       options = $.extend({
         button: ".widget-button, .widget-title",
         inline: ".widget-inline",
         ajax: ".widget-ajax",
-        toggle: "fa-expand fa-collapse"
+        toggle: this.toggleclas
       },options);
       
       var self = this;
@@ -28,7 +30,7 @@
         if (span.length) return self.init_button(button, span);
         
         //no ajax or inline, init necessary plugins
-        switch (button.data("model")) {
+        switch (button.attr("data-model")) {
           case "dropdown":
           button.dropdown();
           break;
@@ -52,10 +54,15 @@
     
     init_button: function(button, span) {
       button.data("span", span);
-      if (button.data("model") == "wrap-collapse") {
-        var content = "#widget-content-" + span.data("widget").id;
-        $(content).addClass("panel-collapse collapse");
-        span.wrap('<a class="dashed tooltip-toggle" href="' + content + '" title="' + lang.widgetlang.clickme + '"></a>');
+      if (button.data("model") == "widget-collapse") {
+        var idcontent = "#widget-content-" + span.data("widget").id;
+        $(idcontent).addClass("panel-collapse");
+
+        span.wrap($.parsetml(this.tml_wrap_collapse, {
+idwidget: span.data("widget").id,
+idcontent: idcontent,
+lang: lang.widgetlang
+}));
       }
       
       var self = this;
@@ -100,28 +107,40 @@
     add: function(button) {
       var span = button.data("span")
       var widget = span.data("widget");
-      switch (button.data("model")) {
+      switch (button.attr("data-model")) {
         case "dropdown":
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
+
         button.dropdown("toggle");
         break;
         
-        case 'wrap-collapse':
+        case 'widget-collapse':
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-        $("#widget-content-" + widget.id).addClass("in");
-        button.find("a")
+
+var id_body = "widget-content-" + widget.id;
+
+        $("#" + id_body)
+.addClass("in")
+        .attr("aria-expanded", true);
+
+button.find("a")
+.removeClass("collapsed")
         .attr("data-toggle", "collapse")
         .attr("data-parent", '#' + button.closest(".panel-group").attr("id"))
-        .attr("data-target", "#widget-content-" + widget.id);
+        .attr("data-target", "#" + id_body)
+        .attr("aria-controls", id_body)
+        .attr("aria-expanded", true)
+.collapse();
         break;
         
         case "slide":
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
+
+        this.toggleicon(span);
         var self = this;
-        self.toggleicon(span);
         button.data("body", widget.body)
         .on("click.widget", function() {
           var btn = $(this);

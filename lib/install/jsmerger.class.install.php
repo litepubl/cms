@@ -107,6 +107,21 @@ function tjsmergerUninstall($self) {
   tupdater::i()->unbind($self);
 }
 
+
+function tjsmerger_switch($self, $add, $delete) {
+
+$self->lock();
+foreach ($delete as $filename) {
+$self->deletefile('default', $filename);
+}
+
+foreach ($add as $filename) {
+$self->add('default', $filename);
+}
+
+$self->unlock();
+}
+
 function tjsmerger_pretty_files() {
 return array(
    '/js/prettyphoto/js/jquery.prettyPhoto.js',
@@ -122,6 +137,10 @@ return array(
 // fix
 '/js/fix/ie10.min.js',
 '/js/fix/android-select.min.js',
+
+//effects
+'/js/litepubl/effects/editor-height.min.js',
+'/js/litepubl/effects/scrollto.min.js',
 
 // bootstrap
 '/js/bootstrap/transition.min.js',
@@ -147,18 +166,4 @@ return array(
 '/js/fonts/css/lobster.min.js',
 '/js/fonts/css/font-awesome.min.js',
 );
-}
-
-function tjsmerger_switch($self, $add, $delete) {
-
-$self->lock();
-foreach ($delete as $filename) {
-$self->deletefile('default', $filename);
-}
-
-foreach ($add as $filename) {
-$self->add('default', $filename);
-}
-
-$self->unlock();
 }
