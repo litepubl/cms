@@ -163,6 +163,7 @@ return array(
 '/js/litepubl/bootstrap/theme.init.min.js',
 
 // fonts
+'/js/plugins/fontfaceobserver.standalone.js',
 '/js/fonts/css/lobster.min.js',
 '/js/fonts/css/font-awesome.min.js',
 );
