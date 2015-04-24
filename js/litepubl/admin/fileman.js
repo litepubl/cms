@@ -124,25 +124,18 @@
         panel.append(this.get_fileitem(id));
       }
       
-      this.setborders(panel);
-      
       var self = this;
-      panel.on("click.toolbar", ".file-toolbar a", function() {
-        var holder = $(this).closest(".file-item");
+      panel.on("click.toolbar", ".file-toolbar > a, .file-toolbar > button", function() {
+var button = $(this);
+        var holder = button.closest(".file-item");
         var idfile = holder.data("idfile");
         
-        switch($(this).attr("class")) {
-          case "add-toolbutton":
+          if (button.hasClass("add-toolbutton")) {
           self.add(idfile);
-          break;
-          
-          case "delete-toolbutton":
+          } else if (button.hasClass("delete-toolbutton")) {
           self.del(idfile, holder);
-          break;
-          
-          case "property-toolbutton":
+          } else if (button.hasClass("property-toolbutton")) {
           self.editprops(idfile, holder);
-          break;
         }
         
         return false;
@@ -218,23 +211,11 @@
     } catch(e) {erralert(e);}
     },
     
-    setborders: function(uipanel) {
-      var all = $(".file-item", uipanel);
-      if (all.length == 0) return;
-      all.removeClass("border-left");
-      var firstpos = $(".file-item:first", uipanel).position();
-      all.each(function() {
-        var self = $(this);
-        var pos = self.position();
-        if (pos.left == firstpos.left) self.addClass("border-left");
-      });
-    },
     
     add: function(idfile) {
-      if ($.inArray(idfile, this.curr) >= 0) return;
+      if ($.inArray(idfile, this.curr) < 0) {
       this.curr.push(idfile);
-      
-      this.setborders($("#current-files .file-items").append(this.get_fileitem(idfile)));
+}
     },
     
     del: function(idfile, holder) {
@@ -248,7 +229,6 @@
       this.curr.splice(i, 1);
       var parent = holder.parent();
       holder.remove();
-      this.setborders(parent);
     },
     
     editprops: function(idfile, owner) {

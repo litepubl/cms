@@ -9,9 +9,9 @@
   window.litepubl.tml.fileman = {
     item: '<div class="file-item">' +
     '<div class="file-toolbar">' +
-    '<a href="#" title="%%lang.add%%" class="add-toolbutton"></a>' +
-    '<a href="#" title="%%lang.del%%" class="delete-toolbutton"></a>' +
-    '<a href="#" title="%%lang.property%%" class="property-toolbutton"></a>' +
+    '<button type="button" title="%%lang.add%%" class="add-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-plus-square"></span> <span class="sr-only">%%lang.add%%</span></button>' +
+    '<button type="button" title="%%lang.del%%" class="delete-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-remove"></span> <span class="sr-only">%%lang.del%%</span></button>' +
+    '<button type="button" title="%%lang.property%%" class="property-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-edit"></span> <span class="sr-only">%%lang.property%%</span></button>' +
     '</div>' +
     '<div class="file-content">' +
     '%%content%%' +
@@ -20,13 +20,13 @@
     
     image: '<a rel="prettyPhoto[gallery-fileman]" href="%%link%%" class="file-image"><img src="%%previewlink%%" title="%%title%%" alt="%%description%%" border="0" /></a>',
     
-    file: '<p>' +
-    '%%lang.file%%: <a href="%%link%%" title="%%title%%">%%description%%</a><br />' +
-    '%%lang.filesize%%: <span class="text-right">%%size%%</span><br />' +
-    '%%lang.title%%: %%title%%<br />' +
-    '%%lang.description%%: %%description%%<br />' +
-    '%%lang.keywords%%: %%keywords%%<br />' +
-    '</p>',
+    file: '<ul>' +
+    '<li>%%lang.file%%: <a href="%%link%%" title="%%title%%">%%description%%</a></li>' +
+    '<li>%%lang.filesize%%: <span class="text-right">%%size%%</span></li>' +
+    '<li>%%lang.title%%: %%title%%</li>' +
+    '<li>%%lang.description%%: %%description%%</li>' +
+    '<li>%%lang.keywords%%: %%keywords%%</li>' +
+    '</ul>',
     
     /*
     tabs: '<div id="uploader"></div>' +

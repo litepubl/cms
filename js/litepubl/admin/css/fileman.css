@@ -36,12 +36,18 @@ height:100% !important;
 width:100% !important;
 }
 
-.file-content p{
+.file-content {
 font-size:10px;
 }
 
-.files-tab .delete-toolbutton{display:none;}
-#current-files .add-toolbutton{display:none;}
+.files-tab .delete-toolbutton{
+display:none;
+}
+
+#current-files .add-toolbutton{
+display:none;
+}
+
 .text-right{text-align:right;}
 .file-items{width:100%;overflow:hidden;}
 
