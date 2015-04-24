@@ -7,45 +7,42 @@
 
 (function( $){
   'use strict';
-  
-  $.fn.poppost = function() {
-    return this.popover({
+
+function get_popover_options($this, options) {
+return $.extend({
       container: 'body',
       delay: 120,
       html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover',
-      title: function() {
+      trigger: 'hover focus click',
+      placement: 'auto ' + ($this.attr('data-placement') || 'right')
+}, options);
+}
+  
+  $.fn.poppost = function() {
+    return this.popover(get_popover_options(this, {
+trigger:  'hover',
+title: function() {
         return $(this).find("poptitle:first").text();
       },
       
-      content: function() {
+content: function() {
         return $(this).find(".poptext:first").html();
       }
-    });
-  };
+}));
+};
   
   $.fn.poptext = function() {
-    return this.popover({
-      container: 'body',
-      delay: 120,
-      html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover focus click',
+    return this.popover(get_popover_options(this, {
       content: function() {
         var self = $(this);
         return $(self.attr("data-holder") || self.attr("href")).html();
       }
-    });
+    }))
+.pophoverclick();
   };
   
   $.fn.pophelp = function() {
-    return this.popover({
-      container: 'body',
-      delay: 120,
-      html:true,
-      placement: 'auto ' + (this.attr('data-placement') || 'right'),
-      trigger: 'hover focus click',
+    return this.popover(get_popover_options(this, {
       title: lang.dialog.help,
       content: function() {
         var self = $(this);
@@ -63,7 +60,7 @@ return s;
         
         return holder.data("popcontent") || holder.html();
       }
-    })
+    }))
 .pophoverclick();
   };
   
