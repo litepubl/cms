@@ -119,7 +119,7 @@ if (!options.buttons.length) css = css + '.modal-footer{display:none}';
 
 this.addstyle();      
       var dialog = this.dialog = $(html).appendTo("body");
-dialog.settooltip();
+//dialog.settooltip();
       this.footer =       $(".modal-footer:first", dialog);
       for (var i =0, l= buttons.length;  i < l; i++) {
         this.getbutton(i).on("click.dialog", buttons[i].click);
