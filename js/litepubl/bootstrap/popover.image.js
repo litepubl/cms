@@ -7,12 +7,6 @@
 
 (function( $, window, document){
   'use strict';
-  
-  $.fn.popimage = function() {
-    return this.each(function(){
-$.popimage.add($(this).addClass("popinit"), false);
-});
-};
 
 $.Popimage = Class.extend({
       dataname: 'popimage',
@@ -134,6 +128,12 @@ if (linkdata.click_enabled) link.pophoverclick();
         
   });
   
+  $.fn.popimage = function() {
+    return this.each(function(){
+$.popimage.add($(this).addClass("popinit"), false);
+});
+};
+
 $(document).ready(function() {
 $.popimage = new $.Popimage();
 });

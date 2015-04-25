@@ -10,10 +10,24 @@
 
   $(document).ready(function() {
     $("textarea").filter("[name^='note'], [name='content']").editorheight();
+
+    $(document).settooltip();
+
+litepubl.linkimage= function(link) {
+$.popimage.add(link, "focus");
+}; function(link) {
+
+litepubl.openimage = function(url, title, description) {
+      $.popimage.open(url, title, description);
+};
+
+$.popimage.oninit = function(url) {
+      litepubl.stat('popimage', {src: url});
+};
+ 
       });
 
 $.ready2(function() {
-    $(document).settooltip();
     $(".poppost").poppost();
     $(".scroll-to").on("click.scrollto", function(){
       var hash = $(this).attr("href");

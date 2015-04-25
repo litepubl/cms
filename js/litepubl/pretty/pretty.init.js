@@ -14,5 +14,10 @@
     $("a[href^='http://youtu.be/'], a[href^='http://www.youtube.com/watch?v=']").prettyPhoto({
       social_tools: false
     });
+
+litepubl.openimage = function(url, title, description) {
+      $.prettyPhoto.open(url, title, description);
+};
+
   });
 }(jQuery, document));

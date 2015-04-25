@@ -149,7 +149,7 @@ var button = $(this);
     },
     
     openimage: function(link) {
-      $.prettyPhoto.open(link.attr("href"), link.attr("title"), $("img", link).attr("alt"));
+      litepubl.openimage(link.attr("href"), link.attr("title"), $("img", link).attr("alt"));
     },
     
     get_fileitem: function(id) {
