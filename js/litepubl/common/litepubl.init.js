@@ -30,4 +30,12 @@ var params = args.params;
       }
 };
 
+$.ready2(function() {
+if ("popimage" in $) {
+$.popimage.oninit = function(url) {
+      litepubl.stat('popimage', {src: url});
+      };
+}
+});
+
 }(jQuery, ltoptions));
