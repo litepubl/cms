@@ -67,4 +67,4 @@ tml/sidebar.submenu.txt
 ru/sidebar.submenu.txt
 tml/sidebar.categories.txt
 ru/sidebar.categories.txt
-ru/sidebar.examples.txt
+ru/sidebar.singles.txt
