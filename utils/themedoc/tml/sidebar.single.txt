@@ -1,0 +1,1 @@
+sidebar.archives.items = [<ul class="list-archives" id="widgetarchives">$item</ul>]
