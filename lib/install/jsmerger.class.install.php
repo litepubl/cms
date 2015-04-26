@@ -109,8 +109,8 @@ function tjsmergerUninstall($self) {
 
 
 function tjsmerger_switch($self, $add, $delete) {
-
 $self->lock();
+
 foreach ($delete as $filename) {
 $self->deletefile('default', $filename);
 }

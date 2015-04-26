@@ -1,0 +1,3 @@
+content.post.templatecomments.comments.count = [
+<p id="comments">$count $lang.topost &#8220;$post.title&#8221;</p>
+]

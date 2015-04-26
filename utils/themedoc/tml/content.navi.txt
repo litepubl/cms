@@ -1,0 +1,9 @@
+content.navi = [
+	<div class="navigation" data-page="$page" data-count="$count" data-perpage="$perpage">
+			$prev = [<span class="previous-entries">$link</span>]
+			$next = [<span class="next-entries">$link</span>]
+			$link = [<a href="$link">$page</a>]
+			$current = [$page]
+			$divider = [|]
+ </div>
+]
