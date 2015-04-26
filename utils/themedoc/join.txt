@@ -68,3 +68,5 @@ ru/sidebar.submenu.txt
 tml/sidebar.categories.txt
 ru/sidebar.categories.txt
 ru/sidebar.single.txt
+tml/sidebar.single.txt
+ru/widget.comments.txt
