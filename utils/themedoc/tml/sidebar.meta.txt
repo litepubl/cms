@@ -1,0 +1,1 @@
+sidebar.meta.classes = [rss=rss,comments=rss-comments,foaf=foaf]
