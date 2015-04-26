@@ -8,17 +8,17 @@
 (function( window ){
   window.litepubl.tml.fileman = {
     item: '<div class="file-item">' +
-    '<div class="file-toolbar">' +
-    '<button type="button" title="%%lang.add%%" class="add-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-plus-square"></span> <span class="sr-only">%%lang.add%%</span></button>' +
-    '<button type="button" title="%%lang.del%%" class="delete-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-remove"></span> <span class="sr-only">%%lang.del%%</span></button>' +
-    '<button type="button" title="%%lang.property%%" class="property-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-edit"></span> <span class="sr-only">%%lang.property%%</span></button>' +
+    '<div class="file-toolbar btn-toolbar" role="toolbar" aria-label="%%lang.filebuttons%%">' +
+    '<button type="button" title="%%lang.add%%" class="add-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-plus-square" aria-hidden="true"></span> <span class="sr-only">%%lang.add%%</span></button>' +
+    '<button type="button" title="%%lang.del%%" class="delete-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-remove" aria-hidden="true"></span> <span class="sr-only">%%lang.del%%</span></button>' +
+    '<button type="button" title="%%lang.property%%" class="property-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-edit" aria-hidden="true"></span> <span class="sr-only">%%lang.property%%</span></button>' +
     '</div>' +
     '<div class="file-content">' +
     '%%content%%' +
     '</div>' +
     '</div>',
     
-    image: '<a rel="prettyPhoto[gallery-fileman]" href="%%link%%" class="file-image"><img src="%%previewlink%%" title="%%title%%" alt="%%description%%" border="0" /></a>',
+    image: '<a href="%%link%%" class="file-image"><img src="%%previewlink%%" title="%%title%%" alt="%%description%%" /></a>',
     
     file: '<ul>' +
     '<li>%%lang.file%%: <a href="%%link%%" title="%%title%%">%%description%%</a></li>' +

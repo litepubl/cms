@@ -7,7 +7,7 @@
 
 (function ($, litepubl, window) {
   'use strict';
-  //method to override
+  //factory to create file manager
   litepubl.init_fileman = function(options) {
     return new litepubl.Fileman(options);
   };
@@ -19,7 +19,6 @@
     holder: false,
     
     init: function(options) {
-      try {
       this.items = {};
         this.curr = [],
         options = $.extend({
@@ -27,7 +26,8 @@
           pages: 0,
           items: false
         }, options);
-        
+
+      try {        
         this.init_templates();
         this.holder = $(options.holder);
         var self = this;
@@ -142,14 +142,10 @@ var button = $(this);
       });
       
       panel.on("click.image", "a.file-image", function() {
-        self.openimage($(this));
+        litepubl.linkimage($(this));
         return false;
       });
       
-    },
-    
-    openimage: function(link) {
-      litepubl.openimage(link.attr("href"), link.attr("title"), $("img", link).attr("alt"));
     },
     
     get_fileitem: function(id) {

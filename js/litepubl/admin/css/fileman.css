@@ -1,30 +1,8 @@
 .file-item{
-float:left;
-width:25%;
-height:175px;
+display:inline-block;
 margin-bottom:5px;
 text-align:center;
 }
-
-.file-toolbar{
-width:96%;
-height:30px;
-text-align:center;
-}
-
-.file-toolbar a{
-background:url(../icons/all.png) no-repeat 0 0;
-display:inline-block;
-width:24px;
-height:24px;
-margin:3px;
-}
-
-a.add-toolbutton{background-position:0 0;}
-a.left-toolbutton{background-position:0 -25px;}
-a.right-toolbutton{background-position:0 -50px;}
-a.delete-toolbutton{background-position:0 -75px;}
-a.property-toolbutton{background-position:0 -100px;}
 
 .file-content{
 width:96%;
@@ -32,6 +10,11 @@ height:145px;
 }
 
 .file-content img{
+  border: 1px solid transparent;
+  border-radius: 4px;
+display: block;
+  margin-left: auto;
+  margin-right: auto;
 height:100% !important;
 width:100% !important;
 }
