@@ -1,0 +1,51 @@
+$template.sidebar1 = [
+  $widget = [
+  <li>
+    <div class="rubric">$title</div>
+    $items = [
+    <ul>
+       $item = [<li><a href="$link" title="$title">$icon$text</a>
+$subcount = [<strong>($itemscount)</strong>]
+$subitems = [<ul>$item</ul>]
+</li>]
+    </ul>
+    ]
+  </li>
+]
+]
+
+sidebar1.posts = [
+		<li class="lastposts">
+			<div class="rubric">$title</div>
+    $items = [
+				<ul>
+					$item = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a><br />
+							<small>$post.date</small></li>]
+			    </ul>
+    ]
+			</li>
+]
+
+sidebar1.comments = [
+		<li class="lastcomments">
+			<div class="rubric">$title</div>
+    $items = [
+				<ul>
+					$item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>
+					]
+				</ul>
+    ]
+		</li>
+]
+
+sidebar1.meta = [
+	<li class="meta">
+				<div class="rubric">$title</div>
+$items = [
+				<ul>
+				      $item = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]
+				</ul>
+    ]
+			</li>
+    $classes= [rss=rss,comments=rss-comments,foaf=foaf]
+]

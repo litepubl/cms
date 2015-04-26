@@ -72,3 +72,5 @@ tml/sidebar.single.txt
 ru/widget.comments.txt
 ru/sidebar.meta.txt
 tml/sidebar.meta.txt
+ru/sidebar1.txt
+tml/sidebar1.txt
