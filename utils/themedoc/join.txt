@@ -74,3 +74,5 @@ ru/sidebar.meta.txt
 tml/sidebar.meta.txt
 ru/sidebar1.txt
 tml/sidebar1.txt
+ru/widget.ajax.txt
+tml/widget.ajax.txt
