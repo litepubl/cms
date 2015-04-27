@@ -1,10 +1,10 @@
-ru/0intro.txt
-tml/0index.txt
-ru/1index.txt
-tml/title.txt
-ru/title.txt
-tml/menu.txt
-ru/menu.txt
+ru/01intro.txt
+tml/01index.txt
+ru/02index.txt
+tml/10title.txt
+ru/10title.txt
+tml/11menu.txt
+ru/11menu.txt
 tml/head.txt
 ru/head.txt
 tml/index.home.txt
