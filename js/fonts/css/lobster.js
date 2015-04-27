@@ -1,5 +1,14 @@
-(function( $, document){
-  $.ready2(function() {
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
+* Dual licensed under the MIT (mit.txt)
+* and GPL (gpl.txt) licenses.
+**/
+
+(function( $){
+  'use strict';
+
+  $.load_lobster = function() {
     //$.load_css("http://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic");
 var css = '<style type="text/css" rel="stylesheet">' +
 "@font-face {" +
@@ -22,5 +31,5 @@ $("head:first").append(css);
 observer .check().then(function () {
 $("body").addClass("lobster");
 });
-  });
-})( jQuery, document);
+  };
+})( jQuery);
