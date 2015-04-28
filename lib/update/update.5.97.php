@@ -26,6 +26,7 @@ $js->lock();
 
 $system = array
 '/js/plugins/tojson.min.js',
+'/js/plugins/fontfaceobserver.standalone.js',
 
 // litepubl/system
 '/js/litepubl/system/css-loader.min.js',
@@ -33,6 +34,7 @@ $system = array
 '/js/litepubl/system/get_get.min.js',
 '/js/litepubl/system/html-comments.min.js',
 '/js/litepubl/system/json-rpc.min.js',
+'/js/litepubl/system/load-font.min.js',
 '/js/litepubl/system/load-script.min.js',
 '/js/litepubl/system/parsetml.min.js',
 

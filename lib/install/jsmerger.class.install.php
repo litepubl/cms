@@ -24,6 +24,7 @@ $defaults = array(
 '/js/plugins/class-extend.min.js',
 '/js/plugins/jquery.cookie.min.js',
 '/js/plugins/tojson.min.js',
+'/js/plugins/fontfaceobserver.standalone.js',
 
 // litepubl/system
 '/js/litepubl/system/css-loader.min.js',
@@ -162,9 +163,9 @@ return array(
 '/js/litepubl/bootstrap/popover.post.min.js',
 '/js/litepubl/bootstrap/youtube.bootstrap.min.js',
 '/js/litepubl/bootstrap/theme.init.min.js',
+'/js/litepubl/bootstrap/theme.font.min.js',
 
 // fonts
-'/js/plugins/fontfaceobserver.standalone.js',
 '/js/fonts/css/lobster.min.js',
 '/js/fonts/css/font-awesome.min.js',
 );
