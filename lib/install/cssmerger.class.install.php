@@ -10,11 +10,13 @@ function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-  $self->add($section, '/js/prettyphoto/css/prettyPhoto.css');
-  $self->add($section, '/js/prettyphoto/litepubl/dialog.pretty.js');
+$items = tcssmerger_pretty_files($self);
+foreach ($list as $filename) {
+$self->add($section, $filename);
+}
+
   $self->add($section, '/js/litepublisher/css/filelist.min.css');
   $self->add($section, '/js/litepublisher/css/table.min.css');
-  $self->add($section, '/js/litepublisher/css/button.min.css');
   $self->add($section, '/js/litepublisher/css/form.inline.min.css');
   
 $self->addtext($section, 'hidden', '.hidden{display:none}');
@@ -30,11 +32,17 @@ $self->addtext($section, 'hidden', '.hidden{display:none}');
   $template = ttemplate::i();
   $template->addtohead('<!--<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />-->');
   
-  $updater = tupdater::i();
-  $updater->onupdated = $self->save;
+tupdater::i()->onupdated = $self->save;
 }
 
 function tcssmergerUninstall($self) {
-  $updater = tupdater::i();
-  $updater->unbind($self);
+tupdater::i()->unbind($self);
+}
+
+function tcssmerger_pretty_files($self) {
+  return array(
+'/js/prettyphoto/css/prettyPhoto.css',
+'/js/litepubl/pretty/dialog.pretty.min.css',
+	'/js/litepubl/deprecated/css/button.min.css',
+);
 }

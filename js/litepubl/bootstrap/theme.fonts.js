@@ -86,13 +86,13 @@ url: "Open+Sans:300italic,400italic,700italic,400,300,700"
 };
 
 var name = window.subtheme;
-if ((name in themefonts) && themefonts[name]) {
+// most case default theme color
+if (name == 'default') {
+$.load_lobster();
+} else if ((name in themefonts) && themefonts[name]) {
 var info = themefonts[name];
 var url = "https://fonts.googleapis.com/css?family=" + info.url + "&subset=latin,cyrillic";
 $.load_font(info.fontname, name, url);
-} else {
-//default or without font
-$.load_lobster();
 }
       });
 

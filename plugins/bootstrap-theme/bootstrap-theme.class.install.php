@@ -8,11 +8,11 @@
 
 function bootstrap_themeInstall($self) {
   $js = tjsmerger::i();
-  $js->lock();
-  
-  tplugins::i()->add('rss-chrome');
-  $js->unlock();
-  
+$js->  externalfunc(get_class($js), '_switch', array(
+$js->externalfunc(get_class($js), '_bootstrap_files', false),
+$js->externalfunc(get_class($js), '_pretty_files', false)
+));
+
   $css = tcssmerger::i();
   $css->lock();
   $css->deletefile('default', '/js/prettyphoto/css/prettyPhoto.css');
@@ -35,10 +35,12 @@ function bootstrap_themeUninstall($self) {
   $t = ttemplate::i();
   unset($t->data['themecolor']);
   $t->save();
-  
+
   $js = tjsmerger::i();
-  $js->lock();
-  $js->unlock();
+$js->  externalfunc(get_class($js), '_switch', array(
+$js->externalfunc(get_class($js), '_pretty_files', false),
+$js->externalfunc(get_class($js), '_bootstrap_files', false),
+));
   
   $css = tcssmerger::i();
   $css->lock();

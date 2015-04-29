@@ -168,7 +168,12 @@ $css = tcssmerger::i();
 $css->lock();
 $css->replacefile('default',
 '/js/litepublisher/css/prettyphoto.dialog.min.css',
-'/js/prettyphoto/litepubl/dialog.pretty.js'
+'/js/litepubl/pretty/dialog.pretty.min.css'
+);
+
+$css->replacefile('default',
+'/js/litepublisher/css/button.min.css',
+	'/js/litepubl/deprecated/css/button.min.css'
 );
 
 $css->replacefile('admin',
