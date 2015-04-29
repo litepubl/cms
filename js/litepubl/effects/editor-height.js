@@ -7,7 +7,7 @@
 
 (function( $){
   'use strict';
-
+  
   $.fn.editorheight = function() {
     var state = '';
     return this

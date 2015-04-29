@@ -7,7 +7,7 @@
 
 (function( $){
   'use strict';
-
+  
   $.easing.easeInOutExpo= function (x, t, b, c, d) {
     if (t==0) return b;
     if (t==d) return b+c;
@@ -22,7 +22,7 @@
       scrolled = true;
       if (callback && $.isFunction(callback)) callback();
     });
-
+    
     return this;
   };
   

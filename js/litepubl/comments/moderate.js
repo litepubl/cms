@@ -13,16 +13,16 @@
     
     init: function() {
       this.onbuttons = $.Callbacks();
-
+      
       var self = this;
       $(".loadhold").click(function() {
-$(this).parent().remove();
-self.loadhold();
-return false;
-});
-
-var comtheme = ltoptions.theme.comments;
-        this.create_buttons($().add(comtheme.comments).add(comtheme.holdcomments));
+        $(this).parent().remove();
+        self.loadhold();
+        return false;
+      });
+      
+      var comtheme = ltoptions.theme.comments;
+      this.create_buttons($().add(comtheme.comments).add(comtheme.holdcomments));
     },
     
     setenabled: function(value) {
@@ -164,7 +164,7 @@ var comtheme = ltoptions.theme.comments;
       var area = ltoptions.theme.comments.editor;
       area.val(area.data("savedtext"));
       this.setenabled(true);
-ltoptions.theme.comments.form.off("submit.moderate").on("submit.confirmcomment", function() {
+      ltoptions.theme.comments.form.off("submit.moderate").on("submit.confirmcomment", function() {
         if ("confirmcomment" in litepubl) return litepubl.confirmcomment.submit();
       });
     },
@@ -176,17 +176,17 @@ ltoptions.theme.comments.form.off("submit.moderate").on("submit.confirmcomment",
       params: {idpost: ltoptions.idpost},
         callback: function(r) {
           try {
-var comtheme = ltoptions.theme.comments;
-var hold = comtheme.holdcomments;
+            var comtheme = ltoptions.theme.comments;
+            var hold = comtheme.holdcomments;
             if (comtheme.ismoder && hold.length) {
-//delete nodes between comments and hold comments
-            while (comtheme.comments.next()[0] != hold[0]) comtheme.comments.next().remove();
-//delete current hold list
-hold.remove();
-}
-
+              //delete nodes between comments and hold comments
+              while (comtheme.comments.next()[0] != hold[0]) comtheme.comments.next().remove();
+              //delete current hold list
+              hold.remove();
+            }
+            
             comtheme.comments.after(r.items);
-comtheme.holdcomments = $(comtheme.hold);
+            comtheme.holdcomments = $(comtheme.hold);
             self.create_buttons(comtheme.holdcomments);
         } catch(e) {erralert(e);}
         },
@@ -195,58 +195,58 @@ comtheme.holdcomments = $(comtheme.hold);
           self.error(lang.comments.errorrecieved);
         }
       });
-
+      
     },
     
     create_buttons: function(owner) {
-var comtheme = ltoptions.theme.comments;
+      var comtheme = ltoptions.theme.comments;
       var self = this;
-owner.on("click.moder", comtheme.buttons, function() {
+      owner.on("click.moder", comtheme.buttons, function() {
         if (!self.enabled) return false;
-var button = $(this);
+        var button = $(this);
         self.setstatus(button.parent().attr("data-idcomment"), button.attr("data-moder"));
-return false;
-});
-
-var comtheme = ltoptions.theme.comments;
-        if (comtheme.ismoder) {
-var names = ['approve', 'hold', 'del', 'edit'];
-} else {
-            if (!comtheme.canedit && !comtheme.candelete) return;
-var nanes = [];
-            if (comtheme.canedit) names.push('edit');
-            if (comtheme.candelete) names.push('del');
-}
+        return false;
+      });
       
-var html = '';      
-var tml = comtheme.button;
-if (tml.indexOf('data-moder') < 0) tml = tml.replace('class=', 'data-moder="%%name%%" class=');
-for (var i = 0; i < names.length; i++) {
-var name = names[i];
-html += $.simpletml(tml, {
+      var comtheme = ltoptions.theme.comments;
+      if (comtheme.ismoder) {
+        var names = ['approve', 'hold', 'del', 'edit'];
+      } else {
+        if (!comtheme.canedit && !comtheme.candelete) return;
+        var nanes = [];
+        if (comtheme.canedit) names.push('edit');
+        if (comtheme.candelete) names.push('del');
+      }
+      
+      var html = '';
+      var tml = comtheme.button;
+      if (tml.indexOf('data-moder') < 0) tml = tml.replace('class=', 'data-moder="%%name%%" class=');
+      for (var i = 0; i < names.length; i++) {
+        var name = names[i];
+        html += $.simpletml(tml, {
           title: lang.comments[name],
           name: name
         });
-}
-
-var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]')).append(html);
-
-          if (containers.length && containers.first().is(":hidden")) {
-      var showbutton  = $.simpletml(comtheme.button, {
-        title: 'E',
-        name: 'show'
-      });
+      }
       
-showbutton = showbutton.replace('class="', 'class="showbutton ');
-container.before(showbutton);
-owner.on("click.showbutton mouseenter.showbutton focus.showbutton", ".showbutton", function() {
-        $(this).next().show();
-        $(this).remove();
-        return false;
-      });
-}
-
-        this.onbuttons.fire(containers);
+      var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]')).append(html);
+      
+      if (containers.length && containers.first().is(":hidden")) {
+        var showbutton  = $.simpletml(comtheme.button, {
+          title: 'E',
+          name: 'show'
+        });
+        
+        showbutton = showbutton.replace('class="', 'class="showbutton ');
+        container.before(showbutton);
+        owner.on("click.showbutton mouseenter.showbutton focus.showbutton", ".showbutton", function() {
+          $(this).next().show();
+          $(this).remove();
+          return false;
+        });
+      }
+      
+      this.onbuttons.fire(containers);
     }
     
   });//class

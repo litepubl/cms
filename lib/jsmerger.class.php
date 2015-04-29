@@ -72,7 +72,7 @@ class tfilemerger extends titems {
   public function after($section, $src, $dst) {
     if (!isset($this->items[$section])) return false;
     if (!($src = $this->normfilename($src))) return false;
-      if (in_array($dst, $this->items[$section]['files'])) return false;
+    if (in_array($dst, $this->items[$section]['files'])) return false;
     if (!($dst = $this->normfilename($dst))) return false;
     if (false === ($i = array_search($src, $this->items[$section]['files']))) {
       //simple add

@@ -4,6 +4,7 @@ class tdatabase {
   public $mysqli;
   public $result;
   public $sql;
+  public $cache;
   public $dbname;
   public $table;
   public $prefix;
@@ -19,8 +20,9 @@ class tdatabase {
   }
   
   public function __construct() {
-    $this->table = '';
     $this->sql = '';
+    $this->cache = false;
+    $this->table = '';
     $this->history = array();
     
     $this->setconfig($this->getconfig());
@@ -87,6 +89,21 @@ class tdatabase {
     }
     
     if (is_object($this->result)) $this->result->close();
+    
+    if ($this->cache) {
+      $sql = trim($sql);
+      $select = 'select ';
+      $sql_select = ($select == strtolower(substr($sql, 0, strlen($select)))) && !strpos($sql, 'last_insert_id');
+      if ($sql_select) {
+        if ($this->result = $this->cache->get($sql)) {
+          if ($this->debug) $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+          return $this->result;
+        }
+      } else {
+        $this->cache->clear();
+      }
+    }
+    
     $this->result = $this->mysqli->query($sql);
     if ($this->debug) {
       $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
@@ -97,9 +114,13 @@ class tdatabase {
         echo "</pre>\n";
       }
     }
+    
     if ($this->result == false) {
       $this->doerror($this->mysqli->error);
+    } elseif ($this->cache && $sql_select) {
+      $this->cache->set($sql, $this->result);
     }
+    
     return $this->result;
   }
   
@@ -507,7 +528,9 @@ class tdata {
         $file =$dir .  $externalname;
         if (!file_exists($file)) return;
       }
+      
       include_once($file);
+      
       $fnc = $class . $func;
       if (function_exists($fnc)) {
         //$fnc($this, $arg);
@@ -516,6 +539,7 @@ class tdata {
         } else {
           $args = array($this, $args);
         }
+        
         return call_user_func_array($fnc, $args);
       }
     }
@@ -1457,6 +1481,11 @@ class titem_storage extends titem {
 }//class
 
 //classes.class.php
+//fix storage include
+if (!class_exists('tstorage')) {
+  include (dirname(__file__) . '/storage.class.php');
+}
+
 if (!function_exists( 'spl_autoload_register' ) ) {
   function __autoload($class) {
     litepublisher::$classes->_autoload($class);
@@ -2116,7 +2145,7 @@ class tsite extends tevents_storage {
         $result = sprintf('<a href="%s">%s</a>', $item['website'], $item['name']);
       } else {
         $page = $this->getdb('userpage')->getitem($id);
-        if(intval($page['idurl'])) {
+        if((int) $page['idurl']) {
           $result = sprintf('<a href="%s%s">%s</a>', $this->url, litepublisher::$urlmap->getvalue($page['idurl'], 'url'), $item['name']);
         } else {
           $result = $item['name'];
@@ -2157,7 +2186,7 @@ class turlmap extends titems {
   public function __construct() {
     parent::__construct();
     if (tfilestorage::$memcache) {
-      $this->cache = new tlitememcache($this);
+      $this->cache = new tlitememcache(tfilestorage::$memcache);
     } else {
       $this->cache = new tfilecache();
     }
@@ -2169,7 +2198,6 @@ class turlmap extends titems {
     $this->table = 'urlmap';
     $this->basename = 'urlmap';
     $this->addevents('beforerequest', 'afterrequest', 'onclearcache');
-    $this->data['revision'] = 0;
     $this->data['disabledcron'] = false;
     $this->data['redirdom'] = false;
     $this->is404 = false;
@@ -2648,46 +2676,65 @@ class turlmap extends titems {
 }//class
 
 class tlitememcache {
-  public $revision;
   public $prefix;
+  public $memcache;
+  public $lifetime;
+  public $revision;
+  public $revision_key;
   
-  public function __construct($urlmap) {
-    $this->revision = &$urlmap->data['revision'];
+  public function __construct($memcache) {
     $this->prefix = litepublisher::$domain . ':cache:';
+    $this->memcache = $memcache;
+    $this->lifetime = 3600;
+    $this->revision = 0;
+    $this->revision_key = 'cache_revision';
+    $this->getrevision();
+  }
+  
+  public function getrevision() {
+    return $this->revision = (int) $this->memcache->get($this->prefix . $this->revision_key);
   }
   
   public function clear() {
     $this->revision++;
-    litepublisher::$urlmap->save();
+    $this->memcache->set($this->prefix . $this->revision_key, "$this->revision", false, $this->lifetime);
+  }
+  
+  public function serialize($data) {
+    return serialize($data);
+  }
+  
+  public function unserialize(&$data) {
+    return unserialize($data);
   }
   
   public function set($filename, $data) {
-    tfilestorage::$memcache->set($this->prefix . $filename,
-    serialize(array(
+    $this->memcache->set($this->prefix . $filename,$this->serialize(array(
     'revision' => $this->revision,
-    'time' => time(),
+    //'time' => time(),
     'data' => $data
-    )), false, 3600);
+    )), false, $this->lifetime);
   }
   
   public function get($filename) {
-    if ($s = tfilestorage::$memcache->get($this->prefix . $filename)) {
-      $a = unserialize($s);
+    if ($s = $this->memcache->get($this->prefix . $filename)) {
+      $a = $this->unserialize($s);
       if ($a['revision'] == $this->revision) {
         return $a['data'];
       } else {
-        tfilestorage::$memcache->delete($this->prefix . $filename);
+        $this->memcache->delete($this->prefix . $filename);
       }
     }
+    
     return false;
   }
   
   public function delete($filename) {
-    tfilestorage::$memcache->delete($this->prefix . $filename);
+    $this->memcache->delete($this->prefix . $filename);
   }
   
   public function exists($filename) {
-    return !!tfilestorage::$memcache->get($this->prefix . $filename);
+    return !!$this->memcache->get($this->prefix . $filename);
   }
   
 }//class
@@ -2760,10 +2807,6 @@ interface iposts {
   public function add(tpost $post);
   public function edit(tpost $post);
   public function delete($id);
-}
-
-interface imenu {
-  public function getcurrent();
 }
 
 //plugin.class.php
@@ -2849,7 +2892,7 @@ class tusers extends titems {
     }
     
     if ($item = $this->db->finditem('email = '. dbquote($email))) {
-      $id = intval($item['id']);
+      $id = (int) $item['id'];
       $this->items[$id] = $item;
       return $id;
     }

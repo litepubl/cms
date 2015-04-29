@@ -18,16 +18,16 @@
   
   //without protocol for ajax calls
   ltoptions.ajaxurl = ltoptions.url.substring(ltoptions.url.indexOf(':') +1);
-
-$.jsonrpcSettings.url = ltoptions.ajaxurl + "/admin/jsonserver.php";
-$.jsonrpcSettings.onargs = function(args) {
-      var user = litepubl.getuser();
-      if (user.id) {
-var params = args.params;
-        params.litepubl_user_id = user.id;
-        params.litepubl_user = user.pass;
-        params.litepubl_user_regservice = user.regservice;
-      }
-};
-
+  
+  $.jsonrpcSettings.url = ltoptions.ajaxurl + "/admin/jsonserver.php";
+  $.jsonrpcSettings.onargs = function(args) {
+    var user = litepubl.getuser();
+    if (user.id) {
+      var params = args.params;
+      params.litepubl_user_id = user.id;
+      params.litepubl_user = user.pass;
+      params.litepubl_user_regservice = user.regservice;
+    }
+  };
+  
 }(jQuery, ltoptions));

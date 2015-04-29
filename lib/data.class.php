@@ -133,9 +133,9 @@ class tdata {
         $file =$dir .  $externalname;
         if (!file_exists($file)) return;
       }
-
+      
       include_once($file);
-
+      
       $fnc = $class . $func;
       if (function_exists($fnc)) {
         //$fnc($this, $arg);
@@ -144,7 +144,7 @@ class tdata {
         } else {
           $args = array($this, $args);
         }
-
+        
         return call_user_func_array($fnc, $args);
       }
     }

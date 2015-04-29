@@ -467,21 +467,21 @@ class tbackuper extends tevents {
           $this->tar = false;
           return $this->errorarch();
         }
-
-$path_checked = false;
-$path_root = false;
-
-        foreach ($this->tar->files as $item) {
-if (!$path_checked) {
-$path_checked = true;
-$path_root = $this->get_path_root($item['name']);
-}
-
-$name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
         
+        $path_checked = false;
+        $path_root = false;
+        
+        foreach ($this->tar->files as $item) {
+          if (!$path_checked) {
+            $path_checked = true;
+            $path_root = $this->get_path_root($item['name']);
+          }
+          
+          $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
+          
           if (!$this->uploadfile($name,$item['file'], $item['mode'])) return $this->errorwrite($item['name']);
         }
-
+        
         $this->onuploaded($this);
         $this->tar = false;
         break;
@@ -489,24 +489,24 @@ $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root))
         case 'unzip':
         $mode = $this->filer->chmod_file;
         $this->unzip->ReadData($content);
-
-$path_checked = false;
-$path_root = false;
-
+        
+        $path_checked = false;
+        $path_root = false;
+        
         foreach ($this->unzip->Entries as  $item) {
           if ($item->Error != 0) continue;
-
-if (!$path_checked) {
-$path_checked = true;
-$path_root = $this->get_path_root($item->path);
-}
-
-$path = $path_root ? trim(substr(trim($item->path, '/'), strlen($path_root)), '/') : $item->path;
+          
+          if (!$path_checked) {
+            $path_checked = true;
+            $path_root = $this->get_path_root($item->path);
+          }
+          
+          $path = $path_root ? trim(substr(trim($item->path, '/'), strlen($path_root)), '/') : $item->path;
           if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
-          return $this->errorwrite($item->Path . $item->Name);
-}
+            return $this->errorwrite($item->Path . $item->Name);
+          }
         }
-
+        
         $this->onuploaded($this);
         $this->unzip = false;
         break;
@@ -518,16 +518,16 @@ $path = $path_root ? trim(substr(trim($item->path, '/'), strlen($path_root)), '/
       if ($this->hasdata) $this->renamedata();
       return true;
     }
-
-//define if first dir is versioned
-public function get_path_root($path) {
-$list = explode('/', trim($path, '/'));
-if (preg_match('/\d*+\.\d*+$/', $list[0])) {
-return $list[0];
-}
-
-return false;
-}
+    
+    //define if first dir is versioned
+    public function get_path_root($path) {
+      $list = explode('/', trim($path, '/'));
+      if (preg_match('/\d*+\.\d*+$/', $list[0])) {
+        return $list[0];
+      }
+      
+      return false;
+    }
     
     private function renamedata() {
       if (!is_dir(litepublisher::$paths->backup)) {

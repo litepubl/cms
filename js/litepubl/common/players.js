@@ -13,7 +13,7 @@
     height: 300,
     script: false,
     video_tml: '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>',
-
+    
     init: function(audio, video) {
       this.width = ltoptions.video_width;
       this.height = ltoptions.video_height;
@@ -27,24 +27,24 @@
       
       if (video.length) this.video(video);
     },
-
+    
     load: function(callback) {
       if (this.script) return this.script.done(callback);
-
-        $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
-        this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
+      
+      $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
+      this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
     },
-
-player: function(elem, options) {
-return elem.mediaelementplayer($.extend(
-options ? options : {}, 
-{
- features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
-pluginPath: ltoptions.files + "/js/mediaelement/"
-},
-"mediaplayer" in lang ? lang.mediaplayer : {}
-));
-},
+    
+    player: function(elem, options) {
+      return elem.mediaelementplayer($.extend(
+    options ? options : {},
+      {
+        features: ['playpause','progress','current','duration','tracks','volume','fullscreen'],
+        pluginPath: ltoptions.files + "/js/mediaelement/"
+      },
+    "mediaplayer" in lang ? lang.mediaplayer : {}
+      ));
+    },
     
     audio: function(links) {
       return this.player(links, {
@@ -55,8 +55,8 @@ pluginPath: ltoptions.files + "/js/mediaelement/"
     },
     
     video: function(links) {
-}
-
-});
-
+    }
+    
+  });
+  
 })( jQuery);

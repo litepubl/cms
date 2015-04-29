@@ -7,7 +7,7 @@
 
 (function ($, document, window) {
   'use strict';
-
+  
   window.litepubl.class_confirmcomment = Class.extend({
     
     init: function() {
@@ -22,7 +22,7 @@
     },
     
     get: function(name) {
-var comtheme = ltoptions.theme.comments;
+      var comtheme = ltoptions.theme.comments;
       if (name == 'content') return comtheme.editor;
       return comtheme.form.find("input[name='" + name + "']");
     },
@@ -142,7 +142,7 @@ var comtheme = ltoptions.theme.comments;
   });
   
   $(document).ready(function() {
-if (ltoptions.theme.comments.form.length) litepubl.confirmcomment = new litepubl.class_confirmcomment();
+    if (ltoptions.theme.comments.form.length) litepubl.confirmcomment = new litepubl.class_confirmcomment();
   });
   
 }(jQuery, document, window));

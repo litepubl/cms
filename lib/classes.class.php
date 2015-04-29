@@ -8,7 +8,7 @@
 
 //fix storage include
 if (!class_exists('tstorage')) {
-include (dirname(__file__) . '/storage.class.php');
+  include (dirname(__file__) . '/storage.class.php');
 }
 
 if (!function_exists( 'spl_autoload_register' ) ) {

@@ -39,12 +39,12 @@
     
     //forward declaration for future plugins as yandex metrika or google analitik
   stat: function(name, param) {},
-// current image galery
-openimage: function(url, title, description) {}
-linkimage: function(link) {
+    // current image galery
+  openimage: function(url, title, description) {}
+    linkimage: function(link) {
       this.openimage(link.attr("href"), link.attr("title"), $("img", link).attr("alt"));
-};
- };
+    };
+  };
   
   window.dump = function(obj) {
     alert(JSON.stringify(obj));

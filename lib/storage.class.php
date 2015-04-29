@@ -9,11 +9,11 @@
 class datastorage {
   public $disabled;
   public $sharedata;
-
+  
   public function __construct() {
-$this->sharedata= array();
-}
-
+    $this->sharedata= array();
+  }
+  
   public function save(tdata $obj) {
     if ($this->disabled) return false;
     return self::savetofile(litepublisher::$paths->data .$obj->getbasename(), $obj->savetostring());

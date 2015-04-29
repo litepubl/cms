@@ -523,36 +523,36 @@ class turlmap extends titems {
 
 class tlitememcache {
   public $prefix;
-public $memcache;
-public $lifetime;
+  public $memcache;
+  public $lifetime;
   public $revision;
   public $revision_key;
-
-    public function __construct($memcache) {
+  
+  public function __construct($memcache) {
     $this->prefix = litepublisher::$domain . ':cache:';
-$this->memcache = $memcache;
-$this->lifetime = 3600;
+    $this->memcache = $memcache;
+    $this->lifetime = 3600;
     $this->revision = 0;
     $this->revision_key = 'cache_revision';
-$this->getrevision();
+    $this->getrevision();
   }
-
+  
   public function getrevision() {
-return $this->revision = (int) $this->memcache->get($this->prefix . $this->revision_key);
-}
+    return $this->revision = (int) $this->memcache->get($this->prefix . $this->revision_key);
+  }
   
   public function clear() {
     $this->revision++;
-$this->memcache->set($this->prefix . $this->revision_key, "$this->revision", false, $this->lifetime);
+    $this->memcache->set($this->prefix . $this->revision_key, "$this->revision", false, $this->lifetime);
   }
-
-public function serialize($data) {
-return serialize($data);
-}
-
-public function unserialize(&$data) {
-return unserialize($data);
-}
+  
+  public function serialize($data) {
+    return serialize($data);
+  }
+  
+  public function unserialize(&$data) {
+    return unserialize($data);
+  }
   
   public function set($filename, $data) {
     $this->memcache->set($this->prefix . $filename,$this->serialize(array(
@@ -571,7 +571,7 @@ return unserialize($data);
         $this->memcache->delete($this->prefix . $filename);
       }
     }
-
+    
     return false;
   }
   

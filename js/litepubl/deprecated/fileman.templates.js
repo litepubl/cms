@@ -39,12 +39,12 @@
     '<div class="file-items"></div>' +
     '<div class="file-items-after"></div>' +
     '</div>' +
-
+    
     '<div id="new-files" class="files-tab">' +
     '<div class="file-items"></div>' +
     '<div class="file-items-after"></div>' +
     '</div>' +
-
+    
     '</div>' +
     '<p class="hidden"><input type="hidden" name="files" value="" /></p>',
     */

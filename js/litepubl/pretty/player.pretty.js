@@ -9,16 +9,16 @@
   'use strict';
   
   litepubl.Prettyplayer= litepubl.Mediaplayer.extend({
-      pretty_tml: '<div id="pretty-video-holder"></div>',
-      holder: "#pretty-video-holder",
+    pretty_tml: '<div id="pretty-video-holder"></div>',
+    holder: "#pretty-video-holder",
     linkclicked: false,
     tmplink: false,
-
+    
     video: function(links) {
-if (!this.tmplink) {
-      this.tmplink = $('<div class="hidden"><a href="#custom=true&width=' + this.width + '&height=' + this.height + '"></a></div>').appendTo("body").find("a");
+      if (!this.tmplink) {
+        this.tmplink = $('<div class="hidden"><a href="#custom=true&width=' + this.width + '&height=' + this.height + '"></a></div>').appendTo("body").find("a");
       }
-
+      
       var self = this;
       links.on("click.playvideo", function(event) {
         event.preventDefault();
@@ -47,12 +47,12 @@ if (!this.tmplink) {
         changepicturecallback: function(){
           $.onEscape($.proxy($.prettyPhoto.close, $.prettyPhoto));
           self.load(function() {
-var html = $.simpletml(self.video_tml, {
-        file: self.linkclicked.data("file"),
-        siteurl: ltoptions.files
-      });
-      
-self.player($(html).appendTo(self.holder));
+            var html = $.simpletml(self.video_tml, {
+              file: self.linkclicked.data("file"),
+              siteurl: ltoptions.files
+            });
+            
+            self.player($(html).appendTo(self.holder));
           });
         }
       });

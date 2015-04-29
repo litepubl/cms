@@ -7,7 +7,7 @@
 
 (function( $ ){
   'use strict';
-
+  
   $.messagebox = function(title, mesg, callback) {
     return $.litedialog({
       title: title,
@@ -58,7 +58,7 @@
       html: this.html(),
       buttons: buttons
     });
-
+    
     return this;
   };
   

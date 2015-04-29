@@ -41,11 +41,11 @@ class tsession {
       ini_set('session.use_only_cookies', $usecookie);
       ini_set('session.use_trans_sid', 0);
       session_cache_limiter(false);
-
-if (function_exists('igbinary_serialize')) {
-ini_set('igbinary.compact_strings', 0);
-ini_set('session.serialize_handler', 'igbinary');
-}
+      
+      if (function_exists('igbinary_serialize')) {
+        ini_set('igbinary.compact_strings', 0);
+        ini_set('session.serialize_handler', 'igbinary');
+      }
     }
     
     if (tfilestorage::$memcache) {

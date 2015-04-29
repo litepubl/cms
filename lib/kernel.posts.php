@@ -484,7 +484,7 @@ class tpost extends titem implements  itemplate {
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
-      if (intval($item['preview'])) return $files->geturl($item['preview']);
+      if ((int) $item['preview']) return $files->geturl($item['preview']);
     }
     return false;
   }
@@ -514,7 +514,7 @@ class tpost extends titem implements  itemplate {
   
   //template
   protected function get_taglinks($name, $excerpt) {
-    $items = $this->$name;
+    $items = $this->__get($name);
     if (!count($items)) return '';
     
     $theme = $this->theme;

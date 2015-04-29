@@ -19,15 +19,15 @@
     holder: false,
     
     init: function(options) {
-      this.items = {};
-        this.curr = [],
-        options = $.extend({
-          holder: '#posteditor-filelist',
-          pages: 0,
-          items: false
-        }, options);
-
-      try {        
+    this.items = {};
+      this.curr = [],
+      options = $.extend({
+        holder: '#posteditor-filelist',
+        pages: 0,
+        items: false
+      }, options);
+      
+      try {
         this.init_templates();
         this.holder = $(options.holder);
         var self = this;
@@ -126,15 +126,15 @@
       
       var self = this;
       panel.on("click.toolbar", ".file-toolbar > a, .file-toolbar > button", function() {
-var button = $(this);
+        var button = $(this);
         var holder = button.closest(".file-item");
         var idfile = holder.data("idfile");
         
-          if (button.hasClass("add-toolbutton")) {
+        if (button.hasClass("add-toolbutton")) {
           self.add(idfile);
-          } else if (button.hasClass("delete-toolbutton")) {
+        } else if (button.hasClass("delete-toolbutton")) {
           self.del(idfile, holder);
-          } else if (button.hasClass("property-toolbutton")) {
+        } else if (button.hasClass("property-toolbutton")) {
           self.editprops(idfile, holder);
         }
         
@@ -210,8 +210,8 @@ var button = $(this);
     
     add: function(idfile) {
       if ($.inArray(idfile, this.curr) < 0) {
-      this.curr.push(idfile);
-}
+        this.curr.push(idfile);
+      }
     },
     
     del: function(idfile, holder) {

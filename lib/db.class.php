@@ -66,7 +66,7 @@ class tdatabase {
     $this->query("SET time_zone = '$timezone:00'");
     */
   }
- 
+  
   /*
   public function __destruct() {
     if (is_object($this)) {
@@ -95,21 +95,21 @@ class tdatabase {
     }
     
     if (is_object($this->result)) $this->result->close();
-
-if ($this->cache) {
-$sql = trim($sql);
-$select = 'select ';
-$sql_select = ($select == strtolower(substr($sql, 0, strlen($select)))) && !strpos($sql, 'last_insert_id');
-if ($sql_select) {
-    if ($this->result = $this->cache->get($sql)) {
-    if ($this->debug) $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
-return $this->result;
-}
-} else {
-$this->cache->clear();
-}
-}
-
+    
+    if ($this->cache) {
+      $sql = trim($sql);
+      $select = 'select ';
+      $sql_select = ($select == strtolower(substr($sql, 0, strlen($select)))) && !strpos($sql, 'last_insert_id');
+      if ($sql_select) {
+        if ($this->result = $this->cache->get($sql)) {
+          if ($this->debug) $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+          return $this->result;
+        }
+      } else {
+        $this->cache->clear();
+      }
+    }
+    
     $this->result = $this->mysqli->query($sql);
     if ($this->debug) {
       $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
@@ -120,13 +120,13 @@ $this->cache->clear();
         echo "</pre>\n";
       }
     }
-
+    
     if ($this->result == false) {
       $this->doerror($this->mysqli->error);
-} elseif ($this->cache && $sql_select) {
-$this->cache->set($sql, $this->result);
+    } elseif ($this->cache && $sql_select) {
+      $this->cache->set($sql, $this->result);
     }
-
+    
     return $this->result;
   }
   

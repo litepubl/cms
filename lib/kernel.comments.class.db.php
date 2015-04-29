@@ -411,7 +411,7 @@ class tcommentmanager extends tevents_storage {
     try {
       $idauthor = $comments->getvalue($id, 'author');
       $users = tusers::i();
-      if ($this->trustlevel > intval($users->getvalue($idauthor, 'trust'))) {
+      if ($this->trustlevel > (int) $users->getvalue($idauthor, 'trust')) {
         $trust = $comments->db->getcount("author = $idauthor and status = 'approved' limit " . ($this->trustlevel + 1));
         $users->setvalue($idauthor, 'trust', $trust);
       }
@@ -550,7 +550,7 @@ class tcommentform extends tevents {
     
     $shortpost= $this->getshortpost(isset($values['postid']) ? (int) $values['postid'] : 0);
     if ($err = $this->invalidate($shortpost)) return $err;
-    if (intval($shortpost['idperm']) > 0) {
+    if ((int) $shortpost['idperm']) {
       $post = tpost::i((int) $shortpost['id']);
       $perm = tperm::i($post->idperm);
       if (!$perm->hasperm($post)) return 403;
@@ -675,7 +675,7 @@ class tcommentform extends tevents {
     $_SESSION['values'] = $values;
     session_write_close();
     
-    if (intval($shortpost['idperm']) > 0) {
+    if ((int) $shortpost['idperm']) {
       $header = $this->getpermheader($shortpost);
       return $header . $this->confirm($confirmid);
     }
@@ -946,7 +946,7 @@ class ttemplatecomments extends tevents {
       
       $cm = tcommentmanager::i();
       $result .=  sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) {', implode(',', $cm->idgroups));
-        //add hold list
+        //add hold list because we need container when comment will be hold
         $result .= 'if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>';
           $args->comment = '';
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'], $args);

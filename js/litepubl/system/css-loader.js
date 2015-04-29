@@ -7,11 +7,11 @@
 
 (function ($, document) {
   'use strict';
-
-    $.css_loader = {
+  
+  $.css_loader = {
     links: [],
     counter: 0,
-maxcounter: 60,
+    maxcounter: 60,
     timer: false,
     
     add: function(url) {
@@ -58,5 +58,5 @@ maxcounter: 60,
   };
   
   $.load_css = $.proxy($.css_loader.add, $.css_loader);
-
+  
 }(jQuery, document));
