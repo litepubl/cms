@@ -40,16 +40,17 @@
         });
         
 try {
-        this.init_upload();
+        this.init_uploader();
+
         if (options.items) {
-          this.set_uploaded(options.pages, options.items);
+          this.set_uploaded(options.items);
         } else {
           this.load_current_files();
         }
     } catch(e) {erralert(e);}
     },
     
-    init_upload: function() {
+    init_uploader: function() {
       this.uploader = new litepubl.Uploader();
       this.uploader.onupload.add($.proxy(this.uploaded, this));
     },
@@ -62,7 +63,7 @@ try {
       params: {idpost: ltoptions.idpost},
         callback: function (r) {
           try {
-            self.set_uploaded(r.count, r.files);
+            self.set_uploaded(r.files);
         } catch(e) {erralert(e);}
         },
         
@@ -72,13 +73,7 @@ try {
       });
     },
     
-    set_uploaded: function(tabscount, items) {
-      /*
-      if ("fileperm" in r) {
-        $("#posteditor-fileperms", this.uploader.holder).removeClass("hidden").html(r.fileperm);
-      }
-      */
-      this.set_tabs_count(tabscount);
+    set_uploaded: function(items) {
       for (var i in items) {
         var item = items[i];
         this.items[item.id] = item;
@@ -86,19 +81,7 @@ try {
       }
       
       this.setpage("#current-files", items);
-      //to assign events
     this.setpage("#new-files", {});
-    },
-    
-    set_tabs_count: function(count) {
-      if (count < 1) return;
-      var tabs = $("#posteditor-files-tabs", this.holder);
-      var tabhead = $(".ui-tabs-nav", tabs);
-      for (var i =1; i <= count; i++) {
-        $(this.tml.tab.replace('%%index%%', i)).appendTo(tabs).data("page", i).data("files", "empty");
-        $(this.tml.tabli.replace(/%%index%%/gim, i)).appendTo(tabhead);
-      }
-      tabs.tabs( "refresh" );
     },
     
     setpage: function(uipanel, files) {
@@ -126,11 +109,14 @@ try {
       });
       
       panel.on("click.image", "a.file-image", function() {
-        litepubl.linkimage($(this));
+        self.openimage($(this));
         return false;
       });
       
     },
+
+litepubl.linkimage(link);
+},
     
     get_fileitem: function(id) {
       var item =this.items[id];
@@ -160,7 +146,7 @@ try {
         },
         
         error:  function(message, code) {
-          $.messagebox(lang.dialog.error, message);
+          $.errorbox(message);
         }
       });
     },
