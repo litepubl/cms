@@ -1,11 +1,1 @@
-.text-center {
-text-align: center;
-}
-
-div.text-center {
-margin: 5px;
-}
-
-.margin-auto {
-margin: auto;
-}
+.text-center{text-align:center}div.text-center{margin:5px}.margin-auto{margin:auto}
