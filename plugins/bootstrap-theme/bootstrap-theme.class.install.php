@@ -15,9 +15,11 @@ $js->externalfunc(get_class($js), '_pretty_files', false)
 
   $css = tcssmerger::i();
   $css->lock();
-  $css->deletefile('default', '/js/prettyphoto/css/prettyPhoto.css');
-  $css->deletefile('default', '/js/litepublisher/css/prettyphoto.dialog.min.css');
-  $css->deletefile('default', '/js/litepublisher/css/button.min.css');
+
+$filelist = $css->externalfunc(get_class($css), '_pretty_files', false);
+foreach ($filelist as $filename) {
+  $css->deletefile('default', $filename);
+}
   $css->unlock();
 
 $appcache = appcache_manifest::i();
@@ -41,15 +43,16 @@ $js->  externalfunc(get_class($js), '_switch', array(
 $js->externalfunc(get_class($js), '_pretty_files', false),
 $js->externalfunc(get_class($js), '_bootstrap_files', false),
 ));
-  
+
   $css = tcssmerger::i();
   $css->lock();
-  $css->add('default', '/js/prettyphoto/css/prettyPhoto.css');
-  $css->add('default', '/js/litepublisher/css/prettyphoto.dialog.min.css');
-  $css->add('default', '/js/litepublisher/css/button.min.css');
+$filelist = $css->externalfunc(get_class($css), '_pretty_files', false);
+foreach ($filelist as $filename) {
+  $css->add('default', $filename);
+}
   $css->unlock();
 
-$appcache = appcache_manifest::i();
+$appcache =appcache_manifest::i();
 $appcache->lock();
 $appcache->delete('/themes/shop/css/$template.themecolor.min.css');
 $appcache->delete('/themes/shop/fonts/lobster.woff');

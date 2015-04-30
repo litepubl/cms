@@ -176,6 +176,11 @@ $css->replacefile('default',
 	'/js/litepubl/deprecated/css/button.min.css'
 );
 
+$css->replacefile('default',
+'/js/litepublisher/css/filelist.min.css',
+'/js/litepubl/common/css/filelist.min.css'
+);
+
 $css->replacefile('admin',
 '/js/litepublisher/css/fileman.min.css',
 '/js/litepubl/admin/css/fileman.min.css'
