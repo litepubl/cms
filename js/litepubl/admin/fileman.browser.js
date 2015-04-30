@@ -13,33 +13,39 @@
     return new litepubl.Fileman(options);
   };
   
-  litepubl.Fileman = Class.extend({
+  litepubl.Filemanbrowser = Class.extend({
     items: false,
     curr: false,
     indialog: false,
     holder: false,
     
     init: function(options) {
-    this.items = {};
-      this.curr = [],
       options = $.extend({
         holder: '#posteditor-filelist',
         pages: 0,
         items: false
       }, options);
       
-      this.tml = litepubl.tml.fileman;
-      $.replacetml(this.tml, {
-        lang: lang.posteditor
-      });
+      try {
+        this.init_templates();
 
         var self = this;
-        this.holder = $(options.holder);
+        var tabs = $("#posteditor-files-tabs", this.holder);
+        tabs.tabs({
+          hide: true,
+          show: true,
+          beforeLoad: litepubl.uibefore,
+          beforeActivate: function(event, ui) {
+            if ("empty" == $(ui.newPanel).data("files")) {
+              self.loadpage(ui.newPanel, $(ui.newPanel).data("page"));
+            }
+          }
+        });
+        
         this.holder.closest('form').submit(function() {
           $("input[name='files']", self.holder).val(self.curr.join(','));
         });
         
-try {
         this.init_upload();
         if (options.items) {
           this.set_uploaded(options.pages, options.items);
@@ -47,6 +53,14 @@ try {
           this.load_current_files();
         }
     } catch(e) {erralert(e);}
+    },
+    
+    init_templates: function() {
+      this.tml = litepubl.tml.fileman;
+      $.replacetml(litepubl.tml.fileman, {
+        lang: lang.posteditor,
+        iconurl:  ltoptions.files + "/js/litepublisher/icons/"
+      });
     },
     
     init_upload: function() {
