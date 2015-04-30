@@ -1,11 +1,12 @@
-.text-center {
-text-align: center;
+.date-edit,
+.date-range input {
+width: 10em;
 }
 
-div.text-center {
-margin: 5px;
+.time-edit {
+width: 5em;
 }
 
-.margin-auto {
-margin: auto;
+#text-phone {
+width: 10em;
 }

@@ -185,6 +185,11 @@ $css->replacefile('default',
 '/js/litepubl/common/css/form-inline.min.css'
 );
 
+$css->replacefile('default',
+'/js/litepublisher/css/table.min.css',
+'/js/litepubl/deprecated/css/table.min.css'
+);
+
 $css->replacefile('admin',
 '/js/litepublisher/css/fileman.min.css',
 '/js/litepubl/admin/css/fileman.min.css'
