@@ -42,7 +42,6 @@ $system = array
 '/js/litepubl/common/litepubl.namespace.min.js',
 '/js/litepubl/common/litepubl.init.min.js',
 '/js/litepubl/common/dialog.min.js',
-'/js/litepubl/common/filelist.min.js',
 '/js/litepubl/common/players.min.js',
 '/js/litepubl/common/templates.min.js',
 '/js/litepubl/common/widgets.min.js');
@@ -179,6 +178,11 @@ $css->replacefile('default',
 $css->replacefile('default',
 '/js/litepublisher/css/filelist.min.css',
 '/js/litepubl/common/css/filelist.min.css'
+);
+
+$css->replacefile('default',
+'/js/litepublisher/css/form-inline.min.css',
+'/js/litepubl/common/css/form-inline.min.css'
 );
 
 $css->replacefile('admin',

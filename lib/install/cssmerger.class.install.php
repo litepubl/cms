@@ -16,8 +16,8 @@ $self->add($section, $filename);
 }
 
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
+  $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
   $self->add($section, '/js/litepublisher/css/table.min.css');
-  $self->add($section, '/js/litepublisher/css/form.inline.min.css');
   
 $self->addtext($section, 'hidden', '.hidden{display:none}');
   

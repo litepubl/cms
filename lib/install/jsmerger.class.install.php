@@ -41,7 +41,6 @@ function tjsmergerInstall($self) {
   '/js/litepubl/common/litepubl.namespace.min.js',
   '/js/litepubl/common/litepubl.init.min.js',
   '/js/litepubl/common/dialog.min.js',
-  '/js/litepubl/common/filelist.min.js',
   '/js/litepubl/common/players.min.js',
   '/js/litepubl/common/templates.min.js',
   '/js/litepubl/common/widgets.min.js');
