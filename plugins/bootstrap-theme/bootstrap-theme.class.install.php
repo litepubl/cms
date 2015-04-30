@@ -20,6 +20,12 @@ $filelist = $css->externalfunc(get_class($css), '_pretty_files', false);
 foreach ($filelist as $filename) {
   $css->deletefile('default', $filename);
 }
+
+$filelist = $css->externalfunc(get_class($css), '_deprecated_files', false);
+foreach ($filelist as $filename) {
+  $css->deletefile('default', $filename);
+}
+
   $css->unlock();
 
 $appcache = appcache_manifest::i();

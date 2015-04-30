@@ -9,3 +9,7 @@ margin: 5px;
 .margin-auto {
 margin: auto;
 }
+
+.hidden{
+display:none
+}

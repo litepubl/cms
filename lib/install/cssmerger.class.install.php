@@ -15,11 +15,15 @@ foreach ($list as $filename) {
 $self->add($section, $filename);
 }
 
+$items = tcssmerger_deprecated_files($self);
+foreach ($list as $filename) {
+$self->add($section, $filename);
+}
+
+  $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
   $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
 
-$self->addtext($section, 'hidden', '.hidden{display:none}');
-  
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
   $self->add($section, '/js/admin/css/fileman.min.css');
@@ -42,6 +46,12 @@ function tcssmerger_pretty_files($self) {
   return array(
 '/js/prettyphoto/css/prettyPhoto.css',
 '/js/litepubl/pretty/dialog.pretty.min.css',
+);
+}
+
+function tcssmerger_deprecated_files($self) {
+  return array(
+	'/js/litepubl/deprecated/css/align.min.css',
 	'/js/litepubl/deprecated/css/button.min.css',
 '/js/litepubl/deprecated/css/table.min.css',
 );

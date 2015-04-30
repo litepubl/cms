@@ -190,6 +190,10 @@ $css->replacefile('default',
 '/js/litepubl/deprecated/css/table.min.css'
 );
 
+$css->add('default', '/js/litepubl/common/css/common.min.css');
+$css->add('default', '/js/litepubl/deprecated/css/align.min.css');
+$css->deletetext('default', 'hidden');
+
 $css->replacefile('admin',
 '/js/litepublisher/css/fileman.min.css',
 '/js/litepubl/admin/css/fileman.min.css'
