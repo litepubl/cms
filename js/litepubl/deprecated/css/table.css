@@ -1,0 +1,16 @@
+.classictable   {
+border: 2px solid black;
+border-collapse:collapse;
+font-size:12px;
+width:98%;
+} 
+
+.classictable   th, .classictable    td {
+border: 1px solid black;
+padding: 5px;
+}
+
+.table-responsive,
+ .div-table{
+overflow:auto
+}
