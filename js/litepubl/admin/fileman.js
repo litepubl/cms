@@ -45,17 +45,12 @@ try {
         if (options.items) {
           this.set_uploaded(options.items);
         } else {
-          this.load_current_files();
+          this.files_getpost();
         }
     } catch(e) {erralert(e);}
     },
-    
-    init_uploader: function() {
-      this.uploader = new litepubl.Uploader();
-      this.uploader.onupload.add($.proxy(this.uploaded, this));
-    },
-    
-    load_current_files: function() {
+
+    files_getpost: function() {
       var self = this;
       $.jsonrpc({
         type: 'get',
@@ -71,6 +66,11 @@ try {
           $.errorbox(message);
         }
       });
+    },
+
+    init_uploader: function() {
+      this.uploader = new litepubl.Uploader();
+      this.uploader.onupload.add($.proxy(this.uploaded, this));
     },
     
     set_uploaded: function(items) {
@@ -114,7 +114,7 @@ try {
       });
       
     },
-
+openimage: function(link) {
 litepubl.linkimage(link);
 },
     
@@ -124,7 +124,9 @@ litepubl.linkimage(link);
       item.previewlink = '';
       var type = (item["media"] in this.tml) ? item["media"] : "file";
       
-      if (parseInt(item["preview"]) &&(item.preview in this.items)) item.previewlink = ltoptions.files + "/files/" + this.items[item["preview"]]["filename"];
+      if (parseInt(item.preview) &&(item.preview in this.items)) {
+item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filename"];
+}
 
       var html = $.simpletml(this.tml.item, {
         id: item.id,
@@ -132,24 +134,6 @@ litepubl.linkimage(link);
       });
       
       return $(html).data("idfile", id);
-    },
-    
-    loadpage: function(uipanel, page) {
-      var self = this;
-      $(uipanel).data("files", "loading");
-      $.jsonrpc({
-        type: 'get',
-        method: "files_getpage",
-      params: {page: page - 1},
-        callback: function(r) {
-          self.joinitems(r.files);
-          self.setpage(uipanel, r.files);
-        },
-        
-        error:  function(message, code) {
-          $.errorbox(message);
-        }
-      });
     },
     
     joinitems: function(files) {
@@ -176,7 +160,6 @@ litepubl.linkimage(link);
         $("#new-files .file-items").append(this.get_fileitem(idfile));
     } catch(e) {erralert(e);}
     },
-    
     
     add: function(idfile) {
       if ($.inArray(idfile, this.loaded) < 0) {

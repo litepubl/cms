@@ -1,15 +1,19 @@
 # These files are text and should be normalized (Convert crlf => lf)
-*.php text eol=lf
-*.css text eol=lf
-*.js text eol=lf
-*.htm text eol=lf
-*.html text eol=lf
-*.xml text eol=lf
-*.txt text eol=lf
-*.tml text eol=lf
-*.ini text eol=lf
-*.inc text eol=lf
-.htaccess text eol=lf
+*.php text
+*.css text
+*.js text
+*.htm text
+*.html text
+*.xml text
+*.txt text
+*.tml text
+*.ini text
+*.inc text
+.htaccess text
+
+# Auto detect text files and perform LF normalization
+# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
+* text=auto
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
@@ -42,10 +46,6 @@
 *.svg binary
 *.woff binary
 *.woff2 binary
-
-# Auto detect text files and perform LF normalization
-# http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
-* text=auto
 
  # Documents
 *.doc  diff=astextplain
