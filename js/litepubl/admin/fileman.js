@@ -16,6 +16,7 @@
   litepubl.Fileman = Class.extend({
     loaded: false, //[id, ...] current attached files to post
     items: false, // {} all files
+count: 0,
     indialog: false,
     holder: false,
     
@@ -23,26 +24,51 @@
       this.loaded = [],
     this.items = {};
 
-      options = $.extend({
-        holder: '#posteditor-filelist',
-        pages: 0,
-        items: false
-      }, options);
-      
       this.tml = litepubl.tml.fileman;
       $.replacetml(this.tml, {
         lang: lang.posteditor
       });
 
+      options = $.extend({
+        holder: '#posteditor-filelist',
+//total uploaded files
+        count: 0,
+// current uploaded files into post
+        items: false
+      }, options);
+      
         var self = this;
-        this.holder = $(options.holder);
-        this.holder.closest('form').submit(function() {
+        var holder = this.holder = $(options.holder);
+        holder.closest('form').submit(function() {
           $("input[name='files']", self.holder).val(self.loaded.join(','));
         });
         
+      holder.on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
+        var button = $(this);
+        var container = button.closest(".file-item");
+        var idfile = container .data("idfile");
+        
+        if (button.hasClass("add-toolbutton")) {
+          self.add(idfile);
+        } else if (button.hasClass("delete-toolbutton")) {
+container.remove();
+          self.remove(idfile);
+        } else if (button.hasClass("property-toolbutton")) {
+          self.editprops(idfile, container );
+        }
+        
+        return false;
+      });
+      
+      holder.on("click.image", ".file-image", function() {
+        self.openimage($(this));
+        return false;
+      });
+
 try {
         this.init_uploader();
         if (options.items) {
+this.count = options.count;
           this.set_uploaded(options.items);
         } else {
           this.files_getpost();
@@ -58,6 +84,7 @@ try {
       params: {idpost: ltoptions.idpost},
         callback: function (r) {
           try {
+self.count = r.count;
             self.set_uploaded(r.files);
         } catch(e) {erralert(e);}
         },
@@ -68,11 +95,6 @@ try {
       });
     },
 
-    init_uploader: function() {
-      this.uploader = new litepubl.Uploader();
-      this.uploader.onupload.add($.proxy(this.uploaded, this));
-    },
-    
     set_uploaded: function(items) {
       for (var i in items) {
         var item = items[i];
@@ -80,39 +102,20 @@ try {
         if (!parseInt(item.parent) ) this.loaded.push(item.id);
       }
       
-      this.setpage("#current-files", items);
-    this.setpage("#new-files", {});
+var owner = $("#oldfiles", this.holder);
+if (this.loaded.length) {
+      this.append(owner, items);
+owner.removeClass("hidden");
+} else {
+owner.addClass("hidden");
+}
     },
     
-    setpage: function(uipanel, files) {
-      var panel = $(".file-items", uipanel);
+    append: function(owner, files) {
       for (var id in files) {
-        if (parseInt(files[id]['parent']) != 0) continue;
-        panel.append(this.get_fileitem(id));
+        if (parseInt(files[id].parent)) continue;
+        owner.append(this.get_fileitem(id));
       }
-      
-      var self = this;
-      panel.on("click.toolbar", ".file-toolbar > a, .file-toolbar > button", function() {
-        var button = $(this);
-        var holder = button.closest(".file-item");
-        var idfile = holder.data("idfile");
-        
-        if (button.hasClass("add-toolbutton")) {
-          self.add(idfile);
-        } else if (button.hasClass("delete-toolbutton")) {
-          self.del(idfile, holder);
-        } else if (button.hasClass("property-toolbutton")) {
-          self.editprops(idfile, holder);
-        }
-        
-        return false;
-      });
-      
-      panel.on("click.image", "a.file-image", function() {
-        self.openimage($(this));
-        return false;
-      });
-      
     },
 openimage: function(link) {
 litepubl.linkimage(link);
@@ -142,6 +145,11 @@ item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filen
       }
     },
 
+    init_uploader: function() {
+      this.uploader = new litepubl.Uploader();
+      this.uploader.onupload.add($.proxy(this.uploaded, this));
+    },
+    
         /*
         r = {
           id: int idfile,
@@ -156,8 +164,9 @@ item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filen
         this.items[idfile] = r.item;
         if (parseInt(r.item.preview)) this.items[r.preview.id] = r.preview;
         
-        $("#current-files .file-items").append(this.get_fileitem(idfile));
-        $("#new-files .file-items").append(this.get_fileitem(idfile));
+        var owner = $("#newfiles", this.holder);
+owner.find("#nonewfiles").hide();
+owner.append(this.get_fileitem(idfile));
     } catch(e) {erralert(e);}
     },
     
@@ -167,7 +176,7 @@ item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filen
       }
     },
     
-    del: function(idfile, holder) {
+    remove: function(idfile) {
       var i = $.inArray(idfile, this.loaded);
       if (i < 0) {
         idfile = parseInt(idfile);
@@ -176,7 +185,6 @@ item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filen
       }
       
       this.loaded.splice(i, 1);
-      holder.remove();
     },
     
     editprops: function(idfile, owner) {
