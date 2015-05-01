@@ -14,14 +14,15 @@
   };
   
   litepubl.Fileman = Class.extend({
-    items: false,
-    curr: false,
+    loaded: false, //[id, ...] current attached files to post
+    items: false, // {} all files
     indialog: false,
     holder: false,
     
     init: function(options) {
+      this.loaded = [],
     this.items = {};
-      this.curr = [],
+
       options = $.extend({
         holder: '#posteditor-filelist',
         pages: 0,
@@ -36,12 +37,11 @@
         var self = this;
         this.holder = $(options.holder);
         this.holder.closest('form').submit(function() {
-          $("input[name='files']", self.holder).val(self.curr.join(','));
+          $("input[name='files']", self.holder).val(self.loaded.join(','));
         });
         
 try {
         this.init_uploader();
-
         if (options.items) {
           this.set_uploaded(options.items);
         } else {
@@ -68,7 +68,7 @@ try {
         },
         
         error: function(message, code) {
-          $.messagebox(lang.dialog.error, message);
+          $.errorbox(message);
         }
       });
     },
@@ -77,7 +77,7 @@ try {
       for (var i in items) {
         var item = items[i];
         this.items[item.id] = item;
-        if (parseInt(item.parent) == 0) this.curr.push(item.id);
+        if (!parseInt(item.parent) ) this.loaded.push(item.id);
       }
       
       this.setpage("#current-files", items);
@@ -124,9 +124,10 @@ litepubl.linkimage(link);
       item.previewlink = '';
       var type = (item["media"] in this.tml) ? item["media"] : "file";
       
-      if ((parseInt(item["preview"]) != 0) &&(item.preview in this.items)) item.previewlink = ltoptions.files + "/files/" + this.items[item["preview"]]["filename"];
+      if (parseInt(item["preview"]) &&(item.preview in this.items)) item.previewlink = ltoptions.files + "/files/" + this.items[item["preview"]]["filename"];
+
       var html = $.simpletml(this.tml.item, {
-        id: item["id"],
+        id: item.id,
         content: $.simpletml(this.tml[type], item)
       });
       
@@ -156,9 +157,7 @@ litepubl.linkimage(link);
         this.items[id] = files[id];
       }
     },
-    
-    uploaded: function(r) {
-      try {
+
         /*
         r = {
           id: int idfile,
@@ -166,11 +165,12 @@ litepubl.linkimage(link);
           preview: array fileitem optimal
         }
         */
-        
+    uploaded: function(r) {
+      try {        
         var idfile = r.id;
-        this.curr.push(idfile);
+        this.loaded.push(idfile);
         this.items[idfile] = r.item;
-        if (parseInt(r.item.preview) != 0) this.items[r.preview.id] = r.preview;
+        if (parseInt(r.item.preview)) this.items[r.preview.id] = r.preview;
         
         $("#current-files .file-items").append(this.get_fileitem(idfile));
         $("#new-files .file-items").append(this.get_fileitem(idfile));
@@ -179,21 +179,20 @@ litepubl.linkimage(link);
     
     
     add: function(idfile) {
-      if ($.inArray(idfile, this.curr) < 0) {
-        this.curr.push(idfile);
+      if ($.inArray(idfile, this.loaded) < 0) {
+        this.loaded.push(idfile);
       }
     },
     
     del: function(idfile, holder) {
-      var i = $.inArray(idfile, this.curr);
+      var i = $.inArray(idfile, this.loaded);
       if (i < 0) {
         idfile = parseInt(idfile);
-        var i = $.inArray(idfile, this.curr);
+        var i = $.inArray(idfile, this.loaded);
         if (i < 0) return;
       }
       
-      this.curr.splice(i, 1);
-      var parent = holder.parent();
+      this.loaded.splice(i, 1);
       holder.remove();
     },
     

@@ -51,6 +51,10 @@
       if (index == 0) callback();
     });
   };
+
+$.errorbox = function(message) {
+$.messagebox(lang.dialog.error, message);
+};
   
   $.fn.litedialog = function(buttons) {
     $.litedialog({

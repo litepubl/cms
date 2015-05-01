@@ -33,11 +33,13 @@ class tjsonfiles extends tevents {
   public function files_getpost(array $args) {
     $idpost = (int) $args['idpost'];
     if (!$this->auth($idpost)) return $this->forbidden();
-    $result = array();
+
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
-    $files = tfiles::i();
-    $result['count'] = (int) ceil($files->db->getcount(" parent = 0 $where") / 20);
-    $result['files'] = array();
+
+    $result = array();    $files = tfiles::i(
+    'count' = (int) $files->db->getcount(" parent = 0 $where");
+'files' => array()
+);
     
     if ($idpost) {
       $list = $files->itemsposts->getitems($idpost);
