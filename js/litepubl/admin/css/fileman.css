@@ -1,12 +1,40 @@
 .file-item{
-display:inline-block;
-margin-bottom:5px;
+float:left;
+display:block;
+overflow: hidden;
+margin:6px 12px;
 text-align:center;
+width: 25%;
+}
+
+@media (min-width: 480px) {
+.file-item{
+  width: 50%;
+}
+}
+
+@media (min-width: 768px) {
+.file-item{
+  width: 33.33333333%;
+}
+}
+
+@media (min-width: 992px) {
+.file-item{
+width: 25%;
+}
+}
+
+@media (min-width: 1200px) {
+.file-item{
+width: 20%;
+}
 }
 
 .file-content{
-width:96%;
-height:145px;
+font-size:10px;
+display: block;
+overflow: hidden;
 }
 
 .file-content img{
@@ -15,24 +43,9 @@ height:145px;
 display: block;
   margin-left: auto;
   margin-right: auto;
-height:100% !important;
-width:100% !important;
+height:100%;
+width:100%;
 }
-
-.file-content {
-font-size:10px;
-}
-
-.files-tab .delete-toolbutton{
-display:none;
-}
-
-#current-files .add-toolbutton{
-display:none;
-}
-
-.text-right{text-align:right;}
-.file-items{width:100%;overflow:hidden;}
 
 #dropzone{
 border:solid 1px blue;
@@ -46,4 +59,9 @@ border:solid 3px green;
   border-radius: 6px;
 }
 
-.flash-hidden{position:absolute;left:-10000px;width:0;height:0;}
+.flash-hidden{
+position:absolute;
+left:-10000px;
+width:0;
+height:0;
+}

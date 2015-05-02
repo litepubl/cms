@@ -173,6 +173,10 @@ owner.append(this.get_fileitem(idfile));
     add: function(idfile) {
       if ($.inArray(idfile, this.loaded) < 0) {
         this.loaded.push(idfile);
+
+$("#oldfiles", this.holder)
+.removeClass("hidden")
+.append(this.get_fileitem(idfile));
       }
     },
     

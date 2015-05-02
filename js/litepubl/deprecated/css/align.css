@@ -2,6 +2,9 @@
 text-align: center;
 }
 
+.text-right{
+text-align:right;
+}
 div.text-center {
 margin: 5px;
 }

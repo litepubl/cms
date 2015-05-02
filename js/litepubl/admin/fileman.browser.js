@@ -19,6 +19,11 @@ this.fileman = fileman;
 this.open();
 },
 
+add: function(owner) {
+
+this.fileman.add(id);
+},
+
 open: function() {
         var self = this;
 $.litedialog({
@@ -82,7 +87,6 @@ panel.attr("data-status", "loading");
         method: "files_getpage",
       params: {page: page - 1},
         callback: function(r) {
-          self.fileman.additems(r.files);
           self.addpage(page, r.files);
 panel.attr("data-status", "loaded");
           panel.append(self.getpage(page));
@@ -97,7 +101,9 @@ panel.append('<p>' + message + '</p>');
 
 addpage: function(page, items) {
 var list = this.pages[page] = [];
+var fileitems = this.fileman.items;
       for (var id in items) {
+        fileitems[id] = items[id];
         if (!parseInt(items[id].parent)) {
 list.push(id);
 }
