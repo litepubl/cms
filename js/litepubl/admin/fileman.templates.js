@@ -28,33 +28,14 @@
     '<li>%%lang.keywords%%: %%keywords%%</li>' +
     '</ul>',
     
-    /*
     tabs: '<div id="uploader"></div>' +
     '<div id="posteditor-files-tabs">' +
-    '<ul>' +
-    '<li><a href="#current-files"><span>%%lang.currentfiles%%</span></a></li>' +
-    '<li><a href="#new-files"><span>%%lang.newupload%%</span></a></li>' +
-    '</ul>' +
-    '<div id="current-files">' +
-    '<div class="file-items"></div>' +
-    '<div class="file-items-after"></div>' +
-    '</div>' +
-    
-    '<div id="new-files" class="files-tab">' +
-    '<div class="file-items"></div>' +
-    '<div class="file-items-after"></div>' +
-    '</div>' +
-    
-    '</div>' +
-    '<p class="hidden"><input type="hidden" name="files" value="" /></p>',
-    */
-    
-    tab: '<div class="files-tab" id="filepage-%%index%%">' +
-    '<div class="file-items"></div>' +
-    '<div class="file-items-after"></div>' +
+    '<ul>' %%head%%</ul>' +
+    '%%body%%' +
     '</div>',
-    
-    tabli: '<li><a href="#filepage-%%index%%">%%index%%</a></li>'
+
+        tabhead : '<li><a href="#filepage-%%index%%">%%index%%</a></li>',
+    tab: '<div class="files-tab" id="filepage-%%index%%" data-page="%%index%%" data-status="empty"></div>'
       };
   
 })( window);
