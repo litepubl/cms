@@ -18,15 +18,17 @@ this.onclose = onclose || $.noop;
 this.onset =  onset || $.noop;
 
 var self = this;
+var lng = lang.posteditor;
 $.litedialog({
         title: lang.posteditor.property,
-        html: litepubl.tml.fileman.fileprops,
+        html: 
+litepubl.tml.getedit(lng.title, "fileprop-title", item.title) +
+litepubl.tml.getedit(lng.description, "fileprop-description", item.description) +
+litepubl.tml.getedit(lng.keywords, "fileprop-keywords", item.keywords),
+
         open: function(holder) {
 self.holder = holder;
-var item = self.item;
-          $("input[name='fileprop-title']", holder).val(item.title);
-          $("input[name='fileprop-description']", holder).val(item.description);
-          $("input[name='fileprop-keywords']", holder).val(item.keywords);
+          $("input[name='fileprop-title']", holder).focus();
         },
 
 close: function() {

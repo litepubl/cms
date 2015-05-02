@@ -65,6 +65,11 @@ container.remove();
         return false;
       });
 
+holder.find("#browsefiles").on("click.browsefiles", function() {
+self.browsefiles();
+return false;
+});
+
 try {
         this.init_uploader();
         if (options.items) {
@@ -184,14 +189,22 @@ owner.append(this.get_fileitem(idfile));
     editprops: function(idfile, owner) {
       if (this.dialog) return false;
       var self = this;
-      this.dialog = new litepubl.Filemanprops(this.items[idfile]);
-this.dialog.onclose = function() {
+      this.dialog = new litepubl.Filemanprops(this.items[idfile],
+function() {
 self.dialog = false;
+},
 
-this.dialog.onset = function() {
+function(r) {
+          self.items[r.item.id] = r.item;
 owner.replaceWith(self.get_fileitem(idfile));
-};
-};
+});
+},
+
+browsefiles: function() {
+if (this.dialog) return false;
+
+var self = this;
+this.dialog = new litepubl.Filemanbrowser(this);
 }
 
 });
