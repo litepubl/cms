@@ -139,12 +139,6 @@ item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filen
       return $(html).data("idfile", id);
     },
     
-    joinitems: function(files) {
-      for (var id in files) {
-        this.items[id] = files[id];
-      }
-    },
-
     init_uploader: function() {
       this.uploader = new litepubl.Uploader();
       this.uploader.onupload.add($.proxy(this.uploaded, this));
@@ -188,66 +182,18 @@ owner.append(this.get_fileitem(idfile));
     },
     
     editprops: function(idfile, owner) {
-      if (this.indialog) return false;
-      this.indialog = true;
-      var fileitem = this.items[idfile];
+      if (this.dialog) return false;
       var self = this;
+      this.dialog = new litepubl.Filemanprops(this.items[idfile]);
+this.dialog.onclose = function() {
+self.dialog = false;
+
+this.dialog.onset = function() {
+owner.replaceWith(self.get_fileitem(idfile));
+};
+};
+}
+
+});
       
-      $.litedialog({
-        title: lang.posteditor.property,
-        html: this.tml.fileprops,
-        open: function(holder) {
-          $("input[name='fileprop-title']", holder).val(fileitem.title);
-          $("input[name='fileprop-description']", holder).val(fileitem.description);
-          $("input[name='fileprop-keywords']", holder).val(fileitem.keywords);
-        },
-        
-        buttons: [
-        {
-          title: "Ok",
-          click: function() {
-            var holder = $(".pp_inline");
-            var values = {
-              title: $.trim($("input[name='fileprop-title']", holder).val()),
-              description: $.trim($("input[name='fileprop-description']", holder).val()),
-              keywords: $.trim($("input[name='fileprop-keywords']", holder).val())
-            };
-            
-            $.closedialog();
-            self.setprops(idfile, values, owner);
-          }
-        },
-        {
-          title: lang.dialog.cancel,
-          click: function() {
-            $.closedialog();
-            self.indialog = false;
-          }
-        }
-        ]
-      } );
-    },
-    
-    setprops: function(idfile, values, holder) {
-      $.extend(this.items[idfile], values);
-      values.idfile = idfile;
-      var self = this;
-      return $.jsonrpc({
-        method: "files_setprops",
-        params: values,
-        callback: function(r) {
-          self.items[r.item["id"]] = r.item;
-          //need to update infos but we cant find all files
-          if (!!holder) holder.replaceWith(self.get_fileitem(idfile));
-          self.indialog = false;
-        },
-        
-        error: function(message, code) {
-          self.indialog = false;
-          $.messagebox(lang.dialog.error, message);
-        }
-      });
-    }
-    
-  });//fileman
 }(jQuery, litepubl, window));

@@ -7,6 +7,7 @@
 
 (function( $ ){
   'use strict';
+
   $.closedialog = function(callback) {
     $.prettyPhoto.close();
     
@@ -85,7 +86,7 @@
     a.click();
     tmp.remove();
     
-    $.onEscape($.prettyPhoto.close);
+    $.onEscape($.proxy($.prettyPhoto.close, $.prettyPhoto));
     return options;
   };
   
