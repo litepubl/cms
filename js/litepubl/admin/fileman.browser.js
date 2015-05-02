@@ -9,15 +9,25 @@
   'use strict';
 
   litepubl.Filemanbrowser = Class.extend({
+pages: false,
     holder: false,
     
     init: function(fileman) {
+this.pages = [];
+},
+
+open: function() {
         var self = this;
 $.litedialog({
-        title: lang.posteditor.property,
-        html: html,
+        title: lang.posteditor.selectfile,
+        html: this.get_html(),
         open: function(holder) {
 self.holder = holder;
+holder.on("click.addfile", ".file-image:not(.file-added)", function() {
+self.add($(this).addClass("file-added"));
+return false;
+});
+
         var tabs = $("#posteditor-files-tabs", holder);
         tabs.tabs({
           hide: true,
@@ -32,26 +42,12 @@ self.holder = holder;
 },
 close: function() {
 self.holder = false;
-self.onclose();
 },
         
-        buttons: [
-        {
-          title: "Ok",
-          click: function() {
-            var holder = self.holder;
-            var values = {
-              title: $.trim($("input[name='fileprop-title']", holder).val()),
-              description: $.trim($("input[name='fileprop-description']", holder).val()),
-              keywords: $.trim($("input[name='fileprop-keywords']", holder).val())
-            };
-            
-            self.setprops(values);
-            $.closedialog();
-          }
-        },
-$.get_cancel_button()
-        ]
+        buttons: [{
+          title: lang.dialog.close,
+          click: $.closedialog
+        }]
       } );
 },
 

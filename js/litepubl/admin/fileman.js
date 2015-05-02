@@ -17,7 +17,8 @@
     loaded: false, //[id, ...] current attached files to post
     items: false, // {} all files
 count: 0,
-    indialog: false,
+    dialog: false,
+browser: false,
     holder: false,
     
     init: function(options) {
@@ -201,10 +202,12 @@ owner.replaceWith(self.get_fileitem(idfile));
 },
 
 browsefiles: function() {
-if (this.dialog) return false;
-
 var self = this;
-this.dialog = new litepubl.Filemanbrowser(this);
+if (this.browser) {
+this.browser.open();
+} else {
+this.browser = new litepubl.Filemanbrowser(this);
+}
 }
 
 });
