@@ -42,7 +42,7 @@ return false;
           show: true,
           beforeLoad: litepubl.uibefore,
           beforeActivate: function(event, ui) {
-var panel = $(ui.newPanel);
+var panel = $(ui.newPanel.firstChild);
             if ("empty" == panel.attr("data-status")) {
               self.loadpage(panel, panel.attr("data-page"));
             }
@@ -113,19 +113,13 @@ list.push(id);
 
     getpage: function(page) {
 var result = '';
-var html;
-
 var list = this.pages[page];
 var fileman = this.fileman;
       for (var i = 0, l = list.length; i < l; i++) {
 var id = list[i];
-html = fileman.get_fileitem(id);
-//insert file-added
-      if ($.inArray(id , fileman.loaded) >= 0) {
-html = html.replace("file-item", "file-item file-added");
+      if ($.inArray(id , fileman.loaded) < 0) {
+result += fileman.get_fileitem(id);
 }
-
-result += html;
       }
       
 return result;
