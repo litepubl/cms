@@ -47,11 +47,9 @@ browser: false,
       holder.on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
         var button = $(this);
         var container = button.closest(".file-item");
-        var idfile = container .data("idfile");
+        var idfile = container .attr("data-idfile");
         
-        if (button.hasClass("add-toolbutton")) {
-          self.add(idfile);
-        } else if (button.hasClass("delete-toolbutton")) {
+         if (button.hasClass("delete-toolbutton")) {
 container.remove();
           self.remove(idfile);
         } else if (button.hasClass("property-toolbutton")) {
@@ -118,11 +116,16 @@ owner.addClass("hidden");
     },
     
     append: function(owner, files) {
+var html = "";
       for (var id in files) {
-        if (parseInt(files[id].parent)) continue;
-        owner.append(this.get_fileitem(id));
+        if (!parseInt(files[id].parent)) {
+html += this.get_fileitem(id);
+}
       }
+
+        owner.append(html);
     },
+
 openimage: function(link) {
 litepubl.linkimage(link);
 },
@@ -131,19 +134,17 @@ litepubl.linkimage(link);
       var item =this.items[id];
       item.link = ltoptions.files + "/files/" + item.filename;
       item.previewlink = '';
-      var type = (item["media"] in this.tml) ? item["media"] : "file";
+      var type = (item.media in this.tml) ? item.media : "file";
       
       if (parseInt(item.preview) &&(item.preview in this.items)) {
 item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filename"];
 }
 
-      var html = $.simpletml(this.tml.item, {
+return $.parsetml(this.tml.item, {
         id: item.id,
-        content: $.simpletml(this.tml[type], item)
+        content: $.parsetml(this.tml[type], item)
       });
-      
-      return $(html).data("idfile", id);
-    },
+          },
     
     init_uploader: function() {
       this.uploader = new litepubl.Uploader();

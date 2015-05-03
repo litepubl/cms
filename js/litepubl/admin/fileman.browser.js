@@ -19,8 +19,7 @@ this.fileman = fileman;
 this.open();
 },
 
-add: function(owner) {
-
+add: function(id) {
 this.fileman.add(id);
 },
 
@@ -28,12 +27,12 @@ open: function() {
               var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         var self = this;
 $.litedialog({
-width: Math.ceil(winwidth / 4 * 3),
         title: lang.posteditor.selectfile,
         html: this.get_html(),
+width: Math.floor(winwidth / 4 * 3),
         open: function(holder) {
-holder.on("click.addfile", ".file-image:not(.file-added)", function() {
-self.add($(this).addClass("file-added"));
+holder.on("click.addfile", ".file-item:not(.file-added)", function() {
+self.add($(this).addClass("file-added").attr("data-idfile"));
 return false;
 });
 
@@ -114,11 +113,19 @@ list.push(id);
 
     getpage: function(page) {
 var result = '';
+var html;
+
 var list = this.pages[page];
-var items = this.fileman.items;
-var tml = litepubl.tml.fileman.file;
+var fileman = this.fileman;
       for (var i = 0, l = list.length; i < l; i++) {
-result += $.parsetml(tml, items[list[i]]);
+var id = list[i];
+html = fileman.get_fileitem(id);
+//insert file-added
+      if ($.inArray(id , fileman.loaded) >= 0) {
+html = html.replace("file-item", "file-item file-added");
+}
+
+result += html;
       }
       
 return result;

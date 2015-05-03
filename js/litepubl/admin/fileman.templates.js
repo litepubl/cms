@@ -7,7 +7,7 @@
 
 (function( window ){
   window.litepubl.tml.fileman = {
-    item: '<div class="file-item">' +
+    item: '<div class="file-item" data-idfile="%%id%%">' +
     '<div class="file-toolbar btn-toolbar" role="toolbar" aria-label="%%lang.filebuttons%%">' +
     '<button type="button" title="%%lang.add%%" class="add-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-plus-square" aria-hidden="true"></span> <span class="sr-only">%%lang.add%%</span></button>' +
     '<button type="button" title="%%lang.del%%" class="delete-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-remove" aria-hidden="true"></span> <span class="sr-only">%%lang.del%%</span></button>' +
@@ -28,14 +28,16 @@
     '<li>%%lang.keywords%%: %%keywords%%</li>' +
     '</ul>',
     
-    tabs: '<div id="uploader"></div>' +
+    tabs: '<div>' +
+'%%lang.seletfiles$%%' +
+'</div>' +
     '<div id="posteditor-files-tabs">' +
     '<ul>' %%head%%</ul>' +
     '%%body%%' +
     '</div>',
 
         tabhead : '<li><a href="#filepage-%%index%%">%%index%%</a></li>',
-    tab: '<div class="files-tab" id="filepage-%%index%%" data-page="%%index%%" data-status="empty"></div>'
+    tab: '<div class="file-items files-tab" id="filepage-%%index%%" data-page="%%index%%" data-status="empty"></div>'
       };
   
 })( window);

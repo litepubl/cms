@@ -69,6 +69,22 @@ height:100%;
   white-space: nowrap;
 }
 
+.file-added .file-content {
+    position: relative;
+}
+
+.file-added .file-content:after {
+    position: absolute;
+     left: 0;
+    top: 0;
+     right: 0;
+    bottom: 0;
+    opacity: 0.4;
+color:black;
+    display: block;
+    overflow: hidden;
+}
+
 #dropzone{
 border:solid 1px blue;
   border-radius: 4px;
