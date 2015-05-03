@@ -25,8 +25,10 @@ this.fileman.add(id);
 },
 
 open: function() {
+              var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
         var self = this;
 $.litedialog({
+width: Math.ceil(winwidth / 4 * 3),
         title: lang.posteditor.selectfile,
         html: this.get_html(),
         open: function(holder) {
