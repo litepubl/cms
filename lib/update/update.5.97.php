@@ -17,7 +17,7 @@ $js = tjsmerger::i();
   }
 
 function update597() {
-  litepublisher::$site->jquery_version = '1.11.2';
+  litepublisher::$site->jquery_version = '1.11.3';
 litepublisher::$site->jqueryui_version = '1.11.4';
 litepublisher::$site->save();
 
