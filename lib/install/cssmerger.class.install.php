@@ -10,7 +10,7 @@ function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-  $items = tcssmerger_pretty_files($self);
+  $list = tcssmerger_pretty_files($self);
   foreach ($list as $filename) {
     $self->add($section, $filename);
   }

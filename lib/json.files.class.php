@@ -36,8 +36,9 @@ class tjsonfiles extends tevents {
     
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
     
-    $result = array();    $files = tfiles::i(
-    'count' = (int) $files->db->getcount(" parent = 0 $where");
+$files = tfiles::i();
+    $result = array(
+    'count' => (int) $files->db->getcount(" parent = 0 $where"),
     'files' => array()
     );
     

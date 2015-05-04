@@ -43,7 +43,7 @@ function tjsmergerInstall($self) {
   '/js/litepubl/common/dialog.min.js',
   '/js/litepubl/common/players.min.js',
   '/js/litepubl/common/templates.min.js',
-  '/js/litepubl/common/widgets.min.js');
+  '/js/litepubl/common/widgets.min.js',
   );
   
   foreach ($defaults as $filename) {
