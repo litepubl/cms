@@ -1478,171 +1478,170 @@ class tposteditor extends tadminmenu {
         $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
       }
     }
+    
+    $result = $html->filelist($args);
+    $html->pop_section();
+    return $result;
   }
   
-  $result = $html->filelist($args);
-  $html->pop_section();
-  return $result;
-}
-
-public function canrequest() {
-  tlocal::admin()->searchsect[] = 'editor';
-  $this->isauthor = false;
-  $this->basename = 'editor';
-  $this->idpost = $this->idget();
-  if ($this->idpost > 0) {
-    $posts = tposts::i();
-    if (!$posts->itemexists($this->idpost)) return 404;
-  }
-  $post = tpost::i($this->idpost);
-  if (!litepublisher::$options->hasgroup('editor')) {
-    if (litepublisher::$options->hasgroup('author')) {
-      $this->isauthor = true;
-      if (($post->id != 0) && (litepublisher::$options->user != $post->author)) return 403;
+  public function canrequest() {
+    tlocal::admin()->searchsect[] = 'editor';
+    $this->isauthor = false;
+    $this->basename = 'editor';
+    $this->idpost = $this->idget();
+    if ($this->idpost > 0) {
+      $posts = tposts::i();
+      if (!$posts->itemexists($this->idpost)) return 404;
+    }
+    $post = tpost::i($this->idpost);
+    if (!litepublisher::$options->hasgroup('editor')) {
+      if (litepublisher::$options->hasgroup('author')) {
+        $this->isauthor = true;
+        if (($post->id != 0) && (litepublisher::$options->user != $post->author)) return 403;
+      }
     }
   }
-}
-
-public function gettitle() {
-  if ($this->idpost == 0){
-    return parent::gettitle();
-  } else {
-    if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
-    return tlocal::get('editor', 'editor');
-  }
-}
-
-public function getexternal() {
-  $this->basename = 'editor';
-  $this->idpost = 0;
-  return $this->getcontent();
-}
-
-public function getpostargs(tpost $post, targs $args) {
-  $args->id = $post->id;
-  $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$post->id&get");
-  $args->title = tcontentfilter::unescape($post->title);
-  $args->categories = $this->getpostcategories($post);
-  $args->date = $post->posted;
-  $args->url = $post->url;
-  $args->title2 = $post->title2;
-  $args->keywords = $post->keywords;
-  $args->description = $post->description;
-  $args->head = $post->rawhead;
   
-  $args->raw = $post->rawcontent;
-  $args->filtered = $post->filtered;
-  $args->excerpt = $post->excerpt;
-  $args->rss = $post->rss;
-  $args->more = $post->moretitle;
-  $args->upd = '';
-}
-
-public function getcontent() {
-  $html = $this->html;
-  $post = tpost::i($this->idpost);
-  ttheme::$vars['post'] = $post;
-  ttheme::$vars['posteditor'] = $this;
-  $args = new targs();
-  $this->getpostargs($post, $args);
-  
-  $result = $post->id == 0 ? '' : $html->h4($this->lang->formhead . ' ' . $post->bookmark);
-  if ($this->isauthor &&($r = tauthor_rights::i()->getposteditor($post, $args)))  return $r;
-  
-  $result .= $html->form($args);
-  unset(ttheme::$vars['post'], ttheme::$vars['posteditor']);
-  return $html->fixquote($result);
-}
-
-public static function processcategories() {
-  return tadminhtml::check2array('category-');
-}
-
-protected function set_post(tpost $post) {
-  extract($_POST, EXTR_SKIP);
-  $post->title = $title;
-  
-  $cats = self::processcategories();
-  $cats = array_unique($cats);
-  array_delete_value($cats, 0);
-  array_delete_value($cats, '');
-  array_delete_value($cats, false);
-  array_delete_value($cats, null);
-  $post->categories= $cats;
-  
-  if (($post->id == 0) && (litepublisher::$options->user >1)) $post->author = litepublisher::$options->user;
-  if (isset($tags)) $post->tagnames = $tags;
-  if (isset($icon)) $post->icon = (int) $icon;
-  if (isset($idview)) $post->idview = $idview;
-  if (isset($files))  {
-    $files = trim($files, ', ');
-    $post->files = tdatabase::str2array($files);
-  }
-  if (isset($date) && $date) {
-    $post->posted = tadminhtml::getdatetime('date');
+  public function gettitle() {
+    if ($this->idpost == 0){
+      return parent::gettitle();
+    } else {
+      if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
+      return tlocal::get('editor', 'editor');
+    }
   }
   
-  if (isset($status)) {
-    $post->status = $status == 'draft' ? 'draft' : 'published';
-    $post->comstatus = $comstatus;
-    $post->pingenabled = isset($pingenabled);
-    $post->idperm = (int) $idperm;
-    if ($password != '') $post->password = $password;
+  public function getexternal() {
+    $this->basename = 'editor';
+    $this->idpost = 0;
+    return $this->getcontent();
   }
   
-  if (isset($url)) {
-    $post->url = $url;
-    $post->title2 = $title2;
-    $post->keywords = $keywords;
-    $post->description = $description;
-    $post->rawhead = $head;
+  public function getpostargs(tpost $post, targs $args) {
+    $args->id = $post->id;
+    $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$post->id&get");
+    $args->title = tcontentfilter::unescape($post->title);
+    $args->categories = $this->getpostcategories($post);
+    $args->date = $post->posted;
+    $args->url = $post->url;
+    $args->title2 = $post->title2;
+    $args->keywords = $post->keywords;
+    $args->description = $post->description;
+    $args->head = $post->rawhead;
+    
+    $args->raw = $post->rawcontent;
+    $args->filtered = $post->filtered;
+    $args->excerpt = $post->excerpt;
+    $args->rss = $post->rss;
+    $args->more = $post->moretitle;
+    $args->upd = '';
   }
   
-  $post->content = $raw;
-  if (isset($excerpt)) $post->excerpt = $excerpt;
-  if (isset($rss)) $post->rss = $rss;
-  if (isset($more)) $post->moretitle = $more;
-  if (isset($filtered)) $post->filtered = $filtered;
-  if (isset($upd)) {
-    $update = sprintf($this->lang->updateformat, tlocal::date(time()), $upd);
-    $post->content = $post->rawcontent . "\n\n" . $update;
+  public function getcontent() {
+    $html = $this->html;
+    $post = tpost::i($this->idpost);
+    ttheme::$vars['post'] = $post;
+    ttheme::$vars['posteditor'] = $this;
+    $args = new targs();
+    $this->getpostargs($post, $args);
+    
+    $result = $post->id == 0 ? '' : $html->h4($this->lang->formhead . ' ' . $post->bookmark);
+    if ($this->isauthor &&($r = tauthor_rights::i()->getposteditor($post, $args)))  return $r;
+    
+    $result .= $html->form($args);
+    unset(ttheme::$vars['post'], ttheme::$vars['posteditor']);
+    return $html->fixquote($result);
   }
   
-}
-
-public function processform() {
-  //dumpvar($_POST);
-  $this->basename = 'editor';
-  $html = $this->html;
-  if (empty($_POST['title'])) return $html->h2->emptytitle;
-  $id = (int)$_POST['id'];
-  $post = tpost::i($id);
-  
-  if ($this->isauthor &&($r = tauthor_rights::i()->editpost($post)))  {
-    $this->idpost = $post->id;
-    return $r;
+  public static function processcategories() {
+    return tadminhtml::check2array('category-');
   }
   
-  $this->set_post($post);
-  $posts = tposts::i();
-  if ($id == 0) {
-    $this->idpost = $posts->add($post);
-    $_POST['id'] = $this->idpost;
-  } else {
-    $posts->edit($post);
+  protected function set_post(tpost $post) {
+    extract($_POST, EXTR_SKIP);
+    $post->title = $title;
+    
+    $cats = self::processcategories();
+    $cats = array_unique($cats);
+    array_delete_value($cats, 0);
+    array_delete_value($cats, '');
+    array_delete_value($cats, false);
+    array_delete_value($cats, null);
+    $post->categories= $cats;
+    
+    if (($post->id == 0) && (litepublisher::$options->user >1)) $post->author = litepublisher::$options->user;
+    if (isset($tags)) $post->tagnames = $tags;
+    if (isset($icon)) $post->icon = (int) $icon;
+    if (isset($idview)) $post->idview = $idview;
+    if (isset($files))  {
+      $files = trim($files, ', ');
+      $post->files = tdatabase::str2array($files);
+    }
+    if (isset($date) && $date) {
+      $post->posted = tadminhtml::getdatetime('date');
+    }
+    
+    if (isset($status)) {
+      $post->status = $status == 'draft' ? 'draft' : 'published';
+      $post->comstatus = $comstatus;
+      $post->pingenabled = isset($pingenabled);
+      $post->idperm = (int) $idperm;
+      if ($password != '') $post->password = $password;
+    }
+    
+    if (isset($url)) {
+      $post->url = $url;
+      $post->title2 = $title2;
+      $post->keywords = $keywords;
+      $post->description = $description;
+      $post->rawhead = $head;
+    }
+    
+    $post->content = $raw;
+    if (isset($excerpt)) $post->excerpt = $excerpt;
+    if (isset($rss)) $post->rss = $rss;
+    if (isset($more)) $post->moretitle = $more;
+    if (isset($filtered)) $post->filtered = $filtered;
+    if (isset($upd)) {
+      $update = sprintf($this->lang->updateformat, tlocal::date(time()), $upd);
+      $post->content = $post->rawcontent . "\n\n" . $update;
+    }
+    
   }
-  $_GET['id'] = $this->idpost;
-  return sprintf($html->p->success,$post->bookmark);
-}
-
+  
+  public function processform() {
+    //dumpvar($_POST);
+    $this->basename = 'editor';
+    $html = $this->html;
+    if (empty($_POST['title'])) return $html->h2->emptytitle;
+    $id = (int)$_POST['id'];
+    $post = tpost::i($id);
+    
+    if ($this->isauthor &&($r = tauthor_rights::i()->editpost($post)))  {
+      $this->idpost = $post->id;
+      return $r;
+    }
+    
+    $this->set_post($post);
+    $posts = tposts::i();
+    if ($id == 0) {
+      $this->idpost = $posts->add($post);
+      $_POST['id'] = $this->idpost;
+    } else {
+      $posts->edit($post);
+    }
+    $_GET['id'] = $this->idpost;
+    return sprintf($html->p->success,$post->bookmark);
+  }
+  
 }//class
 
 class poststatus {
-public function __get($name) {
-  $post = ttheme::$vars['post'];
-$value = $post->{$name};
-  $lang = tlocal::i();
-return $lang->{$value};
-}
+  public function __get($name) {
+    $post = ttheme::$vars['post'];
+  $value = $post->{$name};
+    $lang = tlocal::i();
+  return $lang->{$value};
+  }
 }
 
