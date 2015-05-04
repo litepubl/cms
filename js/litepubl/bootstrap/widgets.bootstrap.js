@@ -9,9 +9,9 @@
   'use strict';
   
   litepubl.BootstrapWidgets = Class.extend({
-
+    
     toggleclass: "fa-expand fa-collapse",
-tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title="%%lang.clickme%%"></a>',
+    tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title="%%lang.clickme%%"></a>',
     
     init: function(options) {
       options = $.extend({
@@ -57,12 +57,12 @@ tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title=
       if (button.data("model") == "widget-collapse") {
         var idcontent = "#widget-content-" + span.data("widget").id;
         $(idcontent).addClass("panel-collapse");
-
+        
         span.wrap($.parsetml(this.tml_wrap_collapse, {
-idwidget: span.data("widget").id,
-idcontent: idcontent,
-lang: lang.widgetlang
-}));
+          idwidget: span.data("widget").id,
+          idcontent: idcontent,
+          lang: lang.widgetlang
+        }));
       }
       
       var self = this;
@@ -111,34 +111,34 @@ lang: lang.widgetlang
         case "dropdown":
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-
+        
         button.dropdown("toggle");
         break;
         
         case 'widget-collapse':
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-
-var id_body = "widget-content-" + widget.id;
-
+        
+        var id_body = "widget-content-" + widget.id;
+        
         $("#" + id_body)
-.addClass("in")
+        .addClass("in")
         .attr("aria-expanded", true);
-
-button.find("a")
-.removeClass("collapsed")
+        
+        button.find("a")
+        .removeClass("collapsed")
         .attr("data-toggle", "collapse")
         .attr("data-parent", '#' + button.closest(".panel-group").attr("id"))
         .attr("data-target", "#" + id_body)
         .attr("aria-controls", id_body)
         .attr("aria-expanded", true)
-.collapse();
+        .collapse();
         break;
         
         case "slide":
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-
+        
         this.toggleicon(span);
         var self = this;
         button.data("body", widget.body)

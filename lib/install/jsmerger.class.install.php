@@ -92,6 +92,8 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/uploader.flash.min.js');
   $self->add($section, '/js/litepubl/admin/posteditor.min.js');
   $self->add($section, '/js/litepubl/admin/fileman.min.js');
+  $self->add($section, '/js/litepubl/admin/fileman.browser.min.js');
+  $self->add($section, '/js/litepubl/admin/fileman.propedit.min.js');
   $self->add($section, '/js/litepubl/admin/fileman.templates.min.js');
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
   

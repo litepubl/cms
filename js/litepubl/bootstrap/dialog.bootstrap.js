@@ -13,9 +13,9 @@
     footer: false,
     style: false,
     options: false,
-padwidth: 32,
-padheight: 0,
-removeOnclose: true,
+    padwidth: 32,
+    padheight: 0,
+    removeOnclose: true,
     
     tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-title-%%id%%">' +
     '<div class="modal-dialog center-block"><div class="modal-content">' +
@@ -37,7 +37,7 @@ removeOnclose: true,
       this.default_options = {
         title: "",
         html: "",
-css: "",
+        css: "",
         width: false,
         height: false,
         open: $.noop,
@@ -66,14 +66,14 @@ css: "",
     
     doclose: function() {
       if (this.dialog && $.isFunction(this.options.close)) this.options.close(this.dialog);
-if (this.removeOnclose) this.remove();
-},
-
-remove: function() {
+      if (this.removeOnclose) this.remove();
+    },
+    
+    remove: function() {
       if (!this.dialog) return false;
       this.options = false;
       this.footer = false;
-this.dialog.removetooltip();
+      this.dialog.removetooltip();
       this.dialog.remove();
       this.dialog = false;
       if (this.style) {
@@ -81,15 +81,15 @@ this.dialog.removetooltip();
         this.style = false;
       }
     },
-
-addstyle: function() {
-var options = this.options;
+    
+    addstyle: function() {
+      var options = this.options;
       var css = options.css;
-      if (options.width) css = css + ".modal-dialog{width:" + (options.width + this.padwidth) + "px}";
-      if (options.height) css = css + ".modal-dialog{height:" + (options.height + this.padheight) + "px}";
-if (!options.buttons.length) css = css + '.modal-footer{display:none}';
-    if (css) this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
-},
+    if (options.width) css = css + ".modal-dialog{width:" + (options.width + this.padwidth) + "px}";
+    if (options.height) css = css + ".modal-dialog{height:" + (options.height + this.padheight) + "px}";
+    if (!options.buttons.length) css = css + '.modal-footer{display:none}';
+      if (css) this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+    },
     
     open: function(o) {
       if (this.dialog) return alert('Dialog already opened');
@@ -116,25 +116,25 @@ if (!options.buttons.length) css = css + '.modal-footer{display:none}';
         body: this.options.html,
         buttons: html_buttons
       });
-
-this.addstyle();      
+      
+      this.addstyle();
       var dialog = this.dialog = $(html).appendTo("body");
-//dialog.settooltip();
+      //dialog.settooltip();
       this.footer =       $(".modal-footer:first", dialog);
       for (var i =0, l= buttons.length;  i < l; i++) {
         this.getbutton(i).on("click.dialog", buttons[i].click);
       }
       
       return dialog
-.fixAndroid()
-.on("shown.bs.modal.dialog", $.proxy(this.opened, this))
+      .fixAndroid()
+      .on("shown.bs.modal.dialog", $.proxy(this.opened, this))
       .on("hidden.bs.modal.dialog", $.proxy(this.doclose, this))
       .modal();
     },
-
-opened: function() {
-        if ($.isFunction(this.options.open)) this.options.open(self.dialog);
-},
+    
+    opened: function() {
+      if ($.isFunction(this.options.open)) this.options.open(self.dialog);
+    },
     
     getbutton: function(index) {
       if (!this.footer) return false;

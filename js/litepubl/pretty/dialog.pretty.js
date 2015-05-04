@@ -7,7 +7,7 @@
 
 (function( $ ){
   'use strict';
-
+  
   $.closedialog = function(callback) {
     $.prettyPhoto.close();
     

@@ -10,20 +10,20 @@ function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-$items = tcssmerger_pretty_files($self);
-foreach ($list as $filename) {
-$self->add($section, $filename);
-}
-
-$items = tcssmerger_deprecated_files($self);
-foreach ($list as $filename) {
-$self->add($section, $filename);
-}
-
+  $items = tcssmerger_pretty_files($self);
+  foreach ($list as $filename) {
+    $self->add($section, $filename);
+  }
+  
+  $items = tcssmerger_deprecated_files($self);
+  foreach ($list as $filename) {
+    $self->add($section, $filename);
+  }
+  
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
   $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
-
+  
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
   $self->add($section, '/js/admin/css/fileman.min.css');
@@ -35,24 +35,24 @@ $self->add($section, $filename);
   $template = ttemplate::i();
   $template->addtohead('<!--<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />-->');
   
-tupdater::i()->onupdated = $self->save;
+  tupdater::i()->onupdated = $self->save;
 }
 
 function tcssmergerUninstall($self) {
-tupdater::i()->unbind($self);
+  tupdater::i()->unbind($self);
 }
 
 function tcssmerger_pretty_files($self) {
   return array(
-'/js/prettyphoto/css/prettyPhoto.css',
-'/js/litepubl/pretty/dialog.pretty.min.css',
-);
+  '/js/prettyphoto/css/prettyPhoto.css',
+  '/js/litepubl/pretty/dialog.pretty.min.css',
+  );
 }
 
 function tcssmerger_deprecated_files($self) {
   return array(
-	'/js/litepubl/deprecated/css/align.min.css',
-	'/js/litepubl/deprecated/css/button.min.css',
-'/js/litepubl/deprecated/css/table.min.css',
-);
+  '/js/litepubl/deprecated/css/align.min.css',
+  '/js/litepubl/deprecated/css/button.min.css',
+  '/js/litepubl/deprecated/css/table.min.css',
+  );
 }

@@ -33,11 +33,11 @@
     '<ul>%%head%%</ul>' +
     '%%body%%' +
     '</div>',
-
-        tabhead : '<li><a href="#filepage-%%index%%">%%index%%</a></li>',
+    
+    tabhead : '<li><a href="#filepage-%%index%%">%%index%%</a></li>',
     tab: '<div class="files-tab" id="filepage-%%index%%">' +
-'<div class="file-items" data-page="%%index%%" data-status="empty"></div>' +
-'</div>'
-      };
+    '<div class="file-items" data-page="%%index%%" data-status="empty"></div>' +
+    '</div>'
+  };
   
 })( window);

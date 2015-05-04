@@ -1,8 +1,10 @@
 .pp_dialog_title {
- padding: .4em 1em;
- position: relative;
-display: block;
-/*overflow:hidden; */
+  padding: .4em 1em;
+  position: relative;
+  display: block;
+  /*overflow:hidden; */
 }
 
-.pp_dialog_buttons { float: right; }
+.pp_dialog_buttons {
+  float: right;
+}

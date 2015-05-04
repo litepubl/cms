@@ -7,34 +7,34 @@
 
 (function ($, litepubl, window) {
   'use strict';
-
+  
   litepubl.Filemanprops = Class.extend({
-item: false,
-holder: false,
-
+    item: false,
+    holder: false,
+    
     init: function(item, onclose, onset) {
-this.item = item;
-this.onclose = onclose || $.noop;
-this.onset =  onset || $.noop;
-
-var self = this;
-var lng = lang.posteditor;
-$.litedialog({
+      this.item = item;
+      this.onclose = onclose || $.noop;
+      this.onset =  onset || $.noop;
+      
+      var self = this;
+      var lng = lang.posteditor;
+      $.litedialog({
         title: lang.posteditor.property,
-        html: 
-litepubl.tml.getedit(lng.title, "fileprop-title", item.title) +
-litepubl.tml.getedit(lng.description, "fileprop-description", item.description) +
-litepubl.tml.getedit(lng.keywords, "fileprop-keywords", item.keywords),
-
+        html:
+        litepubl.tml.getedit(lng.title, "fileprop-title", item.title) +
+        litepubl.tml.getedit(lng.description, "fileprop-description", item.description) +
+        litepubl.tml.getedit(lng.keywords, "fileprop-keywords", item.keywords),
+        
         open: function(holder) {
-self.holder = holder;
+          self.holder = holder;
           $("input[name='fileprop-title']", holder).focus();
         },
-
-close: function() {
-self.holder = false;
-self.onclose();
-},
+        
+        close: function() {
+          self.holder = false;
+          self.onclose();
+        },
         
         buttons: [
         {
@@ -51,7 +51,7 @@ self.onclose();
             $.closedialog();
           }
         },
-$.get_cancel_button()
+        $.get_cancel_button()
         ]
       } );
     },
@@ -59,8 +59,8 @@ $.get_cancel_button()
     setprops: function(values) {
       $.extend(this.item, values);
       values.idfile = this.item.id;
-
-return $.jsonrpc({
+      
+      return $.jsonrpc({
         method: "files_setprops",
         params: values,
         callback: this.onset,
@@ -71,5 +71,5 @@ return $.jsonrpc({
     }
     
   });//fileman
-
+  
 }(jQuery, litepubl, window));

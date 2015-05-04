@@ -7,7 +7,7 @@
 
 (function ($, document, window) {
   'use strict';
-
+  
   litepubl.Posteditor = Class.extend({
     tabs: false,
     

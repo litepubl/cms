@@ -1,7 +1,7 @@
 .file-items {
-width: 100%;
-display: block;
-overflow: hidden;
+  width: 100%;
+  display: block;
+  overflow: hidden;
 }
 
 .file-items:before,
@@ -15,52 +15,52 @@ overflow: hidden;
 }
 
 .file-item {
-float:left;
-display:block;
-overflow: hidden;
-margin:6px 12px;
-text-align:center;
-width: 25%;
+  float:left;
+  display:block;
+  overflow: hidden;
+  margin:6px 12px;
+  text-align:center;
+  width: 25%;
 }
 
 @media (min-width: 480px) {
-.file-item{
-  width: 50%;
-}
+  .file-item{
+    width: 50%;
+  }
 }
 
 @media (min-width: 768px) {
-.file-item{
-  width: 33.33333333%;
-}
+  .file-item{
+    width: 33.33333333%;
+  }
 }
 
 @media (min-width: 992px) {
-.file-item{
-width: 25%;
-}
+  .file-item{
+    width: 25%;
+  }
 }
 
 @media (min-width: 1200px) {
-.file-item{
-width: 20%;
-}
+  .file-item{
+    width: 20%;
+  }
 }
 
 .file-content{
-font-size:10px;
-margin-left: auto;
-margin-right: auto;
-display: block;
-overflow: hidden;
+  font-size:10px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  overflow: hidden;
 }
 
 .file-content img{
   border: 1px solid transparent;
   border-radius: 4px;
-display: block;
-width:100%;
-height:100%;
+  display: block;
+  width:100%;
+  height:100%;
 }
 
 .file-content li {
@@ -70,36 +70,36 @@ height:100%;
 }
 
 .file-added .file-content {
-    position: relative;
+  position: relative;
 }
 
 .file-added .file-content:after {
-    position: absolute;
-     left: 0;
-    top: 0;
-     right: 0;
-    bottom: 0;
-    opacity: 0.4;
-color:black;
-    display: block;
-    overflow: hidden;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.4;
+  color:black;
+  display: block;
+  overflow: hidden;
 }
 
 #dropzone{
-border:solid 1px blue;
+  border:solid 1px blue;
   border-radius: 4px;
-    -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+  -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
 }
 
 #dropzone.drag{
-border:solid 3px green;
+  border:solid 3px green;
   border-radius: 6px;
 }
 
 .flash-hidden{
-position:absolute;
-left:-10000px;
-width:0;
-height:0;
+  position:absolute;
+  left:-10000px;
+  width:0;
+  height:0;
 }

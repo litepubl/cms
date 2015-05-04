@@ -16,19 +16,19 @@
     '</div></div></div>',
     
     init: function() {
-this.padheight = 32;
+      this.padheight = 32;
       this.default_options = {
         title: "",
         html: "",
-css: "button.close{margin-top:-10px}",
+      css: "button.close{margin-top:-10px}",
         width: false,
         height: false,
         open: $.noop,
         close: $.noop,
         buttons: []
-};
-}
-
+      };
+    }
+    
   });
   
 })( jQuery);

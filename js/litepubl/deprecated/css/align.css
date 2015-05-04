@@ -1,18 +1,18 @@
 .text-center {
-text-align: center;
+  text-align: center;
 }
 
 .text-right{
-text-align:right;
+  text-align:right;
 }
 div.text-center {
-margin: 5px;
+  margin: 5px;
 }
 
 .margin-auto {
-margin: auto;
+  margin: auto;
 }
 
 .hidden{
-display:none
+  display:none
 }

@@ -147,6 +147,16 @@ $js->replacefile('posteditor',
 '/js/litepubl/admin/fileman.min.js'
 );
 
+jsafter('posteditor',
+'/js/litepubl/admin/fileman.min.js',
+'/js/litepubl/admin/fileman.browser.min.js'
+);
+
+jsafter('posteditor',
+'/js/litepubl/admin/fileman.browser.min.js',
+'/js/litepubl/admin/fileman.propedit.min.js'
+);
+
 $js->replacefile('posteditor',
 '/js/litepublisher/fileman.templates.min.js',
 '/js/litepubl/admin/fileman.templates.min.js'
