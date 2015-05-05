@@ -20,6 +20,7 @@
     dialog: false,
     browser: false,
     holder: false,
+newfiles: false,
     
     init: function(options) {
       this.loaded = [],
@@ -41,10 +42,11 @@
       var self = this;
       var holder = this.holder = $(options.holder);
       holder.closest('form').submit(function() {
-        $("input[name='files']", self.holder).val(self.loaded.join(','));
+        $("input[name='files']:first", self.holder).val(self.loaded.join(','));
       });
       
-      holder.on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
+this.newfiles = holder.find("#newfiles")
+.on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
         var button = $(this);
         var container = button.closest(".file-item");
         var idfile = container .attr("data-idfile");
@@ -57,9 +59,8 @@
         }
         
         return false;
-      });
-      
-      holder.on("click.image", ".file-image", function() {
+      })
+.on("click.image", ".file-image", function() {
         self.openimage($(this));
         return false;
       });
@@ -106,16 +107,12 @@
         if (!parseInt(item.parent) ) this.loaded.push(item.id);
       }
       
-      var owner = $("#oldfiles", this.holder);
       if (this.loaded.length) {
-        this.append(owner, items);
-        owner.removeClass("hidden");
-      } else {
-        owner.addClass("hidden");
+        this.append(items);
       }
     },
     
-    append: function(owner, files) {
+    append: function(files) {
       var html = "";
       for (var id in files) {
         if (!parseInt(files[id].parent)) {
@@ -123,7 +120,7 @@
         }
       }
       
-      owner.append(html);
+      this.newfiles.append(html);
     },
     
     openimage: function(link) {
@@ -161,23 +158,16 @@
     uploaded: function(r) {
       try {
         var idfile = r.id;
-        this.loaded.push(idfile);
         this.items[idfile] = r.item;
         if (parseInt(r.item.preview)) this.items[r.preview.id] = r.preview;
-        
-        var owner = $("#newfiles", this.holder);
-        owner.find("#nonewfiles").hide();
-        owner.append(this.get_fileitem(idfile));
+this.add(idfile);        
     } catch(e) {erralert(e);}
     },
     
     add: function(idfile) {
       if ($.inArray(idfile, this.loaded) < 0) {
         this.loaded.push(idfile);
-        
-        $("#oldfiles", this.holder)
-        .removeClass("hidden")
-        .append(this.get_fileitem(idfile));
+        this.newfiles.append(this.get_fileitem(idfile));
       }
     },
     

@@ -14,6 +14,7 @@ $url = $_GET['url'];
             $path = isset($bits['path']) ? $bits['path'] : '/';
             $port = isset($bits['port']) ? $bits['port'] : 80;
 
+//var_dump($bits);
         $r = "\r\n";
         $request  = "GET {$path} HTTP/1.0$r";
 
@@ -34,6 +35,7 @@ if ($fp = fsockopen($host, $port, $errno, $errstr)) {
 echo "response:\n";
         while (!feof($fp)) {
             $s = fgets($fp, 4096);
+if (!trim($s)) exit();
 echo htmlspecialchars($s);
 flush();
 //echo "\n";

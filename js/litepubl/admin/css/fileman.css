@@ -1,3 +1,11 @@
+#nonewfiles {
+display: none;
+}
+
+#nonewfiles:last-child {
+display: block;
+}
+
 .file-items {
   width: 100%;
   display: block;
