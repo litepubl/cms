@@ -130,15 +130,18 @@ this.newfiles = holder.find("#newfiles")
     get_fileitem: function(id) {
       var item =this.items[id];
       item.link = ltoptions.files + "/files/" + item.filename;
-      item.previewlink = '';
       var type = (item.media in this.tml) ? item.media : "file";
-      
+
+      if (!("previewlink" in item)) {
+      item.previewlink = '';
       if (parseInt(item.preview) &&(item.preview in this.items)) {
         item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filename"];
       }
+}
       
       return $.parsetml(this.tml.item, {
         id: item.id,
+toolbar: this.tml.toolbar,
         content: $.parsetml(this.tml[type], item)
       });
     },
@@ -197,7 +200,7 @@ this.add(idfile);
     },
     
     browsefiles: function() {
-      var self = this;
+this.dialog = true;
       if (this.browser) {
         this.browser.open();
       } else {

@@ -36,6 +36,9 @@
             return false;
           });
           
+// load first page because ui tabs not fire beforeActivate
+                self.loadpage(holder.find(".file-items:first"), "1");
+
           var tabs = $("#posteditor-files-tabs", holder);
           tabs.tabs({
             hide: true,
@@ -49,6 +52,10 @@
             }
           });
         },
+
+close: function() {
+self.fileman.dialog = false;
+},
         
         buttons: [{
           title: lang.dialog.close,
@@ -115,6 +122,11 @@
       var result = '';
       var list = this.pages[page];
       var fileman = this.fileman;
+
+//save tml toolbar before and restore after generate html
+var toolbar = fileman.tml.toolbar;
+fileman.tml.toolbar = "";
+
       for (var i = 0, l = list.length; i < l; i++) {
         var id = list[i];
         if ($.inArray(id , fileman.loaded) < 0) {
@@ -122,6 +134,7 @@
         }
       }
       
+fileman.tml.toolbar = toolbar;
       return result;
     }
     
