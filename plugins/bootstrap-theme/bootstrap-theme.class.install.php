@@ -15,35 +15,22 @@ function bootstrap_themeInstall($self) {
   
   $css = tcssmerger::i();
   $css->lock();
-  
-  $filelist = $css->externalfunc(get_class($css), '_pretty_files', false);
-  foreach ($filelist as $filename) {
-    $css->deletefile('default', $filename);
-  }
-  
-  $filelist = $css->externalfunc(get_class($css), '_deprecated_files', false);
-  foreach ($filelist as $filename) {
-    $css->deletefile('default', $filename);
-  }
+tjsmerger_switch ($css,
+array(),
+$css->externalfunc(get_class($css), '_pretty_files', false)
+);
+
+tjsmerger_switch ($css,
+array(),
+$css->externalfunc(get_class($css), '_deprecated_files', false)
+);
   
   $css->unlock();
-  
-  $appcache = appcache_manifest::i();
-  $appcache->lock();
-  $appcache->add('/themes/shop/css/$template.themecolor.min.css');
-  $appcache->add('/themes/shop/fonts/lobster.woff');
-  $appcache->add('/themes/shop/css/font-awesome.min.css');
-  $appcache->add('/themes/shop/fonts/fontawesome-webfont.woff');
-  $appcache->unlock();
   
   ttheme::clearcache();
 }
 
 function bootstrap_themeUninstall($self) {
-  $t = ttemplate::i();
-  unset($t->data['themecolor']);
-  $t->save();
-  
   $js = tjsmerger::i();
   $js->  externalfunc(get_class($js), '_switch', array(
   $js->externalfunc(get_class($js), '_pretty_files', false),
@@ -52,19 +39,17 @@ function bootstrap_themeUninstall($self) {
   
   $css = tcssmerger::i();
   $css->lock();
-  $filelist = $css->externalfunc(get_class($css), '_pretty_files', false);
-  foreach ($filelist as $filename) {
-    $css->add('default', $filename);
-  }
-  $css->unlock();
-  
-  $appcache =appcache_manifest::i();
-  $appcache->lock();
-  $appcache->delete('/themes/shop/css/$template.themecolor.min.css');
-  $appcache->delete('/themes/shop/fonts/lobster.woff');
-  $appcache->delete('/themes/shop/css/font-awesome.min.css');
-  $appcache->delete('/themes/shop/fonts/fontawesome-webfont.woff');
-  $appcache->unlock();
-  
+ tjsmerger_switch ($css,
+$css->externalfunc(get_class($css), '_pretty_files', false)
+array(),
+);
+
+tjsmerger_switch ($css,
+$css->externalfunc(get_class($css), '_deprecated_files', false)
+array(),
+);
+
+$css->unlock();
+ 
   ttheme::clearcache();
 }

@@ -1,0 +1,4 @@
+content.excerpts.excerpt.firstimage = [
+<div class="anpost-image">
+<a class="fn url photo" href="$post.link" title="$post.title" data-image="$link"><img src="$preview.link" alt="$post.title" /></a>
+</div>]

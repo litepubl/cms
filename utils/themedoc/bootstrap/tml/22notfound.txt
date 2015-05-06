@@ -1,0 +1,6 @@
+$template.content.notfound = [
+			<div class="simplecontent">
+				<h2 class="center">$lang.notfound </h2>
+				<p class="center">$lang.nocontent</p>
+</div>
+]

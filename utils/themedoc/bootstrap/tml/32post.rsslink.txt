@@ -1,0 +1,3 @@
+content.post.rsslink = [
+<span class="post-rsscomments"><a href="$post.rsscomments" title="$lang.subscribetorsscomments" >$lang.subscribetorsscomments</a></span>
+]

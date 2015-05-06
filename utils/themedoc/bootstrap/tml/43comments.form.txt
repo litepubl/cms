@@ -1,0 +1,23 @@
+content.post.templatecomments.form = [
+<div id="before-commentform">$mesg</div>
+										<p id="respond">$lang.leavereply</p>
+								<form action="$site.url/send-comment.php" method="post" id="commentform">
+									<p><input type="text" name="name" id="name" value="$name" size="22" />
+									<label for="name">$lang.name</label></p>
+
+									<p><input type="text" name="email" id="email" value="$email" size="22" />
+									<label for="email">$lang.email</label></p>
+
+									<p><input type="text" name="url" id="url" value="$url" size="22" />
+									<label for="url">$lang.url</label></p>
+
+									<p><input type="checkbox" name="subscribe" id="subscribe" $subscribe size="22" />
+									<label for="subscribe">$lang.subscribe</label></p>
+
+									<p><textarea name="content" id="comment" rows="10" cols="60%"></textarea></p>
+<div style="text-align: center;">
+<input type="hidden" name="postid" value="$postid" />
+<input type="hidden" name="antispam" value="$antispam" />
+<div style="margin: auto;"><button type="submit" name="submitcomment" class="button" id="id-submitcomment"><span>$lang.send</span></button></div></div>
+								</form>
+]

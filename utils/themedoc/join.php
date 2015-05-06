@@ -13,22 +13,29 @@ function strbegin($s, $begin) {
   return strncmp($s, $begin, strlen($begin)) == 0;
 }
 
-$lang = 'ru';
 $dir = dirname(__file__);
 $s = file_get_contents($dir . '/join.txt');
-$s = str_replace('ru/', "$lang/", $s);
-
+$s = trim(str_replace('ru/', "$lang/", $s));
 $list = explode("\n", $s);
+$l = count($list);
 
+$dir .= '/bootstrap';
+$lang = 'ru';
 $result = "\xEF\xBB\xBF";
-foreach ($list as $filename) {
+
+foreach ($list as $i => $filename) {
 $filename = trim($filename);
 if (!$filename) continue;
+
 $s = file_get_contents("$dir/$filename");
 $s =strip_utf($s);
 $s = trim($s);
 
-if (!strbegin($filename, 'tml/')) $s = "/* $s */";
+if (!strbegin($filename, 'tml/')) {
+if (($i > 0) && strbegin($list[$i - 1], 'tml/')) $s = '/* ' . $s
+if (($i < $l - 1) && strbegin($list[$i + 1], 'tml/')) $s .= ' */';
+}
+
 $result .= $s . "\r\n\r\n";
 }
 

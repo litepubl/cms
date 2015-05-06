@@ -1,0 +1,8 @@
+$template.head = [
+  $post = [
+    $rss = [<link rel="alternate" type="application/rss+xml" title="$lang.onpost $post.title" href="$post.rsscomments" />]
+    $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
+    $next = [<link rel="next" title="$next.title" href="$next.link" />]
+  ]
+$tags = [<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />]
+]
