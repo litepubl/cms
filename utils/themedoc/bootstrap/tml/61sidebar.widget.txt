@@ -1,14 +1,21 @@
 $template.sidebar = [
- $widget = [
-  <div class="widget">
-    <div class="rubric">$title</div>
-    $items = [
-    <ul class="linkcat">
-      $item = [<li><a href="$link" title="$title">$icon$text</a>
+  $widget = [
+  <div class="panel panel-default">
+      <div class="panel-heading" role="tab" id="widget-heading-$id">
+      <h4 class="panel-title widget-title" data-model="widget-collapse">$title</h4>
+      </div>
+      
+<div class="collapse in" id="widget-content-$id" role="tabpanel" aria-labelledby="widget-heading-$id">
+      <div class="panel-body">
+          $items = [
+    <ul>
+       $item = [<li><a href="$link" title="$title">$icon$text</a>
 $subcount = [<strong>($itemscount)</strong>]
-$subitems = [<ul>$item</ul>]</li>]
+$subitems = [<ul>$item</ul>]
+</li>]
     </ul>
     ]
-  </div>
- ]
+        </div></div>
+    </div>
+]
 ]

@@ -1,18 +1,12 @@
 content.excerpts = [
- $excerpt = [
-		<div class="post" id="post-$post.id">
-			<h2><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.iconlink$post.title</a></h2>
-				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
-				<span class="post-tags">$post.taglinks</span>
-			<div class="post-content">
-				$post.excerptfilelist
-$post.excerptcontent
-				$post.morelink = [<a href="$post.link#more-$post.id" class="more-link">$post.moretitle</a>]
-			</div>
-			<div class="post-info">
-				<span class="post-comments">$post.commentslink</span>
-				<span class="post-cat">$post.catlinks</span>	
-			</div>
-		</div>
-]
+$excerpt = [<div class="anpost"id="post-$post.id">
+$post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
+
+<div class="anpost-text poppost">
+<h5 class="title-nowrap"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h5>
+<div class="text-center"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
+$post.catlinks
+<div class="poptext hidden">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
+</div>
+</div>]
 ]

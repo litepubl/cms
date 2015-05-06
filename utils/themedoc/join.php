@@ -15,12 +15,12 @@ function strbegin($s, $begin) {
 
 $lang = 'ru';
 $dir = dirname(__file__);
+$dir .= '/bootstrap';
 $s = file_get_contents($dir . '/join.txt');
 $s = trim(str_replace('ru/', "$lang/", $s));
 $list = explode("\n", $s);
 $l = count($list);
 
-//$dir .= '/bootstrap';
 $result = "\xEF\xBB\xBF";
 
 foreach ($list as $i => $filename) {
@@ -32,8 +32,8 @@ $s =strip_utf($s);
 $s = trim($s);
 
 if (!strbegin($filename, 'tml/')) {
-if (($i > 0) && strbegin($list[$i - 1], 'tml/')) $s = '/* ' . $s;
-if (($i < $l - 1) && strbegin($list[$i + 1], 'tml/')) $s .= ' */';
+if (($i > 0) && strbegin($list[$i - 1], 'tml/')) $s = "/*\n" . $s;
+if (($i < $l - 1) && strbegin($list[$i + 1], 'tml/')) $s .= "\n*/";
 }
 
 $result .= $s . "\r\n\r\n";

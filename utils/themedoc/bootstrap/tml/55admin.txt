@@ -1,36 +1,38 @@
 content.admin = [
-$tableclass = [classictable]
+$tableclass = [table table-bordered]
 
-$editor = [<p><label for="editor-$name">$lang.$name:</label><br />
-<textarea name="$name" id="editor-$name" cols="57%" rows="10">$value</textarea></p>]
+$editor = [<div class="form-group"><label for="editor-$name">$lang.$name:</label>
+<textarea class="form-control" name="$name" id="editor-$name">$value</textarea></div>]
 
-$text = [<p><input type="text" name="$name" id="text-$name" value="$value" size="22" />
-<label for="text-$name">$lang.$name</label></p>]
+$text = [<div class="form-group"><label for="text-$name">$lang.$name</label>
+<input type="text" class="form-control" name="$name" id="text-$name" value="$value" /></div>]
 
-$password = [<p><input type="password" name="$name" id="password-$name" value="$value" size="22" />
-<label for="password-$name">$lang.$name</label></p>]
+$password = [<div class="form-group"><label for="password-$name">$lang.$name</label>
+<input type="password" class="form-control" name="$name" id="password-$name" value="$value" /></div>]
 
-$upload = [<div><label for="file-$name">$lang.$name</label>
-<INPUT type="file" name="$name" id="file-$name" /></div>]
+$upload = [<div class="form-group"><label for="file-$name">$lang.$name</label>
+<input type="file" name="$name" id="file-$name" /></div>]
 
-$checkbox= [<p><input type="checkbox" name="$name" id="checkbox-$name" $value />
-<label for="checkbox-$name">$lang.$name</label></p>]
+$checkbox= [<div class="checkbox"><label>
+<input type="checkbox" name="$name" id="checkbox-$name" $value />
+$lang.$name</label></div>]
 
-$combo = [<p><label for="combo-$name">$lang.$name:</label>
-<select name="$name" id="combo-$name">$value</select></p>]
+$combo = [<div class="form-group"><label for="combo-$name">$lang.$name:</label>
+<select class="form-control" name="$name" id="combo-$name">$value</select></div>]
 
-$radioitem = [<p><label><input type="radio" name="$name" id="radio_$name_$index" value="$index" $checked />$value</label></p>]
+$radioitem = [<div class="radio"><label><input type="radio" name="$name" id="radio_$name_$index" value="$index" $checked />$value</label></div>]
 
 $radio = [<div><h4>$lang.$name:</h4>$value</div>]
 
 $hidden = [<input type="hidden" name="$name" id="hidden-$name" value="$value" />]
-$button =   [<button type="submit" name="$name" id="submitbutton-$name" class="button"><span>$lang.$name</span></button>]
-$submit =   [        <div class="text-center"><div class="margin-auto"><button type="submit" name="$name" id="submitbutton-$name" class="button"><span>$lang.$name</span></button></div></div>]
 
-$form = [<h3>$formtitle</h3>
+$button =   [<button type="submit" name="$name" id="submitbutton-$name" class="btn btn-default">$lang.$name</button>]
+
+$submit =   [<div class="text-center"><div class="center-block"><button type="submit" name="$name" id="submitbutton-$name" class="btn btn-default">$lang.$name</button></div></div>]
+
+$form = [<h4>$formtitle</h4>
 <form action="" method="post" role="form">
 $items
 [submit=update]
 </form>]
-
 ]

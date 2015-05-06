@@ -1,0 +1,13 @@
+$custom.mainsidebar = [left]
+$custom.mainsidebar.admin = [
+$title = [сайдбар слева или справа]
+$type = [radio]
+$values = [left,right]
+]
+
+$custom.subtheme = [default]
+$custom.subtheme.admin = [
+$title = [Вариант оформления темы (один из файлов css темы)]
+$type = [combo]
+$values = [default,cerulean,cosmo,cyborg,darkly,flatly,journal,lumen,paper,readable,sandstone,simplex,slate,spacelab,superhero,united,yeti]
+]
