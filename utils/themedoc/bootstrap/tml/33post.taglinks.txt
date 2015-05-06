@@ -1,5 +1,7 @@
 content.post.taglinks = [
-							$lang.tags: 
-								$item = [ <a href="$link" title="$title" rel="tag">$icon$title</a>]
-								$divider = [, ]
+<div class="post-tags"><span class="fa fa-calendar" aria-hidden="true"></span>
+$lang.tags:
+ $item = [ <a href="$link">$title</a>]
+  $divider = [,&#32;]
+</div>
 ]

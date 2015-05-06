@@ -1,5 +1,6 @@
 content.post.catlinks = [
-							$lang.categories: 
-								$item = [ <a href="$link" title="$title" rel="category">$icon$title</a>]
-								$divider = [, ]
+<div class="post-categories" id="post-categories-$post.id"><span class="fa fa-tags" aria-hidden="true"></span>
+$item = [ <a href="$link" class="category">$title</a>]
+$divider = [,&#32;]
+</div>
 ]

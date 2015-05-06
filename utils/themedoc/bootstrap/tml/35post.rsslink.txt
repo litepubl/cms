@@ -1,3 +1,2 @@
-content.post.rsslink = [
-<span class="post-rsscomments"><a href="$post.rsscomments" title="$lang.subscribetorsscomments" >$lang.subscribetorsscomments</a></span>
-]
+content.post.rsslink = [<span class="rsscomments"><a href="$post.rsscomments" title="$lang.subscribetorsscomments" ><span class="fa fa-rss" aria-hidden="true"></span> $lang.subscribetorsscomments</a></span>]
+
