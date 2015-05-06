@@ -1,0 +1,5 @@
+content.post.taglinks = [
+							$lang.tags: 
+								$item = [ <a href="$link" title="$title" rel="tag">$icon$title</a>]
+								$divider = [, ]
+]
