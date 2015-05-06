@@ -1,0 +1,39 @@
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input{
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#dropzone{
+  border:solid 1px blue;
+  border-radius: 4px;
+  -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+}
+
+#dropzone.drag{
+  border:solid 3px green;
+  border-radius: 6px;
+}
+
+.flash-hidden{
+  position:absolute;
+  left:-10000px;
+  width:0;
+  height:0;
+}

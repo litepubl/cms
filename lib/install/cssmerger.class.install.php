@@ -26,9 +26,10 @@ function tcssmergerInstall($self) {
   
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
-  $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
-  $self->add($section, '/js/litepubl/admin/css/calendar.css');
   $self->add($section, '/js/litepubl/admin/css/admin.views.min.css');
+  $self->add($section, '/js/litepubl/admin/css/calendar.css');
+  $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
+  $self->add($section, '/js/litepubl/admin/css/uploader.min.css');
   $self->unlock();
   
   // add in comment because by default tthemeparser::i()->stylebefore  is true

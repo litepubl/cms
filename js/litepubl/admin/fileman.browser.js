@@ -25,11 +25,14 @@
     
     open: function() {
       var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+      var winheight = window.innerheight || document.documentElement.clientheight || document.body.clientheight;
+
       var self = this;
       $.litedialog({
-        title: lang.posteditor.selectfile,
+        title: lang.posteditor.selectfiles,
         html: this.get_html(),
         width: Math.floor(winwidth / 4 * 3),
+height: Math.min(450, winheight - 60),
         open: function(holder) {
           holder.on("click.addfile", ".file-item:not(.file-added)", function() {
             self.add($(this).addClass("file-added").attr("data-idfile"));

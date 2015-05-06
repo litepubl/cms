@@ -13,10 +13,13 @@
     jq: false,
     queue: false,
     html: '<div id="html-uploader" class="form-group"' +
-    '<label for="file-input">%%lang.upload%%</label>' +
+    '<label class="btn btn-default btn-file" role="button">' +
+'%%lang.upload%%' +
     '<input type="file" id="file-input" name="Filedata" multiple />' +
+'</label>' +
     '<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>' +
     '</div>',
+
     idhtml: "#file-input, #dropzone",
     
     init: function(owner) {
