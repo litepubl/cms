@@ -209,8 +209,6 @@ $css->replacefile('admin',
 '/js/litepubl/admin/css/fileman.min.css'
 );
 
-  $css->add('admin', '/js/litepubl/admin/css/uploader.min.css');
-
 $css->replacefile('admin',
 '/js/litepublisher/css/calendar.css',
 '/js/litepubl/admin/css/calendar.css'

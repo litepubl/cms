@@ -13,10 +13,8 @@
     jq: false,
     queue: false,
     html: '<div id="html-uploader" class="form-group"' +
-    '<label class="btn btn-default btn-file" role="button">' +
-'%%lang.upload%%' +
+    '<label for="file-input">%%lang.upload%%</label>' +
     '<input type="file" id="file-input" name="Filedata" multiple />' +
-'</label>' +
     '<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>' +
     '</div>',
 

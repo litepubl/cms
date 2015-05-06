@@ -93,3 +93,21 @@ display: block;
   overflow: hidden;
 }
 
+#dropzone{
+  border:solid 1px blue;
+  border-radius: 4px;
+  -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+  transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+}
+
+#dropzone.drag{
+  border:solid 3px green;
+  border-radius: 6px;
+}
+
+.flash-hidden{
+  position:absolute;
+  left:-10000px;
+  width:0;
+  height:0;
+}
