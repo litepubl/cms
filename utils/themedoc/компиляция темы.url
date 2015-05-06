@@ -1,9 +1,9 @@
 [DEFAULT]
 BASEURL=http://dest/themedoc/join.php
 [InternetShortcut]
-URL=http://dest/themedoc/join.php
+URL=http://cms/utils/themedoc/join.php
 IDList=
-IconFile=http://dest/favicon.ico
+IconFile=http://cms/favicon.ico
 IconIndex=1
 HotKey=0
 [{000214A0-0000-0000-C000-000000000046}]

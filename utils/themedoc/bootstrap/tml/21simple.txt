@@ -1,1 +1,1 @@
-	$template.content.simple = [<div class="simplecontent">$content</div>]
+	$template.content.simple = [<div class="jumbotron">$content</div>]
