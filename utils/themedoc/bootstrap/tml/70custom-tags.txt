@@ -1,13 +1,13 @@
-$custom.mainsidebar = [left]
+п»ї$custom.mainsidebar = [left]
 $custom.mainsidebar.admin = [
-$title = [сайдбар слева или справа]
+$title = [СЃР°Р№РґР±Р°СЂ СЃР»РµРІР° РёР»Рё СЃРїСЂР°РІР°]
 $type = [radio]
 $values = [left,right]
 ]
 
 $custom.subtheme = [default]
 $custom.subtheme.admin = [
-$title = [Вариант оформления темы (один из файлов css темы)]
+$title = [Р’Р°СЂРёР°РЅС‚ РѕС„РѕСЂРјР»РµРЅРёСЏ С‚РµРјС‹ (РѕРґРёРЅ РёР· С„Р°Р№Р»РѕРІ css С‚РµРјС‹)]
 $type = [combo]
 $values = [default,cerulean,cosmo,cyborg,darkly,flatly,journal,lumen,paper,readable,sandstone,simplex,slate,spacelab,superhero,united,yeti]
 ]
