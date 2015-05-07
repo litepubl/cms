@@ -1,0 +1,10 @@
+﻿Еще раз посмотрим на строку в файле index.tml
+    <link rel="stylesheet" href="$template.url/css/$custom.cssfile.min.css?v=$template.cssmerger" type="text/css" media="all" />
+    
+    После подстановки $custom.cssfile значением default получим:
+        <link rel="stylesheet" href="$template.url/css/default.min.css?v=$template.cssmerger" type="text/css" media="all" />
+        
+        Окончательный результат будет примерно таким:
+            <link rel="stylesheet" href="http://litepublisher.ru/themes/default/css/default.min.css?v=57" type="text/css" media="all" />
+            
+            Если мы будет менять значение тега $custom.cssfile то получим вдключение других css файлов темы.

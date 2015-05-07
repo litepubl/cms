@@ -79,4 +79,6 @@ tml/65sidebar1.txt
 ru/66widget.ajax.txt
 tml/66widget.ajax.txt
 ru/70custom.intro.txt
+tml/71custom.cssfile.txt
+ru/71custom.cssfile.txt
 tml/70custom-tags.txt
