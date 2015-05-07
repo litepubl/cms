@@ -60,4 +60,3 @@ function install_std_widgets($widgets) {
   
   $widgets->unlock();
 }
-?>

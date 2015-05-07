@@ -262,5 +262,6 @@ $c->save();
 tredirector::i()->add('/prefetch.txt', $c->url);
 
 unset(litepublisher::$classes->interfaces['imenu']);
+litepublisher::$classes->delete('tmenuwidget');
 litepublisher::$classes->save();
 }
