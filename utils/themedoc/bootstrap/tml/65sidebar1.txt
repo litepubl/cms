@@ -1,51 +1,16 @@
-$template.sidebar1 = [
-  $widget = [
-  <li>
-    <div class="rubric">$title</div>
-    $items = [
-    <ul>
-       $item = [<li><a href="$link" title="$title">$icon$text</a>
-$subcount = [<strong>($itemscount)</strong>]
+sidebar1.widget = [
+  <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"><span class="caret"></span> $title</a>
+  <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
+$items = [          <ul class="dropdown-menu" role="menu">
+$item = [<li><a href="$link" title="$title">$icon$text</a>
+$subcount = [<em>($itemscount)</em>]
 $subitems = [<ul>$item</ul>]
 </li>]
-    </ul>
-    ]
-  </li>
-]
-]
+</ul>]
+</div>]
 
-sidebar1.posts = [
-		<li class="lastposts">
-			<div class="rubric">$title</div>
-    $items = [
-				<ul>
-					$item = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a><br />
-							<small>$post.date</small></li>]
-			    </ul>
-    ]
-			</li>
-]
+sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
+sidebar1.comments.item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>
+sidebar1.meta.item     = [<li><a href="$link" title="$title"><span $class aria-hidden="true"></span> $text</a>$subitems</li>]
+sidebar1.meta.classes  = [rss=fa fa-rss,comments=fa fa-comments,foaf=fa fa-group]
 
-sidebar1.comments = [
-		<li class="lastcomments">
-			<div class="rubric">$title</div>
-    $items = [
-				<ul>
-					$item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>
-					]
-				</ul>
-    ]
-		</li>
-]
-
-sidebar1.meta = [
-	<li class="meta">
-				<div class="rubric">$title</div>
-$items = [
-				<ul>
-				      $item = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]
-				</ul>
-    ]
-			</li>
-    $classes= [rss=rss,comments=rss-comments,foaf=foaf]
-]
