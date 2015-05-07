@@ -73,7 +73,7 @@ tml/62sidebar.single.txt
 ru/62sidebar.single.txt
 ru/63widget.comments.txt
 ru/64sidebar.meta.txt
-tml/66sidebar.meta.txt
+tml/64sidebar.meta.txt
 ru/67sidebar1.txt
 tml/67sidebar1.txt
 ru/68widget.ajax.txt
