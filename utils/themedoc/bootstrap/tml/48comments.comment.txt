@@ -1,13 +1,17 @@
 content.post.templatecomments.comments.comment = [
- <li $class1=[class="alt"] $class2=[] id="comment-$comment.id">
- $index .
-  <div class="commentmetadata"><a href="#comment-$comment.id" title=""><span class="date">$comment.date = [d.m.Y]</span> $lang.attime <span class="time">$comment.time</span></a></div>
-  <span class="vcard author"><cite>$comment.authorlink</cite> $lang.says:  </span>
-  <div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>
-  <div class="commentcontent" id="commentcontent-$comment.id" >$comment.content</div>
-  $quotebuttons = [
-  <div class="replyquotebuttons">
-   <button type="button" class="button replycomment" data-idcomment="$comment.id" data-authorname="$comment.name"><span>$lang.reply</span></button>
-   <button type="button" class="button quotecomment" data-idcomment="$comment.id" data-authorname="$comment.name"><span>$lang.quote</span></button>
-  </div>]
- </li>]
+<div class="comment-item" id="comment-$comment.id" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
+<div class="container-fluid"><div class="row">
+<div class="col-sm-4 reviewer vcard" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
+<div class="col-sm-2 dtreviewed date comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
+<div class="col-sm-3">
+ <div class="moderate moderationbuttons btn-group" data-idcomment="$comment.id" data-idauthor="$comment.author">
+$quotebuttons = [
+<button type="button" class="btn btn-default tooltip-toggle replycomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.reply"><span class="fa fa-reply" aria-hidden="true"></span> <span class="sr-only">$lang.reply</span></button>
+<button type="button" class="btn btn-default tooltip-toggle quotecomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.quote"><span class="fa fa-copy" aria-hidden="true"></span> <span class="sr-only">$lang.quote</span></button>]
+</div>
+</div>
+</div></div>
+<div id="commentcontent-$comment.id">
+<ins datetime="$comment.iso" itemprop="commentText">$comment.content</ins>
+</div>
+</div>]

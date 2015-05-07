@@ -1,11 +1,20 @@
 content.post.templatecomments.regform = [
-								<div id="before-commentform">$mesg</div>
-								<p id="respond">$lang.leavereply</p>
-								<form action="$site.url/send-comment.php" method="post" id="commentform">
-									<p><textarea name="content" id="comment" rows="10" cols="60%"></textarea></p>
-<div style="text-align: center;">
+<div id="before-commentform">$mesg</div>
+<h4>$lang.leavereview</h4>
+<form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
+<div class="form-group"><label for="comment">$lang.comment</label>
+<textarea name="content" id="comment" class="form-control"></textarea></div>
+
+<div class="hidden">
 <input type="hidden" name="postid" value="$postid" />
 <input type="hidden" name="antispam" value="$antispam" />
-<div style="margin: auto;"><button type="submit" name="submitcomment" class="button" id="id-submitcomment"><span>$lang.send</span></button></div></div>
-								</form>
+</div>
+
+<div class="text-center"><div class="center-block"><button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button></div></div>
+</form>
+<script type="text/javascript">
+ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, {
+button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>'
+});
+</script>
 ]

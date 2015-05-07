@@ -1,23 +1,25 @@
 content.post.templatecomments.form = [
 <div id="before-commentform">$mesg</div>
-										<p id="respond">$lang.leavereply</p>
-								<form action="$site.url/send-comment.php" method="post" id="commentform">
-									<p><input type="text" name="name" id="name" value="$name" size="22" />
-									<label for="name">$lang.name</label></p>
+<h4>$lang.leavereview</h4>
+<form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
+<div class="form-group"><label for="text-name">$lang.name</label>
+<input type="text" class="form-control" name="name" id="text-name" value="$name" /></div>
+<div class="form-group"><label for="text-email">$lang.email</label>
+<input type="text" class="form-control" name="email" id="text-email" value="$email" /></div>
 
-									<p><input type="text" name="email" id="email" value="$email" size="22" />
-									<label for="email">$lang.email</label></p>
+<div class="form-group"><label for="text-url">$lang.url</label>
+<input type="text" class="form-control" name="url" id="text-url" value="$url" /></div>
 
-									<p><input type="text" name="url" id="url" value="$url" size="22" />
-									<label for="url">$lang.url</label></p>
+<div class="form-group"><label>
+<input type="checkbox" class="form-control" name="subscribe" id="checkbox-subscribe" $subscribe /> $lang.subscribe</label></div>
 
-									<p><input type="checkbox" name="subscribe" id="subscribe" $subscribe size="22" />
-									<label for="subscribe">$lang.subscribe</label></p>
+<div class="form-group"><label for="comment">$lang.comment</label>
+<textarea name="content" id="comment" class="form-control"></textarea></div>
 
-									<p><textarea name="content" id="comment" rows="10" cols="60%"></textarea></p>
-<div style="text-align: center;">
+<div class="hidden">
 <input type="hidden" name="postid" value="$postid" />
 <input type="hidden" name="antispam" value="$antispam" />
-<div style="margin: auto;"><button type="submit" name="submitcomment" class="button" id="id-submitcomment"><span>$lang.send</span></button></div></div>
-								</form>
-]
+</div>
+
+<div class="text-center"><div class="center-block"><button type="submit" name="submitcomment" class="btn btn-primary" id="id-submitcomment">$lang.send</button></div></div>
+</form>]

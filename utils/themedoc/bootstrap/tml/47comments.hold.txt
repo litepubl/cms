@@ -1,6 +1,6 @@
 content.post.templatecomments.holdcomments = [
-<p class="hold"><em>$lang.hold</em></p>
-  <a id="holdcomments"></a>
-  <ol class="commentlist" id="holdcommentlist" start="1">
-$comment
-										</ol>]
+<h4 id="holdcomments">$lang.hold</h4>
+<div id="holdcommentlist" data-start="1">
+  $comment
+</div>
+]
