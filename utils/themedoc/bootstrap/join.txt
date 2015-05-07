@@ -69,8 +69,6 @@ ru/55admin.txt
 ru/60sidebar.intro.txt
 tml/61sidebar.widget.txt
 ru/61sidebar.widget.txt
-tml/62sidebar.submenu.txt
-ru/62sidebar.submenu.txt
 tml/63sidebar.categories.txt
 ru/63sidebar.categories.txt
 ru/64sidebar.single.txt
