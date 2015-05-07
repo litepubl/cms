@@ -457,9 +457,14 @@ class tthemeparser extends tevents {
         if (!strpos($path, '.')) return;
         if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
         $widgetname = $m[2];
+//backward compability deprecated submenu
+if ($widgetname == 'submenu') return;
+
         if (($widgetname != 'widget') && (!in_array($widgetname, ttheme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
+
         $path = ttheme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
         if ($path === false) $this->error("Unknown '$path' widget path");
+
         $this->setwidgetitem($widgetname, $path, $value);
         
         if ($widgetname == 'widget') {

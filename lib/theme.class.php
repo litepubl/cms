@@ -36,7 +36,7 @@ class ttheme extends tevents {
   }
   
   public static function getwidgetnames() {
-    return array('submenu', 'categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
+    return array('categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
   }
   
   protected function create() {

@@ -311,4 +311,3 @@ class tadminservice extends tadminmenu {
   }
   
 }//class
-?>

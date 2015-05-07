@@ -53,4 +53,3 @@ public function setidview($id) {}
   }
   
 }//class
-?>

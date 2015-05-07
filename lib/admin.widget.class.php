@@ -329,5 +329,3 @@ class tadminmetawidget extends tadminwidget {
   }
   
 }//class
-
-?>

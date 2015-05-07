@@ -174,5 +174,3 @@ class tarchiveswidget extends twidget {
   }
   
 }//class
-
-?>

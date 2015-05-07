@@ -24,7 +24,7 @@ litepublisher::$site->save();
 $js = tjsmerger::i();
 $js->lock();
 
-$system = array
+$system = array(
 '/js/plugins/tojson.min.js',
 '/js/plugins/fontfaceobserver.standalone.js',
 
@@ -44,14 +44,14 @@ $system = array
 '/js/litepubl/common/dialog.min.js',
 '/js/litepubl/common/players.min.js',
 '/js/litepubl/common/templates.min.js',
-'/js/litepubl/common/widgets.min.js');
+'/js/litepubl/common/widgets.min.js'
 );
 
 $prev = '/js/plugins/jquery.cookie.min.js';
 foreach ($system as $filename) {
   jsafter('default', $prev, $filename);
 $prev = $filename;
-}'/js/litepubl/system/ready2.min.js',
+}
 
 $delete = array(
 '/js/litepublisher/litepublisher.utils.min.js',
@@ -79,12 +79,13 @@ $js->replacefile('default',
 
 $js->replacefile('default',
 '/js/litepublisher/dialog.bootstrap.min.js',
-'/js/litepubl/bootstrap/dialog.bootstrap.min.js',
+'/js/litepubl/bootstrap/dialog.bootstrap.min.js'
 );
+
 
 $js->replacefile('default',
 '/js/litepublisher/pretty.init.min.js',
-'/js/litepubl/pretty/pretty.init.min.js',
+'/js/litepubl/pretty/pretty.init.min.js'
 );
 
 $js->replacefile('default',
@@ -94,7 +95,7 @@ $js->replacefile('default',
 
 $js->replacefile('comments',
 '/js/litepublisher/comments.min.js',
-'/js/litepubl/coments/comments.min.js',
+'/js/litepubl/coments/comments.min.js'
 );
 
 $js->replacefile('comments',
@@ -248,18 +249,21 @@ $t->footer = str_replace('2013', '2015', $t->footer);
 
 $t->save();
 
+if (!litepublisher::$classes->exists('appcache_manifest')) {
 //$a = tprefetchtxt::i()->items;
 $data = new tdata();
 $data->basename = 'prefetch.txt';
 $data->load();
-$a = $data->data['items'];
+
 litepublisher::$classes->delete('tprefetchtxt');
 litepublisher::$classes->add('appcache_manifest', 'appcache.manifest.class.php');
 $c = appcache_manifest::i();
-$c->items = $a;
+if (isset($data->data['items'])) {
+$c->items = $data->data['items'];
 $c->save();
-
+}
 tredirector::i()->add('/prefetch.txt', $c->url);
+}
 
 unset(litepublisher::$classes->interfaces['imenu']);
 litepublisher::$classes->delete('tmenuwidget');
