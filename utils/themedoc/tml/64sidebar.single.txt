@@ -1,4 +1,0 @@
-sidebar.archives.items = [<ul class="list-archives" id="widgetarchives">$item</ul>]
-sidebar.posts.item = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
-sidebar.comments.item = [<li><a href=" $link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
-sidebar.meta.item = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]

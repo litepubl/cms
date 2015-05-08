@@ -1,8 +1,0 @@
-content.author = [
-			<div class="post" id="author-$author.id">
-		        <h2>$author.title</h2>
-		        <div class="post-content">
-					$author.content
-		        </div>
-			</div>
-]

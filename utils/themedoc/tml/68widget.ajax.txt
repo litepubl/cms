@@ -1,2 +1,0 @@
-$template.ajaxwidget = [<span class="ajaxwidget" rel="widget-$id-$sidebar"></span> $title]
-$template.inlinewidget = [<span class="inlinewidget"></span> $title]

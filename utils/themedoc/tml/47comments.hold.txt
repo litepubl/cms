@@ -1,6 +1,0 @@
-content.post.templatecomments.holdcomments = [
-<p class="hold"><em>$lang.hold</em></p>
-  <a id="holdcomments"></a>
-  <ol class="commentlist" id="holdcommentlist" start="1">
-$comment
-										</ol>]

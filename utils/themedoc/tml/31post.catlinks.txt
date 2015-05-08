@@ -1,5 +1,0 @@
-content.post.catlinks = [
-							$lang.categories: 
-								$item = [ <a href="$link" title="$title" rel="category">$icon$title</a>]
-								$divider = [, ]
-]

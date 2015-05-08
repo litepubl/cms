@@ -1,1 +1,0 @@
-$template.title = [$title $template.page | $site.name]

@@ -1,6 +1,0 @@
-content.post.prevnext = [
-								<div id="prevnext">
-								$prev = [<p id="prev">&larr; $lang.prev <a rel="prev" href="$prevpost.link" title="$lang.permalink $prevpost.title">$prevpost.title</a></p>]
-								$next = [<p id="next">$lang.next <a rel="next" href="$nextpost.link" title="$lang.permalink $nextpost.title">$nextpost.title</a> &rarr;</p>]
-								</div>
-]
