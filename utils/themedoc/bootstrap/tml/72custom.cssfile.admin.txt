@@ -1,0 +1,5 @@
+﻿$custom.cssfile.admin = [
+$title = [Вариант оформления темы (один из файлов css темы)]
+$type = [combo]
+$values = [default,cerulean,cosmo,cyborg,darkly,flatly,journal,lumen,paper,readable,sandstone,simplex,slate,spacelab,superhero,united,yeti]
+]
