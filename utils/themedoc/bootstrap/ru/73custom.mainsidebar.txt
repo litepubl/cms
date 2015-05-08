@@ -1,0 +1,18 @@
+﻿Админка немного отличается: $type = radio, что означает радиокнопки и всего два значения. На этом можно остановиться, но нам хотелось бы рассказать, как при помощи всего одного css класса можно поменять местами сайдбар  контент.. Собственно, верстка, css трюки выходят за рамки описания формата темы. Вот кусок шаблона из index.tml
+
+          <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
+                    <div class="col-sm-9 content" itemscope itemprop="mainContentOfPage">$template.content</div>
+          <div class="col-sm-3 main-sidebar"><div class="panel-group" id="sidebar1" role="tablist" aria-multiselectable="true" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div></div>
+</div></div>
+Переключение положения сайдбара будет происходить при помощи классов sidebar-left и sidebar-right. Если никак не прописать класс sidebar-right в стилях, то сайдбар будет справа, как это видно из верстки. Задача сводится к тому. чтобы при помощи sidebar-left поставить слева сайдбар, но при этом на мобильных устройствах сайдбар был бы под главным контентом. В bootstrap эта задача решается при помощи следующего css:
+
+@media (min-width: 768px) {
+  .sidebar-left > .content {
+    left: 25%;
+  }
+  .sidebar-left > .main-sidebar {
+    right: 75%;
+  }
+}
+
+Полное окончание темы. Все. Удачных разработок!
