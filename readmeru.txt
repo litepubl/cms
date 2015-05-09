@@ -39,3 +39,37 @@ http://yourdomain/admin/passwordrecover/
 Для тех, кто хочет сделать редирект с адресами www можно добавить в .htaccess следующие строки:
 RewriteCond %{HTTP_HOST} ^www.site.ru$ [NC]
 RewriteRule ^(.*)$ http://site.ru/$1 [R=301,L]
+
+Использованные продукты и их лицензии в CMS Litepublisher
+
+Bootstrap. Code copyright 2011-2015 Twitter, Inc. Code released under the MIT license (https://github.com/twbs/bootstrap/blob/master/LICENSE).
+
+Bootswatch. Copyright 2014 Thomas Park. Code released under the MIT License.
+
+jQuery. Copyright 2015 jQuery Foundation and other contributors. Code released under the MIT License.
+
+jQuery UI. Copyright jQuery Foundation and other contributors, https://jquery.org/  Code released under the MIT License.
+
+Font Awesome by @davegandy - http://fontawesome.io - @fontawesome License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+
+Lobster font by Pablo Impallari released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+
+MediaElement.js Copyright 2010-2015, John Dyer (http://j.hn) License: MIT
+
+SWFUpload is (c) 2006-2007 Lars Huring, Olov Nilzйn and Mammon Media and is released under the MIT License:
+
+prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) http://creativecommons.org/licenses/by/2.5/
+
+FileReader.js Copyright 2012 Brian Grinstead - MIT License.
+
+Font Face Observer licensed under the BSD License. Copyright 2014-2015 Bram Stein. All rights reserved.
+
+jQuery Cookie Plugin. Copyright 2006, 2014 Klaus Hartl Released under the MIT license
+jQuery JSON Plugin. Brantley Harris wrote this plugin. It is based somewhat on the JSON.org (http://www.json.org/json2.js) MIT License: http://www.opensource.org/licenses/mit-license.php
+
+Respond.js Copyright 2014 Scott Jehl Licensed under MIT
+
+Modernizr MIT & BSD
+
+HTML5 Shiv (http://paulirish.com/2011/the-history-of-the-html5-shiv/) Licensed under MIT and (or) GPL-2.0
+
