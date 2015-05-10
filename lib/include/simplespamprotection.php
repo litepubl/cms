@@ -1,1 +1,0 @@
-<input type=hidden name="FormValue" value="_Value<?php echo strtotime ("+1 hour"); ?>" />
