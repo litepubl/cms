@@ -7,7 +7,7 @@
     <title>$template.title</title>
     <link rel="stylesheet" href="$template.url/css/$custom.cssfile.min.css?v=$template.cssmerger" type="text/css" media="all" />
     <!--[if lt IE 9]>
-      <script src="$site.files/js/fix/ie9.min.js?v=$template.cssmerger"></script>
+      <script src="$site.files/js/fix/ie9.min.js?v=$template.jsmerger"></script>
     <![endif]-->
     <script type="text/javascript">
       window.subtheme = "$custom.subtheme";
@@ -15,8 +15,7 @@
     $template.head
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
-    <div class="container-fluid">
-    <div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="container-fluid"><div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">
        <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
             <span class="sr-only">$lang.togglenavi</span>
@@ -28,8 +27,8 @@
         </div>
 
 <div class="collapse navbar-collapse" role="navigation" id="navbar-menu" itemscope itemtype="http://schema.org/SiteNavigationElement">$template.menu</div>
-    </div>
-</div>
+
+    </div></div>
 
           <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
                     <div class="col-sm-9 content" itemscope itemprop="mainContentOfPage">$template.content</div>

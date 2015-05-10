@@ -1,126 +1,95 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-  <html xmlns="http://www.w3.org/1999/xhtml">
-  <head profile="http://gmpg.org/xfn/11">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>$title</title>
-	<style>
-	* { 	margin: 0; 	padding: 0; }
-	body {background:#f0f6f7 url(/themes/default/images/bg7.png) repeat-x;font:12px Arial, Verdana, sans-serif;}
-	#header {width:960px;background: url(/themes/default/images/logo.png) no-repeat 30px 20px;margin:11px auto 0;height:125px;position:relative;display:block;}
-	#logo {font:14px Trebuchet MS, Tahoma, Verdana, sans-serif;color:#fff;padding:30px 0 0 150px;}
-	#logo .name {font:48px Trebuchet MS, Tahoma, Verdana, sans-serif;height:95px;display:inline-block;float:left;text-shadow:1px 1px 0 #5fa9c1;padding:0 30px 0 0;}
-	#logo .slogan {top:16px;position:relative;}
-	#out {width:960px;margin:11px auto 10px;background-color:#fff;position:relative;padding:1px;}
-	#middle {width:950px;position:relative;display:block;background-color:#fff;border:5px solid #f3f3f3;overflow: hidden;}
-	#content {width:650px;padding:30px 0 30px 30px;position:relative;float:left;font-size:14px;line-height:1.3;color:#303030;}
-	.rubric {font:24px Trebuchet MS, Tahoma, Verdana, sans-serif;color:#737373;margin:0 0 10px 0;}
-	a {color:#0394d3;}
-	a:hover{color:#0c588a;}
-	#content .install p {margin:20px 0 10px;}
-	#showhost {margin:20px 0}
-	#showhost a {border-bottom:1px dashed #737373; cursor:pointer;}
-	
-	</style>
-	<!--[if IE 6]>
-		<script src="/themes/default/css/DD_belatedPNG.js"></script>
-		<script>		
-		  DD_belatedPNG.fix('.rss, .rss-comments, .foaf, #lastcomments li, #lastposts li, .post-comments, .post-cat, .post-time, .post-tags, #header');
-		 </script>
-	<![endif]--> 
-		<script type="text/javascript">
-function changedbversion(db) {
-var form = document.getElementById("dbform");
-if (db == 1) {
-form.style.display = "block"; 
-} else {
-form.style.display = "none"; 
-}
-return true;
-}
-
-function showdbhost() {
-document.getElementById("divhost").style.display = "block"; 
-document.getElementById("showhost").style.display = "none"; 
-document.getElementById("usehost").value = "1";
-}
-
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$title</title>
+    <link rel="stylesheet" href="/themes/default/css/default.min.css?v=1" type="text/css" media="all" />
+    <!--[if lt IE 9]>
+      <script src="/js/fix/ie9.min.js?v=1"></script>
+    <![endif]-->
   </head>
-  <body>
+  <body itemscope itemtype="http://schema.org/WebPage">
+    <div class="container-fluid"><div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+       <div class="navbar-header">
+          <a class="navbar-brand" href="$lang->homeurl">Litepublisher</a>
+        </div>
 
-<div id="header"><div id="logo"><span class="name">Lite Publisher</span><span class="slogan">
-$lang->homename<br />
-$lang->subdescription
-</span>
-</div></div>
-	
-<div id="out">
-<div id="middle">
-	<div id="content">
-
-<h1 class="rubric">$title</h1>
 <form name="langform" action="" method="get" class="install">
-    <p><select name="lang" id="lang">
-$combobox
-</select>
-    <input type="submit" name="changelang" value="Change language" /></p>
+<div class="form-group">
+<div class="form-inline">
+    <select name="lang" id="combo-lang" class="form-control">$combobox</select>
+<button class="btn btn-default" type="submit" name="changelang">Change language</button>
+</div></div>
 </form>
 
-<p>$lang->hosting</p>
-<p>$lang->formhead</p>
+    </div></div>
+
+          <div class="container-fluid section"><div class="row">
+                    <div class="col-sm-12 content" itemscope itemprop="mainContentOfPage">
+
+<p class="help-block">$lang->hosting</p>
+<p class="help-block">$lang->formhead</p>
+
     <form method="post" action="" name="form" class="install">
-    <br clear="all" />
-    <p>E-Mail:</p>
-    <input name="email" type="text" id="email" value="" />
-    <br clear="all" />
-    <p>$lang->blogname:</p>
-    <input name="name" type="text" id="name" value="" />
-    <br clear="all" />
-    <p>$lang->blogdescription:</p>
-    <input name="description" type="text" id="description" value="" />
-    <br clear="all" />
-	<p>$checkrewrite </p>
+
+<div class="form-group"><label for="text-email">E-Mail</label>
+<input type="text" class="form-control" name="email" id="text-email" value="" /></div>
+
+<div class="form-group"><label for="text-name">$lang->blogname</label>
+<input type="text" class="form-control" name="name" id="text-name" value="" /></div>
+
+<div class="form-group"><label for="text-description">$lang->blogdescription</label>
+<input type="text" class="form-control" name="description" id="text-description" value="" /></div>
+
+$checkrewrite 
     
-<div id="dbform">
-    <p>$lang->dbname:</p>
-    <input name="dbname" type="text" id="dbname" value="" />
-    <br clear="all" />
+<div class="form-group"><label for="text-dbname">$lang->dbname</label>
+<input type="text" class="form-control" name="dbname" id="text-dbname" value="" /></div>
 
-    <p>$lang->dblogin:</p>
-    <input name="dblogin" type="text" id="dblogin" value="" />
-    <br clear="all" />
+<div class="form-group"><label for="text-dblogin">$lang->dblogin</label>
+<input type="text" class="form-control" name="dblogin" id="text-dblogin" value="" /></div>
 
-    <p>$lang->dbpassword</p>
-    <input name="dbpassword" type="password" id="dbpassword" value="" />
-    <br clear="all" />
+<div class="form-group"><label for="text-dbpassword">$lang->dbpassword</label>
+<input type="password" class="form-control" name="dbpassword" id="text-dbpassword" value="" /></div>
 
-    <p>$lang->dbprefix:</p>
-    <input name="dbprefix" type="text" id="dbprefix" value="$dbprefix" />
-    <br clear="all" />
+<div class="form-group"><label for="text-dbprefix">$lang->dbprefix</label>
+<input type="text" class="form-control" name="dbprefix" id="text-dbprefix" value="$dbprefix" /></div>
 
-<div class="rubric" id="showhost"><a onclick="showdbhost();">$lang->showdbhost</a></div>
-<div id="divhost" style="display: none;">
-    <p>$lang->dbhost:</p>
-    <input name="dbhost" type="text" id="dbhost" value="localhost" />
-    <br clear="all" />
+<div class="checkbox"><label>
+<input type="checkbox" name="usehost" id="checkbox-usehost" value="1" />
+$lang->showdbhost</label></div>
 
-    <p>$lang->dbport:</p>
-    <input name="dbport" type="text" id="dbport" />
-    <br clear="all" />
+<div id="holder-host" style="display: none;">
+<div class="form-group"><label for="text-dbhost">$lang->dbhost</label>
+<input type="text" class="form-control" name="dbhost" id="text-dbhost" value="localhost" /></div>
 
-<input id="_dbversion" name="dbversion" type="hidden" value="1" />
-<input type="hidden" name="usehost" id="usehost" value="0" />
+<div class="form-group"><label for="text-dbport">$lang->dbport</label>
+<input type="text" class="form-control" name="dbport" id="text-dbport" value="" /></div>
 </div>
 </div>
 
-<br clear="all" />
-    <input type="submit" name="submit" value="$lang->createblog" />
+<div class="text-center"><div class="center-block"><button type="submit" name="createblog" id="submitbutton-createblog" class="btn btn-primary">$lang->createblog</button></div></div>
     </form>
-			
-</div>	
 </div>
-</div>
-</div>	
+</div></div>
 
-</body>
-  </html>
+    <div class="container-fluid section">
+      <hr>
+      <footer>
+        <div class="row">
+          <div class="col-lg-12" itemscope itemtype="http://schema.org/WPFooter">
+            <p>$template.footer</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+<script type="text/javascript">
+document.getElementById("checkbox-usehost").onclick = function() {
+document.getElementById("holder-host").style.display = this.checked ? "block" : "none"; 
+};
+</script>
+  </body>
+</html>

@@ -246,6 +246,7 @@ class tinstaller extends tdata {
     $html = tadminhtml::i();
     $html->section = 'installation';
     $lang = tlocal::i('installation');
+
     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
       $checkrewrite   = '';
     } else {
