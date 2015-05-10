@@ -73,6 +73,7 @@ class tthemeparser extends tevents {
       break;
       
       case 'litepublisher4':
+case '6':
       $theme->type = 'litepublisher';
       $this->parsetheme($theme);
       break;
