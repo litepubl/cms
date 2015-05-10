@@ -82,15 +82,8 @@ class tthemeparser extends tevents {
       break;
     }
     
-    /*
-    //save and restore lang section
-    $lang = tlocal::i();
-    $sect = $lang->section;
-    */
-    
     $this->parsed($theme);
     if ($this->replacelang) $this->doreplacelang($theme);
-    //$lang->section = $sect;
     $theme->unlock();
     return true;
   }
@@ -144,7 +137,7 @@ class tthemeparser extends tevents {
     if (!file_exists($filename))  return $this->error("The requested theme '$theme->name' file $filename not found");
     
     if ($theme->name != 'default') {
-      $parentname = empty($about['parent']) ? 'default' : $about['parent'];
+      $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
       $parent = ttheme::getinstance($parentname);
       $theme->templates = $parent->templates;
       $theme->parent = $parent->name;
@@ -225,12 +218,14 @@ class tthemeparser extends tevents {
   }
   
   public function checkparent($name) {
+if ($name == 'default') return true;
+
     $about = $this->getabout($name);
     $parents = array($name);
     while (!empty($about['parent'])) {
       $name = $about['parent'];
       if (in_array($name, $parents)) {
-        $this->error(sprintf('Theme cicle "%s"', implode(', ', $parents)));
+        $this->error(sprintf('Theme circle "%s"', implode(', ', $parents)));
       }
       
       $parents[] = $name;
