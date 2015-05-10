@@ -48,7 +48,7 @@ $template.sidebar
       <hr>
       <footer>
         <div class="row">
-          <div class="col-lg-12" itemscope itemtype="http://schema.org/WPFooter">
+          <div class="col-sm-12" itemscope itemtype="http://schema.org/WPFooter">
             <p>$template.footer</p>
           </div>
         </div>
