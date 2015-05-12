@@ -159,7 +159,7 @@ case '6':
     if (strbegin($s, $utf)) $s = substr($s, strlen($utf));
     $s = str_replace(array("\r\n", "\r", "\n\n"), "\n", $s);
     //strip coments
-    $s = preg_replace('/\s*\/\*.*?\*\/\s*/sm', '', $s);
+    $s = preg_replace('/\s*\/\*.*?\*\/\s*/sm', "\n", $s);
     $s = preg_replace('/^\s*\/\/.*?$/m', '', $s);
     
     //normalize tags
@@ -191,7 +191,7 @@ case '6':
       }
       $s = strtr($s, $a);
     }
-    
+
     return trim($s);
   }
   
@@ -326,6 +326,7 @@ if ($name == 'default') return true;
     }
     
     public function settag($parent, $s) {
+//echo "$parent<br>";
       if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) ||
       preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
         $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
@@ -515,11 +516,16 @@ if ($widgetname == 'submenu') return;
       
       public function afterparse($theme) {
         $this->onfix($theme);
+
         $templates = &$this->theme->templates;
         $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' :
         ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
+
         if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
-        if (!isset($templates['content.post.templatecomments.confirmform'])) $this->error('tml not');
+        if (!isset($templates['content.post.templatecomments.confirmform'])) {
+echo implode('<br>', array_keys($templates));
+$this->error('template "content.post.templatecomments.confirmform" not exists');
+}
         
         $post = 'content.post.';
         $excerpt = 'content.excerpts.excerpt.';

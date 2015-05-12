@@ -13,7 +13,7 @@ content.post.templatecomments.regform = [
 <div class="text-center"><div class="center-block"><button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button></div></div>
 </form>
 <script type="text/javascript">
-ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, {
+ltoptions.theme.comments = $.extend(ltoptions.theme.comments, {
 button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>'
 });
 </script>

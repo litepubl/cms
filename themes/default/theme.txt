@@ -539,7 +539,7 @@ content.post.templatecomments.regform = [
 <div class="text-center"><div class="center-block"><button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button></div></div>
 </form>
 <script type="text/javascript">
-ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, {
+ltoptions.theme.comments = $.extend(ltoptions.theme.comments, {
 button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>'
 });
 </script>
@@ -1060,7 +1060,7 @@ $subitems = [<ul>$item</ul>]
 </div>]
 
 sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
-sidebar1.comments.item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>
+sidebar1.comments.item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
 sidebar1.meta.item     = [<li><a href="$link" title="$title"><span $class aria-hidden="true"></span> $text</a>$subitems</li>]
 sidebar1.meta.classes  = [rss=fa fa-rss,comments=fa fa-comments,foaf=fa fa-group]
 
