@@ -27,5 +27,3 @@ function TXMLRPCMetaWeblogInstall($self) {
   
   $caller->unlock();
 }
-
-?>

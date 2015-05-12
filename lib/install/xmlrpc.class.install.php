@@ -17,4 +17,3 @@ function TXMLRPCInstall($self) {
 function TXMLRPCUninstall($self) {
   turlmap::unsub($self);
 }
-?>

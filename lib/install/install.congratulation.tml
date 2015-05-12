@@ -13,7 +13,7 @@
       window.subtheme = "default";
     </script>
 
-<script type="text/javascript" src="/files/js/default.1.js"></script>
+$template.head
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
     <div class="container"><div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">

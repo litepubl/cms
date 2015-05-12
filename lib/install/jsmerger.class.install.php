@@ -43,15 +43,15 @@ function tjsmergerInstall($self) {
   '/js/litepubl/common/dialog.min.js',
   '/js/litepubl/common/players.min.js',
   '/js/litepubl/common/templates.min.js',
-  '/js/litepubl/common/widgets.min.js',
   );
   
   foreach ($defaults as $filename) {
     $self->add($section, $filename);
   }
   
-  tjsmerger_switch($self, tjsmerger_pretty_files(), array());
-  //tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
+  //tjsmerger_switch($self, tjsmerger_pretty_files(), array());
+  tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
+
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
@@ -102,8 +102,7 @@ function tjsmergerInstall($self) {
   $template = ttemplate::i();
   $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
   
-  $updater = tupdater::i();
-  $updater->onupdated = $self->onupdated;
+tupdater::i()->onupdated = $self->onupdated;
 }
 
 function tjsmergerUninstall($self) {
@@ -132,6 +131,7 @@ function tjsmerger_pretty_files() {
   '/js/litepubl/pretty/pretty.init.min.js',
   '/js/litepubl/pretty/youtubefix.min.js',
   '/js/litepubl/pretty/player.pretty.min.js',
+  '/js/litepubl/common/widgets.min.js',
   );
 }
 

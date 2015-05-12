@@ -16,5 +16,3 @@ function tmetapostInstall($self) {
 
 function tmetapostUninstall($self) {
 }
-
-?>

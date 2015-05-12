@@ -11,4 +11,3 @@ function ticonsInstall($self) {
   $files->lock();
   $files->deleted = $self->filedeleted;
 }
-?>

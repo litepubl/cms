@@ -27,5 +27,3 @@ function tcontactformUninstall($self) {
   $menus = tmenus::i();
   $menus->delete($self->id);
 }
-
-?>

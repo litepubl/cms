@@ -13,5 +13,3 @@ function tadminboardInstall($self) {
 function tadminboardUninstall($self) {
   turlmap::unsub($self);
 }
-
-?>

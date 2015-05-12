@@ -29,5 +29,3 @@ function TXMLRPCBloggerInstall($self) {
   
   $caller->unlock();
 }
-
-?>

@@ -94,5 +94,3 @@ function installClasses() {
   $posts->unlock();
   litepublisher::$urlmap->unlock();
 }
-
-?>

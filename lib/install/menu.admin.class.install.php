@@ -114,5 +114,3 @@ function tadminmenusInstall($self) {
 function  tadminmenusUninstall($self) {
   //rmdir(. 'menus');
 }
-
-?>

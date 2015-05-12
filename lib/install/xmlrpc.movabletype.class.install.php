@@ -21,5 +21,3 @@ function TXMLRPCMovableTypeInstall($self) {
   
   $caller->unlock();
 }
-
-?>

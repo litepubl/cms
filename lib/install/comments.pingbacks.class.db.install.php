@@ -18,5 +18,3 @@ function tpingbacksInstall($self) {
 function tpingbacksUninstall($self) {
   tposts::unsub($self);
 }
-
-?>

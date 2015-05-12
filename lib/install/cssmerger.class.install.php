@@ -10,6 +10,8 @@ function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
+
+/*
   $list = tcssmerger_pretty_files($self);
   foreach ($list as $filename) {
     $self->add($section, $filename);
@@ -19,6 +21,7 @@ function tcssmergerInstall($self) {
   foreach ($list as $filename) {
     $self->add($section, $filename);
   }
+*/
   
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');

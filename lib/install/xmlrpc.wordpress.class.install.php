@@ -20,5 +20,3 @@ function TXMLRPCWordpressInstall($self) {
   
   $caller->unlock();
 }
-
-?>

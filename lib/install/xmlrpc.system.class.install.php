@@ -24,5 +24,3 @@ function TXMLRPCSystemInstall($self) {
   
   $caller->unlock();
 }
-
-?>

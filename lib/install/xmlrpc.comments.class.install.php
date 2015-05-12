@@ -32,5 +32,3 @@ function TXMLRPCCommentsInstall($self) {
   
   $caller->unlock();
 }
-
-?>

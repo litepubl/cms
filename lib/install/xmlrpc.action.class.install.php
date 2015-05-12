@@ -18,5 +18,3 @@ function TXMLRPCActionUninstall($self) {
   $caller = TXMLRPC::i();
   $caller->deleteclass(get_class($self));
 }
-
-?>
