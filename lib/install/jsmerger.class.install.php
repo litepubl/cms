@@ -164,7 +164,7 @@ function tjsmerger_bootstrap_files() {
   '/js/litepubl/bootstrap/popover.post.min.js',
   '/js/litepubl/bootstrap/youtube.bootstrap.min.js',
   '/js/litepubl/bootstrap/theme.init.min.js',
-  '/js/litepubl/bootstrap/theme.font.min.js',
+  '/js/litepubl/bootstrap/theme.fonts.min.js',
   
   // fonts
   '/js/fonts/css/lobster.min.js',

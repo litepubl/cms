@@ -10,7 +10,7 @@
       <script src="$site.files/js/fix/ie9.min.js?v=$template.jsmerger"></script>
     <![endif]-->
     <script type="text/javascript">
-      window.subtheme = "$custom.subtheme";
+      window.subtheme = "$custom.cssfile";
     </script>
     $template.head
   </head>

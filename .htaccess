@@ -1,5 +1,6 @@
 #CharsetDisable On
-AddDefaultCharset UTF-8
+#AddDefaultCharset UTF-8
+#php_value memory_limit 48M
 
 <IfModule mod_headers.c>
         Header append Cache-Control "no-store, no-cache, must-revalidate"
@@ -9,7 +10,6 @@ AddDefaultCharset UTF-8
         ExpiresActive On ExpiresDefault "now"
 </IfModule>
 
-#php_value memory_limit 48M
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /

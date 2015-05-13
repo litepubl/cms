@@ -15,7 +15,7 @@
     
     litepubl.linkimage= function(link) {
       $.popimage.add(link, "focus");
-    }; function(link) {
+    };
       
       litepubl.openimage = function(url, title, description) {
         $.popimage.open(url, title, description);

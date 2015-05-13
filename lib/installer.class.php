@@ -332,6 +332,8 @@ class tinstaller extends tdata {
     global  $lang;
     $tml = file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'install.congratulation.tml');
     $theme = ttheme::getinstance('default');
+$template = ttemplate::i();
+$template->view = tview::i();
     $html = tadminhtml::i();
     $html->section = 'installation';
     $lang = tlocal::i('installation');
