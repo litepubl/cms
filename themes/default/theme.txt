@@ -431,7 +431,7 @@ $image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="p
 $preview = [<img class="photo" src="$preview.link" alt="$title" title="$description" />]
 </div>]
 $videos = [<div class="files-block filelist-video">
-$video = [<span class="image"><a title="$title" rel="video" class="videofile" id="postfile-$post.id-$id" href="$link" data-file="$json">$preview</a></span>]
+$video = [<span class="image"><a title="$title" rel="video" class="videofile" id="postfile-$post.id-$id" href="$link" data-file="$json">$preview<span class="fa fa-file-video-o video-fallback">$title</span></a></span>]
 </div>]
 $audios = [<div class="files-block filelist-audio">
   $audio = [<audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
@@ -797,7 +797,7 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 <h5 class="title-nowrap"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h5>
 <div class="text-center"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
 $post.catlinks
-<div class="poptext hidden">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
+<div class="poptext">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 </div>
 </div>]
 ]
