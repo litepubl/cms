@@ -1,9 +1,8 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 function tjsmergerInstall($self) {
@@ -51,7 +50,7 @@ function tjsmergerInstall($self) {
   
   //tjsmerger_switch($self, tjsmerger_pretty_files(), array());
   tjsmerger_switch($self, tjsmerger_bootstrap_files(), array());
-
+  
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
@@ -102,7 +101,7 @@ function tjsmergerInstall($self) {
   $template = ttemplate::i();
   $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
   
-tupdater::i()->onupdated = $self->onupdated;
+  tupdater::i()->onupdated = $self->onupdated;
 }
 
 function tjsmergerUninstall($self) {

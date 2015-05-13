@@ -1,9 +1,8 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 function bootstrap_themeInstall($self) {
@@ -15,15 +14,15 @@ function bootstrap_themeInstall($self) {
   
   $css = tcssmerger::i();
   $css->lock();
-tjsmerger_switch ($css,
-array(),
-$css->externalfunc(get_class($css), '_pretty_files', false)
-);
-
-tjsmerger_switch ($css,
-array(),
-$css->externalfunc(get_class($css), '_deprecated_files', false)
-);
+  tjsmerger_switch ($css,
+  array(),
+  $css->externalfunc(get_class($css), '_pretty_files', false)
+  );
+  
+  tjsmerger_switch ($css,
+  array(),
+  $css->externalfunc(get_class($css), '_deprecated_files', false)
+  );
   
   $css->unlock();
   
@@ -39,17 +38,17 @@ function bootstrap_themeUninstall($self) {
   
   $css = tcssmerger::i();
   $css->lock();
- tjsmerger_switch ($css,
-$css->externalfunc(get_class($css), '_pretty_files', false)
-array(),
-);
-
-tjsmerger_switch ($css,
-$css->externalfunc(get_class($css), '_deprecated_files', false)
-array(),
-);
-
-$css->unlock();
- 
+  tjsmerger_switch ($css,
+  $css->externalfunc(get_class($css), '_pretty_files', false)
+  array(),
+  );
+  
+  tjsmerger_switch ($css,
+  $css->externalfunc(get_class($css), '_deprecated_files', false)
+  array(),
+  );
+  
+  $css->unlock();
+  
   ttheme::clearcache();
 }

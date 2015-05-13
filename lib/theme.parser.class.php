@@ -1,9 +1,8 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 class tthemeparser extends tevents {
@@ -73,7 +72,7 @@ class tthemeparser extends tevents {
       break;
       
       case 'litepublisher4':
-case '6':
+      case '6':
       $theme->type = 'litepublisher';
       $this->parsetheme($theme);
       break;
@@ -191,7 +190,7 @@ case '6':
       }
       $s = strtr($s, $a);
     }
-
+    
     return trim($s);
   }
   
@@ -219,8 +218,8 @@ case '6':
   }
   
   public function checkparent($name) {
-if ($name == 'default') return true;
-
+    if ($name == 'default') return true;
+    
     $about = $this->getabout($name);
     $parents = array($name);
     while (!empty($about['parent'])) {
@@ -326,7 +325,7 @@ if ($name == 'default') return true;
     }
     
     public function settag($parent, $s) {
-//echo "$parent<br>";
+      //echo "$parent<br>";
       if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) ||
       preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
         $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
@@ -454,14 +453,14 @@ if ($name == 'default') return true;
         if (!strpos($path, '.')) return;
         if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
         $widgetname = $m[2];
-//backward compability deprecated submenu
-if ($widgetname == 'submenu') return;
-
+        //backward compability deprecated submenu
+        if ($widgetname == 'submenu') return;
+        
         if (($widgetname != 'widget') && (!in_array($widgetname, ttheme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
-
+        
         $path = ttheme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
         if ($path === false) $this->error("Unknown '$path' widget path");
-
+        
         $this->setwidgetitem($widgetname, $path, $value);
         
         if ($widgetname == 'widget') {
@@ -516,16 +515,16 @@ if ($widgetname == 'submenu') return;
       
       public function afterparse($theme) {
         $this->onfix($theme);
-
+        
         $templates = &$this->theme->templates;
         $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' :
         ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
-
+        
         if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
         if (!isset($templates['content.post.templatecomments.confirmform'])) {
-echo implode('<br>', array_keys($templates));
-$this->error('template "content.post.templatecomments.confirmform" not exists');
-}
+          echo implode('<br>', array_keys($templates));
+          $this->error('template "content.post.templatecomments.confirmform" not exists');
+        }
         
         $post = 'content.post.';
         $excerpt = 'content.excerpts.excerpt.';

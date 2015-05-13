@@ -1,8 +1,7 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 (function ($, litepubl, window) {
@@ -26,22 +25,22 @@
     open: function() {
       var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       var winheight = window.innerheight || document.documentElement.clientheight || document.body.clientheight;
-
+      
       var self = this;
       $.litedialog({
         title: lang.posteditor.selectfiles,
         html: this.get_html(),
         width: Math.floor(winwidth / 4 * 3),
-height: Math.min(450, winheight - 60),
+        height: Math.min(450, winheight - 60),
         open: function(holder) {
           holder.on("click.addfile", ".file-item:not(.file-added)", function() {
             self.add($(this).addClass("file-added").attr("data-idfile"));
             return false;
           });
           
-// load first page because ui tabs not fire beforeActivate
-                self.loadpage(holder.find(".file-items:first"), "1");
-
+          // load first page because ui tabs not fire beforeActivate
+          self.loadpage(holder.find(".file-items:first"), "1");
+          
           var tabs = $("#posteditor-files-tabs", holder);
           tabs.tabs({
             hide: true,
@@ -55,10 +54,10 @@ height: Math.min(450, winheight - 60),
             }
           });
         },
-
-close: function() {
-self.fileman.dialog = false;
-},
+        
+        close: function() {
+          self.fileman.dialog = false;
+        },
         
         buttons: [{
           title: lang.dialog.close,
@@ -125,11 +124,11 @@ self.fileman.dialog = false;
       var result = '';
       var list = this.pages[page];
       var fileman = this.fileman;
-
-//save tml toolbar before and restore after generate html
-var toolbar = fileman.tml.toolbar;
-fileman.tml.toolbar = "";
-
+      
+      //save tml toolbar before and restore after generate html
+      var toolbar = fileman.tml.toolbar;
+      fileman.tml.toolbar = "";
+      
       for (var i = 0, l = list.length; i < l; i++) {
         var id = list[i];
         if ($.inArray(id , fileman.loaded) < 0) {
@@ -137,7 +136,7 @@ fileman.tml.toolbar = "";
         }
       }
       
-fileman.tml.toolbar = toolbar;
+      fileman.tml.toolbar = toolbar;
       return result;
     }
     

@@ -1,17 +1,16 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-
-/*
+  
+  /*
   $list = tcssmerger_pretty_files($self);
   foreach ($list as $filename) {
     $self->add($section, $filename);
@@ -21,7 +20,7 @@ function tcssmergerInstall($self) {
   foreach ($list as $filename) {
     $self->add($section, $filename);
   }
-*/
+  */
   
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');

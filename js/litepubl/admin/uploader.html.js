@@ -1,8 +1,7 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 (function ($, litepubl, window) {
@@ -17,7 +16,7 @@
     '<input type="file" id="file-input" name="Filedata" multiple />' +
     '<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>' +
     '</div>',
-
+    
     idhtml: "#file-input, #dropzone",
     
     init: function(owner) {

@@ -1,8 +1,7 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 (function ($, litepubl, window) {
@@ -20,7 +19,7 @@
     dialog: false,
     browser: false,
     holder: false,
-newfiles: false,
+    newfiles: false,
     
     init: function(options) {
       this.loaded = [],
@@ -45,8 +44,8 @@ newfiles: false,
         $("input[name='files']:first", self.holder).val(self.loaded.join(','));
       });
       
-this.newfiles = holder.find("#newfiles")
-.on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
+      this.newfiles = holder.find("#newfiles")
+      .on("click.toolbar", ".file-toolbar > button, .file-toolbar > a", function() {
         var button = $(this);
         var container = button.closest(".file-item");
         var idfile = container .attr("data-idfile");
@@ -60,7 +59,7 @@ this.newfiles = holder.find("#newfiles")
         
         return false;
       })
-.on("click.image", ".file-image", function() {
+      .on("click.image", ".file-image", function() {
         self.openimage($(this));
         return false;
       });
@@ -131,17 +130,17 @@ this.newfiles = holder.find("#newfiles")
       var item =this.items[id];
       item.link = ltoptions.files + "/files/" + item.filename;
       var type = (item.media in this.tml) ? item.media : "file";
-
+      
       if (!("previewlink" in item)) {
-      item.previewlink = '';
-      if (parseInt(item.preview) &&(item.preview in this.items)) {
-        item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filename"];
+        item.previewlink = '';
+        if (parseInt(item.preview) &&(item.preview in this.items)) {
+          item.previewlink = ltoptions.files + "/files/" + this.items[item.preview]["filename"];
+        }
       }
-}
       
       return $.parsetml(this.tml.item, {
         id: item.id,
-toolbar: this.tml.toolbar,
+        toolbar: this.tml.toolbar,
         content: $.parsetml(this.tml[type], item)
       });
     },
@@ -163,7 +162,7 @@ toolbar: this.tml.toolbar,
         var idfile = r.id;
         this.items[idfile] = r.item;
         if (parseInt(r.item.preview)) this.items[r.preview.id] = r.preview;
-this.add(idfile);        
+        this.add(idfile);
     } catch(e) {erralert(e);}
     },
     
@@ -200,7 +199,7 @@ this.add(idfile);
     },
     
     browsefiles: function() {
-this.dialog = true;
+      this.dialog = true;
       if (this.browser) {
         this.browser.open();
       } else {

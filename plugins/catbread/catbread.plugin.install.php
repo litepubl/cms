@@ -1,9 +1,8 @@
 <?php
 /**
-* lite publisher
-* copyright (c) 2010 - 2015 vladimir yushko http://litepublisher.ru/ http://litepublisher.com/
-* dual licensed under the mit (mit.txt)
-* and gpl (gpl.txt) licenses.
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 function catbreadinstall($self) {

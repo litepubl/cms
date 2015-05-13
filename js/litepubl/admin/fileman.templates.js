@@ -1,19 +1,18 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 (function( window ){
   window.litepubl.tml.fileman = {
     item: '<div class="file-item" data-idfile="%%id%%">' +
-'%%toolbar%%' +
+    '%%toolbar%%' +
     '<div class="file-content">' +
     '%%content%%' +
     '</div>' +
     '</div>',
-
+    
     toolbar: '<div class="file-toolbar btn-toolbar" role="toolbar" aria-label="%%lang.filebuttons%%">' +
     '<button type="button" title="%%lang.del%%" class="delete-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-remove" aria-hidden="true"></span> <span class="sr-only">%%lang.del%%</span></button>' +
     '<button type="button" title="%%lang.property%%" class="property-toolbutton tooltip-toggle btn btn-default"><span class="fa fa-edit" aria-hidden="true"></span> <span class="sr-only">%%lang.property%%</span></button>' +

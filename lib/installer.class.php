@@ -1,9 +1,8 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.ru/ http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
 **/
 
 class tinstaller extends tdata {
@@ -246,7 +245,7 @@ class tinstaller extends tdata {
     $html = tadminhtml::i();
     $html->section = 'installation';
     $lang = tlocal::i('installation');
-
+    
     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
       $checkrewrite   = '';
     } else {
@@ -332,8 +331,8 @@ class tinstaller extends tdata {
     global  $lang;
     $tml = file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'install.congratulation.tml');
     $theme = ttheme::getinstance('default');
-$template = ttemplate::i();
-$template->view = tview::i();
+    $template = ttemplate::i();
+    $template->view = tview::i();
     $html = tadminhtml::i();
     $html->section = 'installation';
     $lang = tlocal::i('installation');
