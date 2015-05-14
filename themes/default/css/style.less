@@ -58,7 +58,7 @@ font-size: 80%;
 
     .anpost, .anpost-image, .anpost-text {
   display: inline-block;
-        margin: @padding-base-vertical;
+        margin: @padding-base-vertical @padding-base-horizontal;
 vertical-align: top;
 }
 
@@ -68,7 +68,7 @@ height: @anpost-image;
 }
 
 .anpost-text:first-child {
-width: @anpost-image *2 + @padding-base-vertical;
+width: @anpost-image *2 + @padding-base-horizontal;
 }
 
 .anpost-text .poptext {
