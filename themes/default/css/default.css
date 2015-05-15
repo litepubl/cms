@@ -5717,23 +5717,45 @@ h6,
   font-size: 2em;
   margin: 0.67em 0;
 }
-.anpost,
-.anpost-image,
-.anpost-text {
+.anpost {
   display: inline-block;
-  margin: 6px;
+  margin: 6px 12px;
   vertical-align: top;
 }
 .anpost-image,
 .anpost-text {
+  display: inline-block;
+  margin: 6px 12px;
+  vertical-align: top;
   width: 120px;
   height: 120px;
 }
-.anpost-text:first-child {
-  width: 246px;
+.anpost-text .more-button {
+  text-align: center;
 }
 .anpost-text .poptext {
   display: none;
+}
+.anpost-text:first-child {
+  width: 252px;
+}
+.anpost-text:first-child .more-button,
+.anpost-text:first-child .anpost-catlinks {
+  display: block;
+  overflow: hidden;
+  margin: 6px 12px;
+  width: 120px;
+}
+.anpost-text:first-child .more-button {
+  float: right;
+}
+.anpost-text:first-child .more-button :after {
+  content: " ";
+  display: table;
+  clear: both;
+}
+.anpost-text:first-child .anpost-catlinks {
+  float: left;
 }
 .anpost-text:first-child .poptext {
   display: block;
