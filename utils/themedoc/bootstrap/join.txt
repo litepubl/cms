@@ -58,8 +58,6 @@ ru/49comments.pingbacks.txt
 ru/50excerpt.intro.txt
 tml/51excerpts.txt
 ru/51excerpts.txt
-tml/52excerpts.firstimage.txt
-ru/52excerpts.firstimage.txt
 tml/53excerpts.lite.txt
 ru/53excerpts.lite.txt
 tml/54content.navi.txt
