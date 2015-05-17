@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$title</title>
     <link rel="stylesheet" href="/themes/default/css/default.min.css?v=1" type="text/css" media="all" />
+    <link rel="stylesheet" href="/js/fonts/css/font-awesome.min.css?v=4.3.0" type="text/css" media="all" />
     <!--[if lt IE 9]>
       <script src="/js/fix/ie9.min.js?v=1"></script>
     <![endif]-->
@@ -80,7 +81,23 @@ $lang->showdbhost</label></div>
       <footer>
         <div class="row">
           <div class="col-sm-12" itemscope itemtype="http://schema.org/WPFooter">
-            <p>$template.footer</p>
+
+<a href="https://www.facebook.com/dialog/feed?app_id=290433841025058&link=likeurl&name=$liketitle&picture=' + image +
+&display=popup&redirect_uri=
+
+
+" role="button" target="_blank" class="btn btn-default"><span class="fa fa-facebook"></span> <span class="sr-only">FaceBook</span></a> ' +
+    
+    '<a role="button" target="_blank" href="#" class="btn btn-default social-button" data-like="twitter" title="%%lang.twitter%%"><span class="fa fa-twitter"></span> <span class="sr-only">Twitter</span></a> ',
+    
+    player_buttons: '<button type="button" class="btn btn-default player-button" data-action="back" title="%%lang.tipback%%"><span class="fa fa-backward"></span> <span class="sr-only">%%lang.backward%%</span></button> ' +
+    
+    '<button type="button" class="btn btn-default player-button" data-action="next" title="%%lang.tipnext%%"><span class="fa fa-forward"></span> <span class="sr-only">%%lang.forward%%</span></button> ' +
+    
+    '<button type="button" class="btn btn-default player-button" data-action="stop" title="%%lang.tipstop%%"><span class="fa fa-stop"></span> <span class="sr-only">%%lang.stop%%</span></button> ' +
+    
+    '<button type="button" class="btn btn-default player-button" data-action="play" title="%%lang.tipplay%%"><span class="fa fa-play"></span> <span class="sr-only">%%lang.play%%</span></button> ',
+
           </div>
         </div>
       </footer>
