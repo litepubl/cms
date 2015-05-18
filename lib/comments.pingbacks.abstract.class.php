@@ -58,4 +58,3 @@ class tabstractpingbacks extends titems {
   }
   
 }//class
-?>

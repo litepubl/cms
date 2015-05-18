@@ -96,4 +96,3 @@ class tadminicons extends tadminmenu {
   }
   
 }//class
-?>

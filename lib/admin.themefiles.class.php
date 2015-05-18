@@ -67,4 +67,3 @@ class tadminthemefiles extends tadminmenu {
   }
   
 }//class
-?>

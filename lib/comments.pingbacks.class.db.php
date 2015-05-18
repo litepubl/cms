@@ -93,5 +93,3 @@ class tpingbacks extends tabstractpingbacks implements ipingbacks {
   }
   
 }//class
-
-?>

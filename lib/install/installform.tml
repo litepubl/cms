@@ -83,20 +83,13 @@ $lang->showdbhost</label></div>
           <div class="col-sm-12" itemscope itemtype="http://schema.org/WPFooter">
 
 <a href="https://www.facebook.com/dialog/feed?app_id=290433841025058&link=likeurl&name=$liketitle&picture=' + image +
-&display=popup&redirect_uri=
+&display=popup&redirect_uri=http%3A%2F%2Flitepublisher.ru%2Ffiles%2Fclose-window.htm" role="button" target="_blank" class="btn btn-default"><span class="fa fa-facebook"></span> <span class="sr-only">FaceBook</span></a>
 
-
-" role="button" target="_blank" class="btn btn-default"><span class="fa fa-facebook"></span> <span class="sr-only">FaceBook</span></a> ' +
+<a href="https://twitter.com/share?lang=$langcode&url=$likeurl&text=$liketitle" role="button" target="_blank" class="btn btn-default"><span class="fa fa-twitter"></span> <span class="sr-only">Twitter</span></a> 
     
-    '<a role="button" target="_blank" href="#" class="btn btn-default social-button" data-like="twitter" title="%%lang.twitter%%"><span class="fa fa-twitter"></span> <span class="sr-only">Twitter</span></a> ',
+<a href="http://vk.com/share.php?url=$likeurl" role="button" class="btn btn-default"><span class="fa fa-vk"></span> <span class="sr-only">VKontakte</span></a>
     
-    player_buttons: '<button type="button" class="btn btn-default player-button" data-action="back" title="%%lang.tipback%%"><span class="fa fa-backward"></span> <span class="sr-only">%%lang.backward%%</span></button> ' +
-    
-    '<button type="button" class="btn btn-default player-button" data-action="next" title="%%lang.tipnext%%"><span class="fa fa-forward"></span> <span class="sr-only">%%lang.forward%%</span></button> ' +
-    
-    '<button type="button" class="btn btn-default player-button" data-action="stop" title="%%lang.tipstop%%"><span class="fa fa-stop"></span> <span class="sr-only">%%lang.stop%%</span></button> ' +
-    
-    '<button type="button" class="btn btn-default player-button" data-action="play" title="%%lang.tipplay%%"><span class="fa fa-play"></span> <span class="sr-only">%%lang.play%%</span></button> ',
+<a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=$likeurl&st.comments=$liketitle" role="button" class="btn btn-default"><span class="fa fa-facebook"></span> <span class="sr-only">odnoklassniki</span></a> 
 
           </div>
         </div>

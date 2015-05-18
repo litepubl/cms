@@ -74,6 +74,3 @@ class tadminstaticpages extends tadminmenu {
   }
   
 }//class
-
-
-?>

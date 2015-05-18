@@ -94,4 +94,3 @@ class TXMLRPCSystem extends TXMLRPCAbstract {
   }
   
 }//class
-?>
