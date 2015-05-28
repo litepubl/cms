@@ -1,5 +1,5 @@
 sidebar1.widget = [
-  <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"><span class="caret"></span> $title</a>
+  <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title <span class="caret"></span></a>
   <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
 $items = [          <ul class="dropdown-menu" role="menu">
 $item = [<li><a href="$link" title="$title">$icon$text</a>

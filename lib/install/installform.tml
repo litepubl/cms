@@ -89,8 +89,6 @@ $lang->showdbhost</label></div>
     
 <a href="http://vk.com/share.php?url=$likeurl" role="button" class="btn btn-default"><span class="fa fa-vk"></span> <span class="sr-only">VKontakte</span></a>
     
-<a href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=$likeurl&st.comments=$liketitle" role="button" class="btn btn-default"><span class="fa fa-facebook"></span> <span class="sr-only">odnoklassniki</span></a> 
-
           </div>
         </div>
       </footer>
