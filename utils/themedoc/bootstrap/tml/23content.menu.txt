@@ -1,6 +1,6 @@
 content.menu = [
 			<div class="post" id="menu-$menu.id">
-		        <h2>$menu.title</h2>
+		        <h3>$menu.title</h3>
 		        <div class="post-content">
 					$menu.content
 		        </div>

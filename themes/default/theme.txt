@@ -195,7 +195,7 @@ $template.content.notfound = [
 
 content.menu = [
 			<div class="post" id="menu-$menu.id">
-		        <h2>$menu.title</h2>
+		        <h3>$menu.title</h3>
 		        <div class="post-content">
 					$menu.content
 		        </div>
@@ -936,11 +936,11 @@ $tableclass - класс таблиц с рамочками, в фреймвор
 $template.sidebar = [
   $widget = [
   <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="widget-heading-$id">
+      <div class="panel-heading" id="widget-heading-$id">
       <h4 class="panel-title widget-title" data-model="widget-collapse">$title</h4>
       </div>
       
-<div class="collapse in" id="widget-content-$id" role="tabpanel" aria-labelledby="widget-heading-$id">
+<div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
       <div class="panel-body">
           $items = [
     <ul>

@@ -169,6 +169,7 @@
     },
     
     loadhold: function() {
+var self = this;
       $.jsonrpc({
         type: 'get',
         method: "comments_get_hold",

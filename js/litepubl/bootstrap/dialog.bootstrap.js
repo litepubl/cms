@@ -132,12 +132,12 @@
     },
     
     opened: function() {
-      if ($.isFunction(this.options.open)) this.options.open(self.dialog);
+      if ($.isFunction(this.options.open)) this.options.open(this.dialog);
     },
     
     getbutton: function(index) {
       if (!this.footer) return false;
-      return THIS.FOOTER.FIND("button[data-index=" + index + "]");
+      return this.footer.find("button[data-index=" + index + "]");
     }
     
   });

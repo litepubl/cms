@@ -18,6 +18,7 @@
   overflow: hidden;
 }
 
+/*
 .file-items:before,
 .file-items:after {
   content: " ";
@@ -27,11 +28,15 @@
 .file-items:after {
   clear: both;
 }
+*/
+
+#posteditor-files-tabs{
+min-height: 350px;
+}
 
 .file-item {
-  float:left;
-  display:block;
-  overflow: hidden;
+  display:inline-block;
+        vertical-align: top;
   margin:6px 12px;
   text-align:center;
   width: 25%;
@@ -61,8 +66,12 @@
   }
 }
 
+.file-toolbar {
+  margin-bottom: 6px;
+}
+
 .file-content{
-  font-size:10px;
+  font-size:12px;
   margin-left: auto;
   margin-right: auto;
   display: block;
@@ -83,11 +92,12 @@
   white-space: nowrap;
 }
 
-.file-added .file-content {
+.file-added img {
   position: relative;
+color: gray;
 }
 
-.file-added .file-content:after {
+.file-added img:after {
   position: absolute;
   left: 0;
   top: 0;
