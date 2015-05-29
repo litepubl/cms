@@ -6,8 +6,9 @@
 
 (function( $, document){
   'use strict';
-  
-  $(document).ready(function() {
+$.load_theme_font  = function(name) {
+if (!name) name = 'default';
+
     var themefonts = {
       cerulean: false,
       cosmo: {
@@ -84,7 +85,6 @@
       
     };
     
-    var name = window.subtheme;
     // most case default theme color
     if (name == 'default') {
       $.load_lobster();
@@ -93,6 +93,10 @@
       var url = "https://fonts.googleapis.com/css?family=" + info.url + "&subset=latin,cyrillic";
       $.load_font(info.fontname, name, url);
     }
+};
+
+  $(document).ready(function() {
+$.load_theme_font(ltoptions.theme.cssfile);
   });
   
 })( jQuery, document);

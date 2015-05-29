@@ -9,10 +9,10 @@
     <!--[if lt IE 9]>
       <script src="$site.files/js/fix/ie9.min.js?v=$template.jsmerger"></script>
     <![endif]-->
-    <script type="text/javascript">
-      window.subtheme = "$custom.cssfile";
-    </script>
     $template.head
+    <script type="text/javascript">
+      window.ltoptions.theme.cssfile = "$custom.cssfile";
+    </script>
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
     <div class="container-fluid"><div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">

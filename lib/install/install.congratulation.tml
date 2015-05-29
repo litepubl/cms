@@ -6,13 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$title</title>
     <link rel="stylesheet" href="/themes/default/css/default.min.css?v=1" type="text/css" media="all" />
+<link type="text/css" href="/files/js/default.1.css" rel="stylesheet" />
     <!--[if lt IE 9]>
       <script src="/js/fix/ie9.min.js?v=1"></script>
     <![endif]-->
-    <script type="text/javascript">
-      window.subtheme = "default";
-    </script>
-
 $template.head
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
