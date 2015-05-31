@@ -14,7 +14,6 @@ class tbackuper extends tevents {
   private $__filer;
   private $existingfolders;
   private $lastdir;
-  private $stdfolders;
   private $hasdata;
   
   public static function i() {

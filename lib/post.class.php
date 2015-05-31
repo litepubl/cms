@@ -19,14 +19,18 @@ class tpost extends titem implements  itemplate {
   public static function i($id = 0) {
     $id = (int) $id;
     if ($id > 0) {
-      if (isset(self::$instances['post'][$id]))     return self::$instances['post'][$id];
-      if ($result = self::loadpost($id)) {
+      if (isset(self::$instances['post'][$id]))     {
+$result = self::$instances['post'][$id];
+} else if ($result = self::loadpost($id)) {
         self::$instances['post'][$id] = $result;
-        return $result;
-      }
-      return null;
+} else {
+      $result = null;
     }
-    return parent::iteminstance(__class__, $id);
+} else {
+    $result = parent::iteminstance(__class__, $id);
+}
+
+        return $result;
   }
   
   public static function getinstancename() {
@@ -42,7 +46,10 @@ class tpost extends titem implements  itemplate {
   }
   
   public static function select_child_items($table, array $items) {
-    if (($table == '') || (count($items) == 0)) return array();
+    if (!$table || !count($items)) {
+return array();
+}
+
     $db = litepublisher::$db;
     $childtable =  $db->prefix . $table;
     $list = implode(',', $items);
@@ -50,9 +57,9 @@ class tpost extends titem implements  itemplate {
     from $childtable where id in ($list)"));
   }
   
-  public static function newpost($class) {
-    if (empty($class)) $class = __class__;
-    return new $class();
+  public static function newpost($classname) {
+$classname = $classname ? $classname : __class__;
+    return new $classname();
   }
   
   protected function create() {
@@ -127,20 +134,28 @@ class tpost extends titem implements  itemplate {
       
       case 'excerpttaglinks':
       return $this->get_taglinks('tags', true);
-    }
-    
+
+default:
     return parent::__get($name);
-  }
+    }
+      }
   
   public function __set($name, $value) {
     if ($this->childtable) {
-      if ($name == 'id') return $this->setid($value);
-      if (method_exists($this, $set = 'set'. $name)) return $this->$set($value);
+      if ($name == 'id') {
+return $this->setid($value);
+} 
+
+if (method_exists($this, $set = 'set'. $name)) {
+return $this->$set($value);
+}
+
       if (array_key_exists($name, $this->childdata)) {
         $this->childdata[$name] = $value;
         return true;
       }
-    }
+}
+
     return parent::__set($name, $value);
   }
   
@@ -699,9 +714,14 @@ class tpost extends titem implements  itemplate {
   public function getcmtcount() {
     $l = tlocal::i()->ini['comment'];
     switch($this->commentscount) {
-      case 0: return $l[0];
-      case 1: return $l[1];
-      default: return sprintf($l[2], $this->commentscount);
+      case 0:
+ return $l[0];
+
+      case 1:
+ return $l[1];
+
+      default:
+ return sprintf($l[2], $this->commentscount);
     }
   }
   

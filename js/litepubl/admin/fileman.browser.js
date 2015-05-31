@@ -31,7 +31,7 @@
         title: lang.posteditor.selectfiles,
         html: this.get_html(),
         width: Math.floor(winwidth / 4 * 3) + 32,
-        height: Math.min(450, winheight - 60),
+        height: Math.min(450, winheight - 160),
         open: function(holder) {
           holder.on("click.addfile", ".file-item:not(.file-added)", function() {
             self.add($(this).addClass("file-added").attr("data-idfile"));
@@ -95,7 +95,7 @@
       $.jsonrpc({
         type: 'get',
         method: "files_getpage",
-      params: {page: page - 1},
+      params: {page: page - 1, perpage: this.perpage},
         callback: function(r) {
           self.addpage(page, r.files);
           panel.attr("data-status", "loaded");
@@ -112,6 +112,7 @@
     addpage: function(page, items) {
       var list = this.pages[page] = [];
       var fileitems = this.fileman.items;
+
       for (var id in items) {
         fileitems[id] = items[id];
         if (!parseInt(items[id].parent)) {
