@@ -93,20 +93,13 @@ min-height: 350px;
 }
 
 .file-added img {
-  position: relative;
-color: gray;
+  background-color:black;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
 }
 
-.file-added img:after {
-  position: absolute;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.4;
-  color:black;
-  display: block;
-  overflow: hidden;
+.file-added ul {
+  background-color:gray;
 }
 
 #dropzone{

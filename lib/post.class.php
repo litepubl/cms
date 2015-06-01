@@ -216,7 +216,9 @@ return $this->$set($value);
   public function save() {
     if ($this->lockcount > 0) return;
     $this->SaveToDB();
-    foreach ($this->coinstances as $coinstance) $coinstance->save();
+    foreach ($this->coinstances as $coinstance) {
+$coinstance->save();
+}
   }
   
   protected function SaveToDB() {

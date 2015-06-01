@@ -33,8 +33,13 @@
         width: Math.floor(winwidth / 4 * 3) + 32,
         height: Math.min(450, winheight - 160),
         open: function(holder) {
-          holder.on("click.addfile", ".file-item:not(.file-added)", function() {
-            self.add($(this).addClass("file-added").attr("data-idfile"));
+          holder.on("click.addfile", ".file-item", function() {
+var item = $(this);
+if (!item.hasClass("file-added")) {
+item.addClass("file-added");
+            self.add(item.attr("data-idfile"));
+}
+
             return false;
           });
           
@@ -113,10 +118,11 @@
       var list = this.pages[page] = [];
       var fileitems = this.fileman.items;
 
-      for (var id in items) {
-        fileitems[id] = items[id];
-        if (!parseInt(items[id].parent)) {
-          list.push(id);
+      for (var i in items) {
+var item = items[i];
+        fileitems[item.id] = item;
+        if (!parseInt(item.parent)) {
+          list.push(item.id);
         }
       }
     },
