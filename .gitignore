@@ -7,3 +7,5 @@ storage/backup/
 storage/cache/
 storage/data/
 THEMES/SHOP*
+.sonar/*
+sonar/*

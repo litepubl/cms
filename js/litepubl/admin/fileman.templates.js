@@ -28,8 +28,7 @@
     //'<li>%%lang.keywords%%: %%keywords%%</li>' +
     '</ul>',
     
-    tabs: '<p>%%lang.helpselfiles%%</p>' +
-    '<div id="posteditor-files-tabs">' +
+    tabs: '<div id="posteditor-files-tabs">' +
     '<ul>%%head%%</ul>' +
     '%%body%%' +
     '</div>',

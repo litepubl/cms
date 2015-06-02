@@ -69,6 +69,7 @@ class tjsonfiles extends tevents {
 $db = $files->db;
 
 $result = $db->res2items($db->query("select * from $files->thistable where parent = 0 $where order by id desc limit $from, $perpage"));
+
 if (count($result)) {
 $idlist = implode(',', array_keys($result));
 $thumbs = $db->res2items($db->query("select * from $files->thistable where parent in ($idlist)"));

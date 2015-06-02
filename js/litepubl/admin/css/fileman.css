@@ -18,22 +18,6 @@
   overflow: hidden;
 }
 
-/*
-.file-items:before,
-.file-items:after {
-  content: " ";
-  display: table;
-}
-
-.file-items:after {
-  clear: both;
-}
-*/
-
-#posteditor-files-tabs{
-min-height: 350px;
-}
-
 .file-item {
   display:inline-block;
         vertical-align: top;
@@ -82,8 +66,8 @@ min-height: 350px;
   border: 1px solid transparent;
   border-radius: 4px;
   display: block;
-  width:100%;
-  height:100%;
+width: 120px;
+height: 120px;
 }
 
 .file-content li {
@@ -100,6 +84,11 @@ min-height: 350px;
 
 .file-added ul {
   background-color:gray;
+}
+
+#posteditor-files-tabs.file-items {
+overflow-y: auto;
+max-height: 260px;
 }
 
 #dropzone{

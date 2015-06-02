@@ -25,13 +25,16 @@
     open: function() {
       var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       var winheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+//dialog height = image_height * 2 + 3 * margin + tabs_height + default_dialog_height
+//var dialog_height = 120 * 2 + 6*3 + 81 + 156;
+var dialog_height = 495;
       
       var self = this;
       $.litedialog({
         title: lang.posteditor.selectfiles,
         html: this.get_html(),
         width: Math.floor(winwidth / 4 * 3) + 32,
-        height: Math.min(450, winheight - 160),
+        height: Math.min(dialog_height, winheight - 60),
         open: function(holder) {
           holder.on("click.addfile", ".file-item", function() {
 var item = $(this);
@@ -52,7 +55,7 @@ item.addClass("file-added");
             show: true,
             beforeLoad: litepubl.uibefore,
             beforeActivate: function(event, ui) {
-              var panel = $(ui.newPanel.firstChild);
+              var panel = $(ui.newPanel).children();
               if ("empty" == panel.attr("data-status")) {
                 self.loadpage(panel, panel.attr("data-page"));
               }
