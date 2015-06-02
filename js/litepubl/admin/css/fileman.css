@@ -20,7 +20,7 @@
 
 .file-item {
   display:inline-block;
-        vertical-align: top;
+  vertical-align: top;
   margin:6px 12px;
   text-align:center;
   width: 25%;
@@ -66,8 +66,8 @@
   border: 1px solid transparent;
   border-radius: 4px;
   display: block;
-width: 120px;
-height: 120px;
+  width: 120px;
+  height: 120px;
 }
 
 .file-content li {
@@ -87,8 +87,8 @@ height: 120px;
 }
 
 #posteditor-files-tabs.file-items {
-overflow-y: auto;
-max-height: 260px;
+  overflow-y: auto;
+  max-height: 260px;
 }
 
 #dropzone{

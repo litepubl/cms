@@ -20,17 +20,17 @@ class tpost extends titem implements  itemplate {
     $id = (int) $id;
     if ($id > 0) {
       if (isset(self::$instances['post'][$id]))     {
-$result = self::$instances['post'][$id];
-} else if ($result = self::loadpost($id)) {
+        $result = self::$instances['post'][$id];
+      } else if ($result = self::loadpost($id)) {
         self::$instances['post'][$id] = $result;
-} else {
-      $result = null;
+      } else {
+        $result = null;
+      }
+    } else {
+      $result = parent::iteminstance(__class__, $id);
     }
-} else {
-    $result = parent::iteminstance(__class__, $id);
-}
-
-        return $result;
+    
+    return $result;
   }
   
   public static function getinstancename() {
@@ -47,9 +47,9 @@ $result = self::$instances['post'][$id];
   
   public static function select_child_items($table, array $items) {
     if (!$table || !count($items)) {
-return array();
-}
-
+      return array();
+    }
+    
     $db = litepublisher::$db;
     $childtable =  $db->prefix . $table;
     $list = implode(',', $items);
@@ -58,7 +58,7 @@ return array();
   }
   
   public static function newpost($classname) {
-$classname = $classname ? $classname : __class__;
+    $classname = $classname ? $classname : __class__;
     return new $classname();
   }
   
@@ -134,28 +134,28 @@ $classname = $classname ? $classname : __class__;
       
       case 'excerpttaglinks':
       return $this->get_taglinks('tags', true);
-
-default:
-    return parent::__get($name);
+      
+      default:
+      return parent::__get($name);
     }
-      }
+  }
   
   public function __set($name, $value) {
     if ($this->childtable) {
       if ($name == 'id') {
-return $this->setid($value);
-} 
-
-if (method_exists($this, $set = 'set'. $name)) {
-return $this->$set($value);
-}
-
+        return $this->setid($value);
+      }
+      
+      if (method_exists($this, $set = 'set'. $name)) {
+        return $this->$set($value);
+      }
+      
       if (array_key_exists($name, $this->childdata)) {
         $this->childdata[$name] = $value;
         return true;
       }
-}
-
+    }
+    
     return parent::__set($name, $value);
   }
   
@@ -217,8 +217,8 @@ return $this->$set($value);
     if ($this->lockcount > 0) return;
     $this->SaveToDB();
     foreach ($this->coinstances as $coinstance) {
-$coinstance->save();
-}
+      $coinstance->save();
+    }
   }
   
   protected function SaveToDB() {
@@ -717,13 +717,13 @@ $coinstance->save();
     $l = tlocal::i()->ini['comment'];
     switch($this->commentscount) {
       case 0:
- return $l[0];
-
+      return $l[0];
+      
       case 1:
- return $l[1];
-
+      return $l[1];
+      
       default:
- return sprintf($l[2], $this->commentscount);
+      return sprintf($l[2], $this->commentscount);
     }
   }
   

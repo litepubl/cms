@@ -45,10 +45,10 @@ class tdata {
     } else {
       foreach ($this->coinstances as $coinstance) {
         if (isset($coinstance->$name)) {
-return $coinstance->$name;
-}
+          return $coinstance->$name;
+        }
       }
-
+      
       return    $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
     }
   }
@@ -88,15 +88,15 @@ return $coinstance->$name;
   
   public function __isset($name) {
     if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) {
-return true;
-}
-
+      return true;
+    }
+    
     foreach ($this->coinstances as $coinstance) {
       if (isset($coinstance->$name)) {
-return true;
-}
+        return true;
+      }
     }
-
+    
     return false;
   }
   

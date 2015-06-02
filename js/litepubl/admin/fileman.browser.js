@@ -25,9 +25,9 @@
     open: function() {
       var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       var winheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-//dialog height = image_height * 2 + 3 * margin + tabs_height + default_dialog_height
-//var dialog_height = 120 * 2 + 6*3 + 81 + 156;
-var dialog_height = 495;
+      //dialog height = image_height * 2 + 3 * margin + tabs_height + default_dialog_height
+      //var dialog_height = 120 * 2 + 6*3 + 81 + 156;
+      var dialog_height = 495;
       
       var self = this;
       $.litedialog({
@@ -37,12 +37,12 @@ var dialog_height = 495;
         height: Math.min(dialog_height, winheight - 60),
         open: function(holder) {
           holder.on("click.addfile", ".file-item", function() {
-var item = $(this);
-if (!item.hasClass("file-added")) {
-item.addClass("file-added");
-            self.add(item.attr("data-idfile"));
-}
-
+            var item = $(this);
+            if (!item.hasClass("file-added")) {
+              item.addClass("file-added");
+              self.add(item.attr("data-idfile"));
+            }
+            
             return false;
           });
           
@@ -120,9 +120,9 @@ item.addClass("file-added");
     addpage: function(page, items) {
       var list = this.pages[page] = [];
       var fileitems = this.fileman.items;
-
+      
       for (var i in items) {
-var item = items[i];
+        var item = items[i];
         fileitems[item.id] = item;
         if (!parseInt(item.parent)) {
           list.push(item.id);

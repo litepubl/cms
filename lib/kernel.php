@@ -440,8 +440,11 @@ class tdata {
       return $this->data[$name];
     } else {
       foreach ($this->coinstances as $coinstance) {
-        if (isset($coinstance->$name)) return $coinstance->$name;
+        if (isset($coinstance->$name)) {
+          return $coinstance->$name;
+        }
       }
+      
       return    $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
     }
   }
@@ -480,10 +483,16 @@ class tdata {
   }
   
   public function __isset($name) {
-    if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) return true;
-    foreach ($this->coinstances as $coinstance) {
-      if (isset($coinstance->$name)) return true;
+    if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) {
+      return true;
     }
+    
+    foreach ($this->coinstances as $coinstance) {
+      if (isset($coinstance->$name)) {
+        return true;
+      }
+    }
+    
     return false;
   }
   
@@ -1498,7 +1507,6 @@ class tclasses extends titems {
   public $remap;
   public $factories;
   public $instances;
-  public $included_files;
   
   public static function i() {
     if (!isset(litepublisher::$classes)) {
@@ -1524,9 +1532,6 @@ class tclasses extends titems {
     $this->addmap('factories', array());
     $this->instances = array();
     if (function_exists('spl_autoload_register')) spl_autoload_register(array($this, '_autoload'));
-    $this->data['memcache'] = false;
-    $this->data['revision_memcache'] = 1;
-    $this->included_files = array();
   }
   
   public function load() {
@@ -1575,13 +1580,9 @@ class tclasses extends titems {
     ($this->items[$class][0] == $filename) && ($this->items[$class][1] == $path)) return false;
     
     $this->lock();
-    $m = $this->memcache;
-    $this->memcache = false;
     $this->items[$class] = array($filename, $path);
     $instance = $this->getinstance($class);
     if (method_exists($instance, 'install')) $instance->install();
-    $this->memcache = $m;
-    if ($m) $this->revision_memcache++;
     $this->unlock();
     $this->added($class);
     return true;
@@ -1590,18 +1591,12 @@ class tclasses extends titems {
   public function delete($class) {
     if (!isset($this->items[$class])) return false;
     $this->lock();
-    $m = $this->memcache;
-    $this->memcache = false;
-    
     if (class_exists($class)) {
       $instance = $this->getinstance($class);
       if (method_exists($instance, 'uninstall')) $instance->uninstall();
     }
     
     unset($this->items[$class]);
-    
-    $this->memcache = $m;
-    if ($m) $this->revision_memcache++;
     $this->unlock();
     $this->deleted($class);
   }
@@ -1619,39 +1614,11 @@ class tclasses extends titems {
   public function _autoload($class) {
     if ($filename = $this->getclassfilename($class)) {
       $this->include_file($filename);
-      $this->included_files[$class] = $filename;
     }
   }
   
   public function include_file($filename) {
-    if (!tfilestorage::$memcache || litepublisher::$debug  || !$this->memcache) {
-      if (file_exists($filename)) require_once($filename);
-      return;
-    }
-    
-    if (in_array($filename, $this->included_files)) return;
-    
-    if ($s =  tfilestorage::$memcache->get($filename)) {
-      $i = strpos($s, ';');
-      $revision = substr($s, 0, $i);
-      if ($revision == $this->revision_memcache) {
-        eval(substr($s, $i + 1));
-        return;
-      }
-      tfilestorage::$memcache->delete($filename);
-    }
-    
-    if (file_exists($filename)) {
-      $s = file_get_contents($filename);
-      eval('?>' . $s);
-      //strip php tag and copyright in head
-      if (strbegin($s, '<?php')) $s = substr($s, 5);
-      if (strend($s, '?>')) $s = substr($s, 0, -2);
-      $s = trim($s);
-      if (strbegin($s, '/*')) $s = substr($s, strpos($s, '*/') + 2);
-      $s = $this->revision_memcache . ';' . ltrim($s);
-      tfilestorage::$memcache->set($filename, $s, false, 3600);
-    }
+    if (file_exists($filename)) require_once($filename);
   }
   
   public function getclassfilename($class, $debug = false) {
@@ -1684,12 +1651,7 @@ class tclasses extends titems {
   
   public function getresourcedir($c) {
     $class = self::get_class_name($c);
-    if (isset($this->included_files[$class])) {
-      $dir = dirname($this->included_files[$class]);
-    } else {
-      $dir = dirname($this->getclassfilename($class));
-    }
-    
+    $dir = dirname($this->getclassfilename($class));
     return $dir . '/resource/';
   }
   

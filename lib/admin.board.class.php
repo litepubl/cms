@@ -63,12 +63,12 @@ public function setidview($id) {}
   
   public function gethtml($name = '') {
     if (!$name) {
-$name = 'login';
-}
-
+      $name = 'login';
+    }
+    
     $result = tadminhtml ::i();
     $result->section = $name;
-tlocal::admin($name);
+    tlocal::admin($name);
     return $result;
   }
   

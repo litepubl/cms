@@ -133,7 +133,7 @@ class tclasses extends titems {
   }
   
   public function include_file($filename) {
-      if (file_exists($filename)) require_once($filename);
+    if (file_exists($filename)) require_once($filename);
   }
   
   public function getclassfilename($class, $debug = false) {
@@ -166,7 +166,7 @@ class tclasses extends titems {
   
   public function getresourcedir($c) {
     $class = self::get_class_name($c);
-      $dir = dirname($this->getclassfilename($class));
+    $dir = dirname($this->getclassfilename($class));
     return $dir . '/resource/';
   }
   

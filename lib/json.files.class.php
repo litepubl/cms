@@ -61,21 +61,21 @@ class tjsonfiles extends tevents {
     if (!litepublisher::$options->hasgroup('author')) return $this->forbidden();
     $page = (int) $args['page'];
     $perpage = isset($args['perpage']) ? (int) $args['perpage'] : 10;
-
+    
     $from = $page * $perpage;
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
-
+    
     $files = tfiles::i();
-$db = $files->db;
-
-$result = $db->res2items($db->query("select * from $files->thistable where parent = 0 $where order by id desc limit $from, $perpage"));
-
-if (count($result)) {
-$idlist = implode(',', array_keys($result));
-$thumbs = $db->res2items($db->query("select * from $files->thistable where parent in ($idlist)"));
-$result = array_merge($result, $thumbs);
-}
-
+    $db = $files->db;
+    
+    $result = $db->res2items($db->query("select * from $files->thistable where parent = 0 $where order by id desc limit $from, $perpage"));
+    
+    if (count($result)) {
+      $idlist = implode(',', array_keys($result));
+      $thumbs = $db->res2items($db->query("select * from $files->thistable where parent in ($idlist)"));
+      $result = array_merge($result, $thumbs);
+    }
+    
     return array(
     'files' => $result
     );

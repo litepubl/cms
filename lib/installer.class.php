@@ -251,16 +251,16 @@ class tinstaller extends tdata {
     } else {
       eval('$checkrewrite =  "'. $html->checkrewrite . '\n";');
     }
-
+    
     $dbprefix = strtolower(str_replace(array('.', '-'), '', litepublisher::$domain)) . '_';
-$langcode =$this->language;
-$likeurl = urlencode($lang->homeurl);
-$liketitle = urlencode($lang->homename);
-
+    $langcode =$this->language;
+    $likeurl = urlencode($lang->homeurl);
+    $liketitle = urlencode($lang->homename);
+    
     $form = file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'installform.tml');
     $form = str_replace('"', '\"', $form);
     eval('$form = "'. $form . '\n";');
-
+    
     $this->echohtml(  $form);
   }
   
