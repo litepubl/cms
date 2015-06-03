@@ -33,7 +33,7 @@
       $.litedialog({
         title: lang.posteditor.selectfiles,
         html: this.get_html(),
-        width: Math.floor(winwidth / 4 * 3) + 32,
+        width: Math.min(720, winwidth  - 120),
         height: Math.min(dialog_height, winheight - 60),
         open: function(holder) {
           holder.on("click.addfile", ".file-item", function() {

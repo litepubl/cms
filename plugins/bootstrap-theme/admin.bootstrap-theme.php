@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-class admin_bootstrap_theme extends adminshopmenu  {
+class admin_bootstrap_theme extends tadminmenu {
   
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
@@ -13,31 +13,47 @@ class admin_bootstrap_theme extends adminshopmenu  {
   
   public function getcontent() {
     $result = '';
-    $shoptheme = shoptheme::i();
+    $views = tviews::i();
     $html = $this->inihtml();
     $lang = tlocal::inifile($this, '.admin.ini');
     $args = new targs();
-    $args->sidebartype = tadminhtml::array2combo(array(
+
+$mainsidebars = array(
     'left' => $lang->left,
     'right' => $lang->right,
-    ), $shoptheme->sidebar);
-    
-    $args->color = tadminhtml::array2combo($lang->ini['themenames'], $shoptheme->color);
+);
+
+foreach ($views->items as $it => $item) {
+if (!isset($item['custom']['mainsidebar'])) continue;
+
+      $result .= $html->h4($item['name']);
+$result .=$theme->getinput('combo, "mainsidebar-$id",
+ tadminhtml::array2combo($mainsidebars, $item['custom']['mainsidebar']), $lang->mainsidebar);
+
+$result .=$theme->getinput('combo, "cssfile-$id",
+tadminhtml::array2combo($lang->ini['subthemes'], $item['custom']['cssfile']), $lang->cssfile);
+}
+
     $args->formtitle = $lang->selectstyle;
-    return $html->adminform('[combo=sidebartype] [combo=color]', $args);
+    return $html->adminform($result, $args);
   }
   
   public function processform() {
-    $shoptheme = shoptheme::i();
-    $sidebar = $_POST['sidebartype'];
+    $lang = tlocal::inifile($this, '.admin.ini');
+    $views = tviews::i();
+foreach ($views->items as $it => $item) {
+if (!isset($item['custom']['mainsidebar'])) continue;
+
+    $sidebar = $_POST["mainsidebar-$id"];
     if (!in_array($sidebar, array('left', 'right'))) $sidebar = 'left';
-    $shoptheme->sidebar = $sidebar;
+    $views->items[$id]['custom']['mainsidebar'] = $sidebar;
     
-    $color = $_POST['color'];
-    $filename = litepublisher::$paths->themes . "shop/css/$color.min.css";
-    if (file_exists($filename)) $shoptheme->color = $color;
-    $shoptheme->save();
-    
+    $cssfile = $_POST["cssfile-$id"];
+if (!isset($lang->ini['subthemes'][$cssfile])) $cssfile = 'default';
+    $views->items[$id]['custom']['cssfile'] = $cssfile;
+}
+
+$views->save();    
     ttheme::clearcache();
   }
   

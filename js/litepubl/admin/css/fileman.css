@@ -23,31 +23,6 @@
   vertical-align: top;
   margin:6px 12px;
   text-align:center;
-  width: 25%;
-}
-
-@media (min-width: 480px) {
-  .file-item{
-    width: 50%;
-  }
-}
-
-@media (min-width: 768px) {
-  .file-item{
-    width: 33.33333333%;
-  }
-}
-
-@media (min-width: 992px) {
-  .file-item{
-    width: 25%;
-  }
-}
-
-@media (min-width: 1200px) {
-  .file-item{
-    width: 20%;
-  }
 }
 
 .file-toolbar {
@@ -60,12 +35,15 @@
   margin-right: auto;
   display: block;
   overflow: hidden;
+  width: 120px;
+  height: 120px;
 }
 
 .file-content img{
   border: 1px solid transparent;
   border-radius: 4px;
   display: block;
+  overflow: hidden;
   width: 120px;
   height: 120px;
 }

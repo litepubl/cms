@@ -1,0 +1,24 @@
+<?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+
+function admin_bootstrap_themeInstall($self) {
+$about =tplugins::getabout(tplugins::getname(__file__));
+
+$admin = tadminmenus::i();
+$admin->additem(array(
+    'parent' => $admin->url2id('/admin/views/'),
+    'url' => '/admin/views/bootstraptheme/',
+    'title' => $about['name'],
+    'name' => 'bootstraptheme',
+    'class' => get_class($self),
+    'group' => 'admin'
+    ));
+}
+
+function admin_bootstrap_themeUninstall($self) {
+tadminmenus::i()->deleteurl('/admin/views/bootstraptheme/');
+}
