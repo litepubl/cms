@@ -16,6 +16,7 @@ class tview extends titem_storage {
       $views = tviews::i();
       $class = $views->itemexists($id) ? $views->items[$id]['class'] : __class__;
     }
+
     return parent::iteminstance($class, $id);
   }
   

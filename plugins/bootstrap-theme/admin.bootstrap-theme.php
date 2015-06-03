@@ -14,6 +14,7 @@ class admin_bootstrap_theme extends tadminmenu {
   public function getcontent() {
     $result = '';
     $views = tviews::i();
+$theme = $views->get('admin')->theme;
     $html = $this->inihtml();
     $lang = tlocal::inifile($this, '.admin.ini');
     $args = new targs();
@@ -32,9 +33,11 @@ $result .=$theme->getinput('combo, "mainsidebar-$id",
 
 $result .=$theme->getinput('combo, "cssfile-$id",
 tadminhtml::array2combo($lang->ini['subthemes'], $item['custom']['cssfile']), $lang->cssfile);
+
+$result .= '<hr>';
 }
 
-    $args->formtitle = $lang->selectstyle;
+    $args->formtitle = $lang->customizeview;
     return $html->adminform($result, $args);
   }
   
