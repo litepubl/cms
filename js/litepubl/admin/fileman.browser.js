@@ -11,7 +11,10 @@
     perpage: 10,
     pages: false,
     fileman: false,
-    
+css_small_height: '#posteditor-files-tabs.file-items {' +
+'height:132px' +
+'}',
+
     init: function(fileman) {
     this.pages = {};
       this.fileman = fileman;
@@ -35,6 +38,7 @@
         html: this.get_html(),
         width: Math.min(720, winwidth  - 120),
         height: Math.min(dialog_height, winheight - 60),
+css: winheight - 60 < dialog_height ? this.css_small_height : '',
         open: function(holder) {
           holder.on("click.addfile", ".file-item", function() {
             var item = $(this);

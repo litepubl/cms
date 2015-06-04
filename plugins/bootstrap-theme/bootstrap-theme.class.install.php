@@ -39,13 +39,13 @@ function bootstrap_themeUninstall($self) {
   $css = tcssmerger::i();
   $css->lock();
   tjsmerger_switch ($css,
-  $css->externalfunc(get_class($css), '_pretty_files', false)
-  array(),
+  $css->externalfunc(get_class($css), '_pretty_files', false),
+  array()
   );
   
   tjsmerger_switch ($css,
-  $css->externalfunc(get_class($css), '_deprecated_files', false)
-  array(),
+  $css->externalfunc(get_class($css), '_deprecated_files', false),
+  array()
   );
   
   $css->unlock();

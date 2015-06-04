@@ -66,7 +66,7 @@
 
 #posteditor-files-tabs.file-items {
   overflow-y: auto;
-  max-height: 260px;
+  height: 260px;
 }
 
 #dropzone{
