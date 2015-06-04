@@ -5695,6 +5695,11 @@ body.united,
 .united .h6 {
   font-family: "Ubuntu";
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 @media (min-width: 768px) {
   .sidebar-left > .content {
     left: 25%;
@@ -5745,26 +5750,52 @@ h6,
   font-size: 2em;
   margin: 0.67em 0;
 }
-.anpost,
-.anpost-image,
-.anpost-text {
+.anpost {
   display: inline-block;
-  margin: 8px;
+  margin: 8px 12px;
   vertical-align: top;
 }
 .anpost-image,
 .anpost-text {
+  display: inline-block;
+  margin: 8px 12px;
+  vertical-align: top;
   width: 120px;
   height: 120px;
 }
-.anpost-text:first-child {
-  width: 248px;
+.anpost-text .more-button {
+  text-align: center;
 }
 .anpost-text .poptext {
   display: none;
 }
+.anpost-text:first-child {
+  width: 252px;
+}
+.anpost-text:first-child .more-button,
+.anpost-text:first-child .anpost-catlinks {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  width: 50%;
+}
+.anpost-text:first-child .more-button {
+  float: right;
+}
+.anpost-text:first-child .anpost-catlinks {
+  float: left;
+}
+.anpost-text:first-child .anpost-catlinks :after {
+  content: " ";
+  display: table;
+  clear: both;
+}
 .anpost-text:first-child .poptext {
   display: block;
+}
+.anpost-text:first-child .poptext :before {
+  content: " ";
+  display: table;
 }
 .title-nowrap,
 .popover-title {

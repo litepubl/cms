@@ -5667,6 +5667,11 @@ button.close {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2dede', endColorstr='#ffebcccc', GradientType=0);
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 @media (min-width: 768px) {
   .sidebar-left > .content {
     left: 25%;
@@ -5743,22 +5748,26 @@ h6,
 .anpost-text:first-child .anpost-catlinks {
   display: block;
   overflow: hidden;
-  margin: 6px 12px;
-  width: 120px;
+  margin: 0;
+  width: 50%;
 }
 .anpost-text:first-child .more-button {
   float: right;
 }
-.anpost-text:first-child .more-button :after {
+.anpost-text:first-child .anpost-catlinks {
+  float: left;
+}
+.anpost-text:first-child .anpost-catlinks :after {
   content: " ";
   display: table;
   clear: both;
 }
-.anpost-text:first-child .anpost-catlinks {
-  float: left;
-}
 .anpost-text:first-child .poptext {
   display: block;
+}
+.anpost-text:first-child .poptext :before {
+  content: " ";
+  display: table;
 }
 .title-nowrap,
 .popover-title {

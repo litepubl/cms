@@ -41,5 +41,6 @@ if ($i < $l - 1) $result .= $s . "\r\n\r\n";
 
     $result = str_replace(array("\r\n", "\r"), "\n", $result);
     $result = str_replace("\n", "\r\n", $result);
-file_put_contents("$dir/theme.txt", $result);
+//file_put_contents("$dir/theme.txt", $result);
+file_put_contents('d:\OpenServer\domains\cms\themes\default\theme.txt', $result);
 echo "theme compiled";

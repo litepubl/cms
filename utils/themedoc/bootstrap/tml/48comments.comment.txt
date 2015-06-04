@@ -1,9 +1,9 @@
 content.post.templatecomments.comments.comment = [
-<div class="comment-item" id="comment-$comment.id" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
+<div $class1=[] $class2=[] class="comment-item" id="comment-$comment.id" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
 <div class="container-fluid"><div class="row">
-<div class="col-sm-4 reviewer vcard" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
-<div class="col-sm-2 dtreviewed date comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
-<div class="col-sm-3">
+<div class="col-sm-5 reviewer vcard" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
+<div class="col-sm-3 dtreviewed date comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
+<div class="col-sm-4">
  <div class="moderate moderationbuttons btn-group" data-idcomment="$comment.id" data-idauthor="$comment.author">
 $quotebuttons = [
 <button type="button" class="btn btn-default tooltip-toggle replycomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.reply"><span class="fa fa-reply" aria-hidden="true"></span> <span class="sr-only">$lang.reply</span></button>

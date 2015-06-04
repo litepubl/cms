@@ -81,7 +81,7 @@ h1, h2, h3, h4, h5, h6,
   
   .poptext {
     display: none;
-  }
+}
 }
 
 .anpost-text:first-child {
@@ -91,12 +91,16 @@ h1, h2, h3, h4, h5, h6,
   .anpost-catlinks {
     display: block;
     overflow: hidden;
-    margin: @padding-base-vertical @padding-base-horizontal;
-    width: @anpost-image;
+    margin: 0;
+    width: 50%;
   }
   
   .more-button{
     float: right;
+  }
+  
+  .anpost-catlinks {
+    float: left;
     :after {
       content: " ";
       display: table;
@@ -104,12 +108,12 @@ h1, h2, h3, h4, h5, h6,
     }
   }
   
-  .anpost-catlinks {
-    float: left;
-  }
-  
   .poptext {
     display: block;
+    :before {
+  content: " ";
+  display: table;
+}
   }
 }
 
