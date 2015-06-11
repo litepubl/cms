@@ -797,6 +797,7 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 <h5 class="title-nowrap"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h5>
 <div class="more-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
 <div class="anpost-catlinks">$post.catlinks</div>
+<div class="clearfix"></div>
 <div class="poptext">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 </div>
 </div>]
