@@ -1,0 +1,47 @@
+.font-family(@font-family) when not (@font-family = "") and not (@themename = journal) and not(@themename = readable) {
+font-family: @font-family;
+}
+
+.font-family-header(@font-family) when (@themename = cosmo), (@themename = darkly), (@themename = flatly), (@themename = journal), (@themename = readable), (@themename = simplex), (@themename = spacelab), (@themename = united), (@themename = yeti) {
+font-family: @font-family;
+}
+
+.font-family-navbar(@font-family) when (@themename = journal), (@themename = readable) {
+font-family: @font-family;
+}
+
+.font-family-btn(@font-family) when (@themename = readable), (@themename = simplex) {
+font-family: @font-family;
+}
+
+.font-family-pager(@font-family) when (@themename = readable) {
+font-family: @font-family;
+}
+
+body.@{themename},
+.@{themename} .tooltip,
+.@{themename} .popover {
+.font-family(@theme-font);
+}
+
+.@{themename} h1, .@{themename} h2, .@{themename} h3, .@{themename} h4, .@{themename} h5, .@{themename} h6,
+.@{themename} .h1, .@{themename} .h2, .@{themename} .h3, .@{themename} .h4, .@{themename} .h5, .@{themename} .h6 {
+.font-family-header(@theme-font);
+}
+
+.@{themename} .navbar {
+.font-family-navbar(@theme-font);
+}
+
+.@{themename} .btn{
+.font-family-btn(@theme-font);
+}
+
+.@{themename} legend,
+.@{themename} .input-group-addon,
+.@{themename} .pagination,
+.@{themename} .pager,
+.@{themename} .label,
+.@{themename} .badge {
+.font-family-pager(@theme-font);
+}
