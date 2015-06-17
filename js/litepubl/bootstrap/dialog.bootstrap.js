@@ -17,7 +17,8 @@
     removeOnclose: true,
     
     tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-title-%%id%%">' +
-    '<div class="modal-dialog center-block"><div class="modal-content">' +
+    '<div class="modal-dialog center-block" role="document">' +
+'<div class="modal-content">' +
     '<div class="modal-header">' +
     '<button type="button" class="close" data-dismiss="modal" aria-label="%%close%%"><span aria-hidden="true">&times;</span><span class="sr-only">%%close%%</span></button>' +
     '<h4 class="modal-title" id="modal-title-%%id%%">%%title%%</h4>' +
