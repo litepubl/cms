@@ -367,10 +367,15 @@ class tinstaller extends tdata {
   
   private function GetBrowserLang() {
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-      $result = strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+      $a = explode(',', str_replace(';', ',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
+if (in_array('ru', $a) || in_array('ru_ru', $a)) return 'ru';
+
+foreach ($a as $result) {
       $result = substr($result, 0, 2);
       if ($this->langexists($result))  return $result;
+}
     }
+
     return 'en';
   }
   
