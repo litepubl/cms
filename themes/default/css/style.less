@@ -59,7 +59,15 @@ h1, h2, h3, h4, h5, h6,
   margin: 0.67em 0;
 }
 
-@anpost-image: 120px;
+.anpost-title {
+  .text-overflow();
+}
+
+.anpost-body {
+display: block;
+overflow: hidden;
+margin: 0;
+}
 
 .anpost{
   display: inline-block;
@@ -67,6 +75,7 @@ h1, h2, h3, h4, h5, h6,
   vertical-align: top;
 }
 
+@anpost-image: 120px;
 .anpost-image,
 .anpost-text{
   .anpost;

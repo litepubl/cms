@@ -13,7 +13,7 @@ del %lesspath%bootstrap\variables.less
 copy %lesspath%bootswatch\cerulean\variables.less %lesspath%bootstrap\variables.less
 %less% %lesspath%cerulean.less %themepath%cerulean.css
 %css% cerulean.css -o cerulean.min.css
-pause
+rem pause
 del %lesspath%bootstrap\variables.less
 copy %lesspath%bootswatch\cosmo\variables.less %lesspath%bootstrap\variables.less
 %less% %lesspath%cosmo.less %themepath%cosmo.css

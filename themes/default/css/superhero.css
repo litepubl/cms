@@ -6294,6 +6294,16 @@ h6,
   font-size: 2em;
   margin: 0.67em 0;
 }
+.anpost-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.anpost-body {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+}
 .anpost {
   display: inline-block;
   margin: 8px 16px;
