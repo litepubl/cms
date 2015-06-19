@@ -800,6 +800,7 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 <div class="clearfix"></div>
 <div class="poptext">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 </div>
+</div>
 </div>]
 ]
 
