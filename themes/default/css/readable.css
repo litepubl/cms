@@ -6207,6 +6207,10 @@ h6,
   font-size: 2em;
   margin: 0.67em 0;
 }
+.anpost {
+  display: block;
+  overflow: hidden;
+}
 .anpost-title {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -6215,19 +6219,19 @@ h6,
 .anpost-body {
   display: block;
   overflow: hidden;
-  margin: 0;
+  position: relative;
+  width: 100%;
 }
-.anpost {
-  display: inline-block;
-  margin: 8px 12px;
-  vertical-align: top;
-}
-.anpost-image,
-.anpost-text {
-  display: inline-block;
-  margin: 8px 12px;
-  vertical-align: top;
+.anpost-image {
+  float: left;
+  display: block;
+  margin: 8px 12px 8px 0;
   width: 120px;
+  height: 120px;
+}
+.anpost-text {
+  display: block;
+  overflow: hidden;
   height: 120px;
 }
 .anpost-text .more-button {
@@ -6237,7 +6241,7 @@ h6,
   display: none;
 }
 .anpost-text:first-child {
-  width: 252px;
+  width: 100%;
 }
 .anpost-text:first-child .more-button,
 .anpost-text:first-child .anpost-catlinks {
@@ -6253,7 +6257,9 @@ h6,
   float: left;
 }
 .anpost-text:first-child .poptext {
+  margin-top: 0.5em;
   display: block;
+  overflow: hidden;
 }
 .title-nowrap,
 .popover-title {

@@ -667,8 +667,8 @@ content.post.templatecomments.holdcomments = [
 content.post.templatecomments.comments.comment = [
 <div $class1=[] $class2=[] class="comment-item" id="comment-$comment.id" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
 <div class="container-fluid"><div class="row">
-<div class="col-sm-5 reviewer vcard" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
-<div class="col-sm-3 dtreviewed date comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
+<div class="col-sm-5" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
+<div class="col-sm-3 comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
 <div class="col-sm-4">
  <div class="moderate moderationbuttons btn-group" data-idcomment="$comment.id" data-idauthor="$comment.author">
 $quotebuttons = [
@@ -790,18 +790,22 @@ content.excerpts.lite - шаблон анонсов для lite (облегче�
 */
 
 content.excerpts = [
-$excerpt = [<div class="anpost"id="post-$post.id">
+<div class="row">
+$excerpt = [
+<div class="anpost col-xs-6 col-lg-4"id="post-$post.id">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-body">
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
-<div class="anpost-text poppost">
+<div class="anpost-text">
 <div class="more-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
 <div class="anpost-catlinks">$post.catlinks</div>
 <div class="clearfix"></div>
 <div class="poptext">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 </div>
 </div>
-</div>]
+</div>
+]
+</div>
 ]
 
 /*

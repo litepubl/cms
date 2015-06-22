@@ -1,5 +1,6 @@
 *.log
 build/*
+old/
 PLUGINS/SHOP*
 PLUGINS/IMGRESIZE
 temp/

@@ -59,6 +59,14 @@ h1, h2, h3, h4, h5, h6,
   margin: 0.67em 0;
 }
 
+@anpost-image: 120px;
+
+.anpost{
+display: block;
+overflow: hidden;
+margin-top: @padding-base-vertical;
+}
+
 .anpost-title {
   .text-overflow();
 }
@@ -66,24 +74,24 @@ h1, h2, h3, h4, h5, h6,
 .anpost-body {
 display: block;
 overflow: hidden;
-margin: 0;
+position:relative;
+width:100%;
 }
 
-.anpost{
-  display: inline-block;
-  margin: @padding-base-vertical @padding-base-horizontal;
-  vertical-align: top;
-}
-
-@anpost-image: 120px;
-.anpost-image,
-.anpost-text{
-  .anpost;
+.anpost-image{
+float:left;
+display:block;
+  margin: @padding-base-vertical @padding-base-horizontal @padding-base-vertical 0;
   width: @anpost-image;
   height: @anpost-image;
 }
 
-.anpost-text {
+.anpost-text{
+  display: block;
+overflow: hidden;
+  height: @anpost-image;
+  margin: @padding-base-vertical @padding-base-horizontal @padding-base-vertical 0;
+
   .more-button{
     .text-center;
   }
@@ -94,7 +102,7 @@ margin: 0;
 }
 
 .anpost-text:first-child {
-  width: @anpost-image *2 + @padding-base-horizontal;
+  width: 100%;
   
   .more-button,
   .anpost-catlinks {
@@ -113,7 +121,9 @@ margin: 0;
 }
 
   .poptext {
+margin-top: 0.5em;
     display: block;
+overflow: hidden;
   }
 }
 
