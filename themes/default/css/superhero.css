@@ -6297,6 +6297,7 @@ h6,
 .anpost {
   display: block;
   overflow: hidden;
+  margin-top: 8px;
 }
 .anpost-title {
   overflow: hidden;
@@ -6320,9 +6321,16 @@ h6,
   display: block;
   overflow: hidden;
   height: 120px;
+  margin: 8px 16px 8px 0;
 }
 .anpost-text .more-button {
   text-align: center;
+}
+.anpost-text .post-categories {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .anpost-text .poptext {
   display: none;
@@ -6331,17 +6339,12 @@ h6,
   width: 100%;
 }
 .anpost-text:first-child .more-button,
-.anpost-text:first-child .anpost-catlinks {
+.anpost-text:first-child .post-categories {
+  float: left;
   display: block;
   overflow: hidden;
   margin: 0;
   width: 50%;
-}
-.anpost-text:first-child .more-button {
-  float: right;
-}
-.anpost-text:first-child .anpost-catlinks {
-  float: left;
 }
 .anpost-text:first-child .poptext {
   margin-top: 0.5em;
