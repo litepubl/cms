@@ -92,12 +92,13 @@ overflow: hidden;
   height: @anpost-image;
   margin: @padding-base-vertical @padding-base-horizontal @padding-base-vertical 0;
 
-  .more-button{
+  .more-button,
+.post-categories,
+.product-prices {
     .text-center;
   }
 
 .post-categories {
-    .text-center;
   .text-overflow();
 }
 
@@ -110,7 +111,8 @@ overflow: hidden;
   width: 100%;
   
   .more-button,
-.post-categories {
+.post-categories,
+.product-prices {
 float: left;
     display: block;
     overflow: hidden;
@@ -122,6 +124,7 @@ float: left;
 margin-top: 0.5em;
     display: block;
 overflow: hidden;
+// height 3 lines
   }
 }
 
