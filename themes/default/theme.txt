@@ -259,7 +259,10 @@ content.post = [
 <div class="clear-after">
 $post.filelist  
 <div class="post-header">
-<div class="meta"><time class="post-date" itemprop="datePublished" datetime="$post.isodate">$post.date</time> $post.taglinks </div>
+<div class="meta">
+<span class="fa fa-calendar" aria-hidden="true"></span> <time class="post-date" itemprop="datePublished" datetime="$post.isodate">$post.date</time>
+$post.taglinks 
+</div>
 $post.catlinks 
 </div>
 </div>
@@ -360,8 +363,9 @@ content.post.more = [<span id="more-$post.id"></span>]
 */
 
 content.post.taglinks = [
-<div class="post-tags"><span class="fa fa-calendar" aria-hidden="true"></span>
-$lang.tags:
+<div class="post-tags">
+<span class="fa fa-tags" aria-hidden="true"></span>
+<span class="tags-title">$lang.tags:</span>
  $item = [ <a href="$link">$title</a>]
   $divider = [,&#32;]
 </div>
@@ -376,7 +380,9 @@ $divider - шаблон разделителя ссылок
 */
 
 content.post.catlinks = [
-<div class="post-categories" id="post-categories-$post.id"><span class="fa fa-tags" aria-hidden="true"></span>
+<div class="post-categories" id="post-categories-$post.id">
+<span class="fa fa-tags" aria-hidden="true"></span>
+<span class="cats-title">$lang.categories:</span>
 $item = [ <a href="$link" class="category">$title</a>]
 $divider = [,&#32;]
 </div>
@@ -795,12 +801,21 @@ $excerpt = [
 <div class="anpost col-xs-6 col-lg-4"id="post-$post.id">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
-<div class="anpost-body">
+<div class="anpost-content">
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
-<div class="anpost-buttons">
+<div class="anpost-body">
 $post.catlinks
-<div class="more-button anpost-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
-<div class="clearfix"></div>
+
+<div class="anpost-item">
+<span class="fa fa-calendar" aria-hidden="true"></span>
+<span class="anpost-item-title">$lang.posted</span>
+				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
+</div>
+
+<div class="anpost-item"><span class="post-comments">$post.commentslink</span></div>
+
+<div class="more-button anpost-item"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
+
 </div>
 </div>
 </div>

@@ -6507,7 +6507,7 @@ h6,
 .anpost-subtitle p {
   display: inline;
 }
-.anpost-body {
+.anpost-content {
   display: block;
   overflow: hidden;
   position: relative;
@@ -6521,32 +6521,40 @@ h6,
   width: 120px;
   height: 120px;
 }
-.anpost-buttons {
+.anpost-body {
   display: block;
   overflow: hidden;
   height: 120px;
   margin: 0 12px 0 0;
 }
-.anpost-buttons .anpost-button {
-  text-align: center;
-}
-.anpost-buttons .post-categories {
+.anpost-body .anpost-item,
+.anpost-body .post-categories {
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.anpost-buttons:first-child {
+.anpost-body .anpost-item-title,
+.anpost-body .cats-title {
+  display: none;
+}
+.anpost-body:first-child {
   width: 100%;
   margin: 0;
+  /*
+  .anpost-button,
+.post-categories {
+float: left;
+    display: block;
+    overflow: hidden;
+    margin: 0;
+    width: 50%;
+  }
+*/
 }
-.anpost-buttons:first-child .anpost-button,
-.anpost-buttons:first-child .post-categories {
-  float: left;
-  display: block;
-  overflow: hidden;
-  margin: 0;
-  width: 50%;
+.anpost-body:first-child .anpost-item-title,
+.anpost-body:first-child .cats-title {
+  display: inline;
 }
 .title-nowrap,
 .popover-title {
@@ -6583,9 +6591,12 @@ div.text-center {
   display: block;
   overflow: hidden;
 }
-.post-date {
+.post-header .post-date {
   float: left;
-  margin: 8px;
+  margin: 8px 12px;
+}
+.post-header .cats-title {
+  display: none;
 }
 .prop-gtin,
 .prop-gtin8,
