@@ -6067,59 +6067,64 @@ h6,
 .anpost {
   display: block;
   overflow: hidden;
-  margin-top: 6px;
+  margin-top: 12px;
 }
 .anpost-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.anpost-subtitle {
+  margin-top: 6px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+  overflow: hidden;
+}
+.anpost-subtitle p {
+  display: inline;
+}
 .anpost-body {
   display: block;
   overflow: hidden;
   position: relative;
   width: 100%;
+  margin-top: 6px;
 }
 .anpost-image {
   float: left;
   display: block;
-  margin: 6px 12px 6px 0;
+  margin: 0;
   width: 120px;
   height: 120px;
 }
-.anpost-text {
+.anpost-buttons {
   display: block;
   overflow: hidden;
   height: 120px;
-  margin: 6px 12px 6px 0;
+  margin: 0 12px 0 0;
 }
-.anpost-text .more-button {
+.anpost-buttons .anpost-button {
   text-align: center;
 }
-.anpost-text .post-categories {
+.anpost-buttons .post-categories {
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.anpost-text .poptext {
-  display: none;
-}
-.anpost-text:first-child {
+.anpost-buttons:first-child {
   width: 100%;
+  margin: 0;
 }
-.anpost-text:first-child .more-button,
-.anpost-text:first-child .post-categories {
+.anpost-buttons:first-child .anpost-button,
+.anpost-buttons:first-child .post-categories {
   float: left;
   display: block;
   overflow: hidden;
   margin: 0;
   width: 50%;
-}
-.anpost-text:first-child .poptext {
-  margin-top: 0.5em;
-  display: block;
-  overflow: hidden;
 }
 .title-nowrap,
 .popover-title {

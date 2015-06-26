@@ -1,0 +1,14 @@
+$template.sidebar = [
+ $widget = [
+  <div class="widget">
+    <div class="rubric">$title</div>
+    $items = [
+    <ul class="linkcat">
+      $item = [<li><a href="$link" title="$title">$icon$text</a>
+$subcount = [<strong>($itemscount)</strong>]
+$subitems = [<ul>$item</ul>]</li>]
+    </ul>
+    ]
+  </div>
+ ]
+]

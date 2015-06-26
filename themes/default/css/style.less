@@ -64,11 +64,23 @@ h1, h2, h3, h4, h5, h6,
 .anpost{
 display: block;
 overflow: hidden;
-margin-top: @padding-base-vertical;
+margin-top: 2 * @padding-base-vertical;
 }
 
 .anpost-title {
   .text-overflow();
+}
+
+.anpost-subtitle {
+  margin-top: @padding-base-vertical;
+    .text-center;
+  .text-overflow();
+display: block;
+overflow: hidden;
+}
+
+.anpost-subtitle p {
+display: inline;
 }
 
 .anpost-body {
@@ -76,55 +88,41 @@ display: block;
 overflow: hidden;
 position:relative;
 width:100%;
+  margin-top: @padding-base-vertical;
 }
 
 .anpost-image{
 float:left;
 display:block;
-  margin: @padding-base-vertical @padding-base-horizontal @padding-base-vertical 0;
+  margin: 0;
   width: @anpost-image;
   height: @anpost-image;
 }
 
-.anpost-text{
+.anpost-buttons {
   display: block;
 overflow: hidden;
   height: @anpost-image;
-  margin: @padding-base-vertical @padding-base-horizontal @padding-base-vertical 0;
+  margin: 0 @padding-base-horizontal 0 0;
 
-  .more-button,
-.post-categories,
-.product-prices {
-    .text-center;
-  }
-
+  .anpost-button,
 .post-categories {
+    .text-center;
   .text-overflow();
 }
-
-  .poptext {
-    display: none;
-}
 }
 
-.anpost-text:first-child {
+.anpost-buttons:first-child {
   width: 100%;
+margin: 0;
   
-  .more-button,
-.post-categories,
-.product-prices {
+  .anpost-button,
+.post-categories {
 float: left;
     display: block;
     overflow: hidden;
     margin: 0;
     width: 50%;
-  }
-  
-  .poptext {
-margin-top: 0.5em;
-    display: block;
-overflow: hidden;
-// height 3 lines
   }
 }
 

@@ -1,0 +1,10 @@
+content.post.templatecomments.pingbacks = [
+ <p id="pingbacks">$lang.pingbacks</p>
+ <ol class="commentlist" start="1">
+  $pingback = [
+  <li class="alt" id="pingback-$pingback.id">
+   <cite><a href="$pingback.url">$pingback.title</a></cite>
+  </li>
+ ]
+ </ol>
+]

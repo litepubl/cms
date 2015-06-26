@@ -1,0 +1,1 @@
+	$template.content.simple = [<div class="simplecontent">$content</div>]

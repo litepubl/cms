@@ -1,0 +1,3 @@
+$template.index.home = []
+$template.index.post = []
+$template.index.tag = []
