@@ -6,19 +6,19 @@
 **/
 
 function admin_bootstrap_themeInstall($self) {
-$about =tplugins::getabout(tplugins::getname(__file__));
-
-$admin = tadminmenus::i();
-$admin->additem(array(
-    'parent' => $admin->url2id('/admin/views/'),
-    'url' => '/admin/views/bootstraptheme/',
-    'title' => $about['name'],
-    'name' => 'bootstraptheme',
-    'class' => get_class($self),
-    'group' => 'admin'
-    ));
+  $about =tplugins::getabout(tplugins::getname(__file__));
+  
+  $admin = tadminmenus::i();
+  $admin->additem(array(
+  'parent' => $admin->url2id('/admin/views/'),
+  'url' => '/admin/views/bootstraptheme/',
+  'title' => $about['name'],
+  'name' => 'bootstraptheme',
+  'class' => get_class($self),
+  'group' => 'admin'
+  ));
 }
 
 function admin_bootstrap_themeUninstall($self) {
-tadminmenus::i()->deleteurl('/admin/views/bootstraptheme/');
+  tadminmenus::i()->deleteurl('/admin/views/bootstraptheme/');
 }

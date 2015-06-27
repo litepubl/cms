@@ -142,22 +142,22 @@ class tupdater extends tevents {
   
   public function downloadreleases() {
     if (isset($this->releases)) {
-return $this->releases;
-}
-
+      return $this->releases;
+    }
+    
     if (
     ($s = http::get('http://litepublisher.ru/service/versions.txt' .
-'?litepubl=' . litepublisher::$options->version .
- '&php=' .PHP_VERSION .
- '&mysql=' . litepublisher::$db->mysqli->server_info)
-) ||
-
+    '?litepubl=' . litepublisher::$options->version .
+    '&php=' .PHP_VERSION .
+    '&mysql=' . litepublisher::$db->mysqli->server_info)
+    ) ||
+    
     ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
     ) {
       $this->releases = strtoarray($s);
       return $this->releases;
     }
-
+    
     return false;
   }
   

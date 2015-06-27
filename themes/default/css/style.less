@@ -62,9 +62,9 @@ h1, h2, h3, h4, h5, h6,
 @anpost-image: 120px;
 
 .anpost{
-display: block;
-overflow: hidden;
-margin-top: 2 * @padding-base-vertical;
+  display: block;
+  overflow: hidden;
+  margin-top: 2 * @padding-base-vertical;
 }
 
 .anpost-title {
@@ -73,27 +73,27 @@ margin-top: 2 * @padding-base-vertical;
 
 .anpost-subtitle {
   margin-top: @padding-base-vertical;
-    .text-center;
+  .text-center;
   .text-overflow();
-display: block;
-overflow: hidden;
+  display: block;
+  overflow: hidden;
 }
 
 .anpost-subtitle p {
-display: inline;
+  display: inline;
 }
 
 .anpost-content {
-display: block;
-overflow: hidden;
-position:relative;
-width:100%;
+  display: block;
+  overflow: hidden;
+  position:relative;
+  width:100%;
   margin-top: @padding-base-vertical;
 }
 
 .anpost-image{
-float:left;
-display:block;
+  float:left;
+  display:block;
   margin: 0;
   width: @anpost-image;
   height: @anpost-image;
@@ -101,31 +101,30 @@ display:block;
 
 .anpost-body {
   display: block;
-overflow: hidden;
+  overflow: hidden;
   height: @anpost-image;
   margin: 0 @padding-base-horizontal 0 0;
-
+  
   .anpost-item,
-.post-categories {
+  .post-categories {
     .text-center;
-  .text-overflow();
-}
-
-.anpost-item-title,
-.cats-title  {
-display: none;
-}
+    .text-overflow();
+  }
+  
+  .anpost-item-title,
+  .cats-title  {
+    display: none;
+  }
 }
 
 .anpost-body:first-child {
   width: 100%;
-margin: 0;
-
-.anpost-item-title,
-.cats-title  {
-display: inline;
-}
+  margin: 0;
   
+  .anpost-item-title,
+  .cats-title  {
+    display: inline;
+  }
 }
 
 .title-nowrap,
@@ -169,15 +168,15 @@ div.text-center {
 .post-header {
   display:block;
   overflow:hidden;
-
-.post-date {
-  float: left;
-  margin: @padding-base-vertical @padding-base-horizontal;
-}
-
-.cats-title {
-display: none;
-}
+  
+  .post-date {
+    float: left;
+    margin: @padding-base-vertical @padding-base-horizontal;
+  }
+  
+  .cats-title {
+    display: none;
+  }
 }
 
 .prop-gtin, .prop-gtin8, .prop-gtin13, .prop-gtin14, .prop-mpn, .prop-id, .prop-productID, .prop-sku {

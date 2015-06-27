@@ -163,6 +163,7 @@ class tview extends titem_storage {
       $views = tviews::i();
       $class = $views->itemexists($id) ? $views->items[$id]['class'] : __class__;
     }
+    
     return parent::iteminstance($class, $id);
   }
   
@@ -307,8 +308,11 @@ class tviews extends titems_storage {
   public function delete($id) {
     if ($id == 1) return $this->error('You cant delete default view');
     foreach ($this->defaults as $name => $iddefault) {
-      if ($id == $iddefault) $this->defaults[$name] = 1;
+      if ($id == $iddefault) {
+        $this->defaults[$name] = 1;
+      }
     }
+    
     return parent::delete($id);
   }
   
@@ -316,6 +320,7 @@ class tviews extends titems_storage {
     foreach ($this->items as $id => $item) {
       if ($name == $item['name']) return tview::i($id);
     }
+    
     return false;
   }
   

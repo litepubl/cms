@@ -22,7 +22,7 @@
       title: "",
       html: "",
       width: 300,
-css: false,
+      css: false,
       open: $.noop,
       close: $.noop,
       buttons: [
@@ -44,7 +44,7 @@ css: false,
       });
     }
     
-var style = options.css ? $('<style type="text/css">' + options.css + '</style>').appendTo('head:first') : false;
+    var style = options.css ? $('<style type="text/css">' + options.css + '</style>').appendTo('head:first') : false;
     var id = "pp_dialog_id_" + litepubl.guid++;
     var div = $('<div CLASS="HIDDEN" id="' + id + '"></div>').appendTo("body");
     div.html('<div class="pp_dialog_title">' +
@@ -80,7 +80,7 @@ var style = options.css ? $('<style type="text/css">' + options.css + '</style>'
       /* Called when prettyPhoto is closed */
       callback: function(){
         $(document).off('keydown.onEscape');
-if (style) style.remove();
+        if (style) style.remove();
         if ($.isFunction(options.close)) options.close();
       }
     });

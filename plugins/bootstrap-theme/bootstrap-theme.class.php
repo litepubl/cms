@@ -10,5 +10,5 @@ class bootstrap_theme extends tplugin {
   public static function i() {
     return getinstance(__class__);
   }
-
+  
 }//class
