@@ -39,6 +39,11 @@ class thomepage extends tsinglemenu  {
   
   public function request($id) {
     if (!$this->showpagenator && (litepublisher::$urlmap->page > 1)) return 404;
+
+if ($this->image) {
+ttemplate::i()->addevent('onlabels', $this, 'onlabels', true);
+}
+
     return parent::request($id);
   }
   
@@ -61,6 +66,12 @@ class thomepage extends tsinglemenu  {
     }
     return '';
   }
+
+public function onlabels($template) {
+$theme = $template->view->theme;
+$s = $theme->parse($theme->templates['home.image']);
+$template->result = str_replace('$label.bigimage', $s, $template->result);
+}
   
   public function getbefore() {
     if ($result = $this->getimg() . $this->content) {
