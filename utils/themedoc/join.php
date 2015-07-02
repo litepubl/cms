@@ -30,13 +30,15 @@ if (!$filename) continue;
 $s = file_get_contents("$dir/$filename");
 $s =strip_utf($s);
 $s = trim($s);
+//echo "$filename ", strlen($s), "<br>\n";
 
 if (!strbegin($filename, 'tml/')) {
 if (($i == 0) || (($i > 0) && strbegin($list[$i - 1], 'tml/'))) $s = "/*\n" . $s;
 if (($i == $l - 1) || (($i < $l - 1) && strbegin($list[$i + 1], 'tml/'))) $s .= "\n*/";
 }
 
-if ($i < $l - 1) $result .= $s . "\r\n\r\n";
+$result .= $s;
+if ($i < $l - 1) $result .= "\r\n\r\n";
 }
 
     $result = str_replace(array("\r\n", "\r"), "\n", $result);

@@ -83,3 +83,4 @@ tml/72custom.cssfile.admin.txt
 ru/72custom.cssfile.admin.txt
 tml/73custom.mainsidebar.txt
 ru/73custom.mainsidebar.txt
+ru/80labels.txt
