@@ -66,14 +66,14 @@ class tevents extends tdata {
   }
   
   public function __get($name) {
-    if (method_exists($this, $name)) return array('class' =>get_class($this), 'func' => $name);
+    if (method_exists($this, $name)) return array(get_class($this), $name);
     return parent::__get($name);
   }
   
   public function __set($name, $value) {
     if (parent::__set($name, $value)) return true;
     if (in_array($name, $this->eventnames)) {
-      $this->addevent($name, $value['class'], $value['func']);
+      $this->addevent($name, $value[0], $value[1]);
       return true;
     }
     $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
@@ -103,29 +103,37 @@ class tevents extends tdata {
   }
   
   public function callevent($name, $params) {
+
+if (!isset($this->events[$name])) {
+return '';
+}
+
     $result = '';
-    if (    $list = $this->get_events($name)) {
-      
-      foreach ($list as $i => $item) {
-        if (empty($item['class'])) {
-          if (function_exists($item['func'])) {
-            $call = $item['func'];
-          } else {
-            $this->delete_event_item($name, $i);
-            continue;
-          }
-        } elseif (!class_exists($item['class'])) {
-          $this->delete_event_item($name, $i);
-          continue;
-        } else {
-          $obj = getinstance($item['class']);
-          $call = array($obj, $item['func']);
-        }
+      foreach ($this->events[$name] as $i => $item) {
+//backward compability
+$class = isset($item[0]) ? $item[0] : (isset($item['class']) ? $item['class'] : '');
+if (class_exists($class)) {
+          $call = array(getinstance($class), isset($item[1] ? $item[1] : $item['func']);
+
         try {
           $result = call_user_func_array($call, $params);
         } catch (ECancelEvent $e) {
           return $e->result;
         }
+
+// 2 index = once
+if (isset($item[2]) && $item[2]) {
+    array_splice($this->events[$name], $i, 1);
+}
+
+} else {
+//class not found and delete event handler
+    array_splice($this->events[$name], $i, 1);
+    if (!count($this->events[$name])) {
+unset($this->events[$name]);
+}
+
+    $this->save();
       }
     }
     
@@ -136,53 +144,61 @@ class tevents extends tdata {
     throw new ECancelEvent($result);
   }
   
-  private function delete_event_item($name, $i) {
-    array_splice($this->events[$name], $i, 1);
-    if (count($this->events[$name]) == 0) unset($this->events[$name]);
-    $this->save();
-  }
-  
   public function setevent($name, $params) {
     return $this->addevent($name, $params['class'], $params['func']);
   }
   
-  public function addevent($name, $class, $func) {
+  public function addevent($name, $class, $func, $once = false) {
     if (!in_array($name, $this->eventnames)) return $this->error(sprintf('No such %s event', $name ));
-    if (empty($func)) return false;
-    if (isset($this->events[$name])) {
-      if ($list = $this->get_events($name)) {
-        foreach ($list  as $event) {
-          if (($event['class'] == $class) && ($event['func'] == $func)) return false;
-        }
-      }
-    } else {
+    if (empty($class)) $this->error("Empty class name to bind $name event");
+    if (empty($func)) $this->error("Empty function name to bind $name event");
+
+    if (!isset($this->events[$name])) {
       $this->events[$name] =array();
-    }
-    
-    $this->events[$name][] = array(
-    'class' => $class,
-    'func' => $func
-    );
-    $this->save();
+}
+
+//check if event already added
+        foreach ($this->events[$name] as $event) {
+          if (isset($event[0] && $event[0] == $class && $event[1] == $func) {
+return false;
+//backward compability
+} elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
+return false;
+}
+        }
+
+if ($once) {
+    $this->events[$name][] = array($class, $func, true);
+} else {
+    $this->events[$name][] = array($class, $func);
+$this->save();
+}
   }
   
   public function delete_event_class($name, $class) {
-    if (isset($this->events[$name])) {
+    if (!isset($this->events[$name])) {
+    return false;
+}
+
       $list = &$this->events[$name];
       $deleted = false;
       for ($i = count($list) - 1; $i >= 0; $i--) {
-        if ($list[$i]['class'] == $class) {
+$event = $list[$i];
+
+        if ((isset($event[0] && $event[0] == $class) ||
+//backward compability
+(isset($event['class']) && $event['class'] == $class)) {
           array_splice($list, $i, 1);
           $deleted = true;
         }
       }
+
       if ($deleted) {
         if (count($list) == 0) unset($this->events[$name]);
         $this->save();
       }
+
       return $deleted;
-    }
-    return false;
   }
   
   public function unsubscribeclass($obj) {
@@ -197,7 +213,10 @@ class tevents extends tdata {
     $class = self::get_class_name($c);
     foreach ($this->events as $name => $events) {
       foreach ($events as $i => $item) {
-        if ($item['class'] == $class) array_splice($this->events[$name], $i, 1);
+        if (isset($item[0] && $item[0] == $class) ||
+(isset($item['class']) && $item['class'] == $class) {
+array_splice($this->events[$name], $i, 1);
+}
       }
     }
     
@@ -211,7 +230,8 @@ class tevents extends tdata {
     $count = count($events);
     if (($order < 0) || ($order >= $count)) $order = $count - 1;
     foreach ($events as $i => $event) {
-      if ($class == $event['class']) {
+      if ((isset($event[0]) && $class == $event[0]) ||
+      (isset($event['class']) && $class == $event['class'])) {
         if ($i == $order) return true;
         array_splice($events, $i, 1);
         array_splice($events, $order, 0, array(0 => $event));

@@ -416,14 +416,17 @@ class turlmap extends titems {
     foreach ($this->close_events as $a) {
       try {
         $c = array_shift($a);
+
         if (!is_callable($c)) {
           $c = array($c, array_shift($a));
         }
+
         call_user_func_array($c, $a);
       } catch (Exception $e) {
         litepublisher::$options->handexception($e);
       }
     }
+
     $this->close_events = array();
   }
   
