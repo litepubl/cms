@@ -1,4 +1,5 @@
 content.home= [
+$image = []
 $midle = [
 $post = []
 ]]
