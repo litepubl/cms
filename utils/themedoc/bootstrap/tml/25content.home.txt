@@ -1,5 +1,10 @@
 content.home= [
-$image = []
+$image = [
+<div id="homeimage" data-image="$home.image" data-small="$home.smallimage">
+<h1>$site.name</h1>
+</div>
+]
+
 $midle = [
 $post = []
 ]]
