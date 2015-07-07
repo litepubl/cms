@@ -247,7 +247,7 @@ $author.content - текст на странице автора
 
 content.home= [
 $image = [
-<div id="homeimage" data-image="$home.image" data-small="$home.smallimage" data-smallwidth="$home.smallwidth">
+<div id="homeimage" data-image="$home.image" data-small="$home.smallimage" data-smallwidth="768">
 <h1>$site.name</h1>
 </div>
 ]

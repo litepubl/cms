@@ -8,13 +8,13 @@
   'use strict';
 
 function home_resize(holder) {
+var data = holder.data("homeimage");
 if (!data || data.error) return false;
 
 var win = $(window);
 var winw = win.width();
 var winh = win.height();
 
-var data = holder.data("homeimage");
 if (data.winw == winw && data.winh == winh) return;
 
 data.winw = winw;
@@ -26,14 +26,15 @@ if (cur != data.cur) {
 if (cur.w) {
 //next image loaded; success switching
 data.cur = cur;
-data.img.prop("src", cur.src);
+data.img.remove();
+data.img = $('<img src="' + cur.src + '" />').appendTo(holder);
 } else if (!cur.src) {
 //cant switch; single image
 cur = data.cur;
 } else {
 return load_image(cur, function() {
 data.winw = 0;
-home_resize(self);
+home_resize(holder);
 },
 
 //error callback
@@ -41,19 +42,28 @@ function() {
 //stay to non exists and fallback to single image
 cur.src = false;
 data.winw = 0;
-home_resize(self);
+home_resize(holder);
 });
 }
 }
 
-var w = self.width();
+var w = holder.width();
 var h = Math.min(winh - data.top, w, cur.h);
-self.height(h);
-
+var imgheight = h;
 var imgwidth = (cur.w / cur.h) * h;
+if (imgwidth < w) {
+imgwidth = w;
+imgheight = w / (cur.w / cur.h);
+if (h > imgheight) h = imgheight;
+}
+
+holder.height(h);
 data.img.width(imgwidth);
-data.img.height(h);
-data.img.css("left", (w - imgwidth) /2);
+data.img.height(imgheight );
+data.img.css({
+left: (w - imgwidth) /2,
+top: (h - imgheight) /2
+});
 }
 
 function load_image(info, callback, errorcallback) {

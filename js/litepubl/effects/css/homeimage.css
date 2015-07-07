@@ -13,3 +13,7 @@ top: 0;
 left: 0;
 z-index: 0;
 }
+
+#homeimage h1 {
+z-index: 2;
+}

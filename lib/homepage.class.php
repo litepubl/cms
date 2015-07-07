@@ -60,14 +60,6 @@ ttemplate::i()->addevent('onlabels', $this, 'onlabels', true);
   public function gettitle() {
   }
   
-  public function getimg() {
-    if ($url = $this->image) {
-      if (!strbegin($url, 'http://')) $url = litepublisher::$site->files . $url;
-      return sprintf('<img src="%s" alt="Home image" />', $url);
-    }
-    return '';
-  }
-
 public function onlabels($template) {
 $theme = $template->view->theme;
 ttheme::$vars['home'] = $this;
@@ -77,7 +69,7 @@ unset(ttheme::$vars['home']);
 }
   
   public function getbefore() {
-    if ($result = $this->getimg() . $this->content) {
+    if ($result = $this->content) {
       $theme = ttheme::i();
       $result = $theme->simple($result);
       if ($this->parsetags || litepublisher::$options->parsepost) $result = $theme->parse($result);
