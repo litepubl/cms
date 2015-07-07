@@ -17,6 +17,8 @@ class thomepage extends tsinglemenu  {
     parent::create();
     $this->basename = 'homepage' ;
     $this->data['image'] = '';
+    $this->data['smallimage'] = '';
+    $this->data['smallwidth'] = 768;
     $this->data['showmidle'] = false;
     $this->data['midlecat'] = 0;
     $this->data['showposts'] = true;
