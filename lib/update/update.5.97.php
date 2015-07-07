@@ -23,7 +23,6 @@ litepublisher::$site->save();
 
 $home = thomepage::i();
     $home->data['smallimage'] = '';
-    $home->data['smallwidth'] = 768;
 $home->save();
 
 $js = tjsmerger::i();

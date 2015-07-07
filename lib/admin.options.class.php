@@ -75,6 +75,7 @@ class Tadminoptions extends tadminmenu {
       $home = thomepage::i();
       $tabs = new tuitabs();
       $args->image = $home->image;
+      $args->smallimage = $home->smallimage;
       $args->parsetags = $home->parsetags;
       $args->showmidle = $home->showmidle;
       $args->midlecat = tposteditor::getcombocategories(array(), $home->midlecat);
@@ -85,17 +86,22 @@ class Tadminoptions extends tadminmenu {
       $args->idhome =  $home->id;
       $menus = tmenus::i();
       $args->homemenu =  $menus->home;
+
       $tabs->add($lang->options, '
       [checkbox=homemenu]
-      [text=image]
-      [checkbox=parsetags]
       [checkbox=showmidle]
       [combo=midlecat]
       [checkbox=showposts]
       [checkbox=invertorder]
       [checkbox=showpagenator]
+      [checkbox=parsetags]
       ');
-      
+
+      $tabs->add($lang->images,'
+      [text=image]
+      [text=smallimage]' .
+$html->p->imagehelp);
+
       $tabs->add($lang->includecats,
       $html->h4->includehome .
       tposteditor::getcategories($home->includecats));
@@ -360,6 +366,7 @@ class Tadminoptions extends tadminmenu {
       $home = thomepage::i();
       $home->lock();
       $home->image = $image;
+      $home->smallimage = $smallimage;
       $home->parsetags = isset($parsetags);
       $home->showmidle = isset($showmidle);
       $home->midlecat = (int) $midlecat;
