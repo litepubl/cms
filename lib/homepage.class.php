@@ -70,8 +70,10 @@ ttemplate::i()->addevent('onlabels', $this, 'onlabels', true);
 
 public function onlabels($template) {
 $theme = $template->view->theme;
-$s = $theme->parse($theme->templates['home.image']);
-$template->result = str_replace('$label.bigimage', $s, $template->result);
+ttheme::$vars['home'] = $this;
+$s = $theme->parse($theme->templates['content.home.image']);
+$template->result = str_replace('$label.homeimage', $s, $template->result);
+unset(ttheme::$vars['home']);
 }
   
   public function getbefore() {

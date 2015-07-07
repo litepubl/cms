@@ -48,7 +48,9 @@ $system = array(
 '/js/litepubl/common/dialog.min.js',
 '/js/litepubl/common/players.min.js',
 '/js/litepubl/common/templates.min.js',
-'/js/litepubl/common/widgets.min.js'
+'/js/litepubl/common/widgets.min.js',
+
+  '/js/litepubl/effects/homeimage.min.js'
 );
 
 $prev = '/js/plugins/jquery.cookie.min.js';
@@ -207,6 +209,7 @@ $css->replacefile('default',
 
 $css->add('default', '/js/litepubl/common/css/common.min.css');
 $css->add('default', '/js/litepubl/deprecated/css/align.min.css');
+   $css->add('default', '/js/litepubl/effects/css/homeimage.min.css');
 $css->deletetext('default', 'hidden');
 
 $css->replacefile('admin',

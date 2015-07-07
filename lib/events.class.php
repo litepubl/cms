@@ -112,9 +112,16 @@ return '';
       foreach ($this->events[$name] as $i => $item) {
 //backward compability
 $class = isset($item[0]) ? $item[0] : (isset($item['class']) ? $item['class'] : '');
-if (class_exists($class)) {
-          $call = array(getinstance($class), isset($item[1] ? $item[1] : $item['func']);
 
+if (is_string($class) && class_exists($class)) {
+          $call = array(getinstance($class), isset($item[1]) ? $item[1] : $item['func']);
+} elseif (is_object($class)) {
+          $call = array($class, isset($item[1]) ? $item[1] : $item['func']);
+} else {
+$call = false;
+}
+
+if ($call) {
         try {
           $result = call_user_func_array($call, $params);
         } catch (ECancelEvent $e) {
@@ -159,7 +166,7 @@ unset($this->events[$name]);
 
 //check if event already added
         foreach ($this->events[$name] as $event) {
-          if (isset($event[0] && $event[0] == $class && $event[1] == $func) {
+          if (isset($event[0]) && $event[0] == $class && $event[1] == $func) {
 return false;
 //backward compability
 } elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
@@ -185,7 +192,7 @@ $this->save();
       for ($i = count($list) - 1; $i >= 0; $i--) {
 $event = $list[$i];
 
-        if ((isset($event[0] && $event[0] == $class) ||
+        if ((isset($event[0]) && $event[0] == $class) ||
 //backward compability
 (isset($event['class']) && $event['class'] == $class)) {
           array_splice($list, $i, 1);
@@ -213,8 +220,8 @@ $event = $list[$i];
     $class = self::get_class_name($c);
     foreach ($this->events as $name => $events) {
       foreach ($events as $i => $item) {
-        if (isset($item[0] && $item[0] == $class) ||
-(isset($item['class']) && $item['class'] == $class) {
+        if ((isset($item[0]) && $item[0] == $class) ||
+(isset($item['class']) && $item['class'] == $class)) {
 array_splice($this->events[$name], $i, 1);
 }
       }

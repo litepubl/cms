@@ -162,9 +162,9 @@ class tjsonserver extends tevents {
     return $this->json($result);
   }
   
-  public function addevent($name, $class, $func) {
+  public function addevent($name, $class, $func, $once = false) {
     if (!in_array($name, $this->eventnames)) $this->eventnames[] = $name;
-    return parent::addevent($name, $class, $func);
+    return parent::addevent($name, $class, $func, $once);
   }
   
   public function delete_event($name) {
