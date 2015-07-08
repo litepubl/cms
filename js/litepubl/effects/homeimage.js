@@ -26,6 +26,7 @@ if (cur != data.cur) {
 if (cur.w) {
 //next image loaded; success switching
 data.cur = cur;
+//data.img.prop("src", cur.src);
 data.img.remove();
 data.img = $('<img src="' + cur.src + '" />').appendTo(holder);
 } else if (!cur.src) {

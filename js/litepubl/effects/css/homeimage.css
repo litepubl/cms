@@ -15,5 +15,6 @@ z-index: 0;
 }
 
 #homeimage h1 {
+  position:relative;
 z-index: 2;
 }
