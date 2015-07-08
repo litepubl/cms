@@ -15,7 +15,7 @@
     </script>
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
-    <div class="container-fluid"><div class="navbar navbar-default" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="container-fluid"><div class="navbar navbar-default" itemscope itemtype="http://schema.org/WPHeader">
        <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false" aria-controls="navbar-menu">
             <span class="sr-only">$lang.togglenavi</span>
@@ -27,8 +27,8 @@
         </div>
 
 <div id="navbar-menu" class="navbar-collapse collapse" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">$template.menu</div>
-
     </div></div>
+
           $label.homeimage
           <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
                     <div class="col-sm-9 content" itemscope itemprop="mainContentOfPage">$template.content</div>
