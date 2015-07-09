@@ -91,7 +91,7 @@ var self = this;
 var data = {
 cur: false,
 error: false,
-breakpoint: this.attr("data-smallwidth") || 768,
+breakpoint: this.attr("data-breakpoint") || 768,
 top: this.position().top,
 winw: 0,
 winh: 0,

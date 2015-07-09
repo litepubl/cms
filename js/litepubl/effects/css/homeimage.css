@@ -14,7 +14,8 @@ left: 0;
 z-index: 0;
 }
 
-#homeimage h1 {
+#homeimage h1,
+#homeimage h2 {
   position:relative;
 z-index: 2;
 }
