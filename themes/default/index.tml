@@ -15,7 +15,7 @@
     </script>
   </head>
   <body itemscope itemtype="http://schema.org/WebPage">
-    <div class="container-fluid"><div class="navbar navbar-default" itemscope itemtype="http://schema.org/WPHeader">
+    <div class="navbar navbar-default navbar-fixed-top" itemscope itemtype="http://schema.org/WPHeader"><div class="container-fluid">
        <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false" aria-controls="navbar-menu">
             <span class="sr-only">$lang.togglenavi</span>
@@ -23,7 +23,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="$site.url/">
+          <a class="navbar-brand" href="$site.url/" style="margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0;">
 <img src="/js/litepubl/logo/logo50x50.png" alt="logo" />
 </a>
         </div>

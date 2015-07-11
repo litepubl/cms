@@ -1,10 +1,20 @@
 ul {
-  margin-left: 12px;
-  padding-left: 0;
+  margin-left: 0;
+  padding-left: 40px;
 }
 li {
-  margin: 8px 12px;
-  padding-left: 0;
+  padding-top: 8px;
+}
+.nav ul,
+.breadcrumb ul,
+.pagination ul,
+.pager ul,
+.nav li,
+.breadcrumb li,
+.pagination li,
+.pager li {
+  margin: 0;
+  padding: 0;
 }
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
@@ -6436,10 +6446,15 @@ a.list-group-item-danger.active:focus {
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+body {
+  padding-top: 70px;
+}
 @media (min-width: 768px) {
   .sidebar-left > .content {
     left: 25%;
   }
+}
+@media (min-width: 768px) {
   .sidebar-left > .main-sidebar {
     right: 75%;
   }
@@ -6541,16 +6556,6 @@ h6,
 .anpost-body:first-child {
   width: 100%;
   margin: 0;
-  /*
-  .anpost-button,
-.post-categories {
-float: left;
-    display: block;
-    overflow: hidden;
-    margin: 0;
-    width: 50%;
-  }
-*/
 }
 .anpost-body:first-child .anpost-item-title,
 .anpost-body:first-child .cats-title {
