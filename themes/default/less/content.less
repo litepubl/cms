@@ -1,0 +1,26 @@
+body {
+  padding-top: @navbar-height + @navbar-margin-bottom;
+}
+
+  .sidebar-left > .content {
+.make-sm-column-push(3);
+}
+
+  .sidebar-left > .main-sidebar {
+.make-sm-column-pull(9);
+  }
+
+@media only screen and (min-width : 768px) {
+  // Make Navigation Toggle on Desktop Hover
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+}
+
+footer {
+  margin: @navbar-height 0;
+}
+
+.section {
+  margin-top: @padding-base-vertical;
+}

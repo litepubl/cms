@@ -1,0 +1,90 @@
+.block-fullwidth {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.block {
+  display: block;
+  overflow: hidden;
+}
+
+.div {
+  display: block;
+  overflow: hidden;
+  margin: @padding-base-vertical;
+}
+
+.inline-block {
+  display: inline-block;
+  vertical-align: top;
+}
+
+@jcarousel-image-width : 420px;
+//(@jcarousel-image-width / 4 *3);
+@jcarousel-image-height : 315px;
+@jcarousel-body-height : 116px;
+@jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
+
+.jcarousel-container {
+  display: block;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  //text-align: center;
+}
+
+.jcarousel {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  width: (@jcarousel-image-width * 2);
+  height: @jcarousel-height;
+  border: 0;
+  #gradient > .vertical(@start-color: lighten(@brand-info, 90%); @end-color: lighten(@brand-info, 20%));
+  &:extend(.clearfix all);
+}
+
+.jcarousel-items {
+  width: 20000em;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.jcarousel-items > li {
+  float: left;
+  margin: 0 10px 0 0;
+  padding: 0;
+  display: block;
+  overflow:hidden;
+  width: @jcarousel-image-width;
+  height: @jcarousel-height;
+}
+
+.jcarousel-right > li {
+  float: right;
+  margin: 0 0 0 10px;
+}
+
+.jcarousel-image{
+  display: block;
+  overflow:hidden;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.jcarousel-body{
+  display: block;
+  overflow: hidden;
+  margin: @padding-base-vertical;
+  padding: 0;
+  height: @jcarousel-body-height;
+}

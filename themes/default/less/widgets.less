@@ -1,0 +1,37 @@
+.sidebar-top .media-body:before {
+  display: none;
+}
+
+@media (max-width: @screen-sm-min) {
+  .sidebar-top .media-body:before {
+    display: block;
+    overflow: hidden;
+    background-repeat:no-repeat;
+    background-position: center top;
+    content: "";
+    position: absolute;
+    // 5px margin media-heading + h4 height
+    top: 25px;
+    left:0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  
+  .sidebar-top .media-body {
+    position: relative;
+    #gradient > .horizontal-three-colors(@start-color: rgba(255, 255, 255, 1); @mid-color: rgba(255, 255, 255, 0.5); @color-stop: 50%; @end-color: rgba(255, 255, 255, 1));
+  }
+}
+
+.panel-body {
+  overflow:hidden;
+}
+
+.footer-widget-content {
+  display: inline;
+}
+
+.widget-button {
+  margin: @padding-base-vertical @padding-base-horizontal;
+}
