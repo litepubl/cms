@@ -86,7 +86,7 @@ class Tadminoptions extends tadminmenu {
       $args->idhome =  $home->id;
       $menus = tmenus::i();
       $args->homemenu =  $menus->home;
-
+      
       $tabs->add($lang->options, '
       [checkbox=homemenu]
       [checkbox=showmidle]
@@ -96,12 +96,12 @@ class Tadminoptions extends tadminmenu {
       [checkbox=showpagenator]
       [checkbox=parsetags]
       ');
-
+      
       $tabs->add($lang->images,'
       [text=image]
       [text=smallimage]' .
-$html->p->imagehelp);
-
+      $html->p->imagehelp);
+      
       $tabs->add($lang->includecats,
       $html->h4->includehome .
       tposteditor::getcategories($home->includecats));

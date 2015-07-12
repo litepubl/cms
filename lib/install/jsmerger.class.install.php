@@ -42,8 +42,8 @@ function tjsmergerInstall($self) {
   '/js/litepubl/common/dialog.min.js',
   '/js/litepubl/common/players.min.js',
   '/js/litepubl/common/templates.min.js',
-
-//effects
+  
+  //effects
   '/js/litepubl/effects/homeimage.min.js',
   );
   

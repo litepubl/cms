@@ -216,7 +216,7 @@ class ttheme extends tevents {
     } elseif ($name == 'custom') {
       return $this->parse($this->templates['custom'][$prop]);
     } elseif ($name == 'label') {
-return "\$$name.$prop";
+      return "\$$name.$prop";
     } elseif ($var = $this->getvar($name)) {
       self::$vars[$name] = $var;
     } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
@@ -277,9 +277,9 @@ return "\$$name.$prop";
   public function gethtml($context) {
     self::$vars['context'] = $context;
     if (isset($context->index_tml) && ($tml = $context->index_tml)) {
-return $this->parse($tml);
-}
-
+      return $this->parse($tml);
+    }
+    
     return $this->parse($this->templates['index']);
   }
   

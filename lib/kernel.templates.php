@@ -422,6 +422,7 @@ class ttemplate extends tevents_storage {
   public $hover;
   public $extrahead;
   public $extrabody;
+  public $result;
   
   public static function i() {
     return getinstance(__class__);
@@ -432,7 +433,7 @@ class ttemplate extends tevents_storage {
     litepublisher::$classes->instances[get_class($this)] = $this;
     parent::create();
     $this->basename = 'template' ;
-    $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
+    $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onlabels', 'onrequest', 'ontitle', 'ongetmenu');
     $this->path = litepublisher::$paths->themes . 'default' . DIRECTORY_SEPARATOR ;
     $this->url = litepublisher::$site->files . '/themes/default';
     $this->itemplate = false;
@@ -456,6 +457,7 @@ class ttemplate extends tevents_storage {
     $this->addmap('custom', array());
     $this->extrahead = '';
     $this->extrabody = '';
+    $this->result = '';
   }
   
   public function assignmap() {
@@ -503,13 +505,18 @@ class ttemplate extends tevents_storage {
       $this->hover = false;
     }
     
-    $result = $this->httpheader();
-    $result  .= $theme->gethtml($context);
-    $this->callevent('onbody', array(&$this->extrabody));
-    if ($this->extrabody) $result = str_replace('</body>', $this->extrabody . '</body>', $result);
-    $this->callevent('onrequest', array(&$result));
+    $this->result = $this->httpheader();
+    $this->result  .= $theme->gethtml($context);
+    
+    $this->onlabels($this);
+    $this->result = preg_replace('/\$label\.\w\w*+/', '', $this->result);
+    
+    $this->onbody($this);
+    if ($this->extrabody) $this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
+    $this->onrequest($this);
+    
     unset(ttheme::$vars['context'], ttheme::$vars['template']);
-    return $result;
+    return $this->result;
   }
   
   protected function  httpheader() {
@@ -541,7 +548,7 @@ class ttemplate extends tevents_storage {
   }
   
   public function parsetitle($tml, $title) {
-    $args = targs::i();
+    $args = new targs();
     $args->title = $title;
     $result = $this->view->theme->parsearg($tml, $args);
     //$result = trim($result, sprintf(' |.:%c%c', 187, 150));
@@ -878,6 +885,8 @@ class ttheme extends tevents {
       $var =  self::$vars[$name];
     } elseif ($name == 'custom') {
       return $this->parse($this->templates['custom'][$prop]);
+    } elseif ($name == 'label') {
+      return "\$$name.$prop";
     } elseif ($var = $this->getvar($name)) {
       self::$vars[$name] = $var;
     } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
@@ -937,7 +946,10 @@ class ttheme extends tevents {
   
   public function gethtml($context) {
     self::$vars['context'] = $context;
-    if (isset($context->index_tml) && ($tml = $context->index_tml)) return $this->parse($tml);
+    if (isset($context->index_tml) && ($tml = $context->index_tml)) {
+      return $this->parse($tml);
+    }
+    
     return $this->parse($this->templates['index']);
   }
   

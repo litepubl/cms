@@ -1,21 +1,27 @@
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+
 #homeimage {
   position:relative;
-display: block;
-overflow: hidden;
-width: 100%;
+  display: block;
+  overflow: hidden;
+  width: 100%;
 }
 
 #homeimage img {
   position:absolute;
-display: block;
-overflow: hidden;
-top: 0;
-left: 0;
-z-index: 0;
+  display: block;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  z-index: 0;
 }
 
 #homeimage h1,
 #homeimage h2 {
   position:relative;
-z-index: 2;
+  z-index: 2;
 }

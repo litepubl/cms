@@ -25,8 +25,8 @@ function tcssmergerInstall($self) {
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
   $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
-
-   $self->add($section, '/js/litepubl/effects/css/homeimage.min.css');
+  
+  $self->add($section, '/js/litepubl/effects/css/homeimage.min.css');
   
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');

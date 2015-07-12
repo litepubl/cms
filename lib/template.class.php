@@ -101,14 +101,14 @@ class ttemplate extends tevents_storage {
     
     $this->result = $this->httpheader();
     $this->result  .= $theme->gethtml($context);
-
-$this->onlabels($this);
-      $this->result = preg_replace('/\$label\.\w\w*+/', '', $this->result);
-
+    
+    $this->onlabels($this);
+    $this->result = preg_replace('/\$label\.\w\w*+/', '', $this->result);
+    
     $this->onbody($this);
     if ($this->extrabody) $this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
     $this->onrequest($this);
-
+    
     unset(ttheme::$vars['context'], ttheme::$vars['template']);
     return $this->result;
   }

@@ -103,44 +103,44 @@ class tevents extends tdata {
   }
   
   public function callevent($name, $params) {
-
-if (!isset($this->events[$name])) {
-return '';
-}
-
+    
+    if (!isset($this->events[$name])) {
+      return '';
+    }
+    
     $result = '';
-      foreach ($this->events[$name] as $i => $item) {
-//backward compability
-$class = isset($item[0]) ? $item[0] : (isset($item['class']) ? $item['class'] : '');
-
-if (is_string($class) && class_exists($class)) {
-          $call = array(getinstance($class), isset($item[1]) ? $item[1] : $item['func']);
-} elseif (is_object($class)) {
-          $call = array($class, isset($item[1]) ? $item[1] : $item['func']);
-} else {
-$call = false;
-}
-
-if ($call) {
+    foreach ($this->events[$name] as $i => $item) {
+      //backward compability
+      $class = isset($item[0]) ? $item[0] : (isset($item['class']) ? $item['class'] : '');
+      
+      if (is_string($class) && class_exists($class)) {
+        $call = array(getinstance($class), isset($item[1]) ? $item[1] : $item['func']);
+      } elseif (is_object($class)) {
+        $call = array($class, isset($item[1]) ? $item[1] : $item['func']);
+      } else {
+        $call = false;
+      }
+      
+      if ($call) {
         try {
           $result = call_user_func_array($call, $params);
         } catch (ECancelEvent $e) {
           return $e->result;
         }
-
-// 2 index = once
-if (isset($item[2]) && $item[2]) {
-    array_splice($this->events[$name], $i, 1);
-}
-
-} else {
-//class not found and delete event handler
-    array_splice($this->events[$name], $i, 1);
-    if (!count($this->events[$name])) {
-unset($this->events[$name]);
-}
-
-    $this->save();
+        
+        // 2 index = once
+        if (isset($item[2]) && $item[2]) {
+          array_splice($this->events[$name], $i, 1);
+        }
+        
+      } else {
+        //class not found and delete event handler
+        array_splice($this->events[$name], $i, 1);
+        if (!count($this->events[$name])) {
+          unset($this->events[$name]);
+        }
+        
+        $this->save();
       }
     }
     
@@ -159,53 +159,53 @@ unset($this->events[$name]);
     if (!in_array($name, $this->eventnames)) return $this->error(sprintf('No such %s event', $name ));
     if (empty($class)) $this->error("Empty class name to bind $name event");
     if (empty($func)) $this->error("Empty function name to bind $name event");
-
+    
     if (!isset($this->events[$name])) {
       $this->events[$name] =array();
-}
-
-//check if event already added
-        foreach ($this->events[$name] as $event) {
-          if (isset($event[0]) && $event[0] == $class && $event[1] == $func) {
-return false;
-//backward compability
-} elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
-return false;
-}
-        }
-
-if ($once) {
-    $this->events[$name][] = array($class, $func, true);
-} else {
-    $this->events[$name][] = array($class, $func);
-$this->save();
-}
+    }
+    
+    //check if event already added
+    foreach ($this->events[$name] as $event) {
+      if (isset($event[0]) && $event[0] == $class && $event[1] == $func) {
+        return false;
+        //backward compability
+      } elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
+        return false;
+      }
+    }
+    
+    if ($once) {
+      $this->events[$name][] = array($class, $func, true);
+    } else {
+      $this->events[$name][] = array($class, $func);
+      $this->save();
+    }
   }
   
   public function delete_event_class($name, $class) {
     if (!isset($this->events[$name])) {
-    return false;
-}
-
-      $list = &$this->events[$name];
-      $deleted = false;
-      for ($i = count($list) - 1; $i >= 0; $i--) {
-$event = $list[$i];
-
-        if ((isset($event[0]) && $event[0] == $class) ||
-//backward compability
-(isset($event['class']) && $event['class'] == $class)) {
-          array_splice($list, $i, 1);
-          $deleted = true;
-        }
+      return false;
+    }
+    
+    $list = &$this->events[$name];
+    $deleted = false;
+    for ($i = count($list) - 1; $i >= 0; $i--) {
+      $event = $list[$i];
+      
+      if ((isset($event[0]) && $event[0] == $class) ||
+      //backward compability
+      (isset($event['class']) && $event['class'] == $class)) {
+        array_splice($list, $i, 1);
+        $deleted = true;
       }
-
-      if ($deleted) {
-        if (count($list) == 0) unset($this->events[$name]);
-        $this->save();
-      }
-
-      return $deleted;
+    }
+    
+    if ($deleted) {
+      if (count($list) == 0) unset($this->events[$name]);
+      $this->save();
+    }
+    
+    return $deleted;
   }
   
   public function unsubscribeclass($obj) {
@@ -221,9 +221,9 @@ $event = $list[$i];
     foreach ($this->events as $name => $events) {
       foreach ($events as $i => $item) {
         if ((isset($item[0]) && $item[0] == $class) ||
-(isset($item['class']) && $item['class'] == $class)) {
-array_splice($this->events[$name], $i, 1);
-}
+        (isset($item['class']) && $item['class'] == $class)) {
+          array_splice($this->events[$name], $i, 1);
+        }
       }
     }
     
