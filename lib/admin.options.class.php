@@ -244,7 +244,6 @@ $html->p->imagehelp);
       $args->ob_cache = $options->ob_cache;
       $args->compress = $options->compress;
       $args->commentspull = $options->commentspull;
-      $args->memcache_classes = litepublisher::$classes->memcache;
       
       $args->formtitle = $lang->optionscache;
       $result = $html->adminform('
@@ -253,7 +252,6 @@ $html->p->imagehelp);
       [checkbox=ob_cache]
       [checkbox=admincache]
       [checkbox=commentspull]
-      [checkbox=memcache_classes]
       ', $args);
       
       $form = new adminform($args);
@@ -475,13 +473,6 @@ $html->p->imagehelp);
       if (isset($clearcache)) {
         ttheme::clearcache();
       } else {
-        $classes = litepublisher::$classes;
-        if (        $classes->memcache != isset($memcache_classes)) {
-          if (isset($memcache_classes)) $classes->revision_memcache++;
-          $classes->memcache = isset($memcache_classes);
-          $classes->save();
-        }
-        
         $options->lock();
         $options->cache = isset($enabledcache);
         $options->admincache = isset($admincache );
