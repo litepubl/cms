@@ -1,8 +1,8 @@
 content.home= [
 $image = [
 <div id="homeimage" data-image="$home.image" data-small="$home.smallimage" data-breakpoint="768">
-<h1>$site.name</h1>
-<h2>$site.description</h2>
+<h1><a href="$site.url/">$site.name</a></h1>
+<h3>$site.description</h3>
 </div>
 ]
 

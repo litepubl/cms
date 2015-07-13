@@ -4,8 +4,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function( $, document){
+(function( $){
   'use strict';
+
   $.load_theme_font  = function(name) {
     if (!name) name = 'default';
     
@@ -95,8 +96,8 @@
     }
   };
   
-  $(document).ready(function() {
+  $.ready2(function() {
     $.load_theme_font(ltoptions.theme.cssfile);
   });
   
-})( jQuery, document);
+})( jQuery);

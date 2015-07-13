@@ -59,9 +59,9 @@
     }
     
     holder.height(h);
-    data.img.width(imgwidth);
-    data.img.height(imgheight );
     data.img.css({
+width: imgwidth,
+height: imgheight ,
       left: (w - imgwidth) /2,
       top: (h - imgheight) /2
     });
@@ -135,9 +135,11 @@
     
     return this;
   };
-  
+
+if (location.pathname == '/') {  
   $(document).ready(function() {
     $("#homeimage").homeimage();
   });
+}
   
 })( jQuery, document);

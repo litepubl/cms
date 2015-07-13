@@ -8,7 +8,6 @@
   position:relative;
   display: block;
   overflow: hidden;
-  width: 100%;
 }
 
 #homeimage img {
@@ -21,7 +20,7 @@
 }
 
 #homeimage h1,
-#homeimage h2 {
+#homeimage h3 {
   position:relative;
   z-index: 2;
 }

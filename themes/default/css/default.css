@@ -6019,6 +6019,16 @@ fieldset[disabled] .btn-danger.active {
   .box-shadow(@shadow);
 }
 */
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 body {
   padding-top: 70px;
 }
@@ -6043,6 +6053,11 @@ footer {
 .section {
   margin-top: 6px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 h1,
 h2,
 h3,
@@ -6079,18 +6094,14 @@ A.dashed:focus {
   text-decoration: none;
   border-bottom: 1px dashed #23527c;
 }
-.red {
-  color: red;
-}
-.green {
-  color: green;
-}
-.blue {
-  color: blue;
-}
 .gold {
   color: #ffd700;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .modal-dialog {
   margin-left: auto;
   margin-right: auto;
@@ -6099,6 +6110,11 @@ A.dashed:focus {
   display: block;
   overflow: hidden;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .popover-title,
 .title-nowrap {
   overflow: hidden;
@@ -6114,6 +6130,11 @@ A.dashed:focus {
 .popover-image {
   max-width: 1200px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .fa {
   color: #5bc0de;
 }
@@ -6135,6 +6156,11 @@ A.dashed:focus {
 .fa-vk {
   color: #45668e;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .anpost {
   display: block;
   overflow: hidden;
@@ -6160,7 +6186,6 @@ A.dashed:focus {
   display: block;
   overflow: hidden;
   position: relative;
-  width: 100%;
   margin-top: 6px;
 }
 .anpost-image {
@@ -6188,13 +6213,17 @@ A.dashed:focus {
   display: none;
 }
 .anpost-body:first-child {
-  width: 100%;
   margin: 0;
 }
 .anpost-body:first-child .anpost-item-title,
 .anpost-body:first-child .cats-title {
   display: inline;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .photo img {
   border: 1px solid transparent;
   border-radius: 4px;
@@ -6208,6 +6237,11 @@ A.dashed:focus {
 .video-fallback:first-child {
   display: inline-block;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .post-header {
   display: block;
   overflow: hidden;
@@ -6219,6 +6253,11 @@ A.dashed:focus {
 .post-header .cats-title {
   display: none;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .comment-datetime,
 .comment-datetime span {
   font-size: 80%;
@@ -6238,6 +6277,11 @@ A.dashed:focus {
 .comment-item {
   margin-top: 6px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .sidebar-top .media-body:before {
   display: none;
 }
@@ -6264,15 +6308,30 @@ A.dashed:focus {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
   }
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .panel-body {
   overflow: hidden;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .footer-widget-content {
   display: inline;
 }
 .widget-button {
   margin: 6px 12px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 #text-count,
 input[name^="count"] {
   width: 5em;
@@ -6281,6 +6340,11 @@ input[name^="count"] {
 input[name^="coupon"] {
   width: 10em;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .prop-gtin,
 .prop-gtin8,
 .prop-gtin13,
@@ -6302,6 +6366,11 @@ input[name^="coupon"] {
 .prop-values a:first-child:before {
   content: "";
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .buyform > div {
   text-align: center;
   margin-left: auto;
@@ -6320,6 +6389,11 @@ input[name^="coupon"] {
 .under-radio {
   margin-left: 20px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .price {
   font-weight: bold;
   font-size: 120%;
@@ -6356,31 +6430,9 @@ input[name^="coupon"] {
 .buybutton {
   margin: 6px 12px;
 }
-.block-fullwidth {
-  display: block;
-  overflow: hidden;
-  padding: 0;
-  width: 100%;
-}
-.block {
-  display: block;
-  overflow: hidden;
-}
-.div {
-  display: block;
-  overflow: hidden;
-  margin: 6px;
-}
-.inline-block {
-  display: inline-block;
-  vertical-align: top;
-}
 .jcarousel-container {
   display: block;
   overflow: hidden;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
 }
 .jcarousel {
   position: relative;
@@ -6391,7 +6443,6 @@ input[name^="coupon"] {
   padding: 0;
   width: 840px;
   height: 443px;
-  border: 0;
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: linear-gradient(to bottom, #ffffff 0%, #b0e1ef 100%);
@@ -6432,6 +6483,16 @@ input[name^="coupon"] {
   padding: 0;
   height: 116px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .lobster .navbar-brand,
 .lobster h1,
 .lobster h2,
@@ -6447,11 +6508,33 @@ input[name^="coupon"] {
 .lobster .h6 {
   font-family: 'Lobster', cursive;
 }
+.navbar-title {
+  display: none;
+}
+@media (max-width: 768px) {
+  .navbar-title {
+    display: block;
+    overflow: hidden;
+  }
+  .navbar-title h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+  .navbar-title h5 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .in + .navbar-title {
+    display: none;
+  }
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .navbar-brand {
   font-size: 2em;
-  margin: 0.67em 0;
-}
-.navbar-brand {
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;

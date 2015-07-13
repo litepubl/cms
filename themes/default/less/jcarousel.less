@@ -1,32 +1,3 @@
-/**
-* Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
-
-.block-fullwidth {
-  display: block;
-  overflow: hidden;
-  padding: 0;
-  width: 100%;
-}
-
-.block {
-  display: block;
-  overflow: hidden;
-}
-
-.div {
-  display: block;
-  overflow: hidden;
-  margin: @padding-base-vertical;
-}
-
-.inline-block {
-  display: inline-block;
-  vertical-align: top;
-}
-
 @jcarousel-image-width : 420px;
 //(@jcarousel-image-width / 4 *3);
 @jcarousel-image-height : 315px;
@@ -36,10 +7,7 @@
 .jcarousel-container {
   display: block;
   overflow: hidden;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
-  //text-align: center;
+  //width: 100%;
 }
 
 .jcarousel {
@@ -51,7 +19,7 @@
   padding: 0;
   width: (@jcarousel-image-width * 2);
   height: @jcarousel-height;
-  border: 0;
+
   #gradient > .vertical(@start-color: lighten(@brand-info, 90%); @end-color: lighten(@brand-info, 20%));
   &:extend(.clearfix all);
 }
