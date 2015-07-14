@@ -31,6 +31,7 @@
     </div></div>
 
           $label.homeimage
+
           <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
                     <div class="col-sm-9 content" itemscope itemprop="mainContentOfPage">$template.content</div>
           <div class="col-sm-3 main-sidebar"><div class="panel-group" id="sidebar1" role="tablist" aria-multiselectable="true" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div></div>
@@ -38,21 +39,15 @@
 
 <div class="container-fluid section">
 <hr>
-<div class="row"><div class="col-sm-12">
 <div class="btn-group dropup" itemscope itemtype="http://schema.org/WPSideBar">
 $template.sidebar
 </div>
-</div></div>
 </div>
 
     <div class="container-fluid section">
       <hr>
-      <footer>
-        <div class="row">
-          <div class="col-sm-12" itemscope itemtype="http://schema.org/WPFooter">
+      <footer itemscope itemtype="http://schema.org/WPFooter">
             <p>$template.footer</p>
-          </div>
-        </div>
       </footer>
     </div>
   </body>
