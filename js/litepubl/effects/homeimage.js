@@ -86,7 +86,7 @@ height: imgheight ,
   
   $.fn.homeimage = function() {
     if (!this.length || this.data("homeimage")) return this;
-    
+
     var self = this;
     var data = {
       cur: false,
@@ -110,6 +110,7 @@ height: imgheight ,
     };
     
     this.data("homeimage", data);
+this.addClass(data.classname);
     
     if (!data.large.src && !data.small.src) return this.hide();
     var cur = $(window).width() >= data.breakpoint ? data.large : data.small;
@@ -138,7 +139,7 @@ height: imgheight ,
 
 if (location.pathname == '/') {  
   $(document).ready(function() {
-    $("#homeimage").homeimage();
+    $("#site-description").homeimage();
   });
 }
   
