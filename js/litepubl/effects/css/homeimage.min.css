@@ -1,1 +1,1 @@
-#homeimage{position:relative;display:block;overflow:hidden;width:100%}#homeimage img{position:absolute;display:block;overflow:hidden;top:0;left:0;z-index:0}
+.home-image{position:relative;display:block;overflow:hidden}.home-image img{position:absolute;display:block;overflow:hidden;top:0;left:0;z-index:0}.home-image h1,.home-image h2,.home-image h3{position:relative;z-index:2}

@@ -9,7 +9,7 @@ copy %lesspath%bootstrap\variables.less.original %lesspath%bootstrap\variables.l
 %less% %lesspath%default.less %themepath%default.css
 %css% default.css -o default.min.css
 rem pause 
-exit
+rem exit
 del %lesspath%bootstrap\variables.less
 copy %lesspath%bootswatch\cerulean\variables.less %lesspath%bootstrap\variables.less
 %less% %lesspath%cerulean.less %themepath%cerulean.css

@@ -6168,6 +6168,11 @@ body.cyborg,
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 body {
   padding-top: 70px;
 }
@@ -6192,19 +6197,11 @@ footer {
 .section {
   margin-top: 8px;
 }
-ins {
-  text-decoration: none;
-}
-.comment-datetime,
-.comment-datetime span {
-  font-size: 80%;
-}
-.cursor-loading {
-  cursor: progress;
-}
-.cursor-loading:hover {
-  cursor: progress;
-}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 h1,
 h2,
 h3,
@@ -6219,10 +6216,90 @@ h6,
 .h6 {
   text-align: center;
 }
-.navbar-brand {
-  font-size: 2em;
-  margin: 0.67em 0;
+ins {
+  text-decoration: none;
 }
+.cursor-loading {
+  cursor: progress;
+}
+.cursor-loading:hover {
+  cursor: progress;
+}
+.gold {
+  color: #ffd700;
+}
+div.text-center {
+  margin: 8px;
+}
+A.dashed:hover,
+A.dashed:focus {
+  text-decoration: none;
+  border-bottom: 1px dashed #2a9fd6;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.modal-dialog {
+  margin-left: auto;
+  margin-right: auto;
+}
+.modal-body {
+  display: block;
+  overflow: hidden;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.popover-title,
+.title-nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.popover-content .more-button {
+  display: none;
+}
+.popover {
+  max-width: 320px;
+}
+.popover-image {
+  max-width: 1200px;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.fa {
+  color: #9933cc;
+}
+.btn-info .fa {
+  color: #ffffff;
+}
+.fa-facebook {
+  color: #3b5998;
+}
+.fa-twitter {
+  color: #00aced;
+}
+.fa-google-plus {
+  color: #dd4b39;
+}
+.fa-pinterest {
+  color: #cb2027;
+}
+.fa-vk {
+  color: #45668e;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .anpost {
   display: block;
   overflow: hidden;
@@ -6248,7 +6325,6 @@ h6,
   display: block;
   overflow: hidden;
   position: relative;
-  width: 100%;
   margin-top: 8px;
 }
 .anpost-image {
@@ -6276,31 +6352,17 @@ h6,
   display: none;
 }
 .anpost-body:first-child {
-  width: 100%;
   margin: 0;
 }
 .anpost-body:first-child .anpost-item-title,
 .anpost-body:first-child .cats-title {
   display: inline;
 }
-.title-nowrap,
-.popover-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.popover-content .more-button {
-  display: none;
-}
-.popover {
-  max-width: 320px;
-}
-.popover-image {
-  max-width: 1200px;
-}
-div.text-center {
-  margin: 8px;
-}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .photo img {
   border: 1px solid transparent;
   border-radius: 4px;
@@ -6314,6 +6376,11 @@ div.text-center {
 .video-fallback:first-child {
   display: inline-block;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .post-header {
   display: block;
   overflow: hidden;
@@ -6325,6 +6392,98 @@ div.text-center {
 .post-header .cats-title {
   display: none;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.comment-datetime,
+.comment-datetime span {
+  font-size: 80%;
+}
+.moder-approve:before {
+  content: "\f09c";
+}
+.moder-hold:before {
+  content: "\f023";
+}
+.moder-edit:before {
+  content: "\f044";
+}
+.moder-del:before {
+  content: "\f00d";
+}
+.comment-item {
+  margin-top: 8px;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.sidebar-top .media-body:before {
+  display: none;
+}
+@media (max-width: 768px) {
+  .sidebar-top .media-body:before {
+    display: block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    background-position: center top;
+    content: "";
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  .sidebar-top .media-body {
+    position: relative;
+    background-image: -webkit-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-image: -o-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-image: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
+  }
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.panel-body {
+  overflow: hidden;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.footer-widget-content {
+  display: inline;
+}
+.widget-button {
+  margin: 8px 12px;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+#text-count,
+input[name^="count"] {
+  width: 5em;
+}
+#text-coupon,
+input[name^="coupon"] {
+  width: 10em;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .prop-gtin,
 .prop-gtin8,
 .prop-gtin13,
@@ -6346,6 +6505,11 @@ div.text-center {
 .prop-values a:first-child:before {
   content: "";
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .buyform > div {
   text-align: center;
   margin-left: auto;
@@ -6354,6 +6518,36 @@ div.text-center {
 .buyform label {
   font-weight: normal;
 }
+.edit-addr {
+  margin-left: 20px;
+}
+.edit-addr > span {
+  vertical-align: middle;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+}
+.buypage-product-header {
+  overflow: hidden;
+  position: relative;
+  margin: 8px 12px;
+}
+.buypage-product-header .thumbnail {
+  float: left;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+}
+.buypage-product-header .buypage-product-link {
+  overflow: hidden;
+  margin: 0 12px 0 0;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .price {
   font-weight: bold;
   font-size: 120%;
@@ -6387,117 +6581,12 @@ div.text-center {
 .days-2 {
   display: inline;
 }
-.fa {
-  color: #9933cc;
-}
-.btn-info .fa {
-  color: #ffffff;
-}
-.fa-facebook {
-  color: #3b5998;
-}
-.fa-twitter {
-  color: #00aced;
-}
-.fa-google-plus {
-  color: #dd4b39;
-}
-.fa-pinterest {
-  color: #cb2027;
-}
-.fa-vk {
-  color: #45668e;
-}
 .buybutton {
   margin: 8px 12px;
-}
-.btn-align {
-  vertical-align: middle;
-  padding: 8px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 4px;
-}
-.under-radio {
-  margin-left: 20px;
-}
-.footer-widget-content {
-  display: inline;
-}
-.widget-button {
-  margin: 8px 12px;
-}
-#text-count,
-input[name^="count"] {
-  width: 5em;
-}
-#text-coupon,
-input[name^="coupon"] {
-  width: 10em;
-}
-.panel-body {
-  overflow: hidden;
-}
-.red {
-  color: red;
-}
-.green {
-  color: green;
-}
-.blue {
-  color: blue;
-}
-.gold {
-  color: #ffd700;
-}
-.moder-approve:before {
-  content: "\f09c";
-}
-.moder-hold:before {
-  content: "\f023";
-}
-.moder-edit:before {
-  content: "\f044";
-}
-.moder-del:before {
-  content: "\f00d";
-}
-.comment-item {
-  margin-top: 8px;
-}
-.modal-dialog {
-  margin-left: auto;
-  margin-right: auto;
-}
-.modal-body {
-  display: block;
-  overflow: hidden;
-}
-.block-fullwidth {
-  display: block;
-  overflow: hidden;
-  padding: 0;
-  width: 100%;
-}
-.block {
-  display: block;
-  overflow: hidden;
-}
-.div {
-  display: block;
-  overflow: hidden;
-  margin: 8px;
-}
-.inline-block {
-  display: inline-block;
-  vertical-align: top;
 }
 .jcarousel-container {
   display: block;
   overflow: hidden;
-  padding: 0;
-  width: 100%;
-  box-sizing: border-box;
 }
 .jcarousel {
   position: relative;
@@ -6508,7 +6597,6 @@ input[name^="coupon"] {
   padding: 0;
   width: 840px;
   height: 447px;
-  border: 0;
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #c285e0 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #c285e0 100%);
   background-image: linear-gradient(to bottom, #ffffff 0%, #c285e0 100%);
@@ -6549,49 +6637,24 @@ input[name^="coupon"] {
   padding: 0;
   height: 116px;
 }
-.inline-button {
-  margin-left: 12px;
-  vertical-align: middle;
-  width: auto;
-}
-A.dashed:hover,
-A.dashed:focus {
-  text-decoration: none;
-  border-bottom: 1px dashed #2a9fd6;
-}
-.sidebar-top .media-body:before {
-  display: none;
-}
-@media (max-width: 768px) {
-  .sidebar-top .media-body:before {
-    display: block;
-    overflow: hidden;
-    background-repeat: no-repeat;
-    background-position: center top;
-    content: "";
-    position: absolute;
-    top: 25px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: -1;
-  }
-  .sidebar-top .media-body {
-    position: relative;
-    background-image: -webkit-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-image: -o-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-image: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-repeat: no-repeat;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
-  }
-}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .navbar-brand {
+  font-size: 2em;
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 0;
   padding-bottom: 0;
   display: block;
-  overflow: none;
+  overflow: hidden;
   width: 50px;
   height: 50px;
   background-image: url("data:image/png;base64,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");

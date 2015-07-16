@@ -56,6 +56,10 @@ class thomepage extends tsinglemenu  {
   }
   
   public function getimages() {
+if (!$this->image && !$this->smallimage) {
+return '';
+}
+
     ttheme::$vars['home'] = $this;
     $theme = ttheme::i();
     $result = $theme->parse($theme->templates['content.home.image']);
