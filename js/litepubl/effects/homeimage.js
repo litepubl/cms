@@ -4,7 +4,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-;(function($, document){
+;(function($, window){
   'use strict';
   
   function home_resize(holder) {
@@ -84,35 +84,46 @@ height: imgheight ,
     image.src = info.src;
   }
   
-  $.fn.homeimage = function() {
+  $.fn.homeimage = function(options) {
     if (!this.length || this.data("homeimage")) return this;
+
+options = $.extend({
+      image: "",
+      small: "",
+      breakpoint: 768,
+      addclass: "home-image"
+}, options);
+
+  //no images in data
+    if (!options.image && !options.small) return this;
 
     var self = this;
     var data = {
       cur: false,
       error: false,
-      breakpoint: this.attr("data-breakpoint") || 768,
-      top: this.position().top,
+      breakpoint: options.breakpoint,
+      top: this.offset().top,
       winw: 0,
       winh: 0,
       img: false,
       large: {
         w: 0,
         h: 0,
-        src: this.attr("data-image") || this.find("img").attr("src")
+        src: options.image,
       },
       
       small: {
         w: 0,
         h: 0,
-        src: this.attr("data-small")
+        src: options.small,
       }
     };
     
     this.data("homeimage", data);
-this.addClass(data.classname);
-    
-    if (!data.large.src && !data.small.src) return this.hide();
+this.addClass(options.addclass);
+//set size before loading image
+this.height($(window).height() - data.top);
+
     var cur = $(window).width() >= data.breakpoint ? data.large : data.small;
     if (!cur.src) {
       cur = cur == data.small ? data.large : data.small;
@@ -137,10 +148,4 @@ this.addClass(data.classname);
     return this;
   };
 
-if (location.pathname == '/') {  
-  $(document).ready(function() {
-    $("#site-description").homeimage();
-  });
-}
-  
-})( jQuery, document);
+})( jQuery, window);

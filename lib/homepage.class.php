@@ -40,11 +40,6 @@ class thomepage extends tsinglemenu  {
   
   public function request($id) {
     if (!$this->showpagenator && (litepublisher::$urlmap->page > 1)) return 404;
-    
-    if ($this->image) {
-      ttemplate::i()->addevent('onlabels', $this, 'onlabels', true);
-    }
-    
     return parent::request($id);
   }
   
@@ -60,32 +55,42 @@ class thomepage extends tsinglemenu  {
   public function gettitle() {
   }
   
-  public function onlabels($template) {
-    $theme = $template->view->theme;
+  public function getimages() {
     ttheme::$vars['home'] = $this;
-    $s = $theme->parse($theme->templates['content.home.image']);
-    $template->result = str_replace('$label.homeimage', $s, $template->result);
+    $theme = ttheme::i();
+    $result = $theme->parse($theme->templates['content.home.image']);
     unset(ttheme::$vars['home']);
+return $result;
   }
   
   public function getbefore() {
     if ($result = $this->content) {
       $theme = ttheme::i();
       $result = $theme->simple($result);
-      if ($this->parsetags || litepublisher::$options->parsepost) $result = $theme->parse($result);
+      if ($this->parsetags || litepublisher::$options->parsepost) {
+$result = $theme->parse($result);
+}
+
       return $result;
     }
+
     return '';
   }
   
   public function getcont() {
     $result = '';
     if (litepublisher::$urlmap->page == 1) {
+$result .= $this->getimages();
       $result .= $this->getbefore();
-      if ($this->showmidle && $this->midlecat) $result .= $this->getmidle();
+      if ($this->showmidle && $this->midlecat) {
+$result .= $this->getmidle();
+}
     }
     
-    if ($this->showposts) $result .= $this->getpostnavi();
+    if ($this->showposts) {
+$result .= $this->getpostnavi();
+}
+
     return $result;
   }
   

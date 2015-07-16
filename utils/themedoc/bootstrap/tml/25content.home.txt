@@ -1,9 +1,17 @@
 content.home= [
 $image = [
-<div id="homeimage" data-image="$home.image" data-small="$home.smallimage" data-breakpoint="768">
-<h1><a href="$site.url/">$site.name</a></h1>
-<h3>$site.description</h3>
-</div>
+<script type=text/javascript">
+if (location.pathname == '/') {  
+  $(document).ready(function() {
+    $("#site-description").homeimage({
+      image: "$home.image",
+      small: "$home.smallimage",
+      breakpoint: 768,
+      addclass: "home-image"
+    });
+  });
+}
+</script>
 ]
 
 $midle = [

@@ -35,6 +35,12 @@
 <h3>$site.description</h3>
 </div>
 
+<!-- top sidebar
+<div class="container-fluid section"><div class="row sidebar-top" itemscope itemtype="http://schema.org/WPSideBar">
+template.sidebar2
+</div></div>
+-->
+
           <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
                     <div class="col-sm-9 content" itemscope itemprop="mainContentOfPage">$template.content</div>
           <div class="col-sm-3 main-sidebar"><div class="panel-group" id="sidebar1" role="tablist" aria-multiselectable="true" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div></div>
