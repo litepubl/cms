@@ -18,8 +18,10 @@ tml/23content.menu.txt
 ru/23content.menu.txt
 tml/24content.author.txt
 ru/24content.author.txt
-tml/25content.home.txt
-ru/25content.home.txt
+tml/25content.home.image.txt
+ru/25content.home.image.txt
+tml/26content.home.midle.txt
+ru/26content.home.midle.txt
 tml/30post.txt
 ru/30post.txt
 tml/31post.date.txt

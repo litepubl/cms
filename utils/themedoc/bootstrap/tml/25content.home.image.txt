@@ -1,5 +1,4 @@
-content.home= [
-$image = [
+content.home.image = [
 <script type=text/javascript">
 if (location.pathname == '/') {  
   $(document).ready(function() {
@@ -13,7 +12,3 @@ if (location.pathname == '/') {
 }
 </script>
 ]
-
-$midle = [
-$post = []
-]]
