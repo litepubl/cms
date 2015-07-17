@@ -8,12 +8,22 @@ body {
   padding-top: @navbar-height + @navbar-margin-bottom;
 }
 
+@maincontent-columns: 9;
+
+.content {
+  .make-sm-column(@maincontent-columns);
+}
+
+.main-sidebar {
+  .make-sm-column(@grid-columns - @maincontent-columns);
+}
+
 .sidebar-left > .content {
-  .make-sm-column-push(3);
+  .make-sm-column-push(@grid-columns - @maincontent-columns);
 }
 
 .sidebar-left > .main-sidebar {
-  .make-sm-column-pull(9);
+  .make-sm-column-pull(@maincontent-columns);
 }
 
 @media only screen and (min-width : 768px) {

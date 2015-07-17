@@ -6168,6 +6168,30 @@ body.simplex,
 body {
   padding-top: 58px;
 }
+.content {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .content {
+    float: left;
+    width: 75%;
+  }
+}
+.main-sidebar {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .main-sidebar {
+    float: left;
+    width: 25%;
+  }
+}
 @media (min-width: 768px) {
   .sidebar-left > .content {
     left: 25%;

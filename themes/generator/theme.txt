@@ -171,3 +171,9 @@ sidebar1.meta.items = [<ul>$item = [<li><a $class rel="$rel" href="$link" title=
 
 $template.ajaxwidget = [<a title="$lang.show/$lang.hide" href="javascript:void(0);" onclick="widget_load(this, $id, $sidebar)">$title</a>]
 $template.inlinewidget = [<a title="$lang.show/$lang.hide" href="javascript:void(0);" rel="inlinewidget">$title</a>]
+
+content.home= [
+$image = []
+$midle = [
+$post = []
+]]
