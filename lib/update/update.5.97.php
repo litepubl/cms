@@ -25,6 +25,12 @@ $home = thomepage::i();
     $home->data['smallimage'] = '';
 $home->save();
 
+$fs = tfiles::i();
+if (isset($fs->data['videoplayer'])) {
+    unset($fs->data['videoplayer']);
+$fs->save();
+}
+
 $js = tjsmerger::i();
 $js->lock();
 

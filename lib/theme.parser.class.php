@@ -939,6 +939,11 @@ class tthemeparser extends tevents {
         'tag' => '$video',
         'replace' => '$video'
         ),
+
+        'content.post.filelist.videos.fallback' => array(
+        'tag' => '$fallback',
+        'replace' => ''
+        ),
         
         'content.post.filelist.flash' => array(
         'tag' => '$flash',
@@ -1193,6 +1198,11 @@ class tthemeparser extends tevents {
         'content.excerpts.excerpt.filelist.videos.video' => array(
         'tag' => '$video',
         'replace' => '$video'
+        ),
+
+        'content.excerpts.excerpt.filelist.videos.fallback' => array(
+        'tag' => '$fallback',
+        'replace' => ''
         ),
         
         'content.excerpts.excerpt.filelist.flash' => array(

@@ -3,16 +3,21 @@ content.post.filelist = [
 $files = [<div class="files-block filelist-file"><ul>
 $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description">$title</a></li>]
 </ul></div>]
+
 $images= [<div class="files-block filelist-image">
 $image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="image" href="$link" title="$title" data-file="$json">$preview</a></span>]
 $preview = [<img class="photo" src="$preview.link" alt="$title" title="$description" />]
 </div>]
+
 $videos = [<div class="files-block filelist-video">
-$video = [<span class="image"><a title="$title" rel="video" class="videofile" id="postfile-$post.id-$id" href="$link" data-file="$json">$preview<span class="fa fa-file-video-o video-fallback">$title</span></a></span>]
+$video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a></span>]
+$fallback = [<span class="fa fa-file-video-o video-fallback" aria-hidden="true"></span>]
 </div>]
+
 $audios = [<div class="files-block filelist-audio">
   $audio = [<audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
 </div>]
+
 $flashs = [<div class="files-block filelist-flash">
 $flash = [<div class="flash-holder">
 <object type="application/x-shockwave-flash" data="$link" width="$width" height="$height" id="flashplayer-$id" name="flashplayer-$id">
