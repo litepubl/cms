@@ -30,7 +30,7 @@
 <div id="navbar-menu" class="navbar-collapse collapse" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">$template.menu</div>
     </div></div>
 
-<div id="site-description" data-image="$home.image" data-small="$home.smallimage" data-breakpoint="768">
+<div id="site-description">
 <h1><a href="$site.url/">$site.name</a></h1>
 <h3>$site.description</h3>
 </div>
