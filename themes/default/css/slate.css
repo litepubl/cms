@@ -6632,6 +6632,7 @@ A.dashed:focus {
 .anpost-image {
   float: left;
   display: block;
+  overflow: hidden;
   margin: 0;
   width: 120px;
   height: 120px;
