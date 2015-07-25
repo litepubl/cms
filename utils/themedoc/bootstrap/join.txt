@@ -6,7 +6,7 @@ ru/10title.txt
 tml/11menu.txt
 ru/11menu.txt
 tml/12head.txt
-ru/12h
+ru/12head.txt
 ru/13head.home.txt
 tml/14index.home.txt
 ru/14index.home.txt

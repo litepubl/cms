@@ -5,7 +5,9 @@ $template.head = [
     $next = [<link rel="next" title="$next.title" href="$next.link" />]
   ]
 
-$tags = [<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />]
+$tags = [
+<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
+]
 
 $home = [
 <script type=text/javascript">
