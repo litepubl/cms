@@ -6,9 +6,10 @@ ru/10title.txt
 tml/11menu.txt
 ru/11menu.txt
 tml/12head.txt
-ru/12head.txt
-tml/13index.home.txt
-ru/13index.home.txt
+ru/12h
+ru/13head.home.txt
+tml/14index.home.txt
+ru/14index.home.txt
 ru/20content.txt
 tml/21simple.txt
 ru/21simple.txt
@@ -18,10 +19,8 @@ tml/23content.menu.txt
 ru/23content.menu.txt
 tml/24content.author.txt
 ru/24content.author.txt
-tml/25content.home.image.txt
-ru/25content.home.image.txt
-tml/26content.home.midle.txt
-ru/26content.home.midle.txt
+tml/25content.home.midle.txt
+ru/25content.home.midle.txt
 tml/30post.txt
 ru/30post.txt
 tml/31post.date.txt
