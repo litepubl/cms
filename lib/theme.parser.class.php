@@ -799,8 +799,13 @@ class tthemeparser extends tevents {
         'tag' => '$tags',
         'replace' => ''
         ),
+
+        'head.home' => array(
+        'tag' => '$home',
+        'replace' => ''
+        ),
         
-        'content' => array(
+        'content' => rray(
         'tag' => '$template.content',
         'replace' => '$template.content'
         ),
@@ -827,11 +832,6 @@ class tthemeparser extends tevents {
         
         'content.home' => array(
         'tag' => '$home',
-        'replace' => ''
-        ),
-        
-        'content.home.image' => array(
-        'tag' => '$image',
         'replace' => ''
         ),
         

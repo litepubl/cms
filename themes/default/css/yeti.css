@@ -6578,10 +6578,7 @@ A.dashed:focus {
   margin-top: 20px;
 }
 .video-fallback {
-  display: none;
-}
-.video-fallback:first-child {
-  display: inline-block;
+  font-size: 2em;
 }
 /**
 * Lite Publisher
@@ -6725,31 +6722,6 @@ input[name^="coupon"] {
 .buyform label {
   font-weight: normal;
 }
-.edit-addr {
-  margin-left: 20px;
-}
-.edit-addr > span {
-  vertical-align: middle;
-  padding: 8px 12px;
-  font-size: 15px;
-  line-height: 1.4;
-  border-radius: 0;
-}
-.buypage-product-header {
-  overflow: hidden;
-  position: relative;
-  margin: 8px 12px;
-}
-.buypage-product-header .thumbnail {
-  float: left;
-  display: block;
-  overflow: hidden;
-  margin: 0;
-}
-.buypage-product-header .buypage-product-link {
-  overflow: hidden;
-  margin: 0 12px 0 0;
-}
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -6790,6 +6762,48 @@ input[name^="coupon"] {
 }
 .buybutton {
   margin: 8px 12px;
+}
+.edit-addr {
+  margin-left: 20px;
+}
+.edit-addr > span {
+  vertical-align: middle;
+  padding: 8px 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  border-radius: 0;
+}
+.buypage-product-header {
+  overflow: hidden;
+  position: relative;
+  margin: 8px 12px;
+}
+.buypage-product-header .thumbnail {
+  float: left;
+  display: block;
+  overflow: hidden;
+  margin: 0;
+}
+.buypage-product-header .buypage-product-link {
+  overflow: hidden;
+  margin: 0 12px 0 0;
+}
+.proppage-form,
+.proppage-form-submit,
+.searchpage-form,
+.searchpage-form-submit {
+  margin-top: 8px;
+  overflow: hidden;
+}
+proppage-form-submit,
+.searchpage-form {
+  text-align: center;
+}
+.proppage-prop {
+  display: inline-block;
+  max-height: 12em;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .jcarousel-container {
   display: block;

@@ -45,26 +45,20 @@ class thomepage extends tsinglemenu  {
   
   public function gethead() {
     $result = parent::gethead();
+
+    $theme = tview::getview($this)->theme;
+    $result .= $theme->templates['head.home'];
+
     if ($this->showposts) {
       $items =  $this->getidposts();
       $result .= tposts::i()->getanhead($items);
     }
-    return ttheme::i()->parse($result);
+
+ttheme::$vars['home'] = $this;
+    return $theme->parse($result);
   }
   
   public function gettitle() {
-  }
-  
-  public function getimages() {
-if (!$this->image && !$this->smallimage) {
-return '';
-}
-
-    ttheme::$vars['home'] = $this;
-    $theme = ttheme::i();
-    $result = $theme->parse($theme->templates['content.home.image']);
-    unset(ttheme::$vars['home']);
-return $result;
   }
   
   public function getbefore() {
@@ -84,7 +78,6 @@ $result = $theme->parse($result);
   public function getcont() {
     $result = '';
     if (litepublisher::$urlmap->page == 1) {
-$result .= $this->getimages();
       $result .= $this->getbefore();
       if ($this->showmidle && $this->midlecat) {
 $result .= $this->getmidle();

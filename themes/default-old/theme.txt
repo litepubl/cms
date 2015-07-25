@@ -121,6 +121,7 @@ $template.head = [
     $next = [<link rel="next" title="$next.title" href="$next.link" />]
   ]
 $tags = [<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />]
+$home = []
 ]
 
 В шаблоне $template.head находится шаблоны для полной записи $post. В данном случае шабон пустой и включает в себя 3 подшаблона:
@@ -209,7 +210,6 @@ $author.content - текст на странице автора
 В версии движка 5.73 был добавлен новый шаблон content.home для главной страницы. В проекте интернет магазинов этот шаблон используется для верстки карусели между текстом и анонсами.
 
 content.home= [
-$image = []
 $midle = [
 $post = []
 ]]

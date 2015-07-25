@@ -8,17 +8,18 @@ $excerpt = [
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
 <div class="anpost-body">
 $post.catlinks
-
 <div class="anpost-item">
 <span class="fa fa-calendar" aria-hidden="true"></span>
 <span class="anpost-item-title">$lang.posted</span>
 				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
 </div>
 
-<div class="anpost-item"><span class="post-comments">$post.commentslink</span></div>
+<div class="anpost-item">
+<span class="fa fa-comments" aria-hidden="true"></span>
+<span class="post-comments">$post.commentslink</span>
+</div>
 
-<div class="more-button anpost-item"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
-
+<div class="anpost-item more-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
 </div>
 </div>
 </div>

@@ -173,7 +173,8 @@ $template.ajaxwidget = [<a title="$lang.show/$lang.hide" href="javascript:void(0
 $template.inlinewidget = [<a title="$lang.show/$lang.hide" href="javascript:void(0);" rel="inlinewidget">$title</a>]
 
 content.home= [
-$image = []
 $midle = [
 $post = []
 ]]
+
+head.home = []
