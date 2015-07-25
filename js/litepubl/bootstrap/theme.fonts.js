@@ -6,7 +6,7 @@
 
 (function( $){
   'use strict';
-
+  
   $.load_theme_font  = function(name) {
     if (!name) name = 'default';
     

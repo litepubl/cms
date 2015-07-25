@@ -45,16 +45,16 @@ class thomepage extends tsinglemenu  {
   
   public function gethead() {
     $result = parent::gethead();
-
+    
     $theme = tview::getview($this)->theme;
     $result .= $theme->templates['head.home'];
-
+    
     if ($this->showposts) {
       $items =  $this->getidposts();
       $result .= tposts::i()->getanhead($items);
     }
-
-ttheme::$vars['home'] = $this;
+    
+    ttheme::$vars['home'] = $this;
     return $theme->parse($result);
   }
   
@@ -66,12 +66,12 @@ ttheme::$vars['home'] = $this;
       $theme = ttheme::i();
       $result = $theme->simple($result);
       if ($this->parsetags || litepublisher::$options->parsepost) {
-$result = $theme->parse($result);
-}
-
+        $result = $theme->parse($result);
+      }
+      
       return $result;
     }
-
+    
     return '';
   }
   
@@ -80,14 +80,14 @@ $result = $theme->parse($result);
     if (litepublisher::$urlmap->page == 1) {
       $result .= $this->getbefore();
       if ($this->showmidle && $this->midlecat) {
-$result .= $this->getmidle();
-}
+        $result .= $this->getmidle();
+      }
     }
     
     if ($this->showposts) {
-$result .= $this->getpostnavi();
-}
-
+      $result .= $this->getpostnavi();
+    }
+    
     return $result;
   }
   

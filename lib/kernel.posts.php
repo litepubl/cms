@@ -2420,7 +2420,6 @@ class tfiles extends titems {
     $this->table = 'files';
     $this->addevents('changed', 'edited', 'ongetfilelist', 'onlist');
     $this->itemsposts = tfileitems ::i();
-    $this->data['videoplayer'] = '/js/litepublisher/icons/videoplayer.jpg';
     $this->cachetml = array();
   }
   
@@ -2553,14 +2552,17 @@ class tfiles extends titems {
   
   public function gettml($basekey) {
     if (isset($this->cachetml[$basekey])) return $this->cachetml[$basekey];
+    
     $theme = ttheme::i();
     $result = array(
-    'all' => $theme->templates[$basekey],
+    'container' => $theme->templates[$basekey],
     );
     
     $key = $basekey . '.';
     foreach  ($theme->templates as $k => $v) {
-      if (strbegin($k, $key)) $result[substr($k, strlen($key))] = $v;
+      if (strbegin($k, $key)) {
+        $result[substr($k, strlen($key))] = $v;
+      }
     }
     
     $this->cachetml[$basekey] = $result;
@@ -2569,13 +2571,16 @@ class tfiles extends titems {
   
   public function getlist(array $list,  array $tml) {
     if (count($list) == 0) return '';
+    
     $this->onlist($list);
     $result = '';
     $this->preload($list);
+    
     //sort by media type
     $items = array();
     foreach ($list as $id) {
       if (!isset($this->items[$id])) continue;
+      
       $item = $this->items[$id];
       $type = $item['media'];
       if (isset($tml[$type])) {
@@ -2593,6 +2598,7 @@ class tfiles extends titems {
     $preview = new tarray2prop();
     ttheme::$vars['preview'] = $preview;
     $index = 0;
+    
     foreach ($items as $type => $subitems) {
       $args->subcount = count($subitems);
       $sublist = '';
@@ -2612,8 +2618,7 @@ class tfiles extends titems {
           $preview->array = $item;
           $preview->id = $id;
         } elseif($type == 'video') {
-          $preview->link = litepublisher::$site->url . $this->videoplayer;
-          $args->preview = $theme->parsearg($types['preview'], $args);
+          $args->preview = $theme->parsearg($tml['videos.fallback'], $args);
           $preview->array = array();
         }
         
@@ -2634,7 +2639,7 @@ class tfiles extends titems {
     
     unset(ttheme::$vars['preview'], $preview);
     $args->files =  $result;
-    return $theme->parsearg($tml['all'], $args);
+    return $theme->parsearg($tml['container'], $args);
   }
   
   public function postedited($idpost) {

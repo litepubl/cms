@@ -141,16 +141,65 @@ $template.head = [
     $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
     $next = [<link rel="next" title="$next.title" href="$next.link" />]
   ]
-$tags = [<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />]
+
+$tags = [
+<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
+]
+
+$home = [
+<script type=text/javascript">
+if (location.pathname == '/') {  
+  $(document).ready(function() {
+    $("#site-description").homeimage({
+      image: "$home.image",
+      small: "$home.smallimage",
+      breakpoint: 768,
+      addclass: "home-image"
+    });
+  });
+}
+</script>
+]
 ]
 
 /*
-В шаблоне $template.head находится шаблоны для полной записи $post. В данном случае шабон пустой и включает в себя 3 подшаблона:
-rss - ссылка на RSS комментариев к записи
-prev - ссылка на предыдущую запись
-next - ссылка на следующую запись
+В шаблоне $template.head находятся шаблоны:
+$post- шаблон head для полной записи 
+$tags - шаблон head для меток и рубрик
+$home - шаблон head главной страницы
 
-Если нет следующей или предыдущей записи, то секции head тоже не будет ссылок. Если комментарии закрыты или отсутствуют, то ссылки на RSS комментариев тоже не будет. Эти шаблоны используются в теге $post.head. Шаблон $tags предназначен для секции head рубрик и меток, в частности ссылка на RSS постов этой рубрики или метки. использовались теги $context.*, где $context - это текущий объект запроса и будет либо рубрики или метки. На страницах записи - это будет запись. На странице записи $context и $post одинаковы.
+Рассмотрим каждый из них. $post  включает в себя 3 подшаблона, которые используются в теге $post.head
+$rss - ссылка на RSS комментариев к записи. Если коммментирование разрешено или есть комментарии, иначе пустая строка
+$prev - ссылка на предыдущую запись. Если есть, иначе пустая строка
+$next - ссылка на следующую запись. Если есть, иначе пустая строка
+
+Шаблон $tags предназначен для секции head рубрик и меток, в частности ссылка на RSS постов этой рубрики или метки. использовались теги $context.*, где $context - это текущий объект запроса и будет либо рубрики или метки. На страницах записи - это будет запись. На странице записи $context и $post одинаковы.
+
+В шаблоне head.home вы можете разместить специфичные только для главной страницы  скрипты и стили. В этом варианте темы Шаблон является javascript загрузки изображения. Надо заметить, что шаблонизатору нет никакого дела, что в шаблоне - html или javascript, Выбор всегда находится в руках разработчика темы. 
+
+Рассмотрим детально, что делает скрипт в шаблоне, для этого процитируем код с комментариями:
+
+    $("#site-description").homeimage({
+    // "#site-description - id контейнера, смотрите шаблон index, он находится сразу после панели навигации
+
+      image: "$home.image",
+      // image - адрес большой картинки , использован тег $home.image
+
+      small: "$home.smallimage",
+      // small - адрес картинки для мобильных (тег $home.smallimage), не обязательный аргумент, если отсутствует или пустая строка, то будет использована одна большая картинка для всех разрешений
+
+      breakpoint: 768,
+      // breakpoint - не обязательный параметр, по умолчанию = 768, это размер окна, при котором происходит смена картинки - для десктопов одна, для мобильных устройств - другая меньшая картинка. Для темы поумолчанию на фреймворке bootstrap это 768 и это значение не надо менять. Если вы делаете свою тему, то возможно, что ширина экрана будет отличаться. для таких редких случаев как раз и оставлена возможность указать размер для скрипта.
+
+      addclass: "home-image"
+      //addclass - не обязательный параметр, по умолчанию = home-image. Это имя css класса, который будет добавлен к #site-description Определение css класса находится в файле /js/litepubl/effects/css/homeimage.min.css
+    });
+
+Метод homeimage находится в файле /js/litepubl/effects/homeimage.min.js - поумолчанию он включен сборщиком js, поэтому, если вы хотите отключить загрузку картинок на главной, то вам следует удалить из сборщика этот файл и удалить из шаблона head.home скрипт инициализации . Для работы скрипта в сборщике css подключен файл /js/litepubl/effects/css/homeimage.min.css - в случае отключения про него тоже не забудьте (равно как и при подключении этой фичи к своей теме). 
+
+Шаблон и скрипт коректно отработают (то есть на главной будет масштабирующаяся картинка), если в настройках главной (админка настройки/главная)   указать адрес (url) картинок.  Особенности скрипта:
+- выбор размера картинки в зависимости от разрешения экрана, для мобильных устройств это значительно ускорит открытие сайта
+- один шаблон для всех страниц, не нужно отдельно верстать страничку для главной, картинка будет только на главной
 
 В версии litepublisher 5.73 были добавлены новые шаблоны $template.index.home, $template.index.post и $template.index.tag - шаблоны главной страницы, записи и рубрики/метки. Как правило к этим страницам предъявляются особые требования. В предыдущих версиях движка приходилось создавать отдельные темы для главной, записи и рубрик, что вызывало определенные неудобства во время разработки новой темы. По умолчанию особого шаблона у главной, записи и рубрик/меток нет, объявим эти шаблоны:
 */
@@ -243,45 +292,6 @@ $author.description описание страницы автора, исполь
 $author.content - текст на странице автора
 
 Для главной страницы есть пара шаблонов: content.home.image и content.home.midle
-*/
-
-content.home.image = [
-<script type=text/javascript">
-if (location.pathname == '/') {  
-  $(document).ready(function() {
-    $("#site-description").homeimage({
-      image: "$home.image",
-      small: "$home.smallimage",
-      breakpoint: 768,
-      addclass: "home-image"
-    });
-  });
-}
-</script>
-]
-
-/*
-content.home.image - шаблон картинки на главной. Шаблон будет использован, если в настройках главной (админка настройки/главная)   указать адрес (url) картинки. В этом варианте темы Шаблон представляет собой javascript. Надо заметить, что шаблонизатору нет никакого дела, что в шаблоне - html или javascript, Выбор всегда находится в руках разработчика темы. Мы выбрали javascript по следующим причинам:
-- отложенная загрузка самих картинок, несколько ускорит открытие сайта
-- выбор размера картинки в зависимости от разрешения экрана, для мобильных устройств это значительно ускорит открытие сайта
-- один шаблон для всех страниц, не нужно отдельно верстать страничку для главной, картинка будет только на главной
-- шаблон находится внутри контентной части сайта, а требуется внести изменения в шапку сайта
-
-Рассмотрим детально, что делает скрипт в шаблоне, для этого процитируем код:
-
-    $("#site-description").homeimage({
-      image: "$home.image",
-      small: "$home.smallimage",
-      breakpoint: 768,
-      addclass: "home-image"
-    });
-
-Метод homeimage находится в файле /js/litepubl/effects/homeimage.min.js - поумолчанию он включено сборщиком js, поэтому, если вы хотите отключить загрузку картинок на главной, то вам следует удалить из сборщика этот файл и изменить шаблон картинки. Для работы скрипта в сборщике css подключен файл /js/litepubl/effects/css/homeimage.min.css - в случае отключения про него тоже не забудьте (равно как и при подключении этой фичи к своей теме). Рассмотрим агрументы для этого метода:
-
-      image - адрес большой картинки , использован тег $home.image,
-      small - адрес картинки для мобильных (тег $home.smallimage), не обязательный аргумент, если отсутствует или пустая строка, то будет использована одна большая картинка для всех разрешений
-      breakpoint - не обязательный параметр, по умолчанию = 768, это размер окна, при котором происходит смена картинки - для десктопов одна, для мобильных устройств - другая меньшая картинка. Для темы поумолчанию на фреймворке bootstrap это 768 и это значение не надо менять. Если вы делаете свою тему, то возможно, что ширина экрана будет отличаться. для таких редких случаев как раз и оставлена возможность указать размер для скрипта.
-      addclass - не обязательный параметр, по умолчанию = home-image. Это имя css класса, который будет добавлен к #site-description Определение css класса находится в файле /js/litepubl/effects/css/homeimage.min.css
 */
 
 content.home.midle = [
@@ -473,16 +483,21 @@ content.post.filelist = [
 $files = [<div class="files-block filelist-file"><ul>
 $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description">$title</a></li>]
 </ul></div>]
+
 $images= [<div class="files-block filelist-image">
 $image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="image" href="$link" title="$title" data-file="$json">$preview</a></span>]
 $preview = [<img class="photo" src="$preview.link" alt="$title" title="$description" />]
 </div>]
+
 $videos = [<div class="files-block filelist-video">
-$video = [<span class="image"><a title="$title" rel="video" class="videofile" id="postfile-$post.id-$id" href="$link" data-file="$json">$preview<span class="fa fa-file-video-o video-fallback">$title</span></a></span>]
+$video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a></span>]
+$fallback = [<span class="fa fa-file-video-o video-fallback" aria-hidden="true"></span>]
 </div>]
+
 $audios = [<div class="files-block filelist-audio">
   $audio = [<audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
 </div>]
+
 $flashs = [<div class="files-block filelist-flash">
 $flash = [<div class="flash-holder">
 <object type="application/x-shockwave-flash" data="$link" width="$width" height="$height" id="flashplayer-$id" name="flashplayer-$id">
@@ -505,7 +520,8 @@ $file - отсутствует тип файла, скорее всего это
 $image - картинка, по умолчанию к картинкам создаются миниатюры. Этот шаблон для картинок сразу организует их в галерею
 $preview - шаблон для миниатюр, они используются в галерее
 $audio - шаблон для аудиофайлов, этот шаблон сразу подключает плеер
-$video - шаблон для видеороликов. Видеоплеер будет запущен в открывшейся галерее после клика по миниатюре видеоролика. Если у видео отсутствует миниатюра, то будет использована общая миниатюра для видео
+$video - шаблон для видеороликов. Видеоплеер будет запущен в открывшейся галерее после клика по миниатюре видеоролика. Если у видео отсутствует миниатюра, то будет использован шаблон $fallback
+$fallback - шаблон для отсутствующей миниатюры видио. В теме по умолчанию - это иконка из шрифта font awesome
 $flash - шаблон для флеш. Флеш ролик будет встроен прямо в страницу
 
 LitePublisher генерирует список файлов на основе этих шаблонов, файлы сортируются по типам. Внутри шаблона длялюбого типа файла доступны свойства файла, а именно:
@@ -846,17 +862,18 @@ $excerpt = [
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
 <div class="anpost-body">
 $post.catlinks
-
 <div class="anpost-item">
 <span class="fa fa-calendar" aria-hidden="true"></span>
 <span class="anpost-item-title">$lang.posted</span>
 				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
 </div>
 
-<div class="anpost-item"><span class="post-comments">$post.commentslink</span></div>
+<div class="anpost-item">
+<span class="fa fa-comments" aria-hidden="true"></span>
+<span class="post-comments">$post.commentslink</span>
+</div>
 
-<div class="more-button anpost-item"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
-
+<div class="anpost-item more-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
 </div>
 </div>
 </div>

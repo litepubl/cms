@@ -60,8 +60,8 @@
     
     holder.height(h);
     data.img.css({
-width: imgwidth,
-height: imgheight ,
+      width: imgwidth,
+      height: imgheight ,
       left: (w - imgwidth) /2,
       top: (h - imgheight) /2
     });
@@ -86,17 +86,17 @@ height: imgheight ,
   
   $.fn.homeimage = function(options) {
     if (!this.length || this.data("homeimage")) return this;
-
-options = $.extend({
+    
+    options = $.extend({
       image: "",
       small: "",
       breakpoint: 768,
       addclass: "home-image"
-}, options);
-
-  //no images in data
+    }, options);
+    
+    //no images in data
     if (!options.image && !options.small) return this;
-
+    
     var self = this;
     var data = {
       cur: false,
@@ -120,10 +120,10 @@ options = $.extend({
     };
     
     this.data("homeimage", data);
-this.addClass(options.addclass);
-//set size before loading image
-this.height($(window).height() - data.top);
-
+    this.addClass(options.addclass);
+    //set size before loading image
+    this.height($(window).height() - data.top);
+    
     var cur = $(window).width() >= data.breakpoint ? data.large : data.small;
     if (!cur.src) {
       cur = cur == data.small ? data.large : data.small;
@@ -147,5 +147,5 @@ this.height($(window).height() - data.top);
     
     return this;
   };
-
+  
 })( jQuery, window);

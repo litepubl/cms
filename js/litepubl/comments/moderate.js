@@ -27,7 +27,7 @@
     setenabled: function(value) {
       if (value== this.enabled) return;
       this.enabled = value;
-
+      
       if(value) {
         $(this.options.buttons).show();
       } else {

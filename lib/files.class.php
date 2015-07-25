@@ -152,7 +152,7 @@ class tfiles extends titems {
   
   public function gettml($basekey) {
     if (isset($this->cachetml[$basekey])) return $this->cachetml[$basekey];
-
+    
     $theme = ttheme::i();
     $result = array(
     'container' => $theme->templates[$basekey],
@@ -161,8 +161,8 @@ class tfiles extends titems {
     $key = $basekey . '.';
     foreach  ($theme->templates as $k => $v) {
       if (strbegin($k, $key)) {
-$result[substr($k, strlen($key))] = $v;
-}
+        $result[substr($k, strlen($key))] = $v;
+      }
     }
     
     $this->cachetml[$basekey] = $result;
@@ -171,16 +171,16 @@ $result[substr($k, strlen($key))] = $v;
   
   public function getlist(array $list,  array $tml) {
     if (count($list) == 0) return '';
-
+    
     $this->onlist($list);
     $result = '';
     $this->preload($list);
-
+    
     //sort by media type
     $items = array();
     foreach ($list as $id) {
       if (!isset($this->items[$id])) continue;
-
+      
       $item = $this->items[$id];
       $type = $item['media'];
       if (isset($tml[$type])) {
@@ -198,7 +198,7 @@ $result[substr($k, strlen($key))] = $v;
     $preview = new tarray2prop();
     ttheme::$vars['preview'] = $preview;
     $index = 0;
-
+    
     foreach ($items as $type => $subitems) {
       $args->subcount = count($subitems);
       $sublist = '';

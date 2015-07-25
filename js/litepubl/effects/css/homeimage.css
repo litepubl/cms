@@ -20,16 +20,16 @@
 }
 
 .home-image img:after {
-content: "";
+  content: "";
   position:absolute;
   display: block;
   overflow: hidden;
- left: 0;
+  left: 0;
   top: 0;
-right: 0;
-bottom: 0;
+  right: 0;
+  bottom: 0;
   z-index: 2;
-background-color: #000000;
+  background-color: #000000;
   opacity: 0.3;
   filter: alpha(opacity=30);
 }
@@ -39,5 +39,5 @@ background-color: #000000;
 .home-image h3 {
   position:relative;
   z-index: 5;
-color: #ffffff;
+  color: #ffffff;
 }

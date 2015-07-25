@@ -799,7 +799,7 @@ class tthemeparser extends tevents {
         'tag' => '$tags',
         'replace' => ''
         ),
-
+        
         'head.home' => array(
         'tag' => '$home',
         'replace' => ''
@@ -939,7 +939,7 @@ class tthemeparser extends tevents {
         'tag' => '$video',
         'replace' => '$video'
         ),
-
+        
         'content.post.filelist.videos.fallback' => array(
         'tag' => '$fallback',
         'replace' => ''
@@ -1199,7 +1199,7 @@ class tthemeparser extends tevents {
         'tag' => '$video',
         'replace' => '$video'
         ),
-
+        
         'content.excerpts.excerpt.filelist.videos.fallback' => array(
         'tag' => '$fallback',
         'replace' => ''
