@@ -622,14 +622,16 @@ class tthemeparser extends tevents {
         $templates[$comment] = str_replace('$moderate',
         '<div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>',
         $templates[$comment]);
-        
+
+              $css = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';        
         if ($this->stylebefore) {
           foreach (array('index', 'index.home', 'index.post', 'index.tag') as $k) {
-            if (strpos($templates[$k], '$template.cssmerger_default')) continue;
+            if (!strpos($templates[$k], '$template.cssmerger_default')) continue;
+
             //insert css merger before theme css
             if ($i = strpos($templates[$k], '.css')) {
               $i = strrpos(substr($templates[$k], 0, $i), '<');
-              $css = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';
+
               $templates[$k] = substr_replace($templates[$k], $css, $i - 1, 0);
             }
           }
