@@ -10,6 +10,21 @@
   overflow: hidden;
 }
 
+.home-image:before {
+content: "";
+  position:absolute;
+  display: block;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+right: 0;
+bottom: 0;
+  z-index: 2;
+  background-color: black;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+
 .home-image img {
   position:absolute;
   display: block;
@@ -19,25 +34,10 @@
   z-index: 0;
 }
 
-.home-image img:after {
-  content: "";
-  position:absolute;
-  display: block;
-  overflow: hidden;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  background-color: #000000;
-  opacity: 0.3;
-  filter: alpha(opacity=30);
-}
-
 .home-image h1,
 .home-image h2,
 .home-image h3 {
   position:relative;
   z-index: 5;
-  color: #ffffff;
+  color: white !important;
 }

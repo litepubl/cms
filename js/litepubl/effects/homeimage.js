@@ -49,12 +49,12 @@
     }
     
     var w = holder.width();
-    var h = Math.min(winh - data.top, w, cur.h);
+    var h = Math.floor(Math.min(winh - data.top, w, cur.h));
     var imgheight = h;
-    var imgwidth = (cur.w / cur.h) * h;
+    var imgwidth = Math.floor((cur.w / cur.h) * h);
     if (imgwidth < w) {
       imgwidth = w;
-      imgheight = w / (cur.w / cur.h);
+      imgheight = Math.floor(w / (cur.w / cur.h));
       if (h > imgheight) h = imgheight;
     }
     
@@ -105,22 +105,22 @@
       top: this.offset().top,
       winw: 0,
       winh: 0,
+addclass: options.addclass,
       img: false,
       large: {
         w: 0,
         h: 0,
-        src: options.image,
+        src: options.image
       },
       
       small: {
         w: 0,
         h: 0,
-        src: options.small,
+        src: options.small
       }
     };
     
     this.data("homeimage", data);
-    this.addClass(options.addclass);
     //set size before loading image
     this.height($(window).height() - data.top);
     
@@ -131,6 +131,7 @@
     
     data.cur =cur;
     load_image(cur, function() {
+    self.addClass(data.addclass);
       data.img = $('<img src="' + data.cur.src + '" />').appendTo(self);
       $(window).on("resize.homeimage", function() {
         home_resize(self);

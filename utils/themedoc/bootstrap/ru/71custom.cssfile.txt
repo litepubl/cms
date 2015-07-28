@@ -2,9 +2,11 @@
     <link rel="stylesheet" href="$template.url/css/$custom.cssfile.min.css?v=$template.cssmerger" type="text/css" media="all" />
     
     После подстановки $custom.cssfile значением default получим:
+
         <link rel="stylesheet" href="$template.url/css/default.min.css?v=$template.cssmerger" type="text/css" media="all" />
         
         Окончательный результат будет примерно таким:
-            <link rel="stylesheet" href="http://litepublisher.ru/themes/default/css/default.min.css?v=57" type="text/css" media="all" />
+
+            <link rel="stylesheet" href="http://litepublisher.ru/themes/default/css/default.min.css?v=1" type="text/css" media="all" />
             
             Если мы будем менять значение тега $custom.cssfile то получим подключение других css файлов темы. Собственно, одно единственное значение тега $custom.cssfile совсем неинтересно - подставить default и не париться. Нужна админка для управления этим тегом и заморачиваться с программированием такой админки нет желания и времени. Litepublisher предоставляет такую возможность - админка для $custom тегов. Для этого к тегу достаточно добавить .admin следующим образом: $custom.cssfile.admin = [...] и не отходя от кассы, добавим в тему:

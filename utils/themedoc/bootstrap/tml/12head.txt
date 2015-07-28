@@ -10,8 +10,8 @@ $tags = [
 ]
 
 $home = [
-<script type=text/javascript">
-if (location.pathname == '/') {  
+<script type="text/javascript">
+if (location.pathname == "/") {
   $(document).ready(function() {
     $("#site-description").homeimage({
       image: "$home.image",

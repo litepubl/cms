@@ -13,7 +13,6 @@
 }
 
 .file-items {
-  width: 100%;
   display: block;
   overflow: hidden;
 }
@@ -54,14 +53,25 @@
   white-space: nowrap;
 }
 
-.file-added img {
-  background-color:black;
-  opacity: 0.4;
-  filter: alpha(opacity=40);
+.file-added .file-content {
+  position:relative;
 }
 
-.file-added ul {
-  background-color:gray;
+.file-added 
+.file-content:after {
+  border: 1px solid transparent;
+  border-radius: 4px;
+content: "";
+  position:absolute;
+  display: block;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+right: 0;
+bottom: 0;
+  background-color:black;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
 }
 
 #posteditor-files-tabs.file-items {

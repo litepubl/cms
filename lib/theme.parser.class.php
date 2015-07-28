@@ -805,7 +805,7 @@ class tthemeparser extends tevents {
         'replace' => ''
         ),
         
-        'content' => rray(
+        'content' => array(
         'tag' => '$template.content',
         'replace' => '$template.content'
         ),

@@ -6371,6 +6371,11 @@ h6,
 ins {
   text-decoration: none;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .cursor-loading {
   cursor: progress;
 }
@@ -6709,6 +6714,11 @@ input[name^="coupon"] {
 .buybutton {
   margin: 10px 15px;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .edit-addr {
   margin-left: 20px;
 }
@@ -6734,6 +6744,11 @@ input[name^="coupon"] {
   overflow: hidden;
   margin: 0 15px 0 0;
 }
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .proppage-form,
 .proppage-form-submit,
 .searchpage-form,
@@ -6751,7 +6766,12 @@ proppage-form-submit,
   overflow-x: hidden;
   overflow-y: auto;
 }
-.jcarousel-container {
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.jcarousel-wrapper {
   display: block;
   overflow: hidden;
 }

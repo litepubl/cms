@@ -82,29 +82,36 @@ class turlmap extends titems {
     } catch (Exception $e) {
       litepublisher::$options->handexception($e);
     }
-    
+
+// production mode: no debug and enabled buffer    
     if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
       litepublisher::$options->showerrors();
       litepublisher::$options->errorlog = '';
+
       $afterclose = $this->isredir || count($this->close_events);
-      if ($afterclose) $this->close_connection();
+      if ($afterclose) {
+$this->close_connection();
+}
+
       while (@ob_end_flush ());
       flush();
-      //prevent output while client connected
-      if ($afterclose) ob_start();
+
+if ($afterclose) {
+if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+ob_start();
+}
     }
+
     $this->afterrequest($this->url);
     $this->close();
   }
   
   public function close_connection() {
     ignore_user_abort(true);
-    //$len = $this->isredir ? 0 : ob_get_length();
     $len = ob_get_length();
     header('Connection: close');
     header('Content-Length: ' . $len);
     header('Content-Encoding: none');
-    //header('Accept-Ranges: bytes');
   }
   
   protected function dorequest($url) {

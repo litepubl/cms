@@ -31,15 +31,11 @@
     </div></div>
 
 <div id="site-description">
-<h1><a href="$site.url/">$site.name</a></h1>
+<h1>$site.name</h1>
 <h3>$site.description</h3>
 </div>
 
-<!-- top sidebar
-<div class="container-fluid section"><div class="row sidebar-top" itemscope itemtype="http://schema.org/WPSideBar">
-template.sidebar2
-</div></div>
--->
+$custom.topsidebar 
 
           <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
                     <div class="content" itemscope itemprop="mainContentOfPage">$template.content</div>
