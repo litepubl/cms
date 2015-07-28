@@ -86,4 +86,3 @@ tml/73custom.mainsidebar.txt
 ru/73custom.mainsidebar.txt
 tml/74custom.topsidebar.txt
 ru/74custom.topsidebar.txt
-ru/80labels.txt

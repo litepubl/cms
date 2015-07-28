@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>$template.title</title>
-    <link rel="stylesheet" href="$template.url/css/$custom.cssfile.min.css?v=$template.cssmerger" type="text/css" media="all" />
+    <link rel="stylesheet" href="$site.files/themes/default/css/$custom.cssfile.min.css?v=$template.cssmerger" type="text/css" media="all" />
     <!--[if lt IE 9]>
       <script src="$site.files/js/fix/ie9.min.js?v=$template.jsmerger"></script>
     <![endif]-->
