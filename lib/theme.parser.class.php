@@ -325,7 +325,6 @@ class tthemeparser extends tevents {
     }
     
     public function settag($parent, $s) {
-      //echo "$parent<br>";
       if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) ||
       preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
         $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
@@ -340,7 +339,10 @@ class tthemeparser extends tevents {
         } else {
           $this->sidebar_index = 0;
         }
-        if (!isset($this->theme->templates['sidebars'][$this->sidebar_index])) $this->theme->templates['sidebars'][$this->sidebar_index] = array();
+
+        if (!isset($this->theme->templates['sidebars'][$this->sidebar_index])) {
+$this->theme->templates['sidebars'][$this->sidebar_index] = array();
+}
       }
       
       if ($this->removephp) {
@@ -555,11 +557,9 @@ class tthemeparser extends tevents {
           }
         }
         
-        $sidebars = &$this->theme->templates['sidebars'];
-        $count = substr_count($this->theme->templates['index'], '$template.sidebar');
-        if (count($sidebars) > $count) array_splice($sidebars, $count , count($sidebars) - $count);
-        for ($i = 0; $i < $count; $i++) {
-          $sidebar = &$this->theme->templates['sidebars'][$i];
+        $sidebars = &$templates['sidebars'];
+        for ($i = 0; $i < count($sidebars); $i++) {
+          $sidebar = &$sidebars[$i];
           foreach (ttheme::getwidgetnames() as $widgetname) {
             foreach (array('', '.items', '.item', '.subcount', '.subitems') as $name) {
               if (empty($sidebar[$widgetname . $name])) $sidebar[$widgetname . $name] = $sidebar['widget' . $name];

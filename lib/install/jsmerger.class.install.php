@@ -162,6 +162,7 @@ function tjsmerger_bootstrap_files() {
   '/js/litepubl/bootstrap/dialog.bootstrap.min.js',
   '/js/litepubl/bootstrap/dialog.simpler.min.js',
   '/js/litepubl/bootstrap/player.bootstrap.min.js',
+'/js/litepubl/bootstrap/popover.hoverclick.min.js',
   '/js/litepubl/bootstrap/popover.image.min.js',
   '/js/litepubl/bootstrap/popover.post.min.js',
   '/js/litepubl/bootstrap/youtube.bootstrap.min.js',
