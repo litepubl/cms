@@ -16,7 +16,7 @@
     padheight: 0,
     removeOnclose: true,
     
-    tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-title-%%id%%">' +
+    tml: '<div class="modal fade" id="dialog-%%id%%" tabindex="-1" role="dialog" aria-labelledby="modal-title-%%id%%">' +
     '<div class="modal-dialog" role="document">' +
     '<div class="modal-content">' +
     '<div class="modal-header">' +

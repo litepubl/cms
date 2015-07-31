@@ -22,7 +22,7 @@ class tmediaparser extends tevents {
     $this->data['previewheight'] = 120;
     $this->data['maxwidth'] = 1200;
     $this->data['maxheight'] = 900;
-    $this->data['quality_snapshot'] = 94;
+    $this->data['quality_snapshot'] = 85;
     $this->data['quality_original'] = 92;
     $this->data['alwaysresize'] = false;
     
