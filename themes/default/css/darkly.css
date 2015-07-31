@@ -6688,6 +6688,7 @@ input[name^="coupon"] {
 **/
 .buyform > div {
   text-align: center;
+  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -6709,6 +6710,7 @@ input[name^="coupon"] {
 }
 .oldprice {
   text-decoration: line-through;
+  font-weight: 200;
   font-size: 120%;
   padding: 0 15px;
 }
@@ -6731,9 +6733,6 @@ input[name^="coupon"] {
 .days-1,
 .days-2 {
   display: inline;
-}
-.buybutton {
-  margin: 10px 15px;
 }
 /**
 * Lite Publisher
