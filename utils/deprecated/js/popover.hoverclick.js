@@ -9,7 +9,7 @@
   'use strict';
   
   $.fn.pophoverclick = function() {
-    return this.off('mouseleave.popover')
+    return this.off('mouseleave.bs.popover')
     .on('mouseleave.hoverclick', function(event) {
       var self = $(this);
       if (!self.data("hoverclicked")) self.data("bs.popover").leave(event);

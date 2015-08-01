@@ -157,14 +157,13 @@ function tjsmerger_bootstrap_files() {
   
   // litepubl/bootstrap
   '/js/litepubl/bootstrap/tooltip.init.min.js',
-  '/js/litepubl/bootstrap/popover.single.min.js',
-  '/js/litepubl/bootstrap/widgets.bootstrap.min.js',
   '/js/litepubl/bootstrap/dialog.bootstrap.min.js',
   '/js/litepubl/bootstrap/dialog.simpler.min.js',
   '/js/litepubl/bootstrap/player.bootstrap.min.js',
-'/js/litepubl/bootstrap/popover.hoverclick.min.js',
+  '/js/litepubl/bootstrap/popover.single.min.js',
   '/js/litepubl/bootstrap/popover.image.min.js',
   '/js/litepubl/bootstrap/popover.post.min.js',
+  '/js/litepubl/bootstrap/widgets.bootstrap.min.js',
   '/js/litepubl/bootstrap/youtube.bootstrap.min.js',
   '/js/litepubl/bootstrap/theme.init.min.js',
   '/js/litepubl/bootstrap/theme.fonts.min.js',

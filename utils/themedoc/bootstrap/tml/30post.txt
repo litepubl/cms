@@ -4,10 +4,8 @@ content.post = [
 <div class="clear-after">
 $post.filelist  
 <div class="post-header">
-<div class="meta">
-<span class="fa fa-calendar" aria-hidden="true"></span> <time class="post-date" itemprop="datePublished" datetime="$post.isodate">$post.date</time>
+<time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar" aria-hidden="true"></span> $post.date</time>
 $post.taglinks 
-</div>
 $post.catlinks 
 </div>
 </div>

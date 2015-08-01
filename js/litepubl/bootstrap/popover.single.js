@@ -10,7 +10,7 @@
   var popovers = [];
   $.fn.singletip = function() {
     return this.off(".singletip")
-    .on('show.singletip', function() {
+    .on('show.bs.popover.singletip', function() {
       for (var i = popovers.length - 1; i>= 0; i--) {
         if (this === popovers[i]) {
           popovers.splice(i, 1);
@@ -21,7 +21,7 @@
       
       popovers.push(this);
     })
-    .on("hide.singletip", function() {
+    .on("hide.bs.popover..singletip", function() {
       for (var i = popovers.length - 1; i>= 0; i--) {
         if (this === popovers[i]) {
           popovers.splice(i, 1);
@@ -36,7 +36,8 @@
     if (typeof  options === "object") this.singletip();
     return this.oldpopover(options);
   };
-  
+
+$(document).ready(function() {  
   $("body").on("click.singletooltip", function(e) {
     if (!popovers.length) return;
     
@@ -52,5 +53,6 @@
     }
     
   });
+});
   
 })( jQuery);

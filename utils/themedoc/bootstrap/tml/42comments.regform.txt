@@ -1,6 +1,6 @@
 content.post.templatecomments.regform = [
 <div id="before-commentform">$mesg</div>
-<h4>$lang.leavereview</h4>
+<p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="comment">$lang.comment</label>
 <textarea name="content" id="comment" class="form-control"></textarea></div>

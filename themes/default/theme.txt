@@ -319,10 +319,8 @@ content.post = [
 <div class="clear-after">
 $post.filelist  
 <div class="post-header">
-<div class="meta">
-<span class="fa fa-calendar" aria-hidden="true"></span> <time class="post-date" itemprop="datePublished" datetime="$post.isodate">$post.date</time>
+<time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar" aria-hidden="true"></span> $post.date</time>
 $post.taglinks 
-</div>
 $post.catlinks 
 </div>
 </div>
@@ -495,7 +493,7 @@ $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="
 
 $images= [<div class="files-block filelist-image">
 $image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="image" href="$link" title="$title" data-file="$json">$preview</a></span>]
-$preview = [<img class="photo" src="$preview.link" alt="$title" title="$description" />]
+$preview = [<img src="$preview.link" alt="$title" title="$description" />]
 </div>]
 
 $videos = [<div class="files-block filelist-video">
@@ -590,7 +588,9 @@ $pingbacks - список пингбеков
 Будем разбирать каждый из этих шаблонов по нарастанию сложности. Самый простой шаблон - сообщение закрыто:
 */
 
-content.post.templatecomments.closed = [<p class="text-center red">$lang.closed</p>]
+content.post.templatecomments.closed = [
+<p class="header-comments red">$lang.closed</p>
+]
 
 /*
 Внутри шаблона встречается тег $lang.closed - строка "Комментирование закрыто". Далее посмотрим на шаблон формы комментирования - в зависимости от настроек записи будет выдаваться сообщение о закрытом комментировании либо форма отправки. Объявим форму комментирования для зарегистрированных посетителей и гостей:
@@ -598,7 +598,7 @@ content.post.templatecomments.closed = [<p class="text-center red">$lang.closed<
 
 content.post.templatecomments.regform = [
 <div id="before-commentform">$mesg</div>
-<h4>$lang.leavereview</h4>
+<p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="comment">$lang.comment</label>
 <textarea name="content" id="comment" class="form-control"></textarea></div>
@@ -627,7 +627,7 @@ button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder
 
 content.post.templatecomments.form = [
 <div id="before-commentform">$mesg</div>
-<h4>$lang.leavereview</h4>
+<p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="text-name">$lang.name</label>
 <input type="text" class="form-control" name="name" id="text-name" value="$name" /></div>
@@ -668,7 +668,7 @@ $antispam - строка созданная движком для защиты �
 */
 
 content.post.templatecomments.confirmform = [
-<h3>$lang.checkspam</h3>
+<p class="header-comments">$lang.checkspam</p>
 <form name="preform" method="post" action="" role="form">
 <div class="text-center"><div class="center-block"><button type="submit" class="btn btn-default" name="submit1">$lang.robot</button></div></div>
 </form>
@@ -690,7 +690,7 @@ $comment - шаблон комментария
 */
 
 content.post.templatecomments.comments.count = [
-  <h4><meta itemprop="interactionCount" content="UserComments:$count"/>$count $lang.topost: $post.title</h4>
+  <p class="header-comments"><meta itemprop="interactionCount" content="UserComments:$count"/>$count $lang.topost: $post.title</p>
   ]
 
 /*
@@ -724,7 +724,7 @@ $comment - шаблон комментария
 */
 
 content.post.templatecomments.holdcomments = [
-<h4 id="holdcomments">$lang.hold</h4>
+<p class="header-comments"  id="holdcomments">$lang.hold</p>
 <div id="holdcommentlist" data-start="1">
   $comment
 </div>
@@ -836,7 +836,7 @@ quoteclass : "quotecomment",
 */
 
 content.post.templatecomments.pingbacks = [
-<h4>$lang.pingbacks</h4>
+<p class="header-comments">$lang.pingbacks</p>
 <ol class="commentlist" start="1">
   $pingback = [<li id="pingback-$pingback.id"><a href="$pingback.url">$pingback.title</a></li>]
 </ol>]

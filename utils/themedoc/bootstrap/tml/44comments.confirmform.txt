@@ -1,5 +1,5 @@
 content.post.templatecomments.confirmform = [
-<h3>$lang.checkspam</h3>
+<p class="header-comments">$lang.checkspam</p>
 <form name="preform" method="post" action="" role="form">
 <div class="text-center"><div class="center-block"><button type="submit" class="btn btn-default" name="submit1">$lang.robot</button></div></div>
 </form>

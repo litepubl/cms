@@ -6,7 +6,7 @@ $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="
 
 $images= [<div class="files-block filelist-image">
 $image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="image" href="$link" title="$title" data-file="$json">$preview</a></span>]
-$preview = [<img class="photo" src="$preview.link" alt="$title" title="$description" />]
+$preview = [<img src="$preview.link" alt="$title" title="$description" />]
 </div>]
 
 $videos = [<div class="files-block filelist-video">

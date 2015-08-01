@@ -5,13 +5,22 @@
 **/
 
 .post-header {
+  position:relative;
   display:block;
   overflow:hidden;
   
-  .post-date {
+  .post-date,
+.post-tags {
     float: left;
+}
+
+  .post-date,
+.post-tags,
+.post-categories {
+  display: block;
+  overflow: hidden;
     margin: @padding-base-vertical @padding-base-horizontal;
-  }
+}
   
   .cats-title {
     display: none;
