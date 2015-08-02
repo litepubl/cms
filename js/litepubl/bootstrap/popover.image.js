@@ -77,11 +77,12 @@
         var w = this.width;
         var h = this.height;
       } else {
-        var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        var winheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        var winwidth = $(window).width();
+        var winheight = $(window).height();
         if (ratio >= 1) {
           //horizontal image, midle height and maximum width
-          var h = Math.floor(winheight / 2) - 40;
+          //var h = Math.floor(winheight / 2) - 40;
+          var h = Math.floor(winheight / 3 * 2) - 40;
           var w = Math.min(winwidth - 60, Math.floor(h * ratio));
         } else {
           //vertical image, midle width and maximum height
@@ -117,11 +118,16 @@
         trigger: "hover focus" + (linkdata.click_enabled ? " click" : "")
       });
       
-      // fix if popover trigger has hover and click
-      if (linkdata.click_enabled) link.pophoverclick();
+      if (linkdata.click_enabled) {
+link.on("click.popimage", function() {
+return false;
+});
+}
       
       //show popover after load image if not lose focus or hover
-      if (linkdata.wait_event) link.trigger(linkdata.wait_event);
+      if (linkdata.wait_event) {
+link.trigger(linkdata.wait_event);
+}
       this.oninit(linkdata.url);
     }
     
