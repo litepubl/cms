@@ -491,9 +491,9 @@ $files = [<div class="files-block filelist-file"><ul>
 $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description">$title</a></li>]
 </ul></div>]
 
-$images= [<div class="files-block filelist-image">
-$image = [<span class="image"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="image" href="$link" title="$title" data-file="$json">$preview</a></span>]
-$preview = [<img src="$preview.link" alt="$title" title="$description" />]
+$images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">
+$image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id">$preview</a></span>]
+$preview = [<img src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
 </div>]
 
 $videos = [<div class="files-block filelist-video">

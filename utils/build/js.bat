@@ -135,19 +135,23 @@ cd ..\slideshow
 rem timeout 1
 cd ..\regservices
 %css% regservices.css -o regservices.min.css
-rem timeout 1
 cd ..\ulogin\resource
 %mini%ulogin.popup.js --js_output_file=ulogin.popup.min.js
-rem timeout 1
 %mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
-rem timeout 1
 %mini%en.ulogin.popup.js --js_output_file=en.ulogin.popup.min.js
-rem timeout 1
+
 %mini%email.auth.js --js_output_file=email.auth.min.js
-rem timeout 1
 %mini%ru.email.auth.js --js_output_file=ru.email.auth.min.js
 cd ..\..\rss-chrome\resource
 %mini%rss-chrome.js --js_output_file=rss-chrome.min.js
 %mini%ru.rss-chrome.js --js_output_file=ru.rss-chrome.min.js
+cd ..\..\photoswipe\resource
+%css% photoswipe.css -o photoswipe.min.css
+%mini%photoswipe.plugin.js --js_output_file=photoswipe.plugin.min.js
+%mini%photoswipe.plugin.tml.js --js_output_file=photoswipe.plugin.tml.min.js
+%mini%en.photoswipe.plugin.js --js_output_file=en.photoswipe.plugin.min.js
+%mini%ru.photoswipe.plugin.js --js_output_file=ru.photoswipe.plugin.min.js
+cd default-skin
+%css% default-skin.css -o default-skin.min.css
 cd ..\..\..\build
 ENDLOCAL   
