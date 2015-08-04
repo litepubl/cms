@@ -227,7 +227,7 @@ class tfiles extends titems {
           $args->preview = $theme->parsearg($tml['preview'], $args);
         }
         
-        unset($item['title'], $item['keywords'], $item['description'], $iitem['hash']);
+        unset($item['title'], $item['keywords'], $item['description'], $item['hash']);
         $args->json = jsonattr($item);
         
         $sublist .= $theme->parsearg($tml[$type], $args);

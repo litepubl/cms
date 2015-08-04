@@ -139,8 +139,4 @@ link.trigger(linkdata.wait_event);
     });
   };
   
-  $(document).ready(function() {
-    $.popimage = new $.Popimage();
-  });
-  
-})( jQuery, window, document);
+  })( jQuery, window, document);

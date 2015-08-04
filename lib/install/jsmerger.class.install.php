@@ -100,9 +100,11 @@ function tjsmergerInstall($self) {
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
   
   $self->unlock();
-  
+
+/*  moved to template install
   $template = ttemplate::i();
   $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
+*/
   
   tupdater::i()->onupdated = $self->onupdated;
 }

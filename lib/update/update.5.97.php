@@ -260,6 +260,9 @@ $t->footer = str_replace('2013', '2015', $t->footer);
       $t->data[$js->basename] = $js->revision;
       $t->data[$css->basename] = $css->revision;
 
+$cs = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';        
+$t->head = str_replace("<!--$cs-->", $cs, $t->head);
+
 $t->save();
 
 if (!litepublisher::$classes->exists('appcache_manifest')) {

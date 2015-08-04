@@ -32,6 +32,7 @@ cd ..\bootstrap
 %mini%dialog.simpler.js --js_output_file=dialog.simpler.min.js
 %mini%player.bootstrap.js --js_output_file=player.bootstrap.min.js
 %mini%popover.image.js --js_output_file=popover.image.min.js
+%mini%popover.image.init.js --js_output_file=popover.image.init.min.js
 %mini%popover.post.js --js_output_file=popover.post.min.js
 %mini%popover.single.js --js_output_file=popover.single.min.js
 %mini%theme.fonts.js --js_output_file=theme.fonts.min.js

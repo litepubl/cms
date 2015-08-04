@@ -65,7 +65,7 @@ options.galleryUID = parseInt(idpost);
 
 this.links.each(function() {
 linkindex++;
-$this = $(this);
+var $this = $(this);
 if (idpost == $this.data("idpost")) {
 var data = $this.data("file");
 if (idfile == data.id) {

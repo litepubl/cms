@@ -35,9 +35,10 @@ function tcssmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
   $self->unlock();
   
-  // add in comment because by default tthemeparser::i()->stylebefore  is true
+/*  moved to template install
   $template = ttemplate::i();
   $template->addtohead('<!--<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />-->');
+*/
   
   tupdater::i()->onupdated = $self->save;
 }

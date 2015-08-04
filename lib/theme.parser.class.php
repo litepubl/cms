@@ -623,6 +623,7 @@ $this->theme->templates['sidebars'][$this->sidebar_index] = array();
         '<div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>',
         $templates[$comment]);
 
+/*
               $css = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';        
         if ($this->stylebefore) {
           foreach (array('index', 'index.home', 'index.post', 'index.tag') as $k) {
@@ -646,6 +647,7 @@ $this->theme->templates['sidebars'][$this->sidebar_index] = array();
             }
           }
         }
+*/
         
         
         //reuse templates

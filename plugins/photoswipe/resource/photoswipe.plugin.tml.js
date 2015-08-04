@@ -2,7 +2,7 @@
   'use strict';
 
 litepubl.tml.photoswipe = 
-'<div class="pswp" tabindex="-1" role="dialog">' +
+'<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">' +
 
     // Background of PhotoSwipe.  It's a separate element, as animating opacity is faster than rgba().
     '<div class="pswp__bg"></div>' +
@@ -50,7 +50,7 @@ litepubl.tml.photoswipe =
                 '<div class="pswp__share-tooltip"></div>' +
             '</div>' +
 
-            '<button class="pswp__button pswp__button--arrow--left" title="%%lang.prev%%">  </button>'+
+            '<button class="pswp__button pswp__button--arrow--left" title="%%lang.prev%%"></button>'+
 
             '<button class="pswp__button pswp__button--arrow--right" title="%%lang.next%%"></button>' +
 
