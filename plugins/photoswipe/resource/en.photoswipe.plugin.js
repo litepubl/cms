@@ -5,7 +5,8 @@ share: "Share",
 fullscreen: "Toggle fullscreen",
 zoom: "Zoom in/out",
 prev: "Previous (arrow left)",
-next: "Next (arrow right)"
+next: "Next (arrow right)",
+		error: "The image could not be loaded"
   };
   
 })( window);

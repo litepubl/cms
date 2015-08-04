@@ -14,19 +14,9 @@ if (!links.length) return false;
 var self = this;
 this.options = {
 galleryPIDs: true,
-//showHideOpacity:true,
-getThumbBoundsFn: function(index) {
-var item = self.photoswipe.items[index];
-var link = self.links.eq(item.linkindex);
-var img = link.find("img");
-var offset = img.offset();
-
-return {
-x: offset.left,
-y: offset.top,
-w: img.width()
-}
-}
+showHideOpacity:true,
+getThumbBoundsFn: false,
+		errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lang.photoswipe.error + '</a></div>'
 };
 
 this.links = links.on("click.photoswipe", function() {
@@ -74,7 +64,7 @@ options.index = result.length;
 
 result.push({
 src: $this.attr("href"),
-msrc: $("img", $this).attr("src"),
+//msrc: $("img", $this).attr("src"),
 w: parseInt(data.width),
 h: parseInt(data.height),
 title: $this.attr("title"),
