@@ -119,15 +119,15 @@
       });
       
       if (linkdata.click_enabled) {
-link.on("click.popimage", function() {
-return false;
-});
-}
+        link.on("click.popimage", function() {
+          return false;
+        });
+      }
       
       //show popover after load image if not lose focus or hover
       if (linkdata.wait_event) {
-link.trigger(linkdata.wait_event);
-}
+        link.trigger(linkdata.wait_event);
+      }
       this.oninit(linkdata.url);
     }
     
@@ -139,4 +139,4 @@ link.trigger(linkdata.wait_event);
     });
   };
   
-  })( jQuery, window, document);
+})( jQuery, window, document);

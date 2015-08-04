@@ -82,26 +82,26 @@ class turlmap extends titems {
     } catch (Exception $e) {
       litepublisher::$options->handexception($e);
     }
-
-// production mode: no debug and enabled buffer    
+    
+    // production mode: no debug and enabled buffer
     if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
       litepublisher::$options->showerrors();
       litepublisher::$options->errorlog = '';
-
+      
       $afterclose = $this->isredir || count($this->close_events);
       if ($afterclose) {
-$this->close_connection();
-}
-
+        $this->close_connection();
+      }
+      
       while (@ob_end_flush ());
       flush();
-
-if ($afterclose) {
-if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
-ob_start();
-}
+      
+      if ($afterclose) {
+        if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        ob_start();
+      }
     }
-
+    
     $this->afterrequest($this->url);
     $this->close();
   }

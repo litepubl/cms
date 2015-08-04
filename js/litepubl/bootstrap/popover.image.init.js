@@ -9,7 +9,7 @@
   
   $(document).ready(function() {
     $.popimage = new $.Popimage();
-
+    
     litepubl.linkimage= function(link) {
       $.popimage.add(link, "focus");
     };
@@ -21,6 +21,6 @@
     $.popimage.oninit = function(url) {
     litepubl.stat('popimage', {src: url});
     };
-
+    
   });
 })( jQuery, window, document);

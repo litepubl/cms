@@ -36,23 +36,23 @@
     if (typeof  options === "object") this.singletip();
     return this.oldpopover(options);
   };
-
-$(document).ready(function() {  
-  $("body").on("click.singletooltip", function(e) {
-    if (!popovers.length) return;
-    
-    for (var i = popovers.length - 1; i >= 0; i--) {
-      if (e.target === popovers[i]) return;
-      if ($.contains(popovers[i], e.target)) return;
-    }
-    
-    if ($(e.target).closest(".popover").length) return;
-    
-    for (var i = popovers.length - 1; i >= 0; i--) {
-      $(popovers[i]).oldpopover("hide");
-    }
-    
+  
+  $(document).ready(function() {
+    $("body").on("click.singletooltip", function(e) {
+      if (!popovers.length) return;
+      
+      for (var i = popovers.length - 1; i >= 0; i--) {
+        if (e.target === popovers[i]) return;
+        if ($.contains(popovers[i], e.target)) return;
+      }
+      
+      if ($(e.target).closest(".popover").length) return;
+      
+      for (var i = popovers.length - 1; i >= 0; i--) {
+        $(popovers[i]).oldpopover("hide");
+      }
+      
+    });
   });
-});
   
 })( jQuery);

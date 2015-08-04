@@ -3,6 +3,18 @@
 
 function ParseFile($filename) {
 global $linescount, $filecount;
+//ignore files
+if (in_array(basename($filename), array(
+'default-skin.css',
+'default-skin.inline.css',
+'default-skin.inline.less',
+'photoswipe.css',
+'photoswipe.js',
+'photoswipe-ui-default.js',
+))) {
+return;
+}
+
 //if (strend($filename, '.js')) echo basename($filename) . "\n";
 $filecount++;
 //echo substr($filename, strlen(dirname(dirname(__file__)))), "\n";
@@ -157,8 +169,8 @@ $result .= "\n\n";
 file_put_contents($dir . $kernelfilename, $result);
 }
 
-function parseplugins() {
-$dir = dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR;
+function parseplugins($rootdir) {
+$dir = $rootdir . 'plugins' . DIRECTORY_SEPARATOR;
 $list = tfiler::getdir($dir);
 foreach ($list as $name) {
 if ($name == 'markdown' || $name == 'sape') continue;
@@ -192,17 +204,17 @@ echo "<pre>\n";
 $linescount = 0;
 $filecount = 0;
 $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
-$dir = dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
-include($dir . 'filer.class.php');
-
+$rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
+$dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
+require($dir . 'filer.class.php');
 
 switch (@$_GET['dir']) {
 case 'plugins':
-parseplugins();
+parseplugins($rootdir);
 break;
 
 case 'js':
-$dir = dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'litepubl' . DIRECTORY_SEPARATOR;
+$dir = $rootdir . 'js' . DIRECTORY_SEPARATOR . 'litepubl' . DIRECTORY_SEPARATOR;
 foreach (array('admin', 'bootstrap', 'comments', 'common', 'deprecated', 'effects', 'pretty', 'system') as $subdir) {
 parsejs($dir . $subdir . DIRECTORY_SEPARATOR);
 if (is_dir($dir . $subdir . DIRECTORY_SEPARATOR. 'css')) {
@@ -210,11 +222,11 @@ parsejs($dir . $subdir . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR);
 }
 }
 
-$dir = dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
+$dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
 parsejs($dir . 'ru' . DIRECTORY_SEPARATOR);
 parsejs($dir . 'en' . DIRECTORY_SEPARATOR);
 
-parsejs(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'less' . DIRECTORY_SEPARATOR);
+parsejs($rootdir . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'less' . DIRECTORY_SEPARATOR);
 break;
 
 case 'geo':
@@ -254,10 +266,10 @@ case 'skip':
 return;
 
 default:
-ParseFile(dirname(dirname(__file__)) . DIRECTORY_SEPARATOR . 'index.php');
-parsedir($dir);
-parsedir($dir . 'install' . DIRECTORY_SEPARATOR);
-BuildKernel($dir);
+ParseFile($rootdir . 'index.php');
+parsedir($rootdir . 'lib' . DIRECTORY_SEPARATOR);
+parsedir($rootdir . 'lib' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR);
+BuildKernel($rootdir . 'lib' . DIRECTORY_SEPARATOR);
 }
 
 echo "$linescount = lines count, $filecount = file count\n</pre>\n<pre>";

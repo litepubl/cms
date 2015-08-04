@@ -154,5 +154,7 @@ cd ..\..\photoswipe\resource
 %mini%ru.photoswipe.plugin.js --js_output_file=ru.photoswipe.plugin.min.js
 cd default-skin
 %css% default-skin.css -o default-skin.min.css
+node D:\OpenServer\modules\node_modules\less\bin\lessc default-skin.inline.less default-skin.inline.css
+%css% default-skin.inline.css -o default-skin.inline.min.css
 cd ..\..\..\build
 ENDLOCAL   

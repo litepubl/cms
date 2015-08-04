@@ -37,9 +37,9 @@
         return $(self.attr("data-holder") || self.attr("href")).html();
       }
     }))
-.on("click.prevent", function() {
-return false;
-});
+    .on("click.prevent", function() {
+      return false;
+    });
   };
   
   $.fn.pophelp = function() {
@@ -62,10 +62,10 @@ return false;
         return holder.data("popcontent") || holder.html();
       }
     }))
-.on("click.prevent", function() {
-return false;
-});
-
+    .on("click.prevent", function() {
+      return false;
+    });
+    
   };
   
 })( jQuery);

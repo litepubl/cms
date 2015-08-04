@@ -105,7 +105,7 @@
       top: this.offset().top,
       winw: 0,
       winh: 0,
-addclass: options.addclass,
+      addclass: options.addclass,
       img: false,
       large: {
         w: 0,
@@ -131,7 +131,7 @@ addclass: options.addclass,
     
     data.cur =cur;
     load_image(cur, function() {
-    self.addClass(data.addclass);
+      self.addClass(data.addclass);
       data.img = $('<img src="' + data.cur.src + '" />').appendTo(self);
       $(window).on("resize.homeimage", function() {
         home_resize(self);

@@ -433,7 +433,7 @@ class ttemplate extends tevents_storage {
     litepublisher::$classes->instances[get_class($this)] = $this;
     parent::create();
     $this->basename = 'template' ;
-    $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onlabels', 'onrequest', 'ontitle', 'ongetmenu');
+    $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
     $this->path = litepublisher::$paths->themes . 'default' . DIRECTORY_SEPARATOR ;
     $this->url = litepublisher::$site->files . '/themes/default';
     $this->itemplate = false;
@@ -507,9 +507,6 @@ class ttemplate extends tevents_storage {
     
     $this->result = $this->httpheader();
     $this->result  .= $theme->gethtml($context);
-    
-    $this->onlabels($this);
-    $this->result = preg_replace('/\$label\.\w\w*+/', '', $this->result);
     
     $this->onbody($this);
     if ($this->extrabody) $this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);

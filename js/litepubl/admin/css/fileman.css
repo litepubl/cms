@@ -57,18 +57,18 @@
   position:relative;
 }
 
-.file-added 
+.file-added
 .file-content:after {
   border: 1px solid transparent;
   border-radius: 4px;
-content: "";
+  content: "";
   position:absolute;
   display: block;
   overflow: hidden;
   top: 0;
   left: 0;
-right: 0;
-bottom: 0;
+  right: 0;
+  bottom: 0;
   background-color:black;
   opacity: 0.3;
   filter: alpha(opacity=30);
