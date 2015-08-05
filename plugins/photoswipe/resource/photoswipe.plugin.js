@@ -12,24 +12,13 @@
     opened: false,
     photoswipe: false,
     holder: false,
-  options: {},
+  options: false,
     
     init: function(links) {
       if (!links.length) return false;
       
       var self = this;
-var lng = lang.photoswipe;
-    litepubl.tml.photoswipe = $.parsetml(litepubl.tml.photoswipe, {lang: lng});
-      this.options = {
-history: true,
-        galleryPIDs: true,
-        showHideOpacity:true,
-        getThumbBoundsFn: false,
-        errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lng.error + '</a></div>',
-			shareButtons: this.get_sharebuttons()
-      };
-      
-      this.links = links.on("click.photoswipe", function() {
+            this.links = links.on("click.photoswipe", function() {
         self.open($(this));
         return false;
       });
@@ -37,6 +26,34 @@ history: true,
     litepubl.openimage = $.proxy(this.openimage, this);
 $.ready2($.proxy(this.openhash, this));
     },
+
+getoptions: function() {
+if (!this.options) {
+var lng = lang.photoswipe;
+    litepubl.tml.photoswipe = $.parsetml(litepubl.tml.photoswipe, {lang: lng});
+
+var self = this;
+      this.options = {
+index: 0,
+history: true,
+        galleryPIDs: true,
+        showHideOpacity:true,
+        getThumbBoundsFn: false,
+        errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lng.error + '</a></div>',
+			shareButtons: this.get_sharebuttons(),
+			getTextForShare: function(shareButtonData) {
+				var result = self.pswp.currItem.title || '';
+if (!result || (/\.(jpg|jpeg|png|bmp)$/i).test(result)) {
+result = $("title").text();
+}
+
+return result;
+			}
+      };
+}
+
+return this.options;
+},
     
     open: function(link) {
       if (this.opened) return false;
@@ -70,7 +87,7 @@ return this.openitems(items);
     
     getitems: function(idpost, idfile) {
       var result = [];
-      var options = this.options;
+      var options = this.getoptions();
       options.galleryUID = parseInt(idpost);
       
       this.links.each(function(linkindex) {
@@ -98,7 +115,7 @@ return this.openitems(items);
 
 openimage: function(image) {
 // save current options for swithing single options
-var options = this.options;
+var options = this.getoptions();
 this.options = $.extend({
 index: 0,
 history: false,
@@ -156,50 +173,57 @@ var result =[
 				{
 id:'photoswipe-facebook', 
 label:'<span class="fa fa-facebook"> FaceBook',
- url:'https://www.facebook.com/sharer/sharer.php?u={{url}}'
-              var href = 'https://www.facebook.com/dialog/feed?' +
-              'app_id=' + self.facebook_appid +
-              '&link=' + url +
-              '&name=' + title +
-              '&picture=' + image +
+url: 'https://www.facebook.com/dialog/feed?' +
+              'app_id=' + ltoptions.facebook_appid +
+              '&link=[url]' +
+              '&name=[text]' +
+              '&picture=[image_url]' +
               '&display=popup' +
               '&redirect_uri=' + encodeURIComponent(ltoptions.files + '/files/close-window.htm')
-
 },
+
 				{
 id:'photoswipe-twitter', 
 label:'<span class="fa fa-twitter"></span> Tweet',
- url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
-'https://twitter.com/share?lang=' + self.lang + '&url=' + url + '&text=' + title;
+ url: 'https://twitter.com/share?lang=' + ltoptions.lang + '&url=[url]&text=[text]'
+//'https://twitter.com/intent/tweet?url=[url]&text=[title]'
 },
-				{id:'pinterest', label:'Pin it', url:'http://www.pinterest.com/pin/create/button/'+
-													'?url={{url}}&media={{image_url}}&description={{text}}'
+
+				{
+id:'photoswipe-pinterest',
+ label: '<span class="fa fa-pinterest"></span> Pin it',
+ url:'http://www.pinterest.com/pin/create/button/' +
+'?url=[url]&media=[image_url]&description=[text]'
 }
+];
 
 if (ltoptions.lang == 'ru') {
 result.push({
 id:'photoswipe-vk', 
 label:'<span class="fa fa-vk"></span> ' + lng.vk,
- url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
-'http://vk.com/share.php?url=' + url;
+ url: 'https://vk.com/share.php?url=[url]'
 });
 
 result.push({
-id:'photoswipe-vk', 
-label:'<span class="fa fa-vk"></span> ' + lng.vk,
- url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
-'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=' + url + '&st.comments=' + title;
-
+id:'photoswipe-odnoklassniki', 
+label:'<span class="odnoklassniki-icon"></span> ' + lng.ok,
+ url: 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=[url]&st.comments=[text]'
+//'http://connect.ok.ru/dk?st.cmd=WidgetSharePreview&service=odnoklassniki&st.shareUrl=[url]'
 });
-
 }
 
 result.push({
 id:'photoswipe-download', 
 label:'<span class="fa fa-download"></span>' + lng.downlload,
- url:'{{raw_image_url}}',
+ url:'[raw_image_url]',
  download:true
 });
+
+for (var i = result.length - 1; i>= 0; i--) {
+result[i].url = result[i]
+.replace(/\[/g, "\u007b\u007b")
+.replace(/\]/g, "\u007d\u007d");
+}
 
 return result;
 }

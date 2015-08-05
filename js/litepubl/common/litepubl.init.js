@@ -28,5 +28,6 @@
       params.litepubl_user_regservice = user.regservice;
     }
   };
-  
+
+ltoptions.facebook_appid   = '290433841025058';
 }(jQuery, ltoptions));
