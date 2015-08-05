@@ -6439,21 +6439,38 @@ A.dashed:focus {
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 .post-header {
+  position: relative;
   display: block;
   overflow: hidden;
 }
-.post-header .post-date {
+.post-header .post-date,
+.post-header .post-tags {
   float: left;
+}
+.post-header .post-date,
+.post-header .post-tags,
+.post-header .post-categories {
+  display: block;
+  overflow: hidden;
   margin: 10px 18px;
 }
 .post-header .cats-title {
   display: none;
+}
+#likebuttons .sharefriend {
+  font-size: 80%;
+  font-weight: bold;
 }
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.header-comments {
+  text-align: center;
+  font-weight: 200;
+  font-size: 120%;
+}
 .comment-datetime,
 .comment-datetime span {
   font-size: 80%;

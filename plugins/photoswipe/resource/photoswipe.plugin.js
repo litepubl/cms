@@ -58,10 +58,10 @@ return this.options;
     open: function(link) {
       if (this.opened) return false;
       this.opened = true;
-
 var items = this.getitems(link.data("idpost"), link.data("file").id);
-if (!items.length) {
       this.opened = false;
+
+if (!items.length) {
 return false;
 }
 
