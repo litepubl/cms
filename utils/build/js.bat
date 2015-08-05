@@ -124,25 +124,19 @@ cd ..\ru
 cd ..\..\..\plugins
 cd polls
 %mini%polls.client.js --js_output_file=polls.client.min.js
-rem timeout 1
 cd ..\imagepolls
 %mini%imagepolls.client.js --js_output_file=imagepolls.client.min.js
-rem timeout 1
 %css% topimages.css -o topimages.min.css
-rem timeout 1
 cd ..\slides
 %mini%slides.plugin.js --js_output_file=slides.plugin.min.js
-rem timeout 1
 cd ..\slideshow
 %mini%slideshow.js --js_output_file=slideshow.min.js
-rem timeout 1
 cd ..\regservices
 %css% regservices.css -o regservices.min.css
 cd ..\ulogin\resource
 %mini%ulogin.popup.js --js_output_file=ulogin.popup.min.js
 %mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
 %mini%en.ulogin.popup.js --js_output_file=en.ulogin.popup.min.js
-
 %mini%email.auth.js --js_output_file=email.auth.min.js
 %mini%ru.email.auth.js --js_output_file=ru.email.auth.min.js
 cd ..\..\rss-chrome\resource
