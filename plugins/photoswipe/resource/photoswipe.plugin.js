@@ -151,22 +151,51 @@ if (hash && hash.pid && hash.gid) {
 },
 
 get_sharebuttons: function() {
-var result =
-[
-				{id:'facebook', 
+var lng = lang.photoswipe;
+var result =[
+				{
+id:'photoswipe-facebook', 
 label:'<span class="fa fa-facebook"> FaceBook',
  url:'https://www.facebook.com/sharer/sharer.php?u={{url}}'
+              var href = 'https://www.facebook.com/dialog/feed?' +
+              'app_id=' + self.facebook_appid +
+              '&link=' + url +
+              '&name=' + title +
+              '&picture=' + image +
+              '&display=popup' +
+              '&redirect_uri=' + encodeURIComponent(ltoptions.files + '/files/close-window.htm')
+
 },
-				{id:'twitter', 
-label:'T<span class="fa fa-twitter"></span> weet',
+				{
+id:'photoswipe-twitter', 
+label:'<span class="fa fa-twitter"></span> Tweet',
  url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
+'https://twitter.com/share?lang=' + self.lang + '&url=' + url + '&text=' + title;
 },
 				{id:'pinterest', label:'Pin it', url:'http://www.pinterest.com/pin/create/button/'+
 													'?url={{url}}&media={{image_url}}&description={{text}}'
 }
 
+if (ltoptions.lang == 'ru') {
 result.push({
-id:'download', 
+id:'photoswipe-vk', 
+label:'<span class="fa fa-vk"></span> ' + lng.vk,
+ url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
+'http://vk.com/share.php?url=' + url;
+});
+
+result.push({
+id:'photoswipe-vk', 
+label:'<span class="fa fa-vk"></span> ' + lng.vk,
+ url:'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
+'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=' + url + '&st.comments=' + title;
+
+});
+
+}
+
+result.push({
+id:'photoswipe-download', 
 label:'<span class="fa fa-download"></span>' + lng.downlload,
  url:'{{raw_image_url}}',
  download:true

@@ -23,6 +23,8 @@ cd css
 %css% common.css -o common.min.css
 %css% filelist.css -o filelist.min.css
 %css% form.inline.css -o form.inline.min.css
+node D:\OpenServer\modules\node_modules\less\bin\lessc odnoklassniki.less odnoklassniki.css
+%css% odnoklassniki.css -o odnoklassniki.min.css
 cd ..\..\comments
 %mini%comments.js --js_output_file=comments.min.js
 %mini%confirmcomment.js --js_output_file=confirmcomment.min.js
