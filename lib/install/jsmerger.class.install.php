@@ -99,7 +99,7 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/fileman.templates.min.js');
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
   
-  $self->unlock();
+ $self->unlock();
   
   /*  moved to template install
   $template = ttemplate::i();
@@ -112,7 +112,6 @@ function tjsmergerInstall($self) {
 function tjsmergerUninstall($self) {
   tupdater::i()->unbind($self);
 }
-
 
 function tjsmerger_switch($self, $add, $delete) {
   $self->lock();
@@ -163,7 +162,6 @@ function tjsmerger_bootstrap_files() {
   '/js/litepubl/bootstrap/dialog.simpler.min.js',
   '/js/litepubl/bootstrap/player.bootstrap.min.js',
   '/js/litepubl/bootstrap/popover.single.min.js',
-  //'/js/litepubl/bootstrap/popover.image.min.js',
   '/js/litepubl/bootstrap/popover.post.min.js',
   '/js/litepubl/bootstrap/widgets.bootstrap.min.js',
   '/js/litepubl/bootstrap/youtube.bootstrap.min.js',

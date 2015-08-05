@@ -7,6 +7,8 @@
 
 function bootstrap_themeInstall($self) {
   $js = tjsmerger::i();
+$js->lock();
+
   $js->  externalfunc(get_class($js), '_switch', array(
   $js->externalfunc(get_class($js), '_bootstrap_files', false),
   $js->externalfunc(get_class($js), '_pretty_files', false)
@@ -24,7 +26,15 @@ function bootstrap_themeInstall($self) {
   $css->externalfunc(get_class($css), '_deprecated_files', false)
   );
   
+//default installed plugins
+$plugins = tplugins::i();
+$plugins->lock();
+    $plugins->add('likebuttons');
+    $plugins->add('oldestposts');   $plugins->add('photoswipe');
+$plugins->unlock();
+
   $css->unlock();
+$js->unlock();
   
   ttheme::clearcache();
 }

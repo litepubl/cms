@@ -1,0 +1,29 @@
+#site-description {
+  position:relative;
+  display: block;
+  overflow: hidden;
+background:url("data:image/jpeg;base64,%%data%%") repeat-x top center;
+}
+
+#site-description:before {
+  content: "";
+  position:absolute;
+  display: block;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background-color: black;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+
+#site-description h1,
+#site-description h2,
+#site-description h3 {
+  position:relative;
+  z-index: 5;
+  color: white !important;
+}

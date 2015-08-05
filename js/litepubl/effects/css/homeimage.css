@@ -5,6 +5,7 @@
 **/
 
 .home-image {
+    background-image:none !important;
   position:relative;
   display: block;
   overflow: hidden;
