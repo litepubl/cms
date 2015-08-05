@@ -8,7 +8,7 @@
   'use strict';
   
 function likebuttons(holder) {
-if (!holder.length) r
+if (!holder.length) return;
 
 var html = '';
 var tml = '<a role="button" class="btn btn--default tooltip-toggle" target="_blank" href="%%url%%" title="%%title%%"><span class="%%icon%%"></span></a>';

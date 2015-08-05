@@ -220,7 +220,7 @@ label:'<span class="fa fa-download"></span>' + lng.downlload,
 });
 
 for (var i = result.length - 1; i>= 0; i--) {
-result[i].url = result[i]
+result[i].url = result[i].url
 .replace(/\[/g, "\u007b\u007b")
 .replace(/\]/g, "\u007d\u007d");
 }
