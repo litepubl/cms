@@ -142,6 +142,8 @@ cd ..\ulogin\resource
 cd ..\..\rss-chrome\resource
 %mini%rss-chrome.js --js_output_file=rss-chrome.min.js
 %mini%ru.rss-chrome.js --js_output_file=ru.rss-chrome.min.js
+cd ..\..\bootstrap-theme\resource
+%mini%header.js --js_output_file=header.min.js
 cd ..\..\likebuttons\resource
 %mini%likebuttons.js --js_output_file=likebuttons.min.js
 cd ..\..\photoswipe\resource
