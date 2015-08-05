@@ -12,7 +12,8 @@
     zoom: "Zoom in/out",
     prev: "Previous (arrow left)",
     next: "Next (arrow right)",
-    error: "The image could not be loaded"
+    error: "The image could not be loaded",
+download: "Download image"
   };
   
 })( window);

@@ -14,8 +14,8 @@
       $.popimage.add(link, "focus");
     };
     
-    litepubl.openimage = function(url, title, description) {
-      $.popimage.open(url, title, description);
+    litepubl.openimage = function(image) {
+      $.popimage.open(image);
     };
     
     $.popimage.oninit = function(url) {

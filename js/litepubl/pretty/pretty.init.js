@@ -14,8 +14,8 @@
       social_tools: false
     });
     
-    litepubl.openimage = function(url, title, description) {
-      $.prettyPhoto.open(url, title, description);
+    litepubl.openimage = function(image) {
+      $.prettyPhoto.open(image.url, image.title, image.description);
     };
     
   });
