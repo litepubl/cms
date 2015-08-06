@@ -14,41 +14,27 @@ class admin_bootstrap_header extends tadminmenu {
   public function gethead() {
 $result = parent::gethead();
 
-$result .= "<script type=\"text/javascript\">litepubl.tml.header = '" . file_get_contents(dirname(__file__) . '/resource/css.tml')) . "';</script>";
+$css = file_get_contents(dirname(__file__) . '/resource/css.tml');
+$css = strtr($css, array(
+"\n" => '',
+"\r" => '',
+"'" => '"'
+));
+
+$result .= "<script type=\"text/javascript\">litepubl.tml.header = '" . $css  . "';</script>";
 $result .= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
 $result .= '<script type="text/javascript" src="$site.files/plugins/bootstrap-theme/resource/header.min.js"></script>';
-
+//$result .= "<script type=\"text/javascript\">alert(litepubl.tml.header );</script>";
 return $result;
 }
   
   public function getcontent() {
-    $result = '';
-    $views = tviews::i();
-    $theme = tview::i($views->defaults['admin'])->theme;
-    $html = $this->inihtml();
+$tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
     $lang = tlocal::inifile($this, '.admin.ini');
-    $args = new targs();
-    
-    $mainsidebars = array(
-    'left' => $lang->left,
-    'right' => $lang->right,
-    );
-    
-    foreach ($views->items as $id => $item) {
-      if (!isset($item['custom']['mainsidebar'])) continue;
-      
-      $result .= $html->h4($item['name']);
-      $result .=$theme->getinput('combo', "mainsidebar-$id",
-      tadminhtml::array2combo($mainsidebars, $item['custom']['mainsidebar']), $lang->mainsidebar);
-      
-      $result .=$theme->getinput('combo', "cssfile-$id",
-      tadminhtml::array2combo($lang->ini['subthemes'], $item['custom']['cssfile']), $lang->cssfile);
-      
-      $result .= '<hr>';
-    }
-    
-    $args->formtitle = $lang->customizeview;
-    return $html->adminform($result, $args);
+$lang->addsearch('themeheader', 'editor');
+$html = tadminhtml::i();
+$args = new targs();
+    return $html->parsearg($tml, $args);
   }
   
   public function request($a) {
@@ -63,16 +49,13 @@ $k = 'image';
 strbegin($_FILES[$k]['type'], 'image/') &&
 ($data = file_get_contents($_FILES[$k]['tmp_name']))
 ) {
-$css = file_get_contents(dirname(__file__) . '/resource/header.tml');
-$css = strtr($css, array(
-'%%type%%' => _FILES[$k]['type'],
-'%%data%%' => base64_encode($data)
-);
-
+$css = file_get_contents(dirname(__file__) . '/resource/css.tml');
+$css = str_replace('%%file%%', sprintf('data:%s;base64,%s', $_FILES[$k]['type'], base64_encode($data)), $css);
 $filename = litepublisher::$paths->files . 'js/header.css';
 file_put_contents($filename, $css);
 @chmod($filename, 0666);
 tcssmerger::i()->add('default', 'files/js/header.css');
+//file_put_contents($filename . '.tmp', $data);
 
     $lang = tlocal::inifile($this, '.admin.ini');
 

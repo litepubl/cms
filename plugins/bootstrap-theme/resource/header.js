@@ -4,41 +4,52 @@
   litepubl.Headereditor = Class.extend({
 file: false,
 style: false,
+filereader: false,
     jq: false,
     idinput: "#file-input, #dropzone",
     
     init: function() {
-      var self = this;
-      var fr = new window.FileReader();
-$(this.idinput).fileReaderJS({
+      this.filereader = new window.FileReader();
+var options = {
         accept: 'image/*',
-        readAsDefault: ('readAsBinaryString' in fr ? 'BinaryString' : 'ArrayBuffer'),
+        //readAsDefault: ('readAsBinaryString' in this.filereader ? 'BinaryString' : 'ArrayBuffer'),
+        readAsDefault: 'DataURL',
         on: {
           load: $.proxy(this.add, this)
                 }
-      });
+      };
+
+$(this.idinput).fileReaderJS(options);
+	$("body").fileClipboard(options);
+$("#submitbutton-update").on("click.header", $.proxy(this.submit, this));
     },
     
 add: function(e, file) {
 this.file = file;
-var css = ltoptions.header_tml.replace('%%image%%', btoa(file));
-
+var css = litepubl.tml.header.replace('%%file%%', e.target.result);
+alert(css);
 if (this.style) this.style.remove();
 this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
     },
 
+submit: function() {
+this.upload(this.file);
+
+return false;
+},
+
     setprogress: function(current, total) {
-      this.setpercent(Math.ceil((current / total) * 100));
+      //this.setpercent(Math.ceil((current / total) * 100));
     },
 
 uploaded: function(resp) {
-
+dump(resp);
 },
 
     upload: function(file) {
       var formdata = new FormData();
       // warning: Filedata is same in flash and can not be changed
-      formdata.append("Filedata", file);
+      formdata.append("image", file);
       var self = this;
       this.jq = $.ajax({
         type: "post",
@@ -74,4 +85,7 @@ uploaded: function(resp) {
       
     });
 
+$(document).ready(function() {
+litepubl.headereditor = new litepubl.Headereditor();
+});
   }(jQuery, litepubl, window));

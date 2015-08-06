@@ -1,6 +1,10 @@
+<p class="help-block">$lang.helpblock</p>
+
+
 <div id="html-uploader" class="form-group">
-<label for="file-input">%%lang.upload%%</label>
+<label for="file-input">$lang.upload</label>
 <input type="file" id="file-input" name="Filedata" />
-<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>
+<div id="dropzone" class="help-block">$lang.dragfiles</div>
 </div>
     
+[submit=update]
