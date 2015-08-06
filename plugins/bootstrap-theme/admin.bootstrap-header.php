@@ -51,23 +51,42 @@ return $result;
     return $html->adminform($result, $args);
   }
   
-  public function processform() {
+  public function request($a) {
+if ($response = parent::request($a)) {
+return $response;
+}
+
+$k = 'image';
+    if (isset($_FILES[$k]) &&
+ is_uploaded_file($_FILES[$k]['tmp_name']) &&
+ !$_FILES[$k]['error'] &&
+strbegin($_FILES[$k]['type'], 'image/') &&
+($data = file_get_contents($_FILES[$k]['tmp_name']))
+) {
+$css = file_get_contents(dirname(__file__) . '/resource/header.tml');
+$css = strtr($css, array(
+'%%type%%' => _FILES[$k]['type'],
+'%%data%%' => base64_encode($data)
+);
+
+$filename = litepublisher::$paths->files . 'js/header.css';
+file_put_contents($filename, $css);
+@chmod($filename, 0666);
+tcssmerger::i()->add('default', 'files/js/header.css');
+
     $lang = tlocal::inifile($this, '.admin.ini');
-    $views = tviews::i();
-    foreach ($views->items as $id => $item) {
-      if (!isset($item['custom']['mainsidebar'])) continue;
-      
-      $sidebar = $_POST["mainsidebar-$id"];
-      if (!in_array($sidebar, array('left', 'right'))) $sidebar = 'left';
-      $views->items[$id]['custom']['mainsidebar'] = $sidebar;
-      
-      $cssfile = $_POST["cssfile-$id"];
-      if (!isset($lang->ini['subthemes'][$cssfile])) $cssfile = 'default';
-      $views->items[$id]['custom']['cssfile'] = $cssfile;
-    }
-    
-    $views->save();
-    ttheme::clearcache();
-  }
-  
+    $js = tojson($result);
+
+    return "<?php
+    header('Connection: close');
+    header('Content-Length: ". strlen($js) . "');
+    header('Content-Type: text/javascript; charset=utf-8');
+    header('Date: ".date('r') . "');
+    Header( 'Cache-Control: no-cache, must-revalidate');
+    Header( 'Pragma: no-cache');
+    ?>" .
+    $js;
+}
+}
+
 }//class

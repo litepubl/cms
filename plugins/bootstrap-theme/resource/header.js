@@ -11,7 +11,7 @@ style: false,
       var self = this;
       var fr = new window.FileReader();
 $(this.idinput).fileReaderJS({
-        accept: "image/jpeg",
+        accept: 'image/*',
         readAsDefault: ('readAsBinaryString' in fr ? 'BinaryString' : 'ArrayBuffer'),
         on: {
           load: $.proxy(this.add, this)
@@ -21,26 +21,28 @@ $(this.idinput).fileReaderJS({
     
 add: function(e, file) {
 this.file = file;
-var s = ltoptions.header_tml.replace('%%image%%', btoa(file));
+var css = ltoptions.header_tml.replace('%%image%%', btoa(file));
 
 if (this.style) this.style.remove();
-this.style = $('<style type="text/css">' + s + '</style>').appendTo("head:first");
+this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
     },
-    
-    uploadfile: function(file) {
+
+    setprogress: function(current, total) {
+      this.setpercent(Math.ceil((current / total) * 100));
+    },
+
+uploaded: function(resp) {
+
+},
+
+    upload: function(file) {
       var formdata = new FormData();
       // warning: Filedata is same in flash and can not be changed
       formdata.append("Filedata", file);
-      
-      for (var name in owner.postdata) {
-        formdata.append(name, owner.postdata[name]);
-      }
-      
-      owner.setprogress(0);
       var self = this;
       this.jq = $.ajax({
         type: "post",
-        url: owner.geturl(),
+        url: location.href,
         cache: false,
         data: formdata,
         dataType: "json",
@@ -48,7 +50,7 @@ this.style = $('<style type="text/css">' + s + '</style>').appendTo("head:first"
         processData: false,
         
         success: function(r) {
-          owner.uploaded(r);
+          self.uploaded(r);
         },
         
         xhr: function() {
@@ -56,7 +58,7 @@ this.style = $('<style type="text/css">' + s + '</style>').appendTo("head:first"
           if ("upload" in result) {
             result.upload.addEventListener("progress", function(event){
                 if (event.lengthComputable) {
-                  owner.setprogress(event.loaded, event.total);
+                  self.setprogress(event.loaded, event.total);
                 }
               }, false);
               
@@ -66,8 +68,7 @@ this.style = $('<style type="text/css">' + s + '</style>').appendTo("head:first"
           
         })
         .fail( function(jq, textStatus, errorThrown) {
-          self.next();
-          owner.error(jq.responseText);
+          alert(jq.responseText);
         });
       }
       
