@@ -14,7 +14,7 @@ class admin_bootstrap_header extends tadminmenu {
   public function gethead() {
 $result = parent::gethead();
 
-$result .= "<script type=\"text/javascript\">ltoptions.header_tml ='" . file_get_contents(dirname(__file__) . '/resource/header.tml')) . "';</script>";
+$result .= "<script type=\"text/javascript\">litepubl.tml.header = '" . file_get_contents(dirname(__file__) . '/resource/css.tml')) . "';</script>";
 $result .= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
 $result .= '<script type="text/javascript" src="$site.files/plugins/bootstrap-theme/resource/header.min.js"></script>';
 
@@ -75,6 +75,8 @@ file_put_contents($filename, $css);
 tcssmerger::i()->add('default', 'files/js/header.css');
 
     $lang = tlocal::inifile($this, '.admin.ini');
+
+$result = array('result' => 'ok');
     $js = tojson($result);
 
     return "<?php
