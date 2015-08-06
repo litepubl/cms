@@ -9,7 +9,7 @@ function admin_bootstrap_themeInstall($self) {
   $about =tplugins::getabout(tplugins::getname(__file__));
   
   $admin = tadminmenus::i();
-$admin->lock();
+  $admin->lock();
   $admin->additem(array(
   'parent' => $admin->url2id('/admin/views/'),
   'url' => '/admin/views/bootstraptheme/',
@@ -18,15 +18,15 @@ $admin->lock();
   'class' => get_class($self),
   'group' => 'admin'
   ));
-
-litepublisher::$classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
-$admin->unlock();
+  
+  litepublisher::$classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
+  $admin->unlock();
 }
 
 function admin_bootstrap_themeUninstall($self) {
   $admin = tadminmenus::i();
-$admin->lock();
-$admin->deleteurl('/admin/views/bootstraptheme/');
-litepublisher::$classes->delete('admin_bootstrap_header');
-$admin->unlock();
+  $admin->lock();
+  $admin->deleteurl('/admin/views/bootstraptheme/');
+  litepublisher::$classes->delete('admin_bootstrap_header');
+  $admin->unlock();
 }

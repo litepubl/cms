@@ -74,13 +74,13 @@ function installClasses() {
   litepublisher::$urlmap->lock();
   $posts = tposts::i();
   $posts->lock();
-$js = tjsmerger::i();
-$js->lock();
-
-$css = tcssmerger::i();
-$css->unlock();
-
-    $xmlrpc = TXMLRPC::i();
+  $js = tjsmerger::i();
+  $js->lock();
+  
+  $css = tcssmerger::i();
+  $css->unlock();
+  
+  $xmlrpc = TXMLRPC::i();
   $xmlrpc->lock();
   ttheme::$defaultargs = array();
   $theme = ttheme::getinstance('default');
@@ -93,19 +93,19 @@ $css->unlock();
     $obj = getinstance($class);
     if (method_exists($obj, 'install')) $obj->install();
   }
-
-//default installed plugins
-$plugins = tplugins::i();
-$plugins->lock();
-    $plugins->add('likebuttons');
-    $plugins->add('oldestposts');
-    $plugins->add('photoswipe');
-    $plugins->add('bootstrap-theme');
-$plugins->unlock();
+  
+  //default installed plugins
+  $plugins = tplugins::i();
+  $plugins->lock();
+  $plugins->add('likebuttons');
+  $plugins->add('oldestposts');
+  $plugins->add('photoswipe');
+  $plugins->add('bootstrap-theme');
+  $plugins->unlock();
   
   $xmlrpc->unlock();
-$css->unlock();
-$js->unlock();
+  $css->unlock();
+  $js->unlock();
   $posts->unlock();
   litepublisher::$urlmap->unlock();
 }

@@ -99,7 +99,7 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/fileman.templates.min.js');
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
   
- $self->unlock();
+  $self->unlock();
   
   /*  moved to template install
   $template = ttemplate::i();

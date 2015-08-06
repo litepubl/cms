@@ -310,13 +310,13 @@ class tinstaller extends tdata {
     $users->setvalue($cm->idguest, 'status', 'approved');
     
     tcomments::i()->add($post->id, $cm->idguest,$lang->postcomment, 'approved', '127.0.0.1');
-  
-/*  
+    
+    /*
     $plugins = tplugins::i();
     $plugins->lock();
     $plugins->add('oldestposts');
     $plugins->unlock();
-*/
+    */
   }
   
   public function SendEmail($password) {

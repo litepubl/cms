@@ -9,6 +9,7 @@
   
   litepubl.HTMLUploader = Class.extend({
     owner: false,
+    fr: false,
     jq: false,
     queue: false,
     html: '<div id="html-uploader" class="form-group"' +
@@ -22,12 +23,12 @@
     init: function(owner) {
       this.owner = owner;
       this.queue = [];
-    this.html = $.simpletml(this.html, {lang: lang.posteditor});
+    this.html = $.parsetml(this.html, {lang: lang.posteditor});
       var self = this;
-      var fr = new window.FileReader();
-      $(this.html).appendTo(owner.holder).find(this.idhtml).fileReaderJS({
+      this.fr = new window.FileReader();
+      var options = {
         accept: owner.mime,
-        readAsDefault: ('readAsBinaryString' in fr ? 'BinaryString' : 'ArrayBuffer'),
+        readAsDefault: ('readAsBinaryString' in this.fr ? 'BinaryString' : 'ArrayBuffer'),
         on: {
           load: function(e, file) {
             self.queue.push(file);
@@ -38,7 +39,10 @@
             if (owner.maxsize && (file.size > (owner.maxsize * 1024 * 1024))) return false;
           }
         }
-      });
+      };
+      
+      $(this.html).appendTo(owner.holder).find(this.idhtml).fileReaderJS(options);
+      $("body").fileClipboard(options);
     },
     
     start: function() {

@@ -38,23 +38,23 @@
     
     //forward declaration for future plugins as yandex metrika or google analitik
   stat: function(name, param) {},
-
+    
     // current image galery
     openimage: function(image) {
-//image = {url, title, description...}
+    //image = {url, title, description...}
       // nothing abstract, must be assigned later
     },
     
     linkimage: function(link) {
-var file = link.data("file");
-
+      var file = link.data("file");
+      
       return this.openimage({
-url: link.attr("href"),
-title: link.attr("title"),
-description:  $("img", link).attr("alt"),
-width: parseInt(file.width),
-height: parseInt(file.height)
-});
+        url: link.attr("href"),
+        title: link.attr("title"),
+        description:  $("img", link).attr("alt"),
+        width: parseInt(file.width),
+        height: parseInt(file.height)
+      });
     }
   };
   
