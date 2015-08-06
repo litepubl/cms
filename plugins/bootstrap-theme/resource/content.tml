@@ -1,6 +1,5 @@
 <p class="help-block">$lang.helpblock</p>
 
-
 <div id="html-uploader" class="form-group">
 <label for="file-input">$lang.upload</label>
 <input type="file" id="file-input" name="Filedata" />
@@ -8,3 +7,10 @@
 </div>
     
 [submit=update]
+
+<h5 id="helpstatus" class="help-block">
+<span id="warnsize" class="text-warning hide">$lang.warnsize</span>
+<span id="success" class="text-success hide">$lang.success</span>
+<span id="fail" class="text-danger hide">$lang.fail</span>
+<span id="percent" class=text-info hide"></span>
+</h5>

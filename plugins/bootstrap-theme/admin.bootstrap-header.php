@@ -54,7 +54,12 @@ $css = str_replace('%%file%%', sprintf('data:%s;base64,%s', $_FILES[$k]['type'],
 $filename = litepublisher::$paths->files . 'js/header.css';
 file_put_contents($filename, $css);
 @chmod($filename, 0666);
-tcssmerger::i()->add('default', 'files/js/header.css');
+
+$merger = tcssmerger::i();
+$merger->lock();
+$merger->add('default', 'files/js/header.css');
+$merger->unlock();
+
 //file_put_contents($filename . '.tmp', $data);
 
     $lang = tlocal::inifile($this, '.admin.ini');
