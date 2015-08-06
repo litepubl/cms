@@ -1,0 +1,6 @@
+<div id="html-uploader" class="form-group">
+<label for="file-input">%%lang.upload%%</label>
+<input type="file" id="file-input" name="Filedata" />
+<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>
+</div>
+    

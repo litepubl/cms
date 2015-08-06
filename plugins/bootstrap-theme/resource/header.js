@@ -5,20 +5,12 @@
 file: false,
 style: false,
     jq: false,
-    html: '<div id="html-uploader" class="form-group"' +
-    '<label for="file-input">%%lang.upload%%</label>' +
-    '<input type="file" id="file-input" name="Filedata" multiple />' +
-    '<div id="dropzone" class="help-block">%%lang.dragfiles%%</div>' +
-    '</div>',
-    
-    idhtml: "#file-input, #dropzone",
+    idinput: "#file-input, #dropzone",
     
     init: function() {
-    this.html = $.parsetml(this.html, {lang: lang.posteditor});
-
       var self = this;
       var fr = new window.FileReader();
-      $(this.html).appendTo(owner.holder).find(this.idhtml).fileReaderJS({
+$(this.idinput).fileReaderJS({
         accept: "image/jpeg",
         readAsDefault: ('readAsBinaryString' in fr ? 'BinaryString' : 'ArrayBuffer'),
         on: {
