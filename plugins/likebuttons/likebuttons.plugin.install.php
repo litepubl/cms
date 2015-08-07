@@ -10,6 +10,10 @@ function likebuttonsInstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $js->add('default', "plugins/$name/resource/likebuttons.min.js");
+
+$js->addtext('default', 'facebook_appid',
+ ";ltoptions.facebook_appid='$self->facebook_appid';");
+
   $js->unlock();
   
   tcssmerger::i()->add('default', 'js/litepubl/common/css/odnoklassniki.min.css');
@@ -20,6 +24,8 @@ function likebuttonsUninstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $js->deletefile('default', "plugins/$name/resource/likebuttons.min.js");
+
+$js->deletetext('default', 'facebook_appid');
   $js->unlock();
   
   //stay

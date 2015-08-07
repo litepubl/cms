@@ -59,7 +59,7 @@
   }
   
   $(document).ready(function() {
-    likebuttons($("#likebuttons"));
+    likebuttons($("#likebuttons-container"));
   });
   
 })( jQuery, document );

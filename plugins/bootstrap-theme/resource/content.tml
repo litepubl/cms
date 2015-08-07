@@ -1,7 +1,5 @@
 <h4>$lang.selectimage</h4>
-<div id="radioplaces" class="form-inline">
 $radio
-</div>
 
 <p id="headerhelp" class="help-block">$lang.headerhelp</p>
 <p id="logohelp" class="help-block hide">$lang.logohelp</p>

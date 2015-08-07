@@ -29,5 +29,4 @@
     }
   };
   
-  ltoptions.facebook_appid   = '290433841025058';
 }(jQuery, ltoptions));
