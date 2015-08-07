@@ -1,0 +1,16 @@
+.navbar-brand span {
+    display: none;
+  }
+
+.navbar-brand {
+  font-size: 2em;
+  margin-top:0;
+  margin-bottom: 0;
+  padding-top:0;
+  padding-bottom: 0;
+  display: block;
+  overflow: hidden;
+  height: 50px;
+  width: %%width%%px;
+background:url("%%file%%") no-repeat center left;
+}
