@@ -26,7 +26,7 @@ foreach (array('header', 'logo') as $name) {
 }
 
     $result .= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
-    $result .= '<script type="text/javascript" src="$site.files/plugins/bootstrap-theme/resource/header.js"></script>';
+    $result .= '<script type="text/javascript" src="$site.files/plugins/bootstrap-theme/resource/header.min.js"></script>';
 
     return $result;
   }
@@ -37,6 +37,11 @@ foreach (array('header', 'logo') as $name) {
     $lang->addsearch('themeheader', 'editor');
     $html = tadminhtml::i();
     $args = new targs();
+$theme = ttheme::i();
+$args->radio =
+$theme->getradio('radioplace', 'header', $lang->header, true) .
+$theme->getradio('radioplace', 'logo', $lang->logo, false);
+
     return $html->parsearg($tml, $args);
   }
   
@@ -46,7 +51,7 @@ foreach (array('header', 'logo') as $name) {
     }
     
 if (isset($_FILES['header'])) {
-$name = 'image';
+$name = 'header';
 } elseif (isset($_FILES['logo'])) {
 $name = 'logo';
 } else {
@@ -59,6 +64,11 @@ return;
     ($data = file_get_contents($_FILES[$name]['tmp_name']))
     ) {
       $css = file_get_contents(dirname(__file__) . "/resource/css.$name.tml");
+if ($name == 'logo') {
+$info = @getimagesize($_FILES[$name]['tmp_name']);
+$css = str_replace('%%width%%', $info[0], $css);
+}
+
       $css = str_replace('%%file%%', 'data:%s;base64,%s', $css);
       $css = sprintf($css, $_FILES[$name]['type'], base64_encode($data));
       
@@ -68,7 +78,8 @@ return;
       
       $merger = tcssmerger::i();
       $merger->lock();
-      $merger->add('default', "files/js/$name.css");
+if ($name == 'logo') $merger->deletefile('default', '/themes/default/css/logo.css');
+      $merger->add('default', "/files/js/$name.css");
       $merger->unlock();
       
       //file_put_contents($filename . '.tmp', $data);

@@ -8,8 +8,11 @@
   'use strict';
   
   litepubl.Headereditor = Class.extend({
-    file: false,
-    style: false,
+name: 'header',
+    logofile: false,
+headerfile: false,
+    logo: false,
+header: false,
     filereader: false,
     jq: false,
     idinput: "#file-input, #dropzone",
@@ -32,22 +35,50 @@
       
       var self = this;
       this.savebutton = $("#submitbutton-update").on("click.header", function() {
-        if (self.file) {
+        if (self[self.name + "file"]) {
           $(this).prop("disabled", true);
           self.submit();
         }
         
         return false;
       });
+
+//anouth single radio to control image select
+$("input[name=radioplace]").on("change.place", function() {
+if ($(this).attr("value") == "header") {
+self.name = "header";
+$("#headerhelp").removeClass("hide");
+$("#logohelp").addClass("hide");
+} else {
+self.name = "logo";
+$("#headerhelp").addClass("hide");
+$("#logohelp").removeClass("hide");
+}
+});
       
       this.helpstatus= $("#helpstatus");
     },
     
     add: function(e, file) {
-      this.file = file;
-      var css = litepubl.tml.header.replace('%%file%%', e.target.result);
-      if (this.style) this.style.remove();
-      this.style = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+      this[this.name + "file"] = file;
+      if (this[this.name]) this[this.name].remove();
+
+      var css = litepubl.tml[this.name].replace('%%file%%', e.target.result);
+
+// get logo width
+if (this.name == "logo") {
+var self = this;
+var img = new Image();
+img.onload = function() {
+this.onload = null;
+css = css.replace('%%width%%', this.width);
+      self.logo = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+};
+
+img.src = e.target.result;
+} else {
+      this[this.name] = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+}
       
       this.setstatus('warnsize', file.size > 30000);
     },
@@ -59,7 +90,7 @@
     
     submit: function() {
       this.setstatus('percent', true);
-      this.upload("image", this.file);
+      this.upload(this.name, this[this.name + "file"]);
     },
     
     setprogress: function(current, total) {
@@ -69,7 +100,11 @@
     
     uploaded: function(resp) {
       this.savebutton.prop("disabled", false);
+if (resp.result == "ok") {
       this.setstatus('success', true);
+} else {
+      this.setstatus('error', true);
+}
     },
     
     upload: function(name, file) {
