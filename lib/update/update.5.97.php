@@ -290,4 +290,8 @@ if (isset($parser->data['stylebefore'])) {
 unset($parser->data['stylebefore']);
 $parser->save();
 }
+
+if (tview::i()->theme->name == 'default') {
+tplugins::i()->add('bootstrap-theme');
+}
 }
