@@ -1,6 +1,7 @@
 SETLOCAL  
 set mini=java -jar d:\OpenServer\domains\cms\build\closure\compiler.jar --js=
 set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar
+set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
 cd d:\OpenServer\domains\cms\js\litepubl\system
 %mini%css-loader.js --js_output_file=css-loader.min.js
 %mini%escape.js --js_output_file=escape.min.js
@@ -23,7 +24,7 @@ cd css
 %css% common.css -o common.min.css
 %css% filelist.css -o filelist.min.css
 %css% form.inline.css -o form.inline.min.css
-node D:\OpenServer\modules\node_modules\less\bin\lessc odnoklassniki.less odnoklassniki.css
+%less% odnoklassniki.less odnoklassniki.css
 %css% odnoklassniki.css -o odnoklassniki.min.css
 cd ..\..\comments
 %mini%comments.js --js_output_file=comments.min.js
@@ -79,7 +80,7 @@ cd ..\..\deprecated
 cd css
 %css% align.css -o align.min.css
 %css% button.css -o button.min.css
-node D:\OpenServer\modules\node_modules\less\bin\lessc fileman.less fileman.css
+%less% fileman.less fileman.css
 %css% fileman.css -o fileman.min.css
 
 %css% table.css -o table.min.css
@@ -154,7 +155,10 @@ cd ..\..\photoswipe\resource
 %mini%ru.photoswipe.plugin.js --js_output_file=ru.photoswipe.plugin.min.js
 cd default-skin
 %css% default-skin.css -o default-skin.min.css
-node D:\OpenServer\modules\node_modules\less\bin\lessc default-skin.inline.less default-skin.inline.css
+%less% default-skin.inline.less default-skin.inline.css
 %css% default-skin.inline.css -o default-skin.inline.min.css
+cd ..\..\..\..\themes\default\
+%less% less\logo.less css\logo.css
+%css% logo.css -o logo.min.css
 cd ..\..\..\build
 ENDLOCAL   

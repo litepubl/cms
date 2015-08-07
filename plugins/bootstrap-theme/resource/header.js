@@ -8,11 +8,11 @@
   'use strict';
   
   litepubl.Headereditor = Class.extend({
-name: 'header',
+    name: 'header',
     logofile: false,
-headerfile: false,
+    headerfile: false,
     logo: false,
-header: false,
+    header: false,
     filereader: false,
     jq: false,
     idinput: "#file-input, #dropzone",
@@ -42,19 +42,19 @@ header: false,
         
         return false;
       });
-
-//anouth single radio to control image select
-$("input[name=radioplace]").on("change.place", function() {
-if ($(this).attr("value") == "header") {
-self.name = "header";
-$("#headerhelp").removeClass("hide");
-$("#logohelp").addClass("hide");
-} else {
-self.name = "logo";
-$("#headerhelp").addClass("hide");
-$("#logohelp").removeClass("hide");
-}
-});
+      
+      //anouth single radio to control image select
+      $("input[name=radioplace]").on("change.place", function() {
+        if ($(this).attr("value") == "header") {
+          self.name = "header";
+          $("#headerhelp").removeClass("hide");
+          $("#logohelp").addClass("hide");
+        } else {
+          self.name = "logo";
+          $("#headerhelp").addClass("hide");
+          $("#logohelp").removeClass("hide");
+        }
+      });
       
       this.helpstatus= $("#helpstatus");
     },
@@ -62,23 +62,23 @@ $("#logohelp").removeClass("hide");
     add: function(e, file) {
       this[this.name + "file"] = file;
       if (this[this.name]) this[this.name].remove();
-
+      
       var css = litepubl.tml[this.name].replace('%%file%%', e.target.result);
-
-// get logo width
-if (this.name == "logo") {
-var self = this;
-var img = new Image();
-img.onload = function() {
-this.onload = null;
-css = css.replace('%%width%%', this.width);
-      self.logo = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
-};
-
-img.src = e.target.result;
-} else {
-      this[this.name] = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
-}
+      
+      // get logo width
+      if (this.name == "logo") {
+        var self = this;
+        var img = new Image();
+        img.onload = function() {
+          this.onload = null;
+          css = css.replace('%%width%%', this.width);
+          self.logo = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+        };
+        
+        img.src = e.target.result;
+      } else {
+        this[this.name] = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
+      }
       
       this.setstatus('warnsize', file.size > 30000);
     },
@@ -100,11 +100,11 @@ img.src = e.target.result;
     
     uploaded: function(resp) {
       this.savebutton.prop("disabled", false);
-if (resp.result == "ok") {
-      this.setstatus('success', true);
-} else {
-      this.setstatus('error', true);
-}
+      if (resp.result == "ok") {
+        this.setstatus('success', true);
+      } else {
+        this.setstatus('error', true);
+      }
     },
     
     upload: function(name, file) {

@@ -26,6 +26,11 @@ function bootstrap_themeInstall($self) {
   $css->externalfunc(get_class($css), '_deprecated_files', false)
   );
   
+  tjsmerger_switch ($css,
+  $css->externalfunc(get_class($css), '_bootstrap_files', false),
+  array()
+  );
+  
   //default installed plugins
   $plugins = tplugins::i();
   $plugins->lock();
@@ -57,6 +62,12 @@ function bootstrap_themeUninstall($self) {
   $css->externalfunc(get_class($css), '_deprecated_files', false),
   array()
   );
+  
+  tjsmerger_switch ($css,
+  array(),
+  $css->externalfunc(get_class($css), '_bootstrap_files', false)
+  );
+  
   
   $css->unlock();
   

@@ -53,7 +53,7 @@ class photoswipe extends tplugin {
     $css = tcssmerger::i();
     $css->lock();
     $css->deletefile('default', "plugins/$plugindir/resource/photoswipe.min.css");
-    $css->deletefile('default', "plugins/$plugindir/resource/default-skin/default-skin.c.min.css");
+    $css->deletefile('default', "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
     $css->unlock();
   }
   

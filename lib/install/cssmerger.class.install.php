@@ -26,7 +26,10 @@ function tcssmergerInstall($self) {
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
   $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
   
-  $self->add($section, '/js/litepubl/effects/css/homeimage.min.css');
+  $list = tcssmerger_bootstrap_files ($self);
+  foreach ($list as $filename) {
+    $self->add($section, $filename);
+  }
   
   $section = 'admin';
   $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
@@ -59,5 +62,12 @@ function tcssmerger_deprecated_files($self) {
   '/js/litepubl/deprecated/css/align.min.css',
   '/js/litepubl/deprecated/css/button.min.css',
   '/js/litepubl/deprecated/css/table.min.css',
+  );
+}
+
+function tcssmerger_bootstrap_files($self) {
+  return array(
+  '/js/litepubl/effects/css/homeimage.min.css',
+  '/themes/default/css/logo.min.css'
   );
 }
