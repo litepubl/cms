@@ -58,6 +58,8 @@ MediaElement.js Copyright 2010-2015, John Dyer (http://j.hn) License: MIT
 
 SWFUpload is (c) 2006-2007 Lars Huring, Olov Nilzйn and Mammon Media and is released under the MIT License
 
+PhotoSwipe Copyright (c) 2015 Dmitry Semenov (http://photoswipe.com) licensed under MIT license
+
 prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) http://creativecommons.org/licenses/by/2.5/
 
 FileReader.js Copyright 2012 Brian Grinstead - MIT License.
@@ -83,3 +85,5 @@ Punycode Library Copyright (c) 2011 Takehito Gondo MIT License
 PemFTP - A Ftp implementation in pure PHP copyright Alexey Dotsenko LGPL License 
 
 PHP SMTP class Author: Chris Ryan License: LGPL
+
+CKEditor Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved. GNU Lesser General Public License Version 2.1 or later (the "LGPL")
