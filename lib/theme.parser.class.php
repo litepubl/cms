@@ -26,7 +26,6 @@ class tthemeparser extends tevents {
     $this->addmap('extrapaths', array());
     $this->data['replacelang'] = false;
     $this->data['removephp'] = true;
-    $this->data['stylebefore'] = true;
     
     $this->fixsubcount = true;
     

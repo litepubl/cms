@@ -155,7 +155,6 @@ class Tadminoptions extends tadminmenu {
       
       $themeparser = tthemeparser::i();
       $args->replacelang = $themeparser->replacelang;
-      $args->stylebefore = $themeparser->stylebefore;
       
       $args->formtitle = $lang->viewoptions;
       return $html->adminform('
@@ -168,7 +167,6 @@ class Tadminoptions extends tadminmenu {
       [checkbox=hidefilesonpage]
       [checkbox=icondisabled]
       [checkbox=replacelang]
-      [checkbox=stylebefore]
       ', $args);
       break;
       
@@ -420,18 +418,7 @@ class Tadminoptions extends tadminmenu {
       
       $themeparser = tthemeparser::i();
       $themeparser->replacelang = isset($replacelang );
-      $themeparser->stylebefore = isset($stylebefore);
       $themeparser->save();
-      
-      // restore style after
-      if (!$themeparser->stylebefore) {
-        $css = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';
-        $t = ttemplate::i();
-        if (false !== strpos($t->heads, "<!--$css-->")) {
-          $t->heads = str_replace("<!--$css-->", $css, $t->heads);
-          $t->save();
-        }
-      }
       break;
       
       case 'files':
