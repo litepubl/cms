@@ -23,7 +23,7 @@ function tjsmergerInstall($self) {
   '/js/plugins/class-extend.min.js',
   '/js/plugins/jquery.cookie.min.js',
   '/js/plugins/tojson.min.js',
-  '/js/plugins/fontfaceobserver.standalone.js',
+  '/js/plugins/fontfaceobserver.js',
   
   // litepubl/system
   '/js/litepubl/system/css-loader.min.js',

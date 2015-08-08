@@ -36,7 +36,7 @@ $js->lock();
 
 $system = array(
 '/js/plugins/tojson.min.js',
-'/js/plugins/fontfaceobserver.standalone.js',
+'/js/plugins/fontfaceobserver.js',
 
 // litepubl/system
 '/js/litepubl/system/css-loader.min.js',
@@ -261,7 +261,7 @@ $t->footer = str_replace('2013', '2015', $t->footer);
       $t->data[$css->basename] = $css->revision;
 
 $cs = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />';        
-$t->head = str_replace("<!--$cs-->", $cs, $t->head);
+$t->heads = str_replace("<!--$cs-->", $cs, $t->heads);
 
 $t->save();
 

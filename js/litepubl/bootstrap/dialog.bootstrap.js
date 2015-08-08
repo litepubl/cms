@@ -73,7 +73,7 @@
       if (!this.dialog) return false;
       this.options = false;
       this.footer = false;
-      this.dialog.removetooltip();
+      this.dialog.find("tooltip-toggle").tooltip("destroy");
       this.dialog.remove();
       this.dialog = false;
       if (this.style) {

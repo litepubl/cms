@@ -35,7 +35,7 @@ function bootstrap_themeInstall($self) {
   $plugins = tplugins::i();
   $plugins->lock();
   $plugins->add('likebuttons');
-  $plugins->add('oldestposts');   $plugins->add('photoswipe');
+  $plugins->add('photoswipe');
   $plugins->unlock();
   
   $css->unlock();

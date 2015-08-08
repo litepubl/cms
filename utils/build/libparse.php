@@ -200,7 +200,6 @@ $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }
 
-echo "<pre>\n";
 $linescount = 0;
 $filecount = 0;
 $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
@@ -272,6 +271,7 @@ parsedir($rootdir . 'lib' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATO
 BuildKernel($rootdir . 'lib' . DIRECTORY_SEPARATOR);
 }
 
+echo "<pre>\n";
 echo "$linescount = lines count, $filecount = file count\n</pre>\n<pre>";
 
 //echo ord('}');

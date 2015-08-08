@@ -22,16 +22,4 @@
     });
   };
   
-  $.fn.removetooltip = function() {
-    this.find("tooltip-toggle").each(function() {
-      var data = $(this).data("bs.tooltip");
-      if (data) {
-        clearTimeout(data.timeout);
-        if (("$tip" in data) && data.$tip) data.$tip.remove();
-      }
-    });
-    
-    return this;
-  };
-  
 })( jQuery);
