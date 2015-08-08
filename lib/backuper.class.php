@@ -457,7 +457,7 @@ class tbackuper extends tevents {
       $this->hasdata = false;
       $this->existingfolders = array();
       $this->createarchive();
-      
+
       switch ($archtype) {
         case 'tar':
         $this->tar->loadfromstring($content);
@@ -476,8 +476,7 @@ class tbackuper extends tevents {
           }
           
           $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
-          
-          if (!$this->uploadfile($name,$item['file'], $item['mode'])) return $this->errorwrite($item['name']);
+          //if (!$this->uploadfile($name,$item['file'], $item['mode'])) return $this->errorwrite($item['name']);
         }
         
         $this->onuploaded($this);

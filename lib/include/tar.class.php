@@ -92,7 +92,8 @@ class tar {
 $unsigned_chksum = 0;
         for($i=0; $i<512; $i++)
             $unsigned_chksum += ord($bytestring[$i]);
-        for($i=0; $i<8; $i++)
+
+       for($i=0; $i<8; $i++)
             $unsigned_chksum -= ord($bytestring[148 + $i]);
         $unsigned_chksum += ord(" ") * 8;
 
@@ -134,6 +135,11 @@ $unsigned_chksum = 0;
             // Parse the file size
             $file_size      = octdec(substr($this->tar_file,$main_offset + 124,12));
 
+if ($file_name      == 'pax_global_header') {
+            $main_offset += 512 + (ceil($file_size / 512) * 512);
+continue;
+}
+
             // Parse the file update time - unix timestamp format
             $file_time      = octdec(substr($this->tar_file,$main_offset + 136,12));
 
@@ -147,8 +153,11 @@ $unsigned_chksum = 0;
             $file_gname     = $this->__parseNullPaddedString(substr($this->tar_file,$main_offset + 297,32));
 
             // Make sure our file is valid
-            if($this->__computeUnsignedChecksum(substr($this->tar_file,$main_offset,512)) != $file_chksum)
+/* ignore checksum, sorry
+            if(($sum = $this->__computeUnsignedChecksum(substr($this->tar_file,$main_offset,512))) != $file_chksum) {
                 return false;
+}
+*/
 
             // Parse File Contents
             $file_contents      = substr($this->tar_file,$main_offset + 512,$file_size);
@@ -216,8 +225,10 @@ $unsigned_chksum = 0;
         unset($this->tar_file);
         unset($this->files);
         unset($this->directories);
-        unset($this->numFiles);
-        unset($this->numDirectories);
+        //unset($this->numFiles);
+        $this->numFiles = 0;
+        //unset($this->numDirectories);
+$this->numDirectories = 0;
 
         $this->tar_file = $s;
         if($this->tar_file[0] == chr(31) && $this->tar_file[1] == chr(139) && $this->tar_file[2] == chr(8)) {
