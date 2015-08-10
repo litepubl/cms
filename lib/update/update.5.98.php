@@ -1,22 +1,24 @@
 <?php
-/**
-* Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+function update598() {
+$t = ttemplate::i();
+//remove icons
+$t->heads = strtr($t->heads, array(
+'<link rel="shortcut icon" type="image/x-icon" href="$site.files/favicon.ico" />' => '',
+'<link rel="apple-touch-icon" href="$site.files/apple-touch-icon.png" />' => '',
+));
 
-function ttemplateInstall($self) {
-  $self->heads =
-  '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />
-  <script type="text/javascript" src="$site.files$template.jsmerger_default"></script>
-<link rel="alternate" type="application/rss+xml" title="$site.name RSS Feed" href="$site.url/rss.xml" />
-  <link rel="pingback" href="$site.url/rpc.xml" />
-  <link rel="EditURI" type="application/rsd+xml" title="RSD" href="$site.url/rsd.xml" />
-  <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="$site.url/wlwmanifest.xml" />
-  <meta name="generator" content="Lite Publisher $site.version" /> <!-- leave this for stats -->
-  <meta name="keywords" content="$template.keywords" />
-  <meta name="description" content="$template.description" />
-  <link rel="sitemap" href="$site.url/sitemap.htm" />
+//remove duplicates
+$a = explode("\n", $t->heads);
+foreach ($a as $s) {
+if (($s = trim($s)) && ($first = strpos($t->heads, $s))) {
+if ($second = strrpos($t->heads, $s) && ($first != $scond)) {
+// remove second string
+$t->heads = substr($t->heads, 0, $second) . substr($t->heads, $second + strlen($s) + 1);
+}
+}
+}
+
+$t->heads .= '
 <link rel="apple-touch-icon" sizes="57x57" href="$site.files/js/litepubl/logo/apple-touch-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="$site.files/js/litepubl/logo/apple-touch-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="$site.files/js/litepubl/logo/apple-touch-icon-72x72.png">
@@ -37,12 +39,8 @@ function ttemplateInstall($self) {
 <meta name="msapplication-config" content="$site.files/browserconfig.xml">
 <meta name="theme-color" content="#ffffff">
 ';
-  
-  //footer
-  $html = tadminhtml::i();
-  $html->section = 'installation';
-  $lang = tlocal::i('installation');
-  ttheme::$vars['lang'] = $lang;
-  $theme = ttheme::i();
-  $self->footer = $theme->parse($html->footer);
+
+$t->save();
+
+
 }
