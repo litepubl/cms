@@ -43,4 +43,9 @@ $t->heads .= '
 $t->save();
 
 
+$parser = tthemeparser::i();
+if (!isset($parser->data['tagfiles'])) {
+$parser->data['tagfiles'] = array('lib/install/ini/themeparser.ini');
+$parser->save();
+}
 }
