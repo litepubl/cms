@@ -176,7 +176,10 @@ class tadminservice extends tadminmenu {
       return $this->doupdate($_POST);
       
       case 'backup':
+if (!isset($_POST['sqlbackup'])) {
       if (!$this->checkbackuper()) return $html->h3->erroraccount;
+}
+
       extract($_POST, EXTR_SKIP);
       $backuper = tbackuper::i();
       if (isset($restore)) {
@@ -280,7 +283,10 @@ class tadminservice extends tadminmenu {
     //@file_put_contents(litepublisher::$domain . ".zip", $content);
     if ($filename == '') $filename = str_replace('.', '-', litepublisher::$domain) . date('-Y-m-d') . '.zip';
     if (ob_get_level()) ob_end_clean ();
+
     header('HTTP/1.1 200 OK', true, 200);
+      Header( 'Cache-Control: no-cache, must-revalidate');
+      Header( 'Pragma: no-cache');
     header('Content-type: application/octet-stream');
     header('Content-Disposition: attachment; filename=' . $filename);
     header('Content-Length: ' .strlen($content));

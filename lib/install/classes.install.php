@@ -22,7 +22,7 @@ function install_engine($email, $language) {
 }
 
 function parse_classes_ini($inifile) {
-  $install_dir = litepublisher::$paths->lib.'install' . DIRECTORY_SEPARATOR;
+  $install_dir = litepublisher::$paths->lib.'install' . DIRECTORY_SEPARATOR . 'ini' . DIRECTORY_SEPARATOR;
   if (!$inifile) {
     $inifile = $install_dir . 'classes.ini';
   } elseif(file_exists($install_dir . $inifile)) {
