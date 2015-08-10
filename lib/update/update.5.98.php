@@ -11,7 +11,7 @@ $t->heads = strtr($t->heads, array(
 $a = explode("\n", $t->heads);
 foreach ($a as $s) {
 if (($s = trim($s)) && ($first = strpos($t->heads, $s))) {
-if ($second = strrpos($t->heads, $s) && ($first != $scond)) {
+if (($second = strrpos($t->heads, $s)) && ($first != $second)) {
 // remove second string
 $t->heads = substr($t->heads, 0, $second) . substr($t->heads, $second + strlen($s) + 1);
 }

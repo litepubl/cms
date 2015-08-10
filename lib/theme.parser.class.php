@@ -252,9 +252,8 @@ public $tagfiles;
   
   public function parsetags(ttheme $theme, $s) {
     $this->theme = $theme;
-if (!$thispaths || !count($this->paths)) {
+if (!$this->paths || !count($this->paths)) {
     $this->paths = $this->loadpaths();
-
 }
 
     $s = trim($s);
@@ -682,14 +681,14 @@ if (!$thispaths || !count($this->paths)) {
       
       public function loadpaths() {
 $result = array();
-foreach ($this->inifiles as $filename) {
-$filename = litepublisher::$paths->home . trin($filename, '/');
-if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true)) {
+foreach ($this->tagfiles as $filename) {
+$filename = litepublisher::$paths->home . trim($filename, '/');
+if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
 $result = $result + $a;
 }
 }
 
-$result = $result + $this-extrapaths;
+$result = $result + $this->extrapaths;
         $this->callevent('ongetpaths', array(&$result));
         return $result;
       }
