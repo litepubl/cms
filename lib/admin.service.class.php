@@ -220,7 +220,7 @@ class tadminservice extends tadminmenu {
           tbackuper::include_tar();
           $tar = new tar();
           $tar->addstring($content, $filename, 0644);
-          $content = $this->tar->savetostring(true);
+          $content = $tar->savetostring(true);
           $filename .= '.tar.gz';
           unset($tar);
           break;
