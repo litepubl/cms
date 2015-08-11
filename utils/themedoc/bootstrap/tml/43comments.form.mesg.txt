@@ -32,7 +32,6 @@ $lang.comuser
 ]
 
 $loadhold = [
-<h4>%s</h4>
 $lang.loadhold
 <a class="loadhold " href="$site.url/admin/comments/hold/">$lang.loadhold</a>
 ]

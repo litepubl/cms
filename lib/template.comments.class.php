@@ -48,8 +48,11 @@ class ttemplatecomments extends tevents {
           $result .= $this->loadhold;
         $result .= '<?php } ?>';
         
-        $mesg = $this->logged;
-        if ($cm->canedit || $cm->candelete) $mesg .= "\n" . $this->adminpanel;
+        $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
+        if ($cm->canedit || $cm->candelete) {
+$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.adminpanel'];
+}
+
         $args->mesg = $this->fixmesg($mesg, $theme);
         $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result .= $this->getjs(($post->idperm == 0) && $cm->confirmlogged, 'logged');

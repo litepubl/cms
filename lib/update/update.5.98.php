@@ -51,7 +51,7 @@ $parser->save();
 
 $tc = ttemplatecomments::i();
 if (isset($tc->data['logged'])) {
-unset($tc->data['logged'], $tc->data['
+unset($tc->data['logged'], $tc->data['adminpanel'], $tc->data['reqlogin'], $tc->data['guest'], $tc->data['regaccount'], $tc->data['comuser'], $tc->data['loadhold']);
 $tc->save();
 }
 }
