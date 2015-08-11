@@ -2,38 +2,37 @@ content.post.templatecomments.form.mesg = [
 $logged = [
 $lang.logged
 <?php echo litepublisher::$site->getuserlink(); ?>
-(<a class="logout" href="$site.url/admin/logout/{$site.q}backurl=">$lang.logout</a>).
+(<a class="logout mesg-logged" href="$site.url/admin/logout/{$site.q}backurl=">$lang.logout</a>).
 $lang.cansend
 ]
 
 $adminpanel = [
 $lang.adminpanel
-<a class="admin-panel" href="$site.url/admin/comments/">$lang.controlpanel</a>
+<a class="admin-panel mesg-adminpanel" href="$site.url/admin/comments/">$lang.controlpanel</a>
 ]
 
 $reqlogin = [
 $lang.reqlogin
-<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+<a class="log-in mesg-reqlogin" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 ]
   
 $guest = [
 $lang.guest
-<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+<a class="log-in mesg-guest" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 ]
 
 $regaccount = [
 $lang.regaccount
-<a class="registration" href="$site.url/admin/reguser/{$site.q}backurl=">$lang.signup</a>
+<a class="registration mesg-regaccount" href="$site.url/admin/reguser/{$site.q}backurl=">$lang.signup</a>
 ]
 
 $comuser = [
+<a class="log-in mesg-comuser" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 $lang.comuser
-<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 ]
 
 $loadhold = [
-$lang.loadhold
-<a class="loadhold " href="$site.url/admin/comments/hold/">$lang.loadhold</a>
+<span>$lang.loadhold</span>
 ]
 
 ]
