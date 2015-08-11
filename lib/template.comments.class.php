@@ -44,8 +44,8 @@ class ttemplatecomments extends tevents {
         //add hold list because we need container when comment will be hold
         $result .= 'if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>';
           $args->comment = '';
-          $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'], $args);
-          $result .= $this->loadhold;
+          $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'] .
+$theme->templates['content.post.templatecomments.form.mesg.loadhold'], $args);
         $result .= '<?php } ?>';
         
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
@@ -60,24 +60,33 @@ $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.admin
         
         switch ($post->comstatus) {
           case 'reg':
-          $mesg = $this->reqlogin;
-          if (litepublisher::$options->reguser) $mesg .= "\n" . $this->regaccount;
+          $mesg = $theme->templates['content.post.templatecomments.form.mesg.reqlogin;'];
+          if (litepublisher::$options->reguser) {
+$mesg .= "\n" .$theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+}
+
           $args->mesg = $this->fixmesg($mesg, $theme);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           break;
           
           case 'guest':
           $result .= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
-          $mesg = $this->guest;
-          if (litepublisher::$options->reguser) $mesg .= "\n" . $this->regaccount;
+          $mesg = $theme->templates['content.post.templatecomments.form.mesg.guest'];
+          if (litepublisher::$options->reguser) {
+$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+}
+
           $args->mesg = $this->fixmesg($mesg, $theme);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           break;
           
           case 'comuser':
           $result .= $this->getjs(($post->idperm == 0) && $cm->confirmcomuser, 'comuser');
-          $mesg = $this->comuser;
-          if (litepublisher::$options->reguser) $mesg .= "\n" . $this->regaccount;
+          $mesg = $theme->templates['content.post.templatecomments.form.mesg.comuser'];
+          if (litepublisher::$options->reguser) }
+$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+}
+
           $args->mesg = $this->fixmesg($mesg, $theme);
           
           foreach (array('name', 'email', 'url') as $field) {

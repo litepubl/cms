@@ -27,8 +27,8 @@ $lang.regaccount
 ]
 
 $comuser = [
-<a class="log-in mesg-comuser" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 $lang.comuser
+<a class="log-in mesg-comuser" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
 ]
 
 $loadhold = [
