@@ -44,6 +44,8 @@ tml/42comments.regform.txt
 ru/42comments.regform.txt
 tml/43comments.form.txt
 ru/43comments.form.txt
+tml/43comments.form.mesg.txt
+ru/43comments.form.mesg.txt
 tml/44comments.confirmform.txt
 ru/44comments.confirmform.txt
 tml/45comments.count.txt

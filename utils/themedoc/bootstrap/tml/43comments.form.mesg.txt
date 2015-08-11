@@ -1,0 +1,7 @@
+content.post.templatecomments.form.mesg = [
+$logged = [
+Вы вошли на сайт как %s (%s), вы можете отправить комментарий.
+<?php echo litepublisher::$site->getuserlink(); ?>
+<a class="logout" href="$site.url/admin/logout/{$site.q}backurl=">' . $lang->logout . '</a> 
+]
+]

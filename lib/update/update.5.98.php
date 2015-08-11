@@ -48,4 +48,10 @@ if (!isset($parser->data['tagfiles'])) {
 $parser->data['tagfiles'] = array('lib/install/ini/themeparser.ini');
 $parser->save();
 }
+
+$tc = ttemplatecomments::i();
+if (isset($tc->data['logged'])) {
+unset($tc->data['logged'], $tc->data['
+$tc->save();
+}
 }
