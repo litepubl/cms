@@ -1,7 +1,40 @@
 content.post.templatecomments.form.mesg = [
 $logged = [
-Вы вошли на сайт как %s (%s), вы можете отправить комментарий.
+$lang.logged
 <?php echo litepublisher::$site->getuserlink(); ?>
-<a class="logout" href="$site.url/admin/logout/{$site.q}backurl=">' . $lang->logout . '</a> 
+(<a class="logout" href="$site.url/admin/logout/{$site.q}backurl=">$lang.logout</a>).
+$lang.cansend
 ]
+
+$adminpanel = [
+$lang.adminpanel
+<a class="admin-panel" href="$site.url/admin/comments/">$lang.controlpanel</a>
+]
+
+$reqlogin = [
+$lang.reqlogin
+<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+  
+$guest = [
+$lang.guest
+<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+
+$regaccount = [
+$lang.regaccount
+<a class="registration" href="$site.url/admin/reguser/{$site.q}backurl=">$lang.signup</a>
+]
+
+$comuser = [
+$lang.comuser
+<a class="log-in" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+
+$loadhold = [
+<h4>%s</h4>
+$lang.loadhold
+<a class="loadhold " href="$site.url/admin/comments/hold/">$lang.loadhold</a>
+]
+
 ]
