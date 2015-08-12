@@ -123,8 +123,8 @@ $excerpt = [<li><a href="$post.link" title="$lang.permalink: &laquo;$post.title&
 
 content.navi = [
 <div id="paginator" data-page="$page" data-count="$count" data-perpage="$perpage">
-$prev = [<span class="previous-entries">$link</span>]
-$next = [<span class="next-entries">$link</span>]
+$prev = []
+$next = []
 $link = [<a href="$link">$page</a>]
 $current = [<span class="current">$page</span>]
 $divider = []

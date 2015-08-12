@@ -42,3 +42,17 @@
   z-index: 5;
   color: white !important;
 }
+
+@media (min-width: 768px) {
+.home-image h1 {
+font-size: 48px !important;
+}
+
+.home-image h2 {
+font-size: 36px !important;
+}
+
+.home-image h3 {
+font-size: 24px !important;
+}
+}

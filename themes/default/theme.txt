@@ -674,6 +674,49 @@ $antispam - строка созданная движком для защиты �
 Следующей после отправки комментария находится форма подтверждения оного. Зададим шаблон для формы подтверждения:
 */
 
+content.post.templatecomments.form.mesg = [
+$logged = [
+$lang.logged
+<?php echo litepublisher::$site->getuserlink(); ?>
+(<a class="logout mesg-logged" href="$site.url/admin/logout/{$site.q}backurl=">$lang.logout</a>).
+$lang.cansend
+]
+
+$adminpanel = [
+$lang.adminpanel
+<a class="admin-panel mesg-adminpanel" href="$site.url/admin/comments/">$lang.controlpanel</a>
+]
+
+$reqlogin = [
+$lang.reqlogin
+<a class="log-in mesg-reqlogin" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+  
+$guest = [
+$lang.guest
+<a class="log-in mesg-guest" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+
+$regaccount = [
+$lang.regaccount
+<a class="registration mesg-regaccount" href="$site.url/admin/reguser/{$site.q}backurl=">$lang.signup</a>
+]
+
+$comuser = [
+$lang.comuser
+<a class="log-in mesg-comuser" href="$site.url/admin/login/{$site.q}backurl=">$lang.plslogin</a>
+]
+
+$loadhold = [
+<span>$lang.loadhold</span>
+]
+
+]
+
+/*
+
+*/
+
 content.post.templatecomments.confirmform = [
 <p class="header-comments">$lang.checkspam</p>
 <form name="preform" method="post" action="" role="form">
@@ -872,7 +915,7 @@ content.excerpts = [
 <div class="row">
 $excerpt = [
 <div class="anpost col-xs-6 col-lg-4"id="post-$post.id">
-<h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
+<h4><a href="$post.link" class="anpost-title post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 <div class="anpost-content">
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
@@ -936,29 +979,29 @@ content.excerpts.lite = [
 
 content.navi = [
 		<div><ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
-			$prev = [$link]
-			$next = [$link]
+			$prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
+			$next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
 			$link = [<li><a href="$link" itemprop="url name">$page</a></li>]
-			$current = [<li class="active" itemprop="name">$page</li>]
+			$current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
 			$divider = [ ]
  </ul></div>
  ]
 
 /*
-Как видно, в шаблоне navi описаны 4 вложенных шаблона, а именно
+Как видно, в шаблоне navi описаны 5 вложенных шаблонов, а именно
 
-$prev - шаблон для ссылки на предыдущую страницу. Устарел и не используется.
-$next - шаблон ссылки на следующую страницу. Устарел и не используется как и шаблон $prev. Шаблоны оставлены для обратной совместимости.
+$prev - шаблон для ссылки на предыдущую страницу
+$next - шаблон ссылки на следующую страницу
 $link - шаблон одной ссылки
 $current - ссылка на текущую страницу, в данном случае ссылка отсутствует - только номер
 $divider - разделитель между ссылками
 
-В шаблоне $link доступны следующие теги для ее формирования:
+В шаблонах доступны следующие теги:
 $link - полный адрес страницы, включая адрес сайта
 $url - адрес страницы без адреса сайта
 $page - номер страницы, цифра
 
-Шаблоны $prev и $next используются редко, так как могут выводит всего одну/две ссылки ранее/позже, что при большом количестве страниц очень неэфективно. В настоящий момент выводится целая полоска со ссылками на номера страниц. Поэтому вы можете не описывать шаблоны $prevи $next, они оставлены больше по историчиским причинам.
+$prev и $next начинают и заканчивают список ссылок. Чтобы исключить эти ссылки, то объявите пустой шаблон []
 
 Остался последний шаблон в секции content - admin, вот его сейчас и опишим:
 */

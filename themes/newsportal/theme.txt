@@ -145,10 +145,6 @@ $post.taglinks
 $post.commentslink
 </div>]
 
-$template.content.navi.prev = [$link]
-
-$template.content.navi.next = [$link]
-
 $template.content.navi = [
 <p id="paginator" align="center" data-page="$page" data-count="$count" data-perpage="$perpage">
 $items

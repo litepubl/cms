@@ -154,10 +154,6 @@ $post.commentslink
 		</div>
 	</div>]
 
-$template.content.navi.prev = [<div class="alignleft">$link</div>]
-
-$template.content.navi.next = [<div class="alignright">$link</div>]
-
 $template.content.navi = [
 <div id="paginator" class="navigation" data-page="$page" data-count="$count" data-perpage="$perpage">
 $items
