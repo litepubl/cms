@@ -158,6 +158,7 @@ function tjsmerger_bootstrap_files() {
   
   // litepubl/bootstrap
   '/js/litepubl/bootstrap/tooltip.init.min.js',
+  '/js/litepubl/bootstrap/anpost.ellipsis.min.js',
   '/js/litepubl/bootstrap/dialog.bootstrap.min.js',
   '/js/litepubl/bootstrap/dialog.simpler.min.js',
   '/js/litepubl/bootstrap/player.bootstrap.min.js',

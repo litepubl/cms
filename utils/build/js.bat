@@ -31,6 +31,7 @@ cd ..\..\comments
 %mini%confirmcomment.js --js_output_file=confirmcomment.min.js
 %mini%moderate.js --js_output_file=moderate.min.js
 cd ..\bootstrap
+%mini%anpost.ellipsis.js --js_output_file=anpost.ellipsis.min.js
 %mini%dialog.bootstrap.js --js_output_file=dialog.bootstrap.min.js
 %mini%dialog.simpler.js --js_output_file=dialog.simpler.min.js
 %mini%player.bootstrap.js --js_output_file=player.bootstrap.min.js

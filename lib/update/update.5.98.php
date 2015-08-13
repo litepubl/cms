@@ -54,4 +54,12 @@ if (isset($tc->data['logged'])) {
 unset($tc->data['logged'], $tc->data['adminpanel'], $tc->data['reqlogin'], $tc->data['guest'], $tc->data['regaccount'], $tc->data['comuser'], $tc->data['loadhold']);
 $tc->save();
 }
+
+$themename = tview::i()->themename;
+if (($themename == 'default') || ($themename == 'shop')) {
+$js = tjsmerger::i();
+$js->lock();
+$js->add('default', '/js/litepubl/bootstrap/anpost.ellipsis.min.js');
+$js->unlock();
+}
 }
