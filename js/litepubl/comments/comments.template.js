@@ -4,7 +4,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function ($, document, window) {
+(function ($, document, ltoptions) {
   'use strict';
   
   $(document).ready(function() {
@@ -34,7 +34,6 @@
     comtheme.form = $(comtheme.form);
     if (comtheme.form.length) {
       comtheme.editor = comtheme.form.find(comtheme.editor);
-      litepubl.commentquote = new litepubl.Commentquote();
     }
   });
-}(jQuery, document, window));
+}(jQuery, document, ltoptions));
