@@ -7,7 +7,7 @@
 
 class tthemeparser extends tevents {
   public $theme;
-public $tagfiles;
+  public $tagfiles;
   public $paths;
   public $extrapaths;
   public $fixsubcount;
@@ -193,7 +193,7 @@ public $tagfiles;
         if (isset($about[litepublisher::$options->language])) {
           $about['about'] = $about[litepublisher::$options->language] + $about['about'];
         }
-
+        
         $this->abouts[$name] = $about['about'];
       } else {
         $this->abouts[$name] = false;
@@ -252,10 +252,10 @@ public $tagfiles;
   
   public function parsetags(ttheme $theme, $s) {
     $this->theme = $theme;
-if (!$this->paths || !count($this->paths)) {
-    $this->paths = $this->loadpaths();
-}
-
+    if (!$this->paths || !count($this->paths)) {
+      $this->paths = $this->loadpaths();
+    }
+    
     $s = trim($s);
     $this->callevent('beforeparse', array($theme, &$s));
     if ($this->removephp) {
@@ -680,15 +680,15 @@ if (!$this->paths || !count($this->paths)) {
       }
       
       public function loadpaths() {
-$result = array();
-foreach ($this->tagfiles as $filename) {
-$filename = litepublisher::$paths->home . trim($filename, '/');
-if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
-$result = $result + $a;
-}
-}
-
-$result = $result + $this->extrapaths;
+        $result = array();
+        foreach ($this->tagfiles as $filename) {
+          $filename = litepublisher::$paths->home . trim($filename, '/');
+          if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
+            $result = $result + $a;
+          }
+        }
+        
+        $result = $result + $this->extrapaths;
         $this->callevent('ongetpaths', array(&$result));
         return $result;
       }

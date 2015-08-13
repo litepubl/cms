@@ -150,7 +150,7 @@ class tupdater extends tevents {
     '?php=' .PHP_VERSION .
     '&mysql=' . litepublisher::$db->mysqli->server_info .
     '&litepubl=' . litepublisher::$options->version
-)) ||
+    )) ||
     
     ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
     ) {

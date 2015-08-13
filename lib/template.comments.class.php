@@ -45,14 +45,14 @@ class ttemplatecomments extends tevents {
         $result .= 'if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>';
           $args->comment = '';
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'] .
-$theme->templates['content.post.templatecomments.form.mesg.loadhold'], $args);
+          $theme->templates['content.post.templatecomments.form.mesg.loadhold'], $args);
         $result .= '<?php } ?>';
         
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
         if ($cm->canedit || $cm->candelete) {
-$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.adminpanel'];
-}
-
+          $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.adminpanel'];
+        }
+        
         $args->mesg = $this->fixmesg($mesg, $theme);
         $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result .= $this->getjs(($post->idperm == 0) && $cm->confirmlogged, 'logged');
@@ -62,9 +62,9 @@ $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.admin
           case 'reg':
           $mesg = $theme->templates['content.post.templatecomments.form.mesg.reqlogin;'];
           if (litepublisher::$options->reguser) {
-$mesg .= "\n" .$theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-}
-
+            $mesg .= "\n" .$theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+          }
+          
           $args->mesg = $this->fixmesg($mesg, $theme);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           break;
@@ -73,9 +73,9 @@ $mesg .= "\n" .$theme->templates['content.post.templatecomments.form.mesg.regacc
           $result .= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
           $mesg = $theme->templates['content.post.templatecomments.form.mesg.guest'];
           if (litepublisher::$options->reguser) {
-$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-}
-
+            $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+          }
+          
           $args->mesg = $this->fixmesg($mesg, $theme);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           break;
@@ -83,10 +83,10 @@ $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regac
           case 'comuser':
           $result .= $this->getjs(($post->idperm == 0) && $cm->confirmcomuser, 'comuser');
           $mesg = $theme->templates['content.post.templatecomments.form.mesg.comuser'];
-          if (litepublisher::$options->reguser) }
-$mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-}
-
+          if (litepublisher::$options->reguser) {
+            $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
+          }
+          
           $args->mesg = $this->fixmesg($mesg, $theme);
           
           foreach (array('name', 'email', 'url') as $field) {

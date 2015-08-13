@@ -955,7 +955,10 @@ class ttheme extends tevents {
   }
   
   public function getpages($url, $page, $count, $params = '') {
-    if (!(($count > 1) && ($page >=1) && ($page <= $count)))  return '';
+    if (!(($count > 1) && ($page >=1) && ($page <= $count)))  {
+      return '';
+    }
+    
     $args = new targs();
     $args->count = $count;
     $from = 1;
@@ -1000,12 +1003,30 @@ class ttheme extends tevents {
     if ($params) $params = litepublisher::$site->q . $params;
     
     $a = array();
+    if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
+      $i = $page - 1;
+      $args->page = $i;
+      $link = $i == 1 ? $url : $pageurl .$i . '/';
+      if ($params) $link .= $params;
+      $args->link = $link;
+      $a[] = $this->parsearg($tml_prev, $args);
+    }
+    
     foreach ($items as $i) {
       $args->page = $i;
       $link = $i == 1 ? $url : $pageurl .$i . '/';
       if ($params) $link .= $params;
       $args->link = $link;
       $a[] = $this->parsearg(($i == $page ? $currenttml : $tml), $args);
+    }
+    
+    if (($page < $count) && ($tml_next = trim($this->templates['content.navi.next']))) {
+      $i = $page + 1;
+      $args->page = $i;
+      $link = $pageurl .$i . '/';
+      if ($params) $link .= $params;
+      $args->link = $link;
+      $a[] = $this->parsearg($tml_next, $args);
     }
     
     $args->link =$url;
