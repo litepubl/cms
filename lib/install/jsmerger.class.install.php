@@ -57,7 +57,8 @@ function tjsmergerInstall($self) {
   $self->add($section, "/lib/languages/$language/default.min.js");
   
   $section = 'comments';
-  $self->add($section, '/js/litepubl/comments/comments.min.js');
+  $self->add($section, '/js/litepubl/comments/comments.template.min.js');
+  $self->add($section, '/js/litepubl/comments/comments.quote.min.js');
   $self->add($section, '/js/litepubl/comments/confirmcomment.min.js');
   $self->add($section, '/js/litepubl/comments/moderate.min.js');
   $self->add($section, "/lib/languages/$language/comments.min.js");

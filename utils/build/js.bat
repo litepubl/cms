@@ -27,7 +27,8 @@ cd css
 %less% odnoklassniki.less odnoklassniki.css
 %css% odnoklassniki.css -o odnoklassniki.min.css
 cd ..\..\comments
-%mini%comments.js --js_output_file=comments.min.js
+%mini%comments.template.js --js_output_file=comments.template.min.js
+%mini%comments.quote.js --js_output_file=comments.quote.min.js
 %mini%confirmcomment.js --js_output_file=confirmcomment.min.js
 %mini%moderate.js --js_output_file=moderate.min.js
 cd ..\bootstrap
