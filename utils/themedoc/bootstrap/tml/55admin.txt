@@ -31,7 +31,7 @@ $button =   [<button type="submit" name="$name" id="submitbutton-$name" class="b
 $submit =   [<div class="text-center"><div class="center-block"><button type="submit" name="$name" id="submitbutton-$name" class="btn btn-default">$lang.$name</button></div></div>]
 
 $form = [<h4>$formtitle</h4>
-<form action="" method="post" role="form">
+<form action="" method="post">
 $items
 [submit=update]
 </form>]
