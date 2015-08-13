@@ -12,7 +12,8 @@ class tadmincommentmanager extends tadminmenu {
   }
   
   public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
+    return parent::gethead() .
+ tuitabs::gethead();
   }
   
   public function getcontent() {
@@ -98,8 +99,7 @@ class tadmincommentmanager extends tadminmenu {
     $args->locklist = $subscribe->locklist;
     $args->subscribe_enabled = $subscribe->enabled;
     
-    $tab = new tuitabs();
-    $tab->add($lang->options, '
+    $tabs->add($lang->subscribe, '
     [checkbox=sendnotification]
     [checkbox=defaultsubscribe]
     [checkbox=subscribe_enabled]
@@ -107,17 +107,10 @@ class tadmincommentmanager extends tadminmenu {
     [checkbox=comuser_subscribe]
     ');
     
-    $tab->add($lang->locklist, '[editor=locklist]');
+    $tabs->add($lang->blackemail, '[editor=locklist]');
     
-    $tabs->add($lang->subscribe, $tab->get());
+
     
-    $mesgtabs = new tuitabs();
-    $tc = ttemplatecomments::i();
-    foreach (array('logged', 'reqlogin', 'regaccount', 'guest', 'comuser', 'loadhold') as $name) {
-      $args->$name = $tc->$name;
-      $mesgtabs->add($lang->$name, "[editor=$name]");
-    }
-    $tabs->add($lang->mesgtabs, $mesgtabs->get());
     $args->formtitle = $lang->title;
     return $html->adminform($tabs->get(), $args);
   }
@@ -152,12 +145,6 @@ class tadmincommentmanager extends tadminmenu {
     $cm->comuser_subscribe = isset($comuser_subscribe);
     
     $cm->unlock();
-    
-    $tc = ttemplatecomments::i();
-    foreach (array('logged', 'reqlogin', 'regaccount', 'guest', 'comuser', 'loadhold') as $name) {
-      $tc->$name = $_POST[$name];
-    }
-    $tc->save();
     
     $subscr = tsubscribers::i();
     $subscr->lock();
