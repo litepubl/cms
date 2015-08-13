@@ -605,7 +605,9 @@ content.post.templatecomments.closed = [
 */
 
 content.post.templatecomments.regform = [
-<div id="before-commentform">$mesg</div>
+<div id="before-commentform" class="header-comments">
+$mesg
+</div>
 <p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="comment">$lang.comment</label>
@@ -634,7 +636,9 @@ button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder
 */
 
 content.post.templatecomments.form = [
-<div id="before-commentform">$mesg</div>
+<div id="before-commentform" class="header-comments">
+$mesg
+</div>
 <p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="text-name">$lang.name</label>
@@ -915,7 +919,7 @@ content.excerpts.lite - шаблон анонсов для lite (облегче�
 content.excerpts = [
 <div class="row">
 $excerpt = [
-<div class="anpost col-xs-6 col-lg-4"id="post-$post.id">
+<div class="anpost col-xs-6 col-lg-4" id="post-$post.id">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 <div class="anpost-content">

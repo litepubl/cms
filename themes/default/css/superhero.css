@@ -6428,19 +6428,12 @@ A.dashed:focus {
 .anpost-subtitle {
   margin-top: 8px;
   text-align: center;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: block;
-  overflow: hidden;
 }
 .anpost-subtitle p {
   display: inline;
-}
-.anpost-subtitle br {
-  content: "";
-}
-.anpost-subtitle br:after {
-  content: "\00a0";
 }
 .anpost-content {
   display: block;

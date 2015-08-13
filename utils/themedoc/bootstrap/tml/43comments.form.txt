@@ -1,5 +1,7 @@
 content.post.templatecomments.form = [
-<div id="before-commentform">$mesg</div>
+<div id="before-commentform" class="header-comments">
+$mesg
+</div>
 <p class="header-comments">$lang.leavereview</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform" role="form">
 <div class="form-group"><label for="text-name">$lang.name</label>

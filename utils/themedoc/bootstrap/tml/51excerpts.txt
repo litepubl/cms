@@ -1,7 +1,7 @@
 content.excerpts = [
 <div class="row">
 $excerpt = [
-<div class="anpost col-xs-6 col-lg-4"id="post-$post.id">
+<div class="anpost col-xs-6 col-lg-4" id="post-$post.id">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 <div class="anpost-content">
