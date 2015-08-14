@@ -1,7 +1,7 @@
 content.post.templatecomments.form.mesg = [
 $logged = [
 $lang.logged
-<?php echo litepublisher::$site->getuserlink(); ?>
+$site.liveuser
 (<a class="logout mesg-logged" href="$site.url/admin/logout/{$site.q}backurl=">$lang.logout</a>).
 $lang.cansend
 ]

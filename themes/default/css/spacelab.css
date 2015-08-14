@@ -6394,6 +6394,9 @@ A.dashed:focus {
 .anpost-subtitle p {
   display: inline;
 }
+.anpost-subtitle br {
+  display: none;
+}
 .anpost-content {
   display: block;
   overflow: hidden;

@@ -560,7 +560,6 @@ $lang.topost - строка "на запись"
 
 А вот и сам список комментариев:
 content.post.templatecomments.comments = [
-<script type="text/javascript">ltoptions.theme.commentlist = "#commentlist";</script>
   <ol class="commentlist" id="commentlist" start="$from">
 $comment
 										</ol>
