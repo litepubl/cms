@@ -70,7 +70,6 @@ class ttemplatecomments extends tevents {
           break;
           
           case 'guest':
-          $result .= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
           $mesg = $theme->templates['content.post.templatecomments.form.mesg.guest'];
           if (litepublisher::$options->reguser) {
             $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
@@ -78,10 +77,10 @@ class ttemplatecomments extends tevents {
           
           $args->mesg = $this->fixmesg($mesg, $theme);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
+          $result .= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
           break;
           
           case 'comuser':
-          $result .= $this->getjs(($post->idperm == 0) && $cm->confirmcomuser, 'comuser');
           $mesg = $theme->templates['content.post.templatecomments.form.mesg.comuser'];
           if (litepublisher::$options->reguser) {
             $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
@@ -97,6 +96,7 @@ class ttemplatecomments extends tevents {
           $args->content = '';
           
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.form'], $args);
+          $result .= $this->getjs(($post->idperm == 0) && $cm->confirmcomuser, 'comuser');
           break;
         }
         
@@ -112,30 +112,24 @@ class ttemplatecomments extends tevents {
     str_replace('&backurl=', '&amp;backurl=', $mesg)));
   }
   
-  public function getjs($confirmcomment, $logstatus) {
+  public function getjs($confirmcomment, $authstatus) {
     $cm = tcommentmanager::i();
-    $result = sprintf('<script type="text/javascript">
-    ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, %s%s);
-    </script>',
-    json_encode(array(
+    $params = array(
     'confirmcomment' => $confirmcomment,
-    'comuser' => 'comuser' == $logstatus,
+    'comuser' => 'comuser' == $authstatus,
     'canedit' => $cm->canedit,
     'candelete' => $cm->candelete,
-    )),
-  $logstatus == 'logged' ? ', {ismoder: <?php echo ($ismoder ? \'true\' : \'false\'); ?>}' : '');
-    
-    $template = ttemplate::I();
-    $result .= $template->getjavascript($template->jsmerger_comments);
-    return  $result;
-    
-    /*
-    $result .= $template->getjavascript('/js/litepublisher/confirmcomment.js');
-    $result .= $template->getjavascript($template->jsmerger_moderate);
-    $result .= $template->getjavascript('/js/litepublisher/moderate.js');
-    
-    return  $result;
-    */
+    );
+
+  if ($authstatus == 'logged') {
+$params['ismoder'] = '<?php echo ($ismoder ? \'true\' : \'false\'); ?>';
+}
+
+$args = new targs();
+$args->params = json_encode($params);
+
+$theme = ttheme::i();    
+return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
   }
   
 } //class
