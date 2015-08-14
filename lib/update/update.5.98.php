@@ -73,4 +73,9 @@ $js->after('comments',
 
 $js->unlock();
 }
+
+if (isset(litepublisher::$classes->items['tthemeparserver3'])) {
+unset(litepublisher::$classes->items['tthemeparserver3']);
+litepublisher::$classes->save();
+}
 }

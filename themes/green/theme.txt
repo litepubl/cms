@@ -84,19 +84,6 @@ $template.content.post.templatecomments.confirmform = [<h2>$lang.formhead</h2>
   <p><input type="submit" name="submit" value="$lang.human"/></p>
 </form>]
 
-$template.content.post.templatecomments.moderateform = [<script type="text/javascript" src="$site.files/js/litepublisher/rpc.min.js"></script>
-    <script type="text/javascript" src="$site.files/js/litepublisher/moderate.min.js"></script>
-    <script type="text/javascript" src="$site.files/files/admin$site.language.js"></script>
-<form name="moderateform" action="$site.url/admin/comments/" method="post">
-$comments
-<p>
-<input type="button" name="approvebutton" value="$lang.approve" onclick="submitmoderateform(this.form, 'approved');" />
-<input type="button" name="deletebutton" value="$lang.delete" onclick="submitmoderateform(this.form, 'delete');" />
-<input type="button" name="holdbutton" value="$lang.holdbutton" onclick="submitmoderateform(this.form, 'hold');" />
-<input type="button" value="$lang.sendreply" onclick="sendreply();" />
-</p>
-</form>]
-
 $template.content.post.templatecomments.comments.count = [<h3 id="comments">$count $lang.topost &#8220;$post.title&#8221;</h3>]
 
 $template.content.post.templatecomments.comments = [<a name="comments"></a>
