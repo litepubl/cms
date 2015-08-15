@@ -15,8 +15,6 @@ function likebuttonsInstall($self) {
   ";ltoptions.facebook_appid='$self->facebook_appid';");
   
   $js->unlock();
-  
-  tcssmerger::i()->add('default', 'js/litepubl/common/css/odnoklassniki.min.css');
 }
 
 function likebuttonsUninstall($self) {
@@ -27,7 +25,4 @@ function likebuttonsUninstall($self) {
   
   $js->deletetext('default', 'facebook_appid');
   $js->unlock();
-  
-  //stay
-  //tcssmerger::i()->deletefile('default', 'js/litepubl/common/css/odnoklassniki.min.css');
 }

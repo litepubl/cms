@@ -32,9 +32,7 @@ class photoswipe extends tplugin {
     $css->lock();
     $css->add('default', "plugins/$plugindir/resource/photoswipe.min.css");
     $css->add('default', "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
-    if ($lang == 'ru') $css->add('default', 'js/litepubl/common/css/odnoklassniki.min.css');
     $css->unlock();
-    
   }
   
   public function uninstall() {

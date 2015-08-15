@@ -24,8 +24,6 @@ cd css
 %css% common.css -o common.min.css
 %css% filelist.css -o filelist.min.css
 %css% form.inline.css -o form.inline.min.css
-%less% odnoklassniki.less odnoklassniki.css
-%css% odnoklassniki.css -o odnoklassniki.min.css
 cd ..\..\comments
 %mini%comments.template.js --js_output_file=comments.template.min.js
 %mini%comments.quote.js --js_output_file=comments.quote.min.js

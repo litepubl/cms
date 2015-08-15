@@ -50,7 +50,7 @@
       
       html += $.parsetml(tml, {
         title: 'Odnoklassniki',
-        icon: 'odnoklassniki-icon',
+        icon: 'fa fa-odnoklassniki',
         url: 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=' + url + '&st.comments=' + title
       });
     }

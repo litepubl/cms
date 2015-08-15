@@ -74,6 +74,8 @@ $js->after('comments',
 $js->unlock();
 }
 
+  tcssmerger::i()->deletefile('default', 'js/litepubl/common/css/odnoklassniki.min.css');
+
 if (isset(litepublisher::$classes->items['tthemeparserver3'])) {
 unset(litepublisher::$classes->items['tthemeparserver3']);
 litepublisher::$classes->save();
