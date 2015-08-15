@@ -13,7 +13,7 @@ class tadmincommentmanager extends tadminmenu {
   
   public function gethead() {
     return parent::gethead() .
- tuitabs::gethead();
+    tuitabs::gethead();
   }
   
   public function getcontent() {
@@ -109,7 +109,7 @@ class tadmincommentmanager extends tadminmenu {
     
     $tabs->add($lang->blackemail, '[editor=locklist]');
     
-
+    
     
     $args->formtitle = $lang->title;
     return $html->adminform($tabs->get(), $args);

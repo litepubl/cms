@@ -17,7 +17,7 @@
       buttons:".moderationbuttons",
       replyclass: "replycomment",
       quoteclass : "quotecomment",
-button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>',
+      button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>',
       form: "#commentform",
       editor: "#comment",
       confirmcomment: true,
@@ -28,10 +28,10 @@ button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder
     }, theme.comments);
     
     var comtheme = theme.comments;
-
-// normalize ismoder value  
+    
+    // normalize ismoder value
     comtheme.ismoder = (comtheme.ismoder === 'true') || (comtheme.ismoder === true);
-
+    
     //cache dom search
     comtheme.comments= $(comtheme.comments);
     comtheme.holdcomments = $(comtheme.hold);

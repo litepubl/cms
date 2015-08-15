@@ -2146,6 +2146,10 @@ class tsite extends tevents_storage {
     return '';
   }
   
+  public function getliveuser() {
+    return '<?php echo litepublisher::$site->getuserlink(); ?>';
+  }
+  
 }//class
 
 //urlmap.class.php

@@ -119,14 +119,14 @@ class ttemplatecomments extends tevents {
     'comuser' => 'comuser' == $authstatus,
     'canedit' => $cm->canedit,
     'candelete' => $cm->candelete,
-'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
+    'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
     );
-
-$args = new targs();
-$args->params = json_encode($params);
-
-$theme = ttheme::i();    
-return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
+    
+    $args = new targs();
+    $args->params = json_encode($params);
+    
+    $theme = ttheme::i();
+    return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
   }
   
 } //class

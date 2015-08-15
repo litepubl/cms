@@ -59,7 +59,7 @@ class tthemeparser extends tevents {
     switch ($about['type']) {
       case 'litepublisher3':
       case 'litepublisher':
-$this->error('Litepublisher not supported old themes');
+      $this->error('Litepublisher not supported old themes');
       break;
       
       case 'litepublisher4':
