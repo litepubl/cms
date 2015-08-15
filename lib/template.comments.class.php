@@ -119,11 +119,8 @@ class ttemplatecomments extends tevents {
     'comuser' => 'comuser' == $authstatus,
     'canedit' => $cm->canedit,
     'candelete' => $cm->candelete,
+'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
     );
-
-  if ($authstatus == 'logged') {
-$params['ismoder'] = '<?php echo ($ismoder ? \'true\' : \'false\'); ?>';
-}
 
 $args = new targs();
 $args->params = json_encode($params);

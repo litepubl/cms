@@ -514,9 +514,13 @@ content.post.templatecomments.form = [
 ]
 
 content.post.templatecomments.form.js = [
-
+<script type="text/javascript">
+  ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, {
+      button: '<button type="button" class="button" data-moder="%%name%%"><span>%%title%%</span></button>'
+}, $params);
+</script>
+<script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>
 ]
-
 Шаблон не смотря на свой объем является простым, так как не включает в себя вложенных шаблонов. В шаблоне формы использовались следующие теги:
 
 $name - имя комментатора
