@@ -67,7 +67,7 @@ function tadminmenusInstall($self) {
   
   $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions');
   {
-    $self->createitem($opt, 'home', 'admin', 'tadminoptions');
+    $self->createitem($opt, 'home', 'admin', 'adminhomeoptions');
     $self->createitem($opt, 'mail', 'admin', 'tadminoptions');
     $self->createitem($opt, 'rss', 'admin', 'tadminoptions');
     $self->createitem($opt, 'view', 'admin', 'tadminoptions');

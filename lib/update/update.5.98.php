@@ -76,8 +76,17 @@ $js->unlock();
 
   tcssmerger::i()->deletefile('default', 'js/litepubl/common/css/odnoklassniki.min.css');
 
+litepublisher::$classes->items['adminhomeoptions'] = array('admin.options.home.class.php', '');
 if (isset(litepublisher::$classes->items['tthemeparserver3'])) {
 unset(litepublisher::$classes->items['tthemeparserver3']);
-litepublisher::$classes->save();
 }
+litepublisher::$classes->save();
+
+$admin = tadminmenus::i();
+$id = $admin->url2id('/admin/options/home/');
+$admin->items[$id]['class'] = 'adminhomeoptions';
+$admin->save();
+
+$idurl = litepublisher::$urlmap->db->findid('url = '. dbquote('/admin/options/home/'));
+litepublisher::$urlmap->db->setvalue($idurl,  'class', 'adminhomeoptions');
 }
