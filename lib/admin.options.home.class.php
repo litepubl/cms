@@ -13,6 +13,10 @@ class adminhomeoptions extends tadminmenu {
   
 public function gethead() {
 $result = parent::gethead();
+
+    $result .= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
+    $result .= '<script type="text/javascript" src="$site.files/js/litepubl/admin/homeuploader.js"></script>';
+
 return $result;
 }
 
@@ -88,4 +92,54 @@ return $result;
       $menus->save();
 }
 
+  public function request($a) {
+    if ($response = parent::request($a)) {
+      return $response;
+    }
+    
+      $name = 'image';
+        if (!isset($_FILES[$name])) return;
+
+      $result = array('result' => 'error');
+
+        if (is_uploaded_file($_FILES[$name]['tmp_name']) &&
+    !$_FILES[$name]['error'] &&
+    strbegin($_FILES[$name]['type'], 'image/') &&
+    ($data = file_get_contents($_FILES[$name]['tmp_name']))
+    ) {
+
+      $filename = litepublisher::$paths->files . 'image/home.jpg';
+if (file_exists($filename)) {
+@unlink($filename);
+}
+
+if (move_uploaded_file($_FILES[$name]['tmp_name'], $filename)) {
+@chmod($filename, 0666);
+
+$info = @getimagesize($filename);
+    if ($info && $info[0] && $info[1]) {
+
+$parser = tmediaparser::i();
+
+
+      $result = array('result' => array(
+'image' => $home->image,
+'smallimage' => $home->smallimage
+));
+}
+    }
+}
+    
+    $js = tojson($result);
+    return "<?php
+    header('Connection: close');
+    header('Content-Length: ". strlen($js) . "');
+    header('Content-Type: text/javascript; charset=utf-8');
+    header('Date: ".date('r') . "');
+    Header( 'Cache-Control: no-cache, must-revalidate');
+    Header( 'Pragma: no-cache');
+    ?>" .
+    $js;
+  }
+  
 }//class

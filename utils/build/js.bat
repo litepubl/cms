@@ -68,6 +68,7 @@ cd ..\admin
 %mini%fileman.templates.js --js_output_file=fileman.templates.min.js
 %mini%posteditor.js --js_output_file=posteditor.min.js
 %mini%swfuploader.js --js_output_file=swfuploader.min.js
+%mini%homeuploader.js --js_output_file=homeuploader.min.js
 %mini%tablecolumns.js --js_output_file=tablecolumns.min.js
 %mini%uploader.js --js_output_file=uploader.min.js
 %mini%uploader.flash.js --js_output_file=uploader.flash.min.js

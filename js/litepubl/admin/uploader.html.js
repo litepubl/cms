@@ -9,6 +9,8 @@
   
   litepubl.HTMLUploader = Class.extend({
     owner: false,
+      // warning: Filedata is same in flash and can not be changed
+dataname: "Filedata",
     fr: false,
     jq: false,
     queue: false,
@@ -24,6 +26,7 @@
       this.owner = owner;
       this.queue = [];
     this.html = $.parsetml(this.html, {lang: lang.posteditor});
+
       var self = this;
       this.fr = new window.FileReader();
       var options = {
@@ -65,8 +68,7 @@
       owner.before(file);
       
       var formdata = new FormData();
-      // warning: Filedata is same in flash and can not be changed
-      formdata.append("Filedata", file);
+      formdata.append(this.dataname, file);
       
       for (var name in owner.postdata) {
         formdata.append(name, owner.postdata[name]);

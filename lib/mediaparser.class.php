@@ -430,7 +430,7 @@ class tmediaparser extends tevents {
   public static function readimage($srcfilename) {
     if (!file_exists($srcfilename)) return false;
     if (!($info = @getimagesize($srcfilename))) return false;
-    if (($info[0] == 0) || ($info[1] == 0)) return false;
+    if (!$info[0] || !$info[1]) return false;
     
     switch ($info[2]) {
       case 1:
@@ -522,6 +522,7 @@ class tmediaparser extends tevents {
     $sourcex = imagesx($image);
     $sourcey = imagesy($image);
     if (!$y || !$x || !$sourcex || !$sourcey) return false;
+
     $ratio = $sourcex / $sourcey;
     if ($x/$y > $ratio) {
       $x = $y *$ratio;
