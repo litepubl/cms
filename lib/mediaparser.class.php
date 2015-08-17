@@ -466,7 +466,10 @@ class tmediaparser extends tevents {
   }
   
   public static function createsnapshot($srcfilename, $destfilename, $x, $y, $ratio, $clipbounds) {
-    if (!($source = self::readimage($srcfilename))) return false;
+    if (!($source = self::readimage($srcfilename))) {
+return false;
+}
+
     $r = self::createthumb($source, $destfilename, $x, $y, $ratio, $clipbounds);
     imagedestroy($source);
     return $r;
@@ -487,11 +490,16 @@ class tmediaparser extends tevents {
       }
     } elseif ($ratio) {
       $ratio = $sourcex / $sourcey;
+//zero height
+if (!$y) {
+        $y = $x /$ratio;
+} else {
       if ($x/$y > $ratio) {
         $x = $y *$ratio;
       } else {
         $y = $x /$ratio;
       }
+}
     }
     
     $dest = imagecreatetruecolor($x, $y);

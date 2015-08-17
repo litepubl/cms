@@ -107,8 +107,27 @@ return $result;
     strbegin($_FILES[$name]['type'], 'image/') &&
     ($data = file_get_contents($_FILES[$name]['tmp_name']))
     ) {
+$home = thomepage::i();
+$index = 1;
+if (preg_match('/^\/files\/home(\d*+)\.jpg$/', $home->image, $m)) {
+$index = (int) $m[1];
+      $filename = litepublisher::$paths->files . "home$index.jpg";
+if (file_exists($filename)) {
+@unlink($filename);
+}
 
-      $filename = litepublisher::$paths->files . 'image/home.jpg';
+      $filename = litepublisher::$paths->files . "home$index.small.jpg";
+if (file_exists($filename)) {
+@unlink($filename);
+}
+
+$index++;
+}
+
+$home->image = "/files/home$index.jpg";
+$home->smallimage = "/files/home$index.small.jpg";
+
+      $filename = litepublisher::$paths->files . "home$index.jpg";
 if (file_exists($filename)) {
 @unlink($filename);
 }
@@ -116,11 +135,28 @@ if (file_exists($filename)) {
 if (move_uploaded_file($_FILES[$name]['tmp_name'], $filename)) {
 @chmod($filename, 0666);
 
-$info = @getimagesize($filename);
-    if ($info && $info[0] && $info[1]) {
+if ($image = tmediaparser::readimage($filename)) {
+$maxwidth = 2100;
+if (imagesx($image)  > $maxwidth) {
+@unlink($filename);
+tmediaparser::createthumb($image, $filename, $maxwidth, 0, true, false, 80);
+} else if (filesize($filename) > 1024 * 1024 * 800)) {
+//no resize just save in low quality
+@unlink($filename);
+    imagejpeg($image, $filename, 80);
+@chmod($filename, 0666);
+}
 
-$parser = tmediaparser::i();
+//create small image
+      $smallfile = litepublisher::$paths->files . "home$index.small.jpg";
+if (file_exists($$smallfile)) {
+@unlink($$smallfile);
+}
 
+tmediaparser::createthumb($image, $smallfile, 760, 0, true, false, 80);
+imagedestroy($image);
+
+$home->save();
 
       $result = array('result' => array(
 'image' => $home->image,
