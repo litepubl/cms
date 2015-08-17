@@ -71,7 +71,7 @@ class tadminoptions extends tadminmenu {
       [editor=footer]
       ', $args);
       
-     case 'mail':
+      case 'mail':
       $args->adminemail = $options->email;
       $args->fromemail = $options->fromemail;
       $args->mailer = $options->mailer == 'smtp';

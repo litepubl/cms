@@ -62,12 +62,12 @@ $js->lock();
 $js->add('default', '/js/litepubl/bootstrap/anpost.ellipsis.min.js');
 
 $js->replacefile('comments',
-'/js/litepubl/coments/comments.min.js'
+'/js/litepubl/coments/comments.min.js',
 '/js/litepubl/coments/comments.template.min.js'
 );
 
 $js->after('comments',
-'/js/litepubl/coments/comments.template.min.js'
+'/js/litepubl/coments/comments.template.min.js',
 '/js/litepubl/coments/comments.quote.min.js'
 );
 

@@ -1,3 +1,9 @@
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+
 (function ($, litepubl, window) {
   'use strict';
   
@@ -5,7 +11,7 @@
     dataname: 'image',
     filereader: false,
     jq: false,
-    idinput: "#file-input, #dropzone",
+    idinput: "#file-imgupload, #dropzone",
     helpstatus:false,
     
     init: function() {
@@ -21,23 +27,31 @@
       
       $(this.idinput).fileReaderJS(options);
       $("body").fileClipboard(options);
-      
+      this.helpstatus= $("#helpstatus");
     },
-
+    
+    setstatus: function(name) {
+      this.helpstatus.children().addClass("hide");
+      this.helpstatus.find("#img-" + name).removeClass("hide");
+    },
+    
     setprogress: function(current, total) {
       var value = Math.ceil((current / total) * 100);
-      this.helpstatus.find("#percent").text(value + '%');
+      this.helpstatus.find("#img-percent").text(value + '%');
     },
     
     uploaded: function(resp) {
-      if (resp.result == "ok") {
-        this.setstatus('success', true);
+      if (resp.result == "error") {
+        this.setstatus('fail');
       } else {
-        this.setstatus('error', true);
+        this.setstatus('success');
+        $("#text-image").val(resp.result.image);
+        $("#text-smallimage").val(resp.result.smallimage);
       }
     },
     
     upload: function(e, file) {
+      this.setstatus('percent');
       var formdata = new FormData();
       formdata.append(this.dataname, file);
       
@@ -70,6 +84,7 @@
         
       })
       .fail( function(jq, textStatus, errorThrown) {
+        self.setstatus('fail');
         alert(jq.responseText);
       });
     }
