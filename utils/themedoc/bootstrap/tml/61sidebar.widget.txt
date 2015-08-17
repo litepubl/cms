@@ -8,8 +8,10 @@ $template.sidebar = [
 <div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
       <div class="panel-body">
           $items = [
-    <ul>
-       $item = [<li><a href="$link" title="$title">$icon$text</a>
+    <ul class="fa-ul">
+       $item = [<li>
+<span class="fa fa-li fa-mortar-board"></span>
+<a href="$link" title="$title">$icon$text</a>
 $subcount = [<strong>($itemscount)</strong>]
 $subitems = [<ul>$item</ul>]
 </li>]

@@ -1128,8 +1128,10 @@ $template.sidebar = [
 <div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
       <div class="panel-body">
           $items = [
-    <ul>
-       $item = [<li><a href="$link" title="$title">$icon$text</a>
+    <ul class="fa-ul">
+       $item = [<li>
+<span class="fa fa-li fa-rotate-90 fa-mortar-board"></span>
+<a href="$link" title="$title">$icon$text</a>
 $subcount = [<strong>($itemscount)</strong>]
 $subitems = [<ul>$item</ul>]
 </li>]
@@ -1181,7 +1183,7 @@ $meta - мета
 Мы старались сделать управление шаблонами движка максимально простыми и универсальными, но для реальных задач универсальность противоречит тонкой настройке. Так например шаблон $item виджетов свежих записей, свежих комментариев не совпадают с виджетом по умолчанию. Задекларируем их:
 */
 
-sidebar.posts.item     = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
+sidebar.posts.item     = [<li><span class="fa-li fa-mortar-board"></span><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
 sidebar.comments.item = [<li><a href=" $link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
 sidebar.meta.item      = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]
 
