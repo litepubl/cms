@@ -5,10 +5,11 @@ http://litepublisher.ru/
 
 Установка. Если у вас есть шелл доступ к серверу, то рекомендую устанавливать из шел следующим образом:
 
-wget http://litepublisher.com/download/litepublisher.x.xx.tar.gz
-tar -xf litepublisher.x.xx.tar.gz -p
+wget https://github.com/litepubl/cms/archive/vx.xx.tar.gz
+tar -xf vx.xx.tar.gz
 
-где вместо x.xx поставить номер актуальной версии. Таким образом будет скачен и распакован дистрибутив со всеми необходимыми правами. 
+где вместо x.xx поставить номер актуальной версии. Ссылку на актуальную версию вы можете скопировать со страницы 
+https://github.com/litepubl/cms/releases/latest
 
 Иначе  вам следует скопировать файлы и папки движка в корень домена, установить права для записи (0777) на папки files, storage, storage/backup, storage/cache, storage/data. Во всех этих папках установить права 0666 на файлы index.htm (в них производится тестовая запись). 
 
