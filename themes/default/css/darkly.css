@@ -6370,6 +6370,11 @@ footer {
 .section {
   margin-top: 10px;
 }
+@media (min-width: 1200px) {
+  .container-fluid {
+    width: 1170px;
+  }
+}
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/

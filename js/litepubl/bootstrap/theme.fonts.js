@@ -4,13 +4,10 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function( $){
+(function( $, litepubl){
   'use strict';
   
-  $.load_theme_font  = function(name) {
-    if (!name) name = 'default';
-    
-    var themefonts = {
+    litepubl.themefonts = {
       cerulean: false,
       cosmo: {
         fontname: "Source Sans Pro",
@@ -86,18 +83,25 @@
       
     };
     
+  litepubl.load_theme_font  = function(name) {
+    if (!name) name = 'default';
+    
     // most case default theme color
     if (name == 'default') {
       $.load_lobster();
     } else if ((name in themefonts) && themefonts[name]) {
       var info = themefonts[name];
+if (info.fontname == "Lobster") {
+      $.load_lobster();
+} else {
       var url = "https://fonts.googleapis.com/css?family=" + info.url + "&subset=latin,cyrillic";
       $.load_font(info.fontname, name, url);
+}
     }
   };
   
   $.ready2(function() {
-    $.load_theme_font(ltoptions.theme.cssfile);
+    litepubl.load_theme_font(ltoptions.theme.cssfile);
   });
   
-})( jQuery);
+})( jQuery, litepubl);

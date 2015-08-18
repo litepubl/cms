@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu");
 ul {
   margin-left: 0;
   padding-left: 40px;
@@ -6104,6 +6103,11 @@ footer {
 }
 .section {
   margin-top: 8px;
+}
+@media (min-width: 1200px) {
+  .container-fluid {
+    width: 1170px;
+  }
 }
 /**
 * Lite Publisher
