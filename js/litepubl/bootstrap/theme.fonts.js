@@ -85,7 +85,7 @@
     
   litepubl.load_theme_font  = function(name) {
     if (!name) name = 'default';
-    
+    var themefonts = litepubl.themefonts;
     // most case default theme color
     if (name == 'default') {
       $.load_lobster();
