@@ -428,6 +428,16 @@ return '';
 if ((int) $item['midle']) {
         $midle->array = $files->getitem($item['midle']);
         $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
+$midle->json = jsonattr(array(
+'id' => $midle->attay['id'],
+'link' => $midle->link;
+'width' => $midle->attay['width'],
+'height' => $midle->attay['height'],
+));
+'size' => $midle->attay['size'],
+} else {
+$midle->array = array();
+$midle->json = '0';
 }
         
         $theme = $this->theme;
