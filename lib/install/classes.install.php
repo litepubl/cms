@@ -78,7 +78,7 @@ function installClasses() {
   $js->lock();
   
   $css = tcssmerger::i();
-  $css->unlock();
+  $css->lock();
   
   $xmlrpc = TXMLRPC::i();
   $xmlrpc->lock();
