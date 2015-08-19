@@ -220,18 +220,25 @@ class tmediaparser extends tevents {
     ));
     
     $preview = false;
+$midle = false;
     if ($item['media'] == 'image') {
       $srcfilename = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
       $this->callevent('onbefore', array(&$item, $srcfilename));
+
       $maxwidth = isset($file['maxwidth']) ? $file['maxwidth'] : $this->maxwidth;
       $maxheight = isset($file['maxheight']) ? $file['maxheight'] : $this->maxheight;
+
       $resize = $this->alwaysresize && ($maxwidth > 0) && ($maxheight > 0);
       if (!$resize) $resize = ($item['width'] > $maxwidth ) || ($item['height'] > $maxheight);
       $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->enablepreview);
-      if (($resize || $enablepreview) && ($image = self::readimage($srcfilename))) {
+      $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
+
+      if (($resize || $enablepreview || $enablemidle) && ($image = self::readimage($srcfilename))) {
         $this->onimage($image);
+
         if ($enablepreview && ($preview = $this->getsnapshot($srcfilename, $image))) {
           $preview['title'] = $file['title'];
+
           if (isset($file['ispreview']) && $file['ispreview']) {
             $item['filename'] = $preview['filename'];
             $item['width'] = $preview['width'];
@@ -240,25 +247,32 @@ class tmediaparser extends tevents {
             @unlink($srcfilename);
             $resize = false;
             $preview = false;
+$enablemidle = false;
           }
         }
-        
+
+        if ($enablemidle) {
+$midle = $this->createmidle($srcfilename, $image);
+        }
+
         if ($resize) {
           $sizes = $this->resize($srcfilename, $image, $maxwidth, $maxheight);
           $item['width'] = $sizes['width'];
           $item['height'] = $sizes['height'];
+
           // after resize only jpg format
           if (!strend($srcfilename, '.jpg')) {
             $fixfilename = self::replace_ext($srcfilename, '.jpg');
             $fixfilename = self::makeunique($fixfilename);
+            $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepublisher::$paths->files)));
+
             rename($srcfilename, $fixfilename);
             @chmod($fixfilename, 0666);
-            $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepublisher::$paths->files)));
           }
         } else {
           $this->noresize($image, $srcfilename);
         }
-        
+
         imagedestroy($image);
       }
     }
@@ -275,6 +289,13 @@ class tmediaparser extends tevents {
       $preview['parent'] = $id;
       $idpreview = $files->additem($preview);
       $files->setvalue($id, 'preview', $idpreview);
+    }
+
+    if ($midle) {
+      $midle['parent'] = $id;
+if ($preview) $midle['preview'] = $idpreview;
+      $idmidle = $files->additem($midle);
+      $files->setvalue($id, 'midle', $idmidle);
     }
     
     $this->added($id);
@@ -333,6 +354,7 @@ class tmediaparser extends tevents {
   public function getdefaultvalues($filename) {
     return array(
     'parent' => 0,
+'midle' => 0,
     'preview' => 0,
     'media' => 'bin',
     'mime' => 'application/octet-stream',
@@ -527,16 +549,37 @@ class tmediaparser extends tevents {
       $result['height'] = $info[1];
       return $result;
     }
+
     return false;
   }
-  
+
+  public function createmidle($srcfilename, $image) {
+    $destfilename = self::replace_ext($srcfilename, '.midle.jpg');
+    $destfilename = self::makeunique($destfilename);
+
+          if ($sizes = $this->resize($destfilename, $image, $this->midlewidth, $this->midleheight)) {
+      $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
+      $result['media'] = 'image';
+      $result['mime'] = 'image/jpeg';
+      $result['width'] = $sizes['width'];
+      $result['height'] = $sizes['height'];
+      return $result;
+}
+
+    return false;
+  }
+
   public function resize($filename, $image, $x, $y) {
     $sourcex = imagesx($image);
     $sourcey = imagesy($image);
-    if (!$y || !$x || !$sourcex || !$sourcey) return false;
+    if (!$x || !$sourcex || !$sourcey) {
+return false;
+}
     
     $ratio = $sourcex / $sourcey;
-    if ($x/$y > $ratio) {
+if (!$y) {
+      $y = $x /$ratio;
+} else if ($x/$y > $ratio) {
       $x = $y *$ratio;
     } else {
       $y = $x /$ratio;
@@ -548,6 +591,7 @@ class tmediaparser extends tevents {
     $dest = imagecreatetruecolor($x, $y);
     imagecopyresampled($dest, $image, 0, 0, 0, 0, $x, $y, $sourcex, $sourcey);
     $this->onresize($dest);
+
     imagejpeg($dest, $filename, $this->quality_original);
     imagedestroy($dest);
     @chmod($filename, 0666);

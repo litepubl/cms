@@ -25,7 +25,7 @@ class tfiles extends titems {
   
   public function preload(array $items) {
     $items = array_diff($items, array_keys($this->items));
-    if (count($items) > 0) {
+    if (count($items)) {
       $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))',
       implode(',', $items)), '');
     }
@@ -104,6 +104,7 @@ class tfiles extends titems {
     $list = $this->itemsposts->getposts($id);
     $this->itemsposts->deleteitem($id);
     $this->itemsposts->updateposts($list, 'files');
+
     $item = $this->getitem($id);
     if ($item['idperm'] == 0) {
       @unlink(litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
@@ -113,7 +114,14 @@ class tfiles extends titems {
     }
     
     parent::delete($id);
-    if ($item['preview'] > 0) $this->delete($item['preview']);
+
+    if ((int) $item['preview']) {
+ $this->delete($item['preview']);
+}
+
+    if ((int) $item['midle']) {
+ $this->delete($item['midle']);
+}
     
     $this->getdb('imghashes')->delete("id = $id");
     $this->changed();
@@ -170,7 +178,9 @@ class tfiles extends titems {
   }
   
   public function getlist(array $list,  array $tml) {
-    if (count($list) == 0) return '';
+    if (!count($list)) {
+return '';
+}
     
     $this->onlist($list);
     $result = '';
@@ -195,8 +205,10 @@ class tfiles extends titems {
     $args->count = count($list);
     
     $url = litepublisher::$site->files . '/files/';
-    $preview = new tarray2prop();
-    ttheme::$vars['preview'] = $preview;
+
+    $preview = ttheme::$vars['preview'] = new tarray2prop();
+    $midle = ttheme::$vars['midle'] = new tarray2prop();
+    
     $index = 0;
     
     foreach ($items as $type => $subitems) {
@@ -211,8 +223,16 @@ class tfiles extends titems {
         $args->index = $index++;
         $args->preview  = '';
         $preview->array = array();
+
+        if ((int) $item['midle']) {
+          $midle->array = $this->getitem($item['midle']);
+          $midle->link = $url . $midle->filename;
+} else {
+        $midle->array = array();
+          $midle->link = '';
+}
         
-        if ($item['preview'] > 0) {
+        if ((int) $item['preview']) {
           $preview->array = $this->getitem($item['preview']);
         } elseif($type == 'image') {
           $preview->array = $item;
@@ -237,7 +257,7 @@ class tfiles extends titems {
       $result .=  $theme->parsearg($tml[$type . 's'], $args);
     }
     
-    unset(ttheme::$vars['preview'], $preview);
+    unset(ttheme::$vars['preview'], $preview, ttheme::$vars['midle'], $midle);
     $args->files =  $result;
     return $theme->parsearg($tml['container'], $args);
   }

@@ -375,12 +375,16 @@ class tpost extends titem implements  itemplate {
   }
   
   public function getidimage() {
-    if (count($this->files) == 0) return false;
+    if (!count($this->files)) {
+return false;
+}
+
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
       if ('image' == $item['media']) return $id;
     }
+
     return false;
   }
   
@@ -388,6 +392,7 @@ class tpost extends titem implements  itemplate {
     if ($id = $this->getidimage()) {
       return $this->factory->files->geturl($id);
     }
+
     return false;
   }
   
@@ -398,11 +403,15 @@ class tpost extends titem implements  itemplate {
       $item = $files->getitem($id);
       if ((int) $item['preview']) return $files->geturl($item['preview']);
     }
+
     return false;
   }
   
   public function getfirstimage() {
-    if (count($this->files) == 0) return '';
+    if (!count($this->files)) {
+return '';
+}
+
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
@@ -410,13 +419,21 @@ class tpost extends titem implements  itemplate {
         $args = new targs();
         $args->add($item);
         $args->link = litepublisher::$site->files . '/files/' . $item['filename'];
-        $preview = new tarray2prop();
+
+        $preview = ttheme::$vars['preview'] = new tarray2prop();
         $preview->array = $files->getitem($item['preview']);
         $preview->link = litepublisher::$site->files . '/files/' . $preview->filename;
-        ttheme::$vars['preview'] = $preview;
+        
+        $midle = ttheme::$vars['midle'] = new tarray2prop();
+if ((int) $item['midle']) {
+        $midle->array = $files->getitem($item['midle']);
+        $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
+}
+        
         $theme = $this->theme;
         $result = $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
-        unset(ttheme::$vars['preview']);
+        unset(ttheme::$vars['preview'], ttheme::$vars['midle']);
+
         return $result;
       }
     }

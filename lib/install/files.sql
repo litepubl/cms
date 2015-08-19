@@ -9,6 +9,7 @@
       ) default 'application/octet-stream',
 
   parent int unsigned NOT NULL default '0',
+  midle int unsigned NOT NULL default '0',
   preview int unsigned NOT NULL default '0',
   icon int unsigned NOT NULL default '0',
   author int unsigned NOT NULL default '0',
@@ -24,8 +25,9 @@ idperm int unsigned NOT NULL default '0',
   keywords text  NOT NULL,
 
   PRIMARY KEY  (id),
+  KEY parent (parent),
+  KEY midle(midle),
   KEY preview (preview),
  KEY author (author),
-  KEY parent (parent),
   KEY media (media),
   KEY posted (posted)

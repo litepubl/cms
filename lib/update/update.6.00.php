@@ -8,5 +8,10 @@ if (!isset($mparser->data['midlewidth'])) {
 $mparser->save();
 }
 
+$man = tdbmanager::i();
+if (!$man->column_exists('files', 'midle')) {
+$man->alter('files', "add midle int unsigned NOT NULL default '0' after parent");
+$man->alter('files', 'add key (midle)');
+}
 
 }
