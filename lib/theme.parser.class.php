@@ -55,6 +55,7 @@ class tthemeparser extends tevents {
   public function parse(ttheme $theme) {
     $theme->lock();
     $this->checkparent($theme->name);
+    
     $about = $this->getabout($theme->name);
     switch ($about['type']) {
       case 'litepublisher3':
@@ -124,7 +125,12 @@ class tthemeparser extends tevents {
     if (!file_exists($filename))  return $this->error("The requested theme '$theme->name' file $filename not found");
     
     if ($theme->name != 'default') {
-      $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
+      if ($theme->name == 'default-old') {
+        $parentname = 'default';
+      } else {
+        $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
+      }
+      
       $parent = ttheme::getinstance($parentname);
       $theme->templates = $parent->templates;
       $theme->parent = $parent->name;
@@ -438,7 +444,6 @@ class tthemeparser extends tevents {
       }
       
       private function setwidgetitem($widgetname, $path, $value) {
-        //echo "$widgetname, $path<br>";
         $sidebar = &$this->theme->templates['sidebars'][$this->sidebar_index];
         if (!isset($sidebar[$widgetname])) {
           foreach ( array('', '.items', '.item', '.subcount', '.subitems') as $name) {
