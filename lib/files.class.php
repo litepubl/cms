@@ -229,9 +229,10 @@ return '';
           $midle->link = $url . $midle->filename;
 $midle->json = jsonattr(array(
 'id' => $midle->attay['id'],
-'link' => $midle->link;
-'width' => $midle->attay['width'],
-'height' => $midle->attay['height'],
+'link' => $midle->link,
+'width' => $midle->array['width'],
+'height' => $midle->array['height'],
+'size' => $midle->array['size'],
 ));
 } else {
         $midle->array = array();

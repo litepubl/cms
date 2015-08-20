@@ -500,11 +500,11 @@ $nextpost - следующая запись
 content.post.filelist = [
 <div class="filelist-all filelist-$count" id="files-$post.id">
 $files = [<div class="files-block filelist-file"><ul>
-$file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description">$title</a></li>]
+$file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description"><span class="fa fa-download" aria-label="$lang.download"></span> $title</a></li>]
 </ul></div>]
 
 $images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">
-$image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" rel="prettyPhoto[gallery-$post.id]" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id">$preview</a></span>]
+$image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json">$preview</a></span>]
 $preview = [<img src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
 </div>]
 
@@ -967,7 +967,7 @@ $excerpt = [
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 <div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 <div class="anpost-content">
-$post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link"><img src="$preview.link" alt="$post.title" /></a></div>]
+$post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
 <div class="anpost-body">
 $post.catlinks
 <div class="anpost-item">
