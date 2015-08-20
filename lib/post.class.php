@@ -437,7 +437,7 @@ $midle->json = jsonattr(array(
 'size' => $midle->attay['size'],
 } else {
 $midle->array = array();
-$midle->json = '0';
+$midle->json = '';
 }
         
         $theme = $this->theme;

@@ -87,17 +87,32 @@
     
     getitems: function(idpost, idfile) {
       var result = [];
+var ismobile = $(window).width() <= 768;
       var options = this.getoptions();
       options.galleryUID = parseInt(idpost);
-      
+
       this.links.each(function(linkindex) {
         var link = $(this);
         if (idpost == link.data("idpost")) {
           var data = link.data("file");
+          var midle = link.data("midle");
+
           if (idfile == data.id) {
             options.index = result.length;
           }
-          
+
+if (ismobile && midle) {
+          result.push({
+            src: midle.link,
+            //msrc: $("img", link).attr("src"),
+            w: parseInt(midle.width),
+            h: parseInt(midle.height),
+            title: link.attr("title"),
+//id big image
+            pid: parseInt(data.id),
+            linkindex: linkindex
+          });
+} else {
           result.push({
             src: link.attr("href"),
             //msrc: $("img", link).attr("src"),
@@ -107,6 +122,7 @@
             pid: parseInt(data.id),
             linkindex: linkindex
           });
+}
         }
       });
       

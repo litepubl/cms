@@ -227,9 +227,16 @@ return '';
         if ((int) $item['midle']) {
           $midle->array = $this->getitem($item['midle']);
           $midle->link = $url . $midle->filename;
+$midle->json = jsonattr(array(
+'id' => $midle->attay['id'],
+'link' => $midle->link;
+'width' => $midle->attay['width'],
+'height' => $midle->attay['height'],
+));
 } else {
         $midle->array = array();
           $midle->link = '';
+$midle->json = '';
 }
         
         if ((int) $item['preview']) {
