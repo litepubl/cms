@@ -130,7 +130,14 @@ class tjsonfiles extends tevents {
     'item' => $item
     );
     
-    if ($item['preview'] > 0) $result['preview'] = $files->db->getitem($item['preview']);
+    if ((int) $item['preview']) {
+$result['preview'] = $files->db->getitem($item['preview']);
+}
+
+    if ((int) $item['midle']) {
+$result['midle'] = $files->db->getitem($item['midle']);
+}
+
     return $result;
   }
   

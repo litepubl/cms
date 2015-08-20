@@ -60,7 +60,7 @@
         return false;
       })
       .on("click.image", ".file-image", function() {
-        self.openimage($(this));
+        self.openimage($(this).closest("[data-idfile]").attr("data-idfile"));
         return false;
       });
       
@@ -122,8 +122,18 @@
       this.newfiles.append(html);
     },
     
-    openimage: function(link) {
-      litepubl.linkimage(link);
+    openimage: function(id) {
+      var item = this.items[id];
+      var midle = parseInt(item.midle) ? this.items[item.midle] : false;
+var data = midle && ($(window).width() <= 768) ? midle: item;
+
+litepubl.openimage({
+        url: ltoptions.files + '/files/' + data.filename,
+        width: parseInt(data.width),
+        height: parseInt(data.height),
+        title: item.title,
+        description:  item.description
+});
     },
     
     get_fileitem: function(id) {
@@ -154,14 +164,22 @@
     r = {
       id: int idfile,
       item: array fileitem,
-      preview: array fileitem optimal
+      preview: array fileitem optimal,
+      midle: array fileitem optimal
     }
     */
     uploaded: function(r) {
       try {
         var idfile = r.id;
         this.items[idfile] = r.item;
-        if (parseInt(r.item.preview)) this.items[r.preview.id] = r.preview;
+        if (parseInt(r.item.preview)) {
+this.items[r.preview.id] = r.preview;
+}
+
+        if (parseInt(r.item.midle)) {
+this.items[r.midle.id] = r.midle;
+}
+
         this.add(idfile);
     } catch(e) {erralert(e);}
     },

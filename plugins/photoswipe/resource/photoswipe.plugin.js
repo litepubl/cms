@@ -148,7 +148,7 @@ if (ismobile && midle) {
         title: image.title
       }]);
       
-      //return back
+      //restore back
       this.options = options;
     },
     
