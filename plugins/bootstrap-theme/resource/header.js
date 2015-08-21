@@ -26,7 +26,8 @@
         //readAsDefault: ('readAsBinaryString' in this.filereader ? 'BinaryString' : 'ArrayBuffer'),
         readAsDefault: 'DataURL',
         on: {
-          load: $.proxy(this.add, this)
+          load: $.proxy(this.add, this),
+          beforestart: $.proxy(this.checkfile, this)
         }
       };
       
@@ -58,7 +59,14 @@
       
       this.helpstatus= $("#helpstatus");
     },
-    
+
+checkfile: function(file) {
+            if (file.size > 30000) {
+      this.setstatus('warnsize');
+return false;
+}
+          },
+
     add: function(e, file) {
       this[this.name + "file"] = file;
       if (this[this.name]) this[this.name].remove();
@@ -79,17 +87,15 @@
       } else {
         this[this.name] = $('<style type="text/css">' + css + '</style>').appendTo("head:first");
       }
-      
-      this.setstatus('warnsize', file.size > 30000);
     },
     
-    setstatus: function(name, show) {
+    setstatus: function(name) {
       this.helpstatus.children().addClass("hide");
-      if (show) this.helpstatus.find("#" + name).removeClass("hide");
+this.helpstatus.find("#" + name).removeClass("hide");
     },
     
     submit: function() {
-      this.setstatus('percent', true);
+      this.setstatus('percent');
       this.upload(this.name, this[this.name + "file"]);
     },
     
@@ -101,9 +107,9 @@
     uploaded: function(resp) {
       this.savebutton.prop("disabled", false);
       if (resp.result == "ok") {
-        this.setstatus('success', true);
+        this.setstatus('success');
       } else {
-        this.setstatus('error', true);
+        this.setstatus('error');
       }
     },
     
@@ -141,7 +147,7 @@
       })
       .fail( function(jq, textStatus, errorThrown) {
         self.savebutton.prop("disabled", false);
-        self.setstatus('fail', true);
+        self.setstatus('fail');
         alert(jq.responseText);
       });
     }
