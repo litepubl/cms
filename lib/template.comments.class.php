@@ -41,53 +41,34 @@ class ttemplatecomments extends tevents {
       
       $cm = tcommentmanager::i();
       $result .=  sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) {', implode(',', $cm->idgroups));
-        //add hold list because we need container when comment will be hold
+        //add empty hold list because we need container for holdcomments
         $result .= 'if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>';
           $args->comment = '';
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'] .
           $theme->templates['content.post.templatecomments.form.mesg.loadhold'], $args);
         $result .= '<?php } ?>';
         
-        $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
-        if ($cm->canedit || $cm->candelete) {
-          $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.adminpanel'];
-        }
-        
-        $args->mesg = $this->fixmesg($mesg, $theme);
+        $args->mesg = $this->getmesg('logged', $cm->canedit || $cm->candelete ? 'adminpanel' : false);
         $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result .= $this->getjs(($post->idperm == 0) && $cm->confirmlogged, 'logged');
+
       $result .= '<?php } else { ?>';
         
         switch ($post->comstatus) {
           case 'reg':
-          $mesg = $theme->templates['content.post.templatecomments.form.mesg.reqlogin;'];
-          if (litepublisher::$options->reguser) {
-            $mesg .= "\n" .$theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-          }
-          
-          $args->mesg = $this->fixmesg($mesg, $theme);
+          $args->mesg = $this->getmesg('reqlogin', litepublisher::$options->reguser ? 'regaccount' : false);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           break;
           
           case 'guest':
-          $mesg = $theme->templates['content.post.templatecomments.form.mesg.guest'];
-          if (litepublisher::$options->reguser) {
-            $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-          }
-          
-          $args->mesg = $this->fixmesg($mesg, $theme);
+          $args->mesg = $this->getmesg('guest', litepublisher::$options->reguser ? 'regaccount' : false);
           $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
           $result .= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
           break;
           
           case 'comuser':
-          $mesg = $theme->templates['content.post.templatecomments.form.mesg.comuser'];
-          if (litepublisher::$options->reguser) {
-            $mesg .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.regaccount'];
-          }
-          
-          $args->mesg = $this->fixmesg($mesg, $theme);
-          
+          $args->mesg = $this->getmesg('comuser', litepublisher::$options->reguser ? 'regaccount' : false);
+
           foreach (array('name', 'email', 'url') as $field) {
             $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
           }
@@ -107,9 +88,17 @@ class ttemplatecomments extends tevents {
     return $result;
   }
   
-  public function fixmesg($mesg, $theme) {
-    return $theme->parse(str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url),
+  public function getmesg($k1, $k2) {
+$theme = ttheme::i();
+$result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
+if ($k2) {
+$result .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.' . $k2];
+}
+
+str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url),
     str_replace('&backurl=', '&amp;backurl=', $mesg)));
+
+    return $theme->parse($result);
   }
   
   public function getjs($confirmcomment, $authstatus) {

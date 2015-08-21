@@ -14,13 +14,13 @@
       this.onbuttons = $.Callbacks();
       
       var self = this;
-      $(".loadhold").click(function() {
-        $(this).parent().remove();
+      var comtheme = ltoptions.theme.comments;
+      $(comtheme.loadhold).click(function() {
+        $(this).remove();
         self.loadhold();
         return false;
       });
       
-      var comtheme = ltoptions.theme.comments;
       this.create_buttons($().add(comtheme.comments).add(comtheme.holdcomments));
     },
     
@@ -175,7 +175,14 @@
         type: 'get',
         method: "comments_get_hold",
       params: {idpost: ltoptions.idpost},
-        callback: function(r) {
+        callback: $.proxy(this.replacehold, this),
+        error:  function(message, code) {
+          self.error(lang.comments.errorrecieved);
+        }
+      });
+    },
+
+replacehold: function(r) {
           try {
             var comtheme = ltoptions.theme.comments;
             var hold = comtheme.holdcomments;
@@ -188,17 +195,10 @@
             
             comtheme.comments.after(r.items);
             comtheme.holdcomments = $(comtheme.hold);
-            self.create_buttons(comtheme.holdcomments);
+            this.create_buttons(comtheme.holdcomments);
         } catch(e) {erralert(e);}
         },
         
-        error:  function(message, code) {
-          self.error(lang.comments.errorrecieved);
-        }
-      });
-      
-    },
-    
     create_buttons: function(owner) {
       var comtheme = ltoptions.theme.comments;
       var self = this;

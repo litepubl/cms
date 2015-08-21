@@ -10,7 +10,8 @@
   var jsonrpcSettings  = $.jsonrpcSettings = {
     guid: $.now(),
     url: "",
-    onargs: $.noop
+    onargs: $.noop,
+error: false
   };
   
   $.jsonrpc = function(args) {
@@ -21,7 +22,7 @@
     params: {},
       slave: false,
       callback: false,
-      error: false,
+      error: jsonrpcSettings.error,
       cache: false
     }, args);
     
@@ -47,13 +48,19 @@
               var slave = args.slave;
               var slaveresult = r.result.slave;
               if ($.hasprop(slaveresult, 'error')) {
-                if ($.hasprop(slave, 'error') && $.isFunction(slave.error)) slave.error(slaveresult.error.message, slaveresult.error.code);
+                if ($.hasprop(slave, 'error') && $.isFunction(slave.error)) {
+slave.error(slaveresult.error.message, slaveresult.error.code);
+}
               } else {
-                if ($.hasprop(slave, 'callback') && $.isFunction(slave.callback)) slave.callback(slaveresult);
+                if ($.hasprop(slave, 'callback') && $.isFunction(slave.callback)) {
+slave.callback(slaveresult);
+}
               }
             }
           } else if ("error" in r) {
-            if ($.isFunction(args.error)) args.error(r.error.message, r.error.code);
+            if ($.isFunction(args.error)) {
+args.error(r.error.message, r.error.code);
+}
           }
         }
       }
@@ -74,7 +81,9 @@
     }
     
     return $.ajax(ajax).fail( function(jq, textStatus, errorThrown) {
-      if ($.isFunction(args.error)) args.error(jq.responseText, jq.status);
+      if ($.isFunction(args.error)) {
+args.error(jq.responseText, jq.status);
+}
     });
   };
   

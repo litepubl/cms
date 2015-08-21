@@ -12,6 +12,7 @@
     theme.comments= $.extend({
       comments: "#commentlist",
       hold: "#holdcommentlist",
+      loadhold: ".loadhold",
       comment: "#comment-",
       content: "#commentcontent-",
       buttons:".moderationbuttons",
@@ -20,6 +21,7 @@
       button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>',
       form: "#commentform",
       editor: "#comment",
+// rights of current user
       confirmcomment: true,
       comuser: false,
       canedit: false,

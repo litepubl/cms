@@ -7,7 +7,7 @@
 (function ($, document, window) {
   "use strict";
   
-  $(document).ready(function() {
+$(document).ready(function() {
     litepubl.ulogin = new litepubl.Ulogin();
   });
   
@@ -24,10 +24,14 @@
     init: function() {
       this.registered = litepubl.getuser().pass ? 1 : 0;
       if (this.registered) return;
+
       var self = this;
-      $('a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]').click(function() {
+      $(document).on("click.ulogin", 'a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]', function() {
         var url = $(this).attr("href");
-        if (litepubl.is_admin_url(url)) self.open(url);
+        if (litepubl.is_admin_url(url)) {
+self.open(url);
+}
+
         return false;
       });
       
@@ -41,7 +45,7 @@
           },
           
           error: function(message, code) {
-            $.messagebox(lang.dialog.error, message);
+            $.errobox(message);
           }
         });
         
@@ -167,7 +171,9 @@
     },
     
     onlogged: function(slave, callback) {
-      if (!this.registered) return        this.logon(slave, callback);
+      if (!this.registered) {
+return        this.logon(slave, callback);
+}
       
       if (this.logged) {
         if (slave) {
@@ -175,7 +181,10 @@
           litepubl.stat('ulogin_checklogged');
           return false;
         } else {
-          if ($.isFunction(callback)) callback('logged');
+          if ($.isFunction(callback)) {
+callback('logged');
+}
+
           return true;
         }
       }
