@@ -32,7 +32,7 @@ $lang.comuser
 ]
 
 $loadhold = [
-<div class="loadhold "><a href="$site.url/admin/comments/hold/">$lang.loadhold</a></div>
+<div id="load-hold-comments"><a href="$site.url/admin/comments/hold/">$lang.loadhold</a></div>
 ]
 
 ]

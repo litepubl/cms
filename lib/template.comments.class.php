@@ -35,20 +35,31 @@ class ttemplatecomments extends tevents {
       $result .= $pingbacks->getcontent();
     }
     
-    if (!litepublisher::$options->commentsdisabled && ($post->comstatus != 'closed')) {
+    if (litepublisher::$options->commentsdisabled || ($post->comstatus == 'closed')) {
+      $result .= $theme->parse($theme->templates['content.post.templatecomments.closed']);
+return $result;
+}
+
       $args->postid = $post->id;
       $args->antispam = base64_encode('superspamer' . strtotime ("+1 hour"));
       
       $cm = tcommentmanager::i();
-      $result .=  sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) {', implode(',', $cm->idgroups));
-        //add empty hold list because we need container for holdcomments
-        $result .= 'if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>';
+// if user can see hold comments
+      $result .=  sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+
+        $holdmesg = '<?php if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>' .
+$theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+//hide template hold comments in html comment
+'<!--' .
+$theme->templates['content.post.templatecomments.holdcomments'] .
+'-->' .
+'<?php } ?>';
+
           $args->comment = '';
-          $result .= $theme->parsearg($theme->templates['content.post.templatecomments.holdcomments'] .
-          $theme->templates['content.post.templatecomments.form.mesg.loadhold'], $args);
-        $result .= '<?php } ?>';
-        
-        $args->mesg = $this->getmesg('logged', $cm->canedit || $cm->candelete ? 'adminpanel' : false);
+$mesg = $theme->parsearg($holdmesg, $args);
+        $mesg .= $this->getmesg('logged', $cm->canedit || $cm->candelete ? 'adminpanel' : false);
+        $args->mesg = $mesg;
+
         $result .= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result .= $this->getjs(($post->idperm == 0) && $cm->confirmlogged, 'logged');
 
@@ -82,9 +93,7 @@ class ttemplatecomments extends tevents {
         }
         
       $result .= '<?php } ?>';
-    } else {
-      $result .= $theme->parse($theme->templates['content.post.templatecomments.closed']);
-    }
+
     return $result;
   }
   
@@ -95,8 +104,11 @@ if ($k2) {
 $result .= "\n" . $theme->templates['content.post.templatecomments.form.mesg.' . $k2];
 }
 
-str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url),
-    str_replace('&backurl=', '&amp;backurl=', $mesg)));
+//normalize uri
+    $result = str_replace('&backurl=', '&amp;backurl=', $result);
+
+//insert back url
+$result = str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url), $result);
 
     return $theme->parse($result);
   }

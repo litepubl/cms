@@ -15,13 +15,16 @@
       
       var self = this;
       var comtheme = ltoptions.theme.comments;
-      $(comtheme.loadhold).click(function() {
+      var loadhold = $(comtheme.loadhold).click(function() {
         $(this).remove();
         self.loadhold();
         return false;
       });
+
+//extract template from html comment after loadhold
+comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
       
-      this.create_buttons($().add(comtheme.comments).add(comtheme.holdcomments));
+      this.create_buttons(comtheme.comments);
     },
     
     setenabled: function(value) {
@@ -175,26 +178,32 @@
         type: 'get',
         method: "comments_get_hold",
       params: {idpost: ltoptions.idpost},
-        callback: $.proxy(this.replacehold, this),
+        callback: $.proxy(this.inserthold, this),
         error:  function(message, code) {
           self.error(lang.comments.errorrecieved);
         }
       });
     },
 
-replacehold: function(r) {
+inserthold: function(r) {
           try {
             var comtheme = ltoptions.theme.comments;
             var hold = comtheme.holdcomments;
             if (comtheme.ismoder && hold.length) {
-              //delete nodes between comments and hold comments
-              while (comtheme.comments.next()[0] != hold[0]) comtheme.comments.next().remove();
               //delete current hold list
               hold.remove();
             }
             
-            comtheme.comments.after(r.items);
-            comtheme.holdcomments = $(comtheme.hold);
+            var  inserted = $(r.items).insertAfter(comtheme.comments);
+            comtheme.holdcomments = inserted.parent().find(comtheme.hold);
+
+//utilize unused data
+var holdtemplate = comtheme.holdtemplate;
+if (holdtemplate) {
+holdtemplate.parentNode.removeChild(holdtemplate);
+comtheme.holdtemplate = null;
+}
+
             this.create_buttons(comtheme.holdcomments);
         } catch(e) {erralert(e);}
         },

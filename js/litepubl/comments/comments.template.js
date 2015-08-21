@@ -12,7 +12,7 @@
     theme.comments= $.extend({
       comments: "#commentlist",
       hold: "#holdcommentlist",
-      loadhold: ".loadhold",
+      loadhold: "#load-hold-comments",
       comment: "#comment-",
       content: "#commentcontent-",
       buttons:".moderationbuttons",
@@ -36,7 +36,6 @@
     
     //cache dom search
     comtheme.comments= $(comtheme.comments);
-    comtheme.holdcomments = $(comtheme.hold);
     comtheme.form = $(comtheme.form);
     if (comtheme.form.length) {
       comtheme.editor = comtheme.form.find(comtheme.editor);
