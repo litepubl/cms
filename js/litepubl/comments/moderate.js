@@ -80,8 +80,20 @@ comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
         params:  {id: id, status: status == 'hold' ? 'hold' : 'approved'},
           callback:  function(r) {
             try {
-              if (r == false) return self.error(lang.comments.notmoderated);
-              $(status == "hold" ? options.hold : options.comments).append($(options.comment  + id));
+              if (r == false) {
+return self.error(lang.comments.notmoderated);
+}
+
+if (!options.holdcomments && options.holdtemplate) {
+var holdtemplate = options.holdtemplate;
+options.holdcontainer = $(holdtemplate.nodeValue).insertAfter(options.comments);
+options.holdcomments = options.holdcontainer.parent().find(options.hold);
+            self.create_buttons(options.holdcomments);
+holdtemplate.parentNode.removeChild(holdtemplate);
+comtheme.holdtemplate = null;
+}
+
+              $(status == "hold" ? options.holdcomments : options.comments).append($(options.comment  + id));
               self.setenabled(true);
           } catch(e) {erralert(e);}
           },
@@ -188,15 +200,6 @@ comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
 inserthold: function(r) {
           try {
             var comtheme = ltoptions.theme.comments;
-            var hold = comtheme.holdcomments;
-            if (comtheme.ismoder && hold.length) {
-              //delete current hold list
-              hold.remove();
-            }
-            
-            var  inserted = $(r.items).insertAfter(comtheme.comments);
-            comtheme.holdcomments = inserted.parent().find(comtheme.hold);
-
 //utilize unused data
 var holdtemplate = comtheme.holdtemplate;
 if (holdtemplate) {
@@ -204,6 +207,16 @@ holdtemplate.parentNode.removeChild(holdtemplate);
 comtheme.holdtemplate = null;
 }
 
+            var holdcontainer = comtheme.holdcontainer;
+            if (holdcontainer && holdcontainer.length) {
+contheme.holdcontainer = $(r.items).insertBefore(holdcontainer);
+holdcontainer.remove();
+                        holdcontainer= contheme.holdcontainer;
+            } else {
+                        holdcontainer= contheme.holdcontainer = $(r.items).insertAfter(comtheme.comments);
+}
+
+            comtheme.holdcomments = holdcontainer.parent().find(comtheme.hold);
             this.create_buttons(comtheme.holdcomments);
         } catch(e) {erralert(e);}
         },
@@ -217,8 +230,11 @@ comtheme.holdtemplate = null;
         self.setstatus(button.parent().attr("data-idcomment"), button.attr("data-moder"));
         return false;
       });
-      
+
       var comtheme = ltoptions.theme.comments;
+      var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]'));
+if (!containers.length) rturn;
+
       if (comtheme.ismoder) {
         var names = ['approve', 'hold', 'del', 'edit'];
       } else {
@@ -239,9 +255,8 @@ comtheme.holdtemplate = null;
         });
       }
       
-      var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]')).append(html);
-      
-      if (containers.length && containers.first().is(":hidden")) {
+      containers.append(html);
+            if (containers.first().is(":hidden")) {
         var showbutton  = $.simpletml(comtheme.button, {
           title: 'E',
           name: 'show'

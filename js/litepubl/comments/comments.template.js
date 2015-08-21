@@ -26,7 +26,11 @@
       comuser: false,
       canedit: false,
       candelete: false,
-      ismoder: false
+      ismoder: false,
+//for moderate functions
+holdcomments: false,
+holdcontainer: false,
+holdtemplate: false
     }, theme.comments);
     
     var comtheme = theme.comments;
