@@ -6194,21 +6194,11 @@ A.dashed:focus {
   display: block;
   overflow: hidden;
   margin-top: 12px;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
 }
 @media (min-width: 480px) {
   .anpost {
     float: left;
     width: 50%;
-  }
-}
-@media (min-width: 1200px) {
-  .anpost {
-    float: left;
-    width: 33.33333333%;
   }
 }
 .anpost-title {
@@ -6606,4 +6596,5 @@ proppage-form-submit,
 .lobster .h5,
 .lobster .h6 {
   font-family: 'Lobster', cursive;
+  line-height: 1.2;
 }

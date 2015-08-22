@@ -6864,21 +6864,11 @@ A.dashed:focus {
   display: block;
   overflow: hidden;
   margin-top: 12px;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
 }
 @media (min-width: 480px) {
   .anpost {
     float: left;
     width: 50%;
-  }
-}
-@media (min-width: 1200px) {
-  .anpost {
-    float: left;
-    width: 33.33333333%;
   }
 }
 .anpost-title {
@@ -7262,3 +7252,18 @@ proppage-form-submit,
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.lobster .navbar-brand,
+.lobster h1,
+.lobster h2,
+.lobster h3,
+.lobster h4,
+.lobster h5,
+.lobster h6,
+.lobster .h1,
+.lobster .h2,
+.lobster .h3,
+.lobster .h4,
+.lobster .h5,
+.lobster .h6 {
+  line-height: 1.2;
+}

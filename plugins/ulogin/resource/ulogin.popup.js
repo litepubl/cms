@@ -27,16 +27,23 @@ $(document).ready(function() {
 
       var self = this;
       $(document).on("click.ulogin", 'a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]', function() {
-        var url = $(this).attr("href");
+var link = $(this);
+        var url = link.attr("href");
+
         if (litepubl.is_admin_url(url)) {
+if (link.closest("#before-commentform").length) {
+self.auth_comments();
+} else {
 self.open(url);
+}
 }
 
         return false;
       });
-      
-      $("#ulogin-comment-button").click(function() {
-        self.onlogged({
+},
+
+auth_comments: function() {
+        this.onlogged({
           type: 'get',
           method: "comments_get_logged",
         params: {idpost: ltoptions.idpost},
@@ -48,9 +55,6 @@ self.open(url);
             $.errobox(message);
           }
         });
-        
-        return false;
-      });
     },
     
     open: function(args) {
@@ -135,6 +139,7 @@ self.open(url);
           set_cookie("litepubl_regservice", r.regservice);
           self.registered = true;
           self.logged = true;
+$(document).off("click.ulogin");
           if ($.isFunction(callback)) callback();
         }
       });

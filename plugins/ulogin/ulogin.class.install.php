@@ -36,10 +36,6 @@ function uloginInstall($self) {
   $areg->widget = $self->addpanel($areg->widget, $self->panel);
   $areg->save();
   
-  $tc = ttemplatecomments::i();
-  $tc->regaccount = $self->addpanel($tc->regaccount, $self->button);
-  $tc->save();
-  
   litepublisher::$urlmap->addget($self->url, get_class($self));
   
   $js = tjsmerger::i();
@@ -73,9 +69,6 @@ function uloginUninstall($self) {
   $areg->widget = $self->deletepanel($areg->widget);
   $areg->save();
   
-  $tc = ttemplatecomments::i();
-  $tc->regaccount = $self->deletepanel($tc->regaccount);
-  $tc->save();
   
   $js = tjsmerger::i();
   $js->lock();
