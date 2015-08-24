@@ -104,7 +104,10 @@ auth_comments: function() {
             
             $("#email-login").click(function() {
               $.closedialog(function() {
-                if (!("emailauth" in litepubl)) litepubl.emailauth = new litepubl.Emailauth();
+                if (!("emailauth" in litepubl)) {
+litepubl.emailauth = new litepubl.Emailauth();
+}
+
                 litepubl.emailauth.open(args.email);
               });
               return false;
