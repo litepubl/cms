@@ -21,14 +21,19 @@
     open: function(callback) {
       this.callback = callback;
       var lng = lang.emailauth;
-      var html = '';
-      html += this.getradio('reg');
-      html += this.getradio('login');
-      html += this.getradio('lostpass');
-      html += litepubl.tml.getedit('E-Mail', 'email-emailauth', '');
-      html += litepubl.tml.getedit(lng.name, 'name-emailauth', '');
-      html += litepubl.tml.getedit(lng.password, 'password-emailauth', '').replace(/text/gm, 'password');
-      html += '<p id="info-status"></p>';
+var tml = litepubl.tml;
+
+      var html = 
+      this.getradio('reg') +
+      this.getradio('login') +
+      this.getradio('lostpass') +
+
+      tml.getedit('E-Mail', 'email-emailauth', '') +
+      tml.getedit(lng.name, 'name-emailauth', '') +
+      tml.getedit(lng.password, 'password-emailauth', '')
+.replace(/text/gim, 'password') +
+
+'<p id="info-status"></p>';
       
       var self = this;
       var dialog = self.dialog = $.litedialog({

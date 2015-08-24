@@ -139,6 +139,7 @@ cd ..\regservices
 %css% regservices.css -o regservices.min.css
 cd ..\ulogin\resource
 %mini%ulogin.popup.js --js_output_file=ulogin.popup.min.js
+%css% ulogin.popup.css -o ulogin.popup.min.css
 %mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
 %mini%en.ulogin.popup.js --js_output_file=en.ulogin.popup.min.js
 %mini%email.auth.js --js_output_file=email.auth.min.js

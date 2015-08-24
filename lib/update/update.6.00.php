@@ -16,6 +16,10 @@ $man->alter('files', 'add key (midle)');
 
 if (litepublisher::$classes->exists('ulogin')) {
 unset(litepublisher::$classes->items['adminulogin']);
+  tcssmerger::i()->replacefile('default',
+ '/plugins/ulogin/resource/ulogin.popup.css',
+ '/plugins/ulogin/resource/ulogin.popup.min.css'
+);
 
 $ulogin = ulogin::i();
 $ulogin->panel = '<div id="ulogin-autoinit"></div>';

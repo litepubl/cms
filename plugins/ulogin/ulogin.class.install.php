@@ -30,7 +30,7 @@ function uloginInstall($self) {
   litepublisher::$classes->add('emailauth', 'emailauth.class.php', 'ulogin');
   $js->unlock();
   
-  tcssmerger::i()->add('default', '/plugins/ulogin/resource/ulogin.popup.css');
+  tcssmerger::i()->add('default', '/plugins/ulogin/resource/ulogin.popup.min.css');
   
   $json = tjsonserver::i();
   $json->lock();
@@ -61,7 +61,7 @@ function uloginUninstall($self) {
   $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.ulogin.popup.min.js');
   $js->unlock();
   
-  tcssmerger::i()->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.css');
+  tcssmerger::i()->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.css');
   
   tjsonserver::i()->unbind($self);
   
