@@ -13,27 +13,12 @@ function uloginInstall($self) {
   if (!$man->column_exists('users', 'phone')) $man->alter('users', "add phone bigint not null default '0' after status");
   tusers::i()->deleted = $self->userdeleted;
   
-  $lang = tplugins::getnamelang(basename(dirname(__file__)));
-  
-  $self->panel = '<h4>' . $lang->panel_title . '</h4>
-  <div id="uLogin" data-ulogin="display=small;fields=first_name,last_name;optional=email,phone,nickname;providers=vkontakte,odnoklassniki,mailru,yandex,facebook,google,twitter;hidden=other;redirect_uri=' .
-  urlencode(litepublisher::$site->url . $self->url . '?backurl=') . ';"></div>
-  <script type="text/javascript">
-  $.ready2(function() {
-    litepubl.ulogin.ready();
-  });
-  </script>';
-  
-  $self->button = '<div class="center-block"><button type="button" class="btn btn-default" id="ulogin-comment-button">' . $lang->button_title . '</button></div>';
-  
-  $self->save();
-  
   $alogin = tadminlogin::i();
-  $alogin ->widget = $self->addpanel($alogin ->widget, $self->panel);
+  $alogin ->widget .= $self->panel;
   $alogin->save();
   
   $areg = tadminreguser::i();
-  $areg->widget = $self->addpanel($areg->widget, $self->panel);
+  $areg->widget .= $self->panel;
   $areg->save();
   
   litepublisher::$urlmap->addget($self->url, get_class($self));
@@ -62,11 +47,11 @@ function uloginUninstall($self) {
   if ($man->column_exists('users', 'phone')) $man->alter('users', "drop phone");
   
   $alogin = tadminlogin::i();
-  $alogin ->widget = $self->deletepanel($alogin ->widget);
+  $alogin ->widget = str_replace($self->panel, '', $alogin ->widget);
   $alogin->save();
   
   $areg = tadminreguser::i();
-  $areg->widget = $self->deletepanel($areg->widget);
+  $areg->widget = str_replace($self->panel, '', $areg->widget);
   $areg->save();
   
   

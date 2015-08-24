@@ -6,21 +6,33 @@
 
 (function ($, document, window) {
   "use strict";
-  
-$(document).ready(function() {
-    litepubl.ulogin = new litepubl.Ulogin();
-  });
-  
+
   litepubl.Ulogin = Class.extend({
+url: '/admin/ulogin.php?backurl=',
+autoinit: "#ulogin-autoinit",
     registered: false,
     logged: false,
     script: false,
     dialog: false,
     html: '<div><p>%%lang.subtitle%%</p>' +
     '<div id="ulogin-dialog">' +
-    '<div id="ulogin-holder" data-ulogin="display=small;fields=first_name,last_name;optional=email,phone,nickname;providers=vkontakte,odnoklassniki,mailru,yandex,facebook,google,twitter;hidden=other;redirect_uri=%%redirurl%%;%%callback%%"></div></div>' +
+    '<div id="ulogin-holder" data-ulogin="' +
+'display=small;' +
+'fields=first_name,last_name;' +
+'optional=email,phone,nickname;' +
+'providers=vkontakte,odnoklassniki,mailru,yandex,facebook,google,twitter;' + 
+'hidden=other;' +
+'redirect_uri=%%redirurl%%;' +
+'%%callback%%"></div></div>' +
     '<div><a href="%%url%%" id="email-login">%%lang.emaillogin%%</a></div></div>',
-    
+
+admintml: '<div id="ulogin-buttons" data-ulogin="' +
+'display=small;fields=first_name,last_name;' +
+'optional=email,phone,nickname;' +
+'providers=vkontakte,odnoklassniki,mailru,yandex,facebook,google,twitter;' +
+'hidden=other;' +
+'redirect_uri=%%redirurl%%;"></div>',
+
     init: function() {
       this.registered = litepubl.getuser().pass ? 1 : 0;
       if (this.registered) return;
@@ -40,6 +52,8 @@ self.open(url);
 
         return false;
       });
+
+$.ready2($.proxy(this.adminbuttons, this));
 },
 
 auth_comments: function() {
@@ -87,7 +101,7 @@ auth_comments: function() {
           };
         } else {
           html = html.replace(/%%callback%%/gim, "")
-          .replace(/%%redirurl%%/gim, encodeURIComponent(ltoptions.url + "/admin/ulogin.php?backurl=" + encodeURIComponent(args.url)));
+          .replace(/%%redirurl%%/gim, encodeURIComponent(ltoptions.url + self.url + encodeURIComponent(args.url)));
         }
         
         $.litedialog({
@@ -123,9 +137,25 @@ litepubl.emailauth = new litepubl.Emailauth();
         });
       });
     },
+
+adminbuttons: function() {
+var holder = $(this.autoinit);
+if (!holder.length) return;
+
+var html = this.admintml.replace(/%%redirurl%%/gim,
+ encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(get_get('backurl'))));
+
+holder.append(html);
+this.ready(function() {
+            uLogin.customInit('ulogin-buttons');
+});
+},
     
     ready: function(callback) {
-      if (this.script) return this.script.done(callback);
+      if (this.script) {
+return this.script.done(callback);
+}
+
       return this.script = $.load_script('//ulogin.ru/js/ulogin.js', callback);
     },
     
@@ -218,4 +248,8 @@ callback('logged');
     
   });//class
   
+$(document).ready(function() {
+    litepubl.ulogin = new litepubl.Ulogin();
+  });
+
 }(jQuery, document, window));

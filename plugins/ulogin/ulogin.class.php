@@ -16,13 +16,13 @@ class ulogin extends tplugin {
     $this->addevents('added', 'onadd', 'onphone');
     $this->table = 'ulogin';
     $this->data['url'] = '/admin/ulogin.php';
-    $this->data['panel'] = '';
-    $this->data['button'] = '';
+    $this->data['panel'] = '<div id="ulogin-autoinit"></div>';
     $this->data['nets'] = array();
   }
   
   public function add($id, $service, $uid) {
-    if (($id == 0) || ($service == '') || ($uid == '')) return;
+    if (!$id || !$service || !$uid) return;
+
     if (!in_array($service, $this->data['nets'])) {
       $this->data['nets'][] = $service;
       $this->save();
@@ -168,27 +168,6 @@ class ulogin extends tplugin {
     $result = $this->auth($token);
     if (!$result) $this->error('Not authorized', 403);
     return $result;
-  }
-  
-  public function addpanel($s, $panel) {
-    $open = '<!--ulogin-->';
-    $close = '<!--/ulogin-->';
-    $s = $this->deletepanel($s);
-    return $open . $panel . $close;
-  }
-  
-  public function deletepanel($s) {
-    $open = '<!--ulogin-->';
-    $close = '<!--/ulogin-->';
-    if (false !== ($i = strpos($s, $open))) {
-      if ($j = strpos($s, $close)) {
-        $s = trim(substr($s, 0, $i)) .
-        trim(substr($s, $j + strlen($close) + 1));
-      } else {
-        $s = trim(substr($s, 0, $i));
-      }
-    }
-    return $s;
   }
   
   public function check_logged(array $args) {

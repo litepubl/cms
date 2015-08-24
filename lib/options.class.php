@@ -104,6 +104,7 @@ class toptions extends tevents_storage {
     if (is_null($this->_user)) {
       $this->_user = $this->authenabled ? $this->authcookie() : false;
     }
+
     return $this->_user;
   }
   

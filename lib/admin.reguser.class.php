@@ -80,7 +80,7 @@ class tadminreguser extends tadminform {
         case 'ok':
         $backurl = $this->backurl;
         if (!$backurl) $backurl =  tusergroups::i()->gethome(litepublisher::$options->group);
-        if (!strbegin($backurl, 'http://')) $backurl = litepublisher::$site->url . $backurl;
+        if (!strbegin($backurl, 'http')) $backurl = litepublisher::$site->url . $backurl;
         return $html->h4($lang->successreg . ' ' . $html->getlink($backurl, $lang->continue));
         
         case 'mail':
@@ -98,7 +98,7 @@ class tadminreguser extends tadminform {
     }
     $lang = tlocal::i('users');
     $args->formtitle = $lang->regform;
-    $args->data['$lang.email'] = 'email';
+    $args->data['$lang.email'] = 'E-Mail';
     $result .= $this->widget;
     if (isset($_GET['backurl'])) {
       //normalize
