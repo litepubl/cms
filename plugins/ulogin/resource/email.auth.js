@@ -75,7 +75,7 @@ this.dialog = dialog;
           })
           .filter('[value=reg]').click();
           
-          litepubl.stat('emailauth_open');
+          //litepubl.stat('emailauth_open');
         },
         
 buttons: function() {
@@ -88,7 +88,7 @@ return [{
             var email = self.getemail();
             if (!email) return false;
 
-            var edit = $("#text-name-emailauth", dialog);
+            var edit = $("#text-name-emailauth", self.dialog);
             var name = $.trim(edit.val());
             if (name) {
               self.reg(email, name);
@@ -105,7 +105,8 @@ return [{
           click: function() {
             var email = self.getemail();
             if (!email) return false;
-            var edit = $("#password-password-emailauth", dialog);
+
+            var edit = $("#password-password-emailauth", self.dialog);
             var password = $.trim(edit.val());
             if (password) {
               self.login(email, password);
@@ -130,8 +131,7 @@ return [{
         }, {
           title: lang.dialog.close,
           click: $.closedialog
-        }]
-      });
+        }];
     },
     
     getemail: function() {
@@ -144,6 +144,7 @@ return [{
       }
       
       email.focus();
+litepubl.stat('emailauth_errmail');
       return false;
     },
     
@@ -167,6 +168,7 @@ return [{
     
     ajax: function(args) {
       this.disable(true);
+
       var self = this;
       args.error = function(message, code) {
         self.disable(false);

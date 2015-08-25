@@ -112,18 +112,19 @@ auth_comments: function() {
           width: 300,
           html: html + this.emailauth.html(),
           buttons: this.emailauth.buttons(),
-          close: function() {
-            self.dialog = false;
-            self.emailauth.dialog = false;
-            litepubl.stat('ulogin_close');
-          },
-          
-          open: function() {
+
+          open: function(dialog) {
 self.emailauth.onopen(dialog);
       self.ready(function() {
             uLogin.customInit('ulogin-holder');
 });
             litepubl.stat('ulogin_open');
+          },
+
+          close: function() {
+            self.dialog = false;
+            self.emailauth.dialog = false;
+            litepubl.stat('ulogin_close');
           }
       });
     },
