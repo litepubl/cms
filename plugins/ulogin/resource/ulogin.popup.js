@@ -15,7 +15,9 @@ autoinit: "#ulogin-autoinit",
     script: false,
     dialog: false,
 emailauth: false,
-    html: '<div><p>%%lang.subtitle%%</p>' +
+args: false,
+
+    tml: '<div><p>%%lang.subtitle%%</p>' +
     '<div id="ulogin-dialog">' +
     '<div id="ulogin-holder" data-ulogin="' +
 'display=small;' +
@@ -72,7 +74,20 @@ auth_comments: function() {
           }
         });
     },
-    
+
+html: function() {    
+var hascallback = this.args.callback && $.isFunction(this.args.callback);
+if (hascallback) {
+          window.ulogincallback = $.proxy(this.ontoken, this);
+}
+
+        return  $.parsetml(this.tml, {
+lang:lang.ulogin,
+redirurl: hascallback ? "" : encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(this.args.url)),
+callback : hascallback ? "callback=ulogincallback" : ""
+});
+},
+
     open: function(args) {
       if (this.dialog) return false;
         this.dialog = true;
@@ -80,37 +95,17 @@ auth_comments: function() {
 //preload script when animating dialog
       this.ready();
 
-      args = $.extend({
+      this.args = $.extend({
         url: ltoptions.url + "/admin/login/?backurl=" + encodeURIComponent(location.href),
-        callback: false
+        callback: false,
+slave: false
       }, args);
-      
-      var self = this;
-        var lng = lang.ulogin;
-        var html = this.html
-.replace(/%%lang.emaillogin%%/gim, lng.emaillogin)
-        .replace(/%%lang.subtitle%%/gim, lng.subtitle)
-        .replace(/%%url%%/gim, args.url);
-        
-        if ($.isFunction(args.callback)) {
-          html = html.replace(/%%callback%%/gim, "callback=ulogincallback")
-          .replace(/%%redirurl%%/gim, '');
-          window.ulogincallback = function(token) {
-            $.closedialog();
-            try {
-              args.callback(token);
-              litepubl.stat('ulogin_token');
-          } catch(e) {erralert(e);}
-          };
-        } else {
-          html = html.replace(/%%callback%%/gim, "")
-          .replace(/%%redirurl%%/gim, encodeURIComponent(ltoptions.url + self.url + encodeURIComponent(args.url)));
-        }
-        
+
+        var lng = lang.ulogin;      
         $.litedialog({
           title: lng.title,
           width: 300,
-          html: html + this.emailauth.html(),
+          html: this.html() + this.emailauth.html(),
           buttons: this.emailauth.buttons(),
 
           open: function(dialog) {
@@ -156,6 +151,7 @@ return this.script.done(callback);
     },
 
 setuser: function(user) {
+$(document).off("click.ulogin");
           litepubl.user = user;
           set_cookie("litepubl_user_id", user.id);
           set_cookie("litepubl_user", user.pass);
@@ -164,49 +160,37 @@ setuser: function(user) {
           this.registered = true;
           this.logged = true;
 
-$(document).off("click.ulogin");
+          if ($.isFunction(this.args.callback)) {
+this.args.callback();
+}
 },
-    
-    auth: function(token, slave, callback) {
-      var self =this;
-      return $.jsonrpc({
+
+ontoken: function(token) {
+if (this.dialog) $.closedialog();
+      var result = $.jsonrpc({
         method: "ulogin_auth",
       params:  {token: token},
-        slave: slave,
-        callback:  function(r) {
-self.setuser(r);
-          if ($.isFunction(callback)) callback();
-        }
+        slave: this.args.slave,
+        callback:  $.proxy(this.setuser, this)
       });
+
+              litepubl.stat('ulogin_token');
+return result;
     },
     
     login: function(url, slave, callback) {
-      var self = this;
-      self.open({
+      this.open({
         url: url,
-        callback: function(token) {
-          self.auth(token, slave, callback);
-        },
-        
-        email: callback
+        callback: callback,
+slave: slave
       });
     },
     
     logon: function(slave, callback) {
-      var self = this;
-      self.open({
+      this.open({
         url: '',
-        callback: function(token) {
-          self.auth(token, slave, callback);
-        },
-        
-        email: function() {
-          if (slave) {
-            $.jsonrpc(slave);
-          } else if ($.isFunction(callback)) {
-            callback();
-          }
-        }
+        callback: callback,
+slave: slave
       });
     },
     
