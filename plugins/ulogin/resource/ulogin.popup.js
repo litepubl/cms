@@ -14,6 +14,7 @@ autoinit: "#ulogin-autoinit",
     logged: false,
     script: false,
     dialog: false,
+emailauth: false,
     html: '<div><p>%%lang.subtitle%%</p>' +
     '<div id="ulogin-dialog">' +
     '<div id="ulogin-holder" data-ulogin="' +
@@ -37,6 +38,7 @@ admintml: '<div id="ulogin-buttons" data-ulogin="' +
       this.registered = litepubl.getuser().pass ? 1 : 0;
       if (this.registered) return;
 
+this.emailauth = new litepubl.Emailauth();
       var self = this;
       $(document).on("click.ulogin", 'a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]', function() {
 var link = $(this);
@@ -73,19 +75,20 @@ auth_comments: function() {
     
     open: function(args) {
       if (this.dialog) return false;
+        this.dialog = true;
+
+//preload script when animating dialog
+      this.ready();
+
       args = $.extend({
         url: ltoptions.url + "/admin/login/?backurl=" + encodeURIComponent(location.href),
-        callback: false,
-        email: function() {
-          window.location = args.url;
-        }
+        callback: false
       }, args);
       
       var self = this;
-      self.ready(function() {
-        self.dialog = true;
         var lng = lang.ulogin;
-        var html = self.html.replace(/%%lang.emaillogin%%/gim, lng.emaillogin)
+        var html = this.html
+.replace(/%%lang.emaillogin%%/gim, lng.emaillogin)
         .replace(/%%lang.subtitle%%/gim, lng.subtitle)
         .replace(/%%url%%/gim, args.url);
         
@@ -106,35 +109,22 @@ auth_comments: function() {
         
         $.litedialog({
           title: lng.title,
-          html: html,
           width: 300,
+          html: html + this.emailauth.html(),
+          buttons: this.emailauth.buttons(),
           close: function() {
             self.dialog = false;
+            self.emailauth.dialog = false;
             litepubl.stat('ulogin_close');
           },
           
           open: function() {
+self.emailauth.onopen(dialog);
+      self.ready(function() {
             uLogin.customInit('ulogin-holder');
-            
-            $("#email-login").click(function() {
-              $.closedialog(function() {
-                if (!("emailauth" in litepubl)) {
-litepubl.emailauth = new litepubl.Emailauth();
-}
-
-                litepubl.emailauth.open(args.email);
-              });
-              return false;
-            });
-            
+});
             litepubl.stat('ulogin_open');
-          },
-          
-          buttons: [{
-            title: lang.dialog.close,
-            click: $.closedialog
-          }]
-        });
+          }
       });
     },
 
@@ -158,6 +148,18 @@ return this.script.done(callback);
 
       return this.script = $.load_script('//ulogin.ru/js/ulogin.js', callback);
     },
+
+setuser: function(user) {
+          litepubl.user = user;
+          set_cookie("litepubl_user_id", user.id);
+          set_cookie("litepubl_user", user.pass);
+          set_cookie("litepubl_regservice", user.regservice);
+
+          this.registered = true;
+          this.logged = true;
+
+$(document).off("click.ulogin");
+},
     
     auth: function(token, slave, callback) {
       var self =this;
@@ -166,13 +168,7 @@ return this.script.done(callback);
       params:  {token: token},
         slave: slave,
         callback:  function(r) {
-          litepubl.user = r;
-          set_cookie("litepubl_user_id", r.id);
-          set_cookie("litepubl_user", r.pass);
-          set_cookie("litepubl_regservice", r.regservice);
-          self.registered = true;
-          self.logged = true;
-$(document).off("click.ulogin");
+self.setuser(r);
           if ($.isFunction(callback)) callback();
         }
       });

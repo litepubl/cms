@@ -8,8 +8,8 @@
   "use strict";
   
   litepubl.Emailauth = Class.extend({
-    callback: false,
-    
+dialog: false,
+
     getradio: function(value) {
       return $.simpletml(litepubl.tml.radio, {
         name: 'authtype',
@@ -18,12 +18,11 @@
       });
     },
     
-    open: function(callback) {
-      this.callback = callback;
+    html: function() {
       var lng = lang.emailauth;
 var tml = litepubl.tml;
 
-      var html = 
+return
       this.getradio('reg') +
       this.getradio('login') +
       this.getradio('lostpass') +
@@ -34,16 +33,14 @@ var tml = litepubl.tml;
 .replace(/text/gim, 'password') +
 
 '<p id="info-status"></p>';
+},
       
-      var self = this;
-      var dialog = self.dialog = $.litedialog({
-        title: lng.title,
-        html: html,
-        width: 300,
-        open: function(dialog) {
-          $("input[name=authtype]", dialog).on("click", function() {
+        onopen: function(dialog) {
+this.dialog = dialog;
+          $("input[name=authtype]", dialog).on("click.emailauth", function() {
             var type = $(this).val();
             $("#info-status", dialog).text('');
+
             var name = $("#text-name-emailauth", dialog).parent();
             var pass = $("#password-password-emailauth", dialog).parent();
             var regbutton = $("button[data-index=0]", dialog);
@@ -81,11 +78,16 @@ var tml = litepubl.tml;
           litepubl.stat('emailauth_open');
         },
         
-        buttons: [{
+buttons: function() {
+var self = this;
+      var lng = lang.emailauth;
+
+return [{
           title: lng.regbutton,
           click: function() {
             var email = self.getemail();
             if (!email) return false;
+
             var edit = $("#text-name-emailauth", dialog);
             var name = $.trim(edit.val());
             if (name) {
@@ -146,18 +148,11 @@ var tml = litepubl.tml;
     },
     
     disable: function(disabled) {
-      $(":input", this.dialog).prop("disabled", disabled ? 'disabled="disabled"' : false);
+      $(":input", this.dialog).prop("disabled", disabled);
     },
     
     success: function(r) {
-      litepubl.user = r;
-      set_cookie("litepubl_user_id", r.id);
-      set_cookie("litepubl_user", r.pass);
-      set_cookie("litepubl_regservice", 'email');
-      set_cookie("litepubl_user_flag", r.adminflag);
-      litepubl.ulogin.registered = true;
-      litepubl.ulogin.logged = true;
-      
+      litepubl.ulogin.setuser(r);
       this.dialog = false;
       $.closedialog(this.callback);
     },
