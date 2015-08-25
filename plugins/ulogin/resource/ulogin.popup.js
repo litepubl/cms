@@ -115,9 +115,14 @@ auth_comments: function() {
 
           open: function(dialog) {
 self.emailauth.onopen(dialog);
-      self.ready(function() {
+
+      self.script.done(function() {
             uLogin.customInit('ulogin-holder');
+})
+.fail(function() {
+
 });
+
             litepubl.stat('ulogin_open');
           },
 

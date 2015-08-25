@@ -70,10 +70,6 @@ class tclasses extends titems {
   public function newinstance($class) {
     if (!empty($this->remap[$class])) $class = $this->remap[$class];
     return new $class();
-    /*
-    if (preg_match('/^(tcomments|toptions|tsite|targs|ttheme)$/', $class)) return new $class();
-    return new tdebugproxy(new $class());
-    */
   }
   
   public function newitem($name, $class, $id) {
@@ -156,10 +152,6 @@ require($filename);
       $filename = trim($item[1], '\\/') . DIRECTORY_SEPARATOR . $filename;
       if (file_exists(litepublisher::$paths->plugins . $filename)) {
 return litepublisher::$paths->plugins . $filename;
-}
-
-      if (file_exists(litepublisher::$paths->themes . $filename)) {
-return litepublisher::$paths->themes . $filename;
 }
 
       if  (file_exists(litepublisher::$paths->home . $filename)) {

@@ -43,6 +43,7 @@ this.dialog = dialog;
 
             var name = $("#text-name-emailauth", dialog).parent();
             var pass = $("#password-password-emailauth", dialog).parent();
+
             var regbutton = $("button[data-index=0]", dialog);
             var loginbutton = $("button[data-index=1]", dialog);
             var lostpassbutton = $("button[data-index=2]", dialog);
