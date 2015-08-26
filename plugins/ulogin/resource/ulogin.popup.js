@@ -38,7 +38,7 @@ html: function(args) {
 //preload script when animating dialog
       this.ready();
 
-var hascallback = $.isFunction(args.callback) || (typeof args.slave === "object");
+var hascallback = $.isFunction(args.callback) || (typeof args.rpc === "object");
 if (hascallback) {
           window.ulogincallback = $.proxy(this.ontoken, this);
 }
@@ -91,7 +91,7 @@ var authdialog = litepubl.authdialog;
 return $.jsonrpc({
         method: "ulogin_auth",
       params:  {token: token},
-        slave: authdialog.args.slave,
+        slave: authdialog.args.rpc,
         callback:  $.proxy(authdialog.setuser, authdialog)
       });
     }

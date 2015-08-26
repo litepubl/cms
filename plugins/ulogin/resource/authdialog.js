@@ -54,7 +54,7 @@ auth_comments: function() {
       this.args = $.extend({
         url: ltoptions.url + "/admin/login/?backurl=" + encodeURIComponent(location.href),
         callback: false,
-slave: false
+rpc: false
       }, args);
 
         $.litedialog({
@@ -108,7 +108,9 @@ slave: slave
       });
     },
     
-    onlogged: function(slave, callback) {
+    check: function(a) {
+var args = this.extargs(a);
+
       if (!this.registered) {
 return        this.logon(slave, callback);
 }
@@ -144,7 +146,15 @@ callback('logged');
       
       litepubl.stat('ulogin_checklogged');
       return false;
-    }
+    },
+
+extargs: function(args) {
+return $.extend({
+url: "",
+rpc: false,
+ callback: false
+}, a);
+}
     
   });//class
   

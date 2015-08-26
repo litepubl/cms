@@ -154,16 +154,17 @@ litepubl.stat('emailauth_errmail');
     },
     
     success: function(r) {
-      litepubl.ulogin.setuser(r);
-      this.dialog = false;
+      litepubl.authdialog.setuser(r);
       $.closedialog(this.callback);
     },
     
     login: function(email, password) {
+var authdialog = litepubl.authdialog;
       return this.ajax({
         method: "email_login",
       params:  {email: email, password: password},
-        callback:  $.proxy(this.success, this)
+slave: authdialog.args.rpc,
+        callback:  $.proxy(authdialog.setuser, authdialog)
       });
     },
     
