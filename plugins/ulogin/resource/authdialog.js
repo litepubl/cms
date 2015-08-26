@@ -31,7 +31,6 @@ self.open({url: url});
 
         return false;
       });
-
 },
 
 auth_comments: function() {
@@ -61,7 +60,7 @@ slave: false
         $.litedialog({
           title: lang.ulogin.title,
           width: 300,
-          html: this.ulogin.html() + this.email.html(),
+          html: this.ulogin.html(this.args) + this.email.html(),
           buttons: this.email.buttons(),
 
           open: function(dialog) {
@@ -117,7 +116,7 @@ return        this.logon(slave, callback);
       if (this.logged) {
         if (slave) {
           $.jsonrpc(slave);
-          litepubl.stat('ulogin_checklogged');
+          litepubl.stat('authdialog_checklogged');
           return false;
         } else {
           if ($.isFunction(callback)) {

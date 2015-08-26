@@ -34,23 +34,24 @@ admintml: '<div id="ulogin-buttons" data-ulogin="' +
     init: function() {
 $.ready2($.proxy(this.adminbuttons, this));
 },
-html: function() {    
+html: function(args) {    
 //preload script when animating dialog
       this.ready();
 
-var hascallback = $.isFunction(this.args.callback) || (typeof this.args.slave === "object");
+var hascallback = $.isFunction(args.callback) || (typeof args.slave === "object");
 if (hascallback) {
           window.ulogincallback = $.proxy(this.ontoken, this);
 }
 
         return  $.parsetml(this.tml, {
 lang:lang.ulogin,
-redirurl: hascallback ? "" : encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(this.args.url)),
+redirurl: hascallback ? "" : encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(args.url)),
 callback : hascallback ? "callback=ulogincallback" : ""
 });
 },
+
           onopen: function(dialog) {
-      self.script.done(function() {
+      this.script.done(function() {
             uLogin.customInit('ulogin-holder');
 })
 .fail(function() {
@@ -78,19 +79,24 @@ return this.script.done(callback);
 
       return this.script = $.load_script('//ulogin.ru/js/ulogin.js', callback);
     },
+
 ontoken: function(token) {
+      setTimeout(function() {
+              litepubl.stat('ulogin_token');
+}, 10);
+
 if (this.dialog) $.closedialog();
-      var result = $.jsonrpc({
+
+var authdialog = litepubl.authdialog;
+return $.jsonrpc({
         method: "ulogin_auth",
       params:  {token: token},
-        slave: this.args.slave,
-        callback:  $.proxy(this.setuser, this)
+        slave: authdialog.args.slave,
+        callback:  $.proxy(authdialog.setuser, authdialog)
       });
-
-              litepubl.stat('ulogin_token');
-return result;
     }
 
   });//class
-
   });//class
+
+}(jQuery, document, window));
