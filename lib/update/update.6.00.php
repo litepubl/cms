@@ -16,6 +16,12 @@ $man->alter('files', 'add key (midle)');
 
 if (litepublisher::$classes->exists('ulogin')) {
 unset(litepublisher::$classes->items['adminulogin']);
+
+$js = tjsmerger::i();
+$js->lock();
+  $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
+$js->unlock();
+
   tcssmerger::i()->replacefile('default',
  '/plugins/ulogin/resource/ulogin.popup.css',
  '/plugins/ulogin/resource/ulogin.popup.min.css'

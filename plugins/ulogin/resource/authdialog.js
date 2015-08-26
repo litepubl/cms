@@ -2,20 +2,25 @@
   "use strict";
 
   litepubl.Authdialog = Class.extend({
+// cookie flag
     registered: false,
+//logged = true can be only after request to server
     logged: false,
+// flag for opened/closed popup
     dialog: false,
+//current arguments to calllback
 args: false,
+//instancess
 email: false,
 ulogin: false,
 
     init: function() {
       this.registered = litepubl.getuser().pass ? 1 : 0;
-      if (this.registered) return;
 
 this.email = new litepubl.Emailauth();
 this.ulogin = new litepubl.Ulogin();
 
+      if (!this.registered) {
       var self = this;
       $(document).on("click.authdialog", 'a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]', function() {
 var link = $(this);
@@ -31,10 +36,12 @@ self.open({url: url});
 
         return false;
       });
+}
 },
 
 auth_comments: function() {
-        this.onlogged({
+        this.check({
+rpc: {
           type: 'get',
           method: "comments_get_logged",
         params: {idpost: ltoptions.idpost},
@@ -45,17 +52,19 @@ auth_comments: function() {
           error: function(message, code) {
             $.errobox(message);
           }
+}
         });
     },
+
     open: function(args) {
       if (this.dialog) return false;
         this.dialog = true;
-
       this.args = $.extend({
-        url: ltoptions.url + "/admin/login/?backurl=" + encodeURIComponent(location.href),
-        callback: false,
-rpc: false
-      }, args);
+url: "",
+        //url: ltoptions.url + "/admin/login/?backurl=" + encodeURIComponent(location.href),
+rpc: false,
+ callback: false
+}, args);
 
         $.litedialog({
           title: lang.ulogin.title,
@@ -80,6 +89,7 @@ self.ulogin.onopen(dialog);
 setuser: function(user) {
 $(document).off("click.authdialog");
           litepubl.user = user;
+
           set_cookie("litepubl_user_id", user.id);
           set_cookie("litepubl_user", user.pass);
           set_cookie("litepubl_regservice", user.regservice);
@@ -92,70 +102,57 @@ this.args.callback();
 }
 },
 
-    login: function(url, slave, callback) {
-      this.open({
-        url: url,
-        callback: callback,
-slave: slave
-      });
-    },
-    
-    logon: function(slave, callback) {
-      this.open({
-        url: '',
-        callback: callback,
-slave: slave
-      });
-    },
-    
+/* powerfull method. If user not logged then popup dialog. return 3 results:
+- true
+- false
+- undefined
+*/
+
     check: function(a) {
-var args = this.extargs(a);
+var args = $.extend({
+rpc: false,
+ callback: false
+}, a);
 
       if (!this.registered) {
-return        this.logon(slave, callback);
+return        this.open(args);
 }
       
       if (this.logged) {
-        if (slave) {
-          $.jsonrpc(slave);
+        if (args.rpc) {
+          $.jsonrpc(args.rpc);
           litepubl.stat('authdialog_checklogged');
           return false;
-        } else {
-          if ($.isFunction(callback)) {
-callback('logged');
+}
+
+          if ($.isFunction(args.callback)) {
+args.callback('logged');
 }
 
           return true;
-        }
       }
       
       var self = this;
       $.jsonrpc({
         method: "check_logged",
       params:  {},
-        slave: slave,
+        slave: args.rpc,
         callback:  function(r) {
           self.logged = true;
-          if ($.isFunction(callback)) callback();
+          if ($.isFunction(args.callback)) {
+args.callback();
+}
         },
         
         error: function(message, code) {
-          self.logon(slave, callback);
+          self.open(args);
         }
       });
       
       litepubl.stat('ulogin_checklogged');
       return false;
-    },
+    }
 
-extargs: function(args) {
-return $.extend({
-url: "",
-rpc: false,
- callback: false
-}, a);
-}
-    
   });//class
   
 $(document).ready(function() {

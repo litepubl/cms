@@ -28,6 +28,8 @@ function uloginInstall($self) {
   $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
   $js->add('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.ulogin.popup.min.js');
   litepublisher::$classes->add('emailauth', 'emailauth.class.php', 'ulogin');
+
+  $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
   $js->unlock();
   
   tcssmerger::i()->add('default', '/plugins/ulogin/resource/ulogin.popup.min.css');
@@ -54,16 +56,16 @@ function uloginUninstall($self) {
   $areg->widget = str_replace($self->panel, '', $areg->widget);
   $areg->save();
   
-  
-  $js = tjsmerger::i();
+    $js = tjsmerger::i();
   $js->lock();
   $js->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
   $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.ulogin.popup.min.js');
+  $js->deletefile('default', '/plugins/ulogin/resource/authdialog.min.js');
+
+  litepublisher::$classes->delete('emailauth');
   $js->unlock();
   
   tcssmerger::i()->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.css');
   
   tjsonserver::i()->unbind($self);
-  
-  litepublisher::$classes->delete('emailauth');
 }
