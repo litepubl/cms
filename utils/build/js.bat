@@ -138,6 +138,7 @@ cd ..\slideshow
 cd ..\regservices
 %css% regservices.css -o regservices.min.css
 cd ..\ulogin\resource
+%mini%authdialog.js --js_output_file=authdialog.min.js
 %mini%ulogin.popup.js --js_output_file=ulogin.popup.min.js
 %css% ulogin.popup.css -o ulogin.popup.min.css
 %mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
