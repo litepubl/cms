@@ -153,11 +153,6 @@ litepubl.stat('emailauth_errmail');
       $(":input", this.dialog).prop("disabled", disabled);
     },
     
-    success: function(r) {
-      litepubl.authdialog.setuser(r);
-      $.closedialog(this.callback);
-    },
-    
     login: function(email, password) {
 var authdialog = litepubl.authdialog;
       return this.ajax({

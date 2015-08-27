@@ -97,8 +97,14 @@ $(document).off("click.authdialog");
           this.registered = true;
           this.logged = true;
 
-          if ($.isFunction(this.args.callback)) {
-this.args.callback();
+var args = this.args;
+if (args.url && !args.rpc && !args.callback) {
+//no wait close dialog just open url
+location.href = args.url;
+} else if (this.dialog) {
+$.closedialog(args.callback);
+} else if ($.isFunction(args.callback)) {
+args.callback();
 }
 },
 
