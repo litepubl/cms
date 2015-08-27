@@ -6,7 +6,7 @@
     registered: false,
 //logged = true can be only after request to server
     logged: false,
-// flag for opened/closed popup
+// opened flag
     dialog: false,
 //current arguments to calllback
 args: false,
@@ -86,6 +86,10 @@ self.ulogin.onopen(dialog);
       });
     },
 
+    setstatus: function(status) {
+this.email.setstatus(status);
+},
+
 setuser: function(user) {
 $(document).off("click.authdialog");
           litepubl.user = user;
@@ -99,7 +103,6 @@ $(document).off("click.authdialog");
 
 var args = this.args;
 if (args.url && !args.rpc && !args.callback) {
-//no wait close dialog just open url
 location.href = args.url;
 } else if (this.dialog) {
 $.closedialog(args.callback);

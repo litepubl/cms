@@ -85,6 +85,7 @@ var self = this;
 
 return [{
           title: lng.regbutton,
+icon: '<span class="fa fa-user-plus"></span> ',
           click: function() {
             var email = self.getemail();
             if (!email) return false;
@@ -103,6 +104,7 @@ return [{
           
         }, {
           title: lng.loginbutton,
+icon: '<span class="fa fa-sign-in"></span> ',
           click: function() {
             var email = self.getemail();
             if (!email) return false;
@@ -121,6 +123,7 @@ return [{
           
         }, {
           title: lng.lostpassbutton,
+icon: '<span class="fa fa-user-secret"></span> ',
           click: function() {
             var email = self.getemail();
             if (email) self.lostpass(email);
@@ -131,6 +134,7 @@ return [{
           
         }, {
           title: lang.dialog.close,
+icon: '<span class="fa fa-close"></span> ',
           click: $.closedialog
         }];
     },

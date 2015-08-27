@@ -27,7 +27,7 @@
     '<div class="modal-footer">%%buttons%%</div>' +
     '</div></div></div>',
     
-    button: '<button type="button" class="btn btn-default" id="button-%%id%%-%%index%%" data-index="%%index%%">%%title%%</button>',
+    button: '<button type="button" class="btn btn-default" id="button-%%id%%-%%index%%" data-index="%%index%%">%%icon%%%%title%%</button>',
     
     init: function() {
       var close = $.proxy(this.close, this);
@@ -99,10 +99,12 @@
       var buttons = this.options.buttons;
       var html_buttons = '';
       for (var i =0, l= buttons.length;  i < l; i++) {
+var btnitem = buttons[i].title;
         html_buttons += $.simpletml(this.button, {
           index: i,
           id: id,
-          title:  buttons[i].title
+          title:  btnitem.title,
+icon: "icon" in btnitem ? btnitem.icon : ""
         });
       }
       
