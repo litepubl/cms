@@ -31,13 +31,12 @@ this.ulogin = new litepubl.Ulogin();
       $(document).on("click.authdialog", 'a[href^="' + ltoptions.url + '/admin/"], a[href^="/admin/"]', function() {
 var link = $(this);
         var url = link.attr("href");
-
-        if (litepubl.is_admin_url(url)) {
 if (link.closest("#before-commentform").length) {
 self.auth_comments();
-} else {
+} else if (litepubl.is_admin_url(url)) {
 self.open({url: url});
-}
+} else {
+return;
 }
 
         return false;
@@ -73,6 +72,7 @@ rpc: false,
 }, args);
 
 var lng = lang.authdialog;
+var self = this;
         $.litedialog({
           title: lng.title,
           width: 300,

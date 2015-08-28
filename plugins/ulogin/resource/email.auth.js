@@ -17,24 +17,45 @@ dialog: false,
         title: lang.authdialog[value]
       });
     },
+
+get_storage_email: function() {
+      if("localStorage" in window){
+        try {
+          var result = window.localStorage.getItem('authdialog_email');
+if (!result) return '';
+      } catch(e) {}
+}
+
+return '';
+},
+
+set_storage_email: function(email) {
+      if("localStorage" in window){
+        try {
+window.localStorage.setItem('authdialog_email', email);
+      } catch(e) {}
+}
+},
     
     html: function() {
       var lng = lang.authdialog;
 var tml = litepubl.tml;
-
-return
+var result =
       this.getradio('reg') +
       this.getradio('login') +
       this.getradio('lostpass') +
 
-      tml.getedit('E-Mail', 'email-emailauth', '') +
+      tml.getedit('E-Mail', 'email-emailauth', this.get_storage_email()) +
       tml.getedit(lng.name, 'name-emailauth', '') +
       tml.getedit(lng.password, 'password-emailauth', '')
 .replace(/text/gim, 'password');
+
+return result;
 },
       
         onopen: function(dialog) {
 this.dialog = dialog;
+var checkedradio = $("#text-email-emailauth", dialog).val() ? 'login' : 'reg';
           $("input[name=authtype]", dialog).on("click.emailauth", function() {
             var type = $(this).val();
 
@@ -71,7 +92,7 @@ this.dialog = dialog;
               break;
             }
           })
-          .filter('[value=reg]').click();
+          .filter('[value=' + checkedradio  + ']').click();
           
           //litepubl.stat('emailauth_open');
         },
@@ -141,6 +162,7 @@ icon: '<span class="fa fa-close"></span> ',
       var result = $.trim(email.val());
       if (result) {
       if (/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(result)) {
+this.set_storage_email(result);
           return result;
         }
       }

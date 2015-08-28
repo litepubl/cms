@@ -45,7 +45,7 @@ callback : hascallback ? "callback=ulogincallback" : ""
             uLogin.customInit('ulogin-holder');
 })
 .fail(function() {
-$("#ulogin-dialog).remove();
+$("#ulogin-dialog").remove();
 });
 },
 

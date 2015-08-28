@@ -99,7 +99,7 @@
       var buttons = this.options.buttons;
       var html_buttons = '';
       for (var i =0, l= buttons.length;  i < l; i++) {
-var btnitem = buttons[i].title;
+var btnitem = buttons[i];
         html_buttons += $.simpletml(this.button, {
           index: i,
           id: id,
