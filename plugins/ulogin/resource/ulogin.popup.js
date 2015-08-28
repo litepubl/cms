@@ -44,7 +44,7 @@ if (hascallback) {
 }
 
         return  $.parsetml(this.tml, {
-lang:lang.ulogin,
+lang:lang.authdialog,
 redirurl: hascallback ? "" : encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(args.url)),
 callback : hascallback ? "callback=ulogincallback" : ""
 });
@@ -81,22 +81,23 @@ return this.script.done(callback);
     },
 
 ontoken: function(token) {
+litepubl.authdialog.setstatus("info", lang.authdialog.request);
       setTimeout(function() {
               litepubl.stat('ulogin_token');
 }, 10);
-
-if (this.dialog) $.closedialog();
 
 var authdialog = litepubl.authdialog;
 return $.jsonrpc({
         method: "ulogin_auth",
       params:  {token: token},
         slave: authdialog.args.rpc,
-        callback:  $.proxy(authdialog.setuser, authdialog)
+        callback:  $.proxy(authdialog.setuser, authdialog),
+error: function(message, code) {
+litepubl.authdialog.setstatus("error", message);
+}
       });
     }
 
-  });//class
   });//class
 
 }(jQuery, document, window));

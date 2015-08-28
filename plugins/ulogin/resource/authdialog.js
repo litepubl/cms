@@ -14,7 +14,8 @@ ulogin: false,
 // opened flag
     dialog: false,
 statusline: false,
-tml_status: '<p id="authdialog-status"></p>',
+//single space for non zero height
+tml_status: '<p id="authdialog-status">&nbsp;</p>',
 tml_statustext: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
 
     init: function() {

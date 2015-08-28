@@ -14,12 +14,12 @@ dialog: false,
       return $.simpletml(litepubl.tml.radio, {
         name: 'authtype',
         value: value,
-        title: lang.emailauth[value]
+        title: lang.authdialog[value]
       });
     },
     
     html: function() {
-      var lng = lang.emailauth;
+      var lng = lang.authdialog;
 var tml = litepubl.tml;
 
 return
@@ -78,7 +78,7 @@ this.dialog = dialog;
         
 buttons: function() {
 var self = this;
-      var lng = lang.emailauth;
+      var lng = lang.authdialog;
 
 return [{
           title: lng.regbutton,
@@ -181,7 +181,7 @@ litepubl.authdialog.setstatus("info", lang.authdialog.request);
       this.disable(false);
       $("input[value=login]", this.dialog).click();
       $("#password-password-emailauth", this.dialog).focus();
-litepubl.authdialog.setstatus("success", lang.emailauth[status]);
+litepubl.authdialog.setstatus("success", lang.authdialog[status]);
     },
     
     reg: function(email, name) {
