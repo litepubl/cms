@@ -6,13 +6,16 @@
     registered: false,
 //logged = true can be only after request to server
     logged: false,
-// opened flag
-    dialog: false,
 //current arguments to calllback
 args: false,
 //instancess
 email: false,
 ulogin: false,
+// opened flag
+    dialog: false,
+statusline: false,
+tml_status: '<p id="authdialog-status"></p>',
+tml_statustext: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
 
     init: function() {
       this.registered = litepubl.getuser().pass ? 1 : 0;
@@ -69,10 +72,13 @@ rpc: false,
         $.litedialog({
           title: lang.ulogin.title,
           width: 300,
-          html: this.ulogin.html(this.args) + this.email.html(),
+          html: this.ulogin.html(this.args) +
+ this.email.html() +
+this.tml_status,
           buttons: this.email.buttons(),
 
           open: function(dialog) {
+self.statusline = $("#authdialog-status", dialog);
 self.email.onopen(dialog);
 self.ulogin.onopen(dialog);
             litepubl.stat('authdialog_open');
@@ -80,14 +86,20 @@ self.ulogin.onopen(dialog);
 
           close: function() {
             self.dialog = false;
+self.statusline = false;
             self.email.dialog = false;
             litepubl.stat('authdialog_close');
           }
       });
     },
 
-    setstatus: function(status) {
-this.email.setstatus(status);
+    setstatus: function(status, text) {
+if (status == 'error') status = 'danger';
+this.statusline.html($.parsetml(this.tml_statustext, {
+status: status,
+icon: $.bsdialog.geticon(status),
+text: text
+}));
 },
 
 setuser: function(user) {

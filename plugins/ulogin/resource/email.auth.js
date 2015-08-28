@@ -30,16 +30,13 @@ return
       tml.getedit('E-Mail', 'email-emailauth', '') +
       tml.getedit(lng.name, 'name-emailauth', '') +
       tml.getedit(lng.password, 'password-emailauth', '')
-.replace(/text/gim, 'password') +
-
-'<p id="info-status"></p>';
+.replace(/text/gim, 'password');
 },
       
         onopen: function(dialog) {
 this.dialog = dialog;
           $("input[name=authtype]", dialog).on("click.emailauth", function() {
             var type = $(this).val();
-            $("#info-status", dialog).text('');
 
             var name = $("#text-name-emailauth", dialog).parent();
             var pass = $("#password-password-emailauth", dialog).parent();
@@ -173,9 +170,10 @@ slave: authdialog.args.rpc,
       var self = this;
       args.error = function(message, code) {
         self.disable(false);
-        $("#info-status", self.dialog).text(message);
+litepubl.authdialog.setstatus("error", message);
       };
       
+litepubl.authdialog.setstatus("info", lang.authdialog.request);
       return $.jsonrpc(args);
     },
     
@@ -183,7 +181,7 @@ slave: authdialog.args.rpc,
       this.disable(false);
       $("input[value=login]", this.dialog).click();
       $("#password-password-emailauth", this.dialog).focus();
-      $("#info-status", this.dialog).text(lang.emailauth[status]);
+litepubl.authdialog.setstatus("success", lang.emailauth[status]);
     },
     
     reg: function(email, name) {

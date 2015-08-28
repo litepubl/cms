@@ -141,12 +141,27 @@ icon: "icon" in btnitem ? btnitem.icon : ""
     getbutton: function(index) {
       if (!this.footer) return false;
       return this.footer.find("button[data-index=" + index + "]");
-    }
+    },
+
+geticon: function(name) {
+if (!name) return '';
+
+var icons = {
+info: "info-circle",
+success: "check",
+//warning: "warning",
+danger: "times-circle",
+error: "times-circle"
+};
+
+if (name in icons) name = icons[name];
+return '<span class="fa fa-' + name + '"></span>';
+}
     
   });
   
   $.ready2(function() {
-    if ("modal" in $.fn) $.bootstrapDialog = new $.BootstrapDialog();
+    if ("modal" in $.fn) $.bsdialog = new $.BootstrapDialog();
   });
   
 })( jQuery, window, document );

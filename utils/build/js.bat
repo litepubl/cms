@@ -144,7 +144,7 @@ cd ..\ulogin\resource
 %mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
 %mini%en.ulogin.popup.js --js_output_file=en.ulogin.popup.min.js
 %mini%email.auth.js --js_output_file=email.auth.min.js
-%mini%ru.email.auth.js --js_output_file=ru.email.auth.min.js
+%mini%ru.authdialog.js --js_output_file=ru.authdialog.min.js
 cd ..\..\rss-chrome\resource
 %mini%rss-chrome.js --js_output_file=rss-chrome.min.js
 %mini%ru.rss-chrome.js --js_output_file=ru.rss-chrome.min.js

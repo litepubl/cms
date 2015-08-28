@@ -9,7 +9,6 @@ function emailauthInstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $js->add('default', '/plugins/ulogin/resource/email.auth.min.js');
-  $js->add('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.email.auth.min.js');
   $js->unlock();
   
   $json = tjsonserver::i();
@@ -24,7 +23,6 @@ function emailauthUninstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $js->deletefile('default', '/plugins/ulogin/resource/email.auth.min.js');
-  $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.email.auth.min.js');
   $js->unlock();
   
   tjsonserver::i()->unbind($self);
