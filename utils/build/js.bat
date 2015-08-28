@@ -141,7 +141,6 @@ cd ..\ulogin\resource
 %mini%authdialog.js --js_output_file=authdialog.min.js
 %mini%ulogin.popup.js --js_output_file=ulogin.popup.min.js
 %css% ulogin.popup.css -o ulogin.popup.min.css
-%mini%ru.ulogin.popup.js --js_output_file=ru.ulogin.popup.min.js
 %mini%en.ulogin.popup.js --js_output_file=en.ulogin.popup.min.js
 %mini%email.auth.js --js_output_file=email.auth.min.js
 %mini%ru.authdialog.js --js_output_file=ru.authdialog.min.js
