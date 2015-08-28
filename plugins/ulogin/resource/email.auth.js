@@ -22,7 +22,7 @@ get_storage_email: function() {
       if("localStorage" in window){
         try {
           var result = window.localStorage.getItem('authdialog_email');
-if (!result) return '';
+return result ? result : '';
       } catch(e) {}
 }
 
@@ -168,6 +168,7 @@ this.set_storage_email(result);
       }
       
       email.focus();
+litepubl.authdialog.setstatus('error', lang.authdialog.errmail);
 litepubl.stat('emailauth_errmail');
       return false;
     },
