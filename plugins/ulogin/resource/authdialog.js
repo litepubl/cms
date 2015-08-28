@@ -14,9 +14,11 @@ ulogin: false,
 // opened flag
     dialog: false,
 statusline: false,
+tml: '<p>%%lang.description%%</p>' +
+'%%ulogin%%<hr>%%email%%' +
 //single space for non zero height
-tml_status: '<p id="authdialog-status">&nbsp;</p>',
-tml_statustext: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
+'<p id="authdialog-status">&nbsp;</p>',
+tml_status: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
 
     init: function() {
       this.registered = litepubl.getuser().pass ? 1 : 0;
@@ -70,14 +72,17 @@ rpc: false,
  callback: false
 }, args);
 
+var lng = lang.authdialog;
         $.litedialog({
-          title: lang.ulogin.title,
+          title: lng.title,
           width: 300,
-          html: this.ulogin.html(this.args) +
- this.email.html() +
-this.tml_status,
-          buttons: this.email.buttons(),
+          html: $.parsetml(this.tml, {
+lang: lng,
+ulogin: this.ulogin.html(this.args),
+email: this.email.html()
+}),
 
+          buttons: this.email.buttons(),
           open: function(dialog) {
 self.statusline = $("#authdialog-status", dialog);
 self.email.onopen(dialog);
@@ -96,7 +101,7 @@ self.statusline = false;
 
     setstatus: function(status, text) {
 if (status == 'error') status = 'danger';
-this.statusline.html($.parsetml(this.tml_statustext, {
+this.statusline.html($.parsetml(this.tml_status, {
 status: status,
 icon: $.bsdialog.geticon(status),
 text: text
@@ -171,7 +176,7 @@ args.callback();
         }
       });
       
-      litepubl.stat('ulogin_checklogged');
+      litepubl.stat('authdialog_checklogged');
       return false;
     }
 
