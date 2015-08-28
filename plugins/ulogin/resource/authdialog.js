@@ -15,7 +15,9 @@ ulogin: false,
     dialog: false,
 statusline: false,
 tml: '<p>%%lang.description%%</p>' +
-'%%ulogin%%<hr>%%email%%' +
+'%%ulogin%%' +
+//'<hr>' +
+'%%email%%' +
 //single space for non zero height
 '<p id="authdialog-status">&nbsp;</p>',
 tml_status: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
