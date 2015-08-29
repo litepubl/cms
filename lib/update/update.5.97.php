@@ -1,3 +1,4 @@
+
 <?php
 
 function jsafter($section, $src, $dst) {
@@ -111,7 +112,7 @@ $js->replacefile('comments',
 );
 
   jsafter('comments', 
-'/js/litepubl/coments/comments.template.min.js'
+'/js/litepubl/coments/comments.template.min.js',
 '/js/litepubl/coments/comments.quote.min.js'
 );
 

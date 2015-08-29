@@ -17,6 +17,7 @@ statusline: false,
 tml: '<p>%%lang.description%%</p>' +
 '%%ulogin%%' +
 //'<hr>' +
+//'<h5>%%lang.emaillogin%%</h5>' +
 '%%email%%' +
 //single space for non zero height
 '<p id="authdialog-status">&nbsp;</p>',

@@ -9,6 +9,10 @@
   
   litepubl.Emailauth = Class.extend({
 dialog: false,
+tml_edit: '<div class="input-group">' +
+'<span class="input-group-addon"><span class="fa fa-%%icon%%"></span></span>' +
+    '<input type="text" class="form-control" name="%%name%%" id="text-%%name%%" value="%%value%%" placeholder="%%title%%" />' +
+'</div>',
 
     getradio: function(value) {
       return $.simpletml(litepubl.tml.radio, {
@@ -39,15 +43,31 @@ window.localStorage.setItem('authdialog_email', email);
     
     html: function() {
       var lng = lang.authdialog;
-var tml = litepubl.tml;
 var result =
       this.getradio('reg') +
       this.getradio('login') +
       this.getradio('lostpass') +
 
-      tml.getedit('E-Mail', 'email-emailauth', this.get_storage_email()) +
-      tml.getedit(lng.name, 'name-emailauth', '') +
-      tml.getedit(lng.password, 'password-emailauth', '')
+$.parsetml(this.tml_edit, {
+        name: 'email-emailauth',
+icon: 'envelope',
+        value: this.get_storage_email(),
+        title: 'E-Mail'
+      }) +
+
+$.parsetml(this.tml_edit, {
+        name: 'name-emailauth',
+icon: 'user',
+        value: '',
+        title: lng.name
+      }) +
+
+$.parsetml(this.tml_edit, {
+        name: 'password-emailauth',
+icon: 'lock',
+        value: '',
+        title: lng.password
+      })
 .replace(/text/gim, 'password');
 
 return result;
@@ -93,7 +113,16 @@ var checkedradio = $("#text-email-emailauth", dialog).val() ? 'login' : 'reg';
             }
           })
           .filter('[value=' + checkedradio  + ']').click();
-          
+
+$("input[placeholder]", dialog).tooltip({
+        container: 'body',
+        placement: 'top',
+title: function() {
+return $(this).attr("placeholder");
+}
+
+});          
+
           //litepubl.stat('emailauth_open');
         },
         
