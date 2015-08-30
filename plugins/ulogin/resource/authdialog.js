@@ -14,10 +14,7 @@ ulogin: false,
 // opened flag
     dialog: false,
 statusline: false,
-tml: '<p class="help-block">' +
-'<a href="#authdialog-help" class="pophelp"><span class="fa fa-question"></span> %%lang.description%%</a>' +
-'<span id="authdialog-help" class="hide">%%lang.help%%</span>
-'</p>' +
+tml: '<p class="help-block"></p>' +
 '%%ulogin%%' +
 //'<hr>' +
 //'<h5>%%lang.emaillogin%%</h5>' +
@@ -91,7 +88,10 @@ email: this.email.html()
 
           buttons: this.email.buttons(),
           open: function(dialog) {
+var lng = lang.authdialog;
+$.pophelp.create(dialog.find(".help-block:first"), lng.description, $.pophelp.text2ul(lng.help));
 self.statusline = $("#authdialog-status", dialog);
+
 self.email.onopen(dialog);
 self.ulogin.onopen(dialog);
             litepubl.stat('authdialog_open');
@@ -100,8 +100,9 @@ self.ulogin.onopen(dialog);
           close: function() {
             self.email.onclose();
             self.ulogin.onclose();
-            self.dialog = false;
+
 self.statusline = false;
+            self.dialog = false;
             litepubl.stat('authdialog_close');
           }
       });

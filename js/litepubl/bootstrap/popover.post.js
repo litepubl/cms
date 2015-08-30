@@ -6,19 +6,78 @@
 
 (function( $){
   'use strict';
-  
-  function get_popover_options($this, options) {
+
+$.pophelp = {  
+tml_link: '<a href="#" class="dashed"><span class="fa fa-question"></span>  %%title%%</a>',
+
+create: function(holder, title, content) {
+holder.html(this.tml_link.replace('%%title%%', title));
+holder.removeClass("hide");
+
+var link = holder.find("a");
+link.data("pophelp.content", content);
+return this.popover(link);
+},
+
+popover: function(link) {
+    return link.popover(this.getoptions(link))
+    .on("click.prevent", function() {
+      return false;
+    });
+},
+
+  getoptions: function (link, options) {
+var self = this;
     return $.extend({
       container: 'body',
       delay: 120,
       html:true,
       trigger: 'hover focus click',
-      placement: 'auto ' + ($this.attr('data-placement') || 'right')
+      placement: 'auto ' + (link.attr('data-placement') || 'right'),
+      title: lang.dialog.help,
+      content: function() {
+var holder = $(this);
+return holder.data("pophelp.content") || self.getcontent(holder);
+}
     }, options);
-  }
+  },
+
+getcontent: function(holder) {
+        var container = holder.data("pophelp.container") || $(holder.attr("data-holder") || holder.attr("href"));
+          if (container.hasClass("text-to-list")) {
+            var result = this.text2ul(container.text());
+}else {
+                var result = container.data("popcontent") || container.html();
+}
+
+            holder.data("pophelp.content", result);
+            return result;
+},
+
+text2ul: function(s) {
+            return"<ul><li>" +
+ s.replace(/\\n/gm, "</li><li>") +
+ "</li></ul>";
+}
+
+};
+
+  $.fn.pophelp = function() {
+    return this.each(function() {
+$.pophelp.add($(this));
+});    
+  };
+
+$.fn.createhelp = function() {
+return this.each(function() {
+var holder = $(this);
+$.pophelp.create(holder, holder.attr("title"), $.pophelp.text2ul(holder.text()));
+holder.removeAttr("title");
+});
+};
   
   $.fn.poppost = function() {
-    return this.popover(get_popover_options(this, {
+    return this.popover($.pophelp.getoptions(this, {
       trigger:  'hover',
       title: function() {
         return $(this).find("poptitle:first").text();
@@ -29,43 +88,5 @@
       }
     }));
   };
-  
-  $.fn.poptext = function() {
-    return this.popover(get_popover_options(this, {
-      content: function() {
-        var self = $(this);
-        return $(self.attr("data-holder") || self.attr("href")).html();
-      }
-    }))
-    .on("click.prevent", function() {
-      return false;
-    });
-  };
-  
-  $.fn.pophelp = function() {
-    return this.popover(get_popover_options(this, {
-      title: lang.dialog.help,
-      content: function() {
-        var self = $(this);
-        var holder = self.data("pophelp.holder");
-        if (!holder) {
-          holder = $(self.attr("data-holder") || self.attr("href"));
-          self.data("pophelp.holder", holder);
-          if (holder.hasClass("text-to-list")) {
-            var s = holder.text();
-            s = "<ul><li>" + s.replace("\n", "</li><li>") + "</li></ul>";
-            holder.data("popcontent", s);
-            return s;
-          }
-        }
-        
-        return holder.data("popcontent") || holder.html();
-      }
-    }))
-    .on("click.prevent", function() {
-      return false;
-    });
-    
-  };
-  
+
 })( jQuery);
