@@ -4,7 +4,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-#ulogin-dialog,
+#ulogin-dialog{
   display:block;
   overflow:hidden;
   min-width:300px;

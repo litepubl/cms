@@ -12,6 +12,7 @@ url: '/admin/ulogin.php?backurl=',
 autoinit: "#ulogin-autoinit",
     script: false,
 
+css: '',
     tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
 tml_admin: '<div id="ulogin-buttons" data-ulogin="%%data%%"></div>',
 tml_data: 'display=small;' +
@@ -47,6 +48,10 @@ callback : hascallback ? "callback=ulogincallback" : ""
 .fail(function() {
 $("#ulogin-dialog").remove();
 });
+},
+
+onclose: function() {
+//noop
 },
 
 adminbuttons: function() {

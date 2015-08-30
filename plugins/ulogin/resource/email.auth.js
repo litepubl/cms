@@ -11,8 +11,13 @@
 dialog: false,
 tml_edit: '<div class="input-group">' +
 '<span class="input-group-addon"><span class="fa fa-%%icon%%"></span></span>' +
+'<label class="sr-only" for="text-%%name%%" >%%title%%</label>' +
     '<input type="text" class="form-control" name="%%name%%" id="text-%%name%%" value="%%value%%" placeholder="%%title%%" />' +
 '</div>',
+
+css: '.modal-body input-group-addon {' +
+'width:2em' +
+ '}',
 
     getradio: function(value) {
       return $.simpletml(litepubl.tml.radio, {
@@ -117,6 +122,7 @@ var checkedradio = $("#text-email-emailauth", dialog).val() ? 'login' : 'reg';
 $("input[placeholder]", dialog).tooltip({
         container: 'body',
         placement: 'top',
+    trigger: 'focus',
 title: function() {
 return $(this).attr("placeholder");
 }
@@ -125,6 +131,11 @@ return $(this).attr("placeholder");
 
           //litepubl.stat('emailauth_open');
         },
+
+onclose: function() {
+$("input[placeholder]", this.dialog).tooltip('destroy');
+this.dialog = false;
+},
         
 buttons: function() {
 var self = this;

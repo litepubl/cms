@@ -14,7 +14,10 @@ ulogin: false,
 // opened flag
     dialog: false,
 statusline: false,
-tml: '<p>%%lang.description%%</p>' +
+tml: '<p class="help-block">' +
+'<a href="#authdialog-help" class="pophelp"><span class="fa fa-question"></span> %%lang.description%%</a>' +
+'<span id="authdialog-help" class="hide">%%lang.help%%</span>
+'</p>' +
 '%%ulogin%%' +
 //'<hr>' +
 //'<h5>%%lang.emaillogin%%</h5>' +
@@ -79,6 +82,7 @@ var self = this;
         $.litedialog({
           title: lng.title,
           width: 300,
+css: this.ulogin.css + this.email.css,
           html: $.parsetml(this.tml, {
 lang: lng,
 ulogin: this.ulogin.html(this.args),
@@ -94,9 +98,10 @@ self.ulogin.onopen(dialog);
           },
 
           close: function() {
+            self.email.onclose();
+            self.ulogin.onclose();
             self.dialog = false;
 self.statusline = false;
-            self.email.dialog = false;
             litepubl.stat('authdialog_close');
           }
       });
