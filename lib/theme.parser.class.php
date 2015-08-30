@@ -7,6 +7,7 @@
 
 class tthemeparser extends tevents {
   public $theme;
+  public $tagfiles;
   public $paths;
   public $extrapaths;
   public $fixsubcount;
@@ -23,6 +24,7 @@ class tthemeparser extends tevents {
     parent::create();
     $this->basename = 'themeparser';
     $this->addevents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
+    $this->addmap('tagfiles', array('lib/install/ini/themeparser.ini'));
     $this->addmap('extrapaths', array());
     $this->data['replacelang'] = false;
     $this->data['removephp'] = true;
@@ -50,34 +52,21 @@ class tthemeparser extends tevents {
     return $result;
   }
   
-  public static function checktheme(ttheme $theme) {
-    if ($about = self::get_about_wordpress_theme($theme->name)) {
-      $theme->type = 'wordpress';
-      return true;
-    }
-    return false;
-  }
-  
   public function parse(ttheme $theme) {
     $theme->lock();
     $this->checkparent($theme->name);
+    
     $about = $this->getabout($theme->name);
     switch ($about['type']) {
       case 'litepublisher3':
       case 'litepublisher':
-      $theme->type = 'litepublisher';
-      $ver3 = tthemeparserver3::i();
-      $ver3->parse($theme);
+      $this->error('Litepublisher not supported old themes');
       break;
       
       case 'litepublisher4':
       case '6':
       $theme->type = 'litepublisher';
       $this->parsetheme($theme);
-      break;
-      
-      case 'wordpress':
-      $theme->type = 'wordpress';
       break;
     }
     
@@ -136,7 +125,12 @@ class tthemeparser extends tevents {
     if (!file_exists($filename))  return $this->error("The requested theme '$theme->name' file $filename not found");
     
     if ($theme->name != 'default') {
-      $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
+      if ($theme->name == 'default-old') {
+        $parentname = 'default';
+      } else {
+        $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
+      }
+      
       $parent = ttheme::getinstance($parentname);
       $theme->templates = $parent->templates;
       $theme->parent = $parent->name;
@@ -203,12 +197,8 @@ class tthemeparser extends tevents {
         if (isset($about[litepublisher::$options->language])) {
           $about['about'] = $about[litepublisher::$options->language] + $about['about'];
         }
+        
         $this->abouts[$name] = $about['about'];
-        /*
-      } elseif ($about =  twordpressthemeparser::get_about_wordpress_theme($name)){
-        $about['type'] = 'wordpress';
-        $this->abouts[$name] = $about;
-        */
       } else {
         $this->abouts[$name] = false;
       }
@@ -232,30 +222,6 @@ class tthemeparser extends tevents {
     }
     
     return true;
-  }
-  
-  public function changetheme($old, $name) {
-    $template = ttemplate::i();
-    if ($about = $this->getabout($old)) {
-      if (!empty($about['about']['pluginclassname'])) {
-        $plugins = tplugins::i();
-        $plugins->delete($old);
-      }
-    }
-    
-    $template->data['theme'] = $name;
-    $template->path = litepublisher::$paths->themes . $name . DIRECTORY_SEPARATOR  ;
-    $template->url = litepublisher::$site->url  . '/themes/'. $template->theme;
-    
-    $theme = ttheme::getinstance($name);
-    
-    $about = $this->getabout($name);
-    if (!empty($about['about']['pluginclassname'])) {
-      $plugins = tplugins::i();
-      $plugins->addext($name, $about['about']['pluginclassname'], $about['about']['pluginfilename']);
-    }
-    
-    litepublisher::$urlmap->clearcache();
   }
   
   public function reparse() {
@@ -290,7 +256,10 @@ class tthemeparser extends tevents {
   
   public function parsetags(ttheme $theme, $s) {
     $this->theme = $theme;
-    $this->paths = $this->getpaths($theme);
+    if (!$this->paths || !count($this->paths)) {
+      $this->paths = $this->loadpaths();
+    }
+    
     $s = trim($s);
     $this->callevent('beforeparse', array($theme, &$s));
     if ($this->removephp) {
@@ -475,7 +444,6 @@ class tthemeparser extends tevents {
       }
       
       private function setwidgetitem($widgetname, $path, $value) {
-        //echo "$widgetname, $path<br>";
         $sidebar = &$this->theme->templates['sidebars'][$this->sidebar_index];
         if (!isset($sidebar[$widgetname])) {
           foreach ( array('', '.items', '.item', '.subcount', '.subitems') as $name) {
@@ -714,671 +682,18 @@ class tthemeparser extends tevents {
         return file_put_contents($dir . 'theme.txt', $result);
       }
       
-      public function getpaths() {
-        $extra = $this->extrapaths;
-        $this->callevent('ongetpaths', array(&$extra));
-        return $extra + array(
-        'index' => array(
-        'tag' => '',
-        'replace' => ''
-        ),
-        
-        'index.home' => array(
-        'tag' => '$template.index.home',
-        'replace' => ''
-        ),
-        
-        'index.post' => array(
-        'tag' => '$template.index.post',
-        'replace' => ''
-        ),
-        
-        'index.tag' => array(
-        'tag' => '$template.index.tag',
-        'replace' => ''
-        ),
-        
-        'title' => array(
-        'tag' => '$template.title',
-        'replace' => '$template.title'
-        ),
-        
-        'menu' => array(
-        'tag' => '$template.menu',
-        'replace' => '$template.menu'
-        ),
-        
-        'menu.hover' => array(
-        'tag' => '$hover',
-        'replace' => ''
-        ),
-        
-        'menu.item' => array(
-        'tag' => '$item',
-        'replace' => '$item'
-        ),
-        
-        'menu.current' => array(
-        'tag' => '$current',
-        'replace' => ''
-        ),
-        
-        'menu.item.submenu' => array(
-        'tag' => '$submenu',
-        'replace' => '$submenu'
-        ),
-        
-        'menu.single' => array(
-        'tag' => '$single',
-        'replace' => ''
-        ),
-        
-        'head' => array(
-        'tag' => '$template.head',
-        'replace' => '$template.head'
-        ),
-        
-        'head.post' => array(
-        'tag' => '$post',
-        'replace' => ''
-        ),
-        
-        'head.post.prev' => array(
-        'tag' => '$prev',
-        'replace' => ''
-        ),
-        
-        'head.post.next' => array(
-        'tag' => '$next',
-        'replace' => ''
-        ),
-        
-        'head.post.rss' => array(
-        'tag' => '$rss',
-        'replace' => ''
-        ),
-        
-        'head.tags' => array(
-        'tag' => '$tags',
-        'replace' => ''
-        ),
-        
-        'head.home' => array(
-        'tag' => '$home',
-        'replace' => ''
-        ),
-        
-        'content' => array(
-        'tag' => '$template.content',
-        'replace' => '$template.content'
-        ),
-        
-        'content.simple' => array(
-        'tag' => '$simple',
-        'replace' => ''
-        ),
-        
-        'content.notfound' => array(
-        'tag' => '$notfound',
-        'replace' => ''
-        ),
-        
-        'content.menu' => array(
-        'tag' => '$menu',
-        'replace' => ''
-        ),
-        
-        'content.author' => array(
-        'tag' => '$author',
-        'replace' => ''
-        ),
-        
-        'content.home' => array(
-        'tag' => '$home',
-        'replace' => ''
-        ),
-        
-        'content.home.midle' => array(
-        'tag' => '$midle',
-        'replace' => '$midle'
-        ),
-        
-        'content.home.midle.post' => array(
-        'tag' => '$post',
-        'replace' => '$post'
-        ),
-        
-        'content.post' => array(
-        'tag' => '$post',
-        'replace' => ''
-        ),
-        
-        'content.post.more' => array(
-        'tag' => '$post.more',
-        'replace' => ''
-        ),
-        
-        'content.post.rsslink' => array(
-        'tag' => '$post.rsslink',
-        'replace' => '$post.rsslink'
-        ),
-        
-        'content.post.date' => array(
-        'tag' => '$post.date',
-        'replace' => '$post.date'
-        ),
-        
-        'content.post.filelist' => array(
-        'tag' => '$post.filelist',
-        'replace' => '$post.filelist'
-        ),
-        
-        'content.post.filelist.files' => array(
-        'tag' => '$files',
-        'replace' => '$files'
-        ),
-        
-        'content.post.filelist.file' => array(
-        'tag' => '$file',
-        'replace' => '$files'
-        ),
-        
-        'content.post.filelist.files.file' => array(
-        'tag' => '$file',
-        'replace' => '$file'
-        ),
-        
-        'content.post.filelist.image' => array(
-        'tag' => '$image',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.images' => array(
-        'tag' => '$images',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.images.image' => array(
-        'tag' => '$image',
-        'replace' => '$image'
-        ),
-        
-        'content.post.filelist.preview' => array(
-        'tag' => '$preview',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.images.preview' => array(
-        'tag' => '$preview',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.audio' => array(
-        'tag' => '$audio',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.audios.audio' => array(
-        'tag' => '$audio',
-        'replace' => '$audio'
-        ),
-        
-        'content.post.filelist.audios' => array(
-        'tag' => '$audios',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.video' => array(
-        'tag' => '$video',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.videos' => array(
-        'tag' => '$videos',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.videos.video' => array(
-        'tag' => '$video',
-        'replace' => '$video'
-        ),
-        
-        'content.post.filelist.videos.fallback' => array(
-        'tag' => '$fallback',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.flash' => array(
-        'tag' => '$flash',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.flashs' => array(
-        'tag' => '$flashs',
-        'replace' => ''
-        ),
-        
-        'content.post.filelist.flashs.flash' => array(
-        'tag' => '$flash',
-        'replace' => '$flash'
-        ),
-        
-        'content.post.catlinks' => array(
-        'tag' => '$post.catlinks',
-        'replace' => '$post.catlinks'
-        ),
-        
-        'content.post.catlinks.item' => array(
-        'tag' => '$item',
-        'replace' => '$items'
-        ),
-        
-        'content.post.catlinks.divider' => array(
-        'tag' => '$divider',
-        'replace' => ''
-        ),
-        
-        'content.post.taglinks' => array(
-        'tag' => '$post.taglinks',
-        'replace' => '$post.taglinks'
-        ),
-        
-        'content.post.taglinks.item' => array(
-        'tag' => '$item',
-        'replace' => '$items'
-        ),
-        
-        'content.post.taglinks.divider' => array(
-        'tag' => '$divider',
-        'replace' => ''
-        ),
-        
-        'content.post.prevnext' => array(
-        'tag' => '$post.prevnext',
-        'replace' => '$post.prevnext'
-        ),
-        
-        'content.post.prevnext.prev' => array(
-        'tag' => '$prev',
-        'replace' => '$prev'
-        ),
-        
-        'content.post.prevnext.next' => array(
-        'tag' => '$next',
-        'replace' => '$next'
-        ),
-        
-        'content.post.templatecomments' => array(
-        'tag' => '$post.templatecomments',
-        'replace' => '$post.templatecomments'
-        ),
-        
-        'content.post.templatecomments.closed' => array(
-        'tag' => '$closed',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.form' => array(
-        'tag' => '$form',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.regform' => array(
-        'tag' => '$regform',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.confirmform' => array(
-        'tag' => '$confirmform',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.moderateform' => array(
-        'tag' => '$moderateform',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.holdcomments' => array(
-        'tag' => '$holdcomments',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.comments' => array(
-        'tag' => '$comments',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.comments.id' => array(
-        'tag' => '$id',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.comments.idhold' => array(
-        'tag' => '$idhold',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.comments.count' => array(
-        'tag' => '$count',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.comments.comment' => array(
-        'tag' => '$comment',
-        'replace' => '$comment'
-        ),
-        
-        'content.post.templatecomments.comments.comment.class1' => array(
-        'tag' => '$class1',
-        'replace' => ' $class'
-        ),
-        
-        'content.post.templatecomments.comments.comment.class2' => array(
-        'tag' => '$class2',
-        'replace' => ' '
-        ),
-        
-        'content.post.templatecomments.comments.comment.date' => array(
-        'tag' => '$comment.date',
-        'replace' => '$comment.date'
-        ),
-        
-        'content.post.templatecomments.comments.comment.moderate' => array(
-        'tag' => '$moderate',
-        'replace' => '$moderate'
-        ),
-        
-        'content.post.templatecomments.comments.comment.quotebuttons' => array(
-        'tag' => '$quotebuttons',
-        'replace' => '$quotebuttons'
-        ),
-        
-        'content.post.templatecomments.pingbacks' => array(
-        'tag' => '$pingbacks',
-        'replace' => ''
-        ),
-        
-        'content.post.templatecomments.pingbacks.pingback' => array(
-        'tag' => '$pingback',
-        'replace' => '$pingback'
-        ),
-        
-        'content.excerpts' => array(
-        'tag' => '$excerpts',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt' => array(
-        'tag' => '$excerpt',
-        'replace' => '$excerpt'
-        ),
-        
-        'content.excerpts.excerpt.firstimage' => array(
-        'tag' => '$post.firstimage',
-        'replace' => '$post.firstimage'
-        ),
-        
-        'content.excerpts.excerpt.date' => array(
-        'tag' => '$post.excerptdate',
-        'replace' => '$post.excerptdate'
-        ),
-        
-        'content.excerpts.excerpt.morelink' => array(
-        'tag' => '$post.morelink',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist' => array(
-        'tag' => '$post.excerptfilelist',
-        'replace' => '$post.excerptfilelist'
-        ),
-        
-        'content.excerpts.excerpt.filelist.files' => array(
-        'tag' => '$files',
-        'replace' => '$files'
-        ),
-        
-        'content.excerpts.excerpt.filelist.file' => array(
-        'tag' => '$file',
-        'replace' => '$files'
-        ),
-        
-        'content.excerpts.excerpt.filelist.files.file' => array(
-        'tag' => '$file',
-        'replace' => '$file'
-        ),
-        
-        'content.excerpts.excerpt.filelist.image' => array(
-        'tag' => '$image',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.images' => array(
-        'tag' => '$images',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.images.image' => array(
-        'tag' => '$image',
-        'replace' => '$image'
-        ),
-        
-        'content.excerpts.excerpt.filelist.preview' => array(
-        'tag' => '$preview',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.images.preview' => array(
-        'tag' => '$preview',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.audio' => array(
-        'tag' => '$audio',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.audios.audio' => array(
-        'tag' => '$audio',
-        'replace' => '$audio'
-        ),
-        
-        'content.excerpts.excerpt.filelist.audios' => array(
-        'tag' => '$audios',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.video' => array(
-        'tag' => '$video',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.videos' => array(
-        'tag' => '$videos',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.videos.video' => array(
-        'tag' => '$video',
-        'replace' => '$video'
-        ),
-        
-        'content.excerpts.excerpt.filelist.videos.fallback' => array(
-        'tag' => '$fallback',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.flash' => array(
-        'tag' => '$flash',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.flashs' => array(
-        'tag' => '$flashs',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.filelist.flashs.flash' => array(
-        'tag' => '$flash',
-        'replace' => '$flash'
-        ),
-        
-        'content.excerpts.excerpt.catlinks' => array(
-        'tag' => '$post.excerptcatlinks',
-        'replace' => '$post.excerptcatlinks'
-        ),
-        
-        'content.excerpts.excerpt.catlinks.item' => array(
-        'tag' => '$item',
-        'replace' => '$items'
-        ),
-        
-        'content.excerpts.excerpt.catlinks.divider' => array(
-        'tag' => '$divider',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.excerpt.taglinks' => array(
-        'tag' => '$post.taglinks',
-        'replace' => '$post.taglinks'
-        ),
-        
-        'content.excerpts.excerpt.taglinks.item' => array(
-        'tag' => '$item',
-        'replace' => '$items'
-        ),
-        
-        'content.excerpts.excerpt.taglinks.divider' => array(
-        'tag' => '$divider',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.lite' => array(
-        'tag' => '$lite',
-        'replace' => ''
-        ),
-        
-        'content.excerpts.lite.excerpt' => array(
-        'tag' => '$excerpt',
-        'replace' => '$excerpt'
-        ),
-        
-        'content.navi' => array(
-        'tag' => '$navi',
-        'replace' => ''
-        ),
-        
-        'content.navi.prev' => array(
-        'tag' => '$prev',
-        'replace' => '$items'
-        ),
-        
-        'content.navi.next' => array(
-        'tag' => '$next',
-        'replace' => ''
-        ),
-        
-        'content.navi.link' => array(
-        'tag' => '$link',
-        'replace' => ''
-        ),
-        
-        'content.navi.current' => array(
-        'tag' => '$current',
-        'replace' => ''
-        ),
-        
-        'content.navi.divider' => array(
-        'tag' => '$divider',
-        'replace' => ''
-        ),
-        
-        'content.admin' => array(
-        'tag' => '$admin',
-        'replace' => ''
-        ),
-        
-        'content.admin.editor' => array(
-        'tag' => '$editor',
-        'replace' => ''
-        ),
-        
-        'content.admin.text' => array(
-        'tag' => '$text',
-        'replace' => ''
-        ),
-        
-        'content.admin.password' => array(
-        'tag' => '$password',
-        'replace' => ''
-        ),
-        
-        'content.admin.upload' => array(
-        'tag' => '$upload',
-        'replace' => ''
-        ),
-        
-        'content.admin.combo' => array(
-        'tag' => '$combo',
-        'replace' => ''
-        ),
-        
-        'content.admin.checkbox' => array(
-        'tag' => '$checkbox',
-        'replace' => ''
-        ),
-        
-        'content.admin.radioitem' => array(
-        'tag' => '$radioitem',
-        'replace' => ''
-        ),
-        
-        'content.admin.radio' => array(
-        'tag' => '$radio',
-        'replace' => ''
-        ),
-        
-        'content.admin.hidden' => array(
-        'tag' => '$hidden',
-        'replace' => ''
-        ),
-        
-        'content.admin.button' => array(
-        'tag' => '$button',
-        'replace' => ''
-        ),
-        
-        'content.admin.submit' => array(
-        'tag' => '$submit',
-        'replace' => ''
-        ),
-        
-        'content.admin.form' => array(
-        'tag' => '$form',
-        'replace' => ''
-        ),
-        
-        'content.admin.tableclass' => array(
-        'tag' => '$tableclass',
-        'replace' => ''
-        ),
-        
-        'custom' => array(
-        'tag' => '$custom',
-        'replace' => ''
-        ),
-        
-        'ajaxwidget' => array(
-        'tag' => '$template.ajaxwidget',
-        'replace' => '',
-        ),
-        
-        'inlinewidget' => array(
-        'tag' => '$template.inlinewidget',
-        'replace' => ''
-        )
-        
-        );
+      public function loadpaths() {
+        $result = array();
+        foreach ($this->tagfiles as $filename) {
+          $filename = litepublisher::$paths->home . trim($filename, '/');
+          if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
+            $result = $result + $a;
+          }
+        }
+        
+        $result = $result + $this->extrapaths;
+        $this->callevent('ongetpaths', array(&$result));
+        return $result;
       }
       
     }//class
