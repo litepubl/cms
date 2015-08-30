@@ -20,7 +20,8 @@ return this.popover(link);
 },
 
 popover: function(link) {
-    return link.popover(this.getoptions(link))
+    return link.addClass("popover-help")
+.popover(this.getoptions(link))
     .on("click.prevent", function() {
       return false;
     });
@@ -56,7 +57,7 @@ getcontent: function(holder) {
 
 text2ul: function(s) {
             return"<ul><li>" +
- s.replace(/\\n/gm, "</li><li>") +
+ s.replace(/\n/gm, "</li><li>") +
  "</li></ul>";
 }
 
@@ -64,7 +65,7 @@ text2ul: function(s) {
 
   $.fn.pophelp = function() {
     return this.each(function() {
-$.pophelp.add($(this));
+$.pophelp.popover($(this));
 });    
   };
 

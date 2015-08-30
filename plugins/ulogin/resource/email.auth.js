@@ -15,7 +15,7 @@ tml_edit: '<div class="input-group">' +
     '<input type="text" class="form-control" name="%%name%%" id="text-%%name%%" value="%%value%%" placeholder="%%title%%" />' +
 '</div>',
 
-css: '.modal-body input-group-addon {' +
+css: '.modal-body .input-group-addon {' +
 'width:2em' +
  '}',
 
@@ -119,21 +119,24 @@ var checkedradio = $("#text-email-emailauth", dialog).val() ? 'login' : 'reg';
           })
           .filter('[value=' + checkedradio  + ']').click();
 
-$("input[placeholder]", dialog).tooltip({
+if ("tooltip" in $.fn) {
+$("input[placeholder]", dialog)
+// add tooltip-ready class  for destroy on close dialog
+.addClass("tooltip-ready")
+.tooltip({
         container: 'body',
         placement: 'top',
     trigger: 'focus',
 title: function() {
 return $(this).attr("placeholder");
 }
-
 });          
+}
 
           //litepubl.stat('emailauth_open');
         },
 
 onclose: function() {
-$("input[placeholder]", this.dialog).tooltip('destroy');
 this.dialog = false;
 },
         

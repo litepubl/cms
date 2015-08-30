@@ -73,7 +73,8 @@
       if (!this.dialog) return false;
       this.options = false;
       this.footer = false;
-      this.dialog.find("tooltip-toggle").tooltip("destroy");
+      this.dialog.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
+      this.dialog.find(".popover-toggle, .popover-help").popover("destroy");
       this.dialog.remove();
       this.dialog = false;
       if (this.style) {

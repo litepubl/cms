@@ -14,7 +14,7 @@ ulogin: false,
 // opened flag
     dialog: false,
 statusline: false,
-tml: '<p class="help-block"></p>' +
+tml: '<p class="help-block text-center"></p>' +
 '%%ulogin%%' +
 //'<hr>' +
 //'<h5>%%lang.emaillogin%%</h5>' +
@@ -88,12 +88,16 @@ email: this.email.html()
 
           buttons: this.email.buttons(),
           open: function(dialog) {
+if ("pophelp" in $) {
 var lng = lang.authdialog;
-$.pophelp.create(dialog.find(".help-block:first"), lng.description, $.pophelp.text2ul(lng.help));
+$.pophelp.create(dialog.find(".help-block:first"), lng.helptitle, $.pophelp.text2ul(lng.help));
+}
+
 self.statusline = $("#authdialog-status", dialog);
 
 self.email.onopen(dialog);
 self.ulogin.onopen(dialog);
+
             litepubl.stat('authdialog_open');
           },
 
