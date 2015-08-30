@@ -107,7 +107,12 @@ $js->replacefile('default',
 
 $js->replacefile('comments',
 '/js/litepublisher/comments.min.js',
-'/js/litepubl/coments/comments.min.js'
+'/js/litepubl/coments/comments.template.min.js'
+);
+
+  jsafter('comments', 
+'/js/litepubl/coments/comments.template.min.js',
+'/js/litepubl/coments/comments.quote.min.js'
 );
 
 $js->replacefile('comments',

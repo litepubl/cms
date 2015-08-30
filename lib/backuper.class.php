@@ -476,8 +476,9 @@ class tbackuper extends tevents {
           }
           
           $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
-          
-          if (!$this->uploadfile($name,$item['file'], $item['mode'])) return $this->errorwrite($item['name']);
+          if (!$this->uploadfile($name,$item['file'], $item['mode'])) {
+            return $this->errorwrite($name);
+          }
         }
         
         $this->onuploaded($this);
