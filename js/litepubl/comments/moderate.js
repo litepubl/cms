@@ -20,9 +20,9 @@
         self.loadhold();
         return false;
       });
-
-//extract template from html comment after loadhold
-comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
+      
+      //extract template from html comment after loadhold
+      comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
       
       this.create_buttons(comtheme.comments);
     },
@@ -81,18 +81,18 @@ comtheme.holdtemplate = loadhold.length ? loadhold.get(0).nextSibling : false;
           callback:  function(r) {
             try {
               if (r == false) {
-return self.error(lang.comments.notmoderated);
-}
-
-if (!options.holdcomments && options.holdtemplate) {
-var holdtemplate = options.holdtemplate;
-options.holdcontainer = $(holdtemplate.nodeValue).insertAfter(options.comments);
-options.holdcomments = options.holdcontainer.parent().find(options.hold);
-            self.create_buttons(options.holdcomments);
-holdtemplate.parentNode.removeChild(holdtemplate);
-comtheme.holdtemplate = null;
-}
-
+                return self.error(lang.comments.notmoderated);
+              }
+              
+              if (!options.holdcomments && options.holdtemplate) {
+                var holdtemplate = options.holdtemplate;
+                options.holdcontainer = $(holdtemplate.nodeValue).insertAfter(options.comments);
+                options.holdcomments = options.holdcontainer.parent().find(options.hold);
+                self.create_buttons(options.holdcomments);
+                holdtemplate.parentNode.removeChild(holdtemplate);
+                comtheme.holdtemplate = null;
+              }
+              
               $(status == "hold" ? options.holdcomments : options.comments).append($(options.comment  + id));
               self.setenabled(true);
           } catch(e) {erralert(e);}
@@ -196,31 +196,31 @@ comtheme.holdtemplate = null;
         }
       });
     },
-
-inserthold: function(r) {
-          try {
-            var comtheme = ltoptions.theme.comments;
-//utilize unused data
-var holdtemplate = comtheme.holdtemplate;
-if (holdtemplate) {
-holdtemplate.parentNode.removeChild(holdtemplate);
-comtheme.holdtemplate = null;
-}
-
-            var holdcontainer = comtheme.holdcontainer;
-            if (holdcontainer && holdcontainer.length) {
-contheme.holdcontainer = $(r.items).insertBefore(holdcontainer);
-holdcontainer.remove();
-                        holdcontainer= contheme.holdcontainer;
-            } else {
-                        holdcontainer= contheme.holdcontainer = $(r.items).insertAfter(comtheme.comments);
-}
-
-            comtheme.holdcomments = holdcontainer.parent().find(comtheme.hold);
-            this.create_buttons(comtheme.holdcomments);
-        } catch(e) {erralert(e);}
-        },
+    
+    inserthold: function(r) {
+      try {
+        var comtheme = ltoptions.theme.comments;
+        //utilize unused data
+        var holdtemplate = comtheme.holdtemplate;
+        if (holdtemplate) {
+          holdtemplate.parentNode.removeChild(holdtemplate);
+          comtheme.holdtemplate = null;
+        }
         
+        var holdcontainer = comtheme.holdcontainer;
+        if (holdcontainer && holdcontainer.length) {
+          contheme.holdcontainer = $(r.items).insertBefore(holdcontainer);
+          holdcontainer.remove();
+          holdcontainer= contheme.holdcontainer;
+        } else {
+          holdcontainer= contheme.holdcontainer = $(r.items).insertAfter(comtheme.comments);
+        }
+        
+        comtheme.holdcomments = holdcontainer.parent().find(comtheme.hold);
+        this.create_buttons(comtheme.holdcomments);
+    } catch(e) {erralert(e);}
+    },
+    
     create_buttons: function(owner) {
       var comtheme = ltoptions.theme.comments;
       var self = this;
@@ -230,11 +230,11 @@ holdcontainer.remove();
         self.setstatus(button.parent().attr("data-idcomment"), button.attr("data-moder"));
         return false;
       });
-
+      
       var comtheme = ltoptions.theme.comments;
       var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]'));
-if (!containers.length) rturn;
-
+      if (!containers.length) rturn;
+      
       if (comtheme.ismoder) {
         var names = ['approve', 'hold', 'del', 'edit'];
       } else {
@@ -256,7 +256,7 @@ if (!containers.length) rturn;
       }
       
       containers.append(html);
-            if (containers.first().is(":hidden")) {
+      if (containers.first().is(":hidden")) {
         var showbutton  = $.simpletml(comtheme.button, {
           title: 'E',
           name: 'show'

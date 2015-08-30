@@ -125,15 +125,15 @@
     openimage: function(id) {
       var item = this.items[id];
       var midle = parseInt(item.midle) ? this.items[item.midle] : false;
-var data = midle && ($(window).width() <= 768) ? midle: item;
-
-litepubl.openimage({
+      var data = midle && ($(window).width() <= 768) ? midle: item;
+      
+      litepubl.openimage({
         url: ltoptions.files + '/files/' + data.filename,
         width: parseInt(data.width),
         height: parseInt(data.height),
         title: item.title,
         description:  item.description
-});
+      });
     },
     
     get_fileitem: function(id) {
@@ -173,13 +173,13 @@ litepubl.openimage({
         var idfile = r.id;
         this.items[idfile] = r.item;
         if (parseInt(r.item.preview)) {
-this.items[r.preview.id] = r.preview;
-}
-
+          this.items[r.preview.id] = r.preview;
+        }
+        
         if (parseInt(r.item.midle)) {
-this.items[r.midle.id] = r.midle;
-}
-
+          this.items[r.midle.id] = r.midle;
+        }
+        
         this.add(idfile);
     } catch(e) {erralert(e);}
     },

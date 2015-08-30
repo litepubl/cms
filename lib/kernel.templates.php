@@ -2028,6 +2028,7 @@ class tguard {
   
   public static function checkattack() {
     if (litepublisher::$options->xxxcheck  && self::is_xxx()) {
+      turlmap::nocache();
       tlocal::usefile('admin');
       if ($_POST) {
         die(tlocal::get('login', 'xxxattack'));

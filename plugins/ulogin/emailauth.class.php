@@ -19,8 +19,8 @@ class emailauth extends tplugin {
     if ($mesg = tadminlogin::autherror($email, $password)) {
       return array(
       'error' => array(
-'message' => $mesg,
-'code' => 403
+      'message' => $mesg,
+      'code' => 403
       ));
     }
     
@@ -39,8 +39,8 @@ class emailauth extends tplugin {
   public function email_reg(array $args) {
     if (!litepublisher::$options->usersenabled || !litepublisher::$options->reguser) return array(
     'error' => array(
-'message' => tlocal::admin('users')->regdisabled,
-'code' => 403,
+    'message' => tlocal::admin('users')->regdisabled,
+    'code' => 403,
     ));
     
     try {
@@ -48,8 +48,8 @@ class emailauth extends tplugin {
     } catch (Exception $e) {
       return array(
       'error' => array(
-'message' => $e->getMessage(),
-'code' =>$e->getCode()
+      'message' => $e->getMessage(),
+      'code' =>$e->getCode()
       ));
     }
   }
@@ -60,8 +60,8 @@ class emailauth extends tplugin {
     } catch (Exception $e) {
       return array(
       'error' => array(
-'message' => $e->getMessage(),
-'code' =>$e->getCode()
+      'message' => $e->getMessage(),
+      'code' =>$e->getCode()
       ));
     }
   }

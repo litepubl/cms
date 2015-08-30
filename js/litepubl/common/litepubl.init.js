@@ -19,20 +19,20 @@
   ltoptions.ajaxurl = ltoptions.url.substring(ltoptions.url.indexOf(':') +1);
   
   $.extend($.jsonrpcSettings, {
-url: ltoptions.ajaxurl + "/admin/jsonserver.php",
-onargs: function(args) {
-    var user = litepubl.getuser();
-    if (user.id) {
-      var params = args.params;
-      params.litepubl_user_id = user.id;
-      params.litepubl_user = user.pass;
-      params.litepubl_user_regservice = user.regservice;
+    url: ltoptions.ajaxurl + "/admin/jsonserver.php",
+    onargs: function(args) {
+      var user = litepubl.getuser();
+      if (user.id) {
+        var params = args.params;
+        params.litepubl_user_id = user.id;
+        params.litepubl_user = user.pass;
+        params.litepubl_user_regservice = user.regservice;
+      }
+    },
+    
+    error: function(message, code) {
+      $.errorbox(message);
     }
-  },
-
-error: function(message, code) {
-            $.errorbox(message);
-}
-});
+  });
   
 }(jQuery, ltoptions));

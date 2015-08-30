@@ -22,7 +22,7 @@ class ulogin extends tplugin {
   
   public function add($id, $service, $uid) {
     if (!$id || !$service || !$uid) return;
-
+    
     if (!in_array($service, $this->data['nets'])) {
       $this->data['nets'][] = $service;
       $this->save();

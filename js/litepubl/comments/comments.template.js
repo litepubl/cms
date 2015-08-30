@@ -21,16 +21,16 @@
       button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>',
       form: "#commentform",
       editor: "#comment",
-// rights of current user
+      // rights of current user
       confirmcomment: true,
       comuser: false,
       canedit: false,
       candelete: false,
       ismoder: false,
-//for moderate functions
-holdcomments: false,
-holdcontainer: false,
-holdtemplate: false
+      //for moderate functions
+      holdcomments: false,
+      holdcontainer: false,
+      holdtemplate: false
     }, theme.comments);
     
     var comtheme = theme.comments;

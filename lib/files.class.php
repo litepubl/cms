@@ -104,7 +104,7 @@ class tfiles extends titems {
     $list = $this->itemsposts->getposts($id);
     $this->itemsposts->deleteitem($id);
     $this->itemsposts->updateposts($list, 'files');
-
+    
     $item = $this->getitem($id);
     if ($item['idperm'] == 0) {
       @unlink(litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
@@ -114,14 +114,14 @@ class tfiles extends titems {
     }
     
     parent::delete($id);
-
+    
     if ((int) $item['preview']) {
- $this->delete($item['preview']);
-}
-
+      $this->delete($item['preview']);
+    }
+    
     if ((int) $item['midle']) {
- $this->delete($item['midle']);
-}
+      $this->delete($item['midle']);
+    }
     
     $this->getdb('imghashes')->delete("id = $id");
     $this->changed();
@@ -179,8 +179,8 @@ class tfiles extends titems {
   
   public function getlist(array $list,  array $tml) {
     if (!count($list)) {
-return '';
-}
+      return '';
+    }
     
     $this->onlist($list);
     $result = '';
@@ -205,7 +205,7 @@ return '';
     $args->count = count($list);
     
     $url = litepublisher::$site->files . '/files/';
-
+    
     $preview = ttheme::$vars['preview'] = new tarray2prop();
     $midle = ttheme::$vars['midle'] = new tarray2prop();
     
@@ -223,22 +223,22 @@ return '';
         $args->index = $index++;
         $args->preview  = '';
         $preview->array = array();
-
+        
         if ((int) $item['midle']) {
           $midle->array = $this->getitem($item['midle']);
           $midle->link = $url . $midle->filename;
-$midle->json = jsonattr(array(
-'id' => $midle->attay['id'],
-'link' => $midle->link,
-'width' => $midle->array['width'],
-'height' => $midle->array['height'],
-'size' => $midle->array['size'],
-));
-} else {
-        $midle->array = array();
+          $midle->json = jsonattr(array(
+          'id' => $midle->attay['id'],
+          'link' => $midle->link,
+          'width' => $midle->array['width'],
+          'height' => $midle->array['height'],
+          'size' => $midle->array['size'],
+          ));
+        } else {
+          $midle->array = array();
           $midle->link = '';
-$midle->json = '';
-}
+          $midle->json = '';
+        }
         
         if ((int) $item['preview']) {
           $preview->array = $this->getitem($item['preview']);

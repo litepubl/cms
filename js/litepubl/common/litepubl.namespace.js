@@ -48,27 +48,27 @@
     linkimage: function(link) {
       var file = link.data("file");
       var midle = link.data("midle");
-
-if (midle && ($(window).width() <= 768)) {
-var image = {
-        url: midle.link,
-        width: parseInt(midle.width),
-        height: parseInt(midle.height)
-      };
-} else {
-var image = {
-        url: link.attr("href"),
-        width: parseInt(file.width),
-        height: parseInt(file.height)
-      };
-}
-
-        image.title = link.attr("title");
-        image.description =  $("img", link).attr("alt");
-
+      
+      if (midle && ($(window).width() <= 768)) {
+        var image = {
+          url: midle.link,
+          width: parseInt(midle.width),
+          height: parseInt(midle.height)
+        };
+      } else {
+        var image = {
+          url: link.attr("href"),
+          width: parseInt(file.width),
+          height: parseInt(file.height)
+        };
+      }
+      
+      image.title = link.attr("title");
+      image.description =  $("img", link).attr("alt");
+      
       return this.openimage(image);
     }
-
+    
   };
   
   window.dump = function(obj) {

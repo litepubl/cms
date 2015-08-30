@@ -11,7 +11,7 @@
     guid: $.now(),
     url: "",
     onargs: $.noop,
-error: false
+    error: false
   };
   
   $.jsonrpc = function(args) {
@@ -49,18 +49,18 @@ error: false
               var slaveresult = r.result.slave;
               if ($.hasprop(slaveresult, 'error')) {
                 if ($.hasprop(slave, 'error') && $.isFunction(slave.error)) {
-slave.error(slaveresult.error.message, slaveresult.error.code);
-}
+                  slave.error(slaveresult.error.message, slaveresult.error.code);
+                }
               } else {
                 if ($.hasprop(slave, 'callback') && $.isFunction(slave.callback)) {
-slave.callback(slaveresult);
-}
+                  slave.callback(slaveresult);
+                }
               }
             }
           } else if ("error" in r) {
             if ($.isFunction(args.error)) {
-args.error(r.error.message, r.error.code);
-}
+              args.error(r.error.message, r.error.code);
+            }
           }
         }
       }
@@ -82,8 +82,8 @@ args.error(r.error.message, r.error.code);
     
     return $.ajax(ajax).fail( function(jq, textStatus, errorThrown) {
       if ($.isFunction(args.error)) {
-args.error(jq.responseText, jq.status);
-}
+        args.error(jq.responseText, jq.status);
+      }
     });
   };
   

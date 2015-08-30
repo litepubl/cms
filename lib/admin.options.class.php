@@ -135,7 +135,7 @@ class tadminoptions extends tadminmenu {
       $args->maxwidth = $parser->maxwidth;
       $args->maxheight = $parser->maxheight;
       $args->alwaysresize = $parser->alwaysresize;
-
+      
       $args->enablemidle = $parser->enablemidle;
       $args->midlewidth = $parser->midlewidth;
       $args->midleheight = $parser->midleheight;
@@ -156,11 +156,11 @@ class tadminoptions extends tadminmenu {
       [text=maxwidth]
       [text=maxheight]
       [text=quality_original]
-
-[checkbox=enablemidle]
+      
+      [checkbox=enablemidle]
       [text=midlewidth]
       [text=midleheight]
-
+      
       <h4>$lang.previewsize</h4>
       [checkbox=enablepreview]
       [checkbox=ratio]
@@ -377,7 +377,7 @@ class tadminoptions extends tadminmenu {
       
       $parser->quality_snapshot= (int) trim($quality_snapshot);
       $parser->quality_original = (int) trim($quality_original);
-
+      
       $parser->enablemidle = isset($enablemidle);
       $parser->midlewidth = (int) trim($midlewidth);
       $parser->midleheight = (int) trim($midleheight);

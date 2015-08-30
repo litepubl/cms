@@ -100,12 +100,12 @@
       var buttons = this.options.buttons;
       var html_buttons = '';
       for (var i =0, l= buttons.length;  i < l; i++) {
-var btnitem = buttons[i];
+        var btnitem = buttons[i];
         html_buttons += $.simpletml(this.button, {
           index: i,
           id: id,
           title:  btnitem.title,
-icon: "icon" in btnitem ? btnitem.icon : ""
+          icon: "icon" in btnitem ? btnitem.icon : ""
         });
       }
       
@@ -143,21 +143,21 @@ icon: "icon" in btnitem ? btnitem.icon : ""
       if (!this.footer) return false;
       return this.footer.find("button[data-index=" + index + "]");
     },
-
-geticon: function(name) {
-if (!name) return '';
-
-var icons = {
-info: "info-circle",
-success: "check",
-//warning: "warning",
-danger: "times-circle",
-error: "times-circle"
-};
-
-if (name in icons) name = icons[name];
-return '<span class="fa fa-' + name + '"></span>';
-}
+    
+    geticon: function(name) {
+      if (!name) return '';
+      
+      var icons = {
+        info: "info-circle",
+        success: "check",
+        //warning: "warning",
+        danger: "times-circle",
+        error: "times-circle"
+      };
+      
+      if (name in icons) name = icons[name];
+      return '<span class="fa fa-' + name + '"></span>';
+    }
     
   });
   

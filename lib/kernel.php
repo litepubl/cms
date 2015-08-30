@@ -1582,10 +1582,6 @@ class tclasses extends titems {
   public function newinstance($class) {
     if (!empty($this->remap[$class])) $class = $this->remap[$class];
     return new $class();
-    /*
-    if (preg_match('/^(tcomments|toptions|tsite|targs|ttheme)$/', $class)) return new $class();
-    return new tdebugproxy(new $class());
-    */
   }
   
   public function newitem($name, $class, $id) {
@@ -1645,24 +1641,40 @@ class tclasses extends titems {
   }
   
   public function include_file($filename) {
-    if (file_exists($filename)) require_once($filename);
+    if (file_exists($filename)) {
+      require($filename);
+    }
   }
   
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
+      /* item is indexed array
+      0 = filename
+      1 = releative path
+      2 = filename for debug
+      */
+      
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
         return litepublisher::$paths->lib . $filename;
       }
-      $filename = trim($item[1], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $filename;
-      //if (file_exists($filename))  return $filename;
-      //may be is subdir?
-      if (file_exists(litepublisher::$paths->plugins . $filename)) return litepublisher::$paths->plugins . $filename;
-      if (file_exists(litepublisher::$paths->themes . $filename)) return litepublisher::$paths->themes . $filename;
-      if  (file_exists(litepublisher::$paths->home . $filename)) return  litepublisher::$paths->home . $filename;
+      
+      //may be is subdir
+      $filename = trim($item[1], '\\/') . DIRECTORY_SEPARATOR . $filename;
+      if (file_exists(litepublisher::$paths->plugins . $filename)) {
+        return litepublisher::$paths->plugins . $filename;
+      }
+      
+      if  (file_exists(litepublisher::$paths->home . $filename)) {
+        return  litepublisher::$paths->home . $filename;
+      }
+      
+      return false;
+    } else if (isset($this->interfaces[$class])) {
+      return litepublisher::$paths->lib . $this->interfaces[$class];
     }
-    if (isset($this->interfaces[$class])) return litepublisher::$paths->lib . $this->interfaces[$class];
+    
     return false;
   }
   
@@ -1788,6 +1800,7 @@ class toptions extends tevents_storage {
     if (is_null($this->_user)) {
       $this->_user = $this->authenabled ? $this->authcookie() : false;
     }
+    
     return $this->_user;
   }
   

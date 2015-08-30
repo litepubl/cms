@@ -59,14 +59,14 @@
       
       this.helpstatus= $("#helpstatus");
     },
-
-checkfile: function(file) {
-            if (file.size > 30000) {
-      this.setstatus('warnsize');
-return false;
-}
-          },
-
+    
+    checkfile: function(file) {
+      if (file.size > 30000) {
+        this.setstatus('warnsize');
+        return false;
+      }
+    },
+    
     add: function(e, file) {
       this[this.name + "file"] = file;
       if (this[this.name]) this[this.name].remove();
@@ -91,7 +91,7 @@ return false;
     
     setstatus: function(name) {
       this.helpstatus.children().addClass("hide");
-this.helpstatus.find("#" + name).removeClass("hide");
+      this.helpstatus.find("#" + name).removeClass("hide");
     },
     
     submit: function() {

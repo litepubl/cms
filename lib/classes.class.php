@@ -130,39 +130,39 @@ class tclasses extends titems {
   
   public function include_file($filename) {
     if (file_exists($filename)) {
-require($filename);
-}
+      require($filename);
+    }
   }
   
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
-/* item is indexed array
-0 = filename
-1 = releative path
-2 = filename for debug
-*/
-
+      /* item is indexed array
+      0 = filename
+      1 = releative path
+      2 = filename for debug
+      */
+      
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
         return litepublisher::$paths->lib . $filename;
       }
-
+      
       //may be is subdir
       $filename = trim($item[1], '\\/') . DIRECTORY_SEPARATOR . $filename;
       if (file_exists(litepublisher::$paths->plugins . $filename)) {
-return litepublisher::$paths->plugins . $filename;
-}
-
+        return litepublisher::$paths->plugins . $filename;
+      }
+      
       if  (file_exists(litepublisher::$paths->home . $filename)) {
-return  litepublisher::$paths->home . $filename;
-}
-
-return false;
+        return  litepublisher::$paths->home . $filename;
+      }
+      
+      return false;
     } else if (isset($this->interfaces[$class])) {
-return litepublisher::$paths->lib . $this->interfaces[$class];
-}
-
+      return litepublisher::$paths->lib . $this->interfaces[$class];
+    }
+    
     return false;
   }
   
