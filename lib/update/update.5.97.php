@@ -296,7 +296,11 @@ unset($parser->data['stylebefore']);
 $parser->save();
 }
 
-if (tview::i()->theme->name == 'default') {
+if (tview::i()->theme->name == 'shop') {
+tview::i()->themename = 'default') {
+}
+
+if (tview::i()->theme-name == 'default') {
 tplugins::i()->add('bootstrap-theme');
 }
 }
