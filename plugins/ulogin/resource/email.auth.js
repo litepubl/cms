@@ -133,7 +133,6 @@
         });
       }
       
-      //litepubl.stat('emailauth_open');
     },
     
     onclose: function() {
