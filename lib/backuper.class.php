@@ -527,7 +527,76 @@ class tbackuper extends tevents {
       
       return false;
     }
-    
+
+    public function uploadtar($filename) {
+if (!file_exists($filename)) return false;
+return $this->upload(file_get_contents($filename), 'tar');
+}
+
+    public function uploadzip($filename) {
+if (!file_exists($filename)) return false;
+
+      set_time_limit(300);
+      $this->archtype = 'unzip';
+      $this->hasdata = false;
+      $this->existingfolders = array();
+
+        $mode = $this->filer->chmod_file;
+        $path_checked = false;
+        $path_root = false;
+
+if (class_exists('ZipArchive')) {
+$zip = new ZipArchive ();
+if ($zip->open($filename) !== true) {
+          return $this->errorarch();
+}
+
+ for ($i = 0; $i < $zip->numFiles; $i++) {
+ if ($s = $zip->getFromIndex($i)) {
+     $filename = $zip->getNameIndex($i);
+
+          if (!$path_checked) {
+            $path_checked = true;
+            $path_root = $this->get_path_root($filename);
+          }
+          
+          $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
+          if (!$this->uploadfile($filename,$s, $mode)) {
+            return $this->errorwrite($filename);
+          }
+}
+}
+
+ $zip->close();
+} else {
+      $this->createarchive();
+        $this->unzip->ReadData($content);
+        
+        foreach ($this->unzip->Entries as  $item) {
+          if ($item->Error != 0) continue;
+          
+          if (!$path_checked) {
+            $path_checked = true;
+            $path_root = $this->get_path_root($item->path);
+          }
+          
+          $path = $path_root ? trim(substr(trim($item->path, '/'), strlen($path_root)), '/') : $item->path;
+          if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
+            return $this->errorwrite($item->Path . $item->Name);
+          }
+        }
+}
+        
+        $this->onuploaded($this);
+
+      $this->existingfolders= false;
+      if ($this->hasdata) {
+$this->renamedata();
+}
+
+      return true;
+}
+
     private function renamedata() {
       if (!is_dir(litepublisher::$paths->backup)) {
         mkdir(litepublisher::$paths->backup, 0777);
