@@ -81,3 +81,21 @@ plugins/downloaditem* export-ignore
 plugins/sourcefiles* export-ignore
 plugins/themegenerator* export-ignore
 plugins/togglecode* export-ignore
+
+#not minified theme styles
+themes/default/css/cerulean.css export-ignore
+themes/default/css/cosmo.css export-ignore
+themes/default/css/cyborg.css export-ignore
+themes/default/css/darkly.css export-ignore
+themes/default/css/flatly.css export-ignore
+themes/default/css/journal.css export-ignore
+themes/default/css/lumen.css export-ignore
+themes/default/css/paper.css export-ignore
+themes/default/css/readable.css export-ignore
+themes/default/css/sandstone.css export-ignore
+themes/default/css/simplex.css export-ignore
+themes/default/css/slate.css export-ignore
+themes/default/css/spacelab.css export-ignore
+themes/default/css/superhero.css export-ignore
+themes/default/css/united.css export-ignore
+themes/default/css/yeti.css export-ignore
