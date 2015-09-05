@@ -6,7 +6,7 @@
 **/
 
 class http {
-  public static $timeout = 10;
+  public static $timeout = 20;
   
   public static function get($url, $headers = false) {
     $parsed = @parse_url($url);
