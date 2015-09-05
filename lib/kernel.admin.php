@@ -651,10 +651,13 @@ class tadminhtml {
     $body = '';
     $head = $this->tableposts_head;
     $tml = $this->tableposts_item;
+    
     foreach ($tablestruct as $item) {
       if (!$item || !count($item)) continue;
+      
       $align = $item[0] ? $item[0] : 'left';
       $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
+      
       if (is_string($item[2])) {
         $tml .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
       } else {
@@ -670,6 +673,7 @@ class tadminhtml {
     
     $theme = ttheme::i();
     $args = new targs();
+    
     foreach ($items as $id) {
       $post = tpost::i($id);
       ttheme::$vars['post'] = $post;

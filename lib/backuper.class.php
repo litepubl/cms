@@ -449,17 +449,17 @@ class tbackuper extends tevents {
       $this->filer->chmod($filename, $mode);
       return true;
     }
-
+    
     public function uploadarch($filename, $archtype) {
       switch ($archtype) {
         case 'tar':
-return $this->uploadtar($filename);
-
-case 'zip':
-case 'unzip':
-return $this->uploadzip($filename);
-}
-}
+        return $this->uploadtar($filename);
+        
+        case 'zip':
+        case 'unzip':
+        return $this->uploadzip($filename);
+      }
+    }
     
     public function upload($content, $archtype) {
       set_time_limit(300);
@@ -538,49 +538,50 @@ return $this->uploadzip($filename);
       
       return false;
     }
-
+    
     public function uploadtar($filename) {
-if (!file_exists($filename)) return false;
-return $this->upload(file_get_contents($filename), 'tar');
-}
-
+      if (!file_exists($filename)) return false;
+      return $this->upload(file_get_contents($filename), 'tar');
+    }
+    
     public function uploadzip($filename) {
-if (!file_exists($filename)) return false;
-
+      if (!file_exists($filename)) return false;
+      
       set_time_limit(300);
       $this->archtype = 'unzip';
       $this->hasdata = false;
       $this->existingfolders = array();
-
-        $mode = $this->filer->chmod_file;
-        $path_checked = false;
-        $path_root = false;
-
-if (class_exists('ZipArchive')) {
-$zip = new ZipArchive ();
-if ($zip->open($filename) !== true) {
+      
+      $mode = $this->filer->chmod_file;
+      $path_checked = false;
+      $path_root = false;
+      
+      if (class_exists('ZipArchive')) {
+        $zip = new ZipArchive ();
+        if ($zip->open($filename) !== true) {
           return $this->errorarch();
-}
-
- for ($i = 0; $i < $zip->numFiles; $i++) {
- if ($s = $zip->getFromIndex($i)) {
-     $filename = $zip->getNameIndex($i);
-
-          if (!$path_checked) {
-            $path_checked = true;
-            $path_root = $this->get_path_root($filename);
+        }
+        
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+          if ($s = $zip->getFromIndex($i)) {
+            $filename = $zip->getNameIndex($i);
+            
+            if (!$path_checked) {
+              $path_checked = true;
+              $path_root = $this->get_path_root($filename);
+            }
+            
+            $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
+            if (!$this->uploadfile($filename,$s, $mode)) {
+              $zip->close();
+              return $this->errorwrite($filename);
+            }
           }
-          
-          $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
-          if (!$this->uploadfile($filename,$s, $mode)) {
-            return $this->errorwrite($filename);
-          }
-}
-}
-
- $zip->close();
-} else {
-      $this->createarchive();
+        }
+        
+        $zip->close();
+      } else {
+        $this->createarchive();
         $this->unzip->ReadData($content);
         
         foreach ($this->unzip->Entries as  $item) {
@@ -596,18 +597,18 @@ if ($zip->open($filename) !== true) {
             return $this->errorwrite($item->Path . $item->Name);
           }
         }
-}
-        
-        $this->onuploaded($this);
-
+      }
+      
+      $this->onuploaded($this);
+      
       $this->existingfolders= false;
       if ($this->hasdata) {
-$this->renamedata();
-}
-
+        $this->renamedata();
+      }
+      
       return true;
-}
-
+    }
+    
     private function renamedata() {
       if (!is_dir(litepublisher::$paths->backup)) {
         mkdir(litepublisher::$paths->backup, 0777);
@@ -632,56 +633,11 @@ $this->renamedata();
       return false;
     }
     
-    //upload plugin or theme
-    public function uploaditem($content, $archtype, $itemtype = false) {
-      set_time_limit(300);
-      if ($archtype == 'zip') $archtype = 'unzip';
-      $this->archtype = $archtype;
-      $this->existingfolders = array();
-      $this->createarchive();
-      switch ($archtype) {
-        case 'tar':
-        $this->tar->loadfromstring($content);
-        if (!is_array($this->tar->files)) {
-          $this->tar = false;
-          return $this->errorarch();
-        }
-        
-        foreach ($this->tar->files as $item) {
-          if (strbegin($item['name'], 'themes/') || strbegin($item['name'], 'plugins/')){
-            if (!$this->uploadfile($item['name'],$item['file'], $item['mode'])) return $this->errorwrite($item['name']);
-          }
-        }
-        //$this->onuploaded($this);
-        $this->tar = false;
-        break;
-        
-        case 'unzip':
-        $mode = $this->filer->chmod_file;
-        $this->unzip->ReadData($content);
-        foreach ($this->unzip->Entries as  $item) {
-          if ($item->Error != 0) continue;
-          $filename = $item->Path . '/' . $item->Name;
-          if (strbegin($filename, 'themes/') || strbegin($filename, 'plugins/')){
-            if (!$this->uploadfile($filename, $item->Data, $mode)) return $this->errorwrite($item->Path . $item->Name);
-          }
-        }
-        //$this->onuploaded($this);
-        $this->unzip = false;
-        break;
-        
-        default:
-        $this->unknown_archive();
-      }
-      $this->existingfolders = false;
-      return true;
-    }
-    
     public function unpack($content, $archtype) {
       $result = array();
       if ($archtype == 'zip') $archtype = 'unzip';
       $this->archtype = $archtype;
-      //$this->createarchive();
+      
       switch ($archtype) {
         case 'tar':
         self::include_tar();
@@ -700,13 +656,31 @@ $this->renamedata();
         
         case 'unzip':
         case 'zip':
-        self::include_unzip();
-        $unzip = new StrSimpleUnzip();
-        $unzip->ReadData($content);
-        foreach ($unzip->Entries as  $item) {
-          $result[$item->Path . '/' . $item->Name] = $item->Data;
+        if (class_exists('ZipArchive')) {
+          $filename = litepublisher::$paths->storage . 'backup/unpack.zip';
+          file_put_contents($filename, $content);
+          @chmod($filename, 0666);
+          $content = '';
+          $zip = new ZipArchive ();
+          if ($zip->open($filename) === true) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+              if ($s = $zip->getFromIndex($i)) {
+                $result[$zip->getNameIndex($i)] = $s;
+              }
+            }
+            
+            $zip->close();
+          }
+          
+          @unlink($filename);
+        } else {
+          self::include_unzip();
+          $unzip = new StrSimpleUnzip();
+          $unzip->ReadData($content);
+          foreach ($unzip->Entries as  $item) {
+            $result[$item->Path . '/' . $item->Name] = $item->Data;
+          }
         }
-        unset($unzip);
         break;
         
         default:

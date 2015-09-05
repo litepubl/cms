@@ -191,21 +191,21 @@ class tadminservice extends tadminmenu {
           $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]), $_FILES["filename"]["name"]);
         } else {
           $url = litepublisher::$site->url;
-$dbconfig = litepublisher::$options->dbconfig;
+          $dbconfig = litepublisher::$options->dbconfig;
           $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
-
+          
           if (isset($saveurl)) {
             $storage = new tdata();
             $storage->basename = 'storage';
             $storage->load();
             $storage->data['site'] = litepublisher::$site->data;
-$data->data['options']['dbconfig'] = $dbconfig;
+            $data->data['options']['dbconfig'] = $dbconfig;
             $storage->save();
           }
         }
-
+        
         ttheme::clearcache();
-turlmap::nocache();
+        turlmap::nocache();
         @header('Location: http://' . $_SERVER['HTTP_HOST'] .  $_SERVER['REQUEST_URI']);
         exit();
         
@@ -257,28 +257,37 @@ turlmap::nocache();
       case 'upload':
       $backuper = tbackuper::i();
       if (!$this->checkbackuper()) {
-return $html->h3->erroraccount;
-}
-
+        return $html->h3->erroraccount;
+      }
+      
       if (is_uploaded_file($_FILES['filename']['tmp_name']) && !(isset($_FILES['filename']['error']) && ($_FILES['filename']['error'] > 0))) {
-$result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
+        $result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
       } else {
         $url = trim($_POST['url']);
         if (empty($url)) return '';
         if (!($s = http::get($url))) {
-return $html->h3->errordownload;
-}
-
+          return $html->h3->errordownload;
+        }
+        
         $archtype = $backuper->getarchtype($url);
-     if (!$archtype) {
-        //         local file header signature     4 bytes  (0x04034b50)
-        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
+        if (!$archtype) {
+          //         local file header signature     4 bytes  (0x04034b50)
+          $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
+        }
+        
+        if (($archtype == 'zip') && class_exists('zipArchive')) {
+          $filename = litepublisher::$paths->storage . 'backup/temp.zip';
+          file_put_contents($filename, $s);
+          @chmod($filename, 0666);
+          $s = '';
+          $result = $backuper->uploadzip($filename);
+          @unlink($filename);
+        } else {
+          $result = $backuper->upload($s, $archtype);
+        }
       }
       
-$result = $backuper->uploaditem($s, $archtype);
-}
-
-if ($result) {
+      if ($result) {
         return $html->h3->itemuploaded;
       } else {
         return sprintf('<h3>%s</h3>', $backuper->result);

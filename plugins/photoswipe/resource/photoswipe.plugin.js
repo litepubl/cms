@@ -58,7 +58,7 @@
     open: function(link) {
       if (this.opened) return false;
       this.opened = true;
-
+      
       var items = this.getitems(link.data("idpost"), link.data("file").id);
       this.opened = false;
       
@@ -72,12 +72,12 @@
     openitems: function(items) {
       if (this.opened || !items.length) return false;
       this.opened = true;
-litepubl.stat("photoswipe_opening");
+      litepubl.stat("photoswipe_opening");
       
       this.holder = $(litepubl.tml.photoswipe).appendTo("body");
       var pswp = this.photoswipe = new PhotoSwipe( this.holder.get(0), PhotoSwipeUI_Default, items, this.options);
       pswp.listen('destroy', $.proxy(this.doclose, this));
-this.setstatevents(pswp);
+      this.setstatevents(pswp);
       pswp.init();
     },
     
@@ -86,7 +86,7 @@ this.setstatevents(pswp);
       this.holder.remove();
       this.holder = false;
       this.opened = false;
-litepubl.stat("photoswipe_closed");
+      litepubl.stat("photoswipe_closed");
     },
     
     getitems: function(idpost, idfile) {
@@ -247,20 +247,20 @@ litepubl.stat("photoswipe_closed");
       
       return result;
     },
-
-setstatevents: function(pswp) {
-pswp.listen('afterChange', function() {
-litepubl.stat('photoswipe_afterChange', {
-index: pswp.getCurrentIndex(),
-linkindex: pswp.currItem.linkindex,
-idimage: pswp.currItem.pid
-});
- });
-
-pswp.listen('shareLinkClick', function(e, target) {
-litepubl.stat('photoswipe_shareLinkClick', {url: target.href});
-});
-}
+    
+    setstatevents: function(pswp) {
+      pswp.listen('afterChange', function() {
+        litepubl.stat('photoswipe_afterChange', {
+          index: pswp.getCurrentIndex(),
+          linkindex: pswp.currItem.linkindex,
+          idimage: pswp.currItem.pid
+        });
+      });
+      
+      pswp.listen('shareLinkClick', function(e, target) {
+      litepubl.stat('photoswipe_shareLinkClick', {url: target.href});
+      });
+    }
     
   });
   
