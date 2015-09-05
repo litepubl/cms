@@ -176,7 +176,10 @@ class tadminservice extends tadminmenu {
       return $this->doupdate($_POST);
       
       case 'backup':
-      if (!$this->checkbackuper()) return $html->h3->erroraccount;
+      if (!isset($_POST['sqlbackup'])) {
+        if (!$this->checkbackuper()) return $html->h3->erroraccount;
+      }
+      
       extract($_POST, EXTR_SKIP);
       $backuper = tbackuper::i();
       if (isset($restore)) {
@@ -188,18 +191,21 @@ class tadminservice extends tadminmenu {
           $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]), $_FILES["filename"]["name"]);
         } else {
           $url = litepublisher::$site->url;
-          if (dbversion) $dbconfig = litepublisher::$options->dbconfig;
-          $backuper->upload(file_get_contents($_FILES['filename']['tmp_name']), $backuper->getarchtype($_FILES['filename']['name']));
+          $dbconfig = litepublisher::$options->dbconfig;
+          $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
+          
           if (isset($saveurl)) {
             $storage = new tdata();
             $storage->basename = 'storage';
             $storage->load();
             $storage->data['site'] = litepublisher::$site->data;
-            if (dbversion) $data->data['options']['dbconfig'] = $dbconfig;
+            $data->data['options']['dbconfig'] = $dbconfig;
             $storage->save();
           }
         }
+        
         ttheme::clearcache();
+        turlmap::nocache();
         @header('Location: http://' . $_SERVER['HTTP_HOST'] .  $_SERVER['REQUEST_URI']);
         exit();
         
@@ -220,7 +226,7 @@ class tadminservice extends tadminmenu {
           tbackuper::include_tar();
           $tar = new tar();
           $tar->addstring($content, $filename, 0644);
-          $content = $this->tar->savetostring(true);
+          $content = $tar->savetostring(true);
           $filename .= '.tar.gz';
           unset($tar);
           break;
@@ -250,23 +256,38 @@ class tadminservice extends tadminmenu {
       
       case 'upload':
       $backuper = tbackuper::i();
-      if (!$this->checkbackuper()) return $html->h3->erroraccount;
+      if (!$this->checkbackuper()) {
+        return $html->h3->erroraccount;
+      }
+      
       if (is_uploaded_file($_FILES['filename']['tmp_name']) && !(isset($_FILES['filename']['error']) && ($_FILES['filename']['error'] > 0))) {
-        $s = file_get_contents($_FILES['filename']['tmp_name']);
-        $archtype = $backuper->getarchtype($_FILES['filename']['name']);
+        $result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
       } else {
         $url = trim($_POST['url']);
         if (empty($url)) return '';
-        if (!($s = http::get($url))) return $html->h3->errordownload;
+        if (!($s = http::get($url))) {
+          return $html->h3->errordownload;
+        }
+        
         $archtype = $backuper->getarchtype($url);
+        if (!$archtype) {
+          //         local file header signature     4 bytes  (0x04034b50)
+          $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
+        }
+        
+        if (($archtype == 'zip') && class_exists('zipArchive')) {
+          $filename = litepublisher::$paths->storage . 'backup/temp.zip';
+          file_put_contents($filename, $s);
+          @chmod($filename, 0666);
+          $s = '';
+          $result = $backuper->uploadzip($filename);
+          @unlink($filename);
+        } else {
+          $result = $backuper->upload($s, $archtype);
+        }
       }
       
-      if (!$archtype) {
-        //         local file header signature     4 bytes  (0x04034b50)
-        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
-      }
-      
-      if ($backuper->uploaditem($s, $archtype)) {
+      if ($result) {
         return $html->h3->itemuploaded;
       } else {
         return sprintf('<h3>%s</h3>', $backuper->result);
@@ -280,7 +301,10 @@ class tadminservice extends tadminmenu {
     //@file_put_contents(litepublisher::$domain . ".zip", $content);
     if ($filename == '') $filename = str_replace('.', '-', litepublisher::$domain) . date('-Y-m-d') . '.zip';
     if (ob_get_level()) ob_end_clean ();
+    
     header('HTTP/1.1 200 OK', true, 200);
+    Header( 'Cache-Control: no-cache, must-revalidate');
+    Header( 'Pragma: no-cache');
     header('Content-type: application/octet-stream');
     header('Content-Disposition: attachment; filename=' . $filename);
     header('Content-Length: ' .strlen($content));
