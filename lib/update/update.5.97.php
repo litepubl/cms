@@ -47,6 +47,7 @@ $system = array(
 '/js/litepubl/system/load-font.min.js',
 '/js/litepubl/system/load-script.min.js',
 '/js/litepubl/system/parsetml.min.js',
+  '/js/litepubl/system/ready2.min.js',
 
 //litepubl/common
 '/js/litepubl/common/litepubl.namespace.min.js',
