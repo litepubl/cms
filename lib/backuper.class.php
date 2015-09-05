@@ -449,6 +449,17 @@ class tbackuper extends tevents {
       $this->filer->chmod($filename, $mode);
       return true;
     }
+
+    public function uploadarch($filename, $archtype) {
+      switch ($archtype) {
+        case 'tar':
+return $this->uploadtar($filename);
+
+case 'zip':
+case 'unzip':
+return $this->uploadzip($filename);
+}
+}
     
     public function upload($content, $archtype) {
       set_time_limit(300);

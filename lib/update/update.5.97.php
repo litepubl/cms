@@ -1,4 +1,3 @@
-
 <?php
 
 function jsafter($section, $src, $dst) {

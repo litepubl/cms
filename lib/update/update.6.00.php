@@ -19,7 +19,7 @@ unset(litepublisher::$classes->items['adminulogin']);
 
 $js = tjsmerger::i();
 $js->lock();
-  $js->delete('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.ulogin.popup.min.js');
+  $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.ulogin.popup.min.js');
   $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.email.auth.min.js');
 
   $js->add('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.authdialog.min.js');

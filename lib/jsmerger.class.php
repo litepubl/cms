@@ -50,6 +50,13 @@ class tfilemerger extends titems {
     $this->save();
     return count($this->items[$section]['files']) - 1;
   }
+
+// fix: Strict Standards: Declaration of tfilemerger::delete() should be compatible with titems::delete($id)
+  //public function delete($section, $filename) {
+  public function delete($id) {
+  $a = func_get_args();
+return $this->deletefile($id, $a[1]);
+}
   
   public function deletefile($section, $filename) {
     if (!isset($this->items[$section])) return false;
@@ -144,6 +151,7 @@ class tfilemerger extends titems {
     
     unset($this->items[$section]);
     $this->save();
+$this->deleted($section);
   }
   
   public function merge() {
