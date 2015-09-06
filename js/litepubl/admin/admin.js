@@ -72,4 +72,14 @@
     });
   };
   
+  $.inittabs = function() {
+    $(document).ready(function() {
+      $($(".admintabs").toArray().reverse()).tabs({
+        hide: true,
+        show: true,
+        beforeLoad: litepubl.uibefore
+      });
+    });
+  };
+  
 }(jQuery, document, window, litepubl));
