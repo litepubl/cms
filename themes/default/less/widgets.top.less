@@ -4,28 +4,46 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-.sidebar-top .media-body:before {
+@widget-image-size: 90px;
+
+.sidebar-top {
+.widget-image{
+float: left;
+  display:block;
+  overflow: hidden;
+  width: @widget-image-size;
+  height: @widget-image-size;
+
+@media (max-width: @screen-sm-min) {
+display: none;
+}
+}
+
+.media-body {
+&:before {
   display: none;
 }
 
 @media (max-width: @screen-sm-min) {
-  .sidebar-top .media-body:before {
+    position: relative;
+    #gradient > .horizontal-three-colors(@start-color: rgba(255, 255, 255, 1); @mid-color: rgba(255, 255, 255, 0.5); @color-stop: 50%; @end-color: rgba(255, 255, 255, 1));
+
+&:before {
     display: block;
     overflow: hidden;
+  width: @widget-image-size;
+  height: @widget-image-size;
     background-repeat:no-repeat;
     background-position: center top;
     content: "";
     position: absolute;
-    // 5px margin media-heading + h4 height
-    top: 25px;
+    // margin media-heading + h4 height
+    top: (5px + @line-height-computed + @font-size-h4);
     left:0;
     right: 0;
     bottom: 0;
     z-index: -1;
   }
-  
-  .sidebar-top .media-body {
-    position: relative;
-    #gradient > .horizontal-three-colors(@start-color: rgba(255, 255, 255, 1); @mid-color: rgba(255, 255, 255, 0.5); @color-stop: 50%; @end-color: rgba(255, 255, 255, 1));
-  }
+}
+}
 }
