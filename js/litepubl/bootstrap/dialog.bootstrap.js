@@ -65,8 +65,13 @@
     },
     
     doclose: function() {
-      if (this.dialog && $.isFunction(this.options.close)) this.options.close(this.dialog);
-      if (this.removeOnclose) this.remove();
+      if (this.dialog && $.isFunction(this.options.close)) {
+this.options.close(this.dialog);
+}
+
+      if (this.removeOnclose) {
+this.remove();
+}
     },
     
     remove: function() {
@@ -82,6 +87,11 @@
         this.style = false;
       }
     },
+
+closetips: function() {
+if ("closetooltips" in $) $.closetooltips();
+if ("closepopovers" in $) $.closepopovers ();
+},
     
     addstyle: function() {
       var options = this.options;
@@ -94,6 +104,8 @@
     
     open: function(o) {
       if (this.dialog) return alert('Dialog already opened');
+this.closetips();
+
       var id = litepubl.guid++;
     this.options = $.extend({}, this.default_options, o);
       
