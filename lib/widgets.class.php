@@ -90,8 +90,7 @@ class twidget extends tevents {
   public function expired($id) {
     switch ($this->cache) {
       case 'cache':
-      $cache = twidgetscache::i();
-      $cache->expired($id);
+twidgetscache::i()->expired($id);
       break;
       
       case 'include':

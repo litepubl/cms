@@ -14,8 +14,7 @@ class ttheme extends tevents {
   public $parsing;
   public $templates;
   public $extratml;
-  private $themeprops;
-  
+
   public static function exists($name) {
     return file_exists(litepublisher::$paths->data . 'themes'. DIRECTORY_SEPARATOR . $name . '.php') ||
     file_exists(litepublisher::$paths->themes . $name . DIRECTORY_SEPARATOR  . 'about.ini');
@@ -54,7 +53,7 @@ class ttheme extends tevents {
     'custom' => array(),
     'customadmin' => array()
     );
-    $this->themeprops = new tthemeprops($this);
+
     if (!isset(self::$defaultargs)) self::set_defaultargs();
     $this->extratml = '';
   }
@@ -69,7 +68,7 @@ class ttheme extends tevents {
   }
   
   public function __destruct() {
-    unset($this->themeprops, self::$instances[$this->name], $this->templates);
+    unset(self::$instances[$this->name], $this->templates);
     parent::__destruct();
   }
   
@@ -104,14 +103,6 @@ class ttheme extends tevents {
     return $this->templates['index'];
   }
   
-  public function __get($name) {
-    if (array_key_exists($name, $this->templates)) return $this->themeprops->setpath($name);
-    if ($name == 'comment') return $this->themeprops->setpath('content.post.templatecomments.comments.comment');
-    if ($name == 'sidebar') return $this->themeprops->setroot($this->templates['sidebars'][0]);
-    if (preg_match('/^sidebar(\d)$/', $name, $m)) return $this->themeprops->setroot($this->templates['sidebars'][$m[1]]);
-    return parent::__get($name);
-  }
-  
   public function __set($name, $value) {
     if (array_key_exists($name, $this->templates)) {
       $this->templates[$name] = $value;
@@ -119,14 +110,6 @@ class ttheme extends tevents {
     }
     return parent::__set($name, $value);
   }
-  
-  public function gettag($path) {
-    if (!array_key_exists($path, $this->templates)) $this->error(sprintf('Path "%s" not found', $path));
-    $this->themeprops->setpath($path);
-    $this->themeprops->tostring = true;
-    return $this->themeprops;
-  }
-  
   public function reg($exp) {
     if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
     $result = array();
@@ -550,81 +533,6 @@ class ttheme extends tevents {
     }
     
     return false;
-  }
-  
-}//class
-
-class tthemeprops {
-  
-  public $path;
-  public $tostring;
-  private $root;
-  private $theme;
-  
-  public function __construct(ttheme $theme) {
-    $this->theme = $theme;
-    $this->root = &$theme->templates;
-    $this->path = '';
-    $this->tostring = false;
-  }
-  
-  public function __destruct() {
-    unset($this->theme, $this->root);
-  }
-  
-  public function error($path) {
-    litepublisher::$options->trace(sprintf('Path "%s" not found', $path));
-    litepublisher::$options->showerrors();
-  }
-  
-  public function getpath($name) {
-    return $this->path == '' ? $name : $this->path . '.' . $name;
-  }
-  
-  public function setpath($path) {
-    $this->root = &$this->theme->templates;
-    $this->path = $path;
-    $this->tostring = false;
-    return $this;
-  }
-  
-  public function setroot(array &$root) {
-    $this->setpath('');
-    $this->root = &$root;
-    return $this;
-  }
-  
-  public function __get($name) {
-    //echo "$name get tml<br>";
-    $path = $this->getpath($name);
-    if (!array_key_exists($path, $this->root)) $this->error($path);
-    if ($this->tostring) return $this->root[$path];
-    $this->path = $path;
-    return $this;
-  }
-  
-  public function __set($name, $value) {
-    $this->root[$this->getpath($name)] = $value;
-  }
-  
-  public function __call($name, $params) {
-    if (isset($params[0]) && is_object($params[0]) && ($params[0] instanceof targs)) {
-      return $this->theme->parsearg( (string) $this->$name, $params[0]);
-    } else {
-      return $this->theme->parse((string) $this->$name);
-    }
-  }
-  
-  public function __tostring() {
-    if (array_key_exists($this->path, $this->root)) {
-      return $this->root[$this->path];
-    } else {
-      $this->error($this->path);
-    }
-  }
-  
-  public function __isset($name) {
-    return array_key_exists($this->getpath($name), $this->root);
   }
   
 }//class
