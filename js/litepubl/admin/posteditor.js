@@ -13,6 +13,7 @@
     init: function() {
       this.tabs = $("#tabs");
       if (!this.tabs.length) return;
+
       var self = this;
       this.tabs.tabs({
         hide: true,
@@ -41,7 +42,7 @@
         return false;
       });
       
-      $('form:first').on('submit.posttitle', function(event) {
+      this.tabs.closest('form').on('submit.posttitle', function(event) {
         var title = $("input[name='title']", this);
         if (!$.trim(title.val())) {
           event.stopImmediatePropagation();
