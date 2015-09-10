@@ -311,12 +311,21 @@ class twidgets extends titems_storage {
   
   public function getsidebarindex($context, tview $view, $sidebar) {
     $items = $this->getwidgets($context, $view, $sidebar);
-    if ($context instanceof iwidgets) $context->getwidgets($items, $sidebar);
+    if ($context instanceof iwidgets) {
+$context->getwidgets($items, $sidebar);
+
+}
+
     if (litepublisher::$options->admincookie) $this->callevent('onadminlogged', array(&$items, $sidebar));
     if (litepublisher::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items, $sidebar));
     $this->callevent('ongetwidgets', array(&$items, $sidebar));
+
     $result = $this->getsidebarcontent($items, $sidebar, !$view->customsidebar && $view->disableajax);
-    if ($context instanceof iwidgets) $context->getsidebar($result, $sidebar);
+
+    if ($context instanceof iwidgets) {
+$context->getsidebar($result, $sidebar);
+}
+
     $this->callevent('onsidebar', array(&$result, $sidebar));
     return $result;
   }
@@ -387,7 +396,7 @@ class twidgets extends titems_storage {
     return $items;
   }
   
-  private function getsidebarcontent(array $items, $sidebar, $disableajax) {
+  protected function getsidebarcontent(array $items, $sidebar, $disableajax) {
     $result = '';
     foreach ($items as $item) {
       $id = $item['id'];
@@ -411,7 +420,7 @@ class twidgets extends titems_storage {
       } else {
         switch ($cachetype) {
           case 'cache':
-          $content = $this->getwidgetcache($id, $sidebar);
+          $content = twidgetscache::i()->getcontent($id, $sidebar, false);
           break;
           
           case 'include':
@@ -432,6 +441,7 @@ class twidgets extends titems_storage {
       $this->callevent('onwidget', array($id, &$content));
       $result .= $content;
     }
+
     return $result;
   }
   
@@ -452,15 +462,8 @@ class twidgets extends titems_storage {
       $widget = $this->getwidget($id);
       $content = $widget->getcontent($id, $sidebar);
     }
+
     $content = sprintf('<!--%s-->', $content);
-    return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
-  }
-  
-  public function getwidgetcache($id, $sidebar) {
-    $title = $this->items[$id]['title'];
-    $cache = twidgetscache::i();
-    $content = $cache->getcontent($id, $sidebar);
-    $theme = ttheme::i();
     return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
   }
   
@@ -528,7 +531,11 @@ class twidgets extends titems_storage {
   }
   
   public function getwidgetcontent($id, $sidebar) {
-    if (!isset($this->items[$id])) return false;
+    if (!isset($this->items[$id])) {
+return false;
+
+}
+
     switch ($this->items[$id]['cache']) {
       case 'cache':
       $cache = twidgetscache::i();
@@ -611,15 +618,20 @@ class twidgetscache extends titems {
     }
   }
   
-  public function getcontent($id, $sidebar) {
+  public function getcontent($id, $sidebar, $onlybody = true) {
     if (isset($this->items[$id][$sidebar])) return $this->items[$id][$sidebar];
-    return $this->setcontent($id, $sidebar);
+    return $this->setcontent($id, $sidebar, $onlybody);
   }
   
-  public function setcontent($id, $sidebar) {
-    $widgets = twidgets::i();
-    $widget = $widgets->getwidget($id);
+  public function setcontent($id, $sidebar, $onlybody = true) {
+    $widget = twidgets::i()->getwidget($id);
+
+if ($onlybody) {
     $result = $widget->getcontent($id, $sidebar);
+} else {
+    $result = $widget->getwidget($id, $sidebar);
+}
+
     $this->items[$id][$sidebar] = $result;
     $this->save();
     return $result;

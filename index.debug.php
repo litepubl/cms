@@ -105,7 +105,7 @@ litepublisher::$db->query('SET read_rnd_buffer_size = ' . 1024*1024*32);
 */
 
  tlocal::clearcache();
-ttheme::clearcache();
+//ttheme::clearcache();
 include(dirname(__file__) . '/temp/zdebug.php');
   if (!defined('litepublisher_mode')) {
     litepublisher::$urlmap->request(strtolower($_SERVER['HTTP_HOST']), $_SERVER['REQUEST_URI']);
