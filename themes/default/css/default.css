@@ -6363,7 +6363,7 @@ A.dashed:focus {
     background-position: center top;
     content: "";
     position: absolute;
-    top: 43px;
+    top: 25px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -6532,6 +6532,19 @@ proppage-form-submit,
   max-height: 12em;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.shopticket-body,
+.shopticket-content,
+.shopticket-mesg,
+.shopticket-mesg-content {
+  margin-top: 6px;
+  overflow: hidden;
+}
+.shopticket-prop {
+  font-size: 120%;
+}
+.shopticket-ismanager-false {
+  display: none;
 }
 /**
 * Lite Publisher

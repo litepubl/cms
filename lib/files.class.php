@@ -228,7 +228,7 @@ class tfiles extends titems {
           $midle->array = $this->getitem($item['midle']);
           $midle->link = $url . $midle->filename;
           $midle->json = jsonattr(array(
-          'id' => $midle->attay['id'],
+          'id' => $midle->array['id'],
           'link' => $midle->link,
           'width' => $midle->array['width'],
           'height' => $midle->array['height'],

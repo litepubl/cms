@@ -78,18 +78,22 @@ class tposteditor extends tadminmenu {
     return self::getcategories($postitems);
   }
   
-  public function getfileperm() {
+  public static function getfileperm() {
     return litepublisher::$options->show_file_perm ? tadminperms::getcombo(0, 'idperm_upload') : '';
   }
   
   // $posteditor.files in template editor
   public function getfilelist() {
+    $post = ttheme::$vars['post'];
+return self::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+}
+
+  public static function getuploader(array $list) {
     $html = tadminhtml::i();
     $html->push_section('editor');
     $args = new targs();
-    $args->fileperm = $this->getfileperm();
+    $args->fileperm = self::getfileperm();
     
-    $post = ttheme::$vars['post'];
     $files = tfiles::i();
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
     
@@ -102,15 +106,12 @@ class tposteditor extends tadminmenu {
     // attrib for hidden input
     $args->files = '';
     
-    if ($post->id) {
-      $list = $files->itemsposts->getitems($post->id);
       if (count($list)) {
         $items = implode(',', $list);
         $args->files = $items;
         $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
       }
-    }
-    
+
     $result = $html->filelist($args);
     $html->pop_section();
     return $result;
