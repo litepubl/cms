@@ -15,16 +15,17 @@
     options: false,
     
     init: function(links) {
-      if (!links.length) return false;
-      
+      litepubl.openimage = $.proxy(this.openimage, this);
+
+if (links && links.length) {
       var self = this;
       this.links = links.on("click.photoswipe", function() {
         self.open($(this));
         return false;
       });
       
-      litepubl.openimage = $.proxy(this.openimage, this);
       $.ready2($.proxy(this.openhash, this));
+}
     },
     
     getoptions: function() {

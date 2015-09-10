@@ -85,14 +85,22 @@ class tposteditor extends tadminmenu {
   // $posteditor.files in template editor
   public function getfilelist() {
     $post = ttheme::$vars['post'];
+  if (version_compare(PHP_VERSION, '5.3', '>=')) {
+return static::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+} else {
 return self::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+}
 }
 
   public static function getuploader(array $list) {
     $html = tadminhtml::i();
     $html->push_section('editor');
     $args = new targs();
+  if (version_compare(PHP_VERSION, '5.3', '>=')) {
+    $args->fileperm = static::getfileperm();
+} else {
     $args->fileperm = self::getfileperm();
+}
     
     $files = tfiles::i();
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
