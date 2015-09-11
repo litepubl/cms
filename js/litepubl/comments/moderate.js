@@ -233,7 +233,7 @@
       
       var comtheme = ltoptions.theme.comments;
       var containers = owner.find(comtheme.buttons + (comtheme.ismoder ? '' : '[data-idauthor="' + litepubl.getuser().id + '"]'));
-      if (!containers.length) rturn;
+      if (!containers.length) return;
       
       if (comtheme.ismoder) {
         var names = ['approve', 'hold', 'del', 'edit'];

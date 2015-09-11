@@ -429,7 +429,7 @@ class tpost extends titem implements  itemplate {
           $midle->array = $files->getitem($item['midle']);
           $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
           $midle->json = jsonattr(array(
-          'id' => $midle->attay['id'],
+          'id' => $midle->array['id'],
           'link' => $midle->link,
           'width' => $midle->array['width'],
           'height' => $midle->array['height'],

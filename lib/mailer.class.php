@@ -19,7 +19,7 @@ class tmailer {
         @chmod($dir, 0777);
       }
       $eml = "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: LitePublisher mailer\n\n$body";
-      return file_put_contents($dir . date('H-i-s.d.m.Y.') . microtime(true) . '.eml', $eml);
+      return file_put_contents($dir . date('H-i-s.d.m.Y.') . microtime(true) . '.eml.mhtml', $eml);
     }
     
     return mail($to, $subj, $body,

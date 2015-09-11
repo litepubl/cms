@@ -2,9 +2,7 @@ SETLOCAL
 set mini=java -jar d:\OpenServer\domains\cms\build\closure\compiler.jar --js=
 set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar
 set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
-set ccjs=node D:\OpenServer\modules\node_modules\closurecompiler\bin\ccjs
 cd d:\OpenServer\domains\cms\js\litepubl\system
-rem %ccjs% storage.js>storage.min.js
 %mini%css-loader.js --js_output_file=css-loader.min.js
 %mini%escape.js --js_output_file=escape.min.js
 %mini%get_get.js --js_output_file=get_get.min.js
@@ -85,36 +83,8 @@ cd css
 %css% button.css -o button.min.css
 %less% fileman.less fileman.css
 %css% fileman.css -o fileman.min.css
-
 %css% table.css -o table.min.css
-cd ..\..\..\plugins
-%mini%class-extend.js --js_output_file=class-extend.min.js
-%mini%jquery.cookie.js --js_output_file=jquery.cookie.min.js
-%mini%jquery.mousewheel.js --js_output_file=jquery.mousewheel.min.js
-%mini%tojson.js --js_output_file=tojson.min.js
-%mini%filereader.js --js_output_file=filereader.min.js
-cd ..\swfupload
-%mini%swfupload.js --js_output_file=swfupload.min.js
-cd ..\fonts/css
-rem %css% font-awesome.css -o font-awesome.min.css
-%mini%font-awesome.js --js_output_file=font-awesome.min.js
-%mini%font-awesome.cdn.js --js_output_file=font-awesome.cdn.min.js
-%mini%lobster.js --js_output_file=lobster.min.js
-%mini%lobster.cdn.js --js_output_file=lobster.cdn.min.js
-cd ..\..\bootstrap
-%mini%collapse.js --js_output_file=collapse.min.js
-%mini%dropdown.js --js_output_file=dropdown.min.js
-%mini%modal.js --js_output_file=modal.min.js
-%mini%popover.js --js_output_file=popover.min.js
-%mini%tooltip.js --js_output_file=tooltip.min.js
-%mini%transition.js --js_output_file=transition.min.js
-cd ..\fix
-%mini%android-select.js --js_output_file=android-select.min.js
-%mini%ie10.js --js_output_file=ie10.min.js
-%mini%modernizr.transitions.js --js_output_file=modernizr.transitions.min.js
-copy html5shiv.js + respond.src.js ie9.js /b
-copy html5shiv.min.js + respond.min.js ie9.min.js /b
-cd ..\..\lib\languages\en
+cd ..\..\..\..\lib\languages\en
 %mini%admin.js --js_output_file=admin.min.js
 %mini%comments.js --js_output_file=comments.min.js
 %mini%default.js --js_output_file=default.min.js
