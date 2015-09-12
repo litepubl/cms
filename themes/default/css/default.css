@@ -6533,19 +6533,6 @@ proppage-form-submit,
   overflow-x: hidden;
   overflow-y: auto;
 }
-.shopticket-body,
-.shopticket-content,
-.shopticket-mesg,
-.shopticket-mesg-content {
-  margin-top: 6px;
-  overflow: hidden;
-}
-.shopticket-prop {
-  font-size: 120%;
-}
-.shopticket-ismanager-false {
-  display: none;
-}
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/

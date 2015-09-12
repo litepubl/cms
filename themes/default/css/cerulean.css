@@ -6454,13 +6454,35 @@ A.dashed:focus {
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.sidebar-top .widget-image {
+  float: left;
+  display: block;
+  overflow: hidden;
+  width: 90px;
+  height: 90px;
+}
+@media (max-width: 768px) {
+  .sidebar-top .widget-image {
+    display: none;
+  }
+}
 .sidebar-top .media-body:before {
   display: none;
 }
 @media (max-width: 768px) {
+  .sidebar-top .media-body {
+    position: relative;
+    background-image: -webkit-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-image: -o-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-image: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
+    background-repeat: no-repeat;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
+  }
   .sidebar-top .media-body:before {
     display: block;
     overflow: hidden;
+    width: 90px;
+    height: 90px;
     background-repeat: no-repeat;
     background-position: center top;
     content: "";
@@ -6470,14 +6492,6 @@ A.dashed:focus {
     right: 0;
     bottom: 0;
     z-index: -1;
-  }
-  .sidebar-top .media-body {
-    position: relative;
-    background-image: -webkit-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-image: -o-linear-gradient(left, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-image: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.5) 50%, #ffffff);
-    background-repeat: no-repeat;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffffffff', GradientType=1);
   }
 }
 /**
