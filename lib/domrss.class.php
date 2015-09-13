@@ -52,6 +52,7 @@ class tnode {
   }
   
 }//class
+
 function _struct_to_array(&$values, &$i)  {
   $result = array();
   if (isset($values[$i]['value'])) array_push($result, $values[$i]['value']);
