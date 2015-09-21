@@ -6596,6 +6596,23 @@ proppage-form-submit,
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.navbar-brand,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-family: Impact, fantasy, Palatino, 'Trebuchet MS', cursive;
+  font-style: italic;
+  line-height: 1.2;
+}
 .lobster .navbar-brand,
 .lobster h1,
 .lobster h2,

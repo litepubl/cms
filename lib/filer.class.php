@@ -85,9 +85,9 @@ class tfiler {
   }
   
   public static function forcedir($dir) {
-    $dir = rtrim($dir, DIRECTORY_SEPARATOR);
+    $dir = rtrim(str_replace('\', '/', $dir, '/');
     if (is_dir($dir)) return true;
-    $up = rtrim(dirname($dir), DIRECTORY_SEPARATOR);
+    $up = rtrim(dirname($dir), '/');
     if (($up != '') || ($up != '.'))  self::forcedir($up);
     if (!is_dir($dir)) mkdir($dir, 0777);
     chmod($dir, 0777);

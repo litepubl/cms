@@ -203,6 +203,7 @@ class tmediaparser extends tevents {
   
   public function add(array $file) {
     if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
+
     $files = tfiles::i();
     $hash =$files->gethash(litepublisher::$paths->files . $file['tempfilename']);
     if (($id = $files->indexof('hash', $hash)) ||

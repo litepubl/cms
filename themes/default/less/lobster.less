@@ -6,11 +6,25 @@
 
 .font-lobster() when (@themename = default) {
   font-family: 'Lobster', cursive;
+  line-height: 1.2;
 }
 
-.lobster .navbar-brand,
-.lobster h1, .lobster h2, .lobster h3, .lobster h4, .lobster h5, .lobster h6,
-.lobster .h1, .lobster .h2, .lobster .h3, .lobster .h4, .lobster .h5, .lobster .h6 {
-  .font-lobster();
+.font-lobster-fallback() when (@themename = default) {
+  font-family: Impact, fantasy  , Palatino, 'Trebuchet MS', cursive;
+  font-style: italic;
   line-height: 1.2;
+}
+
+.navbar-brand,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  .font-lobster-fallback();
+}
+
+.lobster {
+.navbar-brand,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  .font-lobster();
+}
 }
