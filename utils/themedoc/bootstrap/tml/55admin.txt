@@ -22,7 +22,10 @@ $combo = [<div class="form-group"><label for="combo-$name">$lang.$name:</label>
 
 $radioitem = [<div class="radio"><label><input type="radio" name="$name" id="radio_$name_$index" value="$index" $checked />$value</label></div>]
 
-$radio = [<div><h4>$lang.$name:</h4>$value</div>]
+$radio = [<div class="form-group">
+  <h4>$lang.$name</h4>
+$value
+</div>]
 
 $hidden = [<input type="hidden" name="$name" id="hidden-$name" value="$value" />]
 
