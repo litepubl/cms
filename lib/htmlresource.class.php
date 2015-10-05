@@ -495,8 +495,19 @@ class tadminhtml {
     
     return $this->gettable($head, $body);
   }
-  
-  public function confirmdelete($id, $adminurl, $mesg) {
+
+public function proplist(array $props, $tml = '<li>%s: %s</li>') {
+$result = '';
+foreach ($props as $prop => $value) {
+if ($value !== false) {
+$result .= sprintf($tml, $prop, is_array($value) ? $this->proplist($value, $tml) : $value);
+}
+}
+
+return $result ? sprintf('<ul>%s</ul>', $result) : '';
+}
+
+    public function confirmdelete($id, $adminurl, $mesg) {
     $args = new targs();
     $args->id = $id;
     $args->action = 'delete';

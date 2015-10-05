@@ -6,7 +6,6 @@
     ini_set('display_errors', 1);
 echo "<pre>\n";
 $url = $_GET['url'];
-$url = 'http://radiojs.ru/episodes/RadioJS-13.mp3?ptm_source=feed&ptm_context=podcast&ptm_file=RadioJS-13.mp3';
             $bits = parse_url($url);
 //var_dump($bits );
 //flush();

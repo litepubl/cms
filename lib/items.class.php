@@ -56,7 +56,7 @@ class titems extends tevents {
   
   public function select($where, $limit) {
     if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
-    if ($where != '') $where = 'where '. $where;
+    if ($where) $where = 'where '. $where;
     return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
   }
   
