@@ -496,15 +496,16 @@ class tadminhtml {
     return $this->gettable($head, $body);
   }
 
-public function proplist(array $props, $tml = '<li>%s: %s</li>') {
+public function proplist($tml, array $props) {
 $result = '';
+if (!$tml) $tml = '<li>%s: %s</li>';
 foreach ($props as $prop => $value) {
 if ($value !== false) {
-$result .= sprintf($tml, $prop, is_array($value) ? $this->proplist($value, $tml) : $value);
+$result .= sprintf($tml, $prop, is_array($value) ? $this->proplist($tml, $value) : $value);
 }
 }
 
-return $result ? sprintf('<ul>%s</ul>', $result) : '';
+return $result ? sprintf($'<ul>%s</ul>', $result);
 }
 
     public function confirmdelete($id, $adminurl, $mesg) {
