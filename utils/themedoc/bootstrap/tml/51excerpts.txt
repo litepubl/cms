@@ -19,7 +19,12 @@ $post.catlinks
 <span class="post-comments">$post.commentslink</span>
 </div>
 
-<div class="anpost-item more-button"><a href="$post.link#more-$post.id" class="btn btn-primary" role="button">$lang.moredetails</a></div>
+<div class="anpost-item more-button">
+<a href="$post.link#more-$post.id" class="btn btn-primary" role="button">
+<span class="fa fa-commenting-o" aria-hidden="true"></span>
+$lang.moredetails</a>
+</div>
+
 </div>
 </div>
 </div>

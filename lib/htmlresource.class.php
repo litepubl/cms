@@ -326,33 +326,43 @@ class tadminhtml {
     '$tablebody' => $body));
   }
   
-  public function tablestruct(array $tablestruct) {
+  public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
-    foreach ($tablestruct as $item) {
+    foreach ($tablestruct as $index => $item) {
       if (!$item || !count($item)) continue;
+
+if (count($item) == 2) {
+array_unshift($item, 'left');
+}
+
       $align = $item[0] ? $item[0] : 'left';
       $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
+
       if (is_string($item[2])) {
         $body .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
+} else if ($args) {
+$callback_name = 'callback' . $index;
+$args->{$callback_name} = $item[2];
+        $body .= sprintf('<td align="%s">$%s</td>', $align, $callback_name);
       } else {
         // special case for callback. Add new prop to template vars
-        $tableprop = tableprop::i();
-        $propname = $tableprop->addprop($item[2]);
-        ttheme::$vars['tableprop'] = $tableprop;
-        $body .= sprintf('<td align="%s">$tableprop.%s</td>', $item[0], $propname);
+        $tableprop =         ttheme::$vars['tableprop'] = tableprop::i();
+        $body .= sprintf('<td align="%s">$tableprop.%s</td>', $align, $tableprop->addprop($item[2]));
       }
     }
     
     $body .= '</tr>';
-    return array($head, $body);
+
+    return array($head, $body, $args);
   }
   
   public function buildtable(array $items, array $tablestruct) {
     $body = '';
-    list($head, $tml) = $this->tablestruct($tablestruct);
     $theme = ttheme::i();
     $args = new targs();
+    list($head, $tml) = $this->tablestruct($tablestruct, $args);
+
     foreach ($items as $id => $item) {
       ttheme::$vars['item'] = $item;
       $args->add($item);
