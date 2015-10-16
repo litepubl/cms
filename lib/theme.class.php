@@ -540,6 +540,7 @@ $s = $args->callback($s);
 
 class targs {
   public $data;
+public $vars;
 public $callbacks;
   
   public static function i() {
@@ -548,6 +549,9 @@ public $callbacks;
   
   public function __construct($thisthis = null) {
 $this->callbacks = array();
+$this->vars = new tarray2prop();
+$this->vars->array = &ttheme::$vars;
+
     if (!isset(ttheme::$defaultargs)) ttheme::set_defaultargs();
     $this->data = ttheme::$defaultargs;
     if (isset($thisthis)) $this->data['$this'] = $thisthis;
