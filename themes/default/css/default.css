@@ -6535,6 +6535,18 @@ proppage-form-submit,
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.switch-expand,
+.collapsed > .switch-collapse {
+  display: none;
+}
+.collapsed > .switch-expand {
+  display: inline-block;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
