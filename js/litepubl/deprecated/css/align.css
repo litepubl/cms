@@ -11,6 +11,11 @@
 .text-right{
   text-align:right;
 }
+
+.text-left {
+  text-align:left;
+}
+
 div.text-center {
   margin: 5px;
 }
@@ -19,6 +24,7 @@ div.text-center {
   margin: auto;
 }
 
+.hide,
 .hidden{
   display:none
 }

@@ -325,10 +325,32 @@ class tadminhtml {
     '$tablehead' => $head,
     '$tablebody' => $body));
   }
+
+public function getcolclass($s) {
+//most case
+if (!$s || $s == 'left') {
+return 'text-left';
+}
+
+$map = array(
+'left' => 'text-left',
+'right' => 'text-right',
+'center' => 'text-center'
+);
+
+foreach ($list as $i => $v) {
+if (isset($map[$v])) {
+$list[$i] = $map[$v];
+}
+}
+
+return implode(' ', $list);
+}
   
   public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
+
     foreach ($tablestruct as $index => $item) {
       if (!$item || !count($item)) continue;
 
@@ -336,19 +358,19 @@ if (count($item) == 2) {
 array_unshift($item, 'left');
 }
 
-      $align = $item[0] ? $item[0] : 'left';
-      $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
+      $colclass = $this->getcolclass($item[0]);
+      $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
 
       if (is_string($item[2])) {
-        $body .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
+        $body .= sprintf('<td class="%s">%s</td>', $colclass, $item[2]);
 } else if ($args) {
 $callback_name = 'callback' . $index;
 $args->{$callback_name} = $item[2];
-        $body .= sprintf('<td align="%s">$%s</td>', $align, $callback_name);
+        $body .= sprintf('<td class="%s">$%s</td>', $colclass, $callback_name);
       } else {
         // special case for callback. Add new prop to template vars
         $tableprop =         ttheme::$vars['tableprop'] = tableprop::i();
-        $body .= sprintf('<td align="%s">$tableprop.%s</td>', $align, $tableprop->addprop($item[2]));
+        $body .= sprintf('<td class="%s">$tableprop.%s</td>', $colclass, $tableprop->addprop($item[2]));
       }
     }
     
