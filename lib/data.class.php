@@ -214,8 +214,8 @@ class tdata {
   }
   
   public function getdb($table = '') {
-    $table =$table != '' ? $table : $this->table;
-    if ($table != '') litepublisher::$db->table = $table;
+    $table =$table ? $table : $this->table;
+    if ($table) litepublisher::$db->table = $table;
     return litepublisher::$db;
   }
   

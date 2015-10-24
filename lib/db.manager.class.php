@@ -23,7 +23,6 @@ class tdbmanager  {
   }
   
   public function createtable($name, $struct) {
-    //    if (litepublisher::$debug)
     if (!$this->engine) $this->engine = 'MyISAM'; //InnoDB
     $this->deletetable($name);
     return $this->exec("create table $this->prefix$name
