@@ -96,6 +96,8 @@ makekernel($dir, 'kernel.php', array(
 'storage.file.class.php',
 'storage.class.php',
 'storage.mem.class.php',
+'storage.cache.file.class.php',
+'storage.cache.memcache.class.php',
 ));
 
 makekernel($dir, 'kernel.templates.php',  array(
