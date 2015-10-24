@@ -93,6 +93,8 @@ makekernel($dir, 'kernel.php', array(
 'users.class.php',
 //'users.groups.class.php'
 'items.pull.class.php',
+'storage.file.class.php',
+'storage.class.php',
 'storage.mem.class.php',
 ));
 
