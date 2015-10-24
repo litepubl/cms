@@ -1,6 +1,6 @@
 <?php
 
-class tlitememcache {
+class cachestorage_memcache {
   public $prefix;
   public $memcache;
   public $lifetime;

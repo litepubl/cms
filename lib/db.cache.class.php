@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-class dbcache extends tlitememcache {
+class dbcache extends cachestorage_memcache {
   
   public function set($sql, $res) {
     if (is_object($res)) {

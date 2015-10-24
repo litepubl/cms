@@ -1,6 +1,6 @@
 <?php
 
-class tfilecache {
+class cachestorage_file {
   
   public function clear() {
     $path = litepublisher::$paths->cache;

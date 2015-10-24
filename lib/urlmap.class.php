@@ -31,9 +31,9 @@ class turlmap extends titems {
   public function __construct() {
     parent::__construct();
     if (tfilestorage::$memcache) {
-      $this->cache = new tlitememcache(tfilestorage::$memcache);
+      $this->cache = new cachestorage_memcache(tfilestorage::$memcache);
     } else {
-      $this->cache = new tfilecache();
+      $this->cache = new cachestorage_file();
     }
   }
   
