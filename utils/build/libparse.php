@@ -144,6 +144,12 @@ makekernel($dir, 'kernel.comments.class.files.php',  array(
 makekernel($dir, 'kernel.admin.php',  array(
 'menu.admin.class.php',
 'htmlresource.class.php',
+'html.adminform.class.php',
+'html.tableprop.class.php',
+'html.uitabs.class.php',
+'html.tag.class.php',
+'html.autoform.class.php',
+'html.tablecols.class.php',
 'admin.posteditor.ajax.class.php',
 'admin.posteditor.class.php',
 ));
