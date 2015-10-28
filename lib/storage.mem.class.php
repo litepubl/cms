@@ -25,17 +25,27 @@ $this->data = array();
     $this->memcache = tfilestorage::$memcache;
 if (!$this->memcache) {
 $db = litepublisher::$db;
+$res = $db->query("show tables like '$db->prefix$this->table'");
+if (!$res || !$res->num_rows) {
+$this->create_table();
+$this->created = time();
+} else {
+
+}
+}
+}
+
+public function create_table() {
+$db = litepublisher::$db;
 $db->query(
-"create table IF NOT EXISTS $db->prefix$this->table
-    (
+"create table if not exists $db->prefix$this->table (
 name varchar(32) not null,
-value text,
+value varchar(255),
 key (name)
 )
     ENGINE=MEMORY
     DEFAULT CHARSET=utf8
     COLLATE = utf8_general_ci");
-}
   }
   
   public function __get($name) {
@@ -72,14 +82,19 @@ if (strlen($name) > 32) {
 $name = md5($name);
 }
 
-$this->data[$name] = $value;
 if ($this->memcache) {
     $this->memcache->set($this->prefix . $name, $this->serialize($value), false, $this->lifetime);
 } else {
 $db = litepublisher::$db;
-$value = $db->quote($this->serialize($value));
-$db->query("update $db->prefix$this->table set value = $value where name = '$name'");
+$v = $db->quote($this->serialize($value));
+if (isset($this->data[$name])) {
+$db->query("update $db->prefix$this->table set value = $v where name = '$name'");
+} else {
+$db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
 }
+}
+
+$this->data[$name] = $value;
 }
 
   public function __unset($filename) {
