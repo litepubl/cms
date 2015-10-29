@@ -204,7 +204,7 @@ class tadminoptions extends tadminmenu {
       $args->admincache = $options->admincache;
       $args->ob_cache = $options->ob_cache;
       $args->compress = $options->compress;
-      $args->commentspull = $options->commentspull;
+      $args->commentspool = $options->commentspool;
       
       $args->formtitle = $lang->optionscache;
       $result = $html->adminform('
@@ -212,7 +212,7 @@ class tadminoptions extends tadminmenu {
       [text=expiredcache]
       [checkbox=ob_cache]
       [checkbox=admincache]
-      [checkbox=commentspull]
+      [checkbox=commentspool]
       ', $args);
       
       $form = new adminform($args);
@@ -412,7 +412,7 @@ class tadminoptions extends tadminmenu {
         if (!empty($expiredcache)) $options->expiredcache = (int) $expiredcache;
         $options->ob_cache = isset($ob_cache);
         $options->compress = isset($compress);
-        $options->commentspull = isset($commentspull);
+        $options->commentspool = isset($commentspool);
         $options->unlock();
       }
       break;

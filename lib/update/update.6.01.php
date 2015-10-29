@@ -20,7 +20,11 @@ unset($classes->items['tpullitems']);
 $classes->items['tpoolitems'] = array('kernel.php', '', 'items.pool.class.php');
 
 unset($classes->items['tcommentspull']);
-$classes->items['tcommentspool'] = array('kernel.php', '', 'comments.pool.class.php');
+$classes->items['tcommentspool'] = array('comments.pool.class.php', '');
 
 $classes->save();
+
+litepublisher::$options->commentspool = litepublisher::$options->commentspull;
+unset(litepublisher::$options->data['commentspull']);
+litepublisher::$options->save();
 }

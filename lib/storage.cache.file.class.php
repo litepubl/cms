@@ -1,9 +1,39 @@
 <?php
 
 class cachestorage_file {
+
+public function getdir() {
+return litepublisher::$paths->cache;
+}
+
+  public function set($filename, $data) {
+    $fn = $this->getdir() . $filename;
+    file_put_contents($fn, serialize($data));
+    @chmod($fn, 0666);
+  }
+  
+  public function get($filename) {
+    $fn = $this->getdir() . $filename;
+    if (file_exists($fn) && ($s = file_get_contents($fn)) {
+return unserialize($s);
+}
+
+    return false;
+  }
+  
+  public function delete($filename) {
+    $fn = $this->getdir() . $filename;
+    if (file_exists($fn)) {
+unlink($fn);
+}
+  }
+  
+  public function exists($filename) {
+    return file_exists($this->getdir() . $filename);
+  }
   
   public function clear() {
-    $path = litepublisher::$paths->cache;
+    $path = $this->getdir();
     if ( $h = @opendir($path)) {
       while(FALSE !== ($filename = @readdir($h))) {
         if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
@@ -16,28 +46,6 @@ class cachestorage_file {
       }
       closedir($h);
     }
-  }
-  
-  public function set($filename, $data) {
-    $fn = litepublisher::$paths->cache . $filename;
-    if (!is_string($data)) $data = serialize($data);
-    file_put_contents($fn, $data);
-    @chmod($fn, 0666);
-  }
-  
-  public function get($filename) {
-    $fn = litepublisher::$paths->cache . $filename;
-    if (file_exists($fn)) return  file_get_contents($fn);
-    return false;
-  }
-  
-  public function delete($filename) {
-    $fn = litepublisher::$paths->cache . $filename;
-    if (file_exists($fn)) unlink($fn);
-  }
-  
-  public function exists($filename) {
-    return file_exists(litepublisher::$paths->cache . $filename);
   }
   
 }//class

@@ -722,7 +722,7 @@ class tpost extends titem implements  itemplate {
       $l = tlocal::i()->ini['comment'];
       $result =sprintf('<?php
       echo \'<a href="%s%s#comments">\';
-      $count =  tcommentspull::i()->get(%d);
+      $count =  tcommentspool::i()->get(%d);
       ',litepublisher::$site->url, $this->getlastcommenturl(), $this->id);
       
       $result .= 'if ($count == 0) {
