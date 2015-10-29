@@ -16,5 +16,11 @@ $classes->items['adminform'] = array('kernel.admin.php', '', 'html.adminform.cla
 $classes->items['tableprop'] = array('kernel.admin.php', '', 'html.tableprop.class.php');
 $classes->items['thtmltag'] = array('kernel.admin.php', '', 'html.tag.class.php');
 
+unset($classes->items['tpullitems']);
+$classes->items['tpoolitems'] = array('kernel.php', '', 'items.pool.class.php');
+
+unset($classes->items['tcommentspull']);
+$classes->items['tcommentspool'] = array('kernel.php', '', 'comments.pool.class.php');
+
 $classes->save();
 }

@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-class tpullpolls extends tpullitems {
+class tpoolpolls extends tpullitems {
   
   public static function i() {
     return getinstance(__class__);

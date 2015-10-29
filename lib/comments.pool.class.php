@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-class tcommentspull extends tpullitems {
+class tcommentspool extends tpoolitems {
   
   public static function i() {
     return getinstance(__class__);
@@ -13,8 +13,8 @@ class tcommentspull extends tpullitems {
   
   protected function create() {
     parent::create();
-    $this->basename = 'commentspull';
-    $this->perpull = 50;
+    $this->basename = 'commentspool';
+    $this->perpool = 50;
   }
   
   public function getitem($id) {
