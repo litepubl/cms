@@ -714,30 +714,17 @@ class tpost extends titem implements  itemplate {
   }
   
   public function getcommentslink() {
-    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspull) {
-      if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) return '';
-      return sprintf('<a href="%s%s#comments">%s</a>', litepublisher::$site->url, $this->getlastcommenturl(), $this->getcmtcount());
-    } else {
+      $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
+    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspool) {
+      if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
+return '';
+}
+
+      return sprintf($tml, $this->getcmtcount());
+}
+
       //inject php code
-      $l = tlocal::i()->ini['comment'];
-      $result =sprintf('<?php
-      echo \'<a href="%s%s#comments">\';
-      $count =  tcommentspool::i()->get(%d);
-      ',litepublisher::$site->url, $this->getlastcommenturl(), $this->id);
-      
-      $result .= 'if ($count == 0) {
-        echo \'' . $l[0] . '\';
-      } elseif ($count == 1) {
-        echo \'' . $l[1] . '\';
-      } else {
-        echo sprintf(\'' . $l[2] . '\', $count);
-      }
-      
-      echo \'</a>\';
-      ?>';
-    }
-    
-    return $result;
+    return sprintf('<?php echo tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
   }
   
   public function getcmtcount() {
