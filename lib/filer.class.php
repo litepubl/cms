@@ -83,9 +83,8 @@ class tfiler {
     }
     return $result;
   }
-  
   public static function forcedir($dir) {
-    $dir = rtrim(str_replace('\', '/', $dir, '/');
+    $dir = rtrim(str_replace('\\', '/', $dir), '/');
     if (is_dir($dir)) return true;
     $up = rtrim(dirname($dir), '/');
     if (($up != '') || ($up != '.'))  self::forcedir($up);

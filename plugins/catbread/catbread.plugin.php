@@ -86,7 +86,10 @@ class catbread extends  tplugin {
   }
   
   public function getbread($idcat) {
-    if (!$idcat) return '';
+    if (!$idcat) {
+return '';
+}
+
     $result = '';
     $cats = $this->cats;
     $cats->loadall();

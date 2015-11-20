@@ -513,9 +513,19 @@ $args->{$callback_name} = $item[2];
 public function proplist($tml, array $props) {
 $result = '';
 if (!$tml) $tml = '<li>%s: %s</li>';
+// exclude props with int keys
+$tml_int = '<li>%s</li>';
+
 foreach ($props as $prop => $value) {
-if ($value !== false) {
-$result .= sprintf($tml, $prop, is_array($value) ? $this->proplist($tml, $value) : $value);
+if ($value === false) continue;
+if (is_array($value)) {
+ $value = $this->proplist($tml, $value);
+}
+
+if (is_int($prop)) {
+$result .= sprintf($tml_int, $value);
+} else {
+$result .= sprintf($tml, $prop, $value);
 }
 }
 

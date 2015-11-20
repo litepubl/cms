@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="$site.language">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,49 +12,57 @@
     <![endif]-->
     $template.head
     <script type="text/javascript">
-      window.ltoptions.theme.cssfile = "$custom.cssfile";
+        window.ltoptions.theme.cssfile = "$custom.cssfile";
     </script>
-  </head>
-  <body itemscope itemtype="http://schema.org/WebPage">
-    <div class="navbar navbar-default navbar-fixed-top" itemscope itemtype="http://schema.org/WPHeader"><div class="container-fluid">
-       <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false" aria-controls="navbar-menu">
-            <span class="sr-only">$lang.togglenavi</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
+</head>
 
-          <a class="navbar-brand" href="$site.url/"><span>$site.name</span></a>
+<body itemscope itemtype="http://schema.org/WebPage">
+    <div class="navbar navbar-default navbar-fixed-top" itemscope itemtype="http://schema.org/WPHeader">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-menu" aria-expanded="false" aria-controls="navbar-menu">
+                    <span class="sr-only">$lang.togglenavi</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="$site.url/"><span>$site.name</span></a>
+            </div>
+
+            <div id="navbar-menu" class="navbar-collapse collapse" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">$template.menu</div>
         </div>
+    </div>
 
-<div id="navbar-menu" class="navbar-collapse collapse" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">$template.menu</div>
-    </div></div>
+    <div id="site-description">
+        <h1>$site.name</h1>
+        <h3>$site.description</h3>
+    </div>
 
-<div id="site-description">
-<h1>$site.name</h1>
-<h3>$site.description</h3>
-</div>
-
-$custom.topsidebar 
-
-          <div class="container-fluid section"><div class="row sidebar-$custom.mainsidebar">
-                    <div class="content" itemscope itemprop="mainContentOfPage">$template.content</div>
-          <div class="main-sidebar"><div class="panel-group" id="sidebar1" role="tablist" aria-multiselectable="true" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div></div>
-</div></div>
-
-<div class="container-fluid section">
-<hr>
-<div class="btn-group dropup" itemscope itemtype="http://schema.org/WPSideBar">
-$template.sidebar
-</div>
-</div>
+    $custom.topsidebar
 
     <div class="container-fluid section">
-      <hr>
-      <footer itemscope itemtype="http://schema.org/WPFooter">
-            <p>$template.footer</p>
-      </footer>
+        <div class="row sidebar-$custom.mainsidebar">
+            <div class="content" itemscope itemprop="mainContentOfPage">$template.content</div>
+            <div class="main-sidebar">
+                <div class="panel-group" id="sidebar1" role="tablist" aria-multiselectable="true" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div>
+            </div>
+        </div>
     </div>
-  </body>
+
+    <div class="container-fluid section">
+        <hr>
+        <div class="btn-group dropup" itemscope itemtype="http://schema.org/WPSideBar">
+            $template.sidebar
+        </div>
+    </div>
+
+    <div class="container-fluid section">
+        <hr>
+        <footer itemscope itemtype="http://schema.org/WPFooter">
+            <p>$template.footer</p>
+        </footer>
+    </div>
+</body>
+
 </html>
