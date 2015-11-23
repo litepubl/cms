@@ -532,6 +532,10 @@ $result .= sprintf($tml, $prop, $value);
 return $result ? sprintf($'<ul>%s</ul>', $result);
 }
 
+public function linkproplist(array $props) {
+return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
+}
+
     public function confirmdelete($id, $adminurl, $mesg) {
     $args = new targs();
     $args->id = $id;
