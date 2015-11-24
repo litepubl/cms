@@ -6,7 +6,7 @@ $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="
 
 $images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">
 $image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json">$preview</a></span>]
-$preview = [<img src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
+$preview = [<img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
 </div>]
 
 $videos = [<div class="files-block filelist-video">

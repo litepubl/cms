@@ -13,6 +13,8 @@
     photoswipe: false,
     holder: false,
     options: false,
+animatethumbs: false,
+onoptions: $.noop,
     
     init: function(links) {
       litepubl.openimage = $.proxy(this.openimage, this);
@@ -38,8 +40,19 @@ if (links && links.length) {
           index: 0,
           history: true,
           galleryPIDs: true,
-          showHideOpacity:true,
-          getThumbBoundsFn: false,
+          showHideOpacity: !this.animatethumbs,
+          getThumbBoundsFn: !this.animatethumbs ? false : function(index) {
+            var linkindex = self.pswp.items[index].linkindex;
+var img = self.links.eq(linkindex).find("img");
+    var offset = img.offset();
+
+    return {
+x:offset.left,
+ y:offset.top,
+ w:img.data('width')
+};
+},
+
           errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lng.error + '</a></div>',
           shareButtons: this.get_sharebuttons(),
           getTextForShare: function(shareButtonData) {
@@ -51,6 +64,8 @@ if (links && links.length) {
             return result;
           }
         };
+
+this.onoptions(this.options);
       }
       
       return this.options;
@@ -93,6 +108,8 @@ if (links && links.length) {
     getitems: function(idpost, idfile) {
       var result = [];
       var ismobile = $(window).width() <= 768;
+var animatethumbs = this.animatethumbs;
+
       var options = this.getoptions();
       options.galleryUID = parseInt(idpost);
       
@@ -109,7 +126,7 @@ if (links && links.length) {
           if (ismobile && midle) {
             result.push({
               src: midle.link,
-              //msrc: $("img", link).attr("src"),
+              msrc: animatethumbs ? $("img", link).attr("src") : false,
               w: parseInt(midle.width),
               h: parseInt(midle.height),
               title: link.attr("title"),
@@ -120,7 +137,7 @@ if (links && links.length) {
           } else {
             result.push({
               src: link.attr("href"),
-              //msrc: $("img", link).attr("src"),
+              msrc: animatethumbs ? $("img", link).attr("src") : false,
               w: parseInt(data.width),
               h: parseInt(data.height),
               title: link.attr("title"),
@@ -143,7 +160,9 @@ if (links && links.length) {
         galleryPIDs: false,
         shareEl: false,
         counterEl: false,
-        arrowEl: false
+        arrowEl: false,
+          showHideOpacity: true,
+          getThumbBoundsFn: false
       }, this.options);
       
       this.openitems([{

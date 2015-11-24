@@ -130,7 +130,10 @@ cd default-skin
 %css% default-skin.css -o default-skin.min.css
 %less% default-skin.inline.less default-skin.inline.css
 %css% default-skin.inline.css -o default-skin.inline.min.css
-cd ..\..\..\..\themes\default\
+cd ..\..\..\photoswipe-thumbnail\resource
+%mini%thumbnails.js --js_output_file=thumbnails.min.js
+%css% thumbnails.css -o thumbnails.min.css
+cd ..\..\..\themes\default\
 %less% less\logo.less css\logo.css
 %css% logo.css -o logo.min.css
 cd ..\..\..\build

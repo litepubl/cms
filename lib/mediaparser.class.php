@@ -502,7 +502,7 @@ class tmediaparser extends tevents {
     return $r;
   }
   
-  public static function createthumb($source, $destfilename, $x, $y, $ratio, $clipbounds, $quality_snapshot) {
+  public static function createthumb($source, $destfilename, $x, $y, $save_ratio, $clipbounds, $quality_snapshot) {
     if (!$source) return false;
     $sourcex = imagesx($source);
     $sourcey = imagesy($source);
@@ -515,11 +515,14 @@ class tmediaparser extends tevents {
       } else {
         $sourcey = $sourcex /$ratio;
       }
-    } elseif ($ratio) {
+    } elseif ($save_ratio) {
       $ratio = $sourcex / $sourcey;
-      //zero height
       if (!$y) {
+      //zero height
         $y = $x /$ratio;
+} else if (!$x) {
+//zero width
+        $x = $y * $ratio;
       } else {
         if ($x/$y > $ratio) {
           $x = $y *$ratio;
@@ -534,20 +537,22 @@ class tmediaparser extends tevents {
     imagejpeg($dest, $destfilename, $quality_snapshot);
     imagedestroy($dest);
     @chmod($destfilename, 0666);
-    return true;
+
+    return array(
+'width' => $x,
+'height' => $y
+);
   }
   
   public function getsnapshot($srcfilename, $image) {
     $destfilename = self::replace_ext($srcfilename, '.preview.jpg');
     $destfilename = self::makeunique($destfilename);
-    if (self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
-      @chmod($destfilename, 0666);
-      $info = getimagesize($destfilename);
+    if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
       $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
       $result['media'] = 'image';
-      $result['mime'] = $info['mime'];
-      $result['width'] = $info[0];
-      $result['height'] = $info[1];
+      $result['mime'] = 'image/jpeg';
+      $result['width'] = $size['width'];
+      $result['height'] = $size['height'];
       return $result;
     }
     
