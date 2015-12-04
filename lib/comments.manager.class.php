@@ -60,9 +60,9 @@ class tcommentmanager extends tevents_storage {
     $count = $comments->db->getcount("post = $idpost and status = 'approved'");
     $comments->getdb('posts')->setvalue($idpost, 'commentscount', $count);
     if (litepublisher::$options->commentspool) {
-tcommentspool::i()->set($idpost, $count);
-}
-
+      tcommentspool::i()->set($idpost, $count);
+    }
+    
     //update trust
     try {
       $idauthor = $comments->getvalue($id, 'author');

@@ -13,7 +13,7 @@
     init: function() {
       this.tabs = $("#tabs");
       if (!this.tabs.length) return;
-
+      
       var self = this;
       this.tabs.tabs({
         hide: true,

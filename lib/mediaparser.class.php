@@ -203,7 +203,7 @@ class tmediaparser extends tevents {
   
   public function add(array $file) {
     if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
-
+    
     $files = tfiles::i();
     $hash =$files->gethash(litepublisher::$paths->files . $file['tempfilename']);
     if (($id = $files->indexof('hash', $hash)) ||
@@ -329,13 +329,12 @@ class tmediaparser extends tevents {
       if (!strbegin($filename, litepublisher::$paths->files)) $filename = litepublisher::$paths->files. ltrim($filename, '\/');
       $destfilename = self::replace_ext($filename, '.jpg');
       $destfilename = self::makeunique($destfilename);
-      if (self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
-        $info = getimagesize($destfilename);
+      if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
         $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
         $item['media'] = 'image';
-        $item['mime'] = $info['mime'];
-        $item['width'] = $info[0];
-        $item['height'] = $info[1];
+        $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
+        $item['width'] = $size['width'];
+        $item['height'] = $size['height'];
         
         $id = $files->additem($item);
         IF ($hash != $files->getvalue($id, 'hash')) {
@@ -518,10 +517,10 @@ class tmediaparser extends tevents {
     } elseif ($save_ratio) {
       $ratio = $sourcex / $sourcey;
       if (!$y) {
-      //zero height
+        //zero height
         $y = $x /$ratio;
-} else if (!$x) {
-//zero width
+      } else if (!$x) {
+        //zero width
         $x = $y * $ratio;
       } else {
         if ($x/$y > $ratio) {
@@ -537,11 +536,11 @@ class tmediaparser extends tevents {
     imagejpeg($dest, $destfilename, $quality_snapshot);
     imagedestroy($dest);
     @chmod($destfilename, 0666);
-
+    
     return array(
-'width' => $x,
-'height' => $y
-);
+    'width' => $x,
+    'height' => $y
+    );
   }
   
   public function getsnapshot($srcfilename, $image) {

@@ -99,17 +99,17 @@ class tjsonfiles extends tevents {
     'item' => $item
     );
   }
-
-public function canupload() {
+  
+  public function canupload() {
     if (!litepublisher::$options->hasgroup('author')) return false;
     
     if (in_array(litepublisher::$options->groupnames['author'], litepublisher::$options->idgroups)
     && ($err = tauthor_rights::i()->canupload())) {
-return false;
-}
-
-return true;
-}
+      return false;
+    }
+    
+    return true;
+  }
   
   public function files_upload(array $args) {
     if ( 'POST' != $_SERVER['REQUEST_METHOD']) return $this->forbidden();
@@ -118,8 +118,8 @@ return true;
     
     //psevdo logout
     litepublisher::$options->user = null;
-if (!$this->canupload()) return $this->forbidden();
-   
+    if (!$this->canupload()) return $this->forbidden();
+    
     $parser = tmediaparser::i();
     $id = $parser->uploadfile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);
     if (isset($_POST['idperm'])) {

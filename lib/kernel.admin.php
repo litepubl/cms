@@ -263,24 +263,6 @@ class tauthor_rights extends tevents {
 }//class
 
 //htmlresource.class.php
-class thtmltag {
-  public $tag;
-  
-public function __construct($tag) { $this->tag = $tag; }
-  public function __get($name) {
-    return sprintf('<%1$s>%2$s</%1$s>', $this->tag, tlocal::i()->$name);
-  }
-  
-}//class
-
-class redtag extends thtmltag {
-  
-  public function __get($name) {
-    return sprintf('<%1$s class="red">%2$s</%1$s>', $this->tag, tlocal::i()->$name);
-  }
-  
-}//class
-
 class tadminhtml {
   public static $tags = array('h1', 'h2', 'h3', 'h4', 'p', 'li', 'ul', 'strong', 'div', 'span');
   public $section;
@@ -584,33 +566,65 @@ class tadminhtml {
     '$tablebody' => $body));
   }
   
-  public function tablestruct(array $tablestruct) {
+  public function getcolclass($s) {
+    //most case
+    if (!$s || $s == 'left') {
+      return 'text-left';
+    }
+    
+    $map = array(
+    'left' => 'text-left',
+    'right' => 'text-right',
+    'center' => 'text-center'
+    );
+    
+    foreach ($list as $i => $v) {
+      if (isset($map[$v])) {
+        $list[$i] = $map[$v];
+      }
+    }
+    
+    return implode(' ', $list);
+  }
+  
+  public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
-    foreach ($tablestruct as $item) {
+    
+    foreach ($tablestruct as $index => $item) {
       if (!$item || !count($item)) continue;
-      $align = $item[0] ? $item[0] : 'left';
-      $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
+      
+      if (count($item) == 2) {
+        array_unshift($item, 'left');
+      }
+      
+      $colclass = $this->getcolclass($item[0]);
+      $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
+      
       if (is_string($item[2])) {
-        $body .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
+        $body .= sprintf('<td class="%s">%s</td>', $colclass, $item[2]);
+      } else if ($args) {
+        $callback_name = 'callback' . $index;
+      $args->{$callback_name} = $item[2];
+        $body .= sprintf('<td class="%s">$%s</td>', $colclass, $callback_name);
       } else {
         // special case for callback. Add new prop to template vars
-        $tableprop = tableprop::i();
-        $propname = $tableprop->addprop($item[2]);
-        ttheme::$vars['tableprop'] = $tableprop;
-        $body .= sprintf('<td align="%s">$tableprop.%s</td>', $item[0], $propname);
+        $tableprop =         ttheme::$vars['tableprop'] = tableprop::i();
+        $body .= sprintf('<td class="%s">$tableprop.%s</td>', $colclass, $tableprop->addprop($item[2]));
       }
     }
     
     $body .= '</tr>';
-    return array($head, $body);
+    
+    return array($head, $body, $args);
   }
   
   public function buildtable(array $items, array $tablestruct) {
     $body = '';
-    list($head, $tml) = $this->tablestruct($tablestruct);
     $theme = ttheme::i();
     $args = new targs();
+    list($head, $tml) = $this->tablestruct($tablestruct, $args);
+    
     foreach ($items as $id => $item) {
       ttheme::$vars['item'] = $item;
       $args->add($item);
@@ -754,6 +768,32 @@ class tadminhtml {
     return $this->gettable($head, $body);
   }
   
+  public function proplist($tml, array $props) {
+    $result = '';
+    if (!$tml) $tml = '<li>%s: %s</li>';
+    // exclude props with int keys
+    $tml_int = '<li>%s</li>';
+    
+    foreach ($props as $prop => $value) {
+      if ($value === false) continue;
+      if (is_array($value)) {
+        $value = $this->proplist($tml, $value);
+      }
+      
+      if (is_int($prop)) {
+        $result .= sprintf($tml_int, $value);
+      } else {
+        $result .= sprintf($tml, $prop, $value);
+      }
+    }
+    
+    return $result ? sprintf($'<ul>%s</ul>', $result);
+  }
+  
+  public function linkproplist(array $props) {
+    return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
+  }
+  
   public function confirmdelete($id, $adminurl, $mesg) {
     $args = new targs();
     $args->id = $id;
@@ -820,6 +860,184 @@ class tadminhtml {
   
 }//class
 
+//html.adminform.class.php
+class adminform {
+  public $args;
+  public$title;
+  public $items;
+  public $action;
+  public $method;
+  public $enctype;
+  public $id;
+  public $class;
+  public $target;
+  public $submit;
+  public $inlineclass;
+  
+  public function __construct($args = null) {
+    $this->args = $args;
+    $this->title = '';
+    $this->items = '';
+    $this->action = '';
+    $this->method = 'post';
+    $this->enctype = '';
+    $this->id = '';
+    $this->class = '';
+    $this->target = '';
+    $this->submit = 'update';
+    $this->inlineclass = 'form-inline';
+  }
+  
+  public function line($s) {
+    return "<div class=\"$this->inlineclass\">$s</div>";
+  }
+  
+  public function __set($k, $v) {
+    switch ($k) {
+      case 'upload':
+      if ($v) {
+        $this->enctype = 'multipart/form-data';
+        $this->submit = 'upload';
+      } else {
+        $this->enctype = '';
+        $this->submit = 'update';
+      }
+      break;
+      
+      case 'inline':
+      $this->class = $v ? $this->inlineclass : '';
+      break;
+    }
+  }
+  
+  public function __tostring() {
+    return $this->get();
+  }
+  
+  public function gettml() {
+    $result = '<div class="form-holder">';
+    if ($this->title) $result .= "<h4>$this->title</h4>\n";
+    $attr = "action=\"$this->action\"";
+    foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
+      if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
+    }
+    
+    $result .= "<form $attr role=\"form\">";
+    $result .= $this->items;
+    if ($this->submit) $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    $result .= "\n</form>\n</div>\n";
+    return $result;
+  }
+  
+  public function get() {
+    return tadminhtml::i()->parsearg($this->gettml(), $this->args);
+  }
+  
+}//class
+
+//html.tableprop.class.php
+class tableprop {
+  public $callbacks;
+  
+  public static function i() {
+    return getinstance(__class__);
+  }
+  
+  public function __construct() {
+    $this->callbacks = array();
+  }
+  
+  public function addprop($callback) {
+    $this->callbacks[] = $callback;
+    $id = count($this->callbacks) -  1;
+    return 'prop' . $id;
+  }
+  
+  public function __get($name) {
+    $id = (int) substr($name, strlen('prop'));
+    return call_user_func_array($this->callbacks[$id], array(ttheme::$vars['item']));
+  }
+  
+}
+
+//html.uitabs.class.php
+class tuitabs {
+  public $head;
+  public $body;
+  public $tabs;
+  public $customdata;
+  private static $index = 0;
+  private $tabindex;
+  private $items;
+  
+  public function __construct() {
+    $this->tabindex = ++self::$index;
+    $this->items = array();
+    $this->head = '<li><a href="%s" role="tab"><span>%s</span></a></li>';
+    $this->body = '<div id="tab-' . self::$index . '-%d" role="tabpanel">%s</div>';
+    $this->tabs = '<div id="tabs-' . self::$index . '" class="admintabs" %s>
+    <ul role="tablist">%s</ul>
+    %s
+    </div>';
+    $this->customdata = false;
+  }
+  
+  public function get() {
+    $head= '';
+    $body = '';
+    foreach ($this->items as $i => $item) {
+      if (isset($item['url'])) {
+        $head .= sprintf($this->head, $item['url'], $item['title']);
+      } else {
+        $head .= sprintf($this->head, "#tab-$this->tabindex-$i", $item['title']);
+        $body .= sprintf($this->body, $i, $item['body']);
+      }
+    }
+    
+    $data = $this->customdata? sprintf('data-custom="%s"', str_replace('"', '&quot;', json_encode($this->customdata))) : '';
+    return sprintf($this->tabs, $data, $head, $body);
+  }
+  
+  public function add($title, $body) {
+    $this->items[] = array(
+    'title' => $title,
+    'body' => $body
+    );
+  }
+  
+  public function ajax($title, $url) {
+    $this->items[] = array(
+    'url' => $url,
+    'title' => $title,
+    );
+  }
+  
+  public static function gethead() {
+    return '<script type="text/javascript">$.inittabs();</script>';
+  }
+  
+}//class
+
+//html.tag.class.php
+class thtmltag {
+  public $tag;
+  
+public function __construct($tag) { $this->tag = $tag; }
+  public function __get($name) {
+    return sprintf('<%1$s>%2$s</%1$s>', $this->tag, tlocal::i()->$name);
+  }
+  
+}//class
+
+class redtag extends thtmltag {
+  
+  public function __get($name) {
+    return sprintf('<%1$s class="red">%2$s</%1$s>', $this->tag, tlocal::i()->$name);
+  }
+  
+}//class
+
+//html.autoform.class.php
 class tautoform {
   const editor = 'editor';
   const text = 'text';
@@ -979,6 +1197,7 @@ class tautoform {
   
 }//class
 
+//html.tablecols.class.php
 class ttablecolumns {
   public $style;
   public $head;
@@ -1030,161 +1249,6 @@ class ttablecolumns {
   }
   
 }//class
-
-class tuitabs {
-  public $head;
-  public $body;
-  public $tabs;
-  public $customdata;
-  private static $index = 0;
-  private $tabindex;
-  private $items;
-  
-  public function __construct() {
-    $this->tabindex = ++self::$index;
-    $this->items = array();
-    $this->head = '<li><a href="%s" role="tab"><span>%s</span></a></li>';
-    $this->body = '<div id="tab-' . self::$index . '-%d" role="tabpanel">%s</div>';
-    $this->tabs = '<div id="tabs-' . self::$index . '" class="admintabs" %s>
-    <ul role="tablist">%s</ul>
-    %s
-    </div>';
-    $this->customdata = false;
-  }
-  
-  public function get() {
-    $head= '';
-    $body = '';
-    foreach ($this->items as $i => $item) {
-      if (isset($item['url'])) {
-        $head .= sprintf($this->head, $item['url'], $item['title']);
-      } else {
-        $head .= sprintf($this->head, "#tab-$this->tabindex-$i", $item['title']);
-        $body .= sprintf($this->body, $i, $item['body']);
-      }
-    }
-    
-    $data = $this->customdata? sprintf('data-custom="%s"', str_replace('"', '&quot;', json_encode($this->customdata))) : '';
-    return sprintf($this->tabs, $data, $head, $body);
-  }
-  
-  public function add($title, $body) {
-    $this->items[] = array(
-    'title' => $title,
-    'body' => $body
-    );
-  }
-  
-  public function ajax($title, $url) {
-    $this->items[] = array(
-    'url' => $url,
-    'title' => $title,
-    );
-  }
-  
-  public static function gethead() {
-    return '<script type="text/javascript">$.inittabs();</script>';
-  }
-  
-}//class
-
-class adminform {
-  public $args;
-  public$title;
-  public $items;
-  public $action;
-  public $method;
-  public $enctype;
-  public $id;
-  public $class;
-  public $target;
-  public $submit;
-  public $inlineclass;
-  
-  public function __construct($args = null) {
-    $this->args = $args;
-    $this->title = '';
-    $this->items = '';
-    $this->action = '';
-    $this->method = 'post';
-    $this->enctype = '';
-    $this->id = '';
-    $this->class = '';
-    $this->target = '';
-    $this->submit = 'update';
-    $this->inlineclass = 'form-inline';
-  }
-  
-  public function line($s) {
-    return "<div class=\"$this->inlineclass\">$s</div>";
-  }
-  
-  public function __set($k, $v) {
-    switch ($k) {
-      case 'upload':
-      if ($v) {
-        $this->enctype = 'multipart/form-data';
-        $this->submit = 'upload';
-      } else {
-        $this->enctype = '';
-        $this->submit = 'update';
-      }
-      break;
-      
-      case 'inline':
-      $this->class = $v ? $this->inlineclass : '';
-      break;
-    }
-  }
-  
-  public function __tostring() {
-    return $this->get();
-  }
-  
-  public function gettml() {
-    $result = '<div class="form-holder">';
-    if ($this->title) $result .= "<h4>$this->title</h4>\n";
-    $attr = "action=\"$this->action\"";
-    foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
-      if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
-    }
-    
-    $result .= "<form $attr role=\"form\">";
-    $result .= $this->items;
-    if ($this->submit) $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
-    $result .= "\n</form>\n</div>\n";
-    return $result;
-  }
-  
-  public function get() {
-    return tadminhtml::i()->parsearg($this->gettml(), $this->args);
-  }
-  
-}//class
-
-class tableprop {
-  public $callbacks;
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  public function __construct() {
-    $this->callbacks = array();
-  }
-  
-  public function addprop($callback) {
-    $this->callbacks[] = $callback;
-    $id = count($this->callbacks) -  1;
-    return 'prop' . $id;
-  }
-  
-  public function __get($name) {
-    $id = (int) substr($name, strlen('prop'));
-    return call_user_func_array($this->callbacks[$id], array(ttheme::$vars['item']));
-  }
-  
-}
 
 //admin.posteditor.ajax.class.php
 class tajaxposteditor  extends tevents {
@@ -1446,18 +1510,30 @@ class tposteditor extends tadminmenu {
     return self::getcategories($postitems);
   }
   
-  public function getfileperm() {
+  public static function getfileperm() {
     return litepublisher::$options->show_file_perm ? tadminperms::getcombo(0, 'idperm_upload') : '';
   }
   
   // $posteditor.files in template editor
   public function getfilelist() {
+    $post = ttheme::$vars['post'];
+    if (version_compare(PHP_VERSION, '5.3', '>=')) {
+      return static::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+    } else {
+      return self::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+    }
+  }
+  
+  public static function getuploader(array $list) {
     $html = tadminhtml::i();
     $html->push_section('editor');
     $args = new targs();
-    $args->fileperm = $this->getfileperm();
+    if (version_compare(PHP_VERSION, '5.3', '>=')) {
+      $args->fileperm = static::getfileperm();
+    } else {
+      $args->fileperm = self::getfileperm();
+    }
     
-    $post = ttheme::$vars['post'];
     $files = tfiles::i();
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
     
@@ -1470,13 +1546,10 @@ class tposteditor extends tadminmenu {
     // attrib for hidden input
     $args->files = '';
     
-    if ($post->id) {
-      $list = $files->itemsposts->getitems($post->id);
-      if (count($list)) {
-        $items = implode(',', $list);
-        $args->files = $items;
-        $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
-      }
+    if (count($list)) {
+      $items = implode(',', $list);
+      $args->files = $items;
+      $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
     }
     
     $result = $html->filelist($args);

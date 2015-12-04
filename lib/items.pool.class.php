@@ -25,9 +25,9 @@ class tpoolitems extends tdata {
   
   public function getitem($id) {
     if (isset($this->ongetitem)) {
-return call_user_func_array($this->ongetitem, array($id));
-}
-
+      return call_user_func_array($this->ongetitem, array($id));
+    }
+    
     $this->error('Call abastract method getitem in class' . get_class($this));
   }
   

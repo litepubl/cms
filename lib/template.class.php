@@ -135,10 +135,10 @@ class ttemplate extends tevents_storage {
   public function gettitle() {
     $title = $this->itemplate ? $this->context->gettitle() : '';
     if ($this->callevent('ontitle', array(&$title))) {
-return $title;
-} else {
-    return $this->parsetitle($this->view->theme->templates['title'], $title);
-}
+      return $title;
+    } else {
+      return $this->parsetitle($this->view->theme->templates['title'], $title);
+    }
   }
   
   public function parsetitle($tml, $title) {

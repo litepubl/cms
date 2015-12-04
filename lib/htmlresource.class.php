@@ -307,47 +307,47 @@ class tadminhtml {
     '$tablehead' => $head,
     '$tablebody' => $body));
   }
-
-public function getcolclass($s) {
-//most case
-if (!$s || $s == 'left') {
-return 'text-left';
-}
-
-$map = array(
-'left' => 'text-left',
-'right' => 'text-right',
-'center' => 'text-center'
-);
-
-foreach ($list as $i => $v) {
-if (isset($map[$v])) {
-$list[$i] = $map[$v];
-}
-}
-
-return implode(' ', $list);
-}
+  
+  public function getcolclass($s) {
+    //most case
+    if (!$s || $s == 'left') {
+      return 'text-left';
+    }
+    
+    $map = array(
+    'left' => 'text-left',
+    'right' => 'text-right',
+    'center' => 'text-center'
+    );
+    
+    foreach ($list as $i => $v) {
+      if (isset($map[$v])) {
+        $list[$i] = $map[$v];
+      }
+    }
+    
+    return implode(' ', $list);
+  }
   
   public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
-
+    
     foreach ($tablestruct as $index => $item) {
       if (!$item || !count($item)) continue;
-
-if (count($item) == 2) {
-array_unshift($item, 'left');
-}
-
+      
+      if (count($item) == 2) {
+        array_unshift($item, 'left');
+      }
+      
       $colclass = $this->getcolclass($item[0]);
       $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
-
+      
       if (is_string($item[2])) {
         $body .= sprintf('<td class="%s">%s</td>', $colclass, $item[2]);
-} else if ($args) {
-$callback_name = 'callback' . $index;
-$args->{$callback_name} = $item[2];
+      } else if ($args) {
+        $callback_name = 'callback' . $index;
+      $args->{$callback_name} = $item[2];
         $body .= sprintf('<td class="%s">$%s</td>', $colclass, $callback_name);
       } else {
         // special case for callback. Add new prop to template vars
@@ -357,7 +357,7 @@ $args->{$callback_name} = $item[2];
     }
     
     $body .= '</tr>';
-
+    
     return array($head, $body, $args);
   }
   
@@ -366,7 +366,7 @@ $args->{$callback_name} = $item[2];
     $theme = ttheme::i();
     $args = new targs();
     list($head, $tml) = $this->tablestruct($tablestruct, $args);
-
+    
     foreach ($items as $id => $item) {
       ttheme::$vars['item'] = $item;
       $args->add($item);
@@ -509,34 +509,34 @@ $args->{$callback_name} = $item[2];
     
     return $this->gettable($head, $body);
   }
-
-public function proplist($tml, array $props) {
-$result = '';
-if (!$tml) $tml = '<li>%s: %s</li>';
-// exclude props with int keys
-$tml_int = '<li>%s</li>';
-
-foreach ($props as $prop => $value) {
-if ($value === false) continue;
-if (is_array($value)) {
- $value = $this->proplist($tml, $value);
-}
-
-if (is_int($prop)) {
-$result .= sprintf($tml_int, $value);
-} else {
-$result .= sprintf($tml, $prop, $value);
-}
-}
-
-return $result ? sprintf($'<ul>%s</ul>', $result);
-}
-
-public function linkproplist(array $props) {
-return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
-}
-
-    public function confirmdelete($id, $adminurl, $mesg) {
+  
+  public function proplist($tml, array $props) {
+    $result = '';
+    if (!$tml) $tml = '<li>%s: %s</li>';
+    // exclude props with int keys
+    $tml_int = '<li>%s</li>';
+    
+    foreach ($props as $prop => $value) {
+      if ($value === false) continue;
+      if (is_array($value)) {
+        $value = $this->proplist($tml, $value);
+      }
+      
+      if (is_int($prop)) {
+        $result .= sprintf($tml_int, $value);
+      } else {
+        $result .= sprintf($tml, $prop, $value);
+      }
+    }
+    
+    return $result ? sprintf($'<ul>%s</ul>', $result);
+  }
+  
+  public function linkproplist(array $props) {
+    return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
+  }
+  
+  public function confirmdelete($id, $adminurl, $mesg) {
     $args = new targs();
     $args->id = $id;
     $args->action = 'delete';
@@ -601,4 +601,3 @@ return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a>
   }
   
 }//class
-

@@ -20,7 +20,7 @@ class tcommentspool extends tpoolitems {
   public function getitem($id) {
     return $this->getdb('posts')->getvalue($id, 'commentscount');
   }
-
+  
   public function getlangcount($count) {
     $l = tlocal::i()->ini['comment'];
     switch($count) {
@@ -34,9 +34,9 @@ class tcommentspool extends tpoolitems {
       return sprintf($l[2], count);
     }
   }
-
-public function getlink($idpost, $tml) {
-return sprintf($tml, $this->getlangcount($this->get($idpost));
-}
-
+  
+  public function getlink($idpost, $tml) {
+    return sprintf($tml, $this->getlangcount($this->get($idpost));
+  }
+  
 }//class

@@ -534,7 +534,7 @@ class tpost extends titem implements  itemplate {
           $midle->array = $files->getitem($item['midle']);
           $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
           $midle->json = jsonattr(array(
-          'id' => $midle->attay['id'],
+          'id' => $midle->array['id'],
           'link' => $midle->link,
           'width' => $midle->array['width'],
           'height' => $midle->array['height'],
@@ -819,30 +819,17 @@ class tpost extends titem implements  itemplate {
   }
   
   public function getcommentslink() {
-    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspull) {
-      if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) return '';
-      return sprintf('<a href="%s%s#comments">%s</a>', litepublisher::$site->url, $this->getlastcommenturl(), $this->getcmtcount());
-    } else {
-      //inject php code
-      $l = tlocal::i()->ini['comment'];
-      $result =sprintf('<?php
-      echo \'<a href="%s%s#comments">\';
-      $count =  tcommentspull::i()->get(%d);
-      ',litepublisher::$site->url, $this->getlastcommenturl(), $this->id);
-      
-      $result .= 'if ($count == 0) {
-        echo \'' . $l[0] . '\';
-      } elseif ($count == 1) {
-        echo \'' . $l[1] . '\';
-      } else {
-        echo sprintf(\'' . $l[2] . '\', $count);
+    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
+    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspool) {
+      if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
+        return '';
       }
       
-      echo \'</a>\';
-      ?>';
+      return sprintf($tml, $this->getcmtcount());
     }
     
-    return $result;
+    //inject php code
+    return sprintf('<?php echo tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
   }
   
   public function getcmtcount() {
@@ -2163,7 +2150,11 @@ class tcommontags extends titems implements  itemplate {
   
   public function getparents($id) {
     $result = array();
-    while ($id = (int) $this->items[$id]['parent']) $result[] = $id;
+    while ($id = (int) $this->items[$id]['parent']) {
+      //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
+      $result[] = $id;
+    }
+    
     return $result;
   }
   
@@ -2655,7 +2646,7 @@ class tfiles extends titems {
           $midle->array = $this->getitem($item['midle']);
           $midle->link = $url . $midle->filename;
           $midle->json = jsonattr(array(
-          'id' => $midle->attay['id'],
+          'id' => $midle->array['id'],
           'link' => $midle->link,
           'width' => $midle->array['width'],
           'height' => $midle->array['height'],

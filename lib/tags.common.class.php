@@ -456,10 +456,10 @@ class tcommontags extends titems implements  itemplate {
   public function getparents($id) {
     $result = array();
     while ($id = (int) $this->items[$id]['parent']) {
-//if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
-$result[] = $id;
-}
-
+      //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
+      $result[] = $id;
+    }
+    
     return $result;
   }
   

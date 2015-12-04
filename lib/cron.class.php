@@ -240,7 +240,7 @@ class tcron extends tevents {
   public function sendexceptions() {
     $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
     if (!file_exists($filename)) return;
-
+    
     $time = @filectime ($filename);
     if (($time === false) || ($time + 3600 > time())) return;
     $s = file_get_contents($filename);

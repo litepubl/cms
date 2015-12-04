@@ -14,7 +14,7 @@ class ttheme extends tevents {
   public $parsing;
   public $templates;
   public $extratml;
-
+  
   public static function exists($name) {
     return file_exists(litepublisher::$paths->data . 'themes'. DIRECTORY_SEPARATOR . $name . '.php') ||
     file_exists(litepublisher::$paths->themes . $name . DIRECTORY_SEPARATOR  . 'about.ini');
@@ -53,7 +53,7 @@ class ttheme extends tevents {
     'custom' => array(),
     'customadmin' => array()
     );
-
+    
     if (!isset(self::$defaultargs)) self::set_defaultargs();
     $this->extratml = '';
   }
@@ -234,7 +234,7 @@ class ttheme extends tevents {
   
   public function parsearg($s, targs $args) {
     $s = $this->parse($s);
-$s = $args->callback($s);
+    $s = $args->callback($s);
     return strtr ($s, $args->data);
   }
   
@@ -540,18 +540,18 @@ $s = $args->callback($s);
 
 class targs {
   public $data;
-public $vars;
-public $callbacks;
+  public $vars;
+  public $callbacks;
   
   public static function i() {
     return litepublisher::$classes->newinstance(__class__);
   }
   
   public function __construct($thisthis = null) {
-$this->callbacks = array();
-$this->vars = new tarray2prop();
-$this->vars->array = &ttheme::$vars;
-
+    $this->callbacks = array();
+    $this->vars = new tarray2prop();
+    $this->vars->array = &ttheme::$vars;
+    
     if (!isset(ttheme::$defaultargs)) ttheme::set_defaultargs();
     $this->data = ttheme::$defaultargs;
     if (isset($thisthis)) $this->data['$this'] = $thisthis;
@@ -561,19 +561,19 @@ $this->vars->array = &ttheme::$vars;
     if (($name == 'link') && !isset($this->data['$link'])  && isset($this->data['$url'])) {
       return litepublisher::$site->url . $this->data['$url'];
     }
-
+    
     return $this->data['$' . $name];
   }
   
   public function __set($name, $value) {
     if (!$name || !is_string($name)) return;
     if (is_array($value)) return;
-
-if (is_callable($value)) {
-$this->callbacks['$' . $name] = $value;
-return;
-}
-
+    
+    if (is_callable($value)) {
+      $this->callbacks['$' . $name] = $value;
+      return;
+    }
+    
     if (is_bool($value)) {
       $value = $value ? 'checked="checked"' : '';
     }
@@ -603,14 +603,14 @@ return;
   public function parse($s) {
     return ttheme::i()->parsearg($s, $this);
   }
-
-public function callback($s) {
-foreach ($this->callbacks as $tag => $callback) {
-$s = str_replace($tag, call_user_func_array($callback, array($this)), $s);
-}
-
-return $s;
-}
+  
+  public function callback($s) {
+    foreach ($this->callbacks as $tag => $callback) {
+      $s = str_replace($tag, call_user_func_array($callback, array($this)), $s);
+    }
+    
+    return $s;
+  }
   
 }//class
 

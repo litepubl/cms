@@ -6,18 +6,18 @@
 
 (function( $){
   'use strict';
-
+  
   var tooltips = [];
-
-$.closetooltips = function() {
-if (!tooltips.length) return;
-
-      for (var i = tooltips.length - 1; i>= 0; i--) {
-          $(tooltips[i]).tooltip("hide");
-}
-
-tooltips.length = 0;
-};
+  
+  $.closetooltips = function() {
+    if (!tooltips.length) return;
+    
+    for (var i = tooltips.length - 1; i>= 0; i--) {
+      $(tooltips[i]).tooltip("hide");
+    }
+    
+    tooltips.length = 0;
+  };
   
   $.fn.settooltip = function() {
     return this.on("mouseenter.settooltip focus.settooltip",".tooltip-toggle:not(.tooltip-ready)",  function(event) {
@@ -29,20 +29,20 @@ tooltips.length = 0;
         container: 'body',
         placement: 'auto top'
       })
-    .on('show.bs.tooltip.singletip', function() {
-      tooltips.push(this);
-    })
-    .on("hide.bs.tooltip.singletip", function() {
-//remove from tooltips array
-      for (var i = tooltips.length - 1; i>= 0; i--) {
-        if (this === tooltips[i]) {
-          tooltips.splice(i, 1);
-          return;
+      .on('show.bs.tooltip.singletip', function() {
+        tooltips.push(this);
+      })
+      .on("hide.bs.tooltip.singletip", function() {
+        //remove from tooltips array
+        for (var i = tooltips.length - 1; i>= 0; i--) {
+          if (this === tooltips[i]) {
+            tooltips.splice(i, 1);
+            return;
+          }
         }
-      }
-    });
-
-           self.trigger(event);
+      });
+      
+      self.trigger(event);
     });
   };
   

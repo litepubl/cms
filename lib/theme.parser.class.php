@@ -146,10 +146,10 @@ class tthemeparser extends tevents {
   public function getfile($filename, $about) {
     $s = file_get_contents($filename);
     if ($s === false) return $this->error(sprintf('Error read "%s" file', $filename));
-
-$s = strip_utf($s);
+    
+    $s = strip_utf($s);
     $s = str_replace(array("\r\n", "\r", "\n\n"), "\n", $s);
-
+    
     //strip coments
     $s = preg_replace('/\s*\/\*.*?\*\/\s*/sm', "\n", $s);
     $s = preg_replace('/^\s*\/\/.*?$/m', '', $s);

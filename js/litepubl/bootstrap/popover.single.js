@@ -8,17 +8,17 @@
   'use strict';
   
   var popovers = [];
-
-$.closepopovers = function() {
-if (!popovers.length) return;
-
-      for (var i = popovers.length - 1; i>= 0; i--) {
-          $(popovers[i]).oldpopover("hide");
-}
-
-popovers.length = 0;
-};
-
+  
+  $.closepopovers = function() {
+    if (!popovers.length) return;
+    
+    for (var i = popovers.length - 1; i>= 0; i--) {
+      $(popovers[i]).oldpopover("hide");
+    }
+    
+    popovers.length = 0;
+  };
+  
   $.fn.singletip = function() {
     return this.off(".singletip")
     .on('show.bs.popover.singletip', function() {
@@ -45,9 +45,9 @@ popovers.length = 0;
   $.fn.oldpopover = $.fn.popover;
   $.fn.popover = function(options) {
     if (typeof  options === "object") {
-this.singletip();
-}
-
+      this.singletip();
+    }
+    
     return this.oldpopover(options);
   };
   

@@ -13,21 +13,21 @@
     photoswipe: false,
     holder: false,
     options: false,
-animatethumbs: false,
-onoptions: $.noop,
+    animatethumbs: false,
+    onoptions: $.noop,
     
     init: function(links) {
       litepubl.openimage = $.proxy(this.openimage, this);
-
-if (links && links.length) {
-      var self = this;
-      this.links = links.on("click.photoswipe", function() {
-        self.open($(this));
-        return false;
-      });
       
-      $.ready2($.proxy(this.openhash, this));
-}
+      if (links && links.length) {
+        var self = this;
+        this.links = links.on("click.photoswipe", function() {
+          self.open($(this));
+          return false;
+        });
+        
+        $.ready2($.proxy(this.openhash, this));
+      }
     },
     
     getoptions: function() {
@@ -43,16 +43,16 @@ if (links && links.length) {
           showHideOpacity: !this.animatethumbs,
           getThumbBoundsFn: !this.animatethumbs ? false : function(index) {
             var linkindex = self.pswp.items[index].linkindex;
-var img = self.links.eq(linkindex).find("img");
-    var offset = img.offset();
-
-    return {
-x:offset.left,
- y:offset.top,
- w:img.data('width')
-};
-},
-
+            var img = self.links.eq(linkindex).find("img");
+            var offset = img.offset();
+            
+            return {
+              x:offset.left,
+              y:offset.top,
+              w:img.data('width')
+            };
+          },
+          
           errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lng.error + '</a></div>',
           shareButtons: this.get_sharebuttons(),
           getTextForShare: function(shareButtonData) {
@@ -64,8 +64,8 @@ x:offset.left,
             return result;
           }
         };
-
-this.onoptions(this.options);
+        
+        this.onoptions(this.options);
       }
       
       return this.options;
@@ -108,8 +108,8 @@ this.onoptions(this.options);
     getitems: function(idpost, idfile) {
       var result = [];
       var ismobile = $(window).width() <= 768;
-var animatethumbs = this.animatethumbs;
-
+      var animatethumbs = this.animatethumbs;
+      
       var options = this.getoptions();
       options.galleryUID = parseInt(idpost);
       
@@ -161,8 +161,8 @@ var animatethumbs = this.animatethumbs;
         shareEl: false,
         counterEl: false,
         arrowEl: false,
-          showHideOpacity: true,
-          getThumbBoundsFn: false
+        showHideOpacity: true,
+        getThumbBoundsFn: false
       }, this.options);
       
       this.openitems([{

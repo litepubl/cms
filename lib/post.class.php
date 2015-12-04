@@ -714,16 +714,16 @@ class tpost extends titem implements  itemplate {
   }
   
   public function getcommentslink() {
-      $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
+    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
     if (($this->comstatus == 'closed') || !litepublisher::$options->commentspool) {
       if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
-return '';
-}
-
+        return '';
+      }
+      
       return sprintf($tml, $this->getcmtcount());
-}
-
-      //inject php code
+    }
+    
+    //inject php code
     return sprintf('<?php echo tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
   }
   

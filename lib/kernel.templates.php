@@ -540,8 +540,11 @@ class ttemplate extends tevents_storage {
   
   public function gettitle() {
     $title = $this->itemplate ? $this->context->gettitle() : '';
-    if ($this->callevent('ontitle', array(&$title))) return $title;
-    return $this->parsetitle($this->view->theme->title, $title);
+    if ($this->callevent('ontitle', array(&$title))) {
+      return $title;
+    } else {
+      return $this->parsetitle($this->view->theme->templates['title'], $title);
+    }
   }
   
   public function parsetitle($tml, $title) {
@@ -681,7 +684,6 @@ class ttheme extends tevents {
   public $parsing;
   public $templates;
   public $extratml;
-  private $themeprops;
   
   public static function exists($name) {
     return file_exists(litepublisher::$paths->data . 'themes'. DIRECTORY_SEPARATOR . $name . '.php') ||
@@ -721,7 +723,7 @@ class ttheme extends tevents {
     'custom' => array(),
     'customadmin' => array()
     );
-    $this->themeprops = new tthemeprops($this);
+    
     if (!isset(self::$defaultargs)) self::set_defaultargs();
     $this->extratml = '';
   }
@@ -736,7 +738,7 @@ class ttheme extends tevents {
   }
   
   public function __destruct() {
-    unset($this->themeprops, self::$instances[$this->name], $this->templates);
+    unset(self::$instances[$this->name], $this->templates);
     parent::__destruct();
   }
   
@@ -771,14 +773,6 @@ class ttheme extends tevents {
     return $this->templates['index'];
   }
   
-  public function __get($name) {
-    if (array_key_exists($name, $this->templates)) return $this->themeprops->setpath($name);
-    if ($name == 'comment') return $this->themeprops->setpath('content.post.templatecomments.comments.comment');
-    if ($name == 'sidebar') return $this->themeprops->setroot($this->templates['sidebars'][0]);
-    if (preg_match('/^sidebar(\d)$/', $name, $m)) return $this->themeprops->setroot($this->templates['sidebars'][$m[1]]);
-    return parent::__get($name);
-  }
-  
   public function __set($name, $value) {
     if (array_key_exists($name, $this->templates)) {
       $this->templates[$name] = $value;
@@ -786,14 +780,6 @@ class ttheme extends tevents {
     }
     return parent::__set($name, $value);
   }
-  
-  public function gettag($path) {
-    if (!array_key_exists($path, $this->templates)) $this->error(sprintf('Path "%s" not found', $path));
-    $this->themeprops->setpath($path);
-    $this->themeprops->tostring = true;
-    return $this->themeprops;
-  }
-  
   public function reg($exp) {
     if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
     $result = array();
@@ -918,6 +904,7 @@ class ttheme extends tevents {
   
   public function parsearg($s, targs $args) {
     $s = $this->parse($s);
+    $s = $args->callback($s);
     return strtr ($s, $args->data);
   }
   
@@ -1221,89 +1208,20 @@ class ttheme extends tevents {
   
 }//class
 
-class tthemeprops {
-  
-  public $path;
-  public $tostring;
-  private $root;
-  private $theme;
-  
-  public function __construct(ttheme $theme) {
-    $this->theme = $theme;
-    $this->root = &$theme->templates;
-    $this->path = '';
-    $this->tostring = false;
-  }
-  
-  public function __destruct() {
-    unset($this->theme, $this->root);
-  }
-  
-  public function error($path) {
-    litepublisher::$options->trace(sprintf('Path "%s" not found', $path));
-    litepublisher::$options->showerrors();
-  }
-  
-  public function getpath($name) {
-    return $this->path == '' ? $name : $this->path . '.' . $name;
-  }
-  
-  public function setpath($path) {
-    $this->root = &$this->theme->templates;
-    $this->path = $path;
-    $this->tostring = false;
-    return $this;
-  }
-  
-  public function setroot(array &$root) {
-    $this->setpath('');
-    $this->root = &$root;
-    return $this;
-  }
-  
-  public function __get($name) {
-    //echo "$name get tml<br>";
-    $path = $this->getpath($name);
-    if (!array_key_exists($path, $this->root)) $this->error($path);
-    if ($this->tostring) return $this->root[$path];
-    $this->path = $path;
-    return $this;
-  }
-  
-  public function __set($name, $value) {
-    $this->root[$this->getpath($name)] = $value;
-  }
-  
-  public function __call($name, $params) {
-    if (isset($params[0]) && is_object($params[0]) && ($params[0] instanceof targs)) {
-      return $this->theme->parsearg( (string) $this->$name, $params[0]);
-    } else {
-      return $this->theme->parse((string) $this->$name);
-    }
-  }
-  
-  public function __tostring() {
-    if (array_key_exists($this->path, $this->root)) {
-      return $this->root[$this->path];
-    } else {
-      $this->error($this->path);
-    }
-  }
-  
-  public function __isset($name) {
-    return array_key_exists($this->getpath($name), $this->root);
-  }
-  
-}//class
-
 class targs {
   public $data;
+  public $vars;
+  public $callbacks;
   
   public static function i() {
     return litepublisher::$classes->newinstance(__class__);
   }
   
   public function __construct($thisthis = null) {
+    $this->callbacks = array();
+    $this->vars = new tarray2prop();
+    $this->vars->array = &ttheme::$vars;
+    
     if (!isset(ttheme::$defaultargs)) ttheme::set_defaultargs();
     $this->data = ttheme::$defaultargs;
     if (isset($thisthis)) $this->data['$this'] = $thisthis;
@@ -1313,12 +1231,18 @@ class targs {
     if (($name == 'link') && !isset($this->data['$link'])  && isset($this->data['$url'])) {
       return litepublisher::$site->url . $this->data['$url'];
     }
+    
     return $this->data['$' . $name];
   }
   
   public function __set($name, $value) {
     if (!$name || !is_string($name)) return;
     if (is_array($value)) return;
+    
+    if (is_callable($value)) {
+      $this->callbacks['$' . $name] = $value;
+      return;
+    }
     
     if (is_bool($value)) {
       $value = $value ? 'checked="checked"' : '';
@@ -1348,6 +1272,14 @@ class targs {
   
   public function parse($s) {
     return ttheme::i()->parsearg($s, $this);
+  }
+  
+  public function callback($s) {
+    foreach ($this->callbacks as $tag => $callback) {
+      $s = str_replace($tag, call_user_func_array($callback, array($this)), $s);
+    }
+    
+    return $s;
   }
   
 }//class
@@ -1442,8 +1374,7 @@ class twidget extends tevents {
   public function expired($id) {
     switch ($this->cache) {
       case 'cache':
-      $cache = twidgetscache::i();
-      $cache->expired($id);
+      twidgetscache::i()->expired($id);
       break;
       
       case 'include':
@@ -1664,12 +1595,21 @@ class twidgets extends titems_storage {
   
   public function getsidebarindex($context, tview $view, $sidebar) {
     $items = $this->getwidgets($context, $view, $sidebar);
-    if ($context instanceof iwidgets) $context->getwidgets($items, $sidebar);
+    if ($context instanceof iwidgets) {
+      $context->getwidgets($items, $sidebar);
+      
+    }
+    
     if (litepublisher::$options->admincookie) $this->callevent('onadminlogged', array(&$items, $sidebar));
     if (litepublisher::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items, $sidebar));
     $this->callevent('ongetwidgets', array(&$items, $sidebar));
+    
     $result = $this->getsidebarcontent($items, $sidebar, !$view->customsidebar && $view->disableajax);
-    if ($context instanceof iwidgets) $context->getsidebar($result, $sidebar);
+    
+    if ($context instanceof iwidgets) {
+      $context->getsidebar($result, $sidebar);
+    }
+    
     $this->callevent('onsidebar', array(&$result, $sidebar));
     return $result;
   }
@@ -1740,7 +1680,7 @@ class twidgets extends titems_storage {
     return $items;
   }
   
-  private function getsidebarcontent(array $items, $sidebar, $disableajax) {
+  protected function getsidebarcontent(array $items, $sidebar, $disableajax) {
     $result = '';
     foreach ($items as $item) {
       $id = $item['id'];
@@ -1764,7 +1704,7 @@ class twidgets extends titems_storage {
       } else {
         switch ($cachetype) {
           case 'cache':
-          $content = $this->getwidgetcache($id, $sidebar);
+          $content = twidgetscache::i()->getcontent($id, $sidebar, false);
           break;
           
           case 'include':
@@ -1785,6 +1725,7 @@ class twidgets extends titems_storage {
       $this->callevent('onwidget', array($id, &$content));
       $result .= $content;
     }
+    
     return $result;
   }
   
@@ -1805,15 +1746,8 @@ class twidgets extends titems_storage {
       $widget = $this->getwidget($id);
       $content = $widget->getcontent($id, $sidebar);
     }
+    
     $content = sprintf('<!--%s-->', $content);
-    return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
-  }
-  
-  public function getwidgetcache($id, $sidebar) {
-    $title = $this->items[$id]['title'];
-    $cache = twidgetscache::i();
-    $content = $cache->getcontent($id, $sidebar);
-    $theme = ttheme::i();
     return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
   }
   
@@ -1881,7 +1815,11 @@ class twidgets extends titems_storage {
   }
   
   public function getwidgetcontent($id, $sidebar) {
-    if (!isset($this->items[$id])) return false;
+    if (!isset($this->items[$id])) {
+      return false;
+      
+    }
+    
     switch ($this->items[$id]['cache']) {
       case 'cache':
       $cache = twidgetscache::i();
@@ -1964,15 +1902,20 @@ class twidgetscache extends titems {
     }
   }
   
-  public function getcontent($id, $sidebar) {
+  public function getcontent($id, $sidebar, $onlybody = true) {
     if (isset($this->items[$id][$sidebar])) return $this->items[$id][$sidebar];
-    return $this->setcontent($id, $sidebar);
+    return $this->setcontent($id, $sidebar, $onlybody);
   }
   
-  public function setcontent($id, $sidebar) {
-    $widgets = twidgets::i();
-    $widget = $widgets->getwidget($id);
-    $result = $widget->getcontent($id, $sidebar);
+  public function setcontent($id, $sidebar, $onlybody = true) {
+    $widget = twidgets::i()->getwidget($id);
+    
+    if ($onlybody) {
+      $result = $widget->getcontent($id, $sidebar);
+    } else {
+      $result = $widget->getwidget($id, $sidebar);
+    }
+    
     $this->items[$id][$sidebar] = $result;
     $this->save();
     return $result;

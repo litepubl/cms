@@ -90,7 +90,7 @@ class twidget extends tevents {
   public function expired($id) {
     switch ($this->cache) {
       case 'cache':
-twidgetscache::i()->expired($id);
+      twidgetscache::i()->expired($id);
       break;
       
       case 'include':
@@ -312,20 +312,20 @@ class twidgets extends titems_storage {
   public function getsidebarindex($context, tview $view, $sidebar) {
     $items = $this->getwidgets($context, $view, $sidebar);
     if ($context instanceof iwidgets) {
-$context->getwidgets($items, $sidebar);
-
-}
-
+      $context->getwidgets($items, $sidebar);
+      
+    }
+    
     if (litepublisher::$options->admincookie) $this->callevent('onadminlogged', array(&$items, $sidebar));
     if (litepublisher::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items, $sidebar));
     $this->callevent('ongetwidgets', array(&$items, $sidebar));
-
+    
     $result = $this->getsidebarcontent($items, $sidebar, !$view->customsidebar && $view->disableajax);
-
+    
     if ($context instanceof iwidgets) {
-$context->getsidebar($result, $sidebar);
-}
-
+      $context->getsidebar($result, $sidebar);
+    }
+    
     $this->callevent('onsidebar', array(&$result, $sidebar));
     return $result;
   }
@@ -441,7 +441,7 @@ $context->getsidebar($result, $sidebar);
       $this->callevent('onwidget', array($id, &$content));
       $result .= $content;
     }
-
+    
     return $result;
   }
   
@@ -462,7 +462,7 @@ $context->getsidebar($result, $sidebar);
       $widget = $this->getwidget($id);
       $content = $widget->getcontent($id, $sidebar);
     }
-
+    
     $content = sprintf('<!--%s-->', $content);
     return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
   }
@@ -532,10 +532,10 @@ $context->getsidebar($result, $sidebar);
   
   public function getwidgetcontent($id, $sidebar) {
     if (!isset($this->items[$id])) {
-return false;
-
-}
-
+      return false;
+      
+    }
+    
     switch ($this->items[$id]['cache']) {
       case 'cache':
       $cache = twidgetscache::i();
@@ -625,13 +625,13 @@ class twidgetscache extends titems {
   
   public function setcontent($id, $sidebar, $onlybody = true) {
     $widget = twidgets::i()->getwidget($id);
-
-if ($onlybody) {
-    $result = $widget->getcontent($id, $sidebar);
-} else {
-    $result = $widget->getwidget($id, $sidebar);
-}
-
+    
+    if ($onlybody) {
+      $result = $widget->getcontent($id, $sidebar);
+    } else {
+      $result = $widget->getwidget($id, $sidebar);
+    }
+    
     $this->items[$id][$sidebar] = $result;
     $this->save();
     return $result;
