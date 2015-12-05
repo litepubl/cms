@@ -569,7 +569,7 @@ class targs {
     if (!$name || !is_string($name)) return;
     if (is_array($value)) return;
     
-    if (is_callable($value)) {
+    if (is_array($value) && is_callable($value)) {
       $this->callbacks['$' . $name] = $value;
       return;
     }

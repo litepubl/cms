@@ -64,7 +64,7 @@ function installoptions($email, $language) {
   $options->commentpages = true;
   $options->commentsperpage = 100;
   $options->comments_invert_order = false;
-  $options->commentspull = false;
+  $options->commentspool = false;
   
   $versions = strtoarray(file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'versions.txt'));
   $options->version = $versions[0];

@@ -320,6 +320,7 @@ class tadminhtml {
     'center' => 'text-center'
     );
     
+$list = explode(' ', $s);
     foreach ($list as $i => $v) {
       if (isset($map[$v])) {
         $list[$i] = $map[$v];
@@ -529,7 +530,7 @@ class tadminhtml {
       }
     }
     
-    return $result ? sprintf($'<ul>%s</ul>', $result);
+    return $result ? sprintf('<ul>%s</ul>', $result) : '';
   }
   
   public function linkproplist(array $props) {

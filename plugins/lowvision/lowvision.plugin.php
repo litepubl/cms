@@ -13,18 +13,10 @@ class lowvision extends tplugin {
   
   public function install() {
     $plugindir = basename(dirname(__file__));
-    $js = tjsmerger::i();
-    $js->lock();
-    $js->add('default', "plugins/$plugindir/resource/thumbnails.min.js");
-    $js->unlock();
-    
-    $css = tcssmerger::i();
-    $css->lock();
-    $css->add('default', "plugins/$plugindir/resource/thumbnails.min.css");
-    $css->add('admin', "plugins/$plugindir/resource/admin.thumbnails.min.css");
-    $css->unlock();
+tjsmerger::i()->add('default', "plugins/$plugindir/resource/lowvision.min.js");
+tcssmerger::i()->add('default', "plugins/$plugindir/resource/lowvision.min.css");
 
-$about = tplugins::getabout(basename(dirname(__file__));
+$about = tplugins::getabout(basename(dirname(__file__)));
 $this->data['idwidget'] = tcustomwidget::i()->add(1, $about['title'], file_get_contents(dirname(__file__) . '/resource/widget.html'), 'widget');
 $this->save();
   }
@@ -33,16 +25,8 @@ $this->save();
 tcustomwidget::i()->delete($this->idwidget);
 
     $plugindir = basename(dirname(__file__));
-    $js = tjsmerger::i();
-    $js->lock();
-    $js->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.js");
-    $js->unlock();
-    
-    $css = tcssmerger::i();
-    $css->lock();
-    $css->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.css");
-    $css->deletefile('admin', "plugins/$plugindir/resource/admin.thumbnails.min.css");
-    $css->unlock();
-   }
+tjsmerger::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.js");
+tcssmerger::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.css");
+}
 
-}//class    
+}

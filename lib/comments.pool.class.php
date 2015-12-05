@@ -36,7 +36,7 @@ class tcommentspool extends tpoolitems {
   }
   
   public function getlink($idpost, $tml) {
-    return sprintf($tml, $this->getlangcount($this->get($idpost));
+    return sprintf($tml, $this->getlangcount($this->get($idpost)));
   }
   
 }//class
