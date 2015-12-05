@@ -1,0 +1,36 @@
+body.lowvision {
+    font-size: 18px !important;
+}
+
+.lowvision  h3{
+    font-size: 28px !important;
+}
+
+.lowvision  h4{
+    font-size: 24px !important;
+}
+
+.lowvision  h5 {
+    font-size: 22px !important;
+}
+
+.lowvision .btn:focus {
+    outline: dotted 2px #000
+}
+
+.lowvision .nav>li>a:hover,
+.lowvision .nav>li>a:focus,
+.lowvision div.active:focus,
+.lowvision .close:hover,
+.lowvision .close:focus {
+    outline: dotted 1px #000
+}
+
+.lowvision-off,
+.lowvision .lowvision-on {
+display: none;
+}
+
+.lowvision .lowvision-off {
+display: inline;
+}

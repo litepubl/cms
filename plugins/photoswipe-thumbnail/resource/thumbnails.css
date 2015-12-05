@@ -8,14 +8,14 @@
   position:relative;
   display: block;
   overflow: hidden;
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border: 1px solid transparent;
   border-radius: @border-radius-base;
 }
 
 .image img {
-  height:150px;
+  height:120px;
   position:absolute;
   top:0;
   left:50%;

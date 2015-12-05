@@ -26,7 +26,7 @@ class photoswipethumbnail extends tplugin {
     
     $parser = tmediaparser::i();
     $parser->previewwidth = 0;
-    $parser->previewheight = 150;
+    $parser->previewheight = 120;
     $parser->ratio = true;
     $parser->clipbounds = false;
     $parser->save();
@@ -48,8 +48,8 @@ class photoswipethumbnail extends tplugin {
     $css->unlock();
     
     $parser = tmediaparser::i();
-    $parser->previewwidth = 150;
-    $parser->previewheight = 150;
+    $parser->previewwidth = 120;
+    $parser->previewheight = 120;
     $parser->ratio = true;
     $parser->clipbounds = true;
     $parser->save();

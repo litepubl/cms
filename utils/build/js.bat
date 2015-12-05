@@ -134,6 +134,9 @@ cd ..\..\..\photoswipe-thumbnail\resource
 %css% admin.thumbnails.css -o admin.thumbnails.min.css
 %css% thumbnails.css -o thumbnails.min.css
 %mini%thumbnails.js --js_output_file=thumbnails.min.js
+cd ..\..\lowvision\resource
+%css% lowvision.css -o lowvision.min.css
+%mini%lowvision.js --js_output_file=lowvision.min.js
 cd ..\..\..\themes\default\
 %less% less\logo.less css\logo.css
 %css% logo.css -o logo.min.css
