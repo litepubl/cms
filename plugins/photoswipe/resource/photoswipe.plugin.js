@@ -42,7 +42,7 @@
           galleryPIDs: true,
           showHideOpacity: !this.animatethumbs,
           getThumbBoundsFn: !this.animatethumbs ? false : function(index) {
-            var linkindex = self.pswp.items[index].linkindex;
+            var linkindex = self.photoswipe.items[index].linkindex;
             var img = self.links.eq(linkindex).find("img");
             var offset = img.offset();
             
@@ -56,7 +56,7 @@
           errorMsg: '<div class="pswp__error-msg"><a href="%url%" target="_blank">' + lng.error + '</a></div>',
           shareButtons: this.get_sharebuttons(),
           getTextForShare: function(shareButtonData) {
-            var result = self.pswp.currItem.title || '';
+            var result = self.photoswipe.currItem.title || '';
             if (!result || (/\.(jpg|jpeg|png|bmp)$/i).test(result)) {
               result = $("title").text();
             }
