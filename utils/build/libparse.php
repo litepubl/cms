@@ -105,6 +105,7 @@ makekernel($dir, 'kernel.templates.php',  array(
 'views.class.php', 
 'template.class.php',
 'theme.class.php',
+'theme.args.class.php',
 'widgets.class.php',
 'guard.class.php'
 ));

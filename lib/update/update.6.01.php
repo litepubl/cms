@@ -22,9 +22,19 @@ $classes->items['tpoolitems'] = array('kernel.php', '', 'items.pool.class.php');
 unset($classes->items['tcommentspull']);
 $classes->items['tcommentspool'] = array('comments.pool.class.php', '');
 
+$classes->items['targs'][2] = 'theme.args.class.php';
 $classes->save();
 
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;
 unset(litepublisher::$options->data['commentspull']);
 litepublisher::$options->save();
+
+$parser = tmediaparser::i();
+    if (!isset($parser->data['thumboptions'])) {
+    $parser->data['previewmode'] = $parser->data['clipbounds'] ? 'fixed' : 'min';
+unset($parser->data['clipbounds']);
+unset($parser->data['ratio']);
+unset($parser->data['enablepreview']);
+$parser->save();
+}
 }

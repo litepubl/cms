@@ -11,6 +11,8 @@
     links: false,
     opened: false,
     photoswipe: false,
+ready: true,
+script: false,
     holder: false,
     options: false,
     animatethumbs: false,
@@ -29,6 +31,14 @@
         $.ready2($.proxy(this.openhash, this));
       }
     },
+
+load_script: function(callback) {
+if (this.script) {
+this.script.done(callback);
+} else {
+this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", callback);
+}
+},
     
     getoptions: function() {
       if (!this.options) {
@@ -70,8 +80,20 @@
       
       return this.options;
     },
-    
+
     open: function(link) {
+if (this.ready) {
+this.openlink(link);
+} else {
+var self = this;
+this.load(function() {
+self.ready = true;
+self.openlink(link);
+});
+}
+},
+
+        openlink: function(link) {
       if (this.opened) return false;
       this.opened = true;
       

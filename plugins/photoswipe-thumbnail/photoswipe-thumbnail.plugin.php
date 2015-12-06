@@ -25,10 +25,9 @@ class photoswipethumbnail extends tplugin {
     $css->unlock();
     
     $parser = tmediaparser::i();
-    $parser->previewwidth = 0;
+    $parser->previewwidth = 120;
     $parser->previewheight = 120;
-    $parser->ratio = true;
-    $parser->clipbounds = false;
+    $parser->previewmode = 'min';
     $parser->save();
     
     $this->rescale();
@@ -50,8 +49,7 @@ class photoswipethumbnail extends tplugin {
     $parser = tmediaparser::i();
     $parser->previewwidth = 120;
     $parser->previewheight = 120;
-    $parser->ratio = true;
-    $parser->clipbounds = true;
+    $parser->previewmode = 'fixed';
     $parser->save();
     
     $this->rescale();
@@ -66,7 +64,7 @@ class photoswipethumbnail extends tplugin {
     $items = $db->res2assoc($db->query("
     select  files.id as id, files.filename as filename, thumbs.id as idthumb, thumbs.filename as filenamethumb
     from $t  files, $t thumbs
-    where thumbs.parent > 0 and thumbs.height <> $parser->previewheight and files.id = thumbs.parent
+    where files.preview > 0 and thumbs.id = files.preview
     "));
     
     foreach ($items as $item) {

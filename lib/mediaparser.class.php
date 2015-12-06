@@ -15,9 +15,7 @@ class tmediaparser extends tevents {
     parent::create();
     $this->basename = 'mediaparser';
     $this->addevents('added', 'onbefore', 'onresize', 'noresize', 'onimage');
-    $this->data['enablepreview'] = true;
-    $this->data['ratio'] = true;
-    $this->data['clipbounds'] = true;
+    $this->data['previewmode'] = 'fixed';
     $this->data['previewwidth'] = 120;
     $this->data['previewheight'] = 120;
     $this->data['maxwidth'] = 1200;
@@ -231,7 +229,7 @@ class tmediaparser extends tevents {
       
       $resize = $this->alwaysresize && ($maxwidth > 0) && ($maxheight > 0);
       if (!$resize) $resize = ($item['width'] > $maxwidth ) || ($item['height'] > $maxheight);
-      $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->enablepreview);
+      $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->previewmode != 'none');
       $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
       
       if (($resize || $enablepreview || $enablemidle) && ($image = self::readimage($srcfilename))) {
@@ -329,7 +327,7 @@ class tmediaparser extends tevents {
       if (!strbegin($filename, litepublisher::$paths->files)) $filename = litepublisher::$paths->files. ltrim($filename, '\/');
       $destfilename = self::replace_ext($filename, '.jpg');
       $destfilename = self::makeunique($destfilename);
-      if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
+      if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
         $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
         $item['media'] = 'image';
         $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
@@ -491,49 +489,52 @@ class tmediaparser extends tevents {
     return false;
   }
   
-  public static function createsnapshot($srcfilename, $destfilename, $x, $y, $ratio, $clipbounds) {
+  public static function createsnapshot($srcfilename, $destfilename, $x, $y, $mode) {
     if (!($source = self::readimage($srcfilename))) {
       return false;
     }
     
-    $r = self::createthumb($source, $destfilename, $x, $y, $ratio, $clipbounds);
+    $r = self::createthumb($source, $destfilename, $x, $y, 85, $mode);
     imagedestroy($source);
     return $r;
   }
   
-  public static function createthumb($source, $destfilename, $x, $y, $save_ratio, $clipbounds, $quality_snapshot) {
+  public static function createthumb($source, $destfilename, $x, $y, $quality, $mode) {
     if (!$source) return false;
     $sourcex = imagesx($source);
     $sourcey = imagesy($source);
+if (!$x) $x = $y;
+if (!$y) $y = $x;
     if (($x >= $sourcex) && ($y >= $sourcey)) return false;
     
-    if ($clipbounds) {
+switch ($mode) {
+case 'fixed':
       $ratio = $x / $y;
+//clip source size
       if ($sourcex/$sourcey > $ratio) {
         $sourcex = $sourcey *$ratio;
       } else {
         $sourcey = $sourcex /$ratio;
       }
-    } elseif ($save_ratio) {
+break;
+
+case 'max':
+case 'min':
       $ratio = $sourcex / $sourcey;
-      if (!$y) {
-        //zero height
-        $y = $x /$ratio;
-      } else if (!$x) {
-        //zero width
-        $x = $y * $ratio;
-      } else {
-        if ($x/$y > $ratio) {
+        if ($mode == 'max' ? $x/$y > $ratio : $x/$y <= $ratio) {
           $x = $y *$ratio;
         } else {
           $y = $x /$ratio;
         }
-      }
+break;
+
+default:
+throw new Exception("Unknow thumbnail options $mode");
     }
     
     $dest = imagecreatetruecolor($x, $y);
     imagecopyresampled($dest, $source, 0, 0, 0, 0, $x, $y, $sourcex, $sourcey);
-    imagejpeg($dest, $destfilename, $quality_snapshot);
+    imagejpeg($dest, $destfilename, $quality);
     imagedestroy($dest);
     @chmod($destfilename, 0666);
     
@@ -546,7 +547,7 @@ class tmediaparser extends tevents {
   public function getsnapshot($srcfilename, $image) {
     $destfilename = self::replace_ext($srcfilename, '.preview.jpg');
     $destfilename = self::makeunique($destfilename);
-    if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->ratio, $this->clipbounds, $this->quality_snapshot)) {
+    if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
       $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
       $result['media'] = 'image';
       $result['mime'] = 'image/jpeg';
