@@ -536,7 +536,7 @@ class ttheme extends tevents {
     return false;
   }
   
-}//class
+}
 
 class emptyclass{
 public function __get($name) { return ''; }

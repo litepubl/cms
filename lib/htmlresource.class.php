@@ -214,7 +214,7 @@ class tadminhtml {
     foreach ($items as $index => $value) {
       $result .= strtr($tml, array(
       '$index' => $index,
-      '$checked' => $value == $selected ? 'checked="checked"' : '',
+      '$checked' => $index == $selected ? 'checked="checked"' : '',
       '$name' => $name,
       '$value' => self::specchars($value)
       ));

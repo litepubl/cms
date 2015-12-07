@@ -129,13 +129,13 @@ class tadminoptions extends tadminmenu {
       $parser = tmediaparser::i();
       $args->previewwidth = $parser->previewwidth;
       $args->previewheight = $parser->previewheight;
-$args->previewsize = $html->getradioitems('previewsize', array(
+$args->previewmode = $html->getradioitems('previewmode', array(
 'fixed' => $lang->fixedsize,
-'max' => $lang-maxsize,
-'min' => $preview->minsize,
+'max' => $lang->maxsize,
+'min' => $lang->minsize,
 'none' => $lang->disablepreview,
-), $parser->previewsize);
-      
+), $parser->previewmode);
+    
       $args->maxwidth = $parser->maxwidth;
       $args->maxheight = $parser->maxheight;
       $args->alwaysresize = $parser->alwaysresize;
@@ -166,7 +166,7 @@ $args->previewsize = $html->getradioitems('previewsize', array(
       [text=midleheight]
       
       <h4>$lang.previewoptions</h4>
-$previewsize
+$previewmode
       [text=previewwidth]
       [text=previewheight]
       [text=quality_snapshot]
@@ -367,7 +367,7 @@ $previewsize
       
       case 'files':
       $parser = tmediaparser::i();
-      $parser->previewsize = $previewsize;
+      $parser->previewmode = $previewmode;
       $parser->previewwidth = (int) trim($previewwidth);
       $parser->previewheight = (int) trim($previewheight);
       
