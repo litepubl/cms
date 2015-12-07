@@ -125,12 +125,16 @@ class tadminoptions extends tadminmenu {
       ', $args);
       break;
       
-      case 'files':      $parser = tmediaparser::i();
-      $args->enablepreview = $parser->enablepreview;
-      $args->ratio = $parser->ratio;
-      $args->clipbounds = $parser->clipbounds;
+      case 'files':
+      $parser = tmediaparser::i();
       $args->previewwidth = $parser->previewwidth;
       $args->previewheight = $parser->previewheight;
+$args->previewsize = $html->getradioitems('previewsize', array(
+'fixed' => $lang->fixedsize,
+'max' => $lang-maxsize,
+'min' => $preview->minsize,
+'none' => $lang->disablepreview,
+), $parser->previewsize);
       
       $args->maxwidth = $parser->maxwidth;
       $args->maxheight = $parser->maxheight;
@@ -161,10 +165,8 @@ class tadminoptions extends tadminmenu {
       [text=midlewidth]
       [text=midleheight]
       
-      <h4>$lang.previewsize</h4>
-      [checkbox=enablepreview]
-      [checkbox=ratio]
-      [checkbox=clipbounds]
+      <h4>$lang.previewoptions</h4>
+$previewsize
       [text=previewwidth]
       [text=previewheight]
       [text=quality_snapshot]
@@ -365,9 +367,7 @@ class tadminoptions extends tadminmenu {
       
       case 'files':
       $parser = tmediaparser::i();
-      $parser->enablepreview = isset($enablepreview);
-      $parser->ratio = isset($ratio);
-      $parser->clipbounds = isset($clipbounds);
+      $parser->previewsize = $previewsize;
       $parser->previewwidth = (int) trim($previewwidth);
       $parser->previewheight = (int) trim($previewheight);
       

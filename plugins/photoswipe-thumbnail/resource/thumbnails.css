@@ -11,13 +11,13 @@
   width: 120px;
   height: 120px;
   border: 1px solid transparent;
-  border-radius: @border-radius-base;
+  border-radius: 4px;
 }
 
 .image img {
-  height:120px;
   position:absolute;
-  top:0;
   left:50%;
+  top:50%;
   margin-left:-50%;
+  margin-top:-50%;
 }

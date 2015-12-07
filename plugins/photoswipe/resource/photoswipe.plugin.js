@@ -19,6 +19,9 @@ script: false,
     onoptions: $.noop,
     
     init: function(links) {
+//templates and photoswipe  library in mysel module
+this.ready = "photoswipe" in litepubl.tml;
+
       litepubl.openimage = $.proxy(this.openimage, this);
       
       if (links && links.length) {
@@ -27,6 +30,10 @@ script: false,
           self.open($(this));
           return false;
         });
+
+if (!this.ready) {
+links.one("focus.ready mouseenter.ready", $.proxy(this.load_script, this, false));
+}
         
         $.ready2($.proxy(this.openhash, this));
       }
@@ -36,7 +43,11 @@ load_script: function(callback) {
 if (this.script) {
 this.script.done(callback);
 } else {
-this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", callback);
+var self = this;
+this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", function() {
+self.ready = true;
+if (callback) callback();
+});
 }
 },
     
@@ -81,19 +92,11 @@ this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoption
       return this.options;
     },
 
-    open: function(link) {
-if (this.ready) {
-this.openlink(link);
-} else {
-var self = this;
-this.load(function() {
-self.ready = true;
-self.openlink(link);
-});
+        open: function(link) {
+if (!this.ready) {
+return this.load_script($.proxy(this.open, this, link));
 }
-},
 
-        openlink: function(link) {
       if (this.opened) return false;
       this.opened = true;
       
@@ -109,6 +112,11 @@ self.openlink(link);
     
     openitems: function(items) {
       if (this.opened || !items.length) return false;
+
+if (!this.ready) {
+return this.load_script($.proxy(this.openitems, this, items));
+}
+
       this.opened = true;
       litepubl.stat("photoswipe_opening");
       
@@ -174,6 +182,10 @@ self.openlink(link);
     },
     
     openimage: function(image) {
+if (!this.ready) {
+return this.load_script($.proxy(this.openimage, this, image));
+}
+
       // save current options for swithing single options
       var options = this.getoptions();
       this.options = $.extend({
