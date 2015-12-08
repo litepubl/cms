@@ -11,7 +11,7 @@
     vid: '',
     width: 500,
     height: 344,
-    tml: '<iframe src=https://www.youtube.com/embed/%%vid%%?autoplay=1&html5=1" width="%%width%%" height="%%height%%" border="0"></iframe>' ,
+    tml: '<iframe src="https://www.youtube.com/embed/%%vid%%?autoplay=1" width="%%width%%" height="%%height%%" frameborder="0" type="text/html" ></iframe>' ,
     dialog: false,
     
     init: function() {
@@ -42,7 +42,7 @@
         }),
         
         open: function(dialog) {
-          dialog.removeClass('in');
+          //dialog.removeClass('in');
         },
         
         close: function(dialog) {
