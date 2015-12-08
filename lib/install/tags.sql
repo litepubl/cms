@@ -6,12 +6,12 @@
   icon int unsigned NOT NULL default '0',
   idview int unsigned NOT NULL default '1',
   idperm int unsigned NOT NULL default '0',
-  title text NOT NULL,
   includeparents boolean default false,
   includechilds boolean default false,
   invertorder boolean default false,
   lite boolean default false,
   liteperpage int unsigned NOT NULL default '1000',
+  title text NOT NULL,
 
   PRIMARY KEY  (id),
   KEY parent (parent)

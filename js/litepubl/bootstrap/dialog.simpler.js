@@ -20,7 +20,7 @@
       this.default_options = {
         title: "",
         html: "",
-      css: "button.close{margin-top:-10px}",
+      css: "button.close{margin-top:-2px}",
         width: false,
         height: false,
         open: $.noop,

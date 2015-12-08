@@ -4,7 +4,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-.image{
+.image,
+.file-image {
   position:relative;
   display: block;
   overflow: hidden;
@@ -14,7 +15,8 @@
   border-radius: 4px;
 }
 
-.image img {
+.image img,
+.file-image img {
   position:absolute;
   left:50%;
   top:50%;

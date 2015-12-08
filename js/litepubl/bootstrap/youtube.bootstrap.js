@@ -9,8 +9,8 @@
   
   $.YoutubeBootstrap = Class.extend({
     vid: '',
-    width: 500,
-    height: 344,
+//size in percent 1 - 100
+size: 90,
     tml: '<iframe src="https://www.youtube.com/embed/%%vid%%?autoplay=1" width="%%width%%" height="%%height%%" frameborder="0" type="text/html" ></iframe>' ,
     dialog: false,
     
@@ -30,15 +30,18 @@
         //wait 100ms to clean iframe
         this.dialog.removeOnclose = false;
       }
+
+var width = Math.round($(window).width()  * this.size / 100);
+var height = Math.round($(window).height()  * this.size / 100);
       
       var self = this;
       this.dialog.open({
-        width: this.width,
-        height: this.height,
+        width: width,
+        height: height,
         html: $.simpletml(this.tml, {
           vid: vid,
-          width: this.width,
-          height: this.height
+          width: width,
+          height: height
         }),
         
         open: function(dialog) {
