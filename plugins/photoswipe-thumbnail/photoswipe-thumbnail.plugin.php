@@ -71,7 +71,7 @@ class photoswipethumbnail extends tplugin {
       $srcfilename = litepublisher::$paths->files . $item['filename'];
       $destfilename = litepublisher::$paths->files . $item['filenamethumb'];
       $image = tmediaparser::readimage($srcfilename);
-      if ($size = tmediaparser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->ratio, $parser->clipbounds, $parser->quality_snapshot)) {
+      if ($size = tmediaparser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
         $db->updateassoc(array(
         'id' => $item['idthumb'],
         'width' => $size['width'],
