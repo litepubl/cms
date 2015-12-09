@@ -373,30 +373,34 @@ class tcommontags extends titems implements  itemplate {
   public function getcont() {
     $result = '';
     $this->callevent('onbeforecontent', array(&$result));
-    $theme = ttheme::i();
-    if ($this->id == 0) {
-      $items = $this->getsortedcontent(array(
-      'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
-      'subcount' => '<strong>($itemscount)</strong>',
-      'subitems' =>       '<ul>$item</ul>'
-      ),
-      0, 'count', 0, 0, false);
-      $result .= sprintf('<ul>%s</ul>', $items);
-      $this->callevent('oncontent', array(&$result));
-      return $result;
-    }
-    
+
+if (!$this->id) {
+$result .= $this->getcont_all();
+    } else {
+$view = tview::getview($this);
+
     if ($this->getcontent()) {
       ttheme::$vars['menu'] = $this;
-      $result .= $theme->parse($theme->templates['content.menu']);
+      $result .= $view->theme->parse($theme->templates['content.menu']);
     }
     
     $list = $this->getidposts($this->id);
     $item = $this->getitem($this->id);
-    $result .= $theme->getpostsnavi($list, (int) $item['lite'], $item['url'], $item['itemscount'], $item['liteperpage']);
+    $result .= $view->theme->getpostsnavi($list, (int) $item['lite'], $item['url'], $item['itemscount'], $item['liteperpage']);
+}
+
     $this->callevent('oncontent', array(&$result));
     return $result;
   }
+
+public function getcont_all() {
+      return  sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
+      'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+      'subcount' => '<strong>($itemscount)</strong>',
+      'subitems' =>       '<ul>$item</ul>'
+      ),
+      0, 'count', 0, 0, false));
+}
   
   public function get_sorted_posts($id, $count, $invert) {
     $ti = $this->itemsposts->thistable;
@@ -412,14 +416,20 @@ class tcommontags extends titems implements  itemplate {
   }
   
   public function getidposts($id) {
-    if (isset($this->_idposts[$id])) return $this->_idposts[$id];
+    if (isset($this->_idposts[$id])) {
+return $this->_idposts[$id];
+}
+
     $item = $this->getitem($id);
-    
     $includeparents = (int) $item['includeparents'];
     $includechilds = (int) $item['includechilds'];
-    $perpage = (int) $item['lite'] ? $item['liteperpage'] : litepublisher::$options->perpage;
-    $posts = $this->factory->posts;
-    $p = $posts->thistable;
+
+$view = tview::i($item['idview']);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $order = $view->invertorder ? 'asc' : 'desc';
+    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+
+    $posts = $this->factory->posts;    $p = $posts->thistable;
     $t = $this->thistable;
     $ti = $this->itemsposts->thistable;
     $postprop = $this->itemsposts->postprop;
@@ -428,20 +438,19 @@ class tcommontags extends titems implements  itemplate {
     if ($includeparents || $includechilds) {
       $this->loadall();
       $all = array($id);
-      if ($includeparents) $all = array_merge($all, $this->getparents($id));
-      if ($includechilds) $all = array_merge($all, $this->getchilds($id));
+
+      if ($includeparents) {
+$all = array_merge($all, $this->getparents($id));
+}
+
+      if ($includechilds) {
+$all = array_merge($all, $this->getchilds($id));
+}
+
       $tags = sprintf('in (%s)', implode(',', $all));
     } else {
       $tags = " = $id";
     }
-    
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
-    $order = (int) $item['invertorder'] ? 'asc' : 'desc';
-    /*
-    $this->_idposts[$id] = $posts->select("$p.status = 'published' and $p.id in
-    (select DISTINCT post from $ti where $ti.item $tags)",
-    "order by $p.posted $order limit $from, $perpage");
-    */
     
     $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'

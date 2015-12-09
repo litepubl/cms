@@ -125,6 +125,10 @@ class tdbmanager  {
   public function key_exists($table, $key) {
     return $this->query("SHOW index FROM $this->prefix$table where Key_name = '$key'")->num_rows;
   }
+
+  public function delete_column($table, $column) {
+$this->alter($table, "drop $column");
+}
   
   public function getdatabases() {
     if ($res = $this->query("show databases")) {

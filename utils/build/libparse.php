@@ -102,6 +102,7 @@ makekernel($dir, 'kernel.php', array(
 
 makekernel($dir, 'kernel.templates.php',  array(
 'local.class.php',
+'view.class.php', 
 'views.class.php', 
 'template.class.php',
 'theme.class.php',
