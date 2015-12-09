@@ -12,7 +12,7 @@ function tuseroptionsInstall($self) {
   $self->save();
   
   $manager = tdbmanager ::i();
-  $manager->CreateTable($self->table, file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'user.options.sql'));
+  $manager->CreateTable($self->table, file_get_contents(dirname(__file__) . '/sql/user.options.sql'));
 }
 
 function tuseroptionsUninstall($self) {

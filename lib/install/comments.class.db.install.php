@@ -7,7 +7,7 @@
 
 function tcommentsInstall($self) {
   $manager = tdbmanager ::i();
-  $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
+  $dir = dirname(__file__) . '/sql/';
   $manager->CreateTable($self->table, file_get_contents($dir .'comments.sql'));
   $manager->CreateTable($self->rawtable, file_get_contents($dir .'comments.raw.sql'));
   

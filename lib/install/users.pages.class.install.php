@@ -8,8 +8,8 @@
 function tuserpagesInstall($self) {
   if ($self->dbversion) {
     $manager = tdbmanager::i();
-    $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-    $manager->CreateTable($self->table, file_get_contents($dir .'userpage.sql'));
+    $dir = dirname(__file__) . '/sql/';
+    $manager->CreateTable($self->table, file_get_contents($dir .'user.page.sql'));
   }
   
   $v = $self->createpage;

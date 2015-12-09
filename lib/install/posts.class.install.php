@@ -9,10 +9,10 @@ function tpostsInstall($self) {
   if ('tposts' != get_class($self)) return;
   if (dbversion) {
     $manager = tdbmanager ::i();
-    $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-    $manager->CreateTable($self->table, file_get_contents($dir .'posts.sql'));
-    $manager->CreateTable('pages', file_get_contents($dir .'postspages.sql'));
-    $manager->CreateTable($self->rawtable, file_get_contents($dir .'raw.sql'));
+    $dir = dirname(__file__) . '/sql/';
+    $manager->CreateTable($self->table, file_get_contents($dir .'post.sql'));
+    $manager->CreateTable('pages', file_get_contents($dir .'post.pages.sql'));
+    $manager->CreateTable($self->rawtable, file_get_contents($dir .'post.raw.sql'));
   } else {
     $dir = litepublisher::$paths->data . 'posts';
     @mkdir($dir, 0777);

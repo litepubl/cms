@@ -7,7 +7,7 @@
 
 function tcronInstall($self) {
   $manager = tdbmanager ::i();
-  $manager->CreateTable('cron', file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'cron.sql'));
+  $manager->CreateTable('cron', file_get_contents(dirname(__file__) . '/sql/cron.sql'));
   
   litepublisher::$urlmap->add('/croncron.htm', get_class($self), null, 'get');
   

@@ -7,7 +7,7 @@
 
 function tmetapostInstall($self) {
   if (dbversion) {
-    $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
+    $dir = dirname(__file__) . '/sql/';
     $manager = tdbmanager ::i();
     $manager->CreateTable($self->table, file_get_contents($dir .'post.meta.sql'));
   }

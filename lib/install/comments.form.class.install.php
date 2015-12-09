@@ -14,11 +14,3 @@ function tcommentformInstall($self) {
 function tcommentformUninstall($self) {
   turlmap::unsub($self);
 }
-
-function tkeptcommentsInstall($self) {
-  if (dbversion) {
-    $manager = tdbmanager ::i();
-    $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-    $manager->CreateTable($self->table, file_get_contents($dir .'comments.kept.sql'));
-  }
-}

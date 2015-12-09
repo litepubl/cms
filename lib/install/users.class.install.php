@@ -7,10 +7,10 @@
 
 function tusersInstall($self) {
   $manager = tdbmanager::i();
-  $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-  $manager->CreateTable($self->table, file_get_contents($dir .'users.sql'));
+  $dir = dirname(__file__) . '/sql/;
+  $manager->CreateTable($self->table, file_get_contents($dir .'user.sql'));
   //$manager->setautoincrement($self->table, 2);
-  $manager->CreateTable($self->grouptable, file_get_contents($dir .'usersgroups.sql'));
+  $manager->CreateTable($self->grouptable, file_get_contents($dir .'user.groups.sql'));
   
   $id = $self->db->add(array(
   'email' =>litepublisher::$options->email,
