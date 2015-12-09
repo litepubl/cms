@@ -32,24 +32,7 @@ class tthemeparser extends tevents {
     $this->fixsubcount = true;
     
     $this->sidebar_index = 0;
-    $this->pathmap = $this->createpathmap();
-  }
-  
-  private function createpathmap() {
-    $result = array();
-    $post = 'content.post.filelist.';
-    $excerpt = 'content.excerpts.excerpt.filelist.';
-    foreach(array('file', 'image',  'audio', 'video', 'flash') as $name) {
-      $key = $post . $name;
-      $result[$key . "s.$name"] = $key;
-      $keyexcerpt = $excerpt . $name;
-      $result[$keyexcerpt . "s.$name"] = $keyexcerpt;
-    }
-    
-    $result[$post . 'images.preview'] = $post . 'preview';
-    $result[$excerpt . 'images.preview'] = $excerpt . 'preview';
-    
-    return $result;
+    $this->pathmap = array();
   }
   
   public function parse(ttheme $theme) {
@@ -293,6 +276,10 @@ class tthemeparser extends tevents {
     }
     
     public function settag($parent, $s) {
+        if (isset($this->pathmap[$parent])) {
+$parent = $this->pathmap[$parent];
+}
+
       if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) ||
       preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
         $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
@@ -331,8 +318,16 @@ class tthemeparser extends tevents {
           $i = self::find_close($s, $m[3]);
           $value = trim(substr($s, 0, $i));
           $s = ltrim(substr($s, $i + 1));
-          
+
+$checkpath = $parent . '.' . substr($tag, 1);
+        if (isset($this->pathmap[$checkpath])) {
+$newpath = $this->pathmap[$checkpath];
+$info = $this->paths[$newpath];
+$info['path'] = $newpath;
+} else {
           $info = $this->tagtopath($parent, $tag);
+}
+
           $this->settag($info['path'], $value);
           $s = $pre . $info['replace'] . $s;
         }
@@ -341,9 +336,6 @@ class tthemeparser extends tevents {
         if (!$this->removephp) {
           $s = preg_replace_callback('/\<\&\#63;.*?\&\#63;\>/ims', array($this, 'callback_restore_php'), $s);
         }
-        
-        //retranslatepaths
-        if (isset($this->pathmap[$parent])) $parent = $this->pathmap[$parent];
         
         //set value
         if (strbegin($parent, 'sidebar')) {
@@ -389,6 +381,7 @@ class tthemeparser extends tevents {
         if (($parent == '') || ($tag == '$template')) return 'index';
         if (strbegin($parent, '$template.')) $parent = substr($parent, strlen('$template.'));
         if ($parent == '$template') $parent = '';
+
         foreach ($this->paths as $path => $info) {
           if (strbegin($path, $parent)) {
             if ($tag == $info['tag']) {
@@ -494,26 +487,30 @@ class tthemeparser extends tevents {
           echo implode('<br>', array_keys($templates));
           $this->error('template "content.post.templatecomments.confirmform" not exists');
         }
-        
-        $post = 'content.post.';
+
+          $post = 'content.post.';
         $excerpt = 'content.excerpts.excerpt.';
+        
         //normalize filelist
         foreach(array('file', 'image',  'audio', 'video', 'flash') as $name) {
-          $key = $post . 'filelist.' . $name;
-          $itemkey = $key . "s.$name";
-          if (!isset($templates[$key . 's'])) $templates[$key . 's'] = '$' . $name;
-          //excerpt
-          $keyexcerpt = $excerpt . 'filelist.' . $name;
-          $itemkeyexcerpt = $keyexcerpt . "s.$name";
-          if (!isset($templates[$keyexcerpt])) $templates[$keyexcerpt] = $templates[$key];
-          if (!isset($templates[$keyexcerpt . 's'])) $templates[$keyexcerpt . 's'] = $templates[$key . 's'];
+          if (!isset($templates["{$post}filelist.{$name}s"]) || empty($templates["{$post}filelist.{$name}s"])) {
+$templates["{$post}filelist.{$name}s"] = "\$$name";
+}
+
+          if (!isset($templates["{$excerpt}filelist.$name"])) {
+$templates["{$excerpt}filelist.$name"] = $templates["{$post}filelist.$name"];
+}
+
+          if (!isset($templates["{$excerpt}filelist.{$name}s"])) {
+$templates["{$excerpt}filelist.{$name}s"] = $templates["{$post}filelist.{$name}s"];
+}
         }
         
         //fix preview
-        $key = $post . 'filelist.preview';
-        $keyexcerpt = $excerpt . 'filelist.preview';
-        if ( !isset($templates[$keyexcerpt])) $templates[$keyexcerpt] = $templates[$key];
-        
+          if (!isset($templates["{$excerpt}filelist.preview"])) {
+$templates["{$excerpt}filelist.preview"] = $templates["{$post}filelist.preview"];
+}
+
         foreach (array('date',
         'filelist', 'filelist.file', 'filelist.image', 'filelist.preview', 'filelist.audio', 'filelist.video', 'filelist.flash',
         'filelist.files', 'filelist.images', 'filelist.audios', 'filelist.videos', 'filelist.flashs',
@@ -687,10 +684,14 @@ class tthemeparser extends tevents {
         foreach ($this->tagfiles as $filename) {
           $filename = litepublisher::$paths->home . trim($filename, '/');
           if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
+if (isset($a['remap'])) {
+$this->pathmap = $this->pathmap + $a['remap'];
+unset($a['remap']);
+}
             $result = $result + $a;
           }
         }
-        
+
         $result = $result + $this->extrapaths;
         $this->callevent('ongetpaths', array(&$result));
         return $result;

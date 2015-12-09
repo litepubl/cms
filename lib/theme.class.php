@@ -355,7 +355,7 @@ class ttheme extends tevents {
 
 public function keyanounce($postanounce) {
 if (!$postanounce || $postanounce == 'default' || $postanounce == 'excerpt') return 'excerpt';
-if ($postanounce === true || $postanounce === 1 || $postanounce == lite') return 'lite';
+if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') return 'lite';
 return 'card';
 }
   
@@ -373,7 +373,9 @@ tposts::i()->loaditems($items);
       $post = tpost::i($id);
       $result .= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
-      if (isset(self::$vars['author'])) unset(self::$vars['author']);
+      if (isset(self::$vars['author'])) {
+unset(self::$vars['author']);
+}
     }
     
     if ($tml = $this->templates['content.excerpts.' . $tml_key]) {
@@ -386,7 +388,7 @@ $result = str_replace('$excerpt', $result, $this->parse($tml));
   
   public function getpostsnavi(array $items, $postanounce, $url, $count, $perpage = 1000) {
     $result = $this->getposts($items, $postanounce);
-    $perpage = $lite ? $liteperpage : litepublisher::$options->perpage;
+if (!$perpage) $perpage = litepublisher::$options->perpage;
     $result .= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
