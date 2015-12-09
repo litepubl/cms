@@ -24,6 +24,7 @@ $classes->items['tcommentspool'] = array('comments.pool.class.php', '');
 
 $classes->items['targs'][2] = 'theme.args.class.php';
 $classes->items['tview'][2] = 'view.class.php';
+$classes->items['tpostfactory'][2] = 'post.factory.class.php';
 $classes->save();
 
 if (isset(litepublisher::$options->commentspull)) {

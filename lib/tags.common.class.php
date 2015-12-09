@@ -386,7 +386,7 @@ $view = tview::getview($this);
     
     $list = $this->getidposts($this->id);
     $item = $this->getitem($this->id);
-    $result .= $view->theme->getpostsnavi($list, (int) $item['lite'], $item['url'], $item['itemscount'], $item['liteperpage']);
+    $result .= $view->theme->getpostsnavi($list, $view->postanounce, $item['url'], $item['itemscount'], $view->perpage);
 }
 
     $this->callevent('oncontent', array(&$result));

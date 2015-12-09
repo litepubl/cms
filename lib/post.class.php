@@ -673,12 +673,12 @@ class tpost extends titem implements  itemplate {
     return $this->parsetml('content.post');
   }
   
-  public function getcontexcerpt($lite) {
+  public function getcontexcerpt($tml_name) {
+    ttheme::$vars['post'] = $this;
     //no use self theme because post in other context
     $theme = ttheme::i();
-    $tml = $lite ? $theme->templates['content.excerpts.lite.excerpt'] : $theme->templates['content.excerpts.excerpt'];
-    ttheme::$vars['post'] = $this;
-    return $theme->parse($tml);
+$tml_key = $tml_name == 'excerpt' ? 'excerpt' :($tml_name == 'card' ? 'card' : 'lite.excerpt');
+    return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
   }
   
   public function getrsslink() {
@@ -956,58 +956,6 @@ class tpost extends titem implements  itemplate {
       if ($pages->url == '') return '';
       return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepublisher::$site->url, $pages->url, $pages->name);
     }
-  }
-  
-}//class
-
-class tpostfactory extends tdata {
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  public function getposts() {
-    return tposts::i();
-  }
-  
-  public function getfiles() {
-    return tfiles::i();
-  }
-  
-  public function gettags() {
-    return ttags::i();
-  }
-  
-  public function getcats () {
-    return tcategories::i();
-  }
-  
-  public function getcategories() {
-    return tcategories::i();
-  }
-  
-  public function gettemplatecomments() {
-    return ttemplatecomments::i();
-  }
-  
-  public function getcomments($id) {
-    return tcomments::i($id);
-  }
-  
-  public function getpingbacks($id) {
-    return tpingbacks::i($id);
-  }
-  
-  public function getmeta($id) {
-    return tmetapost::i($id);
-  }
-  
-  public function gettransform(tpost $post) {
-    return tposttransform::i($post);
-  }
-  
-  public function add(tpost $post) {
-    return tposttransform ::add($post);
   }
   
 }//class

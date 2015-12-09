@@ -352,29 +352,40 @@ class ttheme extends tevents {
     $args->items = implode($this->templates['content.navi.divider'], $a);
     return $this->parsearg($this->templates['content.navi'], $args);
   }
+
+public function keyanounce($postanounce) {
+if (!$postanounce || $postanounce == 'default' || $postanounce == 'excerpt') return 'excerpt';
+if ($postanounce === true || $postanounce === 1 || $postanounce == lite') return 'lite';
+return 'card';
+}
   
-  public function getposts(array $items, $lite) {
-    if (count($items) == 0) return '';
-    if (dbversion) tposts::i()->loaditems($items);
-    
+  public function getposts(array $items, $postanounce) {
+    if (!count($items)) return '';
+
     $result = '';
+$tml_key = $this->keyanounce($postanounce);
+tposts::i()->loaditems($items);
+    
+
     self::$vars['lang'] = tlocal::i('default');
     //$tml = $lite ? $this->templates['content.excerpts.lite.excerpt'] : $this->templates['content.excerpts.excerpt'];
     foreach($items as $id) {
       $post = tpost::i($id);
-      $result .= $post->getcontexcerpt($lite);
+      $result .= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
       if (isset(self::$vars['author'])) unset(self::$vars['author']);
     }
     
-    $tml = $lite ? $this->templates['content.excerpts.lite'] : $this->templates['content.excerpts'];
-    if ($tml != '') $result = str_replace('$excerpt', $result, $this->parse($tml));
+    if ($tml = $this->templates['content.excerpts.' . $tml_key]) {
+$result = str_replace('$excerpt', $result, $this->parse($tml));
+}
+
     unset(self::$vars['post']);
     return $result;
   }
   
-  public function getpostsnavi(array $items, $lite, $url, $count, $liteperpage = 1000) {
-    $result = $this->getposts($items, $lite);
+  public function getpostsnavi(array $items, $postanounce, $url, $count, $perpage = 1000) {
+    $result = $this->getposts($items, $postanounce);
     $perpage = $lite ? $liteperpage : litepublisher::$options->perpage;
     $result .= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;

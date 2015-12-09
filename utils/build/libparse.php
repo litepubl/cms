@@ -114,6 +114,7 @@ makekernel($dir, 'kernel.templates.php',  array(
 makekernel($dir, 'kernel.posts.php',  array(
 'items.posts.class.php',
 'post.class.php',
+'post.factory.class.php',
 'posts.class.php',
 'post.transform.class.php',
 'post.meta.class.php',
