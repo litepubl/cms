@@ -20,7 +20,7 @@ function tcommontagsInstall($self) {
   
   if (dbversion) {
     $manager = tdbmanager ::i();
-    $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
+    $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir .'tags.sql'));
     $manager->createtable($self->itemsposts->table, file_get_contents($dir .'items.posts.sql'));
     $manager->createtable($self->contents->table, file_get_contents($dir .'tags.content.sql'));
@@ -39,6 +39,7 @@ function tcommontagsUninstall($self) {
   $widgets = twidgets::i();
   $widgets->deleteclass(get_class($self));
 }
+
 function tcommontagsGetsitemap($self, $from, $count) {
   $result = array();
   $self->loadall();
