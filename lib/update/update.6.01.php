@@ -60,4 +60,9 @@ $man->alter($table, "drop $column");
 }
 }
 
+include(dirname(__file__) . '/update.5.99.php');
+update599();
+
+tjsmerger::i()->deletesection('adminviews');
+  tcssmerger::i()->deletefile('admin', '/js/litepubl/admin/css/admin.views.min.css');
 }

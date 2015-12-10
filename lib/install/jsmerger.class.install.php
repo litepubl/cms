@@ -78,14 +78,6 @@ function tjsmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
   
-  $section = 'adminviews';
-  $self->add($section, '/js/jquery/ui/draggable.min.js');
-  $self->add($section, '/js/jquery/ui/droppable.min.js');
-  $self->add($section, '/js/jquery/ui/resizable.min.js');
-  $self->add($section, '/js/jquery/ui/selectable.min.js');
-  $self->add($section, '/js/jquery/ui/sortable.min.js');
-  $self->add($section, '/js/litepubl/admin/admin.views.min.js');
-  
   $section = 'posteditor';
   $self->add($section, '/js/jquery/ui/progressbar.min.js');
   $self->add($section, '/js/swfupload/swfupload.min.js');
