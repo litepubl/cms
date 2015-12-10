@@ -10,6 +10,7 @@ class tadminviewsgroup extends tadminmenu {
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
+
   public function getcontent() {
     $views = tviews::i();
     $html = $this->html;
@@ -18,12 +19,12 @@ class tadminviewsgroup extends tadminmenu {
 
       $args->formtitle = $lang->viewposts;
       $result = $html->adminform(
-      self::getcomboview($views->defaults['post'], 'postview') .
+      tadminviews::getcomboview($views->defaults['post'], 'postview') .
       '<input type="hidden" name="action" value="posts" />', $args);
       
       $args->formtitle = $lang->viewmenus;
       $result .= $html->adminform(
-      self::getcomboview($views->defaults['menu'], 'menuview') .
+      tadminviews::getcomboview($views->defaults['menu'], 'menuview') .
       '<input type="hidden" name="action" value="menus" />', $args);
       
       $args->formtitle = $lang->themeviews;
@@ -43,16 +44,7 @@ class tadminviewsgroup extends tadminmenu {
         case 'posts':
         $posts = tposts::i();
         $idview = (int) $_POST['postview'];
-        if (dbversion) {
           $posts->db->update("idview = '$idview'", 'id > 0');
-        } else {
-          foreach ($posts->items as $id => $item) {
-            $post = tpost::i($id);
-            $post->idview = $idview;
-            $post->save();
-            $post->free();
-          }
-        }
         break;
         
         case 'menus':

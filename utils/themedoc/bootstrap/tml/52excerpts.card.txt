@@ -3,7 +3,7 @@ content.excerpts.card = [
 $excerpt = [
 <div class="anpost" id="post-$post.id">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
-<div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
+<div class="anpost-subtitle">$post.excerptcontent $post.morelink </div>
 <div class="anpost-content">
 $post.firstimage
 <div class="anpost-body">
@@ -11,7 +11,7 @@ $post.catlinks
 <div class="anpost-item">
 <span class="fa fa-calendar" aria-hidden="true"></span>
 <span class="anpost-item-title">$lang.posted</span>
-				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
+				<span class="post-date">$post.excerptdate </span>
 </div>
 
 <div class="anpost-item">
