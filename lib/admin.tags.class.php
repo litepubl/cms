@@ -113,9 +113,6 @@ class tadmintags extends tadminmenu {
     $item['idview'] = (int) $idview;
     $item['includechilds'] = isset($includechilds);
     $item['includeparents'] = isset($includeparents);
-    $item['invertorder'] = isset($invertorder);
-    $item['lite'] = isset($lite);
-    $item['liteperpage'] = (int) trim($liteperpage);
     if (isset($idperm)) $item['idperm'] = (int) $idperm;
     if (isset($icon)) $item['icon'] = (int) $icon;
     return $item;

@@ -41,9 +41,6 @@ class tajaxtageditor extends tajaxposteditor  {
       'icon' => 0,
       'includechilds' => $tags->includechilds,
       'includeparents' => $tags->includeparents,
-      'invertorder' => false,
-      'lite' => $tags->lite,
-      'liteperpage' => 1000,
       'url' => '',
       'keywords' => '',
       'description' => '',
@@ -56,13 +53,13 @@ class tajaxtageditor extends tajaxposteditor  {
     switch ($_GET['get']) {
       case 'view':
       if ($id > 0) {
-        foreach (array('includechilds', 'includeparents', 'invertorder', 'lite') as $prop) {
+        foreach (array('includechilds', 'includeparents) as $prop) {
           $item[$prop] = ((int) $item[$prop]) > 0;
         }
       }
       $args = new targs();
       $args->add($item);
-      $result = $html->parsearg('[checkbox=includechilds] [checkbox=includeparents] [checkbox=invertorder] [checkbox=lite] [text=liteperpage]', $args);
+      $result = $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
       $result .= $this->getviewicon($item['idview'], $item['icon']);
       $result .= tadminperms::getcombo($item['idperm']);
       break;

@@ -191,27 +191,6 @@ class tadminviews extends tadminmenu {
       $result .= tuitabs::gethead() . $html->adminform($tabs->get(), $args);
       break;
       
-      case 'group':
-      $args->formtitle = $lang->viewposts;
-      $result .= $html->adminform(
-      self::getcomboview($views->defaults['post'], 'postview') .
-      '<input type="hidden" name="action" value="posts" />', $args);
-      
-      $args->formtitle = $lang->viewmenus;
-      $result .= $html->adminform(
-      self::getcomboview($views->defaults['menu'], 'menuview') .
-      '<input type="hidden" name="action" value="menus" />', $args);
-      
-      $args->formtitle = $lang->themeviews;
-      $view = tview::i();
-      $list =    tfiler::getdir(litepublisher::$paths->themes);
-      sort($list);
-      $themes = array_combine($list, $list);
-      $result .= $html->adminform(
-      $html->getcombo('themeview', tadminhtml::array2combo($themes, $view->themename), $lang->themename) .
-      '<input type="hidden" name="action" value="themes" />', $args);
-      break;
-      
       case 'defaults':
       $items = '';
       $theme = ttheme::i();
@@ -299,47 +278,6 @@ class tadminviews extends tadminmenu {
         if (isset($obj->data['description '])) $obj->description = $_POST["description-$classname"];
         if (isset($obj->data['head'])) $obj->head = $_POST["head-$classname"];
         $obj->unlock();
-      }
-      break;
-      
-      case 'group':
-      switch ($_POST['action']) {
-        case 'posts':
-        $posts = tposts::i();
-        $idview = (int) $_POST['postview'];
-        if (dbversion) {
-          $posts->db->update("idview = '$idview'", 'id > 0');
-        } else {
-          foreach ($posts->items as $id => $item) {
-            $post = tpost::i($id);
-            $post->idview = $idview;
-            $post->save();
-            $post->free();
-          }
-        }
-        break;
-        
-        case 'menus':
-        $idview = (int) $_POST['menuview'];
-        $menus = tmenus::i();
-        foreach ($menus->items as $id => $item) {
-          $menu = tmenu::i($id);
-          $menu->idview = $idview;
-          $menu->save();
-        }
-        break;
-        
-        case 'themes':
-        $themename = $_POST['themeview'];
-        $views = tviews::i();
-        $views->lock();
-        foreach ($views->items as $id => $item) {
-          $view = tview::i($id);
-          $view->themename = $themename;
-          $view->save();
-        }
-        $views->unlock();
-        break;
       }
       break;
       
