@@ -205,28 +205,6 @@ class tadminviews extends tadminmenu {
       $args->formtitle = $lang->defaultsform;
       $result .= $theme->parsearg($theme->content->admin->form, $args);
       break;
-      
-      case 'headers':
-      $tabs = new tuitabs();
-      $args->heads = ttemplate::i()->heads;
-      $tabs->add($lang->headstitle, '[editor=heads]');
-      
-      $args->adminheads = tadminmenus::i()->heads;
-      $tabs->add($lang->admin, '[editor=adminheads]');
-      
-      $ajax = tajaxposteditor ::i();
-      $args->ajaxvisual=  $ajax->ajaxvisual;
-      $args->visual= $ajax->visual;
-      $args->show_file_perm = litepublisher::$options->show_file_perm;
-      $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
-      
-      $args->formtitle = $lang->headstitle;
-      $result = $html->adminform($tabs->get(), $args);
-      $result .= tuitabs      ::gethead();
-      break;
-      
-      case 'admin':
-      return $this->adminoptionsform->getform();
     }
     
     return $html->fixquote($result);
@@ -288,27 +266,6 @@ class tadminviews extends tadminmenu {
       }
       $views->save();
       break;
-      
-      case 'headers':
-      $template = ttemplate::i();
-      $template->heads = $_POST['heads'];
-      $template->save();
-      
-      $adminmenus = tadminmenus::i();
-      $adminmenus->heads = $_POST['adminheads'];
-      $adminmenus->save();
-      
-      $ajax = tajaxposteditor ::i();
-      $ajax->lock();
-      $ajax->ajaxvisual = isset($_POST['ajaxvisual']);
-      $ajax->visual = trim($_POST['visual']);
-      $ajax->unlock();
-      
-      litepublisher::$options->show_file_perm = isset($_POST['show_file_perm']);
-      break;
-      
-      case 'admin':
-      return $this->adminoptionsform->processform();
     }
     
     ttheme::clearcache();
