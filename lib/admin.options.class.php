@@ -224,21 +224,19 @@ $previewmode
       
       case 'catstags':
       case 'lite': //old version suports
-      $args->litearch= litepublisher::$classes->archives->lite;
       $cats = litepublisher::$classes->categories;
-      $args->litecats= $cats->lite;
-      $args->parentcats = $cats->includeparents;
+     $args->parentcats = $cats->includeparents;
       $args->childcats = $cats->includechilds;
+
       $tags = litepublisher::$classes->tags;
-      $args->litetags = $tags->lite;
-      $args->parenttags = $tags->includeparents;
+     $args->parenttags = $tags->includeparents;
       $args->childtags = $tags->includechilds;
       $lang = tlocal::admin('options');
       $args->formtitle = $lang->catstags;
       $html = $this->html;
-      return $html->adminform('[checkbox=litearch]
-      [checkbox=litecats] [checkbox=parentcats] [checkbox=childcats]
-      [checkbox=litetags] [checkbox=parenttags] [checkbox=childtags]', $args) .
+      return $html->adminform('
+      [checkbox=parentcats] [checkbox=childcats]
+      [checkbox=parenttags] [checkbox=childtags]', $args) .
       $html->p->notecatstags;
       
       case 'robots':
@@ -419,14 +417,12 @@ $previewmode
       
       case 'lite':
       case 'catstags':
-      litepublisher::$classes->archives->lite = isset($litearch);
       $cats = litepublisher::$classes->categories;
-      $cats->lite = isset($litecats);
       $cats->includeparents = isset($parentcats);
       $cats->includechilds = isset($childcats);
       $cats->save();
+
       $tags = litepublisher::$classes->tags;
-      $tags->lite = isset($litetags);
       $tags->includeparents = isset($parenttags);
       $tags->includechilds = isset($childtags);
       $tags->save();

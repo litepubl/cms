@@ -69,6 +69,7 @@ tjsmerger::i()->deletesection('adminviews');
 $classes->add('tadminviewsgroup', 'admin.views.group.class.php');
 $classes->add('tadminheaders', 'admin.headers.class.php');
 $classes->add('tadminviewsspec', 'admin.views.spec.class.php');
+$classes->delete('tadminthemefiles');
 
 $m = tadminmenus::i();
 $m->lock();
@@ -88,5 +89,16 @@ $m->items[$id]['class'] = 'tadminviewsspec';
 litepublisher::$urlmap->setvalue(litepublisher::$urlmap->urlexists('/admin/views/spec/'),
 'class', 'tadminviewsspec');
 
+$m->deleteurl('/admin/views/themefiles/');
+
 $m->unlock();
+
+foreach (array('tcategories', 'ttags', 'tarchives') as $classname) {
+$obj = getinstance($classname);
+if (isset($obj->data['lite'])) {
+unset($obj->data['lite']);
+$obj->save();
+}
+}
+
 }

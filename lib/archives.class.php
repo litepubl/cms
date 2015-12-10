@@ -17,7 +17,6 @@ class tarchives extends titems_itemplate implements  itemplate {
     parent::create();
     $this->basename   = 'archives';
     $this->table = 'posts';
-    $this->data['lite'] = false;
   }
   
   public function getheadlinks() {
@@ -26,13 +25,6 @@ class tarchives extends titems_itemplate implements  itemplate {
   $result  .= "<link rel=\"archives\" title=\"{$item['title']}\" href=\"litepublisher::$site->url{$item['url']}\" />\n";
     }
     return ttheme::i()->parse($result);
-  }
-  
-  protected function setlite($value) {
-    if ($value != $this->lite) {
-      $this->data['lite'] = $value;
-      $this->Save();
-    }
   }
   
   public function postschanged() {
@@ -85,8 +77,11 @@ class tarchives extends titems_itemplate implements  itemplate {
     $date = (int) $date;
     if (!isset($this->items[$date])) return 404;
     $this->date = $date;
+
+    $view = tview::getview($this);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     if ($this->lite && (litepublisher::$urlmap->page > 1)) {
-      return sprintf("<?php litepublisher::$urlmap->redir('%s');",$item['url']);
+      return sprintf("<?php litepublisher::$urlmap->redir('%s');",$this->items[$date]['url']);
     }
   }
   
@@ -104,19 +99,22 @@ class tarchives extends titems_itemplate implements  itemplate {
     $items = $this->getidposts();
     if (count($items) == 0)return '';
     
-    $theme = tview::getview($this)->theme;
-    $perpage = $this->lite ? 1000 : litepublisher::$options->perpage;
+    $view = tview::getview($this);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $list = array_slice($items, (litepublisher::$urlmap->page - 1) * $perpage, $perpage);
-    $result = $theme->getposts($list, $this->lite);
-    $result .=$theme->getpages($this->items[$this->date]['url'], litepublisher::$urlmap->page, ceil(count($items)/ $perpage));
+    $result = $view->theme->getposts($list, $view->postanounce);
+    $result .=$view->theme->getpages($this->items[$this->date]['url'], litepublisher::$urlmap->page, ceil(count($items)/ $perpage));
     return $result;
   }
   
   public function getidposts() {
     if (isset($this->_idposts)) return $this->_idposts;
     $item = $this->items[$this->date];
-$this->_idposts = $this->getdb('posts')->idselect("status = 'published' and year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}' ORDER BY posted DESC ");
-    return $this->_idposts;
+    $order = tview::getview($this)->invertorder ? 'asc' : 'desc';
+return $this->_idposts = $this->getdb('posts')->idselect(
+"status = 'published' and
+ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
+ORDER BY posted $order");
   }
   
   public function getsitemap($from, $count) {
