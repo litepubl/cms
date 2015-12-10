@@ -677,7 +677,7 @@ class tpost extends titem implements  itemplate {
     ttheme::$vars['post'] = $this;
     //no use self theme because post in other context
     $theme = ttheme::i();
-$tml_key = $tml_name == 'excerpt' ? 'excerpt' :($tml_name == 'card' ? 'card' : 'lite.excerpt');
+$tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name. '.excerpt';
     return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
   }
   

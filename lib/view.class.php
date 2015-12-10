@@ -47,7 +47,7 @@ class tview extends titem_storage {
     'customsidebar' => false,
     'disableajax' => false,
 //possible values: default, lite, card
-'postanounce' => 'default',
+'postanounce' => 'excerpt',
 'invertorder' => false,
 'perpage' => 0,
 

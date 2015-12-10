@@ -44,7 +44,7 @@ $parser->save();
 
 $views = tviews::i();
 foreach ($views->items as $id => &$item) {
-$item['postanounce'] = 'default';
+$item['postanounce'] = 'excerpt';
 $item['invertorder'] = false;
 $item['perpage'] = 0;
 }
