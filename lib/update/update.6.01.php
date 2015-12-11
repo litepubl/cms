@@ -36,6 +36,12 @@ $classes->items['twidget'][2] = 'widget.class.php';
 $classes->items['torderwidget'][2] = 'widget.order.class.php';
 $classes->items['tclasswidget'][2] = 'widget.class.class.php';
 $classes->items['twidgetscache'][2] = 'widgets.cache.class.php';
+$classes->items['tevents_itemplate'][2] = 'events.itemplate.class.php';
+$classes->items['titems_itemplate'][2] = 'items.itemplate.class.php';
+$classes->items['titems'] = array('kernel.php', '', ' items.class.php');
+$classes->items['titems_storage'] = array('kernel.php', '', 'items.storage.class.php');
+$classes->items['tsingleitems'] = array('kernel.php', '', 'items.single.class.php');
+
 $classes->save();
 
 if (isset(litepublisher::$options->commentspull)) {
