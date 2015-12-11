@@ -32,7 +32,7 @@ class adminhomeoptions extends tadminmenu {
     $args->showmidle = $home->showmidle;
     $args->midlecat = tposteditor::getcombocategories(array(), $home->midlecat);
     $args->showposts = $home->showposts;
-    $args->invertorder = $home->invertorder;
+    $args->invertorder = tview::getview($home)->invertorder;
     $args->showpagenator = $home->showpagenator;
     
     $args->idhome =  $home->id;
@@ -90,7 +90,8 @@ class adminhomeoptions extends tadminmenu {
     $home->showmidle = isset($showmidle);
     $home->midlecat = (int) $midlecat;
     $home->showposts = isset($showposts);
-    $home->invertorder = isset($invertorder);
+    tview::getview($home)->invertorder = isset($invertorder);
+tview::getview($home)->save();
     $home->includecats = tadminhtml::check2array('category-');
     $home->excludecats = tadminhtml::check2array('exclude_category-');
     $home->showpagenator = isset($showpagenator);

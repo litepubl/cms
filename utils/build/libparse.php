@@ -107,7 +107,11 @@ makekernel($dir, 'kernel.templates.php',  array(
 'template.class.php',
 'theme.class.php',
 'theme.args.class.php',
+'widget.class.php',
+'widget.order.class.php',
+'widget.class.class.php',
 'widgets.class.php',
+'widgets.cache.class.php',
 'guard.class.php'
 ));
 
@@ -118,7 +122,14 @@ makekernel($dir, 'kernel.posts.php',  array(
 'posts.class.php',
 'post.transform.class.php',
 'post.meta.class.php',
+'widget.posts.class.php',
 'tags.common.class.php',
+'tags.factory.class.php',
+'tags.categories.class.php',
+'tags.class.php',
+'widget.commontags.class.php',
+'widget.categories.class.php',
+'widget.tags.class.php',
 'files.class.php'
 ));
 

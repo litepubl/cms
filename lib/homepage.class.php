@@ -21,7 +21,6 @@ class thomepage extends tsinglemenu  {
     $this->data['showmidle'] = false;
     $this->data['midlecat'] = 0;
     $this->data['showposts'] = true;
-    $this->data['invertorder'] = false;
     $this->data['includecats'] = array();
     $this->data['excludecats'] = array();
     $this->data['showpagenator'] = true;
@@ -93,9 +92,13 @@ class thomepage extends tsinglemenu  {
   
   public function getpostnavi() {
     $items =  $this->getidposts();
-    $theme = ttheme::i();
-    $result = $theme->getposts($items, false);
-    if ($this->showpagenator) $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($this->data['archcount'] / litepublisher::$options->perpage));
+    $view = tview::getview($this);
+    $result = $view->theme->getposts($items, $view->postanounce);
+    if ($this->showpagenator) {
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+$result .= $view->theme->getpages($this->url, litepublisher::$urlmap->page,
+ ceil($this->data['archcount'] / $perpage));
+}
     return $result;
   }
   
@@ -103,9 +106,10 @@ class thomepage extends tsinglemenu  {
     if (is_array($this->cacheposts)) return $this->cacheposts;
     if($result = $this->onbeforegetitems()) return $result;
     $posts = tposts::i();
-    $perpage = litepublisher::$options->perpage;
+    $view = tview::getview($this);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $from = (litepublisher::$urlmap->page - 1) * $perpage;
-    $order = $this->invertorder ? 'asc' : 'desc';
+    $order = $view->invertorder ? 'asc' : 'desc';
     
     $p = litepublisher::$db->prefix . 'posts';
     $ci = litepublisher::$db->prefix . 'categoriesitems';
@@ -119,7 +123,7 @@ class thomepage extends tsinglemenu  {
       $posts->loaditems($result);
     } else {
       $this->data['archcount'] = $posts->archivescount;
-      $result = $posts->getpage(0, litepublisher::$urlmap->page, $perpage, $this->invertorder);
+      $result = $posts->getpage(0, litepublisher::$urlmap->page, $perpage, $view->invertorder);
     }
     
     $this->callevent('ongetitems', array(&$result));

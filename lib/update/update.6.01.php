@@ -25,6 +25,17 @@ $classes->items['tcommentspool'] = array('comments.pool.class.php', '');
 $classes->items['targs'][2] = 'theme.args.class.php';
 $classes->items['tview'][2] = 'view.class.php';
 $classes->items['tpostfactory'][2] = 'post.factory.class.php';
+$classes->items['tpostswidget'][2] = 'widget.posts.class.php';
+$classes->items['ttagfactory'][2] = 'tags.factory.class.php';
+$classes->items['tcommontagswidget'][2] = 'widget.commontags.class.php';
+$classes->items['tcategories'][2] = 'tags.categories.class.php';
+$classes->items['tcategorieswidget'][2] = 'widget.categories.class.php';
+$classes->items['ttagswidget'][2] = 'widget.tags.class.php';
+$classes->items['ttags'][2] = 'tags.class.php';
+$classes->items['twidget'][2] = 'widget.class.php';
+$classes->items['torderwidget'][2] = 'widget.order.class.php';
+$classes->items['tclasswidget'][2] = 'widget.class.class.php';
+$classes->items['twidgetscache'][2] = 'widgets.cache.class.php';
 $classes->save();
 
 if (isset(litepublisher::$options->commentspull)) {
@@ -101,4 +112,9 @@ $obj->save();
 }
 }
 
+$home = thomepage::i();
+if (isset($home->data['invertorder'])) {
+unset($home->data['invertorder']);
+$home->save();
+}
 }

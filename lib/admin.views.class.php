@@ -163,15 +163,18 @@ class tadminviews extends tadminmenu {
       
       $view = tview::i($id);
       $lang->firstsearch('themes');
-      $tabs->add($lang->theme, tadminthemes::getlist($html->radiotheme, $view->theme->name));
-      if (count($view->custom)) $tabs->add($lang->custom, $this->get_custom($view));
+      $tabs->add($lang->theme, 
+tadminthemes::getlist($html->radiotheme, $view->theme->name));
+
+      if (count($view->custom)) {
+$tabs->add($lang->custom, $this->get_custom($view));
+}
       
       $result .= $html->h4->help;
-      $form = new adminform($args);
-      $form->id = 'admin-view-form';
-      $form->title = $lang->edit;
-      $form->items = $tabs->get();
-      $result .= $form->get();
+
+      $args->formtitle = $lang->edit;
+$result .= $html->adminform($tabs->get(), $args) .
+tuitabs::gethead();
       break;
       
       case 'addview':
