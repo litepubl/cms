@@ -11,17 +11,17 @@
     links: false,
     opened: false,
     photoswipe: false,
-ready: true,
-script: false,
+    ready: true,
+    script: false,
     holder: false,
     options: false,
     animatethumbs: false,
     onoptions: $.noop,
     
     init: function(links) {
-//templates and photoswipe  library in mysel module
-this.ready = "photoswipe" in litepubl.tml;
-
+      //templates and photoswipe  library in mysel module
+      this.ready = "photoswipe" in litepubl.tml;
+      
       litepubl.openimage = $.proxy(this.openimage, this);
       
       if (links && links.length) {
@@ -30,26 +30,26 @@ this.ready = "photoswipe" in litepubl.tml;
           self.open($(this));
           return false;
         });
-
-if (!this.ready) {
-links.one("focus.ready mouseenter.ready", $.proxy(this.load_script, this, false));
-}
+        
+        if (!this.ready) {
+          links.one("focus.ready mouseenter.ready", $.proxy(this.load_script, this, false));
+        }
         
         $.ready2($.proxy(this.openhash, this));
       }
     },
-
-load_script: function(callback) {
-if (this.script) {
-this.script.done(callback);
-} else {
-var self = this;
-this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", function() {
-self.ready = true;
-if (callback) callback();
-});
-}
-},
+    
+    load_script: function(callback) {
+      if (this.script) {
+        this.script.done(callback);
+      } else {
+        var self = this;
+        this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", function() {
+          self.ready = true;
+          if (callback) callback();
+        });
+      }
+    },
     
     getoptions: function() {
       if (!this.options) {
@@ -91,12 +91,12 @@ if (callback) callback();
       
       return this.options;
     },
-
-        open: function(link) {
-if (!this.ready) {
-return this.load_script($.proxy(this.open, this, link));
-}
-
+    
+    open: function(link) {
+      if (!this.ready) {
+        return this.load_script($.proxy(this.open, this, link));
+      }
+      
       if (this.opened) return false;
       this.opened = true;
       
@@ -112,11 +112,11 @@ return this.load_script($.proxy(this.open, this, link));
     
     openitems: function(items) {
       if (this.opened || !items.length) return false;
-
-if (!this.ready) {
-return this.load_script($.proxy(this.openitems, this, items));
-}
-
+      
+      if (!this.ready) {
+        return this.load_script($.proxy(this.openitems, this, items));
+      }
+      
       this.opened = true;
       litepubl.stat("photoswipe_opening");
       
@@ -182,10 +182,10 @@ return this.load_script($.proxy(this.openitems, this, items));
     },
     
     openimage: function(image) {
-if (!this.ready) {
-return this.load_script($.proxy(this.openimage, this, image));
-}
-
+      if (!this.ready) {
+        return this.load_script($.proxy(this.openimage, this, image));
+      }
+      
       // save current options for swithing single options
       var options = this.getoptions();
       this.options = $.extend({

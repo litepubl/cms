@@ -151,7 +151,7 @@ public function __construct($date) { $this->date = $date; }
 public function __get($name) { return tlocal::translate(date($name, $this->date), 'datetime'); }
 }
 
-//views.class.php
+//view.class.php
 class tview extends titem_storage {
   public $sidebars;
   protected $themeinstance;
@@ -193,9 +193,15 @@ class tview extends titem_storage {
     'hovermenu' => true,
     'customsidebar' => false,
     'disableajax' => false,
+    //possible values: default, lite, card
+    'postanounce' => 'excerpt',
+    'invertorder' => false,
+    'perpage' => 0,
+    
     'custom' => array(),
     'sidebars' => array()
     );
+    
     $this->sidebars = &$this->data['sidebars'];
     $this->themeinstance = null;
   }
@@ -267,6 +273,7 @@ class tview extends titem_storage {
   
 }//class
 
+//views.class.php
 class tviews extends titems_storage {
   public $defaults;
   
@@ -342,7 +349,7 @@ class tviews extends titems_storage {
   
 }//class
 
-
+//events.itemplate.class.php
 class tevents_itemplate extends tevents {
   
   protected function create() {
@@ -371,6 +378,7 @@ public function getdescription() {}
   
 }//class
 
+//items.itemplate.class.php
 class titems_itemplate extends titems {
   
   protected function create() {
@@ -1023,29 +1031,41 @@ class ttheme extends tevents {
     return $this->parsearg($this->templates['content.navi'], $args);
   }
   
-  public function getposts(array $items, $lite) {
-    if (count($items) == 0) return '';
-    if (dbversion) tposts::i()->loaditems($items);
+  public function keyanounce($postanounce) {
+    if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') return 'excerpt';
+    if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') return 'lite';
+    return 'card';
+  }
+  
+  public function getposts(array $items, $postanounce) {
+    if (!count($items)) return '';
     
     $result = '';
+    $tml_key = $this->keyanounce($postanounce);
+    tposts::i()->loaditems($items);
+    
     self::$vars['lang'] = tlocal::i('default');
     //$tml = $lite ? $this->templates['content.excerpts.lite.excerpt'] : $this->templates['content.excerpts.excerpt'];
     foreach($items as $id) {
       $post = tpost::i($id);
-      $result .= $post->getcontexcerpt($lite);
+      $result .= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
-      if (isset(self::$vars['author'])) unset(self::$vars['author']);
+      if (isset(self::$vars['author'])) {
+        unset(self::$vars['author']);
+      }
     }
     
-    $tml = $lite ? $this->templates['content.excerpts.lite'] : $this->templates['content.excerpts'];
-    if ($tml != '') $result = str_replace('$excerpt', $result, $this->parse($tml));
+    if ($tml = $this->templates['content.excerpts' . ($tml_key == 'excerpt' ? '' : '.' . $tml_key)]) {
+      $result = str_replace('$excerpt', $result, $this->parse($tml));
+    }
+    
     unset(self::$vars['post']);
     return $result;
   }
   
-  public function getpostsnavi(array $items, $lite, $url, $count, $liteperpage = 1000) {
-    $result = $this->getposts($items, $lite);
-    $perpage = $lite ? $liteperpage : litepublisher::$options->perpage;
+  public function getpostsnavi(array $items, $url, $count, $postanounce, $perpage) {
+    $result = $this->getposts($items, $postanounce);
+    if (!$perpage) $perpage = litepublisher::$options->perpage;
     $result .= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
@@ -1206,8 +1226,13 @@ class ttheme extends tevents {
     return false;
   }
   
-}//class
+}
 
+class emptyclass{
+public function __get($name) { return ''; }
+}
+
+//theme.args.class.php
 class targs {
   public $data;
   public $vars;
@@ -1239,7 +1264,7 @@ class targs {
     if (!$name || !is_string($name)) return;
     if (is_array($value)) return;
     
-    if (is_callable($value)) {
+    if (!is_string($value) && is_callable($value)) {
       $this->callbacks['$' . $name] = $value;
       return;
     }
@@ -1284,11 +1309,7 @@ class targs {
   
 }//class
 
-class emptyclass{
-public function __get($name) { return ''; }
-}
-
-//widgets.class.php
+//widget.class.php
 class twidget extends tevents {
   public $id;
   public $template;
@@ -1411,6 +1432,7 @@ class twidget extends tevents {
   
 }//class
 
+//widget.order.class.php
 class torderwidget extends twidget {
   
   protected function create() {
@@ -1431,6 +1453,7 @@ class torderwidget extends twidget {
   
 }//class
 
+//widget.class.class.php
 class tclasswidget extends twidget {
   private $item;
   
@@ -1469,6 +1492,7 @@ class tclasswidget extends twidget {
   
 }//class
 
+//widgets.class.php
 class twidgets extends titems_storage {
   public $classes;
   public $currentsidebar;
@@ -1863,6 +1887,7 @@ class twidgets extends titems_storage {
   
 }//class
 
+//widgets.cache.class.php
 class twidgetscache extends titems {
   private $modified;
   

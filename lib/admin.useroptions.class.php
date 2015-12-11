@@ -20,7 +20,7 @@ class tadminuseroptions extends tadminmenu {
     
     $pages = tuserpages::i();
     $args->createpage = $pages->createpage;
-
+    
     
     $linkgen = tlinkgenerator::i();
     $args->linkschema = $linkgen->data['user'];

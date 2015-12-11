@@ -16,43 +16,43 @@ class tadminheaders extends tadminmenu {
     $html = $this->html;
     $lang = tlocal::i('views');
     $args = new targs();
-
-      $tabs = new tuitabs();
-      $args->heads = ttemplate::i()->heads;
-      $tabs->add($lang->headstitle, '[editor=heads]');
-      
-      $args->adminheads = tadminmenus::i()->heads;
-      $tabs->add($lang->admin, '[editor=adminheads]');
-      
-      $ajax = tajaxposteditor ::i();
-      $args->ajaxvisual=  $ajax->ajaxvisual;
-      $args->visual= $ajax->visual;
-      $args->show_file_perm = litepublisher::$options->show_file_perm;
-      $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
-      
-      $args->formtitle = $lang->headstitle;
-      $result = $html->adminform($tabs->get(), $args);
-      $result .= tuitabs      ::gethead();
+    
+    $tabs = new tuitabs();
+    $args->heads = ttemplate::i()->heads;
+    $tabs->add($lang->headstitle, '[editor=heads]');
+    
+    $args->adminheads = tadminmenus::i()->heads;
+    $tabs->add($lang->admin, '[editor=adminheads]');
+    
+    $ajax = tajaxposteditor ::i();
+    $args->ajaxvisual=  $ajax->ajaxvisual;
+    $args->visual= $ajax->visual;
+    $args->show_file_perm = litepublisher::$options->show_file_perm;
+    $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
+    
+    $args->formtitle = $lang->headstitle;
+    $result = $html->adminform($tabs->get(), $args);
+    $result .= tuitabs      ::gethead();
     return $html->fixquote($result);
   }
   
   public function processform() {
-
-      $template = ttemplate::i();
-      $template->heads = $_POST['heads'];
-      $template->save();
-      
-      $adminmenus = tadminmenus::i();
-      $adminmenus->heads = $_POST['adminheads'];
-      $adminmenus->save();
-      
-      $ajax = tajaxposteditor ::i();
-      $ajax->lock();
-      $ajax->ajaxvisual = isset($_POST['ajaxvisual']);
-      $ajax->visual = trim($_POST['visual']);
-      $ajax->unlock();
-      
-      litepublisher::$options->show_file_perm = isset($_POST['show_file_perm']);
-}
-
+    
+    $template = ttemplate::i();
+    $template->heads = $_POST['heads'];
+    $template->save();
+    
+    $adminmenus = tadminmenus::i();
+    $adminmenus->heads = $_POST['adminheads'];
+    $adminmenus->save();
+    
+    $ajax = tajaxposteditor ::i();
+    $ajax->lock();
+    $ajax->ajaxvisual = isset($_POST['ajaxvisual']);
+    $ajax->visual = trim($_POST['visual']);
+    $ajax->unlock();
+    
+    litepublisher::$options->show_file_perm = isset($_POST['show_file_perm']);
+  }
+  
 }//class

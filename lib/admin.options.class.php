@@ -129,13 +129,13 @@ class tadminoptions extends tadminmenu {
       $parser = tmediaparser::i();
       $args->previewwidth = $parser->previewwidth;
       $args->previewheight = $parser->previewheight;
-$args->previewmode = $html->getradioitems('previewmode', array(
-'fixed' => $lang->fixedsize,
-'max' => $lang->maxsize,
-'min' => $lang->minsize,
-'none' => $lang->disablepreview,
-), $parser->previewmode);
-    
+      $args->previewmode = $html->getradioitems('previewmode', array(
+      'fixed' => $lang->fixedsize,
+      'max' => $lang->maxsize,
+      'min' => $lang->minsize,
+      'none' => $lang->disablepreview,
+      ), $parser->previewmode);
+      
       $args->maxwidth = $parser->maxwidth;
       $args->maxheight = $parser->maxheight;
       $args->alwaysresize = $parser->alwaysresize;
@@ -166,7 +166,7 @@ $args->previewmode = $html->getradioitems('previewmode', array(
       [text=midleheight]
       
       <h4>$lang.previewoptions</h4>
-$previewmode
+      $previewmode
       [text=previewwidth]
       [text=previewheight]
       [text=quality_snapshot]
@@ -225,11 +225,11 @@ $previewmode
       case 'catstags':
       case 'lite': //old version suports
       $cats = litepublisher::$classes->categories;
-     $args->parentcats = $cats->includeparents;
+      $args->parentcats = $cats->includeparents;
       $args->childcats = $cats->includechilds;
-
+      
       $tags = litepublisher::$classes->tags;
-     $args->parenttags = $tags->includeparents;
+      $args->parenttags = $tags->includeparents;
       $args->childtags = $tags->includechilds;
       $lang = tlocal::admin('options');
       $args->formtitle = $lang->catstags;
@@ -237,8 +237,8 @@ $previewmode
       return $html->adminform('
       [checkbox=parentcats] [checkbox=childcats]
       [checkbox=parenttags] [checkbox=childtags]', $args);
-
-            case 'robots':
+      
+      case 'robots':
       $html = $this->html;
       $args->formtitle = 'robots.txt';
       $args->robots = trobotstxt::i()->text;
@@ -420,7 +420,7 @@ $previewmode
       $cats->includeparents = isset($parentcats);
       $cats->includechilds = isset($childcats);
       $cats->save();
-
+      
       $tags = litepublisher::$classes->tags;
       $tags->includeparents = isset($parenttags);
       $tags->includechilds = isset($childtags);

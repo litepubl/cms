@@ -117,19 +117,19 @@ class tadminviews extends tadminmenu {
     $html = $this->html;
     $lang = tlocal::i('views');
     $args = new targs();
-
+    
     switch ($this->name) {
       case 'views':
       $html->addsearch('views');
       $lang->addsearch('views');
-
+      
       $id = tadminhtml::getparam('idview', 0);
       if (!$id || !$views->itemexists($id)) {
         $adminurl = $this->adminurl . 'view';
         return $html->h4($html->getlink($this->url . '/addview/', $lang->add)) .
         $html->buildtable($views->items, array(
         array('left', $lang->name, "<a href=\"$adminurl=\$id\">\$name</a>"),
-        array('center', $lang->widgets, "<a href=\"{$this->link}widgets/?idview=\$id\">$lang->widgets</a>"),
+      array('center', $lang->widgets, "<a href=\"{$this->link}widgets/?idview=\$id\">$lang->widgets</a>"),
         array('center', $lang->delete, "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\">$lang->delete</a>"),
         ));
       }
@@ -146,35 +146,35 @@ class tadminviews extends tadminmenu {
       $args->add($itemview);
       $args->menu = tadminhtml  ::array2combo($menuitems, $itemview['menuclass']);
       $args->postanounce = tadminhtml  ::array2combo(array(
-'excerpt' => $lang->postexcerpt,
-'card' => $lang->postcard,
-'lite' => $lang->postlite
-), $itemview['postanounce']);
-
+      'excerpt' => $lang->postexcerpt,
+      'card' => $lang->postcard,
+      'lite' => $lang->postlite
+      ), $itemview['postanounce']);
+      
       $tabs->add($lang->name,'[text=name]' .
       ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) .
-
+      
       '[checkbox=hovermenu]
- [combo=menu]
-[combo=postanounce]
-[text=perpage]
-[checkbox=invertorder]
-');
+      [combo=menu]
+      [combo=postanounce]
+      [text=perpage]
+      [checkbox=invertorder]
+      ');
       
       $view = tview::i($id);
       $lang->firstsearch('themes');
-      $tabs->add($lang->theme, 
-tadminthemes::getlist($html->radiotheme, $view->theme->name));
-
+      $tabs->add($lang->theme,
+      tadminthemes::getlist($html->radiotheme, $view->theme->name));
+      
       if (count($view->custom)) {
-$tabs->add($lang->custom, $this->get_custom($view));
-}
+        $tabs->add($lang->custom, $this->get_custom($view));
+      }
       
       $result .= $html->h4->help;
-
+      
       $args->formtitle = $lang->edit;
-$result .= $html->adminform($tabs->get(), $args) .
-tuitabs::gethead();
+      $result .= $html->adminform($tabs->get(), $args) .
+      tuitabs::gethead();
       break;
       
       case 'addview':
@@ -208,7 +208,7 @@ tuitabs::gethead();
       $views = tviews::i();
       $idview = (int) tadminhtml::getparam('idview', 0);
       if (!$idview || !$views->itemexists($idview)) return '';
-
+      
       if ($this->action == 'delete') {
         if ($idview > 1) $views->delete($idview);
         return '';

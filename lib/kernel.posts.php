@@ -778,12 +778,12 @@ class tpost extends titem implements  itemplate {
     return $this->parsetml('content.post');
   }
   
-  public function getcontexcerpt($lite) {
+  public function getcontexcerpt($tml_name) {
+    ttheme::$vars['post'] = $this;
     //no use self theme because post in other context
     $theme = ttheme::i();
-    $tml = $lite ? $theme->templates['content.excerpts.lite.excerpt'] : $theme->templates['content.excerpts.excerpt'];
-    ttheme::$vars['post'] = $this;
-    return $theme->parse($tml);
+    $tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name. '.excerpt';
+    return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
   }
   
   public function getrsslink() {
@@ -1065,6 +1065,7 @@ class tpost extends titem implements  itemplate {
   
 }//class
 
+//post.factory.class.php
 class tpostfactory extends tdata {
   
   public static function i() {
@@ -1461,34 +1462,6 @@ class tposts extends titems {
   
 }//class
 
-
-class tpostswidget extends twidget {
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  protected function create() {
-    parent::create();
-    $this->basename = 'widget.posts';
-    $this->template = 'posts';
-    $this->adminclass = 'tadminmaxcount';
-    $this->data['maxcount'] = 10;
-  }
-  
-  public function getdeftitle() {
-    return tlocal::get('default', 'recentposts');
-  }
-  
-  public function getcontent($id, $sidebar) {
-    $posts = tposts::i();
-    $list = $posts->getpage(0, 1, $this->maxcount, false);
-    $theme = ttheme::i();
-    return $theme->getpostswidgetcontent($list, $sidebar, '');
-  }
-  
-}//class
-
 //post.transform.class.php
 class tposttransform  {
   public $post;
@@ -1699,6 +1672,34 @@ class tmetapost extends titem {
   
 }//class
 
+//widget.posts.class.php
+class tpostswidget extends twidget {
+  
+  public static function i() {
+    return getinstance(__class__);
+  }
+  
+  protected function create() {
+    parent::create();
+    $this->basename = 'widget.posts';
+    $this->template = 'posts';
+    $this->adminclass = 'tadminmaxcount';
+    $this->data['maxcount'] = 10;
+  }
+  
+  public function getdeftitle() {
+    return tlocal::get('default', 'recentposts');
+  }
+  
+  public function getcontent($id, $sidebar) {
+    $posts = tposts::i();
+    $list = $posts->getpage(0, 1, $this->maxcount, false);
+    $theme = ttheme::i();
+    return $theme->getpostswidgetcontent($list, $sidebar, '');
+  }
+  
+}//class
+
 //tags.common.class.php
 class tcommontags extends titems implements  itemplate {
   public $factory;
@@ -1715,7 +1716,6 @@ class tcommontags extends titems implements  itemplate {
     $this->dbversion = dbversion;
     parent::create();
     $this->addevents('changed', 'onbeforecontent', 'oncontent');
-    $this->data['lite'] = false;
     $this->data['includechilds'] = false;
     $this->data['includeparents'] = false;
     $this->PermalinkIndex = 'category';
@@ -1858,9 +1858,6 @@ class tcommontags extends titems implements  itemplate {
     'itemscount' => 0,
     'includechilds' => $this->includechilds,
     'includeparents' => $this->includeparents,
-    'invertorder' => false,
-    'lite' => $this->lite,
-    'liteperpage' => 1000
     );
     
     $id = $this->db->add($item);
@@ -1994,10 +1991,10 @@ class tcommontags extends titems implements  itemplate {
       return 404;
     }
     
-    $perpage = (int) $item['lite'] ? (int) $item['liteperpage'] : litepublisher::$options->perpage;
-    $list = $this->getidposts($id);
-    $pages = (int) ceil(count ($list) / $perpage);
-    if (($pages  > 1) && (litepublisher::$urlmap->page > $pages)) {
+    $view = tview::getview($this);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $pages = (int) ceil($item['itemscount']  / $perpage);
+    if ((litepublisher::$urlmap->page  > 1) && (litepublisher::$urlmap->page > $pages)) {
       return sprintf('<?php litepublisher::$urlmap->redir(\'%s\'); ?>',$item['url']);
     }
     
@@ -2015,10 +2012,13 @@ class tcommontags extends titems implements  itemplate {
   
   public function gethead() {
     $result = $this->contents->getvalue($this->id, 'head');
-    $result .= tview::getview($this)->theme->templates['head.tags'];
+    $theme = tview::getview($this)->theme;
+    $result .= $theme->templates['head.tags'];
+    
     $list = $this->getidposts($this->id);
     $result .=     $this->factory->posts->getanhead($list);
-    return ttheme::i()->parse($result);
+    
+    return $theme->parse($result);
   }
   
   public function getkeywords() {
@@ -2068,29 +2068,33 @@ class tcommontags extends titems implements  itemplate {
   public function getcont() {
     $result = '';
     $this->callevent('onbeforecontent', array(&$result));
-    $theme = ttheme::i();
-    if ($this->id == 0) {
-      $items = $this->getsortedcontent(array(
-      'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
-      'subcount' => '<strong>($itemscount)</strong>',
-      'subitems' =>       '<ul>$item</ul>'
-      ),
-      0, 'count', 0, 0, false);
-      $result .= sprintf('<ul>%s</ul>', $items);
-      $this->callevent('oncontent', array(&$result));
-      return $result;
+    
+    if (!$this->id) {
+      $result .= $this->getcont_all();
+    } else {
+      $view = tview::getview($this);
+      
+      if ($this->getcontent()) {
+        ttheme::$vars['menu'] = $this;
+        $result .= $view->theme->parse($theme->templates['content.menu']);
+      }
+      
+      $list = $this->getidposts($this->id);
+      $item = $this->getitem($this->id);
+      $result .= $view->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $view->postanounce, $view->perpage);
     }
     
-    if ($this->getcontent()) {
-      ttheme::$vars['menu'] = $this;
-      $result .= $theme->parse($theme->templates['content.menu']);
-    }
-    
-    $list = $this->getidposts($this->id);
-    $item = $this->getitem($this->id);
-    $result .= $theme->getpostsnavi($list, (int) $item['lite'], $item['url'], $item['itemscount'], $item['liteperpage']);
     $this->callevent('oncontent', array(&$result));
     return $result;
+  }
+  
+  public function getcont_all() {
+    return  sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
+    'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+    'subcount' => '<strong>($itemscount)</strong>',
+    'subitems' =>       '<ul>$item</ul>'
+    ),
+    0, 'count', 0, 0, false));
   }
   
   public function get_sorted_posts($id, $count, $invert) {
@@ -2107,14 +2111,20 @@ class tcommontags extends titems implements  itemplate {
   }
   
   public function getidposts($id) {
-    if (isset($this->_idposts[$id])) return $this->_idposts[$id];
-    $item = $this->getitem($id);
+    if (isset($this->_idposts[$id])) {
+      return $this->_idposts[$id];
+    }
     
+    $item = $this->getitem($id);
     $includeparents = (int) $item['includeparents'];
     $includechilds = (int) $item['includechilds'];
-    $perpage = (int) $item['lite'] ? $item['liteperpage'] : litepublisher::$options->perpage;
-    $posts = $this->factory->posts;
-    $p = $posts->thistable;
+    
+    $view = tview::i($item['idview']);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $order = $view->invertorder ? 'asc' : 'desc';
+    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+    
+    $posts = $this->factory->posts;    $p = $posts->thistable;
     $t = $this->thistable;
     $ti = $this->itemsposts->thistable;
     $postprop = $this->itemsposts->postprop;
@@ -2123,20 +2133,19 @@ class tcommontags extends titems implements  itemplate {
     if ($includeparents || $includechilds) {
       $this->loadall();
       $all = array($id);
-      if ($includeparents) $all = array_merge($all, $this->getparents($id));
-      if ($includechilds) $all = array_merge($all, $this->getchilds($id));
+      
+      if ($includeparents) {
+        $all = array_merge($all, $this->getparents($id));
+      }
+      
+      if ($includechilds) {
+        $all = array_merge($all, $this->getchilds($id));
+      }
+      
       $tags = sprintf('in (%s)', implode(',', $all));
     } else {
       $tags = " = $id";
     }
-    
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
-    $order = (int) $item['invertorder'] ? 'asc' : 'desc';
-    /*
-    $this->_idposts[$id] = $posts->select("$p.status = 'published' and $p.id in
-    (select DISTINCT post from $ti where $ti.item $tags)",
-    "order by $p.posted $order limit $from, $perpage");
-    */
     
     $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'
@@ -2274,35 +2283,24 @@ class ttagcontent extends tdata {
   
 }//class
 
-class tcommontagswidget extends twidget {
+//tags.factory.class.php
+class ttagfactory extends tdata {
   
-  protected function create() {
-    parent::create();
-    $this->adminclass = 'tadmintagswidget';
-    $this->data['sortname'] = 'count';
-    $this->data['showcount'] = true;
-    $this->data['showsubitems'] = true;
-    $this->data['maxcount'] =0;
+  public static function i() {
+    return getinstance(__class__);
   }
   
-  public function getowner() {
-    return false;
+  public function getposts() {
+    return tposts::i();
   }
   
-  public function getcontent($id, $sidebar) {
-    $theme = ttheme::i();
-    $items = $this->owner->getsortedcontent(array(
-    'item' => $theme->getwidgetitem($this->template, $sidebar),
-    'subcount' =>$theme->getwidgettml($sidebar, $this->template, 'subcount'),
-    'subitems' => $this->showsubitems ? $theme->getwidgettml($sidebar, $this->template, 'subitems') : ''
-    ),
-    0, $this->sortname, $this->maxcount, $this->showcount);
-    return str_replace('$parent', 0,
-    $theme->getwidgetcontent($items, $this->template, $sidebar));
+  public function getpost($id) {
+    return tpost::i($id);
   }
   
 }//class
 
+//tags.categories.class.php
 class tcategories extends tcommontags {
   //public  $defaultid;
   
@@ -2335,28 +2333,7 @@ class tcategories extends tcommontags {
   
 }//class
 
-class tcategorieswidget extends tcommontagswidget {
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  protected function create() {
-    parent::create();
-    $this->basename = 'widget.categories';
-    $this->template = 'categories';
-  }
-  
-  public function getdeftitle() {
-    return tlocal::get('default', 'categories');
-  }
-  
-  public function getowner() {
-    return tcategories::i();
-  }
-  
-}//class
-
+//tags.class.php
 class ttags extends tcommontags {
   
   public static function i() {
@@ -2382,6 +2359,60 @@ class ttags extends tcommontags {
   
 }//class
 
+//widget.commontags.class.php
+class tcommontagswidget extends twidget {
+  
+  protected function create() {
+    parent::create();
+    $this->adminclass = 'tadmintagswidget';
+    $this->data['sortname'] = 'count';
+    $this->data['showcount'] = true;
+    $this->data['showsubitems'] = true;
+    $this->data['maxcount'] =0;
+  }
+  
+  public function getowner() {
+    return false;
+  }
+  
+  public function getcontent($id, $sidebar) {
+    $theme = ttheme::i();
+    $items = $this->owner->getsortedcontent(array(
+    'item' => $theme->getwidgetitem($this->template, $sidebar),
+    'subcount' =>$theme->getwidgettml($sidebar, $this->template, 'subcount'),
+    'subitems' => $this->showsubitems ? $theme->getwidgettml($sidebar, $this->template, 'subitems') : ''
+    ),
+    0, $this->sortname, $this->maxcount, $this->showcount);
+    return str_replace('$parent', 0,
+    $theme->getwidgetcontent($items, $this->template, $sidebar));
+  }
+  
+}//class
+
+//widget.categories.class.php
+class tcategorieswidget extends tcommontagswidget {
+  
+  public static function i() {
+    return getinstance(__class__);
+  }
+  
+  protected function create() {
+    parent::create();
+    $this->basename = 'widget.categories';
+    $this->template = 'categories';
+  }
+  
+  public function getdeftitle() {
+    return tlocal::get('default', 'categories');
+  }
+  
+  public function getowner() {
+    return tcategories::i();
+  }
+  
+}//class
+
+//widget.tags.class.php
 class ttagswidget extends tcommontagswidget {
   
   public static function i() {
@@ -2402,22 +2433,6 @@ class ttagswidget extends tcommontagswidget {
   
   public function getowner() {
     return ttags::i();
-  }
-  
-}//class
-
-class ttagfactory extends tdata {
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  public function getposts() {
-    return tposts::i();
-  }
-  
-  public function getpost($id) {
-    return tpost::i($id);
   }
   
 }//class

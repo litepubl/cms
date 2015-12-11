@@ -352,19 +352,19 @@ class ttheme extends tevents {
     $args->items = implode($this->templates['content.navi.divider'], $a);
     return $this->parsearg($this->templates['content.navi'], $args);
   }
-
-public function keyanounce($postanounce) {
-if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') return 'excerpt';
-if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') return 'lite';
-return 'card';
-}
+  
+  public function keyanounce($postanounce) {
+    if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') return 'excerpt';
+    if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') return 'lite';
+    return 'card';
+  }
   
   public function getposts(array $items, $postanounce) {
     if (!count($items)) return '';
-
+    
     $result = '';
-$tml_key = $this->keyanounce($postanounce);
-tposts::i()->loaditems($items);
+    $tml_key = $this->keyanounce($postanounce);
+    tposts::i()->loaditems($items);
     
     self::$vars['lang'] = tlocal::i('default');
     //$tml = $lite ? $this->templates['content.excerpts.lite.excerpt'] : $this->templates['content.excerpts.excerpt'];
@@ -373,21 +373,21 @@ tposts::i()->loaditems($items);
       $result .= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
       if (isset(self::$vars['author'])) {
-unset(self::$vars['author']);
-}
+        unset(self::$vars['author']);
+      }
     }
     
     if ($tml = $this->templates['content.excerpts' . ($tml_key == 'excerpt' ? '' : '.' . $tml_key)]) {
-$result = str_replace('$excerpt', $result, $this->parse($tml));
-}
-
+      $result = str_replace('$excerpt', $result, $this->parse($tml));
+    }
+    
     unset(self::$vars['post']);
     return $result;
   }
   
   public function getpostsnavi(array $items, $url, $count, $postanounce, $perpage) {
     $result = $this->getposts($items, $postanounce);
-if (!$perpage) $perpage = litepublisher::$options->perpage;
+    if (!$perpage) $perpage = litepublisher::$options->perpage;
     $result .= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }

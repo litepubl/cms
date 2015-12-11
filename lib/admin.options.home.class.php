@@ -91,7 +91,7 @@ class adminhomeoptions extends tadminmenu {
     $home->midlecat = (int) $midlecat;
     $home->showposts = isset($showposts);
     tview::getview($home)->invertorder = isset($invertorder);
-tview::getview($home)->save();
+    tview::getview($home)->save();
     $home->includecats = tadminhtml::check2array('category-');
     $home->excludecats = tadminhtml::check2array('exclude_category-');
     $home->showpagenator = isset($showpagenator);

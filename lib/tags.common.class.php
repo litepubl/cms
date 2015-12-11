@@ -294,7 +294,7 @@ class tcommontags extends titems implements  itemplate {
     } catch (Exception $e) {
       return 404;
     }
-
+    
     $view = tview::getview($this);
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $pages = (int) ceil($item['itemscount']  / $perpage);
@@ -318,10 +318,10 @@ class tcommontags extends titems implements  itemplate {
     $result = $this->contents->getvalue($this->id, 'head');
     $theme = tview::getview($this)->theme;
     $result .= $theme->templates['head.tags'];
-
+    
     $list = $this->getidposts($this->id);
     $result .=     $this->factory->posts->getanhead($list);
-
+    
     return $theme->parse($result);
   }
   
@@ -372,34 +372,34 @@ class tcommontags extends titems implements  itemplate {
   public function getcont() {
     $result = '';
     $this->callevent('onbeforecontent', array(&$result));
-
-if (!$this->id) {
-$result .= $this->getcont_all();
+    
+    if (!$this->id) {
+      $result .= $this->getcont_all();
     } else {
-$view = tview::getview($this);
-
-    if ($this->getcontent()) {
-      ttheme::$vars['menu'] = $this;
-      $result .= $view->theme->parse($theme->templates['content.menu']);
+      $view = tview::getview($this);
+      
+      if ($this->getcontent()) {
+        ttheme::$vars['menu'] = $this;
+        $result .= $view->theme->parse($theme->templates['content.menu']);
+      }
+      
+      $list = $this->getidposts($this->id);
+      $item = $this->getitem($this->id);
+      $result .= $view->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $view->postanounce, $view->perpage);
     }
     
-    $list = $this->getidposts($this->id);
-    $item = $this->getitem($this->id);
-    $result .= $view->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $view->postanounce, $view->perpage);
-}
-
     $this->callevent('oncontent', array(&$result));
     return $result;
   }
-
-public function getcont_all() {
-      return  sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
-      'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
-      'subcount' => '<strong>($itemscount)</strong>',
-      'subitems' =>       '<ul>$item</ul>'
-      ),
-      0, 'count', 0, 0, false));
-}
+  
+  public function getcont_all() {
+    return  sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
+    'item' =>'<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+    'subcount' => '<strong>($itemscount)</strong>',
+    'subitems' =>       '<ul>$item</ul>'
+    ),
+    0, 'count', 0, 0, false));
+  }
   
   public function get_sorted_posts($id, $count, $invert) {
     $ti = $this->itemsposts->thistable;
@@ -416,18 +416,18 @@ public function getcont_all() {
   
   public function getidposts($id) {
     if (isset($this->_idposts[$id])) {
-return $this->_idposts[$id];
-}
-
+      return $this->_idposts[$id];
+    }
+    
     $item = $this->getitem($id);
     $includeparents = (int) $item['includeparents'];
     $includechilds = (int) $item['includechilds'];
-
-$view = tview::i($item['idview']);
+    
+    $view = tview::i($item['idview']);
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $order = $view->invertorder ? 'asc' : 'desc';
     $from = (litepublisher::$urlmap->page - 1) * $perpage;
-
+    
     $posts = $this->factory->posts;    $p = $posts->thistable;
     $t = $this->thistable;
     $ti = $this->itemsposts->thistable;
@@ -437,15 +437,15 @@ $view = tview::i($item['idview']);
     if ($includeparents || $includechilds) {
       $this->loadall();
       $all = array($id);
-
+      
       if ($includeparents) {
-$all = array_merge($all, $this->getparents($id));
-}
-
+        $all = array_merge($all, $this->getparents($id));
+      }
+      
       if ($includechilds) {
-$all = array_merge($all, $this->getchilds($id));
-}
-
+        $all = array_merge($all, $this->getchilds($id));
+      }
+      
       $tags = sprintf('in (%s)', implode(',', $all));
     } else {
       $tags = " = $id";

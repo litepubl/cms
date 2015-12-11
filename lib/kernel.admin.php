@@ -472,7 +472,7 @@ class tadminhtml {
     foreach ($items as $index => $value) {
       $result .= strtr($tml, array(
       '$index' => $index,
-      '$checked' => $value == $selected ? 'checked="checked"' : '',
+      '$checked' => $index == $selected ? 'checked="checked"' : '',
       '$name' => $name,
       '$value' => self::specchars($value)
       ));
@@ -578,6 +578,7 @@ class tadminhtml {
     'center' => 'text-center'
     );
     
+    $list = explode(' ', $s);
     foreach ($list as $i => $v) {
       if (isset($map[$v])) {
         $list[$i] = $map[$v];
@@ -787,7 +788,7 @@ class tadminhtml {
       }
     }
     
-    return $result ? sprintf($'<ul>%s</ul>', $result);
+    return $result ? sprintf('<ul>%s</ul>', $result) : '';
   }
   
   public function linkproplist(array $props) {

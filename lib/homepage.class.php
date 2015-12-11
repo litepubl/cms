@@ -95,10 +95,10 @@ class thomepage extends tsinglemenu  {
     $view = tview::getview($this);
     $result = $view->theme->getposts($items, $view->postanounce);
     if ($this->showpagenator) {
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
-$result .= $view->theme->getpages($this->url, litepublisher::$urlmap->page,
- ceil($this->data['archcount'] / $perpage));
-}
+      $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+      $result .= $view->theme->getpages($this->url, litepublisher::$urlmap->page,
+      ceil($this->data['archcount'] / $perpage));
+    }
     return $result;
   }
   

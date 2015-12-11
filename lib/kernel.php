@@ -1228,6 +1228,7 @@ class titems extends tevents {
   
 }//class
 
+//items.storage.class.php
 class titems_storage extends titems {
   
   public function load() {
@@ -1240,6 +1241,7 @@ class titems_storage extends titems {
   
 }//class
 
+//items.single.class.php
 class tsingleitems extends titems {
   public static $instances;
   public $id;
@@ -1483,7 +1485,7 @@ class tclasses extends titems {
   
   public function include_file($filename) {
     if (file_exists($filename)) {
-      require($filename);
+      require_once($filename);
     }
   }
   
@@ -2517,7 +2519,10 @@ class turlmap extends titems {
   }
   
   public static function sendheader($cache) {
-    if (!$cache) self::nocache();
+    if (!$cache) {
+      self::nocache();
+    }
+    
     header('Content-Type: text/html; charset=utf-8');
     header('Last-Modified: ' . date('r'));
     header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');

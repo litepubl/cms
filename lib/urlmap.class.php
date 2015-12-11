@@ -516,9 +516,9 @@ class turlmap extends titems {
   
   public static function sendheader($cache) {
     if (!$cache) {
-self::nocache();
-}
-
+      self::nocache();
+    }
+    
     header('Content-Type: text/html; charset=utf-8');
     header('Last-Modified: ' . date('r'));
     header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');

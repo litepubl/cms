@@ -93,15 +93,15 @@ class tuserpages extends titems implements itemplate {
     $this->id = (int) $id;
     if (!$this->itemexists($id)) return 404;
     $item =$this->getitem($id);
-
+    
     $view = tview::getview($this);
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $pages = (int) ceil(litepublisher::$classes->posts->archivescount / $perpage);
     if ((litepublisher::$urlmap->page  > 1) && (litepublisher::$urlmap->page > $pages)) {
-$url = litepublisher::$urlmap->getvalue($item['idurl'], 'url');
+      $url = litepublisher::$urlmap->getvalue($item['idurl'], 'url');
       return "<?php litepublisher::\$urlmap->redir('$url'); ?>";
     }
-
+    
   }
   
   public function gettitle() {
@@ -131,21 +131,21 @@ $url = litepublisher::$urlmap->getvalue($item['idurl'], 'url');
   public function getcont() {
     $item = $this->getitem($this->id);
     ttheme::$vars['author'] = $this;
-
+    
     $view = tview::getview($this);
-$theme = $view->theme;
+    $theme = $view->theme;
     $result = $theme->parse($theme->templates['content.author']);
-
+    
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $posts = litepublisher::$classes->posts;
     $from = (litepublisher::$urlmap->page - 1) * $perpage;
     
     $poststable = $posts->thistable;
     $count = $posts->db->getcount("$poststable.status = 'published' and $poststable.author = $this->id");
-$order = $view->invertorder ? 'asc' : 'desc';
+    $order = $view->invertorder ? 'asc' : 'desc';
     $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id",
     "order by $poststable.posted $order limit $from, $perpage");
-
+    
     $result .= $theme->getposts($items, $view->postanounce);
     $result .=$theme->getpages($item['url'], litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;

@@ -503,33 +503,33 @@ class tmediaparser extends tevents {
     if (!$source) return false;
     $sourcex = imagesx($source);
     $sourcey = imagesy($source);
-if (!$x) $x = $y;
-if (!$y) $y = $x;
+    if (!$x) $x = $y;
+    if (!$y) $y = $x;
     if (($x >= $sourcex) && ($y >= $sourcey)) return false;
     
-switch ($mode) {
-case 'fixed':
+    switch ($mode) {
+      case 'fixed':
       $ratio = $x / $y;
-//clip source size
+      //clip source size
       if ($sourcex/$sourcey > $ratio) {
         $sourcex = $sourcey *$ratio;
       } else {
         $sourcey = $sourcex /$ratio;
       }
-break;
-
-case 'max':
-case 'min':
+      break;
+      
+      case 'max':
+      case 'min':
       $ratio = $sourcex / $sourcey;
-        if ($mode == 'max' ? $x/$y > $ratio : $x/$y <= $ratio) {
-          $x = $y *$ratio;
-        } else {
-          $y = $x /$ratio;
-        }
-break;
-
-default:
-throw new Exception("Unknow thumbnail options $mode");
+      if ($mode == 'max' ? $x/$y > $ratio : $x/$y <= $ratio) {
+        $x = $y *$ratio;
+      } else {
+        $y = $x /$ratio;
+      }
+      break;
+      
+      default:
+      throw new Exception("Unknow thumbnail options $mode");
     }
     
     $dest = imagecreatetruecolor($x, $y);

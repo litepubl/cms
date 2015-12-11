@@ -665,10 +665,6 @@ class tcommentform extends tevents {
   }
   
   public function request_confirm(array $values, array $shortpost) {
-    /*
-    $kept = tkeptcomments::i();
-    $kept->deleteold();
-    */
     $values['date'] = time();
     $values['ip'] = preg_replace( '/[^0-9., ]/', '',$_SERVER['REMOTE_ADDR']);
     

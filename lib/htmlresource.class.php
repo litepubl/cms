@@ -320,7 +320,7 @@ class tadminhtml {
     'center' => 'text-center'
     );
     
-$list = explode(' ', $s);
+    $list = explode(' ', $s);
     foreach ($list as $i => $v) {
       if (isset($map[$v])) {
         $list[$i] = $map[$v];

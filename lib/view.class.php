@@ -46,15 +46,15 @@ class tview extends titem_storage {
     'hovermenu' => true,
     'customsidebar' => false,
     'disableajax' => false,
-//possible values: default, lite, card
-'postanounce' => 'excerpt',
-'invertorder' => false,
-'perpage' => 0,
-
+    //possible values: default, lite, card
+    'postanounce' => 'excerpt',
+    'invertorder' => false,
+    'perpage' => 0,
+    
     'custom' => array(),
     'sidebars' => array()
     );
-
+    
     $this->sidebars = &$this->data['sidebars'];
     $this->themeinstance = null;
   }

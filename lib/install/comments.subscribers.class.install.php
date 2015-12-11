@@ -6,9 +6,9 @@
 **/
 
 function tsubscribersInstall($self) {
-    $dbmanager = tdbmanager ::i();
-    $dbmanager->CreateTable($self->table, file_get_contents(dirname(__file__) . '/sql/items.posts.sql'));
-
+  $dbmanager = tdbmanager ::i();
+  $dbmanager->CreateTable($self->table, file_get_contents(dirname(__file__) . '/sql/items.posts.sql'));
+  
   $self->fromemail = 'litepublisher@' . $_SERVER['HTTP_HOST'];
   $self->save();
   

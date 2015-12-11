@@ -76,15 +76,15 @@ class tarchives extends titems_itemplate implements  itemplate {
   public function request($date) {
     $date = (int) $date;
     if (!isset($this->items[$date])) return 404;
-
+    
     $this->date = $date;
-$item = $this->items[$date];
-
+    $item = $this->items[$date];
+    
     $view = tview::getview($this);
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
     $pages = (int) ceil($item['count']  / $perpage);
     if ((litepublisher::$urlmap->page  > 1) && (litepublisher::$urlmap->page > $pages)) {
-      return "<?php litepublisher::\$urlmap->redir('{$item['url']}'); ?>";
+    return "<?php litepublisher::\$urlmap->redir('{$item['url']}'); ?>";
     }
   }
   
@@ -114,10 +114,10 @@ $item = $this->items[$date];
     if (isset($this->_idposts)) return $this->_idposts;
     $item = $this->items[$this->date];
     $order = tview::getview($this)->invertorder ? 'asc' : 'desc';
-return $this->_idposts = $this->getdb('posts')->idselect(
-"status = 'published' and
- year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
-ORDER BY posted $order");
+    return $this->_idposts = $this->getdb('posts')->idselect(
+    "status = 'published' and
+year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
+    ORDER BY posted $order");
   }
   
   public function getsitemap($from, $count) {
