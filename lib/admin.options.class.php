@@ -236,10 +236,9 @@ $previewmode
       $html = $this->html;
       return $html->adminform('
       [checkbox=parentcats] [checkbox=childcats]
-      [checkbox=parenttags] [checkbox=childtags]', $args) .
-      $html->p->notecatstags;
-      
-      case 'robots':
+      [checkbox=parenttags] [checkbox=childtags]', $args);
+
+            case 'robots':
       $html = $this->html;
       $args->formtitle = 'robots.txt';
       $args->robots = trobotstxt::i()->text;

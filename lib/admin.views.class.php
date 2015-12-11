@@ -145,9 +145,21 @@ class tadminviews extends tadminmenu {
       $itemview = $views->items[$id];
       $args->add($itemview);
       $args->menu = tadminhtml  ::array2combo($menuitems, $itemview['menuclass']);
+      $args->postanounce = tadminhtml  ::array2combo(array(
+'excerpt' => $lang->postexcerpt,
+'card' => $lang->postcard,
+'lite' => $lang->postlite
+), $itemview['postanounce']);
+
       $tabs->add($lang->name,'[text=name]' .
       ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) .
-      '[checkbox=hovermenu] [combo=menu]');
+
+      '[checkbox=hovermenu]
+ [combo=menu]
+[combo=postanounce]
+[text=perpage]
+[checkbox=invertorder]
+');
       
       $view = tview::i($id);
       $lang->firstsearch('themes');
@@ -209,6 +221,9 @@ class tadminviews extends tadminmenu {
       $view->themename = trim($_POST['theme_idview']);
       $view->menuclass = $_POST['menu'];
       $view->hovermenu = isset($_POST['hovermenu']);
+      $view->postanounce = $_POST['postanounce'];
+      $view->perpage = (int) $_POST['perpage'];
+      $view->invertorder = isset($_POST['invertorder']);
       
       $this->set_custom($idview);
       $view->save();
