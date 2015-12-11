@@ -20,7 +20,7 @@ class tadminuseroptions extends tadminmenu {
     
     $pages = tuserpages::i();
     $args->createpage = $pages->createpage;
-    $args->lite = $pages->lite;
+
     
     $linkgen = tlinkgenerator::i();
     $args->linkschema = $linkgen->data['user'];
@@ -30,7 +30,6 @@ class tadminuseroptions extends tadminmenu {
     
     return $html->adminform(
     '[checkbox=createpage]
-    [checkbox=lite]
     [text=linkschema]
     [text=defaulthome]'
     . $html->h4->defaults.
@@ -41,7 +40,6 @@ class tadminuseroptions extends tadminmenu {
   public function processform() {
     $pages = tuserpages::i();
     $pages->createpage = isset($_POST['createpage']);
-    $pages->lite = isset($_POST['lite']);
     $pages->save();
     
     $groups = tusergroups::i();

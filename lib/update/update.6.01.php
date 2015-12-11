@@ -93,7 +93,7 @@ $m->deleteurl('/admin/views/themefiles/');
 
 $m->unlock();
 
-foreach (array('tcategories', 'ttags', 'tarchives') as $classname) {
+foreach (array('tcategories', 'ttags', 'tarchives', 'tuserpages') as $classname) {
 $obj = getinstance($classname);
 if (isset($obj->data['lite'])) {
 unset($obj->data['lite']);
