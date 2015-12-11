@@ -162,9 +162,6 @@ class tcommontags extends titems implements  itemplate {
     'itemscount' => 0,
     'includechilds' => $this->includechilds,
     'includeparents' => $this->includeparents,
-    'invertorder' => false,
-    'lite' => $this->lite,
-    'liteperpage' => 1000
     );
     
     $id = $this->db->add($item);
@@ -297,11 +294,11 @@ class tcommontags extends titems implements  itemplate {
     } catch (Exception $e) {
       return 404;
     }
-    
-    $perpage = (int) $item['lite'] ? (int) $item['liteperpage'] : litepublisher::$options->perpage;
-    $list = $this->getidposts($id);
-    $pages = (int) ceil(count ($list) / $perpage);
-    if (($pages  > 1) && (litepublisher::$urlmap->page > $pages)) {
+
+    $view = tview::getview($this);
+    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $pages = (int) ceil($item['itemscount']  / $perpage);
+    if ((litepublisher::$urlmap->page  > 1) && (litepublisher::$urlmap->page > $pages)) {
       return sprintf('<?php litepublisher::$urlmap->redir(\'%s\'); ?>',$item['url']);
     }
     
@@ -319,10 +316,13 @@ class tcommontags extends titems implements  itemplate {
   
   public function gethead() {
     $result = $this->contents->getvalue($this->id, 'head');
-    $result .= tview::getview($this)->theme->templates['head.tags'];
+    $theme = tview::getview($this)->theme;
+    $result .= $theme->templates['head.tags'];
+
     $list = $this->getidposts($this->id);
     $result .=     $this->factory->posts->getanhead($list);
-    return ttheme::i()->parse($result);
+
+    return $theme->parse($result);
   }
   
   public function getkeywords() {

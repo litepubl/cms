@@ -76,12 +76,15 @@ class tarchives extends titems_itemplate implements  itemplate {
   public function request($date) {
     $date = (int) $date;
     if (!isset($this->items[$date])) return 404;
+
     $this->date = $date;
+$item = $this->items[$date];
 
     $view = tview::getview($this);
     $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
-    if ($this->lite && (litepublisher::$urlmap->page > 1)) {
-      return sprintf("<?php litepublisher::$urlmap->redir('%s');",$this->items[$date]['url']);
+    $pages = (int) ceil($item['count']  / $perpage);
+    if ((litepublisher::$urlmap->page  > 1) && (litepublisher::$urlmap->page > $pages)) {
+      return "<?php litepublisher::\$urlmap->redir('{$item['url']}'); ?>";
     }
   }
   
