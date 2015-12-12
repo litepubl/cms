@@ -6,13 +6,13 @@ foreach (array(
 'array2prop.class.php',
 'utils.functions.php',
 
-'storage.file.class.php');
-'storage.class.php');
-'storage.mem.class.php');
-'storage.cache.file.class.php');
-'storage.cache.memcache.class.php');
+'storage.file.class.php',
+'storage.class.php',
+'storage.mem.class.php',
+'storage.cache.file.class.php',
+'storage.cache.memcache.class.php',
    
-'events.class.php');
+'events.class.php',
 'events.exception.class.php',
 'events.coclass.php',
 'events.storage.class.php',

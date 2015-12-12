@@ -655,7 +655,7 @@ class tdata {
   
 }//class
 
-
+//array2prop.class.php
 class tarray2prop {
   public $array;
 public function __construct(array $a = null) { $this->array = $a; }
@@ -665,6 +665,7 @@ public function __isset($name) { return array_key_exists($name, $this->array); }
 public function __tostring() { return $this->array['']; }
 }//class
 
+//utils.functions.php
 function sqldate($date = 0) {
   if ($date == 0) $date = time();
   return date('Y-m-d H:i:s', $date);
@@ -776,15 +777,6 @@ function dumpvar($v) {
 }
 
 //events.class.php
-class ECancelEvent extends Exception {
-  public $result;
-  
-  public function __construct($message, $code = 0) {
-    $this->result = $message;
-    parent::__construct('', 0);
-  }
-}
-
 class tevents extends tdata {
   protected $events;
   protected $eventnames;
@@ -1041,18 +1033,17 @@ class tevents extends tdata {
   
 }//class
 
-class tevents_storage extends tevents {
+//events.exception.class.php
+class ECancelEvent extends Exception {
+  public $result;
   
-  public function load() {
-    return tstorage::load($this);
+  public function __construct($message, $code = 0) {
+    $this->result = $message;
+    parent::__construct('', 0);
   }
-  
-  public function save() {
-    return tstorage::save($this);
-  }
-  
-}//class
+}
 
+//events.coclass.php
 class tcoevents extends tevents {
   private $owner;
   
@@ -1080,6 +1071,19 @@ public function load() {}
   
   public function save() {
     return $this->owner->save();
+  }
+  
+}//class
+
+//events.storage.class.php
+class tevents_storage extends tevents {
+  
+  public function load() {
+    return tstorage::load($this);
+  }
+  
+  public function save() {
+    return tstorage::save($this);
   }
   
 }//class
@@ -1338,6 +1342,7 @@ class titem extends tdata {
   
 }
 
+//item.storage.class.php
 class titem_storage extends titem {
   
   public function getowner() {
@@ -1360,17 +1365,6 @@ class titem_storage extends titem {
 }//class
 
 //classes.class.php
-//fix storage include
-if (!class_exists('tstorage')) {
-  include (dirname(__file__) . '/storage.class.php');
-}
-
-if (!function_exists( 'spl_autoload_register' ) ) {
-  function __autoload($class) {
-    litepublisher::$classes->_autoload($class);
-  }
-}
-
 class tclasses extends titems {
   public $classes;
   public $interfaces;
@@ -1485,7 +1479,7 @@ class tclasses extends titems {
   
   public function include_file($filename) {
     if (file_exists($filename)) {
-      require_once($filename);
+      require ($filename);
     }
   }
   
@@ -1538,6 +1532,13 @@ class tclasses extends titems {
   }
   
 }//class
+
+//classes.functions.php
+if (!function_exists( 'spl_autoload_register' ) ) {
+  function __autoload($class) {
+    litepublisher::$classes->_autoload($class);
+  }
+}
 
 function getinstance($class) {
   return litepublisher::$classes->getinstance($class);

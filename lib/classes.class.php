@@ -119,7 +119,7 @@ class tclasses extends titems {
   
   public function include_file($filename) {
     if (file_exists($filename)) {
-      require_once($filename);
+      require ($filename);
     }
   }
   
