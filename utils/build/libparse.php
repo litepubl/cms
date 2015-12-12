@@ -81,11 +81,17 @@ function BuildKernel($dir){
 makekernel($dir, 'kernel.php', array(
 'db.class.php',
 'data.class.php',
+
  'events.class.php',
+'events.exception.class.php',
+'events.coclass.php',
+'events.storage.class.php',
+
  'items.class.php',
 'items.storage.class.php',
 'items.single.class.php',
 'item.class.php',
+'item.storage.class.php',
  'classes.class.php',
  'options.class.php',
  'site.class.php',

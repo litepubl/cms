@@ -68,21 +68,9 @@ try {
   if (litepublisher::$debug) {
     error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING );
     ini_set('display_errors', 1);
-    require_once(litepublisher::$paths->lib . 'data.class.php');
-    
-    require_once(litepublisher::$paths->lib . 'storage.file.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.mem.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.cache.file.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.cache.memcache.class.php');
-    
-    require_once(litepublisher::$paths->lib . 'events.class.php');
-    require_once(litepublisher::$paths->lib . 'items.class.php');
-    require_once(litepublisher::$paths->lib . 'classes.class.php');
-    require_once(litepublisher::$paths->lib . 'options.class.php');
-    require_once(litepublisher::$paths->lib . 'site.class.php');
+    require (litepublisher::$paths->lib . 'kernel.debug.php');
   } else {
-    require_once(litepublisher::$paths->lib . 'kernel.php');
+    require (litepublisher::$paths->lib . 'kernel.php');
   }
   
   define('dbversion', true);

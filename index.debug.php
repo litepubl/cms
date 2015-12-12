@@ -69,20 +69,7 @@ litepublisher::$paths->data .= 'fire\\';
 }
 
 if (litepublisher::$debug) {
-//require_once(litepublisher::$paths->lib . 'debugproxy.class.php');
-require_once(litepublisher::$paths->lib . 'data.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.file.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.mem.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.cache.file.class.php');
-    require_once(litepublisher::$paths->lib . 'storage.cache.memcache.class.php');
-
-
-require_once(litepublisher::$paths->lib . 'events.class.php');
-require_once(litepublisher::$paths->lib . 'items.class.php');
-require_once(litepublisher::$paths->lib . 'classes.class.php');
-require_once(litepublisher::$paths->lib . 'options.class.php');
-require_once(litepublisher::$paths->lib . 'site.class.php');
+    require (litepublisher::$paths->lib . 'kernel.debug.php');
 } else {
 require_once(litepublisher::$paths->lib . 'kernel.php');
 }

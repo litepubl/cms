@@ -41,9 +41,13 @@ $classes->items['titems_itemplate'][2] = 'items.itemplate.class.php';
 $classes->items['titems'] = array('kernel.php', '', ' items.class.php');
 $classes->items['titems_storage'] = array('kernel.php', '', 'items.storage.class.php');
 $classes->items['tsingleitems'] = array('kernel.php', '', 'items.single.class.php');
-
+$classes->items['titem'] = array('kernel.php', '', 'item.class.php');
+$classes->items['titem_storage'] = array('kernel.php', '', 'item.storage.class.php');
+$classes->items['tevents'] = array('kernel.php', '', 'events.class.php');
+$classes->items['tevents_storage'] = array('kernel.php', '', 'events.storage.class.php');
+$classes->items['tcoevents'] = array('kernel.php', '', 'events.coclass.php');
+$classes->items['ECancelEvent'] = array('kernel.php', '', 'events.exception.class.php');
 $classes->save();
-
 if (isset(litepublisher::$options->commentspull)) {
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;
 unset(litepublisher::$options->data['commentspull']);
