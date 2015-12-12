@@ -3,6 +3,9 @@
 foreach (array(
 //'debugproxy.class.php');
 'data.class.php',
+'array2prop.class.php',
+'utils.functions.php',
+
 'storage.file.class.php');
 'storage.class.php');
 'storage.mem.class.php');
@@ -14,7 +17,6 @@ foreach (array(
 'events.coclass.php',
 'events.storage.class.php',
 
-
 'items.class.php',
 'items.storage.class.php',
 'items.single.class.php',
@@ -22,6 +24,7 @@ foreach (array(
 'item.storage.class.php',
 
 'classes.class.php',
+'classes.functions.php',
 'options.class.php',
 'site.class.php',
 ) as $filename) {

@@ -5,17 +5,6 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-//fix storage include
-if (!class_exists('tstorage')) {
-  include (dirname(__file__) . '/storage.class.php');
-}
-
-if (!function_exists( 'spl_autoload_register' ) ) {
-  function __autoload($class) {
-    litepublisher::$classes->_autoload($class);
-  }
-}
-
 class tclasses extends titems {
   public $classes;
   public $interfaces;
@@ -183,7 +172,3 @@ class tclasses extends titems {
   }
   
 }//class
-
-function getinstance($class) {
-  return litepublisher::$classes->getinstance($class);
-}
