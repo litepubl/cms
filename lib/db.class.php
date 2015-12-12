@@ -113,8 +113,7 @@ class tdatabase {
     if ($this->debug) {
       $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
       if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
-        echo "<pre>\n";
-        echo $sql, "\n";
+        echo "<pre>\n$sql\n";
         var_dump($r->fetch_assoc ());
         echo "</pre>\n";
       }
@@ -330,9 +329,9 @@ class tdatabase {
     return $this->update("$name = " . $this->quote($value), "id = $id");
   }
   
-  public function getvalues($name, $where) {
+  public function getvalues($names, $where) {
     $result = array();
-    $res = $this->query("select $name from $this->prefix$this->table where $where");
+    $res = $this->query("select $names from $this->prefix$this->table where $where");
     if (is_object($res)) {
       while ($r = $res->fetch_row()) {
         $result[$r[0]] = $r[1];

@@ -131,11 +131,10 @@ class tcron extends tevents {
     
     if (($type == 'single') && !$this->disableping && !self::$pinged) {
       if (litepublisher::$debug) tfiler::log("cron added $id");
-      if (tfilestorage::$memcache) {
-        $this->pingmemcache();
-      } else {
-        self::pingonshutdown();
-      }
+$memstorage = memstorage::i();
+if (!$memstorage->singlecron) {
+$memstorage->singlecron = time() + 300;
+}
     }
     
     return $id;
@@ -189,37 +188,13 @@ class tcron extends tevents {
     $this->db->delete("class = '$class'");
   }
   
-  public function pingmemcache() {
-    $memcache = tfilestorage::$memcache;
-    $expired = time() - 300;
-    $key_last =litepublisher::$domain . ':lastpinged';
-    $lastpinged = $memcache->get($key_last );
-    if ($lastpinged && ($expired >= $lastpinged)) {
-      return self::pingonshutdown();
-    }
-    
-    $key_single =litepublisher::$domain . ':singlepinged';
-    $singlepinged = $memcache->get($key_single);
-    if (!$singlepinged) {
-      $memcache->set($key_single, time(), false, 3600);
-    } elseif ($expired >= $singlepinged ) {
-      self::pingonshutdown();
-    }
-    
-  }
-  
   public static function pingonshutdown() {
     if (self::$pinged) return;
     self::$pinged = true;
-    
-    if (tfilestorage::$memcache) {
-      $memcache = tfilestorage::$memcache;
-      $k =litepublisher::$domain . ':lastpinged';
-      $memcache->set($k, time(), false, 3600);
-      $k =litepublisher::$domain . ':singlepinged';
-      $memcache->delete($k);
-    }
-    
+
+$memstorage = memstorage::i();    
+$memstorage->singlecron = false;
+
     register_shutdown_function(array(tcron::i(), 'ping'));
   }
   

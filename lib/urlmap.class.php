@@ -439,27 +439,16 @@ class turlmap extends titems {
   
   protected function close() {
     $this->call_close_events();
-    if ($this->disabledcron) return;
-    if (tfilestorage::$memcache) {
-      $memcache = tfilestorage::$memcache;
-      $k =litepublisher::$domain . ':lastpinged';
-      $lastpinged = $memcache->get($k);
-      if (!$lastpinged  || (time() > $lastpinged  + 3600)) {
-        $memcache->set($k, time(), false, 3600);
-        tcron::pingonshutdown();
-      }else {
-        $k =litepublisher::$domain . ':singlepinged';
-        $singlepinged = $memcache->get($k);
-        if ($singlepinged && (time() > $singlepinged  + 300)) {
-          $memcache->delete($k);
-          tcron::pingonshutdown();
-        }
-      }
-    } elseif (time() > litepublisher::$options->crontime + 3600) {
-      litepublisher::$options->crontime = time();
+    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) return;
+
+$memstorage = memstorage::i();
+if ($memstorage->hourcron + 3600 <= time()) {
+$memstorage->hourcron = time();
       tcron::pingonshutdown();
+} else if ($memstorage->singlecron >= time()) {
+      tcron::pingonshutdown();
+}
     }
-  }
   
   public function redir($url, $status = 301) {
     litepublisher::$options->savemodified();
