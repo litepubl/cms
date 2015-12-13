@@ -136,7 +136,6 @@ $this->saveall();
         $this->create_table();
 $this->created = time();
 }
-
 }
 
 public function loadall() {

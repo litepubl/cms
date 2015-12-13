@@ -8,7 +8,6 @@
 function tarchivesInstall($self) {
   $posts = tposts::i();
   $posts->changed = $self->postschanged;
-  if (!dbversion) $self->postschanged();
 }
 
 function tarchivesUninstall($self) {
@@ -17,6 +16,7 @@ function tarchivesUninstall($self) {
   $widgets = twidgets::i();
   $widgets->deleteclass(get_class($self));
 }
+
 function tarchivesGetsitemap($self, $from, $count) {
   $result = array();
   foreach ($self->items as $date => $item) {

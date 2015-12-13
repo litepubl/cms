@@ -5,10 +5,6 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-function twidgetUninstall($self) {
-  twidgets::i()->deleteclass(get_class($self));
-}
-
 function twidgetsInstall($self) {
   litepublisher::$urlmap->addget('/getwidget.htm', get_class($self));
   $robot = trobotstxt::i();
@@ -16,6 +12,7 @@ function twidgetsInstall($self) {
   
   $xmlrpc = TXMLRPC::i();
   $xmlrpc->add('litepublisher.getwidget', 'xmlrpcgetwidget', get_class($self));
+
   install_std_widgets($self);
 }
 
@@ -23,14 +20,6 @@ function twidgetsUninstall($self) {
   turlmap::unsub($self);
   $xmlrpc = TXMLRPC::i();
   $xmlrpc->deleteclass(get_class($self));
-}
-
-function twidgetscacheInstall($self) {
-  litepublisher::$urlmap->onclearcache = $self->onclearcache;
-}
-
-function twidgetscacheUninstall($self) {
-  turlmap::unsub($self);
 }
 
 function install_std_widgets($widgets) {

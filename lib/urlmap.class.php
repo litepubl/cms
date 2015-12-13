@@ -445,7 +445,8 @@ $memstorage = memstorage::i();
 if ($memstorage->hourcron + 3600 <= time()) {
 $memstorage->hourcron = time();
       tcron::pingonshutdown();
-} else if ($memstorage->singlecron >= time()) {
+} else if ($memstorage->singlecron && ($memstorage->singlecron  <= time())) {
+$memstorage->singlecron = false;
       tcron::pingonshutdown();
 }
     }

@@ -7,29 +7,25 @@
 
 function tpostsInstall($self) {
   if ('tposts' != get_class($self)) return;
-  if (dbversion) {
+
     $manager = tdbmanager ::i();
     $dir = dirname(__file__) . '/sql/';
     $manager->CreateTable($self->table, file_get_contents($dir .'post.sql'));
     $manager->CreateTable('pages', file_get_contents($dir .'post.pages.sql'));
     $manager->CreateTable($self->rawtable, file_get_contents($dir .'post.raw.sql'));
-  } else {
-    $dir = litepublisher::$paths->data . 'posts';
-    @mkdir($dir, 0777);
-    @chmod($dir, 0777);
-  }
+
   $Cron = tcron::i();
   $Cron->add('hour', get_class($self), 'HourCron');
 }
 
 function tpostsUninstall($self) {
   if ('tposts' != get_class($self)) return;
+
   $Cron = tcron::i();
   $Cron->deleteclass(get_class($self));
   
   $widgets = twidgets::i();
   $widgets->deleteclass($self);
-  //@rmdir(litepublisher::$paths->data . 'posts');
 }
 
 function tpostsGetsitemap($self, $from, $count) {
