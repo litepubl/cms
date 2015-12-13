@@ -67,7 +67,7 @@ protected function preparetag($name) {
 return $name;
 }
 
-protected function setvalue($name, $value) {
+protected function setvalue($name, $s) {
         if (strbegin($name, 'sidebar')) {
           $this->setwidgetvalue($name, $s);
         }  elseif (isset($this->paths[$name])) {
@@ -114,14 +114,13 @@ protected function setvalue($name, $value) {
         foreach ($this->paths as $path => $info) {
           if (strbegin($path, $name)) {
             if ($child == $info['tag']) {
-              $info['path'] = $path;+
+              $info['path'] = $path;
               return $info;
             }
           }
         }
         
-        $child = substr($child, 1);
-        $path = $name . '.' . $child;
+        $path = $name . '.' . substr($child, 1);
         if (strbegin($name, 'sidebar')) {
           return array(
           'path' => $path,
@@ -140,3 +139,196 @@ protected function setvalue($name, $value) {
         
         $this->error("The '$child' not found in path '$name'");
       }
+      
+      private function setwidgetvalue($path, $value) {
+        if (!strpos($path, '.')) return;
+        if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
+        $widgetname = $m[2];
+        //backward compability deprecated submenu
+        if ($widgetname == 'submenu') return;
+        
+        if (($widgetname != 'widget') && (!in_array($widgetname, ttheme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
+        
+        $path = ttheme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
+        if ($path === false) $this->error("Unknown '$path' widget path");
+        
+        $this->setwidgetitem($widgetname, $path, $value);
+        
+        if ($widgetname == 'widget') {
+          foreach (ttheme::getwidgetnames() as $widgetname) {
+            if ((($widgetname == 'posts') || ($widgetname == 'comments')) &&
+            ($path =='.item')) continue;
+            
+            $this->setwidgetitem($widgetname, $path, $value);
+          }
+        }
+      }
+      
+      private function setwidgetitem($widgetname, $path, $value) {
+        $sidebar = &$this->theme->templates['sidebars'][$this->sidebar_index];
+        if (!isset($sidebar[$widgetname])) {
+          foreach ( array('', '.items', '.item', '.subcount', '.subitems') as $name) {
+            $sidebar[$widgetname . $name] = isset($sidebar['widget' . $name]) ? $sidebar['widget' . $name] : '';
+          }
+          if ($widgetname == 'meta') $sidebar['meta.classes'] = '';
+        }
+        
+        $sidebar[$widgetname . $path] = $value;
+      }
+      
+      public function setcustom($path, $value) {
+        $names = explode('.', $path);
+        if (count($names) < 2) return;
+        if (($names[0] != '$custom') && ($names[0] != 'custom')) $this->error("The '$path' path is not a custom path");
+        $name = $names[1];
+        switch (count($names)) {
+          case 2:
+          $this->theme->templates['custom'][$name] = $value;
+          return;
+          
+          case 3:
+          return;
+          
+          case 4:
+          $tag = $names[3];
+          $admin = &$this->theme->templates['customadmin'];
+          if (!isset($admin[$name])) $admin[$name] = array();
+          if ($tag == 'values') {
+            $value = explode(',', $value);
+            foreach ($value as $i => $v) $value[$i] = trim($v);
+          }
+          
+          $admin[$name][$tag] = $value;
+          return;
+        }
+      }
+      
+      public function afterparse($theme) {
+        $this->onfix($theme);
+        
+        $templates = &$this->theme->templates;
+        $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' :
+        ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
+        
+        if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
+        if (!isset($templates['content.post.templatecomments.confirmform'])) {
+          echo implode('<br>', array_keys($templates));
+          $this->error('template "content.post.templatecomments.confirmform" not exists');
+        }
+        
+        $post = 'content.post.';
+        $excerpt = 'content.excerpts.excerpt.';
+        
+        //normalize filelist
+        foreach(array('file', 'image',  'audio', 'video', 'flash') as $name) {
+  if (!isset($templates["{$post}filelist.{$name}s"]) || empty($templates["{$post}filelist.{$name}s"])) {
+        $templates["{$post}filelist.{$name}s"] = "\$$name";
+          }
+          
+        if (!isset($templates["{$excerpt}filelist.$name"])) {
+        $templates["{$excerpt}filelist.$name"] = $templates["{$post}filelist.$name"];
+          }
+          
+      if (!isset($templates["{$excerpt}filelist.{$name}s"])) {
+    $templates["{$excerpt}filelist.{$name}s"] = $templates["{$post}filelist.{$name}s"];
+          }
+        }
+        
+        //fix preview
+      if (!isset($templates["{$excerpt}filelist.preview"])) {
+      $templates["{$excerpt}filelist.preview"] = $templates["{$post}filelist.preview"];
+        }
+        
+        foreach (array('date',
+        'filelist', 'filelist.file', 'filelist.image', 'filelist.preview', 'filelist.audio', 'filelist.video', 'filelist.flash',
+        'filelist.files', 'filelist.images', 'filelist.audios', 'filelist.videos', 'filelist.flashs',
+        'catlinks',         'catlinks.item', 'catlinks.divider',
+        'taglinks',         'taglinks.item', 'taglinks.divider') as $name) {
+          if (empty($templates[$excerpt . $name])) {
+            $templates[$excerpt . $name] = $templates[$post . $name];
+          }
+        }
+        
+        $sidebars = &$templates['sidebars'];
+        for ($i = 0; $i < count($sidebars); $i++) {
+          $sidebar = &$sidebars[$i];
+          foreach (ttheme::getwidgetnames() as $widgetname) {
+            foreach (array('', '.items', '.item', '.subcount', '.subitems') as $name) {
+              if (empty($sidebar[$widgetname . $name])) $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
+            }
+            
+            if (in_array($widgetname, array('widget', 'categories', 'tags', 'archives'))) {
+              $v = $sidebar[$widgetname . '.item'];
+              if (!strpos($v, '$subcount')) $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
+            }
+            
+          }
+          
+          if (is_string($sidebar['meta.classes'])) {
+            $sidebar['meta.classes'] = self::getmetaclasses($sidebar['meta.classes']);
+          }
+        }
+        
+        //add spaces
+        foreach (array(
+        'content.excerpts.excerpt.taglinks.divider',
+        'content.post.taglinks.divider',
+        'content.excerpts.excerpt.catlinks.divider',
+        'content.post.catlinks.divider'
+        ) as $k) {
+          if (substr($templates[$k], -1) != ' ') $templates[$k] .= ' ';
+        }
+        
+        $templates['content.post.templatecomments.confirmform'] = str_replace('$lang.formhead', '$lang.checkspam', $templates['content.post.templatecomments.confirmform']);
+        
+        $form = 'content.post.templatecomments.form';
+        $templates[$form] = trim(str_replace(
+        '<script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>', '',
+        $templates[$form]));
+        if (!strpos($templates[$form], '$mesg')) $templates[$form] = '<div id="before-commentform">$mesg</div>' . $templates[$form];
+        
+        $regform = 'content.post.templatecomments.regform';
+        if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
+          $editor = strtr($templates['content.admin.editor'], array(
+          '$lang.$name' => $this->replacelang ? tlocal::i('comment')->content : '$lang.content',
+          '$name' => 'content',
+          '$value' => ''
+          ));
+          
+          $templates[$regform] =
+          '								<div id="before-commentform">$mesg</div>
+          <h4 id="respond">$lang.leavereply</h4>
+          <form action="$site.url/send-comment.php" method="post" id="commentform">'
+          . $editor .
+          '<p>
+          <input type="hidden" name="postid" value="$postid" />
+          <input type="hidden" name="antispam" value="$antispam" />
+          
+          <input type="submit" name="submitbutton" id="submitcomment" value="'
+          . ($this->replacelang ? tlocal::i()->send : '$lang.send' ) .
+          '" /></p>
+          </form>';
+        }
+        
+        $comment = 'content.post.templatecomments.comments.comment';
+        $templates[$comment] = str_replace('$moderate',
+        '<div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>',
+        $templates[$comment]);
+        
+        
+$this->reuse($templates);
+      }
+
+            public static function getmetaclasses($s) {
+        $result = array('rss' => '', 'comments' => '', 'media' => '', 'foaf' => '', 'profile' => '', 'sitemap' => '');
+        foreach (explode(',', $s) as $class) {
+          if ($i = strpos($class, '=')) {
+            $classname = trim(substr($class, 0, $i));
+            $value = trim(substr($class, $i + 1));
+            if ($value != '') $result[$classname] = sprintf('class="%s"', $value);
+          }
+        }
+        return $result;
+      }
+
+}//class

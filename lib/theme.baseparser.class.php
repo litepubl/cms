@@ -295,7 +295,7 @@ $parent = $this->preparetag($parent);
           $s = preg_replace_callback('/\<\&\#63;.*?\&\#63;\>/ims', array($this, 'callback_restore_php'), $s);
         }
         
-$this->setvalue($parent, $value);
+$this->setvalue($parent, $s);
       }
 
 protected function preparetag($name) {
@@ -314,9 +314,52 @@ $this->theme->tempates[$name] = $value;
       public function getinfo($name, $child) {
 $path = $name . '.' . substr($child, 1);
 if (isset($this->paths[$path])) {
-return $this->paths[$path];
+$info = $this->paths[$path];
+$info['path'] = $path;
+return $info;
+} else {
+/*
+        foreach ($this->paths as $path => $info) {
+          if (strbegin($path, $name) && ($child == $info['tag'])) {
+              $info['path'] = $path;
+              return $info;
+            }
+          }
+*/
 }
-
 
         $this->error("The '$child' not found in path '$name'");
 }
+      
+      public function afterparse($theme) {
+        $this->onfix($theme);
+$this->reuse($this->theme->templates);
+        }
+
+public function reuse(&$templates) {
+        foreach ($templates as $k => $v) {
+          if (is_string($v) && !strbegin($v, '<') && isset($templates[$v]) && is_string($templates[$v])) {
+            $templates[$k] = $templates[$v];
+          }
+        }
+}        
+
+            public function loadpaths() {
+        $result = array();
+        foreach ($this->tagfiles as $filename) {
+          $filename = litepublisher::$paths->home . trim($filename, '/');
+          if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
+            if (isset($a['remap'])) {
+              $this->pathmap = $this->pathmap + $a['remap'];
+              unset($a['remap']);
+            }
+            $result = $result + $a;
+          }
+        }
+        
+        $result = $result + $this->extrapaths;
+        $this->callevent('ongetpaths', array(&$result));
+        return $result;
+      }
+      
+    }//class
