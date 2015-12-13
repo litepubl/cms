@@ -170,7 +170,9 @@ makekernel($dir, 'kernel.comments.class.files.php',  array(
 */
 
 makekernel($dir, 'kernel.admin.php',  array(
+'menus.admin.class.php'
 'menu.admin.class.php',
+'author-rights.class.php',
 'theme.admin.class.php',
 'htmlresource.class.php',
 'html.adminform.class.php',
