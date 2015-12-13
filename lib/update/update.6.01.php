@@ -53,6 +53,7 @@ $classes->items['admintheme'] = array('kernel.admin.php', '', 'theme.admin.class
 $classes->items['tauthor_rights'] = array('kernel.admin.php', '', 'author-rights.class.php');
 $classes->items['tadminmenus'] = array('kernel.admin.php', '', 'menus.admin.class.php');
 $classes->items['baseparser'] = array('theme.baseparser.class.php', '',);
+$classes->items['adminparser'] = array('theme.adminparser.class.php', '');
 $classes->save();
 if (isset(litepublisher::$options->commentspull)) {
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;

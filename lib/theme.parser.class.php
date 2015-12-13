@@ -15,6 +15,7 @@ class tthemeparser extends baseparser  {
   protected function create() {
     parent::create();
     $this->basename = 'themeparser';
+    $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
         $this->sidebar_index = 0;
 }
 

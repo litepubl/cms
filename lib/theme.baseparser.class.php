@@ -9,15 +9,11 @@ class baseparser extends tevents {
   protected $pathmap;
   protected $parsedtags;
   
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
   protected function create() {
     parent::create();
     $this->basename = 'baseparser';
     $this->addevents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
-    $this->addmap('tagfiles', array('lib/install/ini/themeparser.ini'));
+    $this->addmap('tagfiles', array());
     $this->addmap('extrapaths', array());
     $this->data['replacelang'] = false;
     $this->data['removephp'] = true;
