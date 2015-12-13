@@ -118,6 +118,7 @@ makekernel($dir, 'kernel.templates.php',  array(
 'events.itemplate.class.php',
 'items.itemplate.class.php',
 'template.class.php',
+'theme.base.class.php',
 'theme.class.php',
 'theme.args.class.php',
 'widget.class.php',

@@ -48,6 +48,8 @@ $classes->items['tevents_storage'] = array('kernel.php', '', 'events.storage.cla
 $classes->items['tcoevents'] = array('kernel.php', '', 'events.coclass.php');
 $classes->items['ECancelEvent'] = array('kernel.php', '', 'events.exception.class.php');
 $classes->items['tarray2prop'] = array('kernel.php', '', 'array2prop.class.php');
+$classes->items['basetheme'] = array('kernel.templates.php, '', 'theme.base.class.php');
+$classes->items['admintheme'] = array('kernel.templates.php, '', 'theme.admin.class.php');
 $classes->save();
 if (isset(litepublisher::$options->commentspull)) {
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;
