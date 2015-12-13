@@ -43,7 +43,7 @@ class tview extends titem_storage {
     'class' => get_class($this),
     'name' => 'default',
     'themename' => 'default',
-    'adminname' => 'default',
+    'adminname' => 'admin-default',
     'menuclass' => 'tmenus',
     'hovermenu' => true,
     'customsidebar' => false,
@@ -68,7 +68,7 @@ class tview extends titem_storage {
     parent::__destruct();
   }
   
-  public function getviews() {
+  public function getowner() {
     return tviews::i() ;
   }
   
@@ -90,13 +90,25 @@ class tview extends titem_storage {
   
   public function setthemename($name) {
     if ($name != $this->themename) {
+if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
       if (!ttheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
+
       $this->data['themename'] = $name;
       $this->_theme = $this->get_theme($name);
       $this->data['custom'] = $this->_theme->templates['custom'];
       $this->save();
 
       $this->views->themechanged($this);
+    }
+  }
+
+  public function setadminname($name) {
+    if ($name != $this->adminname) {
+if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+      if (!admintheme::exists($name)) return $this->error(sprintf('Admin theme %s not exists', $name));
+      $this->data['adminname'] = $name;
+      $this->_admintheme = $this->get_admintheme($name);
+      $this->save();
     }
   }
   
@@ -121,6 +133,18 @@ return $this->_theme;
       $this->setthemename('default');
     }
     return $this->_theme;
+  }
+
+  public function getadmintheme() {
+    if ($this->_admintheme) {
+return $this->_admintheme;
+}
+
+    if (!admintheme::exists($this->adminname)) {
+      $this->setadminname('admin-default');
+}
+
+      return $this->_admintheme = $this->get_admintheme($this->adminname);
   }
   
   public function setcustomsidebar($value) {

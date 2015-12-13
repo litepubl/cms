@@ -149,6 +149,7 @@ $this->data[$item['name']] = $this->unserialize($item['value']);
 }
 
 public function saveall() {
+$db = litepublisher::$db;
 $a = array();
 foreach ($this->data as $name => $value) {
 $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
@@ -170,7 +171,7 @@ $db->mysqli->query("create table if not exists $db->prefix$this->table (
     COLLATE = utf8_general_ci");
   }
 
-public function dclear_table() {
+public function clear_table() {
       $db = litepublisher::$db;
 try {
 $db->query("truncate table $db->prefix$this->table");
