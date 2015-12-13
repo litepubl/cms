@@ -12,9 +12,17 @@ class basetheme extends tevents {
   public static function exists($name) {
     return file_exists(litepublisher::$paths->themes . $name . '/about.ini');
   }
-  
-  public static function i() {
-    return getinstance(__class__);
+
+  public static function getbyname($classname, $name) {  
+    if (isset(self::$instances[$name])) {
+return self::$instances[$name];
+}
+
+    $result = getinstance($classname);
+    if ($result->name != '') $result = litepublisher::$classes->newinstance($classname);
+    $result->name = $name;
+    $result->load();
+    return $result;
   }
   
   protected function create() {

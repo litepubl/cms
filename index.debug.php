@@ -98,7 +98,7 @@ litepublisher::$db->query('SET sort_buffer_size = ' . 1024*1024*32);
 litepublisher::$db->query('SET read_rnd_buffer_size = ' . 1024*1024*32);
 */
 
- tlocal::clearcache();
+tlocal::clearcache();
 ttheme::clearcache();
 include(dirname(__file__) . '/temp/zdebug.php');
   if (!defined('litepublisher_mode')) {

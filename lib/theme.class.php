@@ -7,23 +7,19 @@
 
 class ttheme extends basetheme {
   public static $inifiles;
+
   public static function i() {
     return getinstance(__class__);
   }
 
-  
   public static function getinstance($name) {
-    if (isset(self::$instances[$name])) return self::$instances[$name];
-    $result = getinstance(__class__);
-    if ($result->name != '') $result = litepublisher::$classes->newinstance(__class__);
-    $result->name = $name;
-    $result->load();
-    return $result;
-  }
-  
+return self::getbyname(__class__, $name);
+}
+
   public static function getwidgetnames() {
     return array('categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
   }
+
   protected function create() {
     parent::create();
     $this->templates = array(
