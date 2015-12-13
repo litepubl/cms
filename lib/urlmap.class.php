@@ -444,6 +444,7 @@ class turlmap extends titems {
 $memstorage = memstorage::i();
 if ($memstorage->hourcron + 3600 <= time()) {
 $memstorage->hourcron = time();
+$memstorage->singlecron = false;
       tcron::pingonshutdown();
 } else if ($memstorage->singlecron && ($memstorage->singlecron  <= time())) {
 $memstorage->singlecron = false;

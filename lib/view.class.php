@@ -7,7 +7,8 @@
 
 class tview extends titem_storage {
   public $sidebars;
-  protected $themeinstance;
+  protected $_theme;
+  protected $_admintheme;
   
   public static function i($id = 1) {
     if ($id == 1) {
@@ -42,6 +43,7 @@ class tview extends titem_storage {
     'class' => get_class($this),
     'name' => 'default',
     'themename' => 'default',
+    'adminname' => 'default',
     'menuclass' => 'tmenus',
     'hovermenu' => true,
     'customsidebar' => false,
@@ -56,15 +58,17 @@ class tview extends titem_storage {
     );
     
     $this->sidebars = &$this->data['sidebars'];
-    $this->themeinstance = null;
+    $this->_theme = null;
+    $this->_admintheme = null;
   }
   
   public function __destruct() {
-    unset($this->themeinstance);
+    $this->_theme = null;
+    $this->_admintheme = null;
     parent::__destruct();
   }
   
-  public function getowner() {
+  public function getviews() {
     return tviews::i() ;
   }
   
@@ -76,30 +80,39 @@ class tview extends titem_storage {
     return false;
   }
   
-  protected function get_theme_instance($name) {
+  protected function get_theme($name) {
     return ttheme::getinstance($name);
+  }
+
+  protected function get_admintheme($name) {
+    return admintheme::getinstance($name);
   }
   
   public function setthemename($name) {
     if ($name != $this->themename) {
       if (!ttheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
       $this->data['themename'] = $name;
-      $this->themeinstance = $this->get_theme_instance($name);
-      $this->data['custom'] = $this->themeinstance->templates['custom'];
+      $this->_theme = $this->get_theme($name);
+      $this->data['custom'] = $this->_theme->templates['custom'];
       $this->save();
-      tviews::i()->themechanged($this);
+
+      $this->views->themechanged($this);
     }
   }
   
   public function gettheme() {
-    if (isset($this->themeinstance)) return $this->themeinstance;
+    if ($this->_theme) {
+return $this->_theme;
+}
+
     if (ttheme::exists($this->themename)) {
-      $this->themeinstance = $this->get_theme_instance($this->themename);
+      $this->_theme = $this->get_theme($this->themename);
+
       $viewcustom = &$this->data['custom'];
-      $themecustom = &$this->themeinstance->templates['custom'];
+      $themecustom = &$this->_theme->templates['custom'];
       //aray_equal
       if ((count($viewcustom) == count($themecustom)) && !count(array_diff(array_keys($viewcustom), array_keys($themecustom)))) {
-        $this->themeinstance->templates['custom'] = $viewcustom;
+        $this->_theme->templates['custom'] = $viewcustom;
       } else {
         $this->data['custom'] = $themecustom;
         $this->save();
@@ -107,7 +120,7 @@ class tview extends titem_storage {
     } else {
       $this->setthemename('default');
     }
-    return $this->themeinstance;
+    return $this->_theme;
   }
   
   public function setcustomsidebar($value) {

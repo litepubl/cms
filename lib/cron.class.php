@@ -72,7 +72,6 @@ class tcron extends tevents {
     
     if (($fh = @fopen($this->lockpath .'cron.lok', 'w')) &&       flock($fh, LOCK_EX | LOCK_NB)) {
       set_time_limit(300);
-      //ignore_user_abort(true);
       
       try {
         $this->execute();
@@ -131,6 +130,7 @@ class tcron extends tevents {
     
     if (($type == 'single') && !$this->disableping && !self::$pinged) {
       if (litepublisher::$debug) tfiler::log("cron added $id");
+
 $memstorage = memstorage::i();
 if (!$memstorage->singlecron) {
 $memstorage->singlecron = time() + 300;
@@ -191,9 +191,6 @@ $memstorage->singlecron = time() + 300;
   public static function pingonshutdown() {
     if (self::$pinged) return;
     self::$pinged = true;
-
-$memstorage = memstorage::i();    
-$memstorage->singlecron = false;
 
     register_shutdown_function(array(tcron::i(), 'ping'));
   }
