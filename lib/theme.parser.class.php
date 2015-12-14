@@ -30,9 +30,30 @@ parent::doreplacelang($theme);
     }
     
   }
-  
-  public function getfile($filename, $about) {
-if ($s = parent::getfile($filename, $about)) {
+
+public function checkabout($name) {
+        $about = $this->getabout($name);
+    switch ($about['type']) {
+      case 'litepublisher3':
+      case 'litepublisher':
+      $this->error('Litepublisher not supported old themes');
+      break;
+
+default:      
+return true;
+    }
+}
+
+public function getparentname($name) {
+    if ($name == 'default') return false;
+      if ($name == 'default-old')  return 'default';
+
+$about = $this->getabout($name);
+return empty($about['parent']) ? 'default-old' : $about['parent'];
+}
+
+  public function getfile($filename) {
+if ($s = parent::getfile($filename)) {
     //fix some old tags
     $s = strtr($s, array(
     '$options.url$url' => '$link',

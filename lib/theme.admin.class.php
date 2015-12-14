@@ -15,4 +15,8 @@ class admintheme extends basetheme {
 return self::getbyname(__class__, $name);
 }
 
+public function getparser() {
+return adminparser::i();
+}
+
 }//class

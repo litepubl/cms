@@ -20,28 +20,49 @@ class baseparser extends tevents {
     
     $this->pathmap = array();
   }
-  
-  public function parse(basetheme $theme) {
-    $theme->lock();
-    $this->checkparent($theme->name);
-    
-    $about = $this->getabout($theme->name);
 
-    switch ($about['type']) {
-      case 'litepublisher3':
-      case 'litepublisher':
-      $this->error('Litepublisher not supported old themes');
-      break;
-      
-      case 'litepublisher4':
-      case '6':
-      $theme->type = 'litepublisher';
-      $this->parsetheme($theme);
-      break;
+public function checkabout($name) {
+return true;
+}
+
+public function getparentname($name) {
+$about = $this->getabout($name);
+return empty($about['parent']) ? false : $about['parent'];
+}
+
+public function getfilelist($name) {
+$about = $this->getabout($name);
+return array(
+litepublisher::$paths->themes . $name . '/' . $about['file']
+);
+}
+
+  public function parse(basetheme $theme) {
+    $this->checkparent($theme->name);
+if (!$this->checkabout($theme->name)) return false;
+
+    $theme->lock();
+
+if ($parentname = $this->getparentname($theme->name)) {
+      $parent_theme = basetheme::getbyname(get_class($theme), $parentname);
+      $theme->templates = $parent_theme->templates;
+      $theme->parent = $parent_theme->name;
     }
     
+    $this->parsedtags = array();
+    $about = $this->getabout($theme->name);
+   
+$filelist = $this->getfilelist($theme->name);
+foreach ($filelist as $filename) {    
+    if ($s = $this->getfile($filename, $about)) {
+$s = $this->replace_about($s, $about);
+    $this->parsetags($theme, $s);
+}
+}
+
+    $this->afterparse($theme);
+   if ($this->replacelang) $this->doreplacelang($theme);
     $this->parsed($theme);
-    if ($this->replacelang) $this->doreplacelang($theme);
     $theme->unlock();
     return true;
   }
@@ -81,33 +102,15 @@ class baseparser extends tevents {
     ));
   }
   
-  public function parsetheme(basetheme $theme) {
-    $about = $this->getabout($theme->name);
-    $filename = litepublisher::$paths->themes . $theme->name . DIRECTORY_SEPARATOR . $about['file'];
-    if (!file_exists($filename))  return $this->error("The requested theme '$theme->name' file $filename not found");
-    
-    if ($theme->name != 'default') {
-      if ($theme->name == 'default-old') {
-        $parentname = 'default';
-      } else {
-        $parentname = empty($about['parent']) ? 'default-old' : $about['parent'];
-      }
-      
-      $parent = ttheme::getinstance($parentname);
-      $theme->templates = $parent->templates;
-      $theme->parent = $parent->name;
-    }
-    
-    $this->parsedtags = array();
-    
-    $s = $this->getfile($filename, $about);
-    $this->parsetags($theme, $s);
-    $this->afterparse($theme);
-  }
-  
-  public function getfile($filename, $about) {
+  public function getfile($filename) {
+if (!file_exists($filename))  {
+return $this->error(sprintf('The required file "%s" file not exists', $filename));
+}
+
     $s = file_get_contents($filename);
-    if ($s === false) return $this->error(sprintf('Error read "%s" file', $filename));
+    if ($s === false) {
+return $this->error(sprintf('Error read "%s" file', $filename));
+}
     
     $s = strip_utf($s);
     $s = str_replace(array("\r\n", "\r", "\n\n"), "\n", $s);
@@ -118,8 +121,11 @@ class baseparser extends tevents {
     
     //normalize tags
     $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
-    
+    return trim($s);
+  }
+
     //replace $about.*
+public function replace_about($s, $about) {
     if (preg_match_all('/\$about\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
       $a = array();
       foreach ($m as $item) {
@@ -130,10 +136,10 @@ class baseparser extends tevents {
       }
       $s = strtr($s, $a);
     }
-    
-    return trim($s);
-  }
-  
+
+return $s;
+}    
+
   public function getabout($name) {
     if (!isset($this->abouts)) $this->abouts = array();
     if (!isset($this->abouts[$name])) {

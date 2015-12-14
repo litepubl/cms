@@ -37,6 +37,10 @@ return self::getbyname(__class__, $name);
     return $this->templates['index'];
   }
 
+public function getparser() {
+return tthemeparser::i();
+}
+
   public function getsidebarscount() {
     return count($this->templates['sidebars']);
   }

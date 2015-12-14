@@ -55,9 +55,13 @@ return self::$instances[$name];
   public function getbasename() {
     return 'themes/' . $this->name;
   }
-  
-  public function load() {
-    if ($this->name == '') return false;
+
+public function getparser() {
+return baseparser::i();
+}
+
+    public function load() {
+    if (!$this->name) return false;
 
     if (parent::load()) {
       self::$instances[$this->name] = $this;
@@ -72,17 +76,15 @@ return self::$instances[$name];
       $this->error(sprintf('The %s theme not exists', $this->name));
     }
     
-    $parser = tthemeparser::i();
+    $parser = $this->getparser();
     if ($parser->parse($this)) {
       self::$instances[$this->name] = $this;
-      $this->save();
     }else {
       $this->error(sprintf('Theme file %s not exists', $filename));
     }
   }
   
-  
-  public function __set($name, $value) {
+    public function __set($name, $value) {
     if (array_key_exists($name, $this->templates)) {
       $this->templates[$name] = $value;
       return;

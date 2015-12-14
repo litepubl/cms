@@ -43,7 +43,7 @@ class tview extends titem_storage {
     'class' => get_class($this),
     'name' => 'default',
     'themename' => 'default',
-    'adminname' => 'admin-default',
+    'adminname' => 'admin',
     'menuclass' => 'tmenus',
     'hovermenu' => true,
     'customsidebar' => false,
@@ -141,7 +141,7 @@ return $this->_admintheme;
 }
 
     if (!admintheme::exists($this->adminname)) {
-      $this->setadminname('admin-default');
+      $this->setadminname('admin');
 }
 
       return $this->_admintheme = $this->get_admintheme($this->adminname);
