@@ -1,16 +1,15 @@
 content.excerpts = [
-<div class="row">
 $excerpt = [
 <div class="anpost" id="post-$post.id">
-<h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
-<div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
-<div class="anpost-content">
 $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
 <div class="anpost-body">
+<h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
+
 $post.catlinks
+
 <div class="anpost-item">
 <span class="fa fa-calendar" aria-hidden="true"></span>
-<span class="anpost-item-title">$lang.posted</span>
+<span class="sr-only">$lang.posted</span>
 				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
 </div>
 
@@ -18,16 +17,9 @@ $post.catlinks
 <span class="fa fa-comments" aria-hidden="true"></span>
 <span class="post-comments">$post.commentslink</span>
 </div>
-
-<div class="anpost-item more-button">
-<a href="$post.link#more-$post.id" class="btn btn-primary" role="button">
-<span class="fa fa-commenting-o" aria-hidden="true"></span>
-$lang.moredetails</a>
 </div>
-
+<div class="anpost-subtitle">$post.excerptcontent $post.morelink = [<!--no more-->]</div>
 </div>
-</div>
-</div>
+<hr>
 ]
-</div>
 ]

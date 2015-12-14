@@ -5,6 +5,7 @@
 **/
 
 .image,
+.anpost-image,
 .file-image {
   position:relative;
   display: block;
@@ -16,6 +17,7 @@
 }
 
 .image img,
+.anpost-image img,
 .file-image img {
   position:absolute;
   left:50%;

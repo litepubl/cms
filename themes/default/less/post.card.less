@@ -4,41 +4,39 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-@anpost-image: 120px;
-
-.anpost{
+.postcard {
   position:relative;
   display: block;
   overflow: hidden;
   margin-top: 2 * @padding-base-vertical;
+  
+  @media (min-width: 480px) {
+    float: left;
+    width: 50%;
+  }
 }
 
-.anpost-image{
-  float:left;
-  display:block;
-  overflow: hidden;
-  margin: 0;
-  width: @anpost-image;
-  height: @anpost-image;
+.postcard-header {
+  .text-overflow();
 }
 
-.anpost-body {
+.postcard-body {
   display: block;
   overflow: hidden;
   height: @anpost-image;
   margin: 0 @padding-base-horizontal 0 0;
   
-  .anpost-item,
+  .postcard-item,
   .post-categories {
     .text-center;
+    .text-overflow();
   }
   
-  .anpost-item-title,
   .cats-title  {
     display: none;
   }
 }
 
-.anpost-body:first-child {
+.postcard-body:first-child {
   margin: 0;
 }
