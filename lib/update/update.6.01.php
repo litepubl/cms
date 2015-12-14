@@ -77,6 +77,7 @@ foreach ($views->items as $id => &$item) {
 $item['postanounce'] = 'excerpt';
 $item['invertorder'] = false;
 $item['perpage'] = 0;
+$item['adminname'] = 'admin';
 }
 
 $views->save();

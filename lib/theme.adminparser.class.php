@@ -15,7 +15,7 @@ public $themefiles;
   protected function create() {
     parent::create();
     $this->basename = 'admimparser';
-    $this->tagfiles[] = 'themes/admin-default/admintags.ini';
+    $this->tagfiles[] = 'themes/admin/admintags.ini';
 $this->addmap('themefiles', array());
 }
 

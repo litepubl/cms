@@ -144,6 +144,22 @@ class tadminviews extends tadminmenu {
       
       $itemview = $views->items[$id];
       $args->add($itemview);
+
+$list = array();
+    $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
+    sort($dirlist);
+foreach ($dirlist as $dir) {
+if (!strbegin($dir, 'admin')) $list[] = $dir;
+}
+
+$args->themename =tadminhtml  ::array2combo($list, $itemview['themename']);
+
+$list = array();
+foreach ($dirlist as $dir) {
+if (strbegin($dir, 'admin')) $list[] = $dir;
+}
+
+$args->adminname =tadminhtml  ::array2combo($list, $itemview['adminname']);
       $args->menu = tadminhtml  ::array2combo($menuitems, $itemview['menuclass']);
       $args->postanounce = tadminhtml  ::array2combo(array(
       'excerpt' => $lang->postexcerpt,
@@ -151,21 +167,18 @@ class tadminviews extends tadminmenu {
       'lite' => $lang->postlite
       ), $itemview['postanounce']);
       
-      $tabs->add($lang->name,'[text=name]' .
+      $tabs->add($lang->name,'[text=name]
+      [combo=themename]
+      [combo=adminname]' .
       ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) .
-      
-      '[checkbox=hovermenu]
+            '[checkbox=hovermenu]
       [combo=menu]
       [combo=postanounce]
       [text=perpage]
       [checkbox=invertorder]
       ');
-      
-      $view = tview::i($id);
-      $lang->firstsearch('themes');
-      $tabs->add($lang->theme,
-      tadminthemes::getlist($html->radiotheme, $view->theme->name));
-      
+
+      $view = tview::i($id);      
       if (count($view->custom)) {
         $tabs->add($lang->custom, $this->get_custom($view));
       }
@@ -221,7 +234,8 @@ class tadminviews extends tadminmenu {
       }
       
       $view->name = trim($_POST['name']);
-      $view->themename = trim($_POST['theme_idview']);
+      $view->themename = trim($_POST['themename']);
+      $view->adminname = trim($_POST['adminname']);
       $view->menuclass = $_POST['menu'];
       $view->hovermenu = isset($_POST['hovermenu']);
       $view->postanounce = $_POST['postanounce'];
