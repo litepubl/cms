@@ -302,10 +302,7 @@ class tadminhtml {
   }
   
   public function gettable($head, $body) {
-    return strtr($this->ini['common']['table'], array(
-    '$tableclass' => ttheme::i()->templates['content.admin.tableclass'],
-    '$tablehead' => $head,
-    '$tablebody' => $body));
+return admintheme::i()->gettable($head, $body);
   }
   
   public function getcolclass($s) {
@@ -364,21 +361,19 @@ class tadminhtml {
   
   public function buildtable(array $items, array $tablestruct) {
     $body = '';
-    $theme = ttheme::i();
+    $admintheme = admintheme::i();
     $args = new targs();
     list($head, $tml) = $this->tablestruct($tablestruct, $args);
     
     foreach ($items as $id => $item) {
-      ttheme::$vars['item'] = $item;
+      admintheme::$vars['item'] = $item;
       $args->add($item);
       if (!isset($item['id'])) $args->id = $id;
       $body .= $theme->parsearg($tml, $args);
     }
-    unset(ttheme::$vars['item']);
-    
-    $args->tablehead  = $head;
-    $args->tablebody = $body;
-    return $theme->parsearg($this->ini['common']['table'], $args);
+    unset(admintheme::$vars['item']);
+   
+    return $admintheme->gettable($head, $body);
   }
   
   public function items2table($owner, array $items, array $struct) {
@@ -391,17 +386,16 @@ class tadminhtml {
     }
     $tml .= '</tr>';
     
-    $theme = ttheme::i();
+    $admintheme = admintheme::i();
     $args = new targs();
     foreach ($items as $id) {
       $item = $owner->getitem($id);
       $args->add($item);
       $args->id = $id;
-      $body .= $theme->parsearg($tml, $args);
+      $body .= $admintheme->parsearg($tml, $args);
     }
-    $args->tablehead  = $head;
-    $args->tablebody = $body;
-    return $theme->parsearg($this->ini['common']['table'], $args);
+
+    return $admintheme->gettable($head, $body);
   }
   
   public function tableposts(array $items, array $tablestruct) {
@@ -421,26 +415,24 @@ class tadminhtml {
         // special case for callback. Add new prop to template vars
         $tableprop = tableprop::i();
         $propname = $tableprop->addprop($item[2]);
-        ttheme::$vars['tableprop'] = $tableprop;
+        admintheme::$vars['tableprop'] = $tableprop;
         $tml .= sprintf('<td align="%s">$tableprop.%s</td>', $item[0], $propname);
       }
     }
     
     $tml .= '</tr>';
     
-    $theme = ttheme::i();
+    $admintheme = admintheme::i();
     $args = new targs();
     
     foreach ($items as $id) {
       $post = tpost::i($id);
-      ttheme::$vars['post'] = $post;
+      admintheme::$vars['post'] = $post;
       $args->id = $id;
-      $body .= $theme->parsearg($tml, $args);
+      $body .= $admintheme->parsearg($tml, $args);
     }
     
-    $args->tablehead  = $head;
-    $args->tablebody = $body;
-    return $theme->parsearg($this->ini['common']['table'], $args);
+    return $admintheme->gettable($head, $body);
   }
   
   public function getitemscount($from, $to, $count) {

@@ -25,4 +25,12 @@ public function getparser() {
 return adminparser::i();
 }
 
+  public function gettable($head, $body) {
+    return strtr($this->templates['table'], array(
+    '$class' => ttheme::i()->templates['content.admin.tableclass'],
+    '$head' => $head,
+    '$body' => $body
+));
+  }
+  
 }//class

@@ -307,7 +307,7 @@ return$name;
 
 protected function setvalue($name, $value) {
         if (isset($this->paths[$name])) {
-$this->theme->tempates[$name] = $value;
+$this->theme->templates[$name] = $value;
         } else {
           $this->error("The '$name' tag not found. Content \n$s");
         }
