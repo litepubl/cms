@@ -6,7 +6,6 @@
 **/
 
 class ttheme extends basetheme {
-  public static $inifiles;
 
   public static function i() {
     return getinstance(__class__);

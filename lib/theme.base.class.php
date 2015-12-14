@@ -218,26 +218,4 @@ return baseparser::i();
     litepublisher::$urlmap->clearcache();
   }
   
-  public static function cacheini($filename) {
-    if (isset(self::$inifiles[$filename])) return self::$inifiles[$filename];
-    $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
-    if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
-      if (file_exists($filename)) {
-        $ini = parse_ini_file($filename, true);
-        tfilestorage::savevar($datafile, $ini);
-      } else {
-        $ini = array();
-      }
-    }
-    
-    if (!isset(self::$inifiles)) self::$inifiles = array();
-    self::$inifiles[$filename] = $ini;
-    return $ini;
-  }
-  
-  public static function inifile($class, $filename) {
-    $dir = litepublisher::$classes->getresourcedir($class);
-    return self::cacheini($dir . $filename);
-  }
-
 }//class

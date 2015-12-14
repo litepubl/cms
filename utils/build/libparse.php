@@ -113,6 +113,7 @@ makekernel($dir, 'kernel.php', array(
 
 makekernel($dir, 'kernel.templates.php',  array(
 'local.class.php',
+'inifiles.class.php',
 'view.class.php', 
 'views.class.php', 
 'events.itemplate.class.php',

@@ -121,8 +121,8 @@ class tlocal {
   
   public static function inicache($filename) {
     $self = self::i();
-    if (!isset(ttheme::$inifiles[$filename])) {
-      $ini = ttheme::cacheini($filename);
+    if (!isset(inifiles::$files[$filename])) {
+      $ini = inifiles::cache($filename);
       if (is_array($ini)) {
         $self->ini = $ini + $self->ini ;
         if (isset($ini['searchsect'])) $self->joinsearch($ini['searchsect']);
