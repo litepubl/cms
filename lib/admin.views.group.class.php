@@ -29,11 +29,16 @@ class tadminviewsgroup extends tadminmenu {
     
     $args->formtitle = $lang->themeviews;
     $view = tview::i();
-    $list =    tfiler::getdir(litepublisher::$paths->themes);
+
+    $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
     sort($list);
-    $themes = array_combine($list, $list);
+$list = array();
+foreach ($dirlist as $dir) {
+if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
+}
+
     $result .= $html->adminform(
-    $html->getcombo('themeview', tadminhtml::array2combo($themes, $view->themename), $lang->themename) .
+    $html->getcombo('themeview', tadminhtml::array2combo($list, $view->themename), $lang->themename) .
     '<input type="hidden" name="action" value="themes" />', $args);
     
     return $html->fixquote($result);

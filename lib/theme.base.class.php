@@ -19,7 +19,10 @@ return self::$instances[$name];
 }
 
     $result = getinstance($classname);
-    if ($result->name != '') $result = litepublisher::$classes->newinstance($classname);
+    if (!$result->name) {
+$result = litepublisher::$classes->newinstance($classname);
+}
+
     $result->name = $name;
     $result->load();
     return $result;

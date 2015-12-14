@@ -8,7 +8,13 @@
 class admintheme extends basetheme {
 
   public static function i() {
-    return getinstance(__class__);
+    $result = getinstance(__class__);
+if (!$result->name && ($context = litepublisher::$urlmap->context)) {
+$result->name = tview::getview($context)->adminname;
+$result->load();
+}
+
+return $result;
   }
 
   public static function getinstance($name) {

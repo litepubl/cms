@@ -14,8 +14,8 @@ function strbegin($s, $begin) {
 }
 
 $lang = 'ru';
-$dir = dirname(__file__);
-$dir .= '/bootstrap';
+$dir = dirname(__file__) . '/';
+$dir .= isset($_GET['dir']) ? $_GET['dir'] : 'bootstrap';
 $s = file_get_contents($dir . '/join.txt');
 $s = trim(str_replace('ru/', "$lang/", $s));
 $list = explode("\n", $s);

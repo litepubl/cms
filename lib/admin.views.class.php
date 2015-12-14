@@ -145,18 +145,19 @@ class tadminviews extends tadminmenu {
       $itemview = $views->items[$id];
       $args->add($itemview);
 
-$list = array();
+
     $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
     sort($dirlist);
+$list = array();
 foreach ($dirlist as $dir) {
-if (!strbegin($dir, 'admin')) $list[] = $dir;
+if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
 }
 
 $args->themename =tadminhtml  ::array2combo($list, $itemview['themename']);
 
 $list = array();
 foreach ($dirlist as $dir) {
-if (strbegin($dir, 'admin')) $list[] = $dir;
+if (strbegin($dir, 'admin')) $list[$dir] = $dir;
 }
 
 $args->adminname =tadminhtml  ::array2combo($list, $itemview['adminname']);
