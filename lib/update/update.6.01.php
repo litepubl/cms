@@ -55,6 +55,7 @@ $classes->items['tadminmenus'] = array('kernel.admin.php', '', 'menus.admin.clas
 $classes->items['baseparser'] = array('theme.baseparser.class.php', '',);
 $classes->items['adminparser'] = array('theme.adminparser.class.php', '');
 $classes->items['inifiles'] = array('kernel.templates.php', '', 'inifiles.class.php');
+$classes->items['tsidebars'][0] = 'widgets.sidebars.class.php';
 $classes->save();
 if (isset(litepublisher::$options->commentspull)) {
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;
