@@ -72,11 +72,8 @@ class tadminplugins extends tadminmenu {
         $body .= $html->parsearg($tml, $args);
       }
       
-      $args->tablehead  = $head;
-      $args->tablebody = $body;
-      //$table = $html->parsearg($html->ini['common']['table'], $args);
       $args->formtitle = $lang->formhead;
-      $result .= $html->adminform($html->ini['common']['table'], $args);
+      $result .= $html->adminform(admintheme::i()->gettable($head, $body), $args);
       $result = $html->fixquote($result);
     } else {
       $name = $_GET['plugin'];

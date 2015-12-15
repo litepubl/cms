@@ -986,7 +986,7 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 <div class="clearfix">
 <div class="post-date">
 <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
-$post.excerptdate = [d.m.Y]
+ <span class="anpost-date">$post.excerptdate = [d.m.Y]</span>
 </div>
 
 $post.catlinks

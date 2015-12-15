@@ -128,9 +128,9 @@ class tadminviews extends tadminmenu {
         $adminurl = $this->adminurl . 'view';
         return $html->h4($html->getlink($this->url . '/addview/', $lang->add)) .
         $html->buildtable($views->items, array(
-        array('left', $lang->name, "<a href=\"$adminurl=\$id\"><span class="fa fa-cog"></span> \$name</a>"),
-      array('center', $lang->widgets, "<a href=\"{$this->link}widgets/?idview=\$id\"><span class="fa fa-list-alt"></span> $lang->widgets</a>"),
-        array('center', $lang->delete, "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class="fa fa-remove"></span> $lang->delete</a>"),
+        array('left', $lang->name, "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"),
+      array('center', $lang->widgets, "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"),
+        array('center', $lang->delete, "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"),
         ));
       }
       

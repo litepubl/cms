@@ -6218,13 +6218,6 @@ A.dashed:focus {
   height: 120px;
   margin: 0 12px 0 0;
 }
-.anpost-body .anpost-item,
-.anpost-body .post-categories {
-  text-align: center;
-}
-.anpost-body .post-date {
-  float: left;
-}
 .anpost-body:first-child {
   margin: 0;
 }

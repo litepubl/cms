@@ -369,7 +369,7 @@ return admintheme::i()->gettable($head, $body);
       admintheme::$vars['item'] = $item;
       $args->add($item);
       if (!isset($item['id'])) $args->id = $id;
-      $body .= $theme->parsearg($tml, $args);
+      $body .= $admintheme->parsearg($tml, $args);
     }
     unset(admintheme::$vars['item']);
    
