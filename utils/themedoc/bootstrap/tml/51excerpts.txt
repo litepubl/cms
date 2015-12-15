@@ -5,17 +5,20 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 <div class="anpost-body">
 <h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
 
-<div class="anpost-item">
-<span class="fa fa-calendar" aria-hidden="true"></span>
-<span class="sr-only">$lang.posted</span>
-				<span class="post-date">$post.excerptdate = [d.m.Y]</span>
+<div class="clearfix">
+<div class="post-date">
+<span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
+$post.excerptdate = [d.m.Y]
 </div>
 
 $post.catlinks
-<div class="anpost-item">
+</div>
+
+<div class="hidden anpost-item">
 <span class="fa fa-comments" aria-hidden="true"></span>
 <span class="post-comments">$post.commentslink</span>
 </div>
+
 </div>
 $post.excerptcontent $post.morelink = [<!--no more-->]
 </div>
