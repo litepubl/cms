@@ -21,11 +21,8 @@
     image: '<a href="%%link%%" class="file-image"><img src="%%previewlink%%" title="%%title%%" alt="%%description%%" /></a>',
     
     file: '<ul>' +
-    '<li>%%lang.file%%: <a href="%%link%%" title="%%title%%">%%description%%</a></li>' +
-    '<li>%%lang.filesize%%: <span class="text-right">%%size%%</span></li>' +
-    '<li>%%lang.title%%: %%title%%</li>' +
-    '<li>%%lang.description%%: %%description%%</li>' +
-    //'<li>%%lang.keywords%%: %%keywords%%</li>' +
+    '<li><a href="%%link%%" title="%%title%%">%%description%%</a></li>' +
+    '<li><span class="text-right">%%size%%</span></li>' +
     '</ul>',
     
     tabs: '<div id="posteditor-files-tabs">' +

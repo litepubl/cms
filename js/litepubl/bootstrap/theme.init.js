@@ -8,14 +8,13 @@
   'use strict';
   
   $(document).ready(function() {
-    $("textarea").filter("[name^='note'], [name='content']").editorheight();
+    //$("textarea").filter("[name^='note'], [name='content']").editorheight();
+    $("textarea").editorheight();
     
     $(document).settooltip();
   });
   
   $.ready2(function() {
-    $(".poppost").poppost();
-    
     $(".scroll-to").on("click.scrollto", function(){
       var hash = $(this).attr("href");
       $(hash).scrollto(2000, function(){

@@ -77,17 +77,4 @@
     });
   };
   
-  $.fn.poppost = function() {
-    return this.popover($.pophelp.getoptions(this, {
-      trigger:  'hover',
-      title: function() {
-        return $(this).find("poptitle:first").text();
-      },
-      
-      content: function() {
-        return $(this).find(".poptext:first").html();
-      }
-    }));
-  };
-  
 })( jQuery);

@@ -31,7 +31,7 @@ class tadminviewsgroup extends tadminmenu {
     $view = tview::i();
 
     $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
-    sort($list);
+    sort($dirlist);
 $list = array();
 foreach ($dirlist as $dir) {
 if (!strbegin($dir, 'admin')) $list[$dir] = $dir;

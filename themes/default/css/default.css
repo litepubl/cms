@@ -6215,7 +6215,6 @@ A.dashed:focus {
 .anpost-body {
   display: block;
   overflow: hidden;
-  height: 120px;
   margin: 0 12px 0 0;
 }
 .anpost-body:first-child {
@@ -6264,7 +6263,8 @@ A.dashed:focus {
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-.photo img {
+.photo img,
+.anpost-image img {
   border: 1px solid transparent;
   border-radius: 4px;
 }

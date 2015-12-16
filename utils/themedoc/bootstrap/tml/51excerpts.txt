@@ -1,9 +1,9 @@
 content.excerpts = [
 $excerpt = [
 <div class="anpost" id="post-$post.id">
-$post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
+$post.firstimage = [<div class="anpost-image"><a href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
 <div class="anpost-body">
-<h4 class="anpost-title"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
+<h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
 
 <div class="clearfix">
 <div class="post-date">
@@ -13,15 +13,9 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 
 $post.catlinks
 </div>
-
-<div class="hidden anpost-item">
-<span class="fa fa-comments" aria-hidden="true"></span>
-<span class="post-comments">$post.commentslink</span>
 </div>
-
 </div>
 $post.excerptcontent $post.morelink = [<!--no more-->]
-</div>
 <hr>
 ]
 ]

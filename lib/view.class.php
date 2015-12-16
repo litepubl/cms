@@ -98,7 +98,7 @@ if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin
       $this->data['custom'] = $this->_theme->templates['custom'];
       $this->save();
 
-      $this->views->themechanged($this);
+self::getowner()->themechanged($this);
     }
   }
 

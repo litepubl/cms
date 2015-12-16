@@ -1,24 +1,24 @@
 content.post.filelist = [
 <div class="filelist-all filelist-$count" id="files-$post.id">
-$files = [<div class="files-block filelist-file"><ul>
+$files = [<div class="files-block filelist-file"><ul>$file</ul></div>]
 $file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description"><span class="fa fa-download" aria-label="$lang.download"></span> $title</a></li>]
-</ul></div>]
 
-$images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">
+$images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">$image</div>]
 $image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json">$preview</a></span>]
+
 $preview = [<img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
-</div>]
+
+$video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a></span>]
 
 $videos = [<div class="files-block filelist-video">
-$video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a></span>]
+$video
 $fallback = [<span class="fa fa-file-video-o video-fallback" aria-hidden="true"></span>]
 </div>]
 
-$audios = [<div class="files-block filelist-audio">
+$audios = [<div class="files-block filelist-audio">$audio</div>]
   $audio = [<audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
-</div>]
 
-$flashs = [<div class="files-block filelist-flash">
+$flashs = [<div class="files-block filelist-flash">$flash</div>]
 $flash = [<div class="flash-holder">
 <object type="application/x-shockwave-flash" data="$link" width="$width" height="$height" id="flashplayer-$id" name="flashplayer-$id">
 <param name="movie" value="$link" />
@@ -28,7 +28,6 @@ $flash = [<div class="flash-holder">
 <param name="wmode" value="transparent" />
 <param name="FlashVars" value="autostart=true" />
 </object>
-</div>]
 </div>]
 
 </div>]

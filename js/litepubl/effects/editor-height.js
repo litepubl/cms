@@ -8,23 +8,13 @@
   'use strict';
   
   $.fn.editorheight = function() {
-    var state = '';
-    return this
-    .removeAttr("row")
-    .css("minHeight", 20)
-    .on("input propertychange keyup", function(){
-      if (state == 'expired') {
-        state = 'wait';
-        var editor = $(this);
-        editor.height(20);
-        editor.height(this.scrollHeight);
-      } else if (state != 'timer'){
-        state = 'timer';
-        setTimeout(function () {
-          state = 'expired';
-        }, 1000);
-      }
-    });
-  };
-  
+return this.on("focus.height", function() {
+$(this).css("height", "12em");
+})
+.on("blur.height", function() {
+$(this).css("height", "2em");
+})
+.trigger("blur.height");
+};
+
 })( jQuery);
