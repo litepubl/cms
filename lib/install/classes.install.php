@@ -100,6 +100,7 @@ function installClasses() {
   $plugins->add('likebuttons');
   $plugins->add('oldestposts');
   $plugins->add('photoswipe');
+  $plugins->add('photoswipe-thumbnail');
   $plugins->add('bootstrap-theme');
   $plugins->unlock();
   
