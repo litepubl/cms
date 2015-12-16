@@ -89,9 +89,9 @@ class tview extends titem_storage {
   }
   
   public function setthemename($name) {
-    if ($name != $this->themename) {
+    if ($name == $this->themename) return false;
       if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
-      if (!ttheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
+      if (!basetheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
       
       $this->data['themename'] = $name;
       $this->_theme = $this->get_theme($name);
@@ -99,7 +99,6 @@ class tview extends titem_storage {
       $this->save();
       
       self::getowner()->themechanged($this);
-    }
   }
   
   public function setadminname($name) {
@@ -122,6 +121,7 @@ class tview extends titem_storage {
       
       $viewcustom = &$this->data['custom'];
       $themecustom = &$this->_theme->templates['custom'];
+
       //aray_equal
       if ((count($viewcustom) == count($themecustom)) && !count(array_diff(array_keys($viewcustom), array_keys($themecustom)))) {
         $this->_theme->templates['custom'] = $viewcustom;

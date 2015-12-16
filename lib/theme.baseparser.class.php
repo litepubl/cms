@@ -22,6 +22,7 @@ class baseparser extends tevents {
     $this->addmap('extrapaths', array());
     $this->data['replacelang'] = false;
     $this->data['removephp'] = true;
+    $this->data['removespaces'] = true;
     
     $this->pathmap = array();
   }
@@ -341,6 +342,19 @@ class baseparser extends tevents {
       public function afterparse($theme) {
         $this->onfix($theme);
         $this->reuse($this->theme->templates);
+
+if (!litepublisher::$debug && $this->removespaces) {
+foreach ($theme->templates as $k => $v) {
+if (is_string($v)) {
+$theme->templates[$k] = $this->remove_spaces($v);
+} else if(is_array($v)) {
+foreach ($v as $vk => $vv) {
+$v[$vk] = $this->remove_spaces($vv);
+}
+$theme->templates[$k] = $v;
+}
+}
+}
       }
       
       public function reuse(&$templates) {
@@ -350,6 +364,11 @@ class baseparser extends tevents {
           }
         }
       }
+
+public function remove_spaces($s) {
+$s = preg_replace('/[\t\n ]{2,}/ms', ' ', $s);
+return str_replace('> <', '><', $s);
+}
       
       public function loadpaths() {
         $result = array();

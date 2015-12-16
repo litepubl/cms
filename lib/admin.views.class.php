@@ -58,6 +58,7 @@ class tadminviews extends tadminmenu {
     $result = '';
     $html = $this->html;
     $customadmin = $view->theme->templates['customadmin'];
+
     foreach ($view->data['custom'] as $name => $value) {
       if (!isset($customadmin[$name])) continue;
       switch ($customadmin[$name]['type']) {
@@ -71,11 +72,11 @@ class tadminviews extends tadminmenu {
         break;
         
         case 'combo':
-        $value = tadminhtml  ::array2combo($customadmin[$name]['values'], $value);
+        $value = tadminhtml  ::array2combo($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
         break;
         
         case 'radio':
-        $value = $html->getradioitems(    "custom-$name", $customadmin[$name]['values'], $value);
+        $value = $html->getradioitems(    "custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
         break;
       }
       
@@ -101,6 +102,7 @@ class tadminviews extends tadminmenu {
         break;
         
         case 'radio':
+case 'combo':
         $view->data['custom'][$name] = $customadmin[$name]['values'][(int) $_POST["custom-$name"]];
         break;
         

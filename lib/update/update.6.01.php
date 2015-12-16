@@ -137,4 +137,10 @@ if (isset($home->data['invertorder'])) {
 unset($home->data['invertorder']);
 $home->save();
 }
+
+$themeparser = tthemeparser::i();
+if (!isset($themeparser->data['removespaces'])) {
+$themeparser->data['removespaces'] = true;
+$themeparser->save();
+}
 }
