@@ -53,7 +53,7 @@ class tajaxtageditor extends tajaxposteditor  {
     switch ($_GET['get']) {
       case 'view':
       if ($id > 0) {
-        foreach (array('includechilds', 'includeparents) as $prop) {
+        foreach (array('includechilds', 'includeparents') as $prop) {
           $item[$prop] = ((int) $item[$prop]) > 0;
         }
       }

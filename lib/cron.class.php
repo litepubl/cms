@@ -130,11 +130,11 @@ class tcron extends tevents {
     
     if (($type == 'single') && !$this->disableping && !self::$pinged) {
       if (litepublisher::$debug) tfiler::log("cron added $id");
-
-$memstorage = memstorage::i();
-if (!$memstorage->singlecron) {
-$memstorage->singlecron = time() + 300;
-}
+      
+      $memstorage = memstorage::i();
+      if (!$memstorage->singlecron) {
+        $memstorage->singlecron = time() + 300;
+      }
     }
     
     return $id;
@@ -191,7 +191,7 @@ $memstorage->singlecron = time() + 300;
   public static function pingonshutdown() {
     if (self::$pinged) return;
     self::$pinged = true;
-
+    
     register_shutdown_function(array(tcron::i(), 'ping'));
   }
   

@@ -144,23 +144,23 @@ class tadminviews extends tadminmenu {
       
       $itemview = $views->items[$id];
       $args->add($itemview);
-
-
-    $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
-    sort($dirlist);
-$list = array();
-foreach ($dirlist as $dir) {
-if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
-}
-
-$args->themename =tadminhtml  ::array2combo($list, $itemview['themename']);
-
-$list = array();
-foreach ($dirlist as $dir) {
-if (strbegin($dir, 'admin')) $list[$dir] = $dir;
-}
-
-$args->adminname =tadminhtml  ::array2combo($list, $itemview['adminname']);
+      
+      
+      $dirlist =    tfiler::getdir(litepublisher::$paths->themes);
+      sort($dirlist);
+      $list = array();
+      foreach ($dirlist as $dir) {
+        if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
+      }
+      
+      $args->themename =tadminhtml  ::array2combo($list, $itemview['themename']);
+      
+      $list = array();
+      foreach ($dirlist as $dir) {
+        if (strbegin($dir, 'admin')) $list[$dir] = $dir;
+      }
+      
+      $args->adminname =tadminhtml  ::array2combo($list, $itemview['adminname']);
       $args->menu = tadminhtml  ::array2combo($menuitems, $itemview['menuclass']);
       $args->postanounce = tadminhtml  ::array2combo(array(
       'excerpt' => $lang->postexcerpt,
@@ -172,14 +172,14 @@ $args->adminname =tadminhtml  ::array2combo($list, $itemview['adminname']);
       [combo=themename]
       [combo=adminname]' .
       ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) .
-            '[checkbox=hovermenu]
+      '[checkbox=hovermenu]
       [combo=menu]
       [combo=postanounce]
       [text=perpage]
       [checkbox=invertorder]
       ');
-
-      $view = tview::i($id);      
+      
+      $view = tview::i($id);
       if (count($view->custom)) {
         $tabs->add($lang->custom, $this->get_custom($view));
       }

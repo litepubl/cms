@@ -12,7 +12,7 @@ function twidgetsInstall($self) {
   
   $xmlrpc = TXMLRPC::i();
   $xmlrpc->add('litepublisher.getwidget', 'xmlrpcgetwidget', get_class($self));
-
+  
   install_std_widgets($self);
 }
 

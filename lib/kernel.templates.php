@@ -116,8 +116,8 @@ class tlocal {
   
   public static function inicache($filename) {
     $self = self::i();
-    if (!isset(ttheme::$inifiles[$filename])) {
-      $ini = ttheme::cacheini($filename);
+    if (!isset(inifiles::$files[$filename])) {
+      $ini = inifiles::cache($filename);
       if (is_array($ini)) {
         $self->ini = $ini + $self->ini ;
         if (isset($ini['searchsect'])) $self->joinsearch($ini['searchsect']);
@@ -151,10 +151,42 @@ public function __construct($date) { $this->date = $date; }
 public function __get($name) { return tlocal::translate(date($name, $this->date), 'datetime'); }
 }
 
+//inifiles.class.php
+class inifiles {
+  public static $files = array();
+  
+  public static function cache($filename) {
+    if (isset(self::$files[$filename])) {
+      return self::$inifiles[$filename];
+    }
+    
+    $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
+    if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
+      if (file_exists($filename)) {
+        $ini = parse_ini_file($filename, true);
+        tfilestorage::savevar($datafile, $ini);
+      } else {
+        $ini = array();
+      }
+    }
+    
+    if (!isset(self::$files)) self::$files = array();
+    self::$files[$filename] = $ini;
+    return $ini;
+  }
+  
+  public static function getresource($class, $filename) {
+    $dir = litepublisher::$classes->getresourcedir($class);
+    return self::cache($dir . $filename);
+  }
+  
+}
+
 //view.class.php
 class tview extends titem_storage {
   public $sidebars;
-  protected $themeinstance;
+  protected $_theme;
+  protected $_admintheme;
   
   public static function i($id = 1) {
     if ($id == 1) {
@@ -189,6 +221,7 @@ class tview extends titem_storage {
     'class' => get_class($this),
     'name' => 'default',
     'themename' => 'default',
+    'adminname' => 'admin',
     'menuclass' => 'tmenus',
     'hovermenu' => true,
     'customsidebar' => false,
@@ -203,11 +236,13 @@ class tview extends titem_storage {
     );
     
     $this->sidebars = &$this->data['sidebars'];
-    $this->themeinstance = null;
+    $this->_theme = null;
+    $this->_admintheme = null;
   }
   
   public function __destruct() {
-    unset($this->themeinstance);
+    $this->_theme = null;
+    $this->_admintheme = null;
     parent::__destruct();
   }
   
@@ -223,30 +258,51 @@ class tview extends titem_storage {
     return false;
   }
   
-  protected function get_theme_instance($name) {
+  protected function get_theme($name) {
     return ttheme::getinstance($name);
+  }
+  
+  protected function get_admintheme($name) {
+    return admintheme::getinstance($name);
   }
   
   public function setthemename($name) {
     if ($name != $this->themename) {
+      if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
       if (!ttheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
+      
       $this->data['themename'] = $name;
-      $this->themeinstance = $this->get_theme_instance($name);
-      $this->data['custom'] = $this->themeinstance->templates['custom'];
+      $this->_theme = $this->get_theme($name);
+      $this->data['custom'] = $this->_theme->templates['custom'];
       $this->save();
-      tviews::i()->themechanged($this);
+      
+      self::getowner()->themechanged($this);
+    }
+  }
+  
+  public function setadminname($name) {
+    if ($name != $this->adminname) {
+      if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+      if (!admintheme::exists($name)) return $this->error(sprintf('Admin theme %s not exists', $name));
+      $this->data['adminname'] = $name;
+      $this->_admintheme = $this->get_admintheme($name);
+      $this->save();
     }
   }
   
   public function gettheme() {
-    if (isset($this->themeinstance)) return $this->themeinstance;
+    if ($this->_theme) {
+      return $this->_theme;
+    }
+    
     if (ttheme::exists($this->themename)) {
-      $this->themeinstance = $this->get_theme_instance($this->themename);
+      $this->_theme = $this->get_theme($this->themename);
+      
       $viewcustom = &$this->data['custom'];
-      $themecustom = &$this->themeinstance->templates['custom'];
+      $themecustom = &$this->_theme->templates['custom'];
       //aray_equal
       if ((count($viewcustom) == count($themecustom)) && !count(array_diff(array_keys($viewcustom), array_keys($themecustom)))) {
-        $this->themeinstance->templates['custom'] = $viewcustom;
+        $this->_theme->templates['custom'] = $viewcustom;
       } else {
         $this->data['custom'] = $themecustom;
         $this->save();
@@ -254,7 +310,19 @@ class tview extends titem_storage {
     } else {
       $this->setthemename('default');
     }
-    return $this->themeinstance;
+    return $this->_theme;
+  }
+  
+  public function getadmintheme() {
+    if ($this->_admintheme) {
+      return $this->_admintheme;
+    }
+    
+    if (!admintheme::exists($this->adminname)) {
+      $this->setadminname('admin');
+    }
+    
+    return $this->_admintheme = $this->get_admintheme($this->adminname);
   }
   
   public function setcustomsidebar($value) {
@@ -682,37 +750,33 @@ class ttemplate extends tevents_storage {
   
 }//class
 
-//theme.class.php
-class ttheme extends tevents {
+//theme.base.class.php
+class basetheme extends tevents {
   public static $instances = array();
   public static $vars = array();
   public static $defaultargs;
-  public static $inifiles;
   public $name;
   public $parsing;
   public $templates;
   public $extratml;
   
   public static function exists($name) {
-    return file_exists(litepublisher::$paths->data . 'themes'. DIRECTORY_SEPARATOR . $name . '.php') ||
-    file_exists(litepublisher::$paths->themes . $name . DIRECTORY_SEPARATOR  . 'about.ini');
+    return file_exists(litepublisher::$paths->themes . $name . '/about.ini');
   }
   
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  public static function getinstance($name) {
-    if (isset(self::$instances[$name])) return self::$instances[$name];
-    $result = getinstance(__class__);
-    if ($result->name != '') $result = litepublisher::$classes->newinstance(__class__);
+  public static function getbyname($classname, $name) {
+    if (isset(self::$instances[$name])) {
+      return self::$instances[$name];
+    }
+    
+    $result = getinstance($classname);
+    if (!$result->name) {
+      $result = litepublisher::$classes->newinstance($classname);
+    }
+    
     $result->name = $name;
     $result->load();
     return $result;
-  }
-  
-  public static function getwidgetnames() {
-    return array('categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
   }
   
   protected function create() {
@@ -722,15 +786,7 @@ class ttheme extends tevents {
     $this->data['type'] = 'litepublisher';
     $this->data['parent'] = '';
     $this->addmap('templates', array());
-    $this->templates = array(
-    'index' => '',
-    'title' => '',
-    'menu' => '',
-    'content' => '',
-    'sidebars' => array(),
-    'custom' => array(),
-    'customadmin' => array()
-    );
+    $this->templates = array();
     
     if (!isset(self::$defaultargs)) self::set_defaultargs();
     $this->extratml = '';
@@ -751,34 +807,35 @@ class ttheme extends tevents {
   }
   
   public function getbasename() {
-    return 'themes' . DIRECTORY_SEPARATOR . $this->name;
+    return 'themes/' . $this->name;
+  }
+  
+  public function getparser() {
+    return baseparser::i();
   }
   
   public function load() {
-    if ($this->name == '') return false;
+    if (!$this->name) return false;
+    
     if (parent::load()) {
       self::$instances[$this->name] = $this;
       return true;
     }
+    
     return $this->parsetheme();
   }
   
   public function parsetheme() {
-    if (!file_exists(litepublisher::$paths->themes . $this->name . DIRECTORY_SEPARATOR  . 'about.ini')) {
+    if (!self::exists($this->name)) {
       $this->error(sprintf('The %s theme not exists', $this->name));
     }
     
-    $parser = tthemeparser::i();
+    $parser = $this->getparser();
     if ($parser->parse($this)) {
       self::$instances[$this->name] = $this;
-      $this->save();
     }else {
       $this->error(sprintf('Theme file %s not exists', $filename));
     }
-  }
-  
-  public function __tostring() {
-    return $this->templates['index'];
   }
   
   public function __set($name, $value) {
@@ -788,6 +845,7 @@ class ttheme extends tevents {
     }
     return parent::__set($name, $value);
   }
+  
   public function reg($exp) {
     if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
     $result = array();
@@ -797,34 +855,7 @@ class ttheme extends tevents {
     return $result;
   }
   
-  public function getsidebarscount() {
-    return count($this->templates['sidebars']);
-  }
-  
-  
-  private function  get_author() {
-    $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
-    if (!is_object($context)) {
-      if (!isset(self::$vars['post'])) return new emptyclass();
-      $context = self::$vars['post'];
-    }
-    
-    if ($context instanceof     tuserpages) return $context;
-    $iduser = 0;
-    foreach (array('author', 'idauthor', 'user', 'iduser') as $propname) {
-      if (isset($context->$propname)) {
-        $iduser = $context->$propname;
-        break;
-      }
-    }
-    if (!$iduser) return new emptyclass();
-    $pages = tuserpages::i();
-    if (!$pages->itemexists($iduser)) return new emptyclass();
-    $pages->request($iduser);
-    return $pages;
-  }
-  
-  private function getvar($name) {
+  protected function getvar($name) {
     switch ($name) {
       case 'site':
       return litepublisher::$site;
@@ -936,6 +967,73 @@ class ttheme extends tevents {
     return self::i()->parse($s);
   }
   
+  public static function clearcache() {
+    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
+    litepublisher::$urlmap->clearcache();
+  }
+  
+}//class
+
+//theme.class.php
+class ttheme extends basetheme {
+  
+  public static function i() {
+    return getinstance(__class__);
+  }
+  
+  public static function getinstance($name) {
+    return self::getbyname(__class__, $name);
+  }
+  
+  public static function getwidgetnames() {
+    return array('categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
+  }
+  
+  protected function create() {
+    parent::create();
+    $this->templates = array(
+    'index' => '',
+    'title' => '',
+    'menu' => '',
+    'content' => '',
+    'sidebars' => array(),
+    'custom' => array(),
+    'customadmin' => array()
+    );
+  }
+  
+  public function __tostring() {
+    return $this->templates['index'];
+  }
+  
+  public function getparser() {
+    return tthemeparser::i();
+  }
+  
+  public function getsidebarscount() {
+    return count($this->templates['sidebars']);
+  }
+  private function  get_author() {
+    $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
+    if (!is_object($context)) {
+      if (!isset(self::$vars['post'])) return new emptyclass();
+      $context = self::$vars['post'];
+    }
+    
+    if ($context instanceof     tuserpages) return $context;
+    $iduser = 0;
+    foreach (array('author', 'idauthor', 'user', 'iduser') as $propname) {
+      if (isset($context->$propname)) {
+        $iduser = $context->$propname;
+        break;
+      }
+    }
+    if (!$iduser) return new emptyclass();
+    $pages = tuserpages::i();
+    if (!$pages->itemexists($iduser)) return new emptyclass();
+    $pages->request($iduser);
+    return $pages;
+  }
   public function gethtml($context) {
     self::$vars['context'] = $context;
     if (isset($context->index_tml) && ($tml = $context->index_tml)) {
@@ -1169,33 +1267,6 @@ class ttheme extends tevents {
     '$index' => $value,
     '$checked' => $checked ? 'checked="checked"' : '',
     ));
-  }
-  
-  public static function clearcache() {
-    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-    litepublisher::$urlmap->clearcache();
-  }
-  
-  public static function cacheini($filename) {
-    if (isset(self::$inifiles[$filename])) return self::$inifiles[$filename];
-    $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
-    if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
-      if (file_exists($filename)) {
-        $ini = parse_ini_file($filename, true);
-        tfilestorage::savevar($datafile, $ini);
-      } else {
-        $ini = array();
-      }
-    }
-    
-    if (!isset(self::$inifiles)) self::$inifiles = array();
-    self::$inifiles[$filename] = $ini;
-    return $ini;
-  }
-  
-  public static function inifile($class, $filename) {
-    $dir = litepublisher::$classes->getresourcedir($class);
-    return self::cacheini($dir . $filename);
   }
   
   public static function getwidgetpath($path) {

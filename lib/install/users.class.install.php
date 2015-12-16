@@ -7,7 +7,7 @@
 
 function tusersInstall($self) {
   $manager = tdbmanager::i();
-  $dir = dirname(__file__) . '/sql/;
+  $dir = dirname(__file__) . '/sql/';
   $manager->CreateTable($self->table, file_get_contents($dir .'user.sql'));
   //$manager->setautoincrement($self->table, 2);
   $manager->CreateTable($self->grouptable, file_get_contents($dir .'user.groups.sql'));

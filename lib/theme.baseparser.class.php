@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class baseparser extends tevents {
   public $theme;
@@ -20,30 +25,30 @@ class baseparser extends tevents {
     
     $this->pathmap = array();
   }
-
-public function checkabout($name) {
-return true;
-}
-
-public function getparentname($name) {
-$about = $this->getabout($name);
-return empty($about['parent']) ? false : $about['parent'];
-}
-
-public function getfilelist($name) {
-$about = $this->getabout($name);
-return array(
-litepublisher::$paths->themes . $name . '/' . $about['file']
-);
-}
-
+  
+  public function checkabout($name) {
+    return true;
+  }
+  
+  public function getparentname($name) {
+    $about = $this->getabout($name);
+    return empty($about['parent']) ? false : $about['parent'];
+  }
+  
+  public function getfilelist($name) {
+    $about = $this->getabout($name);
+    return array(
+    litepublisher::$paths->themes . $name . '/' . $about['file']
+    );
+  }
+  
   public function parse(basetheme $theme) {
     $this->checkparent($theme->name);
-if (!$this->checkabout($theme->name)) return false;
-
+    if (!$this->checkabout($theme->name)) return false;
+    
     $theme->lock();
-
-if ($parentname = $this->getparentname($theme->name)) {
+    
+    if ($parentname = $this->getparentname($theme->name)) {
       $parent_theme = basetheme::getbyname(get_class($theme), $parentname);
       $theme->templates = $parent_theme->templates;
       $theme->parent = $parent_theme->name;
@@ -51,17 +56,17 @@ if ($parentname = $this->getparentname($theme->name)) {
     
     $this->parsedtags = array();
     $about = $this->getabout($theme->name);
-   
-$filelist = $this->getfilelist($theme->name);
-foreach ($filelist as $filename) {    
-    if ($s = $this->getfile($filename, $about)) {
-$s = $this->replace_about($s, $about);
-    $this->parsetags($theme, $s);
-}
-}
-
+    
+    $filelist = $this->getfilelist($theme->name);
+    foreach ($filelist as $filename) {
+      if ($s = $this->getfile($filename, $about)) {
+        $s = $this->replace_about($s, $about);
+        $this->parsetags($theme, $s);
+      }
+    }
+    
     $this->afterparse($theme);
-   if ($this->replacelang) $this->doreplacelang($theme);
+    if ($this->replacelang) $this->doreplacelang($theme);
     $this->parsed($theme);
     $theme->unlock();
     return true;
@@ -74,8 +79,8 @@ $s = $this->replace_about($s, $about);
         $theme->templates[$name] = $theme->replacelang($value, $lang);
       }
     }
-}
-    
+  }
+  
   public function callback_replace_php(array $m) {
     return strtr($m[0], array(
     '$' => '&#36;',
@@ -103,14 +108,14 @@ $s = $this->replace_about($s, $about);
   }
   
   public function getfile($filename) {
-if (!file_exists($filename))  {
-return $this->error(sprintf('The required file "%s" file not exists', $filename));
-}
-
+    if (!file_exists($filename))  {
+      return $this->error(sprintf('The required file "%s" file not exists', $filename));
+    }
+    
     $s = file_get_contents($filename);
     if ($s === false) {
-return $this->error(sprintf('Error read "%s" file', $filename));
-}
+      return $this->error(sprintf('Error read "%s" file', $filename));
+    }
     
     $s = strip_utf($s);
     $s = str_replace(array("\r\n", "\r", "\n\n"), "\n", $s);
@@ -123,9 +128,9 @@ return $this->error(sprintf('Error read "%s" file', $filename));
     $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
     return trim($s);
   }
-
-    //replace $about.*
-public function replace_about($s, $about) {
+  
+  //replace $about.*
+  public function replace_about($s, $about) {
     if (preg_match_all('/\$about\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
       $a = array();
       foreach ($m as $item) {
@@ -136,10 +141,10 @@ public function replace_about($s, $about) {
       }
       $s = strtr($s, $a);
     }
-
-return $s;
-}    
-
+    
+    return $s;
+  }
+  
   public function getabout($name) {
     if (!isset($this->abouts)) $this->abouts = array();
     if (!isset($this->abouts[$name])) {
@@ -215,7 +220,7 @@ return $s;
     
     $s = trim($s);
     $this->callevent('beforeparse', array($theme, &$s));
-
+    
     if ($this->removephp) {
       $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
     } else {
@@ -234,7 +239,7 @@ return $s;
           
           $value = trim(substr($s, 0, $i));
           $s = ltrim(substr($s, $i));
-
+          
           $this->settag($tag, $value);
         } else {
           if ($i = strpos($s, "\n")) {
@@ -258,9 +263,9 @@ return $s;
         if (!file_exists($filename)) $this->error("File '$filename' not found");
         $s = $this->getfile($filename, $this->getabout($this->theme->name));
       }
-
-$parent = $this->preparetag($parent);
-
+      
+      $parent = $this->preparetag($parent);
+      
       if ($this->removephp) {
         $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
       } else {
@@ -297,56 +302,56 @@ $parent = $this->preparetag($parent);
           $s = preg_replace_callback('/\<\&\#63;.*?\&\#63;\>/ims', array($this, 'callback_restore_php'), $s);
         }
         
-$this->setvalue($parent, $s);
+        $this->setvalue($parent, $s);
       }
-
-protected function preparetag($name) {
-      if (strbegin($name, '$template.')) $name = substr($name, strlen('$template.'));
-return$name;
-}
-
-protected function setvalue($name, $value) {
+      
+      protected function preparetag($name) {
+        if (strbegin($name, '$template.')) $name = substr($name, strlen('$template.'));
+        return$name;
+      }
+      
+      protected function setvalue($name, $value) {
         if (isset($this->paths[$name])) {
-$this->theme->templates[$name] = $value;
+          $this->theme->templates[$name] = $value;
         } else {
           $this->error("The '$name' tag not found. Content \n$s");
         }
-}
-
+      }
+      
       public function getinfo($name, $child) {
-$path = $name . '.' . substr($child, 1);
-if (isset($this->paths[$path])) {
-$info = $this->paths[$path];
-$info['path'] = $path;
-return $info;
-} else {
-/*
-        foreach ($this->paths as $path => $info) {
-          if (strbegin($path, $name) && ($child == $info['tag'])) {
+        $path = $name . '.' . substr($child, 1);
+        if (isset($this->paths[$path])) {
+          $info = $this->paths[$path];
+          $info['path'] = $path;
+          return $info;
+        } else {
+          /*
+          foreach ($this->paths as $path => $info) {
+            if (strbegin($path, $name) && ($child == $info['tag'])) {
               $info['path'] = $path;
               return $info;
             }
           }
-*/
-}
-
+          */
+        }
+        
         $this->error("The '$child' not found in path '$name'");
-}
+      }
       
       public function afterparse($theme) {
         $this->onfix($theme);
-$this->reuse($this->theme->templates);
-        }
-
-public function reuse(&$templates) {
+        $this->reuse($this->theme->templates);
+      }
+      
+      public function reuse(&$templates) {
         foreach ($templates as $k => $v) {
           if (is_string($v) && !strbegin($v, '<') && isset($templates[$v]) && is_string($templates[$v])) {
             $templates[$k] = $templates[$v];
           }
         }
-}        
-
-            public function loadpaths() {
+      }
+      
+      public function loadpaths() {
         $result = array();
         foreach ($this->tagfiles as $filename) {
           $filename = litepublisher::$paths->home . trim($filename, '/');

@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class basetheme extends tevents {
   public static $instances = array();
@@ -12,17 +17,17 @@ class basetheme extends tevents {
   public static function exists($name) {
     return file_exists(litepublisher::$paths->themes . $name . '/about.ini');
   }
-
-  public static function getbyname($classname, $name) {  
+  
+  public static function getbyname($classname, $name) {
     if (isset(self::$instances[$name])) {
-return self::$instances[$name];
-}
-
+      return self::$instances[$name];
+    }
+    
     $result = getinstance($classname);
     if (!$result->name) {
-$result = litepublisher::$classes->newinstance($classname);
-}
-
+      $result = litepublisher::$classes->newinstance($classname);
+    }
+    
     $result->name = $name;
     $result->load();
     return $result;
@@ -36,7 +41,7 @@ $result = litepublisher::$classes->newinstance($classname);
     $this->data['parent'] = '';
     $this->addmap('templates', array());
     $this->templates = array();
-
+    
     if (!isset(self::$defaultargs)) self::set_defaultargs();
     $this->extratml = '';
   }
@@ -58,19 +63,19 @@ $result = litepublisher::$classes->newinstance($classname);
   public function getbasename() {
     return 'themes/' . $this->name;
   }
-
-public function getparser() {
-return baseparser::i();
-}
-
-    public function load() {
+  
+  public function getparser() {
+    return baseparser::i();
+  }
+  
+  public function load() {
     if (!$this->name) return false;
-
+    
     if (parent::load()) {
       self::$instances[$this->name] = $this;
       return true;
     }
-
+    
     return $this->parsetheme();
   }
   
@@ -87,14 +92,14 @@ return baseparser::i();
     }
   }
   
-    public function __set($name, $value) {
+  public function __set($name, $value) {
     if (array_key_exists($name, $this->templates)) {
       $this->templates[$name] = $value;
       return;
     }
     return parent::__set($name, $value);
   }
-
+  
   public function reg($exp) {
     if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
     $result = array();
@@ -215,7 +220,7 @@ return baseparser::i();
     self::$vars[$name] = $var;
     return self::i()->parse($s);
   }
-
+  
   public static function clearcache() {
     tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
     litepublisher::$urlmap->clearcache();

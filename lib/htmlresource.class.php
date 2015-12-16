@@ -302,7 +302,7 @@ class tadminhtml {
   }
   
   public function gettable($head, $body) {
-return admintheme::i()->gettable($head, $body);
+    return admintheme::i()->gettable($head, $body);
   }
   
   public function getcolclass($s) {
@@ -372,7 +372,7 @@ return admintheme::i()->gettable($head, $body);
       $body .= $admintheme->parsearg($tml, $args);
     }
     unset(admintheme::$vars['item']);
-   
+    
     return $admintheme->gettable($head, $body);
   }
   
@@ -394,7 +394,7 @@ return admintheme::i()->gettable($head, $body);
       $args->id = $id;
       $body .= $admintheme->parsearg($tml, $args);
     }
-
+    
     return $admintheme->gettable($head, $body);
   }
   

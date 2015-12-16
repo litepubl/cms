@@ -6,31 +6,31 @@
 **/
 
 class admintheme extends basetheme {
-
+  
   public static function i() {
     $result = getinstance(__class__);
-if (!$result->name && ($context = litepublisher::$urlmap->context)) {
-$result->name = tview::getview($context)->adminname;
-$result->load();
-}
-
-return $result;
+    if (!$result->name && ($context = litepublisher::$urlmap->context)) {
+      $result->name = tview::getview($context)->adminname;
+      $result->load();
+    }
+    
+    return $result;
   }
-
+  
   public static function getinstance($name) {
-return self::getbyname(__class__, $name);
-}
-
-public function getparser() {
-return adminparser::i();
-}
-
+    return self::getbyname(__class__, $name);
+  }
+  
+  public function getparser() {
+    return adminparser::i();
+  }
+  
   public function gettable($head, $body) {
     return strtr($this->templates['table'], array(
     '$class' => ttheme::i()->templates['content.admin.tableclass'],
     '$head' => $head,
     '$body' => $body
-));
+    ));
   }
   
 }//class

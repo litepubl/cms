@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class tauthor_rights extends tevents {
   
@@ -11,3 +16,5 @@ class tauthor_rights extends tevents {
     $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
     $this->basename = 'authorrights';
   }
+  
+}

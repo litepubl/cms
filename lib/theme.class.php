@@ -6,19 +6,19 @@
 **/
 
 class ttheme extends basetheme {
-
+  
   public static function i() {
     return getinstance(__class__);
   }
-
+  
   public static function getinstance($name) {
-return self::getbyname(__class__, $name);
-}
-
+    return self::getbyname(__class__, $name);
+  }
+  
   public static function getwidgetnames() {
     return array('categories', 'tags', 'archives', 'links', 'posts', 'comments', 'friends', 'meta') ;
   }
-
+  
   protected function create() {
     parent::create();
     $this->templates = array(
@@ -30,16 +30,16 @@ return self::getbyname(__class__, $name);
     'custom' => array(),
     'customadmin' => array()
     );
-}
-
+  }
+  
   public function __tostring() {
     return $this->templates['index'];
   }
-
-public function getparser() {
-return tthemeparser::i();
-}
-
+  
+  public function getparser() {
+    return tthemeparser::i();
+  }
+  
   public function getsidebarscount() {
     return count($this->templates['sidebars']);
   }

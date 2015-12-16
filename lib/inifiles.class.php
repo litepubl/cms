@@ -1,13 +1,18 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class inifiles {
-public static $files = array();
-
+  public static $files = array();
+  
   public static function cache($filename) {
     if (isset(self::$files[$filename])) {
-return self::$inifiles[$filename];
-}
-
+      return self::$inifiles[$filename];
+    }
+    
     $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
     if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
       if (file_exists($filename)) {
@@ -27,5 +32,5 @@ return self::$inifiles[$filename];
     $dir = litepublisher::$classes->getresourcedir($class);
     return self::cache($dir . $filename);
   }
-
+  
 }

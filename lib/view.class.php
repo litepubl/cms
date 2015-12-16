@@ -83,28 +83,28 @@ class tview extends titem_storage {
   protected function get_theme($name) {
     return ttheme::getinstance($name);
   }
-
+  
   protected function get_admintheme($name) {
     return admintheme::getinstance($name);
   }
   
   public function setthemename($name) {
     if ($name != $this->themename) {
-if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
+      if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
       if (!ttheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
-
+      
       $this->data['themename'] = $name;
       $this->_theme = $this->get_theme($name);
       $this->data['custom'] = $this->_theme->templates['custom'];
       $this->save();
-
-self::getowner()->themechanged($this);
+      
+      self::getowner()->themechanged($this);
     }
   }
-
+  
   public function setadminname($name) {
     if ($name != $this->adminname) {
-if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+      if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
       if (!admintheme::exists($name)) return $this->error(sprintf('Admin theme %s not exists', $name));
       $this->data['adminname'] = $name;
       $this->_admintheme = $this->get_admintheme($name);
@@ -114,12 +114,12 @@ if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with ad
   
   public function gettheme() {
     if ($this->_theme) {
-return $this->_theme;
-}
-
+      return $this->_theme;
+    }
+    
     if (ttheme::exists($this->themename)) {
       $this->_theme = $this->get_theme($this->themename);
-
+      
       $viewcustom = &$this->data['custom'];
       $themecustom = &$this->_theme->templates['custom'];
       //aray_equal
@@ -134,17 +134,17 @@ return $this->_theme;
     }
     return $this->_theme;
   }
-
+  
   public function getadmintheme() {
     if ($this->_admintheme) {
-return $this->_admintheme;
-}
-
+      return $this->_admintheme;
+    }
+    
     if (!admintheme::exists($this->adminname)) {
       $this->setadminname('admin');
-}
-
-      return $this->_admintheme = $this->get_admintheme($this->adminname);
+    }
+    
+    return $this->_admintheme = $this->get_admintheme($this->adminname);
   }
   
   public function setcustomsidebar($value) {

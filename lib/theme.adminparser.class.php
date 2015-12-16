@@ -6,22 +6,22 @@
 **/
 
 class adminparser extends baseparser  {
-public $themefiles;
-
+  public $themefiles;
+  
   public static function i() {
     return getinstance(__class__);
   }
-
+  
   protected function create() {
     parent::create();
     $this->basename = 'admimparser';
     $this->tagfiles[] = 'themes/admin/admintags.ini';
-$this->addmap('themefiles', array());
-}
-
-public function getfilelist($name) {
-$result = parent::getfilelist($name);
-return $result + $this->themefiles;
-}
-
+    $this->addmap('themefiles', array());
+  }
+  
+  public function getfilelist($name) {
+    $result = parent::getfilelist($name);
+    return $result + $this->themefiles;
+  }
+  
 }//class

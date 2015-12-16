@@ -7,20 +7,20 @@
 
 function tpostsInstall($self) {
   if ('tposts' != get_class($self)) return;
-
-    $manager = tdbmanager ::i();
-    $dir = dirname(__file__) . '/sql/';
-    $manager->CreateTable($self->table, file_get_contents($dir .'post.sql'));
-    $manager->CreateTable('pages', file_get_contents($dir .'post.pages.sql'));
-    $manager->CreateTable($self->rawtable, file_get_contents($dir .'post.raw.sql'));
-
+  
+  $manager = tdbmanager ::i();
+  $dir = dirname(__file__) . '/sql/';
+  $manager->CreateTable($self->table, file_get_contents($dir .'post.sql'));
+  $manager->CreateTable('pages', file_get_contents($dir .'post.pages.sql'));
+  $manager->CreateTable($self->rawtable, file_get_contents($dir .'post.raw.sql'));
+  
   $Cron = tcron::i();
   $Cron->add('hour', get_class($self), 'HourCron');
 }
 
 function tpostsUninstall($self) {
   if ('tposts' != get_class($self)) return;
-
+  
   $Cron = tcron::i();
   $Cron->deleteclass(get_class($self));
   
