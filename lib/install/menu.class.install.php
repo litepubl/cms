@@ -14,6 +14,7 @@ function tmenusInstall($self) {
 function  tmenusUninstall($self) {
   //rmdir(. 'menus');
 }
+
 function tmenusGetsitemap($self, $from, $count) {
   $result = array();
   foreach ($self->items as $id => $item) {

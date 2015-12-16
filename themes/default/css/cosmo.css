@@ -6293,9 +6293,7 @@ ins {
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-.cursor-loading {
-  cursor: progress;
-}
+.cursor-loading,
 .cursor-loading:hover {
   cursor: progress;
 }
@@ -6375,39 +6373,10 @@ A.dashed:focus {
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 .anpost {
+  position: relative;
   display: block;
   overflow: hidden;
   margin-top: 20px;
-}
-@media (min-width: 480px) {
-  .anpost {
-    float: left;
-    width: 50%;
-  }
-}
-.anpost-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.anpost-subtitle {
-  margin-top: 10px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.anpost-subtitle p {
-  display: inline;
-}
-.anpost-subtitle br {
-  display: none;
-}
-.anpost-content {
-  display: block;
-  overflow: hidden;
-  position: relative;
-  margin-top: 10px;
 }
 .anpost-image {
   float: left;
@@ -6420,33 +6389,56 @@ A.dashed:focus {
 .anpost-body {
   display: block;
   overflow: hidden;
-  height: 120px;
   margin: 0 18px 0 0;
-}
-.anpost-body .anpost-item,
-.anpost-body .post-categories {
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.anpost-body .anpost-item-title,
-.anpost-body .cats-title {
-  display: none;
 }
 .anpost-body:first-child {
   margin: 0;
-}
-.anpost-body:first-child .anpost-item-title,
-.anpost-body:first-child .cats-title {
-  display: inline;
 }
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-.photo img {
+.postcard {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  margin-top: 20px;
+}
+@media (min-width: 480px) {
+  .postcard {
+    float: left;
+    width: 50%;
+  }
+}
+.postcard-header {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.postcard-body {
+  display: block;
+  overflow: hidden;
+  height: 120px;
+  margin: 0 18px 0 0;
+}
+.postcard-body .postcard-item,
+.postcard-body .post-categories {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.postcard-body:first-child {
+  margin: 0;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+.photo img,
+.anpost-image img {
   border: 1px solid transparent;
   border-radius: 0;
 }
@@ -6466,19 +6458,16 @@ A.dashed:focus {
   display: block;
   overflow: hidden;
 }
-.post-header .post-date,
-.post-header .post-tags {
+.post-date,
+.post-tags {
   float: left;
 }
-.post-header .post-date,
-.post-header .post-tags,
-.post-header .post-categories {
+.post-date,
+.post-tags,
+.post-categories {
   display: block;
   overflow: hidden;
   margin: 10px 18px;
-}
-.post-header .cats-title {
-  display: none;
 }
 /**
 * Lite Publisher
