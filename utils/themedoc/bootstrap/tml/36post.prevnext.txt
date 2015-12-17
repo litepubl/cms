@@ -1,6 +1,8 @@
 content.post.prevnext = [
-								<div><ul class="pager">
-								$prev = [<li><a rel="prev" href="$prevpost.link">$lang.prev $prevpost.title</a></li>]
-								$next = [<li><a rel="next" href="$nextpost.link">$nextpost.title $lang.next </a></li>]
-</ul></div>
+<div>
+    <ul class="pager">
+        $prev = [<li><a rel="prev" href="$prevpost.link">$lang.prev $prevpost.title</a></li>]
+                $next = [<li><a rel="next" href="$nextpost.link">$nextpost.title $lang.next </a></li>]
+    </ul>
+</div>
 ]

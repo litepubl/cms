@@ -1,6 +1,6 @@
 content.post.templatecomments.form.js = [
 <script type="text/javascript">
-  ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, $params);
+    ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, $params);
 </script>
 <script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>
 ]

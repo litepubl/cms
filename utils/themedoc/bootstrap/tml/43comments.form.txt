@@ -1,27 +1,41 @@
 content.post.templatecomments.form = [
 <div id="before-commentform" class="header-comments">
-$mesg
+    $mesg
 </div>
 <p class="header-comments">$lang.leavereply</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform">
-<div class="form-group"><label for="text-name">$lang.name</label>
-<input type="text" class="form-control" name="name" id="text-name" value="$name" /></div>
-<div class="form-group"><label for="text-email">$lang.email</label>
-<input type="text" class="form-control" name="email" id="text-email" value="$email" /></div>
+    <div class="form-group">
+        <label for="text-name">$lang.name</label>
+        <input type="text" class="form-control" name="name" id="text-name" value="$name" />
+    </div>
+    <div class="form-group">
+        <label for="text-email">$lang.email</label>
+        <input type="text" class="form-control" name="email" id="text-email" value="$email" />
+    </div>
 
-<div class="form-group"><label for="text-url">$lang.url</label>
-<input type="text" class="form-control" name="url" id="text-url" value="$url" /></div>
+    <div class="form-group">
+        <label for="text-url">$lang.url</label>
+        <input type="text" class="form-control" name="url" id="text-url" value="$url" />
+    </div>
 
-<div class="form-group"><label>
-<input type="checkbox" class="form-control" name="subscribe" id="checkbox-subscribe" $subscribe /> $lang.subscribe</label></div>
+    <div class="form-group">
+        <label>
+            <input type="checkbox" class="form-control" name="subscribe" id="checkbox-subscribe" $subscribe /> $lang.subscribe</label>
+    </div>
 
-<div class="form-group"><label for="comment">$lang.comment</label>
-<textarea name="content" id="comment" class="form-control"></textarea></div>
+    <div class="form-group">
+        <label for="comment">$lang.comment</label>
+        <textarea name="content" id="comment" class="form-control"></textarea>
+    </div>
 
-<div class="hidden">
-<input type="hidden" name="postid" value="$postid" />
-<input type="hidden" name="antispam" value="$antispam" />
-</div>
+    <div class="hidden">
+        <input type="hidden" name="postid" value="$postid" />
+        <input type="hidden" name="antispam" value="$antispam" />
+    </div>
 
-<div class="text-center"><div class="center-block"><button type="submit" name="submitcomment" class="btn btn-primary" id="id-submitcomment">$lang.send</button></div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button type="submit" name="submitcomment" class="btn btn-primary" id="id-submitcomment">$lang.send</button>
+        </div>
+    </div>
 </form>]

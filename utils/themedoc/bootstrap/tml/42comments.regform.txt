@@ -1,17 +1,23 @@
 content.post.templatecomments.regform = [
 <div id="before-commentform" class="header-comments">
-$mesg
+    $mesg
 </div>
 <p class="header-comments">$lang.leavereply</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform">
-<div class="form-group"><label for="comment">$lang.comment</label>
-<textarea name="content" id="comment" class="form-control"></textarea></div>
+    <div class="form-group">
+        <label for="comment">$lang.comment</label>
+        <textarea name="content" id="comment" class="form-control"></textarea>
+    </div>
 
-<div class="hidden">
-<input type="hidden" name="postid" value="$postid" />
-<input type="hidden" name="antispam" value="$antispam" />
-</div>
+    <div class="hidden">
+        <input type="hidden" name="postid" value="$postid" />
+        <input type="hidden" name="antispam" value="$antispam" />
+    </div>
 
-<div class="text-center"><div class="center-block"><button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button></div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button>
+        </div>
+    </div>
 </form>
 ]

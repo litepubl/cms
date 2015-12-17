@@ -1,25 +1,23 @@
 content.excerpts.card = [
 <div class="row">
-$excerpt = [
-<div class="postcard" id="post-$post.id">
-$post.firstimage
-<div class="postcard-body">
-<h4 class="postcard-header"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
-$post.catlinks
+    $excerpt = [
+    <div class="postcard" id="post-$post.id">
+        $post.firstimage
+        <div class="postcard-body">
+            <h4 class="postcard-header"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4> $post.catlinks
 
-<div class="postcard-item">
-<span class="fa fa-calendar" aria-hidden="true"></span>
-<span class="sr-only">$lang.posted</span>
-				<span class="post-date">$post.excerptdate </span>
-</div>
+            <div class="postcard-date">
+                <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
+                <span class="postcard-date-value">$post.excerptdate </span>
+            </div>
 
-<div class="postcard-item">
-<span class="fa fa-comments" aria-hidden="true"></span>
-<span class="post-comments">$post.commentslink</span>
-</div>
+            <div class="postcard-comments">
+                <span class="fa fa-comments" aria-hidden="true"></span>
+                <span class="post-comments">$post.commentslink</span>
+            </div>
 
-</div>
-</div>
-]
+        </div>
+    </div>
+    ]
 </div>
 ]

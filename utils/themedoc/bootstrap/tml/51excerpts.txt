@@ -1,21 +1,22 @@
 content.excerpts = [
-$excerpt = [
-<div class="anpost" id="post-$post.id">
-$post.firstimage = [<div class="anpost-image"><a href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
-<div class="anpost-body">
-<h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
+    $excerpt = [
+    <div class="anpost" id="post-$post.id">
+        $post.firstimage = [<div class="anpost-image"><a href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
 
-<div class="clearfix">
-<div class="post-date">
-<span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
- <span class="anpost-date">$post.excerptdate = [d.m.Y]</span>
-</div>
+        <div class="anpost-body">
+            <h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
 
-$post.catlinks
-</div>
-</div>
-</div>
-$post.excerptcontent $post.morelink = [<!--no more-->]
-<hr>
-]
+            <div class="clearfix">
+                <div class="post-date">
+                    <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
+                    <span class="anpost-date">$post.excerptdate = [d.m.Y]</span>
+                </div>
+
+                $post.catlinks
+            </div>
+        </div>
+    </div>
+    $post.excerptcontent $post.morelink = [<!--no more-->]
+    <hr> 
+    ]
 ]

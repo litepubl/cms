@@ -1,8 +1,8 @@
 content.menu = [
-			<div class="post" id="menu-$menu.id">
-		        <h3>$menu.title</h3>
-		        <div class="post-content">
-					$menu.content
-		        </div>
-			</div>
+<div class="post" id="menu-$menu.id">
+    <h3>$menu.title</h3>
+    <div class="post-content">
+        $menu.content
+    </div>
+</div>
 ]

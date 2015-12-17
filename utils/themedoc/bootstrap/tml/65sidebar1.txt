@@ -1,16 +1,15 @@
 sidebar1.widget = [
-  <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title <span class="caret"></span></a>
-  <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
-$items = [          <ul class="dropdown-menu" role="menu">
-$item = [<li><a href="$link" title="$title">$icon$text</a>
-$subcount = [<em>($itemscount)</em>]
-$subitems = [<ul>$item</ul>]
-</li>]
-</ul>]
-</div>]
-
-sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
+    <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title <span class="caret"></span></a>
+    <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
+        $items = [<ul class="dropdown-menu" role="menu">
+            $item = [<li><a href="$link" title="$title">$icon$text</a>
+                            $subcount = [<em>($itemscount)</em>]
+                                            $subitems = [<ul>$item</ul>]
+            </li>]
+        </ul>]
+    </div>]
+    
+    sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
 sidebar1.comments.item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
 sidebar1.meta.item     = [<li><a href="$link" title="$title"><span $class aria-hidden="true"></span> $text</a>$subitems</li>]
 sidebar1.meta.classes  = [rss=fa fa-rss,comments=fa fa-comments,foaf=fa fa-group]
-

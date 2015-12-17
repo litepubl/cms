@@ -1,6 +1,6 @@
 content.excerpts.lite = [
-			<h1>$lang.posts</h1>
-			<ul>
-				$excerpt = [<li><a href="$post.link" title="$lang.permalink $post.title">$post.title</a></li>]
-			</ul>
+<h3>$lang.posts</h3>
+<ul>
+    $excerpt = [<li><a href="$post.link" title="$lang.permalink $post.title">$post.title</a></li>]
+</ul>
 ]

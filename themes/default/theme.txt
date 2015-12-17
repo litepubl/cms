@@ -117,13 +117,13 @@ $template.footer - подвал страницы, текст задается в
 */
 
 $template.menu = [
-$hover = [bootstrap]
-          <ul class="nav navbar-nav">
-		$item = [<li class="dropdown"><a href="$link" title="$title"               class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" itemprop="name url">$title <span class="caret"></span></a>
-		$submenu = [<ul class="dropdown-menu">$items</ul>]
-		</li>]
-		$single = [<li><a href="$link" title="$title" itemprop="name url">$title</a></li>]
-	</ul>
+    $hover = [bootstrap]
+    <ul class="nav navbar-nav">
+        $item = [<li class="dropdown"><a href="$link" title="$title" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" itemprop="name url">$title <span class="caret"></span></a>
+            $submenu = [<ul class="dropdown-menu">$items</ul>]
+        </li>]
+        $single = [<li><a href="$link" title="$title" itemprop="name url">$title</a></li>]
+    </ul>
 ]
 
 /*
@@ -147,30 +147,30 @@ $ITEMS - ИСПОЛЬЗУЕТСЯ В ШАБЛОНЕ ПОДМЕНЮ $SUBMENU, К�
 */
 
 $template.head = [
-  $post = [
-    $rss = [<link rel="alternate" type="application/rss+xml" title="$lang.onpost $post.title" href="$post.rsscomments" />]
-    $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
-    $next = [<link rel="next" title="$next.title" href="$next.link" />]
-  ]
-
-$tags = [
-<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
-]
-
-$home = [
-<script type="text/javascript">
-if (location.pathname == "/") {
-  $(document).ready(function() {
-    $("#site-description").homeimage({
-      image: "$home.image",
-      small: "$home.smallimage",
-      breakpoint: 768,
-      addclass: "home-image"
-    });
-  });
-}
-</script>
-]
+    $post = [
+        $rss = [<link rel="alternate" type="application/rss+xml" title="$lang.onpost $post.title" href="$post.rsscomments" />]
+        $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
+        $next = [<link rel="next" title="$next.title" href="$next.link" />]
+    ]
+    
+    $tags = [
+        <link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
+    ]
+    
+    $home = [
+        <script type="text/javascript">
+            if (location.pathname == "/") {
+                $(document).ready(function() {
+                    $("#site-description").homeimage({
+                        image: "$home.image",
+                        small: "$home.smallimage",
+                        breakpoint: 768,
+                        addclass: "home-image"
+                    });
+                });
+            }
+        </script>
+    ]
 ]
 
 /*
@@ -246,9 +246,9 @@ $template.content.simple = [<div class="jumbotron">$content</div>]
 
 $template.content.notfound = [
 <div class="jumbotron">
-				<h2>$lang.notfound </h2>
-				<p>$lang.nocontent</p>
-				</div>
+    <h2>$lang.notfound </h2>
+    <p>$lang.nocontent</p>
+</div>
 ]
 
 /*
@@ -258,12 +258,12 @@ $template.content.notfound = [
 */
 
 content.menu = [
-			<div class="post" id="menu-$menu.id">
-		        <h3>$menu.title</h3>
-		        <div class="post-content">
-					$menu.content
-		        </div>
-			</div>
+<div class="post" id="menu-$menu.id">
+    <h3>$menu.title</h3>
+    <div class="post-content">
+        $menu.content
+    </div>
+</div>
 ]
 
 /*
@@ -279,12 +279,12 @@ $menu.content - текст страницы меню
 */
 
 content.author = [
-			<div class="post" id="author-$author.id">
-		        <h2>$author.title</h2>
-		        <div class="post-content">
-					$author.content
-		        </div>
-			</div>
+<div class="post" id="author-$author.id">
+    <h3>$author.title</h3>
+    <div class="post-content">
+        $author.content
+    </div>
+</div>
 ]
 
 /*
@@ -317,31 +317,31 @@ content.home.midle - используется если в настройках �
 
 content.post = [
 <div class="post" id="post-$post.id" itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting">
-<div class="row">
-<div class="col-sm-8">
-<h3><a href="$post.link" class="self" itemprop="name url" rel="bookmark">$post.title</a></h3>
-</div><div class="col-sm-4">
-<div id="likebuttons-container">
-<span class="fa fa-share tooltip-toggle" title="$lang.sharefriend"></span>
-</div>
-</div>
+    <div class="row">
+        <div class="col-sm-8">
+            <h3><a href="$post.link" class="self" itemprop="name url" rel="bookmark">$post.title</a></h3>
+        </div>
+        <div class="col-sm-4">
+            <div id="likebuttons-container">
+                <span class="fa fa-share tooltip-toggle" title="$lang.sharefriend"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="clear-after">
+        $post.filelist
+        <div class="post-header">
+            <time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span> $post.date</time>
+            $post.taglinks $post.catlinks
+        </div>
+    </div>
+
+    <div class="entry" itemprop="text">$post.content</div>
+
+    $post.prevnext
 </div>
 
-<div class="clear-after">
-$post.filelist  
-<div class="post-header">
-<time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span> $post.date</time>
-$post.taglinks 
-$post.catlinks 
-</div>
-</div>
-
-<div class="entry" itemprop="text">$post.content</div>
-
-$post.prevnext
-</div>
-
-$post.templatecomments
+$post.templatecomments 
 ]
 
 /*
@@ -433,9 +433,9 @@ content.post.more = [<span id="more-$post.id"></span>]
 
 content.post.taglinks = [
 <div class="post-tags">
-<span class="fa fa-tags tooltip-toggle" title="$lang.tags"></span>
- $item = [ <a href="$link">$title</a>]
-  $divider = [,&#32;]
+    <span class="fa fa-tags tooltip-toggle" title="$lang.tags"></span>
+        $item = [ <a href="$link">$title</a>]
+            $divider = [,&#32;]
 </div>
 ]
 
@@ -449,9 +449,9 @@ $divider - шаблон разделителя ссылок
 
 content.post.catlinks = [
 <div class="post-categories" id="post-categories-$post.id">
-<span class="fa fa-tags tooltip-toggle" title="$lang.categories"></span>
-$item = [ <a href="$link" class="category">$title</a>]
-$divider = [,&#32;]
+    <span class="fa fa-tags tooltip-toggle" title="$lang.categories"></span>
+        $item = [ <a href="$link" class="category">$title</a>]
+            $divider = [,&#32;]
 </div>
 ]
 
@@ -469,17 +469,21 @@ $icon - html иконка, если есть
 Перед тем, как расматривать шаблон списка файлов рассмотрим два несложных шаблона - ссылка на RSS и ссылки на следующую и предыдущую запись.
 */
 
-content.post.rsslink = [<span class="rsscomments"><a href="$post.rsscomments" title="$lang.subscribetorsscomments" ><span class="fa fa-rss" aria-hidden="true"></span> $lang.subscribetorsscomments</a></span>]
+content.post.rsslink = [
+<span class="rsscomments"><a href="$post.rsscomments" title="$lang.subscribetorsscomments" ><span class="fa fa-rss" aria-hidden="true"></span> $lang.subscribetorsscomments</a>
+</span>]
 
 /*
 В этом шаблоне встречаются два тега: $post.rsscomments - это адресс ссылки RSS комментариев записи, а $lang - строка "Подписаться на RSS комментариев". Все более чем просто. Также несложный шаблон ссыллок на следующую и предыдущую запись:
 */
 
 content.post.prevnext = [
-								<div><ul class="pager">
-								$prev = [<li><a rel="prev" href="$prevpost.link">$lang.prev $prevpost.title</a></li>]
-								$next = [<li><a rel="next" href="$nextpost.link">$nextpost.title $lang.next </a></li>]
-</ul></div>
+<div>
+    <ul class="pager">
+        $prev = [<li><a rel="prev" href="$prevpost.link">$lang.prev $prevpost.title</a></li>]
+                $next = [<li><a rel="next" href="$nextpost.link">$nextpost.title $lang.next </a></li>]
+    </ul>
+</div>
 ]
 
 /*
@@ -497,35 +501,48 @@ $nextpost - следующая запись
 
 content.post.filelist = [
 <div class="filelist-all filelist-$count" id="files-$post.id">
-$files = [<div class="files-block filelist-file"><ul>$file</ul></div>]
-$file = [<li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description"><span class="fa fa-download" aria-label="$lang.download"></span> $title</a></li>]
-
-$images= [<div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">$image</div>]
-$image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json">$preview</a></span>]
-
-$preview = [<img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
-
-$video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a></span>]
-
-$videos = [<div class="files-block filelist-video">
-$video
-$fallback = [<span class="fa fa-file-video-o video-fallback" aria-hidden="true"></span>]
-</div>]
-
-$audios = [<div class="files-block filelist-audio">$audio</div>]
-  $audio = [<audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
-
-$flashs = [<div class="files-block filelist-flash">$flash</div>]
-$flash = [<div class="flash-holder">
-<object type="application/x-shockwave-flash" data="$link" width="$width" height="$height" id="flashplayer-$id" name="flashplayer-$id">
-<param name="movie" value="$link" />
-<param name="allowfullscreen" value="true" />
-<param name="allowscriptaccess" value="always" />
-<param name="menu" value="false" />
-<param name="wmode" value="transparent" />
-<param name="FlashVars" value="autostart=true" />
-</object>
-</div>]
+    $files = [
+    <div class="files-block filelist-file">
+        <ul>$file</ul>
+    </div>]
+    
+    $file = [
+    <li class="file"><a id="postfile-$post.id-$id" href="$link" data-file="$json" title="$description"><span class="fa fa-download" aria-label="$lang.download"></span> $title</a></li>]
+    
+        $images= [
+    <div class="files-block filelist-image" itemscope itemtype="http://schema.org/ImageGallery">$image</div>]
+    
+        $image = [<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json">$preview</a></span>]
+        
+            $preview = [<img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$title" title="$description" itemprop="thumbnail" />]
+            
+                $video = [<span class="image"><a rel="video" class="videofile toolbar-toggle" id="postfile-$post.id-$id" href="$link" data-file="$json" title="$lang.playvideo $title">$preview <span class="sr-only">$lang.playvideo $title</span></a>
+    </span>]
+    
+        $videos = [
+    <div class="files-block filelist-video">
+        $video
+               $fallback = [<span class="fa fa-file-video-o video-fallback" aria-hidden="true"></span>]
+    </div>]
+    
+        $audios = [<div class="files-block filelist-audio">$audio</div>]
+    
+        $audio = [
+    <audio id="postfile-$post.id-$id" src="$link" type="$mime" controls="controls"></audio>]
+    
+        $flashs = [<div class="files-block filelist-flash">$flash</div>]
+    
+        $flash = [
+    <div class="flash-holder">
+        <object type="application/x-shockwave-flash" data="$link" width="$width" height="$height" id="flashplayer-$id" name="flashplayer-$id">
+            <param name="movie" value="$link" />
+            <param name="allowfullscreen" value="true" />
+            <param name="allowscriptaccess" value="always" />
+            <param name="menu" value="false" />
+            <param name="wmode" value="transparent" />
+            <param name="FlashVars" value="autostart=true" />
+        </object>
+    </div>]
 
 </div>]
 
@@ -605,7 +622,7 @@ $pingbacks - список пингбеков
 */
 
 content.post.templatecomments.closed = [
-<p class="header-comments red">$lang.closed</p>
+   <p class="header-comments text-warning">$lang.closed</p>
 ]
 
 /*
@@ -614,19 +631,25 @@ content.post.templatecomments.closed = [
 
 content.post.templatecomments.regform = [
 <div id="before-commentform" class="header-comments">
-$mesg
+    $mesg
 </div>
 <p class="header-comments">$lang.leavereply</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform">
-<div class="form-group"><label for="comment">$lang.comment</label>
-<textarea name="content" id="comment" class="form-control"></textarea></div>
+    <div class="form-group">
+        <label for="comment">$lang.comment</label>
+        <textarea name="content" id="comment" class="form-control"></textarea>
+    </div>
 
-<div class="hidden">
-<input type="hidden" name="postid" value="$postid" />
-<input type="hidden" name="antispam" value="$antispam" />
-</div>
+    <div class="hidden">
+        <input type="hidden" name="postid" value="$postid" />
+        <input type="hidden" name="antispam" value="$antispam" />
+    </div>
 
-<div class="text-center"><div class="center-block"><button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button></div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button class="btn btn-primary" name="submitbutton" type="submit" id="submit-button">$lang.send</button>
+        </div>
+    </div>
 </form>
 ]
 
@@ -638,30 +661,44 @@ $mesg
 
 content.post.templatecomments.form = [
 <div id="before-commentform" class="header-comments">
-$mesg
+    $mesg
 </div>
 <p class="header-comments">$lang.leavereply</p>
 <form action="$site.url/send-comment.php" method="post" id="commentform">
-<div class="form-group"><label for="text-name">$lang.name</label>
-<input type="text" class="form-control" name="name" id="text-name" value="$name" /></div>
-<div class="form-group"><label for="text-email">$lang.email</label>
-<input type="text" class="form-control" name="email" id="text-email" value="$email" /></div>
+    <div class="form-group">
+        <label for="text-name">$lang.name</label>
+        <input type="text" class="form-control" name="name" id="text-name" value="$name" />
+    </div>
+    <div class="form-group">
+        <label for="text-email">$lang.email</label>
+        <input type="text" class="form-control" name="email" id="text-email" value="$email" />
+    </div>
 
-<div class="form-group"><label for="text-url">$lang.url</label>
-<input type="text" class="form-control" name="url" id="text-url" value="$url" /></div>
+    <div class="form-group">
+        <label for="text-url">$lang.url</label>
+        <input type="text" class="form-control" name="url" id="text-url" value="$url" />
+    </div>
 
-<div class="form-group"><label>
-<input type="checkbox" class="form-control" name="subscribe" id="checkbox-subscribe" $subscribe /> $lang.subscribe</label></div>
+    <div class="form-group">
+        <label>
+            <input type="checkbox" class="form-control" name="subscribe" id="checkbox-subscribe" $subscribe /> $lang.subscribe</label>
+    </div>
 
-<div class="form-group"><label for="comment">$lang.comment</label>
-<textarea name="content" id="comment" class="form-control"></textarea></div>
+    <div class="form-group">
+        <label for="comment">$lang.comment</label>
+        <textarea name="content" id="comment" class="form-control"></textarea>
+    </div>
 
-<div class="hidden">
-<input type="hidden" name="postid" value="$postid" />
-<input type="hidden" name="antispam" value="$antispam" />
-</div>
+    <div class="hidden">
+        <input type="hidden" name="postid" value="$postid" />
+        <input type="hidden" name="antispam" value="$antispam" />
+    </div>
 
-<div class="text-center"><div class="center-block"><button type="submit" name="submitcomment" class="btn btn-primary" id="id-submitcomment">$lang.send</button></div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button type="submit" name="submitcomment" class="btn btn-primary" id="id-submitcomment">$lang.send</button>
+        </div>
+    </div>
 </form>]
 
 /*
@@ -742,7 +779,7 @@ $loadhold - сообщение для модератора, чтобы загр�
 
 content.post.templatecomments.form.js = [
 <script type="text/javascript">
-  ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, $params);
+    ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, $params);
 </script>
 <script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>
 ]
@@ -818,12 +855,20 @@ ltoptions.theme.comments = $.extend(true, ltoptions.theme.comments, {
 content.post.templatecomments.confirmform = [
 <p class="header-comments">$lang.checkspam</p>
 <form name="preform" method="post" action="">
-<div class="text-center"><div class="center-block"><button type="submit" class="btn btn-default" name="submit1">$lang.robot</button></div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button type="submit" class="btn btn-default" name="submit1">$lang.robot</button>
+        </div>
+    </div>
 </form>
+
 <form name="form" method="post" action="">
-<div class="text-center"><div class="center-block"><button type="submit" class="btn btn-class" name="submit2">$lang.human</button>
-<input type="hidden" name="confirmid" value="$confirmid" />
-</div></div>
+    <div class="text-center">
+        <div class="center-block">
+            <button type="submit" class="btn btn-class" name="submit2">$lang.human</button>
+            <input type="hidden" name="confirmid" value="$confirmid" />
+        </div>
+    </div>
 </form>]
 
 /*
@@ -854,7 +899,7 @@ $lang.topost - строка "на запись"
 content.post.templatecomments.comments = [
 <a id="comments"></a>
 <div id="commentlist" data-start="$from">
-  $comment
+    $comment
 </div>]
 
 /*
@@ -866,9 +911,9 @@ $comment - шаблон комментария
 */
 
 content.post.templatecomments.holdcomments = [
-<p class="header-comments"  id="holdcomments">$lang.hold</p>
+<p class="header-comments" id="holdcomments">$lang.hold</p>
 <div id="holdcommentlist" data-start="1">
-  $comment
+    $comment
 </div>
 ]
 
@@ -880,20 +925,23 @@ content.post.templatecomments.holdcomments = [
 
 content.post.templatecomments.comments.comment = [
 <div $class1=[] $class2=[] class="comment-item" id="comment-$comment.id" itemprop="comment" itemscope itemtype="http://schema.org/UserComments">
-<div class="container-fluid"><div class="row">
-<div class="col-sm-5" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
-<div class="col-sm-3 comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time></div>
-<div class="col-sm-4">
- <div class="moderate moderationbuttons btn-group" data-idcomment="$comment.id" data-idauthor="$comment.author">
-$quotebuttons = [
-<button type="button" class="btn btn-default tooltip-toggle replycomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.reply"><span class="fa fa-reply" aria-hidden="true"></span> <span class="sr-only">$lang.reply</span></button>
-<button type="button" class="btn btn-default tooltip-toggle quotecomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.quote"><span class="fa fa-copy" aria-hidden="true"></span> <span class="sr-only">$lang.quote</span></button>]
-</div>
-</div>
-</div></div>
-<div id="commentcontent-$comment.id">
-<ins datetime="$comment.iso" itemprop="commentText">$comment.content</ins>
-</div>
+    <div class="row">
+        <div class="col-sm-5" itemprop="creator" itemscope itemtype="http://schema.org/Person"><span class="comment-index">$index</span> <span itemprop="name">$comment.authorlink</span></div>
+        <div class="col-sm-3 comment-datetime"><span class="date">$comment.date = [d M Y]</span> $lang.attime
+            <time class="time" itemprop="commentTime" datetime="$comment.iso">$comment.time</time>
+        </div>
+        <div class="col-sm-4">
+            <div class="moderate moderationbuttons btn-group" data-idcomment="$comment.id" data-idauthor="$comment.author">
+                $quotebuttons = [
+                <button type="button" class="btn btn-default tooltip-toggle replycomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.reply"><span class="fa fa-reply" aria-hidden="true"></span> <span class="sr-only">$lang.reply</span></button>
+                <button type="button" class="btn btn-default tooltip-toggle quotecomment" data-idcomment="$comment.id" data-authorname="$comment.name" title="$lang.quote"><span class="fa fa-copy" aria-hidden="true"></span> <span class="sr-only">$lang.quote</span></button>]
+            </div>
+        </div>
+    </div>
+
+    <div id="commentcontent-$comment.id">
+        <ins datetime="$comment.iso" itemprop="commentText">$comment.content</ins>
+    </div>
 </div>]
 
 /*
@@ -945,7 +993,7 @@ $comment.author - уникальный id автора
 content.post.templatecomments.pingbacks = [
 <p class="header-comments">$lang.pingbacks</p>
 <ol class="commentlist" start="1">
-  $pingback = [<li id="pingback-$pingback.id"><a href="$pingback.url">$pingback.title</a></li>]
+    $pingback = [<li id="pingback-$pingback.id"><a href="$pingback.url">$pingback.title</a></li>]
 </ol>]
 
 /*
@@ -983,25 +1031,26 @@ content.excerpts.lite.excerpt - шаблон одного анонса запи�
 */
 
 content.excerpts = [
-$excerpt = [
-<div class="anpost" id="post-$post.id">
-$post.firstimage = [<div class="anpost-image"><a href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
-<div class="anpost-body">
-<h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
+    $excerpt = [
+    <div class="anpost" id="post-$post.id">
+        $post.firstimage = [<div class="anpost-image"><a href="$post.link" data-image="$link" data-midle="$midle.json"><img src="$preview.link" alt="$post.title" /></a></div>]
 
-<div class="clearfix">
-<div class="post-date">
-<span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
- <span class="anpost-date">$post.excerptdate = [d.m.Y]</span>
-</div>
+        <div class="anpost-body">
+            <h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
 
-$post.catlinks
-</div>
-</div>
-</div>
-$post.excerptcontent $post.morelink = [<!--no more-->]
-<hr>
-]
+            <div class="clearfix">
+                <div class="post-date">
+                    <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
+                    <span class="anpost-date">$post.excerptdate = [d.m.Y]</span>
+                </div>
+
+                $post.catlinks
+            </div>
+        </div>
+    </div>
+    $post.excerptcontent $post.morelink = [<!--no more-->]
+    <hr> 
+    ]
 ]
 
 /*
@@ -1030,27 +1079,25 @@ $post.firstimage = [<div class="anpost-image"><a class="photo" href="$post.link"
 
 content.excerpts.card = [
 <div class="row">
-$excerpt = [
-<div class="postcard" id="post-$post.id">
-$post.firstimage
-<div class="postcard-body">
-<h4 class="postcard-header"><a href="$post.link" class="post-link poptitle" rel="bookmark">$post.title</a></h4>
-$post.catlinks
+    $excerpt = [
+    <div class="postcard" id="post-$post.id">
+        $post.firstimage
+        <div class="postcard-body">
+            <h4 class="postcard-header"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4> $post.catlinks
 
-<div class="postcard-item">
-<span class="fa fa-calendar" aria-hidden="true"></span>
-<span class="sr-only">$lang.posted</span>
-				<span class="post-date">$post.excerptdate </span>
-</div>
+            <div class="postcard-date">
+                <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
+                <span class="postcard-date-value">$post.excerptdate </span>
+            </div>
 
-<div class="postcard-item">
-<span class="fa fa-comments" aria-hidden="true"></span>
-<span class="post-comments">$post.commentslink</span>
-</div>
+            <div class="postcard-comments">
+                <span class="fa fa-comments" aria-hidden="true"></span>
+                <span class="post-comments">$post.commentslink</span>
+            </div>
 
-</div>
-</div>
-]
+        </div>
+    </div>
+    ]
 </div>
 ]
 
@@ -1061,10 +1108,10 @@ $post.catlinks
 */
 
 content.excerpts.lite = [
-			<h1>$lang.posts</h1>
-			<ul>
-				$excerpt = [<li><a href="$post.link" title="$lang.permalink $post.title">$post.title</a></li>]
-			</ul>
+<h3>$lang.posts</h3>
+<ul>
+    $excerpt = [<li><a href="$post.link" title="$lang.permalink $post.title">$post.title</a></li>]
+</ul>
 ]
 
 /*
@@ -1074,14 +1121,16 @@ content.excerpts.lite = [
 */
 
 content.navi = [
-		<div><ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
-			$prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
-			$next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
-			$link = [<li><a href="$link" itemprop="url name">$page</a></li>]
-			$current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
-			$divider = [ ]
- </ul></div>
- ]
+<div>
+    <ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
+        $prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
+                $next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
+                        $link = [<li><a href="$link" itemprop="url name">$page</a></li>]
+                                $current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
+                $divider = [ ]
+    </ul>
+</div>
+]
 
 /*
 Как видно, в шаблоне navi описаны 5 вложенных шаблонов, а именно
@@ -1171,25 +1220,25 @@ $tableclass - класс таблиц с рамочками, в фреймвор
 */
 
 $template.sidebar = [
-  $widget = [
-  <div class="panel panel-default">
-      <div class="panel-heading" id="widget-heading-$id">
-      <h4 class="panel-title widget-title" data-model="widget-collapse">$title</h4>
-      </div>
-      
-<div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
-      <div class="panel-body">
-          $items = [
-    <ul>
-       $item = [<li><a href="$link" title="$title">$icon$text</a>
-$subcount = [<strong>($itemscount)</strong>]
-$subitems = [<ul>$item</ul>]
-</li>]
-    </ul>
-    ]
-        </div></div>
+    $widget = [
+    <div class="panel panel-default">
+        <div class="panel-heading" id="widget-heading-$id">
+            <h4 class="panel-title widget-title" data-model="widget-collapse">$title</h4>
+        </div>
+
+        <div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
+            <div class="panel-body">
+                $items = [<ul>
+                    $item = [<li><a href="$link" title="$title">$icon$text</a>
+                                            $subcount = [<strong>($itemscount)</strong>]
+                                            $subitems = [<ul>$item</ul>]
+                    </li>]
+                </ul>
+                ]
+            </div>
+        </div>
     </div>
-]
+    ]
 ]
 
 /*
@@ -1282,17 +1331,17 @@ sidebar.meta.classes = [rss=rss,comments=rss-comments,foaf=foaf]
 */
 
 sidebar1.widget = [
-  <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title <span class="caret"></span></a>
-  <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
-$items = [          <ul class="dropdown-menu" role="menu">
-$item = [<li><a href="$link" title="$title">$icon$text</a>
-$subcount = [<em>($itemscount)</em>]
-$subitems = [<ul>$item</ul>]
-</li>]
-</ul>]
-</div>]
-
-sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
+    <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-placement="top" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title <span class="caret"></span></a>
+    <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
+        $items = [<ul class="dropdown-menu" role="menu">
+            $item = [<li><a href="$link" title="$title">$icon$text</a>
+                            $subcount = [<em>($itemscount)</em>]
+                                            $subitems = [<ul>$item</ul>]
+            </li>]
+        </ul>]
+    </div>]
+    
+    sidebar1.posts.item    = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
 sidebar1.comments.item = [<li><a href="$link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
 sidebar1.meta.item     = [<li><a href="$link" title="$title"><span $class aria-hidden="true"></span> $text</a>$subitems</li>]
 sidebar1.meta.classes  = [rss=fa fa-rss,comments=fa fa-comments,foaf=fa fa-group]

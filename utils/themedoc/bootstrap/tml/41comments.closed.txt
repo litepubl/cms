@@ -1,3 +1,3 @@
 content.post.templatecomments.closed = [
-<p class="header-comments red">$lang.closed</p>
+   <p class="header-comments text-warning">$lang.closed</p>
 ]

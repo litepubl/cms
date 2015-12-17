@@ -1,5 +1,5 @@
 content.post.templatecomments.comments = [
 <a id="comments"></a>
 <div id="commentlist" data-start="$from">
-  $comment
+    $comment
 </div>]

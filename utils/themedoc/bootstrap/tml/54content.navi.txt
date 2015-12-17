@@ -1,9 +1,11 @@
 content.navi = [
-		<div><ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
-			$prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
-			$next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
-			$link = [<li><a href="$link" itemprop="url name">$page</a></li>]
-			$current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
-			$divider = [ ]
- </ul></div>
- ]
+<div>
+    <ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
+        $prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
+                $next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
+                        $link = [<li><a href="$link" itemprop="url name">$page</a></li>]
+                                $current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
+                $divider = [ ]
+    </ul>
+</div>
+]

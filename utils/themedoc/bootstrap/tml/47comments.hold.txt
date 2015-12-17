@@ -1,6 +1,6 @@
 content.post.templatecomments.holdcomments = [
-<p class="header-comments"  id="holdcomments">$lang.hold</p>
+<p class="header-comments" id="holdcomments">$lang.hold</p>
 <div id="holdcommentlist" data-start="1">
-  $comment
+    $comment
 </div>
 ]
