@@ -210,7 +210,7 @@ class tfiles extends titems {
     $midle = ttheme::$vars['midle'] = new tarray2prop();
     
     $index = 0;
-    
+
     foreach ($items as $type => $subitems) {
       $args->subcount = count($subitems);
       $sublist = '';
