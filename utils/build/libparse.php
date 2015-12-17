@@ -145,7 +145,8 @@ makekernel($dir, 'kernel.posts.php',  array(
 'widget.commontags.class.php',
 'widget.categories.class.php',
 'widget.tags.class.php',
-'files.class.php'
+'files.class.php',
+'files.items.class.php',
 ));
 
 makekernel($dir, 'kernel.comments.class.db.php',  array(
