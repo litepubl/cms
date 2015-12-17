@@ -1,9 +1,9 @@
 $template.menu = [
-$hover = [bootstrap]
-          <ul class="nav navbar-nav">
-		$item = [<li class="dropdown"><a href="$link" title="$title"               class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" itemprop="name url">$title <span class="caret"></span></a>
-		$submenu = [<ul class="dropdown-menu">$items</ul>]
-		</li>]
-		$single = [<li><a href="$link" title="$title" itemprop="name url">$title</a></li>]
-	</ul>
+    $hover = [bootstrap]
+    <ul class="nav navbar-nav">
+        $item = [<li class="dropdown"><a href="$link" title="$title" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" itemprop="name url">$title <span class="caret"></span></a>
+            $submenu = [<ul class="dropdown-menu">$items</ul>]
+        </li>]
+        $single = [<li><a href="$link" title="$title" itemprop="name url">$title</a></li>]
+    </ul>
 ]

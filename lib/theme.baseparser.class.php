@@ -349,7 +349,9 @@ if (is_string($v)) {
 $theme->templates[$k] = $this->remove_spaces($v);
 } else if(is_array($v)) {
 foreach ($v as $vk => $vv) {
+if (is_string($vv)) {
 $v[$vk] = $this->remove_spaces($vv);
+}
 }
 $theme->templates[$k] = $v;
 }
@@ -366,7 +368,8 @@ $theme->templates[$k] = $v;
       }
 
 public function remove_spaces($s) {
-$s = preg_replace('/[\t\n ]{2,}/ms', ' ', $s);
+$s = str_replace(array("\n", "\t", "\x00"), ' ', $s);
+$s = preg_replace('/[ ]{2,}/ms', ' ', $s);
 return str_replace('> <', '><', $s);
 }
       

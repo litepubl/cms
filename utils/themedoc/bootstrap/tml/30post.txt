@@ -1,28 +1,28 @@
 content.post = [
 <div class="post" id="post-$post.id" itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting">
-<div class="row">
-<div class="col-sm-8">
-<h3><a href="$post.link" class="self" itemprop="name url" rel="bookmark">$post.title</a></h3>
-</div><div class="col-sm-4">
-<div id="likebuttons-container">
-<span class="fa fa-share tooltip-toggle" title="$lang.sharefriend"></span>
-</div>
-</div>
+    <div class="row">
+        <div class="col-sm-8">
+            <h3><a href="$post.link" class="self" itemprop="name url" rel="bookmark">$post.title</a></h3>
+        </div>
+        <div class="col-sm-4">
+            <div id="likebuttons-container">
+                <span class="fa fa-share tooltip-toggle" title="$lang.sharefriend"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="clear-after">
+        $post.filelist
+        <div class="post-header">
+            <time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span> $post.date</time>
+            $post.taglinks $post.catlinks
+        </div>
+    </div>
+
+    <div class="entry" itemprop="text">$post.content</div>
+
+    $post.prevnext
 </div>
 
-<div class="clear-after">
-$post.filelist  
-<div class="post-header">
-<time class="post-date" itemprop="datePublished" datetime="$post.isodate"><span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span> $post.date</time>
-$post.taglinks 
-$post.catlinks 
-</div>
-</div>
-
-<div class="entry" itemprop="text">$post.content</div>
-
-$post.prevnext
-</div>
-
-$post.templatecomments
+$post.templatecomments 
 ]

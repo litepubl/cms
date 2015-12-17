@@ -1,26 +1,26 @@
 $template.head = [
-  $post = [
-    $rss = [<link rel="alternate" type="application/rss+xml" title="$lang.onpost $post.title" href="$post.rsscomments" />]
-    $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
-    $next = [<link rel="next" title="$next.title" href="$next.link" />]
-  ]
-
-$tags = [
-<link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
-]
-
-$home = [
-<script type="text/javascript">
-if (location.pathname == "/") {
-  $(document).ready(function() {
-    $("#site-description").homeimage({
-      image: "$home.image",
-      small: "$home.smallimage",
-      breakpoint: 768,
-      addclass: "home-image"
-    });
-  });
-}
-</script>
-]
+    $post = [
+        $rss = [<link rel="alternate" type="application/rss+xml" title="$lang.onpost $post.title" href="$post.rsscomments" />]
+        $prev = [<link rel="prev" title="$prev.title" href="$prev.link" />]
+        $next = [<link rel="next" title="$next.title" href="$next.link" />]
+    ]
+    
+    $tags = [
+        <link rel="alternate" type="application/rss+xml" title="$context.title" href="$site.url/rss/$context.postpropname/$context.id.xml" />
+    ]
+    
+    $home = [
+        <script type="text/javascript">
+            if (location.pathname == "/") {
+                $(document).ready(function() {
+                    $("#site-description").homeimage({
+                        image: "$home.image",
+                        small: "$home.smallimage",
+                        breakpoint: 768,
+                        addclass: "home-image"
+                    });
+                });
+            }
+        </script>
+    ]
 ]

@@ -42,18 +42,14 @@
     $custom.topsidebar
 
     <div class="container-fluid section">
-        <div class="row sidebar-$custom.mainsidebar">
-            <div class="content" itemscope itemprop="mainContentOfPage">$template.content</div>
-            <div class="main-sidebar">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="panel-group" id="sidebar0" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div>
+            </div>
+            <div class="col-sm-6" itemscope itemprop="mainContentOfPage">$template.content</div>
+            <div class="col-sm-3">
                 <div class="panel-group" id="sidebar1" itemscope itemtype="http://schema.org/WPSideBar">$template.sidebar</div>
             </div>
-        </div>
-    </div>
-
-    <div class="container-fluid section">
-        <hr>
-        <div class="btn-group dropup" itemscope itemtype="http://schema.org/WPSideBar">
-            $template.sidebar
         </div>
     </div>
 

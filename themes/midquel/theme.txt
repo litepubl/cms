@@ -1,0 +1,27 @@
+﻿$template = {@import(index.tml)}
+$template.sidebar1 = [
+  $widget = [
+  <div class="panel panel-default">
+      <div class="panel-heading" id="widget-heading-$id">
+      <h4 class="panel-title widget-title" data-model="widget-collapse">$title</h4>
+      </div>
+      
+<div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
+      <div class="panel-body">
+          $items = [
+    <ul>
+       $item = [<li><a href="$link" title="$title">$icon$text</a>
+$subcount = [<strong>($itemscount)</strong>]
+$subitems = [<ul>$item</ul>]
+</li>]
+    </ul>
+    ]
+        </div></div>
+    </div>
+]
+]
+
+sidebar1.posts.item     = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
+sidebar1.comments.item = [<li><a href=" $link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
+sidebar1.meta.item      = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]
+sidebar1.meta.classes = [rss=rss,comments=rss-comments,foaf=foaf]

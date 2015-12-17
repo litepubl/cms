@@ -1,7 +1,7 @@
 content.post.catlinks = [
 <div class="post-categories" id="post-categories-$post.id">
-<span class="fa fa-tags tooltip-toggle" title="$lang.categories"></span>
-$item = [ <a href="$link" class="category">$title</a>]
-$divider = [,&#32;]
+    <span class="fa fa-tags tooltip-toggle" title="$lang.categories"></span>
+        $item = [ <a href="$link" class="category">$title</a>]
+            $divider = [,&#32;]
 </div>
 ]

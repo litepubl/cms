@@ -1,7 +1,7 @@
 content.post.taglinks = [
 <div class="post-tags">
-<span class="fa fa-tags tooltip-toggle" title="$lang.tags"></span>
- $item = [ <a href="$link">$title</a>]
-  $divider = [,&#32;]
+    <span class="fa fa-tags tooltip-toggle" title="$lang.tags"></span>
+        $item = [ <a href="$link">$title</a>]
+            $divider = [,&#32;]
 </div>
 ]
