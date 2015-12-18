@@ -226,7 +226,7 @@ class tthemeparser extends baseparser  {
   }
   
   public function afterparse($theme) {
-parent::afterparse($theme);
+    parent::afterparse($theme);
     
     $templates = &$this->theme->templates;
     $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' :

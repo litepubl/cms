@@ -6392,8 +6392,9 @@ A.dashed:focus {
   height: 120px;
   margin: 0 12px 0 0;
 }
-.postcard-body .postcard-item,
-.postcard-body .post-categories {
+.postcard-body .post-categories,
+.postcard-body .postcard-date,
+.postcard-body .postcard-comments {
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;

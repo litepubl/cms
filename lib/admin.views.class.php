@@ -58,7 +58,7 @@ class tadminviews extends tadminmenu {
     $result = '';
     $html = $this->html;
     $customadmin = $view->theme->templates['customadmin'];
-
+    
     foreach ($view->data['custom'] as $name => $value) {
       if (!isset($customadmin[$name])) continue;
       switch ($customadmin[$name]['type']) {
@@ -102,7 +102,7 @@ class tadminviews extends tadminmenu {
         break;
         
         case 'radio':
-case 'combo':
+        case 'combo':
         $view->data['custom'][$name] = $customadmin[$name]['values'][(int) $_POST["custom-$name"]];
         break;
         

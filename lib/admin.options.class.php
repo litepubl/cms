@@ -258,10 +258,10 @@ class tadminoptions extends tadminmenu {
       $args->xxxcheck = $options->xxxcheck;
       $filter = tcontentfilter::i();
       $args->phpcode = $filter->phpcode;
-$parser = tthemeparser::i();
+      $parser = tthemeparser::i();
       $args->removephp = $parser->removephp;
       $args->removespaces = $parser->removespaces;
-
+      
       $args->useshell = tupdater::i()->useshell;
       $backuper = tbackuper::i();
       $args->filertype = tadminhtml::array2combo(array(
@@ -279,7 +279,7 @@ $parser = tthemeparser::i();
       [checkbox=usersenabled]
       [checkbox=reguser]
       [checkbox=removephp]
-[checkbox=removespaces]
+      [checkbox=removespaces]
       [checkbox=phpcode]
       [checkbox=parsepost]
       [checkbox=show_draft_post]
@@ -465,13 +465,13 @@ $parser = tthemeparser::i();
         $parser->removephp =isset($removephp );
         $parser->removespaces =isset($removespaces);
         $parser->save();
-
+        
         $parser = adminparser::i();
         $parser->removephp =isset($removephp );
         $parser->removespaces =isset($removespaces);
         $parser->save();
-
-                $backuper = tbackuper::i();
+        
+        $backuper = tbackuper::i();
         if ($backuper->filertype != $filertype) {
           $backuper->filertype = $filertype;
           $backuper->save();

@@ -2710,6 +2710,7 @@ class tfiles extends titems {
   
 }//class
 
+//files.items.class.php
 class tfileitems extends titemsposts {
   
   public static function i() {

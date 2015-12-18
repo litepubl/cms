@@ -322,9 +322,7 @@ content.post = [
             <h3><a href="$post.link" class="self" itemprop="name url" rel="bookmark">$post.title</a></h3>
         </div>
         <div class="col-sm-4">
-            <div id="likebuttons-container">
-                <span class="fa fa-share tooltip-toggle" title="$lang.sharefriend"></span>
-            </div>
+            <div id="likebuttons-container" class="btn-group"></div>
         </div>
     </div>
 

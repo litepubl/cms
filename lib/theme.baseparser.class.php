@@ -342,21 +342,21 @@ class baseparser extends tevents {
       public function afterparse($theme) {
         $this->onfix($theme);
         $this->reuse($this->theme->templates);
-
-if (!litepublisher::$debug && $this->removespaces) {
-foreach ($theme->templates as $k => $v) {
-if (is_string($v)) {
-$theme->templates[$k] = $this->remove_spaces($v);
-} else if(is_array($v)) {
-foreach ($v as $vk => $vv) {
-if (is_string($vv)) {
-$v[$vk] = $this->remove_spaces($vv);
-}
-}
-$theme->templates[$k] = $v;
-}
-}
-}
+        
+        if (!litepublisher::$debug && $this->removespaces) {
+          foreach ($theme->templates as $k => $v) {
+            if (is_string($v)) {
+              $theme->templates[$k] = $this->remove_spaces($v);
+            } else if(is_array($v)) {
+              foreach ($v as $vk => $vv) {
+                if (is_string($vv)) {
+                  $v[$vk] = $this->remove_spaces($vv);
+                }
+              }
+              $theme->templates[$k] = $v;
+            }
+          }
+        }
       }
       
       public function reuse(&$templates) {
@@ -366,12 +366,12 @@ $theme->templates[$k] = $v;
           }
         }
       }
-
-public function remove_spaces($s) {
-$s = str_replace(array("\n", "\t", "\x00"), ' ', $s);
-$s = preg_replace('/[ ]{2,}/ms', ' ', $s);
-return str_replace('> <', '><', $s);
-}
+      
+      public function remove_spaces($s) {
+        $s = str_replace(array("\n", "\t", "\x00"), ' ', $s);
+      $s = preg_replace('/[ ]{2,}/ms', ' ', $s);
+        return str_replace('> <', '><', $s);
+      }
       
       public function loadpaths() {
         $result = array();

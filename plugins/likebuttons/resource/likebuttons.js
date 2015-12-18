@@ -11,7 +11,7 @@
     if (!holder.length) return;
     
     var html = '';
-    var tml = '<a role="button" class="btn btn--default tooltip-toggle" target="_blank" href="%%url%%" title="%%title%%"><span class="fa fa-%%icon%%"></span></a>';
+    var tml = '<a role="button" class="btn btn-default tooltip-toggle" target="_blank" href="%%url%%" title="%%title%%"><span class="fa fa-%%icon%%"></span></a>';
     
     var url = encodeURIComponent(location.href);
     var title = encodeURIComponent($("title:first").text());
