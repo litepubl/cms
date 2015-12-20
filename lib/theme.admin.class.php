@@ -39,5 +39,5 @@ class admintheme extends basetheme {
     '$content' => $content
     ));
   }
-
+  
 }//class
