@@ -21,7 +21,6 @@ class photoswipethumbnail extends tplugin {
     $css = tcssmerger::i();
     $css->lock();
     $css->add('default', "plugins/$plugindir/resource/thumbnails.min.css");
-    $css->add('admin', "plugins/$plugindir/resource/admin.thumbnails.min.css");
     $css->unlock();
     
     $parser = tmediaparser::i();
@@ -43,7 +42,6 @@ class photoswipethumbnail extends tplugin {
     $css = tcssmerger::i();
     $css->lock();
     $css->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.css");
-    $css->deletefile('admin', "plugins/$plugindir/resource/admin.thumbnails.min.css");
     $css->unlock();
     
     $parser = tmediaparser::i();

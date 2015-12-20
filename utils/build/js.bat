@@ -131,7 +131,6 @@ cd default-skin
 %less% default-skin.inline.less default-skin.inline.css
 %css% default-skin.inline.css -o default-skin.inline.min.css
 cd ..\..\..\photoswipe-thumbnail\resource
-%css% admin.thumbnails.css -o admin.thumbnails.min.css
 %css% thumbnails.css -o thumbnails.min.css
 %mini%thumbnails.js --js_output_file=thumbnails.min.js
 cd ..\..\lowvision\resource
