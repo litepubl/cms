@@ -1,2 +1,2 @@
 <?php
-require 'D:\OpenServer\unfuddle\shop\themes\doc\join.php';
+require 'D:\OpenServer\unfuddle\shop\build\theme\join.php';

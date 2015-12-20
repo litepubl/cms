@@ -33,4 +33,11 @@ class admintheme extends basetheme {
     ));
   }
   
+  public function getsection($title, $content) {
+    return strtr($this->templates['section'], array(
+    '$title' => $title,
+    '$content' => $content
+    ));
+  }
+
 }//class

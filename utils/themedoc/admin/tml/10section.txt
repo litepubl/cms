@@ -1,0 +1,6 @@
+section = [
+<div class="section">
+    <h4>$title</h4>
+    $content
+</div>
+]

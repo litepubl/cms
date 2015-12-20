@@ -1,8 +1,14 @@
-table = [<div class="table-responsive"><table class="$class">
-	<thead><tr>
-$head
-		</tr></thead>
-<tbody>
-$body
-</tbody>
-</table></div>]
+table = [
+<div class="table-responsive">
+    <table class="$class">
+        <thead>
+            <tr>
+                $head
+            </tr>
+        </thead>
+        <tbody>
+            $body
+        </tbody>
+    </table>
+</div>
+]

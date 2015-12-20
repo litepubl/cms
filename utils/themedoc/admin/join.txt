@@ -1,3 +1,5 @@
 ru/01intro.txt
 tml/01table.txt
 ru/01table.txt
+tml/10section.txt
+ru/10section.txt

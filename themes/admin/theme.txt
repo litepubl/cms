@@ -16,14 +16,20 @@
 Перейдем к описанию шаблонов. Первым задекларируем шаблон таблицы с рамкаами.
 */
 
-table = [<div class="table-responsive"><table class="$class">
-	<thead><tr>
-$head
-		</tr></thead>
-<tbody>
-$body
-</tbody>
-</table></div>]
+table = [
+<div class="table-responsive">
+    <table class="$class">
+        <thead>
+            <tr>
+                $head
+            </tr>
+        </thead>
+        <tbody>
+            $body
+        </tbody>
+    </table>
+</div>
+]
 
 /*
 В шаблоне table есть 3 тега:
@@ -33,4 +39,19 @@ $head - заголовок столбцов
 $body - строки таблицы, то есть сама таблица
 
 По сути шаблон table является примитивом таблицы.
+*/
+
+section = [
+<div class="section">
+    <h4>$title</h4>
+    $content
+</div>
+]
+
+/*
+Простой абстрактный шаблон с двумя тегами:
+$title - заголовок блока/секции
+$content - содержание блока/секции
+
+Может употреблятся в разных местах для разделения блоков информации
 */
