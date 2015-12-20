@@ -79,6 +79,7 @@ function tadminmenusInstall($self) {
     $self->createitem($opt, 'secure', 'admin', 'tadminoptions');
     $self->createitem($opt, 'robots', 'admin', 'tadminoptions');
     $self->createitem($opt, 'local', 'admin', 'tadminlocalmerger');
+    $self->createitem($opt, 'parser', 'admin', 'adminthemeparser');
     $self->createitem($opt, 'notfound404', 'admin', 'tadminoptions');
     $self->createitem($opt, 'redir', 'admin', 'tadminredirector');
   }

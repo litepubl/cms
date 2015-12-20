@@ -15,6 +15,7 @@ $classes->items['tuitabs'] = array('kernel.admin.php', '', 'html.uitabs.class.ph
 $classes->items['adminform'] = array('kernel.admin.php', '', 'html.adminform.class.php');
 $classes->items['tableprop'] = array('kernel.admin.php', '', 'html.tableprop.class.php');
 $classes->items['thtmltag'] = array('kernel.admin.php', '', 'html.tag.class.php');
+$classes->items['redtag'] = array('kernel.admin.php', '', 'html.tag.class.php');
 
 unset($classes->items['tpullitems']);
 $classes->items['tpoolitems'] = array('kernel.php', '', 'items.pool.class.php');
@@ -57,7 +58,9 @@ $classes->items['adminparser'] = array('theme.adminparser.class.php', '');
 $classes->items['inifiles'] = array('kernel.templates.php', '', 'inifiles.class.php');
 $classes->items['tsidebars'][0] = 'widgets.sidebars.class.php';
 $classes->items['tfileitems'] = array('kernel.posts.php', '', 'files.items.class.php');
+
 $classes->save();
+
 if (isset(litepublisher::$options->commentspull)) {
 litepublisher::$options->commentspool = litepublisher::$options->commentspull;
 unset(litepublisher::$options->data['commentspull']);
@@ -102,6 +105,7 @@ $classes->add('tadminviewsgroup', 'admin.views.group.class.php');
 $classes->add('tadminheaders', 'admin.headers.class.php');
 $classes->add('tadminviewsspec', 'admin.views.spec.class.php');
 $classes->delete('tadminthemefiles');
+$classes->add('adminthemeparser', 'admin.themeparser.class.php');
 
 $m = tadminmenus::i();
 $m->lock();
@@ -122,6 +126,9 @@ litepublisher::$urlmap->setvalue(litepublisher::$urlmap->urlexists('/admin/views
 'class', 'tadminviewsspec');
 
 $m->deleteurl('/admin/views/themefiles/');
+
+$id = $m->url2id('/admin/options/');
+    $m->createitem($id, 'parser', 'admin', 'adminthemeparser');
 
 $m->unlock();
 
