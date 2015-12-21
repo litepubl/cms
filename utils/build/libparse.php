@@ -122,6 +122,7 @@ makekernel($dir, 'kernel.templates.php',  array(
 'theme.base.class.php',
 'theme.class.php',
 'theme.args.class.php',
+'theme.vars.class.php',
 'widget.class.php',
 'widget.order.class.php',
 'widget.class.class.php',

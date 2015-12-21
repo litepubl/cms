@@ -456,6 +456,10 @@ class tmenu extends titem implements  itemplate {
     if ($this->is_owner_prop($name)) return true;
     return parent::__isset($name);
   }
+
+public function getview() {
+return tview::getview($this);
+}
   
   //ITemplate
   public function request($id) {
