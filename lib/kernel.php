@@ -2209,7 +2209,17 @@ class turlmap extends titems {
     }
   }
   
-  private function include_file($fn) {
+  protected function save_file($filename, $content) {
+    if (tfilestorage::$memcache) {
+      $this->cache->set($filename, $content);
+    } else {
+      $fn = litepublisher::$paths->cache . $filename;
+      file_put_contents($fn, $content);
+      @chmod($fn, 0666);
+    }
+  }
+  
+  protected function include_file($fn) {
     if (tfilestorage::$memcache) {
       if ($s = $this->cache->get($fn)) {
         eval('?>' . $s);
@@ -2275,7 +2285,7 @@ class turlmap extends titems {
     
     eval('?>'. $s);
     if ($this->cache_enabled && $context->cache) {
-      $this->cache->set($this->getcachefile($item), $s);
+      $this->save_file($this->getcachefile($item), $s);
     }
   }
   
