@@ -80,7 +80,10 @@ class tupdater extends tevents {
       $v = $v + 0.01;
     }
     
-    ttheme::clearcache();
+    //ttheme::clearcache();
+    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
+    litepublisher::$urlmap->clearcache();
+    
     tlocal::clearcache();
     tsidebars::fix();
     if ($log) tfiler::log("update finished", 'update');
