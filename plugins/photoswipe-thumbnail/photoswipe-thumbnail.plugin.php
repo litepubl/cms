@@ -65,11 +65,13 @@ class photoswipethumbnail extends tplugin {
     where files.preview > 0 and thumbs.id = files.preview
     "));
     
-    foreach ($items as $item) {
+    foreach ($items as $i => $item) {
       $srcfilename = litepublisher::$paths->files . $item['filename'];
       $destfilename = litepublisher::$paths->files . $item['filenamethumb'];
       $image = tmediaparser::readimage($srcfilename);
       if ($size = tmediaparser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
+        imagedestroy($image);
+        
         $db->updateassoc(array(
         'id' => $item['idthumb'],
         'width' => $size['width'],

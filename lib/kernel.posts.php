@@ -2076,7 +2076,7 @@ class tcommontags extends titems implements  itemplate {
       
       if ($this->getcontent()) {
         ttheme::$vars['menu'] = $this;
-        $result .= $view->theme->parse($theme->templates['content.menu']);
+        $result .= $view->theme->parse($view->theme->templates['content.menu']);
       }
       
       $list = $this->getidposts($this->id);

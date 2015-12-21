@@ -20,7 +20,7 @@
     }
     
     if ($.cookie("lowvision")=="on"){
-      set_lowvision();
+      set_lowvision(true);
     }
     
     $(".switch-lowvision").click(function() {
