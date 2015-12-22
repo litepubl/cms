@@ -1307,8 +1307,7 @@ public function __get($name) { return ''; }
 class targs {
   public $data;
   public $callbacks;
-  //extra arguments to callback
-  public $params;
+  public $callback_params;
   
   public static function i() {
     return litepublisher::$classes->newinstance(__class__);
@@ -1316,7 +1315,7 @@ class targs {
   
   public function __construct($thisthis = null) {
     $this->callbacks = array();
-    $this->params = array();
+    $this->callback_params = array();
     
     if (!isset(basetheme::$defaultargs)) {
       basetheme::set_defaultargs();
@@ -1376,7 +1375,7 @@ class targs {
   public function callback($s) {
     if (!count($this->callbacks)) return $s;
     
-    $params = $this->params;
+    $params = $this->callback_params;
     array_unshift($params, $this);
     
     foreach ($this->callbacks as $tag => $callback) {
