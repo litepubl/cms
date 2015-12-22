@@ -16,9 +16,9 @@ class tajaxtageditor extends tajaxposteditor  {
   }
   
   public function request($arg) {
-$this->cache = false;
-turlmap::sendheader(false);
-
+    $this->cache = false;
+    turlmap::sendheader(false);
+    
     if ($err = self::auth()) return $err;
     return $this->getcontent();
   }
@@ -29,7 +29,7 @@ turlmap::sendheader(false);
     $id = tadminhtml::idparam();
     if (($id > 0) && !$tags->itemexists($id)) return self::error403();
     
-$theme = tview::i(tviews::i()->defaults['admin'])->theme;
+    $theme = tview::i(tviews::i()->defaults['admin'])->theme;
     $html = tadminhtml ::i();
     $html->section = 'tags';
     $lang = tlocal::i('tags');

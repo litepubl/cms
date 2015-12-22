@@ -1372,7 +1372,8 @@ class tajaxposteditor  extends tevents {
   
   public function request($arg) {
     $this->cache = false;
-    //tfiler::log(var_export($_GET, true) . var_export($_POST, true) . var_export($_FILES, true));
+    turlmap::sendheader(false);
+    
     if ($err = self::auth()) return $err;
     $this->idpost = tadminhtml::idparam();
     $this->isauthor = litepublisher::$options->ingroup('author');
@@ -1453,17 +1454,17 @@ class tajaxposteditor  extends tevents {
   }
   
   public function geteditor($name, $value, $visual) {
+    $theme = tview::i(tviews::i()->defaults['admin'])->theme;
     $html = tadminhtml ::i();
-    $hsect = $html->section;
-    $html->section = 'editor';
+    $html->push_section('editor');
     $lang = tlocal::i();
-    $lsect = $lang->section;
-    $lang->section = 'editor';
     $title = $lang->$name;
-    if ($visual && $this->ajaxvisual && $this->visual) $title .= $html->loadvisual();
-    $result = $html->getinput('editor', $name, tadminhtml::specchars($value), $title);
-    $lang->section = $lsect;
-    $html->section = $hsect;
+    if ($visual && $this->ajaxvisual && $this->visual) {
+      $title .= $html->loadvisual();
+    }
+    
+    $result = $theme->getinput('editor', $name, tadminhtml::specchars($value), $title);
+    $html->pop_section();
     return $result;
   }
   
