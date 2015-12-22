@@ -109,6 +109,7 @@ class tajaxposteditor  extends tevents {
         }
       }
     }
+    
     return $this->getcontent();
   }
   

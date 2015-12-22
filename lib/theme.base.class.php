@@ -24,7 +24,7 @@ class basetheme extends tevents {
     }
     
     $result = getinstance($classname);
-    if (!$result->name) {
+    if ($result->name) {
       $result = litepublisher::$classes->newinstance($classname);
     }
     

@@ -7,8 +7,9 @@
 
 class targs {
   public $data;
-  public $vars;
   public $callbacks;
+  //extra arguments to callback
+  public $params;
   
   public static function i() {
     return litepublisher::$classes->newinstance(__class__);
@@ -16,11 +17,13 @@ class targs {
   
   public function __construct($thisthis = null) {
     $this->callbacks = array();
-    $this->vars = new tarray2prop();
-    $this->vars->array = &ttheme::$vars;
+    $this->params = array();
     
-    if (!isset(ttheme::$defaultargs)) ttheme::set_defaultargs();
-    $this->data = ttheme::$defaultargs;
+    if (!isset(basetheme::$defaultargs)) {
+      basetheme::set_defaultargs();
+    }
+    
+    $this->data = basetheme::$defaultargs;
     if (isset($thisthis)) $this->data['$this'] = $thisthis;
   }
   
@@ -68,12 +71,17 @@ class targs {
   }
   
   public function parse($s) {
-    return ttheme::i()->parsearg($s, $this);
+    return basetheme::i()->parsearg($s, $this);
   }
   
   public function callback($s) {
+    if (!count($this->callbacks)) return $s;
+    
+    $params = $this->params;
+    array_unshift($params, $this);
+    
     foreach ($this->callbacks as $tag => $callback) {
-      $s = str_replace($tag, call_user_func_array($callback, array($this)), $s);
+      $s = str_replace($tag, call_user_func_array($callback, $params),$s);
     }
     
     return $s;

@@ -305,28 +305,6 @@ class tadminhtml {
     return admintheme::i()->gettable($head, $body);
   }
   
-  public function getcolclass($s) {
-    //most case
-    if (!$s || $s == 'left') {
-      return 'text-left';
-    }
-    
-    $map = array(
-    'left' => 'text-left',
-    'right' => 'text-right',
-    'center' => 'text-center'
-    );
-    
-    $list = explode(' ', $s);
-    foreach ($list as $i => $v) {
-      if (isset($map[$v])) {
-        $list[$i] = $map[$v];
-      }
-    }
-    
-    return implode(' ', $list);
-  }
-  
   public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
@@ -338,7 +316,7 @@ class tadminhtml {
         array_unshift($item, 'left');
       }
       
-      $colclass = $this->getcolclass($item[0]);
+      $colclass = tablebuilder::getcolclass($item[0]);
       $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
       
       if (is_string($item[2])) {
@@ -366,9 +344,12 @@ class tadminhtml {
     list($head, $tml) = $this->tablestruct($tablestruct, $args);
     
     foreach ($items as $id => $item) {
-      admintheme::$vars['item'] = $item;
       $args->add($item);
       if (!isset($item['id'])) $args->id = $id;
+      
+      //old style, must be removed after review
+      admintheme::$vars['item'] = $item;
+      
       $body .= $admintheme->parsearg($tml, $args);
     }
     unset(admintheme::$vars['item']);

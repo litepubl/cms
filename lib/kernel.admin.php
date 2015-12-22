@@ -603,28 +603,6 @@ class tadminhtml {
     return admintheme::i()->gettable($head, $body);
   }
   
-  public function getcolclass($s) {
-    //most case
-    if (!$s || $s == 'left') {
-      return 'text-left';
-    }
-    
-    $map = array(
-    'left' => 'text-left',
-    'right' => 'text-right',
-    'center' => 'text-center'
-    );
-    
-    $list = explode(' ', $s);
-    foreach ($list as $i => $v) {
-      if (isset($map[$v])) {
-        $list[$i] = $map[$v];
-      }
-    }
-    
-    return implode(' ', $list);
-  }
-  
   public function tablestruct(array $tablestruct, $args = false) {
     $head = '';
     $body = '<tr>';
@@ -636,7 +614,7 @@ class tadminhtml {
         array_unshift($item, 'left');
       }
       
-      $colclass = $this->getcolclass($item[0]);
+      $colclass = tablebuilder::getcolclass($item[0]);
       $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
       
       if (is_string($item[2])) {
@@ -664,9 +642,12 @@ class tadminhtml {
     list($head, $tml) = $this->tablestruct($tablestruct, $args);
     
     foreach ($items as $id => $item) {
-      admintheme::$vars['item'] = $item;
       $args->add($item);
       if (!isset($item['id'])) $args->id = $id;
+      
+      //old style, must be removed after review
+      admintheme::$vars['item'] = $item;
+      
       $body .= $admintheme->parsearg($tml, $args);
     }
     unset(admintheme::$vars['item']);
@@ -1055,7 +1036,7 @@ class tuitabs {
 class thtmltag {
   public $tag;
   
-public function __construct($tag) { $this->tag = $tag; }
+public function __construct($tag = '') { $this->tag = $tag; }
   public function __get($name) {
     return sprintf('<%1$s>%2$s</%1$s>', $this->tag, tlocal::i()->$name);
   }
@@ -1283,6 +1264,100 @@ class ttablecolumns {
   
 }//class
 
+//html.tablebuilder.class.php
+class tablebuilder {
+  //current item in items
+  public $item;
+  //template head and body table
+  public $head;
+  public $body;
+  //targs
+  public $args;
+  public $callbacks;
+  
+  public function __construct() {
+    $this->head = '';
+    $this->body = '';
+    $this->args = new targs();
+    $this->callbacks = array();
+  }
+  
+  public function setstruct(array $struct) {
+    foreach ($struct as $index => $item) {
+      if (!$item || !count($item)) continue;
+      
+      if (count($item) == 2) {
+        $colclass = 'text-left';
+      } else {
+        $colclass = self::getcolclass(array_shift($item));
+      }
+      
+      $this->head .= sprintf('<th class="%s">%s</th>', $colclass, array_shift($item));
+      
+      $s = array_shift($item);
+      if (is_string($s)) {
+        $this->body .= sprintf('<td class="%s">%s</td>', $colclass, $s);
+      } else if (is_callable($s)) {
+        $name = '$callback' . $index;
+        $this->body .= sprintf('<td class="%s">$%s</td>', $colclass, $name);
+        
+        array_unshift($item, $this);
+        $this->callbacks[$name] = array(
+        'callback'=> $s,
+        'params' => $item,
+        );
+      } else {
+        throw new Exception('Unknown column ' . var_export($s, true));
+      }
+    }
+    
+    $this->body .= '</tr>';
+  }
+  
+  public function build(array $items) {
+    $body = '';
+    $args = $this->args;
+    $admintheme = admintheme::i();
+    
+    foreach ($items as $id => $item) {
+      $args->add($item);
+      if (!isset($item['id'])) $args->id = $id;
+      $this->item = $item;
+      
+      foreach ($this->callbacks as $name => $callback) {
+        $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
+      }
+      
+      $body .= $admintheme->parsearg($this->body, $args);
+    }
+    
+    return $admintheme->gettable($this->head, $body);
+  }
+  
+  public static function getcolclass($s) {
+    //most case
+    if (!$s || $s == 'left') {
+      return 'text-left';
+    }
+    
+    $map = array(
+    'left' => 'text-left',
+    'right' => 'text-right',
+    'center' => 'text-center'
+    );
+    
+    $list = explode(' ', $s);
+    foreach ($list as $i => $v) {
+      if (isset($map[$v])) {
+        $list[$i] = $map[$v];
+      }
+    }
+    
+    return implode(' ', $list);
+  }
+  
+}
+
 //admin.posteditor.ajax.class.php
 class tajaxposteditor  extends tevents {
   public $idpost;
@@ -1388,6 +1463,7 @@ class tajaxposteditor  extends tevents {
         }
       }
     }
+    
     return $this->getcontent();
   }
   

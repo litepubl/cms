@@ -10,7 +10,7 @@ class themevars {
   
   public function __destruct() {
     foreach ($this->keys as $name) {
-      if (isset(basetheme::$vars[$name)) {
+      if (isset(basetheme::$vars[$name])) {
         unset(basetheme::$vars[$name]);
       }
     }
