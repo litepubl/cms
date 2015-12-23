@@ -15,7 +15,8 @@
     
     $(".invertcheck").click(function() {
       $(this).closest("form").find("input[type=checkbox]").each(function() {
-        $(this).prop("checked", ! $(this).prop("checked"));
+        var self = $(this);
+self.prop("checked", ! self.prop("checked"));
       });
       $(this).prop("checked", false);
       return false;

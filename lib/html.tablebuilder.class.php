@@ -73,7 +73,17 @@ class tablebuilder {
     
     return $admintheme->gettable($this->head, $body);
   }
-  
+
+  public static function checkbox($name) {
+$admin = admintheme::i();
+
+    return array(
+'center',
+ $admin->templates['invertcheck'],
+ str_replace('$name', $name, $admin->templates['checkbox'])
+);
+}
+ 
   public static function getcolclass($s) {
     //most case
     if (!$s || $s == 'left') {

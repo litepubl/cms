@@ -1,0 +1,8 @@
+checkbox = [
+   <input type="checkbox" name="$name-$id" value="$id" />
+]
+
+invertcheck = [
+   <input type="checkbox" class="invertcheck" />
+]
+
