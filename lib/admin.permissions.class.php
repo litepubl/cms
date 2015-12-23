@@ -49,7 +49,7 @@ class tadminperms extends tadminmenu {
       $items = array_keys($perms->items);
       array_shift($items);
       $args->table = $html->items2table($perms, $items, array(
-      $html->get_table_checkbox('perm'),
+      tablebuilder::checkbox('perm'),
       array('left', $lang->edit, sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)),
       $html->get_table_link('delete', $this->adminurl)
       ));

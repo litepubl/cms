@@ -33,7 +33,10 @@ class tposteditor extends tadminmenu {
     $result = '';
     $categories = tcategories::i();
     $html = tadminhtml::getinstance('editor');
-    $tml = str_replace('$checkbox', $html->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title'), $html->category);
+$theme = ttheme::i();
+$checkbox = $theme->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title');
+    $tml = str_replace('$checkbox', $checkbox, $html->category);
+
     $args = new targs();
     foreach ($categories->items  as $id => $item) {
       if ($parent != $item['parent']) continue;

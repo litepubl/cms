@@ -420,10 +420,6 @@ class tadminhtml {
     return sprintf($this->h4->itemscount, $from, $to, $count);
   }
   
-  public function get_table_checkbox($name) {
-    return array('center', $this->invertcheckbox, str_replace('$checkboxname', $name, $this->checkbox));
-  }
-  
   public function get_table_item($name) {
     return array('left', tlocal::i()->$name, "\$$name");
   }

@@ -184,7 +184,7 @@ class tadmincustomwidget extends tadminwidget {
     $lang = tlocal::i();
     $args->formtitle = $lang->widgets;
     $args->table = $html->buildtable($widget->items, array(
-    $html->get_table_checkbox('widgetcheck'),
+    tablebuilder::checkbox('widgetcheck'),
     array('left', $lang->widgettitle, "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"),
     ));
     
@@ -265,7 +265,7 @@ class tadminlinkswidget extends tadminwidget {
     
     $adminurl = $this->adminurl . $_GET['idwidget'] . '&idlink';
     $args->table = $html->buildtable($widget->items, array(
-    $html->get_table_checkbox('checklink'),
+    tablebuilder::checkbox('checklink'),
     array('left', $lang->url, '<a href=\'$url\'>$url</a>'),
     array('left', $lang->anchor, '$text'),
     array('left', $lang->description, '$title'),

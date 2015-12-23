@@ -83,12 +83,6 @@ class tadmincomusers extends tadminmenu {
     }
     
     return $html->fixquote($result);
-    /*
-    subscribeitem = "<tr>
-    <td align ='center'><input type='checkbox' name='$id' id='$id' $subscribed /></td>
-    <td  align='left'><a href='$site.url$url'>$title</a></td>
-    </tr>"
-    */
   }
   
   public function processform() {

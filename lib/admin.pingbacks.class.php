@@ -67,7 +67,7 @@ class tadminpingbacks extends tadminmenu {
     $form->items =$html->getitemscount($from, $from + count($items), $total);
     ttheme::$vars['pingitem'] = new pingitem();
     $form->items .= $html->buildtable($items, array(
-    $html->get_table_checkbox('id'),
+    tablebuilder::checkbox('id'),
     array('left', $lang->date , '$pingitem.date'),
     array('left', $lang->status, '$pingitem.status'),
     array('left', $lang->title, '$title'),
