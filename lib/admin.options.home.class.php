@@ -148,9 +148,10 @@ class adminhomeoptions extends tadminmenu {
         
         if ($image = tmediaparser::readimage($filename)) {
           $maxwidth = 1900;
+$maxheight = $maxwidth / 4 * 3;
           if (imagesx($image)  > $maxwidth) {
             @unlink($filename);
-            tmediaparser::createthumb($image, $filename, $maxwidth, 0, true, false, 80);
+            tmediaparser::createthumb($image, $filename, $maxwidth, $maxheight, 80, 'max');
           } else if (filesize($filename) > 1024 * 1024 * 800) {
             //no resize just save in low quality
             @unlink($filename);
@@ -164,7 +165,7 @@ class adminhomeoptions extends tadminmenu {
             @unlink($smallfile);
           }
           
-          tmediaparser::createthumb($image, $smallfile, 760, 0, true, false, 80);
+          tmediaparser::createthumb($image, $smallfile, 760, 760 / 4 * 3, 80, 'max');
           imagedestroy($image);
           
           $home->save();
