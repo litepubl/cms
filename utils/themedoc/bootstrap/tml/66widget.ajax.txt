@@ -1,3 +1,7 @@
-$template.ajaxwidget = [<span class="widget-ajax" data-widget="{&quot;id&quot;:&quot;$id&quot;,&quot;sidebar&quot;:&quot;$sidebar&quot;,&quot;type&quot;:&quot;ajax&quot;}">$title</span>]
+$template.ajaxwidget = [
+   <span class="widget-ajax" data-widget="{&quot;id&quot;:&quot;$id&quot;,&quot;sidebar&quot;:&quot;$sidebar&quot;,&quot;type&quot;:&quot;ajax&quot;}">$title <span class="caret"></span></span>
+   ]
 
-$template.inlinewidget = [<span class="widget-inline" data-widget="{&quot;id&quot;:&quot;$id&quot;,&quot;sidebar&quot;:&quot;$sidebar&quot;,&quot;type&quot;:&quot;inline&quot;}">$title</span>]
+$template.inlinewidget = [
+   <span class="widget-inline" data-widget="{&quot;id&quot;:&quot;$id&quot;,&quot;sidebar&quot;:&quot;$sidebar&quot;,&quot;type&quot;:&quot;inline&quot;}">$title <span class="caret"></span></span>
+   ]

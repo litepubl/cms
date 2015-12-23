@@ -11,7 +11,7 @@ class tadmincommoncomments extends tadminmenu {
   
   public function gethead() {
     $result = parent::gethead();
-    $result .= ttemplate::i()->getjavascript('/js/litepublisher/tablecolumns.min.js');
+    $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecols.js');
     return $result;
   }
   

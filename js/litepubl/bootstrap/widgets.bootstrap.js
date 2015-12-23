@@ -8,20 +8,17 @@
   'use strict';
   
   litepubl.BootstrapWidgets = Class.extend({
-    
-    toggleclass: "fa-expand fa-collapse",
-    tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title="%%lang.clickme%%"></a>',
+    tml_wrap_collapse: '<a class="dashed tooltip-toggle" href="%%idcontent%%" title="%%lang.clickme%%" aria-expanded="false"></a>',
     
     init: function(options) {
       options = $.extend({
         button: ".widget-button, .widget-title",
         inline: ".widget-inline",
-        ajax: ".widget-ajax",
-        toggle: this.toggleclas
+        ajax: ".widget-ajax"
       },options);
       
       var self = this;
-      self.toggleclass = options.toggle;
+
       var widget_class = options.inline + ',' + options.ajax;
       $(options.button).each(function() {
         var button = $(this);
@@ -104,7 +101,7 @@
     },
     
     add: function(button) {
-      var span = button.data("span")
+      var span = button.data("span");
       var widget = span.data("widget");
       switch (button.attr("data-model")) {
         case "dropdown":
@@ -117,12 +114,11 @@
         case 'widget-collapse':
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-        
-        var id_body = "widget-content-" + widget.id;
-        
-        $("#" + id_body)
+                var id_body = "widget-content-" + widget.id;
+
+                $("#" + id_body)
         .addClass("in")
-        .attr("aria-expanded", true);
+        .attr("aria-expanded", "true");
         
         button.find("a")
         .removeClass("collapsed")
@@ -130,52 +126,11 @@
         .attr("data-parent", '#' + button.closest(".panel-group").attr("id"))
         .attr("data-target", "#" + id_body)
         .attr("aria-controls", id_body)
-        .attr("aria-expanded", true)
-        .collapse();
-        break;
-        
-        case "slide":
-        widget.body = $(widget.comment).replaceComment( widget.html);
-        widget.comment = false;
-        
-        this.toggleicon(span);
-        var self = this;
-        button.data("body", widget.body)
-        .on("click.widget", function() {
-          var btn = $(this);
-          self.toggleicon(btn.data("span"));
-          btn.data("body").slideToggle();
-          return false;
-        });
-        break;
-        
-        case "popover":
-        if (widget.comment) $(widget.comment).remove();
-        widget.comment = false;
-        
-        var span = button.data("span");
-        this.toggleicon(span);
-        button.popover({
-          title: span.text(),
-          html: widget.html,
-          container: "body",
-          placement: button.data("placement"),
-          trigger: "manual"
-        });
-        
-        var self = this;
-        button.on("click.widget", function() {
-          var btn = $(this);
-          btn.popover('toggle');
-          self.toggleicon(btn.data("span"));
-          return false;
-        });
+        .attr("aria-expanded", "true")
+        .collapse()
+.click(false);
         break;
       }
-    },
-    
-    toggleicon: function(span) {
-      span.find("i").toggleClass(this.toggleclass);
     }
     
   });
