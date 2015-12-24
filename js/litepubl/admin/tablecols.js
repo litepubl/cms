@@ -9,13 +9,18 @@ tml_hide: '<a href="#"  class="hidecolumn dashed tooltip-toggle" title="%%lang.h
 
 init: function(table) {
 this.table = $(table);
-var btn = this.tml_hide.replace('%%lang.hidecol%%", lang.hidecol);
+var self = this;
 var tr = this.table.find("tr:first")
 tr.on("click.hidecolumn", ".hidecolumn", function() {
-self.hidecolumn();
+var th = $(this).closest("th");
+th.addClass("hidden");
+self.hidecolumn()th.index();
+return false;
 });
 
-tr.find("th").prepend(btn);
+tr.find("th").prepend(
+this.tml_hide.replace('%%lang.hidecol%%", lang.hidecol)
+);
 },
 });
 $(document).ready(function() {
