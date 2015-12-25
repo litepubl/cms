@@ -5,3 +5,5 @@ tml/10section.txt
 ru/10section.txt
 tml/11checkbox.txt
 ru/11checkbox.txt
+tml/12centergroup.txt
+ru/12centergroup.txt

@@ -1,0 +1,7 @@
+centergroup = [
+<div class="text-center">
+    <div class="btn-group">
+        $buttons
+    </div>
+</div>
+]

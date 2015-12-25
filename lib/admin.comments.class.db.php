@@ -34,6 +34,7 @@ class tadminmoderator extends tadminmenu  {
   
   public function gethead() {
     $result = parent::gethead();
+    $result .= ttemplate::i()->getjavascript('/js/litepubl/system/storage.js');
     $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.js');
     return $result;
   }
@@ -135,9 +136,9 @@ class tadminmoderator extends tadminmenu  {
 
 //callback for table builder
 public function get_excerpt(tablebuilder $tb, tcomment $comment) {
-$comment->id = $tb->item['id'];
+$comment->id = $tb->id;
 $args = $tb->args;
-      $args->id = $id;
+      $args->id = $tb->id;
       $args->onhold = $comment->status == 'hold';
       $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
       $args->website =$comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
@@ -145,7 +146,6 @@ return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120))
 }
   
   protected function get_table($kind) {
-    $result = '';
     $comments = tcomments::i(0);
     $perpage = 20;
     // get total count
@@ -157,13 +157,17 @@ return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120))
     $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
 
     $html = $this->html;
-    $result .= sprintf($html->h4->listhead, $from, $from + count($list), $total);
+$lang = tlocal::admin('comments');
+$form = new adminform(new targs());
+    $form->title = sprintf($lang->itemscount, $from, $from + count($list), $total);
 
     $comment = new tcomment(0);
     basetheme::$vars['comment'] = $comment;
 
 $tablebuilder = new tablebuilder();
 $tablebuilder->addcallback('$excerpt', array($this, 'get_excerpt'), $comment);
+    $tablebuilder->args->adminurl = $this->adminurl;
+
 $tablebuilder->setstruct(array(
 tablebuilder::checkbox('id'),
 
@@ -233,17 +237,15 @@ array(
 ),
 ));
 
-    $tablebuilder->args->adminurl = $this->adminurl;
-    $result .= $tablebuilder->build($list);
+$form->items = $tablebuilder->build($list);
+$form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
+$form->submit = '';
+$result = $form->get();
 
-    $html->getsubmit('approve') .
-    $html->getsubmit('hold') .
-    $html->getsubmit('delete')
-    ));
-    
-    $theme = $this->view->theme;
+        $theme = $this->view->theme;
     $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage),
     ($this->iduser ? "iduser=$this->iduser" : ''));
+
     return $result;
   }
   

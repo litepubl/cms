@@ -53,6 +53,10 @@ class adminform {
       break;
     }
   }
+
+public function centergroup($buttons) {
+$this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+}
   
   public function __tostring() {
     return $this->get();
@@ -66,9 +70,12 @@ class adminform {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
-    $result .= "<form $attr role=\"form\">";
+    $result .= "<form $attr>";
     $result .= $this->items;
-    if ($this->submit) $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    if ($this->submit) {
+$result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+}
+
     $result .= "\n</form>\n</div>\n";
     return $result;
   }

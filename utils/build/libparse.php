@@ -183,7 +183,6 @@ makekernel($dir, 'kernel.admin.php',  array(
 'html.uitabs.class.php',
 'html.tag.class.php',
 'html.autoform.class.php',
-'html.tablecols.class.php',
 'html.tablebuilder.class.php',
 'admin.posteditor.ajax.class.php',
 'admin.posteditor.class.php',

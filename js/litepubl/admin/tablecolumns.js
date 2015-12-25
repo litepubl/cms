@@ -2,7 +2,7 @@
   'use strict';
 
 litepubl.tml.tablecols = {
-hidecol: '<a href="#"  class="hidecolumn dashed tooltip-toggle" title="%%lang.hide%%"><span class="fa fa-caret-up"></span> </a>',
+hidecol: '<a href="#"  class="hidecolumn dashed tooltip-toggle" title="%%lang.hidecol%%"><span class="fa fa-caret-up"></span> </a>',
 dropdown: '<div class="dropdown">' +
   '<button type="button" class="btn btn-default dropdown-toggle" id="guid-%%guid%%" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
 '%%title%%' +
@@ -30,7 +30,7 @@ this.headers = this.table.find("tr:first");
 
 var self = this;
 this.headers.on("click.hidecolumn", ".hidecolumn", function() {
-self.set(false, $(this).closest("th").index());
+self.set(true, $(this).closest("th").index());
 self.save();
 return false;
 });
@@ -38,11 +38,12 @@ return false;
 var th = this.headers.find("th");
 this.columns = [];
 this.columns.length = th.length;
-
+//alert(this.table.html());
 var btn = litepubl.tml.tablecols.hidecol.replace("%%lang.hidecol%%", lang.admin.hidecol);
+
 th.each(function() {
 var $this= $(this);
-if ($this.contains("input")) {
+if ($this.has("input").length) {
 $this.addClass("col-ignore");
 } else {
 $this.data("title", $this.text());
@@ -63,6 +64,7 @@ column[hide ? 'addClass' : 'removeClass']('hidden');
 
 load: function() {
 var columns = litepubl.getdatastorage().get(this.keystorage);
+//columns = this.columns;
 if (columns) {
 this.columns = columns;
 for (var i = 0; i < columns.length; i++) {
@@ -73,6 +75,7 @@ this.set(columns[i], i);
 
 save: function() {
 litepubl.getdatastorage().set(this.keystorage, this.columns);
+//dump(this.columns);
 },
 
 getkeystorage: function() {
@@ -91,7 +94,7 @@ title: lang.admin.togglecols
 });
 
 var self = this;
-this.dropdown = this.table.closest("form").insertBefore(html);
+this.dropdown = $(html).insertBefore(this.table.closest("form"));
 this.dropdown.find("button")
 .dropdown()
 .off("click.bs.dropdown")
@@ -119,13 +122,17 @@ self.save();
 getmenu: function() {
 var result = "";
 var tml = litepubl.tml.tablecols.item;
+var columns = this.columns;
 
-this.headers.find("th not(.col-ignore)").each(function(index) {
+this.headers.find("th").each(function(index) {
+var th = $(this);
+if (!th.hasClass("col-ignore")) {
 result += $.parsetml(tml, {
 index: index,
-title: $(this).data("title"),
+title: th.data("title"),
 checked: columns[index] ? '' : 'checked="checked"'
 });
+}
 });
 
 return result;
