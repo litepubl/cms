@@ -45,15 +45,19 @@ class tadminperms extends tadminmenu {
     if (!($action = $this->action)) $action = 'perms';
     switch ($action) {
       case 'perms':
-      $args->formtitle = $lang->table;
+$tb = new tablebuilder();
+$tb->setowner($perms);
+$tb->setstruct(array(
+      tablebuilder::checkbox('perm'),
+      array($lang->edit, "<a href=\"$this->adminurl=\$id&action=edit\">\$name</a>"),
+      ));
+
       $items = array_keys($perms->items);
       array_shift($items);
-      $args->table = $html->items2table($perms, $items, array(
-      tablebuilder::checkbox('perm'),
-      array('left', $lang->edit, sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)),
-      $html->get_table_link('delete', $this->adminurl)
-      ));
-      $result .= $html->deletetable($args);
+
+$form = new adminform($args);
+$form->title = $lang->table;
+      $result .= $form->getdelete($tb->build($items));
       
       $result .= $html->h4->newperms;
       $result .= '<ul>';

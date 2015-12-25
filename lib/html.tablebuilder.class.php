@@ -91,6 +91,26 @@ class tablebuilder {
     
     return $admintheme->gettable($this->head, $body);
   }
+
+//predefined callbacks
+public function titems_callback(tablebuilder $self, titems $owner) {
+$self->item = $owner->getitem($self->id);
+$self->args->add($self->item);
+}
+
+public function setowner(titems $owner) {
+$this->addcallback('$temp' . count($this->callbacks), array($this, 'titems_callback'), $owner);
+}
+
+
+  public function action($action, $adminurl) {
+$title = tlocal::i()->__get($action);
+
+    return array(
+ $title,
+"<a href=\"$adminurl=\$id&action=$action\">$title</a>"
+);
+  }
   
   public static function checkbox($name) {
     $admin = admintheme::i();

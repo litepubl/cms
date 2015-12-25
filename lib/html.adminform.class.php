@@ -57,6 +57,18 @@ class adminform {
   public function centergroup($buttons) {
     $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
   }
+
+public function hidden($name, $value) {
+return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
+}
+
+public function getdelete($table) {
+$this->items = $table;
+$this->items .= $this->hidden('delete', 'delete');
+$this->submit = 'delete';
+
+return $this->get();
+}
   
   public function __tostring() {
     return $this->get();
