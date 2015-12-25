@@ -53,10 +53,10 @@ class adminform {
       break;
     }
   }
-
-public function centergroup($buttons) {
-$this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
-}
+  
+  public function centergroup($buttons) {
+    $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+  }
   
   public function __tostring() {
     return $this->get();
@@ -73,9 +73,9 @@ $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['ce
     $result .= "<form $attr>";
     $result .= $this->items;
     if ($this->submit) {
-$result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
-}
-
+      $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    }
+    
     $result .= "\n</form>\n</div>\n";
     return $result;
   }

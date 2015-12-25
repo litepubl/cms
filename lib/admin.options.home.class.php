@@ -148,7 +148,7 @@ class adminhomeoptions extends tadminmenu {
         
         if ($image = tmediaparser::readimage($filename)) {
           $maxwidth = 1900;
-$maxheight = $maxwidth / 4 * 3;
+          $maxheight = $maxwidth / 4 * 3;
           if (imagesx($image)  > $maxwidth) {
             @unlink($filename);
             tmediaparser::createthumb($image, $filename, $maxwidth, $maxheight, 80, 'max');

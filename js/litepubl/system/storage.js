@@ -168,5 +168,5 @@
     if ("datastorage" in litepubl) return litepubl.datastorage;
     return litepubl.datastorage = new litepubl.DataStorage();
   };
-
+  
 }(jQuery, document, window));

@@ -224,9 +224,9 @@ class tadminhtml {
   
   public function getsubmit() {
     $result = '';
-$theme = ttheme::i();
-$lang = tlocal::i();
-
+    $theme = ttheme::i();
+    $lang = tlocal::i();
+    
     $a = func_get_args();
     foreach ($a as $name) {
       $result .= strtr($theme->templates['content.admin.button'], array(

@@ -18,7 +18,7 @@
       },options);
       
       var self = this;
-
+      
       var widget_class = options.inline + ',' + options.ajax;
       $(options.button).each(function() {
         var button = $(this);
@@ -114,9 +114,9 @@
         case 'widget-collapse':
         widget.body = $(widget.comment).replaceComment( widget.html);
         widget.comment = false;
-                var id_body = "widget-content-" + widget.id;
-
-                $("#" + id_body)
+        var id_body = "widget-content-" + widget.id;
+        
+        $("#" + id_body)
         .addClass("in")
         .attr("aria-expanded", "true");
         
@@ -128,7 +128,7 @@
         .attr("aria-controls", id_body)
         .attr("aria-expanded", "true")
         .collapse()
-.click(false);
+        .click(false);
         break;
       }
     }

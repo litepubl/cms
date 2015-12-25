@@ -8,8 +8,8 @@
 class tablebuilder {
   //current item in items
   public $item;
-//id or index of current item
-public $id;
+  //id or index of current item
+  public $id;
   //template head and body table
   public $head;
   public $body;
@@ -55,13 +55,13 @@ public $id;
     
     $this->body .= '</tr>';
   }
-
-public function addcallback($varname, $callback, $param) {
-        $this->callbacks[$varname] = array(
-        'callback'=> $callback,
-        'params' => array($this, $param),
-        );
-}
+  
+  public function addcallback($varname, $callback, $param) {
+    $this->callbacks[$varname] = array(
+    'callback'=> $callback,
+    'params' => array($this, $param),
+    );
+  }
   
   public function build(array $items) {
     $body = '';
@@ -69,18 +69,18 @@ public function addcallback($varname, $callback, $param) {
     $admintheme = admintheme::i();
     
     foreach ($items as $id => $item) {
-if (is_array($item)) {
-      $this->item = $item;
-      $args->add($item);
-      if (!isset($item['id'])) {
-$this->id = $id;
-$args->id = $id;
-}
-} else {
-$this->id = $item;
-$args->id = $item;
-}
-
+      if (is_array($item)) {
+        $this->item = $item;
+        $args->add($item);
+        if (!isset($item['id'])) {
+          $this->id = $id;
+          $args->id = $id;
+        }
+      } else {
+        $this->id = $item;
+        $args->id = $item;
+      }
+      
       foreach ($this->callbacks as $name => $callback) {
         $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
       }
@@ -90,17 +90,17 @@ $args->id = $item;
     
     return $admintheme->gettable($this->head, $body);
   }
-
+  
   public static function checkbox($name) {
-$admin = admintheme::i();
-
+    $admin = admintheme::i();
+    
     return array(
-'text-center col-checkbox',
- $admin->templates['invertcheck'],
- str_replace('$name', $name, $admin->templates['checkbox'])
-);
-}
- 
+    'text-center col-checkbox',
+    $admin->templates['invertcheck'],
+    str_replace('$name', $name, $admin->templates['checkbox'])
+    );
+  }
+  
   public static function getcolclass($s) {
     //most case
     if (!$s || $s == 'left') {

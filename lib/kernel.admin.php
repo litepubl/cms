@@ -522,10 +522,13 @@ class tadminhtml {
   
   public function getsubmit() {
     $result = '';
+    $theme = ttheme::i();
+    $lang = tlocal::i();
+    
     $a = func_get_args();
     foreach ($a as $name) {
-      $result .= strtr(ttheme::i()->templates['content.admin.button'], array(
-      '$lang.$name' => tlocal::i()->__get($name),
+      $result .= strtr($theme->templates['content.admin.button'], array(
+      '$lang.$name' => $lang->__get($name),
       '$name' => $name,
       ));
     }
@@ -716,10 +719,6 @@ class tadminhtml {
   
   public function getitemscount($from, $to, $count) {
     return sprintf($this->h4->itemscount, $from, $to, $count);
-  }
-  
-  public function get_table_checkbox($name) {
-    return array('center', $this->invertcheckbox, str_replace('$checkboxname', $name, $this->checkbox));
   }
   
   public function get_table_item($name) {
@@ -924,6 +923,10 @@ class adminform {
     }
   }
   
+  public function centergroup($buttons) {
+    $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+  }
+  
   public function __tostring() {
     return $this->get();
   }
@@ -936,9 +939,12 @@ class adminform {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
-    $result .= "<form $attr role=\"form\">";
+    $result .= "<form $attr>";
     $result .= $this->items;
-    if ($this->submit) $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    if ($this->submit) {
+      $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    }
+    
     $result .= "\n</form>\n</div>\n";
     return $result;
   }
@@ -1211,63 +1217,12 @@ class tautoform {
   
 }//class
 
-//html.tablecols.class.php
-class ttablecolumns {
-  public $style;
-  public $head;
-  public $checkboxes;
-  public $checkbox_tml;
-  public $item;
-  public $changed_hidden;
-  public $index;
-  
-  public function __construct() {
-    $this->index = 0;
-    $this->style = '';
-    $this->checkboxes = array();
-    $this->checkbox_tml = '<input type="checkbox" name="checkbox-showcolumn-%1$d" value="%1$d" %2$s />
-    <label for="checkbox-showcolumn-%1$d"><strong>%3$s</strong></label>';
-    $this->head = '';
-    $this->body = '';
-    $this->changed_hidden = 'changed_hidden';
-  }
-  
-  public function addcolumns(array $columns) {
-    foreach ($columns as $column) {
-      list($tml, $title, $align, $show) = $column;
-      $this->add($tml, $title, $align, $show);
-    }
-  }
-  
-  public function add($tml, $title, $align, $show) {
-    $class = 'col_' . ++$this->index;
-    //if (isset($_POST[$this->changed_hidden])) $show  = isset($_POST["checkbox-showcolumn-$this->index"]);
-    $display = $show ? 'block' : 'none';
-  $this->style .= ".$class { text-align: $align; display: $display; }\n";
-    $this->checkboxes[]=  sprintf($this->checkbox_tml, $this->index, $show ? 'checked="checked"' : '', $title);
-    $this->head .= sprintf('<th class="%s">%s</th>', $class, $title);
-    $this->body .= sprintf('<td class="%s">%s</td>', $class, $tml);
-    return $this->index;
-  }
-  
-  public function build($body, $buttons) {
-    $args = new targs();
-    $args->style = $this->style;
-    $args->checkboxes = implode("\n", $this->checkboxes);
-    $args->head = $this->head;
-    $args->body = $body;
-    $args->buttons = $buttons;
-    $tml = tfilestorage::getfile(litepublisher::$paths->languages . 'tablecolumns.ini');
-    $theme = ttheme::i();
-    return $theme->parsearg($tml, $args);
-  }
-  
-}//class
-
 //html.tablebuilder.class.php
 class tablebuilder {
   //current item in items
   public $item;
+  //id or index of current item
+  public $id;
   //template head and body table
   public $head;
   public $body;
@@ -1314,15 +1269,30 @@ class tablebuilder {
     $this->body .= '</tr>';
   }
   
+  public function addcallback($varname, $callback, $param) {
+    $this->callbacks[$varname] = array(
+    'callback'=> $callback,
+    'params' => array($this, $param),
+    );
+  }
+  
   public function build(array $items) {
     $body = '';
     $args = $this->args;
     $admintheme = admintheme::i();
     
     foreach ($items as $id => $item) {
-      $args->add($item);
-      if (!isset($item['id'])) $args->id = $id;
-      $this->item = $item;
+      if (is_array($item)) {
+        $this->item = $item;
+        $args->add($item);
+        if (!isset($item['id'])) {
+          $this->id = $id;
+          $args->id = $id;
+        }
+      } else {
+        $this->id = $item;
+        $args->id = $item;
+      }
       
       foreach ($this->callbacks as $name => $callback) {
         $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
@@ -1332,6 +1302,16 @@ class tablebuilder {
     }
     
     return $admintheme->gettable($this->head, $body);
+  }
+  
+  public static function checkbox($name) {
+    $admin = admintheme::i();
+    
+    return array(
+    'text-center col-checkbox',
+    $admin->templates['invertcheck'],
+    str_replace('$name', $name, $admin->templates['checkbox'])
+    );
   }
   
   public static function getcolclass($s) {
@@ -1575,7 +1555,10 @@ class tposteditor extends tadminmenu {
     $result = '';
     $categories = tcategories::i();
     $html = tadminhtml::getinstance('editor');
-    $tml = str_replace('$checkbox', $html->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title'), $html->category);
+    $theme = ttheme::i();
+    $checkbox = $theme->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title');
+    $tml = str_replace('$checkbox', $checkbox, $html->category);
+    
     $args = new targs();
     foreach ($categories->items  as $id => $item) {
       if ($parent != $item['parent']) continue;
