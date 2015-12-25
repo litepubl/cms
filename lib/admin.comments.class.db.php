@@ -34,7 +34,6 @@ class tadminmoderator extends tadminmenu  {
   
   public function gethead() {
     $result = parent::gethead();
-    $result .= ttemplate::i()->getjavascript('/js/litepubl/system/storage.js');
     $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.js');
     return $result;
   }
@@ -133,17 +132,17 @@ class tadminmoderator extends tadminmenu  {
     ', $args);
     return $result;
   }
-  
-  //callback for table builder
-  public function get_excerpt(tablebuilder $tb, tcomment $comment) {
-    $comment->id = $tb->id;
-    $args = $tb->args;
-    $args->id = $tb->id;
-    $args->onhold = $comment->status == 'hold';
-    $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
-    $args->website =$comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
-    return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
-  }
+
+//callback for table builder
+public function get_excerpt(tablebuilder $tb, tcomment $comment) {
+$comment->id = $tb->id;
+$args = $tb->args;
+      $args->id = $tb->id;
+      $args->onhold = $comment->status == 'hold';
+      $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
+      $args->website =$comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
+return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
+}
   
   protected function get_table($kind) {
     $comments = tcomments::i(0);
@@ -155,97 +154,82 @@ class tadminmoderator extends tadminmenu  {
     $total = $comments->db->getcount($where);
     $from = $this->getfrom($perpage, $total);
     $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
-    
+
     $html = $this->html;
-    $lang = tlocal::admin('comments');
-    $form = new adminform(new targs());
+$lang = tlocal::admin('comments');
+$form = new adminform(new targs());
     $form->title = sprintf($lang->itemscount, $from, $from + count($list), $total);
-    
+
     $comment = new tcomment(0);
     basetheme::$vars['comment'] = $comment;
-    
-    $tablebuilder = new tablebuilder();
-    $tablebuilder->addcallback('$excerpt', array($this, 'get_excerpt'), $comment);
+
+$tablebuilder = new tablebuilder();
+$tablebuilder->addcallback('$excerpt', array($this, 'get_excerpt'), $comment);
     $tablebuilder->args->adminurl = $this->adminurl;
-    
-    $tablebuilder->setstruct(array(
-    tablebuilder::checkbox('id'),
-    
-    array(
+
+$tablebuilder->setstruct(array(
+tablebuilder::checkbox('id'),
+
+array(
     $lang->date,
     '$comment.date',
-    ),
-    
-    array(
+),
+
+array(
     $lang->status,
     '$comment.localstatus',
-    ),
-    
-    array(
+),
+
+array(
     $lang->author,
   '<a href="$site.url/admin/users/{$site.q}id=$comment.author&action=edit">$comment.name</a>',
-    ),
-    
-    array(
+),
+
+array(
     'E-Mail',
     '$email',
-    ),
-    
-    array(
+),
+
+array(
     $lang->website,
     '$website',
-    ),
-    
-    array(
+),
+
+array(
     $lang->post,
     '<a href="$comment.url">$comment.posttitle</a>',
-    ),
-    
-    array(
+),
+
+array(
     $lang->content,
     '$excerpt',
-    ),
-    
-    array(
+),
+
+array(
     'IP',
     '$comment.ip',
-    ),
-    
-    array(
+),
+
+array(
     $lang->reply,
     '<a href="$adminurl=$comment.id&action=reply">$lang.reply</a>',
-    ),
-    
-    array(
-    $lang->approve,
-    '<a href="$adminurl=$comment.id&action=approve">$lang.approve</a>',
-    ),
-    
-    array(
-    $lang->hold,
-    '<a href="$adminurl=$comment.id&action=hold">$lang.hold</a>',
-    ),
-    
-    array(
-    $lang->delete,
-    '<a class="confirm-delete-link" href="$adminurl=$comment.id&action=delete">$lang.delete</a>',
-    ),
-    
-    array(
+),
+
+array(
     $lang->edit,
     '<a href="$adminurl=$comment.id&action=edit">$lang.edit</a>',
-    ),
-    ));
-    
-    $form->items = $tablebuilder->build($list);
-    $form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
-    $form->submit = '';
-    $result = $form->get();
-    
-    $theme = $this->view->theme;
+),
+));
+
+$form->items = $tablebuilder->build($list);
+$form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
+$form->submit = '';
+$result = $form->get();
+
+        $theme = $this->view->theme;
     $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage),
     ($this->iduser ? "iduser=$this->iduser" : ''));
-    
+
     return $result;
   }
   
@@ -271,7 +255,6 @@ class tadminmoderator extends tadminmenu  {
   }
   public function processform() {
     $result = '';
-    parent::processform();
     $comments = tcomments::i();
     if (isset($_REQUEST['action'])) {
       switch ($_REQUEST['action']) {
@@ -292,8 +275,9 @@ class tadminmoderator extends tadminmenu  {
     $status = isset($_POST['approve']) ? 'approved' : (isset($_POST['hold']) ? 'hold' : 'delete');
     foreach ($_POST as $key => $id) {
       if (!is_numeric($id))  continue;
-      if (!strbegin($key, 'checkbox-item-')) continue;
       $id = (int) $id;
+if (!$id) continue;
+
       if ($status == 'delete') {
         if ($this->can($id, 'delete')) $comments->delete($id);
       } else {

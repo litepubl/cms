@@ -33,7 +33,7 @@ class tadmincomusers extends tadminmenu {
     $res = $users->db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
     $items = litepublisher::$db->res2assoc($res);
     
-    $result .= sprintf($html->h4->listhead, $from, $from + count($items), $total);
+    $result .= sprintf($html->h4->itemscount, $from, $from + count($items), $total);
     $adminurl = $this->adminurl;
     $editurl = tadminhtml::getadminlink('/admin/users/', 'id');
     $result .= $html->buildtable($items, array(

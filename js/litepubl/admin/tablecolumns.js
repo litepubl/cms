@@ -8,7 +8,6 @@
   'use strict';
   
   litepubl.tml.tablecols = {
-    hidecol: '<a href="#"  class="hidecolumn dashed tooltip-toggle" title="%%lang.hidecol%%"><span class="fa fa-caret-up"></span> </a>',
     dropdown: '<div class="dropdown">' +
     '<button type="button" class="btn btn-default dropdown-toggle" id="guid-%%guid%%" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
     '%%title%%' +
@@ -20,7 +19,7 @@
     '</ul>' +
     '</div>',
     
-    item: '<li><label class="checkbox"><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>'
+    item: '<li class="checkbox"><label><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>'
   };
   
   litepubl.Tablecols = Class.extend({
@@ -33,30 +32,6 @@
     init: function(table) {
       this.table = $(table);
       this.headers = this.table.find("tr:first");
-      
-      var self = this;
-      this.headers.on("click.hidecolumn", ".hidecolumn", function() {
-        self.set(true, $(this).closest("th").index());
-        self.save();
-        return false;
-      });
-      
-      var th = this.headers.find("th");
-      this.columns = [];
-      this.columns.length = th.length;
-      
-      var btn = litepubl.tml.tablecols.hidecol.replace("%%lang.hidecol%%", lang.admin.hidecol);
-      
-      th.each(function() {
-        var $this= $(this);
-        if ($this.has("input").length) {
-          $this.addClass("col-ignore");
-        } else {
-          $this.data("title", $this.text());
-          $this.prepend(btn);
-        }
-      });
-      
       this.keystorage = this.getkeystorage();
       this.load();
       this.create_dropdown();
@@ -75,6 +50,10 @@
         for (var i = 0; i < columns.length; i++) {
           this.set(columns[i], i);
         }
+} else {
+      var th = this.headers.find("th");
+      this.columns = [];
+      this.columns.length = th.length;
       }
     },
     
@@ -130,10 +109,10 @@
       
       this.headers.find("th").each(function(index) {
         var th = $(this);
-        if (!th.hasClass("col-ignore")) {
+        if (!th.hasClass("col-checkbox")) {
           result += $.parsetml(tml, {
             index: index,
-            title: th.data("title"),
+            title: th.text(),
             checked: columns[index] ? '' : 'checked="checked"'
           });
         }

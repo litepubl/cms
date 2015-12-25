@@ -25,6 +25,7 @@ class tablebuilder {
   }
   
   public function setstruct(array $struct) {
+    $this->body = '<tr>';
     foreach ($struct as $index => $item) {
       if (!$item || !count($item)) continue;
       
