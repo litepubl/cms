@@ -8,6 +8,8 @@
 class tablebuilder {
   //current item in items
   public $item;
+//id or index of current item
+public $id;
   //template head and body table
   public $head;
   public $body;
@@ -53,6 +55,13 @@ class tablebuilder {
     
     $this->body .= '</tr>';
   }
+
+public function addcallback($varname, $callback, $param) {
+        $this->callbacks[$varname] = array(
+        'callback'=> $callback,
+        'params' => array($this, $param),
+        );
+}
   
   public function build(array $items) {
     $body = '';
@@ -60,10 +69,13 @@ class tablebuilder {
     $admintheme = admintheme::i();
     
     foreach ($items as $id => $item) {
-      $args->add($item);
-      if (!isset($item['id'])) $args->id = $id;
       $this->item = $item;
-      
+      $args->add($item);
+      if (!isset($item['id'])) {
+$this->id = $id;
+$args->id = $id;
+}
+
       foreach ($this->callbacks as $name => $callback) {
         $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
       }
@@ -78,7 +90,7 @@ class tablebuilder {
 $admin = admintheme::i();
 
     return array(
-'center',
+'text-center col-checkbox',
  $admin->templates['invertcheck'],
  str_replace('$name', $name, $admin->templates['checkbox'])
 );

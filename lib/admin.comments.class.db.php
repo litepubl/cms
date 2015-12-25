@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-class tadminmoderator extends tadmincommoncomments {
+class tadminmoderator extends tadminmenu  {
   private $moder;
   private $iduser;
   
@@ -30,6 +30,12 @@ class tadminmoderator extends tadmincommoncomments {
       return $cm->candelete;
     }
     return false;
+  }
+  
+  public function gethead() {
+    $result = parent::gethead();
+    $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.js');
+    return $result;
   }
   
   public function getcontent() {
@@ -126,8 +132,19 @@ class tadminmoderator extends tadmincommoncomments {
     ', $args);
     return $result;
   }
+
+//callback for table builder
+public function get_excerpt(tablebuilder $tb, tcomment $comment) {
+$comment->id = $tb->item['id'];
+$args = $tb->args;
+      $args->id = $id;
+      $args->onhold = $comment->status == 'hold';
+      $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
+      $args->website =$comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
+return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
+}
   
-  private function getlist($kind) {
+  protected function getlist($kind) {
     $result = '';
     $comments = tcomments::i(0);
     $perpage = 20;
@@ -140,30 +157,92 @@ class tadminmoderator extends tadmincommoncomments {
     $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
     $html = $this->html;
     $result .= sprintf($html->h4->listhead, $from, $from + count($list), $total);
-    $table = $this->createtable();
-    $args = targs::i();
-    $args->adminurl = $this->adminurl;
+
     $comment = new tcomment(0);
-    ttheme::$vars['comment'] = $comment;
-    $body = '';
+    basetheme::$vars['comment'] = $comment;
+
+$tablebuilder = new tablebuilder();
+$tablebuilder->addcallback('$excerpt', array($this, 'get_excerpt'), $comment);
+$tablebuilder->setstruct(array(
+tablebuilder::checkbox('id'),
+
+array(
+    $lang->date,
+    '$comment.date',
+),
+
+array(
+    $lang->status,
+    '$comment.localstatus',
+),
+
+array(
+    $lang->author,
+  '<a href="$site.url/admin/users/{$site.q}id=$comment.author&action=edit">$comment.name</a>',
+),
+
+array(
+    'E-Mail',
+    '$email',
+),
+
+array(
+    $lang->website,
+    '$website',
+),
+
+array(
+    $lang->post,
+    '<a href="$comment.url">$comment.posttitle</a>',
+),
+
+array(
+    $lang->content,
+    '$excerpt',
+),
+
+array(
+    'IP',
+    '$comment.ip',
+),
+
+array(
+    $lang->reply,
+    '<a href="$adminurl=$comment.id&action=reply">$lang.reply</a>',
+),
+
+array(
+    $lang->approve,
+    '<a href="$adminurl=$comment.id&action=approve">$lang.approve</a>',
+),
+
+array(
+    $lang->hold,
+    '<a href="$adminurl=$comment.id&action=hold">$lang.hold</a>',
+),
+
+array(
+    $lang->delete,
+    '<a class="confirm-delete-link" href="$adminurl=$comment.id&action=delete">$lang.delete</a>',
+),
+
+array(
+    $lang->edit,
+    '<a href="$adminurl=$comment.id&action=edit">$lang.edit</a>',
+),
+));
+
+    $tablebuilder->args->adminurl = $this->adminurl;
     foreach ($list as $id) {
-      $comment->id = $id;
-      $args->id = $id;
-      $args->excerpt = tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
-      $args->onhold = $comment->status == 'hold';
-      $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
-      $args->website =$comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
-      $body .=$html->parsearg($table->body, $args);
-    }
     
-    $result .= $table->build($body, $html->div(
+    $result .= $tablebuilder->build($list);
+
     $html->getsubmit('approve') .
     $html->getsubmit('hold') .
     $html->getsubmit('delete')
     ));
     
-    $theme = ttheme::i();
-    
+    $theme = $this->view->theme;
     $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage),
     ($this->iduser ? "iduser=$this->iduser" : ''));
     return $result;
