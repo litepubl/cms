@@ -69,11 +69,16 @@ public function addcallback($varname, $callback, $param) {
     $admintheme = admintheme::i();
     
     foreach ($items as $id => $item) {
+if (is_array($item)) {
       $this->item = $item;
       $args->add($item);
       if (!isset($item['id'])) {
 $this->id = $id;
 $args->id = $id;
+}
+} else {
+$this->id = $item;
+$args->id = $item;
 }
 
       foreach ($this->callbacks as $name => $callback) {

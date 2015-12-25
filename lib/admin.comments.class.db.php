@@ -80,7 +80,7 @@ class tadminmoderator extends tadminmenu  {
       }
     }
     
-    $result .= $this->getlist($this->name);
+    $result .= $this->get_table($this->name);
     return $result;
   }
   
@@ -144,7 +144,7 @@ $args = $tb->args;
 return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
 }
   
-  protected function getlist($kind) {
+  protected function get_table($kind) {
     $result = '';
     $comments = tcomments::i(0);
     $perpage = 20;
@@ -155,6 +155,7 @@ return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120))
     $total = $comments->db->getcount($where);
     $from = $this->getfrom($perpage, $total);
     $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
+
     $html = $this->html;
     $result .= sprintf($html->h4->listhead, $from, $from + count($list), $total);
 
@@ -233,8 +234,6 @@ array(
 ));
 
     $tablebuilder->args->adminurl = $this->adminurl;
-    foreach ($list as $id) {
-    
     $result .= $tablebuilder->build($list);
 
     $html->getsubmit('approve') .
