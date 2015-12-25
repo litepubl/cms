@@ -34,7 +34,7 @@ class tadminmoderator extends tadminmenu  {
   
   public function gethead() {
     $result = parent::gethead();
-    $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.js');
+    $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.min.js');
     return $result;
   }
   

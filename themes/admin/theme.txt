@@ -17,7 +17,7 @@
 */
 
 table = [
-<div class="table-responsive">
+<div class="table-responsive section">
     <table class="$class">
         <thead>
             <tr>
