@@ -136,7 +136,7 @@ centergroup = [
 */
 
 radiogroup = [
-<div class="btn-group" data-toggle="buttons">
+<div class="btn-group-vertical" data-toggle="buttons">
     $button = [
     <label class="btn btn-default">
         <input type="radio" name="$name" value="$value" autocomplete="off"> $title

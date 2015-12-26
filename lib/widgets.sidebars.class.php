@@ -43,6 +43,14 @@ public function load() {}
     }
     $this->save();
   }
+
+  public function remove($id) {
+      if ($pos = self::getpos($this->items, $id)) {
+      array_delete($this->items[$pos[0]], $pos[1]);
+      $this->save();
+      return $pos[0];
+}
+}
   
   public function delete($id, $index) {
     if ($i = $this->indexof($id, $index)) {
@@ -77,7 +85,7 @@ public function load() {}
   public function move($id, $index, $neworder) {
     if ($old = $this->indexof($id, $index)) {
       if ($old != $newindex) {
-        array_move($this->items[$index], $old, $newindex);
+        array_move($this->items[$index], $old, $neworder);
         $this->save();
       }
     }
@@ -86,7 +94,9 @@ public function load() {}
   public static function getpos(array &$sidebars, $id) {
     foreach ($sidebars as $i => $sidebar) {
       foreach ($sidebar as $j => $item) {
-        if ($id == $item['id']) return array($i, $j);
+        if ($id == $item['id']) {
+return array($i, $j);
+}
       }
     }
     return false;

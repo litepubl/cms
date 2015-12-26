@@ -39,13 +39,10 @@ $lang->addsearch('views');
 
     $args = new targs();
     $args->idview = $idview;
-    $args->customsidebar = $idview == 1 ? '' : 
-$theme->getinput('checkbox', $name, $value ? 'checked="checked"' : '', '$lang.' . $name);
-$theme->parse($html->getcheckbox('customsidebar', true));
+    $args->customsidebar = $idview == 1 ? '' : $theme->parse($html->getcheckbox('customsidebar', true));
 
     $args->adminurl = tadminhtml::getadminlink('/admin/views/widgets/', 'idwidget');
 
-    $result = $html->formhead($args);
     $count = count($view->sidebars);
     $sidebarnames = self::getsidebarnames($view);
 
@@ -119,9 +116,14 @@ $lang->collapse,
 )
 ));
 
-    $result .= $tb->build($items);
+$form = new adminform($args);
+$form->title = $lang->formhead;
+$form->items = $tb->build($items);
+$form->items .= $form->hidden('action', 'edit');
+    $result = $form->get();
     
     //all widgets
+/*
     $args->id_view = $idview;
     $result .= $html->addhead($args);
     foreach ($widgets->items as $id => $item) {
@@ -131,7 +133,7 @@ $lang->collapse,
       $result .= $html->additem($args);
     }
     $result .= $html->addfooter();
-
+*/
     return  $result;
   }
   
@@ -140,46 +142,53 @@ $lang->collapse,
       $widgets = twidgets::i();
       if ($widgets->itemexists($idwidget)) {
         $widget = $widgets->getwidget($idwidget);
-        $result = $widget->admin->getcontent();
-      } else {
+return $widget->admin->getcontent();
+}
+
         $idview = (int) tadminhtml::getparam('idview', 1);
         $view = tview::i($idview);
         $result = tadminviews::getviewform('/admin/views/widgets/');
+
         if (($idview == 1) || $view->customsidebar) {
           $result .= $this->get_table();
         } else {
-          $args = targs::i();
-          $args->idview = $idview;
+$lang = tlocal::i('widgets');
+          $args = new targs();
           $args->customsidebar = $view->customsidebar;
           $args->disableajax = $view->disableajax;
+          $args->idview = $idview;
           $args->action = 'options';
-          $result .= $this->html->adminform('[checkbox=customsidebar] [checkbox=disableajax] [hidden=idview] [hidden=action]', $args);
-        }
+$args->formtitle = $lang->viewsidebar;
+          $result .= $this->html->adminform('
+[checkbox=customsidebar]
+ [checkbox=disableajax]
+ [hidden=idview]
+ [hidden=action]', $args);
       }
       
         return $result;
   }
   
   public function processform() {
-$result = '';
     litepublisher::$urlmap->clearcache();
 
       $idwidget = (int) tadminhtml::getparam('idwidget', 0);
       $widgets = twidgets::i();
+
       if ($widgets->itemexists($idwidget)) {
+if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
+    $idview = (int) tadminhtml::getparam('idview', 1);
+$sidebars = tsidebars::i($idview);
+$sidebars->remove($idwidget);
+$result = $this->html->h4->deleted;
+} else {
         $widget = $widgets->getwidget($idwidget);
         $result = $widget->admin->processform();
-      } else {
-        if (isset($_POST['action'])) {
-$this->setsidebars();
 }
 
-        $result = $this->html->h2->success;
-      }
 return $result;
-  }
-  
-  public function setsidebars() {
+}
+
     $idview = (int) tadminhtml::getparam('idview', 1);
     $view = tview::i($idview);
     
@@ -187,33 +196,37 @@ return $result;
       case 'options':
       $view->disableajax = isset($_POST['disableajax']);
       $view->customsidebar = isset($_POST['customsidebar']);
+$view->save();
       break;
       
       case 'edit':
       if (($view->id > 1) && !isset($_POST['customsidebar'])) {
         $view->customsidebar = false;
       } else {
-$sidebars = &$view->sidebars;
+$sidebars = tsidebars::i($idview);
+foreach ($sidebars->items as $i => $items) {
+foreach ($items as $j => $item) {
+$id = $item['id'];
+if (!isset($_POST["sidebar-$id"])) contiue;
 
-    foreach ($items as $id) {
-      if ($pos = tsidebars::getpos($sidebars, $id)) {
-        list($i, $j) = $pos;
-        if (isset($_POST['deletewidgets']))  {
-          array_delete($sidebars[$i], $j);
-        } else {
           $i2 = (int)$_POST["sidebar-$id"];
+          if ($i2 >= count($sidebars->items)) $i2 = count($sidebars->items) - 1;
+
           $j2 = (int) $_POST["order-$id"];
-          if ($j2 > count($sidebars[$i2])) $j2 = count($sidebars[$i2]);
-          if (($i != $i2) || ($j != $j2)) {
-            $item = $sidebars[$i][$j];
-            array_delete($sidebars[$i], $j);
-            array_insert($sidebars[$i2], $item, $j2);
+          if ($j2 > count($sidebars->items[$i2])) $j2 = count($sidebars[$i2]);
+
+if ($i == $i2) {
+        array_move($sidebars->items[$i2], $j, $j2);
+} else {
+            array_delete($sidebars->items[$i], $j);
+            array_insert($sidebars->items[$i2], $item, $j2);
           }
 
-          $sidebars[$i2][$j2]['ajax'] =  isset($_POST["inlinecheck-$id"]) ? 'inline' : isset($_POST["ajaxcheck-$id"]);
+          $sidebars->items[$i2][$j2]['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
         }
       }
-    }
+
+$sidebars->save();
       }
       break;
       
