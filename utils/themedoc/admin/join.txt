@@ -1,9 +1,9 @@
 ru/01intro.txt
 tml/01table.txt
 ru/01table.txt
+tml/02checkbox.txt
+ru/02checkbox.txt
 tml/10section.txt
 ru/10section.txt
-tml/11checkbox.txt
-ru/11checkbox.txt
-tml/12centergroup.txt
-ru/12centergroup.txt
+tml/11centergroup.txt
+ru/11centergroup.txt
