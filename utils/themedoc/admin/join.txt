@@ -9,3 +9,5 @@ tml/10section.txt
 ru/10section.txt
 tml/11centergroup.txt
 ru/11centergroup.txt
+tml/12radiogroup.txt
+ru/12radiogroup.txt

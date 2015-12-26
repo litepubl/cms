@@ -1,0 +1,15 @@
+radiogroup = [
+<div class="btn-group" data-toggle="buttons">
+    $button = [
+    <label class="btn btn-default">
+        <input type="radio" name="$name" value="$value" autocomplete="off"> $title
+    </label>
+    ]
+    
+    $active = [
+    <label class="btn btn-default active">
+        <input type="radio" name="$name" value="$value" autocomplete="off" checked> $title
+    </label>
+    ]
+</div>
+]

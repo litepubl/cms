@@ -74,7 +74,7 @@ tablecols = [
     </ul>
 </div>
 
-<script type="text/javascript" src="$site.files/js/litepubl/admin/tablecolumns.js"></script>
+<script type="text/javascript" src="$site.files/js/litepubl/admin/tablecolumns.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         litepubl.tablecols = new litepubl.Tablecols("#tablecols-menu");
@@ -131,4 +131,35 @@ centergroup = [
 
 /*
 Шаблон содержит один тег $buttons - это кнопки. Должно получиться: несколько кнопок в одной строке выравнены по центру. Применяется в формах, где несколько кнопок в конце формы, чтобы выровнять их по центру.
+ 
+ Следующий шаблон - группа радиокнопок
+*/
+
+radiogroup = [
+<div class="btn-group" data-toggle="buttons">
+    $button = [
+    <label class="btn btn-default">
+        <input type="radio" name="$name" value="$value" autocomplete="off"> $title
+    </label>
+    ]
+    
+    $active = [
+    <label class="btn btn-default active">
+        <input type="radio" name="$name" value="$value" autocomplete="off" checked> $title
+    </label>
+    ]
+</div>
+]
+
+/*
+Шаблон группы радиокнопок тесно завязан на bootstrap и представляет собой классичиские прямоугольные кнопки с функциями радиокнопок. Несмотря на html разметку type="radio" выглядять они по другому. Кнопки находятся в одной строке. Шаблон пока мало используется и на настоящий момент вы можете их увидить в таблице виджетов. Шаблон radiogroup имеет два вложенных шаблона:
+
+$button - одна кнопка
+$active - нажатая кнопка
+
+Внутри $button и $active исползуются следующие теги:
+
+$name - имя кнопки, атрибут name
+$value - значение кнопки, атрибут value
+$title - текст кнопки
 */

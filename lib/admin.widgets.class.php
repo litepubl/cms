@@ -19,41 +19,84 @@ class tadminwidgets extends tadminmenu {
     foreach ($result as $key => $value) {
       if (isset($about["sidebar$key"])) $result[$key] = $about["sidebar$key"];
     }
+
     return $result;
   }
   
-  public static function getsidebarsform() {
+  public function get_table() {
     $idview = (int) tadminhtml::getparam('idview', 1);
     $view = tview::i($idview);
+
     $widgets = twidgets::i();
+$theme = $this->view->theme;
+$admintheme = $this->view->admintheme;
+
+    $lang = tlocal::i('widgets');
+$lang->addsearch('views');
+
     $html = tadminhtml ::i();
     $html->section = 'widgets';
-    $args = targs::i();
+
+    $args = new targs();
     $args->idview = $idview;
-    $lang = tlocal::i('views');
-    $args->customsidebar = $idview == 1 ? '' :
-    $view->theme->parse($html->getcheckbox('customsidebar', true));
+    $args->customsidebar = $idview == 1 ? '' : 
+$theme->getinput('checkbox', $name, $value ? 'checked="checked"' : '', '$lang.' . $name);
+$theme->parse($html->getcheckbox('customsidebar', true));
+
     $args->adminurl = tadminhtml::getadminlink('/admin/views/widgets/', 'idwidget');
-    $lang = tlocal::i('widgets');
+
     $result = $html->formhead($args);
     $count = count($view->sidebars);
     $sidebarnames = self::getsidebarnames($view);
+
+//items for table builder
+$items = array();
     foreach ($view->sidebars as $i => $sidebar) {
       $orders = range(1, count($sidebar));
-      foreach ($sidebar as $j => $_item) {
-        $id = $_item['id'];
-        $item = $widgets->getitem($id);
-        $args->id = $id;
-        $args->ajax = $_item['ajax'];
-        $args->inline = $_item['ajax'] === 'inline';
+      foreach ($sidebar as $j => $sb_item) {
+        $id = $sb_item['id'];
+        $w_item = $widgets->getitem($id);
+
+$items[] = array(
+'id' => $id,
+'title' => $w_item['title'],
+'sidebarcombo' => tadminhtml::getcombobox("sidebar-$id", $sidebarnames, $i),
+'ordercombo' => tadminhtml::getcombobox("order-$id", $orders, $j),
+'ajaxbuttons' => str_replace('$button',
+$admintheme->templates['']
         $args->disabled = ($item['cache'] == 'cache') || ($item['cache'] == 'nocache') ? '' : 'disabled="disabled"';
-        $args->add($item);
-        $args->sidebarcombo = tadminhtml::getcombobox("sidebar-$id", $sidebarnames, $i);
-        $args->ordercombo = tadminhtml::getcombobox("order-$id", $orders, $j);
-        $result .= $html->item($args);
+        $args->ajax = $sb_item['ajax'];
+        $args->inline = $sb_item['ajax'] === 'inline';
+$admintheme->templates['radiogroup'])
+);
       }
     }
-    $result .= $html->formfooter();
+
+$tb = new tablebuilder();
+$tb->args->adminurl = tadminhtml::getadminlink('/admin/views/widgets/', 'idwidget');
+$tb->setstruct(array(
+array(
+$lang->widget,
+'<a href="$adminurl=$id">$title</a>'
+),
+
+array(
+$lang->sidebar,
+'$sidebarcombo'
+),
+
+array(
+$lang->order,
+'$ordercombo'
+),
+
+array(
+$lang->collapse,
+'$ajaxbuttons'
+)
+));
+
+    $result .= $tb->build($items);
     
     //all widgets
     $args->id_view = $idview;
@@ -65,7 +108,8 @@ class tadminwidgets extends tadminmenu {
       $result .= $html->additem($args);
     }
     $result .= $html->addfooter();
-    return  $html->fixquote($result);
+
+    return  $result;
   }
   
   // parse POST into sidebars array
@@ -104,13 +148,13 @@ class tadminwidgets extends tadminmenu {
       $widgets = twidgets::i();
       if ($widgets->itemexists($idwidget)) {
         $widget = $widgets->getwidget($idwidget);
-        return  $widget->admin->getcontent();
+        $result = $widget->admin->getcontent();
       } else {
         $idview = (int) tadminhtml::getparam('idview', 1);
         $view = tview::i($idview);
         $result = tadminviews::getviewform('/admin/views/widgets/');
         if (($idview == 1) || $view->customsidebar) {
-          $result .= self::getsidebarsform();
+          $result .= $this->get_table();
         } else {
           $args = targs::i();
           $args->idview = $idview;
@@ -119,33 +163,42 @@ class tadminwidgets extends tadminmenu {
           $args->action = 'options';
           $result .= $this->html->adminform('[checkbox=customsidebar] [checkbox=disableajax] [hidden=idview] [hidden=action]', $args);
         }
-        return $result;
       }
+break;
       
       case 'addcustom':
       $widget = tcustomwidget::i();
-      return  $widget->admin->getcontent();
+      $result = $widget->admin->getcontent();
+break;
     }
+
+        return $result;
   }
   
   public function processform() {
+$result = '';
     litepublisher::$urlmap->clearcache();
+
     switch ($this->name) {
       case 'widgets':
       $idwidget = (int) tadminhtml::getparam('idwidget', 0);
       $widgets = twidgets::i();
       if ($widgets->itemexists($idwidget)) {
         $widget = $widgets->getwidget($idwidget);
-        return  $widget->admin->processform();
+        $result = $widget->admin->processform();
       } else {
         if (isset($_POST['action'])) self::setsidebars();
-        return $this->html->h2->success;
+        $result = $this->html->h2->success;
       }
+break;
       
       case 'addcustom':
       $widget = tcustomwidget::i();
-      return  $widget->admin->processform();
+      $result = $widget->admin->processform();
+break;
     }
+
+return $result;
   }
   
   public static function setsidebars() {
