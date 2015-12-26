@@ -360,28 +360,6 @@ class tadminhtml {
     return $admintheme->gettable($head, $body);
   }
   
-  public function items2table($owner, array $items, array $struct) {
-    $head = '';
-    $body = '';
-    $tml = '<tr>';
-    foreach ($struct as $elem) {
-      $head .= sprintf('<th align="%s">%s</th>', $elem[0], $elem[1]);
-      $tml .= sprintf('<td align="%s">%s</td>', $elem[0], $elem[2]);
-    }
-    $tml .= '</tr>';
-    
-    $admintheme = admintheme::i();
-    $args = new targs();
-    foreach ($items as $id) {
-      $item = $owner->getitem($id);
-      $args->add($item);
-      $args->id = $id;
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    
-    return $admintheme->gettable($head, $body);
-  }
-  
   public function tableposts(array $items, array $tablestruct) {
     $body = '';
     $head = $this->tableposts_head;
