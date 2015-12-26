@@ -4,37 +4,26 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function ($, document, litepubl) {
+(function ($, litepubl) {
   'use strict';
   
-  litepubl.tml.tablecols = {
-    dropdown: '<div class="dropdown">' +
-    '<button type="button" class="btn btn-default dropdown-toggle" id="guid-%%guid%%" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-    '%%title%%' +
-    '    <span class="caret"></span>' +
-    '</button>' +
-    
-    '<ul class="dropdown-menu" aria-labelledby="guid-%%guid%%">' +
-    //items
-    '</ul>' +
-    '</div>',
-    
-    item: '<li class="checkbox"><label><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>'
-  };
-  
   litepubl.Tablecols = Class.extend({
+    dropdown: false,
     table: false,
     headers: false,
-    dropdown: false,
     columns: false,
     keystorage: "",
+tml: '<li class="checkbox"><label><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>',
     
-    init: function(table) {
-      this.table = $(table);
+    init: function(dropdown, tml) {
+this.dropdown = $(dropdown);
+      this.table = this.dropdown.parent().find("table:first");
       this.headers = this.table.find("tr:first");
       this.keystorage = this.getkeystorage();
       this.load();
-      this.create_dropdown();
+
+if (tml) this.tml = tml;
+this.init_dropdown();
     },
     
     set: function(hide, index) {
@@ -69,15 +58,8 @@
       
       return result;
     },
-    
-    create_dropdown: function() {
-      var html = $.parsetml(litepubl.tml.tablecols.dropdown, {
-        guid: litepubl.guid++,
-        title: lang.admin.togglecols
-      });
-      
+init_dropdown: function() {    
       var self = this;
-      this.dropdown = $(html).insertBefore(this.table.closest("form"));
       this.dropdown.find("button")
       .dropdown()
       .off("click.bs.dropdown")
@@ -104,7 +86,7 @@
     
     getmenu: function() {
       var result = "";
-      var tml = litepubl.tml.tablecols.item;
+      var tml = this.tml;
       var columns = this.columns;
       
       this.headers.find("th").each(function(index) {
@@ -123,8 +105,4 @@
     
   });
   
-  $(document).ready(function() {
-    litepubl.tablecols = new litepubl.Tablecols("table:first");
-  });
-  
-}(jQuery, document, litepubl));
+}(jQuery, litepubl));

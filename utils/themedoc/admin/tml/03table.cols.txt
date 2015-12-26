@@ -1,0 +1,18 @@
+tablecols = [
+<div class="dropdown" id="tablecols-menu">
+    <button type="button" class="btn btn-default dropdown-toggle" id="tablecols-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        $lang.togglecols
+        <span class="caret"></span>
+    </button>
+
+    <ul class="dropdown-menu" aria-labelledby="tablecols-button">
+    </ul>
+</div>
+
+<script type="text/javascript" src="$site.files/js/litepubl/admin/tablecolumns.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        litepubl.tablecols = new litepubl.Tablecols("#tablecols-menu");
+    });
+</script>
+]

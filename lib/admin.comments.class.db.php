@@ -32,12 +32,6 @@ class tadminmoderator extends tadminmenu  {
     return false;
   }
   
-  public function gethead() {
-    $result = parent::gethead();
-    $result .= ttemplate::i()->getjavascript('/js/litepubl/admin/tablecolumns.min.js');
-    return $result;
-  }
-  
   public function getcontent() {
     $result = '';
     $comments = tcomments::i();
@@ -221,8 +215,9 @@ array(
 ),
 ));
 
+$form->before = $this->view->admintheme->templates['tablecols'];
 $form->items = $tablebuilder->build($list);
-$form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
+$form->items .= $form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
 $form->submit = '';
 $result = $form->get();
 

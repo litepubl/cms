@@ -8,6 +8,7 @@
 class adminform {
   public $args;
   public$title;
+public $before;
   public $items;
   public $action;
   public $method;
@@ -21,6 +22,7 @@ class adminform {
   public function __construct($args = null) {
     $this->args = $args;
     $this->title = '';
+    $this->before = '';
     $this->items = '';
     $this->action = '';
     $this->method = 'post';
@@ -55,7 +57,7 @@ class adminform {
   }
   
   public function centergroup($buttons) {
-    $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
   }
 
 public function hidden($name, $value) {
@@ -77,6 +79,8 @@ return $this->get();
   public function gettml() {
     $result = '<div class="form-holder">';
     if ($this->title) $result .= "<h4>$this->title</h4>\n";
+$result .= $this->before;
+
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
