@@ -35,13 +35,17 @@ $admintheme = $this->view->admintheme;
 $lang->addsearch('views');
 
     $html = tadminhtml ::i();
-    $html->section = 'widgets';
 
     $args = new targs();
-    $args->idview = $idview;
-    $args->customsidebar = $idview == 1 ? '' : $theme->parse($html->getcheckbox('customsidebar', true));
+$form = new adminform($args);
+$form->title = $lang->formhead;
+$form->items = $form->hidden('action', 'edit');
+$form->items .= $form->hidden('idview', $idview);
 
-    $args->adminurl = tadminhtml::getadminlink('/admin/views/widgets/', 'idwidget');
+if ($idview != 1) {
+
+$form->items .= $html->getcheckbox('customsidebar', true);
+}
 
     $count = count($view->sidebars);
     $sidebarnames = self::getsidebarnames($view);
@@ -116,10 +120,7 @@ $lang->collapse,
 )
 ));
 
-$form = new adminform($args);
-$form->title = $lang->formhead;
-$form->items = $tb->build($items);
-$form->items .= $form->hidden('action', 'edit');
+$form->items .= $tb->build($items);
     $result = $form->get();
     
     //all widgets
