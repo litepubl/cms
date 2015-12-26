@@ -99,37 +99,37 @@ class tadminusers extends tadminmenu {
     $items = $users->select($where, " order by id desc limit $from, $perpage");
     if (!$items) $items = array();
     
-$tb = new tablebuilder();
+    $tb = new tablebuilder();
     $tb->args->adminurl = $this->adminurl;
-$tb->setowner($users);
-$tb->setstruct(array(
+    $tb->setowner($users);
+    $tb->setstruct(array(
     tablebuilder::checkbox('user'),
-
+    
     array(
- $lang->edit,
-sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)
-),
-
-array(
-$lang->status,
-'$status'
-),
-
+    $lang->edit,
+    sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)
+    ),
+    
     array(
-$lang->comments,
- sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/comments/', 'iduser=$id'), $lang->comments)
-),
-
+    $lang->status,
+    '$status'
+    ),
+    
     array(
-$lang->page,
- sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/pages/', 'id=$id'), $lang->page)
-),
+    $lang->comments,
+    sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/comments/', 'iduser=$id'), $lang->comments)
+    ),
+    
+    array(
+    $lang->page,
+    sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/pages/', 'id=$id'), $lang->page)
+    ),
     ));
     
-$form = new adminform($args);
-$form->title = $lang->userstable;
+    $form = new adminform($args);
+    $form->title = $lang->userstable;
     $result .= $form->getdelete($tb->build($items));
-
+    
     $theme = ttheme::i();
     $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count/$perpage), $params);
     

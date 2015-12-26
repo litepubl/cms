@@ -658,28 +658,6 @@ class tadminhtml {
     return $admintheme->gettable($head, $body);
   }
   
-  public function items2table($owner, array $items, array $struct) {
-    $head = '';
-    $body = '';
-    $tml = '<tr>';
-    foreach ($struct as $elem) {
-      $head .= sprintf('<th align="%s">%s</th>', $elem[0], $elem[1]);
-      $tml .= sprintf('<td align="%s">%s</td>', $elem[0], $elem[2]);
-    }
-    $tml .= '</tr>';
-    
-    $admintheme = admintheme::i();
-    $args = new targs();
-    foreach ($items as $id) {
-      $item = $owner->getitem($id);
-      $args->add($item);
-      $args->id = $id;
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    
-    return $admintheme->gettable($head, $body);
-  }
-  
   public function tableposts(array $items, array $tablestruct) {
     $body = '';
     $head = $this->tableposts_head;
@@ -877,6 +855,7 @@ class tadminhtml {
 class adminform {
   public $args;
   public$title;
+  public $before;
   public $items;
   public $action;
   public $method;
@@ -890,6 +869,7 @@ class adminform {
   public function __construct($args = null) {
     $this->args = $args;
     $this->title = '';
+    $this->before = '';
     $this->items = '';
     $this->action = '';
     $this->method = 'post';
@@ -924,7 +904,19 @@ class adminform {
   }
   
   public function centergroup($buttons) {
-    $this->items .= str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+    return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+  }
+  
+  public function hidden($name, $value) {
+    return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
+  }
+  
+  public function getdelete($table) {
+    $this->items = $table;
+    $this->items .= $this->hidden('delete', 'delete');
+    $this->submit = 'delete';
+    
+    return $this->get();
   }
   
   public function __tostring() {
@@ -934,6 +926,8 @@ class adminform {
   public function gettml() {
     $result = '<div class="form-holder">';
     if ($this->title) $result .= "<h4>$this->title</h4>\n";
+    $result .= $this->before;
+    
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
@@ -1238,6 +1232,7 @@ class tablebuilder {
   }
   
   public function setstruct(array $struct) {
+    $this->body = '<tr>';
     foreach ($struct as $index => $item) {
       if (!$item || !count($item)) continue;
       
@@ -1302,6 +1297,26 @@ class tablebuilder {
     }
     
     return $admintheme->gettable($this->head, $body);
+  }
+  
+  //predefined callbacks
+  public function titems_callback(tablebuilder $self, titems $owner) {
+    $self->item = $owner->getitem($self->id);
+    $self->args->add($self->item);
+  }
+  
+  public function setowner(titems $owner) {
+    $this->addcallback('$temp' . count($this->callbacks), array($this, 'titems_callback'), $owner);
+  }
+  
+  
+  public function action($action, $adminurl) {
+    $title = tlocal::i()->__get($action);
+    
+    return array(
+    $title,
+    "<a href=\"$adminurl=\$id&action=$action\">$title</a>"
+    );
   }
   
   public static function checkbox($name) {

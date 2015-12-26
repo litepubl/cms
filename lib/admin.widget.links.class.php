@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class tadminlinkswidget extends tadminwidget {
   
@@ -39,16 +44,19 @@ class tadminlinkswidget extends tadminwidget {
     [text=linktitle]
     [hidden=mode]', $args);
     
-    $adminurl = $this->adminurl . $_GET['idwidget'] . '&idlink';
-    $args->table = $html->buildtable($widget->items, array(
+    $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
+    $tb = new tablebuilder();
+    $tb->setstruct(array(
     tablebuilder::checkbox('checklink'),
-    array('left', $lang->url, '<a href=\'$url\'>$url</a>'),
-    array('left', $lang->anchor, '$text'),
-    array('left', $lang->description, '$title'),
-    array('center', $lang->edit, "<a href='$adminurl=\$id'>$lang->edit</a>"),
+    array($lang->url, '<a href=\'$url\'>$url</a>'),
+    array($lang->anchor, '$text'),
+    array($lang->description, '$title'),
+    array($lang->edit, "<a href='$adminurl=\$id'>$lang->edit</a>"),
     ));
     
-    $result .= $html->deletetable($args);
+    $form = new adminform($args);
+    $form->title = $lang->widgets;
+    $result .= $form->getdelete($tb->build($widget->items));
     return $result;
   }
   

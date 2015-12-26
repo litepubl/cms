@@ -113,18 +113,18 @@ class tadminuserpages extends tadminmenu {
     $args = new targs();
     $args->adminurl = $this->adminurl;
     $result = $html->h4->userstable;
-
-$tb = new tablebuilder();
-$tb->setowner($users);
-$tb->setstruct(array(
+    
+    $tb = new tablebuilder();
+    $tb->setowner($users);
+    $tb->setstruct(array(
     array(
-$lang->edit,
- sprintf('<a href="%s=$id">$name</a>', $this->adminurl)
-)
+    $lang->edit,
+    sprintf('<a href="%s=$id">$name</a>', $this->adminurl)
+    )
     ));
-  
-$result .= $tb->build($items);  
-
+    
+    $result .= $tb->build($items);
+    
     $theme = ttheme::i();
     $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count/$perpage));
     return $result;

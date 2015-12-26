@@ -13,17 +13,17 @@
     headers: false,
     columns: false,
     keystorage: "",
-tml: '<li class="checkbox"><label><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>',
+    tml: '<li class="checkbox"><label><input type="checkbox" value="%%index%%" %%checked%% />%%title%%</label></li>',
     
     init: function(dropdown, tml) {
-this.dropdown = $(dropdown);
+      this.dropdown = $(dropdown);
       this.table = this.dropdown.parent().find("table:first");
       this.headers = this.table.find("tr:first");
       this.keystorage = this.getkeystorage();
       this.load();
-
-if (tml) this.tml = tml;
-this.init_dropdown();
+      
+      if (tml) this.tml = tml;
+      this.init_dropdown();
     },
     
     set: function(hide, index) {
@@ -39,10 +39,10 @@ this.init_dropdown();
         for (var i = 0; i < columns.length; i++) {
           this.set(columns[i], i);
         }
-} else {
-      var th = this.headers.find("th");
-      this.columns = [];
-      this.columns.length = th.length;
+      } else {
+        var th = this.headers.find("th");
+        this.columns = [];
+        this.columns.length = th.length;
       }
     },
     
@@ -58,7 +58,7 @@ this.init_dropdown();
       
       return result;
     },
-init_dropdown: function() {    
+    init_dropdown: function() {
       var self = this;
       this.dropdown.find("button")
       .dropdown()

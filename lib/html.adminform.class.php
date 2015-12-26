@@ -8,7 +8,7 @@
 class adminform {
   public $args;
   public$title;
-public $before;
+  public $before;
   public $items;
   public $action;
   public $method;
@@ -57,20 +57,20 @@ public $before;
   }
   
   public function centergroup($buttons) {
-return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+    return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
   }
-
-public function hidden($name, $value) {
-return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
-}
-
-public function getdelete($table) {
-$this->items = $table;
-$this->items .= $this->hidden('delete', 'delete');
-$this->submit = 'delete';
-
-return $this->get();
-}
+  
+  public function hidden($name, $value) {
+    return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
+  }
+  
+  public function getdelete($table) {
+    $this->items = $table;
+    $this->items .= $this->hidden('delete', 'delete');
+    $this->submit = 'delete';
+    
+    return $this->get();
+  }
   
   public function __tostring() {
     return $this->get();
@@ -79,8 +79,8 @@ return $this->get();
   public function gettml() {
     $result = '<div class="form-holder">';
     if ($this->title) $result .= "<h4>$this->title</h4>\n";
-$result .= $this->before;
-
+    $result .= $this->before;
+    
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);

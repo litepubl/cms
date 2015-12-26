@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class tadmincustomwidget extends tadminwidget {
   
@@ -47,13 +52,15 @@ class tadmincustomwidget extends tadminwidget {
     $args));
     
     $lang = tlocal::i();
-    $args->formtitle = $lang->widgets;
-    $args->table = $html->buildtable($widget->items, array(
+    $tb = new tablebuilder();
+    $tb->setstruct(array(
     tablebuilder::checkbox('widgetcheck'),
-    array('left', $lang->widgettitle, "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"),
+    array($lang->widgettitle, "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"),
     ));
     
-    $result .= $html->deletetable($args);
+    $form = new adminform($args);
+    $form->title = $lang->widgets;
+    $result .= $form->getdelete($tb->build($widget->items));
     return $result;
   }
   
