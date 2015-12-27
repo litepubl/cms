@@ -136,7 +136,7 @@ centergroup = [
 */
 
 radiogroup = [
-<div class="btn-group-vertical" data-toggle="buttons">
+<div class="btn-group" data-toggle="buttons">
     $button = [
     <label class="btn btn-default">
         <input type="radio" name="$name" value="$value" autocomplete="off"> $title
@@ -162,4 +162,45 @@ $active - нажатая кнопка
 $name - имя кнопки, атрибут name
 $value - значение кнопки, атрибут value
 $title - текст кнопки
+
+Следующий шаблон - добавление виджетов
+*/
+
+addwidgets = [
+<h4><a href="#addwidgets-body" id="addwidgets-header" class="dashed">$lang.addhead</a></h4>
+<div id="addwidgets-body" class="hidden"><!--
+        <form action="" id="addwidgets-form" method="post">
+            $checkboxes
+        </form>
+--></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+                $("#addwidgets-header").on("click.addwidgets", function(e) {
+                        e.preventDefault();
+
+                        var dialog = $.litedialog({
+                                title: "$lang.addwidgets",
+                                html: $(#addwidgets - body ").get(0).firstChild.nodeValue,
+                                    buttons: [{
+                                            title: "$lang.add",
+                                            click: function() {
+                                                dialog.find("#addwidgets-form").submit();
+                                            }
+                                        },
+
+                                        $.get_cancel_button()
+                                    ]
+                                });
+                        });
+
+                    if (!("button" in $.fn)) {
+                        $.load_script(ltoptions.files + "/js/bootstrap/button.min.js");
+                    }
+                });
+</script>
+]
+
+/*
+Шаблон предназначен для страницы виджетов, в частности диалог добавления новых виджетов. Из тегов, кроме языка $lang.* встречается всего один тег - $checkboxes, который является  набором чекбоксов из content.admin.checkbox для каждого виджета, не включенного в сайдбар. После выбора флажков в диалоговом окне будет самбит формы. Из примечательного в шаблоне то, что сама форма прячется внутри html комментария. Еще неизвестно будет ли вызван ддиалог добавления виджетов и загромаждать dom дерево нет желания. Реализовать сценарий, при котором чекбоксы запрашивались бы аяксом с сервера не было ни желания и главное время: дополнительная работа без очевидных плюсов.
 */

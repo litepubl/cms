@@ -1,0 +1,34 @@
+addwidgets = [
+<h4><a href="#addwidgets-body" id="addwidgets-header" class="dashed">$lang.addhead</a></h4>
+<div id="addwidgets-body" class="hidden"><!--
+        <form action="" id="addwidgets-form" method="post">
+            $checkboxes
+        </form>
+--></div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+                $("#addwidgets-header").on("click.addwidgets", function(e) {
+                        e.preventDefault();
+
+                        var dialog = $.litedialog({
+                                title: "$lang.addwidgets",
+                                html: $(#addwidgets - body ").get(0).firstChild.nodeValue,
+                                    buttons: [{
+                                            title: "$lang.add",
+                                            click: function() {
+                                                dialog.find("#addwidgets-form").submit();
+                                            }
+                                        },
+
+                                        $.get_cancel_button()
+                                    ]
+                                });
+                        });
+
+                    if (!("button" in $.fn)) {
+                        $.load_script(ltoptions.files + "/js/bootstrap/button.min.js");
+                    }
+                });
+</script>
+]

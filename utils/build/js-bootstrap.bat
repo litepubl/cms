@@ -3,6 +3,7 @@ set mini=java -jar d:\OpenServer\domains\cms\build\closure\compiler.jar --js=
 set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar
 set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
 cd d:\OpenServer\domains\cms\js\bootstrap
+%mini%button.js --js_output_file=button.min.js
 %mini%collapse.js --js_output_file=collapse.min.js
 %mini%dropdown.js --js_output_file=dropdown.min.js
 %mini%modal.js --js_output_file=modal.min.js
