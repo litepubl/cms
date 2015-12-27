@@ -73,6 +73,7 @@ cd ..\admin
 %mini%uploader.js --js_output_file=uploader.min.js
 %mini%uploader.flash.js --js_output_file=uploader.flash.min.js
 %mini%uploader.html.js --js_output_file=uploader.html.min.js
+%mini%widgets.add.js --js_output_file=widgets.add.min.js
 cd css
 %css% admin.views.css -o admin.views.min.css
 %css% fileman.css -o fileman.min.css

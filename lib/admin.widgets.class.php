@@ -46,7 +46,17 @@ if ($idview != 1) {
 
 $form->items .= $html->getcheckbox('customsidebar', true);
 }
+    //all widgets
+    $checkboxes = '';
+    foreach ($widgets->items as $id => $item) {
+if (!tsidebars::getpos($view->sidebars, $id)) {
+      $checkboxes .= $theme->getinput('checkbox', "addwidget-$id", "value=\"$id\"", $item['title']);
+}
+    }
 
+$args->checkboxes = $checkboxes;
+    $args->idview = $idview;
+$form->before = $admintheme->parsearg($admintheme->templates['addwidgets'], $args);
     $count = count($view->sidebars);
     $sidebarnames = self::getsidebarnames($view);
 
@@ -121,29 +131,17 @@ $lang->collapse,
 ));
 
 $form->items .= $tb->build($items);
-    $result = $form->get();
-    
-    //all widgets
-/*
-    $args->id_view = $idview;
-    $result .= $html->addhead($args);
-    foreach ($widgets->items as $id => $item) {
-      $args->id = $id;
-      $args->add($item);
-      $args->checked = tsidebars::getpos($view->sidebars, $id) ? false : true;
-      $result .= $html->additem($args);
-    }
-    $result .= $html->addfooter();
-*/
-    return  $result;
+return $form->get();
   }
   
   public function getcontent() {
+if (!(isset($_GET['action']) && $_GET['action'] == 'delete')) {
       $idwidget = tadminhtml::getparam('idwidget', 0);
       $widgets = twidgets::i();
       if ($widgets->itemexists($idwidget)) {
         $widget = $widgets->getwidget($idwidget);
 return $widget->admin->getcontent();
+}
 }
 
         $idview = (int) tadminhtml::getparam('idview', 1);
@@ -192,7 +190,6 @@ return $result;
 
     $idview = (int) tadminhtml::getparam('idview', 1);
     $view = tview::i($idview);
-    
     switch ($_POST['action']) {
       case 'options':
       $view->disableajax = isset($_POST['disableajax']);
