@@ -1,4 +1,9 @@
 <?php
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class addcustomwidget extends tadminmenu {
   
@@ -7,13 +12,13 @@ class addcustomwidget extends tadminmenu {
   }
   
   public function getcontent() {
-      $widget = tcustomwidget::i();
-return $widget->admin->getcontent();
-}
-
+    $widget = tcustomwidget::i();
+    return $widget->admin->getcontent();
+  }
+  
   public function processform() {
-      $widget = tcustomwidget::i();
-return $widget->admin->processform();
-}
-
+    $widget = tcustomwidget::i();
+    return $widget->admin->processform();
+  }
+  
 }//class
