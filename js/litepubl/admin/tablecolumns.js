@@ -19,8 +19,13 @@
       this.dropdown = $(dropdown);
       this.table = this.dropdown.parent().find("table:first");
       this.headers = this.table.find("tr:first");
-      this.keystorage = this.getkeystorage();
+this.keystorage = this.getkeystorage();
+
+if ("DataStorage" in litepubl) {
       this.load();
+} else {
+$.load_script(ltoptions.files + "/js/litepubl/system/storage.min.js", $.proxy(this.load, this));
+}
       
       if (tml) this.tml = tml;
       this.init_dropdown();

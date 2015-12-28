@@ -101,8 +101,47 @@ class tablebuilder {
   public function setowner(titems $owner) {
     $this->addcallback('$temp' . count($this->callbacks), array($this, 'titems_callback'), $owner);
   }
-  
-  
+
+  public function props(array $props) {
+    $lang = tlocal::i();
+$this->setstruct(array(
+array(
+$lang->name,
+'$name'
+),
+
+array(
+$lang->property,
+'$value'
+)
+));
+
+$items = array();
+    foreach ($props as $k => $v) {
+      if (($k === false) || ($v === false)) continue;
+      
+      if (is_array($v)) {
+        foreach ($v as $kv => $vv) {
+          if ($k2 = $lang->__get($kv)) $kv = $k2;
+$items[] = array(
+'name' => $kv,
+'value' =>  $vv
+);
+        }
+      } else {
+        if ($k2 = $lang->__get($k)) $k = $k2;
+$items[] = array(
+'name' => $k,
+'value' =>  $v
+);
+      }
+    }
+    
+    return $this->build($items);
+  }
+
+
+
   public function action($action, $adminurl) {
     $title = tlocal::i()->__get($action);
     
