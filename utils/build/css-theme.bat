@@ -76,4 +76,5 @@ copy %lesspath%bootswatch\yeti\variables.less %lesspath%bootstrap\variables.less
 %less% %lesspath%yeti.less %themepath%yeti.css
 %css% yeti.css -o yeti.min.css
 cd %lesspath%
+pause
 ENDLOCAL   

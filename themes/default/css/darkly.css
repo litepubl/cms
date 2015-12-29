@@ -2729,7 +2729,7 @@ tbody.collapse.in {
   list-style: none;
   font-size: 15px;
   text-align: left;
-  background-color: #ffffff;
+  background-color: #303030;
   border: 1px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
@@ -2745,7 +2745,7 @@ tbody.collapse.in {
   height: 1px;
   margin: 9.5px 0;
   overflow: hidden;
-  background-color: #e5e5e5;
+  background-color: #464545;
 }
 .dropdown-menu > li > a {
   display: block;
@@ -2753,14 +2753,14 @@ tbody.collapse.in {
   clear: both;
   font-weight: normal;
   line-height: 1.42857143;
-  color: #375a7f;
+  color: #ebebeb;
   white-space: nowrap;
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   text-decoration: none;
   color: #ffffff;
-  background-color: #00bc8c;
+  background-color: #375a7f;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
@@ -2768,7 +2768,7 @@ tbody.collapse.in {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: #00bc8c;
+  background-color: #375a7f;
 }
 .dropdown-menu > .disabled > a,
 .dropdown-menu > .disabled > a:hover,
@@ -3295,7 +3295,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
   color: #ffffff;
-  background-color: #00bc8c;
+  background-color: #375a7f;
 }
 .nav-stacked > li {
   float: none;
@@ -4284,8 +4284,8 @@ button.list-group-item {
 .list-group-item.active:focus {
   z-index: 2;
   color: #ffffff;
-  background-color: #00bc8c;
-  border-color: #00bc8c;
+  background-color: #375a7f;
+  border-color: #375a7f;
 }
 .list-group-item.active .list-group-item-heading,
 .list-group-item.active:hover .list-group-item-heading,
@@ -4301,7 +4301,7 @@ button.list-group-item {
 .list-group-item.active .list-group-item-text,
 .list-group-item.active:hover .list-group-item-text,
 .list-group-item.active:focus .list-group-item-text {
-  color: #89ffe1;
+  color: #a8c0da;
 }
 .list-group-item-success {
   color: #ffffff;
@@ -5822,22 +5822,22 @@ fieldset[disabled] .btn-danger.active {
 }
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
-  background-image: -webkit-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-  background-image: -o-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-  background-image: linear-gradient(to bottom, #00bc8c 0%, #00a379 100%);
+  background-image: -webkit-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+  background-image: -o-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+  background-image: linear-gradient(to bottom, #375a7f 0%, #2f4d6d 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00bc8c', endColorstr='#ff00a379', GradientType=0);
-  background-color: #00a379;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff375a7f', endColorstr='#ff2f4d6d', GradientType=0);
+  background-color: #2f4d6d;
 }
 .dropdown-menu > .active > a,
 .dropdown-menu > .active > a:hover,
 .dropdown-menu > .active > a:focus {
-  background-image: -webkit-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-  background-image: -o-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-  background-image: linear-gradient(to bottom, #00bc8c 0%, #00a379 100%);
+  background-image: -webkit-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+  background-image: -o-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+  background-image: linear-gradient(to bottom, #375a7f 0%, #2f4d6d 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00bc8c', endColorstr='#ff00a379', GradientType=0);
-  background-color: #00a379;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff375a7f', endColorstr='#ff2f4d6d', GradientType=0);
+  background-color: #2f4d6d;
 }
 .navbar-default {
   background-image: -webkit-linear-gradient(top, #4673a3 0%, #375a7f 100%);
@@ -5897,11 +5897,11 @@ fieldset[disabled] .btn-danger.active {
   .navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #fff;
-    background-image: -webkit-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-    background-image: -o-linear-gradient(top, #00bc8c 0%, #00a379 100%);
-    background-image: linear-gradient(to bottom, #00bc8c 0%, #00a379 100%);
+    background-image: -webkit-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+    background-image: -o-linear-gradient(top, #375a7f 0%, #2f4d6d 100%);
+    background-image: linear-gradient(to bottom, #375a7f 0%, #2f4d6d 100%);
     background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00bc8c', endColorstr='#ff00a379', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff375a7f', endColorstr='#ff2f4d6d', GradientType=0);
   }
 }
 /*
@@ -5960,13 +5960,13 @@ fieldset[disabled] .btn-danger.active {
 .list-group-item.active,
 .list-group-item.active:hover,
 .list-group-item.active:focus {
-  text-shadow: 0 -1px 0 #008966;
-  background-image: -webkit-linear-gradient(top, #00bc8c 0%, #009670 100%);
-  background-image: -o-linear-gradient(top, #00bc8c 0%, #009670 100%);
-  background-image: linear-gradient(to bottom, #00bc8c 0%, #009670 100%);
+  text-shadow: 0 -1px 0 #28415b;
+  background-image: -webkit-linear-gradient(top, #375a7f 0%, #2b4764 100%);
+  background-image: -o-linear-gradient(top, #375a7f 0%, #2b4764 100%);
+  background-image: linear-gradient(to bottom, #375a7f 0%, #2b4764 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff00bc8c', endColorstr='#ff009670', GradientType=0);
-  border-color: #009670;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff375a7f', endColorstr='#ff2b4764', GradientType=0);
+  border-color: #2b4764;
 }
 .list-group-item.active .badge,
 .list-group-item.active:hover .badge,
@@ -6175,6 +6175,10 @@ textarea:focus {
 .has-warning .checkbox,
 .has-warning .radio-inline,
 .has-warning .checkbox-inline,
+.has-warning.radio label,
+.has-warning.checkbox label,
+.has-warning.radio-inline label,
+.has-warning.checkbox-inline label,
 .has-warning .form-control-feedback {
   color: #f39c12;
 }
@@ -6192,6 +6196,10 @@ textarea:focus {
 .has-error .checkbox,
 .has-error .radio-inline,
 .has-error .checkbox-inline,
+.has-error.radio label,
+.has-error.checkbox label,
+.has-error.radio-inline label,
+.has-error.checkbox-inline label,
 .has-error .form-control-feedback {
   color: #e74c3c;
 }
@@ -6209,6 +6217,10 @@ textarea:focus {
 .has-success .checkbox,
 .has-success .radio-inline,
 .has-success .checkbox-inline,
+.has-success.radio label,
+.has-success.checkbox label,
+.has-success.radio-inline label,
+.has-success.checkbox-inline label,
 .has-success .form-control-feedback {
   color: #00bc8c;
 }

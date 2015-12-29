@@ -6066,7 +6066,7 @@ fieldset[disabled] .btn-danger.active {
     padding: 8px 12px;
   }
 }
-@media (max-width: 768px - 1) {
+@media (max-width: 767px) {
   .navbar .navbar-nav > li > a {
     margin: 0;
   }
