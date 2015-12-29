@@ -341,23 +341,9 @@ class tadminhtml {
   }
   
   public function buildtable(array $items, array $tablestruct) {
-    $body = '';
-    $admintheme = admintheme::i();
-    $args = new targs();
-    list($head, $tml) = $this->tablestruct($tablestruct, $args);
-    
-    foreach ($items as $id => $item) {
-      $args->add($item);
-      if (!isset($item['id'])) $args->id = $id;
-      
-      //old style, must be removed after review
-      admintheme::$vars['item'] = $item;
-      
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    unset(admintheme::$vars['item']);
-    
-    return $admintheme->gettable($head, $body);
+$tb = new tablebuilder();
+$tb->setstruct($tablestruct);
+return $db->build($items);
   }
   
   public function tableposts(array $items, array $tablestruct) {
@@ -411,26 +397,6 @@ class tadminhtml {
     '$lang.action' => tlocal::i()->$action,
     '$adminurl' => $adminurl
     )));
-  }
-  
-  public function tableprops($item) {
-    $body = '';
-    $lang = tlocal::i();
-    foreach ($item as $k => $v) {
-      if (($k === false) || ($v === false)) continue;
-      
-      if (is_array($v)) {
-        foreach ($v as $kv => $vv) {
-          if ($k2 = $lang->__get($kv)) $kv = $k2;
-          $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $kv, $vv);
-        }
-      } else {
-        if ($k2 = $lang->__get($k)) $k = $k2;
-        $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $k, $v);
-      }
-    }
-    
-    return $this->gettable("<th>$lang->name</th> <th>$lang->property</th>", $body);
   }
   
   public function tablevalues(array $a) {

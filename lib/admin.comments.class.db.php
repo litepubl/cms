@@ -81,7 +81,8 @@ class tadminmoderator extends tadminmenu  {
   public function getinfo($comment) {
     $html = $this->html;
     $lang = tlocal::admin();
-    $result = $html->tableprops(array(
+$tb = new tablebuilder();
+    $result = $tb->props(array(
     'commentonpost' => "<a href=\"$comment->url\">$comment->posttitle</a>",
     'author' => $comment->name,
     'E-Mail' => $comment->email,

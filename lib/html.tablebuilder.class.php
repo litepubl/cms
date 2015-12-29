@@ -116,31 +116,30 @@ $lang->property,
 )
 ));
 
-$items = array();
+    $body = '';
+    $args = $this->args;
+    $admintheme = admintheme::i();
+
     foreach ($props as $k => $v) {
       if (($k === false) || ($v === false)) continue;
       
       if (is_array($v)) {
         foreach ($v as $kv => $vv) {
           if ($k2 = $lang->__get($kv)) $kv = $k2;
-$items[] = array(
-'name' => $kv,
-'value' =>  $vv
-);
+$args->name = $kv;
+$args->value = $vv;
+      $body .= $admintheme->parsearg($this->body, $args);
         }
       } else {
         if ($k2 = $lang->__get($k)) $k = $k2;
-$items[] = array(
-'name' => $k,
-'value' =>  $v
-);
+$args->name = $k;
+$args->value = $v;
+      $body .= $admintheme->parsearg($this->body, $args);
       }
     }
     
-    return $this->build($items);
+    return $admintheme->gettable($this->head, $body);
   }
-
-
 
   public function action($action, $adminurl) {
     $title = tlocal::i()->__get($action);

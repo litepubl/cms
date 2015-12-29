@@ -28,7 +28,8 @@ class tadminservice extends tadminmenu {
       $lang = $this->lang;
       $result .= $html->h3->info;
       $result .= $this->doupdate($_GET);
-      $result .= $html->tableprops(array(
+$tb = new tablebuilder();
+      $result .= $tb->props(array(
       'postscount' => litepublisher::$classes->posts->count,
       'commentscount' =>litepublisher::$classes->commentmanager->count,
       'version' => litepublisher::$site->version

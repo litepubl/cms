@@ -122,18 +122,33 @@ class tadminviews extends tadminmenu {
     
     switch ($this->name) {
       case 'views':
-      $html->addsearch('views');
       $lang->addsearch('views');
       
       $id = tadminhtml::getparam('idview', 0);
       if (!$id || !$views->itemexists($id)) {
         $adminurl = $this->adminurl . 'view';
-        return $html->h4($html->getlink($this->url . '/addview/', $lang->add)) .
-        $html->buildtable($views->items, array(
-        array('left', $lang->name, "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"),
-      array('center', $lang->widgets, "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"),
-        array('center', $lang->delete, "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"),
+        $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
+
+$tb = new tablebuilder();
+$tb->setstruct(array(
+        array(
+ $lang->name,
+ "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
+),
+
+      array(
+ $lang->widgets,
+ "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
+),
+
+        array(
+ $lang->delete,
+ "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
+)
         ));
+
+$result .= $tb->build($views->items);
+return $result;
       }
       
       $result = self::getviewform($this->url);
