@@ -168,9 +168,12 @@ class tfilemerger extends titems {
           if (file_exists($filename)) {
             $s .= $this->readfile($filename);
             $s .= "\n"; //prevent comments
+} else {
+trigger_error(sprintf('The "%s" file not exists', $filename), E_USER_WARNING);
+
           }
-          //else echo "$filename not found<br>\n";
         }
+
         $s .= implode("\n", $items['texts']);
         $savefile =  $this->getfilename($section, $this->revision);
         $realfile= $home . str_replace('/',DIRECTORY_SEPARATOR, $savefile);

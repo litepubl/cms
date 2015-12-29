@@ -14,7 +14,7 @@ $classes->items['tadminmetawidget'][0] = 'admin.widget.meta.class.php';
 $classes->items['addcustomwidget'] = array('admin.widgets.addcustom.class.php', '');
 $classes->save();
 
-tjsmerger::i()->add('default', '/js/litepubl/system/storage.min.js');
+//tjsmerger::i()->add('default', '/js/litepubl/system/storage.min.js');
 
 $m = tadminmenus::i();
 $m->lock();
