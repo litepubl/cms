@@ -169,7 +169,7 @@ class tfilemerger extends titems {
             $s .= $this->readfile($filename);
             $s .= "\n"; //prevent comments
 } else {
-trigger_error(sprintf('The "%s" file not exists', $filename), E_USER_WARNING);
+trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);
 
           }
         }

@@ -36,16 +36,36 @@ class tadmincomusers extends tadminmenu {
     $result .= sprintf($html->h4->itemscount, $from, $from + count($items), $total);
     $adminurl = $this->adminurl;
     $editurl = tadminhtml::getadminlink('/admin/users/', 'id');
-    $result .= $html->buildtable($items, array(
-    array('left', $lang->author, '$name'),
-    array('left', 'E-Mail', '$email'),
-    array('left', $lang->website, '$website'),
-    array('center', $lang->edit, "<a href='$editurl=\$id&action=edit'>$lang->edit</a>"),
-    array('center', $lang->delete, "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"),
+$tb = new tablebuilder();
+$tb->setstruct(array(
+    array(
+$lang->author,
+ '$name'
+),
+
+    array(
+'E-Mail',
+ '$email'
+),
+
+    array(
+ $lang->website,
+ '$website'
+),
+
+    array(
+ $lang->edit,
+ "<a href='$editurl=\$id&action=edit'>$lang->edit</a>"
+),
+
+    array(
+ $lang->delete,
+ "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"
+)
     ));
-    
-    $theme = ttheme::i();
-    $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage));
+ 
+    $result .= $tb->build($items);
+    $result .= $this->view->theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage));
     return $result;
   }
   
