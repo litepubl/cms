@@ -82,12 +82,13 @@ class tadminsubscribers extends tadminform {
     tposts::i()->loaditems($items);
     $args->default_subscribe = tuseroptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
     $args->formtitle = tusers::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
-    $result .= $html->adminform('[checkbox=default_subscribe]' .
-    $table = $html->tableposts($items, array(
-    array('left', $lang->post, '<a href="$site.url$post.url" title="$post.title">$post.title</a>')
+
+$tb = new tablebuilder();
+$tb->setposts(array(
+    array($lang->post, '<a href="$site.url$post.url" title="$post.title">$post.title</a>')
     )), $args);
-    
-    return $html->fixquote($result);
+
+return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items)), $args);
   }
   
   public function processform() {

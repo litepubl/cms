@@ -78,16 +78,19 @@ class tadminposts extends tadminmenu {
     $lang = tlocal::admin();
     $form = new  adminform(new targs());
     $form->items =$html->getitemscount($from, $from + count($items), $count);
-    $form->items .= $html->tableposts($items, array(
+
+$tb = new tablebuilder();
+$tb->setposts(array(
     array('center', $lang->date, '$post.date'),
-    array('left', $lang->posttitle, '$post.bookmark'),
-    array('left', $lang->category, '$post.category'),
-    array('left', $lang->status, '$poststatus.status'),
-    array('center', $lang->edit, '<a href="' . tadminhtml::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'),
-    array('center', $lang->delete, "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"),
+    array($lang->posttitle, '$post.bookmark'),
+    array($lang->category, '$post.category'),
+    array($lang->status, '$poststatus'),
+    array($lang->edit, '<a href="' . tadminhtml::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'),
+    array($lang->delete, "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"),
     ));
     
-    $form->items .= $html->div(
+    $form->items .= $tb->build($items);
+    $form->items .= $form->centergroup(
     '[button=publish]
     [button=setdraft]
     [button=delete]');

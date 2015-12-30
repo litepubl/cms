@@ -279,12 +279,3 @@ class tposteditor extends tadminmenu {
   }
   
 }//class
-
-class poststatus {
-  public function __get($name) {
-    $post = ttheme::$vars['post'];
-  $value = $post->{$name};
-    $lang = tlocal::i();
-  return $lang->{$value};
-  }
-}

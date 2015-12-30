@@ -43,18 +43,22 @@ class tadmintickets extends tadminmenu {
     $result .=$html->editlink();
     $result .=$html->getitemscount($from, $from + count($items), $count);
     
-    ttheme::$vars['poststatus'] = new poststatus();
-    $table = $html->tableposts($items, array(
+$tb = new tablebuilder();
+$tb->setposts(array(
     array('center', $lang->date, '$post.date'),
     array('left', $lang->posttitle, '$post.bookmark'),
     array('left', $lang->author, '$post.authorlink'),
-    array('left', $lang->status, '$poststatus.status'),
+    array($lang->status, '$poststatus'),
     array('left', $lang->category, '$post.category'),
-    array('left', $lang->state, '$poststatus.state'),
+    array($lang->state, function(tablebuilder $t) {
+return tlocal::i()->__get(basetheme::$vars['post']->state);
+}),
+
     array('center', $lang->edit, '<a href="' . tadminhtml::getadminlink('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'),
     ));
-    
-    unset(ttheme::$vars['poststatus']);
+
+$table = $tb->build($items);    
+
     //wrap form
     if (litepublisher::$options->group != 'ticket') {
       $args = new targs();

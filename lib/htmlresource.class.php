@@ -346,43 +346,6 @@ $tb->setstruct($tablestruct);
 return $db->build($items);
   }
   
-  public function tableposts(array $items, array $tablestruct) {
-    $body = '';
-    $head = $this->tableposts_head;
-    $tml = $this->tableposts_item;
-    
-    foreach ($tablestruct as $item) {
-      if (!$item || !count($item)) continue;
-      
-      $align = $item[0] ? $item[0] : 'left';
-      $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
-      
-      if (is_string($item[2])) {
-        $tml .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
-      } else {
-        // special case for callback. Add new prop to template vars
-        $tableprop = tableprop::i();
-        $propname = $tableprop->addprop($item[2]);
-        admintheme::$vars['tableprop'] = $tableprop;
-        $tml .= sprintf('<td align="%s">$tableprop.%s</td>', $item[0], $propname);
-      }
-    }
-    
-    $tml .= '</tr>';
-    
-    $admintheme = admintheme::i();
-    $args = new targs();
-    
-    foreach ($items as $id) {
-      $post = tpost::i($id);
-      admintheme::$vars['post'] = $post;
-      $args->id = $id;
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    
-    return $admintheme->gettable($head, $body);
-  }
-  
   public function getitemscount($from, $to, $count) {
     return sprintf($this->h4->itemscount, $from, $to, $count);
   }

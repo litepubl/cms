@@ -99,7 +99,19 @@ class tablebuilder {
   }
   
   public function setowner(titems $owner) {
-    $this->addcallback('$temp' . count($this->callbacks), array($this, 'titems_callback'), $owner);
+    $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'titems_callback'), $owner);
+  }
+
+public function posts_callback(tablebuilder $self) {
+$post = tpost::i($self->id);
+basetheme::$vars['post'] = $post;
+$self->args->poststatus = tlocal::i()->__get($post->status);
+}
+
+  public function setposts(array $struct) {
+array_unshift($struct, self::checkbox('checkbox'));
+$this->setstruct($struct);
+    $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'posts_callback'), false);
   }
 
   public function props(array $props) {
