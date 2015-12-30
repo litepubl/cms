@@ -7,6 +7,9 @@ $editor = [<div class="form-group"><label for="editor-$name">$lang.$name:</label
 $text = [<div class="form-group"><label for="text-$name">$lang.$name</label>
 <input type="text" class="form-control" name="$name" id="text-$name" value="$value" /></div>]
 
+$email = [<div class="form-group"><label for="text-$name">E-Mail</label>
+<input type="email" class="form-control" name="$name" id="text-$name" value="$value" autocapitalize="off" autocorrect="off" autocomplete="on" /></div>]
+
 $password = [<div class="form-group"><label for="password-$name">$lang.$name</label>
 <input type="password" class="form-control" name="$name" id="password-$name" value="$value" /></div>]
 

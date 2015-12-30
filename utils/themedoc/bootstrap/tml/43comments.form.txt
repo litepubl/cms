@@ -10,7 +10,7 @@ content.post.templatecomments.form = [
     </div>
     <div class="form-group">
         <label for="text-email">$lang.email</label>
-        <input type="text" class="form-control" name="email" id="text-email" value="$email" />
+        <input type="email" class="form-control" name="email" id="text-email" value="$email" autocapitalize="off" autocorrect="off" autocomplete="on" />
     </div>
 
     <div class="form-group">

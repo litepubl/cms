@@ -669,7 +669,7 @@ content.post.templatecomments.form = [
     </div>
     <div class="form-group">
         <label for="text-email">$lang.email</label>
-        <input type="text" class="form-control" name="email" id="text-email" value="$email" />
+        <input type="email" class="form-control" name="email" id="text-email" value="$email" autocapitalize="off" autocorrect="off" autocomplete="on" />
     </div>
 
     <div class="form-group">
@@ -1158,6 +1158,9 @@ $editor = [<div class="form-group"><label for="editor-$name">$lang.$name:</label
 $text = [<div class="form-group"><label for="text-$name">$lang.$name</label>
 <input type="text" class="form-control" name="$name" id="text-$name" value="$value" /></div>]
 
+$email = [<div class="form-group"><label for="text-$name">E-Mail</label>
+<input type="email" class="form-control" name="$name" id="text-$name" value="$value" autocapitalize="off" autocorrect="off" autocomplete="on" /></div>]
+
 $password = [<div class="form-group"><label for="password-$name">$lang.$name</label>
 <input type="password" class="form-control" name="$name" id="password-$name" value="$value" /></div>]
 
@@ -1195,6 +1198,9 @@ $items
 Шаблон admin предназначен длягенерации форм в админке. Перечислим их
 
 $text - шаблон однострочного редактора
+$email - шаблон email, используется на странице авторизации и восстановления пароля
+$password - шаблон пароля, испльзуется на страницах авторизации
+$upload - кнопка загрузки файлов
 $editor - шаблон многострочного редактора
 $checkbox - шаблон чекбокса
 $combo - шаблон комбобокса
