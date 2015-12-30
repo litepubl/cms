@@ -76,12 +76,15 @@ class tadmingroups extends tadminmenu {
       break;
     }
     
-    $result .= $html->h4->grouptable;
-    $result .= $html->buildtable($groups->items, array(
-    array('left', $lang->name, '<a href="' . $adminurl . '=$id&action=edit" title="$title">$title</a>'),
-    array('left', $lang->users, sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/', 'idgroup=$id'), $lang->users)),
-    $html->get_table_link('delete', $adminurl)
+$tb = new tablebuilder();
+$tb->setstruct(array(
+    array($lang->name, '<a href="' . $adminurl . '=$id&action=edit" title="$title">$title</a>'),
+    array($lang->users, sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/', 'idgroup=$id'), $lang->users)),
+    $tb->action('delete', $adminurl)
     ));
+
+    $result .= $html->h4->grouptable;
+    $result .= $tb->build($groups->items);
     return $result;
   }
   

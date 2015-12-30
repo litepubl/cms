@@ -350,18 +350,6 @@ return $db->build($items);
     return sprintf($this->h4->itemscount, $from, $to, $count);
   }
   
-  public function get_table_item($name) {
-    return array('left', tlocal::i()->$name, "\$$name");
-  }
-  
-  public function get_table_link($action, $adminurl) {
-    return array('left', tlocal::i()->$action, strtr($this->actionlink , array(
-    '$action' => $action,
-    '$lang.action' => tlocal::i()->$action,
-    '$adminurl' => $adminurl
-    )));
-  }
-  
   public function tablevalues(array $a) {
     $body = '';
     foreach ($a as $k => $v) {
