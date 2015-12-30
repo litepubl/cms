@@ -45,7 +45,7 @@ function tadminmenusInstall($self) {
   $views = $self->createitem(0, 'views', 'admin', 'tadminviews');
   {
     $self->createitem($views, 'addview', 'admin', 'tadminviews');
-    $self->createitem($views, 'themes', 'admin', 'tadminthemes');
+    //$self->createitem($views, 'themes', 'admin', 'tadminthemes');
     $self->createitem($views, 'widgets', 'admin', 'tadminwidgets');
     $self->createitem($views, 'addcustom', 'admin', 'addcustomwidget');
     $self->createitem($views, 'group', 'admin', 'tadminviewsgroup');
