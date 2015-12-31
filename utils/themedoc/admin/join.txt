@@ -13,7 +13,9 @@ tml/12inline.txt
 ru/12inline.txt
 tml/13calendar.txt
 ru/13calendar.txt
-tml/12radiogroup.txt
-ru/12radiogroup.txt
-tml/13addwidgets.txt
-ru/13addwidgets.txt
+tml/14daterange.txt
+ru/14daterange.txt
+tml/15radiogroup.txt
+ru/15radiogroup.txt
+tml/16addwidgets.txt
+ru/16addwidgets.txt

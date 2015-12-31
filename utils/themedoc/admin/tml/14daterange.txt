@@ -1,0 +1,3 @@
+daterange = [
+<div class="form-inline date-range">%s</div>
+]
