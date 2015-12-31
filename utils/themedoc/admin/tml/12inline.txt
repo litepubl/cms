@@ -1,0 +1,3 @@
+inline = [
+   <div class="form-inline">$content</div>
+]

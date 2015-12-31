@@ -1,0 +1,6 @@
+calendar = [
+<div class="calendar">
+<div class="calendar-title">$title</div>
+$input
+</div>
+]

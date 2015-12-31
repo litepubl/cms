@@ -195,10 +195,6 @@ class tadminhtml {
     return $this->parsearg(ttheme::i()->templates['content.admin.form'], $args);
   }
   
-  public function inline($s) {
-    return sprintf($this->ini['common']['inline'], $s);
-  }
-  
   public function getupload($name) {
     return $this->getinput('upload', $name, '', '');
   }

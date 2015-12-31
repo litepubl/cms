@@ -10,33 +10,40 @@ class adminform {
   public$title;
   public $before;
   public $items;
+  public $submit;
+public $inline;
+
+//attribs for <form>
   public $action;
   public $method;
   public $enctype;
   public $id;
   public $class;
   public $target;
-  public $submit;
-  public $inlineclass;
-  
+
   public function __construct($args = null) {
     $this->args = $args;
     $this->title = '';
     $this->before = '';
     $this->items = '';
+    $this->submit = 'update';
+$this->inline = false;
+
     $this->action = '';
     $this->method = 'post';
     $this->enctype = '';
     $this->id = '';
     $this->class = '';
     $this->target = '';
-    $this->submit = 'update';
-    $this->inlineclass = 'form-inline';
   }
   
-  public function line($s) {
-    return "<div class=\"$this->inlineclass\">$s</div>";
+  public function line($content) {
+    return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
   }
+
+public function getadmintheme() {
+return admintheme::i();
+}
   
   public function __set($k, $v) {
     switch ($k) {
@@ -49,15 +56,11 @@ class adminform {
         $this->submit = 'update';
       }
       break;
-      
-      case 'inline':
-      $this->class = $v ? $this->inlineclass : '';
-      break;
-    }
+   }
   }
   
   public function centergroup($buttons) {
-    return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+    return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
   }
   
   public function hidden($name, $value) {
@@ -87,10 +90,15 @@ class adminform {
     }
     
     $result .= "<form $attr>";
+
+if ($this->inline) {
+$result .= $this->line($this->items . ($this->submit ? "[button=$this->submit]" : ''));
+} else {
     $result .= $this->items;
     if ($this->submit) {
-      $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+      $result .= "[submit=$this->submit]";
     }
+}
     
     $result .= "\n</form>\n</div>\n";
     return $result;
