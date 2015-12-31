@@ -75,7 +75,7 @@ cd ..\admin
 %mini%uploader.html.js --js_output_file=uploader.html.min.js
 %mini%widgets.add.js --js_output_file=widgets.add.min.js
 cd css
-%css% admin.views.css -o admin.views.min.css
+%css% calendar.css -o calendar.min.css
 %css% fileman.css -o fileman.min.css
 cd ..\..\deprecated
 %mini%fileman.templates.js --js_output_file=fileman.templates.min.js

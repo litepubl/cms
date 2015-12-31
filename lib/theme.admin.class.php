@@ -39,5 +39,25 @@ class admintheme extends basetheme {
     '$content' => $content
     ));
   }
-  
+
+public function getcalendar($name, $date) {
+$format = 'd.m.Y';
+    $date = cleandate($date, $format);
+
+$args = new targs();
+$args->name = $name;
+$args->title = tlocal::i()->__get($name);
+$args->format = $format;
+
+if ($date) {
+$args->date = date($format, $date);
+$args->time = date('H:i', $date);
+} else {
+$args->date = '';
+$args->time = '';
+}
+
+return $this->parsearg($this->templates['calendar'], $args);
+}
+
 }//class
