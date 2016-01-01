@@ -63,7 +63,11 @@
     },
     
     setprogress: function(current, total) {
+if (current&& total) {
       this.setpercent(Math.ceil((current / total) * 100));
+} else {
+      this.setpercent(0);
+}
     },
     
     hideprogress: function() {

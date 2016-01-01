@@ -86,7 +86,7 @@ class tadminhtml {
         }
         
         if ($type == 'calendar') {
-          $tag = $this->getcalendar($name, $args->data[$varname]);
+          $tag = admintheme::i()->getcalendar($name, $args->data[$varname]);
         } else {
           $tag = strtr($theme->templates["content.admin.$type"], array(
           '$name' => $name,
@@ -242,33 +242,6 @@ class tadminhtml {
     return $this->getinput('combo', $name, $value, $title);
   }
   
-  public function cleandate($date) {
-    if (is_numeric($date)) {
-      $date = (int) $date;
-    } else if ($date == '0000-00-00 00:00:00') {
-      $date = 0;
-    } elseif ($date == '0000-00-00') {
-      $date = 0;
-    } elseif (trim($date)) {
-      $date = strtotime($date);
-    } else {
-      $date = 0;
-    }
-    
-    return $date;
-  }
-  
-  public function getcalendar($name, $date) {
-    $date = $this->cleandate($date);
-    $lang = tlocal::i();
-    $controls = $this->getinput('text', $name, $date? date('d.m.Y', $date) : '', $lang->date);
-    $controls .= $this->getinput('text', "$name-time", $date ?date('H:i', $date) : '', $lang->time);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-$name", '', $lang->calendar));
-    
-    return sprintf($this->ini['common']['calendar'], $lang->__get($name), $this->inline($controls));
-  }
-  
   public function getdaterange($from, $to) {
     $from = $this->cleandate($from);
     $to = $this->cleandate($to);
@@ -282,17 +255,6 @@ class tadminhtml {
     $this->getinput('button', "calendar-to", '', $lang->calendar));
     
     return sprintf($this->ini['common']['daterange'], $controls);
-  }
-  
-  public static function getdatetime($name) {
-    if (!empty($_POST[$name]) && @sscanf(trim($_POST[$name]), '%d.%d.%d', $d, $m, $y)) {
-      $h = 0;
-      $min  = 0;
-      if (!empty($_POST[$name . '-time'])) @sscanf(trim($_POST[$name . '-time']), '%d:%d', $h, $min);
-      return mktime($h,$min,0, $m, $d, $y);
-    }
-    
-    return 0;
   }
   
   public static function datestr($date) {

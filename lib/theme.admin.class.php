@@ -41,16 +41,16 @@ class admintheme extends basetheme {
   }
 
 public function getcalendar($name, $date) {
-    $date = datefilter::clean($date);
+    $date = datefilter::timestamp($date);
 
 $args = new targs();
 $args->name = $name;
 $args->title = tlocal::i()->__get($name);
-$args->format = dateutil::$format;
+$args->format = datefilter::$format;
 
 if ($date) {
-$args->date = date(dateutil::$format, $date);
-$args->time = date(dateutil::$timeformat, $date);
+$args->date = date(datefilter::$format, $date);
+$args->time = date(datefilter::$timeformat, $date);
 } else {
 $args->date = '';
 $args->time = '';

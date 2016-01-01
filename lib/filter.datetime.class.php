@@ -6,7 +6,7 @@ class datefilter {
 public static $format = 'd.m.Y';
 public static $timeformat = 'H:i';
 
-public static function clean($date, $format = false) {
+public static function timestamp($date, $format = false) {
     if (is_numeric($date)) {
       $date = (int) $date;
     } else if ($date == '0000-00-00 00:00:00') {
@@ -31,6 +31,7 @@ if (version_compare(PHP_VERSION, '5.3', '>=')) {
 if (!$format) $format = self::$format;
     $d = DateTime::createFromFormat($format, $date);
 if ($d && $d->format($format) == $date) {
+echo $d->format('r');
 return $d->getTimestamp() + self::gettime($name . '-time');
 }
 } else {
@@ -42,7 +43,7 @@ if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
     return 0;
   }
 
-public function gettime($name) {
+public static function gettime($name) {
 $result = 0;
       if (!empty($_POST[$name] && ($time = trim($_POST[$name])))) {
 if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {

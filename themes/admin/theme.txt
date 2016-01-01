@@ -135,6 +135,46 @@ centergroup = [
  Следующий шаблон - группа радиокнопок
 */
 
+inline = [
+   <div class="form-inline">$content</div>
+]
+
+/*
+Шаблон является контейнером для выстраивания контролов в одну строку и содержит всего один тег $content - содержание для выравнивание в одну строку. Теоритичиски можно было бы обойтись шаблоном для соответствуюего класса (здесь это form-inline), но вероятно для других тем потребуется более сложный html
+*/
+
+calendar = [
+<div class="calendar">
+<div class="calendar-title">$title</div>
+<div class="form-inline">
+
+<div class="form-group"><label for="text-$name">$lang.date</label>
+<input type="date" class="form-control date-edit" name="$name" id="text-$name" value="$date" data-format="$format" /></div>
+
+<div class="form-group"><label for="text-$name">$lang.time</label>
+<input type="time" class="form-control time-edit" name="$name-time" id="text-$name" value="$time" /></div>
+
+<button type="button" id="calendar-$name" class="btn btn-default">
+<span class="fa fa-calendar text-success"></span>
+$lang.calendar
+</button>
+
+</div>
+</div>
+]
+
+/*
+Шаблон для ввода даты/времени. Шаблон не является календарем - календарь организуется через javascript, например из библиотеки jquery ui. Этот шаблон всего лишь показывает в одной строке заголовок, поле ввода и кнопку для вызова календаря.
+*/
+
+daterange = [
+<div class="form-inline date-range">%s</div>
+]
+
+/*
+Шаблон предназначен для ввода диапазона дат от и до
+*/
+
 radiogroup = [
 <div class="btn-group" data-toggle="buttons">
     $button = [

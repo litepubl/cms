@@ -315,7 +315,7 @@ class baseparser extends tevents {
         if (isset($this->paths[$name])) {
           $this->theme->templates[$name] = $value;
         } else {
-          $this->error("The '$name' tag not found. Content \n$s");
+          $this->error("The '$name' tag not found. Content \n$value");
         }
       }
       

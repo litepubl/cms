@@ -24,7 +24,7 @@ function tcssmergerInstall($self) {
   
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
-  $self->add($section, '/js/litepubl/common/css/form-inline.min.css');
+  $self->add($section, '/js/litepubl/common/css/form.inline.min.css');
   
   $list = tcssmerger_bootstrap_files ($self);
   foreach ($list as $filename) {

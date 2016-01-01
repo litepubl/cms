@@ -8,8 +8,17 @@ $classes->save();
 $m = tadminmenus::i();
 $m->deleteurl('/admin/views/themes/');
 
-tcssmerger::i()->replacefile('admin'
+$css = tcssmerger::i();
+$css->lock();
+$css->replacefile('admin', 
 '/js/litepubl/admin/css/calendar.css',
 '/js/litepubl/admin/css/calendar.min.css'
 );
+
+$css->replacefile('default',
+'/js/litepubl/common/css/form-inline.min.css',
+'/js/litepubl/common/css/form.inline.min.css'
+);
+
+$css->unlock();
 }
