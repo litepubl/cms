@@ -4,6 +4,7 @@
 
 class datefilter {
 public static $format = 'd.m.Y';
+public static $timeformat = 'H:i';
 
 public static function clean($date, $format = false) {
     if (is_numeric($date)) {
@@ -21,7 +22,7 @@ public static function clean($date, $format = false) {
     return $date;
   }
 
-public static function extract($name, $format = false) {
+public static function getdate($name, $format = false) {
 if (empty($_POST[$name])) return 0;
 $date = trim($_POST[$name]);
 if (!$date) return 0;
@@ -30,18 +31,18 @@ if (version_compare(PHP_VERSION, '5.3', '>=')) {
 if (!$format) $format = self::$format;
     $d = DateTime::createFromFormat($format, $date);
 if ($d && $d->format($format) == $date) {
-return $d->getTimestamp() + self::timepost($name . '-time');
+return $d->getTimestamp() + self::gettime($name . '-time');
 }
 } else {
 if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
-      return mktime(0, 0, 0, $m, $d, $y) + self::timepost($name . '-time');
+      return mktime(0, 0, 0, $m, $d, $y) + self::gettime($name . '-time');
     }
 }
     
     return 0;
   }
 
-public function timepost($name) {
+public function gettime($name) {
 $result = 0;
       if (!empty($_POST[$name] && ($time = trim($_POST[$name])))) {
 if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
