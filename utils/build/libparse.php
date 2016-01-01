@@ -184,6 +184,7 @@ makekernel($dir, 'kernel.admin.php',  array(
 'html.tag.class.php',
 'html.autoform.class.php',
 'html.tablebuilder.class.php',
+'filter.datetime.class.php',
 'admin.posteditor.ajax.class.php',
 'admin.posteditor.class.php',
 ));

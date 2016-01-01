@@ -15,22 +15,6 @@ function sqltime($date = 0) {
   return date('Y-m-d H:i:s', $date);
 }
 
-  function cleandate($date, $format = 'd.m.Y') {
-    if (is_numeric($date)) {
-      $date = (int) $date;
-    } else if ($date == '0000-00-00 00:00:00') {
-      $date = 0;
-    } elseif ($date == '0000-00-00') {
-      $date = 0;
-    } elseif ($date = trim($date)) {
-      $date = strtotime($date);
-    } else {
-      $date = 0;
-    }
-    
-    return $date;
-  }
-
 function dbquote($s) {
   return litepublisher::$db->quote($s);
 }
