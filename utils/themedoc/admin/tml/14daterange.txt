@@ -1,5 +1,22 @@
 daterange = [
-<div class="form-inline date-range">
+<div class="form-inline date-range section">
+    <div class="form-group">
+        <label for="text-from">$lang.from</label>
+        <input type="date" name="from" class="form-control date-edit tooltip-toggle" id="text-from" value="$from" title="$lang.tipdate" data-format="$format" />
+    </div>
+
+    <button type="button" id="calendar-from" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
+        <span class="fa fa-calendar text-success"></span>
+    </button>
+
+    <div class="form-group">
+        <label for="text-to">$lang.to</label>
+        <input type="date" name="to" class="form-control date-edit tooltip-toggle" id="text-to" value="$to" title="$lang.tipdate" data-format="$format" />
+    </div>
+
+    <button type="button" id="calendar-to" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
+        <span class="fa fa-calendar text-success"></span>
+    </button>
 
 </div>
 ]

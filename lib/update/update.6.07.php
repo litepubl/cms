@@ -21,4 +21,8 @@ $css->replacefile('default',
 );
 
 $css->unlock();
+
+$t = ttemplate::i();
+$t->footer = str_replace('2015', '2016', $t->footer);
+$t->save();
 }

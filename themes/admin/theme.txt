@@ -131,8 +131,6 @@ centergroup = [
 
 /*
 Шаблон содержит один тег $buttons - это кнопки. Должно получиться: несколько кнопок в одной строке выравнены по центру. Применяется в формах, где несколько кнопок в конце формы, чтобы выровнять их по центру.
- 
- Следующий шаблон - группа радиокнопок
 */
 
 inline = [
@@ -140,39 +138,78 @@ inline = [
 ]
 
 /*
-Шаблон является контейнером для выстраивания контролов в одну строку и содержит всего один тег $content - содержание для выравнивание в одну строку. Теоритичиски можно было бы обойтись шаблоном для соответствуюего класса (здесь это form-inline), но вероятно для других тем потребуется более сложный html
+Шаблон является контейнером для выстраивания контролов в одну строку и содержит всего один тег $content - содержание для выравнивание в одну строку. Теоритичиски можно было бы обойтись шаблоном для соответствующего класса (здесь это form-inline), но вероятно для других тем потребуется более сложный html
 */
 
 calendar = [
-<div class="calendar">
-<div class="calendar-title">$title</div>
-<div class="form-inline">
+<div class="calendar section">
+    <div class="calendar-title">$title</div>
+    <div class="form-inline">
 
-<div class="form-group"><label for="text-$name">$lang.date</label>
-<input type="date" class="form-control date-edit" name="$name" id="text-$name" value="$date" data-format="$format" /></div>
+        <div class="form-group">
+            <label for="text-$name">$lang.date</label>
+            <input type="date" name="$name" class="form-control date-edit tooltip-toggle" id="text-$name" value="$date" title="$lang.tipdate" data-format="$format" />
+        </div>
 
-<div class="form-group"><label for="text-$name">$lang.time</label>
-<input type="time" class="form-control time-edit" name="$name-time" id="text-$name" value="$time" /></div>
+        <div class="form-group">
+            <label for="text-$name-time">$lang.time</label>
+            <input type="time" name="$name-time" class="form-control time-edit tooltip-toggle" id="text-$name-time" value="$time" title="$lang.tiptime" />
+        </div>
 
-<button type="button" id="calendar-$name" class="btn btn-default">
-<span class="fa fa-calendar text-success"></span>
-$lang.calendar
-</button>
+        <button type="button" id="calendar-$name" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
+            <span class="fa fa-calendar text-success"></span>
+        </button>
 
-</div>
+    </div>
 </div>
 ]
 
 /*
-Шаблон для ввода даты/времени. Шаблон не является календарем - календарь организуется через javascript, например из библиотеки jquery ui. Этот шаблон всего лишь показывает в одной строке заголовок, поле ввода и кнопку для вызова календаря.
+Шаблон для ввода даты и времени. Шаблон не является календарем - календарь организуется через javascript, например из библиотеки jquery ui. Этот шаблон всего лишь показывает в одной строке заголовок, поле ввода и кнопку для вызова календаря. В шаблоне следующие теги:
+
+$title - заголовок
+$name - имя контрола
+$date - дата , может быть пустой строкой
+$time - время, может быть пустой строкой
+$format - формат даты, по умолчанию это строка "d.m.Y", то есть в формате для функции php date. На сегодня это значение вставлено в атрибут data-format и никак не используется, сделан задел на будущее.
+
+Дляобслуживания кнопки вызова календаря используется скрипт js/litepubl/admin/calendar.js, который в свою очердь исползует jquery ui библиотеку
+
+На php есть короткий способ использования шаблона admintheme::i()->getcalendar($name, $date);
 */
 
 daterange = [
-<div class="form-inline date-range">%s</div>
+<div class="form-inline date-range section">
+    <div class="form-group">
+        <label for="text-from">$lang.from</label>
+        <input type="date" name="from" class="form-control date-edit tooltip-toggle" id="text-from" value="$from" title="$lang.tipdate" data-format="$format" />
+    </div>
+
+    <button type="button" id="calendar-from" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
+        <span class="fa fa-calendar text-success"></span>
+    </button>
+
+    <div class="form-group">
+        <label for="text-to">$lang.to</label>
+        <input type="date" name="to" class="form-control date-edit tooltip-toggle" id="text-to" value="$to" title="$lang.tipdate" data-format="$format" />
+    </div>
+
+    <button type="button" id="calendar-to" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
+        <span class="fa fa-calendar text-success"></span>
+    </button>
+
+</div>
 ]
 
 /*
-Шаблон предназначен для ввода диапазона дат от и до
+Шаблон предназначен для ввода диапазона дат от и до 	и имеет следующие теги:
+
+$from - дата от, может быть бустой строкой
+$to - дата до, может быть пустой строкой
+$format - формат даты, смотрите комментарий к шаблону calendar
+Дляобслуживания кнопки вызова календаря используется скрипт js/litepubl/admin/calendar.js, который в свою очердь исползует jquery ui библиотеку
+
+На php есть короткий способ использования шаблона admintheme::i()->getdaterange($from, $to);
 */
 
 radiogroup = [
