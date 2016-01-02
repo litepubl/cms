@@ -100,9 +100,13 @@ $result .= $this->line($this->items . ($this->submit ? "[button=$this->submit]" 
     }
 }
     
-    $result .= "\n</form>\n</div>\n";
-    return $result;
-  }
+
+    return strtr($this->getadmintheme()->templates['form'], array(
+'$title' => $title,
+'$before' => $this->before,
+'attr' => $attr,
+'$body' => $body,
+));  }
   
   public function get() {
     return tadminhtml::i()->parsearg($this->gettml(), $this->args);

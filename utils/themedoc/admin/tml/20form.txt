@@ -1,0 +1,9 @@
+form = [
+<div class="form-holder">
+    $title = [<h4>$title</h4>]
+    $before
+    <form $attr>
+        $body
+    </form>
+</div>
+]
