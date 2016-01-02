@@ -3,10 +3,11 @@
 // namespace litepubl\admin;
 
 class datefilter {
+//only date without time
 public static $format = 'd.m.Y';
 public static $timeformat = 'H:i';
 
-public static function timestamp($date, $format = false) {
+public static function timestamp($date) {
     if (is_numeric($date)) {
       $date = (int) $date;
     } else if ($date == '0000-00-00 00:00:00') {
@@ -31,7 +32,7 @@ if (version_compare(PHP_VERSION, '5.3', '>=')) {
 if (!$format) $format = self::$format;
     $d = DateTime::createFromFormat($format, $date);
 if ($d && $d->format($format) == $date) {
-echo $d->format('r');
+$d->setTime(0, 0, 0);
 return $d->getTimestamp() + self::gettime($name . '-time');
 }
 } else {

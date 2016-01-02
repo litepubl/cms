@@ -3,15 +3,18 @@ calendar = [
 <div class="calendar-title">$title</div>
 <div class="form-inline">
 
-<div class="form-group"><label for="text-$name">$lang.date</label>
-<input type="date" class="form-control date-edit" name="$name" id="text-$name" value="$date" data-format="$format" /></div>
+<div class="form-group">
+<label for="text-$name">$lang.date</label>
+<input type="date" name="$name" class="form-control date-edit tooltip-toggle" id="text-$name" value="$date" title="$lang.tipdate" data-format="$format" />
+</div>
 
-<div class="form-group"><label for="text-$name">$lang.time</label>
-<input type="time" class="form-control time-edit" name="$name-time" id="text-$name" value="$time" /></div>
+<div class="form-group">
+<label for="text-$name">$lang.time</label>
+<input type="time" name="$name-time" class="form-control time-edit tooltip-toggle" id="text-$name-time" value="$time" title="$lang.tiptime" />
+</div>
 
-<button type="button" id="calendar-$name" class="btn btn-default">
+<button type="button" id="calendar-$name" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
 <span class="fa fa-calendar text-success"></span>
-$lang.calendar
 </button>
 
 </div>

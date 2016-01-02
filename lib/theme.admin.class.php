@@ -59,4 +59,16 @@ $args->time = '';
 return $this->parsearg($this->templates['calendar'], $args);
 }
 
+  public function getdaterange($from, $to) {
+    $from = datefilter::timestamp($from);
+    $to = datefilter::timestamp($to);
+
+$args = new targs();
+$args->from = $from ? date(datefilter::$format, $from) : '';
+$args->to = $to ? date(datefilter::$format, $to) : '';
+$args->format = datefilter::$format;
+
+return $this->parsearg($this->templates['daterange'], $args);
+  }
+
 }//class

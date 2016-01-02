@@ -242,21 +242,6 @@ class tadminhtml {
     return $this->getinput('combo', $name, $value, $title);
   }
   
-  public function getdaterange($from, $to) {
-    $from = $this->cleandate($from);
-    $to = $this->cleandate($to);
-    $lang = tlocal::i();
-    $controls = $this->getinput('text', 'from', $from ? date('d.m.Y', $from) : '', $lang->from);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-from", '', $lang->calendar));
-    
-    $controls .= $this->getinput('text', 'to', $to ? date('d.m.Y', $to) : '', $lang->to);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-to", '', $lang->calendar));
-    
-    return sprintf($this->ini['common']['daterange'], $controls);
-  }
-  
   public static function datestr($date) {
     if ($date == '0000-00-00 00:00:00') return tlocal::i()->noword;
     return tlocal::date(strtotime($date),'d F Y');
