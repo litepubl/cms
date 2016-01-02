@@ -1159,7 +1159,7 @@ $text = [<div class="form-group"><label for="text-$name">$lang.$name</label>
 <input type="text" class="form-control" name="$name" id="text-$name" value="$value" /></div>]
 
 $email = [<div class="form-group"><label for="text-$name">E-Mail</label>
-<input type="email" class="form-control" name="$name" id="text-$name" value="$value" autocapitalize="off" autocorrect="off" autocomplete="on" /></div>]
+<input type="email" class="form-control" name="$name" value="$value" autocapitalize="off" autocorrect="off" autocomplete="on" /></div>]
 
 $password = [<div class="form-group"><label for="password-$name">$lang.$name</label>
 <input type="password" class="form-control" name="$name" id="password-$name" value="$value" /></div>]
@@ -1198,7 +1198,7 @@ $items
 Шаблон admin предназначен длягенерации форм в админке. Перечислим их
 
 $text - шаблон однострочного редактора
-$email - шаблон email, используется на странице авторизации и восстановления пароля
+$email - шаблон email, используется на странице авторизации и восстановления пароля. Обратите внимание на то, что у этого шаблона нет id в input - на странице авторизации 2 раза используется шаблон с name="email" и чтобы поддержать валидность html был удален id
 $password - шаблон пароля, испльзуется на страницах авторизации
 $upload - кнопка загрузки файлов
 $editor - шаблон многострочного редактора
