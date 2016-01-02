@@ -92,6 +92,7 @@ class tadminlogin extends tadminform {
   }
   
   public function getcontent() {
+$theme = tview::getview($this)->theme;
     $result = $this->widget;
     $result = str_replace('&amp;backurl=', '&backurl=', $result);
     if (!empty($_GET['backurl'])) {
@@ -105,22 +106,21 @@ class tadminlogin extends tadminform {
       $result = str_replace('%3Fbackurl%3D', '', $result);
     }
     
-    $html = $this->html;
     $args = new targs();
     if (litepublisher::$options->usersenabled && litepublisher::$options->reguser) {
       $lang = tlocal::admin('users');
       $form = new  adminform($args);
+      $form->title = $lang->regform;
+
       $form->action = litepublisher::$site->url . '/admin/reguser/';
       if (!empty($_GET['backurl'])) {
         $form->action .= '?backurl=' . urlencode($_GET['backurl']);
       }
-      $form->title = $lang->regform;
-      $args->email = '';
-      $args->name = '';
-      $form->items = '[text=email] [text=name]';
+
+      $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
+      $form->body .= $theme->getinput('text', 'name', '', $lang->name);
       $form->submit = 'signup';
-      //fix id text-email
-      $result .= str_replace('text-email', 'reg-email', $form->get());
+    $result .= $form->get();
     }
     
     $lang = tlocal::admin('login');
@@ -129,7 +129,7 @@ class tadminlogin extends tadminform {
     $args->email = !empty($_POST['email']) ? strip_tags($_POST['email']) : '';
     $args->password = !empty($_POST['password']) ? strip_tags($_POST['password']) : '';
     $args->remember = isset($_POST['remember']);
-    $form->items = '[text=email]
+    $form->body = '[email=email]
     [password=password]
     [checkbox=remember]';
     
@@ -141,11 +141,10 @@ class tadminlogin extends tadminform {
     $form->action = '$site.url/admin/password/';
     $form->target = '_blank';
     $form->inline = true;
-    // double "text-email" input id
-    $form->items = str_replace('text-email', 'lostpass-email',
-    $html->getinput('text', 'email', '', 'E-Mail'));
+    $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
     $form->submit = 'sendpass';
     $result .= $form->get();
+
     $this->callevent('oncontent', array(&$result));
     return $result;
   }

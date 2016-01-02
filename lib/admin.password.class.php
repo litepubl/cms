@@ -22,7 +22,7 @@ class tadminpassword extends tadminform {
     $lang = tlocal::admin('password');
     if (empty($_GET['confirm'])) {
       $args->formtitle = $lang->enteremail;
-      return $html->adminform('[text=email]', $args);
+      return $html->adminform('[email=email]', $args);
     } else {
       $email = $_GET['email'];
       $confirm = $_GET['confirm'];

@@ -92,14 +92,16 @@ class tadminreguser extends tadminform {
     }
     
     $form = '';
-    foreach (array('email', 'name') as $name) {
-      $args->$name = isset($_POST[$name]) ? $_POST[$name] : '';
-      $form .= "[text=$name]";
-    }
+
+      $args->$email = isset($_POST['email']) ? $_POST['email'] : '';
+      $args->name = isset($_POST['name']) ? $_POST['name'] : '';
+      $form .= '[email=email] [text=name]';
+
     $lang = tlocal::i('users');
     $args->formtitle = $lang->regform;
     $args->data['$lang.email'] = 'E-Mail';
     $result .= $this->widget;
+
     if (isset($_GET['backurl'])) {
       //normalize
       $result = str_replace('&amp;backurl=', '&backurl=', $result);
@@ -109,6 +111,7 @@ class tadminreguser extends tadminform {
     
     $result .= $html->adminform($form, $args);
     $result = str_replace(' action=""',' action="' . litepublisher::$site->url . '/admin/reguser/"', $result);
+
     $this->callevent('oncontent', array(&$result));
     return $result;
   }
