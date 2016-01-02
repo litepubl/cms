@@ -21,3 +21,5 @@ tml/16addwidgets.txt
 ru/16addwidgets.txt
 tml/20form.txt
 ru/20form.txt
+tml/21confirmform.txt
+ru/21confirmform.txt

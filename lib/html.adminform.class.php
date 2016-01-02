@@ -9,6 +9,8 @@ class adminform {
   public $args;
   public$title;
   public $before;
+public $body;
+//items deprecated
   public $items;
   public $submit;
 public $inline;
@@ -25,7 +27,8 @@ public $inline;
     $this->args = $args;
     $this->title = '';
     $this->before = '';
-    $this->items = '';
+    $this->body = '';
+    $this->items = &$this->body;
     $this->submit = 'update';
 $this->inline = false;
 
@@ -68,8 +71,8 @@ return admintheme::i();
   }
   
   public function getdelete($table) {
-    $this->items = $table;
-    $this->items .= $this->hidden('delete', 'delete');
+    $this->body = $table;
+    $this->body .= $this->hidden('delete', 'delete');
     $this->submit = 'delete';
     
     return $this->get();
@@ -80,35 +83,31 @@ return admintheme::i();
   }
   
   public function gettml() {
-    $result = '<div class="form-holder">';
-    if ($this->title) $result .= "<h4>$this->title</h4>\n";
-    $result .= $this->before;
-    
+$title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
+
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
-    $result .= "<form $attr>";
-
 if ($this->inline) {
-$result .= $this->line($this->items . ($this->submit ? "[button=$this->submit]" : ''));
+$body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
 } else {
-    $result .= $this->items;
+    $body = $this->body;
     if ($this->submit) {
-      $result .= "[submit=$this->submit]";
+      $body .= "[submit=$this->submit]";
     }
 }
     
-
     return strtr($this->getadmintheme()->templates['form'], array(
 '$title' => $title,
 '$before' => $this->before,
 'attr' => $attr,
 '$body' => $body,
-));  }
-  
-  public function get() {
+));  
+}
+
+    public function get() {
     return tadminhtml::i()->parsearg($this->gettml(), $this->args);
   }
   

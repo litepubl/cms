@@ -1,0 +1,7 @@
+confirmform = [
+<form action="$adminurl=$id&action=$action&confirm=1" method="post">
+    <p>
+        $confirm
+        [button=yesword]
+    </p>
+</form>

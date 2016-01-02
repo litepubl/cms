@@ -353,7 +353,9 @@ return $db->build($items);
     $args->action = 'delete';
     $args->adminurl = $adminurl;
     $args->confirm = $mesg;
-    return $this->confirmform($args);
+
+$admin = admintheme::i();
+      return $this->parsearg($admin->templates['confirmform'], $args);
   }
   
   public function confirm_delete($owner, $adminurl) {
@@ -368,7 +370,9 @@ return $db->build($items);
       $args->adminurl = $adminurl;
       $args->action = 'delete';
       $args->confirm = tlocal::i()->confirmdelete;
-      return $this->confirmform($args);
+
+$admin = admintheme::i();
+      return $this->parsearg($admin->templates['confirmform'], $args);
     }
   }
   
