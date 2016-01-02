@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -28,7 +28,7 @@ class tadminservice extends tadminmenu {
       $lang = $this->lang;
       $result .= $html->h3->info;
       $result .= $this->doupdate($_GET);
-$tb = new tablebuilder();
+      $tb = new tablebuilder();
       $result .= $tb->props(array(
       'postscount' => litepublisher::$classes->posts->count,
       'commentscount' =>litepublisher::$classes->commentmanager->count,

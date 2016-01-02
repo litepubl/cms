@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -53,16 +53,16 @@ class tadmindownloaditems extends tadminmenu {
     $result .= $html->editlink();
     $form = new  adminform(new targs());
     $form->items =$html->getitemscount($from, $from + count($items), $count);
-$tb = new tablebuilder();
-$tb->setposts(array(
+    $tb = new tablebuilder();
+    $tb->setposts(array(
     array('right', $lang->downloads, '$post.downloads'),
     array('left', $lang->posttitle, '$post.bookmark'),
     array('left', $lang->status, '$ticket_status.status'),
     array('left', $lang->tags, '$post.tagnames'),
     array('center', $lang->edit, '<a href="' . $editurl . '=$post.id">' . $lang->edit . '</a>'),
     ));
-
-$form->items .= $tb->build($items);    
+    
+    $form->items .= $tb->build($items);
     $form->items .= $form->centergroup(
     '[button=publish]
     [button=setdraft]

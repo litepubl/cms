@@ -300,6 +300,37 @@ class admintheme extends basetheme {
     ));
   }
   
+  public function getcalendar($name, $date) {
+    $date = datefilter::timestamp($date);
+    
+    $args = new targs();
+    $args->name = $name;
+    $args->title = tlocal::i()->__get($name);
+    $args->format = datefilter::$format;
+    
+    if ($date) {
+      $args->date = date(datefilter::$format, $date);
+      $args->time = date(datefilter::$timeformat, $date);
+    } else {
+      $args->date = '';
+      $args->time = '';
+    }
+    
+    return $this->parsearg($this->templates['calendar'], $args);
+  }
+  
+  public function getdaterange($from, $to) {
+    $from = datefilter::timestamp($from);
+    $to = datefilter::timestamp($to);
+    
+    $args = new targs();
+    $args->from = $from ? date(datefilter::$format, $from) : '';
+    $args->to = $to ? date(datefilter::$format, $to) : '';
+    $args->format = datefilter::$format;
+    
+    return $this->parsearg($this->templates['daterange'], $args);
+  }
+  
 }//class
 
 //htmlresource.class.php
@@ -384,7 +415,7 @@ class tadminhtml {
         }
         
         if ($type == 'calendar') {
-          $tag = $this->getcalendar($name, $args->data[$varname]);
+          $tag = admintheme::i()->getcalendar($name, $args->data[$varname]);
         } else {
           $tag = strtr($theme->templates["content.admin.$type"], array(
           '$name' => $name,
@@ -493,10 +524,6 @@ class tadminhtml {
     return $this->parsearg(ttheme::i()->templates['content.admin.form'], $args);
   }
   
-  public function inline($s) {
-    return sprintf($this->ini['common']['inline'], $s);
-  }
-  
   public function getupload($name) {
     return $this->getinput('upload', $name, '', '');
   }
@@ -544,59 +571,6 @@ class tadminhtml {
     return $this->getinput('combo', $name, $value, $title);
   }
   
-  public function cleandate($date) {
-    if (is_numeric($date)) {
-      $date = (int) $date;
-    } else if ($date == '0000-00-00 00:00:00') {
-      $date = 0;
-    } elseif ($date == '0000-00-00') {
-      $date = 0;
-    } elseif (trim($date)) {
-      $date = strtotime($date);
-    } else {
-      $date = 0;
-    }
-    
-    return $date;
-  }
-  
-  public function getcalendar($name, $date) {
-    $date = $this->cleandate($date);
-    $lang = tlocal::i();
-    $controls = $this->getinput('text', $name, $date? date('d.m.Y', $date) : '', $lang->date);
-    $controls .= $this->getinput('text', "$name-time", $date ?date('H:i', $date) : '', $lang->time);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-$name", '', $lang->calendar));
-    
-    return sprintf($this->ini['common']['calendar'], $lang->__get($name), $this->inline($controls));
-  }
-  
-  public function getdaterange($from, $to) {
-    $from = $this->cleandate($from);
-    $to = $this->cleandate($to);
-    $lang = tlocal::i();
-    $controls = $this->getinput('text', 'from', $from ? date('d.m.Y', $from) : '', $lang->from);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-from", '', $lang->calendar));
-    
-    $controls .= $this->getinput('text', 'to', $to ? date('d.m.Y', $to) : '', $lang->to);
-    $controls .= str_replace('type="submit"', 'type="button"',
-    $this->getinput('button', "calendar-to", '', $lang->calendar));
-    
-    return sprintf($this->ini['common']['daterange'], $controls);
-  }
-  
-  public static function getdatetime($name) {
-    if (!empty($_POST[$name]) && @sscanf(trim($_POST[$name]), '%d.%d.%d', $d, $m, $y)) {
-      $h = 0;
-      $min  = 0;
-      if (!empty($_POST[$name . '-time'])) @sscanf(trim($_POST[$name . '-time']), '%d:%d', $h, $min);
-      return mktime($h,$min,0, $m, $d, $y);
-    }
-    
-    return 0;
-  }
-  
   public static function datestr($date) {
     if ($date == '0000-00-00 00:00:00') return tlocal::i()->noword;
     return tlocal::date(strtotime($date),'d F Y');
@@ -639,96 +613,13 @@ class tadminhtml {
   }
   
   public function buildtable(array $items, array $tablestruct) {
-    $body = '';
-    $admintheme = admintheme::i();
-    $args = new targs();
-    list($head, $tml) = $this->tablestruct($tablestruct, $args);
-    
-    foreach ($items as $id => $item) {
-      $args->add($item);
-      if (!isset($item['id'])) $args->id = $id;
-      
-      //old style, must be removed after review
-      admintheme::$vars['item'] = $item;
-      
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    unset(admintheme::$vars['item']);
-    
-    return $admintheme->gettable($head, $body);
-  }
-  
-  public function tableposts(array $items, array $tablestruct) {
-    $body = '';
-    $head = $this->tableposts_head;
-    $tml = $this->tableposts_item;
-    
-    foreach ($tablestruct as $item) {
-      if (!$item || !count($item)) continue;
-      
-      $align = $item[0] ? $item[0] : 'left';
-      $head .= sprintf('<th align="%s">%s</th>', $align, $item[1]);
-      
-      if (is_string($item[2])) {
-        $tml .= sprintf('<td align="%s">%s</td>', $align, $item[2]);
-      } else {
-        // special case for callback. Add new prop to template vars
-        $tableprop = tableprop::i();
-        $propname = $tableprop->addprop($item[2]);
-        admintheme::$vars['tableprop'] = $tableprop;
-        $tml .= sprintf('<td align="%s">$tableprop.%s</td>', $item[0], $propname);
-      }
-    }
-    
-    $tml .= '</tr>';
-    
-    $admintheme = admintheme::i();
-    $args = new targs();
-    
-    foreach ($items as $id) {
-      $post = tpost::i($id);
-      admintheme::$vars['post'] = $post;
-      $args->id = $id;
-      $body .= $admintheme->parsearg($tml, $args);
-    }
-    
-    return $admintheme->gettable($head, $body);
+    $tb = new tablebuilder();
+    $tb->setstruct($tablestruct);
+    return $db->build($items);
   }
   
   public function getitemscount($from, $to, $count) {
     return sprintf($this->h4->itemscount, $from, $to, $count);
-  }
-  
-  public function get_table_item($name) {
-    return array('left', tlocal::i()->$name, "\$$name");
-  }
-  
-  public function get_table_link($action, $adminurl) {
-    return array('left', tlocal::i()->$action, strtr($this->actionlink , array(
-    '$action' => $action,
-    '$lang.action' => tlocal::i()->$action,
-    '$adminurl' => $adminurl
-    )));
-  }
-  
-  public function tableprops($item) {
-    $body = '';
-    $lang = tlocal::i();
-    foreach ($item as $k => $v) {
-      if (($k === false) || ($v === false)) continue;
-      
-      if (is_array($v)) {
-        foreach ($v as $kv => $vv) {
-          if ($k2 = $lang->__get($kv)) $kv = $k2;
-          $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $kv, $vv);
-        }
-      } else {
-        if ($k2 = $lang->__get($k)) $k = $k2;
-        $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $k, $v);
-      }
-    }
-    
-    return $this->gettable("<th>$lang->name</th> <th>$lang->property</th>", $body);
   }
   
   public function tablevalues(array $a) {
@@ -791,7 +682,9 @@ class tadminhtml {
     $args->action = 'delete';
     $args->adminurl = $adminurl;
     $args->confirm = $mesg;
-    return $this->confirmform($args);
+    
+    $admin = admintheme::i();
+    return $this->parsearg($admin->templates['confirmform'], $args);
   }
   
   public function confirm_delete($owner, $adminurl) {
@@ -806,7 +699,9 @@ class tadminhtml {
       $args->adminurl = $adminurl;
       $args->action = 'delete';
       $args->confirm = tlocal::i()->confirmdelete;
-      return $this->confirmform($args);
+      
+      $admin = admintheme::i();
+      return $this->parsearg($admin->templates['confirmform'], $args);
     }
   }
   
@@ -818,15 +713,6 @@ class tadminhtml {
       }
     }
     return $result;
-  }
-  
-  public function toggle($title, $target, $second = '') {
-    return strtr($this->ini['common']['toggle'], array(
-    '$title' => $title,
-    '$target' => $target,
-    '$second' => $second,
-    "'" => '"',
-    ));
   }
   
   public function inidir($dir) {
@@ -856,33 +742,43 @@ class adminform {
   public $args;
   public$title;
   public $before;
+  public $body;
+  //items deprecated
   public $items;
+  public $submit;
+  public $inline;
+  
+  //attribs for <form>
   public $action;
   public $method;
   public $enctype;
   public $id;
   public $class;
   public $target;
-  public $submit;
-  public $inlineclass;
   
   public function __construct($args = null) {
     $this->args = $args;
     $this->title = '';
     $this->before = '';
-    $this->items = '';
+    $this->body = '';
+    $this->items = &$this->body;
+    $this->submit = 'update';
+    $this->inline = false;
+    
     $this->action = '';
     $this->method = 'post';
     $this->enctype = '';
     $this->id = '';
     $this->class = '';
     $this->target = '';
-    $this->submit = 'update';
-    $this->inlineclass = 'form-inline';
   }
   
-  public function line($s) {
-    return "<div class=\"$this->inlineclass\">$s</div>";
+  public function line($content) {
+    return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
+  }
+  
+  public function getadmintheme() {
+    return admintheme::i();
   }
   
   public function __set($k, $v) {
@@ -896,15 +792,11 @@ class adminform {
         $this->submit = 'update';
       }
       break;
-      
-      case 'inline':
-      $this->class = $v ? $this->inlineclass : '';
-      break;
     }
   }
   
   public function centergroup($buttons) {
-    return str_replace('$buttons', $buttons, admintheme::i()->templates['centergroup']);
+    return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
   }
   
   public function hidden($name, $value) {
@@ -912,8 +804,8 @@ class adminform {
   }
   
   public function getdelete($table) {
-    $this->items = $table;
-    $this->items .= $this->hidden('delete', 'delete');
+    $this->body = $table;
+    $this->body .= $this->hidden('delete', 'delete');
     $this->submit = 'delete';
     
     return $this->get();
@@ -924,23 +816,28 @@ class adminform {
   }
   
   public function gettml() {
-    $result = '<div class="form-holder">';
-    if ($this->title) $result .= "<h4>$this->title</h4>\n";
-    $result .= $this->before;
+    $title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
     
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
-    $result .= "<form $attr>";
-    $result .= $this->items;
-    if ($this->submit) {
-      $result .= $this->class == $this->inlineclass ? "[button=$this->submit]" : "[submit=$this->submit]";
+    if ($this->inline) {
+      $body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
+    } else {
+      $body = $this->body;
+      if ($this->submit) {
+        $body .= "[submit=$this->submit]";
+      }
     }
     
-    $result .= "\n</form>\n</div>\n";
-    return $result;
+    return strtr($this->getadmintheme()->templates['form'], array(
+    '$title' => $title,
+    '$before' => $this->before,
+    'attr' => $attr,
+    '$body' => $body,
+    ));
   }
   
   public function get() {
@@ -1306,9 +1203,59 @@ class tablebuilder {
   }
   
   public function setowner(titems $owner) {
-    $this->addcallback('$temp' . count($this->callbacks), array($this, 'titems_callback'), $owner);
+    $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'titems_callback'), $owner);
   }
   
+  public function posts_callback(tablebuilder $self) {
+    $post = tpost::i($self->id);
+    basetheme::$vars['post'] = $post;
+    $self->args->poststatus = tlocal::i()->__get($post->status);
+  }
+  
+  public function setposts(array $struct) {
+    array_unshift($struct, self::checkbox('checkbox'));
+    $this->setstruct($struct);
+    $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'posts_callback'), false);
+  }
+  
+  public function props(array $props) {
+    $lang = tlocal::i();
+    $this->setstruct(array(
+    array(
+    $lang->name,
+    '$name'
+    ),
+    
+    array(
+    $lang->property,
+    '$value'
+    )
+    ));
+    
+    $body = '';
+    $args = $this->args;
+    $admintheme = admintheme::i();
+    
+    foreach ($props as $k => $v) {
+      if (($k === false) || ($v === false)) continue;
+      
+      if (is_array($v)) {
+        foreach ($v as $kv => $vv) {
+          if ($k2 = $lang->__get($kv)) $kv = $k2;
+          $args->name = $kv;
+          $args->value = $vv;
+          $body .= $admintheme->parsearg($this->body, $args);
+        }
+      } else {
+        if ($k2 = $lang->__get($k)) $k = $k2;
+        $args->name = $k;
+        $args->value = $v;
+        $body .= $admintheme->parsearg($this->body, $args);
+      }
+    }
+    
+    return $admintheme->gettable($this->head, $body);
+  }
   
   public function action($action, $adminurl) {
     $title = tlocal::i()->__get($action);
@@ -1352,6 +1299,67 @@ class tablebuilder {
   }
   
 }
+
+//filter.datetime.class.php
+// namespace litepubl\admin;
+
+class datefilter {
+  //only date without time
+  public static $format = 'd.m.Y';
+  public static $timeformat = 'H:i';
+  
+  public static function timestamp($date) {
+    if (is_numeric($date)) {
+      $date = (int) $date;
+    } else if ($date == '0000-00-00 00:00:00') {
+      $date = 0;
+    } elseif ($date == '0000-00-00') {
+      $date = 0;
+    } elseif ($date = trim($date)) {
+      $date = strtotime($date);
+    } else {
+      $date = 0;
+    }
+    
+    return $date;
+  }
+  
+  public static function getdate($name, $format = false) {
+    if (empty($_POST[$name])) return 0;
+    $date = trim($_POST[$name]);
+    if (!$date) return 0;
+    
+    if (version_compare(PHP_VERSION, '5.3', '>=')) {
+      if (!$format) $format = self::$format;
+      $d = DateTime::createFromFormat($format, $date);
+      if ($d && $d->format($format) == $date) {
+        $d->setTime(0, 0, 0);
+        return $d->getTimestamp() + self::gettime($name . '-time');
+      }
+    } else {
+      if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
+        return mktime(0, 0, 0, $m, $d, $y) + self::gettime($name . '-time');
+      }
+    }
+    
+    return 0;
+  }
+  
+  public static function gettime($name) {
+    $result = 0;
+    if (!empty($_POST[$name] && ($time = trim($_POST[$name])))) {
+      if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
+        $result = intval($m[1]) * 3600 + intval($m[2]) * 60;
+        if (isset($m[4])) {
+          $result += (int) $m[4];
+        }
+      }
+    }
+    
+    return $result;
+  }
+  
+}//class
 
 //admin.posteditor.ajax.class.php
 class tajaxposteditor  extends tevents {
@@ -1759,7 +1767,7 @@ class tposteditor extends tadminmenu {
       $post->files = tdatabase::str2array($files);
     }
     if (isset($date) && $date) {
-      $post->posted = tadminhtml::getdatetime('date');
+      $post->posted = datefilter::getdate('date');
     }
     
     if (isset($status)) {
@@ -1816,13 +1824,4 @@ class tposteditor extends tadminmenu {
   }
   
 }//class
-
-class poststatus {
-  public function __get($name) {
-    $post = ttheme::$vars['post'];
-  $value = $post->{$name};
-    $lang = tlocal::i();
-  return $lang->{$value};
-  }
-}
 

@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -9,20 +9,20 @@ class adminform {
   public $args;
   public$title;
   public $before;
-public $body;
-//items deprecated
+  public $body;
+  //items deprecated
   public $items;
   public $submit;
-public $inline;
-
-//attribs for <form>
+  public $inline;
+  
+  //attribs for <form>
   public $action;
   public $method;
   public $enctype;
   public $id;
   public $class;
   public $target;
-
+  
   public function __construct($args = null) {
     $this->args = $args;
     $this->title = '';
@@ -30,8 +30,8 @@ public $inline;
     $this->body = '';
     $this->items = &$this->body;
     $this->submit = 'update';
-$this->inline = false;
-
+    $this->inline = false;
+    
     $this->action = '';
     $this->method = 'post';
     $this->enctype = '';
@@ -43,10 +43,10 @@ $this->inline = false;
   public function line($content) {
     return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
   }
-
-public function getadmintheme() {
-return admintheme::i();
-}
+  
+  public function getadmintheme() {
+    return admintheme::i();
+  }
   
   public function __set($k, $v) {
     switch ($k) {
@@ -59,7 +59,7 @@ return admintheme::i();
         $this->submit = 'update';
       }
       break;
-   }
+    }
   }
   
   public function centergroup($buttons) {
@@ -83,31 +83,31 @@ return admintheme::i();
   }
   
   public function gettml() {
-$title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
-
+    $title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
+    
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
-if ($this->inline) {
-$body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
-} else {
-    $body = $this->body;
-    if ($this->submit) {
-      $body .= "[submit=$this->submit]";
+    if ($this->inline) {
+      $body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
+    } else {
+      $body = $this->body;
+      if ($this->submit) {
+        $body .= "[submit=$this->submit]";
+      }
     }
-}
     
     return strtr($this->getadmintheme()->templates['form'], array(
-'$title' => $title,
-'$before' => $this->before,
-'attr' => $attr,
-'$body' => $body,
-));  
-}
-
-    public function get() {
+    '$title' => $title,
+    '$before' => $this->before,
+    'attr' => $attr,
+    '$body' => $body,
+    ));
+  }
+  
+  public function get() {
     return tadminhtml::i()->parsearg($this->gettml(), $this->args);
   }
   

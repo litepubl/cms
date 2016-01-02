@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -82,13 +82,13 @@ class tadminsubscribers extends tadminform {
     tposts::i()->loaditems($items);
     $args->default_subscribe = tuseroptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
     $args->formtitle = tusers::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
-
-$tb = new tablebuilder();
-$tb->setposts(array(
+    
+    $tb = new tablebuilder();
+    $tb->setposts(array(
     array($lang->post, '<a href="$site.url$post.url" title="$post.title">$post.title</a>')
     )), $args);
-
-return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items)), $args);
+    
+    return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items)), $args);
   }
   
   public function processform() {

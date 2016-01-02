@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -70,7 +70,7 @@ class tfilemerger extends titems {
       if (!isset($this->items[$section])) return false;
       if (!($src = $this->normfilename($src))) return false;
       if (!($dst = $this->normfilename($dst))) return false;
-
+      
       if (false === ($i = array_search($src, $this->items[$section]['files']))) return false;
       $this->items[$section]['files'][$i] = $dst;
       $this->save();
@@ -169,12 +169,12 @@ class tfilemerger extends titems {
           if (file_exists($filename)) {
             $s .= $this->readfile($filename);
             $s .= "\n"; //prevent comments
-} else {
-trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);
-
+          } else {
+            trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);
+            
           }
         }
-
+        
         $s .= implode("\n", $items['texts']);
         $savefile =  $this->getfilename($section, $this->revision);
         $realfile= $home . str_replace('/',DIRECTORY_SEPARATOR, $savefile);

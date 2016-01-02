@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -78,9 +78,9 @@ class tadminposts extends tadminmenu {
     $lang = tlocal::admin();
     $form = new  adminform(new targs());
     $form->items =$html->getitemscount($from, $from + count($items), $count);
-
-$tb = new tablebuilder();
-$tb->setposts(array(
+    
+    $tb = new tablebuilder();
+    $tb->setposts(array(
     array('center', $lang->date, '$post.date'),
     array($lang->posttitle, '$post.bookmark'),
     array($lang->category, '$post.category'),

@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -39,36 +39,36 @@ class admintheme extends basetheme {
     '$content' => $content
     ));
   }
-
-public function getcalendar($name, $date) {
+  
+  public function getcalendar($name, $date) {
     $date = datefilter::timestamp($date);
-
-$args = new targs();
-$args->name = $name;
-$args->title = tlocal::i()->__get($name);
-$args->format = datefilter::$format;
-
-if ($date) {
-$args->date = date(datefilter::$format, $date);
-$args->time = date(datefilter::$timeformat, $date);
-} else {
-$args->date = '';
-$args->time = '';
-}
-
-return $this->parsearg($this->templates['calendar'], $args);
-}
-
+    
+    $args = new targs();
+    $args->name = $name;
+    $args->title = tlocal::i()->__get($name);
+    $args->format = datefilter::$format;
+    
+    if ($date) {
+      $args->date = date(datefilter::$format, $date);
+      $args->time = date(datefilter::$timeformat, $date);
+    } else {
+      $args->date = '';
+      $args->time = '';
+    }
+    
+    return $this->parsearg($this->templates['calendar'], $args);
+  }
+  
   public function getdaterange($from, $to) {
     $from = datefilter::timestamp($from);
     $to = datefilter::timestamp($to);
-
-$args = new targs();
-$args->from = $from ? date(datefilter::$format, $from) : '';
-$args->to = $to ? date(datefilter::$format, $to) : '';
-$args->format = datefilter::$format;
-
-return $this->parsearg($this->templates['daterange'], $args);
+    
+    $args = new targs();
+    $args->from = $from ? date(datefilter::$format, $from) : '';
+    $args->to = $to ? date(datefilter::$format, $to) : '';
+    $args->format = datefilter::$format;
+    
+    return $this->parsearg($this->templates['daterange'], $args);
   }
-
+  
 }//class

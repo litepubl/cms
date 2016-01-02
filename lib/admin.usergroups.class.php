@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -76,13 +76,13 @@ class tadmingroups extends tadminmenu {
       break;
     }
     
-$tb = new tablebuilder();
-$tb->setstruct(array(
+    $tb = new tablebuilder();
+    $tb->setstruct(array(
     array($lang->name, '<a href="' . $adminurl . '=$id&action=edit" title="$title">$title</a>'),
     array($lang->users, sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/', 'idgroup=$id'), $lang->users)),
     $tb->action('delete', $adminurl)
     ));
-
+    
     $result .= $html->h4->grouptable;
     $result .= $tb->build($groups->items);
     return $result;

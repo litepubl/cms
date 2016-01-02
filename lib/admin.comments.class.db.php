@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -81,7 +81,7 @@ class tadminmoderator extends tadminmenu  {
   public function getinfo($comment) {
     $html = $this->html;
     $lang = tlocal::admin();
-$tb = new tablebuilder();
+    $tb = new tablebuilder();
     $result = $tb->props(array(
     'commentonpost' => "<a href=\"$comment->url\">$comment->posttitle</a>",
     'author' => $comment->name,

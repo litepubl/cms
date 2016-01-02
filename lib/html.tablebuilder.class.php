@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -101,58 +101,58 @@ class tablebuilder {
   public function setowner(titems $owner) {
     $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'titems_callback'), $owner);
   }
-
-public function posts_callback(tablebuilder $self) {
-$post = tpost::i($self->id);
-basetheme::$vars['post'] = $post;
-$self->args->poststatus = tlocal::i()->__get($post->status);
-}
-
+  
+  public function posts_callback(tablebuilder $self) {
+    $post = tpost::i($self->id);
+    basetheme::$vars['post'] = $post;
+    $self->args->poststatus = tlocal::i()->__get($post->status);
+  }
+  
   public function setposts(array $struct) {
-array_unshift($struct, self::checkbox('checkbox'));
-$this->setstruct($struct);
+    array_unshift($struct, self::checkbox('checkbox'));
+    $this->setstruct($struct);
     $this->addcallback('$tempcallback' . count($this->callbacks), array($this, 'posts_callback'), false);
   }
-
+  
   public function props(array $props) {
     $lang = tlocal::i();
-$this->setstruct(array(
-array(
-$lang->name,
-'$name'
-),
-
-array(
-$lang->property,
-'$value'
-)
-));
-
+    $this->setstruct(array(
+    array(
+    $lang->name,
+    '$name'
+    ),
+    
+    array(
+    $lang->property,
+    '$value'
+    )
+    ));
+    
     $body = '';
     $args = $this->args;
     $admintheme = admintheme::i();
-
+    
     foreach ($props as $k => $v) {
       if (($k === false) || ($v === false)) continue;
       
       if (is_array($v)) {
         foreach ($v as $kv => $vv) {
           if ($k2 = $lang->__get($kv)) $kv = $k2;
-$args->name = $kv;
-$args->value = $vv;
-      $body .= $admintheme->parsearg($this->body, $args);
+          $args->name = $kv;
+          $args->value = $vv;
+          $body .= $admintheme->parsearg($this->body, $args);
         }
       } else {
         if ($k2 = $lang->__get($k)) $k = $k2;
-$args->name = $k;
-$args->value = $v;
-      $body .= $admintheme->parsearg($this->body, $args);
+        $args->name = $k;
+        $args->value = $v;
+        $body .= $admintheme->parsearg($this->body, $args);
       }
     }
     
     return $admintheme->gettable($this->head, $body);
   }
-
+  
   public function action($action, $adminurl) {
     $title = tlocal::i()->__get($action);
     

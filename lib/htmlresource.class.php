@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -284,9 +284,9 @@ class tadminhtml {
   }
   
   public function buildtable(array $items, array $tablestruct) {
-$tb = new tablebuilder();
-$tb->setstruct($tablestruct);
-return $db->build($items);
+    $tb = new tablebuilder();
+    $tb->setstruct($tablestruct);
+    return $db->build($items);
   }
   
   public function getitemscount($from, $to, $count) {
@@ -353,9 +353,9 @@ return $db->build($items);
     $args->action = 'delete';
     $args->adminurl = $adminurl;
     $args->confirm = $mesg;
-
-$admin = admintheme::i();
-      return $this->parsearg($admin->templates['confirmform'], $args);
+    
+    $admin = admintheme::i();
+    return $this->parsearg($admin->templates['confirmform'], $args);
   }
   
   public function confirm_delete($owner, $adminurl) {
@@ -370,8 +370,8 @@ $admin = admintheme::i();
       $args->adminurl = $adminurl;
       $args->action = 'delete';
       $args->confirm = tlocal::i()->confirmdelete;
-
-$admin = admintheme::i();
+      
+      $admin = admintheme::i();
       return $this->parsearg($admin->templates['confirmform'], $args);
     }
   }
@@ -384,15 +384,6 @@ $admin = admintheme::i();
       }
     }
     return $result;
-  }
-  
-  public function toggle($title, $target, $second = '') {
-    return strtr($this->ini['common']['toggle'], array(
-    '$title' => $title,
-    '$target' => $target,
-    '$second' => $second,
-    "'" => '"',
-    ));
   }
   
   public function inidir($dir) {

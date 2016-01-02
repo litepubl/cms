@@ -1,6 +1,6 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -19,13 +19,13 @@
       this.dropdown = $(dropdown);
       this.table = this.dropdown.parent().find("table:first");
       this.headers = this.table.find("tr:first");
-this.keystorage = this.getkeystorage();
-
-if ("DataStorage" in litepubl) {
-      this.load();
-} else {
-$.load_script(ltoptions.files + "/js/litepubl/system/storage.min.js", $.proxy(this.load, this));
-}
+      this.keystorage = this.getkeystorage();
+      
+      if ("DataStorage" in litepubl) {
+        this.load();
+      } else {
+        $.load_script(ltoptions.files + "/js/litepubl/system/storage.min.js", $.proxy(this.load, this));
+      }
       
       if (tml) this.tml = tml;
       this.init_dropdown();

@@ -1,6 +1,6 @@
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -63,11 +63,11 @@
     },
     
     setprogress: function(current, total) {
-if (current&& total) {
-      this.setpercent(Math.ceil((current / total) * 100));
-} else {
-      this.setpercent(0);
-}
+      if (current&& total) {
+        this.setpercent(Math.ceil((current / total) * 100));
+      } else {
+        this.setpercent(0);
+      }
     },
     
     hideprogress: function() {

@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -128,27 +128,27 @@ class tadminviews extends tadminmenu {
       if (!$id || !$views->itemexists($id)) {
         $adminurl = $this->adminurl . 'view';
         $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
-
-$tb = new tablebuilder();
-$tb->setstruct(array(
+        
+        $tb = new tablebuilder();
+        $tb->setstruct(array(
         array(
- $lang->name,
- "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
-),
-
-      array(
- $lang->widgets,
- "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
-),
-
+        $lang->name,
+        "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
+        ),
+        
         array(
- $lang->delete,
- "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
-)
+        $lang->widgets,
+      "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
+        ),
+        
+        array(
+        $lang->delete,
+        "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
+        )
         ));
-
-$result .= $tb->build($views->items);
-return $result;
+        
+        $result .= $tb->build($views->items);
+        return $result;
       }
       
       $result = self::getviewform($this->url);

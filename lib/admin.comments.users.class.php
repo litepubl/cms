@@ -1,7 +1,7 @@
 <?php
 /**
 * Lite Publisher
-* Copyright (C) 2010 - 2015 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
@@ -36,34 +36,34 @@ class tadmincomusers extends tadminmenu {
     $result .= sprintf($html->h4->itemscount, $from, $from + count($items), $total);
     $adminurl = $this->adminurl;
     $editurl = tadminhtml::getadminlink('/admin/users/', 'id');
-$tb = new tablebuilder();
-$tb->setstruct(array(
+    $tb = new tablebuilder();
+    $tb->setstruct(array(
     array(
-$lang->author,
- '$name'
-),
-
+    $lang->author,
+    '$name'
+    ),
+    
     array(
-'E-Mail',
- '$email'
-),
-
+    'E-Mail',
+    '$email'
+    ),
+    
     array(
- $lang->website,
- '$website'
-),
-
+    $lang->website,
+    '$website'
+    ),
+    
     array(
- $lang->edit,
- "<a href='$editurl=\$id&action=edit'>$lang->edit</a>"
-),
-
+    $lang->edit,
+    "<a href='$editurl=\$id&action=edit'>$lang->edit</a>"
+    ),
+    
     array(
- $lang->delete,
- "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"
-)
+    $lang->delete,
+    "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"
+    )
     ));
- 
+    
     $result .= $tb->build($items);
     $result .= $this->view->theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total/$perpage));
     return $result;
