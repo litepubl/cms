@@ -1,0 +1,8 @@
+error = [
+<div class="section">
+    <h4 class="text-danger">$title</h4>
+    <div class="help-block text-danger">
+        $content
+    </div>
+</div>
+]

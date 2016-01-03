@@ -117,8 +117,19 @@ $title - заголовок блока/секции
 $content - содержание блока/секции
 
 Может употреблятся в разных местах для разделения блоков информации
+*/
 
-Следующий шаблон - отцентрированная группа кнопок
+error = [
+<div class="section">
+    <h4 class="text-danger">$lang.error</h4>
+    <div class="help-block text-danger">
+        $content
+    </div>
+</div>
+]
+
+/*
+Шаблон  вывода сообщения об ошибке. Имеет один тег $content - текст ошибки. Похож на шаблон section, в который добавили красный цвет.
 */
 
 centergroup = [
@@ -283,4 +294,23 @@ $body - контролы формы
 $form = new adminform();
 $form->title = 'Заголовок формы';
 $form->body = '[text=title]';
+*/
+
+confirmform = [
+<form action="$adminurl=$id&action=$action&confirm=1" method="post">
+    <p>
+        $confirm
+        [button=yesword]
+    </p>
+</form>
+
+/*
+Шаблон confirmform является еще одним из вариантов формы. На этот раз форма потдверждения какого либо действия, как правило это удаление. Содержит следующие теги:
+
+$adminurl - базовый адрес в админке, куда ведет форма, пример http://site.com/admin/posts?id=
+$id - id удаляемого элемента
+$action - действие, примеры delete
+$confirm - текст вопроса, пример: Вы действительно хотите удалить?
+
+Понятно, что даже в таком виде шаблон все еще остается несколько неудобным. Как правило исползуются два метода php класса tadminhtml: confirmdelete и confirm_delete
 */

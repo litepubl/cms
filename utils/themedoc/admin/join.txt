@@ -7,6 +7,8 @@ tml/03table.cols.txt
 ru/03table.cols.txt
 tml/10section.txt
 ru/10section.txt
+tml/10error.txt
+ru/10error.txt
 tml/11centergroup.txt
 ru/11centergroup.txt
 tml/12inline.txt

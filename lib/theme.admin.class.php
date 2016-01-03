@@ -39,6 +39,13 @@ class admintheme extends basetheme {
     '$content' => $content
     ));
   }
+
+  public function geterr($content) {
+    return strtr($this->templates['error'], array(
+    '$title' => tlocal::i()->error,
+    '$content' => $content
+    ));
+}
   
   public function getcalendar($name, $date) {
     $date = datefilter::timestamp($date);
