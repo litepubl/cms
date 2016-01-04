@@ -15,37 +15,53 @@ class tadminpassword extends tadminform {
     parent::create();
     $this->section = 'password';
   }
-  
+
+  public function createform() {
+$form = new adminform();
+      $form->title = tlocal::admin('password')->enteremail;
+$form->body = tview::getview($this)->theme->getinput('email', 'email', '', 'E-Mail');
+$form->submit= 'send';
+return $form->gettml();
+}
+
   public function getcontent() {
-    $html = $this->html;
-    $args = new targs();
+$theme = tview::getview($this)->theme;
     $lang = tlocal::admin('password');
+
     if (empty($_GET['confirm'])) {
-      $args->formtitle = $lang->enteremail;
-      return $html->adminform('[email=email]', $args);
-    } else {
+      return $this->getform();
+}
+
       $email = $_GET['email'];
       $confirm = $_GET['confirm'];
       tsession::start('password-restore-' . md5(litepublisher::$options->hash($email)));
+
       if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
-        if (!isset($_SESSION['email'])) session_destroy();
-        return $html->h4->notfound;
+        if (!isset($_SESSION['email'])) {
+session_destroy();
+}
+
+        return $theme->h($lang->notfound);
       }
+
       $password = $_SESSION['password'];
       session_destroy();
+
       if ($id = $this->getiduser($email)) {
         if ($id == 1) {
           litepublisher::$options->changepassword($password);
         } else {
           tusers::i()->changepassword($id, $password);
         }
+
+    $html = $this->html;
+    $args = new targs();
         $args->password = $password;
         $args->email = $email;
         return $html->newpassword($args);
       } else {
-        return $html->h4->notfound;
+        return $theme->h($lang->notfound);
       }
-    }
   }
   
   public function getiduser($email) {
