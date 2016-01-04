@@ -47,34 +47,54 @@ class tadminplugins extends tadminmenu {
   
   public function getcontent() {
     $result = $this->getpluginsmenu();
-    $html = $this->html;
-    $plugins = tplugins::i();
-    if (empty($_GET['plugin'])) {
-      $result .= $html->formhead();
-      $args = new targs();
+$admintheme = $this->view->admintheme;
       $lang = $this->lang;
-      list($head, $tml) = $html->tablestruct(array(
-      array('center', ' ', '<input type="checkbox" name="$name" id="$name" $checked />'),
-      array('left', $lang->name, '$short'),
-      array('right', $lang->version, '$version'),
-      array('left', $lang->author, '<a target="_blank" href="$url">$author</a>'),
-      array('left', $lang->description, '$description'),
+    $plugins = tplugins::i();
+
+    if (empty($_GET['plugin'])) {
+      $result .= $admintheme->parse($admintheme->templates['help.plugins']);
+
+$tb = new tablebuilder();
+$tb->setstruct(array(
+$tb->namecheck(),
+
+      array(
+$lang->name,
+ '$short'
+),
+
+      array(
+'right',
+ $lang->version,
+ '$version'
+),
+
+      array(
+$lang->description,
+ '$description'
+),
       ));
       
       $body = '';
+      $args = $tb->args;
       foreach ($this->names as $name) {
         if (in_array($name, $plugins->deprecated)) continue;
+
         $about = tplugins::getabout($name);
         $args->add($about);
         $args->name = $name;
         $args->checked = isset($plugins->items[$name]);
         $args->short = $about['name'];
-        $body .= $html->parsearg($tml, $args);
+      $body .= $admintheme->parsearg($tb->body, $args);
       }
-      
-      $args->formtitle = $lang->formhead;
-      $result .= $html->adminform(admintheme::i()->gettable($head, $body), $args);
-      $result = $html->fixquote($result);
+
+$form = new adminform();      
+      $form->title = $lang->formhead;
+$form->body = $admintheme->gettable($tb->head, $body);
+$form->submit = 'update';
+
+//no need to parse form
+      $result .= $form->gettml();
     } else {
       $name = $_GET['plugin'];
       if (!in_array($name, $this->names)) return $this->notfound;
@@ -96,7 +116,7 @@ class tadminplugins extends tadminmenu {
       } catch (Exception $e) {
         litepublisher::$options->handexception($e);
       }
-      $result = $this->html->h2->updated;
+      $result = $this->view->theme->h(tlocal::i()->updated);
     } else {
       $name = $_GET['plugin'];
       if (!in_array($name, $this->names)) return $this->notfound;

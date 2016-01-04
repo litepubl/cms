@@ -251,38 +251,6 @@ class tadminhtml {
     return admintheme::i()->gettable($head, $body);
   }
   
-  public function tablestruct(array $tablestruct, $args = false) {
-    $head = '';
-    $body = '<tr>';
-    
-    foreach ($tablestruct as $index => $item) {
-      if (!$item || !count($item)) continue;
-      
-      if (count($item) == 2) {
-        array_unshift($item, 'left');
-      }
-      
-      $colclass = tablebuilder::getcolclass($item[0]);
-      $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
-      
-      if (is_string($item[2])) {
-        $body .= sprintf('<td class="%s">%s</td>', $colclass, $item[2]);
-      } else if ($args) {
-        $callback_name = 'callback' . $index;
-      $args->{$callback_name} = $item[2];
-        $body .= sprintf('<td class="%s">$%s</td>', $colclass, $callback_name);
-      } else {
-        // special case for callback. Add new prop to template vars
-        $tableprop =         ttheme::$vars['tableprop'] = tableprop::i();
-        $body .= sprintf('<td class="%s">$tableprop.%s</td>', $colclass, $tableprop->addprop($item[2]));
-      }
-    }
-    
-    $body .= '</tr>';
-    
-    return array($head, $body, $args);
-  }
-  
   public function buildtable(array $items, array $tablestruct) {
     $tb = new tablebuilder();
     $tb->setstruct($tablestruct);

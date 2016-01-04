@@ -1,0 +1,7 @@
+help.plugins = [
+<p class="help-block">
+$lang.uploadplugin 
+   <a href="$site.url/admin/service/upload/{$site.q}url=http%3A%2F%2Flitepublisher.ru%2Fdownloaditem.htm%3Fid%3D256">CKEditor</a>.
+   <a href="$site.url/admin/service/upload/">$lang.moreupload</a>
+</p>
+]

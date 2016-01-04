@@ -3,8 +3,10 @@ function update607() {
 $classes = litepublisher::$classes;
 unset($classes->items['poststatus']);
 unset($classes->items['tadminthemes']);
+unset($classes->items['tableprop']);
 $classes->items['datefilter'] = array('kernel.admin.php', '', 'filter.datetime.class.php');
 $classes->save();
+
 $m = tadminmenus::i();
 $m->deleteurl('/admin/views/themes/');
 

@@ -25,3 +25,5 @@ tml/20form.txt
 ru/20form.txt
 tml/21confirmform.txt
 ru/21confirmform.txt
+tml/30help.plugins.txt
+ru/30help.plugins.txt

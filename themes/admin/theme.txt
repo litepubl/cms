@@ -43,22 +43,34 @@ $body - строки таблицы, то есть сама таблица
 Следующие шабоны - примитивные чекбоксы
 */
 
-checkbox = [
+checkbox.id = [
    <input type="checkbox" name="$name-$id" value="$id" />
 ]
 
-invertcheck = [
+checkbox.name = [
+   <input type="checkbox" name="$name" value="$name" $checked />
+]
+
+checkbox.invert= [
    <input type="checkbox" class="invertcheck" />
 ]
 
+checkbox.stub = [
+   <span class="fa fa-check-square-o"></span>
+]
+
 /*
-Два примитивных шаблона чекбоксов, в первом используются два тега:
+4 примитивных шаблона чекбоксов, вот их описание:
+checkbox.id - часто используемый шаблон для отметки по id. Внутри теги $id и $name
+checkbox.name - чекбокс без id и с предопределенным состоянием, пример использования - таблица плагинов. Внутри теги$name и $checked
+checkbox.invert - чекбокс в названиях стобцов, инвертирует все чебоксы формы. Отсутствуют какие либо теги, но есть класс invertcheck, который обрабатывается js скриптомв админке js/litepubl /admin/admin.js
+checkbox.stub - заглушка для заголовка таблицы, когда не нужен чекбокс в заголовке, сейчас это иконка
 
-$name - имя чекбокса
+Описание тегов внутри шаблонов:
+
 $id - id элемента, например в  id записи
-
-Шаблоны checkbox и invertcheck применяются как правило в таблицах: check для ячейки, чтобы отметить строку. invertcheck - для первого чекбокса, который инвертирует чекбоксы. В шаблоне invertcheck вообще отсутствуют какие либо теги, но есть класс invertcheck, который обрабатывается js скриптомв админке js/litepubl /admin/admin.js
-
+$name - имя чекбокса
+$checked - пустая строка или строка checked="checked" - текущее состояние отметки
 
 Следующий шаблон - управление колонками в таблице
 */
@@ -320,4 +332,16 @@ $action - действие, примеры delete
 $confirm - текст вопроса, пример: Вы действительно хотите удалить?
 
 Понятно, что даже в таком виде шаблон все еще остается несколько неудобным. Как правило исползуются два метода php класса tadminhtml: confirmdelete и confirm_delete
+*/
+
+help.plugins = [
+<p class="help-block">
+$lang.uploadplugin 
+   <a href="$site.url/admin/service/upload/{$site.q}url=http%3A%2F%2Flitepublisher.ru%2Fdownloaditem.htm%3Fid%3D256">CKEditor</a>.
+   <a href="$site.url/admin/service/upload/">$lang.moreupload</a>
+</p>
+]
+
+/*
+Шаблон предназначен для справки перед формой выбора плагинов и в нем содержатся ссылки на каталог плагинов и в частности популярный плагин визуального редактора
 */

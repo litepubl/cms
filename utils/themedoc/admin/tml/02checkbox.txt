@@ -1,8 +1,15 @@
-checkbox = [
+checkbox.id = [
    <input type="checkbox" name="$name-$id" value="$id" />
 ]
 
-invertcheck = [
+checkbox.name = [
+   <input type="checkbox" name="$name" value="$name" $checked />
+]
+
+checkbox.invert= [
    <input type="checkbox" class="invertcheck" />
 ]
 
+checkbox.stub = [
+   <span class="fa fa-check-square-o"></span>
+]
