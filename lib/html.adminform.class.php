@@ -83,26 +83,34 @@ class adminform {
   }
   
   public function gettml() {
-    $title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
+$admin = $this->getadmintheme();
+    $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
     
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
-    
-    if ($this->inline) {
-      $body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
-    } else {
+
+$theme = ttheme::i();    
+$lang = tlocal::i();
       $body = $this->body;
+
+    if ($this->inline) {
       if ($this->submit) {
-        $body .= "[submit=$this->submit]";
+        $body .= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
+      }
+
+      $body = $this->line($body);
+    } else {
+      if ($this->submit) {
+        $body .= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
       }
     }
     
-    return strtr($this->getadmintheme()->templates['form'], array(
+    return strtr($admin->templates['form'], array(
     '$title' => $title,
     '$before' => $this->before,
-    'attr' => $attr,
+    '$attr' => $attr,
     '$body' => $body,
     ));
   }

@@ -69,11 +69,13 @@ class tadminreguser extends tadminform {
   
   public function getcontent() {
     $result = '';
-    $html = $this->html;
+$view = tview::getview($this);
+$theme =  $view->theme;
     $lang = tlocal::admin('users');
-    if ($this->logged) return $html->h4red($lang->logged . ' ' . $html->getlink('/admin/', $lang->adminpanel));
-    
-    $args = new targs();
+
+    if ($this->logged) {
+return $view->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $lang->adminpanel));
+}
     
     if ($this->regstatus) {
       switch ($this->regstatus) {
@@ -81,42 +83,50 @@ class tadminreguser extends tadminform {
         $backurl = $this->backurl;
         if (!$backurl) $backurl =  tusergroups::i()->gethome(litepublisher::$options->group);
         if (!strbegin($backurl, 'http')) $backurl = litepublisher::$site->url . $backurl;
-        return $html->h4($lang->successreg . ' ' . $html->getlink($backurl, $lang->continue));
+        return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
         
         case 'mail':
-        return $html->h4->waitconfirm;
+        return $theme->h($lang->waitconfirm);
         
         case 'error':
-        $result .= $html->h4->invalidregdata;
+        $result .= $theme->h($lang->invalidregdata);
       }
     }
-    
-    $form = '';
 
-      $args->$email = isset($_POST['email']) ? $_POST['email'] : '';
+    $args = new targs();    
+      $args->email = isset($_POST['email']) ? $_POST['email'] : '';
       $args->name = isset($_POST['name']) ? $_POST['name'] : '';
-      $form .= '[email=email] [text=name]';
+$args->action = litepublisher::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
+$result .= $theme->parsearg($this->getform(), $args);
 
-    $lang = tlocal::i('users');
-    $args->formtitle = $lang->regform;
-    $args->data['$lang.email'] = 'E-Mail';
-    $result .= $this->widget;
-
-    if (isset($_GET['backurl'])) {
+    if (!empty($_GET['backurl'])) {
       //normalize
       $result = str_replace('&amp;backurl=', '&backurl=', $result);
       $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']), $result);
       $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])), $result);
     }
     
-    $result .= $html->adminform($form, $args);
-    $result = str_replace(' action=""',' action="' . litepublisher::$site->url . '/admin/reguser/"', $result);
-
     $this->callevent('oncontent', array(&$result));
     return $result;
   }
-  
-  public function processform() {
+
+public function createform() {
+    $lang = tlocal::i('users');
+$theme = tview::getview($this)->theme;
+
+$form = new adminform();
+    $form->title = $lang->regform;
+$form->action = '$action';
+$form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
+$form->body .= $theme->getinput('text', 'name', '$name', $lang->name);
+$form->submit = 'signup';
+
+$result = $form->gettml();
+    $result .= $this->widget;
+return $result;
+}
+
+    public function processform() {
     $this->regstatus = 'error';
     try {
       if ($this->reguser($_POST['email'], $_POST['name']))    $this->regstatus = 'mail';

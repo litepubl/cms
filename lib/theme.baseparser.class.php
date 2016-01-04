@@ -273,7 +273,7 @@ class baseparser extends tevents {
         $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array($this, 'callback_replace_php'), $s);
       }
       
-      while ($s && preg_match('/(\$\w*+(\.\w\w*+)?)\s*=\s*(\[|\{|\()?/i', $s, $m)) {
+      while ($s && preg_match('/(\$\w*+(\.\w\w*+)?)\s*=\s*(\[|\{|\()/i', $s, $m)) {
           if (!isset($m[3])) {
             $this->error('The bracket not found in ' . $s);
           }
