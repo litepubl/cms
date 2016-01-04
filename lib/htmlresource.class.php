@@ -293,60 +293,6 @@ class tadminhtml {
     return sprintf($this->h4->itemscount, $from, $to, $count);
   }
   
-  public function tablevalues(array $a) {
-    $body = '';
-    foreach ($a as $k => $v) {
-      if (is_array($v)) {
-        foreach ($v as $kv => $vv) {
-          $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $kv, $vv);
-        }
-      } else {
-        $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $k, $v);
-      }
-    }
-    
-    $lang = tlocal::i();
-    return $this->gettable("<th>$lang->name</th> <th>$lang->value</th>", $body);
-  }
-  
-  public function singlerow(array $a) {
-    $head = '';
-    $body = '<tr>';
-    foreach ($a as $k => $v) {
-      $head .= sprintf('<th>%s</th>', $k);
-      $body .= sprintf('<td>%s</td>', $v);
-    }
-    $body .= '</tr>';
-    
-    return $this->gettable($head, $body);
-  }
-  
-  public function proplist($tml, array $props) {
-    $result = '';
-    if (!$tml) $tml = '<li>%s: %s</li>';
-    // exclude props with int keys
-    $tml_int = '<li>%s</li>';
-    
-    foreach ($props as $prop => $value) {
-      if ($value === false) continue;
-      if (is_array($value)) {
-        $value = $this->proplist($tml, $value);
-      }
-      
-      if (is_int($prop)) {
-        $result .= sprintf($tml_int, $value);
-      } else {
-        $result .= sprintf($tml, $prop, $value);
-      }
-    }
-    
-    return $result ? sprintf('<ul>%s</ul>', $result) : '';
-  }
-  
-  public function linkproplist(array $props) {
-    return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
-  }
-  
   public function confirmdelete($id, $adminurl, $mesg) {
     $args = new targs();
     $args->id = $id;
