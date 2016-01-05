@@ -27,10 +27,10 @@ public function save() { return true; }
     
     if (!litepublisher::$options->hasgroup('editor')) {
       $url = tusergroups::i()->gethome(litepublisher::$options->group);
-if ($url == '/admin/') {
-return 403;
-}
-
+      if ($url == '/admin/') {
+        return 403;
+      }
+      
       return litepublisher::$urlmap->redir($url);
     }
     

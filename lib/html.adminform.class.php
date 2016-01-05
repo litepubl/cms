@@ -83,23 +83,23 @@ class adminform {
   }
   
   public function gettml() {
-$admin = $this->getadmintheme();
+    $admin = $this->getadmintheme();
     $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
     
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
-
-$theme = ttheme::i();    
-$lang = tlocal::i();
-      $body = $this->body;
-
+    
+    $theme = ttheme::i();
+    $lang = tlocal::i();
+    $body = $this->body;
+    
     if ($this->inline) {
       if ($this->submit) {
         $body .= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
       }
-
+      
       $body = $this->line($body);
     } else {
       if ($this->submit) {

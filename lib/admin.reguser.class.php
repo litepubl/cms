@@ -69,13 +69,13 @@ class tadminreguser extends tadminform {
   
   public function getcontent() {
     $result = '';
-$view = tview::getview($this);
-$theme =  $view->theme;
+    $view = tview::getview($this);
+    $theme =  $view->theme;
     $lang = tlocal::admin('users');
-
+    
     if ($this->logged) {
-return $view->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $lang->adminpanel));
-}
+      return $view->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $lang->adminpanel));
+    }
     
     if ($this->regstatus) {
       switch ($this->regstatus) {
@@ -92,13 +92,13 @@ return $view->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $
         $result .= $theme->h($lang->invalidregdata);
       }
     }
-
-    $args = new targs();    
-      $args->email = isset($_POST['email']) ? $_POST['email'] : '';
-      $args->name = isset($_POST['name']) ? $_POST['name'] : '';
-$args->action = litepublisher::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
-$result .= $theme->parsearg($this->getform(), $args);
-
+    
+    $args = new targs();
+    $args->email = isset($_POST['email']) ? $_POST['email'] : '';
+    $args->name = isset($_POST['name']) ? $_POST['name'] : '';
+    $args->action = litepublisher::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
+    $result .= $theme->parsearg($this->getform(), $args);
+    
     if (!empty($_GET['backurl'])) {
       //normalize
       $result = str_replace('&amp;backurl=', '&backurl=', $result);
@@ -109,24 +109,24 @@ $result .= $theme->parsearg($this->getform(), $args);
     $this->callevent('oncontent', array(&$result));
     return $result;
   }
-
-public function createform() {
+  
+  public function createform() {
     $lang = tlocal::i('users');
-$theme = tview::getview($this)->theme;
-
-$form = new adminform();
+    $theme = tview::getview($this)->theme;
+    
+    $form = new adminform();
     $form->title = $lang->regform;
-$form->action = '$action';
-$form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
-$form->body .= $theme->getinput('text', 'name', '$name', $lang->name);
-$form->submit = 'signup';
-
-$result = $form->gettml();
+    $form->action = '$action';
+    $form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
+    $form->body .= $theme->getinput('text', 'name', '$name', $lang->name);
+    $form->submit = 'signup';
+    
+    $result = $form->gettml();
     $result .= $this->widget;
-return $result;
-}
-
-    public function processform() {
+    return $result;
+  }
+  
+  public function processform() {
     $this->regstatus = 'error';
     try {
       if ($this->reguser($_POST['email'], $_POST['name']))    $this->regstatus = 'mail';

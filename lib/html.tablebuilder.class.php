@@ -171,14 +171,14 @@ class tablebuilder {
     str_replace('$name', $name, $admin->templates['checkbox.id'])
     );
   }
-
+  
   public function namecheck() {
     $admin = admintheme::i();
     
     return array(
     'text-center col-checkbox',
     $admin->templates['checkbox.stub'],
-$admin->templates['checkbox.name']
+    $admin->templates['checkbox.name']
     );
   }
   

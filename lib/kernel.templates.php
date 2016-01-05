@@ -1297,6 +1297,15 @@ class ttheme extends basetheme {
     return false;
   }
   
+  public function h($s) {
+    return sprintf('<h4>%s</h4>', $s);
+  }
+  
+  
+  public function link($url, $title) {
+    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
+  }
+  
 }
 
 class emptyclass{

@@ -22,8 +22,8 @@ public function getdescription() {}
     return tviews::i()->defaults['admin'];
   }
   
-public function setidview($id) {
-}
+  public function setidview($id) {
+  }
   
   public function request($arg) {
     $this->cache = false;
@@ -51,25 +51,25 @@ public function setidview($id) {
     $lang = tlocal::admin($this->section);
     return $result;
   }
-
-public function set_cache($content) {
-litepublisher::$urlmap->cache->set($this->basename, $content);
-}
   
-public function get_cache() {
-return litepublisher::$urlmap->cache->get($this->basename);
-}
-
-public function getform() {
-if ($result = $this->get_cache()) return $result;
-
-$result = $this->createform();
-$this->set_cache($result);
-return $result;
-}
-
-public function createform() {
-return '';
-}
-
+  public function set_cache($content) {
+    litepublisher::$urlmap->cache->set($this->basename, $content);
+  }
+  
+  public function get_cache() {
+    return litepublisher::$urlmap->cache->get($this->basename);
+  }
+  
+  public function getform() {
+    if ($result = $this->get_cache()) return $result;
+    
+    $result = $this->createform();
+    $this->set_cache($result);
+    return $result;
+  }
+  
+  public function createform() {
+    return '';
+  }
+  
 }//class

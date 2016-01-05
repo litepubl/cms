@@ -47,53 +47,53 @@ class tadminplugins extends tadminmenu {
   
   public function getcontent() {
     $result = $this->getpluginsmenu();
-$admintheme = $this->view->admintheme;
-      $lang = $this->lang;
+    $admintheme = $this->view->admintheme;
+    $lang = $this->lang;
     $plugins = tplugins::i();
-
+    
     if (empty($_GET['plugin'])) {
       $result .= $admintheme->parse($admintheme->templates['help.plugins']);
-
-$tb = new tablebuilder();
-$tb->setstruct(array(
-$tb->namecheck(),
-
+      
+      $tb = new tablebuilder();
+      $tb->setstruct(array(
+      $tb->namecheck(),
+      
       array(
-$lang->name,
- '$short'
-),
-
+      $lang->name,
+      '$short'
+      ),
+      
       array(
-'right',
- $lang->version,
- '$version'
-),
-
+      'right',
+      $lang->version,
+      '$version'
+      ),
+      
       array(
-$lang->description,
- '$description'
-),
+      $lang->description,
+      '$description'
+      ),
       ));
       
       $body = '';
       $args = $tb->args;
       foreach ($this->names as $name) {
         if (in_array($name, $plugins->deprecated)) continue;
-
+        
         $about = tplugins::getabout($name);
         $args->add($about);
         $args->name = $name;
         $args->checked = isset($plugins->items[$name]);
         $args->short = $about['name'];
-      $body .= $admintheme->parsearg($tb->body, $args);
+        $body .= $admintheme->parsearg($tb->body, $args);
       }
-
-$form = new adminform();      
+      
+      $form = new adminform();
       $form->title = $lang->formhead;
-$form->body = $admintheme->gettable($tb->head, $body);
-$form->submit = 'update';
-
-//no need to parse form
+      $form->body = $admintheme->gettable($tb->head, $body);
+      $form->submit = 'update';
+      
+      //no need to parse form
       $result .= $form->gettml();
     } else {
       $name = $_GET['plugin'];

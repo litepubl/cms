@@ -91,9 +91,51 @@ class tadminlogin extends tadminform {
     return litepublisher::$urlmap->redir($url);
   }
   
-  public function getcontent() {
-$theme = tview::getview($this)->theme;
+  public function createform() {
     $result = $this->widget;
+    $theme = tview::getview($this)->theme;
+    $args = new targs();
+    
+    if (litepublisher::$options->usersenabled && litepublisher::$options->reguser) {
+      $lang = tlocal::admin('users');
+      $form = new  adminform($args);
+      $form->title = $lang->regform;
+    $form->action = '$site.url/admin/reguser/{$site.q}backurl=';
+      $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
+      $form->body .= $theme->getinput('text', 'name', '', $lang->name);
+      $form->submit = 'signup';
+      $result .= $form->get();
+    }
+    
+    $lang = tlocal::admin('login');
+    $form = new adminform($args);
+    $form->title = $lang->emailpass;
+    $form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
+    $form->body .= $theme->getinput('password', 'password', '', $lang->password);
+    $form->body .= $theme->getinput('checkbox', 'remember', '$remember', $lang->remember);
+    $form->submit = 'log_in';
+    $result .= $form->gettml();
+    
+    $form = new adminform($args);
+    $form->title = $lang->lostpass;
+    $form->action = '$site.url/admin/password/';
+    $form->target = '_blank';
+    $form->inline = true;
+    $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
+    $form->submit = 'sendpass';
+    $result .= $form->get();
+    
+    return $result;
+  }
+  
+  public function getcontent() {
+    $result = $this->getform();
+    
+    $args = new targs();
+    $args->email = isset($_POST['email']) ? trim(strip_tags($_POST['email'])) : '';
+    $args->remember = isset($_POST['remember']);
+    $result = tview::getview($this)->theme->parsearg($result, $args);
+    
     $result = str_replace('&amp;backurl=', '&backurl=', $result);
     if (!empty($_GET['backurl'])) {
       $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']), $result);
@@ -106,45 +148,6 @@ $theme = tview::getview($this)->theme;
       $result = str_replace('%3Fbackurl%3D', '', $result);
     }
     
-    $args = new targs();
-    if (litepublisher::$options->usersenabled && litepublisher::$options->reguser) {
-      $lang = tlocal::admin('users');
-      $form = new  adminform($args);
-      $form->title = $lang->regform;
-
-      $form->action = litepublisher::$site->url . '/admin/reguser/';
-      if (!empty($_GET['backurl'])) {
-        $form->action .= '?backurl=' . urlencode($_GET['backurl']);
-      }
-
-      $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
-      $form->body .= $theme->getinput('text', 'name', '', $lang->name);
-      $form->submit = 'signup';
-    $result .= $form->get();
-    }
-    
-    $lang = tlocal::admin('login');
-    $form = new adminform($args);
-    $form->title = $lang->emailpass;
-    $args->email = !empty($_POST['email']) ? strip_tags($_POST['email']) : '';
-    $args->password = !empty($_POST['password']) ? strip_tags($_POST['password']) : '';
-    $args->remember = isset($_POST['remember']);
-    $form->body = '[email=email]
-    [password=password]
-    [checkbox=remember]';
-    
-    $form->submit = 'log_in';
-    $result .= $form->get();
-    
-    $form = new adminform($args);
-    $form->title = $lang->lostpass;
-    $form->action = '$site.url/admin/password/';
-    $form->target = '_blank';
-    $form->inline = true;
-    $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
-    $form->submit = 'sendpass';
-    $result .= $form->get();
-
     $this->callevent('oncontent', array(&$result));
     return $result;
   }

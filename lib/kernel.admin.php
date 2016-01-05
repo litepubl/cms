@@ -300,6 +300,13 @@ class admintheme extends basetheme {
     ));
   }
   
+  public function geterr($content) {
+    return strtr($this->templates['error'], array(
+    '$title' => tlocal::i()->error,
+    '$content' => $content
+    ));
+  }
+  
   public function getcalendar($name, $date) {
     $date = datefilter::timestamp($date);
     
@@ -400,7 +407,7 @@ class tadminhtml {
       $s = substr_replace($s, $replace, $i, strlen('[/form]'));
     }
     
-    if (preg_match_all('/\[(editor|checkbox|text|password|combo|hidden|submit|button|calendar|upload)(:|=)(\w*+)\]/i', $s, $m, PREG_SET_ORDER)) {
+    if (preg_match_all('/\[(editor|checkbox|text|email|password|combo|hidden|submit|button|calendar|upload)(:|=)(\w*+)\]/i', $s, $m, PREG_SET_ORDER)) {
       foreach ($m as $item) {
         $type = $item[1];
         $name = $item[3];
@@ -580,38 +587,6 @@ class tadminhtml {
     return admintheme::i()->gettable($head, $body);
   }
   
-  public function tablestruct(array $tablestruct, $args = false) {
-    $head = '';
-    $body = '<tr>';
-    
-    foreach ($tablestruct as $index => $item) {
-      if (!$item || !count($item)) continue;
-      
-      if (count($item) == 2) {
-        array_unshift($item, 'left');
-      }
-      
-      $colclass = tablebuilder::getcolclass($item[0]);
-      $head .= sprintf('<th class="%s">%s</th>', $colclass, $item[1]);
-      
-      if (is_string($item[2])) {
-        $body .= sprintf('<td class="%s">%s</td>', $colclass, $item[2]);
-      } else if ($args) {
-        $callback_name = 'callback' . $index;
-      $args->{$callback_name} = $item[2];
-        $body .= sprintf('<td class="%s">$%s</td>', $colclass, $callback_name);
-      } else {
-        // special case for callback. Add new prop to template vars
-        $tableprop =         ttheme::$vars['tableprop'] = tableprop::i();
-        $body .= sprintf('<td class="%s">$tableprop.%s</td>', $colclass, $tableprop->addprop($item[2]));
-      }
-    }
-    
-    $body .= '</tr>';
-    
-    return array($head, $body, $args);
-  }
-  
   public function buildtable(array $items, array $tablestruct) {
     $tb = new tablebuilder();
     $tb->setstruct($tablestruct);
@@ -620,60 +595,6 @@ class tadminhtml {
   
   public function getitemscount($from, $to, $count) {
     return sprintf($this->h4->itemscount, $from, $to, $count);
-  }
-  
-  public function tablevalues(array $a) {
-    $body = '';
-    foreach ($a as $k => $v) {
-      if (is_array($v)) {
-        foreach ($v as $kv => $vv) {
-          $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $kv, $vv);
-        }
-      } else {
-        $body .= sprintf('<tr><td>%s</td><td>%s</td></tr>', $k, $v);
-      }
-    }
-    
-    $lang = tlocal::i();
-    return $this->gettable("<th>$lang->name</th> <th>$lang->value</th>", $body);
-  }
-  
-  public function singlerow(array $a) {
-    $head = '';
-    $body = '<tr>';
-    foreach ($a as $k => $v) {
-      $head .= sprintf('<th>%s</th>', $k);
-      $body .= sprintf('<td>%s</td>', $v);
-    }
-    $body .= '</tr>';
-    
-    return $this->gettable($head, $body);
-  }
-  
-  public function proplist($tml, array $props) {
-    $result = '';
-    if (!$tml) $tml = '<li>%s: %s</li>';
-    // exclude props with int keys
-    $tml_int = '<li>%s</li>';
-    
-    foreach ($props as $prop => $value) {
-      if ($value === false) continue;
-      if (is_array($value)) {
-        $value = $this->proplist($tml, $value);
-      }
-      
-      if (is_int($prop)) {
-        $result .= sprintf($tml_int, $value);
-      } else {
-        $result .= sprintf($tml, $prop, $value);
-      }
-    }
-    
-    return $result ? sprintf('<ul>%s</ul>', $result) : '';
-  }
-  
-  public function linkproplist(array $props) {
-    return $this->proplist('<li><a href="' . litepublisher::$site->url . '%s">%s</a></li>', $props);
   }
   
   public function confirmdelete($id, $adminurl, $mesg) {
@@ -816,26 +737,34 @@ class adminform {
   }
   
   public function gettml() {
-    $title = $this->title ? str_replace('$title', $this->title, $this->getadmintheme()->templates['form.title']) : '';
+    $admin = $this->getadmintheme();
+    $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
     
     $attr = "action=\"$this->action\"";
     foreach (array('method', 'enctype', 'target', 'id', 'class') as $k) {
       if ($v = $this->$k) $attr .= sprintf(' %s="%s"', $k, $v);
     }
     
+    $theme = ttheme::i();
+    $lang = tlocal::i();
+    $body = $this->body;
+    
     if ($this->inline) {
-      $body = $this->line($this->body . ($this->submit ? "[button=$this->submit]" : ''));
-    } else {
-      $body = $this->body;
       if ($this->submit) {
-        $body .= "[submit=$this->submit]";
+        $body .= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
+      }
+      
+      $body = $this->line($body);
+    } else {
+      if ($this->submit) {
+        $body .= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
       }
     }
     
-    return strtr($this->getadmintheme()->templates['form'], array(
+    return strtr($admin->templates['form'], array(
     '$title' => $title,
     '$before' => $this->before,
-    'attr' => $attr,
+    '$attr' => $attr,
     '$body' => $body,
     ));
   }
@@ -845,31 +774,6 @@ class adminform {
   }
   
 }//class
-
-//html.tableprop.class.php
-class tableprop {
-  public $callbacks;
-  
-  public static function i() {
-    return getinstance(__class__);
-  }
-  
-  public function __construct() {
-    $this->callbacks = array();
-  }
-  
-  public function addprop($callback) {
-    $this->callbacks[] = $callback;
-    $id = count($this->callbacks) -  1;
-    return 'prop' . $id;
-  }
-  
-  public function __get($name) {
-    $id = (int) substr($name, strlen('prop'));
-    return call_user_func_array($this->callbacks[$id], array(ttheme::$vars['item']));
-  }
-  
-}
 
 //html.uitabs.class.php
 class tuitabs {
@@ -925,6 +829,54 @@ class tuitabs {
   
   public static function gethead() {
     return '<script type="text/javascript">$.inittabs();</script>';
+  }
+  
+}//class
+
+//html.ulist.class.php
+//namespace litepubl\admin
+
+class ulist {
+  public $ul;
+  public $item;
+  public $link;
+  public $value;
+  
+  public function __construct($admin = null) {
+    if ($admin) {
+      $this->ul = $admin->templates['list'];
+      $this->item = $admin->templates['list.item'];
+      $this->link = $admin->templates['list.link'];
+      $this->value = $admin->templates['list.value'];
+    }
+  }
+  
+  public function get(array $props) {
+    $result = '';
+    foreach ($props as $name => $value) {
+      if ($value === false) continue;
+      
+      if (is_array($value)) {
+        $value = $this->get($value);
+      }
+      
+      $result .= strtr(is_int($name) ? $this->value : $this->item, array(
+      '$name' => $name,
+      '$value' => $value,
+      ));
+    }
+    
+    if ($result) {
+      return str_replace('$item', $result, $this->ul);
+    }
+    
+    return '';
+  }
+  
+  public function links(array $props) {
+    $this->item = $this->link;
+    $result = $this->get($props);
+    return str_replace('$site.url', litepublisher::$site->url, $result);
   }
   
 }//class
@@ -1271,8 +1223,18 @@ class tablebuilder {
     
     return array(
     'text-center col-checkbox',
-    $admin->templates['invertcheck'],
-    str_replace('$name', $name, $admin->templates['checkbox'])
+    $admin->templates['checkbox.invert'],
+    str_replace('$name', $name, $admin->templates['checkbox.id'])
+    );
+  }
+  
+  public function namecheck() {
+    $admin = admintheme::i();
+    
+    return array(
+    'text-center col-checkbox',
+    $admin->templates['checkbox.stub'],
+    $admin->templates['checkbox.name']
     );
   }
   
