@@ -5,8 +5,10 @@ tml/02checkbox.txt
 ru/02checkbox.txt
 tml/03table.cols.txt
 ru/03table.cols.txt
-tml/10section.txt
-ru/10section.txt
+tml/08list.txt
+ru/08list.txt
+tml/09section.txt
+ru/09section.txt
 tml/10error.txt
 ru/10error.txt
 tml/11centergroup.txt

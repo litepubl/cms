@@ -5,6 +5,7 @@ unset($classes->items['poststatus']);
 unset($classes->items['tadminthemes']);
 unset($classes->items['tableprop']);
 $classes->items['datefilter'] = array('kernel.admin.php', '', 'filter.datetime.class.php');
+$classes->items['ulist'] = array('kernel.admin.php', '', 'html.ulist.class.php');
 $classes->save();
 
 $m = tadminmenus::i();

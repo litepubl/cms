@@ -1,0 +1,7 @@
+list = [
+<ul>
+   $item = [<li>$name: $value</li>]
+   $link = [<li><a href="$site.url$name">$value</a></li>]
+   $value = [<li>$value</li>]
+</ul>
+]
