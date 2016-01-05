@@ -54,11 +54,14 @@ session_destroy();
           tusers::i()->changepassword($id, $password);
         }
 
-    $html = $this->html;
-    $args = new targs();
-        $args->password = $password;
-        $args->email = $email;
-        return $html->newpassword($args);
+$admin = tview::getview($this)->admintheme;
+$ulist = new ulist($admin);
+        return $admin->getsection($lang->uselogin,
+ $ulist->get(array(
+ $lang->canlogin=>  ttheme::link('/admin/login/', $lang->controlpanel),
+'E-Mail' => $email,
+$lang->password => $password
+)));
       } else {
         return $theme->h($lang->notfound);
       }
