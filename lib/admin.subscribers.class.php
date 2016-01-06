@@ -86,9 +86,9 @@ class tadminsubscribers extends tadminform {
     $tb = new tablebuilder();
     $tb->setposts(array(
     array($lang->post, '<a href="$site.url$post.url" title="$post.title">$post.title</a>')
-    )), $args);
+    ));
     
-    return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items)), $args);
+    return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items), $args);
   }
   
   public function processform() {

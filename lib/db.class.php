@@ -379,7 +379,7 @@ class tdatabase {
     }
     return $result;
   }
-  
+
   public function fetchassoc($res) {
     return is_object($res) ? $res->fetch_assoc() : false;
   }

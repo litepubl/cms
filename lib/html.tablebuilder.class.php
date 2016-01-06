@@ -15,6 +15,7 @@ class tablebuilder {
   public $body;
   //targs
   public $args;
+public $admintheme;
   public $callbacks;
   
   public function __construct() {
@@ -67,7 +68,9 @@ class tablebuilder {
   public function build(array $items) {
     $body = '';
     $args = $this->args;
-    $admintheme = admintheme::i();
+
+if (!$this->admintheme) $this->admintheme = admintheme::i();
+    $admintheme = $this->admintheme;
     
     foreach ($items as $id => $item) {
       if (is_array($item)) {
