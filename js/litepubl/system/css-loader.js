@@ -15,16 +15,16 @@
     guid: 0,
     
     add: function(url, callback) {
-this.additem($('<link rel="stylesheet" type="text/css" media="' + this.getmedia() + '" href="' + url + '" />').appendTo("head:first").get(0), callback);
+this.additem($('<link rel="stylesheet" type="text/css" media="only x" id="' + this.newid() + '" href="' + url + '" />').appendTo("head:first").get(0), callback);
 },
 
     addtext: function(text, callback) {
-this.additem($('<link rel="stylesheet" type="text/css" media="' + this.getmedia() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
+this.additem($('<link rel="stylesheet" type="text/css" media="only x" id="' + this.newid() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
 },
 
-getmedia: function() {
+newid: function() {
 if (!this.guid) this.guid = $.now();
-return "only x" + this.guid++;
+return "css_loader_" + this.guid++;
 },
 
 additem: function(link, callback) {
@@ -66,7 +66,7 @@ if ($.isFunction(item.callback)) item.callback();
     ready: function(link) {
       var sheets = document.styleSheets;
       for( var i = 0, l = sheets.length; i < l; i++ ){
-        if( sheets[ i ].media && sheets[ i ].media == link.media) {
+        if( sheets[i].id && sheets[i].id == link.id) {
           //link.media = "all";
           return true;
         }
