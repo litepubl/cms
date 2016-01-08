@@ -19,7 +19,7 @@ this.additem($('<link rel="stylesheet" type="text/css" media="only x" id="' + th
 },
 
     addtext: function(text, callback) {
-this.additem($('<link rel="stylesheet" type="text/css" media="only x" id="' + this.newid() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
+this.additem($('<style type="text/css" media="only x" id="' + this.newid() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
 },
 
 newid: function() {

@@ -10,8 +10,7 @@
 
   $.load_lobster = function() {
     //$.load_css("http://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic");
-var css = '<style type="text/css" rel="stylesheet">' +
-"@font-face {" +
+var css = "@font-face {" +
   "font-family: 'Lobster';" +
   "font-style: normal;" +
   "font-weight: 400;" +
@@ -22,10 +21,11 @@ var css = '<style type="text/css" rel="stylesheet">' +
 "url('%s.woff2') format('woff2')," +
 "url('%s.ttf') format('truetype')," +
 "url('%s.svg#Lobster') format('svg');" +
-"}</style>";
+"}";
 
 css = css.replace(/%s/gm, ltoptions.files + '/js/fonts/lobster/lobster');
-$("head:first").append(css);
+
+$.css_loader.addtext(css);
 
     var observer = new FontFaceObserver('Lobster', {weight: 400});
 observer .check().then(function () {
