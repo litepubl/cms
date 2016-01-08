@@ -59,14 +59,21 @@ function array_delete(array &$a, $i) {
 
 function array_delete_value(array &$a, $value) {
   $i = array_search($value, $a);
-  if ($i !== false)         array_splice($a, $i, 1);
+  if ($i !== false)         {
+array_splice($a, $i, 1);
+return true;
+}
+
+return false;
 }
 
 function array_clean(array &$items) {
   $items = array_unique($items);
   foreach (array(0, false, null, '') as $v) {
     $i = array_search($v, $items);
-    if ($i !== false)         array_splice($items, $i, 1);
+    if (($i !== false) && ($items[$i] === $v)) {
+array_splice($items, $i, 1);
+}
   }
 }
 

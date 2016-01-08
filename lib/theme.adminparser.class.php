@@ -18,10 +18,29 @@ class adminparser extends baseparser  {
     $this->tagfiles[] = 'themes/admin/admintags.ini';
     $this->addmap('themefiles', array());
   }
-  
+
   public function getfilelist($name) {
     $result = parent::getfilelist($name);
-    return $result + $this->themefiles;
+foreach ($this->themefiles as $filename) {
+$filename = ltrim($filename, '/');
+if (!$filename) continue;
+
+if (file_exists(litepublisher::$paths->home . $filename)) {
+$result[] = litepublisher::$paths->home . $filename;
+} else if (file_exists(litepublisher::$paths->themes . $filename)) {
+$result[] = litepublisher::$paths->themes . $filename;
+}
+}
+
+return $result;
   }
+
+      public function loadpaths() {
+if (!count($this->tagfiles)) {
+$this->tagfiles[] = 'themes/admin/admintags.ini';
+}
+
+return parent::loadpaths();
+}
   
 }//class

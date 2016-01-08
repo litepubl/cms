@@ -26,7 +26,7 @@ class baseparser extends tevents {
     
     $this->pathmap = array();
   }
-  
+
   public function checkabout($name) {
     return true;
   }
@@ -59,8 +59,9 @@ class baseparser extends tevents {
     $about = $this->getabout($theme->name);
     
     $filelist = $this->getfilelist($theme->name);
+
     foreach ($filelist as $filename) {
-      if ($s = $this->getfile($filename, $about)) {
+      if ($s = $this->getfile($filename)) {
         $s = $this->replace_about($s, $about);
         $this->parsetags($theme, $s);
       }
@@ -262,7 +263,9 @@ class baseparser extends tevents {
       preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
         $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
         if (!file_exists($filename)) $this->error("File '$filename' not found");
-        $s = $this->getfile($filename, $this->getabout($this->theme->name));
+        if ($s = $this->getfile($filename)) {
+        $s = $this->replace_about($s, $this->getabout($this->theme->name));
+}
       }
       
       $parent = $this->preparetag($parent);
@@ -390,5 +393,20 @@ class baseparser extends tevents {
         $this->callevent('ongetpaths', array(&$result));
         return $result;
       }
-      
-    }//class
+
+public function add_tagfile($filename) {
+if (!in_array($filename, $this->tagfiles)) {
+$this->tagfiles[] = $filename;
+array_clean($this->tagfiles);
+$this->save();
+}
+}
+
+public function delete_tagfile($filename) {
+if (array_delete_value($this->tagfiles, $filename)) {
+array_clean($this->tagfiles);
+$this->save();
+}
+}
+
+          }//class

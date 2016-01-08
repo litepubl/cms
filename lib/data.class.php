@@ -178,7 +178,10 @@ class tdata {
   
   public function loadfromstring($s) {
     try {
-      if (!empty($s)) $this->data = unserialize($s) + $this->data;
+      if (!empty($s)) {
+$this->data = unserialize($s) + $this->data;
+}
+
       $this->afterload();
       return true;
     } catch (Exception $e) {

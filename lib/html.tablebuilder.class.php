@@ -15,18 +15,22 @@ class tablebuilder {
   public $body;
   //targs
   public $args;
+public $data;
 public $admintheme;
   public $callbacks;
   
   public function __construct() {
     $this->head = '';
     $this->body = '';
-    $this->args = new targs();
     $this->callbacks = array();
+    $this->args = new targs();
+$this->data = array();
   }
   
   public function setstruct(array $struct) {
+$this->head = '';
     $this->body = '<tr>';
+
     foreach ($struct as $index => $item) {
       if (!$item || !count($item)) continue;
       
@@ -133,7 +137,8 @@ if (!$this->admintheme) $this->admintheme = admintheme::i();
     
     $body = '';
     $args = $this->args;
-    $admintheme = admintheme::i();
+if (!$this->admintheme) $this->admintheme = admintheme::i();
+    $admintheme = $this->admintheme;
     
     foreach ($props as $k => $v) {
       if (($k === false) || ($v === false)) continue;

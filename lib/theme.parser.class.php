@@ -18,7 +18,15 @@ class tthemeparser extends baseparser  {
     $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
     $this->sidebar_index = 0;
   }
-  
+
+      public function loadpaths() {
+if (!count($this->tagfiles)) {
+    $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
+}
+
+return parent::loadpaths();
+}
+
   public function doreplacelang(basetheme $theme) {
     parent::doreplacelang($theme);
     
