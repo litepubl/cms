@@ -15,11 +15,11 @@
     guid: 0,
     
     add: function(url, callback) {
-this.additem($('<link rel="stylesheet" type="text/css" media="only x" id="' + this.newid() + '" href="' + url + '" />').appendTo("head:first").get(0), callback);
+this.additem($('<link type="text/css" rel="stylesheet" media="only x" id="' + this.newid() + '" href="' + url + '" />').appendTo("head:first").get(0), callback);
 },
 
     addtext: function(text, callback) {
-this.additem($('<style type="text/css" media="only x" id="' + this.newid() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
+this.additem($('<style type="text/css" rel="stylesheet" media="only x" id="' + this.newid() + '">' + text + '</style>').appendTo("head:first").get(0), callback);
 },
 
 newid: function() {

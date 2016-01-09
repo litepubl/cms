@@ -27,7 +27,5 @@ cd ..\swfupload
 cd ..\fonts/css
 rem %css% font-awesome.css -o font-awesome.min.css
 %mini%font-awesome.js --js_output_file=font-awesome.min.js
-%mini%font-awesome.cdn.js --js_output_file=font-awesome.cdn.min.js
 %mini%lobster.js --js_output_file=lobster.min.js
-%mini%lobster.cdn.js --js_output_file=lobster.cdn.min.js
 ENDLOCAL   
