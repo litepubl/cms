@@ -1,5 +1,8 @@
 <?php
 function update607() {
+  litepublisher::$site->jquery_version = '1.12.0';
+litepublisher::$site->save();
+
 $classes = litepublisher::$classes;
 unset($classes->items['poststatus']);
 unset($classes->items['tadminthemes']);
