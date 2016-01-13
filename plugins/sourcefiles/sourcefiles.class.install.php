@@ -10,17 +10,10 @@ litepublisher::$urlmap->add($self->url, get_class($self), '', 'begin');
 
   if (!@is_dir($self->dir)) @mkdir($self->dir, 0777);
   @chmod($self->dir, 0777);
-  
-  $self->ignore = get_ignore_source();
-  $self->save();
-
-  litepublisher::$classes->add('tsourcefilesmenu', 'sourcefiles.menu.class.php', basename(dirname(__file__)));
 }
 
 function tsourcefilesUninstall($self) {
 litepublisher::$urlmap->delete($self->url);
-  litepublisher::$classes->delete('tsourcefilesmenu');
-
   tfiler::delete($self->dir, true, true);
 }
 
