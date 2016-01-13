@@ -6,9 +6,8 @@
 **/
 
 class tsourcefiles extends tplugin implements itemplate {
-  public $ignore;
-  private $item;
-  private $geshi;
+public $item;
+  public $geshi;
   
   public static function i() {
     return getinstance(__class__);
@@ -16,13 +15,51 @@ class tsourcefiles extends tplugin implements itemplate {
   
   protected function create() {
     parent::create();
-    $this->table = 'sourcefiles';
-    $this->addmap('ignore', array());
-    $this->data['root'] = '';
+$this->data['url'] = '/source/';
   }
+
+public function getdir() {
+return litepublisher::$paths->data . 'sourcecache';
+}
+
+public function getfilename($url) {
+return $this->dir . '/' . md5($url) . '.txt';
+}
+
+public function clear() {
+tfiler::delete($this->dir, true, false);
+}
+
+public function loaditem($filename) {
+if (!file_exists($filename)) return false;
+$s = file_get_contents($filename);
+if (!$s)) return false;
+
+$this->item = unserialize($s);
+return true;
+}
+
+public function saveitem($filename, $data) {
+file_put_contents($filename, serialize($data));
+@chmod($filename, 0666);
+}
   
   public function request($arg) {
-    $this->item = $this->db->getitem($arg);
+$url = substr(litepublisher::$urlmap->url, strlen($this->url));
+if (!$url) $url = '/';
+
+
+if (!$this->loaditem($this->getfilename($url)) {
+while ($url && $url != '/') {
+$url = dirname($url);
+if (file_exists($this->getfilename($url . '/')) {
+return litepublisher::$urlmap->redir($this->url . $url . '/');
+}
+}
+
+return 404;
+}
+
   }
   
   public function gettitle() {
@@ -53,23 +90,6 @@ public function gethead() { }
     
     $theme = ttheme::i();
     return $theme->simple($updir . $this->getcachecontent($dir, $filename));
-  }
-  
-  private function getcachename($dir, $filename) {
-    $name = $dir;
-    if ($filename != '') $name .= '_' . $filename;
-    $name .= '.htm';
-    $name = str_replace('/', '_', $name);
-    return litepublisher::$paths->data . 'sourcefiles' . DIRECTORY_SEPARATOR . $name;
-  }
-  
-  public function getcachecontent($dir, $filename) {
-    $cachefile = $this->getcachename($dir, $filename);
-    if (file_exists($cachefile)) return file_get_contents($cachefile);
-    $result = $this->getfilecontent($dir, $filename);
-    file_put_contents($cachefile, $result);
-    @chmod($cachefile, 0666);
-    return $result;
   }
   
   public function getfilecontent($dir, $filename) {

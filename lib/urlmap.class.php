@@ -156,7 +156,10 @@ if ($item = $this->findfilter($url)) {
   public function finditem($url) {
     if ($result = $this->query($url)) return $result;
     $srcurl = $url;
-    if ($i = strpos($url, '?'))  $url = substr($url, 0, $i);
+    if ($i = strpos($url, '?'))  {
+$url = substr($url, 0, $i);
+}
+
     if ('//' == substr($url, -2)) $this->redir(rtrim($url, '/') . '/');
     //extract page number
     if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
@@ -166,17 +169,22 @@ if ($item = $this->findfilter($url)) {
       $this->page = max(1, abs((int) $m[2]));
     }
     
-    if ($result = $this->query($url)) {
-      if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) return $this->redir($url);
+    if (($srcurl != $url) && ($result = $this->query($url))) {
+      if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
+return $this->redir($result['url']);
+}
+
       return $result;
     }
 
     $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
-    if ($result = $this->query($url)) {
-      if ($this->page > 1) return $result;
-      if ($result['type'] == 'normal') return $this->redir($url);
+    if (($srcurl != $url) && ($result = $this->query($url))) {
+      if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
+return $this->redir($result['url']);
+}
+
       return $result;
-    }
+}
     
     $this->uripath = explode('/', trim($url, '/'));
     return false;

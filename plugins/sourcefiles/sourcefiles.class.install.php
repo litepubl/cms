@@ -6,32 +6,22 @@
 **/
 
 function tsourcefilesInstall($self) {
-  if (!dbversion) die("Plugin required data base");
-  $manager = tdbmanager ::i();
-  $manager->CreateTable($self->table, "
-  `id` int unsigned NOT NULL auto_increment,
-  `idurl` int unsigned NOT NULL default '0',
-  `filename` varchar(128) NOT NULL,
-  `dir` varchar(128) NOT NULL,
-  PRIMARY KEY  (`id`)
-  ");
-  
-  $dir = litepublisher::$paths->data . 'sourcefiles';
-  if (!@is_dir($dir)) @mkdir($dir, 0777);
-  @chmod($dir, 0777);
+litepublisher::$urlmap->add($self->url, get_class($self), '', 'begin');
+
+  if (!@is_dir($self->dir)) @mkdir($self->dir, 0777);
+  @chmod($self->dir, 0777);
   
   $self->ignore = get_ignore_source();
   $self->save();
+
   litepublisher::$classes->add('tsourcefilesmenu', 'sourcefiles.menu.class.php', basename(dirname(__file__)));
 }
 
 function tsourcefilesUninstall($self) {
-  //die("Warning! You can lost all tickets!");
+litepublisher::$urlmap->delete($self->url);
   litepublisher::$classes->delete('tsourcefilesmenu');
-  $manager = tdbmanager ::i();
-  $manager->deletetable($self->table);
-  Turlmap::unsub($self);
-  tfiler::delete(litepublisher::$paths->data . 'sourcefiles', true, true);
+
+  tfiler::delete($self->dir, true, true);
 }
 
 function get_ignore_source() {
