@@ -103,6 +103,7 @@ class tdbmanager  {
       $value = trim($value, ' \'"');
       $i = array_search($value, $values);
       if (false === $i) return;
+
       unset($values[$i]);
       $default = $values[0];
       $this->exec("update $this->prefix$table set $column = '$default' where $column = '$value'");

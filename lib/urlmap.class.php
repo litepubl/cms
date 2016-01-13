@@ -13,11 +13,10 @@ class turlmap extends titems {
   public $itemrequested;
   public  $context;
   public $cache_enabled;
-  public $argtree;
   public $is404;
   public $isredir;
   public $adminpanel;
-  public $mobile;
+public $prefilter;
   protected $close_events;
   
   public static function i() {
@@ -45,10 +44,11 @@ class turlmap extends titems {
     $this->addevents('beforerequest', 'afterrequest', 'onclearcache');
     $this->data['disabledcron'] = false;
     $this->data['redirdom'] = false;
+$this->addmap('prefilter', array());
+
     $this->is404 = false;
     $this->isredir = false;
     $this->adminpanel = false;
-    $this->mobile= false;
     $this->cache_enabled =     litepublisher::$options->cache && !litepublisher::$options->admincookie;
     $this->page = 1;
     $this->close_events = array();
@@ -142,10 +142,14 @@ class turlmap extends titems {
   }
   
   private function query($url) {
-    if ($item = $this->db->getassoc('url = '. dbquote($url). ' limit 1')) {
+if ($item = $this->findfilter($url)) {
+      $this->items[$item['id']] = $item;
+      return $item;
+    } else if ($item = $this->db->getassoc('url = '. dbquote($url). ' limit 1')) {
       $this->items[$item['id']] = $item;
       return $item;
     }
+
     return false;
   }
   
@@ -166,6 +170,7 @@ class turlmap extends titems {
       if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) return $this->redir($url);
       return $result;
     }
+
     $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
     if ($result = $this->query($url)) {
       if ($this->page > 1) return $result;
@@ -174,20 +179,33 @@ class turlmap extends titems {
     }
     
     $this->uripath = explode('/', trim($url, '/'));
-    //tree convert into argument
-    $url = trim($url, '/');
-    $j = -1;
-    while($i = strrpos($url, '/', $j)) {
-      if ($result = $this->query('/' . substr($url, 0, $i + 1))) {
-        if ($result['type'] != 'tree') return false;
-        $this->argtree = substr($url, $i +1);
-        return $result;
-      }
-      $j = - (strlen($url) - $i + 1);
-    }
-    
     return false;
   }
+
+public function findfilter($url) {
+foreach ($this->prefilter as $item) {
+switch ($item['type']) {
+case 'begin':
+if (strbegin($url, $item['url'])) return $item;
+break;
+
+case 'end':
+if (strend($url, $item['url'])) return $item;
+break;
+
+case 'regexp':
+if (preg_match($item['url'], $url)) return $item;
+break;
+}
+}
+
+return false;
+}
+
+public function updatefilter() {
+$this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
+$this->save();
+}
   
   private function getcachefile(array $item) {
     switch ($item['type']) {
@@ -323,17 +341,29 @@ class turlmap extends titems {
   public function add($url, $class, $arg, $type = 'normal') {
     if (empty($url)) $this->error('Empty url to add');
     if (empty($class)) $this->error('Empty class name of adding url');
-    if (!in_array($type, array('normal','get','tree', 'usernormal', 'userget'))) $this->error(sprintf('Invalid url type %s', $type));
-    
-    if ($item = $this->db->finditem('url = ' . dbquote($url))) $this->error(sprintf('Url "%s" already exists', $url));
+    if (!in_array($type, array('normal','get','usernormal', 'userget', 'begin', 'end', 'regexp'))) {
+$this->error(sprintf('Invalid url type %s', $type));
+}
+
+    if ($item = $this->db->finditem('url = ' . dbquote($url))) {
+$this->error(sprintf('Url "%s" already exists', $url));
+}
+
     $item= array(
     'url' => $url,
     'class' => $class,
     'arg' => (string) $arg,
     'type' => $type
     );
+
     $item['id'] = $this->db->add($item);
     $this->items[$item['id']] = $item;
+
+    if (in_array($type, array('begin', 'end', 'regexp'))) {
+$this->prefilter[] = $item;
+$this->save();
+}
+
     return $item['id'];
   }
   
@@ -344,15 +374,22 @@ class turlmap extends titems {
     } else {
       return false;
     }
-    
+
+foreach ($this->prefilter as $i => $item) {
+if ($id == $item['id']) {
+unset($this->prefilter[$i]);
+$this->save();
+break;
+}
+}    
+
     $this->clearcache();
     $this->deleted($id);
     return true;
   }
   
   public function deleteclass($class) {
-    if ($items =
-    $this->db->getitems("class = '$class'")) {
+    if ($items = $this->db->getitems("class = '$class'")) {
       $this->db->delete("class = '$class'");
       foreach ($items as $item) $this->deleted($item['id']);
     }

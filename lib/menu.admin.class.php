@@ -7,8 +7,8 @@
 
 class tadminmenu  extends tmenu {
   public static $adminownerprops = array('title', 'url', 'idurl', 'parent', 'order', 'status', 'name', 'group');
-  public $arg;
-  
+
+ 
   public static function getinstancename() {
     return 'adminmenu';
   }
@@ -63,7 +63,7 @@ public function save() { return true; }
     
     if ($s = self::auth($this->group)) return $s;
     tlocal::usefile('admin');
-    $this->arg = litepublisher::$urlmap->argtree;
+
     if ($s = $this->canrequest()) return $s;
     $this->doprocessform();
   }

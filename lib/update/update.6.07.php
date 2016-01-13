@@ -31,4 +31,16 @@ $css->unlock();
 $t = ttemplate::i();
 $t->footer = str_replace('2015', '2016', $t->footer);
 $t->save();
+
+$man = tdbmanager::i();
+$man->addenum('urlmap', 'type', 'begin');
+$man->addenum('urlmap', 'type', 'end');
+$man->addenum('urlmap', 'type', 'regexp');
+        $man->exec("update {$man->prefix}urlmap set type = 'begin' where type = 'tree'");
+$man->delete_enum('urlmap', 'type', 'tree');
+
+litepublisher::$urlmap->data['prefilter'] = litepublisher::$urlmap->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
+litepublisher::$urlmap->save();
+
+  tcron::i()->addnightly('turlmap', 'updatefilter', null);
 }
