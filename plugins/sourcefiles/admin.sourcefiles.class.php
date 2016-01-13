@@ -18,12 +18,15 @@ $lang = tplugins::getnamelang(basename(dirname(__file__)));
     $args = new targs();
     $args->urlfile = '';
     $args->formtitle = $lang->title;
-$plugin->readzip(litepublisher::$paths->data . 'sourcefile.temp.zip');
 return $html->adminform('[text=urlfile]', $args);
   }
   
   public function processform() {
     $plugin = tsourcefiles::i();
+$m = microtime(true);
+$plugin->readzip(litepublisher::$paths->data . 'sourcefile.temp.zip');
+echo round(microtime(true) - $m, 2);
+return;
 $url = trim($_POST['urlfile']);
 if ($url && ($s = http::get($url))) {
 $filename = litepublisher::$paths->data . 'sourcefile.temp.zip';

@@ -36,8 +36,7 @@ if (!file_exists($filename)) return false;
 $s = file_get_contents($filename);
 if (!$s) return false;
 
-$this->item = unserialize($s);
-return true;
+return unserialize($s);
 }
 
 public function saveitem($filename, $data) {
@@ -49,10 +48,13 @@ file_put_contents($filename, serialize($data));
 $url = substr(litepublisher::$urlmap->url, strlen($this->url));
 if (!$url) $url = '/';
 
-
-if (!$this->loaditem($this->getfilename($url))) {
+if (!($this->item = $this->loaditem($this->getfilename($url)))) {
 while ($url && $url != '/') {
 $url = dirname($url);
+if ($url == '.') {
+return litepublisher::$urlmap->redir($this->url);
+}
+
 if (file_exists($this->getfilename($url . '/'))) {
 return litepublisher::$urlmap->redir($this->url . $url . '/');
 }
@@ -87,13 +89,21 @@ return $this->item['filename'];
 public function gethead() { }
   
   public function getcont() {
-    $dir = $this->item['dir'];
-    $filename = $this->item['filename'];
-    $updir = $filename == '' ? '' :
-    ($dir == '' ? '' : sprintf('<ul><li><a href="%1$s/source/%2$s/" title="%2$s">..</a></li></ul>', litepublisher::$site->url, $dir));
+$result = '';
+if ($this->item['type'] == 'file') {
+$dir = dirname($this->item['filename']);
+if ($dir == '.') {
+$dir = '/';
+} else {
+$dir .= '/';
+}
+if ($item = $this->loaditem($this->getfilename($dir))) {
+$result .= $item['content'];
+}
+}
     
-    $theme = ttheme::i();
-    return $theme->simple($updir . $this->item['content']);
+$result .= $this->item['content'];
+    return $this->view->theme->simple($result);
   }
 
 public function creategeshi() {
@@ -109,31 +119,43 @@ require(dirname(__file__) . '/geshi.php');
 $ext = strtolower($ext);
 
     if ($ext == 'php') {
-return highlight_string ($content);
+return highlight_string ($content, true);
 }
 
-    if ($ext == 'tml') $ext = 'htm';
-    
+switch ($ext) {
+case 'tml':
+$lang = 'html5';
+break;
 
+case 'less':
+$lang = 'css';
+break;
+
+case 'js':
+$lang = 'jquery';
+break;
+
+default:
     $lang = $this->geshi->get_language_name_from_extension($ext);
-dumpvar($lang);
-die($ext);
+}
+
     $this->geshi->set_language($lang);
-    $this->geshi->set_source($source);
+    $this->geshi->set_source($content);
     return $this->geshi->parse_code();
   }
   
   public function readzip($zipname) {
-        $zip = new ZipArchive ();
+$zip = new zipArchive();
         if ($zip->open($zipname) !== true) {
 $this->error(sprintf('Error open "%s" zip archive', $zipname));
         }
 
 $this->creategeshi();
+$dirlist = array();
 $root = false;        
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
-if (strend($filename, '.min.js') || strend($filename, '.min.css')) continue;
+if (preg_match('/\.(min\.js|min\.css|jpg|jpeg|ico|png|gif|svg|swf|xap|otf|eot|ttf|woff|woff2)$/', $filename)) continue;
 
             if (!$root) {
       $list = explode('/', trim($filename, '/'));
@@ -142,17 +164,59 @@ $root = $list[0];
             
             $filename = ltrim(substr(ltrim($filename, '/'), strlen($root)), '/');
 $ext = strtolower(substr($filename,            strrpos($filename, '.') + 1));
-
-$content = $zip->getFromIndex($i);
+$content = trim($zip->getFromIndex($i));
 if (!$content) continue;
 
+$path = dirname($filename);
+if (isset($dirlist[$path])) {
+$dirlist[$path][] = basename($filename);
+} else {
+$dirlist[$path] = array(basename($filename));
+}
+
 $this->saveitem($this->getfilename($filename), array(
+'type' => 'file',
 'filename' => $filename,
 'content' => $this->syntax($ext, $content),
 ));
         }
         
         $zip->close();
+
+$tml = '<li><a href="' . litepublisher::$site->url . $this->url . '%s">%s</a></li>';
+$tml_list = '<ul>%s</ul>';
+$dirnames = array_keys($dirlist);
+foreach ($dirlist as $dir => $filelist) {
+$list = '';
+if ($dir != '.') {
+$list .= sprintf($tml, dirname($dir) == '.' ? '' : dirname($dir), '..');
+}
+
+$subdirs = array();
+foreach ($dirnames as $i => $subdir) {
+if ($dir == dirname($subdir)) {
+$subdirs[] = basename($subdir);
+unset($subdirs[$i]);
+}
+}
+
+sort($subdirs, SORT_NATURAL);
+
+foreach ($subdirs as $subdir) {
+$list .= sprintf($tml, ($dir == '.' ? '' : $dir . '/') . $subdir . '/', strtoupper($subdir));
+}
+
+sort($filelist, SORT_NATURAL);
+foreach ($filelist as $filename) {
+$list .= sprintf($tml, $filename, $filename);
+}
+
+$this->saveitem($this->getfilename($dir == '.' ? '/' : $dir . '/'), array(
+'type' => 'dir',
+'filename' => $dir,
+'content' => sprintf($tml_list, $list),
+));
+}
 }
 
 }//class
