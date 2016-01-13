@@ -93,7 +93,7 @@ public function gethead() { }
     ($dir == '' ? '' : sprintf('<ul><li><a href="%1$s/source/%2$s/" title="%2$s">..</a></li></ul>', litepublisher::$site->url, $dir));
     
     $theme = ttheme::i();
-    return $theme->simple($updir . $this->getcachecontent($dir, $filename));
+    return $theme->simple($updir . $this->item['content']);
   }
 
 public function creategeshi() {
