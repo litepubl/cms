@@ -46,16 +46,15 @@ file_put_contents($filename, serialize($data));
   
   public function request($arg) {
 $url = substr(litepublisher::$urlmap->url, strlen($this->url));
-if (!$url) $url = '/';
+$url = trim($url, '/');
+if (!$url) $url = '.';
 
 if (!($this->item = $this->loaditem($this->getfilename($url)))) {
-while ($url && $url != '/') {
+while ($url && $url != '.') {
 $url = dirname($url);
 if ($url == '.') {
 return litepublisher::$urlmap->redir($this->url);
-}
-
-if (file_exists($this->getfilename($url . '/'))) {
+} else if (file_exists($this->getfilename($url))) {
 return litepublisher::$urlmap->redir($this->url . $url . '/');
 }
 }
@@ -86,17 +85,16 @@ return $this->item['filename'];
   
   public function getkeywords() {}
  public function getdescription() { }
-public function gethead() { }
+public function gethead() {
+if ($this->item['style']) {
+return sprintf('<style type="text/css">%s</style>', $this->item['style']);
+}
+ }
   
   public function getcont() {
 $result = '';
 if ($this->item['type'] == 'file') {
 $dir = dirname($this->item['filename']);
-if ($dir == '.') {
-$dir = '/';
-} else {
-$dir .= '/';
-}
 if ($item = $this->loaditem($this->getfilename($dir))) {
 $result .= $item['content'];
 }
@@ -112,16 +110,20 @@ public function creategeshi() {
 require(dirname(__file__) . '/geshi.php');
       $this->geshi = new GeSHi();
       $this->geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+$this->geshi->enable_classes();
+//$this->geshi->enable_keyword_links(false);
     }
 }
   
   public function syntax($ext, $content) {
-$ext = strtolower($ext);
-
+/*
     if ($ext == 'php') {
-return highlight_string ($content, true);
+return array(
+'content' => highlight_string ($content, true),
+'style' => ''
+);
 }
-
+*/
 switch ($ext) {
 case 'tml':
 $lang = 'html5';
@@ -135,13 +137,20 @@ case 'js':
 $lang = 'jquery';
 break;
 
+case 'json':
+$lang = 'javascript';
+break;
+
 default:
     $lang = $this->geshi->get_language_name_from_extension($ext);
 }
 
     $this->geshi->set_language($lang);
     $this->geshi->set_source($content);
-    return $this->geshi->parse_code();
+    return array(
+'content' => $this->geshi->parse_code(),
+'style' => $this->geshi->get_stylesheet()
+);
   }
   
   public function readzip($zipname) {
@@ -174,11 +183,11 @@ $dirlist[$path][] = basename($filename);
 $dirlist[$path] = array(basename($filename));
 }
 
-$this->saveitem($this->getfilename($filename), array(
-'type' => 'file',
-'filename' => $filename,
-'content' => $this->syntax($ext, $content),
-));
+$item = $this->syntax($ext, $content);
+$item['type'] = 'file';
+$item['filename'] = $filename;
+
+$this->saveitem($this->getfilename($filename), $item);
         }
         
         $zip->close();
@@ -188,8 +197,11 @@ $tml_list = '<ul>%s</ul>';
 $dirnames = array_keys($dirlist);
 foreach ($dirlist as $dir => $filelist) {
 $list = '';
-if ($dir != '.') {
-$list .= sprintf($tml, dirname($dir) == '.' ? '' : dirname($dir), '..');
+if ($dir == '.') {
+$basedir = '';
+} else {
+$basedir = $dir . '/';
+$list .= sprintf($tml, dirname($dir) == '.' ? '' : dirname($dir) . '/', '..');
 }
 
 $subdirs = array();
@@ -201,20 +213,20 @@ unset($subdirs[$i]);
 }
 
 sort($subdirs, SORT_NATURAL);
-
 foreach ($subdirs as $subdir) {
-$list .= sprintf($tml, ($dir == '.' ? '' : $dir . '/') . $subdir . '/', strtoupper($subdir));
+$list .= sprintf($tml, $basedir . $subdir . '/', strtoupper($subdir));
 }
 
 sort($filelist, SORT_NATURAL);
 foreach ($filelist as $filename) {
-$list .= sprintf($tml, $filename, $filename);
+$list .= sprintf($tml, $basedir . $filename, $filename);
 }
 
-$this->saveitem($this->getfilename($dir == '.' ? '/' : $dir . '/'), array(
+$this->saveitem($this->getfilename($dir), array(
 'type' => 'dir',
 'filename' => $dir,
 'content' => sprintf($tml_list, $list),
+'style' => '',
 ));
 }
 }

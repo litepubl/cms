@@ -99,7 +99,8 @@ $language_data = array (
             ),
         9 => array(
             // jQuery Events Functions
-            'ready', 'bind', 'one', 'trigger', 'triggerHandler', 'unbind', 'live',
+            'on', 'off',
+'ready', 'bind', 'one', 'trigger', 'triggerHandler', 'unbind', 'live',
             'die', 'hover', 'blur', 'change', 'click', 'dblclick', 'error',
             'focus', 'keydown', 'keypress', 'keyup', 'mousedown', 'mouseenter',
             'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'resize',
@@ -120,6 +121,7 @@ $language_data = array (
             ),
         12 => array(
             // jQuery Utility Functions
+ 'proxy',
             'support', 'browser', 'version', 'boxModal', 'extend', 'grep', 'makeArray',
             'map', 'inArray', 'merge', 'unique', 'isArray', 'isFunction', 'trim',
             'param',
@@ -204,15 +206,15 @@ $language_data = array (
         1 => '',
         2 => '',
         3 => '',
-        4 => 'http://docs.jquery.com/Core/{FNAME}',
-        5 => 'http://docs.jquery.com/Attributes/{FNAME}',
-        6 => 'http://docs.jquery.com/Traversing/{FNAME}',
-        7 => 'http://docs.jquery.com/Manipulation/{FNAME}',
-        8 => 'http://docs.jquery.com/CSS/{FNAME}',
-        9 => 'http://docs.jquery.com/Events/{FNAME}',
-        10 => 'http://docs.jquery.com/Effects/{FNAME}',
-        11 => 'http://docs.jquery.com/Ajax/{FNAME}',
-        12 => 'http://docs.jquery.com/Utilities/{FNAME}'
+        4 => 'https://api.jquery.com/{FNAME}/',
+        5 => 'https://api.jquery.com/{FNAME}/',
+        6 => 'https://api.jquery.com/{FNAME}/',
+        7 => 'https://api.jquery.com/{FNAME}/',
+        8 => 'https://api.jquery.com/{FNAME}/',
+        9 => 'https://api.jquery.com/{FNAME}/',
+        10 => 'https://api.jquery.com/{FNAME}/',
+        11 => 'https://api.jquery.com/{FNAME}/',
+        12 => 'https://api.jquery.com/jQuery.{FNAME}/'
         ),
     'OOLANG' => true,
     'OBJECT_SPLITTERS' => array(
