@@ -192,6 +192,20 @@ $this->saveitem($this->getfilename($filename), $item);
         
         $zip->close();
 
+$dirnames = array_keys($dirlist);
+//force dir tree
+foreach ($dirnames as $dirname) {
+$list = explode('/', $dirname);
+$dir = '';
+foreach ($list as $name) {
+if ($dir) $dir .= '/';
+$dir .= $name;
+if (!isset($dirlist[$dir])) {
+$dirlist[$dir] = array();
+}
+}
+}
+
 $tml = '<li><a href="' . litepublisher::$site->url . $this->url . '%s">%s</a></li>';
 $tml_list = '<ul>%s</ul>';
 $dirnames = array_keys($dirlist);
@@ -206,9 +220,9 @@ $list .= sprintf($tml, dirname($dir) == '.' ? '' : dirname($dir) . '/', '..');
 
 $subdirs = array();
 foreach ($dirnames as $i => $subdir) {
-if ($dir == dirname($subdir)) {
+if (($dir != $subdir) && ($dir == dirname($subdir))) {
 $subdirs[] = basename($subdir);
-unset($subdirs[$i]);
+unset($dirnames[$i]);
 }
 }
 

@@ -23,6 +23,7 @@ return $html->adminform('[text=urlfile]', $args);
   
   public function processform() {
     $plugin = tsourcefiles::i();
+$plugin->clear();
 $plugin->readzip(litepublisher::$paths->data . 'sourcefile.temp.zip');
 return;
 $m = microtime(true);
@@ -31,6 +32,7 @@ if ($url && ($s = http::get($url))) {
 $filename = litepublisher::$paths->data . 'sourcefile.temp.zip';
 file_put_contents($filename, $s);
 @chmod($filename, 0666);
+$plugin->clear();
 $plugin->readzip($filename);
 //unlink($filename);
 return sprintf('<h4>Processed  by %f seconds</h4>', round(microtime(true) - $m, 2));
