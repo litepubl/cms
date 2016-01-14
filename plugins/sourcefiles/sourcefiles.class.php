@@ -16,6 +16,7 @@ public $item;
   protected function create() {
     parent::create();
 $this->data['url'] = '/source/';
+$this->data['zipurl'] = '';
     $this->data['idview'] = 1;
   }
 
@@ -92,7 +93,7 @@ return sprintf('<style type="text/css">%s</style>', $this->item['style']);
  }
   
   public function getcont() {
-$result = '';
+$result = sprintf('<h4>%s</h4>', $this->item['filename']);
 if ($this->item['type'] == 'file') {
 $dir = dirname($this->item['filename']);
 if ($item = $this->loaditem($this->getfilename($dir))) {
@@ -238,7 +239,7 @@ $list .= sprintf($tml, $basedir . $filename, $filename);
 
 $this->saveitem($this->getfilename($dir), array(
 'type' => 'dir',
-'filename' => $dir,
+'filename' => $dir == '.' ? $root : $dir,
 'content' => sprintf($tml_list, $list),
 'style' => '',
 ));
