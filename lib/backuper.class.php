@@ -538,82 +538,6 @@ class tbackuper extends tevents {
       default:
         $this->unknown_archive();
       }
-      $this->existingfolders = false;
-      if ($this->hasdata) $this->renamedata();
-      return true;
-    }
-
-    //define if first dir is versioned
-    public function get_path_root($path) {
-      $list = explode('/', trim($path, '/'));
-      if (preg_match('/\d*+\.\d*+$/', $list[0])) {
-        return $list[0];
-      }
-
-      return false;
-    }
-
-    public function uploadtar($filename) {
-      if (!file_exists($filename)) return false;
-      return $this->upload(file_get_contents($filename) , 'tar');
-    }
-
-    public function uploadzip($filename) {
-      if (!file_exists($filename)) return false;
-
-      set_time_limit(300);
-      $this->archtype = 'unzip';
-      $this->hasdata = false;
-      $this->existingfolders = array();
-
-      $mode = $this->filer->chmod_file;
-      $path_checked = false;
-      $path_root = false;
-
-      if (class_exists('ZipArchive')) {
-        $zip = new ZipArchive();
-        if ($zip->open($filename) !== true) {
-          return $this->errorarch();
-        }
-
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-          if ($s = $zip->getFromIndex($i)) {
-            $filename = $zip->getNameIndex($i);
-
-            if (!$path_checked) {
-              $path_checked = true;
-              $path_root = $this->get_path_root($filename);
-            }
-
-            $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
-            if (!$this->uploadfile($filename, $s, $mode)) {
-              $zip->close();
-              return $this->errorwrite($filename);
-            }
-          }
-        }
-
-        $zip->close();
-      } else {
-        $this->createarchive();
-        $this->unzip->ReadData($content);
-
-        foreach ($this->unzip->Entries as $item) {
-          if ($item->Error != 0) continue;
-
-          if (!$path_checked) {
-            $path_checked = true;
-            $path_root = $this->get_path_root($item->path);
-          }
-
-          $path = $path_root ? trim(substr(trim($item->path, '/') , strlen($path_root)) , '/') : $item->path;
-          if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
-            return $this->errorwrite($item->Path . $item->Name);
-          }
-        }
-      }
-
-      $this->onuploaded($this);
 
       $this->existingfolders = false;
       if ($this->hasdata) {
@@ -621,191 +545,271 @@ class tbackuper extends tevents {
       }
 
       return true;
+  }
+
+  //define if first dir is versioned
+  public function get_path_root($path) {
+    $list = explode('/', trim($path, '/'));
+    if (preg_match('/\d*+\.\d*+$/', $list[0])) {
+      return $list[0];
     }
 
-    private function renamedata() {
-      if (!is_dir(litepublisher::$paths->backup)) {
-        mkdir(litepublisher::$paths->backup, 0777);
-        @chmod(litepublisher::$paths->backup, 0777);
+    return false;
+  }
+
+  public function uploadtar($filename) {
+    if (!file_exists($filename)) return false;
+    return $this->upload(file_get_contents($filename) , 'tar');
+  }
+
+  public function uploadzip($filename) {
+    if (!file_exists($filename)) return false;
+
+    set_time_limit(300);
+    $this->archtype = 'unzip';
+    $this->hasdata = false;
+    $this->existingfolders = array();
+
+    $mode = $this->filer->chmod_file;
+    $path_checked = false;
+    $path_root = false;
+
+    if (class_exists('ZipArchive')) {
+      $zip = new ZipArchive();
+      if ($zip->open($filename) !== true) {
+        return $this->errorarch();
       }
-      $backup = litepublisher::$paths->backup . 'data-' . time();
-      $data = rtrim(litepublisher::$paths->data, DIRECTORY_SEPARATOR);
-      rename($data, $backup);
-      rename(litepublisher::$paths->storage . 'newdata', $data);
-      tfiler::delete($backup, true, true);
-    }
 
-    private function errorwrite($filename) {
-      $lang = tlocal::admin('service');
-      $this->result = sprintf($lang->errorwritefile, $filename);
-      return false;
-    }
+      for ($i = 0; $i < $zip->numFiles; $i++) {
+        if ($s = $zip->getFromIndex($i)) {
+          $filename = $zip->getNameIndex($i);
 
-    private function errorarch() {
-      $lang = tlocal::admin('service');
-      $this->result = $lang->errorarchive;
-      return false;
-    }
-
-    public function unpack($content, $archtype) {
-      $result = array();
-      if ($archtype == 'zip') $archtype = 'unzip';
-      $this->archtype = $archtype;
-
-      switch ($archtype) {
-        case 'tar':
-          self::include_tar();
-          $tar = new tar();
-          $tar->loadfromstring($content);
-          if (!is_array($tar->files)) {
-            unset($tar);
-            return $this->errorarch();
+          if (!$path_checked) {
+            $path_checked = true;
+            $path_root = $this->get_path_root($filename);
           }
 
-          foreach ($tar->files as $item) {
-            $result[$item['name']] = $item['file'];
+          $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+          if (!$this->uploadfile($filename, $s, $mode)) {
+            $zip->close();
+            return $this->errorwrite($filename);
           }
+        }
+      }
+
+      $zip->close();
+    } else {
+      $this->createarchive();
+      $this->unzip->ReadData($content);
+
+      foreach ($this->unzip->Entries as $item) {
+        if ($item->Error != 0) continue;
+
+        if (!$path_checked) {
+          $path_checked = true;
+          $path_root = $this->get_path_root($item->path);
+        }
+
+        $path = $path_root ? trim(substr(trim($item->path, '/') , strlen($path_root)) , '/') : $item->path;
+        if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
+          return $this->errorwrite($item->Path . $item->Name);
+        }
+      }
+    }
+
+    $this->onuploaded($this);
+
+    $this->existingfolders = false;
+    if ($this->hasdata) {
+      $this->renamedata();
+    }
+
+    return true;
+  }
+
+  private function renamedata() {
+    if (!is_dir(litepublisher::$paths->backup)) {
+      mkdir(litepublisher::$paths->backup, 0777);
+      @chmod(litepublisher::$paths->backup, 0777);
+    }
+    $backup = litepublisher::$paths->backup . 'data-' . time();
+    $data = rtrim(litepublisher::$paths->data, DIRECTORY_SEPARATOR);
+    rename($data, $backup);
+    rename(litepublisher::$paths->storage . 'newdata', $data);
+    tfiler::delete($backup, true, true);
+  }
+
+  private function errorwrite($filename) {
+    $lang = tlocal::admin('service');
+    $this->result = sprintf($lang->errorwritefile, $filename);
+    return false;
+  }
+
+  private function errorarch() {
+    $lang = tlocal::admin('service');
+    $this->result = $lang->errorarchive;
+    return false;
+  }
+
+  public function unpack($content, $archtype) {
+    $result = array();
+    if ($archtype == 'zip') $archtype = 'unzip';
+    $this->archtype = $archtype;
+
+    switch ($archtype) {
+      case 'tar':
+        self::include_tar();
+        $tar = new tar();
+        $tar->loadfromstring($content);
+        if (!is_array($tar->files)) {
           unset($tar);
-          break;
+          return $this->errorarch();
+        }
+
+        foreach ($tar->files as $item) {
+          $result[$item['name']] = $item['file'];
+        }
+        unset($tar);
+        break;
 
 
-        case 'unzip':
-        case 'zip':
-          if (class_exists('ZipArchive')) {
-            $filename = litepublisher::$paths->storage . 'backup/unpack.zip';
-            file_put_contents($filename, $content);
-            @chmod($filename, 0666);
-            $content = '';
-            $zip = new ZipArchive();
-            if ($zip->open($filename) === true) {
-              for ($i = 0; $i < $zip->numFiles; $i++) {
-                if ($s = $zip->getFromIndex($i)) {
-                  $result[$zip->getNameIndex($i) ] = $s;
-                }
+      case 'unzip':
+      case 'zip':
+        if (class_exists('ZipArchive')) {
+          $filename = litepublisher::$paths->storage . 'backup/unpack.zip';
+          file_put_contents($filename, $content);
+          @chmod($filename, 0666);
+          $content = '';
+          $zip = new ZipArchive();
+          if ($zip->open($filename) === true) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+              if ($s = $zip->getFromIndex($i)) {
+                $result[$zip->getNameIndex($i) ] = $s;
               }
-
-              $zip->close();
             }
 
-            @unlink($filename);
-          } else {
-            self::include_unzip();
-            $unzip = new StrSimpleUnzip();
-            $unzip->ReadData($content);
-            foreach ($unzip->Entries as $item) {
-              $result[$item->Path . '/' . $item->Name] = $item->Data;
-            }
+            $zip->close();
           }
-          break;
+
+          @unlink($filename);
+        } else {
+          self::include_unzip();
+          $unzip = new StrSimpleUnzip();
+          $unzip->ReadData($content);
+          foreach ($unzip->Entries as $item) {
+            $result[$item->Path . '/' . $item->Name] = $item->Data;
+          }
+        }
+        break;
 
 
-        default:
-          $this->unknown_archive();
-      }
-
-      return $result;
+      default:
+        $this->unknown_archive();
     }
 
-    public function createfullbackup() {
-      return $this->_savebackup($this->getpartial(true, true, true));
-    }
+    return $result;
+  }
 
-    public function createbackup() {
-      /*
-      $filer = $this->__filer;
-      if (!$filer || ! ($filer instanceof tlocalfiler)) {
-        $this->__filer = tlocalfiler::i();
-      }
-      */
-      $result = $this->_savebackup($this->getpartial(false, false, false));
-      //$this->__filer = $filer;
-      return $result;
-    }
+  public function createfullbackup() {
+    return $this->_savebackup($this->getpartial(true, true, true));
+  }
 
-    public function getfilename($ext) {
-      $filename = litepublisher::$paths->backup . litepublisher::$domain . date('-Y-m-d');
-      $result = $filename . $ext;
-      $i = 2;
-      while (file_exists($result) && ($i < 100)) {
-        $result = $filename . '_' . $i++ . $ext;
-      }
-      return $result;
-    }
+  public function createbackup() {
+    /*
+      $filer = $this->__filer;
+      if (!$filer || ! ($filer instanceof tlocalfiler)) {
+        $this->__filer = tlocalfiler::i();
+      }
+    */
+    $result = $this->_savebackup($this->getpartial(false, false, false));
+    //$this->__filer = $filer;
+    return $result;
+  }
 
-    private function _savebackup($s) {
-      $filename = $this->getfilename($this->archtype == 'zip' ? '.zip' : '.tar.gz');
-      file_put_contents($filename, $s);
-      @chmod($filename, 0666);
-      return $filename;
+  public function getfilename($ext) {
+    $filename = litepublisher::$paths->backup . litepublisher::$domain . date('-Y-m-d');
+    $result = $filename . $ext;
+    $i = 2;
+    while (file_exists($result) && ($i < 100)) {
+      $result = $filename . '_' . $i++ . $ext;
     }
+    return $result;
+  }
 
-    public function getshellfilename() {
-      $filename = $this->getfilename('.tar.gz');
-      return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')) , strrpos($filename, DIRECTORY_SEPARATOR) + 1);
-    }
+  private function _savebackup($s) {
+    $filename = $this->getfilename($this->archtype == 'zip' ? '.zip' : '.tar.gz');
+    file_put_contents($filename, $s);
+    @chmod($filename, 0666);
+    return $filename;
+  }
 
-    public function createshellbackup() {
-      $dbconfig = litepublisher::$options->dbconfig;
-      $cmd = array();
-      $cmd[] = 'cd ' . litepublisher::$paths->backup;
-      $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
-      $filename = $this->getshellfilename();
-      $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
-      $cmd[] = 'rm dump.sql';
-      $cmd[] = "gzip $filename.tar";
-      $cmd[] = "rm $filename.tar";
-      $cmd[] = "chmod 0666 $filename.tar.gz";
-      exec(implode("\n", $cmd) , $r);
-      //echo implode("\n", $r);
-      return litepublisher::$paths->backup . $filename . '.tar.gz';
-    }
+  public function getshellfilename() {
+    $filename = $this->getfilename('.tar.gz');
+    return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')) , strrpos($filename, DIRECTORY_SEPARATOR) + 1);
+  }
 
-    public function createshellfullbackup() {
-      $dbconfig = litepublisher::$options->dbconfig;
-      $cmd = array();
-      $cmd[] = 'cd ' . litepublisher::$paths->backup;
-      $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
-      $filename = $this->getshellfilename();
-      $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
-      $cmd[] = 'rm dump.sql';
-      $cmd[] = "gzip $filename.tar";
-      $cmd[] = "rm $filename.tar";
-      $cmd[] = "chmod 0666 $filename.tar.gz";
-      exec(implode("\n", $cmd) , $r);
-      //echo implode("\n", $r);
-      return litepublisher::$paths->backup . $filename . '.tar.gz';
-    }
+  public function createshellbackup() {
+    $dbconfig = litepublisher::$options->dbconfig;
+    $cmd = array();
+    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
+    $filename = $this->getshellfilename();
+    $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
+    $cmd[] = 'rm dump.sql';
+    $cmd[] = "gzip $filename.tar";
+    $cmd[] = "rm $filename.tar";
+    $cmd[] = "chmod 0666 $filename.tar.gz";
+    exec(implode("\n", $cmd) , $r);
+    //echo implode("\n", $r);
+    return litepublisher::$paths->backup . $filename . '.tar.gz';
+  }
 
-    public function createshellfilesbackup() {
-      $cmd = array();
-      $cmd[] = 'cd ' . litepublisher::$paths->backup;
-      $filename = 'files_' . litepublisher::$domain . date('-Y-m-d');
-      $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
-      $cmd[] = "gzip $filename.tar";
-      $cmd[] = "rm $filename.tar";
-      $cmd[] = "chmod 0666 $filename.tar.gz";
-      exec(implode("\n", $cmd) , $r);
-      //echo implode("\n", $r);
-      return litepublisher::$paths->backup . $filename . '.tar.gz';
-    }
+  public function createshellfullbackup() {
+    $dbconfig = litepublisher::$options->dbconfig;
+    $cmd = array();
+    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
+    $filename = $this->getshellfilename();
+    $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
+    $cmd[] = 'rm dump.sql';
+    $cmd[] = "gzip $filename.tar";
+    $cmd[] = "rm $filename.tar";
+    $cmd[] = "chmod 0666 $filename.tar.gz";
+    exec(implode("\n", $cmd) , $r);
+    //echo implode("\n", $r);
+    return litepublisher::$paths->backup . $filename . '.tar.gz';
+  }
 
-    public function test() {
-      if (!@file_put_contents(litepublisher::$paths->data . 'index.htm', ' ')) return false;
-      if (!$this->filer->connected) return false;
-      $this->setdir('lib');
-      return $this->uploadfile('lib/index.htm', ' ', $this->filer->chmod_file);
-    }
+  public function createshellfilesbackup() {
+    $cmd = array();
+    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $filename = 'files_' . litepublisher::$domain . date('-Y-m-d');
+    $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
+    $cmd[] = "gzip $filename.tar";
+    $cmd[] = "rm $filename.tar";
+    $cmd[] = "chmod 0666 $filename.tar.gz";
+    exec(implode("\n", $cmd) , $r);
+    //echo implode("\n", $r);
+    return litepublisher::$paths->backup . $filename . '.tar.gz';
+  }
 
-    public function getfiletype() {
-      if ($this->archtype == 'zip') return '.zip';
-      if ($this->archtype == 'tar') return '.tar.gz';
-      return false;
-    }
+  public function test() {
+    if (!@file_put_contents(litepublisher::$paths->data . 'index.htm', ' ')) return false;
+    if (!$this->filer->connected) return false;
+    $this->setdir('lib');
+    return $this->uploadfile('lib/index.htm', ' ', $this->filer->chmod_file);
+  }
 
-    public function getarchtype($filename) {
-      if (strend($filename, '.zip')) return 'zip';
-      if (strend($filename, '.tar.gz') || strend($filename, '.tar')) return 'tar';
-      return false;
-    }
+  public function getfiletype() {
+    if ($this->archtype == 'zip') return '.zip';
+    if ($this->archtype == 'tar') return '.tar.gz';
+    return false;
+  }
 
-  } //class
+  public function getarchtype($filename) {
+    if (strend($filename, '.zip')) return 'zip';
+    if (strend($filename, '.tar.gz') || strend($filename, '.tar')) return 'tar';
+    return false;
+  }
+
+} //class

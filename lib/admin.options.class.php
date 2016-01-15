@@ -314,7 +314,10 @@ class tadminoptions extends tadminmenu {
   }
 
   public function processform() {
-    if ($form = $this->getautoform($this->name)) return $form->processform();
+    if ($form = $this->getautoform($this->name)) {
+      return $form->processform();
+    }
+
     extract($_POST, EXTR_SKIP);
     $options = litepublisher::$options;
 
@@ -459,46 +462,55 @@ class tadminoptions extends tadminmenu {
 
       case 'secure':
         if (isset($_POST['oldpassword'])) {
-          $h2 = $this->html->h2;
-          if ($oldpassword == '') return $h2->badpassword;
-          if (($newpassword == '') || ($newpassword != $repassword)) return $h2->difpassword;
-          if (!$options->auth($options->email, $oldpassword)) return $h2->badpassword;
+          $h4 = $this->html->h4;
+          if ($oldpassword == '') {
+            return $h4->badpassword;
+          }
+
+          if (($newpassword == '') || ($newpassword != $repassword)) {
+            return $h4->difpassword;
+          }
+
+          if (!$options->auth($options->email, $oldpassword)) {
+            return $h4->badpassword;
+          }
+
           $options->changepassword($newpassword);
           $options->logout();
           return $h4->passwordchanged;
-        } else {
-          $options->echoexception = isset($echoexception);
-          $options->reguser = isset($reguser);
-          $this->usersenabled = isset($usersenabled);
-          $options->parsepost = isset($parsepost);
-          $options->show_draft_post = isset($show_draft_post);
-          $options->xxxcheck = isset($xxxcheck);
-          $filter = tcontentfilter::i();
-          $filter->phpcode = isset($phpcode);
-          $filter->save();
+        }
 
-          $parser = tthemeparser::i();
-          $parser->removephp = isset($removephp);
-          $parser->removespaces = isset($removespaces);
-          $parser->save();
+        $options->echoexception = isset($echoexception);
+        $options->reguser = isset($reguser);
+        $this->usersenabled = isset($usersenabled);
+        $options->parsepost = isset($parsepost);
+        $options->show_draft_post = isset($show_draft_post);
+        $options->xxxcheck = isset($xxxcheck);
+        $filter = tcontentfilter::i();
+        $filter->phpcode = isset($phpcode);
+        $filter->save();
 
-          $parser = adminparser::i();
-          $parser->removephp = isset($removephp);
-          $parser->removespaces = isset($removespaces);
-          $parser->save();
+        $parser = tthemeparser::i();
+        $parser->removephp = isset($removephp);
+        $parser->removespaces = isset($removespaces);
+        $parser->save();
 
-          $backuper = tbackuper::i();
-          if ($backuper->filertype != $filertype) {
-            $backuper->filertype = $filertype;
-            $backuper->save();
-          }
+        $parser = adminparser::i();
+        $parser->removephp = isset($removephp);
+        $parser->removespaces = isset($removespaces);
+        $parser->save();
 
-          $useshell = isset($useshell);
-          $updater = tupdater::i();
-          if ($useshell !== $updater->useshell) {
-            $updater->useshell = $useshell;
-            $updater->save();
-          }
+        $backuper = tbackuper::i();
+        if ($backuper->filertype != $filertype) {
+          $backuper->filertype = $filertype;
+          $backuper->save();
+        }
+
+        $useshell = isset($useshell);
+        $updater = tupdater::i();
+        if ($useshell !== $updater->useshell) {
+          $updater->useshell = $useshell;
+          $updater->save();
         }
         break;
       }
@@ -507,7 +519,10 @@ class tadminoptions extends tadminmenu {
     }
 
     public function setusersenabled($value) {
-      if (litepublisher::$options->usersenabled == $value) return;
+      if (litepublisher::$options->usersenabled == $value) {
+        return;
+      }
+
       litepublisher::$options->usersenabled = $value;
       $menus = tadminmenus::i();
       $menus->lock();

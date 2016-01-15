@@ -120,7 +120,9 @@ class basetheme extends tevents {
 
       case 'post':
         $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
-        if ($context instanceof tpost) return $context;
+        if ($context instanceof tpost) {
+          return $context;
+        }
         break;
 
 
@@ -129,115 +131,115 @@ class basetheme extends tevents {
 
       case 'metapost':
         return isset(self::$vars['post']) ? self::$vars['post']->meta : new emptyclass();
-      } //switch
-      if (isset($GLOBALS[$name])) {
-        $var = $GLOBALS[$name];
-      } else {
-        $classes = litepublisher::$classes;
-        $var = $classes->gettemplatevar($name);
-        if (!$var) {
-          if (isset($classes->classes[$name])) {
-            $var = $classes->getinstance($classes->classes[$name]);
-          } elseif (isset($classes->items[$name])) {
-            $var = $classes->getinstance($name);
-          } else {
-            $class = 't' . $name;
-            if (isset($classes->items[$class])) $var = $classes->getinstance($class);
-          }
+    } //switch
+    if (isset($GLOBALS[$name])) {
+      $var = $GLOBALS[$name];
+    } else {
+      $classes = litepublisher::$classes;
+      $var = $classes->gettemplatevar($name);
+      if (!$var) {
+        if (isset($classes->classes[$name])) {
+          $var = $classes->getinstance($classes->classes[$name]);
+        } elseif (isset($classes->items[$name])) {
+          $var = $classes->getinstance($name);
+        } else {
+          $class = 't' . $name;
+          if (isset($classes->items[$class])) $var = $classes->getinstance($class);
         }
       }
-
-      if (!is_object($var)) {
-        litepublisher::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
-        return false;
-      }
-
-      return $var;
     }
 
-    public function parsecallback($names) {
-      $name = $names[1];
-      $prop = $names[2];
-      if (isset(self::$vars[$name])) {
-        $var = self::$vars[$name];
-      } elseif ($name == 'custom') {
-        return $this->parse($this->templates['custom'][$prop]);
-      } elseif ($name == 'label') {
-        return "\$$name.$prop";
-      } elseif ($var = $this->getvar($name)) {
-        self::$vars[$name] = $var;
-      } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
-        $var = self::$vars['post']->meta;
-      } else {
-        return '';
-      }
+    if (!is_object($var)) {
+      litepublisher::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+      return false;
+    }
 
-      try {
-        return $var->{$prop};
-      }
-      catch(Exception $e) {
-        litepublisher::$options->handexception($e);
-      }
+    return $var;
+  }
+
+  public function parsecallback($names) {
+    $name = $names[1];
+    $prop = $names[2];
+    if (isset(self::$vars[$name])) {
+      $var = self::$vars[$name];
+    } elseif ($name == 'custom') {
+      return $this->parse($this->templates['custom'][$prop]);
+    } elseif ($name == 'label') {
+      return "\$$name.$prop";
+    } elseif ($var = $this->getvar($name)) {
+      self::$vars[$name] = $var;
+    } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
+      $var = self::$vars['post']->meta;
+    } else {
       return '';
     }
 
-    public function parse($s) {
-      if (!$s) return '';
-      $s = strtr((string)$s, self::$defaultargs);
-      if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
-      array_push($this->parsing, $s);
-      try {
-        $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
-        $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', array(
-          $this,
-          'parsecallback'
-        ) , $s);
-      }
-      catch(Exception $e) {
-        $result = '';
-        litepublisher::$options->handexception($e);
-      }
-      array_pop($this->parsing);
-      return $result;
+    try {
+      return $var->{$prop};
     }
-
-    public function parsearg($s, targs $args) {
-      $s = $this->parse($s);
-      $s = $args->callback($s);
-      return strtr($s, $args->data);
+    catch(Exception $e) {
+      litepublisher::$options->handexception($e);
     }
+    return '';
+  }
 
-    public function replacelang($s, $lang) {
-      $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
-      self::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
-      $s = strtr($s, self::$defaultargs);
-      if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
-        foreach ($m as $item) {
-          $name = $item[1];
-          if ($v = $lang->{$name}) {
-            $s = str_replace($item[0], $v, $s);
-          }
+  public function parse($s) {
+    if (!$s) return '';
+    $s = strtr((string)$s, self::$defaultargs);
+    if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
+    array_push($this->parsing, $s);
+    try {
+      $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
+      $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', array(
+        $this,
+        'parsecallback'
+      ) , $s);
+    }
+    catch(Exception $e) {
+      $result = '';
+      litepublisher::$options->handexception($e);
+    }
+    array_pop($this->parsing);
+    return $result;
+  }
+
+  public function parsearg($s, targs $args) {
+    $s = $this->parse($s);
+    $s = $args->callback($s);
+    return strtr($s, $args->data);
+  }
+
+  public function replacelang($s, $lang) {
+    $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
+    self::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
+    $s = strtr($s, self::$defaultargs);
+    if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
+      foreach ($m as $item) {
+        $name = $item[1];
+        if ($v = $lang->{$name}) {
+          $s = str_replace($item[0], $v, $s);
         }
       }
-      return $s;
     }
+    return $s;
+  }
 
-    public static function parsevar($name, $var, $s) {
-      self::$vars[$name] = $var;
-      return self::i()->parse($s);
-    }
+  public static function parsevar($name, $var, $s) {
+    self::$vars[$name] = $var;
+    return self::i()->parse($s);
+  }
 
-    public static function clearcache() {
-      tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-      litepublisher::$urlmap->clearcache();
-    }
+  public static function clearcache() {
+    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
+    litepublisher::$urlmap->clearcache();
+  }
 
-    public function h($s) {
-      return sprintf('<h4>%s</h4>', $s);
-    }
+  public function h($s) {
+    return sprintf('<h4>%s</h4>', $s);
+  }
 
-    public function link($url, $title) {
-      return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
-    }
+  public function link($url, $title) {
+    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
+  }
 
-  } //class
+} //class

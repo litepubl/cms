@@ -236,10 +236,15 @@ class tadminviews extends tadminmenu {
         case 'views':
           $views = tviews::i();
           $idview = (int)tadminhtml::getparam('idview', 0);
-          if (!$idview || !$views->itemexists($idview)) return '';
+          if (!$idview || !$views->itemexists($idview)) {
+            return '';
+          }
 
           if ($this->action == 'delete') {
-            if ($idview > 1) $views->delete($idview);
+            if ($idview > 1) {
+              $views->delete($idview);
+            }
+
             return '';
           }
 
@@ -279,9 +284,9 @@ class tadminviews extends tadminmenu {
           }
           $views->save();
           break;
-        }
-
-        ttheme::clearcache();
       }
 
-  } //class
+      ttheme::clearcache();
+    }
+
+} //class

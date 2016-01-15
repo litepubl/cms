@@ -89,14 +89,14 @@ function tadminmenusInstall($self) {
   $self->items[$id]['order'] = 9999999;
 
   /*
-  $board = $self->additem(array(
-  'parent' => 0,
-  'url' => '/admin/',
-  'title' => tlocal::get('adminmenus', 'board'),
-  'name' => 'board',
-  'class' => 'tadminboard',
-  'group' => 'author'
-  ));
+  $board = $self->additem(array(
+  'parent' => 0,
+  'url' => '/admin/',
+  'title' => tlocal::get('adminmenus', 'board'),
+  'name' => 'board',
+  'class' => 'tadminboard',
+  'group' => 'author'
+  ));
   */
   $self->unlock();
 

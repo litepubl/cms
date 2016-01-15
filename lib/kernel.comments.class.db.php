@@ -577,16 +577,27 @@ class tcommentform extends tevents {
           return $this->geterrorcontent($lang->reg);
 
         case 'guest':
-          if (!$confirmed && $cm->confirmguest) return $this->request_confirm($values, $shortpost);
+          if (!$confirmed && $cm->confirmguest) {
+            return $this->request_confirm($values, $shortpost);
+          }
+
           $iduser = $cm->idguest;
           break;
 
 
         case 'comuser':
           //hook in regservices social plugin
-          if ($r = $this->oncomuser($values, $confirmed)) return $r;
-          if (!$confirmed && $cm->confirmcomuser) return $this->request_confirm($values, $shortpost);
-          if ($err = $this->processcomuser($values)) return $err;
+          if ($r = $this->oncomuser($values, $confirmed)) {
+            return $r;
+          }
+
+          if (!$confirmed && $cm->confirmcomuser) {
+            return $this->request_confirm($values, $shortpost);
+          }
+
+          if ($err = $this->processcomuser($values)) {
+            return $err;
+          }
 
           $users = tusers::i();
           if ($iduser = $users->emailexists($values['email'])) {
@@ -606,151 +617,151 @@ class tcommentform extends tevents {
             $cookies["comuser_$field"] = $values[$field];
           }
           break;
-        }
       }
+    }
 
-      $user = tusers::i()->getitem($iduser);
-      if ('hold' == $user['status']) {
-        return $this->geterrorcontent($lang->holduser);
-      }
+    $user = tusers::i()->getitem($iduser);
+    if ('hold' == $user['status']) {
+      return $this->geterrorcontent($lang->holduser);
+    }
 
-      if (!$cm->canadd($iduser)) {
-        return $this->geterrorcontent($lang->toomany);
-      }
+    if (!$cm->canadd($iduser)) {
+      return $this->geterrorcontent($lang->toomany);
+    }
 
-      if (!$cm->add($shortpost['id'], $iduser, $values['content'], $values['ip'])) {
-        return $this->geterrorcontent($lang->spamdetected);
-      }
+    if (!$cm->add($shortpost['id'], $iduser, $values['content'], $values['ip'])) {
+      return $this->geterrorcontent($lang->spamdetected);
+    }
 
-      //subscribe by email
-      switch ($user['status']) {
-        case 'approved':
-          if ($user['email'] != '') {
-            // subscribe if its first comment
-            if (1 == tcomments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
-              if ('enabled' == tuseroptions::i()->getvalue($iduser, 'subscribe')) {
-                tsubscribers::i()->update($shortpost['id'], $iduser, true);
-              }
+    //subscribe by email
+    switch ($user['status']) {
+      case 'approved':
+        if ($user['email'] != '') {
+          // subscribe if its first comment
+          if (1 == tcomments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
+            if ('enabled' == tuseroptions::i()->getvalue($iduser, 'subscribe')) {
+              tsubscribers::i()->update($shortpost['id'], $iduser, true);
             }
           }
-          break;
+        }
+        break;
 
 
-        case 'comuser':
-          if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
-            tsubscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
-          }
-          break;
-      }
-
-      //$post->lastcommenturl;
-      $shortpost['commentscount']++;
-      if (!litepublisher::$options->commentpages || ($shortpost['commentscount'] <= litepublisher::$options->commentsperpage)) {
-        $c = 1;
-      } else {
-        $c = ceil($shortpost['commentscount'] / litepublisher::$options->commentsperpage);
-      }
-
-      $url = litepublisher::$urlmap->getvalue($shortpost['idurl'], 'url');
-      if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
-
-      litepublisher::$urlmap->setexpired($shortpost['idurl']);
-      return $this->sendresult(litepublisher::$site->url . $url, isset($cookies) ? $cookies : array());
+      case 'comuser':
+        if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
+          tsubscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
+        }
+        break;
     }
 
-    public function confirm_recevied($confirmid) {
-      $lang = tlocal::i('comment');
-      tsession::start(md5($confirmid));
-      if (!isset($_SESSION['confirmid']) || ($confirmid != $_SESSION['confirmid'])) {
-        session_destroy();
-        return $this->geterrorcontent($lang->notfound);
-      }
+    //$post->lastcommenturl;
+    $shortpost['commentscount']++;
+    if (!litepublisher::$options->commentpages || ($shortpost['commentscount'] <= litepublisher::$options->commentsperpage)) {
+      $c = 1;
+    } else {
+      $c = ceil($shortpost['commentscount'] / litepublisher::$options->commentsperpage);
+    }
 
-      $values = $_SESSION['values'];
+    $url = litepublisher::$urlmap->getvalue($shortpost['idurl'], 'url');
+    if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+
+    litepublisher::$urlmap->setexpired($shortpost['idurl']);
+    return $this->sendresult(litepublisher::$site->url . $url, isset($cookies) ? $cookies : array());
+  }
+
+  public function confirm_recevied($confirmid) {
+    $lang = tlocal::i('comment');
+    tsession::start(md5($confirmid));
+    if (!isset($_SESSION['confirmid']) || ($confirmid != $_SESSION['confirmid'])) {
       session_destroy();
-      return $this->processform($values, true);
+      return $this->geterrorcontent($lang->notfound);
     }
 
-    public function request_confirm(array $values, array $shortpost) {
-      $values['date'] = time();
-      $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
+    $values = $_SESSION['values'];
+    session_destroy();
+    return $this->processform($values, true);
+  }
 
-      $confirmid = md5uniq();
-      if ($sess = tsession::start(md5($confirmid))) $sess->lifetime = 900;
-      $_SESSION['confirmid'] = $confirmid;
-      $_SESSION['values'] = $values;
-      session_write_close();
+  public function request_confirm(array $values, array $shortpost) {
+    $values['date'] = time();
+    $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
 
-      if ((int)$shortpost['idperm']) {
-        $header = $this->getpermheader($shortpost);
-        return $header . $this->confirm($confirmid);
-      }
+    $confirmid = md5uniq();
+    if ($sess = tsession::start(md5($confirmid))) $sess->lifetime = 900;
+    $_SESSION['confirmid'] = $confirmid;
+    $_SESSION['values'] = $values;
+    session_write_close();
 
-      return $this->confirm($confirmid);
+    if ((int)$shortpost['idperm']) {
+      $header = $this->getpermheader($shortpost);
+      return $header . $this->confirm($confirmid);
     }
 
-    public function getpermheader(array $shortpost) {
-      $urlmap = litepublisher::$urlmap;
-      $url = $urlmap->url;
-      $saveitem = $urlmap->itemrequested;
-      $urlmap->itemrequested = $urlmap->getitem($shortpost['idurl']);
-      $urlmap->url = $urlmap->itemrequested['url'];
-      $post = tpost::i((int)$shortpost['id']);
-      $perm = tperm::i($post->idperm);
-      // not restore values because perm will be used this values
-      return $perm->getheader($post);
+    return $this->confirm($confirmid);
+  }
+
+  public function getpermheader(array $shortpost) {
+    $urlmap = litepublisher::$urlmap;
+    $url = $urlmap->url;
+    $saveitem = $urlmap->itemrequested;
+    $urlmap->itemrequested = $urlmap->getitem($shortpost['idurl']);
+    $urlmap->url = $urlmap->itemrequested['url'];
+    $post = tpost::i((int)$shortpost['id']);
+    $perm = tperm::i($post->idperm);
+    // not restore values because perm will be used this values
+    return $perm->getheader($post);
+  }
+
+  private function getconfirmform($confirmid) {
+    ttheme::$vars['lang'] = tlocal::i('comment');
+    $args = targs::i();
+    $args->confirmid = $confirmid;
+    $theme = tsimplecontent::gettheme();
+    return $theme->parsearg($theme->templates['content.post.templatecomments.confirmform'], $args);
+  }
+
+  //htmlhelper
+  public function confirm($confirmid) {
+    if (isset($this->helper) && ($this != $this->helper)) return $this->helper->confirm($confirmid);
+    return tsimplecontent::html($this->getconfirmform($confirmid));
+  }
+
+  public function geterrorcontent($s) {
+    if (isset($this->helper) && ($this != $this->helper)) return $this->helper->geterrorcontent($s);
+    return tsimplecontent::content($s);
+  }
+
+  private function checkspam($s) {
+    if (!($s = @base64_decode($s))) return false;
+    $sign = 'superspamer';
+    if (!strbegin($s, $sign)) return false;
+    $TimeKey = (int)substr($s, strlen($sign));
+    return time() < $TimeKey;
+  }
+
+  public function processcomuser(array & $values) {
+    $lang = tlocal::i('comment');
+    if (empty($values['name'])) return $this->geterrorcontent($lang->emptyname);
+    $values['name'] = tcontentfilter::escape($values['name']);
+    $values['email'] = isset($values['email']) ? strtolower(trim($values['email'])) : '';
+    if (!tcontentfilter::ValidateEmail($values['email'])) {
+      return $this->geterrorcontent($lang->invalidemail);
     }
 
-    private function getconfirmform($confirmid) {
-      ttheme::$vars['lang'] = tlocal::i('comment');
-      $args = targs::i();
-      $args->confirmid = $confirmid;
-      $theme = tsimplecontent::gettheme();
-      return $theme->parsearg($theme->templates['content.post.templatecomments.confirmform'], $args);
+    $values['url'] = isset($values['url']) ? tcontentfilter::escape(tcontentfilter::clean_website($values['url'])) : '';
+    $values['subscribe'] = isset($values['subscribe']);
+  }
+
+  public function sendresult($link, $cookies) {
+    if (isset($this->helper) && ($this != $this->helper)) return $this->helper->sendresult($link, $cookies);
+    foreach ($cookies as $name => $value) {
+      setcookie($name, $value, time() + 30000000, '/', false);
     }
 
-    //htmlhelper
-    public function confirm($confirmid) {
-      if (isset($this->helper) && ($this != $this->helper)) return $this->helper->confirm($confirmid);
-      return tsimplecontent::html($this->getconfirmform($confirmid));
-    }
+    return litepublisher::$urlmap->redir($link);
+  }
 
-    public function geterrorcontent($s) {
-      if (isset($this->helper) && ($this != $this->helper)) return $this->helper->geterrorcontent($s);
-      return tsimplecontent::content($s);
-    }
-
-    private function checkspam($s) {
-      if (!($s = @base64_decode($s))) return false;
-      $sign = 'superspamer';
-      if (!strbegin($s, $sign)) return false;
-      $TimeKey = (int)substr($s, strlen($sign));
-      return time() < $TimeKey;
-    }
-
-    public function processcomuser(array & $values) {
-      $lang = tlocal::i('comment');
-      if (empty($values['name'])) return $this->geterrorcontent($lang->emptyname);
-      $values['name'] = tcontentfilter::escape($values['name']);
-      $values['email'] = isset($values['email']) ? strtolower(trim($values['email'])) : '';
-      if (!tcontentfilter::ValidateEmail($values['email'])) {
-        return $this->geterrorcontent($lang->invalidemail);
-      }
-
-      $values['url'] = isset($values['url']) ? tcontentfilter::escape(tcontentfilter::clean_website($values['url'])) : '';
-      $values['subscribe'] = isset($values['subscribe']);
-    }
-
-    public function sendresult($link, $cookies) {
-      if (isset($this->helper) && ($this != $this->helper)) return $this->helper->sendresult($link, $cookies);
-      foreach ($cookies as $name => $value) {
-        setcookie($name, $value, time() + 30000000, '/', false);
-      }
-
-      return litepublisher::$urlmap->redir($link);
-    }
-
-  } //class
+} //class
 
 //comments.subscribers.class.php
 class tsubscribers extends titemsposts {

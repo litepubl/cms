@@ -238,13 +238,16 @@ class tadminwidgets extends tadminmenu {
           if (strbegin($key, 'addwidget-')) {
             $id = (int)$value;
             if (!$widgets->itemexists($id) || $widgets->subclass($id)) continue;
+
             $view->sidebars[0][] = array(
               'id' => $id,
               'ajax' => false
             );
           }
         }
+        break;
       }
+
       $view->save();
     }
 

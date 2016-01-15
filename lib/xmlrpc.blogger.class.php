@@ -13,9 +13,9 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
   }
 
   /*
-  appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
-  username (string): Login for the Blogger user who's blogs will be retrieved.
-  password (string): Password for said username.
+  appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+  username (string): Login for the Blogger user who's blogs will be retrieved.
+  password (string): Password for said username.
   */
   public function getUsersBlogs($appkey, $login, $password) {
     $this->auth($login, $password, 'author');
@@ -122,12 +122,12 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
   }
 
   /*
-  appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
-  blogid (string): Unique identifier of the blog the post will be added to.
-  username (string): Login for a Blogger user who has permission to post to the blog.
-  password (string): Password for said username.
-  content (string): Contents of the post.
-  publish (boolean): If true, the blog will be published immediately after the post is made.
+  appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
+  blogid (string): Unique identifier of the blog the post will be added to.
+  username (string): Login for a Blogger user who has permission to post to the blog.
+  password (string): Password for said username.
+  content (string): Contents of the post.
+  publish (boolean): If true, the blog will be published immediately after the post is made.
   */
   public function newPost($appkey, $blogid, $login, $password, $content, $publish) {
     $this->auth($login, $password, 'author');

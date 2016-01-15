@@ -230,7 +230,10 @@ class tthemeparser extends baseparser {
       case 4:
         $tag = $names[3];
         $admin = & $this->theme->templates['customadmin'];
-        if (!isset($admin[$name])) $admin[$name] = array();
+        if (!isset($admin[$name])) {
+          $admin[$name] = array();
+        }
+
         if ($tag == 'values') {
           $value = explode(',', $value);
           foreach ($value as $i => $v) $value[$i] = trim($v);
@@ -239,131 +242,131 @@ class tthemeparser extends baseparser {
         $admin[$name][$tag] = $value;
         return;
       }
+  }
+
+  public function afterparse($theme) {
+    parent::afterparse($theme);
+
+    $templates = & $this->theme->templates;
+    $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' : ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
+
+    if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
+    if (!isset($templates['content.post.templatecomments.confirmform'])) {
+      echo implode('<br>', array_keys($templates));
+      $this->error('template "content.post.templatecomments.confirmform" not exists');
     }
 
-    public function afterparse($theme) {
-      parent::afterparse($theme);
+    $post = 'content.post.';
+    $excerpt = 'content.excerpts.excerpt.';
 
-      $templates = & $this->theme->templates;
-      $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' : ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
-
-      if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
-      if (!isset($templates['content.post.templatecomments.confirmform'])) {
-        echo implode('<br>', array_keys($templates));
-        $this->error('template "content.post.templatecomments.confirmform" not exists');
+    //normalize filelist
+    foreach (array(
+      'file',
+      'image',
+      'audio',
+      'video',
+      'flash'
+    ) as $name) {
+      if (!isset($templates["{$post}filelist.{$name}s"]) || empty($templates["{$post}filelist.{$name}s"])) {
+        $templates["{$post}filelist.{$name}s"] = "\$$name";
       }
 
-      $post = 'content.post.';
-      $excerpt = 'content.excerpts.excerpt.';
-
-      //normalize filelist
-      foreach (array(
-        'file',
-        'image',
-        'audio',
-        'video',
-        'flash'
-      ) as $name) {
-        if (!isset($templates["{$post}filelist.{$name}s"]) || empty($templates["{$post}filelist.{$name}s"])) {
-          $templates["{$post}filelist.{$name}s"] = "\$$name";
-        }
-
-        if (!isset($templates["{$excerpt}filelist.$name"])) {
-          $templates["{$excerpt}filelist.$name"] = $templates["{$post}filelist.$name"];
-        }
-
-        if (!isset($templates["{$excerpt}filelist.{$name}s"])) {
-          $templates["{$excerpt}filelist.{$name}s"] = $templates["{$post}filelist.{$name}s"];
-        }
+      if (!isset($templates["{$excerpt}filelist.$name"])) {
+        $templates["{$excerpt}filelist.$name"] = $templates["{$post}filelist.$name"];
       }
 
-      //fix preview
-      if (!isset($templates["{$excerpt}filelist.preview"])) {
-        $templates["{$excerpt}filelist.preview"] = $templates["{$post}filelist.preview"];
+      if (!isset($templates["{$excerpt}filelist.{$name}s"])) {
+        $templates["{$excerpt}filelist.{$name}s"] = $templates["{$post}filelist.{$name}s"];
       }
+    }
 
-      foreach (array(
-        'date',
-        'filelist',
-        'filelist.file',
-        'filelist.image',
-        'filelist.preview',
-        'filelist.audio',
-        'filelist.video',
-        'filelist.flash',
-        'filelist.files',
-        'filelist.images',
-        'filelist.audios',
-        'filelist.videos',
-        'filelist.flashs',
-        'catlinks',
-        'catlinks.item',
-        'catlinks.divider',
-        'taglinks',
-        'taglinks.item',
-        'taglinks.divider'
-      ) as $name) {
-        if (empty($templates[$excerpt . $name])) {
-          $templates[$excerpt . $name] = $templates[$post . $name];
-        }
+    //fix preview
+    if (!isset($templates["{$excerpt}filelist.preview"])) {
+      $templates["{$excerpt}filelist.preview"] = $templates["{$post}filelist.preview"];
+    }
+
+    foreach (array(
+      'date',
+      'filelist',
+      'filelist.file',
+      'filelist.image',
+      'filelist.preview',
+      'filelist.audio',
+      'filelist.video',
+      'filelist.flash',
+      'filelist.files',
+      'filelist.images',
+      'filelist.audios',
+      'filelist.videos',
+      'filelist.flashs',
+      'catlinks',
+      'catlinks.item',
+      'catlinks.divider',
+      'taglinks',
+      'taglinks.item',
+      'taglinks.divider'
+    ) as $name) {
+      if (empty($templates[$excerpt . $name])) {
+        $templates[$excerpt . $name] = $templates[$post . $name];
       }
+    }
 
-      $sidebars = & $templates['sidebars'];
-      for ($i = 0; $i < count($sidebars); $i++) {
-        $sidebar = & $sidebars[$i];
-        foreach (ttheme::getwidgetnames() as $widgetname) {
-          foreach (array(
-            '',
-            '.items',
-            '.item',
-            '.subcount',
-            '.subitems'
-          ) as $name) {
-            if (empty($sidebar[$widgetname . $name])) $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
-          }
-
-          if (in_array($widgetname, array(
-            'widget',
-            'categories',
-            'tags',
-            'archives'
-          ))) {
-            $v = $sidebar[$widgetname . '.item'];
-            if (!strpos($v, '$subcount')) $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
-          }
-
+    $sidebars = & $templates['sidebars'];
+    for ($i = 0; $i < count($sidebars); $i++) {
+      $sidebar = & $sidebars[$i];
+      foreach (ttheme::getwidgetnames() as $widgetname) {
+        foreach (array(
+          '',
+          '.items',
+          '.item',
+          '.subcount',
+          '.subitems'
+        ) as $name) {
+          if (empty($sidebar[$widgetname . $name])) $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
         }
 
-        if (is_string($sidebar['meta.classes'])) {
-          $sidebar['meta.classes'] = self::getmetaclasses($sidebar['meta.classes']);
+        if (in_array($widgetname, array(
+          'widget',
+          'categories',
+          'tags',
+          'archives'
+        ))) {
+          $v = $sidebar[$widgetname . '.item'];
+          if (!strpos($v, '$subcount')) $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
         }
+
       }
 
-      //add spaces
-      foreach (array(
-        'content.excerpts.excerpt.taglinks.divider',
-        'content.post.taglinks.divider',
-        'content.excerpts.excerpt.catlinks.divider',
-        'content.post.catlinks.divider'
-      ) as $k) {
-        if (substr($templates[$k], -1) != ' ') $templates[$k].= ' ';
+      if (is_string($sidebar['meta.classes'])) {
+        $sidebar['meta.classes'] = self::getmetaclasses($sidebar['meta.classes']);
       }
+    }
 
-      $templates['content.post.templatecomments.confirmform'] = str_replace('$lang.formhead', '$lang.checkspam', $templates['content.post.templatecomments.confirmform']);
+    //add spaces
+    foreach (array(
+      'content.excerpts.excerpt.taglinks.divider',
+      'content.post.taglinks.divider',
+      'content.excerpts.excerpt.catlinks.divider',
+      'content.post.catlinks.divider'
+    ) as $k) {
+      if (substr($templates[$k], -1) != ' ') $templates[$k].= ' ';
+    }
 
-      $form = 'content.post.templatecomments.form';
-      $templates[$form] = trim(str_replace('<script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>', '', $templates[$form]));
-      if (!strpos($templates[$form], '$mesg')) $templates[$form] = '<div id="before-commentform">$mesg</div>' . $templates[$form];
+    $templates['content.post.templatecomments.confirmform'] = str_replace('$lang.formhead', '$lang.checkspam', $templates['content.post.templatecomments.confirmform']);
 
-      $regform = 'content.post.templatecomments.regform';
-      if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
-        $editor = strtr($templates['content.admin.editor'], array(
-          '$lang.$name' => $this->replacelang ? tlocal::i('comment')->content : '$lang.content',
-          '$name' => 'content',
-          '$value' => ''
-        ));
+    $form = 'content.post.templatecomments.form';
+    $templates[$form] = trim(str_replace('<script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>', '', $templates[$form]));
+    if (!strpos($templates[$form], '$mesg')) $templates[$form] = '<div id="before-commentform">$mesg</div>' . $templates[$form];
 
-        $templates[$regform] = '								<div id="before-commentform">$mesg</div>
+    $regform = 'content.post.templatecomments.regform';
+    if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
+      $editor = strtr($templates['content.admin.editor'], array(
+        '$lang.$name' => $this->replacelang ? tlocal::i('comment')->content : '$lang.content',
+        '$name' => 'content',
+        '$value' => ''
+      ));
+
+      $templates[$regform] = '								<div id="before-commentform">$mesg</div>
       <h4 id="respond">$lang.leavereply</h4>
       <form action="$site.url/send-comment.php" method="post" id="commentform">' . $editor . '<p>
       <input type="hidden" name="postid" value="$postid" />
@@ -371,31 +374,31 @@ class tthemeparser extends baseparser {
       
       <input type="submit" name="submitbutton" id="submitcomment" value="' . ($this->replacelang ? tlocal::i()->send : '$lang.send') . '" /></p>
       </form>';
-      }
-
-      $comment = 'content.post.templatecomments.comments.comment';
-      $templates[$comment] = str_replace('$moderate', '<div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>', $templates[$comment]);
-
-      $this->reuse($templates);
     }
 
-    public static function getmetaclasses($s) {
-      $result = array(
-        'rss' => '',
-        'comments' => '',
-        'media' => '',
-        'foaf' => '',
-        'profile' => '',
-        'sitemap' => ''
-      );
-      foreach (explode(',', $s) as $class) {
-        if ($i = strpos($class, '=')) {
-          $classname = trim(substr($class, 0, $i));
-          $value = trim(substr($class, $i + 1));
-          if ($value != '') $result[$classname] = sprintf('class="%s"', $value);
-        }
-      }
-      return $result;
-    }
+    $comment = 'content.post.templatecomments.comments.comment';
+    $templates[$comment] = str_replace('$moderate', '<div class="moderationbuttons" data-idcomment="$comment.id" data-idauthor="$comment.author"></div>', $templates[$comment]);
 
-  } //class
+    $this->reuse($templates);
+  }
+
+  public static function getmetaclasses($s) {
+    $result = array(
+      'rss' => '',
+      'comments' => '',
+      'media' => '',
+      'foaf' => '',
+      'profile' => '',
+      'sitemap' => ''
+    );
+    foreach (explode(',', $s) as $class) {
+      if ($i = strpos($class, '=')) {
+        $classname = trim(substr($class, 0, $i));
+        $value = trim(substr($class, $i + 1));
+        if ($value != '') $result[$classname] = sprintf('class="%s"', $value);
+      }
+    }
+    return $result;
+  }
+
+} //class

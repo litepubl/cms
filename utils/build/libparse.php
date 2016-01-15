@@ -1,5 +1,5 @@
 <?php
-set_time_limit(300);
+set_time_limit(120);
 
 function ParseFile($filename) {
 global $linescount, $filecount, $oBeautify;
@@ -28,6 +28,13 @@ if (strend($filename, 'php')) {
 $s = $oBeautify->get();
 $s = trim($s);
 file_put_contents($filename, $s);
+
+$Lines = explode("\n", $s);
+$linescount += count($Lines);
+
+if (strbegin($Lines[count($Lines) - 1], ' ')) {
+echo basename($filename), '<br>spaces finished<br>';
+}
 return;
 }
 
@@ -263,7 +270,7 @@ $rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
 require($dir . 'filer.class.php');
 $m = microtime(true);
-require ($rootdir . 'temp/PHP_Beautifier-master/Beautifier.php');
+require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
         $oBeautify = new PHP_Beautifier();
 $oBeautify->setIndentNumber(2);
         $oBeautify->addFilter('ArrayNested');
