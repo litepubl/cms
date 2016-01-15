@@ -13,7 +13,8 @@
 
 # Auto detect text files and perform LF normalization
 # http://davidlaing.com/2012/09/19/customise-your-gitattributes-to-become-a-git-ninja/
-* text=auto
+#* text=auto
+* text=lf
 
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)

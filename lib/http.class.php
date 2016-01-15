@@ -41,8 +41,8 @@ class http {
       if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
       /*
-      curl_setopt($ch, CURLOPT_VERBOSE , true);
-      curl_setopt($ch, CURLOPT_STDERR, fopen(litepublisher::$paths->data . 'logs/curl.txt', 'w+'));
+      curl_setopt($ch, CURLOPT_VERBOSE , true);
+      curl_setopt($ch, CURLOPT_STDERR, fopen(litepublisher::$paths->data . 'logs/curl.txt', 'w+'));
       */
 
       if (!ini_get('open_basedir') && !ini_get('safe_mode')) {

@@ -261,7 +261,6 @@ class tadminoptions extends tadminmenu {
         return tuitabs::gethead() . $html->adminform($tabs->get() , $args);
         break;
 
-
     }
 
     $result = $this->html->{$this->name}($args);
@@ -419,4 +418,4 @@ class tadminoptions extends tadminmenu {
       return '';
     }
 
-}//class
+  } //class
