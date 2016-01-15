@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tcustomtitle extends tplugin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->data['post'] = '';
@@ -18,7 +19,7 @@ class tcustomtitle extends tplugin {
     $this->data['home'] = '';
     $this->data['archive'] = '';
   }
-  
+
   public function ontitle(&$title) {
     $template = ttemplate::i();
     if ($template->context instanceof tpost) {
@@ -36,5 +37,5 @@ class tcustomtitle extends tplugin {
     $title = $template->parsetitle($tml, $title);
     return true;
   }
-  
-}//class
+
+} //class

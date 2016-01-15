@@ -1,44 +1,45 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class admincatbread implements iadmin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getcontent() {
     $plugin = catbread::i();
     $lang = tplugins::getnamelang('catbread');
-    $html= tadminhtml::i();
+    $html = tadminhtml::i();
     $args = new targs();
     $args->add($plugin->tml);
     $args->showhome = $plugin->showhome;
     $args->showchilds = $plugin->showchilds;
     $args->showsimilar = $plugin->showsimilar;
-    
+
     $lang->addsearch('sortnametags');
     $sort = array(
-    'title' => $lang->title,
-    'itemscount' => $lang->count,
-    'customorder' => $lang->customorder,
+      'title' => $lang->title,
+      'itemscount' => $lang->count,
+      'customorder' => $lang->customorder,
     );
-    
+
     $args->sort = tadminhtml::array2combo($sort, $plugin->childsortname);
-    
+
     $pos = array(
-    'top' => $lang->top,
-    'before' => $lang->before,
-    'after' => $lang->after,
+      'top' => $lang->top,
+      'before' => $lang->before,
+      'after' => $lang->after,
     );
-    
+
     $args->breadpos = tadminhtml::array2combo($pos, $plugin->breadpos);
     $args->similarpos = tadminhtml::array2combo($pos, $plugin->similarpos);
-    
+
     $args->formtitle = $lang->formtitle;
     return $html->adminform('
     [checkbox=showhome]
@@ -62,8 +63,8 @@ class admincatbread implements iadmin {
     [text=similaritems]
     ', $args);
   }
-  
-  public function processform()  {
+
+  public function processform() {
     extract($_POST, EXTR_SKIP);
     $plugin = catbread::i();
     $plugin->showhome = isset($showchilds);
@@ -75,9 +76,9 @@ class admincatbread implements iadmin {
     foreach ($plugin->tml as $k => $v) {
       $plugin->tml[$k] = trim($_POST[$k]);
     }
-    
+
     $plugin->save();
     return '';
   }
-  
-}//class
+
+} //class

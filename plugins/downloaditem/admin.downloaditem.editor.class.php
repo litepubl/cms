@@ -1,24 +1,25 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tdownloaditemeditor extends tposteditor {
-  
+
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
+
   public function gettitle() {
-    if ($this->idpost == 0){
+    if ($this->idpost == 0) {
       return parent::gettitle();
     } else {
       return tlocal::admin('downloaditems')->editor;
     }
   }
-  
+
   public function getcontent() {
     $result = '';
     $this->basename = 'downloaditems';
@@ -26,7 +27,7 @@ class tdownloaditemeditor extends tposteditor {
     $lang = tlocal::admin('downloaditems');
     $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
     $html->push_section('editor');
-    
+
     $downloaditem = tdownloaditem::i($this->idpost);
     ttheme::$vars['downloaditem'] = $downloaditem;
     $args = new targs();
@@ -36,28 +37,27 @@ class tdownloaditemeditor extends tposteditor {
     $args->authorname = $downloaditem->authorname;
     $args->authorurl = $downloaditem->authorurl;
     $args->version = $downloaditem->version;
-    
-    
+
     $types = array(
-    'theme' => tlocal::get('downloaditem', 'theme'),
-    'plugin' => tlocal::get('downloaditem', 'plugin')
+      'theme' => tlocal::get('downloaditem', 'theme') ,
+      'plugin' => tlocal::get('downloaditem', 'plugin')
     );
-    
+
     $args->type = tadminhtml::array2combo($types, $downloaditem->type);
-    
-    if ($downloaditem->id > 0) $result .= $html->headeditor ();
-    $result .= $html->form($args);
+
+    if ($downloaditem->id > 0) $result.= $html->headeditor();
+    $result.= $html->form($args);
     $result = $html->fixquote($result);
     unset(ttheme::$vars['downloaditem']);
     return $result;
   }
-  
+
   public function processform() {
     /*
-    echo "<pre>\n";
-    var_dump($_POST);
-    echo "</pre>\n";
-    return;
+    echo "<pre>\n";
+    var_dump($_POST);
+    echo "</pre>\n";
+    return;
     */
     extract($_POST, EXTR_SKIP);
     $this->basename = 'downloaditems';
@@ -82,5 +82,5 @@ class tdownloaditemeditor extends tposteditor {
     $lang = tlocal::i('downloaditems');
     return $html->h2->successedit;
   }
-  
-}//class
+
+} //class

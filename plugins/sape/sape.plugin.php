@@ -1,18 +1,19 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tsapeplugin extends twidget {
   public $sape;
   public $counts;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->basename = 'widget.sape';
@@ -23,13 +24,13 @@ class tsapeplugin extends twidget {
     $this->data['force'] = false;
     $this->addmap('counts', array());
   }
-  
+
   public function getdeftitle() {
     return tlocal::get('default', 'links');
   }
-  
+
   private function createsape() {
-    if (!defined('_SAPE_USER')){
+    if (!defined('_SAPE_USER')) {
       define('_SAPE_USER', $this->user);
       litepublisher::$classes->include_file(litepublisher::$paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
       $o['charset'] = 'UTF-8';
@@ -38,19 +39,19 @@ class tsapeplugin extends twidget {
       $this->sape = new SAPE_client($o);
     }
   }
-  
+
   public function getwidget($id, $sidebar) {
     if ($this->user == '') return '';
     if (litepublisher::$urlmap->is404 || litepublisher::$urlmap->adminpanel) return '';
     return parent::getwidget($id, $sidebar);
   }
-  
+
   public function getcontent($id, $sidebar) {
     $links = $this->getlinks();
     if (empty($links)) return '';
     return sprintf('<ul><li>%s</li></ul>', $links);
   }
-  
+
   public function getcont() {
     return $this->getcontent(0, 0);
   }
@@ -60,8 +61,8 @@ class tsapeplugin extends twidget {
     if (!isset($this->sape)) $this->createsape();
     return $this->sape->return_links($this->counts[$id]);
   }
-  
-  public function setcount($id ,$count) {
+
+  public function setcount($id, $count) {
     $this->counts[$id] = $count;
     $widgets = twidgets::i();
     foreach ($this->counts as $id => $count) {
@@ -69,13 +70,14 @@ class tsapeplugin extends twidget {
     }
     $this->save();
   }
-  
+
   public function add() {
     $id = $this->addtosidebar(0);
     $this->counts[$id] = 10;
     $this->save();
     return $id;
   }
-  
-}//class
+
+} //class
+
 ?>

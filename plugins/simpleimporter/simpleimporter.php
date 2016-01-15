@@ -1,33 +1,34 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tsimpleimporter extends timporter {
   public $tagsmap;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->data['script'] = '';
     $this->addmap('tagsmap', array(
-    'title' => 'title',
-    'link' => 'link',
-    'pubDate' => 'pubdate',
-    'content:encoded' => 'content'
+      'title' => 'title',
+      'link' => 'link',
+      'pubDate' => 'pubdate',
+      'content:encoded' => 'content'
     ));
   }
-  
+
   public function getcontent() {
     $result = parent::getcontent();
     $tagsmap = '';
     foreach ($this->tagsmap as $key => $val) {
-      $tagsmap .= "$key = $val\n";
+      $tagsmap.= "$key = $val\n";
     }
     $args = targs::i();
     $args->tagsmap = $tagsmap;
@@ -37,17 +38,17 @@ class tsimpleimporter extends timporter {
     $args->scriptlabel = $about['scriptlabel'];
     $tml = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'form.tml');
     $html = tadminhtml::i();
-    $result .= $html->parsearg($tml, $args);
+    $result.= $html->parsearg($tml, $args);
     return $result;
   }
-  
+
   public function processform() {
-    if ($_POST['form'] != 'options')  return parent::ProcessForm();
+    if ($_POST['form'] != 'options') return parent::ProcessForm();
     $this->parsemap($_POST['tagsmap']);
     $this->script = $_POST['script'];
     $this->save();
   }
-  
+
   public function parsemap($s) {
     $this->tagsmap = array();
     $lines = explode("\n", $s);
@@ -59,11 +60,11 @@ class tsimpleimporter extends timporter {
       }
     }
   }
-  
+
   public function import($s) {
-    require_once(litepublisher::$paths->lib . 'domrss.class.php');
+    require_once (litepublisher::$paths->lib . 'domrss.class.php');
     $a = xml2array($s);
-    
+
     $urlmap = turlmap::i();
     $urlmap->lock();
     $cats = tcategories::i();
@@ -82,16 +83,16 @@ class tsimpleimporter extends timporter {
     $cats->unlock();
     $urlmap->unlock();
   }
-  
+
   public function add(array $item) {
     $post = tpost::i();
     foreach ($this->tagsmap as $key => $val) {
       if (isset($item[$key])) {
-      $post->{$val} = $item[$key];
+        $post->{$val} = $item[$key];
       }
     }
     if ($this->script != '') eval($this->script);
     return $post;
   }
-  
-}//class
+
+} //class

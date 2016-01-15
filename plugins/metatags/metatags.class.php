@@ -1,23 +1,24 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tmetatags extends tplugin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function themeparsed(ttheme $theme) {
     $theme->templates['index'] = strtr($theme->templates['index'], array(
-    '$template.keywords' => '$metatags.keywords',
-    '$template.description' => '$metatags.description',
+      '$template.keywords' => '$metatags.keywords',
+      '$template.description' => '$metatags.description',
     ));
   }
-  
+
   public function getlist() {
     $context = ttemplate::i()->context;
     if ($context instanceof tcommontags) {
@@ -27,33 +28,33 @@ class tmetatags extends tplugin {
     } else {
       return false;
     }
-    
+
     if (count($list) > 0) {
       tposts::i()->loaditems($list);
       return array_slice($list, 0, 3);
     }
-    
+
     return false;
   }
-  
+
   public function getkeywords() {
     if ($list = $this->getlist()) {
       $result = '';
       foreach ($list as $id) {
         $post = tpost::i($id);
-        $result .= $post->keywords . ', ';
+        $result.= $post->keywords . ', ';
       }
       return trim($result, ', ');
     }
     return ttemplate::i()->getkeywords();
   }
-  
+
   public function getdescription() {
     if ($list = $this->getlist()) {
       $result = '';
       foreach ($list as $id) {
         $post = tpost::i($id);
-        $result .= $post->title . ' ';
+        $result.= $post->title . ' ';
         if (strlen($result) > 250) break;
       }
       //return tcontentfilter::getexcerpt($result, 300);
@@ -61,5 +62,5 @@ class tmetatags extends tplugin {
     }
     return ttemplate::i()->getdescription();
   }
-  
-}//class
+
+} //class

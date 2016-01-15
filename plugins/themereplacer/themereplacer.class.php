@@ -1,23 +1,23 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tviewthemereplacer extends tview {
-  
+
   protected function get_theme_instance($name) {
     return tthemereplacer::get_instance($name, $this->id);
   }
-  
-}//class
 
+} //class
 class tthemereplacer extends ttheme {
   protected $replace;
   protected $source;
   public $idview;
-  
+
   public static function get_instance($name, $idview) {
     if (isset(self::$instances[$name])) return self::$instances[$name];
     $class = 'ttheme';
@@ -28,27 +28,27 @@ class tthemereplacer extends ttheme {
       $result = litepublisher::$classes->newinstance(__class__);
       litepublisher::$classes->instances[$class] = $result;
     }
-    
+
     $result->idview = $idview;
     $result->name = $name;
     $result->load();
     return $result;
   }
-  
+
   public function getbasename() {
     return 'themes' . DIRECTORY_SEPARATOR . $this->idview . '.replacer.' . $this->name;
   }
-  
+
   public function parsetheme() {
     if ($this->name == '') return false;
     if (!isset($this->source)) {
       $this->source = new ttheme();
     }
-    
+
     if (!isset($this->replace)) {
       $this->replace = titemsreplacer::i()->items[$this->idview];
     }
-    
+
     $this->source->name = $this->name;
     $this->source->load();
     self::$instances[$this->name] = $this;
@@ -56,26 +56,26 @@ class tthemereplacer extends ttheme {
     $this->save();
     return true;
   }
-  
-  
-public function install() {}
-public function uninstall() {}
-}//class
 
+  public function install() {
+  }
+  public function uninstall() {
+  }
+} //class
 class titemsreplacer extends titems {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
-    $this->basename=  'plugins' .DIRECTORY_SEPARATOR  . strtolower(get_class($this));
+    $this->basename = 'plugins' . DIRECTORY_SEPARATOR . strtolower(get_class($this));
   }
-  
+
   public function add($id) {
     $this->items[$id] = array();
     $this->save();
   }
-  
-}//class
+
+} //class

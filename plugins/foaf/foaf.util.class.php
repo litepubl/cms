@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
-class tfoafutil  extends tevents {
-  
+class tfoafutil extends tevents {
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getfoafdom(&$foafurl) {
     $s = http::get($foafurl);
     if (!$s) return false;
@@ -21,29 +22,28 @@ class tfoafutil  extends tevents {
       if (!$s) return false;
       if (!$this->isfoaf($s)) return false;
     }
-    
-    
+
     $dom = new domDocument;
     $dom->loadXML($s);
     return $dom;
   }
-  
+
   public function getinfo($url) {
     $dom = $this->getfoafdom($url);
     if (!$dom) return false;
     $person = $dom->getElementsByTagName('RDF')->item(0)->getElementsByTagName('Person')->item(0);
     $result = array(
-    'nick' => $person->getElementsByTagName('nick')->item(0)->nodeValue,
-    'url' => $person->getElementsByTagName('weblog')->item(0)->attributes->getNamedItem('resource')->nodeValue,
-    'foafurl' => $url
+      'nick' => $person->getElementsByTagName('nick')->item(0)->nodeValue,
+      'url' => $person->getElementsByTagName('weblog')->item(0)->attributes->getNamedItem('resource')->nodeValue,
+      'foafurl' => $url
     );
     return $result;
   }
-  
+
   private function isfoaf(&$s) {
     return strpos($s, '<rdf:RDF') > 0;
   }
-  
+
   private function discoverfoafurl(&$s) {
     $tag = '<link rel="meta" type="application/rdf+xml" title="FOAF" href="';
     if ($i = strpos($s, $tag)) {
@@ -60,13 +60,13 @@ class tfoafutil  extends tevents {
     }
     return false;
   }
-  
+
   public function checkfriend($foafurl) {
     $dom = $this->getfoafdom($foafurl);
     if (!$dom) return false;
-    
+
     $knows = $dom->getElementsByTagName('knows');
-    foreach ($knows  as $node) {
+    foreach ($knows as $node) {
       $blog = $node->getElementsByTagName('Person')->item(0)->getElementsByTagName('weblog')->item(0)->attributes->getNamedItem('resource')->nodeValue;
       $seealso = $node->getElementsByTagName('Person')->item(0)->getElementsByTagName('seeAlso')->item(0)->attributes->getNamedItem('resource')->nodeValue;
       if (($blog == litepublisher::$site->url . '/') && ($seealso == litepublisher::$site->url . '/foaf.xml')) {
@@ -75,7 +75,7 @@ class tfoafutil  extends tevents {
     }
     return false;
   }
-  
+
   public function check() {
     $result = '';
     $lang = tlocal::i('foaf');
@@ -94,22 +94,22 @@ class tfoafutil  extends tevents {
         $foaf->unlock();
       }
     }
-    
-    if($result != '') {
+
+    if ($result != '') {
       $result = $lang->founderrors . $result;
       $result = str_replace('\n', "\n", $result);
       $args = targs::i();
       $args->errors = $result;
-      
+
       tlocal::usefile('mail');
       $lang = tlocal::i('mailfoaf');
       $theme = ttheme::i();
-      
+
       $subject = $theme->parsearg($lang->errorsubj, $args);
       $body = $theme->parsearg($lang->errorbody, $args);
-      
+
       tmailer::sendtoadmin($subject, $body);
     }
   }
-  
-}//class
+
+} //class

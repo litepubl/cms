@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
-class tsinglecat extends  tplugin {
-  
+class tsinglecat extends tplugin {
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->data['invertorder'] = false;
@@ -18,14 +19,14 @@ class tsinglecat extends  tplugin {
     $this->data['tml'] = '<li><a href="$site.url$url" title="$title">$title</a></li>';
     $this->data['tmlitems'] = '<ul>$items</ul>';
   }
-  
+
   public function themeparsed(ttheme $theme) {
     $tag = '$singlecat.content';
     if (!strpos($theme->templates['content.post'], $tag)) {
       $theme->templates['content.post'] = str_replace('$post.content', '$post.content ' . $tag, $theme->templates['content.post']);
     }
   }
-  
+
   public function getcontent() {
     $post = litepublisher::$urlmap->context;
     if (!($post instanceof tpost)) return '';
@@ -38,10 +39,9 @@ class tsinglecat extends  tplugin {
     $result = $posts->getlinks("$posts->thistable.id in
     (select  $table.post from $table where $table.item = $idcat)
     and $posts->thistable.id != $post->id
-    order by $posts->thistable.posted  $order limit $this->maxcount",
-    $this->tml);
-    
+    order by $posts->thistable.posted  $order limit $this->maxcount", $this->tml);
+
     return str_replace('$items', $result, $this->tmlitems);
   }
-  
-}//class
+
+} //class

@@ -1,69 +1,76 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class emailauth extends tplugin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function email_login(array $args) {
     if (!isset($args['email']) || !isset($args['password'])) return $this->error('Invalid data', 403);
     $email = strtolower(trim($args['email']));
     $password = trim($args['password']);
-    
+
     if ($mesg = tadminlogin::autherror($email, $password)) {
       return array(
-      'error' => array(
-      'message' => $mesg,
-      'code' => 403
-      ));
+        'error' => array(
+          'message' => $mesg,
+          'code' => 403
+        )
+      );
     }
-    
+
     $expired = time() + 31536000;
     $cookie = md5uniq();
     litepublisher::$options->setcookies($cookie, $expired);
-    
+
     return array(
-    'id' => litepublisher::$options->user,
-    'pass' => $cookie,
-    'regservice' => 'email',
-    'adminflag' => litepublisher::$options->ingroup('admin') ? 'true' : '',
+      'id' => litepublisher::$options->user,
+      'pass' => $cookie,
+      'regservice' => 'email',
+      'adminflag' => litepublisher::$options->ingroup('admin') ? 'true' : '',
     );
   }
-  
+
   public function email_reg(array $args) {
     if (!litepublisher::$options->usersenabled || !litepublisher::$options->reguser) return array(
-    'error' => array(
-    'message' => tlocal::admin('users')->regdisabled,
-    'code' => 403,
-    ));
-    
-    try {
-      return tadminreguser ::i()->reguser($args['email'], $args['name']);
-    } catch (Exception $e) {
-      return array(
       'error' => array(
-      'message' => $e->getMessage(),
-      'code' =>$e->getCode()
-      ));
+        'message' => tlocal::admin('users')->regdisabled,
+        'code' => 403,
+      )
+    );
+
+    try {
+      return tadminreguser::i()->reguser($args['email'], $args['name']);
+    }
+    catch(Exception $e) {
+      return array(
+        'error' => array(
+          'message' => $e->getMessage() ,
+          'code' => $e->getCode()
+        )
+      );
     }
   }
-  
+
   public function email_lostpass(array $args) {
     try {
       return tadminpassword::i()->restore($args['email']);
-    } catch (Exception $e) {
+    }
+    catch(Exception $e) {
       return array(
-      'error' => array(
-      'message' => $e->getMessage(),
-      'code' =>$e->getCode()
-      ));
+        'error' => array(
+          'message' => $e->getMessage() ,
+          'code' => $e->getCode()
+        )
+      );
     }
   }
-  
-}//class
+
+} //class

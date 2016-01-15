@@ -1,17 +1,18 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tmarkdownplugin extends tplugin {
   public $parser;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->data['deletep'] = false;
@@ -19,17 +20,17 @@ class tmarkdownplugin extends tplugin {
     litepublisher::$classes->include_file(litepublisher::$paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'Markdown.php');
     $this->parser = new Markdown();
   }
-  
+
   public function filter(&$content) {
     if ($this->deletep) $content = str_replace('_', '&#95;', $content);
     $content = $this->parser->transform($content);
     if ($this->deletep) $content = strtr($content, array(
-    '<p>' => '',
-    '</p>' => '',
-    '&#95;' => '_'
+      '<p>' => '',
+      '</p>' => '',
+      '&#95;' => '_'
     ));
   }
-  
+
   public function install() {
     $filter = tcontentfilter::i();
     $filter->lock();
@@ -37,10 +38,10 @@ class tmarkdownplugin extends tplugin {
     $filter->oncomment = $this->filter;
     $filter->unlock();
   }
-  
+
   public function uninstall() {
     $filter = tcontentfilter::i();
     $filter->unbind($this);
   }
-  
-}//class
+
+} //class

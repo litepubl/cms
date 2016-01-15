@@ -1,17 +1,18 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function tkeywordspluginInstall($self) {
   @mkdir(litepublisher::$paths->data . 'keywords', 0777);
   @chmod(litepublisher::$paths->data . 'keywords', 0777);
-  
-  $item = litepublisher::$classes->items[get_class($self)];
-  litepublisher::$classes->add('tkeywordswidget','keywords.widget.php', $item[1]);
-  
+
+  $item = litepublisher::$classes->items[get_class($self) ];
+  litepublisher::$classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
+
   $widget = tkeywordswidget::i();
   $widgets = twidgets::i();
   $widgets->lock();
@@ -19,7 +20,7 @@ function tkeywordspluginInstall($self) {
   $sidebars = tsidebars::i();
   $sidebars->insert($id, false, 1, -1);
   $widgets->unlock();
-  
+
   $urlmap = turlmap::i();
   $urlmap->lock();
   $urlmap->afterrequest = $self->parseref;
@@ -33,4 +34,5 @@ function tkeywordspluginUninstall($self) {
   $widgets->deleteclass('tkeywordswidget');
   litepublisher::$classes->delete('tkeywordswidget');
   //TFiler::DeleteFiles(litepublisher::$paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
+  
 }

@@ -1,22 +1,23 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tdownloaditemcounter extends titems {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     $this->dbversion = dbversion;
     parent::create();
     $this->table = 'downloaditems';
   }
-  
+
   public function updatestat() {
     $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
     if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
@@ -24,7 +25,7 @@ class tdownloaditemcounter extends titems {
       $stat = array();
       $a = explode("\n", $s);
       foreach ($a as $id) {
-        $id = (int) $id;
+        $id = (int)$id;
         if ($id == 0) continue;
         if (isset($stat[$id])) {
           $stat[$id]++;
@@ -40,10 +41,10 @@ class tdownloaditemcounter extends titems {
       }
     }
   }
-  
+
   public function request($arg) {
     //$this->cache = false;
-    $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
     if (!$this->itemexists($id)) return 404;
     $item = $this->getitem($id);
     $url = $item['downloadurl'];
@@ -51,5 +52,5 @@ class tdownloaditemcounter extends titems {
     return "<?php tfiler::append('$id\n', '$filename');
     return litepublisher::\$urlmap->redir('$url');";
   }
-  
-}//class
+
+} //class

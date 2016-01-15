@@ -1,17 +1,18 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
-class ttoptext extends tplugin{
+class ttoptext extends tplugin {
   public $text;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function beforecontent(tpost $post, &$content, &$cancel) {
     $sign = '[toptext]';
     if ($i = strpos($content, $sign)) {
@@ -19,9 +20,9 @@ class ttoptext extends tplugin{
       $content = substr($content, $i + strlen($sign));
     }
   }
-  
+
   public function aftercontent(tpost $post) {
     if ($this->text) $post->filtered = $this->text . $post->filtered;
   }
-  
-}//class
+
+} //class

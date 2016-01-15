@@ -9,10 +9,18 @@ unset($classes->items['tadminthemes']);
 unset($classes->items['tableprop']);
 $classes->items['datefilter'] = array('kernel.admin.php', '', 'filter.datetime.class.php');
 $classes->items['ulist'] = array('kernel.admin.php', '', 'html.ulist.class.php');
+$classes->items['adminsecure'] = array('admin.options.secure.class.php', '');
 $classes->save();
 
 $m = tadminmenus::i();
+$m->lock();
 $m->deleteurl('/admin/views/themes/');
+$id = $m->url2id('/admin/options/secure/');
+$m->items[$id]['class'] = 'adminsecure';
+litepublisher::$urlmap->setvalue(litepublisher::$urlmap->urlexists('/admin/options/secure/'),
+'class', 'adminsecure');
+
+$m->unlock();
 
 $css = tcssmerger::i();
 $css->lock();

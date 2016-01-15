@@ -1,27 +1,28 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tsmushitplugin extends tplugin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function install() {
-    
+
     $parser = tmediaparser::i();
     $parser->added = $this->fileadded;
   }
-  
+
   public function uninstall() {
     $parser = tmediaparser::i();
     $parser->unbind($this);
   }
-  
+
   public function fileadded($id) {
     $files = tfiles::i();
     $item = $files->getitem($id);
@@ -29,10 +30,8 @@ class tsmushitplugin extends tplugin {
     $fileurl = $files->geturl($id);
     if ($s = http::get('http://www.smushit.com/ysmush.it/ws.php?img=' . urlencode($fileurl))) {
       $json = json_decode($s);
-      if ( isset ( $json->error) ||
-      (-1 === (int) $json->dest_size) ||
-      !$json->dest) return;
-      $div = $item['size'] - (int) $json->dest_size;
+      if (isset($json->error) || (-1 === (int)$json->dest_size) || !$json->dest) return;
+      $div = $item['size'] - (int)$json->dest_size;
       if (($div / ($item['size'] / 100)) < 3) return;
       $dest = urldecode($json->dest);
       if (!strbegin($dest, 'http')) $dest = 'http://www.smushit.com/' . $dest;
@@ -41,5 +40,5 @@ class tsmushitplugin extends tplugin {
       }
     }
   }
-  
-}//class
+
+} //class

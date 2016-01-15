@@ -1,20 +1,21 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminlivejournalposter {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getcontent() {
     $plugin = tlivejournalposter::i();
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-    if ($plugin->template == '') $plugin->template = file_get_contents($dir. 'livejournalposter.tml');
+    if ($plugin->template == '') $plugin->template = file_get_contents($dir . 'livejournalposter.tml');
     $about = tplugins::getabout(tplugins::getname(__file__));
     $lang = tplugins::getlangabout(__file__);
     $html = tadminhtml::i();
@@ -34,7 +35,7 @@ class tadminlivejournalposter {
     
     [editor=template]', $args);
   }
-  
+
   public function processform() {
     extract($_POST, EXTR_SKIP);
     $plugin = tlivejournalposter::i();
@@ -48,5 +49,5 @@ class tadminlivejournalposter {
     $plugin->unlock();
     return '';
   }
-  
+
 }

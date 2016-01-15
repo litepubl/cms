@@ -1,19 +1,20 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tcodedocmenu extends tmenu {
-  
+
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
+
   public function gethead() {
     $result = parent::gethead();
-    $result .=   '<style type="text/css">
+    $result.= '<style type="text/css">
   .doc_classes p { display:none;}
     </style>
     <script type="text/javascript">
@@ -26,25 +27,25 @@ class tcodedocmenu extends tmenu {
     </script>';
     return $result;
   }
-  
+
   public function getcontent() {
     $result = parent::getcontent();
     $db = litepublisher::$db;
-  $items = $db->res2items($db->query("select id, class from {$db->prefix}codedoc order by class"));
+    $items = $db->res2items($db->query("select id, class from {$db->prefix}codedoc order by class"));
     if (count($items) == 0) return $result;
     tposts::i()->loaditems(array_keys($items));
     $theme = tview::getview($this)->theme;
     $args = new targs();
-    $result .= '<ul class="doc_classes">';
+    $result.= '<ul class="doc_classes">';
     $tml = '<li id="doc-class-$id"><a href="#">$class</a> $post.excerptcontent</li>';
     foreach ($items as $id => $item) {
       $args->add($item);
       ttheme::$vars['post'] = tpost::i($id);
-      $result .= $theme->parsearg($tml, $args);
+      $result.= $theme->parsearg($tml, $args);
     }
-    
-    $result .= '</ul>';
+
+    $result.= '</ul>';
     return $result;
   }
-  
-}//class
+
+} //class

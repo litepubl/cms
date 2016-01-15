@@ -1,27 +1,28 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminpolltypes extends tadminmenu {
-  
+
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
+
   public function gethead() {
     return parent::gethead() . tuitabs::gethead();
   }
-  
+
   public function getcontent() {
     $result = '';
     $types = tpolltypes::i();
     $html = tadminhtml::i();
     $lang = tlocal::admin('polls');
     $args = new targs();
-    
+
     $type = isset($_GET['type']) ? $_GET['type'] : '';
     if (isset($types->items[$type])) {
       $args->type = $type;
@@ -31,20 +32,20 @@ class tadminpolltypes extends tadminmenu {
         $tabs->add($lang->$name, "[editor=$name]");
       }
       $args->formtitle = $lang->edittype;
-      $result .= $html->adminform($tabs->get(), $args);
+      $result.= $html->adminform($tabs->get() , $args);
     }
-    
-    $result .= $html->h4->alltypes;
-    $result .= '<ul>';
+
+    $result.= $html->h4->alltypes;
+    $result.= '<ul>';
     $adminurl = $html->getadminlink($this->url, 'type=');
     foreach ($types->items as $type => $item) {
-      $result .= sprintf('<li><a href="%s%2$s" title="%2$s">%2$s</a></li>', $adminurl, $type);
+      $result.= sprintf('<li><a href="%s%2$s" title="%2$s">%2$s</a></li>', $adminurl, $type);
     }
-    $result .= '</ul>';
-    
+    $result.= '</ul>';
+
     return $result;
   }
-  
+
   public function processform() {
     $types = tpolltypes::i();
     $type = isset($_GET['type']) ? $_GET['type'] : '';
@@ -54,8 +55,8 @@ class tadminpolltypes extends tadminmenu {
       }
       $types->save();
     }
-    
+
     return '';
   }
-  
-}//class
+
+} //class

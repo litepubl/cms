@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function textrasidebarsInstall($self) {
   $parser = tthemeparser::i();
@@ -11,7 +12,7 @@ function textrasidebarsInstall($self) {
   $parser->onfix = $self->fix;
   $parser->parsed = $self->themeparsed;
   $parser->unlock();
-  
+
   ttheme::clearcache();
 }
 

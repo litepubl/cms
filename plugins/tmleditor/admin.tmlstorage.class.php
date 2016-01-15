@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class admintmlstorage implements iadmin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getcontent() {
     $plugin = tmlstorage::i();
     $args = new targs();
@@ -22,20 +23,17 @@ class admintmlstorage implements iadmin {
         $tab = new tuitabs();
         $obj = getinstance($classname);
         foreach ($obj->data['tml'] as $key => $value) {
-          $tab->add($key, $html->getinput('editor',
-          $classname . '_text_' . $key, tadminhtml::specchars($value), $key));
+          $tab->add($key, $html->getinput('editor', $classname . '_text_' . $key, tadminhtml::specchars($value) , $key));
         }
         $tabs->add($classname, $tab->get());
       } else {
-        $tabs->add($classname, $html->getinput('editor',
-        $classname . '_text', tadminhtml::specchars($obj->data['tml']), $classname ));
+        $tabs->add($classname, $html->getinput('editor', $classname . '_text', tadminhtml::specchars($obj->data['tml']) , $classname));
       }
     }
-    
-    return tuitabs::gethead() .
-    $html->adminform($tabs->get(), $args);
+
+    return tuitabs::gethead() . $html->adminform($tabs->get() , $args);
   }
-  
+
   public function processform() {
     $plugin = tmlstorage::i();
     foreach ($plugin->items as $classname => $items) {
@@ -49,7 +47,7 @@ class admintmlstorage implements iadmin {
       }
       $obj->save();
     }
-    
+
   }
-  
-}//class
+
+} //class

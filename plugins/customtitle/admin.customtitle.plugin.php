@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadmincustomtitle {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getcontent() {
     $plugin = tcustomtitle::i();
     $about = tplugins::getabout(tplugins::getname(__file__));
@@ -21,14 +22,14 @@ class tadmincustomtitle {
     $args->archive = $plugin->archive;
     $args->formtitle = $about['formtitle'];
     $args->data['$lang.tag'] = $about['tagcat'];
-    
+
     $html = tadminhtml::i();
     return $html->adminform('[text=post]
     [text=tag]
     [text=home]
     [text=archive]', $args);
   }
-  
+
   public function processform() {
     $plugin = tcustomtitle::i();
     $plugin->post = $_POST['post'];
@@ -38,5 +39,5 @@ class tadmincustomtitle {
     $plugin->save();
     litepublisher::$urlmap->clearcache();
   }
-  
-}//class
+
+} //class

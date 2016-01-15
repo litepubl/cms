@@ -1,18 +1,19 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminpostcontentplugin {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function getcontent() {
-    $plugin = tpostcontentplugin ::i();
+    $plugin = tpostcontentplugin::i();
     $html = tadminhtml::i();
     $args = targs::i();
     $about = tplugins::getabout(tplugins::getname(__file__));
@@ -23,15 +24,15 @@ class tadminpostcontentplugin {
     $args->after = $plugin->after;
     return $html->adminform('[editor=before] [editor=after]', $args);
   }
-  
+
   public function processform() {
     extract($_POST, EXTR_SKIP);
-    $plugin = tpostcontentplugin ::i();
+    $plugin = tpostcontentplugin::i();
     $plugin->lock();
     $plugin->before = $before;
     $plugin->after = $after;
     $plugin->unlock();
     return '';
   }
-  
+
 }

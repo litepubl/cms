@@ -71,7 +71,7 @@ function tadminmenusInstall($self) {
     $self->createitem($opt, 'links', 'admin', 'tadminoptions');
     $self->createitem($opt, 'cache', 'admin', 'tadminoptions');
     $self->createitem($opt, 'catstags', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'secure', 'admin', 'tadminoptions');
+    $self->createitem($opt, 'secure', 'admin', 'adminsecure');
     $self->createitem($opt, 'robots', 'admin', 'tadminoptions');
     $self->createitem($opt, 'local', 'admin', 'tadminlocalmerger');
     $self->createitem($opt, 'parser', 'admin', 'adminthemeparser');
@@ -89,14 +89,14 @@ function tadminmenusInstall($self) {
   $self->items[$id]['order'] = 9999999;
 
   /*
-  $board = $self->additem(array(
-  'parent' => 0,
-  'url' => '/admin/',
-  'title' => tlocal::get('adminmenus', 'board'),
-  'name' => 'board',
-  'class' => 'tadminboard',
-  'group' => 'author'
-  ));
+  $board = $self->additem(array(
+  'parent' => 0,
+  'url' => '/admin/',
+  'title' => tlocal::get('adminmenus', 'board'),
+  'name' => 'board',
+  'class' => 'tadminboard',
+  'group' => 'author'
+  ));
   */
   $self->unlock();
 
