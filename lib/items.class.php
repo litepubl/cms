@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class titems extends tevents {
   public $items;
   public $dbversion;
   protected $idprop;
   protected $autoid;
-  
+
   protected function create() {
     parent::create();
     $this->addevents('added', 'deleted');
@@ -22,7 +23,7 @@ class titems extends tevents {
       $this->addmap('autoid', 0);
     }
   }
-  
+
   public function load() {
     if ($this->dbversion) {
       return tstorage::load($this);
@@ -30,7 +31,7 @@ class titems extends tevents {
       return parent::load();
     }
   }
-  
+
   public function save() {
     if ($this->lockcount > 0) return;
     if ($this->dbversion) {
@@ -39,12 +40,12 @@ class titems extends tevents {
       return parent::save();
     }
   }
-  
+
   public function loadall() {
-    if (!$this->dbversion)  return;
+    if (!$this->dbversion) return;
     return $this->select('', '');
   }
-  
+
   public function loaditems(array $items) {
     if (!$this->dbversion) return;
     //exclude loaded items
@@ -53,13 +54,13 @@ class titems extends tevents {
     $list = implode(',', $items);
     $this->select("$this->thistable.$this->idprop in ($list)", '');
   }
-  
+
   public function select($where, $limit) {
     if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
-    if ($where) $where = 'where '. $where;
+    if ($where) $where = 'where ' . $where;
     return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
   }
-  
+
   public function res2items($res) {
     if (!$res) return array();
     $result = array();
@@ -71,7 +72,7 @@ class titems extends tevents {
     }
     return $result;
   }
-  
+
   public function getcount() {
     if ($this->dbversion) {
       return $this->db->getcount();
@@ -79,7 +80,7 @@ class titems extends tevents {
       return count($this->items);
     }
   }
-  
+
   public function getitem($id) {
     if (isset($this->items[$id])) return $this->items[$id];
     if ($this->dbversion) {
@@ -87,37 +88,38 @@ class titems extends tevents {
     }
     return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
   }
-  
+
   public function getvalue($id, $name) {
     if ($this->dbversion && !isset($this->items[$id])) $this->items[$id] = $this->db->getitem($id, $this->idprop);
     return $this->items[$id][$name];
   }
-  
+
   public function setvalue($id, $name, $value) {
     $this->items[$id][$name] = $value;
     if ($this->dbversion) {
       //$this->db->setvalue($id, $name, $value);
-      $this->db->update("$name = " . dbquote($value), "$this->idprop = $id");
+      $this->db->update("$name = " . dbquote($value) , "$this->idprop = $id");
     }
   }
-  
+
   public function itemexists($id) {
     if (isset($this->items[$id])) return true;
     if ($this->dbversion) {
       try {
         return $this->getitem($id);
-      } catch (Exception $e) {
+      }
+      catch(Exception $e) {
         return false;
       }
     }
     return false;
   }
-  
+
   public function indexof($name, $value) {
-    if ($this->dbversion){
-      return $this->db->findprop($this->idprop, "$name = ". dbquote($value));
+    if ($this->dbversion) {
+      return $this->db->findprop($this->idprop, "$name = " . dbquote($value));
     }
-    
+
     foreach ($this->items as $id => $item) {
       if ($item[$name] == $value) {
         return $id;
@@ -125,7 +127,7 @@ class titems extends tevents {
     }
     return false;
   }
-  
+
   public function additem(array $item) {
     $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
     $item[$this->idprop] = $id;
@@ -134,7 +136,7 @@ class titems extends tevents {
     $this->added($id);
     return $id;
   }
-  
+
   public function delete($id) {
     if ($this->dbversion) $this->db->delete("$this->idprop = $id");
     if (isset($this->items[$id])) {
@@ -145,5 +147,5 @@ class titems extends tevents {
     }
     return false;
   }
-  
-}//class
+
+} //class

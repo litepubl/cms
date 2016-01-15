@@ -1,29 +1,30 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tcommentswidget extends twidget {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->basename = 'widget.comments';
     $this->cache = 'include';
     $this->template = 'comments';
     $this->adminclass = 'tadminmaxcount';
-    $this->data['maxcount'] =  7;
+    $this->data['maxcount'] = 7;
   }
-  
+
   public function getdeftitle() {
     return tlocal::get('default', 'recentcomments');
   }
-  
+
   public function getcontent($id, $sidebar) {
     $recent = $this->getrecent($this->maxcount);
     if (count($recent) == 0) return '';
@@ -37,15 +38,15 @@ class tcommentswidget extends twidget {
       $args->add($item);
       $args->link = $url . $item['posturl'];
       $args->content = tcontentfilter::getexcerpt($item['content'], 120);
-      $result .= $theme->parsearg($tml,$args);
+      $result.= $theme->parsearg($tml, $args);
     }
     return $theme->getwidgetcontent($result, 'comments', $sidebar);
   }
-  
+
   public function changed() {
     $this->expire();
   }
-  
+
   public function getrecent($count, $status = 'approved') {
     $db = litepublisher::$db;
     $result = $db->res2assoc($db->query("select $db->comments.*,
@@ -60,14 +61,14 @@ class tcommentswidget extends twidget {
     $db->posts.status = 'published' and
     $db->posts.idperm = 0
     order by $db->comments.posted desc limit $count"));
-    
+
     if (litepublisher::$options->commentpages && !litepublisher::$options->comments_invert_order) {
       foreach ($result as $i => $item) {
         $page = ceil($item['commentscount'] / litepublisher::$options->commentsperpage);
-        if ($page > 1) $result[$i]['posturl']= rtrim($item['posturl'], '/') . "/page/$page/";
+        if ($page > 1) $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
       }
     }
     return $result;
   }
-  
-}//class
+
+} //class

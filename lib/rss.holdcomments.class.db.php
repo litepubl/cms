@@ -1,17 +1,18 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class trssholdcomments extends tevents {
   public $url;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->basename = 'rss.holdcomments';
@@ -20,7 +21,7 @@ class trssholdcomments extends tevents {
     $this->data['count'] = 20;
     $this->data['template'] = '';
   }
-  
+
   public function setkey($key) {
     if ($this->key != $key) {
       if ($key == '') {
@@ -32,24 +33,24 @@ class trssholdcomments extends tevents {
       $this->save();
     }
   }
-  
+
   public function commentschanged($idpost) {
     litepublisher::$urlmap->setexpired($this->idurl);
   }
-  
+
   public function request($arg) {
     if (!litepublisher::$options->user) return 403;
     $result = '<?php turlmap::sendxml(); ?>';
     $rss = trss::i();
     $rss->domrss = new tdomrss;
     $this->dogetholdcomments($rss);
-    $result .= $rss->domrss->GetStripedXML();
+    $result.= $rss->domrss->GetStripedXML();
     return $result;
   }
-  
+
   private function dogetholdcomments($rss) {
-    $rss->domrss->CreateRoot(litepublisher::$site->url . $this->url, tlocal::get('comment', 'onrecent') . ' '. litepublisher::$site->name);
-    
+    $rss->domrss->CreateRoot(litepublisher::$site->url . $this->url, tlocal::get('comment', 'onrecent') . ' ' . litepublisher::$site->name);
+
     $db = litepublisher::$db;
     $author = litepublisher::$options->ingroup('moderator') ? '' : sprintf('%s.author = %d and ', $db->comments, litepublisher::$options->user);
     $recent = $db->res2assoc($db->query("select $db->comments.*,
@@ -63,20 +64,20 @@ class trssholdcomments extends tevents {
     $db->urlmap.id = $db->posts.idurl and
     $db->posts.status = 'published'
     order by $db->comments.posted desc limit $this->count"));
-    
+
     $title = tlocal::get('comment', 'onpost') . ' ';
     $comment = new tarray2prop();
     ttheme::$vars['comment'] = $comment;
     $theme = ttheme::i();
-    $tml = str_replace('$adminurl', '/admin/comments/'. litepublisher::$site->q . 'id=$comment.id&action', $this->template);
+    $tml = str_replace('$adminurl', '/admin/comments/' . litepublisher::$site->q . 'id=$comment.id&action', $this->template);
     $lang = tlocal::admin('comments');
-    
-    foreach ($recent  as $item) {
+
+    foreach ($recent as $item) {
       if ($item['website']) $item['website'] = sprintf('<a href="%1$s">%1$s</a>', $item['website']);
       $comment->array = $item;
       $comment->content = $theme->parse($tml);
       $rss->AddRSSComment($comment, $title . $comment->title);
     }
   }
-  
-}//class
+
+} //class

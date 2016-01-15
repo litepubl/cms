@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function tarchivesInstall($self) {
   $posts = tposts::i();
@@ -21,9 +22,9 @@ function tarchivesGetsitemap($self, $from, $count) {
   $result = array();
   foreach ($self->items as $date => $item) {
     $result[] = array(
-    'url' => $item['url'],
-    'title' => $item['title'],
-    'pages' => 1
+      'url' => $item['url'],
+      'title' => $item['title'],
+      'pages' => 1
     );
   }
   return $result;

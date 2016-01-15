@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 interface ipingbacks {
   public function doadd($url, $title);
@@ -15,7 +16,7 @@ interface ipingbacks {
 
 class tabstractpingbacks extends titems {
   public $pid;
-  
+
   public function add($url, $title) {
     $filter = tcontentfilter::i();
     $title = $filter->gettitle($title);
@@ -24,15 +25,15 @@ class tabstractpingbacks extends titems {
     $this->sendmail($id);
     return $id;
   }
-  
+
   public function hold($id) {
     return $this->setstatus($id, false);
   }
-  
+
   public function approve($id) {
     return $this->setstatus($id, true);
   }
-  
+
   private function sendmail($id) {
     $item = $this->getitem($id);
     $args = targs::i();
@@ -40,21 +41,20 @@ class tabstractpingbacks extends titems {
     $args->id = $id;
     $status = dbversion ? $item['status'] : ($item['approved'] ? 'approved' : 'hold');
     $args->localstatus = tlocal::get('commentstatus', $status);
-  $args->adminurl = litepublisher::$site->url . '/admin/comments/pingback/'. litepublisher::$site->q . "id=$id&post={$item['post']}&action";
+    $args->adminurl = litepublisher::$site->url . '/admin/comments/pingback/' . litepublisher::$site->q . "id=$id&post={$item['post']}&action";
     $post = tpost::i($item['post']);
-    $args->posttitle =$post->title;
+    $args->posttitle = $post->title;
     $args->postlink = $post->link;
-    
+
     tlocal::usefile('mail');
     $lang = tlocal::i('mailcomments');
     $theme = ttheme::i();
-    
+
     $subject = $theme->parsearg($lang->pingbacksubj, $args);
     $body = $theme->parsearg($lang->pingbackbody, $args);
-    
-    tmailer::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail,
-    'admin', litepublisher::$options->email,  $subject, $body);
-    
+
+    tmailer::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail, 'admin', litepublisher::$options->email, $subject, $body);
+
   }
-  
-}//class
+
+} //class

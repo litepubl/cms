@@ -1,74 +1,80 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminusers extends tadminmenu {
-  
+
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
-  public function  gethead() {
+
+  public function gethead() {
     return parent::gethead() . tuitabs::gethead();
   }
-  
+
   public function getcontent() {
     $result = '';
     $users = tusers::i();
     $groups = tusergroups::i();
-    
+
     $html = $this->html;
     $lang = tlocal::i('users');
     $args = targs::i();
-    
+
     $id = $this->idget();
     switch ($this->action) {
       case 'edit':
-      if (!$users->itemexists($id)) {
-        $result .= $this->notfound();
-      } else {
-        $statuses = array();
-        foreach (array('approved', 'hold','comuser') as $name) {
-          $statuses[$name] = $lang->$name;
+        if (!$users->itemexists($id)) {
+          $result.= $this->notfound();
+        } else {
+          $statuses = array();
+          foreach (array(
+            'approved',
+            'hold',
+            'comuser'
+          ) as $name) {
+            $statuses[$name] = $lang->$name;
+          }
+
+          $item = $users->getitem($id);
+          $args->add($item);
+          $args->registered = tuserpages::i()->getvalue($id, 'registered');
+          $args->formtitle = $item['name'];
+          $args->status = tadminhtml::array2combo($statuses, $item['status']);
+
+          $tabs = new tuitabs();
+          $tabs->add($lang->login, '[text=email] [password=password]');
+          $tabs->add($lang->groups, '[combo=status]' . tadmingroups::getgroups($item['idgroups']));
+          $tabs->add('Cookie', '[text=cookie] [text=expired] [text=registered] [text=trust]');
+
+          $args->password = '';
+          $result.= $html->adminform($tabs->get() , $args);
         }
-        
-        $item = $users->getitem($id);
-        $args->add($item);
-        $args->registered = tuserpages::i()->getvalue($id, 'registered');
-        $args->formtitle = $item['name'];
-        $args->status = tadminhtml::array2combo($statuses, $item['status']);
-        
-        $tabs = new tuitabs();
-        $tabs->add($lang->login, '[text=email] [password=password]');
-        $tabs->add($lang->groups, '[combo=status]' .
-        tadmingroups::getgroups($item['idgroups']));
-        $tabs->add('Cookie', '[text=cookie] [text=expired] [text=registered] [text=trust]');
-        
-        $args->password = '';
-        $result .= $html->adminform($tabs->get(), $args);
-      }
-      break;
-      
+        break;
+
+
       case 'delete':
-      $result .= $html->confirm_delete($users, $this->adminurl);
-      break;
-      
+        $result.= $html->confirm_delete($users, $this->adminurl);
+        break;
+
+
       default:
-      $args->formtitle = $lang->newuser;
-      $args->email = '';
-      $args->action = 'add';
-      
-      $tabs = new tuitabs();
-      $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
-      $tabs->add($lang->groups, tadmingroups::getgroups(array()));
-      
-      $result .= $html->adminform($tabs->get(), $args);
+        $args->formtitle = $lang->newuser;
+        $args->email = '';
+        $args->action = 'add';
+
+        $tabs = new tuitabs();
+        $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
+        $tabs->add($lang->groups, tadmingroups::getgroups(array()));
+
+        $result.= $html->adminform($tabs->get() , $args);
     }
     $args->search = '';
-    
+
     //table
     $perpage = 20;
     $count = $users->count;
@@ -76,10 +82,10 @@ class tadminusers extends tadminmenu {
     $where = '';
     $params = '';
     if (!empty($_GET['idgroup'])) {
-      $idgroup = (int) tadminhtml::getparam('idgroup', 0);
+      $idgroup = (int)tadminhtml::getparam('idgroup', 0);
       if ($groups->itemexists($idgroup)) {
         $grouptable = litepublisher::$db->prefix . $users->grouptable;
-        $where =  "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
+        $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
         $params = "idgroup=$idgroup";
       }
     } elseif ($search = trim(tadminhtml::getparam('search', ''))) {
@@ -87,96 +93,99 @@ class tadminusers extends tadminmenu {
       $args->search = $search;
       $search = litepublisher::$db->escape($search);
       $search = strtr($search, array(
-      '%' => '\%',
-      '_' => '\_'
+        '%' => '\%',
+        '_' => '\_'
       ));
-      
+
       $where = "email like '%$search%' or name like '%$search%' ";
       $count = $users->db->getcount($where);
       $from = $this->getfrom($perpage, $count);
     }
-    
+
     $items = $users->select($where, " order by id desc limit $from, $perpage");
     if (!$items) $items = array();
-    
+
     $tb = new tablebuilder();
     $tb->args->adminurl = $this->adminurl;
     $tb->setowner($users);
     $tb->setstruct(array(
-    tablebuilder::checkbox('user'),
-    
-    array(
-    $lang->edit,
-    sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)
-    ),
-    
-    array(
-    $lang->status,
-    '$status'
-    ),
-    
-    array(
-    $lang->comments,
-    sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/comments/', 'iduser=$id'), $lang->comments)
-    ),
-    
-    array(
-    $lang->page,
-    sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/pages/', 'id=$id'), $lang->page)
-    ),
+      tablebuilder::checkbox('user') ,
+
+      array(
+        $lang->edit,
+        sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)
+      ) ,
+
+      array(
+        $lang->status,
+        '$status'
+      ) ,
+
+      array(
+        $lang->comments,
+        sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/comments/', 'iduser=$id') , $lang->comments)
+      ) ,
+
+      array(
+        $lang->page,
+        sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/pages/', 'id=$id') , $lang->page)
+      ) ,
     ));
-    
+
     $form = new adminform($args);
     $form->title = $lang->userstable;
-    $result .= $form->getdelete($tb->build($items));
-    
+    $result.= $form->getdelete($tb->build($items));
+
     $theme = ttheme::i();
-    $result .= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count/$perpage), $params);
-    
+    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage) , $params);
+
     $form = new adminform($args);
     $form->method = 'get';
     $form->inline = true;
     $form->items = '[text=search]';
     $form->submit = 'find';
-    $result .= $form->get();
+    $result.= $form->get();
     return $result;
   }
-  
+
   public function processform() {
     $users = tusers::i();
     $groups = tusergroups::i();
-    
+
     if (isset($_POST['delete'])) {
       foreach ($_POST as $key => $value) {
         if (!is_numeric($value)) continue;
-        $id = (int) $value;
+        $id = (int)$value;
         $users->delete($id);
         //if (litepublisher::$classes->exists('tregservices')) $users->getdb('
+        
       }
       return;
     }
-    
+
     switch ($this->action) {
       case 'add':
-      $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
-      if ($id = $users->add($_POST)) {
-        litepublisher::$urlmap->redir("$this->adminurl=$id&action=edit");
-      } else {
-        return $this->html->h4red->invalidregdata;
-      }
-      break;
-      
+        $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
+        if ($id = $users->add($_POST)) {
+          litepublisher::$urlmap->redir("$this->adminurl=$id&action=edit");
+        } else {
+          return $this->html->h4red->invalidregdata;
+        }
+        break;
+
+
       case 'edit':
-      $id = $this->idget();
-      if (!$users->itemexists($id)) return;
-      $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
-      if (!$users->edit($id, $_POST))return $this->notfound;
-      if ($id == 1) {
-        litepublisher::$site->author = $_POST['name'];
-        //litepublisher::$site->email = $_POST['email'];
+        $id = $this->idget();
+        if (!$users->itemexists($id)) return;
+        $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
+        if (!$users->edit($id, $_POST)) return $this->notfound;
+        if ($id == 1) {
+          litepublisher::$site->author = $_POST['name'];
+          //litepublisher::$site->email = $_POST['email'];
+          
+        }
+        break;
       }
-      break;
     }
-  }
-  
-}//class
+
+} //class

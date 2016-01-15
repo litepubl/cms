@@ -1,8 +1,8 @@
 <?php
-//php_strip_whitespace
+set_time_limit(300);
 
 function ParseFile($filename) {
-global $linescount, $filecount;
+global $linescount, $filecount, $oBeautify;
 //ignore files
 if (in_array(basename($filename), array(
 'default-skin.css',
@@ -21,6 +21,16 @@ $filecount++;
 $s = trim(file_get_contents( $filename));
 $s = str_replace('2014', '2015', $s);
 $s = replace_copyright($s);
+
+if (strend($filename, 'php')) {
+        $oBeautify->setInputString($s);
+        $oBeautify->process();
+$s = $oBeautify->get();
+$s = trim($s);
+file_put_contents($filename, $s);
+return;
+}
+
 $Lines = explode("\n", $s);
 $linescount += count($Lines);
 
@@ -252,6 +262,14 @@ $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
 $rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
 require($dir . 'filer.class.php');
+$m = microtime(true);
+require ($rootdir . 'temp/PHP_Beautifier-master/Beautifier.php');
+        $oBeautify = new PHP_Beautifier();
+$oBeautify->setIndentNumber(2);
+        $oBeautify->addFilter('ArrayNested');
+        $oBeautify->addFilter('Pear',array('add_header'=>'php'));
+        $oBeautify->addFilter('KeepEmptyLines');
+//echo round(microtime(true) - $m, 2), ' = load beauty<br>';
 
 switch (@$_GET['dir']) {
 case 'plugins':
@@ -322,3 +340,4 @@ echo "$linescount = lines count, $filecount = file count\n</pre>\n<pre>";
 
 //echo ord('}');
 //echo chr(125);
+echo round(microtime(true) - $m, 2), ' = total beauty<br>';

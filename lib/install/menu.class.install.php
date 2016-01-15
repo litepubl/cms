@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function tmenusInstall($self) {
   @mkdir(litepublisher::$paths->data . 'menus', 0777);
@@ -11,8 +12,9 @@ function tmenusInstall($self) {
   @chmod(litepublisher::$paths->data . 'menus', 0777);
 }
 
-function  tmenusUninstall($self) {
+function tmenusUninstall($self) {
   //rmdir(. 'menus');
+  
 }
 
 function tmenusGetsitemap($self, $from, $count) {
@@ -20,9 +22,9 @@ function tmenusGetsitemap($self, $from, $count) {
   foreach ($self->items as $id => $item) {
     if ($item['status'] == 'draft') continue;
     $result[] = array(
-    'url' => $item['url'],
-    'title' => $item['title'],
-    'pages' => 1
+      'url' => $item['url'],
+      'title' => $item['title'],
+      'pages' => 1
     );
   }
   return $result;

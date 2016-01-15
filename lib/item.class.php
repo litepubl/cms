@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class titem extends tdata {
   public static $instances;
   //public $id;
-  
   public static function iteminstance($class, $id = 0) {
-    $name = call_user_func_array(array($class, 'getinstancename'), array());
+    $name = call_user_func_array(array(
+      $class,
+      'getinstancename'
+    ) , array());
     if (!isset(self::$instances)) self::$instances = array();
-    if (isset(self::$instances[$name][$id]))     return self::$instances[$name][$id];
+    if (isset(self::$instances[$name][$id])) return self::$instances[$name][$id];
     $self = litepublisher::$classes->newitem($name, $class, $id);
     return $self->loaddata($id);
   }
-  
+
   public function loaddata($id) {
     $this->data['id'] = $id;
     if ($id != 0) {
@@ -28,49 +31,49 @@ class titem extends tdata {
     }
     return $this;
   }
-  
+
   public function free() {
-    unset(self::$instances[$this->getinstancename()][$this->id]);
+    unset(self::$instances[$this->getinstancename() ][$this->id]);
   }
-  
+
   public function __construct() {
     parent::__construct();
     $this->data['id'] = 0;
   }
-  
+
   public function __destruct() {
     $this->free();
   }
-  
+
   public function __set($name, $value) {
     if (parent::__set($name, $value)) return true;
-    return  $this->Error("Field $name not exists in class " . get_class($this));
+    return $this->Error("Field $name not exists in class " . get_class($this));
   }
-  
+
   public function setid($id) {
     if ($id != $this->id) {
       $name = $this->instancename;
       if (!isset(self::$instances)) self::$instances = array();
       if (!isset(self::$instances[$name])) self::$instances[$name] = array();
-      $a = &self::$instances[$this->instancename];
-      if (isset(   $a[$this->id])) unset($a[$this->id]);
+      $a = & self::$instances[$this->instancename];
+      if (isset($a[$this->id])) unset($a[$this->id]);
       if (isset($a[$id])) $a[$id] = 0;
       $a[$id] = $this;
       $this->data['id'] = $id;
     }
   }
-  
+
   public function request($id) {
     if ($id != $this->id) {
       $this->setid($id);
       if (!$this->load()) return 404;
     }
   }
-  
+
   public static function deletedir($dir) {
     if (!@file_exists($dir)) return false;
     tfiler::delete($dir, true, true);
     @rmdir($dir);
   }
-  
+
 }

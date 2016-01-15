@@ -1,54 +1,55 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tpingbacks extends tabstractpingbacks implements ipingbacks {
-  
+
   public static function i($pid = 0) {
     $result = getinstance(__class__);
     $result->pid = $pid;
     return $result;
   }
-  
+
   protected function create() {
     $this->dbversion = true;
     parent::create();
     $this->table = 'pingbacks';
     $this->basename = 'pingbacks';
   }
-  
+
   public function doadd($url, $title) {
     $item = array(
-    'url' => $url,
-    'title' => $title,
-    'post' => $this->pid,
-    'posted' =>sqldate(),
-    'status' => 'hold',
-    'ip' => preg_replace( '/[^0-9., ]/', '',$_SERVER['REMOTE_ADDR'])
+      'url' => $url,
+      'title' => $title,
+      'post' => $this->pid,
+      'posted' => sqldate() ,
+      'status' => 'hold',
+      'ip' => preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'])
     );
-    $id =     $this->db->add($item);
+    $id = $this->db->add($item);
     $item['id'] = $id;
     $this->items[$id] = $item;
     $this->updatecount($this->pid);
     return $id;
   }
-  
+
   private function updatecount($idpost) {
-    $count= $this->db->getcount("post = $idpost and status = 'approved'");
+    $count = $this->db->getcount("post = $idpost and status = 'approved'");
     $this->getdb('posts')->setvalue($idpost, 'pingbackscount', $count);
   }
-  
+
   public function edit($id, $title, $url) {
     $this->db->updateassoc(compact('id', 'title', 'url'));
   }
-  
+
   public function exists($url) {
     return $this->db->finditem('url =' . dbquote($url));
   }
-  
+
   public function setstatus($id, $approve) {
     $status = $approve ? 'approved' : 'hold';
     $item = $this->getitem($id);
@@ -57,21 +58,21 @@ class tpingbacks extends tabstractpingbacks implements ipingbacks {
     $db->setvalue($id, 'status', $status);
     $this->updatecount($item['post']);
   }
-  
+
   public function postdeleted($idpost) {
     $this->db->delete("post = $idpost");
   }
-  
+
   public function import($url, $title, $posted, $ip, $status) {
     $item = array(
-    'url' => $url,
-    'title' => $title,
-    'post' => $this->pid,
-    'posted' =>sqldate($posted),
-    'status' => $status,
-    'ip' => $ip
+      'url' => $url,
+      'title' => $title,
+      'post' => $this->pid,
+      'posted' => sqldate($posted) ,
+      'status' => $status,
+      'ip' => $ip
     );
-    $id =     $this->db->add($item);
+    $id = $this->db->add($item);
     $item['id'] = $id;
     $this->items[$id] = $item;
     $this->updatecount($this->pid);
@@ -87,9 +88,9 @@ class tpingbacks extends tabstractpingbacks implements ipingbacks {
     $tml = $theme->content->post->templatecomments->pingbacks->pingback;
     foreach ($items as $item) {
       $pingback->array = $item;
-      $result .= $theme->parse($tml);
+      $result.= $theme->parse($tml);
     }
     return str_replace('$pingback', $result, $theme->parse($theme->content->post->templatecomments->pingbacks));
   }
-  
-}//class
+
+} //class

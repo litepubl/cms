@@ -1,25 +1,26 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminsubscribers extends tadminform {
   private $iduser;
   private $newreg;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->section = 'subscribers';
     $this->iduser = false;
     $this->newreg = false;
   }
-  
+
   public function request($arg) {
     $this->cache = false;
     if (!($this->iduser = litepublisher::$options->user)) {
@@ -33,18 +34,18 @@ class tadminsubscribers extends tadminform {
             $item = $users->getitem($this->iduser);
             $item['status'] = 'approved';
             $item['password'] = '';
-            $item['idgroups'] =  'commentator';
-            
+            $item['idgroups'] = 'commentator';
+
             $cookie = md5uniq();
             $expired = time() + 31536000;
-            
+
             $item['cookie'] = litepublisher::$options->hash($cookie);
             $item['expired'] = sqldate($expired);
             $users->edit($this->iduser, $item);
-            
+
             litepublisher::$options->user = $this->iduser;
             litepublisher::$options->updategroup();
-            
+
             litepublisher::$options->setcookie('litepubl_user_id', $this->iduser, $expired);
             litepublisher::$options->setcookie('litepubl_user', $cookie, $expired);
           } else {
@@ -53,55 +54,58 @@ class tadminsubscribers extends tadminform {
         }
       }
     }
-    
+
     if (!$this->iduser) {
       $url = litepublisher::$site->url . '/admin/login/' . litepublisher::$site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
       return litepublisher::$urlmap->redir($url);
     }
-    
+
     if ('hold' == tusers::i()->getvalue($this->iduser, 'status')) return 403;
     return parent::request($arg);
   }
-  
+
   public function gethead() {
     $result = parent::gethead();
-    $result .= tadminmenus::i()->heads;
+    $result.= tadminmenus::i()->heads;
     return $result;
   }
-  
+
   public function getcontent() {
     $result = '';
-    $html= $this->html;
+    $html = $this->html;
     $lang = tlocal::admin();
     $args = new targs();
-    if ($this->newreg) $result .=$html->h4->newreg;
-    
-    $subscribers=  tsubscribers::i();
+    if ($this->newreg) $result.= $html->h4->newreg;
+
+    $subscribers = tsubscribers::i();
     $items = $subscribers->getposts($this->iduser);
     if (count($items) == 0) return $html->h4->nosubscribtions;
     tposts::i()->loaditems($items);
     $args->default_subscribe = tuseroptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
     $args->formtitle = tusers::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
-    
+
     $tb = new tablebuilder();
     $tb->setposts(array(
-    array($lang->post, '<a href="$site.url$post.url" title="$post.title">$post.title</a>')
+      array(
+        $lang->post,
+        '<a href="$site.url$post.url" title="$post.title">$post.title</a>'
+      )
     ));
-    
-    return $html->adminform('[checkbox=default_subscribe]' .    $tb->build($items), $args);
+
+    return $html->adminform('[checkbox=default_subscribe]' . $tb->build($items) , $args);
   }
-  
+
   public function processform() {
     tuseroptions::i()->setvalue($this->iduser, 'subscribe', isset($_POST['default_subscribe']) ? 'enabled' : 'disabled');
-    
+
     $subscribers = tsubscribers::i();
     foreach ($_POST as $name => $value) {
       if (strbegin($name, 'checkbox-')) {
-        $subscribers->remove((int) $value, $this->iduser);
+        $subscribers->remove((int)$value, $this->iduser);
       }
     }
-    
+
     return $this->html->h4->unsubscribed;
   }
-  
-}//class
+
+} //class

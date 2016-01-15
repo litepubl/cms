@@ -1,12 +1,13 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tini2array {
-  
+
   public static function extractvalue(&$lines, &$name, &$value) {
     $s = '';
     while (($s == '') && (count($lines) > 0)) {
@@ -18,7 +19,7 @@ class tini2array {
       array_unshift($lines, $s);
       return false;
     }
-    
+
     $name = trim(substr($s, 0, $i));
     $value = ltrim(substr($s, $i + 1));
     if (!$value) return '';
@@ -28,49 +29,57 @@ class tini2array {
       $value = '';
       $r = sprintf('/(?<!\\\\)%s(\s*?)?$/', $q);
       while (!preg_match($r, $s) && (count($lines) > 0)) {
-        $value .= $s . "\n";
-        $s= array_shift($lines);
+        $value.= $s . "\n";
+        $s = array_shift($lines);
       }
-      
+
       $s = rtrim($s);
       if (preg_match($r, $s)) $s = substr($s, 0, strlen($s) - 1);
-      $value .= $s;
+      $value.= $s;
       $value = str_replace("\\$q", $q, $value);
       return true;
     } else {
-      $value  = trim($value);
+      $value = trim($value);
       return true;
     }
   }
-  
+
   public static function parse($s) {
-    $result  =array();
-    $s = str_replace(array("\r\n", "\r"), "\n", trim($s));
+    $result = array();
+    $s = str_replace(array(
+      "\r\n",
+      "\r"
+    ) , "\n", trim($s));
     $lines = explode("\n", $s);
     while (count($lines) > 0) {
       $line = array_shift($lines);
-      $sectionname = trim(trim($line), '[] ');
+      $sectionname = trim(trim($line) , '[] ');
       $section = array();
       $name = '';
       $value = '';
       while (self::extractvalue($lines, $name, $value)) {
         $section[$name] = $value;
       }
-      
+
       if (isset($result[$sectionname])) {
-        if (!isset($result[$sectionname][0]))  $result[$sectionname] = array(0 => $result[$sectionname]);
+        if (!isset($result[$sectionname][0])) $result[$sectionname] = array(
+          0 => $result[$sectionname]
+        );
         $result[$sectionname][] = $section;
       } else {
         $result[$sectionname] = $section;
       }
     }
-    
+
     return $result;
   }
-  
+
   public static function parsesection($s) {
-    $result  =array();
-    $s = str_replace(array("\r\n", "\r"), "\n", trim($s));
+    $result = array();
+    $s = str_replace(array(
+      "\r\n",
+      "\r"
+    ) , "\n", trim($s));
     $lines = explode("\n", $s);
     $name = '';
     $value = '';
@@ -79,5 +88,5 @@ class tini2array {
     }
     return $result;
   }
-  
-}//class
+
+} //class

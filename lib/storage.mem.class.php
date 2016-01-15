@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class memstorage {
   public $memcache;
@@ -12,11 +13,11 @@ class memstorage {
   public $table;
   public $data;
   private $table_checked;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public function __construct() {
     $this->memcache_prefix = litepublisher::$domain . ':';
     $this->table = 'memstorage';
@@ -28,19 +29,19 @@ class memstorage {
       $this->lifetime = 10800;
     }
   }
-  
+
   public function __get($name) {
     if (strlen($name) > 32) {
       $name = md5($name);
     }
-    
+
     if (isset($this->data[$name])) {
       return $this->data[$name];
     }
-    
+
     return $this->get($name);
   }
-  
+
   public function get($name) {
     $result = false;
     if ($this->memcache) {
@@ -52,32 +53,32 @@ class memstorage {
       if (!$this->table_checked) {
         $this->check();
       }
-      
+
       $db = litepublisher::$db;
       if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
         $result = $this->unserialize($r['value']);
         $this->data[$name] = $result;
       }
     }
-    
+
     return $result;
   }
-  
+
   public function __set($name, $value) {
     if (strlen($name) > 32) {
       $name = md5($name);
     }
-    
+
     $exists = isset($this->data[$name]);
     $this->data[$name] = $value;
-    
+
     if ($this->memcache) {
-      $this->memcache->set($this->memcache_prefix . $name, $this->serialize($value), false, $this->lifetime);
+      $this->memcache->set($this->memcache_prefix . $name, $this->serialize($value) , false, $this->lifetime);
     } else {
       if (!$this->table_checked) {
         $this->check();
       }
-      
+
       $db = litepublisher::$db;
       $v = $db->quote($this->serialize($value));
       if ($exists) {
@@ -87,39 +88,39 @@ class memstorage {
       }
     }
   }
-  
+
   public function __unset($name) {
     if (strlen($name) > 32) {
       $name = md5($name);
     }
-    
+
     if (isset($this->data[$name])) {
       unset($this->data[$name]);
     }
-    
+
     if ($this->memcache) {
       $this->memcache->delete($this->memcache_prefix . $name);
     } else {
       if (!$this->table_checked) {
         $this->check();
       }
-      
+
       $db = litepublisher::$db;
       $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
   }
-  
+
   public function serialize($data) {
     return serialize($data);
   }
-  
+
   public function unserialize(&$data) {
     return unserialize($data);
   }
-  
+
   public function check() {
     $this->table_checked = true;
-    
+
     //exclude throw exception
     $db = litepublisher::$db;
     $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
@@ -137,7 +138,7 @@ class memstorage {
       $this->created = time();
     }
   }
-  
+
   public function loadall() {
     $db = litepublisher::$db;
     $res = $db->query("select * from $db->prefix$this->table");
@@ -147,18 +148,18 @@ class memstorage {
       }
     }
   }
-  
+
   public function saveall() {
     $db = litepublisher::$db;
     $a = array();
     foreach ($this->data as $name => $value) {
       $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
     }
-    
+
     $values = implode(',', $a);
     $db->query("insert into $db->prefix$this->table (name, value) values $values");
   }
-  
+
   public function create_table() {
     $db = litepublisher::$db;
     $db->mysqli->query("create table if not exists $db->prefix$this->table (
@@ -170,14 +171,16 @@ class memstorage {
     DEFAULT CHARSET=utf8
     COLLATE = utf8_general_ci");
   }
-  
+
   public function clear_table() {
     $db = litepublisher::$db;
     try {
       $db->query("truncate table $db->prefix$this->table");
-    } catch (Exception $e) {
+    }
+    catch(Exception $e) {
       //silince
+      
     }
   }
-  
-}//class
+
+} //class

@@ -1,17 +1,18 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tmetawidget extends twidget {
   public $items;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->basename = 'widget.meta';
@@ -19,34 +20,34 @@ class tmetawidget extends twidget {
     $this->adminclass = 'tadminmetawidget';
     $this->addmap('items', array());
   }
-  
+
   public function getdeftitle() {
     return tlocal::get('default', 'subscribe');
   }
-  
+
   public function add($name, $url, $title) {
     $this->items[$name] = array(
-    'enabled' => true,
-    'url' => $url,
-    'title' => $title
+      'enabled' => true,
+      'url' => $url,
+      'title' => $title
     );
     $this->save();
   }
-  
+
   public function delete($name) {
     if (isset($this->items[$name])) {
       unset($this->items[$name]);
       $this->save();
     }
   }
-  
+
   public function getcontent($id, $sidebar) {
     $result = '';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('meta', $sidebar);
     $metaclasses = $theme->getwidgettml($sidebar, 'meta', 'classes');
     $args = targs::i();
-    foreach    ($this->items as $name => $item) {
+    foreach ($this->items as $name => $item) {
       if (!$item['enabled']) continue;
       $args->add($item);
       $args->icon = '';
@@ -57,11 +58,11 @@ class tmetawidget extends twidget {
         $args->rel = 'author profile';
       }
       $args->class = isset($metaclasses[$name]) ? $metaclasses[$name] : '';
-      $result .= $theme->parsearg($tml, $args);
+      $result.= $theme->parsearg($tml, $args);
     }
-    
+
     if ($result == '') return '';
     return $theme->getwidgetcontent($result, 'meta', $sidebar);
   }
-  
-}//class
+
+} //class

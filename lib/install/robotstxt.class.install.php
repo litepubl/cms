@@ -1,15 +1,16 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function trobotstxtInstall($self) {
   $self->lock();
   $urlmap = turlmap::i();
-  $self->idurl = $urlmap->add('/robots.txt', get_class($self), null);
-  
+  $self->idurl = $urlmap->add('/robots.txt', get_class($self) , null);
+
   $self->add("#" . litepublisher::$site->url . "/");
   $self->add('User-agent: *');
   //$self->AddDisallow('/rss.xml');

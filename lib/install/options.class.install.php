@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 /* to prevent recurse call */
 function installoptions($email, $language) {
@@ -12,22 +13,23 @@ function installoptions($email, $language) {
   $options->solt = md5uniq();
   $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
   $options->data['dbconfig'] = array(
-  'driver' => 'mysqli',
-  'host' => $usehost ? $_REQUEST['dbhost'] : 'localhost',
-  'port' => $usehost ? (int) $_REQUEST['dbport'] : 0,
-  'dbname' => $_REQUEST['dbname'],
-  'login' => $_REQUEST['dblogin'],
-  'password' => '',
-  'prefix' => $_REQUEST['dbprefix']
+    'driver' => 'mysqli',
+    'host' => $usehost ? $_REQUEST['dbhost'] : 'localhost',
+    'port' => $usehost ? (int)$_REQUEST['dbport'] : 0,
+    'dbname' => $_REQUEST['dbname'],
+    'login' => $_REQUEST['dblogin'],
+    'password' => '',
+    'prefix' => $_REQUEST['dbprefix']
   );
-  
+
   $options->setdbpassword($_REQUEST['dbpassword']);
   try {
-    litepublisher::$db= new tdatabase();
-  } catch (Exception $e) {
+    litepublisher::$db = new tdatabase();
+  }
+  catch(Exception $e) {
     die($e->GetMessage());
   }
-  
+
   if (litepublisher::$debug) {
     $db = litepublisher::$db;
     $list = $db->res2array($db->query("show tables from " . $options->dbconfig['dbname']));
@@ -38,7 +40,7 @@ function installoptions($email, $language) {
       }
     }
   }
-  
+
   $options->language = $language;
   $options->email = $email;
   $options->dateformat = '';
@@ -49,10 +51,10 @@ function installoptions($email, $language) {
   $options->cookiehash = '';
   $options->cookieexpired = 0;
   $options->securecookie = false;
-  
+
   $options->mailer = '';
   $options->data['cache'] = true;
-  $options->expiredcache= 3600;
+  $options->expiredcache = 3600;
   $options->admincache = false;
   $options->ob_cache = true;
   $options->compress = false;
@@ -65,7 +67,7 @@ function installoptions($email, $language) {
   $options->commentsperpage = 100;
   $options->comments_invert_order = false;
   $options->commentspool = false;
-  
+
   $versions = strtoarray(file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'versions.txt'));
   $options->version = $versions[0];
   $options->echoexception = true;

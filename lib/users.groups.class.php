@@ -1,41 +1,42 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tusergroups extends titems {
   public $defaults;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->basename = 'usergroups';
     $this->addmap('defaults', array());
     $this->data['defaulthome'] = '/admin/';
   }
-  
+
   public function add($name, $title, $home) {
     if ($id = $this->getidgroup($name)) return $id;
     $this->items[++$this->autoid] = array(
-    'name' => $name,
-    'title' => $title,
-    'home' => $home,
-    'parents' => array()
+      'name' => $name,
+      'title' => $title,
+      'home' => $home,
+      'parents' => array()
     );
     $this->save();
     return $this->autoid;
   }
-  
+
   public function delete($id) {
     if (!isset($this->items[$id])) return false;
     unset($this->items[$id]);
     $this->save();
-    
+
     $users = tusers::i();
     $db = $users->db;
     $items = $db->res2assoc($users->getdb($users->grouptable)->select("idgroup = $id"));
@@ -46,18 +47,18 @@ class tusergroups extends titems {
       $users->db->setvalue($iduser, 'idgroups', implode(',', $idgroups));
     }
   }
-  
+
   public function save() {
     parent::save();
     $this->update();
   }
-  
+
   public function update() {
     litepublisher::$options->data['groupnames'] = array();
-    $groupnames = &litepublisher::$options->data['groupnames'];
+    $groupnames = & litepublisher::$options->data['groupnames'];
     litepublisher::$options->data['parentgroups'] = array();
-    $parentgroups = &litepublisher::$options->data['parentgroups'];
-    
+    $parentgroups = & litepublisher::$options->data['parentgroups'];
+
     foreach ($this->items as $id => $group) {
       $names = explode(',', $group['name']);
       foreach ($names as $name) {
@@ -67,12 +68,12 @@ class tusergroups extends titems {
     }
     litepublisher::$options->save();
   }
-  
+
   public function getidgroup($name) {
     $name = trim($name);
     return isset(litepublisher::$options->groupnames[$name]) ? litepublisher::$options->groupnames[$name] : false;
   }
-  
+
   public function addparent($id, $name) {
     if (!isset($this->items[$id])) return false;
     if ($idparent = $this->getidgroup($name)) {
@@ -82,7 +83,7 @@ class tusergroups extends titems {
       return $idparent;
     }
   }
-  
+
   public function addchild($id, $name) {
     if (!isset($this->items[$id])) return false;
     if ($idchild = $this->getidgroup($name)) {
@@ -92,13 +93,12 @@ class tusergroups extends titems {
       return $idchild;
     }
   }
-  
-  
+
   public function gethome($name) {
     if ($id = $this->getidgroup($name)) {
       return isset($this->items[$id]['home']) ? $this->items[$id]['home'] : $this->defaulthome;
     }
     return $this->defaulthome;
   }
-  
-}//class
+
+} //class

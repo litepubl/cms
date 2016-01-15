@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class turlmap extends titems {
   public $host;
@@ -11,22 +12,22 @@ class turlmap extends titems {
   public $page;
   public $uripath;
   public $itemrequested;
-  public  $context;
+  public $context;
   public $cache_enabled;
   public $is404;
   public $isredir;
   public $adminpanel;
-public $prefilter;
+  public $prefilter;
   protected $close_events;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   public static function instance() {
     return getinstance(__class__);
   }
-  
+
   public function __construct() {
     parent::__construct();
     if (tfilestorage::$memcache) {
@@ -35,7 +36,7 @@ public $prefilter;
       $this->cache = new cachestorage_file();
     }
   }
-  
+
   protected function create() {
     $this->dbversion = true;
     parent::create();
@@ -44,16 +45,16 @@ public $prefilter;
     $this->addevents('beforerequest', 'afterrequest', 'onclearcache');
     $this->data['disabledcron'] = false;
     $this->data['redirdom'] = false;
-$this->addmap('prefilter', array());
+    $this->addmap('prefilter', array());
 
     $this->is404 = false;
     $this->isredir = false;
     $this->adminpanel = false;
-    $this->cache_enabled =     litepublisher::$options->cache && !litepublisher::$options->admincookie;
+    $this->cache_enabled = litepublisher::$options->cache && !litepublisher::$options->admincookie;
     $this->page = 1;
     $this->close_events = array();
   }
-  
+
   protected function prepareurl($host, $url) {
     $this->host = $host;
     $this->page = 1;
@@ -64,7 +65,7 @@ $this->addmap('prefilter', array());
       $this->url = $_GET['url'];
     }
   }
-  
+
   public function request($host, $url) {
     $this->prepareurl($host, $url);
     $this->adminpanel = strbegin($this->url, '/admin/') || ($this->url == '/admin');
@@ -74,38 +75,39 @@ $this->addmap('prefilter', array());
         return $this->redir($url);
       }
     }
-    
+
     $this->beforerequest();
     if (!litepublisher::$debug && litepublisher::$options->ob_cache) ob_start();
     try {
       $this->dorequest($this->url);
-    } catch (Exception $e) {
+    }
+    catch(Exception $e) {
       litepublisher::$options->handexception($e);
     }
-    
+
     // production mode: no debug and enabled buffer
     if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
       litepublisher::$options->showerrors();
       litepublisher::$options->errorlog = '';
-      
+
       $afterclose = $this->isredir || count($this->close_events);
       if ($afterclose) {
         $this->close_connection();
       }
-      
-      while (@ob_end_flush ());
+
+      while (@ob_end_flush());
       flush();
-      
+
       if ($afterclose) {
         if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
         ob_start();
       }
     }
-    
+
     $this->afterrequest($this->url);
     $this->close();
   }
-  
+
   public function close_connection() {
     ignore_user_abort(true);
     $len = ob_get_length();
@@ -113,7 +115,7 @@ $this->addmap('prefilter', array());
     header('Content-Length: ' . $len);
     header('Content-Encoding: none');
   }
-  
+
   protected function dorequest($url) {
     //echo "'$url'<br>";
     $this->itemrequested = $this->finditem($url);
@@ -124,55 +126,55 @@ $this->addmap('prefilter', array());
       $this->notfound404();
     }
   }
-  
+
   public function getidurl($id) {
     if (!isset($this->items[$id])) {
       $this->items[$id] = $this->db->getitem($id);
     }
     return $this->items[$id]['url'];
   }
-  
+
   public function findurl($url) {
-    if ($result = $this->db->finditem('url = '. dbquote($url))) return $result;
+    if ($result = $this->db->finditem('url = ' . dbquote($url))) return $result;
     return false;
   }
-  
+
   public function urlexists($url) {
-    return $this->db->findid('url = '. dbquote($url));
+    return $this->db->findid('url = ' . dbquote($url));
   }
-  
+
   private function query($url) {
-if ($item = $this->findfilter($url)) {
+    if ($item = $this->findfilter($url)) {
       $this->items[$item['id']] = $item;
       return $item;
-    } else if ($item = $this->db->getassoc('url = '. dbquote($url). ' limit 1')) {
+    } else if ($item = $this->db->getassoc('url = ' . dbquote($url) . ' limit 1')) {
       $this->items[$item['id']] = $item;
       return $item;
     }
 
     return false;
   }
-  
+
   public function finditem($url) {
     if ($result = $this->query($url)) return $result;
     $srcurl = $url;
-    if ($i = strpos($url, '?'))  {
-$url = substr($url, 0, $i);
-}
+    if ($i = strpos($url, '?')) {
+      $url = substr($url, 0, $i);
+    }
 
     if ('//' == substr($url, -2)) $this->redir(rtrim($url, '/') . '/');
     //extract page number
     if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
-      if ('/' != substr($url, -1))  return $this->redir($url . '/');
+      if ('/' != substr($url, -1)) return $this->redir($url . '/');
       $url = $m[1];
       if ($url == '') $url = '/';
-      $this->page = max(1, abs((int) $m[2]));
+      $this->page = max(1, abs((int)$m[2]));
     }
-    
+
     if (($srcurl != $url) && ($result = $this->query($url))) {
       if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
-return $this->redir($result['url']);
-}
+        return $this->redir($result['url']);
+      }
 
       return $result;
     }
@@ -180,63 +182,65 @@ return $this->redir($result['url']);
     $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
     if (($srcurl != $url) && ($result = $this->query($url))) {
       if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
-return $this->redir($result['url']);
-}
+        return $this->redir($result['url']);
+      }
 
       return $result;
-}
-    
+    }
+
     $this->uripath = explode('/', trim($url, '/'));
     return false;
   }
 
-public function findfilter($url) {
-foreach ($this->prefilter as $item) {
-switch ($item['type']) {
-case 'begin':
-if (strbegin($url, $item['url'])) {
-return $item;
-}
-break;
+  public function findfilter($url) {
+    foreach ($this->prefilter as $item) {
+      switch ($item['type']) {
+        case 'begin':
+          if (strbegin($url, $item['url'])) {
+            return $item;
+          }
+          break;
 
-case 'end':
-if (strend($url, $item['url'])) {
-return $item;
-}
-break;
 
-case 'regexp':
-if (preg_match($item['url'], $url)) {
-return $item;
-}
-break;
-}
-}
+        case 'end':
+          if (strend($url, $item['url'])) {
+            return $item;
+          }
+          break;
 
-return false;
-}
 
-public function updatefilter() {
-$this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
-$this->save();
-}
-  
+        case 'regexp':
+          if (preg_match($item['url'], $url)) {
+            return $item;
+          }
+          break;
+      }
+    }
+
+    return false;
+  }
+
+  public function updatefilter() {
+    $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
+    $this->save();
+  }
+
   private function getcachefile(array $item) {
     switch ($item['type']) {
       case 'normal':
-      return  sprintf('%s-%d.php', $item['id'], $this->page);
-      
+        return sprintf('%s-%d.php', $item['id'], $this->page);
+
       case 'usernormal':
-      return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepublisher::$options->user);
-      
+        return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepublisher::$options->user);
+
       case 'userget':
-      return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepublisher::$options->user, md5($_SERVER['REQUEST_URI']));
-      
+        return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepublisher::$options->user, md5($_SERVER['REQUEST_URI']));
+
       default: //get
-      return sprintf('%s-%d-%s.php', $item['id'], $this->page, md5($_SERVER['REQUEST_URI']));
+        return sprintf('%s-%d-%s.php', $item['id'], $this->page, md5($_SERVER['REQUEST_URI']));
     }
   }
-  
+
   protected function save_file($filename, $content) {
     if (tfilestorage::$memcache) {
       $this->cache->set($filename, $content);
@@ -246,7 +250,7 @@ $this->save();
       @chmod($fn, 0666);
     }
   }
-  
+
   protected function include_file($fn) {
     if (tfilestorage::$memcache) {
       if ($s = $this->cache->get($fn)) {
@@ -255,132 +259,150 @@ $this->save();
       }
       return false;
     }
-    
+
     $filename = litepublisher::$paths->cache . $fn;
-    if (file_exists($filename) &&
-    ((filemtime ($filename) + litepublisher::$options->expiredcache - litepublisher::$options->filetime_offset) >= time())) {
-      include($filename);
+    if (file_exists($filename) && ((filemtime($filename) + litepublisher::$options->expiredcache - litepublisher::$options->filetime_offset) >= time())) {
+      include ($filename);
       return true;
     }
-    
+
     return false;
   }
-  
-  private function  printcontent(array $item) {
+
+  private function printcontent(array $item) {
     $options = litepublisher::$options;
     if ($this->cache_enabled) {
       if ($this->include_file($this->getcachefile($item))) return;
     }
-    
-    if (class_exists($item['class']))  {
+
+    if (class_exists($item['class'])) {
       return $this->GenerateHTML($item);
     } else {
       //$this->deleteclass($item['class']);
       $this->notfound404();
     }
   }
-  
+
   public function getidcontext($id) {
     $item = $this->getitem($id);
     return $this->getcontext($item);
   }
-  
+
   public function getcontext(array $item) {
     $class = $item['class'];
     $parents = class_parents($class);
     if (in_array('titem', $parents)) {
-      return call_user_func_array(array($class, 'i'), array($item['arg']));
+      return call_user_func_array(array(
+        $class,
+        'i'
+      ) , array(
+        $item['arg']
+      ));
     } else {
       return getinstance($class);
     }
   }
-  
+
   protected function GenerateHTML(array $item) {
     $context = $this->getcontext($item);
-    $this->context  = $context;
-    
+    $this->context = $context;
+
     //special handling for rss
     if (method_exists($context, 'request') && ($s = $context->request($item['arg']))) {
       switch ($s) {
-        case 404: return $this->notfound404();
-        case 403: return $this->forbidden();
+        case 404:
+          return $this->notfound404();
+        case 403:
+          return $this->forbidden();
       }
     } else {
       if ($this->isredir) return;
       $template = ttemplate::i();
       $s = $template->request($context);
     }
-    
-    eval('?>'. $s);
+
+    eval('?>' . $s);
     if ($this->cache_enabled && $context->cache) {
-      $this->save_file($this->getcachefile($item), $s);
+      $this->save_file($this->getcachefile($item) , $s);
     }
   }
-  
+
   public function notfound404() {
     $redir = tredirector::i();
-    if ($url  = $redir->get($this->url)) {
+    if ($url = $redir->get($this->url)) {
       return $this->redir($url);
     }
-    
+
     $this->is404 = true;
     $this->printclasspage('tnotfound404');
   }
-  
+
   private function printclasspage($classname) {
     $cachefile = $classname . '.php';
     if ($this->cache_enabled) {
       if ($this->include_file($cachefile)) return;
     }
-    
+
     $obj = getinstance($classname);
     $Template = ttemplate::i();
     $s = $Template->request($obj);
-    eval('?>'. $s);
-    
+    eval('?>' . $s);
+
     if ($this->cache_enabled && $obj->cache) {
       $this->cache->set($cachefile, $result);
     }
   }
-  
+
   public function forbidden() {
     $this->is404 = true;
     $this->printclasspage('tforbidden');
   }
-  
+
   public function addget($url, $class) {
     return $this->add($url, $class, null, 'get');
   }
-  
+
   public function add($url, $class, $arg, $type = 'normal') {
     if (empty($url)) $this->error('Empty url to add');
     if (empty($class)) $this->error('Empty class name of adding url');
-    if (!in_array($type, array('normal','get','usernormal', 'userget', 'begin', 'end', 'regexp'))) {
-$this->error(sprintf('Invalid url type %s', $type));
-}
+    if (!in_array($type, array(
+      'normal',
+      'get',
+      'usernormal',
+      'userget',
+      'begin',
+      'end',
+      'regexp'
+    ))) {
+      $this->error(sprintf('Invalid url type %s', $type));
+    }
 
     if ($item = $this->db->finditem('url = ' . dbquote($url))) {
-$this->error(sprintf('Url "%s" already exists', $url));
-}
+      $this->error(sprintf('Url "%s" already exists', $url));
+    }
 
-    $item= array(
-    'url' => $url,
-    'class' => $class,
-    'arg' => (string) $arg,
-    'type' => $type
+    $item = array(
+      'url' => $url,
+      'class' => $class,
+      'arg' => (string)$arg,
+      'type' => $type
     );
 
     $item['id'] = $this->db->add($item);
     $this->items[$item['id']] = $item;
 
-    if (in_array($type, array('begin', 'end', 'regexp'))) {
-$this->prefilter[] = $item;
-$this->save();
-}
+    if (in_array($type, array(
+      'begin',
+      'end',
+      'regexp'
+    ))) {
+      $this->prefilter[] = $item;
+      $this->save();
+    }
 
     return $item['id'];
   }
-  
+
   public function delete($url) {
     $url = dbquote($url);
     if ($id = $this->db->findid('url = ' . $url)) {
@@ -389,19 +411,19 @@ $this->save();
       return false;
     }
 
-foreach ($this->prefilter as $i => $item) {
-if ($id == $item['id']) {
-unset($this->prefilter[$i]);
-$this->save();
-break;
-}
-}    
+    foreach ($this->prefilter as $i => $item) {
+      if ($id == $item['id']) {
+        unset($this->prefilter[$i]);
+        $this->save();
+        break;
+      }
+    }
 
     $this->clearcache();
     $this->deleted($id);
     return true;
   }
-  
+
   public function deleteclass($class) {
     if ($items = $this->db->getitems("class = '$class'")) {
       $this->db->delete("class = '$class'");
@@ -409,7 +431,7 @@ break;
     }
     $this->clearcache();
   }
-  
+
   public function deleteitem($id) {
     if ($item = $this->db->getitem($id)) {
       $this->db->iddelete($id);
@@ -417,18 +439,18 @@ break;
     }
     $this->clearcache();
   }
-  
+
   //for Archives
   public function GetClassUrls($class) {
     $res = $this->db->query("select url from $this->thistable where class = '$class'");
     return $this->db->res2id($res);
   }
-  
+
   public function clearcache() {
     $this->cache->clear();
     $this->onclearcache();
   }
-  
+
   public function setexpired($id) {
     if ($item = $this->getitem($id)) {
       $cache = $this->cache;
@@ -440,11 +462,11 @@ break;
       $this->page = $page;
     }
   }
-  
+
   public function setexpiredcurrent() {
     $this->cache->delete($this->getcachefile($this->itemrequested));
   }
-  
+
   public function expiredclass($class) {
     $items = $this->db->getitems("class = '$class'");
     if (count($items) == 0) return;
@@ -456,13 +478,13 @@ break;
     }
     $this->page = $page;
   }
-  
+
   public function addredir($from, $to) {
     if ($from == $to) return;
     $Redir = tredirector::i();
     $Redir->add($from, $to);
   }
-  
+
   public static function unsub($obj) {
     $self = self::i();
     $self->lock();
@@ -470,117 +492,123 @@ break;
     $self->deleteclass(get_class($obj));
     $self->unlock();
   }
-  
+
   public function setonclose(array $a) {
     if (count($a) == 0) return;
     $this->close_events[] = $a;
   }
-  
+
   public function onclose() {
     $this->setonclose(func_get_args());
   }
-  
+
   private function call_close_events() {
     foreach ($this->close_events as $a) {
       try {
         $c = array_shift($a);
-        
+
         if (!is_callable($c)) {
-          $c = array($c, array_shift($a));
+          $c = array(
+            $c,
+            array_shift($a)
+          );
         }
-        
+
         call_user_func_array($c, $a);
-      } catch (Exception $e) {
+      }
+      catch(Exception $e) {
         litepublisher::$options->handexception($e);
       }
     }
-    
+
     $this->close_events = array();
   }
-  
+
   protected function close() {
     $this->call_close_events();
     if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) return;
-    
+
     $memstorage = memstorage::i();
     if ($memstorage->hourcron + 3600 <= time()) {
       $memstorage->hourcron = time();
       $memstorage->singlecron = false;
       tcron::pingonshutdown();
-    } else if ($memstorage->singlecron && ($memstorage->singlecron  <= time())) {
+    } else if ($memstorage->singlecron && ($memstorage->singlecron <= time())) {
       $memstorage->singlecron = false;
       tcron::pingonshutdown();
     }
   }
-  
+
   public function redir($url, $status = 301) {
     litepublisher::$options->savemodified();
     $this->isredir = true;
-    
+
     switch ($status) {
       case 301:
-      header('HTTP/1.1 301 Moved Permanently', true, 301);
-      break;
-      
+        header('HTTP/1.1 301 Moved Permanently', true, 301);
+        break;
+
+
       case 302:
-      header('HTTP/1.1 302 Found', true, 302);
-      break;
-      
+        header('HTTP/1.1 302 Found', true, 302);
+        break;
+
+
       case 307:
-      header('HTTP/1.1 307 Temporary Redirect', true, 307);
-      break;
+        header('HTTP/1.1 307 Temporary Redirect', true, 307);
+        break;
     }
-    
+
     if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepublisher::$site->url . $url;
     header('Location: ' . $url);
   }
-  
+
   public function seturlvalue($url, $name, $value) {
     if ($id = $this->urlexists($url)) {
       $this->setvalue($id, $name, $value);
     }
   }
-  
+
   public function setidurl($id, $url) {
     $this->db->setvalue($id, 'url', $url);
     if (isset($this->items[$id])) $this->items[$id]['url'] = $url;
   }
-  
+
   public function getnextpage() {
     $url = $this->itemrequested['url'];
     return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
   }
-  
+
   public function getprevpage() {
     $url = $this->itemrequested['url'];
     if ($this->page <= 2) return url;
     return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }
-  
+
   public static function htmlheader($cache) {
     return sprintf('<?php turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
   }
-  
+
   public static function nocache() {
-    Header( 'Cache-Control: no-cache, must-revalidate');
-    Header( 'Pragma: no-cache');
+    Header('Cache-Control: no-cache, must-revalidate');
+    Header('Pragma: no-cache');
   }
-  
+
   public static function sendheader($cache) {
     if (!$cache) {
       self::nocache();
     }
-    
+
     header('Content-Type: text/html; charset=utf-8');
     header('Last-Modified: ' . date('r'));
     header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
   }
-  
+
   public static function sendxml() {
     header('Content-Type: text/xml; charset=utf-8');
     header('Last-Modified: ' . date('r'));
     header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
     echo '<?xml version="1.0" encoding="utf-8" ?>';
   }
-  
-}//class
+
+} //class

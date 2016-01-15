@@ -1,15 +1,16 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tadminicons extends tadminmenu {
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
+
   public static function getradio($idicon) {
     $items = self::getallicons();
     if (count($items) == 0) return '';
@@ -30,12 +31,12 @@ class tadminicons extends tadminmenu {
       $args->id = $id;
       $args->checked = $id == $idicon;
       $args->link = $url . $item['filename'];
-      $result .= $html->radioicon($args);
+      $result.= $html->radioicon($args);
     }
-    
+
     return $result;
   }
-  
+
   public static function getallicons() {
     $files = tfiles::i();
     if ($files->dbversion) {
@@ -49,7 +50,7 @@ class tadminicons extends tadminmenu {
       return $result;
     }
   }
-  
+
   public function getcontent() {
     $result = '';
     $files = tfiles::i();
@@ -60,7 +61,7 @@ class tadminicons extends tadminmenu {
     $a = array();
     //добавить 0 для отсутствия иконки
     $a[0] = $lang->noicon;
-    
+
     $allicons = self::getallicons();
     foreach ($allicons as $id) {
       $args->id = $id;
@@ -68,7 +69,7 @@ class tadminicons extends tadminmenu {
       $args->add($item);
       $a[$id] = $html->comboitem($args);
     }
-    
+
     $list = '';
     foreach ($icons->items as $name => $id) {
       $args->name = $name;
@@ -76,23 +77,23 @@ class tadminicons extends tadminmenu {
       if ($title == '') $title = tlocal::usefile('install')->$name;
       $args->title = $title;
       $args->combo = $html->array2combo($a, $id);
-      $list .= $html->iconitem($args);
+      $list.= $html->iconitem($args);
     }
-    
+
     $args->formtitle = $lang->iconheader;
-    $result .= $html->adminform($list, $args);
+    $result.= $html->adminform($list, $args);
     return $html->fixquote($result);
   }
-  
+
   public function processform() {
     $icons = ticons::i();
     foreach ($_POST as $name => $value) {
-      if (isset($icons->items[$name])) $icons->items[$name] = (int) $value;
+      if (isset($icons->items[$name])) $icons->items[$name] = (int)$value;
     }
     $icons->save();
-    
+
     $lang = tlocal::i('files');
     return $this->html->h2->iconupdated;
   }
-  
-}//class
+
+} //class

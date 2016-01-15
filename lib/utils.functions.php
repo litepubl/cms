@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function sqldate($date = 0) {
   if ($date == 0) $date = time();
@@ -20,15 +21,15 @@ function dbquote($s) {
 }
 
 function md5rand() {
-  return md5(mt_rand() . litepublisher::$secret. microtime());
+  return md5(mt_rand() . litepublisher::$secret . microtime());
 }
 
 function md5uniq() {
-  return basemd5(mt_rand() . litepublisher::$secret. microtime());
+  return basemd5(mt_rand() . litepublisher::$secret . microtime());
 }
 
 function basemd5($s) {
-  return trim(base64_encode(md5($s, true)), '=');
+  return trim(base64_encode(md5($s, true)) , '=');
 }
 
 function strbegin($s, $begin) {
@@ -53,40 +54,49 @@ function strip_utf($s) {
   return strbegin($s, $utf) ? substr($s, strlen($utf)) : $s;
 }
 
-function array_delete(array &$a, $i) {
+function array_delete(array & $a, $i) {
   array_splice($a, $i, 1);
 }
 
-function array_delete_value(array &$a, $value) {
+function array_delete_value(array & $a, $value) {
   $i = array_search($value, $a);
-  if ($i !== false)         {
-array_splice($a, $i, 1);
-return true;
+  if ($i !== false) {
+    array_splice($a, $i, 1);
+    return true;
+  }
+
+  return false;
 }
 
-return false;
-}
-
-function array_clean(array &$items) {
+function array_clean(array & $items) {
   $items = array_unique($items);
-  foreach (array(0, false, null, '') as $v) {
+  foreach (array(
+    0,
+    false,
+    null,
+    ''
+  ) as $v) {
     $i = array_search($v, $items);
     if (($i !== false) && ($items[$i] === $v)) {
-array_splice($items, $i, 1);
-}
+      array_splice($items, $i, 1);
+    }
   }
 }
 
-function array_insert(array &$a, $item, $index) {
-  array_splice($a, $index, 0, array($item));
+function array_insert(array & $a, $item, $index) {
+  array_splice($a, $index, 0, array(
+    $item
+  ));
 }
 
-function array_move(array &$a, $oldindex, $newindex) {
+function array_move(array & $a, $oldindex, $newindex) {
   //delete and insert
   if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
   $item = $a[$oldindex];
   array_splice($a, $oldindex, 1);
-  array_splice($a, $newindex, 0, array($item));
+  array_splice($a, $newindex, 0, array(
+    $item
+  ));
 }
 
 function strtoarray($s) {
@@ -99,7 +109,7 @@ function tojson($a) {
   if (defined('JSON_NUMERIC_CHECK')) {
     return json_encode($a, JSON_NUMERIC_CHECK | (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0));
   }
-  
+
   return json_encode($a);
 }
 
@@ -113,7 +123,7 @@ function toenum($v, array $a) {
 }
 
 function dumpstr($s) {
-  echo "<pre>\n", htmlspecialchars($s), "</pre>\n";
+  echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
 }
 
 function dumpvar($v) {

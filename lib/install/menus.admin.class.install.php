@@ -1,19 +1,19 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 function tadminmenusInstall($self) {
   if ('tadminmenus' != get_class($self)) return;
   $self->lock();
   $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>';
-  
+
   //posts
-  $posts = $self->createitem(0, 'posts', 'author', 'tadminposts');
-  {
+  $posts = $self->createitem(0, 'posts', 'author', 'tadminposts'); {
     $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
     $self->items[$id]['title'] = tlocal::i()->newpost;
     $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
@@ -22,17 +22,15 @@ function tadminmenusInstall($self) {
     $self->createitem($posts, 'tags', 'editor', 'tadmintags');
     $self->createitem($posts, 'staticpages', 'editor', 'tadminstaticpages');
   }
-  
-  $moder = $self->createitem(0, 'comments', 'commentator', 'tadminmoderator');
-  {
+
+  $moder = $self->createitem(0, 'comments', 'commentator', 'tadminmoderator'); {
     $self->createitem($moder, 'hold', 'commentator', 'tadminmoderator');
     $self->createitem($moder, 'authors', 'moderator', 'tadmincomusers');
     $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
   }
-  
+
   $plugins = $self->createitem(0, 'plugins', 'admin', 'tadminplugins');
-  $files = $self->createitem(0, 'files', 'author', 'tadminfiles');
-  {
+  $files = $self->createitem(0, 'files', 'author', 'tadminfiles'); {
     $self->createitem($files, 'thumbnail', 'editor', 'tadminfilethumbnails');
     $self->createitem($files, 'image', 'editor', 'tadminfiles');
     $self->createitem($files, 'video', 'editor', 'tadminfiles');
@@ -41,9 +39,8 @@ function tadminmenusInstall($self) {
     $self->createitem($files, 'deficons', 'editor', 'tadminicons');
     $self->createitem($files, 'bin', 'editor', 'tadminfiles');
   }
-  
-  $views = $self->createitem(0, 'views', 'admin', 'tadminviews');
-  {
+
+  $views = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
     $self->createitem($views, 'addview', 'admin', 'tadminviews');
     //$self->createitem($views, 'themes', 'admin', 'tadminthemes');
     $self->createitem($views, 'widgets', 'admin', 'tadminwidgets');
@@ -55,17 +52,15 @@ function tadminmenusInstall($self) {
     $self->createitem($views, 'jsmerger', 'admin', 'tadminjsmerger');
     $self->createitem($views, 'cssmerger', 'admin', 'tadmincssmerger');
   }
-  
-  $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager');
-  {
+
+  $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager'); {
     $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
     $self->items[$id]['title'] = tlocal::get('menu', 'addmenu');
     $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');
     $self->items[$id]['title'] = tlocal::get('menu', 'addfake');
   }
-  
-  $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions');
-  {
+
+  $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions'); {
     $self->createitem($opt, 'home', 'admin', 'adminhomeoptions');
     $self->createitem($opt, 'mail', 'admin', 'tadminoptions');
     $self->createitem($opt, 'rss', 'admin', 'tadminoptions');
@@ -83,33 +78,33 @@ function tadminmenusInstall($self) {
     $self->createitem($opt, 'notfound404', 'admin', 'tadminoptions');
     $self->createitem($opt, 'redir', 'admin', 'tadminredirector');
   }
-  
-  $service = $self->createitem(0, 'service', 'admin', 'tadminservice');
-  {
+
+  $service = $self->createitem(0, 'service', 'admin', 'tadminservice'); {
     $self->createitem($service, 'backup', 'admin', 'tadminservice');
     $self->createitem($service, 'upload', 'admin', 'tadminservice');
     $self->createitem($service, 'run', 'admin', 'tadminservice');
   }
-  
+
   $id = $self->addfake('/admin/logout/', tlocal::i()->logout);
   $self->items[$id]['order'] = 9999999;
-  
+
   /*
-  $board = $self->additem(array(
-  'parent' => 0,
-  'url' => '/admin/',
-  'title' => tlocal::get('adminmenus', 'board'),
-  'name' => 'board',
-  'class' => 'tadminboard',
-  'group' => 'author'
-  ));
+  $board = $self->additem(array(
+  'parent' => 0,
+  'url' => '/admin/',
+  'title' => tlocal::get('adminmenus', 'board'),
+  'name' => 'board',
+  'class' => 'tadminboard',
+  'group' => 'author'
+  ));
   */
   $self->unlock();
-  
+
   $redir = tredirector::i();
   $redir->add('/admin/', '/admin/posts/editor/');
 }
 
-function  tadminmenusUninstall($self) {
+function tadminmenusUninstall($self) {
   //rmdir(. 'menus');
+  
 }

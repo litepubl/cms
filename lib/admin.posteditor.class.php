@@ -1,34 +1,35 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tposteditor extends tadminmenu {
   public $idpost;
   protected $isauthor;
-  
+
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
-  
+
   public function gethtml($name = '') {
     if (!$name) $name = 'editor';
     return parent::gethtml($name);
   }
-  
+
   public function gethead() {
     $result = parent::gethead();
-    
+
     $template = ttemplate::i();
     $template->ltoptions['idpost'] = $this->idget();
-    $result .= $template->getjavascript($template->jsmerger_posteditor);
-    
-    if ($this->isauthor &&($h = tauthor_rights::i()->gethead()))  $result .= $h;
+    $result.= $template->getjavascript($template->jsmerger_posteditor);
+
+    if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) $result.= $h;
     return $result;
   }
-  
+
   protected static function getsubcategories($parent, array $postitems, $exclude = false) {
     $result = '';
     $categories = tcategories::i();
@@ -36,98 +37,99 @@ class tposteditor extends tadminmenu {
     $theme = ttheme::i();
     $checkbox = $theme->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title');
     $tml = str_replace('$checkbox', $checkbox, $html->category);
-    
+
     $args = new targs();
-    foreach ($categories->items  as $id => $item) {
+    foreach ($categories->items as $id => $item) {
       if ($parent != $item['parent']) continue;
       if ($exclude && in_array($id, $exclude)) continue;
       $args->add($item);
       $args->checked = in_array($item['id'], $postitems);
       $args->subcount = '';
       $args->subitems = self::getsubcategories($id, $postitems);
-      $result .= $html->parsearg($tml, $args);
+      $result.= $html->parsearg($tml, $args);
     }
-    
+
     if ($result == '') return '';
-    return sprintf($html->categories(), $result);
+    return sprintf($html->categories() , $result);
   }
-  
+
   public static function getcategories(array $items) {
     $categories = tcategories::i();
     $categories->loadall();
     $html = tadminhtml::i();
     $html->push_section('editor');
     $result = $html->categorieshead();
-    $result .= self::getsubcategories(0, $items);
+    $result.= self::getsubcategories(0, $items);
     $html->pop_section();
     return str_replace("'", '"', $result);
   }
-  
+
   public static function getcombocategories(array $items, $idselected) {
     $result = '';
     $categories = tcategories::i();
     $categories->loadall();
     if (count($items) == 0) $items = array_keys($categories->items);
     foreach ($items as $id) {
-      $result .= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', tadminhtml::specchars($categories->getvalue($id, 'title')));
+      $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', tadminhtml::specchars($categories->getvalue($id, 'title')));
     }
     return $result;
   }
-  
+
   protected function getpostcategories(tpost $post) {
     $postitems = $post->categories;
     $categories = tcategories::i();
-    if (count($postitems) == 0) $postitems = array($categories->defaultid);
+    if (count($postitems) == 0) $postitems = array(
+      $categories->defaultid
+    );
     return self::getcategories($postitems);
   }
-  
+
   public static function getfileperm() {
     return litepublisher::$options->show_file_perm ? tadminperms::getcombo(0, 'idperm_upload') : '';
   }
-  
+
   // $posteditor.files in template editor
   public function getfilelist() {
     $post = ttheme::$vars['post'];
     if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      return static::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
+      return static ::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
     } else {
       return self::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
     }
   }
-  
+
   public static function getuploader(array $list) {
     $html = tadminhtml::i();
     $html->push_section('editor');
     $args = new targs();
     if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      $args->fileperm = static::getfileperm();
+      $args->fileperm = static ::getfileperm();
     } else {
       $args->fileperm = self::getfileperm();
     }
-    
+
     $files = tfiles::i();
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
-    
+
     $db = $files->db;
     //total count files
-    $args->count = (int) $db->getcount(" parent = 0 $where");
+    $args->count = (int)$db->getcount(" parent = 0 $where");
     //already loaded files
-    $args->items= '{' .
-    '}';
+    $args->items = '{' . '}';
     // attrib for hidden input
     $args->files = '';
-    
+
     if (count($list)) {
       $items = implode(',', $list);
       $args->files = $items;
       $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
     }
-    
+
     $result = $html->filelist($args);
     $html->pop_section();
     return $result;
   }
-  
+
   public function canrequest() {
     tlocal::admin()->searchsect[] = 'editor';
     $this->isauthor = false;
@@ -145,22 +147,22 @@ class tposteditor extends tadminmenu {
       }
     }
   }
-  
+
   public function gettitle() {
-    if ($this->idpost == 0){
+    if ($this->idpost == 0) {
       return parent::gettitle();
     } else {
       if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
       return tlocal::get('editor', 'editor');
     }
   }
-  
+
   public function getexternal() {
     $this->basename = 'editor';
     $this->idpost = 0;
     return $this->getcontent();
   }
-  
+
   public function getpostargs(tpost $post, targs $args) {
     $args->id = $post->id;
     $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$post->id&get");
@@ -172,7 +174,7 @@ class tposteditor extends tadminmenu {
     $args->keywords = $post->keywords;
     $args->description = $post->description;
     $args->head = $post->rawhead;
-    
+
     $args->raw = $post->rawcontent;
     $args->filtered = $post->filtered;
     $args->excerpt = $post->excerpt;
@@ -180,7 +182,7 @@ class tposteditor extends tadminmenu {
     $args->more = $post->moretitle;
     $args->upd = '';
   }
-  
+
   public function getcontent() {
     $html = $this->html;
     $post = tpost::i($this->idpost);
@@ -188,51 +190,51 @@ class tposteditor extends tadminmenu {
     ttheme::$vars['posteditor'] = $this;
     $args = new targs();
     $this->getpostargs($post, $args);
-    
+
     $result = $post->id == 0 ? '' : $html->h4($this->lang->formhead . ' ' . $post->bookmark);
-    if ($this->isauthor &&($r = tauthor_rights::i()->getposteditor($post, $args)))  return $r;
-    
-    $result .= $html->form($args);
+    if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) return $r;
+
+    $result.= $html->form($args);
     unset(ttheme::$vars['post'], ttheme::$vars['posteditor']);
     return $html->fixquote($result);
   }
-  
+
   public static function processcategories() {
     return tadminhtml::check2array('category-');
   }
-  
+
   protected function set_post(tpost $post) {
     extract($_POST, EXTR_SKIP);
     $post->title = $title;
-    
+
     $cats = self::processcategories();
     $cats = array_unique($cats);
     array_delete_value($cats, 0);
     array_delete_value($cats, '');
     array_delete_value($cats, false);
     array_delete_value($cats, null);
-    $post->categories= $cats;
-    
-    if (($post->id == 0) && (litepublisher::$options->user >1)) $post->author = litepublisher::$options->user;
+    $post->categories = $cats;
+
+    if (($post->id == 0) && (litepublisher::$options->user > 1)) $post->author = litepublisher::$options->user;
     if (isset($tags)) $post->tagnames = $tags;
-    if (isset($icon)) $post->icon = (int) $icon;
+    if (isset($icon)) $post->icon = (int)$icon;
     if (isset($idview)) $post->idview = $idview;
-    if (isset($files))  {
+    if (isset($files)) {
       $files = trim($files, ', ');
       $post->files = tdatabase::str2array($files);
     }
     if (isset($date) && $date) {
       $post->posted = datefilter::getdate('date');
     }
-    
+
     if (isset($status)) {
       $post->status = $status == 'draft' ? 'draft' : 'published';
       $post->comstatus = $comstatus;
       $post->pingenabled = isset($pingenabled);
-      $post->idperm = (int) $idperm;
+      $post->idperm = (int)$idperm;
       if ($password != '') $post->password = $password;
     }
-    
+
     if (isset($url)) {
       $post->url = $url;
       $post->title2 = $title2;
@@ -240,19 +242,19 @@ class tposteditor extends tadminmenu {
       $post->description = $description;
       $post->rawhead = $head;
     }
-    
+
     $post->content = $raw;
     if (isset($excerpt)) $post->excerpt = $excerpt;
     if (isset($rss)) $post->rss = $rss;
     if (isset($more)) $post->moretitle = $more;
     if (isset($filtered)) $post->filtered = $filtered;
     if (isset($upd)) {
-      $update = sprintf($this->lang->updateformat, tlocal::date(time()), $upd);
+      $update = sprintf($this->lang->updateformat, tlocal::date(time()) , $upd);
       $post->content = $post->rawcontent . "\n\n" . $update;
     }
-    
+
   }
-  
+
   public function processform() {
     //dumpvar($_POST);
     $this->basename = 'editor';
@@ -260,12 +262,12 @@ class tposteditor extends tadminmenu {
     if (empty($_POST['title'])) return $html->h2->emptytitle;
     $id = (int)$_POST['id'];
     $post = tpost::i($id);
-    
-    if ($this->isauthor &&($r = tauthor_rights::i()->editpost($post)))  {
+
+    if ($this->isauthor && ($r = tauthor_rights::i()->editpost($post))) {
       $this->idpost = $post->id;
       return $r;
     }
-    
+
     $this->set_post($post);
     $posts = tposts::i();
     if ($id == 0) {
@@ -275,7 +277,7 @@ class tposteditor extends tadminmenu {
       $posts->edit($post);
     }
     $_GET['id'] = $this->idpost;
-    return sprintf($html->p->success,$post->bookmark);
+    return sprintf($html->p->success, $post->bookmark);
   }
-  
-}//class
+
+} //class

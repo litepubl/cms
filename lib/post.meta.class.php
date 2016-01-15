@@ -1,28 +1,29 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tmetapost extends titem {
-  
+
   public static function i($id = 0) {
-    return parent::iteminstance(__class__, (int) $id);
+    return parent::iteminstance(__class__, (int)$id);
   }
-  
+
   public static function getinstancename() {
     return 'postmeta';
   }
-  
+
   protected function create() {
     $this->table = 'postsmeta';
   }
-  
+
   public function getdbversion() {
     return true;
   }
-  
+
   public function __set($name, $value) {
     if ($name == 'id') return $this->setid($value);
     $exists = isset($this->data[$name]);
@@ -36,17 +37,17 @@ class tmetapost extends titem {
       $this->db->insertrow("(id, name, value) values ($this->id, $name, $value)");
     }
   }
-  
+
   public function __unset($name) {
     $this->remove($name);
   }
-  
+
   //db
   public function load() {
     $this->LoadFromDB();
     return true;
   }
-  
+
   protected function LoadFromDB() {
     $db = $this->db;
     $res = $db->select("id = $this->id");
@@ -57,7 +58,7 @@ class tmetapost extends titem {
     }
     return true;
   }
-  
+
   protected function SaveToDB() {
     $db = $this->db;
     $db->delete("id = $this->id");
@@ -68,13 +69,13 @@ class tmetapost extends titem {
       $this->db->insertrow("(id, name, value) values ($this->id, $name, $value)");
     }
   }
-  
+
   public function remove($name) {
     if ($name == 'id') return;
     unset($this->data[$name]);
     $this->db->delete("id = $this->id and name = '$name'");
   }
-  
+
   public static function loaditems(array $items) {
     if (!count($items)) return;
     //exclude already loaded items
@@ -84,22 +85,22 @@ class tmetapost extends titem {
     } else {
       self::$instances['postmeta'] = array();
     }
-    
-    $instances = &self::$instances['postmeta'];
+
+    $instances = & self::$instances['postmeta'];
     $db = litepublisher::$db;
     $db->table = 'postsmeta';
     $res = $db->select(sprintf('id in (%s)', implode(',', $items)));
     while ($row = $db->fetchassoc($res)) {
-      $id = (int) $row['id'];
+      $id = (int)$row['id'];
       if (!isset($instances[$id])) {
         $instances[$id] = new self();
         $instances[$id]->data['id'] = $id;
       }
-      
+
       $instances[$id]->data[$row['name']] = $row['value'];
     }
-    
+
     return $items;
   }
-  
-}//class
+
+} //class

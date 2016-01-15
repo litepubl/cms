@@ -1,73 +1,77 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tfiles extends titems {
   public $itemsposts;
   public $cachetml;
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     $this->dbversion = true;
     parent::create();
     $this->basename = 'files';
     $this->table = 'files';
     $this->addevents('changed', 'edited', 'ongetfilelist', 'onlist');
-    $this->itemsposts = tfileitems ::i();
+    $this->itemsposts = tfileitems::i();
     $this->cachetml = array();
   }
-  
+
   public function preload(array $items) {
     $items = array_diff($items, array_keys($this->items));
     if (count($items)) {
-      $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))',
-      implode(',', $items)), '');
+      $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))', implode(',', $items)) , '');
     }
   }
-  
+
   public function geturl($id) {
     $item = $this->getitem($id);
     return litepublisher::$site->files . '/files/' . $item['filename'];
   }
-  
+
   public function getlink($id) {
     $item = $this->getitem($id);
     $icon = '';
     if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
       $icon = $this->geticon($item['icon']);
     }
-    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepublisher::$site->files,
-    $item['filename'], $item['title'], $icon . $item['description']);
+    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepublisher::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
   }
-  
+
   public function geticon($id) {
     return sprintf('<img src="%s" alt="icon" />', $this->geturl($id));
   }
-  
+
   public function gethash($filename) {
-    return trim(base64_encode(md5_file($filename, true)), '=');
+    return trim(base64_encode(md5_file($filename, true)) , '=');
   }
-  
+
   public function additem(array $item) {
     $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
     $item['author'] = litepublisher::$options->user;
     $item['posted'] = sqldate();
     $item['hash'] = $this->gethash($realfile);
     $item['size'] = filesize($realfile);
-    
+
     //fix empty props
-    foreach (array('mime', 'title', 'description', 'keywords') as $prop) {
+    foreach (array(
+      'mime',
+      'title',
+      'description',
+      'keywords'
+    ) as $prop) {
       if (!isset($item[$prop])) $item[$prop] = '';
     }
     return $this->insert($item);
   }
-  
+
   public function insert(array $item) {
     $item = $this->escape($item);
     $id = $this->db->add($item);
@@ -76,18 +80,22 @@ class tfiles extends titems {
     $this->added($id);
     return $id;
   }
-  
+
   public function escape(array $item) {
-    foreach (array('title', 'description', 'keywords') as $name) {
+    foreach (array(
+      'title',
+      'description',
+      'keywords'
+    ) as $name) {
       $item[$name] = tcontentfilter::escape(tcontentfilter::unescape($item[$name]));
     }
     return $item;
   }
-  
+
   public function edit($id, $title, $description, $keywords) {
     $item = $this->getitem($id);
     if (($item['title'] == $title) && ($item['description'] == $description) && ($item['keywords'] == $keywords)) return false;
-    
+
     $item['title'] = $title;
     $item['description'] = $description;
     $item['keywords'] = $keywords;
@@ -98,13 +106,13 @@ class tfiles extends titems {
     $this->edited($id);
     return true;
   }
-  
+
   public function delete($id) {
     if (!$this->itemexists($id)) return false;
     $list = $this->itemsposts->getposts($id);
     $this->itemsposts->deleteitem($id);
     $this->itemsposts->updateposts($list, 'files');
-    
+
     $item = $this->getitem($id);
     if ($item['idperm'] == 0) {
       @unlink(litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
@@ -112,22 +120,22 @@ class tfiles extends titems {
       @unlink(litepublisher::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
       litepublisher::$urlmap->delete('/files/' . $item['filename']);
     }
-    
+
     parent::delete($id);
-    
-    if ((int) $item['preview']) {
+
+    if ((int)$item['preview']) {
       $this->delete($item['preview']);
     }
-    
-    if ((int) $item['midle']) {
+
+    if ((int)$item['midle']) {
       $this->delete($item['midle']);
     }
-    
+
     $this->getdb('imghashes')->delete("id = $id");
     $this->changed();
     return true;
   }
-  
+
   public function setcontent($id, $content) {
     if (!$this->itemexists($id)) return false;
     $item = $this->getitem($id);
@@ -144,53 +152,51 @@ class tfiles extends titems {
       }
     }
   }
-  
+
   public function exists($filename) {
     return $this->indexof('filename', $filename);
   }
-  
+
   public function getfilelist(array $list, $excerpt) {
     if ($result = $this->ongetfilelist($list, $excerpt)) return $result;
     if (count($list) == 0) return '';
-    
-    return $this->getlist($list, $excerpt ?
-    $this->gettml('content.excerpts.excerpt.filelist') :
-    $this->gettml('content.post.filelist'));
+
+    return $this->getlist($list, $excerpt ? $this->gettml('content.excerpts.excerpt.filelist') : $this->gettml('content.post.filelist'));
   }
-  
+
   public function gettml($basekey) {
     if (isset($this->cachetml[$basekey])) return $this->cachetml[$basekey];
-    
+
     $theme = ttheme::i();
     $result = array(
-    'container' => $theme->templates[$basekey],
+      'container' => $theme->templates[$basekey],
     );
-    
+
     $key = $basekey . '.';
-    foreach  ($theme->templates as $k => $v) {
+    foreach ($theme->templates as $k => $v) {
       if (strbegin($k, $key)) {
-        $result[substr($k, strlen($key))] = $v;
+        $result[substr($k, strlen($key)) ] = $v;
       }
     }
-    
+
     $this->cachetml[$basekey] = $result;
     return $result;
   }
-  
-  public function getlist(array $list,  array $tml) {
+
+  public function getlist(array $list, array $tml) {
     if (!count($list)) {
       return '';
     }
-    
+
     $this->onlist($list);
     $result = '';
     $this->preload($list);
-    
+
     //sort by media type
     $items = array();
     foreach ($list as $id) {
       if (!isset($this->items[$id])) continue;
-      
+
       $item = $this->items[$id];
       $type = $item['media'];
       if (isset($tml[$type])) {
@@ -199,18 +205,18 @@ class tfiles extends titems {
         $items['file'][] = $id;
       }
     }
-    
+
     $theme = ttheme::i();
     $args = new targs();
     $args->count = count($list);
-    
+
     $url = litepublisher::$site->files . '/files/';
-    
+
     $preview = ttheme::$vars['preview'] = new tarray2prop();
     $midle = ttheme::$vars['midle'] = new tarray2prop();
-    
+
     $index = 0;
-    
+
     foreach ($items as $type => $subitems) {
       $args->subcount = count($subitems);
       $sublist = '';
@@ -221,58 +227,58 @@ class tfiles extends titems {
         $args->id = $id;
         $args->typeindex = $typeindex;
         $args->index = $index++;
-        $args->preview  = '';
+        $args->preview = '';
         $preview->array = array();
-        
-        if ((int) $item['midle']) {
+
+        if ((int)$item['midle']) {
           $midle->array = $this->getitem($item['midle']);
           $midle->link = $url . $midle->filename;
           $midle->json = jsonattr(array(
-          'id' => $midle->array['id'],
-          'link' => $midle->link,
-          'width' => $midle->array['width'],
-          'height' => $midle->array['height'],
-          'size' => $midle->array['size'],
+            'id' => $midle->array['id'],
+            'link' => $midle->link,
+            'width' => $midle->array['width'],
+            'height' => $midle->array['height'],
+            'size' => $midle->array['size'],
           ));
         } else {
           $midle->array = array();
           $midle->link = '';
           $midle->json = '';
         }
-        
-        if ((int) $item['preview']) {
+
+        if ((int)$item['preview']) {
           $preview->array = $this->getitem($item['preview']);
-        } elseif($type == 'image') {
+        } elseif ($type == 'image') {
           $preview->array = $item;
           $preview->id = $id;
-        } elseif($type == 'video') {
+        } elseif ($type == 'video') {
           $args->preview = $theme->parsearg($tml['videos.fallback'], $args);
           $preview->array = array();
         }
-        
+
         if (count($preview->array)) {
           $preview->link = $url . $preview->filename;
           $args->preview = $theme->parsearg($tml['preview'], $args);
         }
-        
+
         unset($item['title'], $item['keywords'], $item['description'], $item['hash']);
         $args->json = jsonattr($item);
-        
-        $sublist .= $theme->parsearg($tml[$type], $args);
+
+        $sublist.= $theme->parsearg($tml[$type], $args);
       }
-      
+
       $args->__set($type, $sublist);
-      $result .=  $theme->parsearg($tml[$type . 's'], $args);
+      $result.= $theme->parsearg($tml[$type . 's'], $args);
     }
-    
+
     unset(ttheme::$vars['preview'], $preview, ttheme::$vars['midle'], $midle);
-    $args->files =  $result;
+    $args->files = $result;
     return $theme->parsearg($tml['container'], $args);
   }
-  
+
   public function postedited($idpost) {
     $post = tpost::i($idpost);
     $this->itemsposts->setitems($idpost, $post->files);
   }
-  
-}//class
+
+} //class

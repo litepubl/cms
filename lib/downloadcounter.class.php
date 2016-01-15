@@ -1,26 +1,27 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 class tdownloadcounter extends titems {
-  
+
   public static function i() {
     return getinstance(__class__);
   }
-  
+
   protected function create() {
     parent::create();
     $this->cache = false;
     $this->basename = 'downloadcounter';
     $this->table = 'downloadcounter';
   }
-  
+
   public function reqest($args) {
-    if (!isset($_GET['id']))  return 404;
-    $id = (int) $_GET['fileid'];
+    if (!isset($_GET['id'])) return 404;
+    $id = (int)$_GET['fileid'];
     $files = tfiles::i();
     if (!$files->itemexists($id)) return 404;
     if (dbversion) {
@@ -29,8 +30,8 @@ class tdownloadcounter extends titems {
         $this->db->setvalue($id, 'downloaded', $count);
       } else {
         $this->db->add(array(
-        'id' => $id,
-        'downloaded' => 1
+          'id' => $id,
+          'downloaded' => 1
         ));
       }
     } else {
@@ -41,9 +42,9 @@ class tdownloadcounter extends titems {
       }
       $this->save();
     }
-    
+
     $url = $files->geturl($id);
     litepublisher::$urlmap->redir($url);
   }
-  
-}//class
+
+} //class
