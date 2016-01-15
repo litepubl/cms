@@ -96,8 +96,8 @@ function tjsmergerInstall($self) {
   $self->unlock();
 
   /*  moved to template install
-  $template = ttemplate::i();
-  $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
+  $template = ttemplate::i();
+  $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
   */
 
   tupdater::i()->onupdated = $self->onupdated;

@@ -189,6 +189,7 @@ class tadminwidgets extends tadminmenu {
 
     $idview = (int)tadminhtml::getparam('idview', 1);
     $view = tview::i($idview);
+
     switch ($_POST['action']) {
       case 'options':
         $view->disableajax = isset($_POST['disableajax']);
@@ -205,13 +206,17 @@ class tadminwidgets extends tadminmenu {
           foreach ($sidebars->items as $i => $items) {
             foreach ($items as $j => $item) {
               $id = $item['id'];
-              if (!isset($_POST["sidebar-$id"])) contiue;
+              if (!isset($_POST["sidebar-$id"])) continue;
 
               $i2 = (int)$_POST["sidebar-$id"];
-              if ($i2 >= count($sidebars->items)) $i2 = count($sidebars->items) - 1;
+              if ($i2 >= count($sidebars->items)) {
+                $i2 = count($sidebars->items) - 1;
+              }
 
               $j2 = (int)$_POST["order-$id"];
-              if ($j2 > count($sidebars->items[$i2])) $j2 = count($sidebars[$i2]);
+              if ($j2 > count($sidebars->items[$i2])) {
+                $j2 = count($sidebars[$i2]);
+              }
 
               if ($i == $i2) {
                 array_move($sidebars->items[$i2], $j, $j2);
@@ -234,6 +239,7 @@ class tadminwidgets extends tadminmenu {
         $_GET['idview'] = $idview;
         $view = tview::i($idview);
         $widgets = twidgets::i();
+
         foreach ($_POST as $key => $value) {
           if (strbegin($key, 'addwidget-')) {
             $id = (int)$value;
@@ -251,4 +257,4 @@ class tadminwidgets extends tadminmenu {
       $view->save();
     }
 
-  } //class
+} //class

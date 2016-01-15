@@ -364,11 +364,27 @@ class tadminoptions extends tadminmenu {
       case 'links':
         $linkgen = tlinkgenerator::i();
         $linkgen->urlencode = isset($urlencode);
-        if (!empty($post)) $linkgen->post = $post;
-        if (!empty($menu)) $linkgen->menu = $menu;
-        if (!empty($category)) $linkgen->category = $category;
-        if (!empty($tag)) $linkgen->tag = $tag;
-        if (!empty($archive)) $linkgen->archive = $archive;
+        if (!empty($post)) {
+          $linkgen->post = $post;
+
+        }
+
+        if (!empty($menu)) {
+          $linkgen->menu = $menu;
+        }
+
+        if (!empty($category)) {
+          $linkgen->category = $category;
+        }
+
+        if (!empty($tag)) {
+          $linkgen->tag = $tag;
+        }
+
+        if (!empty($archive)) {
+          $linkgen->archive = $archive;
+        }
+
         $linkgen->save();
         break;
 
@@ -380,42 +396,45 @@ class tadminoptions extends tadminmenu {
           $options->lock();
           $options->cache = isset($enabledcache);
           $options->admincache = isset($admincache);
-          if (!empty($expiredcache)) $options->expiredcache = (int)$expiredcache;
-          $options->ob_cache = isset($ob_cache);
-          $options->compress = isset($compress);
-          $options->commentspool = isset($commentspool);
-          $options->unlock();
+          if (!empty($expiredcache)) {
+            $options->expiredcache = (int)$expiredcache;
+          }
         }
-        break;
 
-
-      case 'lite':
-      case 'catstags':
-        $cats = litepublisher::$classes->categories;
-        $cats->includeparents = isset($parentcats);
-        $cats->includechilds = isset($childcats);
-        $cats->save();
-
-        $tags = litepublisher::$classes->tags;
-        $tags->includeparents = isset($parenttags);
-        $tags->includechilds = isset($childtags);
-        $tags->save();
-        break;
-
-
-      case 'robots':
-        $robo = trobotstxt::i();
-        $robo->text = $robots;
-        $robo->save();
-
-        $appcache_manifest = appcache_manifest::i();
-        $appcache_manifest->text = $appcache;
-        $appcache_manifest->save();
-        break;
-
+        $options->ob_cache = isset($ob_cache);
+        $options->compress = isset($compress);
+        $options->commentspool = isset($commentspool);
+        $options->unlock();
       }
+      break;
 
-      return '';
+
+    case 'lite':
+    case 'catstags':
+      $cats = litepublisher::$classes->categories;
+      $cats->includeparents = isset($parentcats);
+      $cats->includechilds = isset($childcats);
+      $cats->save();
+
+      $tags = litepublisher::$classes->tags;
+      $tags->includeparents = isset($parenttags);
+      $tags->includechilds = isset($childtags);
+      $tags->save();
+      break;
+
+
+    case 'robots':
+      $robo = trobotstxt::i();
+      $robo->text = $robots;
+      $robo->save();
+
+      $appcache_manifest = appcache_manifest::i();
+      $appcache_manifest->text = $appcache;
+      $appcache_manifest->save();
+      break;
     }
 
-  } //class
+    return '';
+}
+
+} //class
