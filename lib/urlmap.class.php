@@ -194,15 +194,21 @@ public function findfilter($url) {
 foreach ($this->prefilter as $item) {
 switch ($item['type']) {
 case 'begin':
-if (strbegin($url, $item['url'])) return $item;
+if (strbegin($url, $item['url'])) {
+return $item;
+}
 break;
 
 case 'end':
-if (strend($url, $item['url'])) return $item;
+if (strend($url, $item['url'])) {
+return $item;
+}
 break;
 
 case 'regexp':
-if (preg_match($item['url'], $url)) return $item;
+if (preg_match($item['url'], $url)) {
+return $item;
+}
 break;
 }
 }
