@@ -347,4 +347,4 @@ echo "$linescount = lines count, $filecount = file count\n</pre>\n<pre>";
 
 //echo ord('}');
 //echo chr(125);
-echo round(microtime(true) - $m, 2), ' = total beauty<br>';
+echo round(microtime(true) - $m, 2), ' = seconds<br>';

@@ -85,27 +85,27 @@ function tticketsInstall($self) {
   $adminmenus->unlock();
 
   /*
-  $menus = tmenus::i();
-  $menus->lock();
-  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
-  
-  $menu = tticketsmenu::i();
-  $menu->type = 'tickets';
-  $menu->url = '/tickets/';
-  $menu->title = $ini['tickets'];
-  $menu->content = $ini['contenttickets'];
-  $id = $menus->add($menu);
-  
-  foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menu = tticketsmenu::i();
-    $menu->type = $type;
-    $menu->parent = $id;
-    $menu->url = "/$type/";
-    $menu->title = $ini[$type];
-    $menu->content = '';
-    $menus->add($menu);
-  }
-  $menus->unlock();
+  $menus = tmenus::i();
+  $menus->lock();
+  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
+  
+  $menu = tticketsmenu::i();
+  $menu->type = 'tickets';
+  $menu->url = '/tickets/';
+  $menu->title = $ini['tickets'];
+  $menu->content = $ini['contenttickets'];
+  $id = $menus->add($menu);
+  
+  foreach (array('bug', 'feature', 'support', 'task') as $type) {
+    $menu = tticketsmenu::i();
+    $menu->type = $type;
+    $menu->parent = $id;
+    $menu->url = "/$type/";
+    $menu->title = $ini[$type];
+    $menu->content = '';
+    $menus->add($menu);
+  }
+  $menus->unlock();
   */
 
   litepublisher::$classes->unlock();
@@ -144,15 +144,15 @@ function tticketsUninstall($self) {
   $adminmenus->unlock();
 
   /*
-  $menus = tmenus::i();
-  $menus->lock();
-  foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menus->deleteurl("/$type/");
-  }
-  $menus->deleteurl('/tickets/');
-  $menus->unlock();
-  
-  litepublisher::$classes->delete('tticketsmenu');
+  $menus = tmenus::i();
+  $menus->lock();
+  foreach (array('bug', 'feature', 'support', 'task') as $type) {
+    $menus->deleteurl("/$type/");
+  }
+  $menus->deleteurl('/tickets/');
+  $menus->unlock();
+  
+  litepublisher::$classes->delete('tticketsmenu');
   */
   litepublisher::$classes->unlock();
 

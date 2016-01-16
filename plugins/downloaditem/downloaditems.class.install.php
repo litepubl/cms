@@ -30,12 +30,12 @@ function tdownloaditemsInstall($self) {
   $classes = litepublisher::$classes;
   $classes->lock();
   /*
-  //install polls if its needed
-  $plugins = tplugins::i();
-  if (!isset($plugins->items['polls'])) $plugins->add('polls');
-  $polls = tpolls::i();
-  $polls->garbage = false;
-  $polls->save();
+  //install polls if its needed
+  $plugins = tplugins::i();
+  if (!isset($plugins->items['polls'])) $plugins->add('polls');
+  $polls = tpolls::i();
+  $polls->garbage = false;
+  $polls->save();
   */
 
   $classes->Add('tdownloaditem', 'downloaditem.class.php', $base);

@@ -183,10 +183,10 @@ class catbread extends tplugin {
     if (!count($parents)) return '';
 
     /* without db cant sort
-    $similar = array();
-    foreach ($cats->items as $id => $item) {
-      if (in_array($item['parent'], $parents)) $similar[] = $id;
-    }
+    $similar = array();
+    foreach ($cats->items as $id => $item) {
+      if (in_array($item['parent'], $parents)) $similar[] = $id;
+    }
     */
 
     $parents = implode(',', $parents);

@@ -96,7 +96,7 @@ class tticketeditor extends tposteditor {
 
   public function processform() {
     /* dumpvar($_POST);
-    return;
+    return;
     */
     extract($_POST, EXTR_SKIP);
     $tickets = ttickets::i();
