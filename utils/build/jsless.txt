@@ -1,0 +1,2 @@
+plugins\photoswipe\resource\default-skin\default-skin.inline
+themes\default\less\logo
