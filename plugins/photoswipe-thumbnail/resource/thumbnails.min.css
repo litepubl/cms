@@ -1,1 +1,1 @@
-.image,.anpost-image,.file-image{position:relative;display:block;overflow:hidden;width:120px;height:120px;border:1px solid transparent;border-radius:4px}.image img,.anpost-image img,.file-image img{position:absolute;left:50%;top:50%;margin-left:-50%;margin-top:-50%}
+.anpost-image,.file-image,.image{position:relative;display:block;overflow:hidden;width:120px;height:120px;border:1px solid transparent;border-radius:4px}.anpost-image img,.file-image img,.image img{position:absolute;left:50%;top:50%;margin-left:-50%;margin-top:-50%}

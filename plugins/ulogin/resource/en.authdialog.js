@@ -1,18 +1,18 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function(window){
-//window.lang= window.lang || {};
+(function(window) {
+  //window.lang= window.lang || {};
   window.lang.authdialog = {
     title: 'Login',
-    helptitle: 'Авторизуйтесь через соцсеть или E-Mail',
-    help: 'выбирайте соцсеть, которую часто посещаете\n' +
-    'если вы первый раз у нас на сайте, то для вас будет создан новый аккаунт\n' +
-    'либо воспользуйтесь  своим E-Mail',
-    
+    helptitle: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ E-Mail',
+    help: 'пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n' +
+      'пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ\n' +
+      'пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅ E-Mail',
+
     reg: 'I am first time on site and need to registration',
     login: 'I already have account',
     lostpass: 'I lost password, please restore',
@@ -26,5 +26,5 @@
     request: 'Please wait while connecting to server',
     errmail: 'Please correct your E-Mail and try again'
   };
-  
-})( window);
+
+})(window);

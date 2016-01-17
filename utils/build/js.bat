@@ -4,10 +4,9 @@ set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar
 set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
 set jsparser=node D:\OpenServer\modules\node_modules\js-beautify\js\bin\js-beautify.js --type js
 set cssparser=node D:\OpenServer\modules\node_modules\js-beautify\js\bin\js-beautify.js --type css
-cd d:\OpenServer\domains\cms\js\litepubl\system
+set home=d:\OpenServer\domains\cms
+cd %home%\js\litepubl\system
 %jsparser%css-loader.js -o css-loader.js
-pause
-exit
 %mini%css-loader.js --js_output_file=css-loader.min.js
 %mini%escape.js --js_output_file=escape.min.js
 %mini%get_get.js --js_output_file=get_get.min.js

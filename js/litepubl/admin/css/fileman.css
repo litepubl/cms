@@ -5,94 +5,94 @@
 **/
 
 #nonewfiles {
-  display: none;
+    display: none;
 }
 
 #nonewfiles:last-child {
-  display: block;
+    display: block;
 }
 
 .file-items {
-  display: block;
-  overflow: hidden;
+    display: block;
+    overflow: hidden;
 }
 
 .file-item {
-  display:inline-block;
-  vertical-align: top;
-  margin:6px 12px;
-  text-align:center;
+    display: inline-block;
+    vertical-align: top;
+    margin: 6px 12px;
+    text-align: center;
 }
 
 .file-toolbar {
-  margin-bottom: 6px;
+    margin-bottom: 6px;
 }
 
-.file-content{
-  font-size:12px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  overflow: hidden;
-  width: 120px;
-  height: 120px;
+.file-content {
+    font-size: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    overflow: hidden;
+    width: 120px;
+    height: 120px;
 }
 
-.file-content img{
-  border: 1px solid transparent;
-  border-radius: 4px;
-  display: block;
-  overflow: hidden;
-  width: 120px;
-  height: 120px;
+.file-content img {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: block;
+    overflow: hidden;
+    width: 120px;
+    height: 120px;
 }
 
 .file-content li {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file-added .file-content {
-  position:relative;
+    position: relative;
 }
 
 .file-added .file-content:after {
-  border: 1px solid transparent;
-  border-radius: 4px;
-  content: "";
-  position:absolute;
-  display: block;
-  overflow: hidden;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color:black;
-  opacity: 0.3;
-  filter: alpha(opacity=30);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    content: "";
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: black;
+    opacity: 0.3;
+    filter: alpha(opacity=30);
 }
 
 #posteditor-files-tabs.file-items {
-  overflow-y: auto;
-  height: 260px;
+    overflow-y: auto;
+    height: 260px;
 }
 
-#dropzone{
-  border:solid 1px blue;
-  border-radius: 4px;
-  -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
-  transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+#dropzone {
+    border: solid 1px blue;
+    border-radius: 4px;
+    -webkit-transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-size ease-in-out .15s, box-radius ease-in-out .15s;
 }
 
-#dropzone.drag{
-  border:solid 3px green;
-  border-radius: 6px;
+#dropzone.drag {
+    border: solid 3px green;
+    border-radius: 6px;
 }
 
-.flash-hidden{
-  position:absolute;
-  left:-10000px;
-  width:0;
-  height:0;
+.flash-hidden {
+    position: absolute;
+    left: -10000px;
+    width: 0;
+    height: 0;
 }

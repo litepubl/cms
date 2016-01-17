@@ -4,9 +4,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-.datepicker-container{
-  width:290px;
-  height:250px;
-  display:block;
-  overflow:hidden;
+.datepicker-container {
+    width: 290px;
+    height: 250px;
+    display: block;
+    overflow: hidden;
 }

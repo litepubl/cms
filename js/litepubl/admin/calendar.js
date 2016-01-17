@@ -1,23 +1,23 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function ($, document, window) {
+(function($, document, window) {
   'use strict';
-  
+
   litepubl.Calendar = Class.extend({
     holderclass: ".calendar",
     rangeclass: ".date-range",
     ui_datepicker: false,
     dialogopened: false,
-    
+
     init: function() {
       this.on(this.holderclass);
       this.onrange(this.rangeclass);
     },
-    
+
     on: function(holders) {
       var self = this;
       $(holders).each(function() {
@@ -27,7 +27,7 @@
         self.add($("button:first", this), date);
       });
     },
-    
+
     onrange: function(holders) {
       var self = this;
       $(holders).each(function() {
@@ -37,7 +37,7 @@
         self.add(buttons.eq(1), inputs.eq(1).addClass("date-edit"));
       });
     },
-    
+
     add: function(button, edit) {
       var self = this;
       $(button).data("date", edit).off("click.calendar").on("click.calendar", function() {
@@ -45,17 +45,17 @@
         return false;
       });
     },
-    
+
     load: function(callback) {
       if (this.ui_datepicker) return this.ui_datepicker.done(callback);
-      
+
       var self = this;
-      this.ui_datepicker= $.load_script(ltoptions.files + '/js/jquery/ui/datepicker.min.js', function() {
+      this.ui_datepicker = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker.min.js', function() {
         if (ltoptions.lang == 'en') return callback();
-        self.ui_datepicker= $.load_script(ltoptions.files + '/js/jquery/ui/datepicker-' + ltoptions.lang + '.min.js', callback);
+        self.ui_datepicker = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker-' + ltoptions.lang + '.min.js', callback);
       });
     },
-    
+
     datepicker: function(holder, edit) {
       $(holder).datepicker({
         altField: edit,
@@ -65,8 +65,8 @@
         changeYear: true
       });
     },
-    
-    open: function (edit) {
+
+    open: function(edit) {
       if (this.dialogopened) return;
       this.dialogopened = true;
       var self = this;
@@ -78,22 +78,22 @@
           close: function() {
             self.dialogopened = false;
           },
-          
+
           open: function() {
             self.datepicker("#popup-calendar", edit);
           },
-          
+
           buttons: [{
             title: lang.dialog.close,
             click: $.closedialog
           }]
         });
       });
-      
+
     }
-    
-  });//class
-  
+
+  }); //class
+
   $(document).ready(function() {
     litepubl.calendar = new litepubl.Calendar();
   });
