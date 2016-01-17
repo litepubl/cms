@@ -9,5 +9,4 @@ plugins\class-extend
 plugins\filereader
 plugins\jquery.cookie
 plugins\tojson
-fix\modernizr.transitions
 swfupload\swfupload
