@@ -15,10 +15,9 @@ if (in_array(basename($filename), array(
 return;
 }
 
-//if (strend($filename, '.js')) echo basename($filename) . "\n";
 $filecount++;
-//echo substr($filename, strlen(dirname(dirname(__file__)))), "\n";
 $s = trim(file_get_contents( $filename));
+$s = str_replace("\r\n", "\n", $s);
 $s = str_replace('2014', '2015', $s);
 $s = replace_copyright($s);
 
@@ -27,37 +26,36 @@ if (strend($filename, 'php')) {
         $oBeautify->process();
 $s = $oBeautify->get();
 $s = trim($s);
-file_put_contents($filename, $s);
 
-$Lines = explode("\n", $s);
-$linescount += count($Lines);
-
-if (strbegin($Lines[count($Lines) - 1], ' ')) {
+$lastline = substr($s, strrpos($s, "\n") + 1);
+if (strbegin($lastline, ' ')) {
 echo basename($filename), '<br>spaces finished<br>';
 }
-return;
-}
-
+} else if (strend($filename, '.less')) {
 $Lines = explode("\n", $s);
+$s = '';
 $linescount += count($Lines);
-
 $open = 0;
-$Result = "";
+
 for ($i=0; $i < count($Lines); $i++) {
 $Line = trim($Lines[$i]);
 $open = $open - substr_count($Line, '}');
 if ($open < 0) {
 echo substr($filename, strlen(dirname(dirname(__file__))));
 echo "\n$i\n$Line<br>\n";
-$Result .= $Line. "\r\n";
+$s .= $Line. "\r\n";
 } else {
-$Result .= str_repeat(' ', $open * 2).$Line. "\r\n";
+$s .= str_repeat(' ', $open * 2).$Line. "\n";
 }
+
 $open = $open + substr_count($Line, "{") ;
 }
-//$s = implode("\n", $Lines);
-$Result = trim($Result);
-file_put_contents($filename, $Result);
+
+$s = trim($s);
+}
+
+$linescount += substr_count($s, "\n");
+file_put_contents($filename, $s);
 }
 
 function parsedir($dir) {
