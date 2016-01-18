@@ -399,7 +399,6 @@ class tadminoptions extends tadminmenu {
           if (!empty($expiredcache)) {
             $options->expiredcache = (int)$expiredcache;
           }
-        }
 
         $options->ob_cache = isset($ob_cache);
         $options->compress = isset($compress);

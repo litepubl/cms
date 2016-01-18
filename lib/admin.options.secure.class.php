@@ -15,6 +15,7 @@ class adminsecure extends tadminmenu {
   public function getcontent() {
     $options = litepublisher::$options;
     $lang = tlocal::admin('options');
+$html = $this->gethtml('options');
     $args = new targs();
     $args->echoexception = $options->echoexception;
     $args->usersenabled = $options->usersenabled;
