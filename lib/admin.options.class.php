@@ -400,40 +400,40 @@ class tadminoptions extends tadminmenu {
             $options->expiredcache = (int)$expiredcache;
           }
 
-        $options->ob_cache = isset($ob_cache);
-        $options->compress = isset($compress);
-        $options->commentspool = isset($commentspool);
-        $options->unlock();
+          $options->ob_cache = isset($ob_cache);
+          $options->compress = isset($compress);
+          $options->commentspool = isset($commentspool);
+          $options->unlock();
+        }
+        break;
+
+
+      case 'lite':
+      case 'catstags':
+        $cats = litepublisher::$classes->categories;
+        $cats->includeparents = isset($parentcats);
+        $cats->includechilds = isset($childcats);
+        $cats->save();
+
+        $tags = litepublisher::$classes->tags;
+        $tags->includeparents = isset($parenttags);
+        $tags->includechilds = isset($childtags);
+        $tags->save();
+        break;
+
+
+      case 'robots':
+        $robo = trobotstxt::i();
+        $robo->text = $robots;
+        $robo->save();
+
+        $appcache_manifest = appcache_manifest::i();
+        $appcache_manifest->text = $appcache;
+        $appcache_manifest->save();
+        break;
       }
-      break;
 
-
-    case 'lite':
-    case 'catstags':
-      $cats = litepublisher::$classes->categories;
-      $cats->includeparents = isset($parentcats);
-      $cats->includechilds = isset($childcats);
-      $cats->save();
-
-      $tags = litepublisher::$classes->tags;
-      $tags->includeparents = isset($parenttags);
-      $tags->includechilds = isset($childtags);
-      $tags->save();
-      break;
-
-
-    case 'robots':
-      $robo = trobotstxt::i();
-      $robo->text = $robots;
-      $robo->save();
-
-      $appcache_manifest = appcache_manifest::i();
-      $appcache_manifest->text = $appcache;
-      $appcache_manifest->save();
-      break;
+      return '';
     }
-
-    return '';
-}
 
 } //class

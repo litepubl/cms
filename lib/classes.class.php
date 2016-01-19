@@ -90,6 +90,7 @@ class tclasses extends titems {
       $filename,
       $path
     );
+
     $instance = $this->getinstance($class);
     if (method_exists($instance, 'install')) $instance->install();
     $this->unlock();
@@ -135,11 +136,10 @@ class tclasses extends titems {
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
-      /* item is indexed array
-      0 = filename
-      1 = releative path
-      2 = filename for debug
-      */
+
+      /*
+       * item is indexed array
+       * 0 = filename      * 1 = releative path      * 2 = filename for debug      */
 
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
