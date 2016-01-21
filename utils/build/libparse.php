@@ -98,6 +98,7 @@ makekernel($dir, 'kernel.php', array(
 'data.class.php',
 'array2prop.class.php',
 'utils.functions.php',
+'getter.class.php',
 
  'events.class.php',
 'events.exception.class.php',
