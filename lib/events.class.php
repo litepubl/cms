@@ -50,7 +50,9 @@ class tevents extends tdata {
 
   public function free() {
     unset(litepublisher::$classes->instances[get_class($this) ]);
-    foreach ($this->coinstances as $coinstance) $coinstance->free();
+    foreach ($this->coinstances as $coinstance) {
+$coinstance->free();
+}
   }
 
   public function eventexists($name) {
@@ -58,15 +60,21 @@ class tevents extends tdata {
   }
 
   public function __get($name) {
-    if (method_exists($this, $name)) return array(
+    if (method_exists($this, $name)) {
+return array(
       get_class($this) ,
       $name
     );
+}
+
     return parent::__get($name);
   }
 
   public function __set($name, $value) {
-    if (parent::__set($name, $value)) return true;
+    if (parent::__set($name, $value)) {
+return true;
+}
+
     if (in_array($name, $this->eventnames)) {
       $this->addevent($name, $value[0], $value[1]);
       return true;
@@ -79,22 +87,20 @@ class tevents extends tdata {
   }
 
   public function __call($name, $params) {
-    if (in_array($name, $this->eventnames)) return $this->callevent($name, $params);
+    if (in_array($name, $this->eventnames)) {
+return $this->callevent($name, $params);
+}
+
     parent::__call($name, $params);
   }
 
   public function __isset($name) {
-    if (parent::__isset($name)) return true;
-    return in_array($name, $this->eventnames);
+return parent::__isset($name) || in_array($name, $this->eventnames);
   }
 
   protected function addevents() {
     $a = func_get_args();
     array_splice($this->eventnames, count($this->eventnames) , 0, $a);
-  }
-
-  private function get_events($name) {
-    return isset($this->events[$name]) ? $this->events[$name] : false;
   }
 
   public function callevent($name, $params) {
@@ -158,9 +164,18 @@ class tevents extends tdata {
   }
 
   public function addevent($name, $class, $func, $once = false) {
-    if (!in_array($name, $this->eventnames)) return $this->error(sprintf('No such %s event', $name));
-    if (empty($class)) $this->error("Empty class name to bind $name event");
-    if (empty($func)) $this->error("Empty function name to bind $name event");
+    if (!in_array($name, $this->eventnames)) {
+return $this->error(sprintf('No such %s event', $name));
+}
+
+    if (empty($class)) {
+$this->error("Empty class name to bind $name event");
+}
+
+    if (empty($func)) {
+$this->error("Empty function name to bind $name event");
+}
+
 
     if (!isset($this->events[$name])) {
       $this->events[$name] = array();
@@ -211,7 +226,10 @@ class tevents extends tdata {
     }
 
     if ($deleted) {
-      if (count($list) == 0) unset($this->events[$name]);
+      if (count($list) == 0) {
+unset($this->events[$name]);
+}
+
       $this->save();
     }
 
@@ -240,18 +258,28 @@ class tevents extends tdata {
   }
 
   public function seteventorder($eventname, $c, $order) {
-    if (!isset($this->events[$eventname])) return false;
+    if (!isset($this->events[$eventname])) {
+return false;
+}
+
     $events = & $this->events[$eventname];
     $class = self::get_class_name($c);
     $count = count($events);
-    if (($order < 0) || ($order >= $count)) $order = $count - 1;
+    if (($order < 0) || ($order >= $count)) {
+$order = $count - 1;
+}
+
     foreach ($events as $i => $event) {
       if ((isset($event[0]) && $class == $event[0]) || (isset($event['class']) && $class == $event['class'])) {
-        if ($i == $order) return true;
+        if ($i == $order) {
+return true;
+}
+
         array_splice($events, $i, 1);
         array_splice($events, $order, 0, array(
           0 => $event
         ));
+
         $this->save();
         return true;
       }

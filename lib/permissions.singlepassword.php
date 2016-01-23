@@ -70,6 +70,7 @@ class tsinglepassword extends tperm {
     switch ($result) {
       case 404:
         return litepublisher::$urlmap->notfound404();
+
       case 403:
         return litepublisher::$urlmap->forbidden();
     }
