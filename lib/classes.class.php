@@ -36,10 +36,12 @@ class tclasses extends titems {
     $this->addmap('remap', array());
     $this->addmap('factories', array());
     $this->instances = array();
-    if (function_exists('spl_autoload_register')) spl_autoload_register(array(
-      $this,
-      '_autoload'
-    ));
+    if (function_exists('spl_autoload_register')) {
+      spl_autoload_register(array(
+        $this,
+        '_autoload'
+      ));
+    }
   }
 
   public function load() {

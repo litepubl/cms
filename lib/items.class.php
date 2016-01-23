@@ -33,7 +33,10 @@ class titems extends tevents {
   }
 
   public function save() {
-    if ($this->lockcount > 0) return;
+    if ($this->lockcount > 0) {
+return;
+}
+
     if ($this->dbversion) {
       return tstorage::save($this);
     } else {
@@ -42,27 +45,43 @@ class titems extends tevents {
   }
 
   public function loadall() {
-    if (!$this->dbversion) return;
+    if ($this->dbversion) {
     return $this->select('', '');
+}
   }
 
   public function loaditems(array $items) {
-    if (!$this->dbversion) return;
+    if (!$this->dbversion) {
+return;
+}
+
     //exclude loaded items
     $items = array_diff($items, array_keys($this->items));
-    if (count($items) == 0) return;
+    if (count($items) == 0) {
+return;
+}
+
     $list = implode(',', $items);
     $this->select("$this->thistable.$this->idprop in ($list)", '');
   }
 
   public function select($where, $limit) {
-    if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
-    if ($where) $where = 'where ' . $where;
+    if (!$this->dbversion) {
+$this->error('Select method must be called ffrom database version');
+}
+
+    if ($where) {
+$where = 'where ' . $where;
+}
+
     return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
   }
 
   public function res2items($res) {
-    if (!$res) return array();
+    if (!$res) {
+return array();
+}
+
     $result = array();
     $db = litepublisher::$db;
     while ($item = $db->fetchassoc($res)) {
@@ -82,28 +101,37 @@ class titems extends tevents {
   }
 
   public function getitem($id) {
-    if (isset($this->items[$id])) return $this->items[$id];
-    if ($this->dbversion) {
-      if ($this->select("$this->thistable.$this->idprop = $id", 'limit 1')) return $this->items[$id];
-    }
+    if (isset($this->items[$id])) {
+return $this->items[$id];
+}
+
+    if ($this->dbversion && $this->select("$this->thistable.$this->idprop = $id", 'limit 1')) {
+return $this->items[$id];
+}
+
     return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
   }
 
   public function getvalue($id, $name) {
-    if ($this->dbversion && !isset($this->items[$id])) $this->items[$id] = $this->db->getitem($id, $this->idprop);
+    if ($this->dbversion && !isset($this->items[$id])) {
+$this->items[$id] = $this->db->getitem($id, $this->idprop);
+}
+
     return $this->items[$id][$name];
   }
 
   public function setvalue($id, $name, $value) {
     $this->items[$id][$name] = $value;
     if ($this->dbversion) {
-      //$this->db->setvalue($id, $name, $value);
       $this->db->update("$name = " . dbquote($value) , "$this->idprop = $id");
     }
   }
 
   public function itemexists($id) {
-    if (isset($this->items[$id])) return true;
+    if (isset($this->items[$id])) {
+return true;
+}
+
     if ($this->dbversion) {
       try {
         return $this->getitem($id);
@@ -132,16 +160,25 @@ class titems extends tevents {
     $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
     $item[$this->idprop] = $id;
     $this->items[$id] = $item;
-    if (!$this->dbversion) $this->save();
+    if (!$this->dbversion) {
+$this->save();
+}
+
     $this->added($id);
     return $id;
   }
 
   public function delete($id) {
-    if ($this->dbversion) $this->db->delete("$this->idprop = $id");
+    if ($this->dbversion) {
+$this->db->delete("$this->idprop = $id");
+}
+
     if (isset($this->items[$id])) {
       unset($this->items[$id]);
-      if (!$this->dbversion) $this->save();
+      if (!$this->dbversion) {
+$this->save();
+}
+
       $this->deleted($id);
       return true;
     }

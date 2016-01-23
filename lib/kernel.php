@@ -477,11 +477,14 @@ class tdata {
     }
 
     foreach ($this->coinstances as $coinstance) {
-      if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) return call_user_func_array(array(
-        $coinstance,
-        $name
-      ) , $params);
+      if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) {
+        return call_user_func_array(array(
+          $coinstance,
+          $name
+        ) , $params);
+      }
     }
+
     $this->error("The requested method $name not found in class " . get_class($this));
   }
 
@@ -526,7 +529,7 @@ class tdata {
   protected function externalchain($func, $arg = null) {
     $parents = class_parents($this);
     array_splice($parents, 0, 0, get_class($this));
-    foreach ($parents as $key => $class) {
+    foreach ($parents as $class) {
       $this->externalfunc($class, $func, $arg);
     }
   }
@@ -538,14 +541,15 @@ class tdata {
       $file = $dir . 'install' . DIRECTORY_SEPARATOR . $externalname;
       if (!file_exists($file)) {
         $file = $dir . $externalname;
-        if (!file_exists($file)) return;
+        if (!file_exists($file)) {
+          return;
+        }
       }
 
       include_once ($file);
 
       $fnc = $class . $func;
       if (function_exists($fnc)) {
-        //$fnc($this, $arg);
         if (is_array($args)) {
           array_unshift($args, $this);
         } else {
@@ -561,12 +565,14 @@ class tdata {
   }
 
   public function load() {
-    //if ($this->dbversion == 'full') return $this->LoadFromDB();
     return tfilestorage::load($this);
   }
 
   public function save() {
-    if ($this->lockcount) return;
+    if ($this->lockcount) {
+      return;
+    }
+
     if ($this->dbversion) {
       $this->SaveToDB();
     } else {
@@ -595,7 +601,9 @@ class tdata {
 
   public function afterload() {
     foreach ($this->coinstances as $coinstance) {
-      if (method_exists($coinstance, 'afterload')) $coinstance->afterload();
+      if (method_exists($coinstance, 'afterload')) {
+        $coinstance->afterload();
+      }
     }
   }
 
@@ -604,7 +612,9 @@ class tdata {
   }
 
   public function unlock() {
-    if (--$this->lockcount <= 0) $this->save();
+    if (--$this->lockcount <= 0) {
+      $this->save();
+    }
   }
 
   public function getlocked() {
@@ -616,13 +626,16 @@ class tdata {
   }
 
   public function getdbversion() {
-    return false; // dbversion == 'full';
-    
+    return false;
+
   }
 
   public function getdb($table = '') {
     $table = $table ? $table : $this->table;
-    if ($table) litepublisher::$db->table = $table;
+    if ($table) {
+      litepublisher::$db->table = $table;
+    }
+
     return litepublisher::$db;
   }
 
@@ -637,7 +650,6 @@ class tdata {
   }
 
   protected function getthistable() {
-    if (!litepublisher::$db) $this->error('db');
     return litepublisher::$db->prefix . $this->table;
   }
 
@@ -647,7 +659,10 @@ class tdata {
 
   public static function encrypt($s, $key) {
     $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
-    if (strlen($key) > $maxkey) $key = substr($key, $maxkey);
+    if (strlen($key) > $maxkey) {
+      $key = substr($key, $maxkey);
+    }
+
     $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
     $pad = $block - (strlen($s) % $block);
     $s.= str_repeat(chr($pad) , $pad);
@@ -656,10 +671,11 @@ class tdata {
 
   public static function decrypt($s, $key) {
     $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
-    if (strlen($key) > $maxkey) $key = substr($key, $maxkey);
+    if (strlen($key) > $maxkey) {
+      $key = substr($key, $maxkey);
+    }
 
     $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-    $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
     $pad = ord($s[($len = strlen($s)) - 1]);
     return substr($s, 0, strlen($s) - $pad);
   }
@@ -813,6 +829,31 @@ function dumpvar($v) {
   echo "</pre>\n";
 }
 
+//getter.class.php
+class getter {
+  public $get;
+  public $set;
+
+  public function __construct($get = null, $set = null) {
+    $this->get = $get;
+    $this->set = $set;
+  }
+
+  public function __get($name) {
+    return call_user_func_array($this->get, array(
+      $name
+    ));
+  }
+
+  public function __set($name, $value) {
+    call_user_func_array($this->set, array(
+      $name,
+      $value
+    ));
+  }
+
+}
+
 //events.class.php
 class tevents extends tdata {
   protected $events;
@@ -858,7 +899,9 @@ class tevents extends tdata {
 
   public function free() {
     unset(litepublisher::$classes->instances[get_class($this) ]);
-    foreach ($this->coinstances as $coinstance) $coinstance->free();
+    foreach ($this->coinstances as $coinstance) {
+      $coinstance->free();
+    }
   }
 
   public function eventexists($name) {
@@ -866,15 +909,21 @@ class tevents extends tdata {
   }
 
   public function __get($name) {
-    if (method_exists($this, $name)) return array(
-      get_class($this) ,
-      $name
-    );
+    if (method_exists($this, $name)) {
+      return array(
+        get_class($this) ,
+        $name
+      );
+    }
+
     return parent::__get($name);
   }
 
   public function __set($name, $value) {
-    if (parent::__set($name, $value)) return true;
+    if (parent::__set($name, $value)) {
+      return true;
+    }
+
     if (in_array($name, $this->eventnames)) {
       $this->addevent($name, $value[0], $value[1]);
       return true;
@@ -887,22 +936,20 @@ class tevents extends tdata {
   }
 
   public function __call($name, $params) {
-    if (in_array($name, $this->eventnames)) return $this->callevent($name, $params);
+    if (in_array($name, $this->eventnames)) {
+      return $this->callevent($name, $params);
+    }
+
     parent::__call($name, $params);
   }
 
   public function __isset($name) {
-    if (parent::__isset($name)) return true;
-    return in_array($name, $this->eventnames);
+    return parent::__isset($name) || in_array($name, $this->eventnames);
   }
 
   protected function addevents() {
     $a = func_get_args();
     array_splice($this->eventnames, count($this->eventnames) , 0, $a);
-  }
-
-  private function get_events($name) {
-    return isset($this->events[$name]) ? $this->events[$name] : false;
   }
 
   public function callevent($name, $params) {
@@ -966,9 +1013,17 @@ class tevents extends tdata {
   }
 
   public function addevent($name, $class, $func, $once = false) {
-    if (!in_array($name, $this->eventnames)) return $this->error(sprintf('No such %s event', $name));
-    if (empty($class)) $this->error("Empty class name to bind $name event");
-    if (empty($func)) $this->error("Empty function name to bind $name event");
+    if (!in_array($name, $this->eventnames)) {
+      return $this->error(sprintf('No such %s event', $name));
+    }
+
+    if (empty($class)) {
+      $this->error("Empty class name to bind $name event");
+    }
+
+    if (empty($func)) {
+      $this->error("Empty function name to bind $name event");
+    }
 
     if (!isset($this->events[$name])) {
       $this->events[$name] = array();
@@ -1019,7 +1074,10 @@ class tevents extends tdata {
     }
 
     if ($deleted) {
-      if (count($list) == 0) unset($this->events[$name]);
+      if (count($list) == 0) {
+        unset($this->events[$name]);
+      }
+
       $this->save();
     }
 
@@ -1048,18 +1106,28 @@ class tevents extends tdata {
   }
 
   public function seteventorder($eventname, $c, $order) {
-    if (!isset($this->events[$eventname])) return false;
+    if (!isset($this->events[$eventname])) {
+      return false;
+    }
+
     $events = & $this->events[$eventname];
     $class = self::get_class_name($c);
     $count = count($events);
-    if (($order < 0) || ($order >= $count)) $order = $count - 1;
+    if (($order < 0) || ($order >= $count)) {
+      $order = $count - 1;
+    }
+
     foreach ($events as $i => $event) {
       if ((isset($event[0]) && $class == $event[0]) || (isset($event['class']) && $class == $event['class'])) {
-        if ($i == $order) return true;
+        if ($i == $order) {
+          return true;
+        }
+
         array_splice($events, $i, 1);
         array_splice($events, $order, 0, array(
           0 => $event
         ));
+
         $this->save();
         return true;
       }
@@ -1456,10 +1524,12 @@ class tclasses extends titems {
     $this->addmap('remap', array());
     $this->addmap('factories', array());
     $this->instances = array();
-    if (function_exists('spl_autoload_register')) spl_autoload_register(array(
-      $this,
-      '_autoload'
-    ));
+    if (function_exists('spl_autoload_register')) {
+      spl_autoload_register(array(
+        $this,
+        '_autoload'
+      ));
+    }
   }
 
   public function load() {
@@ -1549,7 +1619,7 @@ class tclasses extends titems {
 
   public function include_file($filename) {
     if (file_exists($filename)) {
-      require ($filename);
+      require_once ($filename);
     }
   }
 

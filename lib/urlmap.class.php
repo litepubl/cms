@@ -77,7 +77,10 @@ class turlmap extends titems {
     }
 
     $this->beforerequest();
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) ob_start();
+    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
+ob_start();
+}
+
     try {
       $this->dorequest($this->url);
     }
@@ -99,7 +102,10 @@ class turlmap extends titems {
       flush();
 
       if ($afterclose) {
-        if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        if (function_exists('fastcgi_finish_request')) {
+fastcgi_finish_request();
+}
+
         ob_start();
       }
     }
@@ -117,9 +123,11 @@ class turlmap extends titems {
   }
 
   protected function dorequest($url) {
-    //echo "'$url'<br>";
     $this->itemrequested = $this->finditem($url);
-    if ($this->isredir) return;
+    if ($this->isredir) {
+return;
+}
+
     if ($this->itemrequested) {
       return $this->printcontent($this->itemrequested);
     } else {
@@ -135,7 +143,10 @@ class turlmap extends titems {
   }
 
   public function findurl($url) {
-    if ($result = $this->db->finditem('url = ' . dbquote($url))) return $result;
+    if ($result = $this->db->finditem('url = ' . dbquote($url))) {
+return $result;
+}
+
     return false;
   }
 
@@ -156,16 +167,25 @@ class turlmap extends titems {
   }
 
   public function finditem($url) {
-    if ($result = $this->query($url)) return $result;
+    if ($result = $this->query($url)) {
+return $result;
+}
+
     $srcurl = $url;
     if ($i = strpos($url, '?')) {
       $url = substr($url, 0, $i);
     }
 
-    if ('//' == substr($url, -2)) $this->redir(rtrim($url, '/') . '/');
+    if ('//' == substr($url, -2)) {
+$this->redir(rtrim($url, '/') . '/');
+}
+
     //extract page number
     if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
-      if ('/' != substr($url, -1)) return $this->redir($url . '/');
+      if ('/' != substr($url, -1)) {
+return $this->redir($url . '/');
+}
+
       $url = $m[1];
       if ($url == '') $url = '/';
       $this->page = max(1, abs((int)$m[2]));
@@ -271,8 +291,8 @@ class turlmap extends titems {
 
   private function printcontent(array $item) {
     $options = litepublisher::$options;
-    if ($this->cache_enabled) {
-      if ($this->include_file($this->getcachefile($item))) return;
+    if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
+return;
     }
 
     if (class_exists($item['class'])) {
@@ -316,7 +336,10 @@ class turlmap extends titems {
           return $this->forbidden();
       }
     } else {
-      if ($this->isredir) return;
+      if ($this->isredir) {
+return;
+}
+
       $template = ttemplate::i();
       $s = $template->request($context);
     }
@@ -339,8 +362,8 @@ class turlmap extends titems {
 
   private function printclasspage($classname) {
     $cachefile = $classname . '.php';
-    if ($this->cache_enabled) {
-      if ($this->include_file($cachefile)) return;
+    if ($this->cache_enabled && $this->include_file($cachefile)) {
+return;
     }
 
     $obj = getinstance($classname);
@@ -469,7 +492,10 @@ class turlmap extends titems {
 
   public function expiredclass($class) {
     $items = $this->db->getitems("class = '$class'");
-    if (count($items) == 0) return;
+    if (count($items) == 0) {
+return;
+}
+
     $cache = $this->cache;
     $page = $this->page;
     $this->page = 1;
@@ -480,7 +506,10 @@ class turlmap extends titems {
   }
 
   public function addredir($from, $to) {
-    if ($from == $to) return;
+    if ($from == $to) {
+return;
+}
+
     $Redir = tredirector::i();
     $Redir->add($from, $to);
   }
@@ -494,7 +523,10 @@ class turlmap extends titems {
   }
 
   public function setonclose(array $a) {
-    if (count($a) == 0) return;
+    if (count($a) == 0) {
+return;
+}
+
     $this->close_events[] = $a;
   }
 
@@ -526,7 +558,9 @@ class turlmap extends titems {
 
   protected function close() {
     $this->call_close_events();
-    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) return;
+    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) {
+return;
+}
 
     $memstorage = memstorage::i();
     if ($memstorage->hourcron + 3600 <= time()) {
@@ -581,7 +615,10 @@ class turlmap extends titems {
 
   public function getprevpage() {
     $url = $this->itemrequested['url'];
-    if ($this->page <= 2) return url;
+    if ($this->page <= 2) {
+return url;
+}
+
     return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }
 

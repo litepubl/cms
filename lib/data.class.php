@@ -85,8 +85,11 @@ class tdata {
 
     foreach ($this->coinstances as $coinstance) {
       if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) {
-return call_user_func_array(array($coinstance, $name) , $params);
-}
+        return call_user_func_array(array(
+          $coinstance,
+          $name
+        ) , $params);
+      }
     }
 
     $this->error("The requested method $name not found in class " . get_class($this));
@@ -146,8 +149,8 @@ return call_user_func_array(array($coinstance, $name) , $params);
       if (!file_exists($file)) {
         $file = $dir . $externalname;
         if (!file_exists($file)) {
-return;
-}
+          return;
+        }
       }
 
       include_once ($file);
@@ -174,8 +177,8 @@ return;
 
   public function save() {
     if ($this->lockcount) {
-return;
-}
+      return;
+    }
 
     if ($this->dbversion) {
       $this->SaveToDB();
@@ -206,8 +209,8 @@ return;
   public function afterload() {
     foreach ($this->coinstances as $coinstance) {
       if (method_exists($coinstance, 'afterload')) {
-$coinstance->afterload();
-}
+        $coinstance->afterload();
+      }
     }
   }
 
@@ -217,8 +220,8 @@ $coinstance->afterload();
 
   public function unlock() {
     if (--$this->lockcount <= 0) {
-$this->save();
-}
+      $this->save();
+    }
   }
 
   public function getlocked() {
@@ -231,14 +234,14 @@ $this->save();
 
   public function getdbversion() {
     return false;
-    
+
   }
 
   public function getdb($table = '') {
     $table = $table ? $table : $this->table;
     if ($table) {
-litepublisher::$db->table = $table;
-}
+      litepublisher::$db->table = $table;
+    }
 
     return litepublisher::$db;
   }
@@ -264,8 +267,8 @@ litepublisher::$db->table = $table;
   public static function encrypt($s, $key) {
     $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
     if (strlen($key) > $maxkey) {
-$key = substr($key, $maxkey);
-}
+      $key = substr($key, $maxkey);
+    }
 
     $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
     $pad = $block - (strlen($s) % $block);
@@ -276,8 +279,8 @@ $key = substr($key, $maxkey);
   public static function decrypt($s, $key) {
     $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
     if (strlen($key) > $maxkey) {
-$key = substr($key, $maxkey);
-}
+      $key = substr($key, $maxkey);
+    }
 
     $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
     $pad = ord($s[($len = strlen($s)) - 1]);
