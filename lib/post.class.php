@@ -120,9 +120,17 @@ class tpost extends titem implements itemplate {
 
   public function __get($name) {
     if ($this->childtable) {
-      if ($name == 'id') return $this->data['id'];
-      if (method_exists($this, $get = 'get' . $name)) return $this->$get();
-      if (array_key_exists($name, $this->childdata)) return $this->childdata[$name];
+      if ($name == 'id') {
+return $this->data['id'];
+}
+
+      if (method_exists($this, $get = 'get' . $name)) {
+return $this->$get();
+}
+
+      if (array_key_exists($name, $this->childdata)) {
+return $this->childdata[$name];
+}
     }
 
     // tags and categories theme tag
@@ -169,13 +177,9 @@ class tpost extends titem implements itemplate {
 
   //db
   public function afterdb() {
-    //$this->childdata['reproduced'] = $this->childdata['reproduced'] == '1';
-    
   }
 
   public function beforedb() {
-    //if ($this->childdata['closed'] == '') $this->childdata['closed'] = sqldate();
-    
   }
 
   public function load() {
@@ -220,7 +224,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function save() {
-    if ($this->lockcount > 0) return;
+    if ($this->lockcount > 0) {
+return;
+}
+
     $this->SaveToDB();
     foreach ($this->coinstances as $coinstance) {
       $coinstance->save();
@@ -302,7 +309,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getprev() {
-    if (!is_null($this->aprev)) return $this->aprev;
+    if (!is_null($this->aprev)) {
+return $this->aprev;
+}
+
     $this->aprev = false;
     if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
       $this->aprev = self::i($id);
@@ -311,7 +321,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getnext() {
-    if (!is_null($this->anext)) return $this->anext;
+    if (!is_null($this->anext)) {
+return $this->anext;
+}
+
     $this->anext = false;
     if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
       $this->anext = self::i($id);
@@ -344,7 +357,10 @@ class tpost extends titem implements itemplate {
 
   public function gettheme() {
     ttheme::$vars['post'] = $this;
-    if (isset($this->_theme)) return $this->_theme;
+    if (isset($this->_theme)) {
+return $this->_theme;
+}
+
     $this->_theme = isset(ttemplate::i()->view) ? ttemplate::i()->view->theme : tview::getview($this)->theme;
     return $this->_theme;
   }
@@ -391,7 +407,9 @@ class tpost extends titem implements itemplate {
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
-      if ('image' == $item['media']) return $id;
+      if ('image' == $item['media']) {
+return $id;
+}
     }
 
     return false;
@@ -406,11 +424,16 @@ class tpost extends titem implements itemplate {
   }
 
   public function getthumb() {
-    if (count($this->files) == 0) return false;
+    if (count($this->files) == 0) {
+return false;
+}
+
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
-      if ((int)$item['preview']) return $files->geturl($item['preview']);
+      if ((int)$item['preview']) {
+return $files->geturl($item['preview']);
+}
     }
 
     return false;
@@ -462,7 +485,9 @@ class tpost extends titem implements itemplate {
   //template
   protected function get_taglinks($name, $excerpt) {
     $items = $this->__get($name);
-    if (!count($items)) return '';
+    if (!count($items)) {
+return '';
+}
 
     $theme = $this->theme;
     $tmlpath = $excerpt ? 'content.excerpts.excerpt' : 'content.post';
@@ -521,14 +546,20 @@ class tpost extends titem implements itemplate {
   }
 
   public function getmorelink() {
-    if ($this->moretitle == '') return '';
+    if ($this->moretitle) {
     return $this->parsetml('content.excerpts.excerpt.morelink');
+}
+
+return '';
   }
 
   public function gettagnames() {
-    if (count($this->tags) == 0) return '';
+    if (count($this->tags)) {
     $tags = $this->factory->tags;
     return implode(', ', $tags->getnames($this->tags));
+}
+
+return '';
   }
 
   public function settagnames($names) {
@@ -537,9 +568,12 @@ class tpost extends titem implements itemplate {
   }
 
   public function getcatnames() {
-    if (count($this->categories) == 0) return '';
+    if (count($this->categories)) {
     $categories = $this->factory->categories;
     return implode(', ', $categories->getnames($this->categories));
+}
+
+return '';
   }
 
   public function setcatnames($names) {
@@ -560,7 +594,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getidcat() {
-    if (($cats = $this->categories) && count($cats)) return $cats[0];
+    if (($cats = $this->categories) && count($cats)) {
+return $cats[0];
+}
+
     return 0;
   }
 
@@ -568,16 +605,24 @@ class tpost extends titem implements itemplate {
   public function request($id) {
     parent::request((int)$id);
     if ($this->status != 'published') {
-      if (!litepublisher::$options->show_draft_post) return 404;
+      if (!litepublisher::$options->show_draft_post) {
+return 404;
+}
+
       $groupname = litepublisher::$options->group;
-      if (($groupname == 'admin') || ($groupname == 'editor')) return;
-      if ($this->author == litepublisher::$options->user) return;
+      if (($groupname == 'admin') || ($groupname == 'editor')) {
+return;
+}
+
+      if ($this->author == litepublisher::$options->user) {
+return;
+}
+
       return 404;
     }
   }
 
   public function gettitle() {
-    //if ($this->data['title2'] != '') return $this->data['title2'];
     return $this->data['title'];
   }
 
@@ -597,13 +642,15 @@ class tpost extends titem implements itemplate {
     }
 
     if ($this->hascomm) {
-      $lang = tlocal::i('comment');
+tlocal::i('comment');
       $result.= $theme->templates['head.post.rss'];
     }
+
     $result = $theme->parse($result);
     $this->factory->posts->callevent('onhead', array(
       $this, &$result
     ));
+
     return $result;
   }
 
@@ -666,7 +713,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getfilelist() {
-    if ((count($this->files) == 0) || ((litepublisher::$urlmap->page > 1) && litepublisher::$options->hidefilesonpage)) return '';
+    if ((count($this->files) == 0) || ((litepublisher::$urlmap->page > 1) && litepublisher::$options->hidefilesonpage)) {
+return '';
+}
+
     $files = $this->factory->files;
     return $files->getfilelist($this->files, false);
   }

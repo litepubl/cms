@@ -50,7 +50,7 @@ class tdata {
         }
       }
 
-      return $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
+      $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
     }
   }
 
@@ -283,8 +283,9 @@ class tdata {
     }
 
     $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-    $pad = ord($s[($len = strlen($s)) - 1]);
-    return substr($s, 0, strlen($s) - $pad);
+$len = strlen($s);
+    $pad = ord($s[$len  - 1]);
+    return substr($s, 0, $len - $pad);
   }
 
 } //class
