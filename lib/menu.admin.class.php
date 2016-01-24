@@ -38,6 +38,7 @@ class tadminmenu extends tmenu {
   public function load() {
     return true;
   }
+
   public function save() {
     return true;
   }
@@ -51,7 +52,10 @@ class tadminmenu extends tmenu {
   }
 
   public static function auth($group) {
-    if ($s = tguard::checkattack()) return $s;
+    if ($err = tguard::checkattack()) {
+return $err;
+}
+
     if (!litepublisher::$options->user) {
       turlmap::nocache();
       return litepublisher::$urlmap->redir('/admin/login/' . litepublisher::$site->q . 'backurl=' . urlencode(litepublisher::$urlmap->url));
@@ -68,16 +72,25 @@ class tadminmenu extends tmenu {
     error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING);
     ini_set('display_errors', 1);
 
-    if (is_null($id)) $id = $this->owner->class2id(get_class($this));
+    if (is_null($id)) {
+$id = $this->owner->class2id(get_class($this));
+}
+
     $this->data['id'] = (int)$id;
     if ($id > 0) {
       $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
     }
 
-    if ($s = self::auth($this->group)) return $s;
+    if ($s = self::auth($this->group)) {
+return $s;
+}
+
     tlocal::usefile('admin');
 
-    if ($s = $this->canrequest()) return $s;
+    if ($s = $this->canrequest()) {
+return $s;
+}
+
     $this->doprocessform();
   }
 
@@ -88,6 +101,7 @@ class tadminmenu extends tmenu {
     if (tguard::post()) {
       litepublisher::$urlmap->clearcache();
     }
+
     return parent::doprocessform();
   }
 
@@ -95,7 +109,10 @@ class tadminmenu extends tmenu {
     if (litepublisher::$options->admincache) {
       $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
       $filename = 'adminmenu.' . litepublisher::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-      if ($result = litepublisher::$urlmap->cache->get($filename)) return $result;
+      if ($result = litepublisher::$urlmap->cache->get($filename)) {
+return $result;
+}
+
       $result = parent::getcont();
       litepublisher::$urlmap->cache->set($filename, $result);
       return $result;

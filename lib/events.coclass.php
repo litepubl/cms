@@ -14,7 +14,10 @@ class tcoevents extends tevents {
     $a = func_get_args();
     $owner = array_shift($a);
     $this->owner = $owner;
-    if (!isset($owner->data['events'])) $owner->data['events'] = array();
+    if (!isset($owner->data['events'])) {
+$owner->data['events'] = array();
+}
+
     $this->events = & $owner->data['events'];
     array_splice($this->eventnames, count($this->eventnames) , 0, $a);
   }
@@ -26,10 +29,13 @@ class tcoevents extends tevents {
 
   public function assignmap() {
   }
+
   protected function create() {
   }
+
   public function load() {
   }
+
   public function afterload() {
     $this->events = & $this->owner->data['events'];
   }
