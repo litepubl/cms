@@ -31,7 +31,11 @@ class tdata {
     $this->data = array();
     $this->coinstances = array();
     $this->coclasses = array();
-    $this->basename = substr(get_class($this) , 1);
+
+if (!$this->basename) {
+    $this->basename = ltrim(get_class($this), 'tT');
+}
+
     $this->create();
   }
 

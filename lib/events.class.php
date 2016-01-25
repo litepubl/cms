@@ -12,9 +12,16 @@ class tevents extends tdata {
   protected $map;
 
   public function __construct() {
-    $this->eventnames = array();
+    if (!is_array($this->eventnames )) {
+$this->eventnames = array();
+}
+
+if (!is_array($this->map )) {
     $this->map = array();
+}
+
     parent::__construct();
+
     $this->assignmap();
     $this->load();
   }
@@ -36,9 +43,11 @@ class tevents extends tdata {
 
   public function afterload() {
     $this->assignmap();
+
     foreach ($this->coclasses as $coclass) {
       $this->coinstances[] = getinstance($coclass);
     }
+
     parent::afterload();
   }
 
