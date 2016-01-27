@@ -26,7 +26,10 @@ class tposteditor extends tadminmenu {
     $template->ltoptions['idpost'] = $this->idget();
     $result.= $template->getjavascript($template->jsmerger_posteditor);
 
-    if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) $result.= $h;
+    if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) {
+$result.= $h;
+}
+
     return $result;
   }
 
@@ -68,10 +71,15 @@ class tposteditor extends tadminmenu {
     $result = '';
     $categories = tcategories::i();
     $categories->loadall();
-    if (count($items) == 0) $items = array_keys($categories->items);
+
+    if (!count($items)) {
+$items = array_keys($categories->items);
+}
+
     foreach ($items as $id) {
       $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', tadminhtml::specchars($categories->getvalue($id, 'title')));
     }
+
     return $result;
   }
 

@@ -42,8 +42,7 @@ class tclasswidget extends twidget {
 
   public function save() {
     parent::save();
-    $widgets = twidgets::i();
-    $widgets->save();
+twidgets::i()->save();
   }
 
 } //class

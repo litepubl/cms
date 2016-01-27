@@ -14,7 +14,7 @@ protected $callbacks;
     $args = func_get_args();
 if (isset($args[0])) {
 if (is_array($args[0])) {
-$this->callbacks = array_shift($args)
+$this->callbacks = array_shift($args);
 $this->trigger_callback('construct');
 } else if (($owner = array_shift($args)) &&is_object($owner) && ($owner instanceof tdata)) {
 $this->setowner($owner);
@@ -40,7 +40,7 @@ $owner->data['events'] = array();
   }
 
 public function trigger_callback($name) {
-if (isset($this->callbacks[$name]) {
+if (isset($this->callbacks[$name])) {
 $callback = $this->callbacks[$name];
 if (is_callable($callback)) {
 $callback($this);

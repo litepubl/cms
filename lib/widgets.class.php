@@ -47,13 +47,17 @@ class twidgets extends titems_storage {
   public function addclass(twidget $widget, $class) {
     $this->lock();
     $id = $this->add($widget);
-    if (!isset($this->classes[$class])) $this->classes[$class] = array();
+    if (!isset($this->classes[$class])) {
+$this->classes[$class] = array();
+}
+
     $this->classes[$class][] = array(
       'id' => $id,
       'order' => 0,
       'sidebar' => 0,
       'ajax' => false
     );
+
     $this->unlock();
     return $id;
   }
@@ -61,18 +65,25 @@ class twidgets extends titems_storage {
   public function subclass($id) {
     foreach ($this->classes as $class => $items) {
       foreach ($items as $item) {
-        if ($id == $item['id']) return $class;
+        if ($id == $item['id']) {
+return $class;
+}
       }
     }
+
     return false;
   }
 
   public function delete($id) {
-    if (!isset($this->items[$id])) return false;
+    if (!isset($this->items[$id])) {
+return false;
+}
 
     foreach ($this->classes as $class => $items) {
       foreach ($items as $i => $item) {
-        if ($id == $item['id']) array_delete($this->classes[$class], $i);
+        if ($id == $item['id']) {
+array_delete($this->classes[$class], $i);
+}
       }
     }
 
@@ -95,20 +106,33 @@ class twidgets extends titems_storage {
     if (count($deleted) > 0) {
       foreach ($this->classes as $name => $items) {
         foreach ($items as $i => $item) {
-          if (in_array($item['id'], $deleted)) array_delete($this->classes[$name], $i);
+          if (in_array($item['id'], $deleted)) {
+array_delete($this->classes[$name], $i);
+}
         }
-        if (count($this->classes[$name]) == 0) unset($this->classes[$name]);
+
+        if (!count($this->classes[$name])) {
+unset($this->classes[$name]);
+}
       }
     }
 
-    if (isset($this->classes[$class])) unset($this->classes[$class]);
+    if (isset($this->classes[$class])) {
+unset($this->classes[$class]);
+}
+
     $this->save();
-    foreach ($deleted as $id) $this->deleted($id);
+
+    foreach ($deleted as $id) {
+$this->deleted($id);
+}
   }
 
   public function class2id($class) {
     foreach ($this->items as $id => $item) {
-      if ($class == $item['class']) return $id;
+      if ($class == $item['class']) {
+return $id;
+}
     }
 
     return false;
@@ -197,6 +221,7 @@ class twidgets extends titems_storage {
         }
       }
     }
+
     return $result;
   }
 
