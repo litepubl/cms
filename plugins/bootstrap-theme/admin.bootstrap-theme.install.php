@@ -7,6 +7,7 @@
  */
 
 function admin_bootstrap_themeInstall($self) {
+  tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
   $about = tplugins::getabout(tplugins::getname(__file__));
 
   $admin = tadminmenus::i();
@@ -25,6 +26,7 @@ function admin_bootstrap_themeInstall($self) {
 }
 
 function admin_bootstrap_themeUninstall($self) {
+  tlocalmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
   $admin = tadminmenus::i();
   $admin->lock();
   $admin->deleteurl('/admin/views/bootstraptheme/');

@@ -37,7 +37,7 @@ class admin_bootstrap_header extends tadminmenu {
 
   public function getcontent() {
     $tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
-    $lang = tlocal::inifile($this, '.admin.ini');
+    $lang = tlocal::admin('adminbootstraptheme');
     $lang->addsearch('themeheader', 'editor');
     $html = tadminhtml::i();
     $args = new targs();

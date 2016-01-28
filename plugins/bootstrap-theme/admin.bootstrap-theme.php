@@ -17,7 +17,7 @@ class admin_bootstrap_theme extends tadminmenu {
     $views = tviews::i();
     $theme = tview::i($views->defaults['admin'])->theme;
     $html = $this->inihtml();
-    $lang = tlocal::inifile($this, '.admin.ini');
+    $lang = tlocal::admin('adminbootstraptheme');
     $args = new targs();
 
     $mainsidebars = array(
@@ -41,7 +41,7 @@ class admin_bootstrap_theme extends tadminmenu {
   }
 
   public function processform() {
-    $lang = tlocal::inifile($this, '.admin.ini');
+    $lang = tlocal::admin('adminbootstraptheme');
     $views = tviews::i();
     foreach ($views->items as $id => $item) {
       if (!isset($item['custom']['mainsidebar'])) continue;

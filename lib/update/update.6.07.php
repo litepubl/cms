@@ -52,4 +52,6 @@ litepublisher::$urlmap->data['prefilter'] = litepublisher::$urlmap->db->getitems
 litepublisher::$urlmap->save();
 
   tcron::i()->addnightly('turlmap', 'updatefilter', null);
+
+  tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
 }
