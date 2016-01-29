@@ -1,0 +1,2 @@
+posteditor.raw = [
+loadvisual = "<span id='loadvisual'> (<a rel='loadvisual' href='#'>$lang.loadvisual</a>)</span>"

@@ -1,0 +1,41 @@
+posteditor.text = [
+<div id="posteditor-content">
+<span id="posteditor-visual"></span>
+<span id="posteditor-init-raw-tabs"><a href="#">$lang.loadcontenttabs</a></span>
+
+<div id="posteditor-raw-holder"><!--
+    <ul>
+        <li><a href="#posteditor-raw"><span>$lang.raw</span></a></li>
+        <li><a href="#posteditor-excerpt"><span>$lang.excerpt</span></a></li>
+        <li><a href="#posteditor-rss"><span>$lang.rss</span></a></li>
+        <li><a href="#posteditor-more"><span>$lang.more</span></a></li>
+        <li><a href="#posteditor-filtered"><span>$lang.filtered</span></a></li>
+        <li><a href="#posteditor-upd"><span>$lang.upd</span></a></li>
+    </ul>
+
+<div id="posteditor-excerpt"><comment>
+[editor=excerpt]
+</comment></div>
+
+<div id="posteditor-rss"><comment>
+[editor=rss]
+</comment></div>
+
+<div id="posteditor-more"><comment>
+[text=more]
+</comment></div>
+
+<div id="posteditor-filtered"><comment>
+[editor=filtered]
+</comment></div>
+
+<div id="posteditor-upd"><comment>
+[editor=upd]
+</comment></div>
+-->
+<div id="posteditor-raw">
+[editor=raw]
+</div>
+</div>
+</div>
+]

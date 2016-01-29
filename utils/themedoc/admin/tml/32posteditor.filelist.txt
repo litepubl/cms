@@ -1,0 +1,23 @@
+posteditor.filelist = [
+<div id="posteditor-filelist">
+<input type="hidden" name="files" value="%%files%%" />
+<div id="posteditor-fileperms">%%fileperm%%</div>
+    <div id="uploader"></div>
+<div id="browsefiles-holder"><button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square green" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
+
+    <div id="newfiles" class="file-items">
+<h4>$lang.newfiles</h4>
+<h5 id="nonewfiles">$lang.nonewfiles</h5>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+        litepubl.fileman = litepubl.init_fileman({
+    holder: "#posteditor-filelist",
+    count: %%count%%,
+    items: %%items%%
+    });
+    });
+</script>
+</div>
+]
