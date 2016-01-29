@@ -32,7 +32,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
       $args->idwidget = 0;
     }
 
-    $cats = tposteditor::getcategories($item['cats']);
+    $cats = admintheme::i()->getcats($item['cats']);
     $html = $this->html;
     $html->section = 'widgets';
     $args->add($item);

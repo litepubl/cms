@@ -15,8 +15,8 @@ class tadmincategoriesmenu {
   public function getcontent() {
     $plugin = tcategoriesmenu::i();
     $about = tplugins::getabout(tplugins::getname(__file__));
-    $args = targs::i();
-    $args->cats = tposteditor::getcategories($plugin->exitems);
+    $args = new targs();
+    $args->cats = admintheme::i()->getcats($plugin->exitems);
     $args->formtitle = $about['formtitle'];
     //    $args->data['$lang.before'] = $about['before'];
     $html = tadminhtml::i();

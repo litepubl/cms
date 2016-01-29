@@ -65,9 +65,13 @@ class adminhomeoptions extends tadminmenu {
     </h5>
     ');
 
-    $tabs->add($lang->includecats, $html->h4->includehome . tposteditor::getcategories($home->includecats));
+    $tabs->add($lang->includecats, 
+$html->h4->includehome . 
+$this->admintheme->getcats($home->includecats));
 
-    $tabs->add($lang->excludecats, $html->h4->excludehome . str_replace('category-', 'exclude_category-', tposteditor::getcategories($home->excludecats)));
+    $tabs->add($lang->excludecats, 
+$html->h4->excludehome .
+ str_replace('category-', 'exclude_category-', $this->admintheme->getcats($home->excludecats)));
 
     $args->formtitle = $lang->homeform;
     return tuitabs::gethead() . $html->adminform('<h4><a href="$site.url/admin/menu/edit/{$site.q}id=$idhome">$lang.hometext</a></h4>' . $tabs->get() , $args);

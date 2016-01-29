@@ -85,20 +85,16 @@ return str_replace('$text', $text, $this->templates['success']);
 
   public function getcats(array $items) {
     $result = $this->parse($this->templates['posteditor.categories.head']);
-    $categories = tcategories::i();
-    $categories->loadall();
+tcategories::i()->loadall();
     $result.= $this->getsubcats(0, $items);
     return $result;
   }
 
   protected function getsubcats($parent, array $postitems, $exclude = false) {
     $result = '';
-    $tml = str_replace(
-'$checkbox',
-str_replace('$name', 'category-$id', $this->templates['checkbox.name']),
-$this->templates['posteditor.categories.item']);
-
-    $args = new targs();    $categories = tcategories::i();
+    $args = new targs();
+    $categories = tcategories::i();
+    $tml = $this->templates['posteditor.categories.item'];
     foreach ($categories->items as $id => $item) {
       if (($parent == $item['parent']) &&
       !($exclude && in_array($id, $exclude))) {
