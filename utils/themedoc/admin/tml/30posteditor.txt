@@ -1,10 +1,10 @@
 posteditor = [
 <form name="form" id="form" action="$site.url/admin/posts/editor/" method="post">
-[text=title]
-$posteditor.tabs
-$posteditor.filelist
-$posteditor.text
-[hidden=id]
-[submit=save]
+    [text=title]
+    $posteditor.tabs
+    $posteditor.filelist
+    $posteditor.text
+    [hidden=id]
+    [submit=save]
 </form>
 ]

@@ -1,9 +1,10 @@
 posteditor.text = [
 <div id="posteditor-content">
-<span id="posteditor-visual"></span>
-<span id="posteditor-init-raw-tabs"><a href="#">$lang.loadcontenttabs</a></span>
+    <span id="posteditor-visual"></span>
+    <span id="posteditor-init-raw-tabs"><a href="#">$lang.loadcontenttabs</a></span>
 
-<div id="posteditor-raw-holder"><!--
+    <div id="posteditor-raw-holder">
+        <!--
     <ul>
         <li><a href="#posteditor-raw"><span>$lang.raw</span></a></li>
         <li><a href="#posteditor-excerpt"><span>$lang.excerpt</span></a></li>
@@ -33,9 +34,9 @@ posteditor.text = [
 [editor=upd]
 </comment></div>
 -->
-<div id="posteditor-raw">
-[editor=raw]
-</div>
-</div>
+        <div id="posteditor-raw">
+            [editor=raw]
+        </div>
+    </div>
 </div>
 ]

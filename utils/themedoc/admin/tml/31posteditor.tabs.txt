@@ -1,27 +1,31 @@
 posteditor.tabs = [
-<div id='tabs' class='posteditor-tabs'>
+<div id="tabs" class="posteditor-tabs">
     <ul>
-        <li><a href='#categoriestab'><span>$lang.categories</span></a></li>
-        <li><a href='$ajax=tags'><span>$lang.tags</span></a></li>
-        <li><a href='#datetime-tab'><span>$lang.posted</span></a></li>
-        <li><a href='$ajax=status'><span>$lang.access</span></a></li>
-        <li><a href='$ajax=view'><span>$lang.view</span></a></li>
-        <li><a href='#seo-tab'><span>$lang.seo</span></a></li>
+        <li><a href="#categoriestab"><span>$lang.categories</span></a></li>
+        <li><a href="$ajax=tags"><span>$lang.tags</span></a></li>
+        <li><a href="#datetime-tab"><span>$lang.posted</span></a></li>
+        <li><a href="$ajax=status"><span>$lang.access</span></a></li>
+        <li><a href="$ajax=view"><span>$lang.view</span></a></li>
+        <li><a href="#seo-tab"><span>$lang.seo</span></a></li>
     </ul>
-<div id='categoriestab'>
-$categories
-</div>
-<div id='datetime-tab'>
-<div id='datetime-holder'><!--[calendar=date]--></div>
-</div>
-<div id='seo-tab'>
-<div id='seo-holder'><!--
-[text=url]
-[text=title2]
-[text=keywords]
-[text=description]
-[editor=head]
---></div>
-</div>
+    <div id="categoriestab">
+        $categories
+    </div>
+    <div id="datetime-tab">
+        <div id="datetime-holder">
+            <!--[calendar=date]-->
+        </div>
+    </div>
+    <div id="seo-tab">
+        <div id="seo-holder">
+            <!--
+                [text=url]
+                [text=title2]
+                [text=keywords]
+                [text=description]
+                [editor=head]
+-->
+        </div>
+    </div>
 </div>
 ]
