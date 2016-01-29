@@ -96,9 +96,23 @@ $items = array_keys($categories->items);
     return litepublisher::$options->show_file_perm ? tadminperms::getcombo(0, 'idperm_upload') : '';
   }
 
+public function gettabs($post = null) {
+if (!$post) {
+$post = basetheme::$vars['post'];
+}
+
+$args = new targs();
+$this->getpostargs($post, $args);
+
+return $this->html->parsearg($this->admintheme->templates['posteditor.tabs'], $args);
+}
+
   // $posteditor.files in template editor
-  public function getfilelist() {
+  public function getfilelist($post = null) {
+if (!$post) {
     $post = ttheme::$vars['post'];
+}
+
     if (version_compare(PHP_VERSION, '5.3', '>=')) {
       return static ::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
     } else {
@@ -123,7 +137,7 @@ $items = array_keys($categories->items);
     //total count files
     $args->count = (int)$db->getcount(" parent = 0 $where");
     //already loaded files
-    $args->items = '{' . '}';
+    $args->items = '{}';
     // attrib for hidden input
     $args->files = '';
 
@@ -190,6 +204,15 @@ $items = array_keys($categories->items);
     $args->more = $post->moretitle;
     $args->upd = '';
   }
+
+public function getform_tml() {
+$admintheme = $this->admintheme;
+return strtr($admintheme->templates['posteditor'], array(
+'$posteditor.tabs' => $admintheme->templates['posteditor.tabs'],
+'$posteditor.filelist' => $admintheme->templates['posteditor.filelist'],
+'$posteditor.text' => $admintheme->templates['posteditor.text'],
+));
+}
 
   public function getcontent() {
     $result = '';

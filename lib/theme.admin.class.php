@@ -83,4 +83,38 @@ return str_replace('$text', $text, $this->templates['success']);
     return $this->parsearg($this->templates['daterange'], $args);
   }
 
+  public function getcats(array $items) {
+    $result = $this->parse($this->templates['posteditor.categories.head']);
+    $categories = tcategories::i();
+    $categories->loadall();
+    $result.= $this->getsubcats(0, $items);
+    return $result;
+  }
+
+  protected function getsubcats($parent, array $postitems, $exclude = false) {
+    $result = '';
+    $tml = str_replace(
+'$checkbox',
+str_replace('$name', 'category-$id', $this->templates['checkbox.name']),
+$this->templates['posteditor.categories.item']);
+
+    $args = new targs();    $categories = tcategories::i();
+    foreach ($categories->items as $id => $item) {
+      if (($parent == $item['parent']) &&
+      !($exclude && in_array($id, $exclude))) {
+      $args->add($item);
+      $args->checked = in_array($item['id'], $postitems);
+      $args->subcount = '';
+      $args->subitems = $this->getsubcats($id, $postitems);
+      $result.= $this->parsearg($tml, $args);
+    }
+}
+
+    if ($result) {
+$result = str_replace('$item', $result, $this->templates['posteditor.categories']);
+}
+
+return $result;
+  }
+
 } //class
