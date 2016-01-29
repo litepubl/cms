@@ -130,6 +130,7 @@ class tlocalmerger extends tfilemerger {
     if (file_exists($dir . $language . '.ini')) $this->add('default', "plugins/$name/resource/$language.ini");
     if (file_exists($dir . $language . '.admin.ini')) $this->add('admin', "plugins/$name/resource/$language.admin.ini");
     if (file_exists($dir . $language . '.mail.ini')) $this->add('mail', "plugins/$name/resource/$language.mail.ini");
+    if (file_exists($dir . $language . '.install.ini')) $this->add('install', "plugins/$name/resource/$language.install.ini");
     if (file_exists($dir . 'html.ini')) $this->addhtml("plugins/$name/resource/html.ini");
     $this->unlock();
   }
@@ -141,6 +142,7 @@ class tlocalmerger extends tfilemerger {
     $this->deletefile('admin', "plugins/$name/resource/$language.admin.ini");
     $this->deletefile('mail', "plugins/$name/resource/$language.mail.ini");
     $this->deletehtml("plugins/$name/resource/html.ini");
+    $this->deletefile('install', "plugins/$name/resource/$language.install.ini");
     $this->unlock();
   }
 

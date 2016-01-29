@@ -34,6 +34,10 @@ class admintheme extends basetheme {
     ));
   }
 
+public function success($text) {
+return str_replace('$text', $text, $this->templates['success']);
+}
+
   public function getsection($title, $content) {
     return strtr($this->templates['section'], array(
       '$title' => $title,

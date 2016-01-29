@@ -138,6 +138,16 @@ $value - значение
 Эти шаблоны использует класс ulist для генерации списков. Если в массиве свойств ключ имеет числовое значение, то такой ключ игнорируется и исползуется шаблон list.value
 */
 
+success = [
+<h4 class="text-success">$text</h4>
+]
+
+/*
+Шаблон success предназначен для вывода сообщения об успешном окончании действия, например редактирование поста, удаление рубрики и так далее. Имеет один тег:
+
+$text - сам текст сообщения
+*/
+
 section = [
 <div class="section">
     <h4>$title</h4>
@@ -156,7 +166,7 @@ $content - содержание блока/секции
 error = [
 <div class="section">
     <h4 class="text-danger">$title</h4>
-    <div class="help-block text-danger">
+    <div class="help-block text-danger text-center">
         $content
     </div>
 </div>

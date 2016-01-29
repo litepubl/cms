@@ -192,18 +192,25 @@ $items = array_keys($categories->items);
   }
 
   public function getcontent() {
+    $result = '';
     $html = $this->html;
     $post = tpost::i($this->idpost);
-    ttheme::$vars['post'] = $post;
-    ttheme::$vars['posteditor'] = $this;
+$vars = new themevars();
+$vars->post = $post;
+$vars->posteditor = $this;
+
     $args = new targs();
     $this->getpostargs($post, $args);
 
-    $result = $post->id == 0 ? '' : $html->h4($this->lang->formhead . ' ' . $post->bookmark);
-    if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) return $r;
+if ($post->id == 0) {
+$result .= $html->h4($this->lang->formhead . ' ' . $post->bookmark);
+}
+
+    if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {
+return $r;
+}
 
     $result.= $html->form($args);
-    unset(ttheme::$vars['post'], ttheme::$vars['posteditor']);
     return $html->fixquote($result);
   }
 
@@ -264,10 +271,12 @@ $items = array_keys($categories->items);
   }
 
   public function processform() {
-    //dumpvar($_POST);
     $this->basename = 'editor';
-    $html = $this->html;
-    if (empty($_POST['title'])) return $html->h2->emptytitle;
+$lang = $this->lang;
+    if (empty($_POST['title'])) {
+return $this->admintheme->geterr($lang->error, $lang->emptytitle);
+}
+
     $id = (int)$_POST['id'];
     $post = tpost::i($id);
 
@@ -285,7 +294,8 @@ $items = array_keys($categories->items);
       $posts->edit($post);
     }
     $_GET['id'] = $this->idpost;
-    return sprintf($html->p->success, $post->bookmark);
+
+    return $this->admintheme->success($lang->success);
   }
 
 } //class

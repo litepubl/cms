@@ -1,0 +1,3 @@
+success = [
+<h4 class="text-success">$text</h4>
+]
