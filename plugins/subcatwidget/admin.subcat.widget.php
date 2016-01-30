@@ -36,7 +36,7 @@ class tadminsubcatwidget extends tadminwidget {
       $tags[] = $item['idtag'];
     }
     $args->formtitle = $about['formtitle'];
-    return $html->adminform(tposteditor::getcategories($tags) , $args);
+    return $html->adminform(admintheme::i()->getcats($tags), $args);
   }
 
   public function processform() {
@@ -58,7 +58,7 @@ class tadminsubcatwidget extends tadminwidget {
     foreach ($widget->items as $id => $item) {
       $tags[] = $item['idtag'];
     }
-    $list = tposteditor::processcategories();
+    $list = admintheme::i()->processcategories();
     $add = array_diff($list, $tags);
     $delete = array_diff($tags, $list);
     if ((count($add) == 0) && (count($delete) == 0)) return '';

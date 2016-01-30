@@ -61,7 +61,7 @@ class tticketeditor extends tposteditor {
     $args->fixed = $ticket->state == 'fixed';
 
     $tickets = ttickets::i();
-    $args->catcombo = tposteditor::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : $tickets->cats[0]);
+    $args->catcombo = static::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : $tickets->cats[0]);
 
     $states = array();
     foreach (array(

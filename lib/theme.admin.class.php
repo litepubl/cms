@@ -90,18 +90,18 @@ tcategories::i()->loadall();
     return $result;
   }
 
-  protected function getsubcats($parent, array $postitems, $exclude = false) {
+  protected function getsubcats($parent, array $items, $exclude = false) {
     $result = '';
     $args = new targs();
-    $categories = tcategories::i();
     $tml = $this->templates['posteditor.categories.item'];
+    $categories = tcategories::i();
     foreach ($categories->items as $id => $item) {
       if (($parent == $item['parent']) &&
       !($exclude && in_array($id, $exclude))) {
       $args->add($item);
-      $args->checked = in_array($item['id'], $postitems);
+      $args->checked = in_array($item['id'], $items);
       $args->subcount = '';
-      $args->subitems = $this->getsubcats($id, $postitems);
+      $args->subitems = $this->getsubcats($id, $items, $exclude);
       $result.= $this->parsearg($tml, $args);
     }
 }
@@ -111,6 +111,10 @@ $result = str_replace('$item', $result, $this->templates['posteditor.categories'
 }
 
 return $result;
+  }
+
+  public function processcategories() {
+    return tadminhtml::check2array('category-');
   }
 
 } //class

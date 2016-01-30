@@ -75,8 +75,11 @@ class tusernews extends tplugin {
 
     if ($this->insertsource) $post->meta->sourceurl = $sourceurl;
     $post->title = $title;
-    $post->categories = tposteditor::processcategories();
-    if (litepublisher::$options->user > 1) $post->author = litepublisher::$options->user;
+    $post->categories = admintheme::i()->processcategories();
+    if (litepublisher::$options->user > 1) {
+$post->author = litepublisher::$options->user;
+}
+
     if (isset($files)) {
       $files = trim($files);
       $post->files = $files == '' ? array() : explode(',', $files);

@@ -33,40 +33,6 @@ $result.= $h;
     return $result;
   }
 
-  protected static function getsubcategories($parent, array $postitems, $exclude = false) {
-    $result = '';
-    $categories = tcategories::i();
-    $html = tadminhtml::getinstance('editor');
-    $theme = ttheme::i();
-    $checkbox = $theme->getinput('checkbox', 'category-$id', 'value="$id" $checked', '$title');
-    $tml = str_replace('$checkbox', $checkbox, $html->category);
-
-    $args = new targs();
-    foreach ($categories->items as $id => $item) {
-      if ($parent != $item['parent']) continue;
-      if ($exclude && in_array($id, $exclude)) continue;
-      $args->add($item);
-      $args->checked = in_array($item['id'], $postitems);
-      $args->subcount = '';
-      $args->subitems = self::getsubcategories($id, $postitems);
-      $result.= $html->parsearg($tml, $args);
-    }
-
-    if ($result == '') return '';
-    return sprintf($html->categories() , $result);
-  }
-
-  public static function getcategories(array $items) {
-    $categories = tcategories::i();
-    $categories->loadall();
-    $html = tadminhtml::i();
-    $html->push_section('editor');
-    $result = $html->categorieshead();
-    $result.= self::getsubcategories(0, $items);
-    $html->pop_section();
-    return str_replace("'", '"', $result);
-  }
-
   public static function getcombocategories(array $items, $idselected) {
     $result = '';
     $categories = tcategories::i();

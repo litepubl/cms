@@ -17,12 +17,12 @@ class tadminticketoptions extends tadminmenu {
     $args = new targs();
     $args->formtitle = $lang->admincats;
     $tickets = ttickets::i();
-    return $this->html->adminform(tposteditor::getcategories($tickets->cats) , $args);
+    return $this->html->adminform($this->admintheme->getcats($tickets->cats) , $args);
   }
 
   public function processform() {
     $tickets = ttickets::i();
-    $tickets->cats = tposteditor::processcategories();
+    $tickets->cats = $this->admintheme->processcategories();
     $tickets->save();
   }
 

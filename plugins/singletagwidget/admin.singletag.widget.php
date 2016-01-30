@@ -16,7 +16,7 @@ class tadminsingletagwidget extends tadminwidget {
     $widget = tsingletagwidget::i();
     $about = tplugins::getabout(tplugins::getname(__file__));
     $html = $this->html;
-    $args = targs::i();
+    $args = new targs();
     $id = (int)tadminhtml::getparam('idwidget', 0);
     if (isset($widget->items[$id])) {
       $args->add($widget->items[$id]);
@@ -32,7 +32,7 @@ class tadminsingletagwidget extends tadminwidget {
       $tags[] = $item['idtag'];
     }
     $args->formtitle = $about['formtitle'];
-    return $html->adminform(tposteditor::getcategories($tags) , $args);
+    return $html->adminform(admintheme::i()->getcats($tags), $args);
   }
 
   public function processform() {
@@ -50,7 +50,7 @@ class tadminsingletagwidget extends tadminwidget {
     foreach ($widget->items as $id => $item) {
       $tags[] = $item['idtag'];
     }
-    $list = tposteditor::processcategories();
+    $list = admintheme::i()->processcategories();
     $add = array_diff($list, $tags);
     $delete = array_diff($tags, $list);
     if ((count($add) == 0) && (count($delete) == 0)) return '';

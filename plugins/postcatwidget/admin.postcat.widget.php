@@ -55,7 +55,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
       extract($_POST, EXTR_SKIP);
       switch ($mode) {
         case 'add':
-          $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, tposteditor::processcategories());
+          $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, admintheme::i()->processcategories());
           break;
 
 
@@ -66,7 +66,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
           $item['title'] = $widgettitle;
           $item['content'] = $content;
           $item['template'] = $template;
-          $item['cats'] = tposteditor::processcategories();
+          $item['cats'] = admintheme::i()->processcategories();
           $widget->items[$id] = $item;
           $widget->save();
 
