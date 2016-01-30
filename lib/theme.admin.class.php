@@ -114,7 +114,10 @@ return $result;
   }
 
   public function processcategories() {
-    return tadminhtml::check2array('category-');
+    $result = tadminhtml::check2array('category-');
+array_clean($result);
+    array_delete_value($result, 0);
+return $result;
   }
 
 } //class

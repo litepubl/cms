@@ -49,13 +49,16 @@ $items = array_keys($categories->items);
     return $result;
   }
 
-  protected function getpostcategories(tpost $post) {
+  protected function getcats(tpost $post) {
     $postitems = $post->categories;
     $categories = tcategories::i();
-    if (count($postitems) == 0) $postitems = array(
+    if (!count($postitems)) {
+$postitems = array(
       $categories->defaultid
     );
-    return self::getcategories($postitems);
+}
+
+    return $this->admintheme->getcats($postitems);
   }
 
   public static function getfileperm() {
@@ -155,7 +158,7 @@ if (!$post) {
     $args->id = $post->id;
     $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$post->id&get");
     $args->title = tcontentfilter::unescape($post->title);
-    $args->categories = $this->getpostcategories($post);
+    $args->categories = $this->getcats($post);
     $args->date = $post->posted;
     $args->url = $post->url;
     $args->title2 = $post->title2;
@@ -203,21 +206,11 @@ return $r;
     return $html->fixquote($result);
   }
 
-  public static function processcategories() {
-    return tadminhtml::check2array('category-');
-  }
-
   protected function set_post(tpost $post) {
     extract($_POST, EXTR_SKIP);
     $post->title = $title;
 
-    $cats = self::processcategories();
-    $cats = array_unique($cats);
-    array_delete_value($cats, 0);
-    array_delete_value($cats, '');
-    array_delete_value($cats, false);
-    array_delete_value($cats, null);
-    $post->categories = $cats;
+    $post->categories = $this->admintheme->processcategories();
 
     if (($post->id == 0) && (litepublisher::$options->user > 1)) $post->author = litepublisher::$options->user;
     if (isset($tags)) $post->tagnames = $tags;
