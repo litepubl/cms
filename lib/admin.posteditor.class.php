@@ -14,11 +14,6 @@ class tposteditor extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethtml($name = '') {
-    if (!$name) $name = 'editor';
-    return parent::gethtml($name);
-  }
-
   public function gethead() {
     $result = parent::gethead();
 
@@ -49,7 +44,7 @@ $items = array_keys($categories->items);
     return $result;
   }
 
-  protected function getcats(tpost $post) {
+  protected function getcategories(tpost $post) {
     $postitems = $post->categories;
     $categories = tcategories::i();
     if (!count($postitems)) {
@@ -61,65 +56,66 @@ $postitems = array(
     return $this->admintheme->getcats($postitems);
   }
 
-  public static function getfileperm() {
-    return litepublisher::$options->show_file_perm ? tadminperms::getcombo(0, 'idperm_upload') : '';
-  }
-
-public function gettabs($post = null) {
+public function getvarpost($post ) {
 if (!$post) {
-$post = basetheme::$vars['post'];
+return  basetheme::$vars['post'];
 }
 
-$args = new targs();
-$this->getpostargs($post, $args);
+return $post;
+}
 
+public function getajaxlink($idpost) {
+    return litepublisher::$site->url . '/admin/ajaxposteditor.htm' . litepublisher::$site->q . "id=$idpost&get";
+}
+
+public function gettabs($post = null) {
+$post = $this->gegvarpost($post);
+$args = new targs();
+$this->getargstab($post, $args);
 return $this->html->parsearg($this->admintheme->templates['posteditor.tabs'], $args);
+}
+
+  public function getargstab(tpost $post, targs $args) {
+    $args->id = $post->id;
+    $args->ajax = $this->getajaxlink($post->id);
+    //categories tab
+    $args->categories = $this->getcategories($post);
+    
+    //datetime tab
+        $args->date = $post->posted;
+        
+        //seo tab
+    $args->url = $post->url;
+    $args->title2 = $post->title2;
+    $args->keywords = $post->keywords;
+    $args->description = $post->description;
+    $args->head = $post->rawhead;
 }
 
   // $posteditor.files in template editor
   public function getfilelist($post = null) {
-if (!$post) {
-    $post = ttheme::$vars['post'];
+$post = $this->getvarpost($post);
+return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
+  }
+
+  public function gettext($post = null) {
+public function gettext($post = null) {
+$post = $this->gegvarpost($post);
+$args = new targs();
+$this->getargstext($post, $args);
+return $this->html->parsearg($this->admintheme->templates['posteditor.text'], $args);
 }
 
-    if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      return static ::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
-    } else {
-      return self::getuploader($post->id ? tfiles::i()->itemsposts->getitems($post->id) : array());
-    }
-  }
-
-  public static function getuploader(array $list) {
-    $html = tadminhtml::i();
-    $html->push_section('editor');
-    $args = new targs();
-    if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      $args->fileperm = static ::getfileperm();
-    } else {
-      $args->fileperm = self::getfileperm();
-    }
-
-    $files = tfiles::i();
-    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
-
-    $db = $files->db;
-    //total count files
-    $args->count = (int)$db->getcount(" parent = 0 $where");
-    //already loaded files
-    $args->items = '{}';
-    // attrib for hidden input
-    $args->files = '';
-
-    if (count($list)) {
-      $items = implode(',', $list);
-      $args->files = $items;
-      $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
-    }
-
-    $result = $html->filelist($args);
-    $html->pop_section();
-    return $result;
-  }
+  public function getargstext(tpost $post, targs $args) {
+    $args->id = $post->id;
+    $args->ajax = $this->getajaxlink($post->id);
+    $args->raw = $post->rawcontent;
+    $args->filtered = $post->filtered;
+    $args->excerpt = $post->excerpt;
+    $args->rss = $post->rss;
+    $args->more = $post->moretitle;
+    $args->upd = '';
+}
 
   public function canrequest() {
     tlocal::admin()->searchsect[] = 'editor';
@@ -128,13 +124,18 @@ if (!$post) {
     $this->idpost = $this->idget();
     if ($this->idpost > 0) {
       $posts = tposts::i();
-      if (!$posts->itemexists($this->idpost)) return 404;
+      if (!$posts->itemexists($this->idpost)) {
+return 404;
+}
     }
+
     $post = tpost::i($this->idpost);
     if (!litepublisher::$options->hasgroup('editor')) {
       if (litepublisher::$options->hasgroup('author')) {
         $this->isauthor = true;
-        if (($post->id != 0) && (litepublisher::$options->user != $post->author)) return 403;
+        if (($post->id != 0) && (litepublisher::$options->user != $post->author)) {
+return 403;
+}
       }
     }
   }
@@ -156,32 +157,9 @@ if (!$post) {
 
   public function getpostargs(tpost $post, targs $args) {
     $args->id = $post->id;
-    $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$post->id&get");
+    $args->ajax = $this->getajaxlink($post->id);
     $args->title = tcontentfilter::unescape($post->title);
-    $args->categories = $this->getcats($post);
-    $args->date = $post->posted;
-    $args->url = $post->url;
-    $args->title2 = $post->title2;
-    $args->keywords = $post->keywords;
-    $args->description = $post->description;
-    $args->head = $post->rawhead;
-
-    $args->raw = $post->rawcontent;
-    $args->filtered = $post->filtered;
-    $args->excerpt = $post->excerpt;
-    $args->rss = $post->rss;
-    $args->more = $post->moretitle;
-    $args->upd = '';
   }
-
-public function getform_tml() {
-$admintheme = $this->admintheme;
-return strtr($admintheme->templates['posteditor'], array(
-'$posteditor.tabs' => $admintheme->templates['posteditor.tabs'],
-'$posteditor.filelist' => $admintheme->templates['posteditor.filelist'],
-'$posteditor.text' => $admintheme->templates['posteditor.text'],
-));
-}
 
   public function getcontent() {
     $result = '';

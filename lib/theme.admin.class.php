@@ -7,6 +7,7 @@
  */
 
 class admintheme extends basetheme {
+public $onfileperm;
 
   public static function i() {
     $result = getinstance(__class__);
@@ -118,6 +119,36 @@ return $result;
 array_clean($result);
     array_delete_value($result, 0);
 return $result;
+  }
+
+  public function getfilelist(array $list) {
+    $args = new targs();
+$args->fileperm = '';
+
+if (is_callable($this->onfileperm)) {
+        call_user_func_array($this->onfileperm, array($args));
+} else if (litepublisher::$options->show_file_perm) {
+$args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
+}
+
+    $files = tfiles::i();
+    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
+
+    $db = $files->db;
+    //total count files
+    $args->count = (int)$db->getcount(" parent = 0 $where");
+    //already loaded files
+    $args->items = '{}';
+    // attrib for hidden input
+    $args->files = '';
+
+    if (count($list)) {
+      $items = implode(',', $list);
+      $args->files = $items;
+      $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
+    }
+
+return $this->parsearg($this->templates['posteditor.filelist'], $args);
   }
 
 } //class
