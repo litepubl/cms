@@ -3,6 +3,7 @@ bootstrap\collapse
 bootstrap\dropdown
 bootstrap\modal
 bootstrap\popover
+bootstrap\tab
 bootstrap\tooltip
 bootstrap\transition
 plugins\class-extend
