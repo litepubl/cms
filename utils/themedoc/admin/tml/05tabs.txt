@@ -1,0 +1,17 @@
+tabs = [
+<div>
+    <ul class="nav nav-tabs" role="tablist">
+        $head = [
+        <li role="presentation"><a href="#idtab-$id" aria-controls="idtab-$id" role="tab" data-toggle="tab">$title</a></li>
+        ]
+    </ul>
+
+    <div class="tab-content">
+        $tab = [
+        <div role="tabpanel" class="tab-pane fade" id="idtab-$id">
+            $content
+        </div>
+        ]
+    </div>
+</div>
+]

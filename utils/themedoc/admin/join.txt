@@ -5,6 +5,8 @@ tml/02checkbox.txt
 ru/02checkbox.txt
 tml/03table.cols.txt
 ru/03table.cols.txt
+tml/05tabs.txt
+ru/05tabs.txt
 tml/07list.txt
 ru/07list.txt
 tml/08success.txt
