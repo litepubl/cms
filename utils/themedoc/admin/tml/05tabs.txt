@@ -2,10 +2,6 @@ tabs = [
 <div class="admintabs">
     <ul class="nav nav-tabs" role="tablist">
         $head = [
-            <li role="presentation"><a href="#idtab-$id" aria-controls="idtab-$id" role="tab" data-toggle="tab">$title</a></li>
-        ]
-        
-        $ajax = [
             <li role="presentation"><a href="#idtab-$id" aria-controls="idtab-$id" role="tab" data-toggle="tab" data-ajax="$url">$title</a></li>
         ]
     </ul>

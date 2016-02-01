@@ -1,0 +1,15 @@
+tabs = [
+<div class="admintabs">
+    <ul role="tablist">
+        $head = [
+            <li role="presentation"><a href="$url#idtab-$id" aria-controls="idtab-$id" role="tab">$title</a></li>
+        ]
+    </ul>
+
+        $tab = [
+        <div role="tabpanel" id="idtab-$id">
+            $content
+        </div>
+        ]
+</div>
+]
