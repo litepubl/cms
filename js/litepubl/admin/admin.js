@@ -4,7 +4,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function($, document, window, litepubl) {
+(function($, document) {
   'use strict';
 
   $(document).ready(function() {
@@ -52,25 +52,4 @@
 
   });
 
-  litepubl.uibefore = function(event, ui) {
-    if (ui.tab.data("loaded")) {
-      event.preventDefault();
-      return;
-    }
-
-    ui.jqXHR.success(function() {
-      ui.tab.data("loaded", true);
-    });
-  };
-
-  $.inittabs = function() {
-    $(document).ready(function() {
-      $($(".admintabs").toArray().reverse()).tabs({
-        hide: true,
-        show: true,
-        beforeLoad: litepubl.uibefore
-      });
-    });
-  };
-
-}(jQuery, document, window, litepubl));
+}(jQuery, document));
