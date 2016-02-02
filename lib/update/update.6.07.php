@@ -11,6 +11,9 @@ $classes->items['datefilter'] = array('kernel.admin.php', '', 'filter.datetime.c
 $classes->items['ulist'] = array('kernel.admin.php', '', 'html.ulist.class.php');
 $classes->items['adminsecure'] = array('admin.options.secure.class.php', '');
 $classes->items['getter'] = array('kernel.php', '', 'getter.class.php');
+
+unset($classes->items['tuitabs']);
+$classes->items['tabs'] = array('kernel.admin.php', '', 'html.tabs.class.php');
 $classes->save();
 
 $m = tadminmenus::i();

@@ -195,7 +195,7 @@ makekernel($dir, 'kernel.admin.php',  array(
 'theme.admin.class.php',
 'htmlresource.class.php',
 'html.adminform.class.php',
-'html.uitabs.class.php',
+'html.tabs.class.php',
 'html.ulist.class.php',
 'html.tag.class.php',
 'html.autoform.class.php',

@@ -15,17 +15,13 @@
       if (!this.tabs.length) return;
 
       var self = this;
-      this.tabs.tabs({
-        hide: true,
-        show: true,
-        beforeLoad: litepubl.uibefore,
-
-        beforeActivate: function(event, ui) {
+      litepubl.tabs(this.tabs, {
+        before: function(panel) {
           self.init_tab(ui.newPanel);
         },
 
-        load: function(event, ui) {
-          $(".posteditor-tag", ui.panel).click(function() {
+        loaded: function(panel) {
+          $(".posteditor-tag", panel).click(function() {
             self.addtag($(this).text());
             return false;
           });
@@ -103,13 +99,12 @@
       var i = html.indexOf('<div');
       $("#posteditor-raw").before(html.substring(0, i)).after(html.substring(i));
 
-      holder.tabs({
-        hide: true,
-        show: true,
-        beforeLoad: litepubl.uibefore,
-        beforeActivate: function(event, ui) {
-          var inner = $(".tab-holder", ui.newPanel);
-          if (inner.length) inner.replaceWith(inner.get(0).firstChild.nodeValue);
+      litepubl.tabs(holder, {
+        before: function(panel) {
+          var inner = $(".tab-holder", panel);
+          if (inner.length) {
+inner.replaceWith(inner.get(0).firstChild.nodeValue);
+}
         }
       });
     },

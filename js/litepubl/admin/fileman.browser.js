@@ -54,12 +54,9 @@
           self.loadpage(holder.find(".file-items:first"), "1");
 
           var tabs = $("#posteditor-files-tabs", holder);
-          tabs.tabs({
-            hide: true,
-            show: true,
-            beforeLoad: litepubl.uibefore,
-            beforeActivate: function(event, ui) {
-              var panel = $(ui.newPanel).children();
+          litepubl.tabs(tabs, {
+            before: function(tabpanel) {
+              var panel = tabpanel.children();
               if ("empty" == panel.attr("data-status")) {
                 self.loadpage(panel, panel.attr("data-page"));
               }
