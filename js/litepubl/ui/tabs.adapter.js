@@ -1,24 +1,63 @@
 (function( $, document, litepubl){
   'use strict';
 
-litepubl.ui.tabs = Class.extend({
+litepubl.ui.Tabs = Class.extend({
 
-tabs: function(tabs) {
-return tabs.each(function() {
-var list = $(this).children('ul').children();
+init: function() {
+      this.tabs($($(".admintabs").toArray().reverse()));
+},
 
-//prepare ajax
+tabs: function(tabs, events) {
+return tabs.tabs({
+        hide: true,
+        show: true,
+        beforeLoad: this.beforeLoad,
+        beforeActivate: events && 'before' in events ? function(event, ui) {
+events.before(ui.newPanel);
+} : null,
 
-//activate first item
-if (!list.filter(".active")) {
-list.first().tab("show");
+        activate: events && 'activated' in events ? function(event, ui) {
+events.activated(ui.newPanel);
+} : null,
+
+        load: events && 'loaded' in events ? function(event, ui) {
+events.loaded(ui.panel);
+} : null
+      });
+},
+
+on: function(tabs, events) {
+for (var name in events) {
+switch (name) {
+case 'before':
+tabs.on( "tabsbeforeactivate.litepubl", function( event, ui ) {
+events.before(ui.newPanel);
+} );
+break;
+
+case 'activated':
+tabs.on("tabsactivate.litepubl", function( event, ui ) {
+events.activated(ui.newPanel);
+} );
+break;
+
+case 'loaded':
+tabs.on( "tabsload.litepubl", function( event, ui ) {
+events.loaded(ui.panel);
+} );
+break;
+}
 }
 },
 
-add: function() {
-}
+off: function(tabs) {
+tabs.off('.litepubl');
+},
 
-before: function(event, ui) {
+add: function() {
+},
+
+beforeLoad: function(event, ui) {
     if (ui.tab.data("loaded")) {
       event.preventDefault();
     } else {
@@ -26,23 +65,12 @@ before: function(event, ui) {
       ui.tab.data("loaded", true);
     });
 }
-  },
-
-  $.inittabs = function() {
-      $($(".admintabs").toArray().reverse()).tabs({
-        hide: true,
-        show: true,
-        beforeLoad: this.before
-      });
-    });
-  };
-
+  }
 
 });
-  
-litepubl.tabs = new litepubl.bs.tabs(".admintabs");
 
-  $(document).ready(function() {
+    $(document).ready(function() {
+litepubl.tabs = new litepubl.ui.Tabs();
   });
 
 })( jQuery, document, litepubl);

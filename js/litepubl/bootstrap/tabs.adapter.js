@@ -1,66 +1,86 @@
 (function( $, document, litepubl){
   'use strict';
 
-litepubl.bootstrap.tabs = Class.extend({
+litepubl.bootstrap.Tabs = Class.extend({
 
 init: function() {
 var self = this;
 $(document).on('show.bs.tab', function(e) {
-self.activate($(e.target));
+var link = $(this);
+self.before(link);
+self.event('before', link);
 })
 .on('shown.bs.tab', function(e) {
-self.activated($(e.target));
+self.event('activated', $(e.target));
 });
 
-$(".nav-tab").each(function() {
-});
+      this.navtabs($($(".nav-tabs").toArray().reverse()));
 },
 
-tabs: function(tabs) {
-var self = this;
-return tabs.each(function() {
-var ul = $(this).children("ul");
+tabs: function(tabs, events) {
+this.navtabs(tabs.children('.nav-tabs'));
+if (events) {
+tabs.data('tabevents.litepubl, events);
+}
+},.lite
+
+
+navtabs: function(navtabs) {
 //activate first item
+return navtabs.each(function() {
+var ul = $(this);
 if (!ul.children(".active").length) {
 ul.find("a:first").click();
 }
 });
 },
 
-activate: function(link) {
+before: function(link) {
 var url = link.attr("data-ajax");
 if (url && !link.data("loaded")) {
 this.load(link, url);
 }
+},
 
+getpanel: function(link) {
+var panel = $(link.data("target") || link.attr("data-target") ||
+ this.striphref(link.attr("href")) || 
+('#' + link.attr('aria-controls')));
+
+if (panel) {
+link.data('target', panel);
+}
+
+return panel;
 },
 
 load: function(link, url) {
 link.data("loaded", "loading");
 var tml = litepubl.tml.bootstraptabs;
-
-var panel = $(link.data("target") || link.attr("data-target") ||
- this.striphref(link.attr("href")) || 
-('#' + link.attr('aria-controls')));
+var panel = this.getpanel(link);
 
 //create panel if not exists
 if (!panel.length) {
 var parent = link.closest("ul").parent().children(".tab-content:first");
 var html = tml.tab.replace(/%%id%%/gim, litepubl.guid++);
 panel = $(html).appendTo(parent);
+link.data("target", panel);
 }
 
-link.data("target", panel);
 panel.html(tml.spinner);
 			panel.attr( "aria-busy", "true" );
 
-    return $.ajax(this.getajax(url, panel)).fail( function(jq, textStatus, errorThrown) {
+    return $.ajax(this.getajax(url, link, panel))
+.always(function() {
 			panel.removeAttr( "aria-busy");
+link.data("loaded", "loaded");
+})
+.fail( function(jq, textStatus, errorThrown) {
 alert(jq.responseText);
 });
 },
 
-getajax: function(url, panel) {
+getajax: function(url, link, panel) {
 return {
       type: 'get',
       url: url,
@@ -68,7 +88,7 @@ return {
       dataType: "html",
       success: function(html) {
 panel.html(html);
-			panel.removeAttr( "aria-busy");
+self.event('loaded', link);
 }
 };
 },
@@ -79,15 +99,30 @@ return url.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
 }
 
 return '';
-}
+},
 
 add: function() {
+},
+
+on: function(tabs, events) {
+tabs.data("tabevents.litepubl", events);
+},
+
+off: function(tabs) {
+tabs.data('tabevents.litepubl', false);
+},
+
+event: function(name, link) {
+var events = link.closest('.adminpanel').data('tabevents.litepubl');
+if (events && name in events) {
+events[name](this.getpanel(link));
+}
 }
 
 });
   
-litepubl.tabs = new litepubl.bs.tabs(".admintabs");
   $(document).ready(function() {
+litepubl.tabs = new litepubl.bootstrap.Tabs();
   });
 
 })( jQuery, document, litepubl);

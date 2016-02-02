@@ -1,8 +1,8 @@
 (function( litepubl){
   'use strict';
 
-litepubl.tml.bootstrap = litepubl.tml.bootstrap || {};
-litepubl.tml.bootstrap.tabs = {
+litepubl.tml.ui = litepubl.tml.ui || {};
+litepubl.tml.ui.tabs = {
 tabs: '<div class="admintabs"><ul class="nav nav-tabs" role="tablist">%%head%%</ul>' +
     '<div class="tab-content">%%tab%%</div></div>',
 head: '<li role="presentation"><a href="#tabpanel-%%id%%" aria-controls="tabpanel-%%id%%" role="tab" data-toggle="tab">%%title%%</a></li>',
