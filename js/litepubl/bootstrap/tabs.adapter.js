@@ -1,21 +1,28 @@
 (function( $, document, litepubl){
   'use strict';
 
-litepubl.bs.tabs = Class.extend({
-spinner: '<span class="fa fa-spin fa-spinner"></span>',
+litepubl.bootstrap.tabs = Class.extend({
+
+init: function() {
+var self = this;
+$(document).on('show.bs.tab', function(e) {
+self.activate($(e.target));
+})
+.on('shown.bs.tab', function(e) {
+self.activated($(e.target));
+});
+
+$(".nav-tab").each(function() {
+});
+},
 
 tabs: function(tabs) {
 var self = this;
 return tabs.each(function() {
 var ul = $(this).children("ul");
-ul.off("click.litepubl.tab").on("click.litepubl.tab", "a", function(e) {
-e.preventDefault();
-self.activate($(this));
-});
-
 //activate first item
 if (!ul.children(".active").length) {
-self.activate(ul.find("a:first"));
+ul.find("a:first").click();
 }
 });
 },
@@ -26,18 +33,21 @@ if (url && !link.data("loaded")) {
 this.load(link, url);
 }
 
-link.tab("show");
 },
 
 load: function(link, url) {
 link.data("loaded", "loading");
 var tml = litepubl.tml.bootstraptabs;
 
+var panel = $(link.data("target") || link.attr("data-target") ||
+ this.striphref(link.attr("href")) || 
+('#' + link.attr('aria-controls')));
+
 //create panel if not exists
-var panel = $(link.data("target") || link.attr("data-target") || this.striphref(link.attr("href")));
 if (!panel.length) {
 var parent = link.closest("ul").parent().children(".tab-content:first");
-panel = $(tml.tab).appendTo(parent);
+var html = tml.tab.replace(/%%id%%/gim, litepubl.guid++);
+panel = $(html).appendTo(parent);
 }
 
 link.data("target", panel);
@@ -45,6 +55,7 @@ panel.html(tml.spinner);
 			panel.attr( "aria-busy", "true" );
 
     return $.ajax(this.getajax(url, panel)).fail( function(jq, textStatus, errorThrown) {
+			panel.removeAttr( "aria-busy");
 alert(jq.responseText);
 });
 },
@@ -67,7 +78,7 @@ if (url) {
 return url.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
 }
 
-return false;
+return '';
 }
 
 add: function() {
