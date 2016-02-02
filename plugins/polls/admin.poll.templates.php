@@ -12,9 +12,6 @@ class tadminpolltemplates extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
 
   public function getcontent() {
     $result = '';
@@ -50,8 +47,7 @@ class tadminpolltemplates extends tadminmenu {
             $args->name = tcontentfilter::unescape($tml['name']);
             $args->title = tcontentfilter::unescape($tml['title']);
             //$args->items = implode("\n", $tml['items']);
-            $tabs = new tuitabs();
-            //$tabs->add($lang->pollitems, "[editor=items]");
+      $tabs = new tabs($this->admintheme);
             $tabs->add($lang->opened, "[editor=opened]");
             $tabs->add($lang->closed, "[editor=closed]");
             $args->formtitle = $lang->edittemplate;

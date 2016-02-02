@@ -28,7 +28,7 @@ class tadminviewsspec extends tadminmenu {
     $lang = tlocal::i('views');
     $args = new targs();
 
-    $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
     $inputs = '';
     foreach (self::getspecclasses() as $classname) {
       $obj = getinstance($classname);
@@ -44,9 +44,9 @@ class tadminviewsspec extends tadminmenu {
     }
 
     $args->formtitle = $lang->defaults;
-    $result.= tuitabs::gethead() . $html->adminform($tabs->get() , $args);
+    $result.= $html->adminform($tabs->get() , $args);
 
-    return $html->fixquote($result);
+    return $result;
   }
 
   public function processform() {

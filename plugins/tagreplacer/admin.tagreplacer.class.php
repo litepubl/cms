@@ -12,14 +12,10 @@ class tadmintagreplacer {
     return getinstance(__class__);
   }
 
-  public function gethead() {
-    return tuitabs::gethead();
-  }
-
   public function getcontent() {
     $plugin = ttagreplacer::i();
     $html = tadminhtml::i();
-    $tabs = new tuitabs();
+    $tabs = new tabs();
     $args = targs::i();
     $about = tplugins::getabout('tagreplacer');
     $args->formtitle = $about['name'];

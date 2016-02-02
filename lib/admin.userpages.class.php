@@ -12,10 +12,6 @@ class tadminuserpages extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
-
   public function getiduser() {
     if (litepublisher::$options->ingroup('admin')) {
       $id = $this->idget();
@@ -47,7 +43,7 @@ class tadminuserpages extends tadminmenu {
     }
     $args->add($item);
     $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
-    $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
     $tabs->add($lang->title, '[text=name] [text=website]');
     if ('admin' == litepublisher::$options->group) {
       $tabs->add($lang->view, tadminviews::getcomboview($item['idview']));

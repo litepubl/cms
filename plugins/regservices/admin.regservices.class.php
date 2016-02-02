@@ -12,14 +12,10 @@ class tadminregservices implements iadmin {
     return getinstance(__class__);
   }
 
-  public function gethead() {
-    return tuitabs::gethead();
-  }
-
   public function getcontent() {
     $plugin = tregservices::i();
     $html = tadminhtml::i();
-    $tabs = new tuitabs();
+    $tabs = new tabs();
     $args = targs::i();
     $lang = tplugins::getnamelang($plugin->dirname);
     $args->formtitle = $lang->options;

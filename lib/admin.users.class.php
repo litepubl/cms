@@ -12,10 +12,6 @@ class tadminusers extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
-
   public function getcontent() {
     $result = '';
     $users = tusers::i();
@@ -46,7 +42,7 @@ class tadminusers extends tadminmenu {
           $args->formtitle = $item['name'];
           $args->status = tadminhtml::array2combo($statuses, $item['status']);
 
-          $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
           $tabs->add($lang->login, '[text=email] [password=password]');
           $tabs->add($lang->groups, '[combo=status]' . tadmingroups::getgroups($item['idgroups']));
           $tabs->add('Cookie', '[text=cookie] [text=expired] [text=registered] [text=trust]');
@@ -67,7 +63,7 @@ class tadminusers extends tadminmenu {
         $args->email = '';
         $args->action = 'add';
 
-        $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
         $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
         $tabs->add($lang->groups, tadmingroups::getgroups(array()));
 

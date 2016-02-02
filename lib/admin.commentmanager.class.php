@@ -12,10 +12,6 @@ class tadmincommentmanager extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
-
   public function getcontent() {
     $result = '';
     $cm = tcommentmanager::i();
@@ -23,7 +19,7 @@ class tadmincommentmanager extends tadminmenu {
     $html = $this->gethtml('comments');
     $lang = tlocal::admin('commentmanager');
     $args = new targs();
-    $tabs = new tuitabs();
+    $tabs = new tabs($this->admintheme);
     $args->comstatus = tadminhtml::array2combo(array(
       'closed' => $lang->closed,
       'reg' => $lang->reg,

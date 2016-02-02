@@ -12,15 +12,11 @@ class adminthemeparser extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
-
   public function getcontent() {
     $html = $this->html;
     $lang = tlocal::i('options');
     $args = targs::i();
-    $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
 
     $themeparser = tthemeparser::i();
     $args->tagfiles = implode("\n", $themeparser->tagfiles);

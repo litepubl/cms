@@ -12,29 +12,24 @@ class tadminjsmerger extends tadminmenu {
     return self::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
-
   public function getmerger() {
     return tjsmerger::i();
   }
 
   public function getcontent() {
     $merger = $this->getmerger();
-    $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
     $html = $this->html;
     $lang = tlocal::i('views');
     $args = targs::i();
     $args->formtitle = $this->title;
     foreach ($merger->items as $section => $items) {
-      $tab = new tuitabs();
+      $tab = new tabs($this->admintheme);
       $tab->add($lang->files, $html->getinput('editor', $section . '_files', tadminhtml::specchars(implode("\n", $items['files'])) , $lang->files));
-      $tabtext = new tuitabs();
       foreach ($items['texts'] as $key => $text) {
-        $tabtext->add($key, $html->getinput('editor', $section . '_text_' . $key, tadminhtml::specchars($text) , $key));
+        $tab->add($key, $html->getinput('editor', $section . '_text_' . $key, tadminhtml::specchars($text) , $key));
       }
-      $tab->add($lang->text, $tabtext->get());
+
       $tabs->add($section, $tab->get());
     }
 

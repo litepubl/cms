@@ -12,9 +12,6 @@ class tadminpolltypes extends tadminmenu {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    return parent::gethead() . tuitabs::gethead();
-  }
 
   public function getcontent() {
     $result = '';
@@ -26,7 +23,7 @@ class tadminpolltypes extends tadminmenu {
     $type = isset($_GET['type']) ? $_GET['type'] : '';
     if (isset($types->items[$type])) {
       $args->type = $type;
-      $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
       foreach ($types->items[$type] as $name => $value) {
         $args->$name = $value;
         $tabs->add($lang->$name, "[editor=$name]");

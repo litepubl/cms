@@ -9,7 +9,6 @@
 class tabs {
 public$head;
 public $body;
-  public $customdata;
 public $_admintheme;
   private static $index = 0;
 
@@ -17,7 +16,6 @@ public $_admintheme;
 $this->_admintheme = $admintheme;
     $this->head = array();
     $this->body = array();
-    $this->customdata = false;
   }
 
 public function getadmintheme() {
@@ -34,8 +32,6 @@ return strtr($this->getadmintheme()->templates['tabs'], array(
 '$head' => implode("\n", $this->head),
 '$tab' => implode("\n", $this->body),
 ));
-
-    $data = $this->customdata ? sprintf('data-custom="%s"', str_replace('"', '&quot;', json_encode($this->customdata))) : '';
   }
 
   public function add($title, $content) {
@@ -59,10 +55,6 @@ $this->body[] = strtr($this->admintheme->templates['tabs.tab'], array(
 '$id' => $id
 '$content' => $content
 ));
-  }
-
-  public static function gethead() {
-    return '<script type="text/javascript">$.inittabs();</script>';
   }
 
 } //class

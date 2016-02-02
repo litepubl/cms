@@ -21,13 +21,13 @@ class tadminblackip {
     $args->ipstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
     $args->wordstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
 
-    $tabs = new tuitabs();
+      $tabs = new tabs();
     $tabs->add($lang->wordtitle, '[combo=wordstatus] [editor=words]');
     $tabs->add('IP', '[combo=ipstatus] [editor=ip]');
 
     $args->formtitle = $lang->formtitle;
     $html = tadminhtml::i();
-    return tuitabs::gethead() . $html->adminform($tabs->get() , $args);
+    return $html->adminform($tabs->get() , $args);
   }
 
   public function processform() {

@@ -152,7 +152,7 @@ class tadminviews extends tadminmenu {
         }
 
         $result = self::getviewform($this->url);
-        $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
         $menuitems = array();
         foreach ($views->items as $itemview) {
           $class = $itemview['menuclass'];
@@ -201,7 +201,7 @@ class tadminviews extends tadminmenu {
         $result.= $html->h4->help;
 
         $args->formtitle = $lang->edit;
-        $result.= $html->adminform($tabs->get() , $args) . tuitabs::gethead();
+        $result.= $html->adminform($tabs->get() , $args);
         break;
 
 

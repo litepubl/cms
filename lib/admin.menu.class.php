@@ -93,7 +93,7 @@ class tadminmenumanager extends tadminmenu {
         [hidden=id]', $args);
         }
 
-        $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
         $tabs->add($lang->title, '
       [text=title]
       [combo=parent]
@@ -108,7 +108,7 @@ class tadminmenumanager extends tadminmenu {
 
         $ajaxeditor = tajaxmenueditor::i();
         $args->formtitle = $lang->edit;
-        return tuitabs::gethead() . $html->adminform($tabs->get() . sprintf('<div>%s</div>', $ajaxeditor->geteditor('raw', $id == 0 ? '' : $menuitem->rawcontent, true)) , $args);
+        return  $html->adminform($tabs->get() . sprintf('<div>%s</div>', $ajaxeditor->geteditor('raw', $id == 0 ? '' : $menuitem->rawcontent, true)) , $args);
       }
   }
 

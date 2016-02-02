@@ -12,10 +12,6 @@ class tadminitemsreplacer implements iadmin {
     return getinstance(__class__);
   }
 
-  public function gethead() {
-    return tuitabs::gethead();
-  }
-
   public function getcontent() {
     $result = '';
     $plugin = titemsreplacer::i();
@@ -29,7 +25,7 @@ class tadminitemsreplacer implements iadmin {
       $id = (int)$_GET['id'];
       if (isset($plugin->items[$id])) {
         $args->formtitle = sprintf($lang->formtitle, $views->items[$id]['name']);
-        $tabs = new tuitabs();
+        $tabs = new tabs();
 
         $tabs->add($lang->add, $html->getinput('text', 'addtag', '', $lang->addtag) . $html->getinput('editor', 'addreplace', '', $lang->replace));
 

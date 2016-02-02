@@ -64,7 +64,7 @@ class tadmintags extends tadminmenu {
       $args->parent = tadminhtml::array2combo($parents, $item['parent']);
       $args->order = tadminhtml::array2combo(array_combine(range(0, 9) , range(1, 10)) , $item['customorder']);
 
-      $tabs = new tuitabs();
+      $tabs = new tabs($this->admintheme);
       $tabs->add($lang->title, '
       [text=title]
       [combo=parent]
@@ -76,7 +76,7 @@ class tadmintags extends tadminmenu {
       $tabs->ajax('SEO', "$ajax=seo");
 
       $form = new adminform($args);
-      $result.= $html->adminform($tabs->get() , $args) . tuitabs::gethead();
+      $result.= $html->adminform($tabs->get() , $args);
     }
 
     //table
