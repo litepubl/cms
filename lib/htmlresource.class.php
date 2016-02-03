@@ -275,7 +275,7 @@ class tadminhtml {
   public function buildtable(array $items, array $tablestruct) {
     $tb = new tablebuilder();
     $tb->setstruct($tablestruct);
-    return $db->build($items);
+    return $tb->build($items);
   }
 
   public function getitemscount($from, $to, $count) {

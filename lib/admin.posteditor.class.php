@@ -98,7 +98,6 @@ $post = $this->getvarpost($post);
 return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
   }
 
-  public function gettext($post = null) {
 public function gettext($post = null) {
 $post = $this->gegvarpost($post);
 $args = new targs();

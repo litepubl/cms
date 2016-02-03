@@ -48,12 +48,12 @@ $admintheme = $this->getadmintheme();
 $this->head [] = strtr($admintheme->templates['tabs.head'], array(
 '$id' => $id,
 '$title' => $title,
-'$ajax' => $url,
+'$url' => $url,
 ));
 
-$this->body[] = strtr($this->admintheme->templates['tabs.tab'], array(
-'$id' => $id
-'$content' => $content
+$this->body[] = strtr($admintheme->templates['tabs.tab'], array(
+'$id' => $id,
+'$content' => $content,
 ));
   }
 

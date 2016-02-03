@@ -1,12 +1,13 @@
 (function( $, document, litepubl){
   'use strict';
 
+litepubl.bootstrap = litepubl.bootstrap || {};
 litepubl.bootstrap.Tabs = Class.extend({
 
 init: function() {
 var self = this;
 $(document).on('show.bs.tab', function(e) {
-var link = $(this);
+var link = $(e.target);
 self.before(link);
 self.event('before', link);
 })
@@ -20,10 +21,9 @@ self.event('activated', $(e.target));
 tabs: function(tabs, events) {
 this.navtabs(tabs.children('.nav-tabs'));
 if (events) {
-tabs.data('tabevents.litepubl, events);
+tabs.data('tabevents.litepubl', events);
 }
-},.lite
-
+},
 
 navtabs: function(navtabs) {
 //activate first item
@@ -56,7 +56,7 @@ return panel;
 
 load: function(link, url) {
 link.data("loaded", "loading");
-var tml = litepubl.tml.bootstraptabs;
+var tml = litepubl.tml.bootstrap.tabs;
 var panel = this.getpanel(link);
 
 //create panel if not exists
@@ -70,7 +70,11 @@ link.data("target", panel);
 panel.html(tml.spinner);
 			panel.attr( "aria-busy", "true" );
 
-    return $.ajax(this.getajax(url, link, panel))
+var self = this;
+    return $.ajax(this.getajax(url, function(html) {
+panel.html(html);
+self.event('loaded', link);
+}))
 .always(function() {
 			panel.removeAttr( "aria-busy");
 link.data("loaded", "loaded");
@@ -80,16 +84,13 @@ alert(jq.responseText);
 });
 },
 
-getajax: function(url, link, panel) {
+getajax: function(url, success) {
 return {
       type: 'get',
       url: url,
       cache: false,
       dataType: "html",
-      success: function(html) {
-panel.html(html);
-self.event('loaded', link);
-}
+      success: success
 };
 },
 
