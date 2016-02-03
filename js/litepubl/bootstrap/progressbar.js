@@ -2,7 +2,7 @@
   'use strict';
 
 litepubl.bootstrap = litepubl.bootstrap || {};
-litepubl.bootstrap.Tabs = Class.extend({
+litepubl.bootstrap.Progress = Class.extend({
 
 init: function() {
 var self = this;
@@ -124,7 +124,7 @@ events[name](this.getpanel(link));
 });
   
   $(document).ready(function() {
-litepubl.tabs = new litepubl.bootstrap.Tabs();
+litepubl.progressbar = new litepubl.bootstrap.Progressbar();
   });
 
 })( jQuery, document, litepubl);

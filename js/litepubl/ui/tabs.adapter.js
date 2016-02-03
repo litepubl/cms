@@ -1,6 +1,7 @@
 (function( $, document, litepubl){
   'use strict';
 
+litepubl.ui = litepubl.ui || {};
 litepubl.ui.Tabs = Class.extend({
 
 init: function() {
