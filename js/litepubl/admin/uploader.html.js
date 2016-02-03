@@ -51,7 +51,9 @@
     },
 
     start: function() {
-      if (this.queue.length) this.uploadfile(this.queue[0]);
+      if (this.queue.length) {
+this.uploadfile(this.queue[0]);
+}
     },
 
     next: function() {

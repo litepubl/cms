@@ -14,9 +14,6 @@
     mime: false, // regexp for html as 'image/*' to only accept images
     types: "*.*", // for flash uploader
     holder: false,
-    progressbar: false,
-    htmlprogress: '<div id="progressbar"></div>',
-    idprogress: "#progressbar",
 
     init: function(options) {
       options = $.extend({
@@ -50,8 +47,6 @@
       } else {
         this.handler = new litepubl.FlashUploader(this);
       }
-
-      this.progressbar = this.holder.append(this.htmlprogress).find(this.idprogress);
     },
 
     geturl: function() {
@@ -59,9 +54,7 @@
     },
 
     setpercent: function(percent) {
-      this.progressbar.progressbar({
-        value: percent
-      });
+litepubl.progressbar.setvalue(this.holder, percent);
     },
 
     setprogress: function(current, total) {
@@ -72,8 +65,12 @@
       }
     },
 
+    showprogress: function() {
+litepubl.progressbar.add(this.holder);
+},
+
     hideprogress: function() {
-      this.progressbar.progressbar("destroy");
+litepubl.progressbar.remove(this.holder);
     },
 
     error: function(mesg) {
@@ -110,6 +107,7 @@
     before: function() {
       this.addparams();
       this.onbefore.fire(this);
+this.showprogress();
     },
 
     complete: function() {
