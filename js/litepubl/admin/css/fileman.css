@@ -73,7 +73,7 @@
     filter: alpha(opacity=30);
 }
 
-#posteditor-files-tabs.file-items {
+.files-tab {
     overflow-y: auto;
     height: 260px;
 }

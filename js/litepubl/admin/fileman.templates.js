@@ -25,15 +25,7 @@
       '<li><span class="text-right">%%size%%</span></li>' +
       '</ul>',
 
-    tabs: '<div id="posteditor-files-tabs">' +
-      '<ul>%%head%%</ul>' +
-      '%%body%%' +
-      '</div>',
-
-    tabhead: '<li><a href="#filepage-%%index%%">%%index%%</a></li>',
-    tab: '<div class="files-tab" id="filepage-%%index%%">' +
-      '<div class="file-items" data-page="%%index%%" data-status="empty"></div>' +
-      '</div>'
+    tab: '<div class="files-tab file-items" data-page="%%page%%" data-status="empty"></div>'
   };
 
 })(window);

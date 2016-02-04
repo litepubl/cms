@@ -16,8 +16,8 @@
       '}',
 
     init: function(fileman) {
-      this.pages = {};
       this.fileman = fileman;
+      this.pages = {};
       this.open();
     },
 
@@ -26,10 +26,8 @@
     },
 
     open: function() {
-      var winwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-      var winheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-      //dialog height = image_height * 2 + 3 * margin + tabs_height + default_dialog_height
-      //var dialog_height = 120 * 2 + 6*3 + 81 + 156;
+      var winwidth = $(window).width();
+      var winheight = $(window).height();
       var dialog_height = 495;
 
       var self = this;
@@ -76,18 +74,29 @@
     },
 
     get_html: function() {
-      var tml = litepubl.tml.fileman;
+      var tml_tab = litepubl.tml.fileman.tab;
+var tml = litepubl.tabs.gettml();
       var pages = Math.ceil(this.fileman.count / this.perpage);
       var head = "";
       var body = "";
-      for (var i = 1; i <= pages; i++) {
-        head += tml.tabhead.replace(/%%index%%/gim, i);
-        body += tml.tab.replace(/%%index%%/gim, i);
+
+      for (var page = 1; page <= pages; page++) {
+        head += $.parsetml(tml.head, {
+id: ++litepubl.guid,
+title: page
+});
+
+        body += $.parsetml(tml.tab, {
+id: litepubl.guid,
+content: $.parsetml(tml_tab, {
+page: page
+})
+});
       }
 
       return $.parsetml(tml.tabs, {
         head: head,
-        body: body
+        tab: body
       });
     },
 
@@ -95,12 +104,10 @@
       if (page in this.pages) {
         panel.attr("data-status", "loaded");
         panel.append(this.getpage(page));
-        return;
-      }
-
-      var self = this;
+      } else {
       panel.attr("data-status", "loading");
 
+      var self = this;
       $.jsonrpc({
         type: 'get',
         method: "files_getpage",
@@ -119,6 +126,7 @@
           panel.append('<p>' + message + '</p>');
         }
       });
+}
     },
 
     addpage: function(page, items) {

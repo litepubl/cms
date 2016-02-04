@@ -55,7 +55,9 @@
       tabs.off('.litepubl');
     },
 
-    add: function() {},
+    gettml: function() {
+return litepubl.tml.ui.tabs;
+},
 
     beforeLoad: function(event, ui) {
       if (ui.tab.data("loaded")) {
