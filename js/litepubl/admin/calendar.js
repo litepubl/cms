@@ -10,8 +10,9 @@
   litepubl.Calendar = Class.extend({
     holderclass: ".calendar",
     rangeclass: ".date-range",
-    ui_datepicker: false,
     dialogopened: false,
+width: 300,
+tml: '<div  class="datepicker-container"><div></div></div>',
 
     init: function() {
       this.on(this.holderclass);
@@ -46,41 +47,23 @@
       });
     },
 
-    load: function(callback) {
-      if (this.ui_datepicker) return this.ui_datepicker.done(callback);
-
-      var self = this;
-      this.ui_datepicker = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker.min.js', function() {
-        if (ltoptions.lang == 'en') return callback();
-        self.ui_datepicker = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker-' + ltoptions.lang + '.min.js', callback);
-      });
-    },
-
-    datepicker: function(holder, edit) {
-      $(holder).datepicker({
-        altField: edit,
-        altFormat: "dd.mm.yy",
-        dateFormat: "dd.mm.yy",
-        defaultDate: edit.val(),
-        changeYear: true
-      });
-    },
-
     open: function(edit) {
-      if (this.dialogopened) return;
+      if (this.dialogopened) return false;
       this.dialogopened = true;
+
       var self = this;
-      this.load(function() {
+      litepubl.datepicker.ready(function() {
         $.litedialog({
           title: lang.admin.calendar,
-          html: '<div  class="datepicker-container"><div id="popup-calendar"></div></div>',
-          width: 300,
+          html: self.tml,
+          width: self.width,
           close: function() {
             self.dialogopened = false;
           },
 
-          open: function() {
-            self.datepicker("#popup-calendar", edit);
+          open: function(dialog) {
+var holder = self.getcontainer(dialog);
+            litepubl.datepicker.datepicker(holder, edit);
           },
 
           buttons: [{
@@ -90,7 +73,11 @@
         });
       });
 
-    }
+    },
+
+getcontainer: function(dialog) {
+return dialog.find(".datepicker-container").children();
+}
 
   }); //class
 
