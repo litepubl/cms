@@ -1,23 +1,23 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function ($, document, ltoptions) {
+(function($, document, ltoptions) {
   'use strict';
-  
+
   $(document).ready(function() {
     var theme = ltoptions.theme;
-    theme.comments= $.extend({
+    theme.comments = $.extend({
       comments: "#commentlist",
       hold: "#holdcommentlist",
       loadhold: "#load-hold-comments",
       comment: "#comment-",
       content: "#commentcontent-",
-      buttons:".moderationbuttons",
+      buttons: ".moderationbuttons",
       replyclass: "replycomment",
-      quoteclass : "quotecomment",
+      quoteclass: "quotecomment",
       button: '<button type="button" class="btn btn-default tooltip-toggle" data-moder="%%name%%" title="%%title%%"><span class="fa moder-%%name%%" aria-hidden="true"></span> <span class="sr-only">%%title%%</span></button>',
       form: "#commentform",
       editor: "#comment",
@@ -32,14 +32,14 @@
       holdcontainer: false,
       holdtemplate: false
     }, theme.comments);
-    
+
     var comtheme = theme.comments;
-    
+
     // normalize ismoder value
     comtheme.ismoder = (comtheme.ismoder === 'true') || (comtheme.ismoder === true);
-    
+
     //cache dom search
-    comtheme.comments= $(comtheme.comments);
+    comtheme.comments = $(comtheme.comments);
     comtheme.form = $(comtheme.form);
     if (comtheme.form.length) {
       comtheme.editor = comtheme.form.find(comtheme.editor);

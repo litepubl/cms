@@ -1,18 +1,22 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
 function widget_load(node, id, sidebar) {
   $(node).attr("onclick", "");
   var comment = $(node).findcomment(id);
-  if (! comment) return alert('Widget not found');
-  $.get(ltoptions.url + '/getwidget.htm',
-{id: id, sidebar: sidebar, themename: ltoptions.theme.name, idurl: ltoptions.idurl},
-  function (html) {
-    widget_add(node, $(comment).replaceComment( html));
-  }, 'html');
+  if (!comment) return alert('Widget not found');
+  $.get(ltoptions.url + '/getwidget.htm', {
+      id: id,
+      sidebar: sidebar,
+      themename: ltoptions.theme.name,
+      idurl: ltoptions.idurl
+    },
+    function(html) {
+      widget_add(node, $(comment).replaceComment(html));
+    }, 'html');
 }
 
 function widget_findcomment(node, id) {
@@ -21,8 +25,8 @@ function widget_findcomment(node, id) {
 
 function widget_inline(node) {
   var comment = $(node).findcomment(false);
-  if (! comment) return alert('Widget not found');
-  widget_add(node,   $(comment).replaceComment());
+  if (!comment) return alert('Widget not found');
+  widget_add(node, $(comment).replaceComment());
 }
 
 function widget_add(node, widget) {
@@ -43,26 +47,26 @@ $(document).ready(function() {
       widget_inline(this);
       return false;
     });
-    
+
     var a = '<a class="expandwidget" href="">' + lang.widgetlang.expand + '</a>';
     $(".inlinewidget, .ajaxwidget").each(function() {
       $(a).appendTo(this).one("click", function() {
-        if ($(this).parent().hasClass("inlinewidget")) {
-          widget_inline(this);
-        } else {
-          var rel = $(this).parent().attr("rel").split("-");
-          widget_load(this, rel[1], rel[2]);
-        }
-        return false;
-      })
-      .click(function() {
-        var self = $(this);
-        self.toggleClass("expandwidget colapsewidget");
-        self.text(self.hasClass("expandwidget") ? lang.widgetlang.expand : lang.widgetlang.colapse);
-        return false;
-      });
+          if ($(this).parent().hasClass("inlinewidget")) {
+            widget_inline(this);
+          } else {
+            var rel = $(this).parent().attr("rel").split("-");
+            widget_load(this, rel[1], rel[2]);
+          }
+          return false;
+        })
+        .click(function() {
+          var self = $(this);
+          self.toggleClass("expandwidget colapsewidget");
+          self.text(self.hasClass("expandwidget") ? lang.widgetlang.expand : lang.widgetlang.colapse);
+          return false;
+        });
     });
-    
+
     $(".widget-load").one("click", function() {
       var self = $(this);
       widget_load(this, self.data("idwidget"), self.data("sidebar"));

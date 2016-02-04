@@ -1,14 +1,14 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function ($, document, window) {
+(function($, document, window) {
   'use strict';
-  
+
   window.litepubl.Commentquote = Class.extend({
-    
+
     init: function(opt) {
       var self = this;
       var theme = ltoptions.theme.comments;
@@ -19,15 +19,15 @@
         return false;
       });
     },
-    
-    getquoted: function( authorname, content) {
+
+    getquoted: function(authorname, content) {
       if (content == '') {
         return lang.comment.to + " [b]" + authorname + "[/b]: ";
       } else {
         return "[b]" + authorname + "[/b] " + lang.comment.says + ":\n[quote]" + content + "[/quote]\n";
       }
     },
-    
+
     quote: function(id, authorname) {
       if (window.getSelection) {
         var sel = window.getSelection();
@@ -38,18 +38,18 @@
       } else {
         var sel = '';
       }
-      
+
       if (sel == '') sel = $("#commentcontent-" + id).text();
-      var area =   ltoptions.theme.comments.editor;
+      var area = ltoptions.theme.comments.editor;
       area.val(area.val() + this.getquoted(authorname, sel)).focus();
     },
-    
+
     reply: function(id, authorname) {
-      var area =   ltoptions.theme.comments.editor;
+      var area = ltoptions.theme.comments.editor;
       area.val(area.val() + this.getquoted(authorname, ''));
     }
   });
-  
+
   $(document).ready(function() {
     if (ltoptions.theme.comments.form.length) {
       litepubl.commentquote = new litepubl.Commentquote();

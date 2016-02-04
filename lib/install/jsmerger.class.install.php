@@ -168,3 +168,61 @@ function tjsmerger_bootstrap_files() {
     '/js/fonts/css/font-awesome.min.js',
   );
 }
+
+function tjsmerger_bootstrap_admin($js, $add = true) {
+$items = array(
+'admin' => array(
+'/js/bootstrap/tab.min.js',
+'/js/litepubl/bootstrap/tabs.keys.min.js',
+'/js/litepubl/bootstrap/tabs.tml.min.js',
+'/js/litepubl/bootstrap/tabs.adapter.min.js',
+),
+
+'posteditor' => array(
+'/js/litepubl/bootstrap/progressbar.adapter.min.js',
+),
+);
+
+foreach ($items as $section => $filenames) {
+foreach ($filenames as $filename) {
+if ($add) {
+$js->add($section, $filename);
+} else {
+$js->deletefile($section, $filename);
+}
+}
+}
+
+}
+
+function tjsmerger_ui_admin($js, $add = true) {
+$items = array(
+'admin' => array(
+'/js/jquery/ui/core.min.js',
+'/js/jquery/ui/widget.min.js',
+'/js/jquery/ui/mouse.min.js',
+'/js/jquery/ui/position.min.js',
+'/js/jquery/ui/effect.min.js',
+'/js/jquery/ui/tabs.min.js',
+
+'/js/litepubl/ui/tabs.tml.min.js',
+'/js/litepubl/ui/tabs.adapter.min.js',
+),
+
+'posteditor' => array(
+'/js/jquery/ui/progressbar.min.js',
+'/js/litepubl/ui/progressbar.adapter.min.js',
+),
+);
+
+foreach ($items as $section => $filenames) {
+foreach ($filenames as $filename) {
+if ($add) {
+$js->add($section, $filename);
+} else {
+$js->deletefile($section, $filename);
+}
+}
+}
+
+}

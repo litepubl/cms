@@ -1,8 +1,8 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
 (function($, litepubl, window) {
   'use strict';
@@ -54,7 +54,7 @@
     },
 
     setpercent: function(percent) {
-litepubl.progressbar.setvalue(this.holder, percent);
+      litepubl.progressbar.setvalue(this.holder, percent);
     },
 
     setprogress: function(current, total) {
@@ -66,11 +66,11 @@ litepubl.progressbar.setvalue(this.holder, percent);
     },
 
     showprogress: function() {
-litepubl.progressbar.add(this.holder);
-},
+      litepubl.progressbar.add(this.holder);
+    },
 
     hideprogress: function() {
-litepubl.progressbar.remove(this.holder);
+      litepubl.progressbar.remove(this.holder);
     },
 
     error: function(mesg) {
@@ -107,7 +107,7 @@ litepubl.progressbar.remove(this.holder);
     before: function() {
       this.addparams();
       this.onbefore.fire(this);
-this.showprogress();
+      this.showprogress();
     },
 
     complete: function() {

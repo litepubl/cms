@@ -1,15 +1,16 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-;(function($, document){
+;
+(function($, document) {
   'use strict';
-  
-  litepubl.Bootstrapplayer= litepubl.Mediaplayer.extend({
+
+  litepubl.Bootstrapplayer = litepubl.Mediaplayer.extend({
     dialog: false,
-    
+
     video: function(links) {
       var self = this;
       return links.on("click.playvideo", function(event) {
@@ -17,18 +18,18 @@
         self.open($(this));
       });
     },
-    
+
     open: function(link) {
       //preload script when animate opening dialog
       this.load($.noop);
       var self = this;
       if (!this.dialog) this.dialog = new $.Simplerdialog();
       this.dialog.open({
-        html:  $.simpletml(this.tml, {
+        html: $.simpletml(this.tml, {
           file: link.data("file"),
           siteurl: ltoptions.files
         }),
-        
+
         width: this.width,
         height: this.height,
         open: function(dialog) {
@@ -39,10 +40,10 @@
         }
       });
     }
-    
-  });//class
-  
+
+  }); //class
+
   $(document).ready(function() {
     litepubl.mediaplayer = new litepubl.Bootstrapplayer($("audio"), $(".videofile"));
   });
-})( jQuery, document);
+})(jQuery, document);

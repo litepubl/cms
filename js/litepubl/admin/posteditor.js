@@ -1,8 +1,8 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
 (function($, document, window) {
   'use strict';
@@ -103,8 +103,8 @@
         before: function(panel) {
           var inner = $(".tab-holder", panel);
           if (inner.length) {
-inner.replaceWith(inner.get(0).firstChild.nodeValue);
-}
+            inner.replaceWith(inner.get(0).firstChild.nodeValue);
+          }
         }
       });
     },

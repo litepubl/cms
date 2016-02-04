@@ -1,12 +1,12 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function( $, document){
+(function($, document) {
   'use strict';
-  
+
   $(document).ready(function() {
     $(document).on("click.postcard", ".postcard-title", function(event) {
       if (event.target.nodeName.toLowerCase() != "a") {
@@ -14,4 +14,4 @@
       }
     });
   });
-})( jQuery, document);
+})(jQuery, document);

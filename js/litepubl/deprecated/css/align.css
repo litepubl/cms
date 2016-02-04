@@ -5,26 +5,26 @@
 **/
 
 .text-center {
-  text-align: center;
+    text-align: center;
 }
 
-.text-right{
-  text-align:right;
+.text-right {
+    text-align: right;
 }
 
 .text-left {
-  text-align:left;
+    text-align: left;
 }
 
 div.text-center {
-  margin: 5px;
+    margin: 5px;
 }
 
 .margin-auto {
-  margin: auto;
+    margin: auto;
 }
 
 .hide,
-.hidden{
-  display:none
+.hidden {
+    display: none
 }

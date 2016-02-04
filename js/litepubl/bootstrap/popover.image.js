@@ -1,12 +1,12 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function( $, window, document){
+(function($, window, document) {
   'use strict';
-  
+
   $.Popimage = Class.extend({
     dataname: 'popimage',
     title: "",
@@ -15,7 +15,7 @@
     height: false,
     oninit: $.noop,
     onerror: $.noop,
-    
+
     init: function(options) {
       this.re = /\.(jpg|jpeg|png|bmp)$/i;
       var self = this;
@@ -23,11 +23,11 @@
         return self.add($(this).addClass("popinit"), event.type);
       });
     },
-    
+
     add: function(link, event_type) {
       //already added
       if (link.data(this.dataname)) return false;
-      
+
       var click_enabled = true;
       var url = link.attr("href");
       if (!url || !this.re.test(url)) {
@@ -35,43 +35,43 @@
         if (event_type == "click") return;
         url = link.attr("data-image");
         if (!url || !this.re.test(url)) return;
-        click_enabled  = false;
+        click_enabled = false;
       }
-      
+
       link.data(this.dataname, {
         url: url,
-        click_enabled : click_enabled ,
+        click_enabled: click_enabled,
         wait_event: event_type
       });
-      
+
       var self = this;
       link.one(event_type == "mouseenter" ? "mouseleave.popinit" : "blur.popinit", function() {
         $(this).data(self.dataname).wait_event = false;
       });
-      
+
       link.addClass(this.cursorclass);
       var img = new Image();
-      img.onload = function(){
+      img.onload = function() {
         this.onload = this.onerror = null;
         link.removeClass(self.cursorclass);
         self.calc_size(link, this.width, this.height);
       };
-      
+
       img.onerror = function() {
         this.onload = this.onerror = null;
         link.removeClass(self.cursorclass);
         self.onerror(this.src);
       };
-      
-      img.src =           url;
+
+      img.src = url;
       return false;
     },
-    
+
     calc_size: function(link, width, height) {
       var linkdata = link.data(this.dataname);
       linkdata.width = width;
       linkdata.height = height;
-      
+
       var ratio = width / height;
       if (this.width) {
         var w = this.width;
@@ -90,53 +90,53 @@
           var h = Math.min(winheight - 60, Math.floor(w / ratio));
         }
       }
-      
+
       if ((width <= w) && (height <= h)) {
         w = width;
         h = height;
       } else {
-        if (w /h >= ratio) {
-          w = Math.floor(h *ratio);
+        if (w / h >= ratio) {
+          w = Math.floor(h * ratio);
         } else {
           h = Math.floor(w / ratio);
         }
       }
-      
+
       var title = link.attr("title");
       if (this.re.test(title)) title = this.title;
-      
+
       link.popover({
         container: 'body',
         content: '<img src="' + linkdata.url + '" width="' + w + '" height="' + h + '" />',
         delay: 120,
-        html:true,
+        html: true,
         placement: 'auto ' + (ratio >= 1 ? 'bottom' : 'right'),
         template: '<div class="popover popover-image" role="tooltip"><div class="arrow"></div>' +
-        '<h3 class="popover-title" style="max-width:' + w + 'px;"></h3>' +
-        '<div class="popover-content"></div></div>',
+          '<h3 class="popover-title" style="max-width:' + w + 'px;"></h3>' +
+          '<div class="popover-content"></div></div>',
         title: title,
         trigger: "hover focus" + (linkdata.click_enabled ? " click" : "")
       });
-      
+
       if (linkdata.click_enabled) {
         link.on("click.popimage", function() {
           return false;
         });
       }
-      
+
       //show popover after load image if not lose focus or hover
       if (linkdata.wait_event) {
         link.trigger(linkdata.wait_event);
       }
       this.oninit(linkdata.url);
     }
-    
+
   });
-  
+
   $.fn.popimage = function() {
-    return this.each(function(){
+    return this.each(function() {
       $.popimage.add($(this).addClass("popinit"), false);
     });
   };
-  
-})( jQuery, window, document);
+
+})(jQuery, window, document);

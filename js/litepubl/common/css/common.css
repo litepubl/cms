@@ -6,13 +6,13 @@
 
 .date-edit,
 .date-range input {
-  width: 10em;
+    width: 10em;
 }
 
 .time-edit {
-  width: 5em;
+    width: 5em;
 }
 
 #text-phone {
-  width: 10em;
+    width: 10em;
 }

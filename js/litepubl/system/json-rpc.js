@@ -1,31 +1,31 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function ($) {
+(function($) {
   'use strict';
-  
-  var jsonrpcSettings  = $.jsonrpcSettings = {
+
+  var jsonrpcSettings = $.jsonrpcSettings = {
     guid: $.now(),
     url: "",
     onargs: $.noop,
     error: false
   };
-  
+
   $.jsonrpc = function(args) {
     args = $.extend({
       url: jsonrpcSettings.url,
       type: 'post',
       method: '',
-    params: {},
+      params: {},
       slave: false,
       callback: false,
       error: jsonrpcSettings.error,
       cache: false
     }, args);
-    
+
     jsonrpcSettings.onargs(args);
     var params = args.params;
     if (args.slave) {
@@ -34,7 +34,7 @@
         params: args.slave.params
       };
     }
-    
+
     var ajax = {
       type: args.type,
       url: args.url,
@@ -65,7 +65,7 @@
         }
       }
     };
-    
+
     if (args.type == 'post') {
       if (!args.cache) ajax.url = ajax.url + '?_=' + jsonrpcSettings.guid++;
       ajax.data = $.toJSON({
@@ -79,17 +79,17 @@
       params.method = args.method;
       ajax.data = params;
     }
-    
-    return $.ajax(ajax).fail( function(jq, textStatus, errorThrown) {
+
+    return $.ajax(ajax).fail(function(jq, textStatus, errorThrown) {
       if ($.isFunction(args.error)) {
         args.error(jq.responseText, jq.status);
       }
     });
   };
-  
-  $.hasprop= function(obj, prop) {
+
+  $.hasprop = function(obj, prop) {
     return (typeof obj === "object") && (prop in obj);
   };
-  
-  
+
+
 }(jQuery));

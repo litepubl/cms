@@ -1,12 +1,12 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 
-(function ($, ltoptions) {
+(function($, ltoptions) {
   'use strict';
-  
+
   var rurl = /^([\w.+-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/;
   var dom = rurl.exec(ltoptions.url);
   var href = rurl.exec(location.href.toLowerCase()) || [];
@@ -14,10 +14,10 @@
     ltoptions.url = ltoptions.url.replace(dom[2], href[2]);
     ltoptions.files = ltoptions.files.replace(dom[2], href[2]);
   }
-  
+
   //without protocol for ajax calls
-  ltoptions.ajaxurl = ltoptions.url.substring(ltoptions.url.indexOf(':') +1);
-  
+  ltoptions.ajaxurl = ltoptions.url.substring(ltoptions.url.indexOf(':') + 1);
+
   $.extend($.jsonrpcSettings, {
     url: ltoptions.ajaxurl + "/admin/jsonserver.php",
     onargs: function(args) {
@@ -29,10 +29,10 @@
         params.litepubl_user_regservice = user.regservice;
       }
     },
-    
+
     error: function(message, code) {
       $.errorbox(message);
     }
   });
-  
+
 }(jQuery, ltoptions));
