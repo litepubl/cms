@@ -66,21 +66,17 @@ function tjsmergerInstall($self) {
 
   $section = 'media';
   $self->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
-  if ($language != 'en') $self->add($section, "/lib/languages/$language/mediaplayer.min.js");
+  if ($language != 'en') {
+$self->add($section, "/lib/languages/$language/mediaplayer.min.js");
+}
 
   $section = 'admin';
-  $self->add($section, '/js/jquery/ui/core.min.js');
-  $self->add($section, '/js/jquery/ui/widget.min.js');
-  $self->add($section, '/js/jquery/ui/mouse.min.js');
-  $self->add($section, '/js/jquery/ui/position.min.js');
-  $self->add($section, '/js/jquery/ui/effect.min.js');
-  $self->add($section, '/js/jquery/ui/tabs.min.js');
+tjsmerger_bootstrap_admin($self, true);
   $self->add($section, '/js/litepubl/admin/admin.min.js');
   $self->add($section, '/js/litepubl/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
 
   $section = 'posteditor';
-  $self->add($section, '/js/jquery/ui/progressbar.min.js');
   $self->add($section, '/js/swfupload/swfupload.min.js');
   $self->add($section, '/js/plugins/filereader.min.js');
   $self->add($section, '/js/litepubl/admin/uploader.min.js');
@@ -225,4 +221,7 @@ $js->deletefile($section, $filename);
 }
 }
 
+if ($add) {
+array_move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']), 0);
+}
 }
