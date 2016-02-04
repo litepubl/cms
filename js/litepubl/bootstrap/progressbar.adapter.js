@@ -19,13 +19,13 @@
     },
 
     setvalue: function(holder, value) {
-var progress = holder.data('progressbar.litepubl');
-if (!progress) {
-progress = this.add(holder);
-}
+      var progress = holder.data('progressbar.litepubl');
+      if (!progress) {
+        progress = this.add(holder);
+      }
 
       var percent = value + '%';
-$('.progress-bar', progress).get(0).style.width = percent;
+      $('.progress-bar', progress).get(0).style.width = percent;
       $('.sr-only', progress).text(percent);
     }
 

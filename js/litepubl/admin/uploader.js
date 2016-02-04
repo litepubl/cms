@@ -35,8 +35,8 @@
 
       var cookie = $.cookie("litepubl_user");
       if (!cookie) {
-cookie = $.cookie("admin");
-}
+        cookie = $.cookie("admin");
+      }
 
       this.postdata = {
         litepubl_user: cookie,
@@ -82,8 +82,8 @@ cookie = $.cookie("admin");
     uploaded: function(resp) {
       try {
         if (typeof resp == "string") {
-resp = $.parseJSON(resp);
-}
+          resp = $.parseJSON(resp);
+        }
 
         if ("result" in resp) {
           this.items.push(resp.result);
@@ -107,8 +107,8 @@ resp = $.parseJSON(resp);
     addparams: function() {
       var perm = $("#combo-idperm_upload", this.holder.parent());
       if (perm.length) {
-this.addparam("idperm", perm.val());
-}
+        this.addparam("idperm", perm.val());
+      }
     },
 
     before: function() {

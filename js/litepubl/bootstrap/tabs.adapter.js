@@ -104,8 +104,8 @@
     },
 
     gettml: function() {
-return litepubl.tml.bootstrap.tabs;
-},
+      return litepubl.tml.bootstrap.tabs;
+    },
 
     on: function(tabs, events) {
       tabs.data("tabevents.litepubl", events);

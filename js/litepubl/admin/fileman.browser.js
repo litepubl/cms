@@ -75,23 +75,23 @@
 
     get_html: function() {
       var tml_tab = litepubl.tml.fileman.tab;
-var tml = litepubl.tabs.gettml();
+      var tml = litepubl.tabs.gettml();
       var pages = Math.ceil(this.fileman.count / this.perpage);
       var head = "";
       var body = "";
 
       for (var page = 1; page <= pages; page++) {
         head += $.parsetml(tml.head, {
-id: ++litepubl.guid,
-title: page
-});
+          id: ++litepubl.guid,
+          title: page
+        });
 
         body += $.parsetml(tml.tab, {
-id: litepubl.guid,
-content: $.parsetml(tml_tab, {
-page: page
-})
-});
+          id: litepubl.guid,
+          content: $.parsetml(tml_tab, {
+            page: page
+          })
+        });
       }
 
       return $.parsetml(tml.tabs, {
@@ -105,28 +105,28 @@ page: page
         panel.attr("data-status", "loaded");
         panel.append(this.getpage(page));
       } else {
-      panel.attr("data-status", "loading");
+        panel.attr("data-status", "loading");
 
-      var self = this;
-      $.jsonrpc({
-        type: 'get',
-        method: "files_getpage",
-        params: {
-          page: page - 1,
-          perpage: this.perpage
-        },
-        callback: function(r) {
-          self.addpage(page, r.files);
-          panel.attr("data-status", "loaded");
-          panel.append(self.getpage(page));
-        },
+        var self = this;
+        $.jsonrpc({
+          type: 'get',
+          method: "files_getpage",
+          params: {
+            page: page - 1,
+            perpage: this.perpage
+          },
+          callback: function(r) {
+            self.addpage(page, r.files);
+            panel.attr("data-status", "loaded");
+            panel.append(self.getpage(page));
+          },
 
-        error: function(message, code) {
-          panel.attr("data-status", "error");
-          panel.append('<p>' + message + '</p>');
-        }
-      });
-}
+          error: function(message, code) {
+            panel.attr("data-status", "error");
+            panel.append('<p>' + message + '</p>');
+          }
+        });
+      }
     },
 
     addpage: function(page, items) {
