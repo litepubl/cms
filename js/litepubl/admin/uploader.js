@@ -31,10 +31,12 @@
       this.oncomplete = $.Callbacks();
       this.onupload = $.Callbacks();
 
-      this.items = new Array();
+      this.items = [];
 
       var cookie = $.cookie("litepubl_user");
-      if (!cookie) cookie = $.cookie("admin");
+      if (!cookie) {
+cookie = $.cookie("admin");
+}
 
       this.postdata = {
         litepubl_user: cookie,
@@ -79,7 +81,10 @@
 
     uploaded: function(resp) {
       try {
-        if (typeof resp == "string") resp = $.parseJSON(resp);
+        if (typeof resp == "string") {
+resp = $.parseJSON(resp);
+}
+
         if ("result" in resp) {
           this.items.push(resp.result);
           this.onupload.fire(resp.result);
@@ -101,7 +106,9 @@
 
     addparams: function() {
       var perm = $("#combo-idperm_upload", this.holder.parent());
-      if (perm.length) this.addparam("idperm", perm.val());
+      if (perm.length) {
+this.addparam("idperm", perm.val());
+}
     },
 
     before: function() {

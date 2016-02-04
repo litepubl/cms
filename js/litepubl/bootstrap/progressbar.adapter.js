@@ -10,7 +10,7 @@
       '</div>',
 
     add: function(holder) {
-      holder.data('progressbar.litepubl', $(this.tml).appendTo(holder));
+      return holder.data('progressbar.litepubl', $(this.tml).appendTo(holder));
     },
 
     remove: function(holder) {
@@ -18,10 +18,14 @@
       holder.removeData('progressbar.litepubl');
     },
 
-    setvalue: function(holver, value) {
+    setvalue: function(holder, value) {
+var progress = holder.data('progressbar.litepubl');
+if (!progress) {
+progress = this.add(holder);
+}
+
       var percent = value + '%';
-      var progress = $('.progress-bar', holder.data('progressbar.litepubl'));
-      progress[0].style.width = percent;
+$('.progress-bar', progress).get(0).style.width = percent;
       $('.sr-only', progress).text(percent);
     }
 
