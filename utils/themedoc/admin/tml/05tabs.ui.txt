@@ -1,12 +1,12 @@
 tabs = [
 <div class="admintabs">
     <ul role="tablist">
-        $head = [
+        $tab = [
             <li role="presentation"><a href="$url#tabpanel-$id" aria-controls="tabpanel-$id" role="tab">$title</a></li>
         ]
     </ul>
 
-        $tab = [
+        $panel = [
         <div role="tabpanel" id="tabpanel-$id">
             $content
         </div>

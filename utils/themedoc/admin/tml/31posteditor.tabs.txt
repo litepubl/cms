@@ -1,22 +1,29 @@
 posteditor.tabs = [
 <div id="tabs" class="posteditor-tabs">
-    <ul>
-        <li><a href="#categoriestab"><span>$lang.categories</span></a></li>
-        <li><a href="$ajax=tags"><span>$lang.tags</span></a></li>
-        <li><a href="#datetime-tab"><span>$lang.posted</span></a></li>
-        <li><a href="$ajax=status"><span>$lang.access</span></a></li>
-        <li><a href="$ajax=view"><span>$lang.view</span></a></li>
-        <li><a href="#seo-tab"><span>$lang.seo</span></a></li>
+    <ul class="nav nav-tabs" role="tablist">
+    [tab=categories]
+        <li role="presentation"><a href="#tabpanel-categories" aria-controls="tabpanel-categories" id="tab-categories" role="tab" data-toggle="tab">$lang.categories</a></li>
+        <li role="presentation"><a href="#tabpanel-tags" aria-controls="tabpanel-$id" id="tab-$id" role="tab" data-toggle="tab" data-ajax="$url">$lang.tags</a></li>
+        <li role="presentation"><a href="#datetime-tab"><span>$lang.posted</a></li>
+        <li role="presentation"><a href="$ajax=status"><span>$lang.access</a></li>
+        <li role="presentation"><a href="$ajax=view"><span>$lang.view</a></li>
+        <li role="presentation"><a href="#seo-tab"><span>$lang.seo</a></li>
     </ul>
-    <div id="categoriestab">
+    
+        <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade" id="tabpanel-categories" aria-labelledby="tab-categories">
         $categories
     </div>
-    <div id="datetime-tab">
+    
+            <div role="tabpanel" class="tab-pane fade" id="tabpanel-tags" aria-labelledby="tab-tags">
+            </div>
+            
+        <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
         <div id="datetime-holder">
             <!--[calendar=date]-->
         </div>
     </div>
-    <div id="seo-tab">
+        <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
         <div id="seo-holder">
             <!--
                 [text=url]
@@ -27,5 +34,10 @@ posteditor.tabs = [
 -->
         </div>
     </div>
+    
+            <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
+            </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
+</div>
 </div>
 ]

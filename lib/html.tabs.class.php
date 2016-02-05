@@ -7,15 +7,15 @@
  */
 
 class tabs {
-public$head;
-public $body;
+public$tabs;
+public $panels;
 public $_admintheme;
   private static $index = 0;
 
   public function __construct($admintheme = null) {
 $this->_admintheme = $admintheme;
-    $this->head = array();
-    $this->body = array();
+    $this->tabs = array();
+    $this->panels = array();
   }
 
 public function getadmintheme() {
@@ -29,8 +29,8 @@ return $this->_admintheme;
   public function get() {
 return strtr($this->getadmintheme()->templates['tabs'], array(
 '$id' => self::$index++,
-'$head' => implode("\n", $this->head),
-'$tab' => implode("\n", $this->body),
+'$tab' => implode("\n", $this->tabs),
+'$panel' => implode("\n", $this->panels),
 ));
   }
 
@@ -44,14 +44,20 @@ $this->addtab($url, $title, '');
 
   public function addtab($url, $title, $content) {
 $id = self::$index++;
-$admintheme = $this->getadmintheme();
-$this->head [] = strtr($admintheme->templates['tabs.head'], array(
+$this->tabs[] = $this->gettab($id, $title, $url);
+$this->panels[] = $this->getpanel($id, $content);
+}
+
+public function gettab($id, $url, $title) {
+return strtr($this->getadmintheme()->templates['tabs.tab'], array(
 '$id' => $id,
 '$title' => $title,
 '$url' => $url,
 ));
+}
 
-$this->body[] = strtr($admintheme->templates['tabs.tab'], array(
+public function getpanel($id, $content) {
+return strtr($this->getadmintheme()->templates['tabs.panel'], array(
 '$id' => $id,
 '$content' => $content,
 ));

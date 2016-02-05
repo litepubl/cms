@@ -4,22 +4,29 @@
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Datepicker = Class.extend({
 format: "dd.mm.yy",
+url: '/js/jquery/ui/datepicker.min.js',
+langurl:'/js/jquery/ui/datepicker-%%lang%%.min.js',
 script: false,
 
     init: function() {
 },
 
     ready: function(callback) {
+if ("datepicker" in $.fn) {
+return callback();
+}
+
       if (this.script) {
 return this.script.done(callback);
 }
 
       var self = this;
-      this.script = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker.min.js', function() {
+      this.script = $.load_script(ltoptions.files + this.url, function() {
         if (ltoptions.lang == 'en') {
 if ($.isFunction(callback)) callback();
 } else {
-        self.script = $.load_script(ltoptions.files + '/js/jquery/ui/datepicker-' + ltoptions.lang + '.min.js', callback);
+var langurl = self.langurl.replace('%%lang%%', ltoptions.lang );
+        self.script = $.load_script(ltoptions.files + langurl, callback);
 }
       });
     },

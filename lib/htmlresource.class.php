@@ -88,40 +88,7 @@ class tadminhtml {
       $s = substr_replace($s, $replace, $i, strlen('[/form]'));
     }
 
-    if (preg_match_all('/\[(editor|checkbox|text|email|password|combo|hidden|submit|button|calendar|upload)(:|=)(\w*+)\]/i', $s, $m, PREG_SET_ORDER)) {
-      foreach ($m as $item) {
-        $type = $item[1];
-        $name = $item[3];
-        $varname = '$' . $name;
-        //convert spec charsfor editor
-        if (!in_array($type, array(
-          'checkbox',
-          'combo',
-          'calendar',
-          'upload'
-        ))) {
-          if (isset($args->data[$varname])) {
-            $args->data[$varname] = self::specchars($args->data[$varname]);
-          } else {
-            $args->data[$varname] = '';
-          }
-        }
-
-        if ($type == 'calendar') {
-          $tag = admintheme::i()->getcalendar($name, $args->data[$varname]);
-        } else {
-          $tag = strtr($theme->templates["content.admin.$type"], array(
-            '$name' => $name,
-            '$value' => $varname
-          ));
-        }
-
-        $s = str_replace($item[0], $tag, $s);
-      }
-    }
-
-    $s = strtr($s, $args->data);
-    return $theme->parse($s);
+    return admintheme::i()->parse($s);
   }
 
   public function addsearch() {

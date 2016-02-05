@@ -27,6 +27,69 @@ public $onfileperm;
     return adminparser::i();
   }
 
+public function shortcode($s, targs $args) {
+$result = trim($s);
+
+    if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|tabpanel)(:|=)(\w*+)\]/i', $s, $m, PREG_SET_ORDER)) {
+$theme = ttheme::i();
+$lang = tlocal::i();
+
+      foreach ($m as $item) {
+        $type = $item[1];
+        $name = $item[3];
+        $varname = '$' . $name;
+
+switch ($type) {
+case 'editor':
+case 'text':
+case 'email':
+case 'password':
+          if (isset($args->data[$varname])) {
+            $args->data[$varname] = self::specchars($args->data[$varname]);
+          } else {
+            $args->data[$varname] = '';
+          }
+
+          $replace = strtr($theme->templates["content.admin.$type"], array(
+            '$name' => $name,
+            '$value' => $varname
+          ));
+break;
+
+          case 'calendar':
+          $replace = $this->getcalendar($name, $args->data[$varname]);
+break;
+
+case 'tab':
+$replace = strtr($this->templates['tabs.tab', array(
+'$id' => $name,
+'$title' => $lang->__get($name),
+'$url' => '',
+));
+break;
+
+case 'tabpanel':
+$replace = strtr($this->templates['tabs.panel', array(
+'$id' => $name,
+'$content' => $varname,
+));
+break;
+
+default:
+          $replace = strtr($theme->templates["content.admin.$type"], array(
+            '$name' => $name,
+            '$value' => $varname
+          ));
+}
+
+        $result = str_replace($item[0], $replace, $result);
+      }
+    }
+
+    $result = strtr($result, $args->data);
+    return $this->parse($result);
+}
+
   public function gettable($head, $body) {
     return strtr($this->templates['table'], array(
       '$class' => ttheme::i()->templates['content.admin.tableclass'],
