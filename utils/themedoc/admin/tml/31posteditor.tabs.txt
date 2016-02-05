@@ -2,27 +2,23 @@ posteditor.tabs = [
 <div id="tabs" class="posteditor-tabs">
     <ul class="nav nav-tabs" role="tablist">
     [tab=categories]
-        <li role="presentation"><a href="#tabpanel-categories" aria-controls="tabpanel-categories" id="tab-categories" role="tab" data-toggle="tab">$lang.categories</a></li>
         <li role="presentation"><a href="#tabpanel-tags" aria-controls="tabpanel-$id" id="tab-$id" role="tab" data-toggle="tab" data-ajax="$url">$lang.tags</a></li>
-        <li role="presentation"><a href="#datetime-tab"><span>$lang.posted</a></li>
+        [tab=posted]
         <li role="presentation"><a href="$ajax=status"><span>$lang.access</a></li>
         <li role="presentation"><a href="$ajax=view"><span>$lang.view</a></li>
         <li role="presentation"><a href="#seo-tab"><span>$lang.seo</a></li>
     </ul>
     
         <div class="tab-content">
-        <div role="tabpanel" class="tab-pane fade" id="tabpanel-categories" aria-labelledby="tab-categories">
-        $categories
-    </div>
+        [tabpanel=categories]
+        [tabpanel=tags]
     
-            <div role="tabpanel" class="tab-pane fade" id="tabpanel-tags" aria-labelledby="tab-tags">
-            </div>
-            
-        <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
+                   <div role="tabpanel" class="tab-pane fade" id="tabpanel-posted" aria-labelledby="tab-posted">
         <div id="datetime-holder">
             <!--[calendar=date]-->
         </div>
     </div>
+    
         <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
         <div id="seo-holder">
             <!--

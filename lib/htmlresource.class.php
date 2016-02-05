@@ -73,22 +73,7 @@ class tadminhtml {
   }
 
   public function parsearg($s, targs $args) {
-    if (!is_string($s)) $s = (string)$s;
-    $theme = ttheme::i();
-
-    // parse tags [form] .. [/form]
-    if (is_int($i = strpos($s, '[form]'))) {
-      $form = $theme->templates['content.admin.form'];
-      $replace = substr($form, 0, strpos($form, '$items'));
-      $s = substr_replace($s, $replace, $i, strlen('[form]'));
-    }
-
-    if ($i = strpos($s, '[/form]')) {
-      $replace = substr($form, strrpos($form, '$items') + strlen('$items'));
-      $s = substr_replace($s, $replace, $i, strlen('[/form]'));
-    }
-
-    return admintheme::i()->parse($s);
+    return admintheme::i()->shortcode($s, $args);
   }
 
   public function addsearch() {
