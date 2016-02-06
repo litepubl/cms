@@ -15,6 +15,7 @@ calendar = [
 
         <button type="button" id="calendar-$name" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
             <span class="fa fa-calendar text-success"></span>
+                        <span class="sr-only">$lang.calendar</span>
         </button>
 
     </div>

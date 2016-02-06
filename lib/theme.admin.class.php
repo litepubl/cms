@@ -11,7 +11,7 @@ public $onfileperm;
 
   public static function i() {
     $result = getinstance(__class__);
-    if (!$result->name && ($context = litepublisher::$urlmap->context)) {
+    if (!$result->name && ($context = litepublisher::$urlmap->context) && isset($context->idview)) {
       $result->name = tview::getview($context)->adminname;
       $result->load();
     }

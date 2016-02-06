@@ -15,7 +15,10 @@
           self.event('activated', $(e.target));
         });
 
-      this.navtabs($($(".nav-tabs").toArray().reverse()));
+var self = this;
+$($(".admintabs").toArray().reverse()).each(function() {
+self.tabs($(this));
+});
     },
 
     tabs: function(tabs, events) {

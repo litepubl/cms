@@ -58,12 +58,22 @@ var self = this;
 break;
 
 case 'posted':
-panel.html(panel.get(0).firstChild.nodeValue);
+var node = panel.get(0).firstChild;
+while (node.nodeType  != 8) {
+node = node.nextSibling;
+}
+
+panel.html(node.nodeValue);
       litepubl.calendar.on(panel);
 break;
 
 case 'seo':
-panel.html(panel.get(0).firstChild.nodeValue);
+var node = panel.get(0).firstChild;
+while (node.nodeType  != 8) {
+node = node.nextSibling;
+}
+
+panel.html(node.nodeValue);
 break;
 }
       }
