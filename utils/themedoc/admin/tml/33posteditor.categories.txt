@@ -1,4 +1,4 @@
-Hposteditor.categories = [
+posteditor.categories = [
 $head = [<h4><a target="_blank" href="$site.url/admin/posts/categories/">$lang.catcontrol</a> $lang.toeditcat</h4>]
 <ul class="catitems">
     $item = [<li><label><input type="checkbox" name="$category-$id" value="$id" $checked /> $title</label> $subitems</li>]

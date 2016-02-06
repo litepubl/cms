@@ -33,3 +33,13 @@ tml/20form.txt
 ru/20form.txt
 tml/21confirmform.txt
 ru/21confirmform.txt
+tml/30posteditor.txt
+ru/30posteditor.txt
+tml/31posteditor.tabs.txt
+ru/31posteditor.tabs.txt
+tml/32posteditor.filelist.txt
+ru/32posteditor.filelist.txt
+tml/33posteditor.categories.txt
+ru/33posteditor.categories.txt
+tml/34posteditor.text.txt
+ru/34posteditor.text.txt

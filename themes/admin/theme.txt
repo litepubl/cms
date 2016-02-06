@@ -402,3 +402,143 @@ $confirm - текст вопроса, пример: Вы действитель�
 
 Понятно, что даже в таком виде шаблон все еще остается несколько неудобным. Как правило исползуются два метода php класса tadminhtml: confirmdelete и confirm_delete
 */
+
+posteditor = [
+<form name="form" id="form" action="$site.url/admin/posts/editor/" method="post">
+    [text=title]
+    $posteditor.tabs
+    $posteditor.filelist
+    $posteditor.text
+    [hidden=id]
+    [submit=save]
+</form>
+]
+
+/*
+Шаблон редактора записи
+*/
+
+posteditor.tabs = [
+<div id="tabs" class="posteditor-tabs">
+    <ul class="nav nav-tabs" role="tablist">
+        [tab=categories]
+        [ajaxtab=tags]
+        [tab=posted]
+        [ajaxtab=access]
+        [ajaxtab=view]
+        [tab=seo]
+    </ul>
+
+    <div class="tab-content">
+        [tabpanel=categories]
+        [tabpanel=tags]
+        [tabpanel=posted{
+            <!--
+                [calendar=posted]
+            -->
+}]
+        [tabpanel=access]
+        [tabpanel=view]
+        [tabpanel=seo{
+            <!--
+                [text=url]
+                [text=title2]
+                [text=keywords]
+                [text=description]
+                [editor=head]
+            -->
+        }]
+    </div>
+</div>
+]
+
+/*
+Вкладки редактора записи
+*/
+
+posteditor.filelist = [
+<div id="posteditor-filelist">
+    <input type="hidden" name="files" value="$files" />
+    <div id="posteditor-fileperms">$fileperm</div>
+    <div id="uploader"></div>
+    <div id="browsefiles-holder">
+        <button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square green" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
+
+    <div id="newfiles" class="file-items">
+        <h4>$lang.newfiles</h4>
+        <h5 id="nonewfiles">$lang.nonewfiles</h5>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            litepubl.fileman = litepubl.init_fileman({
+                holder: "#posteditor-filelist",
+                count: $count,
+                items: $items
+            });
+        });
+    </script>
+</div>
+]
+
+/*
+Шаблон файлов редактора зписи, включает в себя загрузчик файлов
+*/
+
+posteditor.categories = [
+$head = [<h4><a target="_blank" href="$site.url/admin/posts/categories/">$lang.catcontrol</a> $lang.toeditcat</h4>]
+<ul class="catitems">
+    $item = [<li><label><input type="checkbox" name="$category-$id" value="$id" $checked /> $title</label> $subitems</li>]
+</ul>
+]
+
+/*
+Выбор рубрик в редакторе записи. Исползуется не только в редакторе, а также во многих плагинах, где требуется выбрать рубрики
+*/
+
+posteditor.text = [
+<div id="posteditor-content">
+    <span id="posteditor-visual"></span>
+    <span id="posteditor-init-raw-tabs"><a href="#">$lang.loadcontenttabs</a></span>
+
+    <div id="posteditor-raw-holder">
+        <!--
+    <ul>
+        <li><a href="#posteditor-raw"><span>$lang.raw</span></a></li>
+        <li><a href="#posteditor-excerpt"><span>$lang.excerpt</span></a></li>
+        <li><a href="#posteditor-rss"><span>$lang.rss</span></a></li>
+        <li><a href="#posteditor-more"><span>$lang.more</span></a></li>
+        <li><a href="#posteditor-filtered"><span>$lang.filtered</span></a></li>
+        <li><a href="#posteditor-upd"><span>$lang.upd</span></a></li>
+    </ul>
+
+<div id="posteditor-excerpt"><comment>
+[editor=excerpt]
+</comment></div>
+
+<div id="posteditor-rss"><comment>
+[editor=rss]
+</comment></div>
+
+<div id="posteditor-more"><comment>
+[text=more]
+</comment></div>
+
+<div id="posteditor-filtered"><comment>
+[editor=filtered]
+</comment></div>
+
+<div id="posteditor-upd"><comment>
+[editor=upd]
+</comment></div>
+-->
+        <div id="posteditor-raw">
+            [editor=raw]
+        </div>
+    </div>
+</div>
+]
+
+/*
+Шаблон текстовых вкладок
+*/

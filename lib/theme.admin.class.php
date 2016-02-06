@@ -30,18 +30,18 @@ public $onfileperm;
 public function shortcode($s, targs $args) {
 $result = trim($s);
 //replace [tabpanel=name{content}]
-    if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/im', $result, $m, PREG_SET_ORDER)) {
+    if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
       foreach ($m as $item) {
         $name = $item[1];
 $replace = strtr($this->templates['tabs.panel'], array(
 '$id' => $name,
-'$content' => $item[2],
+'$content' => trim($item[2]),
 ));
 
 $result = str_replace($item[0], $replace, $result);
 }
 }
-dumpstr($result);
+
     if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|ajaxtab|tabpanel)[:=](\w*+)\]/i', $result, $m, PREG_SET_ORDER)) {
 $theme = ttheme::i();
 $lang = tlocal::i();
@@ -91,7 +91,7 @@ break;
 case 'tabpanel':
 $replace = strtr($this->templates['tabs.panel'], array(
 '$id' => $name,
-'$content' => $varname,
+'$content' => isset($args->data[$varname]) ? $varname : '',
 ));
 break;
 
@@ -109,7 +109,7 @@ default:
 return $result;
 }
 
-public function parsecodes($s, targs $args) {
+public function parsearg($s, targs $args) {
 $result = $this->shortcode($s, $args);
     $result = strtr($result, $args->data);
     $result = $args->callback($result);

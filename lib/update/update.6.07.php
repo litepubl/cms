@@ -56,5 +56,10 @@ litepublisher::$urlmap->save();
 
   tcron::i()->addnightly('turlmap', 'updatefilter', null);
 
-  tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
+
+  $lm = tlocalmerger::i();
+$lm->lock();
+$lm->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
+$lm->deletehtml('lib/languages/posteditor.ini');
+$lm->unlock();
 }

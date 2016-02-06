@@ -69,12 +69,12 @@ public function getajaxlink($idpost) {
 }
 
 public function gettabs($post = null) {
-$post = $this->gegvarpost($post);
+$post = $this->getvarpost($post);
 $args = new targs();
 $this->getargstab($post, $args);
 
 $admintheme = $this->admintheme;
-return $admintheme->parsecode($admintheme->templates['posteditor.tabs'], $args);
+return $admintheme->parsearg($admintheme->templates['posteditor.tabs'], $args);
 }
 
   public function getargstab(tpost $post, targs $args) {
@@ -82,9 +82,10 @@ return $admintheme->parsecode($admintheme->templates['posteditor.tabs'], $args);
     $args->ajax = $this->getajaxlink($post->id);
     //categories tab
     $args->categories = $this->getcategories($post);
-    
+
     //datetime tab
         $args->posted = $post->posted;
+
         
         //seo tab
     $args->url = $post->url;
@@ -101,7 +102,7 @@ return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemspo
   }
 
 public function gettext($post = null) {
-$post = $this->gegvarpost($post);
+$post = $this->getvarpost($post);
 $args = new targs();
 $this->getargstext($post, $args);
 return $this->html->parsearg($this->admintheme->templates['posteditor.text'], $args);
@@ -164,25 +165,28 @@ return 403;
 
   public function getcontent() {
     $result = '';
+$admintheme = $this->admintheme;
+$lang = tlocal::admin('editor');
     $html = $this->html;
+    $args = new targs();
+
     $post = tpost::i($this->idpost);
 $vars = new themevars();
 $vars->post = $post;
 $vars->posteditor = $this;
 
-    $args = new targs();
-    $this->getpostargs($post, $args);
-
 if ($post->id == 0) {
-$result .= $html->h4($this->lang->formhead . ' ' . $post->bookmark);
+$result .= $admintheme->h($lang->formhead . ' ' . $post->bookmark);
 }
 
     if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {
 return $r;
 }
 
-    $result.= $html->form($args);
-    return $html->fixquote($result);
+$args->title = $post->title;
+$args->id = $post->id;
+$result .= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
+return $result;
   }
 
   protected function set_post(tpost $post) {
