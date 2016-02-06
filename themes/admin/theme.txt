@@ -120,13 +120,13 @@ tabs = [
 <div class="admintabs">
     <ul class="nav nav-tabs" role="tablist">
         $tab = [
-            <li role="presentation"><a href="#tabpanel-$id" aria-controls="tabpanel-$id" id="tab-$id" role="tab" data-toggle="tab" data-ajax="$url">$title</a></li>
+            <li role="presentation"><a href="#tabpanel-$id" aria-controls="tabpanel-$id" id="tab-$id" role="tab" data-toggle="tab" data-ajax="$url" data-id="$id">$title</a></li>
         ]
     </ul>
 
     <div class="tab-content">
         $panel = [
-        <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
+        <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id" data-id="$id">
             $content
         </div>
         ]

@@ -44,7 +44,7 @@ $this->addtab($url, $title, '');
 
   public function addtab($url, $title, $content) {
 $id = self::$index++;
-$this->tabs[] = $this->gettab($id, $title, $url);
+$this->tabs[] = $this->gettab($id, $url, $title);
 $this->panels[] = $this->getpanel($id, $content);
 }
 

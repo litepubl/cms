@@ -116,7 +116,7 @@
     },
 
     event: function(name, link) {
-      var events = link.closest('.adminpanel').data('tabevents.litepubl');
+      var events = link.closest('ul').parent().data('tabevents.litepubl');
       if (events && name in events) {
         events[name](this.getpanel(link));
       }
