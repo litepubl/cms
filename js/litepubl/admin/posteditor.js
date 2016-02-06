@@ -15,16 +15,9 @@
       if (!this.tabs.length) return;
 
       var self = this;
-      litepubl.tabs(this.tabs, {
+      litepubl.tabs.tabs(this.tabs, {
         before: function(panel) {
-          self.init_tab(ui.newPanel);
-        },
-
-        loaded: function(panel) {
-          $(".posteditor-tag", panel).click(function() {
-            self.addtag($(this).text());
-            return false;
-          });
+          self.init_tab(panel);
         }
       });
 
@@ -51,11 +44,28 @@
 
     },
 
-    init_tab: function(tab) {
-      if ($("#datetime-holder", tab).length) {
-        this.init_datetime_tab(tab);
-      } else if ($("#seo-holder", tab).length) {
-        this.init_seo_tab(tab);
+    init_tab: function(panel) {
+if (!panel.data('init.litepubl')) {
+panel.data('init.litepubl', true);
+
+switch (panel.attr('data-id')) {
+case 'tags':
+var self = this;
+          panel.on('click.tag', 'a', function() {
+            self.addtag($(this).text());
+            return false;
+          });
+break;
+
+case 'posted':
+panel.html(panel.get(0).firstChild.nodeValue);
+      litepubl.calendar.on(panel);
+break;
+
+case 'seo':
+panel.html(panel.get(0).firstChild.nodeValue);
+break;
+}
       }
     },
 
@@ -71,20 +81,6 @@
         }
         $('#text-tags').val(tags + ', ' + newtag);
       }
-    },
-
-    init_seo_tab: function(uipanel) {
-      //replace html in comment
-      var holder = $("#seo-holder", uipanel);
-      holder.replaceWith(holder.get(0).firstChild.nodeValue);
-    },
-
-    init_datetime_tab: function(uipanel) {
-      //replace html in comment
-      var holder = $("#datetime-holder", uipanel);
-      var calendar = $(holder.get(0).firstChild.nodeValue).appendTo(uipanel);
-      holder.remove();
-      litepubl.calendar.on(calendar);
     },
 
     init_raw_tabs: function() {

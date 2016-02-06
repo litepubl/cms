@@ -31,8 +31,6 @@ function tlocalmergerInstall($self) {
   $self->add('install', "lib/languages/$lang/install.ini");
 
   $self->addhtml('lib/languages/adminhtml.ini');
-  $self->addhtml('lib/languages/posteditor.ini');
-
   $self->unlock();
 
   //after install
