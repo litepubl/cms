@@ -292,17 +292,6 @@ class ttheme extends basetheme {
     ));
   }
 
-  public static function quote($s) {
-    return strtr($s, array(
-      '"' => '&quot;',
-      "'" => '&#039;',
-      '\\' => '&#092;',
-      '$' => '&#36;',
-      '%' => '&#37;',
-      '_' => '&#95;'
-    ));
-  }
-
   public function getinput($type, $name, $value, $title) {
     return strtr($this->templates['content.admin.' . $type], array(
       '$lang.$name' => $title,

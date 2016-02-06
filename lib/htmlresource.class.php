@@ -73,7 +73,7 @@ class tadminhtml {
   }
 
   public function parsearg($s, targs $args) {
-    return admintheme::i()->shortcode($s, $args);
+    return admintheme::i()->parsecodes($s, $args);
   }
 
   public function addsearch() {

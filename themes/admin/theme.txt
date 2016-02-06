@@ -119,13 +119,13 @@ $form->before = admintheme::i()->templates['tablecols'];
 tabs = [
 <div class="admintabs">
     <ul class="nav nav-tabs" role="tablist">
-        $head = [
+        $tab = [
             <li role="presentation"><a href="#tabpanel-$id" aria-controls="tabpanel-$id" id="tab-$id" role="tab" data-toggle="tab" data-ajax="$url">$title</a></li>
         ]
     </ul>
 
     <div class="tab-content">
-        $tab = [
+        $panel = [
         <div role="tabpanel" class="tab-pane fade" id="tabpanel-$id" aria-labelledby="tab-$id">
             $content
         </div>

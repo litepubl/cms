@@ -242,4 +242,15 @@ class basetheme extends tevents {
     return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
   }
 
+  public static function quote($s) {
+    return strtr($s, array(
+      '"' => '&quot;',
+      "'" => '&#039;',
+      '\\' => '&#092;',
+      '$' => '&#36;',
+      '%' => '&#37;',
+      '_' => '&#95;'
+    ));
+  }
+
 } //class

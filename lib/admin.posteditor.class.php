@@ -72,7 +72,9 @@ public function gettabs($post = null) {
 $post = $this->gegvarpost($post);
 $args = new targs();
 $this->getargstab($post, $args);
-return $this->html->parsearg($this->admintheme->templates['posteditor.tabs'], $args);
+
+$admintheme = $this->admintheme;
+return $admintheme->parsecode($admintheme->templates['posteditor.tabs'], $args);
 }
 
   public function getargstab(tpost $post, targs $args) {
@@ -82,7 +84,7 @@ return $this->html->parsearg($this->admintheme->templates['posteditor.tabs'], $a
     $args->categories = $this->getcategories($post);
     
     //datetime tab
-        $args->date = $post->posted;
+        $args->posted = $post->posted;
         
         //seo tab
     $args->url = $post->url;
@@ -197,8 +199,8 @@ return $r;
       $files = trim($files, ', ');
       $post->files = tdatabase::str2array($files);
     }
-    if (isset($date) && $date) {
-      $post->posted = datefilter::getdate('date');
+    if (isset($posted) && $posted) {
+      $post->posted = datefilter::getdate('posted');
     }
 
     if (isset($status)) {

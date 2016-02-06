@@ -137,6 +137,7 @@ class tajaxposteditor extends tevents {
 
 
       case 'status':
+      case 'access':
         $args = new targs();
         $args->comstatus = tadminhtml::array2combo(array(
           'closed' => $lang->closed,

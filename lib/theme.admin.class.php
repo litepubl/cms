@@ -29,14 +29,26 @@ public $onfileperm;
 
 public function shortcode($s, targs $args) {
 $result = trim($s);
+//replace [tabpanel=name{content}]
+    if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/im', $result, $m, PREG_SET_ORDER)) {
+      foreach ($m as $item) {
+        $name = $item[1];
+$replace = strtr($this->templates['tabs.panel'], array(
+'$id' => $name,
+'$content' => $item[2],
+));
 
-    if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|tabpanel)(:|=)(\w*+)\]/i', $s, $m, PREG_SET_ORDER)) {
+$result = str_replace($item[0], $replace, $result);
+}
+}
+dumpstr($result);
+    if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|ajaxtab|tabpanel)[:=](\w*+)\]/i', $result, $m, PREG_SET_ORDER)) {
 $theme = ttheme::i();
 $lang = tlocal::i();
 
       foreach ($m as $item) {
         $type = $item[1];
-        $name = $item[3];
+        $name = $item[2];
         $varname = '$' . $name;
 
 switch ($type) {
@@ -45,7 +57,7 @@ case 'text':
 case 'email':
 case 'password':
           if (isset($args->data[$varname])) {
-            $args->data[$varname] = self::specchars($args->data[$varname]);
+            $args->data[$varname] = self::quote($args->data[$varname]);
           } else {
             $args->data[$varname] = '';
           }
@@ -61,15 +73,23 @@ break;
 break;
 
 case 'tab':
-$replace = strtr($this->templates['tabs.tab', array(
+$replace = strtr($this->templates['tabs.tab'], array(
 '$id' => $name,
 '$title' => $lang->__get($name),
 '$url' => '',
 ));
 break;
 
+case 'ajaxtab':
+$replace = strtr($this->templates['tabs.tab'], array(
+'$id' => $name,
+'$title' => $lang->__get($name),
+'$url' => "\$ajax=$name",
+));
+break;
+
 case 'tabpanel':
-$replace = strtr($this->templates['tabs.panel', array(
+$replace = strtr($this->templates['tabs.panel'], array(
 '$id' => $name,
 '$content' => $varname,
 ));
@@ -86,7 +106,13 @@ default:
       }
     }
 
+return $result;
+}
+
+public function parsecodes($s, targs $args) {
+$result = $this->shortcode($s, $args);
     $result = strtr($result, $args->data);
+    $result = $args->callback($result);
     return $this->parse($result);
 }
 
