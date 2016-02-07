@@ -16,9 +16,7 @@
         });
 
 var self = this;
-$($(".admintabs").toArray().reverse()).each(function() {
-self.tabs($(this));
-});
+this.navtabs($($(".admintabs>.nav-tabs").toArray().reverse()));
     },
 
     tabs: function(tabs, events) {

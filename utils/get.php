@@ -20,8 +20,6 @@ $url = $_GET['url'];
         $headers = array('Host' =>  $host);
 //        $headers['Content-Type']  = 'text/xml';
         $headers['User-Agent']    = 'tester';
-        //$this->headers['Content-Length']= $length;
-
         foreach( $headers as $header => $value ) {
 //litepublisher replace to sprintf
             $request .= sprintf('%s: %s%s', $header, $value, $r);
@@ -34,7 +32,7 @@ if ($fp = fsockopen($host, $port, $errno, $errstr)) {
 echo "response:\n";
         while (!feof($fp)) {
             $s = fgets($fp, 4096);
-if (!trim($s)) exit();
+//if (!trim($s)) exit();
 echo htmlspecialchars($s);
 flush();
 //echo "\n";

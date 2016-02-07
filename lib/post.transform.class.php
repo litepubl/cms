@@ -110,26 +110,37 @@ class tposttransform {
       'id' => $post->id,
       'modified' => sqldate()
     );
-    if (false !== $post->data['rawcontent']) $raw['rawcontent'] = $post->data['rawcontent'];
+    if (false !== $post->data['rawcontent']) {
+$raw['rawcontent'] = $post->data['rawcontent'];
+}
+
     $post->rawdb->updateassoc($raw);
-    /*
-    $db->table = 'pages';
-    $db->iddelete($post->id);
-    foreach ($post->data['pages'] as $i => $content) {
-      $db->insert(array('id' => $post->id, 'page' => $i, 'content' => $content));
-    }
-    */
+
   }
 
   public function setassoc(array $a) {
-    foreach ($a as $k => $v) $this->__set($k, $v);
+    foreach ($a as $k => $v) {
+$this->__set($k, $v);
+}
   }
 
   public function __get($name) {
-    if ('pagescount' == $name) return $this->post->data[$name];
-    if (method_exists($this, $get = "get$name")) return $this->$get();
-    if (in_array($name, self::$arrayprops)) return implode(',', $this->post->$name);
-    if (in_array($name, self::$boolprops)) return $this->post->$name ? 1 : 0;
+    if ('pagescount' == $name) {
+return $this->post->data[$name];
+}
+
+    if (method_exists($this, $get = "get$name")) {
+return $this->$get();
+}
+
+    if (in_array($name, self::$arrayprops)) {
+return implode(',', $this->post->$name);
+}
+
+    if (in_array($name, self::$boolprops)) {
+return $this->post->$name ? 1 : 0;
+}
+
     return $this->post->$name;
   }
 
@@ -146,15 +157,15 @@ class tposttransform {
     }
   }
 
-  private function getposted() {
+  protected function getposted() {
     return sqldate($this->post->posted);
   }
 
-  private function setposted($value) {
+  protected function setposted($value) {
     $this->post->posted = strtotime($value);
   }
 
-  private function setrevision($value) {
+  protected function setrevision($value) {
     $this->post->data['revision'] = $value;
   }
 

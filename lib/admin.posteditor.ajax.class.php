@@ -20,13 +20,15 @@ class tajaxposteditor extends tevents {
     $this->addevents('onhead', 'oneditor');
     $this->data['head'] = '';
     $this->data['visual'] = '';
-    //'/plugins/tiny_mce/init.js';
     //'/plugins/ckeditor/init.js';
     $this->data['ajaxvisual'] = true;
   }
 
   public function setvisual($url) {
-    if ($url == $this->visual) return;
+    if ($url == $this->visual) {
+return;
+}
+
     $js = tjsmerger::i();
     $js->lock();
     $js->deletefile('posteditor', $this->visual);
