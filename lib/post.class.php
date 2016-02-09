@@ -109,7 +109,8 @@ class tpost extends titem implements itemplate {
     );
 
     $this->data['childdata'] = & $this->childdata;
-    $this->factory = litepublisher::$classes->getfactory($this);
+
+    $this->factory = $this->getfactory();
     $posts = $this->factory->posts;
     foreach ($posts->itemcoclasses as $class) {
       $coinstance = litepublisher::$classes->newinstance($class);
@@ -117,6 +118,10 @@ class tpost extends titem implements itemplate {
       $this->coinstances[] = $coinstance;
     }
   }
+
+public function getfactory() {
+return litepublisher::$classes->getfactory($this);
+}
 
   public function __get($name) {
     if ($this->childtable) {

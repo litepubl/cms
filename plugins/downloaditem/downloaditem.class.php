@@ -36,6 +36,10 @@ class tdownloaditem extends tpost {
     );
   }
 
+public function getfactory() {
+return dlitemfactory::i();
+}
+
   protected function getauthorname() {
     return $this->childdata['authorname'];
   }
@@ -96,3 +100,15 @@ class tdownloaditem extends tpost {
   }
 
 } //class
+
+class dlitemfactory extends tpostfactory {
+
+  public static function i() {
+    return getinstance(__class__);
+  }
+
+  public function getposts() {
+    return tdownloaditems::i();
+  }
+
+}

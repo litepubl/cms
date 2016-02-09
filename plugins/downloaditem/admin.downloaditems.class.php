@@ -52,9 +52,8 @@ class tadmindownloaditems extends tadminmenu {
       $items = array();
     }
 
-    $result.= $html->editlink();
     $form = new adminform(new targs());
-    $form->items = $html->getitemscount($from, $from + count($items) , $count);
+    $form->body = $html->getitemscount($from, $from + count($items) , $count);
     $tb = new tablebuilder();
     $tb->setposts(array(
       array(
@@ -62,21 +61,22 @@ class tadmindownloaditems extends tadminmenu {
         $lang->downloads,
         '$post.downloads'
       ) ,
+
       array(
-        'left',
         $lang->posttitle,
         '$post.bookmark'
       ) ,
+
       array(
-        'left',
         $lang->status,
         '$ticket_status.status'
       ) ,
+
       array(
-        'left',
         $lang->tags,
         '$post.tagnames'
       ) ,
+
       array(
         'center',
         $lang->edit,
@@ -84,16 +84,15 @@ class tadmindownloaditems extends tadminmenu {
       ) ,
     ));
 
-    $form->items.= $tb->build($items);
-    $form->items.= $form->centergroup('[button=publish]
+    $form->body .= $tb->build($items);
+    $form->body .= $form->centergroup('[button=publish]
     [button=setdraft]
     [button=delete]');
 
     $form->submit = false;
     $result.= $form->get();
-    $result = $html->fixquote($result);
 
-    $theme = ttheme::i();
+    $theme = $this->view->theme;
     $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }

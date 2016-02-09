@@ -38,7 +38,7 @@ $items = array_keys($categories->items);
 }
 
     foreach ($items as $id) {
-      $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', tadminhtml::specchars($categories->getvalue($id, 'title')));
+      $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', basetheme::quote($categories->getvalue($id, 'title')));
     }
 
     return $result;
@@ -155,7 +155,6 @@ return 403;
     $result = '';
 $admintheme = $this->admintheme;
 $lang = tlocal::admin('editor');
-    $html = $this->html;
     $args = new targs();
 
     $post = tpost::i($this->idpost);
@@ -163,7 +162,7 @@ $vars = new themevars();
 $vars->post = $post;
 $vars->posteditor = $this;
 
-if ($post->id == 0) {
+if ($post->id != 0) {
 $result .= $admintheme->h($lang->formhead . ' ' . $post->bookmark);
 }
 
@@ -171,26 +170,38 @@ $result .= $admintheme->h($lang->formhead . ' ' . $post->bookmark);
 return $r;
 }
 
-$args->title = $post->title;
 $args->id = $post->id;
+$args->title = $post->title;
 $result .= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
 return $result;
   }
 
   protected function set_post(tpost $post) {
-    extract($_POST, EXTR_SKIP);
-    $post->title = $title;
+$this->processtab($post);
+}
 
+  protected function processtab(tpost $post) {
+    extract($_POST, EXTR_SKIP);
+
+    $post->title = $title;
     $post->categories = $this->admintheme->processcategories();
 
-    if (($post->id == 0) && (litepublisher::$options->user > 1)) $post->author = litepublisher::$options->user;
-    if (isset($tags)) $post->tagnames = $tags;
-    if (isset($icon)) $post->icon = (int)$icon;
-    if (isset($idview)) $post->idview = $idview;
-    if (isset($files)) {
-      $files = trim($files, ', ');
-      $post->files = tdatabase::str2array($files);
-    }
+    if (($post->id == 0) && (litepublisher::$options->user > 1)) {
+$post->author = litepublisher::$options->user;
+}
+
+    if (isset($tags)) {
+$post->tagnames = $tags;
+}
+
+    if (isset($icon)) {
+$post->icon = (int)$icon;
+}
+
+    if (isset($idview)) {
+$post->idview = (int) $idview;
+}
+
     if (isset($posted) && $posted) {
       $post->posted = datefilter::getdate('posted');
     }
@@ -200,46 +211,49 @@ return $result;
       $post->comstatus = $comstatus;
       $post->pingenabled = isset($pingenabled);
       $post->idperm = (int)$idperm;
-      if ($password != '') $post->password = $password;
+      if ($password) {
+$post->password = $password;
+}
     }
 
     if (isset($url)) {
       $post->url = $url;
       $post->title2 = $title2;
       $post->keywords = $keywords;
+
       $post->description = $description;
       $post->rawhead = $head;
     }
 
-    $post->content = $raw;
-    if (isset($excerpt)) $post->excerpt = $excerpt;
-    if (isset($rss)) $post->rss = $rss;
-    if (isset($more)) $post->moretitle = $more;
-    if (isset($filtered)) $post->filtered = $filtered;
-    if (isset($upd)) {
-      $update = sprintf($this->lang->updateformat, tlocal::date(time()) , $upd);
-      $post->content = $post->rawcontent . "\n\n" . $update;
+    if (isset($files)) {
+      $files = trim($files, ', ');
+      $post->files = tdatabase::str2array($files);
     }
 
+    $post->content = $raw;
   }
 
+public function newpost() {
+return new tpost();
+}
+
   public function processform() {
-    $this->basename = 'editor';
-$lang = $this->lang;
+$lang = tlocal::admin('editor');
     if (empty($_POST['title'])) {
 return $this->admintheme->geterr($lang->error, $lang->emptytitle);
 }
 
     $id = (int)$_POST['id'];
-    $post = tpost::i($id);
+    $post = $id ? tpost::i($id) : $this->newpost();
 
     if ($this->isauthor && ($r = tauthor_rights::i()->editpost($post))) {
       $this->idpost = $post->id;
       return $r;
     }
 
-    $this->set_post($post);
-    $posts = tposts::i();
+    $this->processtab($post);
+
+    $posts = $post->factory->posts;
     if ($id == 0) {
       $this->idpost = $posts->add($post);
       $_POST['id'] = $this->idpost;
