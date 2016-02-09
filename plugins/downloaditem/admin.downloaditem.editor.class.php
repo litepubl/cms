@@ -20,6 +20,44 @@ class tdownloaditemeditor extends tposteditor {
     }
   }
 
+public function gettabs($post = null) {
+$post = $this->getvarpost($post);
+$args = new targs();
+$this->getargstab($post, $args);
+
+$admintheme = $this->admintheme;
+
+//add tab before cats
+$tml = strtr($admintheme->templates['posteditor.tabs'], array(
+'[tab=categories]' => '[tab=downloaditem] [tab=categories]',
+'[tabpanel=categories]' => '[tabpanel=downloaditem{
+[combo=type]
+[text=downloadurl]
+[text=authorurl]
+[text=authorname]
+[text=version]
+}] [tabpanel=categories]',
+));
+
+return $admintheme->parsearg($tml, $args);
+}
+
+  public function getargstab(tpost $post, targs $args) {
+parent::getargstab($post, $args);
+
+    $args->downloadurl = $post->downloadurl;
+    $args->authorname = $post->authorname;
+    $args->authorurl = $post->authorurl;
+    $args->version = $post->version;
+
+    $types = array(
+      'theme' => tlocal::get('downloaditem', 'theme') ,
+      'plugin' => tlocal::get('downloaditem', 'plugin')
+    );
+
+    $args->type = tadminhtml::array2combo($types, $post->type);
+}
+
   public function getcontent() {
     $result = '';
     $this->basename = 'downloaditems';
@@ -33,17 +71,6 @@ class tdownloaditemeditor extends tposteditor {
     $args = new targs();
     $this->getpostargs($downloaditem, $args);
     $html->pop_section();
-    $args->downloadurl = $downloaditem->downloadurl;
-    $args->authorname = $downloaditem->authorname;
-    $args->authorurl = $downloaditem->authorurl;
-    $args->version = $downloaditem->version;
-
-    $types = array(
-      'theme' => tlocal::get('downloaditem', 'theme') ,
-      'plugin' => tlocal::get('downloaditem', 'plugin')
-    );
-
-    $args->type = tadminhtml::array2combo($types, $downloaditem->type);
 
     if ($downloaditem->id > 0) $result.= $html->headeditor();
     $result.= $html->form($args);
@@ -53,12 +80,6 @@ class tdownloaditemeditor extends tposteditor {
   }
 
   public function processform() {
-    /*
-    echo "<pre>\n";
-    var_dump($_POST);
-    echo "</pre>\n";
-    return;
-    */
     extract($_POST, EXTR_SKIP);
     $this->basename = 'downloaditems';
     $html = $this->html;
