@@ -27,9 +27,14 @@ class tajaxtageditor extends tajaxposteditor {
   public function getcontent() {
     $type = tadminhtml::getparam('type', 'tags') == 'tags' ? 'tags' : 'categories';
     $tags = $type == 'tags' ? ttags::i() : tcategories::i();
-    if ($err = self::auth()) return $err;
+    if ($err = self::auth()) {
+return $err;
+}
+
     $id = tadminhtml::idparam();
-    if (($id > 0) && !$tags->itemexists($id)) return self::error403();
+    if (($id > 0) && !$tags->itemexists($id)) {
+return self::error403();
+}
 
     $theme = tview::i(tviews::i()->defaults['admin'])->theme;
     $html = tadminhtml::i();

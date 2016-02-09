@@ -1,7 +1,18 @@
 posteditor.text = [
 <div id="posteditor-text">
-    <span id="posteditor-visual"></span>
-    loadvisual = <span id="loadvisual"> (<a rel="loadvisual" href="#">$lang.loadvisual</a>)</span>
-            [editor=raw]
-            </div>
-            ]
+    $visual = [
+    <span><a href="$site.files$url" id="load-visual-editor">$lang.loadvisual</a></span>
+    <script type="text/javascript">
+        $(document).ready(function() {
+                    $("#load-visual-editor").click(function() {
+                        $.load_script($(this).attr("href"));
+                        $(this).parent().remove();
+                        return false;
+                    });
+                }
+    </script>
+    ]
+    
+    [editor=raw]
+</div>
+]

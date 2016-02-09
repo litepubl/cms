@@ -35,11 +35,7 @@ return;
     $js->deletetext('posteditor', 'visual');
 
     if ($url) {
-      if ($this->ajaxvisual) {
-        $js->addtext('posteditor', 'visual', sprintf('$(document).ready(function() {
-          litepubl.posteditor.init_visual_link("%s", %s);
-        });', litepublisher::$site->files . $url, json_encode(tlocal::get('editor', 'loadvisual'))));
-      } else {
+      if (!$this->ajaxvisual) {
         $js->add('posteditor', $url);
       }
     }
@@ -52,21 +48,7 @@ return;
 
   public function gethead() {
     $result = $this->data['head'];
-    if ($this->visual) {
-      $template = ttemplate::i();
-      if ($this->ajaxvisual) {
-        $result.= $template->getready('$("a[rel~=\'loadvisual\']").one("click", function() {
-          $("#loadvisual").remove();
-          $.load_script("' . litepublisher::$site->files . $this->visual . '");
-          return false;
-        });');
-      } else {
-        $result.= $template->getjavascript($this->visual);
-      }
-    }
-
-    $this->callevent('onhead', array(&$result
-    ));
+    $this->callevent('onhead', array(&$result));
     return $result;
   }
 
@@ -180,17 +162,13 @@ return;
 
   public function geteditor($name, $value, $visual) {
     $theme = tview::i(tviews::i()->defaults['admin'])->theme;
-    $html = tadminhtml::i();
-    $html->push_section('editor');
     $lang = tlocal::i();
     $title = $lang->$name;
     if ($visual && $this->ajaxvisual && $this->visual) {
       $title.= $html->loadvisual();
     }
 
-    $result = $theme->getinput('editor', $name, tadminhtml::specchars($value) , $title);
-    $html->pop_section();
-    return $result;
+return $theme->getinput('editor', $name, tadminhtml::specchars($value) , $title);
   }
 
 } //class
