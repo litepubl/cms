@@ -62,4 +62,14 @@ $lm->lock();
 $lm->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
 $lm->deletehtml('lib/languages/posteditor.ini');
 $lm->unlock();
+
+$ajax = tajaxposteditor::i();
+if ($ajax->visual) {
+    $js = tjsmerger::i();
+    $js->lock();
+    $js->deletefile('posteditor', $ajax->visual);
+    $js->deletetext('posteditor', 'visual');
+$js->unlock();
+}
+
 }

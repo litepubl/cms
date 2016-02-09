@@ -103,20 +103,8 @@ return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemspo
 
 public function gettext($post = null) {
 $post = $this->getvarpost($post);
-$args = new targs();
-$this->getargstext($post, $args);
-return $this->html->parsearg($this->admintheme->templates['posteditor.text'], $args);
-}
-
-  public function getargstext(tpost $post, targs $args) {
-    $args->id = $post->id;
-    $args->ajax = $this->getajaxlink($post->id);
-    $args->raw = $post->rawcontent;
-    $args->filtered = $post->filtered;
-    $args->excerpt = $post->excerpt;
-    $args->rss = $post->rss;
-    $args->more = $post->moretitle;
-    $args->upd = '';
+$ajax = tajaxposteditor::i();
+return $ajax->gettext($post->rawcontent, $this->admintheme);
 }
 
   public function canrequest() {

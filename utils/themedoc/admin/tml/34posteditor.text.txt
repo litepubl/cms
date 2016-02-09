@@ -1,7 +1,7 @@
 posteditor.text = [
 <div id="posteditor-text">
     $visual = [
-    <span><a href="$site.files$url" id="load-visual-editor">$lang.loadvisual</a></span>
+    <h6><a href="$site.files$scripturl" id="load-visual-editor" class="dashed"><span class="fa fa-edit"></span> <small>$lang.loadvisual</small></a></h6>
     <script type="text/javascript">
         $(document).ready(function() {
                     $("#load-visual-editor").click(function() {

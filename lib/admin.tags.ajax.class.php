@@ -94,8 +94,7 @@ return self::error403();
 
 
       case 'text':
-        $result = $this->geteditor('raw', $id == 0 ? '' : $tags->contents->getcontent($id) , true);
-        $result.= $this->gethead();
+return $this->gettext($id == 0 ? '' : $tags->contents->getcontent($id) );
         break;
 
 

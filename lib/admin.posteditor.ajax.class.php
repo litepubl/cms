@@ -24,28 +24,6 @@ class tajaxposteditor extends tevents {
     $this->data['ajaxvisual'] = true;
   }
 
-  public function setvisual($url) {
-    if ($url == $this->visual) {
-return;
-}
-
-    $js = tjsmerger::i();
-    $js->lock();
-    $js->deletefile('posteditor', $this->visual);
-    $js->deletetext('posteditor', 'visual');
-
-    if ($url) {
-      if (!$this->ajaxvisual) {
-        $js->add('posteditor', $url);
-      }
-    }
-
-    $js->unlock();
-
-    $this->data['visual'] = $url;
-    $this->save();
-  }
-
   public function gethead() {
     $result = $this->data['head'];
     $this->callevent('onhead', array(&$result));
@@ -160,15 +138,25 @@ return;
     return turlmap::htmlheader(false) . $result;
   }
 
-  public function geteditor($name, $value, $visual) {
-    $theme = tview::i(tviews::i()->defaults['admin'])->theme;
-    $lang = tlocal::i();
-    $title = $lang->$name;
-    if ($visual && $this->ajaxvisual && $this->visual) {
-      $title.= $html->loadvisual();
-    }
+  public function gettext($text, $admintheme = null) {
+if (!$admintheme) {
+    $admintheme = tview::i(tviews::i()->defaults['admin'])->admintheme;
+}
 
-return $theme->getinput('editor', $name, tadminhtml::specchars($value) , $title);
+$args = new targs();
+    if ($this->visual) {
+if ($this->ajaxvisual) {
+$args->scripturl = $this->visual;
+$args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
+} else {
+$args->visual = ttemplate::i()->getjavascript($this->visual);
+}
+} else {
+$args->visual = '';
+}
+
+    $args->raw = $text;
+return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
   }
 
 } //class

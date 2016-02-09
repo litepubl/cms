@@ -49,7 +49,6 @@ class tajaxmenueditor extends tajaxposteditor {
         $result = $html->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
         break;
 
-
       default:
         $result = var_export($_GET, true);
     }
