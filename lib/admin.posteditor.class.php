@@ -172,6 +172,7 @@ return $r;
 
 $args->id = $post->id;
 $args->title = $post->title;
+$args->adminurl = $this->url;
 $result .= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
 return $result;
   }
@@ -245,10 +246,15 @@ return $lang->emptytitle;
 }
 }
 
-  public function processform() {
-    if ($error = $this->canprocess()) {
+  public function afterprocess(tpost $post) {
+}
+
+  public function processform( {
 $lang = tlocal::admin('editor');
-return $this->admintheme->geterr($lang->error, $error);
+$admintheme = $this->admintheme;
+
+    if ($error = $this->canprocess()) {
+return $admintheme->geterr($lang->error, $error);
 }
 
     $id = (int)$_POST['id'];
@@ -271,7 +277,8 @@ return $this->admintheme->geterr($lang->error, $error);
     }
     $_GET['id'] = $this->idpost;
 
-    return $this->admintheme->success($lang->success);
+$this->afterprocess($post);
+    return $admintheme->success($lang->success);
   }
 
 } //class

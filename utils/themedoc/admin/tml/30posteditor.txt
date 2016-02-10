@@ -1,5 +1,5 @@
 posteditor = [
-<form name="form" id="form" action="$site.url/admin/posts/editor/" method="post">
+<form name="form" id="form" action="$site.url$adminurl" method="post">
     [text=title]
     $posteditor.tabs
     $posteditor.filelist
