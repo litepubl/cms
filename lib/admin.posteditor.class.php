@@ -225,22 +225,30 @@ $post->password = $password;
       $post->rawhead = $head;
     }
 
-    if (isset($files)) {
-      $files = trim($files, ', ');
-      $post->files = tdatabase::str2array($files);
-    }
-
     $post->content = $raw;
+}
+
+  protected function processfiles(tpost $post) {
+    if (isset($_POST['files'])) {
+      $post->files = tdatabase::str2array(trim($POST['files'], ', '));
+    }
   }
 
 public function newpost() {
 return new tpost();
 }
 
-  public function processform() {
-$lang = tlocal::admin('editor');
+public function canprocess() {
     if (empty($_POST['title'])) {
-return $this->admintheme->geterr($lang->error, $lang->emptytitle);
+$lang = tlocal::admin('editor');
+return $lang->emptytitle;
+}
+}
+
+  public function processform() {
+    if ($error = $this->canprocess()) {
+$lang = tlocal::admin('editor');
+return $this->admintheme->geterr($lang->error, $error);
 }
 
     $id = (int)$_POST['id'];
@@ -252,6 +260,7 @@ return $this->admintheme->geterr($lang->error, $lang->emptytitle);
     }
 
     $this->processtab($post);
+    $this->processfiles($post);
 
     $posts = $post->factory->posts;
     if ($id == 0) {

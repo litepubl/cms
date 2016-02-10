@@ -39,10 +39,10 @@ class tadmintickets extends tadminmenu {
       $items = array();
     }
 
-    $html = $this->inihtml();
+$admintheme = $this->admintheme;
     $lang = tlocal::admin('tickets');
     $lang->addsearch('ticket');
-    $result.= $html->editlink();
+    $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
     $result.= $html->getitemscount($from, $from + count($items) , $count);
 
     $tb = new tablebuilder();

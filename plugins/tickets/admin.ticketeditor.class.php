@@ -7,6 +7,7 @@
  */
 
 class tticketeditor extends tposteditor {
+private $newstatus;
 
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
@@ -93,79 +94,75 @@ $args->os = $ticket->os;
     $args->prio = tadminhtml::array2combo($prio, $ticket->prio);
 }
 
-  public function gettext() {
-    $args->code = $html->getinput('editor', 'code', tadminhtml::specchars($ticket->code) , $lang->codetext);
+public function gettext($post = null) {
+$post = $this->getvarpost($post);
+$admintheme = $this->admintheme;
+$lang = tlocal::admin('tickets');
+$tabs = new tabs($admintheme);
+$tabs->add($lang->text, '[editor=raw]');
+$tabs->add($lang->codetext, '[editor=code]');
+
+$args = new targs();
+$args->raw = $post->rawcontent;
+    $args->code = $post->code;
+
+return $admintheme->parsearg($tabs->get(), $args);
 }
 
 public function newpost() {
 return new tticket();
 }
 
-  public function processform() {
-    /* dumpvar($_POST);
-    return;
-
-
-
-
-
-
-    */
-    extract($_POST, EXTR_SKIP);
-    $tickets = ttickets::i();
-    $this->basename = 'tickets';
-    $html = $this->html;
+public function canprocess() {
+if ($error = parent::canprocess()) {
+return $error;
+}
 
     // check spam
+    $tickets = ttickets::i();
     if ($id == 0) {
-      $newstatus = 'published';
+      $this->newstatus = 'published';
       if (litepublisher::$options->group == 'ticket') {
         $hold = $tickets->db->getcount('status = \'draft\' and author = ' . litepublisher::$options->user);
         $approved = $tickets->db->getcount('status = \'published\' and author = ' . litepublisher::$options->user);
         if ($approved < 3) {
-          if ($hold - $approved >= 2) return $html->h4->noapproved;
-          $newstatus = 'draft';
+          if ($hold - $approved >= 2) {
+return tlocal::admin('tickets')->noapproved;
+}
+
+          $this->newstatus = 'draft';
         }
       }
     }
-    if (empty($title)) {
-      $lang = tlocal::i('editor');
-      return $html->h4->emptytitle;
-    }
-    $ticket = tticket::i((int)$id);
-    $ticket->title = $title;
-    $ticket->categories = array(
-      (int)$combocat
-    );
-    if (isset($tags)) $ticket->tagnames = $tags;
-    if ($ticket->author == 0) $ticket->author = litepublisher::$options->user;
-    if (isset($files)) {
-      $files = trim($files);
-      $ticket->files = $files == '' ? array() : explode(',', $files);
-    }
+}
 
-    $ticket->content = tcontentfilter::quote(htmlspecialchars($raw));
-    $ticket->code = $code;
+  public function processtab(tpost $ticket) {
+    extract($_POST, EXTR_SKIP);
+
+    $ticket->title = $title;
     $ticket->prio = $prio;
     $ticket->set_state($state);
     $ticket->version = $version;
     $ticket->os = $os;
-    //if (litepublisher::$options->group != 'ticket') $ticket->state = $state;
-    if ($id == 0) {
-      $ticket->status = $newstatus;
-      $ticket->categories = array(
-        (int)$combocat
-      );
+    $ticket->categories = array(
+      (int)$category
+    );
+
+    if (isset($tags)) {
+$ticket->tagnames = $tags;
+}
+
+    if ($ticket->author == 0) {
+$ticket->author = litepublisher::$options->user;
+}
+
+    if ($ticket->id == 0) {
+      $ticket->status = $this->newstatus;
       $ticket->closed = time();
-      $id = $tickets->add($ticket);
-      $_GET['id'] = $id;
-      $_POST['id'] = $id;
-      $this->idpost = $id;
-    } else {
-      $tickets->edit($ticket);
-    }
+}
 
-    return $html->h4->successedit;
-  }
+    $ticket->content = tcontentfilter::quote(htmlspecialchars($raw));
+    $ticket->code = $code;
+}
 
-} //class
+}//class
