@@ -1,29 +1,34 @@
-<div class="div-table">
-<table class="classictable">
-<tbody>
-<tr>
-		<td>$lang.state</td>
-		<td>$state</td>
-</tr><tr>
-		<td>$lang.prio</td>
-		<td>$prio</td>
-</tr><tr>
-		<td>$lang.version</td>
-		<td>$ticket.version</td>
-</tr><tr>
-		<td>$lang.os</td>
-		<td>$ticket.os</td>
-</tr><tr>
-		<td>$lang.reproduced</td>
-		<td>$reproduced</td>
-</tr><tr>
-		<td>$lang.author</td>
-		<td>$author</td>
-</tr><tr>
-		<td>$lang.assignto</td>
-		<td>$assignto</td>
-</tr>
-
-</tbody >
-</table>
+<div class="table-responsive section">
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>$lang.state</td>
+                <td>$state</td>
+            </tr>
+            <tr>
+                <td>$lang.prio</td>
+                <td>$prio</td>
+            </tr>
+            <tr>
+                <td>$lang.version</td>
+                <td>$ticket.version</td>
+            </tr>
+            <tr>
+                <td>$lang.os</td>
+                <td>$ticket.os</td>
+            </tr>
+            <tr>
+                <td>$lang.reproduced</td>
+                <td>$reproduced</td>
+            </tr>
+            <tr>
+                <td>$lang.author</td>
+                <td>$author</td>
+            </tr>
+            <tr>
+                <td>$lang.assignto</td>
+                <td>$assignto</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
