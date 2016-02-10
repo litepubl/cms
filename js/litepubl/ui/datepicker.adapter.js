@@ -3,35 +3,35 @@
 
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Datepicker = Class.extend({
-format: "dd.mm.yy",
-//url: '/js/jquery/ui/datepicker.min.js',
-url: '/js/ui-datepicker/jquery-ui.min.js',
-//langurl:'/js/jquery/ui/datepicker-%%lang%%.min.js',
-langurl:'/js/ui-datepicker/datepicker-%%lang%%.js',
-cssurl:'/js/ui-datepicker/jquery-ui.min.css',
-script: false,
+    format: "dd.mm.yy",
+    //url: '/js/jquery/ui/datepicker.min.js',
+    url: '/js/ui-datepicker/jquery-ui.min.js',
+    //langurl:'/js/jquery/ui/datepicker-%%lang%%.min.js',
+    langurl: '/js/ui-datepicker/datepicker-%%lang%%.js',
+    cssurl: '/js/ui-datepicker/jquery-ui.min.css',
+    script: false,
 
     ready: function(callback) {
-if ("datepicker" in $.fn) {
-return callback();
-}
+      if ("datepicker" in $.fn) {
+        return callback();
+      }
 
       if (this.script) {
-return this.script.done(callback);
-}
+        return this.script.done(callback);
+      }
 
-if (this.cssurl) {
-$.load_css(ltoptions.files + this.cssurl);
-}
+      if (this.cssurl) {
+        $.load_css(ltoptions.files + this.cssurl);
+      }
 
       var self = this;
       this.script = $.load_script(ltoptions.files + this.url, function() {
         if (ltoptions.lang == 'en') {
-if ($.isFunction(callback)) callback();
-} else {
-var langurl = self.langurl.replace('%%lang%%', ltoptions.lang );
-        self.script = $.load_script(ltoptions.files + langurl, callback);
-}
+          if ($.isFunction(callback)) callback();
+        } else {
+          var langurl = self.langurl.replace('%%lang%%', ltoptions.lang);
+          self.script = $.load_script(ltoptions.files + langurl, callback);
+        }
       });
     },
 

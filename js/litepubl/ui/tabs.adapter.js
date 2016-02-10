@@ -9,17 +9,17 @@
     },
 
     tabs: function(tabs, events) {
-tabs.tabs({
+      tabs.tabs({
         hide: true,
         show: true,
         beforeLoad: this.beforeLoad
-});
+      });
 
-if (events) {
-this.on(tabs, events);
-}
+      if (events) {
+        this.on(tabs, events);
+      }
 
-return tabs;
+      return tabs;
     },
 
     on: function(tabs, events) {

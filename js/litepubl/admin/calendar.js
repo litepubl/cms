@@ -11,8 +11,8 @@
     holderclass: ".calendar",
     rangeclass: ".date-range",
     dialogopened: false,
-width: 300,
-tml: '<div  class="datepicker-container"><div></div></div>',
+    width: 300,
+    tml: '<div  class="datepicker-container"><div></div></div>',
 
     init: function() {
       this.on(this.holderclass);
@@ -62,7 +62,7 @@ tml: '<div  class="datepicker-container"><div></div></div>',
           },
 
           open: function(dialog) {
-var holder = self.getcontainer(dialog);
+            var holder = self.getcontainer(dialog);
             litepubl.datepicker.datepicker(holder, edit);
           },
 
@@ -75,9 +75,9 @@ var holder = self.getcontainer(dialog);
 
     },
 
-getcontainer: function(dialog) {
-return dialog.find(".datepicker-container").children();
-}
+    getcontainer: function(dialog) {
+      return dialog.find(".datepicker-container").children();
+    }
 
   }); //class
 

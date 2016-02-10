@@ -30,7 +30,7 @@
         var title = $("input[name='title']", this);
         if (!$.trim(title.val())) {
           event.stopImmediatePropagation();
-event.preventDefault();
+          event.preventDefault();
           $.messagebox(lang.dialog.error, lang.posteditor.emptytitle, function() {
             title.focus();
           });
@@ -40,37 +40,37 @@ event.preventDefault();
     },
 
     init_tab: function(panel) {
-if (!panel.data('init.litepubl')) {
-panel.data('init.litepubl', true);
+      if (!panel.data('init.litepubl')) {
+        panel.data('init.litepubl', true);
 
-switch (panel.attr('data-id')) {
-case 'tags':
-var self = this;
-          panel.on('click.tag', 'a', function() {
-            self.addtag($(this).text());
-            return false;
-          });
-break;
+        switch (panel.attr('data-id')) {
+          case 'tags':
+            var self = this;
+            panel.on('click.tag', 'a', function() {
+              self.addtag($(this).text());
+              return false;
+            });
+            break;
 
-case 'posted':
-var node = panel.get(0).firstChild;
-while (node.nodeType  != 8) {
-node = node.nextSibling;
-}
+          case 'posted':
+            var node = panel.get(0).firstChild;
+            while (node.nodeType != 8) {
+              node = node.nextSibling;
+            }
 
-panel.html(node.nodeValue);
-      litepubl.calendar.on(panel);
-break;
+            panel.html(node.nodeValue);
+            litepubl.calendar.on(panel);
+            break;
 
-case 'seo':
-var node = panel.get(0).firstChild;
-while (node.nodeType  != 8) {
-node = node.nextSibling;
-}
+          case 'seo':
+            var node = panel.get(0).firstChild;
+            while (node.nodeType != 8) {
+              node = node.nextSibling;
+            }
 
-panel.html(node.nodeValue);
-break;
-}
+            panel.html(node.nodeValue);
+            break;
+        }
       }
     },
 
