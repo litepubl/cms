@@ -9,6 +9,7 @@
 class tabs {
 public$tabs;
 public $panels;
+public $id;
 public $_admintheme;
   private static $index = 0;
 
@@ -28,7 +29,7 @@ return $this->_admintheme;
 
   public function get() {
 return strtr($this->getadmintheme()->templates['tabs'], array(
-'$id' => self::$index++,
+'$id' => $this->id ? $this->id : 'tabs-' . self::$index++,
 '$tab' => implode("\n", $this->tabs),
 '$panel' => implode("\n", $this->panels),
 ));

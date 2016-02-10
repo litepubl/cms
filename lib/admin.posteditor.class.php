@@ -163,7 +163,7 @@ $vars->post = $post;
 $vars->posteditor = $this;
 
 if ($post->id != 0) {
-$result .= $admintheme->h($lang->formhead . ' ' . $post->bookmark);
+$result .= $admintheme->h($lang->formhead . $post->bookmark);
 }
 
     if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {

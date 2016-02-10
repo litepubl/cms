@@ -9,22 +9,17 @@
     },
 
     tabs: function(tabs, events) {
-      return tabs.tabs({
+tabs.tabs({
         hide: true,
         show: true,
-        beforeLoad: this.beforeLoad,
-        beforeActivate: events && 'before' in events ? function(event, ui) {
-          events.before(ui.newPanel);
-        } : null,
+        beforeLoad: this.beforeLoad
+});
 
-        activate: events && 'activated' in events ? function(event, ui) {
-          events.activated(ui.newPanel);
-        } : null,
+if (events) {
+this.on(tabs, events);
+}
 
-        load: events && 'loaded' in events ? function(event, ui) {
-          events.loaded(ui.panel);
-        } : null
-      });
+return tabs;
     },
 
     on: function(tabs, events) {

@@ -73,12 +73,20 @@ class tablebuilder {
     );
   }
 
+public function getadmintheme() {
+    if (!$this->admintheme) {
+$this->admintheme = admintheme::i();
+}
+
+return $this->admintheme;
+}
+
+}
+
   public function build(array $items) {
     $body = '';
     $args = $this->args;
-
-    if (!$this->admintheme) $this->admintheme = admintheme::i();
-    $admintheme = $this->admintheme;
+    $admintheme = $this->getadmintheme();
 
     foreach ($items as $id => $item) {
       if (is_array($item)) {
@@ -147,8 +155,7 @@ class tablebuilder {
 
     $body = '';
     $args = $this->args;
-    if (!$this->admintheme) $this->admintheme = admintheme::i();
-    $admintheme = $this->admintheme;
+    $admintheme = $this->getadmintheme();
 
     foreach ($props as $k => $v) {
       if (($k === false) || ($v === false)) continue;
@@ -161,11 +168,60 @@ class tablebuilder {
           $body.= $admintheme->parsearg($this->body, $args);
         }
       } else {
-        if ($k2 = $lang->__get($k)) $k = $k2;
+        if ($k2 = $lang->__get($k)) {
+$k = $k2;
+}
+
         $args->name = $k;
         $args->value = $v;
         $body.= $admintheme->parsearg($this->body, $args);
       }
+    }
+
+    return $admintheme->gettable($this->head, $body);
+  }
+
+  public function inputs(array $inputs) {
+    $lang = tlocal::i();
+    $this->setstruct(array(
+      array(
+        $lang->name,
+        '<label for="$name-input">$title</label>'
+      ) ,
+
+      array(
+        $lang->property,
+        '$input'
+      )
+    ));
+
+    $body = '';
+    $args = $this->args;
+    $admintheme = $this->getadmintheme();
+
+    foreach ($inputs as $type => $name) {
+      if (($name === false) || ($type === false)) {
+continue;
+}
+
+switch ($type) {
+case 'combo':
+$input = '<select name="$name" id="$name-input">$value</select>';
+break;
+
+case 'text':
+$input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+break;
+
+default:
+$this->error('Unknown input type ' . $type);
+}
+
+$args->name = $name;
+        $args->title = $lang->$name;
+$args->value = $args->$name;
+        $args->input = $admintheme->parsearg($input, $args);
+        $body.= $admintheme->parsearg($this->body, $args);
     }
 
     return $admintheme->gettable($this->head, $body);

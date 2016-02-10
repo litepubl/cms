@@ -62,6 +62,7 @@ $lm->lock();
 $lm->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
 $lm->deletehtml('lib/languages/posteditor.ini');
 $lm->deletehtml('plugins/downloaditem/resource/html.ini');
+$lm->deletehtml('plugins/tickets/resource/html.ini');
 $lm->unlock();
 
     $js = tjsmerger::i();

@@ -12,16 +12,6 @@ class tticketeditor extends tposteditor {
     return parent::iteminstance(__class__, $id);
   }
 
-  public function gethead() {
-    $result = parent::gethead();
-    $template = ttemplate::i();
-    $result.= $template->getready('
-    //alert($("#tabs").parent().parent().html());
-    //$("textarea:first").val($("#tabs").parent().parent().html());
-  $("#tabs, #contenttabs").tabs({ beforeLoad: litepubl.uibefore});');
-    return $result;
-  }
-
   public function gettitle() {
     if ($this->idpost == 0) {
       return parent::gettitle();
@@ -39,29 +29,41 @@ class tticketeditor extends tposteditor {
     }
   }
 
-  public function getcontent() {
-    $result = '';
-    $this->basename = 'tickets';
-    $ticket = tticket::i($this->idpost);
-    ttheme::$vars['ticket'] = $ticket;
-    ttheme::$vars['post'] = $ticket;
-    $args = new targs();
-    $args->id = $this->idpost;
-    $args->title = tcontentfilter::unescape($ticket->title);
-    $args->ajax = tadminhtml::getadminlink('/admin/ajaxposteditor.htm', "id=$ticket->id&get");
-    $ajaxeditor = tajaxposteditor::i();
-    $args->raw = $ajaxeditor->geteditor('raw', $ticket->rawcontent, true);
+public function gettabs($post = null) {
+$post = $this->getvarpost($post);
+$args = new targs();
+$this->getargstab($post, $args);
 
-    $html = $this->inihtml('tickets');
     $lang = tlocal::admin('tickets');
-    $lang->ini['tickets'] = $lang->ini['ticket'] + $lang->ini['tickets'];
+    $lang->addsearch('ticket', 'tickets', 'editor');
 
-    $args->code = $html->getinput('editor', 'code', tadminhtml::specchars($ticket->code) , $lang->codetext);
+$admintheme = $this->admintheme;
+$tabs = new tabs($admintheme);
+// #tabs for posteditor.js
+$tabs->id = 'tabs';
 
+$tb = new tablebuilder($admintheme);
+$tabs->add($lang->ticket, $tb->inputs(array(
+'combo' => 'category',
+'combo' => 'state',
+'combo' => 'prio',
+'text' => 'version',
+'text' => 'os',
+)));
+
+$tabs->ajax(
+return $atmintheme->parsearg($tabs->get(), $args);
+}
+
+  public function getargstab(tpost $ticket, targs $args) {
+    $args->ajax = $this->getajaxlink($ticket->id);
     $args->fixed = $ticket->state == 'fixed';
 
+$lang = tlocal::admin('tickets');
     $tickets = ttickets::i();
-    $args->catcombo = static::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : $tickets->cats[0]);
+    $args->category = static::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : $tickets->cats[0]);
+$args->version = $ticket->version;
+$args->os = $ticket->os;
 
     $states = array();
     foreach (array(
@@ -74,7 +76,8 @@ class tticketeditor extends tposteditor {
     ) as $state) {
       $states[$state] = $lang->$state;
     }
-    $args->statecombo = $html->array2combo($states, $ticket->state);
+
+    $args->state = tadminhtml::array2combo($states, $ticket->state);
 
     $prio = array();
     foreach (array(
@@ -86,17 +89,27 @@ class tticketeditor extends tposteditor {
     ) as $p) {
       $prio[$p] = $lang->$p;
     }
-    $args->priocombo = $html->array2combo($prio, $ticket->prio);
 
-    if ($ticket->id > 0) $result.= $html->headeditor();
-    $result.= $html->form($args);
-    $result = $html->fixquote($result);
-    return $result;
-  }
+    $args->prio = tadminhtml::array2combo($prio, $ticket->prio);
+}
+
+  public function gettext() {
+    $args->code = $html->getinput('editor', 'code', tadminhtml::specchars($ticket->code) , $lang->codetext);
+}
+
+public function newpost() {
+return new tticket();
+}
 
   public function processform() {
     /* dumpvar($_POST);
-    return;
+    return;
+
+
+
+
+
+
     */
     extract($_POST, EXTR_SKIP);
     $tickets = ttickets::i();

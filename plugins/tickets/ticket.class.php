@@ -38,6 +38,10 @@ class tticket extends tpost {
     );
   }
 
+public function getfactory() {
+return ticketfactory::i();
+}
+
   public function beforedb() {
     if ($this->childdata['closed'] == '') $this->childdata['closed'] = sqldate();
   }
@@ -130,3 +134,15 @@ class tticket extends tpost {
   }
 
 } //class
+
+class ticketfactory extends tpostfactory {
+
+  public static function i() {
+    return getinstance(__class__);
+  }
+
+  public function getposts() {
+    return ttickets::i();
+  }
+
+}
