@@ -73,6 +73,7 @@ $self->add($section, "/lib/languages/$language/mediaplayer.min.js");
   $section = 'admin';
 tjsmerger_bootstrap_admin($self, true);
   $self->add($section, '/js/litepubl/admin/admin.min.js');
+$self->add($section, 'js/litepubl/ui/datepicker.adapter.min.js');
   $self->add($section, '/js/litepubl/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
 

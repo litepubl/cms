@@ -38,7 +38,7 @@ $css->replacefile('default',
 '/js/litepubl/common/css/form.inline.min.css'
 );
 
-$css->unlock();
+
 
 $t = ttemplate::i();
 $t->footer = str_replace('2015', '2016', $t->footer);
@@ -75,6 +75,18 @@ if ($ajax->visual) {
 }
 
 //replace ui tabs
+include_once(litepublisher::$paths->lib . 'install/jsmerger.class.install.php');
+tjsmerger_ui_admin($js, false);
+tjsmerger_bootstrap_admin($js, true);
+
+//ui datepicker adapter
+$js->add('admin', 'js/litepubl/ui/datepicker.adapter.min.js');
 
 $js->unlock();
+
+$css->deletefile('admin', '/js/jquery/ui/redmond/jquery-ui.min.css');
+$css->unlock();
+
+  unset(litepublisher::$site->data['jqueryui_version']);
+litepublisher::$site->save();
 }

@@ -33,7 +33,7 @@ function tcssmergerInstall($self) {
   }
 
   $section = 'admin';
-  $self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
+  //$self->add($section, '/js/jquery/ui/redmond/jquery-ui.min.css');
   $self->add($section, '/js/litepubl/admin/css/calendar.min.css');
   $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
   $self->unlock();

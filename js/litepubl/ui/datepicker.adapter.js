@@ -4,12 +4,12 @@
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Datepicker = Class.extend({
 format: "dd.mm.yy",
-url: '/js/jquery/ui/datepicker.min.js',
-langurl:'/js/jquery/ui/datepicker-%%lang%%.min.js',
+//url: '/js/jquery/ui/datepicker.min.js',
+url: '/js/ui-datepicker/jquery-ui.min.js',
+//langurl:'/js/jquery/ui/datepicker-%%lang%%.min.js',
+langurl:'/js/ui-datepicker/datepicker-%%lang%%.js',
+cssurl:'/js/ui-datepicker/jquery-ui.min.css',
 script: false,
-
-    init: function() {
-},
 
     ready: function(callback) {
 if ("datepicker" in $.fn) {
@@ -18,6 +18,10 @@ return callback();
 
       if (this.script) {
 return this.script.done(callback);
+}
+
+if (this.cssurl) {
+$.load_css(ltoptions.files + this.cssurl);
 }
 
       var self = this;

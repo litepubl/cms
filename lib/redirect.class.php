@@ -30,7 +30,6 @@ class tredirector extends titems {
     if (strbegin($url, litepublisher::$site->url)) return substr($url, strlen(litepublisher::$site->url));
 
     //redir jquery scripts
-    if (strbegin($url, '/js/jquery/ui-')) return '/js/jquery/ui-' . litepublisher::$site->jqueryui_version . substr($url, strpos($url, '/', 15));
     if (strbegin($url, '/js/jquery/jquery')) return '/js/jquery/jquery-' . litepublisher::$site->jquery_version . '.min.js';
 
     //fix for 2.xx versions
