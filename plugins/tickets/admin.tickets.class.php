@@ -48,29 +48,31 @@ $admintheme = $this->admintheme;
     $tb = new tablebuilder();
     $tb->setposts(array(
       array(
-        'center',
+        'right',
         $lang->date,
         '$post.date'
       ) ,
+
       array(
-        'left',
         $lang->posttitle,
         '$post.bookmark'
       ) ,
+
       array(
-        'left',
         $lang->author,
         '$post.authorlink'
       ) ,
+
       array(
         $lang->status,
         '$poststatus'
       ) ,
+
       array(
-        'left',
         $lang->category,
         '$post.category'
       ) ,
+
       array(
         $lang->state,
         function (tablebuilder $t) {
@@ -79,10 +81,10 @@ $admintheme = $this->admintheme;
       ) ,
 
       array(
-        'center',
         $lang->edit,
         '<a href="' . tadminhtml::getadminlink('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
       ) ,
+
     ));
 
     $table = $tb->build($items);
@@ -90,15 +92,16 @@ $admintheme = $this->admintheme;
     //wrap form
     if (litepublisher::$options->group != 'ticket') {
       $args = new targs();
-      $args->table = $table;
-      $result.= $html->tableform($args);
+$form = new adminform($args);
+$form->body = $table;
+    $form->body .= $form->centergroup($this->html->getsubmit('delete', 'setdraft', 'publish', 'setfixed'));
+    $form->submit = '';
+      $result.= $form->get();
     } else {
       $result.= $table;
     }
 
-    $result = $html->fixquote($result);
-
-    $theme = ttheme::i();
+    $theme = $this->theme;
     $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }

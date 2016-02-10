@@ -52,7 +52,9 @@ $tabs->add($lang->ticket, $tb->inputs(array(
 'text' => 'os',
 )));
 
-$tabs->ajax(
+$tabs->tabs[] = $tabs->gettab('tags', '$ajax=tags', $lang->tags);
+$tabs->panels[] = $tabs->getpanel('tags', '');
+
 return $atmintheme->parsearg($tabs->get(), $args);
 }
 
