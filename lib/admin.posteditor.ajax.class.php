@@ -140,7 +140,7 @@ class tajaxposteditor extends tevents {
 
   public function gettext($text, $admintheme = null) {
 if (!$admintheme) {
-    $admintheme = tview::i(tviews::i()->defaults['admin'])->admintheme;
+    $admintheme = admintheme::admin();
 }
 
 $args = new targs();

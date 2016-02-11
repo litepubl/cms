@@ -1,15 +1,13 @@
-posteditor.tabs = [
-<div id="tabs" class="posteditor-tabs">
-    <ul class="nav nav-tabs" role="tablist">
+posteditor.tabs.tabs = [
         [tab=categories]
         [ajaxtab=tags]
         [tab=posted]
         [ajaxtab=access]
         [ajaxtab=view]
         [tab=seo]
-    </ul>
+        ]
 
-    <div class="tab-content">
+posteditor.tabs.panels = [
         [tabpanel=categories]
         [tabpanel=tags]
         [tabpanel=posted{
@@ -28,6 +26,4 @@ posteditor.tabs = [
                 [editor=head]
             -->
         }]
-    </div>
-</div>
 ]

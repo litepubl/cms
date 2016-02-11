@@ -72,9 +72,16 @@ public function gettabs($post = null) {
 $post = $this->getvarpost($post);
 $args = new targs();
 $this->getargstab($post, $args);
+return $this->admintheme->parsearg($this->gettabstemplate(), $args);
+}
 
+public function gettabstemplate() {
 $admintheme = $this->admintheme;
-return $admintheme->parsearg($admintheme->templates['posteditor.tabs'], $args);
+return strtr($admintheme->templates['tabs'], array(
+'$id' => 'tabs',
+'$tab' => $admintheme->templates['posteditor.tabs.tabs'],
+'$panel' => $admintheme->templates['posteditor.tabs.panels'],
+));
 }
 
   public function getargstab(tpost $post, targs $args) {
@@ -157,7 +164,7 @@ $admintheme = $this->admintheme;
 $lang = tlocal::admin('editor');
     $args = new targs();
 
-    $post = tpost::i($this->idpost);
+    $post = $this->idpost ? tpost::i($this->idpost) : $this->newpost();
 $vars = new themevars();
 $vars->post = $post;
 $vars->posteditor = $this;
@@ -176,10 +183,6 @@ $args->adminurl = $this->url;
 $result .= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
 return $result;
   }
-
-  protected function set_post(tpost $post) {
-$this->processtab($post);
-}
 
   protected function processtab(tpost $post) {
     extract($_POST, EXTR_SKIP);

@@ -23,6 +23,10 @@ public $onfileperm;
     return self::getbyname(__class__, $name);
   }
 
+  public static function admin() {
+return tview::i(tviews::i()->defaults['admin'])->admintheme;
+}
+
   public function getparser() {
     return adminparser::i();
   }

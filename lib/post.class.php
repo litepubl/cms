@@ -894,7 +894,10 @@ return '';
   }
 
   public function setcontent($s) {
-    if (!is_string($s)) $this->error('Error! Post content must be string');
+    if (!is_string($s)) {
+$this->error('Error! Post content must be string');
+}
+
     $this->rawcontent = $s;
     tcontentfilter::i()->filterpost($this, $s);
   }
@@ -916,6 +919,7 @@ return '';
     if (($this->id > 0) && ($this->data['rawcontent'] === false)) {
       $this->data['rawcontent'] = $this->rawdb->getvalue($this->id, 'rawcontent');
     }
+
     return $this->data['rawcontent'];
   }
 

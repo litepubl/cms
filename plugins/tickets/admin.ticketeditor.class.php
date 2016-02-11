@@ -14,6 +14,7 @@ private $newstatus;
   }
 
   public function gettitle() {
+tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
     if ($this->idpost == 0) {
       return parent::gettitle();
     } else {
@@ -30,32 +31,22 @@ private $newstatus;
     }
   }
 
-public function gettabs($post = null) {
-$post = $this->getvarpost($post);
-$args = new targs();
-$this->getargstab($post, $args);
-
-    $lang = tlocal::admin('tickets');
-    $lang->addsearch('ticket', 'tickets', 'editor');
-
+public function gettabstemplate() {
 $admintheme = $this->admintheme;
-$tabs = new tabs($admintheme);
-// #tabs for posteditor.js
-$tabs->id = 'tabs';
-
 $tb = new tablebuilder($admintheme);
-$tabs->add($lang->ticket, $tb->inputs(array(
+
+return strtr($admintheme->templates['tabs'], array(
+'$id' => 'tabs',
+'$tab' => '[tab=ticket] [ajaxtab=tags]',
+'$panel' => '[tabpanel=tags]' .
+$tb->inputs(array(
 'combo' => 'category',
 'combo' => 'state',
 'combo' => 'prio',
 'text' => 'version',
 'text' => 'os',
-)));
-
-$tabs->tabs[] = $tabs->gettab('tags', '$ajax=tags', $lang->tags);
-$tabs->panels[] = $tabs->getpanel('tags', '');
-
-return $atmintheme->parsearg($tabs->get(), $args);
+))
+));
 }
 
   public function getargstab(tpost $ticket, targs $args) {

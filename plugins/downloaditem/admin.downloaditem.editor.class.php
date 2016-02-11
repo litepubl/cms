@@ -13,6 +13,9 @@ class tdownloaditemeditor extends tposteditor {
   }
 
   public function gettitle() {
+    $lang = tlocal::admin('downloaditems');
+    $lang->addsearch('downloaditems', 'downloaditem', 'editor');
+
     if ($this->idpost == 0) {
       return parent::gettitle();
     } else {
@@ -20,29 +23,20 @@ class tdownloaditemeditor extends tposteditor {
     }
   }
 
-public function gettabs($post = null) {
-$post = $this->getvarpost($post);
-$args = new targs();
-$this->getargstab($post, $args);
-
-    $lang = tlocal::admin('downloaditems');
-    $lang->addsearch('downloaditem', 'editor');
-
+public function gettabstemplate() {
 $admintheme = $this->admintheme;
-
-//add tab before cats
-$tml = strtr($admintheme->templates['posteditor.tabs'], array(
-'[tab=categories]' => '[tab=downloaditem] [tab=categories]',
-'[tabpanel=categories]' => '[tabpanel=downloaditem{
+return strtr($admintheme->templates['tabs'], array(
+'$id' => 'tabs',
+'$tab' => '[tab=downloaditem]' . $admintheme->templates['posteditor.tabs.tabs'],
+'$panel' => '[tabpanel=downloaditem{
 [combo=type]
 [text=downloadurl]
 [text=authorurl]
 [text=authorname]
 [text=version]
-}] [tabpanel=categories]',
+}]' .
+$admintheme->templates['posteditor.tabs.panels'],
 ));
-
-return $admintheme->parsearg($tml, $args);
 }
 
   public function getargstab(tpost $post, targs $args) {
