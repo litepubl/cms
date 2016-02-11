@@ -40,4 +40,19 @@
     return false;
   };
 
+  $.fn.extractComment= function(callback) {
+            var node = this.get(0).firstChild;
+            while (node.nodeType != 8) {
+              node = node.nextSibling;
+            }
+
+var html = node.nodeValue;
+if ($.isFunction(callback)) {
+html = callback(html);
+}
+
+            this.html(html);
+return this;
+};
+
 }(jQuery));

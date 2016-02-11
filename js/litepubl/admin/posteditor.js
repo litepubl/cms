@@ -11,33 +11,22 @@
     tabs: false,
 
     init: function() {
-      this.tabs = $("#tabs");
-      if (!this.tabs.length) return;
+      var tabs = $("#tabs");
+      if (tabs.length) {
+this.init_tabs(tabs);
+this.ontitle(tabs.closest('form'));
+}
+},
 
+init_tabs: function(tabs) {
+this.tabs = tabs;
       var self = this;
       litepubl.tabs.tabs(this.tabs, {
         before: function(panel) {
           self.init_tab(panel);
         }
       });
-
-      $("#posteditor-init-files").one('click.initfiles', function() {
-        litepubl.fileman = new litepubl.Fileman("#posteditor-files");
-        return false;
-      });
-
-      this.tabs.closest('form').on('submit.posttitle', function(event) {
-        var title = $("input[name='title']", this);
-        if (!$.trim(title.val())) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
-          $.messagebox(lang.dialog.error, lang.posteditor.emptytitle, function() {
-            title.focus();
-          });
-        }
-      });
-
-    },
+},
 
     init_tab: function(panel) {
       if (!panel.data('init.litepubl')) {
@@ -53,22 +42,12 @@
             break;
 
           case 'posted':
-            var node = panel.get(0).firstChild;
-            while (node.nodeType != 8) {
-              node = node.nextSibling;
-            }
-
-            panel.html(node.nodeValue);
+panel.extractComment();
             litepubl.calendar.on(panel);
             break;
 
           case 'seo':
-            var node = panel.get(0).firstChild;
-            while (node.nodeType != 8) {
-              node = node.nextSibling;
-            }
-
-            panel.html(node.nodeValue);
+panel.extractComment();
             break;
         }
       }
@@ -86,6 +65,20 @@
         }
         $('#text-tags').val(tags + ', ' + newtag);
       }
+    },
+
+ontitle: function(form) {
+form.on('submit.posttitle', function(event) {
+        var title = $("input[name='title']", this);
+        if (!$.trim(title.val())) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          $.messagebox(lang.dialog.error, lang.posteditor.emptytitle, function() {
+            title.focus();
+          });
+        }
+      });
+
     }
 
   }); //posteditor
