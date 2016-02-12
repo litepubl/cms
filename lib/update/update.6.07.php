@@ -89,4 +89,10 @@ $css->unlock();
 
   unset(litepublisher::$site->data['jqueryui_version']);
 litepublisher::$site->save();
+
+$aj = tajaxposteditor::i();
+if (!isset($aj->data['eventnames'])) {
+$aj->data['eventnames'] = array();
+$aj->save();
+}
 }

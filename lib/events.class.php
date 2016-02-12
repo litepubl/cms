@@ -113,7 +113,6 @@ if (!is_array($this->map )) {
   }
 
   public function callevent($name, $params) {
-
     if (!isset($this->events[$name])) {
       return '';
     }

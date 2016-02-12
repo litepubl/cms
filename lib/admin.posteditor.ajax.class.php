@@ -17,17 +17,29 @@ class tajaxposteditor extends tevents {
   protected function create() {
     parent::create();
     $this->basename = 'ajaxposteditor';
-    $this->addevents('onhead', 'oneditor');
+    $this->data['eventnames'] = & $this->eventnames;
+    $this->map['eventnames'] = 'eventnames';
+
     $this->data['head'] = '';
     $this->data['visual'] = '';
     //'/plugins/ckeditor/init.js';
     $this->data['ajaxvisual'] = true;
   }
 
-  public function gethead() {
-    $result = $this->data['head'];
-    $this->callevent('onhead', array(&$result));
-    return $result;
+  public function addevent($name, $class, $func, $once = false) {
+    if (!in_array($name, $this->eventnames)) {
+$this->eventnames[] = $name;
+}
+
+    return parent::addevent($name, $class, $func, $once);
+  }
+
+  public function delete_event($name) {
+    if (isset($this->events[$name])) {
+      unset($this->events[$name]);
+      array_delete_value($this->eventnames, $name);
+      $this->save();
+    }
   }
 
   protected static function error403() {
@@ -77,17 +89,16 @@ class tajaxposteditor extends tevents {
 
   public function getcontent() {
     $theme = tview::i(tviews::i()->defaults['admin'])->theme;
-    $html = tadminhtml::i();
-    $html->section = 'editor';
     $lang = tlocal::i('editor');
     $post = tpost::i($this->idpost);
-    ttheme::$vars['post'] = $post;
+$vars = new themevars();
+$vars->post = $post;
 
     switch ($_GET['get']) {
       case 'tags':
-        $result = $html->getedit('tags', $post->tagnames, $lang->tags);
+        $result = $theme->getinput('text', 'tags', $post->tagnames, $lang->tags);
         $lang->section = 'editor';
-        $result.= $html->h4->addtags;
+        $result.= $theme->h($lang->addtags);
         $items = array();
         $tags = $post->factory->tags;
         $list = $tags->getsorted(-1, 'name', 0);
@@ -116,7 +127,7 @@ class tajaxposteditor extends tevents {
 
         $args->perms = tadminperms::getcombo($post->idperm);
         $args->password = $post->password;
-        $result = $html->parsearg('[combo=comstatus]
+        $result = admintheme::admin()->parsearg('[combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
@@ -132,8 +143,14 @@ class tajaxposteditor extends tevents {
 
 
       default:
+$name = trim($_GET['get']);
+if (isset($this->events[$name])) {
+$result = $this->callevent($name, array($post));
+} else {
         $result = var_export($_GET, true);
+}
     }
+
     //tfiler::log($result);
     return turlmap::htmlheader(false) . $result;
   }
