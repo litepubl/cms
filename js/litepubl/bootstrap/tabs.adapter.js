@@ -109,7 +109,7 @@
     },
 
     on: function(tabs, events) {
-      tabs.data("tabevents.litepubl", events);
+      tabs.data("tabevents.litepubl", $.extend(tabs.data("tabevents.litepubl") || {}, events));
     },
 
     off: function(tabs) {
