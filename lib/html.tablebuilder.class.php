@@ -81,14 +81,19 @@ $this->admintheme = admintheme::i();
 return $this->admintheme;
 }
 
-}
-
   public function build(array $items) {
     $body = '';
-    $args = $this->args;
-    $admintheme = $this->getadmintheme();
 
     foreach ($items as $id => $item) {
+      $body.= $this->parseitem($id, $item);
+    }
+
+    return $this->getadmintheme()->gettable($this->head, $body);
+  }
+
+public function parseitem($id, $item) {
+    $args = $this->args;
+
       if (is_array($item)) {
         $this->item = $item;
         $args->add($item);
@@ -105,11 +110,8 @@ return $this->admintheme;
         $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
       }
 
-      $body.= $admintheme->parsearg($this->body, $args);
-    }
-
-    return $admintheme->gettable($this->head, $body);
-  }
+return $this->getadmintheme()->parsearg($this->body, $args);
+}
 
   //predefined callbacks
   public function titems_callback(tablebuilder $self, titems $owner) {
