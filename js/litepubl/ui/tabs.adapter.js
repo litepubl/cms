@@ -27,19 +27,22 @@
         switch (name) {
           case 'before':
             tabs.on("tabsbeforeactivate.litepubl", function(event, ui) {
-              events.before(ui.newPanel);
+event.panel = ui.newPanel;
+              events.before(event);
             });
             break;
 
           case 'activated':
             tabs.on("tabsactivate.litepubl", function(event, ui) {
-              events.activated(ui.newPanel);
+event.panel = ui.newPanel;
+              events.activated(event);
             });
             break;
 
           case 'loaded':
             tabs.on("tabsload.litepubl", function(event, ui) {
-              events.loaded(ui.panel);
+event.panel = ui.panel;
+              events.loaded(event);
             });
             break;
         }

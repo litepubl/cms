@@ -3,16 +3,18 @@
 
   litepubl.bootstrap = litepubl.bootstrap || {};
   litepubl.bootstrap.Tabs = Class.extend({
+//event namespace
+namespace: '.litepubl.tabs',
 
     init: function() {
       var self = this;
       $(document).on('show.bs.tab', function(e) {
           var link = $(e.target);
           self.before(link);
-          self.event('before', link);
+          self.trigger('before', link);
         })
         .on('shown.bs.tab', function(e) {
-          self.event('activated', $(e.target));
+          self.trigger('activated', $(e.target));
         });
 
       var self = this;
@@ -21,10 +23,8 @@
 
     tabs: function(tabs, events) {
       this.navtabs(tabs.children('.nav-tabs'));
-      if (events) {
-        tabs.data('tabevents.litepubl', events);
-      }
-    },
+this.on(tabs, events);
+},
 
     navtabs: function(navtabs) {
       //activate first item
@@ -73,7 +73,7 @@
       var self = this;
       return $.ajax(this.getajax(url, function(html) {
           panel.html(html);
-          self.event('loaded', link);
+          self.trigger('loaded', link);
         }))
         .always(function() {
           panel.removeAttr("aria-busy");
@@ -109,18 +109,24 @@
     },
 
     on: function(tabs, events) {
-      tabs.data("tabevents.litepubl", $.extend(tabs.data("tabevents.litepubl") || {}, events));
+if (tabs && events) {
+for (var name in events) {
+tabs.on(name + this.namespace, events[name]);
+}
+}
     },
 
     off: function(tabs) {
-      tabs.data('tabevents.litepubl', false);
+      tabs.off(this.namespace);
     },
 
-    event: function(name, link) {
-      var events = link.closest('ul').parent().data('tabevents.litepubl');
-      if (events && name in events) {
-        events[name](this.getpanel(link));
-      }
+    trigger: function(name, link) {
+var panel = this.getpanel(link);
+link.closest('.adminpanel').trigger($.Event(name + this.namespace, {
+target: link[0],
+      relatedTarget: panel[0],
+panel: panel
+}));
     },
 
 setenabled: function(link, enabled) {
