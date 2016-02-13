@@ -68,7 +68,7 @@ event.panel = ui.panel;
     },
 
 setenabled: function(link, enabled) {
-link.closest('.adminpanel').tabs(enabled ? 'enable' : 'disable', link.parent().index() );
+link.closest('.admintabs').tabs(enabled ? 'enable' : 'disable', link.parent().index() );
 }
 
   });

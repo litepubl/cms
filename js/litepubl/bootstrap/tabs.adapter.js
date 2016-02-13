@@ -122,7 +122,7 @@ tabs.on(name + this.namespace, events[name]);
 
     trigger: function(name, link) {
 var panel = this.getpanel(link);
-link.closest('.adminpanel').trigger($.Event(name + this.namespace, {
+link.closest('.admintabs').trigger($.Event(name + this.namespace, {
 target: link[0],
       relatedTarget: panel[0],
 panel: panel

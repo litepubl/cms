@@ -252,7 +252,7 @@ return $lang->emptytitle;
   public function afterprocess(tpost $post) {
 }
 
-  public function processform( {
+  public function processform() {
 $lang = tlocal::admin('editor');
 $admintheme = $this->admintheme;
 
