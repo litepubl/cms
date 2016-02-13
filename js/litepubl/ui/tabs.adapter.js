@@ -62,7 +62,11 @@
           ui.tab.data("loaded", true);
         });
       }
-    }
+    },
+
+setenabled: function(link, enabled) {
+link.closest('.adminpanel').tabs(enabled ? 'enable' : 'disable', link.parent().index() );
+}
 
   });
 

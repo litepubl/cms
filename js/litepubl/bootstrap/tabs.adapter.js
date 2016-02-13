@@ -121,7 +121,21 @@
       if (events && name in events) {
         events[name](this.getpanel(link));
       }
-    }
+    },
+
+setenabled: function(link, enabled) {
+if (enabled) {
+link.parent().removeClass("disabled");
+link.attr("data-toggle", "tab");
+link.off("click.disabled");
+} else {
+link.parent().addClass("disabled");
+link.attr("data-toggle", "disabled");
+link.on("click.disabled", function() {
+return false;
+});
+}
+}
 
   });
 
