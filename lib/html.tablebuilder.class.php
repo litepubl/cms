@@ -201,7 +201,7 @@ $k = $k2;
     $args = $this->args;
     $admintheme = $this->getadmintheme();
 
-    foreach ($inputs as $type => $name) {
+    foreach ($inputs as $name => $type) {
       if (($name === false) || ($type === false)) {
 continue;
 }

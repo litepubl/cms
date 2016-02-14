@@ -82,11 +82,11 @@ $args->os = $ticket->os;
 $tb = new tablebuilder($this->admintheme);
 $tb->args = $args;
 $args->ticket = $tb->inputs(array(
-'combo' => 'category',
-'combo' => 'state',
-'combo' => 'prio',
-'text' => 'version',
-'text' => 'os',
+'category' => 'combo',
+'state' => 'combo',
+'prio' => 'combo',
+'version' => 'text',
+'os' => 'text',
 ));
 }
 
@@ -116,6 +116,7 @@ return $error;
 
     // check spam
     $tickets = ttickets::i();
+$id = (int) $_POST['id'];
     if ($id == 0) {
       $this->newstatus = 'published';
       if (litepublisher::$options->group == 'ticket') {

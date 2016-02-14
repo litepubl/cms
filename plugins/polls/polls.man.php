@@ -25,10 +25,18 @@ class tpollsman extends tplugin {
 
   public function add($id_tml, $status) {
     $id_tml = (int)$id_tml;
-    if ($id_tml == 0) $id_tml = $this->pollpost;
+    if ($id_tml == 0) {
+$id_tml = $this->pollpost;
+}
+
     $polls = tpolls::i();
-    if (!($tml = $polls->get_tml($id_tml))) $this->error(sprintf('The "%d" poll template not found', $id_tml));
-    if (($status != 'opened') && ($status != 'closed')) $this->error(sprintf('Unknown status "%s"', $status));
+    if (!($tml = $polls->get_tml($id_tml))) {
+$this->error(sprintf('The "%d" poll template not found', $id_tml));
+}
+
+    if (($status != 'opened') && ($status != 'closed')) {
+$this->error(sprintf('Unknown status "%s"', $status));
+}
 
     $item = array(
       'id_tml' => $id_tml,

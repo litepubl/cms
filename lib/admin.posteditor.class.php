@@ -234,7 +234,7 @@ $post->password = $password;
 
   protected function processfiles(tpost $post) {
     if (isset($_POST['files'])) {
-      $post->files = tdatabase::str2array(trim($POST['files'], ', '));
+      $post->files = tdatabase::str2array(trim($_POST['files'], ', '));
     }
   }
 
