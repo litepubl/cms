@@ -102,7 +102,7 @@ class tpolls extends titems {
     $theme = ttheme::i();
     if ($item['status'] == 'opened') {
       //inject php into html
-      $result = sprintf('<?php $poll = tpullpolls::i()->get(%d); ?>', $id);
+      $result = sprintf('<?php $poll = tpoolpolls::i()->get(%d); ?>', $id);
       $args->total = '<?php echo $poll[\'total\']; ?>';
       $args->rate = '<?php echo $poll[\'rate\'] / 10; ?>';
       if (strpos($tml['closed'], '$votes')) {
@@ -206,7 +206,7 @@ class tpolls extends titems {
       'total' => $result['total'],
     ));
 
-    tpullpolls::i()->set($id, $result);
+    tpoolpolls::i()->set($id, $result);
     $result['rate'] = (string)($result['rate'] / 10);
     return $result;
   }

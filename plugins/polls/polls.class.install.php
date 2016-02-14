@@ -37,7 +37,7 @@ function tpollsInstall($self) {
   $lang = tlocal::admin('polls');
   litepublisher::$classes->add('tpolltypes', 'poll.types.php', $name);
   litepublisher::$classes->add('tpollsman', 'polls.man.php', $name);
-  litepublisher::$classes->add('tpullpolls', 'pullpolls.class.php', $name);
+  litepublisher::$classes->add('tpoolpolls', 'pullpolls.class.php', $name);
   litepublisher::$classes->add('tadminpolltemplates', 'admin.poll.templates.php', $name);
   litepublisher::$classes->add('tadminpolltypes', 'admin.poll.types.php', $name);
   litepublisher::$classes->add('tadminpolloptions', 'admin.polloptions.class.php', $name);

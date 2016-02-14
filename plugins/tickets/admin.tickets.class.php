@@ -41,9 +41,9 @@ class tadmintickets extends tadminmenu {
 
 $admintheme = $this->admintheme;
     $lang = tlocal::admin('tickets');
-    $lang->addsearch('ticket');
+    $lang->addsearch('ticket', 'tickets');
     $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
-    $result.= $html->getitemscount($from, $from + count($items) , $count);
+    $result.= $this->html->getitemscount($from, $from + count($items) , $count);
 
     $tb = new tablebuilder();
     $tb->setposts(array(

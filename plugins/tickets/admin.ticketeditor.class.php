@@ -32,20 +32,10 @@ tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
   }
 
 public function gettabstemplate() {
-$admintheme = $this->admintheme;
-$tb = new tablebuilder($admintheme);
-
-return strtr($admintheme->templates['tabs'], array(
+return strtr($this->admintheme->templates['tabs'], array(
 '$id' => 'tabs',
 '$tab' => '[tab=ticket] [ajaxtab=tags]',
-'$panel' => '[tabpanel=tags]' .
-$tb->inputs(array(
-'combo' => 'category',
-'combo' => 'state',
-'combo' => 'prio',
-'text' => 'version',
-'text' => 'os',
-))
+'$panel' => '[tabpanel=ticket] [tabpanel=tags]' 
 ));
 }
 
@@ -55,7 +45,10 @@ $tb->inputs(array(
 
 $lang = tlocal::admin('tickets');
     $tickets = ttickets::i();
-    $args->category = static::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : $tickets->cats[0]);
+    $args->category = static::getcombocategories($tickets->cats, count($ticket->categories) ? 
+$ticket->categories[0] :
+ (count($tickets->cats) ? $tickets->cats[0] : 0));
+
 $args->version = $ticket->version;
 $args->os = $ticket->os;
 
@@ -85,6 +78,16 @@ $args->os = $ticket->os;
     }
 
     $args->prio = tadminhtml::array2combo($prio, $ticket->prio);
+
+$tb = new tablebuilder($this->admintheme);
+$tb->args = $args;
+$args->ticket = $tb->inputs(array(
+'combo' => 'category',
+'combo' => 'state',
+'combo' => 'prio',
+'text' => 'version',
+'text' => 'os',
+));
 }
 
 public function gettext($post = null) {

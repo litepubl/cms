@@ -27,7 +27,7 @@ class tadminpolltemplates extends tadminmenu {
       switch ($action) {
         case 'delete':
           $man = tpollsman::i();
-          if ($id == $man->pollpost) return $html->h4->deletepullpost;
+          if ($id == $man->pollpost) return $html->h4->deletepoolpost;
           if ($this->confirmed) {
             tfilestorage::delete($dir . DIRECTORY_SEPARATOR . "$id.php");
             tfilestorage::delete($dir . DIRECTORY_SEPARATOR . "$id.bak.php");

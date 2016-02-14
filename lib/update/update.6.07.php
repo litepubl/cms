@@ -14,6 +14,11 @@ $classes->items['getter'] = array('kernel.php', '', 'getter.class.php');
 
 unset($classes->items['tuitabs']);
 $classes->items['tabs'] = array('kernel.admin.php', '', 'html.tabs.class.php');
+
+if ($classes->exists('tpolls')) {
+unset($classes->items['tpullpolls']);
+$classes->items['tpoolpolls'] = array('pullpolls.class.php', 'polls',);
+}
 $classes->save();
 
 $m = tadminmenus::i();
@@ -63,6 +68,9 @@ $lm->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options-
 $lm->deletehtml('lib/languages/posteditor.ini');
 $lm->deletehtml('plugins/downloaditem/resource/html.ini');
 $lm->deletehtml('plugins/tickets/resource/html.ini');
+if ($classes->exists('tticket')) {
+$lm->add('admin', 'plugins/tickets/resource/' . litepublisher::$options->language . '.admin.ini');
+}
 $lm->unlock();
 
     $js = tjsmerger::i();

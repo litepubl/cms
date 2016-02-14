@@ -6,7 +6,7 @@
  *
  */
 
-class tpoolpolls extends tpullitems {
+class tpoolpolls extends tpoolitems {
 
   public static function i() {
     return getinstance(__class__);
@@ -14,7 +14,7 @@ class tpoolpolls extends tpullitems {
 
   protected function create() {
     parent::create();
-    $this->basename = 'pullpolls';
+    $this->basename = 'poolpolls';
   }
 
   public function getitem($id) {
