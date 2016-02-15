@@ -15,7 +15,7 @@ class tpolltypes extends titems {
   protected function create() {
     $this->dbversion = false;
     parent::create();
-    $this->basename = 'polls' . DIRECTORY_SEPARATOR . 'types';
+    $this->basename = 'polls/types';
   }
 
   public function add(array $item) {

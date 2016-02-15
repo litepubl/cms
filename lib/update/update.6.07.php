@@ -90,6 +90,16 @@ tjsmerger_bootstrap_admin($js, true);
 //ui datepicker adapter
 $js->add('admin', 'js/litepubl/ui/datepicker.adapter.min.js');
 
+
+if ($classes->exists('tpolls')) {
+  $js->replacefile('default',
+ '/plugins/polls/polls.client.min.js',
+ '/plugins/polls/resource/polls.min.js');
+
+$js->deletetext('default', 'poll');
+  $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+}
+
 $js->unlock();
 
 $css->deletefile('admin', '/js/jquery/ui/redmond/jquery-ui.min.css');

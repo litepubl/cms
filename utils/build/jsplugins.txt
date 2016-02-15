@@ -1,4 +1,6 @@
-polls\polls.client
+polls\resource\polls
+polls\resource\ru.polls
+polls\resource\en.polls
 imagepolls\imagepolls.client
 imagepolls\topimages
 regservices\regservices

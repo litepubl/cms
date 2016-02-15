@@ -24,14 +24,11 @@ function tpollsInstall($self) {
 
   tjsonserver::i()->addevent('polls_sendvote', get_class($self) , 'polls_sendvote');
 
-  $jsmerger = tjsmerger::i();
-  $jsmerger->lock();
-  $jsmerger->add('default', '/plugins/polls/polls.client.min.js');
-  $jsmerger->addtext('default', 'poll', sprintf('var lang = $.extend(true, lang, {poll: %s});', json_encode(array(
-    'voted' => $lang->voted,
-  ))));
-
-  $jsmerger->unlock();
+  $js = tjsmerger::i();
+  $js->lock();
+  $js->add('default', '/plugins/polls/resource/polls.min.js');
+  $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+  $js->unlock();
 
   tcssmerger::i()->addstyle(dirname(__file__) . '/stars.min.css');
   $lang = tlocal::admin('polls');
@@ -84,11 +81,11 @@ function tpollsUninstall($self) {
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
 
-  $jsmerger = tjsmerger::i();
-  $jsmerger->lock();
-  $jsmerger->deletefile('default', '/plugins/polls/polls.client.min.js');
-  $jsmerger->deletetext('default', 'poll');
-  $jsmerger->unlock();
+  $js= tjsmerger::i();
+  $js->lock();
+  $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
+  $js->deletefile('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+  $js->unlock();
 
   $adminmenus = tadminmenus::i();
   $adminmenus->deletetree($adminmenus->url2id('/admin/plugins/polls/'));

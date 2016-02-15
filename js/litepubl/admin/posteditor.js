@@ -21,7 +21,7 @@ this.ontitle(tabs.closest('form'));
 init_tabs: function(tabs) {
 this.tabs = tabs;
       var self = this;
-      litepubl.tabs.tabs(tabs, {
+      litepubl.tabs.on(tabs, {
         before: function(e) {
           self.init_tab(e.panel);
         }
