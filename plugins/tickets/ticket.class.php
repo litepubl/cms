@@ -61,8 +61,7 @@ return ticketfactory::i();
   protected function getcontentpage($page) {
     $result = '';
     if ($this->poll > 0) {
-      $polls = tpolls::i();
-      $result.= $polls->gethtml($this->poll, true);
+      $result.= tpolls::i()->gethtml($this->poll, true);
     }
 
     $result.= parent::getcontentpage($page);

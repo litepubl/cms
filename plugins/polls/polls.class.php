@@ -20,7 +20,7 @@ class tpolls extends titems {
     $this->dbversion = true;
     parent::create();
     $this->addevents('edited');
-    $this->basename = 'polls' . DIRECTORY_SEPARATOR . 'index';
+    $this->basename = 'polls/index';
     $this->table = 'polls';
     $this->votes = 'pollvotes';
     $this->users1 = 'pollusers1';
@@ -156,23 +156,39 @@ class tpolls extends titems {
 
   public function polls_sendvote(array $args) {
     extract($args, EXTR_SKIP);
-    if (!isset($idpoll) || !isset($vote)) return $this->error('Invalid data', 403);
+    if (!isset($idpoll) || !isset($vote)) {
+$this->error('Invalid data', 403);
+}
+
     $idpoll = (int)$idpoll;
-    if ($idpoll == 0) return $this->error('Invalid data', 403);
+    if (!$idpoll) {
+$this->error('Invalid data', 403);
+}
+
     $vote = (int)$vote;
     $iduser = litepublisher::$options->user;
-    if (!$iduser) return $this->err('notauth');
-    if (!$this->itemexists($idpoll)) return $this->err('notfound');
-    if ('closed' == $this->getvalue($idpoll, 'status')) return $this->err('closed');
-    if ($this->hasvote($idpoll, $iduser)) return $this->err('voted');
 
-    return $this->addvote($idpoll, $iduser, (int)$vote);
+    if (!$iduser) {
+$result = $this->err('notauth');
+} else     if (!$this->itemexists($idpoll)) {
+$result = $this->err('notfound');
+} else     if ('closed' == $this->getvalue($idpoll, 'status')) {
+$result = $this->err('closed');
+} else if ($this->hasvote($idpoll, $iduser)) {
+$result = $this->err('voted');
+} else {
+    $result = $this->addvote($idpoll, $iduser, (int)$vote);
+}
+
+return $result;
   }
 
   public function hasvote($idpoll, $iduser) {
     $q = sprintf('id = %d and user = %d', (int)$idpoll, (int)$iduser);
-    //$this->getdb($this->users1)->delete($q);
-    if ($this->getdb($this->users1)->findid($q)) return true;
+    if ($this->getdb($this->users1)->findid($q)) {
+return true;
+}
+
     return $this->getdb($this->users2)->findid($q);
   }
 

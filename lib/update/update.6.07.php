@@ -90,6 +90,9 @@ tjsmerger_bootstrap_admin($js, true);
 //ui datepicker adapter
 $js->add('admin', 'js/litepubl/ui/datepicker.adapter.min.js');
 
+  $parser = tthemeparser::i();
+  $parser->lock();
+$parser->data['themefiles'] = array();
 
 if ($classes->exists('tpolls')) {
   $js->replacefile('default',
@@ -98,7 +101,15 @@ if ($classes->exists('tpolls')) {
 
 $js->deletetext('default', 'poll');
   $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+
+$css->deletestyle('plugins/polls/stars.min.css');
+$css->add('default', 'plugins/polls/resource/polls.min.css');
+
+  $parser->add_tagfile('plugins/polls/resource/themetags.ini');
+  $parser->data['themefiles'][] = 'plugins/polls/resource/theme.txt';
 }
+
+  $parser->unlock();
 
 $js->unlock();
 

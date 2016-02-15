@@ -8,6 +8,7 @@
 
 class baseparser extends tevents {
   public $theme;
+  public $themefiles;
   public $tagfiles;
   public $paths;
   public $extrapaths;
@@ -20,6 +21,7 @@ class baseparser extends tevents {
     $this->basename = 'baseparser';
     $this->addevents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
     $this->addmap('tagfiles', array());
+    $this->addmap('themefiles', array());
     $this->addmap('extrapaths', array());
     $this->data['replacelang'] = false;
     $this->data['removephp'] = true;
@@ -38,10 +40,24 @@ class baseparser extends tevents {
   }
 
   public function getfilelist($name) {
+$result = array();
+
+    foreach ($this->themefiles as $filename) {
+      $filename = ltrim($filename, '/');
+      if (!$filename) continue;
+
+      if (file_exists(litepublisher::$paths->home . $filename)) {
+        $result[] = litepublisher::$paths->home . $filename;
+      } else if (file_exists(litepublisher::$paths->themes . $filename)) {
+        $result[] = litepublisher::$paths->themes . $filename;
+      } else if (file_exists(litepublisher::$paths->plugins . $filename)) {
+        $result[] = litepublisher::$paths->plugins . $filename;
+      }
+    }
+
     $about = $this->getabout($name);
-    return array(
-      litepublisher::$paths->themes . $name . '/' . $about['file']
-    );
+    return $result[] = litepublisher::$paths->themes . $name . '/' . $about['file']
+return $result;
   }
 
   public function parse(basetheme $theme) {

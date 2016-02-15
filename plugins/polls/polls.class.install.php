@@ -30,7 +30,14 @@ function tpollsInstall($self) {
   $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
   $js->unlock();
 
-  tcssmerger::i()->addstyle(dirname(__file__) . '/stars.min.css');
+  tcssmerger::i()->add('default', 'plugins/polls/resource/polls.min.css');
+
+  $parser = tthemeparser::i();
+  $parser->lock();
+  $parser->add_tagfile('plugins/polls/resource/themetags.ini');
+  $parser->themefiles[] = 'plugins/polls/resource/theme.txt';
+  $parser->unlock();
+
   $lang = tlocal::admin('polls');
   litepublisher::$classes->add('tpolltypes', 'poll.types.php', $name);
   litepublisher::$classes->add('tpollsman', 'polls.man.php', $name);
@@ -77,7 +84,8 @@ function tpollsInstall($self) {
 }
 
 function tpollsUninstall($self) {
-  tcssmerger::i()->deletestyle(dirname(__file__) . '/stars.min.css');
+  tcssmerger::i()->deletefile('default', 'plugins/polls/resource/polls.min.css');
+
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
 
@@ -86,6 +94,12 @@ function tpollsUninstall($self) {
   $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
   $js->deletefile('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
   $js->unlock();
+
+  $parser = tthemeparser::i();
+  $parser->lock();
+  $parser->delete_tagfile('plugins/polls/resource/themetags.ini');
+  array_delete_value($parser->themefiles, 'plugins/polls/resource/theme.txt');
+  $parser->unlock();
 
   $adminmenus = tadminmenus::i();
   $adminmenus->deletetree($adminmenus->url2id('/admin/plugins/polls/'));

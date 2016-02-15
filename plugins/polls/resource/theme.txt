@@ -1,0 +1,10 @@
+polls.star = [
+<div class="activepoll pollstars" data-idpoll="$id" data-polltype="star">
+<span class="poll-title">$title</span>
+<ul class="star-rating star_0">
+$item = [<li class="s_$indexplus"><a title="$text" href="#" class="pollitem" data-idpoll="$id" data-index="$index">$text</a></li>]
+</ul>
+</div>
+]
+
+polls.button = [
