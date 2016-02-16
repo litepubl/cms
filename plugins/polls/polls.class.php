@@ -148,4 +148,41 @@ $item['bestvotes'] = count($statitems) ? $statitems[count($statitems) - 1]['coun
 $this->items[$id] = $item;
   }
 
+ public function optimize() {
+$date =sqldate(strtotime('-1 month'));
+$list = $this->db->idselect("created <= '$date' and status = 'opened');
+if (count($list)) {
+$ids = implode(',', $list);
+$this->db->update("status = 'closed'", "id in($ids)");
+$this->getdb(self::votes)->delete("idpoll in ($ids)");
+}
+}
+
+public function objectdeleted($idobject, $typeobject) {
+if ($id = $this->db->findid("idobject = $idpost and typeobject = 'post'")) {
+$this->delete($id);
+}
+}
+
+  public function postdeleted($idpost) {
+$this->objectdeleted($idpost, 'post');
+}
+
+  public function filter(&$content) {
+    if (preg_match_all('/\[poll\=(\d*?)\]/', $content, $m, PREG_SET_ORDER)) {
+      $polls = tpolls::i();
+      foreach ($m as $item) {
+        $id = (int)$item[1];
+        if ($polls->itemexists($id)) {
+          $html = $polls->gethtml($id);
+          $html = '[html]' . $html . '[/html]';
+        } else {
+          $html = '';
+        }
+
+        $content = str_replace($item[0], $html, $content);
+      }
+    }
+  }
+
 } //class
