@@ -22,12 +22,13 @@ const votes = 'pollvotes';
   }
 
   public function add($template, $idobject, $typeobject) {
+  $best = $template == 'stars' ? 5 : 2;
 return $this->additem(array(
   'idobject' => (int) $idobject,
 'typeobject' => $typeobject,
   'votes' => 0,
   'rate' => 0.0,
-  'maxvote' => $template == 'stars' ? 5 : 2,
+  'best' => $best,
   'created' => sqldate(),
   'status' => 'opened',
 'template' => $template,
@@ -98,7 +99,7 @@ $result = $this->err('closed');
 } else if ($this->hasvote($idpoll, $iduser)) {
 $result = $this->err('voted');
 } else {
-    $vote = min(max(1, (int)$vote), $this->getvalue($id, 'maxvote')));
+    $vote = min(max(1, (int)$vote), $this->getvalue($id, 'best')));
 $this->addvote($idpoll, $iduser, (int)$vote);
 $item = $this->getitem($id);
 
@@ -125,8 +126,10 @@ $db->insert(array(
 ));
 
 $t = $db->prefix . self::$votes;
-$statitems = $db->res2assoc($db->query("select count(idpoll as count, vote from $t
-where idpoll = $id group by votes"));
+$statitems = $db->res2assoc($db->query(
+"select count(idpoll as count, vote from $t
+where idpoll = $id group by vote order by vote asc"
+));
 
 $votes = 0;
 $rate = 0;
@@ -135,16 +138,14 @@ $votes += $item['count'];
       $rate += $item['vote'] * $item['count'];
     }
 
-    $rate = $votes == 0 ? 0 : round($rate / $votes, 1);
+$item = $this->getitem($id);
+$item['votes'] = $votes;
+    $item['rate'] = $votes == 0 ? 0 : round($rate / $votes, 1);
+$item['worstvotes'] = count($statitems) ? $statitems[0]['count'] : 0;
+$item['bestvotes'] = count($statitems) ? $statitems[count($statitems) - 1]['count'] : 0;
 
-    $this->db->updateassoc(array(
-      'id' => $id,
-      'rate' => $rate,
-      'votes' => $votes
-    ));
-
-$this->items[$id]['rate'] = $rate;
-$this->items[$id]['votes'] = $votes;
+    $this->db->updateassoc($item);
+$this->items[$id] = $item;
   }
 
 } //class
