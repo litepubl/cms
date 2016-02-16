@@ -31,7 +31,6 @@ class tticket extends tpost {
       'assignto' => 0,
       'closed' => '',
       'version' => litepublisher::$options->version,
-      'poll' => 0,
       'os' => '*',
       'reproduced' => false,
       'code' => ''
@@ -59,11 +58,7 @@ return ticketfactory::i();
   }
 
   protected function getcontentpage($page) {
-    $result = '';
-    if ($this->poll > 0) {
-      $result.= tpolls::i()->gethtml($this->poll, true);
-    }
-
+      $result= polls::i()->getobjectpoll($this->id, 'post');
     $result.= parent::getcontentpage($page);
     return $result;
   }
@@ -106,8 +101,7 @@ return ticketfactory::i();
   }
 
   public function closepoll() {
-    $polls = tpolls::i();
-    $polls->db->setvalue($this->poll, 'status', 'closed');
+polls::i()->close();
   }
 
   public static function getresource() {

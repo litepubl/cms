@@ -32,6 +32,7 @@ function tpollsInstall($self) {
 
   tlocalmerger::i()->addplugin($name);
   tcron::i()->addnightly(get_class($self) , 'optimize', null);
+tposs::i()->deleted = $self->postdeleted;
 }
 
 function tpollsUninstall($self) {
@@ -56,4 +57,5 @@ function tpollsUninstall($self) {
   $manager->deletetable(tpolss::votes);
 
   tcron::i()->deleteclass(get_class($self));
+tposts::i()->unbind($self);
 }

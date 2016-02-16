@@ -24,9 +24,8 @@ class ttickets extends tposts {
     return tticket::i();
   }
 
-  public function createpoll() {
-    $polls = tpolls::i();
-    return $polls->add(0, 'opened');
+  public function createpoll($id) {
+return polls::i()->add('like', $id, 'post');
   }
 
   public function filtercats(tpost $post) {
@@ -46,10 +45,10 @@ class ttickets extends tposts {
 
   public function add(tpost $post) {
     $this->filtercats($post);
-    $post->poll = $this->createpoll();
     $post->updatefiltered();
-    //$post->status = 'draft';
+
     $id = parent::add($post);
+$this->createpoll($id);
     $this->notify($post);
     return $id;
   }
@@ -74,16 +73,6 @@ class ttickets extends tposts {
     $this->filtercats($post);
     $post->updatefiltered();
     return parent::edit($post);
-  }
-
-  public function postsdeleted(array $items) {
-    $deleted = implode(',', $items);
-    $db = $this->getdb($this->childtable);
-    $idpolls = $db->res2id($db->query("select poll from $db->prefix$this->childtable where (id in ($deleted)) and (poll  > 0)"));
-    if (count($idpolls) > 0) {
-      $polls = tpolls::i();
-      foreach ($idpolls as $idpoll) $pols->delete($idpoll);
-    }
   }
 
   public function onexclude($id) {
