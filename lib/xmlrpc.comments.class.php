@@ -207,7 +207,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
       $idpost = absint($idpost);
     } else {
       $urlmap = turlmap::i();
-      if (!($item = $urlmap->finditem($url))) {
+      if (!($item = $urlmap->find_item($url))) {
         return $this->xerror(404, 'Invalid post ID.');
       }
 

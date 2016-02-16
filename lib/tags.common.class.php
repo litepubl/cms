@@ -195,7 +195,7 @@ class tcommontags extends titems implements itemplate {
     }
 
     if ($item['url'] != $url) {
-      if (($urlitem = litepublisher::$urlmap->finditem($url)) && ($urlitem['id'] != $item['idurl'])) {
+      if (($urlitem = litepublisher::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
         $url = $linkgen->MakeUnique($url);
       }
       litepublisher::$urlmap->setidurl($item['idurl'], $url);

@@ -89,8 +89,14 @@ return array();
       $result[] = $id;
       $this->items[$id] = $item;
     }
+
     return $result;
   }
+
+public function finditem($where) {
+$a = $this->select($where, 'limit 1');
+return count($a) ? $a[0] : false;
+}
 
   public function getcount() {
     if ($this->dbversion) {

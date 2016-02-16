@@ -19,7 +19,7 @@ class TXMLRPCPingback extends TXMLRPCAbstract {
 
     $url = substr($to, strlen(litepublisher::$site->url));
     $urlmap = turlmap::i();
-    if (!($item = $urlmap->finditem($url))) {
+    if (!($item = $urlmap->find_item($url))) {
       return $this->xerror(0, 'Is there no link to us?');
     }
 

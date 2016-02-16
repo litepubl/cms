@@ -123,7 +123,7 @@ fastcgi_finish_request();
   }
 
   protected function dorequest($url) {
-    $this->itemrequested = $this->finditem($url);
+    $this->itemrequested = $this->find_item($url);
     if ($this->isredir) {
 return;
 }
@@ -166,7 +166,7 @@ return $result;
     return false;
   }
 
-  public function finditem($url) {
+  public function find_item($url) {
     if ($result = $this->query($url)) {
 return $result;
 }
