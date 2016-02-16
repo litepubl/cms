@@ -65,7 +65,23 @@ if (!$id) {return '';
     $args->add($item);
 
    $theme = ttheme::i();
-    $tml = $theme->templates[$item['status'] == 'opened' ? 'polls.' . $item['template'] : 'polls.closed'];
+if ($status == 'closed') {
+    $tml = $theme->templates['polls.closed'];
+} else {
+$k = 'polls.' . $item['template'];
+    $tml = $theme->templates[$k];
+
+if (isset($theme->templates[$k . '.item'])) {
+$tml_item = $theme->templates[$k . '.item'];
+$items = '';
+for ($vote = 1; $vote <= $item['best']; $vote++) {
+$args->vote = $vote;
+$items .= $theme->parsearg($tml_item, $args);
+}
+$args->item = $items;
+}
+}
+
 return $theme->parsearg($tml, $args);
   }
 
@@ -73,8 +89,10 @@ return $theme->parsearg($tml, $args);
     $lang = tlocal::i('poll');
 
     return array(
-      'code' => 'error',
+'error' => array(
+      'code' => 403,
       'message' => $lang->$mesg
+)
     );
   }
 

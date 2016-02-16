@@ -47,11 +47,12 @@ function tpollsInstall($self) {
   $adminmenus->items[$idmenu]['title'] = $lang->options;
 
   $adminmenus->unlock();
+
+  tcron::i()->addnightly(get_class($self) , 'optimize', null);
 }
 
 function tpollsUninstall($self) {
   tcssmerger::i()->deletefile('default', 'plugins/polls/resource/polls.min.css');
-
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
 
@@ -76,4 +77,6 @@ function tpollsUninstall($self) {
   $manager = tdbmanager::i();
   $manager->deletetable($self->table);
   $manager->deletetable(tpolss::votes);
+
+  tcron::i()->deleteclass(get_class($self));
 }

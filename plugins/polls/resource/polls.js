@@ -4,79 +4,57 @@
  * Licensed under the MIT (LICENSE.txt) license.
  **/
 
-(function($, document, window) {
+(function($, document, litepubl) {
   'use strict';
 
-  $.pollclient = {
-    enabled: true,
-    voted: [],
+  litepubl.Polls = Class.extend({
+    voted: false,
 
     init: function() {
-      $(".pollitem").click(function() {
-        var self = $(this);
-        $.pollclient.clickvote(self.data("idpoll"), self.data("index"), self.closest(".activepoll"));
+this.voted = [];
+
+var self = this;
+$(document).on("click.poll", ".poll-vote", function() {
+        var button = $(this);
+self.addvote(button.attr("data-vote"), button.closest(".poll-active"));
         return false;
       });
+},
 
-      $(".submit-radio-poll").click(function() {
-        var self = $(this);
-        var owner = self.closest(".activepoll");
-        var vote = $("input:radio:checked", owner).val();
-        $.pollclient.clickvote(self.data("idpoll"), vote, owner);
-        return false;
-      });
-    },
+    addvote: function(vote, holder) {
+var idpoll = holder.attr("data-idpoll");
+      if ($.inArray(idpoll, this.voted) >= 0) {
+return this.error(lang.poll.voted);
+}
 
-    clickvote: function(idpoll, vote, holder) {
-      if ($.inArray(idpoll, this.voted) >= 0) return this.error(lang.poll.voted);
-      //single request
-      if (!this.enabled) return false;
-      this.setenabled(false);
       this.voted.push(idpoll);
-      $.jsonrpc({
+var self = this;
+      litepubl.authdialog.check({
+        rpc: {
         type: 'get',
         method: "polls_sendvote",
         params: {
           idpoll: idpoll,
           vote: vote
         },
+
         callback: function(r) {
-          if (r.code == "error") return $.pollclient.error(r.message);
-          $.pollclient.setenabled(true);
-          //update results
-          var pollresult = holder.next(".poll-result");
-          $(".votes", pollresult).text(r.total);
-          $(".average", pollresult).text(r.rate);
-          $(".poll-votes", pollresult).each(function() {
-            var index = $(this).data("index");
-            if (index in r.votes) $(this).text(r.votes[index]);
-          });
+self.enabled = true;
+holder.html(r.html);
         },
 
-        error: $.proxy($.pollclient.error, $.pollclient)
+        error: function(message, code) {
+self.enabled = true;
+$.errorbox(message);
+}
+}
       });
-    },
-
-    error: function(mesg) {
-      $.pollclient.setenabled(true);
-      $.messagebox(lang.dialog.error, mesg);
-    },
-
-    setenabled: function(value) {
-      if (value == this.enabled) return;
-      this.enabled = value;
-      if (value) {
-        $(":input", ".activepoll").removeAttr("disabled");
-      } else {
-        $(":input", ".activepoll").attr("disabled", "disabled");
-      }
     }
 
-  };
-
-  $(document).ready(function() {
-    //only logged users
-    if (litepubl.getuser().id) $.pollclient.init();
   });
 
-}(jQuery, document, window));
+  $(document).ready(function() {
+litepubl.polls = new litepubl.Polls();
+  });
+
+}(jQuery, document, litepubl));

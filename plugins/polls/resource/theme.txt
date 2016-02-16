@@ -1,25 +1,33 @@
 polls.stars = [
 <div class="poll-opened poll-stars" data-idpoll="$id" data-polltype="star">
-<span class="poll-title">$title</span>
+<span class="poll-title">$lang.poll:</span>
 <ul class="list-inline">
-$item = [<li><a href="#" class="pollitem tooltip-toggle" title="$lang.tipstar" data-idpoll="$id" data-index="$index"><span class="fa fa-star-o"></span><span class="sr-only">$indexplus $lang.stars</span></a></li>]
+$item = [<li><a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.tipstar" data-vote="$vote">
+<span class="fa fa-star-o"></span>
+<span class="sr-only">$vote $lang.stars</span>
+</a></li>]
 </ul>
 </div>
 ]
 
 polls.like = [
-<div class="poll-opened poll-stars" data-idpoll="$id" data-polltype="star">
-<span class="poll-title">$title</span>
+<div class="poll-opened poll-like" data-idpoll="$id" data-polltype="like">
+<span class="poll-title">$lang.like</span>
+$lang.like $bestvotes
 <div class="btn-group">
-<button type="btn btn-default tooltip-toggle" title="$lang.clicktovote" data-index="$index">
-<span class="fa fa-minus"></span>
-<span class="sr-only">$lang</span>
+<button type="btn btn-default tooltip-toggle pool-vote" title="$lang.clicktovote" data-vote="2">
+<span class="fa fa-plus"></span>
+<span class="sr-only">+</span>
 </button>
 
-<button type="btn btn-default tooltip-toggle" title="$lang.clicktovote">
-<span class="fa fa-plus"></span>
-<span class="sr-only">$lang</span>
+<button type="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="1">
+<span class="fa fa-minus"></span>
+<span class="sr-only">-</span>
 </button>
 </div>
+
+<span class="">
+$lang.unlike $worstvotes
+</span>
 </div>
 ]
