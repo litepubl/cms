@@ -31,23 +31,6 @@ function tpollsInstall($self) {
   $parser->unlock();
 
   tlocalmerger::i()->addplugin($name);
-  $lang = tlocal::admin('poll');
-  $lang = tlocal::admin('polls');
-  
-  litepublisher::$classes->add('tadminpolloptions', 'admin.polloptions.class.php', $name);
-  litepublisher::$classes->add('tadminpolls', 'admin.polls.class.php', $name);
-
-  $adminmenus = tadminmenus::i();
-  $adminmenus->lock();
-
-  $parent = $adminmenus->createitem($adminmenus->url2id('/admin/plugins/') , 'polls', 'editor', 'tadminpolls');
-  $adminmenus->items[$parent]['title'] = $lang->polls;
-
-  $idmenu = $adminmenus->createitem($parent, 'options', 'admin', 'tadminpolloptions');
-  $adminmenus->items[$idmenu]['title'] = $lang->options;
-
-  $adminmenus->unlock();
-
   tcron::i()->addnightly(get_class($self) , 'optimize', null);
 }
 
@@ -67,12 +50,6 @@ function tpollsUninstall($self) {
   $parser->delete_tagfile('plugins/polls/resource/themetags.ini');
   array_delete_value($parser->themefiles, 'plugins/polls/resource/theme.txt');
   $parser->unlock();
-
-  $adminmenus = tadminmenus::i();
-  $adminmenus->deletetree($adminmenus->url2id('/admin/plugins/polls/'));
-
-  litepublisher::$classes->delete('tadminpolloptions');
-  litepublisher::$classes->delete('tadminpolls');
 
   $manager = tdbmanager::i();
   $manager->deletetable($self->table);

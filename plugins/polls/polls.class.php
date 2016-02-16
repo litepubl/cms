@@ -61,6 +61,7 @@ if (!$id) {return '';
 
     $item = $this->getitem($id);
 
+$lang = tlocal::i('poll');
     $args = new targs();
     $args->add($item);
 

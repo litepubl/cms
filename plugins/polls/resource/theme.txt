@@ -1,33 +1,63 @@
 polls.stars = [
-<div class="poll-opened poll-stars" data-idpoll="$id" data-polltype="star">
-<span class="poll-title">$lang.poll:</span>
-<ul class="list-inline">
-$item = [<li><a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.tipstar" data-vote="$vote">
-<span class="fa fa-star-o"></span>
-<span class="sr-only">$vote $lang.stars</span>
-</a></li>]
-</ul>
+<div class="poll-opened poll-stars" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <meta itemprop="bestRating" content="$best" />
+    <meta itemprop="worstRating" content="1" />
+    <span class="poll-title">$lang.poll:</span>
+    <ul class="list-inline">
+        $item = [
+        <li>
+            <a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.tipstar" data-vote="$vote">
+                <span class="fa fa-star-o"></span>
+                <span class="sr-only">$vote $lang.stars</span>
+            </a>
+        </li>]
+    </ul>
+
+    <span class="poll-text">
+$lang.pollresult $lang.rating:
+    <span itemprop="ratingValue">$rate</span> $lang.votes:
+    <span itemprop="ratingCount">$votes</span>
+    </span>
+</div>
+] polls.like = [
+<div class="poll-opened poll-like" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <meta itemprop="bestRating" content="$best" />
+    <meta itemprop="worstRating" content="1" />
+    <span class="poll-text">
+$lang.poll
+$lang.like
+<span class="thin-text">$bestvotes</span>
+    </span>
+
+    <div class="btn-group">
+        <button type="btn btn-default tooltip-toggle pool-vote" title="$lang.clicktovote" data-vote="2">
+            <span class="fa fa-plus"></span>
+            <span class="sr-only">+</span>
+        </button>
+
+        <button type="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="1">
+            <span class="fa fa-minus"></span>
+            <span class="sr-only">-</span>
+        </button>
+    </div>
+
+    <span class="poll-text">
+<span class="thin-text">$worstvotes</span> $lang.unlike
+    </span>
+
+    <meta itemprop="ratingValue" content="$rate" />
+    <meta itemprop="ratingCount" content="$votes" />
 </div>
 ]
 
-polls.like = [
-<div class="poll-opened poll-like" data-idpoll="$id" data-polltype="like">
-<span class="poll-title">$lang.like</span>
-$lang.like $bestvotes
-<div class="btn-group">
-<button type="btn btn-default tooltip-toggle pool-vote" title="$lang.clicktovote" data-vote="2">
-<span class="fa fa-plus"></span>
-<span class="sr-only">+</span>
-</button>
-
-<button type="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="1">
-<span class="fa fa-minus"></span>
-<span class="sr-only">-</span>
-</button>
-</div>
-
-<span class="">
-$lang.unlike $worstvotes
-</span>
+polls.closed = [
+<div class="poll-closed" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <meta itemprop="bestRating" content="$best" />
+    <meta itemprop="worstRating" content="1" />
+    <span class="poll-text">
+$lang.pollresult $lang.rating:
+    <span itemprop="ratingValue">$rate</span> $lang.votes:
+    <span itemprop="ratingCount">$votes</span>
+    </span>
 </div>
 ]

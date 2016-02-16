@@ -16,7 +16,7 @@ this.voted = [];
 var self = this;
 $(document).on("click.poll", ".poll-vote", function() {
         var button = $(this);
-self.addvote(button.attr("data-vote"), button.closest(".poll-active"));
+self.addvote(button.attr("data-vote"), button.closest(".poll-opened"));
         return false;
       });
 },
@@ -28,6 +28,8 @@ return this.error(lang.poll.voted);
 }
 
       this.voted.push(idpoll);
+this.changestars(holder, vote);
+
 var self = this;
       litepubl.authdialog.check({
         rpc: {
@@ -39,17 +41,28 @@ var self = this;
         },
 
         callback: function(r) {
-self.enabled = true;
+holder.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
 holder.html(r.html);
+holder.find("tooltip-toggle").removeClass("tooltip-toggle");
+self.changestars(holder, vote);
         },
 
         error: function(message, code) {
-self.enabled = true;
 $.errorbox(message);
 }
 }
       });
-    }
+    },
+
+changestars: function(holder, vote) {
+if (holder.hasClass("poll-stars")) {
+holder.find("poll-star").each(function() {
+if (vote >= $(this).attr("data-vote")) {
+$("fa", this).removeClass("fa-star-o").addClass("fa-star");
+}
+});
+}
+}
 
   });
 
