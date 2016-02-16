@@ -6,7 +6,7 @@
  *
  */
 
-class tpolls extends titems {
+class polls extends titems {
 const votes = 'pollvotes';
 
   public static function i() {
@@ -118,7 +118,7 @@ $result = $this->err('closed');
 } else if ($this->hasvote($idpoll, $iduser)) {
 $result = $this->err('voted');
 } else {
-    $vote = min(max(1, (int)$vote), $this->getvalue($id, 'best')));
+    $vote = min(max(1, (int)$vote), $this->getvalue($id, 'best'));
 $this->addvote($idpoll, $iduser, (int)$vote);
 $item = $this->getitem($id);
 
@@ -169,10 +169,10 @@ $this->items[$id] = $item;
 
  public function optimize() {
 $date =sqldate(strtotime('-1 month'));
-$list = $this->db->idselect("created <= '$date' and status = 'opened');
+$list = $this->db->idselect("created <= '$date' and status = 'opened'");
 if (count($list)) {
 $ids = implode(',', $list);
-$this->db->update("status = 'closed'", "id in($ids)");
+$this->db->update("status = 'closed'", "id in ($ids)");
 $this->getdb(self::votes)->delete("idpoll in ($ids)");
 }
 }

@@ -108,7 +108,8 @@ class tadminmenumanager extends tadminmenu {
 
         $ajaxeditor = tajaxmenueditor::i();
         $args->formtitle = $lang->edit;
-        return  $html->adminform($tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme)) , $args);
+$tml = $tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme);
+        return  $html->adminform($tml, $args);
       }
   }
 

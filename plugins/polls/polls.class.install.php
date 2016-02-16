@@ -6,13 +6,13 @@
  *
  */
 
-function tpollsInstall($self) {
+function pollsInstall($self) {
   $name = basename(dirname(__file__));
   $res = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
 
   $manager = tdbmanager::i();
   $manager->createtable($self->table, file_get_contents($res . 'polls.sql'));
-  $manager->createtable(tpolls::votes, file_get_contents($res . 'votes.sql'));
+  $manager->createtable(polls::votes, file_get_contents($res . 'votes.sql'));
 
   tjsonserver::i()->addevent('polls_sendvote', get_class($self) , 'polls_sendvote');
 
@@ -32,10 +32,10 @@ function tpollsInstall($self) {
 
   tlocalmerger::i()->addplugin($name);
   tcron::i()->addnightly(get_class($self) , 'optimize', null);
-tposs::i()->deleted = $self->postdeleted;
+tposts::i()->deleted = $self->postdeleted;
 }
 
-function tpollsUninstall($self) {
+function pollsUninstall($self) {
   tcssmerger::i()->deletefile('default', 'plugins/polls/resource/polls.min.css');
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
@@ -54,7 +54,7 @@ function tpollsUninstall($self) {
 
   $manager = tdbmanager::i();
   $manager->deletetable($self->table);
-  $manager->deletetable(tpolss::votes);
+  $manager->deletetable(polls::votes);
 
   tcron::i()->deleteclass(get_class($self));
 tposts::i()->unbind($self);

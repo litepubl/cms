@@ -56,7 +56,7 @@ $result = array();
     }
 
     $about = $this->getabout($name);
-    return $result[] = litepublisher::$paths->themes . $name . '/' . $about['file']
+    $result[] = litepublisher::$paths->themes . $name . '/' . $about['file'];
 return $result;
   }
 
