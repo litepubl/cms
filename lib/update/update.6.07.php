@@ -107,6 +107,13 @@ $css->add('default', 'plugins/polls/resource/polls.min.css');
 
   $parser->add_tagfile('plugins/polls/resource/themetags.ini');
   $parser->data['themefiles'][] = 'plugins/polls/resource/theme.txt';
+
+$man = tdbmanager::i();
+$man->alter('polls', 'drop id_tml');
+$man->alter('polls', "add template enum('stars', 'like') default 'stars'");
+        $man->alter('polls', "drop KEY (total)");
+$man->alter('polls', "change total votes int UNSIGNED NOT NULL default 0");
+        $man->alter('polls', "add KEY (votes)");
 }
 
   $parser->unlock();
