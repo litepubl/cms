@@ -13,20 +13,20 @@
     init: function() {
       var tabs = $("#tabs");
       if (tabs.length) {
-this.init_tabs(tabs);
-this.ontitle(tabs.closest('form'));
-}
-},
+        this.init_tabs(tabs);
+        this.ontitle(tabs.closest('form'));
+      }
+    },
 
-init_tabs: function(tabs) {
-this.tabs = tabs;
+    init_tabs: function(tabs) {
+      this.tabs = tabs;
       var self = this;
       litepubl.tabs.on(tabs, {
         before: function(e) {
           self.init_tab(e.panel);
         }
       });
-},
+    },
 
     init_tab: function(panel) {
       if (!panel.data('init.litepubl')) {
@@ -42,12 +42,12 @@ this.tabs = tabs;
             break;
 
           case 'posted':
-panel.extractComment();
+            panel.extractComment();
             litepubl.calendar.on(panel);
             break;
 
           case 'seo':
-panel.extractComment();
+            panel.extractComment();
             break;
         }
       }
@@ -67,8 +67,8 @@ panel.extractComment();
       }
     },
 
-ontitle: function(form) {
-form.on('submit.posttitle', function(event) {
+    ontitle: function(form) {
+      form.on('submit.posttitle', function(event) {
         var title = $("input[name='title']", this);
         if (!$.trim(title.val())) {
           event.stopImmediatePropagation();

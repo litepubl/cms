@@ -16,6 +16,19 @@ class ttheme extends basetheme {
     return self::getbyname(__class__, $name);
   }
 
+  public static function context() {
+$result = self::i();
+    if (!$result->name) {
+if (($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+      $result = tview::getview($context)->theme;
+    } else {
+$result = tview::i()->theme;
+}
+}
+
+return $result;
+}
+
   public static function getwidgetnames() {
     return array(
       'categories',

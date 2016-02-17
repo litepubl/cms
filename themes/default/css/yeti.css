@@ -6488,6 +6488,10 @@ A.dashed:focus {
   text-decoration: none;
   border-bottom: 1px dashed #008cba;
 }
+.thin-text {
+  font-weight: 200;
+  font-size: 120%;
+}
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/

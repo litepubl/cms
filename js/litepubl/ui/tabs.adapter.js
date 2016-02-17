@@ -27,21 +27,21 @@
         switch (name) {
           case 'before':
             tabs.on("tabsbeforeactivate.litepubl", function(event, ui) {
-event.panel = ui.newPanel;
+              event.panel = ui.newPanel;
               events.before(event);
             });
             break;
 
           case 'activated':
             tabs.on("tabsactivate.litepubl", function(event, ui) {
-event.panel = ui.newPanel;
+              event.panel = ui.newPanel;
               events.activated(event);
             });
             break;
 
           case 'loaded':
             tabs.on("tabsload.litepubl", function(event, ui) {
-event.panel = ui.panel;
+              event.panel = ui.panel;
               events.loaded(event);
             });
             break;
@@ -67,9 +67,9 @@ event.panel = ui.panel;
       }
     },
 
-setenabled: function(link, enabled) {
-link.closest('.admintabs').tabs(enabled ? 'enable' : 'disable', link.parent().index() );
-}
+    setenabled: function(link, enabled) {
+      link.closest('.admintabs').tabs(enabled ? 'enable' : 'disable', link.parent().index());
+    }
 
   });
 

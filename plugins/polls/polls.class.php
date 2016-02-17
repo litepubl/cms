@@ -61,11 +61,14 @@ if (!$id) {return '';
 
     $item = $this->getitem($id);
 
+$this->getdb(self::votes)->delete('iduser = '. litepublisher::$options->user);
+//$this->addvote($id, litepublisher::$options->user, 2);
+
 $lang = tlocal::i('poll');
     $args = new targs();
     $args->add($item);
 
-   $theme = ttheme::i();
+   $theme = ttheme::context();
 if ($item['status'] == 'closed') {
     $tml = $theme->templates['polls.closed'];
 } else {
@@ -118,14 +121,14 @@ $result = $this->err('closed');
 } else if ($this->hasvote($idpoll, $iduser)) {
 $result = $this->err('voted');
 } else {
-    $vote = min(max(1, (int)$vote), $this->getvalue($id, 'best'));
+    $vote = min(max(1, (int)$vote), $this->getvalue($idpoll, 'best'));
 $this->addvote($idpoll, $iduser, (int)$vote);
-$item = $this->getitem($id);
+$item = $this->getitem($idpoll);
 
     $result = array(
       'code' => 'success',
 'item' => $item,
-'html' => $this->getplll($id),
+'html' => $this->getpoll($idpoll),
     );
 }
 
@@ -139,29 +142,35 @@ return $result;
   public function addvote($id, $iduser, $vote) {
 $db = $this->getdb(self::votes);
 $db->insert(array(
-'idpoll' => (int) $idpoll,
+'idpoll' => (int) $id,
 'iduser' => (int) $iduser,
 'vote' => (int) $vote,
 ));
 
-$t = $db->prefix . self::$votes;
+$t = $db->prefix . self::votes;
 $statitems = $db->res2assoc($db->query(
-"select count(idpoll as count, vote from $t
+"select count(idpoll) as count, vote from $t
 where idpoll = $id group by vote order by vote asc"
 ));
 
+
+//it impossible but maybe strange
+if (!count($statitems)) {
+return false;
+}
+
 $votes = 0;
 $rate = 0;
-    foreach ($statitems as $item) {
-$votes += $item['count'];
-      $rate += $item['vote'] * $item['count'];
+    foreach ($statitems as $statitem) {
+$votes += $statitem['count'];
+      $rate += $statitem['vote'] * $statitem['count'];
     }
 
 $item = $this->getitem($id);
 $item['votes'] = $votes;
     $item['rate'] = $votes == 0 ? 0 : round($rate / $votes, 1);
-$item['worstvotes'] = count($statitems) ? $statitems[0]['count'] : 0;
-$item['bestvotes'] = count($statitems) ? $statitems[count($statitems) - 1]['count'] : 0;
+$item['bestvotes'] = $statitems[count($statitems) - 1]['count'];
+$item['worstvotes'] = count($statitems) == 1 ? 0 : $statitems[0]['count'];
 
     $this->db->updateassoc($item);
 $this->items[$id] = $item;

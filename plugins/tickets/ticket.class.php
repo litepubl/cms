@@ -31,6 +31,7 @@ class tticket extends tpost {
       'assignto' => 0,
       'closed' => '',
       'version' => litepublisher::$options->version,
+'poll' => 0,
       'os' => '*',
       'reproduced' => false,
       'code' => ''

@@ -67,7 +67,7 @@
       var sheets = document.styleSheets;
       for (var i = 0, l = sheets.length; i < l; i++) {
         if (sheets[i].id && sheets[i].id == link.id) {
-          //link.media = "all";
+          link.media = "all";
           return true;
         }
       }

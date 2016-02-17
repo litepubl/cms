@@ -3,8 +3,8 @@
 
   litepubl.bootstrap = litepubl.bootstrap || {};
   litepubl.bootstrap.Tabs = Class.extend({
-//event namespace
-namespace: '.litepubl.tabs',
+    //event namespace
+    namespace: '.litepubl.tabs',
 
     init: function() {
       var self = this;
@@ -23,8 +23,8 @@ namespace: '.litepubl.tabs',
 
     tabs: function(tabs, events) {
       this.navtabs(tabs.children('.nav-tabs'));
-this.on(tabs, events);
-},
+      this.on(tabs, events);
+    },
 
     navtabs: function(navtabs) {
       //activate first item
@@ -109,11 +109,11 @@ this.on(tabs, events);
     },
 
     on: function(tabs, events) {
-if (tabs && events) {
-for (var name in events) {
-tabs.on(name + this.namespace, events[name]);
-}
-}
+      if (tabs && events) {
+        for (var name in events) {
+          tabs.on(name + this.namespace, events[name]);
+        }
+      }
     },
 
     off: function(tabs) {
@@ -121,27 +121,27 @@ tabs.on(name + this.namespace, events[name]);
     },
 
     trigger: function(name, link) {
-var panel = this.getpanel(link);
-link.closest('.admintabs').trigger($.Event(name + this.namespace, {
-target: link[0],
-      relatedTarget: panel[0],
-panel: panel
-}));
+      var panel = this.getpanel(link);
+      link.closest('.admintabs').trigger($.Event(name + this.namespace, {
+        target: link[0],
+        relatedTarget: panel[0],
+        panel: panel
+      }));
     },
 
-setenabled: function(link, enabled) {
-if (enabled) {
-link.parent().removeClass("disabled");
-link.attr("data-toggle", "tab");
-link.off("click.disabled");
-} else {
-link.parent().addClass("disabled");
-link.attr("data-toggle", "disabled");
-link.on("click.disabled", function() {
-return false;
-});
-}
-}
+    setenabled: function(link, enabled) {
+      if (enabled) {
+        link.parent().removeClass("disabled");
+        link.attr("data-toggle", "tab");
+        link.off("click.disabled");
+      } else {
+        link.parent().addClass("disabled");
+        link.attr("data-toggle", "disabled");
+        link.on("click.disabled", function() {
+          return false;
+        });
+      }
+    }
 
   });
 
