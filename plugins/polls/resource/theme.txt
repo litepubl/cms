@@ -1,5 +1,6 @@
 polls.stars = [
 <div class="poll-opened poll-stars" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+<div class="section">
     <meta itemprop="bestRating" content="$best" />
     <meta itemprop="worstRating" content="1" />
     <span class="poll-title">$lang.poll:</span>
@@ -12,12 +13,13 @@ polls.stars = [
             </a>
         </li>]
     </ul>
-
-    <span class="poll-text">
+    </div>
+    <div class="section">
 $lang.pollresult $lang.rating:
-    <span itemprop="ratingValue">$rate</span> $lang.votes:
-    <span itemprop="ratingCount">$votes</span>
-    </span>
+    <span itemprop="ratingValue" class="thin-text">$rate</span>
+    $lang.votes:
+    <span itemprop="ratingCount" class="thin-text">$votes</span>
+    </div>
 </div>
 ]
 

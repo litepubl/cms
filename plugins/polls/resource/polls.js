@@ -25,14 +25,14 @@
         })
         .on("hide.bs.tooltip.poll", ".poll-star", function(e) {
           var button = $(e.target);
-          button.closest(".poll-opened").find("fa-star").removeClass("fa-star").addClass("fa-star-o");
+          button.closest(".poll-opened").find(".fa-star").removeClass("fa-star").addClass("fa-star-o");
         });
     },
 
     addvote: function(vote, holder) {
       var idpoll = holder.attr("data-idpoll");
       if ($.inArray(idpoll, this.voted) >= 0) {
-        return this.error(lang.poll.voted);
+        return $.errorbox(lang.poll.voted);
       }
 
       this.voted.push(idpoll);
@@ -51,7 +51,7 @@
           callback: function(r) {
             holder.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
             holder.html(r.html);
-            holder.find("tooltip-toggle").removeClass("tooltip-toggle");
+            holder.find(".tooltip-toggle").removeClass("tooltip-toggle");
             self.changestars(vote, holder);
           },
 
@@ -64,9 +64,9 @@
 
     changestars: function(vote, holder) {
       if (holder.hasClass("poll-stars")) {
-        holder.find("poll-star").each(function() {
+        holder.find(".poll-star").each(function() {
           if (vote >= $(this).attr("data-vote")) {
-            $("fa", this).removeClass("fa-star-o").addClass("fa-star");
+            $(".fa-star-o", this).removeClass("fa-star-o").addClass("fa-star");
           }
         });
       }
