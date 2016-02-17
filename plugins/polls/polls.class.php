@@ -59,10 +59,8 @@ return $this->getpoll($this->finditem("idobject = $idobject and typeobject = '$t
 if (!$id) {return '';
 }
 
+if (litepublisher::$debug) $this->getdb(self::votes)->delete('iduser = '. litepublisher::$options->user);
     $item = $this->getitem($id);
-
-$this->getdb(self::votes)->delete('iduser = '. litepublisher::$options->user);
-//$this->addvote($id, litepublisher::$options->user, 2);
 
 $lang = tlocal::i('poll');
     $args = new targs();
@@ -171,6 +169,24 @@ $item['votes'] = $votes;
     $item['rate'] = $votes == 0 ? 0 : round($rate / $votes, 1);
 $item['bestvotes'] = $statitems[count($statitems) - 1]['count'];
 $item['worstvotes'] = count($statitems) == 1 ? 0 : $statitems[0]['count'];
+
+    $this->db->updateassoc($item);
+$this->items[$id] = $item;
+  }
+
+  public function addfakevote($id) {
+$item = $this->getitem($id);
+$best = (int) $item['best'];
+$this->getdb(self::votes)->insert(array(
+'idpoll' => (int) $id,
+'iduser' => 1,
+'vote' => $best,
+));
+
+$item['votes'] = mt_rand(7, 167);
+    $item['rate'] = mt_rand(($best - 1) *10, $best * 10) / 10;
+$item['bestvotes'] = mt_rand(2,120);
+$item['worstvotes'] = 1;
 
     $this->db->updateassoc($item);
 $this->items[$id] = $item;

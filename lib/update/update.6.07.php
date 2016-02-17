@@ -15,10 +15,6 @@ $classes->items['getter'] = array('kernel.php', '', 'getter.class.php');
 unset($classes->items['tuitabs']);
 $classes->items['tabs'] = array('kernel.admin.php', '', 'html.tabs.class.php');
 
-if ($classes->exists('tpolls')) {
-unset($classes->items['tpullpolls']);
-$classes->items['tpoolpolls'] = array('pullpolls.class.php', 'polls',);
-}
 $classes->save();
 
 $m = tadminmenus::i();
@@ -91,32 +87,10 @@ tjsmerger_bootstrap_admin($js, true);
 $js->add('admin', 'js/litepubl/ui/datepicker.adapter.min.js');
 
   $parser = tthemeparser::i();
-  $parser->lock();
+if (!isset($parser->data['themefiles'])) {
 $parser->data['themefiles'] = array();
-
-if ($classes->exists('tpolls')) {
-  $js->replacefile('default',
- '/plugins/polls/polls.client.min.js',
- '/plugins/polls/resource/polls.min.js');
-
-$js->deletetext('default', 'poll');
-  $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
-
-$css->deletestyle('plugins/polls/stars.min.css');
-$css->add('default', 'plugins/polls/resource/polls.min.css');
-
-  $parser->add_tagfile('plugins/polls/resource/themetags.ini');
-  $parser->data['themefiles'][] = 'plugins/polls/resource/theme.txt';
-
-$man = tdbmanager::i();
-$man->alter('polls', 'drop id_tml');
-$man->alter('polls', "add template enum('stars', 'like') default 'stars'");
-        $man->alter('polls', "drop KEY (total)");
-$man->alter('polls', "change total votes int UNSIGNED NOT NULL default 0");
-        $man->alter('polls', "add KEY (votes)");
+  $parser->save();
 }
-
-  $parser->unlock();
 
 $js->unlock();
 
@@ -130,5 +104,11 @@ $aj = tajaxposteditor::i();
 if (!isset($aj->data['eventnames'])) {
 $aj->data['eventnames'] = array();
 $aj->save();
+}
+
+if ($classes->exists('tticket')) {
+if ($man->column_exists('tickets', 'poll')) {
+$man->alter('tickets', 'drop poll');
+}
 }
 }

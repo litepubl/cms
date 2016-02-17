@@ -3,10 +3,10 @@ polls.stars = [
     <meta itemprop="bestRating" content="$best" />
     <meta itemprop="worstRating" content="1" />
     <span class="poll-title">$lang.poll:</span>
-    <ul class="list-inline">
+    <ul class="list-inline list-stars">
         $item = [
         <li>
-            <a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.tipstar" data-vote="$vote">
+            <a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.clicktovote" data-vote="$vote">
                 <span class="fa fa-star-o"></span>
                 <span class="sr-only">$vote $lang.stars</span>
             </a>

@@ -25,7 +25,7 @@ class ttickets extends tposts {
   }
 
   public function createpoll($id) {
-return polls::i()->add('stars', $id, 'post');
+return polls::i()->add('like', $id, 'post');
   }
 
   public function filtercats(tpost $post) {

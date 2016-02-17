@@ -31,7 +31,6 @@ class tticket extends tpost {
       'assignto' => 0,
       'closed' => '',
       'version' => litepublisher::$options->version,
-'poll' => 0,
       'os' => '*',
       'reproduced' => false,
       'code' => ''
@@ -99,10 +98,6 @@ return ticketfactory::i();
 
   protected function getassigntoname() {
     return $this->getusername($this->assignto, true);
-  }
-
-  public function closepoll() {
-polls::i()->close();
   }
 
   public static function getresource() {

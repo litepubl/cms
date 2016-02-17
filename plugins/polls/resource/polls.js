@@ -15,10 +15,18 @@
 
       var self = this;
       $(document).on("click.poll", ".poll-vote", function() {
-        var button = $(this);
-        self.addvote(button.attr("data-vote"), button.closest(".poll-opened"));
-        return false;
-      });
+          var button = $(this);
+          self.addvote(button.attr("data-vote"), button.closest(".poll-opened"));
+          return false;
+        })
+        .on("show.bs.tooltip.poll", ".poll-star", function(e) {
+          var button = $(e.target);
+          self.changestars(button.attr("data-vote"), button.closest(".poll-opened"));
+        })
+        .on("hide.bs.tooltip.poll", ".poll-star", function(e) {
+          var button = $(e.target);
+          button.closest(".poll-opened").find("fa-star").removeClass("fa-star").addClass("fa-star-o");
+        });
     },
 
     addvote: function(vote, holder) {
@@ -28,7 +36,7 @@
       }
 
       this.voted.push(idpoll);
-      this.changestars(holder, vote);
+      this.changestars(vote, holder);
 
       var self = this;
       litepubl.authdialog.check({
@@ -44,7 +52,7 @@
             holder.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
             holder.html(r.html);
             holder.find("tooltip-toggle").removeClass("tooltip-toggle");
-            self.changestars(holder, vote);
+            self.changestars(vote, holder);
           },
 
           error: function(message, code) {
@@ -54,7 +62,7 @@
       });
     },
 
-    changestars: function(holder, vote) {
+    changestars: function(vote, holder) {
       if (holder.hasClass("poll-stars")) {
         holder.find("poll-star").each(function() {
           if (vote >= $(this).attr("data-vote")) {
