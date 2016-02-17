@@ -18,11 +18,17 @@ function pollsInstall($self) {
 
   $js = tjsmerger::i();
   $js->lock();
+
+  $css = tcssmerger::i();
+$css->lock();
+
+tplugins::i()->add('ulogin');
   $js->add('default', '/plugins/polls/resource/polls.min.js');
   $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
-  $js->unlock();
 
-  tcssmerger::i()->add('default', 'plugins/polls/resource/polls.min.css');
+$css->add('default', 'plugins/polls/resource/polls.min.css');
+$css->unlock();
+  $js->unlock();
 
   $parser = tthemeparser::i();
   $parser->lock();
@@ -36,14 +42,22 @@ tposts::i()->deleted = $self->postdeleted;
 }
 
 function pollsUninstall($self) {
-  tcssmerger::i()->deletefile('default', 'plugins/polls/resource/polls.min.css');
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
 
   $js= tjsmerger::i();
   $js->lock();
+
+  $css = tcssmerger::i();
+$css->lock();
+
+tplugins::i()->delete('ulogin');
+
   $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
   $js->deletefile('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+
+$css->deletefile('default', 'plugins/polls/resource/polls.min.css');
+$css->unlock();
   $js->unlock();
 
   $parser = tthemeparser::i();

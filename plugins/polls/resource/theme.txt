@@ -32,12 +32,12 @@ $lang.like
     </span>
 
     <div class="btn-group">
-        <button type="btn btn-default tooltip-toggle pool-vote" title="$lang.clicktovote" data-vote="2">
+        <button type="button" class="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="2">
             <span class="fa fa-plus"></span>
             <span class="sr-only">+</span>
         </button>
 
-        <button type="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="1">
+        <button type="button" class="btn btn-default tooltip-toggle poll-vote" title="$lang.clicktovote" data-vote="1">
             <span class="fa fa-minus"></span>
             <span class="sr-only">-</span>
         </button>
