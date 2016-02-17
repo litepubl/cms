@@ -19,7 +19,9 @@ $lang.pollresult $lang.rating:
     <span itemprop="ratingCount">$votes</span>
     </span>
 </div>
-] polls.like = [
+]
+
+ polls.like = [
 <div class="poll-opened poll-like" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
     <meta itemprop="bestRating" content="$best" />
     <meta itemprop="worstRating" content="1" />

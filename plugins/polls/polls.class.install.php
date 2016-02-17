@@ -50,6 +50,7 @@ function pollsUninstall($self) {
   $parser->lock();
   $parser->delete_tagfile('plugins/polls/resource/themetags.ini');
   array_delete_value($parser->themefiles, 'plugins/polls/resource/theme.txt');
+array_clean($parser->themefiles);
   $parser->unlock();
 
   $manager = tdbmanager::i();

@@ -66,7 +66,7 @@ $lang = tlocal::i('poll');
     $args->add($item);
 
    $theme = ttheme::i();
-if ($status == 'closed') {
+if ($item['status'] == 'closed') {
     $tml = $theme->templates['polls.closed'];
 } else {
 $k = 'polls.' . $item['template'];

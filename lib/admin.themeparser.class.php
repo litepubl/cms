@@ -20,12 +20,13 @@ class adminthemeparser extends tadminmenu {
 
     $themeparser = tthemeparser::i();
     $args->tagfiles = implode("\n", $themeparser->tagfiles);
-    $tabs->add($lang->theme, '[editor=tagfiles]');
+    $args->themefiles = implode("\n", $themeparser->themefiles);
+    $tabs->add($lang->theme, '[editor=tagfiles] [editor=themefiles]');
 
     $admin = adminparser::i();
     $args->admintagfiles = implode("\n", $admin->tagfiles);
-    $args->themefiles = implode("\n", $admin->themefiles);
-    $tabs->add($lang->admin, '[editor=admintagfiles] [editor=themefiles]');
+    $args->adminthemefiles = implode("\n", $admin->themefiles);
+    $tabs->add($lang->admin, '[editor=admintagfiles] [editor=adminthemefiles]');
 
     $args->formtitle = $lang->options;
     return $html->adminform($tabs->get() , $args);
@@ -34,11 +35,12 @@ class adminthemeparser extends tadminmenu {
   public function processform() {
     $themeparser = tthemeparser::i();
     $themeparser->tagfiles = strtoarray($_POST['tagfiles']);
+    $themeparser->themefiles = strtoarray($_POST['themefiles']);
     $themeparser->save();
 
     $admin = adminparser::i();
     $admin->tagfiles = strtoarray($_POST['admintagfiles']);
-    $admin->themefiles = strtoarray($_POST['themefiles']);
+    $admin->themefiles = strtoarray($_POST['adminthemefiles']);
     $admin->save();
 
     basetheme::clearcache();
