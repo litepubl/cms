@@ -178,6 +178,7 @@ return str_replace('$text', $text, $this->templates['success']);
   }
 
   public function getcats(array $items) {
+tlocal::i()->addsearch('editor');
     $result = $this->parse($this->templates['posteditor.categories.head']);
 tcategories::i()->loadall();
     $result.= $this->getsubcats(0, $items);

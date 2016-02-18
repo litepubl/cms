@@ -58,8 +58,8 @@ return ticketfactory::i();
   }
 
   protected function getcontentpage($page) {
-      $result= polls::i()->getobjectpoll($this->id, 'post');
-    $result.= parent::getcontentpage($page);
+    $result= parent::getcontentpage($page);
+      $result.= polls::i()->getobjectpoll($this->id, 'post');
     return $result;
   }
 
