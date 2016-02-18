@@ -1,36 +1,40 @@
 polls.stars = [
-<div class="poll-opened poll-stars" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
-<div class="section">
-    <meta itemprop="bestRating" content="$best" />
-    <meta itemprop="worstRating" content="1" />
-    <span class="poll-title">$lang.poll:</span>
-    <ul class="list-inline list-stars">
-        $item = [
-        <li>
-            <a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.clicktovote" data-vote="$vote">
-                <span class="fa fa-star-o"></span>
-                <span class="sr-only">$vote $lang.stars</span>
-            </a>
-        </li>]
-    </ul>
+<div class="poll-opened poll-stars section" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <div>
+        <meta itemprop="bestRating" content="$best" />
+        <meta itemprop="worstRating" content="1" />
+        <span class="poll-title">
+            <span class="fa fa-line-chart"></span>
+            $lang.poll:
+        </span>
+
+        <ul class="list-inline list-stars">
+            $item = [
+            <li>
+                <a href="#" class="poll-vote poll-star tooltip-toggle" title="$lang.clicktovote" data-vote="$vote">
+                    <span class="fa fa-star-o"></span>
+                    <span class="sr-only">$vote $lang.stars</span>
+                </a>
+            </li>]
+        </ul>
     </div>
-    <div class="section">
-$lang.pollresult $lang.rating:
-    <span itemprop="ratingValue" class="thin-text">$rate</span>
-    $lang.votes:
-    <span itemprop="ratingCount" class="thin-text">$votes</span>
+    <div>
+        $lang.pollresult $lang.rating:
+        <span itemprop="ratingValue" class="thin-text">$rate</span>
+        $lang.votes:
+        <span itemprop="ratingCount" class="thin-text">$votes</span>
     </div>
 </div>
 ]
 
- polls.like = [
+polls.like = [
 <div class="poll-opened poll-like" data-idpoll="$id" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
     <meta itemprop="bestRating" content="$best" />
     <meta itemprop="worstRating" content="1" />
     <span class="poll-text">
-$lang.poll
-$lang.like
-<span class="thin-text">$bestvotes</span>
+        <span class="fa fa-line-chart"></span>
+        $lang.poll: $lang.like
+    <span class="thin-text">$bestvotes</span>
     </span>
 
     <div class="btn-group">
@@ -46,7 +50,8 @@ $lang.like
     </div>
 
     <span class="poll-text">
-<span class="thin-text">$worstvotes</span> $lang.unlike
+<span class="thin-text">$worstvotes</span>
+$lang.unlike
     </span>
 
     <meta itemprop="ratingValue" content="$rate" />
@@ -59,9 +64,11 @@ polls.closed = [
     <meta itemprop="bestRating" content="$best" />
     <meta itemprop="worstRating" content="1" />
     <span class="poll-text">
-$lang.pollresult $lang.rating:
-    <span itemprop="ratingValue">$rate</span> $lang.votes:
-    <span itemprop="ratingCount">$votes</span>
+        <span class="fa fa-line-chart"></span>
+        $lang.pollresult $lang.rating:
+        <span itemprop="ratingValue">$rate</span>
+        $lang.votes:
+        <span itemprop="ratingCount">$votes</span>
     </span>
 </div>
 ]

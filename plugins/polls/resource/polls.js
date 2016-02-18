@@ -50,7 +50,7 @@
 
           callback: function(r) {
             holder.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
-            holder.html(r.html);
+holder = $(r.html).replaceAll(holder);
             holder.find(".tooltip-toggle").removeClass("tooltip-toggle");
             self.changestars(vote, holder);
           },
