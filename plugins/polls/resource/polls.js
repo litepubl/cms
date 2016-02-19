@@ -1,8 +1,8 @@
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- **/
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 (function($, document, litepubl) {
   'use strict';
@@ -50,7 +50,7 @@
 
           callback: function(r) {
             holder.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
-holder = $(r.html).replaceAll(holder);
+            holder = $(r.html).replaceAll(holder);
             holder.find(".tooltip-toggle").removeClass("tooltip-toggle");
             self.changestars(vote, holder);
           },

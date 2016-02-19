@@ -21,7 +21,7 @@ class tadminblackip {
     $args->ipstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
     $args->wordstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
 
-      $tabs = new tabs();
+    $tabs = new tabs();
     $tabs->add($lang->wordtitle, '[combo=wordstatus] [editor=words]');
     $tabs->add('IP', '[combo=ipstatus] [editor=ip]');
 

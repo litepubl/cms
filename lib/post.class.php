@@ -119,23 +119,23 @@ class tpost extends titem implements itemplate {
     }
   }
 
-public function getfactory() {
-return litepublisher::$classes->getfactory($this);
-}
+  public function getfactory() {
+    return litepublisher::$classes->getfactory($this);
+  }
 
   public function __get($name) {
     if ($this->childtable) {
       if ($name == 'id') {
-return $this->data['id'];
-}
+        return $this->data['id'];
+      }
 
       if (method_exists($this, $get = 'get' . $name)) {
-return $this->$get();
-}
+        return $this->$get();
+      }
 
       if (array_key_exists($name, $this->childdata)) {
-return $this->childdata[$name];
-}
+        return $this->childdata[$name];
+      }
     }
 
     // tags and categories theme tag
@@ -230,8 +230,8 @@ return $this->childdata[$name];
 
   public function save() {
     if ($this->lockcount > 0) {
-return;
-}
+      return;
+    }
 
     $this->SaveToDB();
     foreach ($this->coinstances as $coinstance) {
@@ -315,8 +315,8 @@ return;
 
   public function getprev() {
     if (!is_null($this->aprev)) {
-return $this->aprev;
-}
+      return $this->aprev;
+    }
 
     $this->aprev = false;
     if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
@@ -327,8 +327,8 @@ return $this->aprev;
 
   public function getnext() {
     if (!is_null($this->anext)) {
-return $this->anext;
-}
+      return $this->anext;
+    }
 
     $this->anext = false;
     if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
@@ -363,8 +363,8 @@ return $this->anext;
   public function gettheme() {
     ttheme::$vars['post'] = $this;
     if (isset($this->_theme)) {
-return $this->_theme;
-}
+      return $this->_theme;
+    }
 
     $this->_theme = isset(ttemplate::i()->view) ? ttemplate::i()->view->theme : tview::getview($this)->theme;
     return $this->_theme;
@@ -413,8 +413,8 @@ return $this->_theme;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
       if ('image' == $item['media']) {
-return $id;
-}
+        return $id;
+      }
     }
 
     return false;
@@ -430,15 +430,15 @@ return $id;
 
   public function getthumb() {
     if (count($this->files) == 0) {
-return false;
-}
+      return false;
+    }
 
     $files = $this->factory->files;
     foreach ($this->files as $id) {
       $item = $files->getitem($id);
       if ((int)$item['preview']) {
-return $files->geturl($item['preview']);
-}
+        return $files->geturl($item['preview']);
+      }
     }
 
     return false;
@@ -491,8 +491,8 @@ return $files->geturl($item['preview']);
   protected function get_taglinks($name, $excerpt) {
     $items = $this->__get($name);
     if (!count($items)) {
-return '';
-}
+      return '';
+    }
 
     $theme = $this->theme;
     $tmlpath = $excerpt ? 'content.excerpts.excerpt' : 'content.post';
@@ -552,19 +552,19 @@ return '';
 
   public function getmorelink() {
     if ($this->moretitle) {
-    return $this->parsetml('content.excerpts.excerpt.morelink');
-}
+      return $this->parsetml('content.excerpts.excerpt.morelink');
+    }
 
-return '';
+    return '';
   }
 
   public function gettagnames() {
     if (count($this->tags)) {
-    $tags = $this->factory->tags;
-    return implode(', ', $tags->getnames($this->tags));
-}
+      $tags = $this->factory->tags;
+      return implode(', ', $tags->getnames($this->tags));
+    }
 
-return '';
+    return '';
   }
 
   public function settagnames($names) {
@@ -574,11 +574,11 @@ return '';
 
   public function getcatnames() {
     if (count($this->categories)) {
-    $categories = $this->factory->categories;
-    return implode(', ', $categories->getnames($this->categories));
-}
+      $categories = $this->factory->categories;
+      return implode(', ', $categories->getnames($this->categories));
+    }
 
-return '';
+    return '';
   }
 
   public function setcatnames($names) {
@@ -600,8 +600,8 @@ return '';
 
   public function getidcat() {
     if (($cats = $this->categories) && count($cats)) {
-return $cats[0];
-}
+      return $cats[0];
+    }
 
     return 0;
   }
@@ -611,17 +611,17 @@ return $cats[0];
     parent::request((int)$id);
     if ($this->status != 'published') {
       if (!litepublisher::$options->show_draft_post) {
-return 404;
-}
+        return 404;
+      }
 
       $groupname = litepublisher::$options->group;
       if (($groupname == 'admin') || ($groupname == 'editor')) {
-return;
-}
+        return;
+      }
 
       if ($this->author == litepublisher::$options->user) {
-return;
-}
+        return;
+      }
 
       return 404;
     }
@@ -647,7 +647,7 @@ return;
     }
 
     if ($this->hascomm) {
-tlocal::i('comment');
+      tlocal::i('comment');
       $result.= $theme->templates['head.post.rss'];
     }
 
@@ -719,8 +719,8 @@ tlocal::i('comment');
 
   public function getfilelist() {
     if ((count($this->files) == 0) || ((litepublisher::$urlmap->page > 1) && litepublisher::$options->hidefilesonpage)) {
-return '';
-}
+      return '';
+    }
 
     $files = $this->factory->files;
     return $files->getfilelist($this->files, false);
@@ -895,8 +895,8 @@ return '';
 
   public function setcontent($s) {
     if (!is_string($s)) {
-$this->error('Error! Post content must be string');
-}
+      $this->error('Error! Post content must be string');
+    }
 
     $this->rawcontent = $s;
     tcontentfilter::i()->filterpost($this, $s);

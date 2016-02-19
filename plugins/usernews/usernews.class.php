@@ -77,8 +77,8 @@ class tusernews extends tplugin {
     $post->title = $title;
     $post->categories = admintheme::i()->processcategories();
     if (litepublisher::$options->user > 1) {
-$post->author = litepublisher::$options->user;
-}
+      $post->author = litepublisher::$options->user;
+    }
 
     if (isset($files)) {
       $files = trim($files);

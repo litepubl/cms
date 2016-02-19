@@ -78,8 +78,8 @@ class turlmap extends titems {
 
     $this->beforerequest();
     if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
-ob_start();
-}
+      ob_start();
+    }
 
     try {
       $this->dorequest($this->url);
@@ -103,8 +103,8 @@ ob_start();
 
       if ($afterclose) {
         if (function_exists('fastcgi_finish_request')) {
-fastcgi_finish_request();
-}
+          fastcgi_finish_request();
+        }
 
         ob_start();
       }
@@ -125,8 +125,8 @@ fastcgi_finish_request();
   protected function dorequest($url) {
     $this->itemrequested = $this->find_item($url);
     if ($this->isredir) {
-return;
-}
+      return;
+    }
 
     if ($this->itemrequested) {
       return $this->printcontent($this->itemrequested);
@@ -144,8 +144,8 @@ return;
 
   public function findurl($url) {
     if ($result = $this->db->finditem('url = ' . dbquote($url))) {
-return $result;
-}
+      return $result;
+    }
 
     return false;
   }
@@ -168,8 +168,8 @@ return $result;
 
   public function find_item($url) {
     if ($result = $this->query($url)) {
-return $result;
-}
+      return $result;
+    }
 
     $srcurl = $url;
     if ($i = strpos($url, '?')) {
@@ -177,14 +177,14 @@ return $result;
     }
 
     if ('//' == substr($url, -2)) {
-$this->redir(rtrim($url, '/') . '/');
-}
+      $this->redir(rtrim($url, '/') . '/');
+    }
 
     //extract page number
     if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
       if ('/' != substr($url, -1)) {
-return $this->redir($url . '/');
-}
+        return $this->redir($url . '/');
+      }
 
       $url = $m[1];
       if ($url == '') $url = '/';
@@ -292,7 +292,7 @@ return $this->redir($url . '/');
   private function printcontent(array $item) {
     $options = litepublisher::$options;
     if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
-return;
+      return;
     }
 
     if (class_exists($item['class'])) {
@@ -337,8 +337,8 @@ return;
       }
     } else {
       if ($this->isredir) {
-return;
-}
+        return;
+      }
 
       $template = ttemplate::i();
       $s = $template->request($context);
@@ -363,7 +363,7 @@ return;
   private function printclasspage($classname) {
     $cachefile = $classname . '.php';
     if ($this->cache_enabled && $this->include_file($cachefile)) {
-return;
+      return;
     }
 
     $obj = getinstance($classname);
@@ -493,8 +493,8 @@ return;
   public function expiredclass($class) {
     $items = $this->db->getitems("class = '$class'");
     if (count($items) == 0) {
-return;
-}
+      return;
+    }
 
     $cache = $this->cache;
     $page = $this->page;
@@ -507,8 +507,8 @@ return;
 
   public function addredir($from, $to) {
     if ($from == $to) {
-return;
-}
+      return;
+    }
 
     $Redir = tredirector::i();
     $Redir->add($from, $to);
@@ -524,8 +524,8 @@ return;
 
   public function setonclose(array $a) {
     if (count($a) == 0) {
-return;
-}
+      return;
+    }
 
     $this->close_events[] = $a;
   }
@@ -559,8 +559,8 @@ return;
   protected function close() {
     $this->call_close_events();
     if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) {
-return;
-}
+      return;
+    }
 
     $memstorage = memstorage::i();
     if ($memstorage->hourcron + 3600 <= time()) {
@@ -616,8 +616,8 @@ return;
   public function getprevpage() {
     $url = $this->itemrequested['url'];
     if ($this->page <= 2) {
-return url;
-}
+      return url;
+    }
 
     return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }

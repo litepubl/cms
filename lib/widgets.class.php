@@ -48,8 +48,8 @@ class twidgets extends titems_storage {
     $this->lock();
     $id = $this->add($widget);
     if (!isset($this->classes[$class])) {
-$this->classes[$class] = array();
-}
+      $this->classes[$class] = array();
+    }
 
     $this->classes[$class][] = array(
       'id' => $id,
@@ -66,8 +66,8 @@ $this->classes[$class] = array();
     foreach ($this->classes as $class => $items) {
       foreach ($items as $item) {
         if ($id == $item['id']) {
-return $class;
-}
+          return $class;
+        }
       }
     }
 
@@ -76,14 +76,14 @@ return $class;
 
   public function delete($id) {
     if (!isset($this->items[$id])) {
-return false;
-}
+      return false;
+    }
 
     foreach ($this->classes as $class => $items) {
       foreach ($items as $i => $item) {
         if ($id == $item['id']) {
-array_delete($this->classes[$class], $i);
-}
+          array_delete($this->classes[$class], $i);
+        }
       }
     }
 
@@ -107,32 +107,32 @@ array_delete($this->classes[$class], $i);
       foreach ($this->classes as $name => $items) {
         foreach ($items as $i => $item) {
           if (in_array($item['id'], $deleted)) {
-array_delete($this->classes[$name], $i);
-}
+            array_delete($this->classes[$name], $i);
+          }
         }
 
         if (!count($this->classes[$name])) {
-unset($this->classes[$name]);
-}
+          unset($this->classes[$name]);
+        }
       }
     }
 
     if (isset($this->classes[$class])) {
-unset($this->classes[$class]);
-}
+      unset($this->classes[$class]);
+    }
 
     $this->save();
 
     foreach ($deleted as $id) {
-$this->deleted($id);
-}
+      $this->deleted($id);
+    }
   }
 
   public function class2id($class) {
     foreach ($this->items as $id => $item) {
       if ($class == $item['class']) {
-return $id;
-}
+        return $id;
+      }
     }
 
     return false;

@@ -16,7 +16,7 @@ class adminthemeparser extends tadminmenu {
     $html = $this->html;
     $lang = tlocal::i('options');
     $args = targs::i();
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
 
     $themeparser = tthemeparser::i();
     $args->tagfiles = implode("\n", $themeparser->tagfiles);

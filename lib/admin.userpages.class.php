@@ -43,7 +43,7 @@ class tadminuserpages extends tadminmenu {
     }
     $args->add($item);
     $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $tabs->add($lang->title, '[text=name] [text=website]');
     if ('admin' == litepublisher::$options->group) {
       $tabs->add($lang->view, tadminviews::getcomboview($item['idview']));

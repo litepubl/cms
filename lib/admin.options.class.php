@@ -255,7 +255,7 @@ class tadminoptions extends tadminmenu {
         $args->formtitle = 'robots.txt';
         $args->robots = trobotstxt::i()->text;
         $args->appcache = appcache_manifest::i()->text;
-      $tabs = new tabs($this->admintheme);
+        $tabs = new tabs($this->admintheme);
         $tabs->add('robots.txt', '[editor=robots]');
         $tabs->add('manifest.appcache', '[editor=appcache]');
         return $html->adminform($tabs->get() , $args);

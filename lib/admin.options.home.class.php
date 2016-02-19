@@ -26,7 +26,7 @@ class adminhomeoptions extends tadminmenu {
     $lang = tlocal::admin('options');
     $html = $this->html;
     $home = thomepage::i();
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $args->image = $home->image;
     $args->smallimage = $home->smallimage;
     $args->parsetags = $home->parsetags;
@@ -65,13 +65,9 @@ class adminhomeoptions extends tadminmenu {
     </h5>
     ');
 
-    $tabs->add($lang->includecats, 
-$html->h4->includehome . 
-$this->admintheme->getcats($home->includecats));
+    $tabs->add($lang->includecats, $html->h4->includehome . $this->admintheme->getcats($home->includecats));
 
-    $tabs->add($lang->excludecats, 
-$html->h4->excludehome .
- str_replace('category-', 'exclude_category-', $this->admintheme->getcats($home->excludecats)));
+    $tabs->add($lang->excludecats, $html->h4->excludehome . str_replace('category-', 'exclude_category-', $this->admintheme->getcats($home->excludecats)));
 
     $args->formtitle = $lang->homeform;
     return $html->adminform('<h4><a href="$site.url/admin/menu/edit/{$site.q}id=$idhome">$lang.hometext</a></h4>' . $tabs->get() , $args);

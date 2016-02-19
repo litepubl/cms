@@ -67,13 +67,13 @@ function tjsmergerInstall($self) {
   $section = 'media';
   $self->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
   if ($language != 'en') {
-$self->add($section, "/lib/languages/$language/mediaplayer.min.js");
-}
+    $self->add($section, "/lib/languages/$language/mediaplayer.min.js");
+  }
 
   $section = 'admin';
-tjsmerger_bootstrap_admin($self, true);
+  tjsmerger_bootstrap_admin($self, true);
   $self->add($section, '/js/litepubl/admin/admin.min.js');
-$self->add($section, 'js/litepubl/ui/datepicker.adapter.min.js');
+  $self->add($section, 'js/litepubl/ui/datepicker.adapter.min.js');
   $self->add($section, '/js/litepubl/admin/calendar.min.js');
   $self->add($section, "/lib/languages/$language/admin.min.js");
 
@@ -167,62 +167,62 @@ function tjsmerger_bootstrap_files() {
 }
 
 function tjsmerger_bootstrap_admin($js, $add = true) {
-$items = array(
-'admin' => array(
-'/js/bootstrap/tab.min.js',
-'/js/litepubl/bootstrap/tabs.keys.min.js',
-'/js/litepubl/bootstrap/tabs.tml.min.js',
-'/js/litepubl/bootstrap/tabs.adapter.min.js',
-),
+  $items = array(
+    'admin' => array(
+      '/js/bootstrap/tab.min.js',
+      '/js/litepubl/bootstrap/tabs.keys.min.js',
+      '/js/litepubl/bootstrap/tabs.tml.min.js',
+      '/js/litepubl/bootstrap/tabs.adapter.min.js',
+    ) ,
 
-'posteditor' => array(
-'/js/litepubl/bootstrap/progressbar.adapter.min.js',
-),
-);
+    'posteditor' => array(
+      '/js/litepubl/bootstrap/progressbar.adapter.min.js',
+    ) ,
+  );
 
-foreach ($items as $section => $filenames) {
-foreach ($filenames as $filename) {
-if ($add) {
-$js->add($section, $filename);
-} else {
-$js->deletefile($section, $filename);
-}
-}
-}
+  foreach ($items as $section => $filenames) {
+    foreach ($filenames as $filename) {
+      if ($add) {
+        $js->add($section, $filename);
+      } else {
+        $js->deletefile($section, $filename);
+      }
+    }
+  }
 
 }
 
 function tjsmerger_ui_admin($js, $add = true) {
-$items = array(
-'admin' => array(
-'/js/jquery/ui/core.min.js',
-'/js/jquery/ui/widget.min.js',
-'/js/jquery/ui/mouse.min.js',
-'/js/jquery/ui/position.min.js',
-'/js/jquery/ui/effect.min.js',
-'/js/jquery/ui/tabs.min.js',
+  $items = array(
+    'admin' => array(
+      '/js/jquery/ui/core.min.js',
+      '/js/jquery/ui/widget.min.js',
+      '/js/jquery/ui/mouse.min.js',
+      '/js/jquery/ui/position.min.js',
+      '/js/jquery/ui/effect.min.js',
+      '/js/jquery/ui/tabs.min.js',
 
-'/js/litepubl/ui/tabs.tml.min.js',
-'/js/litepubl/ui/tabs.adapter.min.js',
-),
+      '/js/litepubl/ui/tabs.tml.min.js',
+      '/js/litepubl/ui/tabs.adapter.min.js',
+    ) ,
 
-'posteditor' => array(
-'/js/jquery/ui/progressbar.min.js',
-'/js/litepubl/ui/progressbar.adapter.min.js',
-),
-);
+    'posteditor' => array(
+      '/js/jquery/ui/progressbar.min.js',
+      '/js/litepubl/ui/progressbar.adapter.min.js',
+    ) ,
+  );
 
-foreach ($items as $section => $filenames) {
-foreach ($filenames as $filename) {
-if ($add) {
-$js->add($section, $filename);
-} else {
-$js->deletefile($section, $filename);
-}
-}
-}
+  foreach ($items as $section => $filenames) {
+    foreach ($filenames as $filename) {
+      if ($add) {
+        $js->add($section, $filename);
+      } else {
+        $js->deletefile($section, $filename);
+      }
+    }
+  }
 
-if ($add) {
-array_move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']), 0);
-}
+  if ($add) {
+    array_move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']) , 0);
+  }
 }

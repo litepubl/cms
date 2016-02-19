@@ -34,8 +34,8 @@ class titems extends tevents {
 
   public function save() {
     if ($this->lockcount > 0) {
-return;
-}
+      return;
+    }
 
     if ($this->dbversion) {
       return tstorage::save($this);
@@ -46,20 +46,20 @@ return;
 
   public function loadall() {
     if ($this->dbversion) {
-    return $this->select('', '');
-}
+      return $this->select('', '');
+    }
   }
 
   public function loaditems(array $items) {
     if (!$this->dbversion) {
-return;
-}
+      return;
+    }
 
     //exclude loaded items
     $items = array_diff($items, array_keys($this->items));
     if (count($items) == 0) {
-return;
-}
+      return;
+    }
 
     $list = implode(',', $items);
     $this->select("$this->thistable.$this->idprop in ($list)", '');
@@ -67,20 +67,20 @@ return;
 
   public function select($where, $limit) {
     if (!$this->dbversion) {
-$this->error('Select method must be called ffrom database version');
-}
+      $this->error('Select method must be called ffrom database version');
+    }
 
     if ($where) {
-$where = 'where ' . $where;
-}
+      $where = 'where ' . $where;
+    }
 
     return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
   }
 
   public function res2items($res) {
     if (!$res) {
-return array();
-}
+      return array();
+    }
 
     $result = array();
     $db = litepublisher::$db;
@@ -93,10 +93,10 @@ return array();
     return $result;
   }
 
-public function finditem($where) {
-$a = $this->select($where, 'limit 1');
-return count($a) ? $a[0] : false;
-}
+  public function finditem($where) {
+    $a = $this->select($where, 'limit 1');
+    return count($a) ? $a[0] : false;
+  }
 
   public function getcount() {
     if ($this->dbversion) {
@@ -108,20 +108,20 @@ return count($a) ? $a[0] : false;
 
   public function getitem($id) {
     if (isset($this->items[$id])) {
-return $this->items[$id];
-}
+      return $this->items[$id];
+    }
 
     if ($this->dbversion && $this->select("$this->thistable.$this->idprop = $id", 'limit 1')) {
-return $this->items[$id];
-}
+      return $this->items[$id];
+    }
 
     return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
   }
 
   public function getvalue($id, $name) {
     if ($this->dbversion && !isset($this->items[$id])) {
-$this->items[$id] = $this->db->getitem($id, $this->idprop);
-}
+      $this->items[$id] = $this->db->getitem($id, $this->idprop);
+    }
 
     return $this->items[$id][$name];
   }
@@ -135,8 +135,8 @@ $this->items[$id] = $this->db->getitem($id, $this->idprop);
 
   public function itemexists($id) {
     if (isset($this->items[$id])) {
-return true;
-}
+      return true;
+    }
 
     if ($this->dbversion) {
       try {
@@ -167,8 +167,8 @@ return true;
     $item[$this->idprop] = $id;
     $this->items[$id] = $item;
     if (!$this->dbversion) {
-$this->save();
-}
+      $this->save();
+    }
 
     $this->added($id);
     return $id;
@@ -176,14 +176,14 @@ $this->save();
 
   public function delete($id) {
     if ($this->dbversion) {
-$this->db->delete("$this->idprop = $id");
-}
+      $this->db->delete("$this->idprop = $id");
+    }
 
     if (isset($this->items[$id])) {
       unset($this->items[$id]);
       if (!$this->dbversion) {
-$this->save();
-}
+        $this->save();
+      }
 
       $this->deleted($id);
       return true;

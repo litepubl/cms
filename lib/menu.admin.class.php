@@ -51,18 +51,18 @@ class tadminmenu extends tmenu {
     return tviews::i()->defaults['admin'];
   }
 
-public function gettheme() {
-return $this->view->theme;
-}
+  public function gettheme() {
+    return $this->view->theme;
+  }
 
-public function getadmintheme() {
-return $this->view->admintheme;
-}
+  public function getadmintheme() {
+    return $this->view->admintheme;
+  }
 
   public static function auth($group) {
     if ($err = tguard::checkattack()) {
-return $err;
-}
+      return $err;
+    }
 
     if (!litepublisher::$options->user) {
       turlmap::nocache();
@@ -81,8 +81,8 @@ return $err;
     ini_set('display_errors', 1);
 
     if (is_null($id)) {
-$id = $this->owner->class2id(get_class($this));
-}
+      $id = $this->owner->class2id(get_class($this));
+    }
 
     $this->data['id'] = (int)$id;
     if ($id > 0) {
@@ -90,14 +90,14 @@ $id = $this->owner->class2id(get_class($this));
     }
 
     if ($s = self::auth($this->group)) {
-return $s;
-}
+      return $s;
+    }
 
     tlocal::usefile('admin');
 
     if ($s = $this->canrequest()) {
-return $s;
-}
+      return $s;
+    }
 
     $this->doprocessform();
   }
@@ -118,8 +118,8 @@ return $s;
       $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
       $filename = 'adminmenu.' . litepublisher::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
       if ($result = litepublisher::$urlmap->cache->get($filename)) {
-return $result;
-}
+        return $result;
+      }
 
       $result = parent::getcont();
       litepublisher::$urlmap->cache->set($filename, $result);

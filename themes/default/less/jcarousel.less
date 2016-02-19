@@ -5,15 +5,14 @@
 **/
 
 @jcarousel-image-width : 420px;
-//(@jcarousel-image-width / 4 *3);
-@jcarousel-image-height : 315px;
-@jcarousel-body-height : 116px;
-@jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
+@jcarousel-image-height : (@jcarousel-image-width / 4 *3);
+@jcarousel-body-height : (@jcarousel-image-width - @jcarousel-image-height);
+//@jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
+@jcarousel-height : @jcarousel-image-width;
 
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
-  //width: 100%;
 }
 
 .jcarousel {

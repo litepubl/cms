@@ -39,7 +39,7 @@ class tadmintickets extends tadminmenu {
       $items = array();
     }
 
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     $lang = tlocal::admin('tickets');
     $lang->addsearch('ticket', 'tickets');
     $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
@@ -92,10 +92,10 @@ $admintheme = $this->admintheme;
     //wrap form
     if (litepublisher::$options->group != 'ticket') {
       $args = new targs();
-$form = new adminform($args);
-$form->body = $table;
-    $form->body .= $form->centergroup($this->html->getsubmit('delete', 'setdraft', 'publish', 'setfixed'));
-    $form->submit = '';
+      $form = new adminform($args);
+      $form->body = $table;
+      $form->body.= $form->centergroup($this->html->getsubmit('delete', 'setdraft', 'publish', 'setfixed'));
+      $form->submit = '';
       $result.= $form->get();
     } else {
       $result.= $table;

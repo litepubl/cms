@@ -424,7 +424,11 @@ class tdata {
     $this->data = array();
     $this->coinstances = array();
     $this->coclasses = array();
-    $this->basename = substr(get_class($this) , 1);
+
+    if (!$this->basename) {
+      $this->basename = ltrim(get_class($this) , 'tT');
+    }
+
     $this->create();
   }
 
@@ -443,7 +447,7 @@ class tdata {
         }
       }
 
-      return $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
+      $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
     }
   }
 
@@ -676,8 +680,9 @@ class tdata {
     }
 
     $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-    $pad = ord($s[($len = strlen($s)) - 1]);
-    return substr($s, 0, strlen($s) - $pad);
+    $len = strlen($s);
+    $pad = ord($s[$len - 1]);
+    return substr($s, 0, $len - $pad);
   }
 
 } //class
@@ -861,9 +866,16 @@ class tevents extends tdata {
   protected $map;
 
   public function __construct() {
-    $this->eventnames = array();
-    $this->map = array();
+    if (!is_array($this->eventnames)) {
+      $this->eventnames = array();
+    }
+
+    if (!is_array($this->map)) {
+      $this->map = array();
+    }
+
     parent::__construct();
+
     $this->assignmap();
     $this->load();
   }
@@ -885,9 +897,11 @@ class tevents extends tdata {
 
   public function afterload() {
     $this->assignmap();
+
     foreach ($this->coclasses as $coclass) {
       $this->coinstances[] = getinstance($coclass);
     }
+
     parent::afterload();
   }
 
@@ -953,7 +967,6 @@ class tevents extends tdata {
   }
 
   public function callevent($name, $params) {
-
     if (!isset($this->events[$name])) {
       return '';
     }
@@ -1168,35 +1181,95 @@ class ECancelEvent extends Exception {
 
 //events.coclass.php
 class tcoevents extends tevents {
-  private $owner;
+  protected $owner;
+  protected $callbacks;
 
   public function __construct() {
+    $args = func_get_args();
+    if (isset($args[0])) {
+      if (is_array($args[0])) {
+        $this->callbacks = array_shift($args);
+        $this->trigger_callback('construct');
+      } else if (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof tdata)) {
+        $this->setowner($owner);
+      }
+    }
+
+    if (is_array($this->eventnames)) {
+      array_splice($this->eventnames, count($this->eventnames) , 0, $args);
+    } else {
+      $this->eventnames = $args;
+    }
+
     parent::__construct();
-    $a = func_get_args();
-    $owner = array_shift($a);
+  }
+
+  public function setowner(tdata $owner) {
     $this->owner = $owner;
-    if (!isset($owner->data['events'])) $owner->data['events'] = array();
+    if (!isset($owner->data['events'])) {
+      $owner->data['events'] = array();
+    }
+
     $this->events = & $owner->data['events'];
-    array_splice($this->eventnames, count($this->eventnames) , 0, $a);
+  }
+
+  public function trigger_callback($name) {
+    if (isset($this->callbacks[$name])) {
+      $callback = $this->callbacks[$name];
+      if (is_callable($callback)) {
+        $callback($this);
+      }
+    }
   }
 
   public function __destruct() {
     parent::__destruct();
-    unset($this->owner);
+    unset($this->owner, $this->callbacks);
   }
 
   public function assignmap() {
+    if (!$this->owner) {
+      parent::assignmap();
+    }
+
+    $this->trigger_callback('assignmap');
   }
+
   protected function create() {
+    if (!$this->owner) {
+      parent::create();
+    }
+
+    $this->trigger_callback('create');
   }
+
   public function load() {
+    if (!$this->owner) {
+      return parent::load();
+    }
   }
+
   public function afterload() {
-    $this->events = & $this->owner->data['events'];
+    if ($this->owner) {
+      $this->events = & $this->owner->data['events'];
+    } else {
+      parent::afterload();
+    }
+
+    $this->trigger_callback('afterload');
   }
 
   public function save() {
-    return $this->owner->save();
+    if ($this->owner) {
+      return $this->owner->save();
+    } else {
+      return parent::save();
+    }
+  }
+
+  public function inject_events() {
+    $a = func_get_args();
+    array_splice($this->eventnames, count($this->eventnames) , 0, $a);
   }
 
 } //class
@@ -1242,7 +1315,10 @@ class titems extends tevents {
   }
 
   public function save() {
-    if ($this->lockcount > 0) return;
+    if ($this->lockcount > 0) {
+      return;
+    }
+
     if ($this->dbversion) {
       return tstorage::save($this);
     } else {
@@ -1251,27 +1327,43 @@ class titems extends tevents {
   }
 
   public function loadall() {
-    if (!$this->dbversion) return;
-    return $this->select('', '');
+    if ($this->dbversion) {
+      return $this->select('', '');
+    }
   }
 
   public function loaditems(array $items) {
-    if (!$this->dbversion) return;
+    if (!$this->dbversion) {
+      return;
+    }
+
     //exclude loaded items
     $items = array_diff($items, array_keys($this->items));
-    if (count($items) == 0) return;
+    if (count($items) == 0) {
+      return;
+    }
+
     $list = implode(',', $items);
     $this->select("$this->thistable.$this->idprop in ($list)", '');
   }
 
   public function select($where, $limit) {
-    if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
-    if ($where) $where = 'where ' . $where;
+    if (!$this->dbversion) {
+      $this->error('Select method must be called ffrom database version');
+    }
+
+    if ($where) {
+      $where = 'where ' . $where;
+    }
+
     return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
   }
 
   public function res2items($res) {
-    if (!$res) return array();
+    if (!$res) {
+      return array();
+    }
+
     $result = array();
     $db = litepublisher::$db;
     while ($item = $db->fetchassoc($res)) {
@@ -1279,7 +1371,13 @@ class titems extends tevents {
       $result[] = $id;
       $this->items[$id] = $item;
     }
+
     return $result;
+  }
+
+  public function finditem($where) {
+    $a = $this->select($where, 'limit 1');
+    return count($a) ? $a[0] : false;
   }
 
   public function getcount() {
@@ -1291,28 +1389,37 @@ class titems extends tevents {
   }
 
   public function getitem($id) {
-    if (isset($this->items[$id])) return $this->items[$id];
-    if ($this->dbversion) {
-      if ($this->select("$this->thistable.$this->idprop = $id", 'limit 1')) return $this->items[$id];
+    if (isset($this->items[$id])) {
+      return $this->items[$id];
     }
+
+    if ($this->dbversion && $this->select("$this->thistable.$this->idprop = $id", 'limit 1')) {
+      return $this->items[$id];
+    }
+
     return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
   }
 
   public function getvalue($id, $name) {
-    if ($this->dbversion && !isset($this->items[$id])) $this->items[$id] = $this->db->getitem($id, $this->idprop);
+    if ($this->dbversion && !isset($this->items[$id])) {
+      $this->items[$id] = $this->db->getitem($id, $this->idprop);
+    }
+
     return $this->items[$id][$name];
   }
 
   public function setvalue($id, $name, $value) {
     $this->items[$id][$name] = $value;
     if ($this->dbversion) {
-      //$this->db->setvalue($id, $name, $value);
       $this->db->update("$name = " . dbquote($value) , "$this->idprop = $id");
     }
   }
 
   public function itemexists($id) {
-    if (isset($this->items[$id])) return true;
+    if (isset($this->items[$id])) {
+      return true;
+    }
+
     if ($this->dbversion) {
       try {
         return $this->getitem($id);
@@ -1341,16 +1448,25 @@ class titems extends tevents {
     $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
     $item[$this->idprop] = $id;
     $this->items[$id] = $item;
-    if (!$this->dbversion) $this->save();
+    if (!$this->dbversion) {
+      $this->save();
+    }
+
     $this->added($id);
     return $id;
   }
 
   public function delete($id) {
-    if ($this->dbversion) $this->db->delete("$this->idprop = $id");
+    if ($this->dbversion) {
+      $this->db->delete("$this->idprop = $id");
+    }
+
     if (isset($this->items[$id])) {
       unset($this->items[$id]);
-      if (!$this->dbversion) $this->save();
+      if (!$this->dbversion) {
+        $this->save();
+      }
+
       $this->deleted($id);
       return true;
     }
@@ -1660,7 +1776,9 @@ class tclasses extends titems {
 
   public function getfactory($instance) {
     foreach ($this->factories as $classname => $factory) {
-      if (@is_a($instance, $classname)) return $this->getinstance($factory);
+      if (@is_a($instance, $classname)) {
+        return $this->getinstance($factory);
+      }
     }
   }
 
@@ -2229,7 +2347,10 @@ class turlmap extends titems {
     }
 
     $this->beforerequest();
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) ob_start();
+    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
+      ob_start();
+    }
+
     try {
       $this->dorequest($this->url);
     }
@@ -2251,7 +2372,10 @@ class turlmap extends titems {
       flush();
 
       if ($afterclose) {
-        if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+        if (function_exists('fastcgi_finish_request')) {
+          fastcgi_finish_request();
+        }
+
         ob_start();
       }
     }
@@ -2269,9 +2393,11 @@ class turlmap extends titems {
   }
 
   protected function dorequest($url) {
-    //echo "'$url'<br>";
-    $this->itemrequested = $this->finditem($url);
-    if ($this->isredir) return;
+    $this->itemrequested = $this->find_item($url);
+    if ($this->isredir) {
+      return;
+    }
+
     if ($this->itemrequested) {
       return $this->printcontent($this->itemrequested);
     } else {
@@ -2287,7 +2413,10 @@ class turlmap extends titems {
   }
 
   public function findurl($url) {
-    if ($result = $this->db->finditem('url = ' . dbquote($url))) return $result;
+    if ($result = $this->db->finditem('url = ' . dbquote($url))) {
+      return $result;
+    }
+
     return false;
   }
 
@@ -2307,17 +2436,26 @@ class turlmap extends titems {
     return false;
   }
 
-  public function finditem($url) {
-    if ($result = $this->query($url)) return $result;
+  public function find_item($url) {
+    if ($result = $this->query($url)) {
+      return $result;
+    }
+
     $srcurl = $url;
     if ($i = strpos($url, '?')) {
       $url = substr($url, 0, $i);
     }
 
-    if ('//' == substr($url, -2)) $this->redir(rtrim($url, '/') . '/');
+    if ('//' == substr($url, -2)) {
+      $this->redir(rtrim($url, '/') . '/');
+    }
+
     //extract page number
     if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
-      if ('/' != substr($url, -1)) return $this->redir($url . '/');
+      if ('/' != substr($url, -1)) {
+        return $this->redir($url . '/');
+      }
+
       $url = $m[1];
       if ($url == '') $url = '/';
       $this->page = max(1, abs((int)$m[2]));
@@ -2423,8 +2561,8 @@ class turlmap extends titems {
 
   private function printcontent(array $item) {
     $options = litepublisher::$options;
-    if ($this->cache_enabled) {
-      if ($this->include_file($this->getcachefile($item))) return;
+    if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
+      return;
     }
 
     if (class_exists($item['class'])) {
@@ -2468,7 +2606,10 @@ class turlmap extends titems {
           return $this->forbidden();
       }
     } else {
-      if ($this->isredir) return;
+      if ($this->isredir) {
+        return;
+      }
+
       $template = ttemplate::i();
       $s = $template->request($context);
     }
@@ -2491,8 +2632,8 @@ class turlmap extends titems {
 
   private function printclasspage($classname) {
     $cachefile = $classname . '.php';
-    if ($this->cache_enabled) {
-      if ($this->include_file($cachefile)) return;
+    if ($this->cache_enabled && $this->include_file($cachefile)) {
+      return;
     }
 
     $obj = getinstance($classname);
@@ -2621,7 +2762,10 @@ class turlmap extends titems {
 
   public function expiredclass($class) {
     $items = $this->db->getitems("class = '$class'");
-    if (count($items) == 0) return;
+    if (count($items) == 0) {
+      return;
+    }
+
     $cache = $this->cache;
     $page = $this->page;
     $this->page = 1;
@@ -2632,7 +2776,10 @@ class turlmap extends titems {
   }
 
   public function addredir($from, $to) {
-    if ($from == $to) return;
+    if ($from == $to) {
+      return;
+    }
+
     $Redir = tredirector::i();
     $Redir->add($from, $to);
   }
@@ -2646,7 +2793,10 @@ class turlmap extends titems {
   }
 
   public function setonclose(array $a) {
-    if (count($a) == 0) return;
+    if (count($a) == 0) {
+      return;
+    }
+
     $this->close_events[] = $a;
   }
 
@@ -2678,7 +2828,9 @@ class turlmap extends titems {
 
   protected function close() {
     $this->call_close_events();
-    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) return;
+    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) {
+      return;
+    }
 
     $memstorage = memstorage::i();
     if ($memstorage->hourcron + 3600 <= time()) {
@@ -2733,7 +2885,10 @@ class turlmap extends titems {
 
   public function getprevpage() {
     $url = $this->itemrequested['url'];
-    if ($this->page <= 2) return url;
+    if ($this->page <= 2) {
+      return url;
+    }
+
     return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }
 

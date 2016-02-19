@@ -73,13 +73,13 @@ class tablebuilder {
     );
   }
 
-public function getadmintheme() {
+  public function getadmintheme() {
     if (!$this->admintheme) {
-$this->admintheme = admintheme::i();
-}
+      $this->admintheme = admintheme::i();
+    }
 
-return $this->admintheme;
-}
+    return $this->admintheme;
+  }
 
   public function build(array $items) {
     $body = '';
@@ -91,27 +91,27 @@ return $this->admintheme;
     return $this->getadmintheme()->gettable($this->head, $body);
   }
 
-public function parseitem($id, $item) {
+  public function parseitem($id, $item) {
     $args = $this->args;
 
-      if (is_array($item)) {
-        $this->item = $item;
-        $args->add($item);
-        if (!isset($item['id'])) {
-          $this->id = $id;
-          $args->id = $id;
-        }
-      } else {
-        $this->id = $item;
-        $args->id = $item;
+    if (is_array($item)) {
+      $this->item = $item;
+      $args->add($item);
+      if (!isset($item['id'])) {
+        $this->id = $id;
+        $args->id = $id;
       }
+    } else {
+      $this->id = $item;
+      $args->id = $item;
+    }
 
-      foreach ($this->callbacks as $name => $callback) {
-        $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
-      }
+    foreach ($this->callbacks as $name => $callback) {
+      $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
+    }
 
-return $this->getadmintheme()->parsearg($this->body, $args);
-}
+    return $this->getadmintheme()->parsearg($this->body, $args);
+  }
 
   //predefined callbacks
   public function titems_callback(tablebuilder $self, titems $owner) {
@@ -171,8 +171,8 @@ return $this->getadmintheme()->parsearg($this->body, $args);
         }
       } else {
         if ($k2 = $lang->__get($k)) {
-$k = $k2;
-}
+          $k = $k2;
+        }
 
         $args->name = $k;
         $args->value = $v;
@@ -203,27 +203,29 @@ $k = $k2;
 
     foreach ($inputs as $name => $type) {
       if (($name === false) || ($type === false)) {
-continue;
-}
+        continue;
+      }
 
-switch ($type) {
-case 'combo':
-$input = '<select name="$name" id="$name-input">$value</select>';
-break;
+      switch ($type) {
+        case 'combo':
+          $input = '<select name="$name" id="$name-input">$value</select>';
+          break;
 
-case 'text':
-$input = '<input type="text" name="$name" id="$name-input" value="$value" />';
-break;
 
-default:
-$this->error('Unknown input type ' . $type);
-}
+        case 'text':
+          $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+          break;
 
-$args->name = $name;
-        $args->title = $lang->$name;
-$args->value = $args->$name;
-        $args->input = $admintheme->parsearg($input, $args);
-        $body.= $admintheme->parsearg($this->body, $args);
+
+        default:
+          $this->error('Unknown input type ' . $type);
+      }
+
+      $args->name = $name;
+      $args->title = $lang->$name;
+      $args->value = $args->$name;
+      $args->input = $admintheme->parsearg($input, $args);
+      $body.= $admintheme->parsearg($this->body, $args);
     }
 
     return $admintheme->gettable($this->head, $body);

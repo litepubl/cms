@@ -173,8 +173,8 @@ class tclasses extends titems {
   public function getfactory($instance) {
     foreach ($this->factories as $classname => $factory) {
       if (@is_a($instance, $classname)) {
-return $this->getinstance($factory);
-}
+        return $this->getinstance($factory);
+      }
     }
   }
 

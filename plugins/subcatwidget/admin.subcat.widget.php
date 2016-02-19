@@ -36,7 +36,7 @@ class tadminsubcatwidget extends tadminwidget {
       $tags[] = $item['idtag'];
     }
     $args->formtitle = $about['formtitle'];
-    return $html->adminform(admintheme::i()->getcats($tags), $args);
+    return $html->adminform(admintheme::i()->getcats($tags) , $args);
   }
 
   public function processform() {

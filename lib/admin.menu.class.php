@@ -93,7 +93,7 @@ class tadminmenumanager extends tadminmenu {
         [hidden=id]', $args);
         }
 
-      $tabs = new tabs($this->admintheme);
+        $tabs = new tabs($this->admintheme);
         $tabs->add($lang->title, '
       [text=title]
       [combo=parent]
@@ -108,8 +108,8 @@ class tadminmenumanager extends tadminmenu {
 
         $ajaxeditor = tajaxmenueditor::i();
         $args->formtitle = $lang->edit;
-$tml = $tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme);
-        return  $html->adminform($tml, $args);
+        $tml = $tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme);
+        return $html->adminform($tml, $args);
       }
   }
 

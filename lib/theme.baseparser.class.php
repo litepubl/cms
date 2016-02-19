@@ -40,7 +40,7 @@ class baseparser extends tevents {
   }
 
   public function getfilelist($name) {
-$result = array();
+    $result = array();
 
     foreach ($this->themefiles as $filename) {
       $filename = ltrim($filename, '/');
@@ -57,7 +57,7 @@ $result = array();
 
     $about = $this->getabout($name);
     $result[] = litepublisher::$paths->themes . $name . '/' . $about['file'];
-return $result;
+    return $result;
   }
 
   public function parse(basetheme $theme) {

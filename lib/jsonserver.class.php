@@ -176,8 +176,8 @@ class tjsonserver extends tevents {
 
   public function addevent($name, $class, $func, $once = false) {
     if (!in_array($name, $this->eventnames)) {
-$this->eventnames[] = $name;
-}
+      $this->eventnames[] = $name;
+    }
 
     return parent::addevent($name, $class, $func, $once);
   }

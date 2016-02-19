@@ -111,8 +111,8 @@ class tposttransform {
       'modified' => sqldate()
     );
     if (false !== $post->data['rawcontent']) {
-$raw['rawcontent'] = $post->data['rawcontent'];
-}
+      $raw['rawcontent'] = $post->data['rawcontent'];
+    }
 
     $post->rawdb->updateassoc($raw);
 
@@ -120,26 +120,26 @@ $raw['rawcontent'] = $post->data['rawcontent'];
 
   public function setassoc(array $a) {
     foreach ($a as $k => $v) {
-$this->__set($k, $v);
-}
+      $this->__set($k, $v);
+    }
   }
 
   public function __get($name) {
     if ('pagescount' == $name) {
-return $this->post->data[$name];
-}
+      return $this->post->data[$name];
+    }
 
     if (method_exists($this, $get = "get$name")) {
-return $this->$get();
-}
+      return $this->$get();
+    }
 
     if (in_array($name, self::$arrayprops)) {
-return implode(',', $this->post->$name);
-}
+      return implode(',', $this->post->$name);
+    }
 
     if (in_array($name, self::$boolprops)) {
-return $this->post->$name ? 1 : 0;
-}
+      return $this->post->$name ? 1 : 0;
+    }
 
     return $this->post->$name;
   }

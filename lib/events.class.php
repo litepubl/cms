@@ -12,13 +12,13 @@ class tevents extends tdata {
   protected $map;
 
   public function __construct() {
-    if (!is_array($this->eventnames )) {
-$this->eventnames = array();
-}
+    if (!is_array($this->eventnames)) {
+      $this->eventnames = array();
+    }
 
-if (!is_array($this->map )) {
-    $this->map = array();
-}
+    if (!is_array($this->map)) {
+      $this->map = array();
+    }
 
     parent::__construct();
 

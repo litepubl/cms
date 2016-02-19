@@ -12,7 +12,7 @@ function tticketsInstall($self) {
   }
 
   $dirname = basename(dirname(__file__));
-tlocalmerger::i()->addplugin($dirname);
+  tlocalmerger::i()->addplugin($dirname);
   $lang = tlocal::admin('tickets');
   $lang->addsearch('ticket', 'tickets');
 

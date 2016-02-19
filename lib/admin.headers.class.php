@@ -18,7 +18,7 @@ class tadminheaders extends tadminmenu {
     $lang = tlocal::i('views');
     $args = new targs();
 
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $args->heads = ttemplate::i()->heads;
     $tabs->add($lang->headstitle, '[editor=heads]');
 
@@ -32,7 +32,7 @@ class tadminheaders extends tadminmenu {
     $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
 
     $args->formtitle = $lang->headstitle;
-return $html->adminform($tabs->get() , $args);
+    return $html->adminform($tabs->get() , $args);
   }
 
   public function processform() {

@@ -32,9 +32,9 @@ class tdata {
     $this->coinstances = array();
     $this->coclasses = array();
 
-if (!$this->basename) {
-    $this->basename = ltrim(get_class($this), 'tT');
-}
+    if (!$this->basename) {
+      $this->basename = ltrim(get_class($this) , 'tT');
+    }
 
     $this->create();
   }
@@ -287,8 +287,8 @@ if (!$this->basename) {
     }
 
     $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-$len = strlen($s);
-    $pad = ord($s[$len  - 1]);
+    $len = strlen($s);
+    $pad = ord($s[$len - 1]);
     return substr($s, 0, $len - $pad);
   }
 

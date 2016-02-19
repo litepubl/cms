@@ -28,8 +28,8 @@ class tajaxposteditor extends tevents {
 
   public function addevent($name, $class, $func, $once = false) {
     if (!in_array($name, $this->eventnames)) {
-$this->eventnames[] = $name;
-}
+      $this->eventnames[] = $name;
+    }
 
     return parent::addevent($name, $class, $func, $once);
   }
@@ -91,8 +91,8 @@ $this->eventnames[] = $name;
     $theme = tview::i(tviews::i()->defaults['admin'])->theme;
     $lang = tlocal::i('editor');
     $post = tpost::i($this->idpost);
-$vars = new themevars();
-$vars->post = $post;
+    $vars = new themevars();
+    $vars->post = $post;
 
     switch ($_GET['get']) {
       case 'tags':
@@ -143,12 +143,14 @@ $vars->post = $post;
 
 
       default:
-$name = trim($_GET['get']);
-if (isset($this->events[$name])) {
-$result = $this->callevent($name, array($post));
-} else {
-        $result = var_export($_GET, true);
-}
+        $name = trim($_GET['get']);
+        if (isset($this->events[$name])) {
+          $result = $this->callevent($name, array(
+            $post
+          ));
+        } else {
+          $result = var_export($_GET, true);
+        }
     }
 
     //tfiler::log($result);
@@ -156,24 +158,24 @@ $result = $this->callevent($name, array($post));
   }
 
   public function gettext($text, $admintheme = null) {
-if (!$admintheme) {
-    $admintheme = admintheme::admin();
-}
+    if (!$admintheme) {
+      $admintheme = admintheme::admin();
+    }
 
-$args = new targs();
+    $args = new targs();
     if ($this->visual) {
-if ($this->ajaxvisual) {
-$args->scripturl = $this->visual;
-$args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
-} else {
-$args->visual = ttemplate::i()->getjavascript($this->visual);
-}
-} else {
-$args->visual = '';
-}
+      if ($this->ajaxvisual) {
+        $args->scripturl = $this->visual;
+        $args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
+      } else {
+        $args->visual = ttemplate::i()->getjavascript($this->visual);
+      }
+    } else {
+      $args->visual = '';
+    }
 
     $args->raw = $text;
-return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
+    return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
   }
 
 } //class

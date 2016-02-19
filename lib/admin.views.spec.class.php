@@ -28,7 +28,7 @@ class tadminviewsspec extends tadminmenu {
     $lang = tlocal::i('views');
     $args = new targs();
 
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $inputs = '';
     foreach (self::getspecclasses() as $classname) {
       $obj = getinstance($classname);

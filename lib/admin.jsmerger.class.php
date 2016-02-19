@@ -18,7 +18,7 @@ class tadminjsmerger extends tadminmenu {
 
   public function getcontent() {
     $merger = $this->getmerger();
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $html = $this->html;
     $lang = tlocal::i('views');
     $args = targs::i();

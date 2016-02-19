@@ -6659,9 +6659,21 @@ input[name^="coupon"] {
   border: 1px solid transparent;
   border-radius: 4px;
 }
+.price {
+  background-image: -webkit-linear-gradient(top, #9933CC 0%, #74279b 100%);
+  background-image: -o-linear-gradient(top, #9933CC 0%, #74279b 100%);
+  background-image: linear-gradient(to bottom, #9933CC 0%, #74279b 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff9933cc', endColorstr='#ff74279b', GradientType=0);
+}
 .oldprice {
   text-decoration: line-through;
   font-weight: 200;
+  font-size: 120%;
+  padding: 0 12px;
+}
+.anprice {
+  font-weight: bold;
   font-size: 120%;
   padding: 0 12px;
 }

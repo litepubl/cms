@@ -17,17 +17,17 @@ class ttheme extends basetheme {
   }
 
   public static function context() {
-$result = self::i();
+    $result = self::i();
     if (!$result->name) {
-if (($context = litepublisher::$urlmap->context) && isset($context->idview)) {
-      $result = tview::getview($context)->theme;
-    } else {
-$result = tview::i()->theme;
-}
-}
+      if (($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+        $result = tview::getview($context)->theme;
+      } else {
+        $result = tview::i()->theme;
+      }
+    }
 
-return $result;
-}
+    return $result;
+  }
 
   public static function getwidgetnames() {
     return array(

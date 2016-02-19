@@ -152,7 +152,7 @@ class tadminviews extends tadminmenu {
         }
 
         $result = self::getviewform($this->url);
-      $tabs = new tabs($this->admintheme);
+        $tabs = new tabs($this->admintheme);
         $menuitems = array();
         foreach ($views->items as $itemview) {
           $class = $itemview['menuclass'];

@@ -23,24 +23,23 @@ class tdownloaditemeditor extends tposteditor {
     }
   }
 
-public function gettabstemplate() {
-$admintheme = $this->admintheme;
-return strtr($admintheme->templates['tabs'], array(
-'$id' => 'tabs',
-'$tab' => '[tab=downloaditem]' . $admintheme->templates['posteditor.tabs.tabs'],
-'$panel' => '[tabpanel=downloaditem{
+  public function gettabstemplate() {
+    $admintheme = $this->admintheme;
+    return strtr($admintheme->templates['tabs'], array(
+      '$id' => 'tabs',
+      '$tab' => '[tab=downloaditem]' . $admintheme->templates['posteditor.tabs.tabs'],
+      '$panel' => '[tabpanel=downloaditem{
 [combo=type]
 [text=downloadurl]
 [text=authorurl]
 [text=authorname]
 [text=version]
-}]' .
-$admintheme->templates['posteditor.tabs.panels'],
-));
-}
+}]' . $admintheme->templates['posteditor.tabs.panels'],
+    ));
+  }
 
   public function getargstab(tpost $post, targs $args) {
-parent::getargstab($post, $args);
+    parent::getargstab($post, $args);
 
     $args->downloadurl = $post->downloadurl;
     $args->authorname = $post->authorname;
@@ -53,14 +52,14 @@ parent::getargstab($post, $args);
     );
 
     $args->type = tadminhtml::array2combo($types, $post->type);
-}
+  }
 
-public function newpost() {
-return new tdownloaditem();
-}
+  public function newpost() {
+    return new tdownloaditem();
+  }
 
   public function processtab(tpost $post) {
-parent::processtab($post);
+    parent::processtab($post);
 
     extract($_POST, EXTR_SKIP);
     $post->version = $version;
@@ -68,6 +67,6 @@ parent::processtab($post);
     $post->downloadurl = $downloadurl;
     $post->authorname = $authorname;
     $post->authorurl = $authorurl;
-}
+  }
 
-}//class
+} //class

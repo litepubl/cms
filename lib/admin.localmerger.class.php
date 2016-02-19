@@ -13,7 +13,7 @@ class tadminlocalmerger extends tadminmenu {
 
   public function getcontent() {
     $merger = tlocalmerger::i();
-      $tabs = new tabs($this->admintheme);
+    $tabs = new tabs($this->admintheme);
     $html = $this->html;
     $lang = tlocal::i('options');
     $args = targs::i();

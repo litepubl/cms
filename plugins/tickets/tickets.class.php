@@ -25,7 +25,7 @@ class ttickets extends tposts {
   }
 
   public function createpoll($id) {
-return polls::i()->add('like', $id, 'post');
+    return polls::i()->add('like', $id, 'post');
   }
 
   public function filtercats(tpost $post) {
@@ -48,7 +48,7 @@ return polls::i()->add('like', $id, 'post');
     $post->updatefiltered();
 
     $id = parent::add($post);
-$this->createpoll($id);
+    $this->createpoll($id);
     $this->notify($post);
     return $id;
   }

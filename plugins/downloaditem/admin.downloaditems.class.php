@@ -84,8 +84,8 @@ class tadmindownloaditems extends tadminmenu {
       ) ,
     ));
 
-    $form->body .= $tb->build($items);
-    $form->body .= $form->centergroup('[button=publish]
+    $form->body.= $tb->build($items);
+    $form->body.= $form->centergroup('[button=publish]
     [button=setdraft]
     [button=delete]');
 

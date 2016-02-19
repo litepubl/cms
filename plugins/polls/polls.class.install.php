@@ -20,14 +20,14 @@ function pollsInstall($self) {
   $js->lock();
 
   $css = tcssmerger::i();
-$css->lock();
+  $css->lock();
 
-tplugins::i()->add('ulogin');
+  tplugins::i()->add('ulogin');
   $js->add('default', '/plugins/polls/resource/polls.min.js');
   $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
 
-$css->add('default', 'plugins/polls/resource/polls.min.css');
-$css->unlock();
+  $css->add('default', 'plugins/polls/resource/polls.min.css');
+  $css->unlock();
   $js->unlock();
 
   $parser = tthemeparser::i();
@@ -38,33 +38,33 @@ $css->unlock();
 
   tlocalmerger::i()->addplugin($name);
   tcron::i()->addnightly(get_class($self) , 'optimize', null);
-tposts::i()->deleted = $self->postdeleted;
+  tposts::i()->deleted = $self->postdeleted;
 }
 
 function pollsUninstall($self) {
   tjsonserver::i()->unbind($self);
   tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
 
-  $js= tjsmerger::i();
+  $js = tjsmerger::i();
   $js->lock();
 
   $css = tcssmerger::i();
-$css->lock();
+  $css->lock();
 
-tplugins::i()->delete('ulogin');
+  tplugins::i()->delete('ulogin');
 
   $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
   $js->deletefile('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
 
-$css->deletefile('default', 'plugins/polls/resource/polls.min.css');
-$css->unlock();
+  $css->deletefile('default', 'plugins/polls/resource/polls.min.css');
+  $css->unlock();
   $js->unlock();
 
   $parser = tthemeparser::i();
   $parser->lock();
   $parser->delete_tagfile('plugins/polls/resource/themetags.ini');
   array_delete_value($parser->themefiles, 'plugins/polls/resource/theme.txt');
-array_clean($parser->themefiles);
+  array_clean($parser->themefiles);
   $parser->unlock();
 
   $manager = tdbmanager::i();
@@ -72,5 +72,5 @@ array_clean($parser->themefiles);
   $manager->deletetable(polls::votes);
 
   tcron::i()->deleteclass(get_class($self));
-tposts::i()->unbind($self);
+  tposts::i()->unbind($self);
 }

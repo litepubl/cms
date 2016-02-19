@@ -7,14 +7,14 @@
  */
 
 class tticketeditor extends tposteditor {
-private $newstatus;
+  private $newstatus;
 
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
   }
 
   public function gettitle() {
-tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
+    tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
     if ($this->idpost == 0) {
       return parent::gettitle();
     } else {
@@ -31,26 +31,24 @@ tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
     }
   }
 
-public function gettabstemplate() {
-return strtr($this->admintheme->templates['tabs'], array(
-'$id' => 'tabs',
-'$tab' => '[tab=ticket] [ajaxtab=tags]',
-'$panel' => '[tabpanel=ticket] [tabpanel=tags]' 
-));
-}
+  public function gettabstemplate() {
+    return strtr($this->admintheme->templates['tabs'], array(
+      '$id' => 'tabs',
+      '$tab' => '[tab=ticket] [ajaxtab=tags]',
+      '$panel' => '[tabpanel=ticket] [tabpanel=tags]'
+    ));
+  }
 
   public function getargstab(tpost $ticket, targs $args) {
     $args->ajax = $this->getajaxlink($ticket->id);
     $args->fixed = $ticket->state == 'fixed';
 
-$lang = tlocal::admin('tickets');
+    $lang = tlocal::admin('tickets');
     $tickets = ttickets::i();
-    $args->category = static::getcombocategories($tickets->cats, count($ticket->categories) ? 
-$ticket->categories[0] :
- (count($tickets->cats) ? $tickets->cats[0] : 0));
+    $args->category = static ::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : (count($tickets->cats) ? $tickets->cats[0] : 0));
 
-$args->version = $ticket->version;
-$args->os = $ticket->os;
+    $args->version = $ticket->version;
+    $args->os = $ticket->os;
 
     $states = array();
     foreach (array(
@@ -79,44 +77,44 @@ $args->os = $ticket->os;
 
     $args->prio = tadminhtml::array2combo($prio, $ticket->prio);
 
-$tb = new tablebuilder($this->admintheme);
-$tb->args = $args;
-$args->ticket = $tb->inputs(array(
-'category' => 'combo',
-'state' => 'combo',
-'prio' => 'combo',
-'version' => 'text',
-'os' => 'text',
-));
-}
+    $tb = new tablebuilder($this->admintheme);
+    $tb->args = $args;
+    $args->ticket = $tb->inputs(array(
+      'category' => 'combo',
+      'state' => 'combo',
+      'prio' => 'combo',
+      'version' => 'text',
+      'os' => 'text',
+    ));
+  }
 
-public function gettext($post = null) {
-$post = $this->getvarpost($post);
-$admintheme = $this->admintheme;
-$lang = tlocal::admin('tickets');
-$tabs = new tabs($admintheme);
-$tabs->add($lang->text, '[editor=raw]');
-$tabs->add($lang->codetext, '[editor=code]');
+  public function gettext($post = null) {
+    $post = $this->getvarpost($post);
+    $admintheme = $this->admintheme;
+    $lang = tlocal::admin('tickets');
+    $tabs = new tabs($admintheme);
+    $tabs->add($lang->text, '[editor=raw]');
+    $tabs->add($lang->codetext, '[editor=code]');
 
-$args = new targs();
-$args->raw = $post->rawcontent;
+    $args = new targs();
+    $args->raw = $post->rawcontent;
     $args->code = $post->code;
 
-return $admintheme->parsearg($tabs->get(), $args);
-}
+    return $admintheme->parsearg($tabs->get() , $args);
+  }
 
-public function newpost() {
-return new tticket();
-}
+  public function newpost() {
+    return new tticket();
+  }
 
-public function canprocess() {
-if ($error = parent::canprocess()) {
-return $error;
-}
+  public function canprocess() {
+    if ($error = parent::canprocess()) {
+      return $error;
+    }
 
     // check spam
     $tickets = ttickets::i();
-$id = (int) $_POST['id'];
+    $id = (int)$_POST['id'];
     if ($id == 0) {
       $this->newstatus = 'published';
       if (litepublisher::$options->group == 'ticket') {
@@ -124,14 +122,14 @@ $id = (int) $_POST['id'];
         $approved = $tickets->db->getcount('status = \'published\' and author = ' . litepublisher::$options->user);
         if ($approved < 3) {
           if ($hold - $approved >= 2) {
-return tlocal::admin('tickets')->noapproved;
-}
+            return tlocal::admin('tickets')->noapproved;
+          }
 
           $this->newstatus = 'draft';
         }
       }
     }
-}
+  }
 
   public function processtab(tpost $ticket) {
     extract($_POST, EXTR_SKIP);
@@ -146,20 +144,20 @@ return tlocal::admin('tickets')->noapproved;
     );
 
     if (isset($tags)) {
-$ticket->tagnames = $tags;
-}
+      $ticket->tagnames = $tags;
+    }
 
     if ($ticket->author == 0) {
-$ticket->author = litepublisher::$options->user;
-}
+      $ticket->author = litepublisher::$options->user;
+    }
 
     if ($ticket->id == 0) {
       $ticket->status = $this->newstatus;
       $ticket->closed = time();
-}
+    }
 
     $ticket->content = tcontentfilter::quote(htmlspecialchars($raw));
     $ticket->code = $code;
-}
+  }
 
-}//class
+} //class

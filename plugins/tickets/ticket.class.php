@@ -37,9 +37,9 @@ class tticket extends tpost {
     );
   }
 
-public function getfactory() {
-return ticketfactory::i();
-}
+  public function getfactory() {
+    return ticketfactory::i();
+  }
 
   public function beforedb() {
     if ($this->childdata['closed'] == '') $this->childdata['closed'] = sqldate();
@@ -58,8 +58,8 @@ return ticketfactory::i();
   }
 
   protected function getcontentpage($page) {
-    $result= parent::getcontentpage($page);
-      $result.= polls::i()->getobjectpoll($this->id, 'post');
+    $result = parent::getcontentpage($page);
+    $result.= polls::i()->getobjectpoll($this->id, 'post');
     return $result;
   }
 
@@ -123,7 +123,6 @@ return ticketfactory::i();
   }
 
 } //class
-
 class ticketfactory extends tpostfactory {
 
   public static function i() {

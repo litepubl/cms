@@ -83,9 +83,9 @@ class tplugins extends TItems {
     return $this->autoid;
   }
 
-public function has($name) {
-return isset($this->items[$name]);
-}
+  public function has($name) {
+    return isset($this->items[$name]);
+  }
 
   public function delete($name) {
     if (!isset($this->items[$name])) return false;

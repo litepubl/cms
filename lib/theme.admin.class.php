@@ -7,7 +7,7 @@
  */
 
 class admintheme extends basetheme {
-public $onfileperm;
+  public $onfileperm;
 
   public static function i() {
     $result = getinstance(__class__);
@@ -24,101 +24,106 @@ public $onfileperm;
   }
 
   public static function admin() {
-return tview::i(tviews::i()->defaults['admin'])->admintheme;
-}
+    return tview::i(tviews::i()->defaults['admin'])->admintheme;
+  }
 
   public function getparser() {
     return adminparser::i();
   }
 
-public function shortcode($s, targs $args) {
-$result = trim($s);
-//replace [tabpanel=name{content}]
+  public function shortcode($s, targs $args) {
+    $result = trim($s);
+    //replace [tabpanel=name{content}]
     if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
       foreach ($m as $item) {
         $name = $item[1];
-$replace = strtr($this->templates['tabs.panel'], array(
-'$id' => $name,
-'$content' => trim($item[2]),
-));
+        $replace = strtr($this->templates['tabs.panel'], array(
+          '$id' => $name,
+          '$content' => trim($item[2]) ,
+        ));
 
-$result = str_replace($item[0], $replace, $result);
-}
-}
+        $result = str_replace($item[0], $replace, $result);
+      }
+    }
 
     if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|ajaxtab|tabpanel)[:=](\w*+)\]/i', $result, $m, PREG_SET_ORDER)) {
-$theme = ttheme::i();
-$lang = tlocal::i();
+      $theme = ttheme::i();
+      $lang = tlocal::i();
 
       foreach ($m as $item) {
         $type = $item[1];
         $name = $item[2];
         $varname = '$' . $name;
 
-switch ($type) {
-case 'editor':
-case 'text':
-case 'email':
-case 'password':
-          if (isset($args->data[$varname])) {
-            $args->data[$varname] = self::quote($args->data[$varname]);
-          } else {
-            $args->data[$varname] = '';
-          }
+        switch ($type) {
+          case 'editor':
+          case 'text':
+          case 'email':
+          case 'password':
+            if (isset($args->data[$varname])) {
+              $args->data[$varname] = self::quote($args->data[$varname]);
+            } else {
+              $args->data[$varname] = '';
+            }
 
-          $replace = strtr($theme->templates["content.admin.$type"], array(
-            '$name' => $name,
-            '$value' => $varname
-          ));
-break;
+            $replace = strtr($theme->templates["content.admin.$type"], array(
+              '$name' => $name,
+              '$value' => $varname
+            ));
+            break;
+
 
           case 'calendar':
-          $replace = $this->getcalendar($name, $args->data[$varname]);
-break;
+            $replace = $this->getcalendar($name, $args->data[$varname]);
+            break;
 
-case 'tab':
-$replace = strtr($this->templates['tabs.tab'], array(
-'$id' => $name,
-'$title' => $lang->__get($name),
-'$url' => '',
-));
-break;
 
-case 'ajaxtab':
-$replace = strtr($this->templates['tabs.tab'], array(
-'$id' => $name,
-'$title' => $lang->__get($name),
-'$url' => "\$ajax=$name",
-));
-break;
+          case 'tab':
+            $replace = strtr($this->templates['tabs.tab'], array(
+              '$id' => $name,
+              '$title' => $lang->__get($name) ,
+              '$url' => '',
+            ));
+            break;
 
-case 'tabpanel':
-$replace = strtr($this->templates['tabs.panel'], array(
-'$id' => $name,
-'$content' => isset($args->data[$varname]) ? $varname : '',
-));
-break;
 
-default:
-          $replace = strtr($theme->templates["content.admin.$type"], array(
-            '$name' => $name,
-            '$value' => $varname
-          ));
-}
+          case 'ajaxtab':
+            $replace = strtr($this->templates['tabs.tab'], array(
+              '$id' => $name,
+              '$title' => $lang->__get($name) ,
+              '$url' => "\$ajax=$name",
+            ));
+            break;
+
+
+          case 'tabpanel':
+            $replace = strtr($this->templates['tabs.panel'], array(
+              '$id' => $name,
+              '$content' => isset($args->data[$varname]) ? $varname : '',
+            ));
+            break;
+
+
+          default:
+            $replace = strtr($theme->templates["content.admin.$type"], array(
+              '$name' => $name,
+              '$value' => $varname
+            ));
+        }
 
         $result = str_replace($item[0], $replace, $result);
       }
     }
 
-return $result;
-}
+    return $result;
+  }
 
-public function parsearg($s, targs $args) {
-$result = $this->shortcode($s, $args);
+  public function parsearg($s, targs $args) {
+    $result = $this->shortcode($s, $args);
     $result = strtr($result, $args->data);
     $result = $args->callback($result);
     return $this->parse($result);
-}
+  }
 
   public function gettable($head, $body) {
     return strtr($this->templates['table'], array(
@@ -128,9 +133,9 @@ $result = $this->shortcode($s, $args);
     ));
   }
 
-public function success($text) {
-return str_replace('$text', $text, $this->templates['success']);
-}
+  public function success($text) {
+    return str_replace('$text', $text, $this->templates['success']);
+  }
 
   public function getsection($title, $content) {
     return strtr($this->templates['section'], array(
@@ -178,9 +183,9 @@ return str_replace('$text', $text, $this->templates['success']);
   }
 
   public function getcats(array $items) {
-tlocal::i()->addsearch('editor');
+    tlocal::i()->addsearch('editor');
     $result = $this->parse($this->templates['posteditor.categories.head']);
-tcategories::i()->loadall();
+    tcategories::i()->loadall();
     $result.= $this->getsubcats(0, $items);
     return $result;
   }
@@ -191,39 +196,40 @@ tcategories::i()->loadall();
     $tml = $this->templates['posteditor.categories.item'];
     $categories = tcategories::i();
     foreach ($categories->items as $id => $item) {
-      if (($parent == $item['parent']) &&
-      !($exclude && in_array($id, $exclude))) {
-      $args->add($item);
-      $args->checked = in_array($item['id'], $items);
-      $args->subcount = '';
-      $args->subitems = $this->getsubcats($id, $items, $exclude);
-      $result.= $this->parsearg($tml, $args);
+      if (($parent == $item['parent']) && !($exclude && in_array($id, $exclude))) {
+        $args->add($item);
+        $args->checked = in_array($item['id'], $items);
+        $args->subcount = '';
+        $args->subitems = $this->getsubcats($id, $items, $exclude);
+        $result.= $this->parsearg($tml, $args);
+      }
     }
-}
 
     if ($result) {
-$result = str_replace('$item', $result, $this->templates['posteditor.categories']);
-}
+      $result = str_replace('$item', $result, $this->templates['posteditor.categories']);
+    }
 
-return $result;
+    return $result;
   }
 
   public function processcategories() {
     $result = tadminhtml::check2array('category-');
-array_clean($result);
+    array_clean($result);
     array_delete_value($result, 0);
-return $result;
+    return $result;
   }
 
   public function getfilelist(array $list) {
     $args = new targs();
-$args->fileperm = '';
+    $args->fileperm = '';
 
-if (is_callable($this->onfileperm)) {
-        call_user_func_array($this->onfileperm, array($args));
-} else if (litepublisher::$options->show_file_perm) {
-$args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
-}
+    if (is_callable($this->onfileperm)) {
+      call_user_func_array($this->onfileperm, array(
+        $args
+      ));
+    } else if (litepublisher::$options->show_file_perm) {
+      $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
+    }
 
     $files = tfiles::i();
     $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
@@ -242,7 +248,7 @@ $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
       $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
     }
 
-return $this->parsearg($this->templates['posteditor.filelist'], $args);
+    return $this->parsearg($this->templates['posteditor.filelist'], $args);
   }
 
 } //class
