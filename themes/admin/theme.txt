@@ -405,7 +405,7 @@ $confirm - текст вопроса, пример: Вы действитель�
 */
 
 posteditor = [
-<form name="form" id="form" action="$site.url$adminurl" method="post">
+<form id="form" action="$site.url$adminurl" method="post">
     [text=title]
     $posteditor.tabs
     $posteditor.filelist

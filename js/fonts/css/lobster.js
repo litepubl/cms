@@ -27,11 +27,15 @@
 
     $.css_loader.addtext(css);
 
-    var observer = new FontFaceObserver('Lobster', {
-      weight: 400
-    });
-    observer.check().then(function() {
-      $("body").addClass("lobster");
-    });
+    // sometimes lobster not detected without timeout
+    setTimeout(function() {
+      var observer = new FontFaceObserver('Lobster', {
+        weight: 400
+      });
+
+      observer.check().then(function() {
+        $("body").addClass("lobster");
+      });
+    }, 0);
   };
 })(jQuery);

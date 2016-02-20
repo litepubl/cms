@@ -59,7 +59,10 @@ class tplugins extends TItems {
   }
 
   public function add($name) {
-    if (!@is_dir(litepublisher::$paths->plugins . $name)) return false;
+    if (!@is_dir(litepublisher::$paths->plugins . $name)) {
+return false;
+}
+
     $about = self::getabout($name);
     return $this->AddExt($name, $about['classname'], $about['filename'], $about['adminclassname'], $about['adminfilename']);
   }
@@ -76,7 +79,10 @@ class tplugins extends TItems {
 
     litepublisher::$classes->lock();
     litepublisher::$classes->Add($classname, $filename, $name);
-    if ($adminclassname != '') litepublisher::$classes->Add($adminclassname, $adminfilename, $name);
+    if ($adminclassname) {
+litepublisher::$classes->Add($adminclassname, $adminfilename, $name);
+}
+
     litepublisher::$classes->unlock();
     $this->unlock();
     $this->added($name);
@@ -140,7 +146,7 @@ class tplugins extends TItems {
     $this->unlock();
   }
 
-  public function setplugins($list) {
+  public function setplugins(array $list) {
     $names = array_diff($list, array_keys($this->items));
     foreach ($names as $name) {
       $this->Add($name);

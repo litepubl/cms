@@ -6228,6 +6228,27 @@ A.dashed:focus {
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.post-header {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.post-date,
+.post-tags {
+  float: left;
+}
+.post-date,
+.post-tags,
+.post-categories {
+  display: block;
+  overflow: hidden;
+  margin: 6px 12px;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .anpost {
   position: relative;
   display: block;
@@ -6304,27 +6325,6 @@ A.dashed:focus {
 }
 .video-fallback {
   font-size: 2em;
-}
-/**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
-.post-header {
-  position: relative;
-  display: block;
-  overflow: hidden;
-}
-.post-date,
-.post-tags {
-  float: left;
-}
-.post-date,
-.post-tags,
-.post-categories {
-  display: block;
-  overflow: hidden;
-  margin: 6px 12px;
 }
 /**
 * Lite Publisher
@@ -6589,7 +6589,7 @@ proppage-form-submit,
   margin-right: auto;
   padding: 0;
   width: 840px;
-  height: 443px;
+  height: 420px;
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: linear-gradient(to bottom, #ffffff 0%, #b0e1ef 100%);
@@ -6610,7 +6610,7 @@ proppage-form-submit,
   display: block;
   overflow: hidden;
   width: 420px;
-  height: 443px;
+  height: 420px;
 }
 .jcarousel-right > li {
   float: right;
@@ -6628,7 +6628,15 @@ proppage-form-submit,
   overflow: hidden;
   margin: 6px;
   padding: 0;
-  height: 116px;
+  height: 105px;
+}
+.jcarousel-body .post-categories {
+  display: inline-block;
+  margin: 0;
+  padding-left: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /**
 * Lite Publisher
