@@ -245,8 +245,6 @@ ParseFile($dir . 'markdown' . DIRECTORY_SEPARATOR . 'markdown.plugin.class.php')
 ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'sape.plugin.php');
 ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'sape.plugin.install.php');
 ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'admin.sape.plugin.php');
-//js poll
-ParseFile($dir . 'polls' . DIRECTORY_SEPARATOR . 'polls.client.js');
 }
 
 function replace_copyright($s) {
