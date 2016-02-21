@@ -8,6 +8,11 @@
   'use strict';
 
   litepubl.themefonts = {
+    "default": function() {
+      //because load_lobster maybe after this code or not exists
+      $.load_lobster();
+    },
+
     cerulean: false,
     cosmo: {
       fontname: "Source Sans Pro",
@@ -86,13 +91,14 @@
   litepubl.load_theme_font = function(name) {
     if (!name) name = 'default';
     var themefonts = litepubl.themefonts;
-    // most case default theme color
-    if (name == 'default') {
-      $.load_lobster();
-    } else if ((name in themefonts) && themefonts[name]) {
+    if ((name in themefonts) && themefonts[name]) {
       var info = themefonts[name];
       if (info.fontname == "Lobster") {
-        $.load_lobster();
+        info = themefonts['default'];
+      }
+
+      if ($.isFunction(info)) {
+        info();
       } else {
         var url = "https://fonts.googleapis.com/css?family=" + info.url + "&subset=latin,cyrillic";
         $.load_font(info.fontname, name, url);

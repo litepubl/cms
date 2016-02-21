@@ -8,8 +8,8 @@
 (function($) {
   'use strict';
 
-  $.load_lobster = function() {
-    $.load_font_part('Lobster', 'lobster', ltoptions.files + '/js/fonts/lobster/lobster');
+  litepubl.themefonts['default'] = function() {
+    $.load_font_part('Nautilus', 'nautilus', ltoptions.files + '/plugins/nautilus/font/nautilus');
   };
 
 })(jQuery);

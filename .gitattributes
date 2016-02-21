@@ -82,6 +82,7 @@ plugins/downloaditem* export-ignore
 plugins/sourcefiles* export-ignore
 plugins/themegenerator* export-ignore
 plugins/togglecode* export-ignore
+plugins/nautilus* export-ignore
 
 #not minified theme styles
 themes/default/css/cerulean.css export-ignore

@@ -22,3 +22,4 @@ photoswipe\resource\default-skin\default-skin
 photoswipe\resource\default-skin\default-skin.inline
 photoswipe-thumbnail\resource\thumbnails
 lowvision\resource\lowvision
+nautilus\resource\nautilus
