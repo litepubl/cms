@@ -6589,7 +6589,7 @@ proppage-form-submit,
   margin-right: auto;
   padding: 0;
   width: 840px;
-  height: 420px;
+  height: 402px;
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #b0e1ef 100%);
   background-image: linear-gradient(to bottom, #ffffff 0%, #b0e1ef 100%);
@@ -6610,7 +6610,7 @@ proppage-form-submit,
   display: block;
   overflow: hidden;
   width: 420px;
-  height: 420px;
+  height: 402px;
 }
 .jcarousel-right > li {
   float: right;
@@ -6623,12 +6623,16 @@ proppage-form-submit,
   margin: 0;
   text-align: center;
 }
+.jcarousel-image img {
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
 .jcarousel-body {
   display: block;
   overflow: hidden;
-  margin: 6px;
+  margin-bottom: 6px;
   padding: 0;
-  height: 105px;
+  height: 75px;
 }
 .jcarousel-body .post-categories {
   display: inline-block;

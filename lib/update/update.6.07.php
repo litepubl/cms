@@ -1,6 +1,6 @@
 <?php
 function update607() {
-  litepublisher::$site->jquery_version = '1.12.0';
+  litepublisher::$site->jquery_version = '1.12.1';
 litepublisher::$site->save();
 
 $classes = litepublisher::$classes;
@@ -111,4 +111,5 @@ if ($man->column_exists('tickets', 'poll')) {
 $man->alter('tickets', 'drop poll');
 }
 }
+
 }

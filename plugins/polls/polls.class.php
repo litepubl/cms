@@ -201,7 +201,7 @@ where idpoll = $id group by vote order by vote asc"));
   }
 
   public function objectdeleted($idobject, $typeobject) {
-    if ($id = $this->db->findid("idobject = $idpost and typeobject = 'post'")) {
+    if ($id = $this->db->findid("idobject = $idobject and typeobject = '$typeobject'")) {
       $this->delete($id);
     }
   }

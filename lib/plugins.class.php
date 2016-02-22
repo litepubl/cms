@@ -60,8 +60,8 @@ class tplugins extends TItems {
 
   public function add($name) {
     if (!@is_dir(litepublisher::$paths->plugins . $name)) {
-return false;
-}
+      return false;
+    }
 
     $about = self::getabout($name);
     return $this->AddExt($name, $about['classname'], $about['filename'], $about['adminclassname'], $about['adminfilename']);
@@ -80,8 +80,8 @@ return false;
     litepublisher::$classes->lock();
     litepublisher::$classes->Add($classname, $filename, $name);
     if ($adminclassname) {
-litepublisher::$classes->Add($adminclassname, $adminfilename, $name);
-}
+      litepublisher::$classes->Add($adminclassname, $adminfilename, $name);
+    }
 
     litepublisher::$classes->unlock();
     $this->unlock();

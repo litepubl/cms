@@ -6,9 +6,10 @@
 
 @jcarousel-image-width : 420px;
 @jcarousel-image-height : (@jcarousel-image-width / 4 *3);
-@jcarousel-body-height : (@jcarousel-image-width - @jcarousel-image-height);
-//@jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
-@jcarousel-height : @jcarousel-image-width;
+//@jcarousel-body-height : (@jcarousel-image-width - @jcarousel-image-height);
+@jcarousel-body-height : 75px;
+@jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
+//@jcarousel-height : @jcarousel-image-width;
 
 .jcarousel-wrapper {
   display: block;
@@ -58,19 +59,24 @@
   padding: 0;
   margin: 0;
   text-align: center;
+  
+  img {
+    border: 1px solid transparent;
+    border-radius: @border-radius-base;
+  }
 }
 
 .jcarousel-body{
   display: block;
   overflow: hidden;
-  margin: @padding-base-vertical;
+  margin-bottom: @padding-base-vertical;
   padding: 0;
   height: @jcarousel-body-height;
-
+  
   .post-categories{
-display: inline-block;
-margin: 0;
-padding-left: @padding-base-horizontal;
+    display: inline-block;
+    margin: 0;
+    padding-left: @padding-base-horizontal;
     .text-overflow();
-}
+  }
 }
