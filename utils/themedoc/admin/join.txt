@@ -15,8 +15,10 @@ tml/09section.txt
 ru/09section.txt
 tml/10error.txt
 ru/10error.txt
-tml/11centergroup.txt
-ru/11centergroup.txt
+tml/11a.centergroup.txt
+ru/11a.centergroup.txt
+tml/11b.buttons.txt
+ru/11b.buttons.txt
 tml/12inline.txt
 ru/12inline.txt
 tml/13calendar.txt
@@ -35,6 +37,8 @@ tml/21confirmform.txt
 ru/21confirmform.txt
 tml/26icon.txt
 ru/26icon.txt
+tml/27screenreader.txt
+ru/27screenreader.txt
 tml/30posteditor.txt
 ru/30posteditor.txt
 tml/31posteditor.tabs.txt

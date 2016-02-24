@@ -1,0 +1,3 @@
+screenreader = [
+<span class="sr-only">$text</span>
+]

@@ -1,0 +1,5 @@
+buttons = [
+<div class="btn-group">
+$buttons
+</div>
+]

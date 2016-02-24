@@ -242,7 +242,7 @@ class tadminhtml {
     $args->confirm = $mesg;
 
     $admin = admintheme::i();
-    return $this->parsearg($admin->templates['confirmform'], $args);
+    return $admin->parsearg($admin->templates['confirmform'], $args);
   }
 
   public function confirm_delete($owner, $adminurl) {

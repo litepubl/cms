@@ -20,6 +20,13 @@ class tablebuilder {
   public $admintheme;
   public $callbacks;
 
+public static function items(array $items, array $struct) {
+$classname = __class__;
+    $self = new $classname();
+    $self->setstruct($struct);
+    return $self->build($items);
+}
+
   public function __construct() {
     $this->head = '';
     $this->body = '';
