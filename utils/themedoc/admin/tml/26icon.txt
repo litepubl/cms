@@ -1,0 +1,3 @@
+icon = [
+<span class="fa fa-$name"></span>
+]

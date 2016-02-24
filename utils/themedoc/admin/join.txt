@@ -33,6 +33,8 @@ tml/20form.txt
 ru/20form.txt
 tml/21confirmform.txt
 ru/21confirmform.txt
+tml/26icon.txt
+ru/26icon.txt
 tml/30posteditor.txt
 ru/30posteditor.txt
 tml/31posteditor.tabs.txt

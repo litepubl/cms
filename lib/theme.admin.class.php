@@ -137,6 +137,14 @@ class admintheme extends basetheme {
     return str_replace('$text', $text, $this->templates['success']);
   }
 
+  public function getcount($from, $to, $count) {
+    return $this->h(sprintf(tlocal::i()->itemscount, $from, $to, $count));
+  }
+
+public function geticon($name) {
+return str_replace('$name', $name, $this->templates['icon']);
+}
+
   public function getsection($title, $content) {
     return strtr($this->templates['section'], array(
       '$title' => $title,
