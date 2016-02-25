@@ -20,7 +20,7 @@ class tablebuilder {
   public $admintheme;
   public $callbacks;
 
-public static function items(array $items, array $struct) {
+public static function fromitems(array $items, array $struct) {
 $classname = __class__;
     $self = new $classname();
     $self->setstruct($struct);

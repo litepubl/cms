@@ -7,6 +7,7 @@ daterange = [
 
     <button type="button" id="calendar-from" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
         <span class="fa fa-calendar text-success"></span>
+        <span class="sr-only">$lang.calendar</span>
     </button>
 
     <div class="form-group">
@@ -16,6 +17,7 @@ daterange = [
 
     <button type="button" id="calendar-to" class="btn btn-default tooltip-toggle" title="$lang.tipcalendar">
         <span class="fa fa-calendar text-success"></span>
+        <span class="sr-only">$lang.calendar</span>
     </button>
 
 </div>
