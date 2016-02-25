@@ -137,12 +137,14 @@
 
     setenabled: function(link, enabled) {
       if (enabled) {
-        link.parent().removeClass("disabled");
         link.attr("data-toggle", "tab");
+link.removeAttr("aria-disabled");
+        link.parent().removeClass("disabled");
         link.off("click.disabled");
       } else {
-        link.parent().addClass("disabled");
         link.attr("data-toggle", "disabled");
+link.attr("aria-disabled", "true");
+        link.parent().addClass("disabled");
         link.on("click.disabled", function() {
           return false;
         });
