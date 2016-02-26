@@ -125,40 +125,44 @@ class admintheme extends basetheme {
     return $this->parse($result);
   }
 
-public function parselink($s) {
-$list = explode(',', $s);
-$a = array();
-foreach ($list as $item) {
-if ($i = strpos($item, '=')) {
-$a[trim(substr($item, 0, $i))] = trim(substr($item, $i +1));
-} else {
-$a['text'] = trim($item);
-}
-}
+  public function parselink($s) {
+    $list = explode(',', $s);
+    $a = array();
+    foreach ($list as $item) {
+      if ($i = strpos($item, '=')) {
+        $a[trim(substr($item, 0, $i)) ] = trim(substr($item, $i + 1));
+      } else {
+        $a['text'] = trim($item);
+      }
+    }
 
-$a['href'] = str_replace('?', litepublisher::$site->q, $a['href']);
-if (!strbegin($a['href'], 'http')) {
-$a['href'] = litepublisher::$site->url . $a['href'];
-}
+    $a['href'] = str_replace('?', litepublisher::$site->q, $a['href']);
+    if (!strbegin($a['href'], 'http')) {
+      $a['href'] = litepublisher::$site->url . $a['href'];
+    }
 
-if (isset($a['icon'])) {
-$a['text'] = $this->geticon($a['icon']) . (empty($a['text']) ? '' : ' ' . $a['text']);
-}
+    if (isset($a['icon'])) {
+      $a['text'] = $this->geticon($a['icon']) . (empty($a['text']) ? '' : ' ' . $a['text']);
+    }
 
-if (isset($a['tooltip'])) {
-$a['title'] = $a['tooltip'];
-$a['class'] = empty($a['class']) ? 'tooltip-toggle' : $a['class'] . ' tooltip-toggle';
-}
+    if (isset($a['tooltip'])) {
+      $a['title'] = $a['tooltip'];
+      $a['class'] = empty($a['class']) ? 'tooltip-toggle' : $a['class'] . ' tooltip-toggle';
+    }
 
-$attr = '';
-foreach (array('class', 'title', 'role') as $name) {
-if (!empty($a[$name])) {
-$attr .= sprintf(' %s="%s"', $name, $a[$name]);
-}
-}
+    $attr = '';
+    foreach (array(
+      'class',
+      'title',
+      'role'
+    ) as $name) {
+      if (!empty($a[$name])) {
+        $attr.= sprintf(' %s="%s"', $name, $a[$name]);
+      }
+    }
 
-return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
-}
+    return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
+  }
 
   public function gettable($head, $body) {
     return strtr($this->templates['table'], array(
@@ -176,10 +180,9 @@ return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
     return $this->h(sprintf(tlocal::i()->itemscount, $from, $to, $count));
   }
 
-public function geticon($name, $screenreader = false) {
-return str_replace('$name', $name, $this->templates['icon']) .
- ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
-}
+  public function geticon($name, $screenreader = false) {
+    return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
+  }
 
   public function getsection($title, $content) {
     return strtr($this->templates['section'], array(
