@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tarray2prop {
   public $array;
   public function __construct(array $a = null) {

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function ttemplateInstall($self) {
   $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_default"></script>

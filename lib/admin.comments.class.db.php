@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminmoderator extends tadminmenu {
   private $moder;
   private $iduser;

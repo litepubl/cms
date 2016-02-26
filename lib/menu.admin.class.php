@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminmenu extends tmenu {
   public static $adminownerprops = array(
     'title',

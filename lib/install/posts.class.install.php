@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tpostsInstall($self) {
   if ('tposts' != get_class($self)) return;
 

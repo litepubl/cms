@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 interface ipingbacks {
   public function doadd($url, $title);
   public function setstatus($id, $approve);

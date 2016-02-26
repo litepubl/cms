@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadmincustomwidget extends tadminwidget {
 
   public static function i() {

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function TXMLRPCInstall($self) {
   $urlmap = turlmap::i();
   $urlmap->lock();

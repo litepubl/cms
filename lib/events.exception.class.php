@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class ECancelEvent extends Exception {
   public $result;
 

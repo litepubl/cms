@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tadminmenusInstall($self) {
   if ('tadminmenus' != get_class($self)) return;
   $self->lock();

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function trssInstall($self) {
   litepublisher::$urlmap->add('/rss.xml', get_class($self) , 'posts');
   $self->idcomments = litepublisher::$urlmap->add('/comments.xml', get_class($self) , 'comments');

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class dbcache extends cachestorage_memcache {
 
   public function set($sql, $res) {

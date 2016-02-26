@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 litepublisher::$classes = tclasses::i();
 litepublisher::$options = toptions::i();
 litepublisher::$site = tsite::i();

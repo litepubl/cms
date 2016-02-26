@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class TXMLRPCPingback extends TXMLRPCAbstract {
 
   public static function i() {

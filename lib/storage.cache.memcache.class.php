@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class cachestorage_memcache {
   public $prefix;
   public $memcache;

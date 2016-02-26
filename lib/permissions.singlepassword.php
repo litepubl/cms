@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tsinglepassword extends tperm {
   private $password;
   private $checked;

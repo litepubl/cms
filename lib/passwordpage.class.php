@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tpasswordpage extends tevents_itemplate implements itemplate {
   public $perm;
   private $formresult;

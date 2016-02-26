@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tdatabase extends PDO {
   public $result;
   public $sql;

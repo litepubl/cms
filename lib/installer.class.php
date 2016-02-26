@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tinstaller extends tdata {
   public $language;
   public $mode;

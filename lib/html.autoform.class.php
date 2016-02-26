@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tautoform {
   const editor = 'editor';
   const text = 'text';

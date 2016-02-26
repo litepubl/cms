@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tmenusInstall($self) {
   @mkdir(litepublisher::$paths->data . 'menus', 0777);
   if (get_class($self) != 'tmenus') return;

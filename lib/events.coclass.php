@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tcoevents extends tevents {
   protected $owner;
   protected $callbacks;

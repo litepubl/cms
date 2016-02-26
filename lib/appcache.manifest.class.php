@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class appcache_manifest extends titems {
 
   public static function i() {

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tadminpasswordInstall($self) {
   litepublisher::$urlmap->addget('/admin/password/', get_class($self));
 }

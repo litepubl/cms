@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tpluginsInstall($self) {
   @mkdir(litepublisher::$paths->data . 'plugins', 0777);
   @chmod(litepublisher::$paths->data . 'plugins', 0777);

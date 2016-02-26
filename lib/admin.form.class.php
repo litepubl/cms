@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminform extends tevents implements itemplate {
   protected $formresult;
   protected $title;

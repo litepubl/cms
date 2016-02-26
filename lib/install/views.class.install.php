@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tviewsInstall($self) {
   $widgets = twidgets::i();
   $widgets->deleted = $self->widgetdeleted;

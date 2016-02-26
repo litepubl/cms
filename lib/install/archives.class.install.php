@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tarchivesInstall($self) {
   $posts = tposts::i();
   $posts->changed = $self->postschanged;

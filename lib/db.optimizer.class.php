@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tdboptimizer extends tevents {
   public $childtables;
 

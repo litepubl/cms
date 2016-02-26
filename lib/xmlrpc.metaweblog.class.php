@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
   public static function i() {

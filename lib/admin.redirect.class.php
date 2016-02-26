@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminredirector extends tadminmenu {
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);

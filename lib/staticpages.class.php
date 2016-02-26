@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tstaticpages extends titems implements itemplate {
   private $id;
 

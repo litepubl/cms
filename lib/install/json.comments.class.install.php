@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tjsoncommentsInstall($self) {
   $json = tjsonserver::i();
   $json->lock();

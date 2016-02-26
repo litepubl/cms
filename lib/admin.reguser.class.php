@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminreguser extends tadminform {
   private $regstatus;
   private $backurl;

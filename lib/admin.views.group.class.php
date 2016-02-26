@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminviewsgroup extends tadminmenu {
 
   public static function i($id = 0) {

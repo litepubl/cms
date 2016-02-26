@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tfilestorage {
   public static $disabled;
   public static $memcache = false;

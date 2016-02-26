@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tcustomwidgetInstall($self) {
   $widgets = twidgets::i();
   $widgets->deleted = $self->widgetdeleted;

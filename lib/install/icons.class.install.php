@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function ticonsInstall($self) {
   $files = tfiles::i();
   $files->lock();

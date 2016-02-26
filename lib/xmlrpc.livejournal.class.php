@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class TXMLRPCLivejournal extends TXMLRPCAbstract {
 
   public static function i() {

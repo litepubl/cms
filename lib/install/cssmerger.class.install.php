@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function turlmapInstall($self) {
   $manager = tdbmanager::i();
   $manager->CreateTable('urlmap', file_get_contents(dirname(__file__) . '/sql/urlmap.sql'));

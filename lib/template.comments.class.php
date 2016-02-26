@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class ttemplatecomments extends tevents {
 
   public static function i() {

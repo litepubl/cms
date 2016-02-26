@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tmanifestInstall($self) {
   $urlmap = turlmap::i();
   $urlmap->lock();

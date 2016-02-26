@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 if (version_compare(PHP_VERSION, '5.1', '<')) {
   die('Lite Publisher requires PHP 5.1 or later. You are using PHP ' . PHP_VERSION);
 }

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tcommentsInstall($self) {
   $manager = tdbmanager::i();
   $dir = dirname(__file__) . '/sql/';

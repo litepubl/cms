@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class adminitems {
 
   public static function getcontent($holder, $menu) {

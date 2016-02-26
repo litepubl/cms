@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tuserpages extends titems implements itemplate {
   public static $userprops = array(
     'email',
