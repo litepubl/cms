@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tperm extends titem_storage {
   protected $_admin;
   protected $adminclass;

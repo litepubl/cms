@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tajaxposteditor extends tevents {
   public $idpost;
   private $isauthor;

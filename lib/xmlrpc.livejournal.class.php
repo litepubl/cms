@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class TXMLRPCLivejournal extends TXMLRPCAbstract {
 
   public static function i() {
@@ -82,25 +81,23 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
     $post->content = $struct['event'];
     //$lineendings = $struct['lineendings']; canbe \n \r \r\n
     $post->title = $struct['subject'];
-
     /* not supported
-    if (isset($struct['security'])) {
-      switch ($struct['security']) {
-        case 'public':
-        break;
-        
-        case 'private':
-        break;
-        
-        case 'usemask':
-        $allowmask = $args[0]['allowmask'];
-        
-        // A 32-bit unsigned integer representing which of the user's groups of friends are allowed to view this post. Turn bit 0 on to allow any defined friend to read it. Otherwise, turn bit 1-30 on for every friend group that should be allowed to read it. Bit 31 is reserved.
-        break;
-      }
-    }
+    if (isset($struct['security'])) {
+      switch ($struct['security']) {
+        case 'public':
+        break;
+        
+        case 'private':
+        break;
+        
+        case 'usemask':
+        $allowmask = $args[0]['allowmask'];
+        
+        // A 32-bit unsigned integer representing which of the user's groups of friends are allowed to view this post. Turn bit 0 on to allow any defined friend to read it. Otherwise, turn bit 1-30 on for every friend group that should be allowed to read it. Bit 31 is reserved.
+        break;
+      }
+    }
     */
-
     $post->posted = mktime($struct['hour'], $struct['min'], 0, $struct['mon'], $struct['day'], $struct['year']);
 
     if (isset($struct['props'])) {
@@ -119,14 +116,12 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
       }
 
     }
-
     /* not supported
-    if (isset($struct['usejournal'])) {
-      //Journal username that authenticating user has 'usejournal' access in, as given in the 'login' mode.
-      $usejournal = $struct['usejournal'];
-    }
+    if (isset($struct['usejournal'])) {
+      //Journal username that authenticating user has 'usejournal' access in, as given in the 'login' mode.
+      $usejournal = $struct['usejournal'];
+    }
     */
-
     if ($id == 0) {
       $id = $posts->add($post);
     } else {
@@ -158,13 +153,11 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
 
     return $this->EditPost($id, $struct);
   }
-
   /*
-  public function checkfriends ($args) {
-    if (!$this->lj_auth($args[0])) {
-      return new IXR_Error(403, 'Bad login/pass combination.');
-    }
-  }
+  public function checkfriends ($args) {
+    if (!$this->lj_auth($args[0])) {
+      return new IXR_Error(403, 'Bad login/pass combination.');
+    }
+  }
   */
-
 } //class

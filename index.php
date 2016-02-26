@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 if (version_compare(PHP_VERSION, '5.1', '<')) {
   die('Lite Publisher requires PHP 5.1 or later. You are using PHP ' . PHP_VERSION);
 }
@@ -75,12 +74,11 @@ try {
 
   define('dbversion', true);
   /*
-  if (class_exists('Memcache')) {
-    tfilestorage::$memcache =  new Memcache;
-    tfilestorage::$memcache->connect('127.0.0.1', 11211);
-  }
+  if (class_exists('Memcache')) {
+    tfilestorage::$memcache =  new Memcache;
+    tfilestorage::$memcache->connect('127.0.0.1', 11211);
+  }
   */
-
   if (!tstorage::loaddata()) {
     if (file_exists(litepublisher::$paths->data . 'storage.php') && filesize(litepublisher::$paths->data . 'storage.php')) die('Storage not loaded');
     require_once (litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'install.php');

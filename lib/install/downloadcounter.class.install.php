@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tdownloadcounterInstall($self) {
   if (dbversion) {
     $manager = TDBManager::i();

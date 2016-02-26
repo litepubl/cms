@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tlocal {
   public static $self;
   public $loaded;

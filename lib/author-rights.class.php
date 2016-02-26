@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tauthor_rights extends tevents {
 
   public static function i() {

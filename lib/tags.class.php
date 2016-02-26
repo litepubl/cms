@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class ttags extends tcommontags {
 
   public static function i() {

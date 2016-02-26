@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class titems_itemplate extends titems {
 
   protected function create() {

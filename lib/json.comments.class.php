@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tjsoncomments extends tevents {
 
   public static function i() {

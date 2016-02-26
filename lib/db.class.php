@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tdatabase {
   public $mysqli;
   public $result;
@@ -60,21 +59,19 @@ class tdatabase {
     $this->mysqli->set_charset('utf8');
     //$this->query('SET NAMES utf8');
     /* lost performance
-    $timezone = date('Z') / 3600;
-    if ($timezone > 0) $timezone = "+$timezone";
-    $this->query("SET time_zone = '$timezone:00'");
+    $timezone = date('Z') / 3600;
+    if ($timezone > 0) $timezone = "+$timezone";
+    $this->query("SET time_zone = '$timezone:00'");
     */
   }
-
   /*
-  public function __destruct() {
-    if (is_object($this)) {
-      if (is_object($this->mysqli)) $this->mysqli->close();
-      $this->mysqli = false;
-    }
-  }
+  public function __destruct() {
+    if (is_object($this)) {
+      if (is_object($this->mysqli)) $this->mysqli->close();
+      $this->mysqli = false;
+    }
+  }
   */
-
   public function __get($name) {
     return $this->prefix . $name;
   }

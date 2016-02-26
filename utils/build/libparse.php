@@ -23,12 +23,9 @@ $s = str_replace('2014', '2015', $s);
 $s = replace_copyright($s);
 
     $s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
-return preg_replace('/\s*\n/sm', '', $sc[0]);
+return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 }, $s);
 
-if (strpos($s, "\n\n\n\n\n")) {
-echo basename($filename), '<br>';
-}
 if (strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();

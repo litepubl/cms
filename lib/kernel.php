@@ -54,21 +54,19 @@ class tdatabase {
     $this->mysqli->set_charset('utf8');
     //$this->query('SET NAMES utf8');
     /* lost performance
-    $timezone = date('Z') / 3600;
-    if ($timezone > 0) $timezone = "+$timezone";
-    $this->query("SET time_zone = '$timezone:00'");
+    $timezone = date('Z') / 3600;
+    if ($timezone > 0) $timezone = "+$timezone";
+    $this->query("SET time_zone = '$timezone:00'");
     */
   }
-
   /*
-  public function __destruct() {
-    if (is_object($this)) {
-      if (is_object($this->mysqli)) $this->mysqli->close();
-      $this->mysqli = false;
-    }
-  }
+  public function __destruct() {
+    if (is_object($this)) {
+      if (is_object($this->mysqli)) $this->mysqli->close();
+      $this->mysqli = false;
+    }
+  }
   */
-
   public function __get($name) {
     return $this->prefix . $name;
   }
@@ -1742,11 +1740,12 @@ class tclasses extends titems {
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
-
       /*
        * item is indexed array
-       * 0 = filename      * 1 = releative path      * 2 = filename for debug      */
-
+       * 0 = filename
+       * 1 = releative path
+       * 2 = filename for debug
+      */
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
         return litepublisher::$paths->lib . $filename;
@@ -3290,7 +3289,6 @@ class tfilestorage {
   public static function comment_php($s) {
     return sprintf('<?php /* %s */ ?>', str_replace('*/', '**//*/', $s));
   }
-
   public static function uncomment_php($s) {
     return str_replace('**//*/', '*/', substr($s, 9, strlen($s) - 9 - 6));
   }

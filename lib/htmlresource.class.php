@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminhtml {
   public static $tags = array(
     'h1',

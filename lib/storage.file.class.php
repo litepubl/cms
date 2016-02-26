@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tfilestorage {
   public static $disabled;
   public static $memcache = false;
@@ -101,7 +100,6 @@ class tfilestorage {
   public static function comment_php($s) {
     return sprintf('<?php /* %s */ ?>', str_replace('*/', '**//*/', $s));
   }
-
   public static function uncomment_php($s) {
     return str_replace('**//*/', '*/', substr($s, 9, strlen($s) - 9 - 6));
   }

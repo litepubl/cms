@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcommontagsInstall($self) {
   if ('tcommontags' == get_class($self)) return;
 

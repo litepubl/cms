@@ -1279,14 +1279,12 @@ class tposts extends titems {
 
     $items = $db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $where and  $db->urlmap.id  = $db->posts.idurl $limit"));
-
     /*
-    $items = $db->res2items($db->query(
-    "select $db->posts.*, $db->urlmap.url as url  from $db->posts
-    left join  $db->urlmap on $db->urlmap.id  = $db->posts.idurl
-    where $where $limit"));
+    $items = $db->res2items($db->query(
+    "select $db->posts.*, $db->urlmap.url as url  from $db->posts
+    left join  $db->urlmap on $db->urlmap.id  = $db->posts.idurl
+    where $where $limit"));
     */
-
     if (count($items) == 0) return array();
     $subclasses = array();
     foreach ($items as & $item) {
@@ -1299,13 +1297,12 @@ class tposts extends titems {
 
     foreach ($subclasses as $class => $list) {
       /*
-      $childtable =  $db->prefix .
-      call_user_func_array(array($class, 'getchildtable'), array());
-      $list = implode(',', $list);
-      $subitems = $db->res2items($db->query("select $childtable.*
-      from $childtable where id in ($list)"));
+      $childtable =  $db->prefix .
+      call_user_func_array(array($class, 'getchildtable'), array());
+      $list = implode(',', $list);
+      $subitems = $db->res2items($db->query("select $childtable.*
+      from $childtable where id in ($list)"));
       */
-
       $subitems = call_user_func_array(array(
         $class,
         'selectitems'

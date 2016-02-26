@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminposts extends tadminmenu {
   private $isauthor;
 

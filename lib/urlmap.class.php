@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class turlmap extends titems {
   public $host;
   public $url;

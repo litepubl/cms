@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tpoolitems extends tdata {
   protected $perpool;
   protected $pool;

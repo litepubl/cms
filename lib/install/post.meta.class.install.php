@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tmetapostInstall($self) {
   if (dbversion) {
     $dir = dirname(__file__) . '/sql/';

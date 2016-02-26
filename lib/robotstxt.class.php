@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class trobotstxt extends titems {
 
   public static function i() {

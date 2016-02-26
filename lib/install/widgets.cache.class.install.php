@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function twidgetscacheInstall($self) {
   litepublisher::$urlmap->onclearcache = $self->onclearcache;
 }

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class trssMultimedia extends tevents {
   public $domrss;
 
@@ -83,15 +82,13 @@ class trssMultimedia extends tevents {
       tnode::attr($media, 'height', $file['height']);
       tnode::attr($media, 'width', $file['width']);
     }
-
     /*
-    if (!empty($file['bitrate'])) tnode::attr($media, 'bitrate', $file['bitrate']);
-    if (!empty($file['framerate'])) tnode::attr($media, 'framerate', $file['framerate']);
-    if (!empty($file['samplingrate'])) tnode::attr($media, 'samplingrate', $file['samplingrate']);
-    if (!empty($file['channels'])) tnode::attr($media, 'channels', $file['channels']);
-    if (!empty($file['duration'])) tnode::attr($media, 'duration', $file['duration']);
+    if (!empty($file['bitrate'])) tnode::attr($media, 'bitrate', $file['bitrate']);
+    if (!empty($file['framerate'])) tnode::attr($media, 'framerate', $file['framerate']);
+    if (!empty($file['samplingrate'])) tnode::attr($media, 'samplingrate', $file['samplingrate']);
+    if (!empty($file['channels'])) tnode::attr($media, 'channels', $file['channels']);
+    if (!empty($file['duration'])) tnode::attr($media, 'duration', $file['duration']);
     */
-
     $hash = tnode::addvalue($item, 'media:hash', self::hashtomd5($file['hash']));
     tnode::attr($hash, 'algo', "md5");
 

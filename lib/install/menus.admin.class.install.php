@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tadminmenusInstall($self) {
   if ('tadminmenus' != get_class($self)) return;
   $self->lock();
@@ -87,16 +86,15 @@ function tadminmenusInstall($self) {
 
   $id = $self->addfake('/admin/logout/', tlocal::i()->logout);
   $self->items[$id]['order'] = 9999999;
-
   /*
-  $board = $self->additem(array(
-  'parent' => 0,
-  'url' => '/admin/',
-  'title' => tlocal::get('adminmenus', 'board'),
-  'name' => 'board',
-  'class' => 'tadminboard',
-  'group' => 'author'
-  ));
+  $board = $self->additem(array(
+  'parent' => 0,
+  'url' => '/admin/',
+  'title' => tlocal::get('adminmenus', 'board'),
+  'name' => 'board',
+  'class' => 'tadminboard',
+  'group' => 'author'
+  ));
   */
   $self->unlock();
 

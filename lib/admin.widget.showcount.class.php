@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminshowcount extends tadminwidget {
 
   public static function i() {

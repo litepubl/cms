@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class ttemplate extends tevents_storage {
   public $path;
   public $url;

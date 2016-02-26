@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tupdater extends tevents {
   private $releases;
   public $versions;

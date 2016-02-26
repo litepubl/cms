@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tlocalInstall($self) {
   tlocal::$self = $self;
   //check double install

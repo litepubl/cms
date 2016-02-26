@@ -5,24 +5,21 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcssmergerInstall($self) {
   $self->lock();
   $self->items = array();
   $section = 'default';
-
   /*
-  $list = tcssmerger_pretty_files($self);
-  foreach ($list as $filename) {
-    $self->add($section, $filename);
-  }
-  
-  $items = tcssmerger_deprecated_files($self);
-  foreach ($list as $filename) {
-    $self->add($section, $filename);
-  }
+  $list = tcssmerger_pretty_files($self);
+  foreach ($list as $filename) {
+    $self->add($section, $filename);
+  }
+  
+  $items = tcssmerger_deprecated_files($self);
+  foreach ($list as $filename) {
+    $self->add($section, $filename);
+  }
   */
-
   $self->add($section, '/js/litepubl/common/css/common.min.css');
   $self->add($section, '/js/litepubl/common/css/filelist.min.css');
   $self->add($section, '/js/litepubl/common/css/form.inline.min.css');
@@ -37,12 +34,10 @@ function tcssmergerInstall($self) {
   $self->add($section, '/js/litepubl/admin/css/calendar.min.css');
   $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
   $self->unlock();
-
   /*  moved to template install
-  $template = ttemplate::i();
-  $template->addtohead('<!--<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />-->');
+  $template = ttemplate::i();
+  $template->addtohead('<!--<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />-->');
   */
-
   tupdater::i()->onupdated = $self->save;
 }
 

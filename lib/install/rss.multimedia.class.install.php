@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function trssMultimediaInstall($self) {
   $urlmap = turlmap::i();
   $urlmap->lock();

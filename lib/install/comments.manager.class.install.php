@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcommentmanagerInstall($self) {
   $self->data['filterstatus'] = true;
   $self->data['checkduplicate'] = true;

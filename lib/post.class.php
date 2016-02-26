@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tpost extends titem implements itemplate {
   public $childdata;
   public $childtable;

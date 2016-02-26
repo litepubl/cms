@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tthemeparser extends baseparser {
   private $sidebar_index;
 

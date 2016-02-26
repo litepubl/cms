@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class titems extends tevents {
   public $items;
   public $dbversion;

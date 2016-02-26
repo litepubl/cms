@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tadminreguserInstall($self) {
   litepublisher::$urlmap->addget('/admin/reguser/', get_class($self));
 }

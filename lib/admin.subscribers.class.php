@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminsubscribers extends tadminform {
   private $iduser;
   private $newreg;

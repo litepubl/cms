@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tfiler {
 
   public static function callback($callback, $path, $subdir) {

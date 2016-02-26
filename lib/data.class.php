@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tdata {
   const zerodate = '0000-00-00 00:00:00';
   public $data;

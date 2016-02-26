@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class dbcache extends cachestorage_memcache {
 
   public function set($sql, $res) {
@@ -113,13 +112,11 @@ class dbcache_result implements Iterator {
     if ($this->index < 0 || $this->index >= count($this->items)) return false;
     return array_combine($this->keys, $this->items[$this->index++]);
   }
-
   /*
-  public function fetch_field_direct ( int $fieldnr ) {}
-  public function fetch_field () {}
-  public function fetch_fields () {}
+  public function fetch_field_direct ( int $fieldnr ) {}
+  public function fetch_field () {}
+  public function fetch_fields () {}
   */
-
   public function fetch_object($class_name = 'stdClass', $params = false) {
     if ($this->index < 0 || $this->index >= count($this->items)) return false;
     $result = new $class_name($params);

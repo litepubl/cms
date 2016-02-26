@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tstorage extends tfilestorage {
   public static $data;
   private static $modified;

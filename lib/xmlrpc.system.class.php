@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class TXMLRPCSystem extends TXMLRPCAbstract {
 
   public static function i() {

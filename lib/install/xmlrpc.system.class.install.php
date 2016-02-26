@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function TXMLRPCSystemInstall($self) {
   $caller = TXMLRPC::i();
   $caller->lock();

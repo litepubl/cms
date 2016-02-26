@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcategories extends tcommontags {
   //public  $defaultid;
   public static function i() {

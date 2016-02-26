@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tsiteInstall($self) {
   $site = $self;
   $site->lock();

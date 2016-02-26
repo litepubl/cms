@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class thomepage extends tsinglemenu {
   public $cacheposts;
   public $midleposts;

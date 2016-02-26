@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcommentswidgetInstall($self) {
   tcomments::i()->changed = $self->changed;
 }

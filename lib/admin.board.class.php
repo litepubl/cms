@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminboard extends tevents implements itemplate {
 
   public static function i() {

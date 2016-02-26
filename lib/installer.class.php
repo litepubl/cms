@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tinstaller extends tdata {
   public $language;
   public $mode;
@@ -308,12 +307,11 @@ class tinstaller extends tdata {
     $users->setvalue($cm->idguest, 'status', 'approved');
 
     tcomments::i()->add($post->id, $cm->idguest, $lang->postcomment, 'approved', '127.0.0.1');
-
     /*
-    $plugins = tplugins::i();
-    $plugins->lock();
-    $plugins->add('oldestposts');
-    $plugins->unlock();
+    $plugins = tplugins::i();
+    $plugins->lock();
+    $plugins->add('oldestposts');
+    $plugins->unlock();
     */
   }
 

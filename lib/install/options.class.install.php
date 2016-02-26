@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 /* to prevent recurse call */
 function installoptions($email, $language) {
   $options = toptions::i();

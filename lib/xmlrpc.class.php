@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class TXMLRPCParser extends IXR_Server {
   public $XMLResult;
   private $owner;
@@ -107,10 +106,10 @@ class TXMLRPC extends titems {
       }
       $obj = getinstance($class);
       /*
-      if (!method_exists($Obj, $Func)) {
-        $this->delete($method);
-        return new IXR_Error(-32601, "server error. requested object method \"$Function\" does not exist.");
-      }
+      if (!method_exists($Obj, $Func)) {
+        $this->delete($method);
+        return new IXR_Error(-32601, "server error. requested object method \"$Function\" does not exist.");
+      }
       */
       //return $obj->$func($args);
       try {

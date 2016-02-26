@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class ttheme extends basetheme {
 
   public static function i() {

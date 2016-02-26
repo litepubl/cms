@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcomments extends titems {
   public $rawtable;
   private $pid;

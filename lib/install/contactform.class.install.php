@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcontactformInstall($self) {
   $html = tadminhtml::i();
   $html->loadinstall();

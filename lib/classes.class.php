@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tclasses extends titems {
   public $classes;
   public $interfaces;
@@ -138,11 +137,12 @@ class tclasses extends titems {
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
-
       /*
        * item is indexed array
-       * 0 = filename      * 1 = releative path      * 2 = filename for debug      */
-
+       * 0 = filename
+       * 1 = releative path
+       * 2 = filename for debug
+      */
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
         return litepublisher::$paths->lib . $filename;

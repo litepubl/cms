@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class http {
   public static $timeout = 20;
 
@@ -39,12 +38,10 @@ class http {
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
       if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
       /*
-      curl_setopt($ch, CURLOPT_VERBOSE , true);
-      curl_setopt($ch, CURLOPT_STDERR, fopen(litepublisher::$paths->data . 'logs/curl.txt', 'w+'));
+      curl_setopt($ch, CURLOPT_VERBOSE , true);
+      curl_setopt($ch, CURLOPT_STDERR, fopen(litepublisher::$paths->data . 'logs/curl.txt', 'w+'));
       */
-
       if (!ini_get('open_basedir') && !ini_get('safe_mode')) {
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         $result = curl_exec($ch);

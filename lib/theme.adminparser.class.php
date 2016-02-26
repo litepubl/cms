@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class adminparser extends baseparser {
 
   public static function i() {

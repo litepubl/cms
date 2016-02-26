@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tuserpagesInstall($self) {
   if ($self->dbversion) {
     $manager = tdbmanager::i();

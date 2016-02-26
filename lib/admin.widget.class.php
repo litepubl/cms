@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminwidget extends tdata {
   public $widget;
   protected $html;

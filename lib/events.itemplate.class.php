@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tevents_itemplate extends tevents {
 
   protected function create() {

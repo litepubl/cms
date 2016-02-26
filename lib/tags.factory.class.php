@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class ttagfactory extends tdata {
 
   public static function i() {

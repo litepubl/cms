@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 interface itemplate {
   public function request($arg);
   public function gettitle();

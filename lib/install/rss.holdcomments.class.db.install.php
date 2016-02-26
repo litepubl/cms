@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function trssholdcommentsInstall($self) {
   $self->idurl = litepublisher::$urlmap->add($self->url, get_class($self) , null, 'usernormal');
 

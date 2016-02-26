@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class twidgets extends titems_storage {
   public $classes;
   public $currentsidebar;

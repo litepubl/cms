@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcommentformInstall($self) {
   $url = '/send-comment.php';
 

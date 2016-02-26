@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class basetheme extends tevents {
   public static $instances = array();
   public static $vars = array();

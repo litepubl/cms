@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tbackuper extends tevents {
   public $archtype;
   public $result;
@@ -716,10 +715,10 @@ class tbackuper extends tevents {
 
   public function createbackup() {
     /*
-      $filer = $this->__filer;
-      if (!$filer || ! ($filer instanceof tlocalfiler)) {
-        $this->__filer = tlocalfiler::i();
-      }
+      $filer = $this->__filer;
+      if (!$filer || ! ($filer instanceof tlocalfiler)) {
+        $this->__filer = tlocalfiler::i();
+      }
     */
     $result = $this->_savebackup($this->getpartial(false, false, false));
     //$this->__filer = $filer;

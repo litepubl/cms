@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tmanifest extends tevents {
 
   static function i() {
@@ -33,21 +32,20 @@ class tmanifest extends tevents {
 
       case 'rsd':
         /*
-        $s .= '<rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">' .
-        '<service>' .
-        '<engineName>Lite Publisher</engineName>' .
-        '<engineLink>http://litepublisher.com/</engineLink>' .
-        "<homePageLink>$site->url/</homePageLink>" .
-        '<apis>' .
-        '<api name="WordPress" blogID="1" preferred="true" apiLink="' . $site->url . '/rpc.xml" />' .
-        '<api name="Movable Type" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
-        '<api name="MetaWeblog" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
-        '<api name="Blogger" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
-        '</apis>' .
-        '</service>' .
-        '</rsd>';
+        $s .= '<rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">' .
+        '<service>' .
+        '<engineName>Lite Publisher</engineName>' .
+        '<engineLink>http://litepublisher.com/</engineLink>' .
+        "<homePageLink>$site->url/</homePageLink>" .
+        '<apis>' .
+        '<api name="WordPress" blogID="1" preferred="true" apiLink="' . $site->url . '/rpc.xml" />' .
+        '<api name="Movable Type" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
+        '<api name="MetaWeblog" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
+        '<api name="Blogger" blogID="1" preferred="false" apiLink="' . $site->url . '/rpc.xml" />' .
+        '</apis>' .
+        '</service>' .
+        '</rsd>';
         */
-
         $dom = new domDocument();
         $dom->encoding = 'utf-8';
         $rsd = $dom->createElement('rsd');

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tdatabase extends PDO {
   public $result;
   public $sql;
@@ -40,9 +39,9 @@ class tdatabase extends PDO {
     }
     //$this->exec('SET NAMES utf8');
     /* lost performance
-    $timezone = date('Z') / 3600;
-    if ($timezone > 0) $timezone = "+$timezone";
-    $this->exec("SET time_zone = '$timezone:00'");
+    $timezone = date('Z') / 3600;
+    if ($timezone > 0) $timezone = "+$timezone";
+    $this->exec("SET time_zone = '$timezone:00'");
     */
   }
 

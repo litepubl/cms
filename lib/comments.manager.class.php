@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcommentmanager extends tevents_storage {
 
   public static function i() {

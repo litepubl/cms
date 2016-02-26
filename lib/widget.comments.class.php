@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcommentswidget extends twidget {
 
   public static function i() {

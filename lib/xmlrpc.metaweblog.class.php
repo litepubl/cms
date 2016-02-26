@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
   public static function i() {
@@ -143,10 +142,8 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     if (isset($struct["wp_page_order"])) {
       $menu->order = (int)$struct["wp_page_order"];
     }
-
     /* custom_fields is not supported */
   }
-
   /* <item> in RSS 2.0, providing a rich variety of item-level metadata, with well-understood applications.
    The three basic elements are title, link and description.  */
   public function setpost(array & $struct, tpost $post) {
@@ -187,25 +184,24 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
     $this->MWSetDate($struct, $post);
     $this->MWSetPingCommentStatus($struct, $post);
-
     /* not supported yet
-    if (isset($struct['flNotOnHomePage']) && $struct['flNotOnHomePage']) {
-      //exclude post from homepage
-    }
-    
-    if (!empty($struct['enclosure'])) {
-      //enclosure Describes a media object that is attached to the item.
-      <enclosure> is an optional sub-element of <item>.
-      
-      It has three required attributes. url says where the enclosure is located, length says how big it is in bytes, and type says what its type is, a standard MIME type.
-      
-      The url must be an http url.
-      
-      <enclosure url="http://www.scripting.com/mp3s/weatherReportSuite.mp3" length="12216320" type="audio/mpeg" />
-      
-      A use-case narrative for this element is here.
-    }
-    
+    if (isset($struct['flNotOnHomePage']) && $struct['flNotOnHomePage']) {
+      //exclude post from homepage
+    }
+    
+    if (!empty($struct['enclosure'])) {
+      //enclosure Describes a media object that is attached to the item.
+      <enclosure> is an optional sub-element of <item>.
+      
+      It has three required attributes. url says where the enclosure is located, length says how big it is in bytes, and type says what its type is, a standard MIME type.
+      
+      The url must be an http url.
+      
+      <enclosure url="http://www.scripting.com/mp3s/weatherReportSuite.mp3" length="12216320" type="audio/mpeg" />
+      
+      A use-case narrative for this element is here.
+    }
+    
     */
   }
 
@@ -221,10 +217,8 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     $menus->edit($menu);
     return true;
   }
-
   /* returns struct.
    The struct returned contains one struct for each category, containing the following elements: description, htmlUrl and rssUrl. */
-
   public function getCategories($blogid, $username, $password) {
     $this->auth($username, $password, 'author');
 

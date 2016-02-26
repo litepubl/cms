@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tnode {
   public static function attr($node, $name, $value) {
     $attr = $node->ownerDocument->createAttribute($name);

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tdebugproxy {
   public static $trace;
   public static $total;

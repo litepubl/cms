@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tsubscribers extends titemsposts {
   public $blacklist;
 

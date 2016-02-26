@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tlocalmerger extends tfilemerger {
   public $html;
 

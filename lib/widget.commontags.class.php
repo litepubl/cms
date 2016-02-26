@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcommontagswidget extends twidget {
 
   protected function create() {

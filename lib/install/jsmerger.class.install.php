@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tjsmergerInstall($self) {
   $dir = litepublisher::$paths->files . 'js';
   @mkdir($dir, 0777);
@@ -91,12 +90,10 @@ function tjsmergerInstall($self) {
   $self->add($section, "/lib/languages/$language/posteditor.min.js");
 
   $self->unlock();
-
   /*  moved to template install
-  $template = ttemplate::i();
-  $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
+  $template = ttemplate::i();
+  $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
   */
-
   tupdater::i()->onupdated = $self->onupdated;
 }
 

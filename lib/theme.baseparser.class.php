@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class baseparser extends tevents {
   public $theme;
   public $themefiles;
@@ -363,12 +362,12 @@ class baseparser extends tevents {
       return $info;
     } else {
       /*
-          foreach ($this->paths as $path => $info) {
-            if (strbegin($path, $name) && ($child == $info['tag'])) {
-              $info['path'] = $path;
-              return $info;
-            }
-          }
+          foreach ($this->paths as $path => $info) {
+            if (strbegin($path, $name) && ($child == $info['tag'])) {
+              $info['path'] = $path;
+              return $info;
+            }
+          }
       */
     }
 

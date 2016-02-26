@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tcssmerger extends tfilemerger {
 
   public static function i() {
