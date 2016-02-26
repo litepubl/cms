@@ -3,7 +3,6 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-
 (function($) {
   'use strict';
 
@@ -79,7 +78,6 @@
         $(".pp_dialog_btn_0").focus();
         if ($.isFunction(options.open)) options.open($(".pp_inline"));
       },
-
       /* Called when prettyPhoto is closed */
       callback: function() {
         $(document).off('keydown.onEscape');

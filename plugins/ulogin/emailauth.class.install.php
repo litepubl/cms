@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function emailauthInstall($self) {
   $js = tjsmerger::i();
   $js->lock();

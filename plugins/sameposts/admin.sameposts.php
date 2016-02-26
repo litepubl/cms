@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminsameposts extends tadminorderwidget {
 
   public static function i() {

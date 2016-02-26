@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class topenid extends tevents {
   public $keys;
   public $trusted;

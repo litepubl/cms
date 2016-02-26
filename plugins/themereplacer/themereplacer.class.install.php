@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function titemsreplacerInstall($self) {
   $dir = basename(dirname(__file__));
   litepublisher::$classes->add('tviewthemereplacer', 'themereplacer.class.php', $dir);

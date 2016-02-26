@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcategoriesmenuInstall($self) {
   $categories = tcategories::i();
   $categories->changed = $self->buildtree;

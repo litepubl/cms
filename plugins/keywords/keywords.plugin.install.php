@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tkeywordspluginInstall($self) {
   @mkdir(litepublisher::$paths->data . 'keywords', 0777);
   @chmod(litepublisher::$paths->data . 'keywords', 0777);

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminextrasidebars implements iadmin {
 
   public static function i() {

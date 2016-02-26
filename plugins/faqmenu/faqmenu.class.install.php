@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tfaqmenuInstall($self) {
   $about = tplugins::getabout(tplugins::getname(__file__));
   $self->title = $about['title'];

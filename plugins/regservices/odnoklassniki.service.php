@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class todnoklassnikiservice extends tregservice {
 
   public static function i() {

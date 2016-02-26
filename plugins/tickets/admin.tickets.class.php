@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadmintickets extends tadminmenu {
 
   public static function i($id = 0) {

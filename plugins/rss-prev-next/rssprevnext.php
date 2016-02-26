@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class TRSSPrevNext extends tplugin {
 
   public static function i() {

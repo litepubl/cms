@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tticketsInstall($self) {
   if (version_compare(PHP_VERSION, '5.3', '<')) {
     die('Ticket system requires PHP 5.3 or later. You are using PHP ' . PHP_VERSION);
@@ -77,31 +76,29 @@ function tticketsInstall($self) {
 
   $adminmenus->onexclude = $self->onexclude;
   $adminmenus->unlock();
-
   /*
-  $menus = tmenus::i();
-  $menus->lock();
-  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
-  
-  $menu = tticketsmenu::i();
-  $menu->type = 'tickets';
-  $menu->url = '/tickets/';
-  $menu->title = $ini['tickets'];
-  $menu->content = $ini['contenttickets'];
-  $id = $menus->add($menu);
-  
-  foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menu = tticketsmenu::i();
-    $menu->type = $type;
-    $menu->parent = $id;
-    $menu->url = "/$type/";
-    $menu->title = $ini[$type];
-    $menu->content = '';
-    $menus->add($menu);
-  }
-  $menus->unlock();
+  $menus = tmenus::i();
+  $menus->lock();
+  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
+  
+  $menu = tticketsmenu::i();
+  $menu->type = 'tickets';
+  $menu->url = '/tickets/';
+  $menu->title = $ini['tickets'];
+  $menu->content = $ini['contenttickets'];
+  $id = $menus->add($menu);
+  
+  foreach (array('bug', 'feature', 'support', 'task') as $type) {
+    $menu = tticketsmenu::i();
+    $menu->type = $type;
+    $menu->parent = $id;
+    $menu->url = "/$type/";
+    $menu->title = $ini[$type];
+    $menu->content = '';
+    $menus->add($menu);
+  }
+  $menus->unlock();
   */
-
   litepublisher::$classes->unlock();
 
   $linkgen = tlinkgenerator::i();
@@ -136,17 +133,16 @@ function tticketsUninstall($self) {
   $adminmenus->deletetree($adminmenus->url2id('/admin/tickets/'));
   $adminmenus->unbind($self);
   $adminmenus->unlock();
-
   /*
-  $menus = tmenus::i();
-  $menus->lock();
-  foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menus->deleteurl("/$type/");
-  }
-  $menus->deleteurl('/tickets/');
-  $menus->unlock();
-  
-  litepublisher::$classes->delete('tticketsmenu');
+  $menus = tmenus::i();
+  $menus->lock();
+  foreach (array('bug', 'feature', 'support', 'task') as $type) {
+    $menus->deleteurl("/$type/");
+  }
+  $menus->deleteurl('/tickets/');
+  $menus->unlock();
+  
+  litepublisher::$classes->delete('tticketsmenu');
   */
   litepublisher::$classes->unlock();
 

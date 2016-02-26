@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class polls extends titems {
   const votes = 'pollvotes';
 

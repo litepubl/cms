@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tbookmarkswidgetInstall($self) {
   $self->lock();
   $self->items = array();

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class nautilus_font extends tplugin {
 
   public static function i() {

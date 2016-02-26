@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tdownloaditemcounterInstall($self) {
   $cron = tcron::i();
   $cron->add('hour', get_class($self) , 'updatestat');

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tsingletagwidget extends twidget {
   public $items;
   public $tags;

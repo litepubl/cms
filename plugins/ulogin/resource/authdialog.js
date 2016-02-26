@@ -3,7 +3,6 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-
 (function($, document, window) {
   "use strict";
 
@@ -151,13 +150,11 @@
         args.callback();
       }
     },
-
     /* powerfull method. If user not logged then popup dialog. return 3 results:
     - true
     - false
     - undefined
     */
-
     check: function(a) {
       var args = $.extend({
         rpc: false,

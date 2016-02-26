@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function textrasidebarsInstall($self) {
   $parser = tthemeparser::i();
   $parser->lock();

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tsameposts extends tclasswidget {
 
   public static function i() {

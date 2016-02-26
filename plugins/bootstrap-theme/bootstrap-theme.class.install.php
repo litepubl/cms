@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function bootstrap_themeInstall($self) {
   $js = tjsmerger::i();
   $js->lock();

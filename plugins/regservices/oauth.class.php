@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class toauth extends tdata {
   public $urllist;
   public $key;
@@ -211,8 +210,8 @@ class toauth extends tdata {
     if ($tokens = $this->get_token($keys)) {
       return $tokens;
       /*
-      $keys['oauth_token'] = $tokens['oauth_token'];
-      if ($this->getaccess($keys)) return true;
+      $keys['oauth_token'] = $tokens['oauth_token'];
+      if ($this->getaccess($keys)) return true;
       */
     }
     return false;

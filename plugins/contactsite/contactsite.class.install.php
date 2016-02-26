@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tcontactsiteInstall($self) {
   $theme = ttheme::i();
   $args = targs::i();

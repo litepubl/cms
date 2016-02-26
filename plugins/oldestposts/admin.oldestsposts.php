@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tadminoldestposts extends tadminorderwidget {
 
   public static function i() {

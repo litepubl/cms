@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tviewthemereplacer extends tview {
 
   protected function get_theme_instance($name) {

@@ -3,7 +3,6 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-
 ;
 (function($, document, window) {
   'use strict';
@@ -42,7 +41,6 @@
         /* true/false */
         social_tools: false,
         //hideflash: true,
-
         /* Called when prettyPhoto is closed */
         callback: function() {
           $(document).off('keydown.onEscape');

@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tsamepostsInstall($self) {
   if (dbversion) {
     $manager = tdbmanager::i();

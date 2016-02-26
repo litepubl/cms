@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tbookmarkswidget extends tlinkswidget {
 
   public static function i() {

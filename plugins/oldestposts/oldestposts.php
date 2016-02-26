@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class toldestposts extends tclasswidget {
 
   public static function i() {

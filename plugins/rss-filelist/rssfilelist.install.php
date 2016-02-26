@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function trssfilelistInstall($self) {
   $rss = trss::i();
   $rss->beforepost = $self->beforepost;

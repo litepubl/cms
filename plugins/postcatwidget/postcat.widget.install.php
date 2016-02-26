@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tpostcatwidgetInstall($self) {
   $widgets = twidgets::i();
   $widgets->deleted = $self->widgetdeleted;

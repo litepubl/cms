@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function ttidyfilterInstall($self) {
   if (!class_exists('tidy')) die('PHP tidy extension is required');
   $filter = tcontentfilter::i();

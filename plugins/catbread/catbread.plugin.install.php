@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function catbreadinstall($self) {
   $self->cats->onbeforecontent = $self->beforecat;
   tthemeparser::i()->parsed = $self->themeparsed;

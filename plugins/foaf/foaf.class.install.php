@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tfoafInstall($self) {
   $merger = tlocalmerger::i();
   $merger->addplugin(tplugins::getname(__file__));

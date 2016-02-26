@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tsourcefiles extends tplugin implements itemplate {
   public $item;
   public $geshi;
@@ -122,12 +121,12 @@ class tsourcefiles extends tplugin implements itemplate {
 
   public function syntax($ext, $content) {
     /*
-    if ($ext == 'php') {
-    return array(
-    'content' => highlight_string ($content, true),
-    'style' => ''
-    );
-    }
+    if ($ext == 'php') {
+    return array(
+    'content' => highlight_string ($content, true),
+    'style' => ''
+    );
+    }
     */
     switch ($ext) {
       case 'tml':

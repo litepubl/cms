@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tshortcodeInstall($self) {
   $filter = tcontentfilter::i();
   $filter->lock();

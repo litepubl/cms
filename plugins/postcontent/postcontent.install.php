@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tpostcontentpluginInstall($self) {
   $posts = tposts::i();
   $posts->lock();

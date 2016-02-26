@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tfoaf extends titems {
   public $title;
 
@@ -165,7 +164,6 @@ class tfoaf extends titems {
     }
     return false;
   }
-
   /* begin remote calls */
   public function invate($nick, $url, $foafurl) {
     if (!$this->validateurl($url, $foafurl)) return false;

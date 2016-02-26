@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class tprofile extends tevents_itemplate implements itemplate {
 
   public static function i($id = 0) {

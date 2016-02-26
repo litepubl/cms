@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function tregservicesInstall($self) {
   $dir = litepublisher::$paths->data . 'regservices';
   @mkdir($dir, 0777);

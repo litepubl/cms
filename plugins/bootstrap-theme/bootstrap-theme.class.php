@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class bootstrap_theme extends tplugin {
 
   public static function i() {

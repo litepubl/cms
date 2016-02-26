@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 function texternallinksInstall($self) {
   if (dbversion) {
     $manager = tdbmanager::i();

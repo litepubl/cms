@@ -5,7 +5,6 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
-
 class catbread extends tplugin {
   public $tml;
   public $cats;
@@ -181,14 +180,12 @@ class catbread extends tplugin {
 
     array_clean($parents);
     if (!count($parents)) return '';
-
     /* without db cant sort
-    $similar = array();
-    foreach ($cats->items as $id => $item) {
-      if (in_array($item['parent'], $parents)) $similar[] = $id;
-    }
+    $similar = array();
+    foreach ($cats->items as $id => $item) {
+      if (in_array($item['parent'], $parents)) $similar[] = $id;
+    }
     */
-
     $parents = implode(',', $parents);
     $list = implode(',', $list);
     $similar = $cats->db->idselect("parent in ($parents) and id not in ($list) order by $this->childsortname asc");

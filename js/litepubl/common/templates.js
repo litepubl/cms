@@ -3,7 +3,6 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-
 (function($, litepubl) {
   $.extend(litepubl.tml, {
     text: '<div class="form-group"><label for="text-%%name%%">%%title%%</label>' +
