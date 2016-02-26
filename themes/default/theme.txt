@@ -1081,7 +1081,8 @@ content.excerpts.card = [
     <div class="postcard" id="post-$post.id">
         $post.firstimage
         <div class="postcard-body">
-            <h4 class="postcard-header"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4> $post.catlinks
+            <h4 class="postcard-header"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
+            $post.catlinks
 
             <div class="postcard-date">
                 <span class="fa fa-calendar tooltip-toggle" title="$lang.posted"></span>
