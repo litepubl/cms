@@ -9,6 +9,7 @@ table = [
         <tbody>
             $body
         </tbody>
+        $footer
     </table>
 </div>
 ]

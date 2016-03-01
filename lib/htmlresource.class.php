@@ -164,8 +164,7 @@ class tadminhtml {
   }
 
   public function adminform($tml, targs $args) {
-    $args->items = $this->parsearg($tml, $args);
-    return $this->parsearg(ttheme::i()->templates['content.admin.form'], $args);
+    return admintheme::i()->form($tml, $args);
   }
 
   public function getupload($name) {

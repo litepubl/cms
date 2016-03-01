@@ -29,8 +29,10 @@ tml/15radiogroup.txt
 ru/15radiogroup.txt
 tml/16addwidgets.txt
 ru/16addwidgets.txt
-tml/17help.plugins.txt
-ru/17help.plugins.txt
+tml/17help.txt
+ru/17help.txt
+tml/18help.plugins.txt
+ru/18help.plugins.txt
 tml/20form.txt
 ru/20form.txt
 tml/21confirmform.txt

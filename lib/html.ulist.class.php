@@ -22,6 +22,17 @@ class ulist {
     }
   }
 
+public function li($name, $value) {
+return strtr(is_int($name) ? $this->value : $this->item, array(
+        '$name' => $name,
+        '$value' => $value,
+      ));
+}
+
+public function ul($items) {
+      return str_replace('$item', $items, $this->ul);
+}
+
   public function get(array $props) {
     $result = '';
     foreach ($props as $name => $value) {
@@ -31,14 +42,11 @@ class ulist {
         $value = $this->get($value);
       }
 
-      $result.= strtr(is_int($name) ? $this->value : $this->item, array(
-        '$name' => $name,
-        '$value' => $value,
-      ));
+      $result.= $this->li($name, $value);
     }
 
     if ($result) {
-      return str_replace('$item', $result, $this->ul);
+      return $this->ul($result);
     }
 
     return '';

@@ -14,6 +14,7 @@ class tablebuilder {
   //template head and body table
   public $head;
   public $body;
+public $footer;
   //targs
   public $args;
   public $data;
@@ -30,6 +31,7 @@ class tablebuilder {
   public function __construct() {
     $this->head = '';
     $this->body = '';
+    $this->footer = '';
     $this->callbacks = array();
     $this->args = new targs();
     $this->data = array();
@@ -80,6 +82,14 @@ class tablebuilder {
     );
   }
 
+public function addfooter($footer) {
+$this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
+}
+
+public function td($colclass, $content) {
+return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass), $content);
+}
+
   public function getadmintheme() {
     if (!$this->admintheme) {
       $this->admintheme = admintheme::i();
@@ -95,7 +105,7 @@ class tablebuilder {
       $body.= $this->parseitem($id, $item);
     }
 
-    return $this->getadmintheme()->gettable($this->head, $body);
+    return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
   }
 
   public function parseitem($id, $item) {
@@ -288,5 +298,21 @@ class tablebuilder {
 
     return implode(' ', $list);
   }
+
+public function date($date) {
+    if ($date == tdata::zerodate) {
+      return tlocal::i()->noword;
+    } else {
+      return tlocal::date(strtotime($date) , 'd F Y');
+    }
+}
+
+public function datetime($date) {
+    if ($date == tdata::zerodate) {
+      return tlocal::i()->noword;
+    } else {
+      return tlocal::date(strtotime($date) , 'd F Y H:i');
+    }
+}
 
 }
