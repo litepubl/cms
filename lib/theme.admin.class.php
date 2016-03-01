@@ -164,6 +164,10 @@ class admintheme extends basetheme {
     return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
   }
 
+  public function form($tml, targs $args) {
+    return $this->parsearg(str_replace('$items', $tml, ttheme::i()->templates['content.admin.form']), $args);
+  }
+
   public function gettable($head, $body) {
     return strtr($this->templates['table'], array(
       '$class' => ttheme::i()->templates['content.admin.tableclass'],
