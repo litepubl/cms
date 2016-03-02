@@ -29,27 +29,6 @@ class topenid extends tevents {
     return "<link rel=\"openid.server\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid2.provider\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid.delegate\" href=\"\$site.url$this->url\" />" . "<link rel=\"openid2.local_id\" href=\"\$site.url$this->url\" />";
   }
 
-  public function install() {
-    litepublisher::$urlmap->add($this->url, get_class($this) , null, 'get');
-
-    $template = ttemplate::i();
-    $template->addtohead($this->get_head());
-
-    $merger = tlocalmerger::i();
-    $merger->addplugin(tplugins::getname(__file__));
-  }
-
-  public function uninstall() {
-    turlmap::unsub($this);
-    $template = ttemplate::i();
-    $template->deletefromhead($this->get_head());
-
-    $merger = tlocalmerger::i();
-    $merger->deleteplugin(tplugins::getname(__file__));
-
-    litepublisher::$urlmap->clearcache();
-  }
-
   public function afterload() {
     parent::afterload();
     $time = time();
@@ -324,6 +303,31 @@ class topenid extends tevents {
     return $this->checkid(true);
   }
 
+private function getform() {
+        $lang = tlocal::i('openidserver');
+$admintheme = admintheme::admin();
+$result = $admintheme->h($lang->trustform);
+$result .= $admintheme->h('<a href="$trust_root">$trust_root</a>');
+$result .= $admintheme->h($lang->confirmtrust);
+
+$form = new adminform();
+$form->body = $form->hidden('accept', 'yes');
+$form->body .= $form->hidden('assoc_handle', '$assoc_handle');
+$form->submit = 'yestrust';
+$result .= $form->get();
+
+$form->body = $form->hidden('accept', 'yesall');
+$form->body .= $form->hidden('assoc_handle', '$assoc_handle');
+$form->submit = 'yestrust';
+$result .= $form->get();
+
+$form->body = $form->hidden('accept', 'no');
+$form->submit = 'notrust';
+$result .= $form->get();
+
+return $result;
+}
+
   private function checkid($wait) {
     if (empty($_REQUEST['openid_return_to'])) return $this->error400('return_to');
     $return_to = $_REQUEST['openid_return_to'];
@@ -360,14 +364,18 @@ class topenid extends tevents {
           $this->save();
         }
 
-        $html = tadminhtml::i();
-        $html->section = 'openidserver';
         $lang = tlocal::i('openidserver');
-        $args = targs::i();
+        $args = new targs();
         $args->trust_root = $trust_root;
         $args->assoc_handle = $assoc_handle;
-        $form = $html->trustform($args);
-        return tsimplecontent::html($form);
+
+$result = litepublisher::$urlmap->cache->get('openid.txt');
+if (!$result) {
+$result = $this->getform();
+litepublisher::$urlmap->cache->set('openid.txt', $result);
+}
+
+        return tsimplecontent::html(ttheme::i()->parsearg($result, $args));
       } else {
         switch ($_POST['accept']) {
           case 'yes':
