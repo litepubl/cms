@@ -7,7 +7,6 @@
  */
 
 class tlocalmerger extends tfilemerger {
-  public $html;
 
   public static function i() {
     return getinstance(__class__);
@@ -17,7 +16,6 @@ class tlocalmerger extends tfilemerger {
     $this->dbversion = false;
     parent::create();
     $this->basename = 'localmerger';
-    $this->addmap('html', array());
   }
 
   public function addtext($name, $section, $s) {
@@ -58,7 +56,6 @@ class tlocalmerger extends tfilemerger {
     foreach ($this->items as $name => $items) {
       $this->parse($name);
     }
-    $this->parsehtml();
   }
 
   public function parse($name) {
@@ -89,40 +86,6 @@ class tlocalmerger extends tfilemerger {
     if (isset($ini['searchsect'])) $lang->joinsearch($ini['searchsect']);
   }
 
-  public function addhtml($filename) {
-    if (!($filename = $this->normfilename($filename))) return false;
-    if (in_array($filename, $this->html)) return false;
-    $this->html[] = $filename;
-    $this->save();
-    return count($this->html);
-  }
-
-  public function deletehtml($filename) {
-    if (!($filename = $this->normfilename($filename))) return false;
-    if (false === ($i = array_search($filename, $this->html))) return false;
-    array_delete($this->html, $i);
-    $this->save();
-  }
-
-  public function parsehtml() {
-    $html = getinstance('tadminhtml');
-    $html->ini = array();
-    foreach ($this->html as $filename) {
-      $realfilename = $this->getrealfilename($filename);
-      if (!file_exists($realfilename)) $this->error(sprintf('The file "%s" not found', $realfilename));
-      if (!($parsed = parse_ini_file($realfilename, true))) $this->error(sprintf('Error parse "%s" ini file', $realfilename));
-      if (count($html->ini) == 0) {
-        $html->ini = $parsed;
-      } else {
-        foreach ($parsed as $section => $itemsini) {
-          $html->ini[$section] = isset($html->ini[$section]) ? $itemsini + $html->ini[$section] : $itemsini;
-        }
-      }
-    }
-
-    tfilestorage::savevar(tlocal::getcachedir() . 'adminhtml', $html->ini);
-  }
-
   public function addplugin($name) {
     $language = litepublisher::$options->language;
     $dir = litepublisher::$paths->plugins . $name . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
@@ -131,7 +94,6 @@ class tlocalmerger extends tfilemerger {
     if (file_exists($dir . $language . '.admin.ini')) $this->add('admin', "plugins/$name/resource/$language.admin.ini");
     if (file_exists($dir . $language . '.mail.ini')) $this->add('mail', "plugins/$name/resource/$language.mail.ini");
     if (file_exists($dir . $language . '.install.ini')) $this->add('install', "plugins/$name/resource/$language.install.ini");
-    if (file_exists($dir . 'html.ini')) $this->addhtml("plugins/$name/resource/html.ini");
     $this->unlock();
   }
 
@@ -141,7 +103,6 @@ class tlocalmerger extends tfilemerger {
     $this->deletefile('default', "plugins/$name/resource/$language.ini");
     $this->deletefile('admin', "plugins/$name/resource/$language.admin.ini");
     $this->deletefile('mail', "plugins/$name/resource/$language.mail.ini");
-    $this->deletehtml("plugins/$name/resource/html.ini");
     $this->deletefile('install', "plugins/$name/resource/$language.install.ini");
     $this->unlock();
   }

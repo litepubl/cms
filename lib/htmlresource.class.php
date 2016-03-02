@@ -19,16 +19,12 @@ class tadminhtml {
     'div',
     'span'
   );
+
   public $section;
   public $searchsect;
-  public $ini;
-  private $map;
-  private $section_stack;
 
   public static function i() {
-    $self = getinstance(__class__);
-    if (count($self->ini) == 0) $self->load();
-    return $self;
+return getinstance(__class__);
   }
 
   public static function getinstance($section) {
@@ -39,19 +35,10 @@ class tadminhtml {
   }
 
   public function __construct() {
-    $this->ini = array();
-    $this->searchsect = array(
-      'common'
-    );
     tlocal::usefile('admin');
   }
 
   public function __get($name) {
-    if (isset($this->ini[$this->section][$name])) return $this->ini[$this->section][$name];
-    foreach ($this->searchsect as $section) {
-      if (isset($this->ini[$section][$name])) return $this->ini[$section][$name];
-    }
-
     if (in_array($name, self::$tags)) return new thtmltag($name);
     if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
 
@@ -77,28 +64,12 @@ class tadminhtml {
   }
 
   public function addsearch() {
-    $a = func_get_args();
-    foreach ($a as $sect) {
-      if (!in_array($sect, $this->searchsect)) $this->searchsect[] = $sect;
-    }
   }
 
-  public function push_section($section) {
-    if (!isset($this->section_stack)) $this->section_stack = array();
-    $lang = tlocal::i();
-    $this->section_stack[] = array(
-      $this->section,
-      $lang->section
-    );
-
-    $this->section = $section;
-    $lang->section = $section;
+ public function push_section($section) {
   }
 
   public function pop_section() {
-    $a = array_pop($this->section_stack);
-    $this->section = $a[0];
-    tlocal::i()->section = $a[1];
   }
 
   public static function specchars($s) {
@@ -118,13 +89,6 @@ class tadminhtml {
   }
 
   public function load() {
-    $filename = tlocal::getcachedir() . 'adminhtml';
-    if (tfilestorage::loadvar($filename, $v) && is_array($v)) {
-      $this->ini = $v + $this->ini;
-    } else {
-      $merger = tlocalmerger::i();
-      $merger->parsehtml();
-    }
   }
 
   public function loadinstall() {

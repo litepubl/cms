@@ -15,11 +15,14 @@ $classes->items['getter'] = array('kernel.php', '', 'getter.class.php');
 unset($classes->items['tuitabs']);
 $classes->items['tabs'] = array('kernel.admin.php', '', 'html.tabs.class.php');
 
+unset($classes->items['tadminicons']);
 $classes->save();
 
 $m = tadminmenus::i();
 $m->lock();
 $m->deleteurl('/admin/views/themes/');
+$m->deleteurl('/admin/files/deficons/');
+$m->deleteurl('/admin/files/icon/');
 $id = $m->url2id('/admin/options/secure/');
 $m->items[$id]['class'] = 'adminsecure';
 litepublisher::$urlmap->setvalue(litepublisher::$urlmap->urlexists('/admin/options/secure/'),
@@ -61,12 +64,12 @@ litepublisher::$urlmap->save();
   $lm = tlocalmerger::i();
 $lm->lock();
 $lm->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
-$lm->deletehtml('lib/languages/posteditor.ini');
-$lm->deletehtml('plugins/downloaditem/resource/html.ini');
-$lm->deletehtml('plugins/tickets/resource/html.ini');
+
 if ($classes->exists('tticket')) {
 $lm->add('admin', 'plugins/tickets/resource/' . litepublisher::$options->language . '.admin.ini');
 }
+
+unset($lm->data['html']);
 $lm->unlock();
 
     $js = tjsmerger::i();

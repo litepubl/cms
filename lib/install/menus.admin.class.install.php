@@ -35,8 +35,6 @@ function tadminmenusInstall($self) {
     $self->createitem($files, 'image', 'editor', 'tadminfiles');
     $self->createitem($files, 'video', 'editor', 'tadminfiles');
     $self->createitem($files, 'audio', 'editor', 'tadminfiles');
-    $self->createitem($files, 'icon', 'editor', 'tadminfiles');
-    $self->createitem($files, 'deficons', 'editor', 'tadminicons');
     $self->createitem($files, 'bin', 'editor', 'tadminfiles');
   }
 

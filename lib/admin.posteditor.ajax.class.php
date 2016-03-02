@@ -46,17 +46,6 @@ class tajaxposteditor extends tevents {
     return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . turlmap::htmlheader(false) . 'Forbidden';
   }
 
-  public function getviewicon($idview, $icon) {
-    $result = tadminviews::getcomboview($idview);
-    if ($icons = tadminicons::getradio($icon)) {
-      $html = tadminhtml::i();
-      if ($html->section == '') $html->section = 'editor';
-      $result.= $html->h2->icons;
-      $result.= $icons;
-    }
-    return $result;
-  }
-
   public static function auth() {
     $options = litepublisher::$options;
     if (!$options->user) return self::error403();
@@ -138,7 +127,7 @@ class tajaxposteditor extends tevents {
 
 
       case 'view':
-        $result = $this->getviewicon($post->idview, $post->icon);
+    $result = tadminviews::getcomboview($post->idview);
         break;
 
 
