@@ -1,5 +1,4 @@
-[foaf]
-profile = "<h4>$lang.myprofile</h4>
+<h4>$lang.myprofile</h4>
 <div>$profile.stat</div>
 
 <h4>$lang.myself</h4>
@@ -16,4 +15,3 @@ $profile.myinterests
     
 <h4>$lang.myfriends</h4>
 $profile.friendslist
-"

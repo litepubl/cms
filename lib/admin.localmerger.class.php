@@ -28,8 +28,6 @@ class tadminlocalmerger extends tadminmenu {
       $tabs->add($section, $tab->get());
     }
 
-    $tabs->add('HTML', $html->getinput('editor', 'adminhtml_files', tadminhtml::specchars(implode("\n", $merger->html)) , $lang->files));
-
     $args->formtitle = $lang->optionslocal;
     $args->dateformat = litepublisher::$options->dateformat;
     $dirs = tfiler::getdir(litepublisher::$paths->languages);
@@ -64,8 +62,6 @@ class tadminlocalmerger extends tadminmenu {
       }
     }
 
-    $merger->html = explode("\n", trim($_POST['adminhtml_files']));
-    foreach ($merger->html as $i => $filename) $merger->html[$i] = trim($filename);
     $merger->unlock();
   }
 

@@ -132,11 +132,10 @@ class tprofile extends tevents_itemplate implements itemplate {
     ttheme::$vars['profile'] = $this;
     $theme = ttheme::i();
     $tml = $this->template;
-    if ($tml == '') {
-      $html = tadminhtml::i();
-      $html->section = 'foaf';
-      $tml = $html->profile;
+    if (!$tml) {
+$tml = file_get_contents(litepublisher::$paths->plugins . 'foaf/resource/profile.tml');
     }
+
     return $theme->parse($tml);
   }
 
