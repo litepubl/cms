@@ -6,32 +6,10 @@
  *
  */
 class tadminfoaf extends tadminmenu {
-
   private $user;
 
   public static function i($id = 0) {
     return parent::iteminstance(__class__, $id);
-  }
-
-  private function getcombo($id, $status) {
-    $lang = tlocal::i('foaf');
-    $names = array(
-      'approved',
-      'hold',
-      'invated',
-      'rejected',
-      'spam',
-      'error'
-    );
-    $result = "<select name='status-$id' >\n";
-
-    foreach ($names as $name) {
-      $title = $lang->$name;
-      $selected = $status == $name ? 'selected' : '';
-      $result.= "<option value='$name' $selected>$title</option>\n";
-    }
-    $result.= "</select>";
-    return $result;
   }
 
   private function getlist() {
@@ -39,41 +17,66 @@ class tadminfoaf extends tadminmenu {
     $perpage = 20;
     $total = $foaf->getcount();
     $from = $this->getfrom($perpage, $total);
-    if ($foaf->dbversion) {
+
       $items = $foaf->select('', " order by status asc, added desc limit $from, $perpage");
       if (!$items) $items = array();
-    } else {
-      $items = array_slice(array_keys($foaf->items) , $from, $perpage);
-    }
-    $html = $this->html;
-    $result = $html->tableheader();
-    $args = targs::i();
-    $args->adminurl = $this->adminurl;
-    foreach ($items as $id) {
-      $item = $foaf->getitem($id);
-      $args->add($item);
-      $args->id = $id;
-      $args->status = tlocal::get('foaf', $item['status']);
-      $result.= $html->itemlist($args);
-    }
-    $result.= $html->tablefooter();
 
-    $theme = ttheme::i();
-    $result.= $theme->getpages('/admin/foaf/', litepublisher::$urlmap->page, ceil($total / $perpage));
+$tb = new tablebuilder();
+$tb->admintheme = $this->admintheme;
+$tb->setowner($foaf);
+$tb->setstruct(array(
+$tb->checkbox('checkbox'),
+array(
+$lang->nick,
+'$nick'
+),
+
+array(
+$lang->url,
+'$url',
+),
+
+array(
+$lang->status,
+function(tablebuilder $b) {
+return tlocal::i()->__get($b->item['status']);
+}),
+
+array(
+$lang->edit,),
+"<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>",
+),
+));
+
+$form = new adminform();
+$fform->body = $tb->build($items);
+    $form->body .= $form->centergroup($this->html->getsubmit('approve', 'hold', 'delete'));
+$form->body .= $form->hidden('foaftable', 1);
+$form->submit = false;
+$result = $form->get();
+
+    $result.= $this->theme->getpages('/admin/foaf/', litepublisher::$urlmap->page, ceil($total / $perpage));
     return $result;
   }
 
   public function getcontent() {
-    $lang = tlocal::i('foaf');
     $result = '';
     $foaf = tfoaf::i();
+$admintheme = $this->admintheme;
+    $lang = tlocal::i('foaf');
     $html = $this->html;
+$args = new targs();
 
     switch ($this->name) {
       case 'foaf':
         switch ($this->action) {
           case false:
-            $result = $html->addform();
+$args->url = '';
+$form = new adminform($args);
+$form->title = $lang->addform;
+$form->body = '[text=url]';
+$form->submit = 'add';
+            $result = $form->get();
             break;
 
 
@@ -84,10 +87,23 @@ class tadminfoaf extends tadminmenu {
             }
 
             $item = $foaf->getitem($id);
-            $args = targs::i();
             $args->add($item);
-            $args->status = $this->getcombo($id, $item['status']);
-            $result.= $html->editform($args);
+    $statuses = array(
+      'approved' => $lang->approved,
+      'hold' => $lang->hold,
+      'invated' => $lang->invated,
+      'rejected' => $lang->rejected,
+      'spam' => $lang->spam,
+      'error' => $lang->error,
+    );
+
+            $args->status = tadminhtml::array2combo($statuses, $item['status']);
+            $result.= $admintheme->form('
+[text=nick]
+[text=url]
+[text=foafurl]
+[combo=status]
+', $args);
             break;
 
 
@@ -99,15 +115,11 @@ class tadminfoaf extends tadminmenu {
 
             if ($this->confirmed) {
               $foaf->delete($id);
-              $result.= $html->h2->deleted;
+              $result.= $admintheme->h($lang->deleted);
             } else {
               $item = $foaf->getitem($id);
-              $args = targs::i();
-              $args->add($item);
-              $args->adminurl = $this->adminurl;
-              $args->action = 'delete';
-              $args->confirm = $html->confirmdelete($args);
-              $result.= $html->confirmform($args);
+$mesg = "$lang->confirmdelete {$item['nick']} ({$item['url']})?";
+              $result.= $this->html->confirmdelete($id, $this->adminurl, $mesg);
             }
             break;
         }
@@ -117,7 +129,8 @@ class tadminfoaf extends tadminmenu {
 
       case 'profile':
         $profile = tprofile::i();
-        ttheme::$vars['profile '] = $profile;
+$vars = new themevars();
+$vars->profile  = $profile;
         $args = targs::i();
         $form = '';
         foreach (array(
@@ -155,19 +168,16 @@ class tadminfoaf extends tadminmenu {
 
       case 'profiletemplate':
         $profile = tprofile::i();
-        $args = targs::i();
         $args->template = $profile->template;
-        $result.= $html->profiletemplate($args);
+        $result.= $admintheme->form('[editor=template]', $args);
         break;
       }
 
-      return $html->fixquote($result);
+      return $result;
   }
 
   public function processform() {
     $foaf = tfoaf::i();
-    $html = $this->html;
-
     switch ($this->name) {
       case 'foaf':
         if (!isset($_POST['foaftable'])) {
@@ -178,21 +188,19 @@ class tadminfoaf extends tadminmenu {
               return '';
             }
 
-            $status = $_POST["status-$id"];
             $foaf->edit($id, $nick, $url, $foafurl, $status);
-            return $html->h2->successedit;
+            return $this->admintheme->success($lang->successedit);
           } else {
             if (empty($url)) {
               return '';
             }
 
             if ($foaf->hasfriend($url)) {
-              return $html->h2->erroradd;
-
+              return $this->admintheme->h($lang->erroradd);
             }
 
             $foaf->addurl($url);
-            return $html->h2->successadd;
+            return $this->admintheme->h($lang->successadd);
           }
         } else {
           $status = isset($_POST['approve']) ? 'approved' : (isset($_POST['hold']) ? 'hold' : 'delete');
@@ -207,7 +215,7 @@ class tadminfoaf extends tadminmenu {
             }
           }
           $foaf->unlock();
-          return $html->h2->successmoderate;
+          return $this->admintheme->h($lang->successmoderate);
         }
 
       case 'profile':
