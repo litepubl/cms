@@ -20,18 +20,13 @@ class tadminhtml {
     'span'
   );
 
-  public $section;
-  public $searchsect;
-
   public static function i() {
 return getinstance(__class__);
   }
 
   public static function getinstance($section) {
-    $self = self::i();
-    $self->section = $section;
     tlocal::i($section);
-    return $self;
+return self::i();
   }
 
   public function __construct() {
@@ -50,6 +45,7 @@ return getinstance(__class__);
       ttheme::i() ,
       'getinput'
     ) , $params);
+
     $s = $this->__get($name);
     if (is_object($s) && ($s instanceof thtmltag)) return sprintf('<%1$s>%2$s</%1$s>', $name, $params[0]);
 
@@ -61,15 +57,6 @@ return getinstance(__class__);
 
   public function parsearg($s, targs $args) {
     return admintheme::i()->parsearg($s, $args);
-  }
-
-  public function addsearch() {
-  }
-
- public function push_section($section) {
-  }
-
-  public function pop_section() {
   }
 
   public static function specchars($s) {
@@ -236,24 +223,4 @@ return getinstance(__class__);
     return $result;
   }
 
-  public function inidir($dir) {
-    $filename = $dir . 'html.ini';
-    if (!isset(inifiles::$files[$filename])) {
-      $html_ini = inifiles::cache($filename);
-      if (is_array($html_ini)) {
-        $this->ini = $html_ini + $this->ini;
-        $keys = array_keys($html_ini);
-        $this->section = array_shift($keys);
-        $this->searchsect[] = $this->section;
-      }
-    }
-
-    tlocal::inicache($dir . litepublisher::$options->language . '.admin.ini');
-    return $this;
-  }
-
-  public function iniplugin($class) {
-    return $this->inidir(litepublisher::$classes->getresourcedir($class));
-  }
-
-} //class
+}

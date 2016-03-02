@@ -33,11 +33,4 @@ function preloadlanguage($lang, $language) {
     $lang->loaded[] = $name;
   }
   date_default_timezone_set(tlocal::get('installation', 'timezone'));
-
-  $html = new tadminhtml();
-  litepublisher::$classes->instances['tadminhtml'] = $html;
-  $ini = parse_ini_file(litepublisher::$paths->languages . 'adminhtml.ini', true);
-  $html->ini = $ini + $html->ini;
-  $ini = parse_ini_file(litepublisher::$paths->languages . 'install.ini', true);
-  $html->ini = $ini + $html->ini;
 }

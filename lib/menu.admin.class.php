@@ -138,15 +138,7 @@ class tadminmenu extends tmenu {
   }
 
   public function gethtml($name = '') {
-    $result = tadminhtml::i();
-    if ($name == '') $name = $this->basename;
-    if (!isset($result->ini[$name]) && $this->parent) {
-      $name = $this->owner->items[$this->parent]['name'];
-    }
-
-    $result->section = $name;
-    $lang = tlocal::i($name);
-    return $result;
+return tadminhtml::i();
   }
 
   public function getlang() {
@@ -168,7 +160,7 @@ class tadminmenu extends tmenu {
   }
 
   public function getnotfound() {
-    return $this->html->h4red->notfound;
+    return $this->admintheme->geterr(tlocal::i()->notfound);
   }
 
   public function getadminurl() {

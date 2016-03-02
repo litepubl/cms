@@ -47,29 +47,28 @@ class tadminposts extends tadminmenu {
       return $this->html->confirmform($args);
     }
 
-    $html = $this->html;
-    $html->push_section('posts');
+$admintheme = $this->admintheme;
     switch ($_GET['action']) {
       case 'delete':
         $posts->delete($id);
-        $result = $html->h4->confirmeddelete;
+        $result = $admintheme->h($lang->confirmeddelete);
         break;
 
 
       case 'setdraft':
         $post->status = 'draft';
         $posts->edit($post);
-        $result = $html->h4->confirmedsetdraft;
+        $result = $admintheme->h($lang->confirmedsetdraft);
         break;
 
 
       case 'publish':
         $post->status = 'published';
         $posts->edit($post);
-        $result = $html->h4->confirmedpublish;
+        $result = $admintheme->h($lang->confirmedpublish);
         break;
     }
-    $html->pop_section();
+
     return $result;
   }
 
@@ -81,10 +80,10 @@ class tadminposts extends tadminmenu {
     $items = $posts->select($where, " order by posted desc limit $from, $perpage");
     if (!$items) $items = array();
 
-    $html = $this->html;
+$admintheme = $this->admintheme;
     $lang = tlocal::admin();
     $form = new adminform(new targs());
-    $form->items = $html->getitemscount($from, $from + count($items) , $count);
+    $form->items = $admintheme->getcount($from, $from + count($items) , $count);
 
     $tb = new tablebuilder();
     $tb->setposts(array(
@@ -122,10 +121,7 @@ class tadminposts extends tadminmenu {
 
     $form->submit = false;
     $result = $form->get();
-    $result = $html->fixquote($result);
-
-    $theme = ttheme::i();
-    $result.= $theme->getpages('/admin/posts/', litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $this->theme->getpages('/admin/posts/', litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
