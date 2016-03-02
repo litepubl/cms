@@ -149,12 +149,6 @@ return tadminhtml::i();
     return tlocal::inifile($this, '.admin.ini');
   }
 
-  public function inihtml($name = '') {
-    $html = $this->gethtml($name);
-    $html->iniplugin(get_class($this));
-    return $html;
-  }
-
   public function getconfirmed() {
     return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
   }

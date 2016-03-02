@@ -13,7 +13,7 @@ class tadmindownloaditems extends tadminmenu {
 
   public function getcontent() {
     $result = '';
-    $html = $this->inihtml();
+$admintheme = $this->admintheme;
     $lang = tlocal::admin('downloaditems');
     $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
 
@@ -30,7 +30,7 @@ class tadmindownloaditems extends tadminmenu {
       case 'addurl':
         $args->formtitle = $lang->addurl;
         $args->url = tadminhtml::getparam('url', '');
-        return $html->adminform('[text=url]', $args);
+        return $admintheme->form('[text=url]', $args);
 
       case 'theme':
         $where.= " and type = 'theme' ";
@@ -52,7 +52,7 @@ class tadmindownloaditems extends tadminmenu {
     }
 
     $form = new adminform(new targs());
-    $form->body = $html->getitemscount($from, $from + count($items) , $count);
+    $form->body = $admintheme->getcount($from, $from + count($items) , $count);
     $tb = new tablebuilder();
     $tb->setposts(array(
       array(

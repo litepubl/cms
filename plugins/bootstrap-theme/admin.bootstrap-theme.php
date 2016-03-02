@@ -15,7 +15,8 @@ class admin_bootstrap_theme extends tadminmenu {
     $result = '';
     $views = tviews::i();
     $theme = tview::i($views->defaults['admin'])->theme;
-    $html = $this->inihtml();
+$admintheme = $view->admintheme;
+
     $lang = tlocal::admin('adminbootstraptheme');
     $args = new targs();
 
@@ -27,7 +28,7 @@ class admin_bootstrap_theme extends tadminmenu {
     foreach ($views->items as $id => $item) {
       if (!isset($item['custom']['mainsidebar'])) continue;
 
-      $result.= $html->h4($item['name']);
+      $result.= $admintheme->h($item['name']);
       $result.= $theme->getinput('combo', "mainsidebar-$id", tadminhtml::array2combo($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
 
       $result.= $theme->getinput('combo', "cssfile-$id", tadminhtml::array2combo($lang->ini['subthemes'], $item['custom']['cssfile']) , $lang->cssfile);
@@ -36,7 +37,7 @@ class admin_bootstrap_theme extends tadminmenu {
     }
 
     $args->formtitle = $lang->customizeview;
-    return $html->adminform($result, $args);
+    return $admintheme->form($result, $args);
   }
 
   public function processform() {

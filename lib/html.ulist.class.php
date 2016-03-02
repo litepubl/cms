@@ -29,6 +29,13 @@ return strtr(is_int($name) ? $this->value : $this->item, array(
       ));
 }
 
+public function link($url, $title) {
+return strtr($this->link, array(
+        '$name' => $url,
+        '$value' => $title,
+      ));
+}
+
 public function ul($items) {
       return str_replace('$item', $items, $this->ul);
 }
