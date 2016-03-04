@@ -191,7 +191,7 @@ class tadminmoderator extends tadminmenu {
     $tablebuilder->args->adminurl = $this->adminurl;
 
     $tablebuilder->setstruct(array(
-      tablebuilder::checkbox('id') ,
+      $tablebuilder->checkbox('id') ,
 
       array(
         $lang->date,

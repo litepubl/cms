@@ -53,7 +53,7 @@ class tadmincustomwidget extends tadminwidget {
     $lang = tlocal::i();
     $tb = new tablebuilder();
     $tb->setstruct(array(
-      tablebuilder::checkbox('widgetcheck') ,
+      $tb->checkbox('widgetcheck') ,
       array(
         $lang->widgettitle,
         "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"

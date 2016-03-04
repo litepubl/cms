@@ -48,7 +48,7 @@ class tadminlinkswidget extends tadminwidget {
     $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
     $tb = new tablebuilder();
     $tb->setstruct(array(
-      tablebuilder::checkbox('checklink') ,
+      $tb->checkbox('checklink') ,
       array(
         $lang->url,
         '<a href=\'$url\'>$url</a>'

@@ -69,8 +69,10 @@ class tadminpingbacks extends tadminmenu {
     $form = new adminform($args);
     $form->items = $html->getitemscount($from, $from + count($items) , $total);
     ttheme::$vars['pingitem'] = new pingitem();
-    $form->items.= $html->buildtable($items, array(
-      tablebuilder::checkbox('id') ,
+
+$tb = new tablebuilder();
+$tb->setstruct(array(
+      $tb->checkbox('id') ,
       array(
         'left',
         $lang->date,
@@ -107,7 +109,7 @@ class tadminpingbacks extends tadminmenu {
         "<a href='$this->adminurl=\$id&action=edit'>$lang->edit</a>"
       ) ,
     ));
-
+    $form->items.= $tb->build($items);
     unset(ttheme::$vars['pingitem']);
 
     $form->items.= $html->div($html->getsubmit('approve', 'hold', 'delete'));

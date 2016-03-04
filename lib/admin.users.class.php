@@ -105,8 +105,7 @@ class tadminusers extends tadminmenu {
     $tb->args->adminurl = $this->adminurl;
     $tb->setowner($users);
     $tb->setstruct(array(
-      tablebuilder::checkbox('user') ,
-
+      $tb->checkbox('user') ,
       array(
         $lang->edit,
         sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)

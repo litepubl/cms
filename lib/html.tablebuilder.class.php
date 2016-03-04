@@ -150,7 +150,7 @@ return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass), $content)
   }
 
   public function setposts(array $struct) {
-    array_unshift($struct, self::checkbox('checkbox'));
+    array_unshift($struct, $this->checkbox('checkbox'));
     $this->setstruct($struct);
     $this->addcallback('$tempcallback' . count($this->callbacks) , array(
       $this,
@@ -257,8 +257,8 @@ return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass), $content)
     );
   }
 
-  public static function checkbox($name) {
-    $admin = admintheme::i();
+  public function checkbox($name) {
+    $admin = $this->getadmintheme();
 
     return array(
       'text-center col-checkbox',

@@ -48,7 +48,7 @@ class tadminperms extends tadminmenu {
         $tb = new tablebuilder();
         $tb->setowner($perms);
         $tb->setstruct(array(
-          tablebuilder::checkbox('perm') ,
+          $tb->checkbox('perm') ,
           array(
             $lang->edit,
             "<a href=\"$this->adminurl=\$id&action=edit\">\$name</a>"
