@@ -57,7 +57,7 @@ public $footer;
         $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $s);
       } else if (is_callable($s)) {
         $name = '$callback' . $index;
-        $this->body.= sprintf('<td class="%s">$%s</td>', $colclass, $name);
+        $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
         array_unshift($item, $this);
         $this->callbacks[$name] = array(
@@ -72,7 +72,7 @@ public $footer;
     $this->body.= '</tr>';
   }
 
-  public function addcallback($varname, $callback, $param) {
+  public function addcallback($varname, $callback, $param = null) {
     $this->callbacks[$varname] = array(
       'callback' => $callback,
       'params' => array(
