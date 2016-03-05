@@ -6137,6 +6137,9 @@ h6,
 .h6 {
   text-align: center;
 }
+.radio-header {
+  text-align: left;
+}
 ins {
   text-decoration: none;
 }
@@ -6425,11 +6428,11 @@ A.dashed:focus {
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 #text-count,
-input[name^="count"] {
+input[id^="text-count"] {
   width: 5em;
 }
 #text-coupon,
-input[name^="coupon"] {
+input[id^="text-coupon"] {
   width: 10em;
 }
 /**
