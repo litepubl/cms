@@ -38,11 +38,6 @@ function ttemplateInstall($self) {
   <meta name="theme-color" content="#ffffff">
   ';
 
-  //footer
-  $html = tadminhtml::i();
-  $html->section = 'installation';
   $lang = tlocal::i('installation');
-  ttheme::$vars['lang'] = $lang;
-  $theme = ttheme::i();
-  $self->footer = $theme->parse($html->footer);
+  $self->footer = "$lang->poweredby $lang->copyright"
 }
