@@ -43,7 +43,7 @@ return tlocal::i()->__get($b->item['status']);
 }),
 
 array(
-$lang->edit,),
+$lang->edit,
 "<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>",
 ),
 ));

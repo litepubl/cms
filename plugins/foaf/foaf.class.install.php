@@ -25,7 +25,7 @@ function tfoafInstall($self) {
   $actions->unlock();
 
   $urlmap = litepublisher::$urlmap;
-  $urlmap->lock();
+  turlmap::unsub($self);
   $urlmap->add('/foaf.xml', get_class($self) , null);
 
   $name = tplugins::getname(__file__);
@@ -44,7 +44,6 @@ function tfoafInstall($self) {
     $admin->createitem($id, 'profiletemplate', 'admin', 'tadminfoaf');
   }
   $admin->unlock();
-  $urlmap->unlock();
 
   $template = ttemplate::i();
   $template->addtohead('	<link rel="meta" type="application/rdf+xml" title="FOAF" href="$site.url/foaf.xml" />');
@@ -65,7 +64,6 @@ function tfoafUninstall($self) {
   $actions->deleteclass(get_class($self));
 
   $urlmap = litepublisher::$urlmap;
-  $urlmap->lock();
   turlmap::unsub($self);
 
   $classes = litepublisher::$classes;
@@ -83,7 +81,6 @@ function tfoafUninstall($self) {
   $admin->deleteurl('/admin/foaf/');
   $admin->unlock();
 
-  $urlmap->unlock();
 
   if ($self->dbversion) {
     $manager = tdbmanager::i();
