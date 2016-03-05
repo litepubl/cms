@@ -242,7 +242,8 @@ class tinstaller extends tdata {
     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
       $checkrewrite = '';
     } else {
-      eval('$checkrewrite =  "' . $html->checkrewrite . '\n";');
+      $checkrewrite = file_get_contents(litepublisher::$paths->lib . 'install/templates/modrewrite.tml');
+      $checkrewrite = str_replace('$checkrewrite', $lang->checkrewrite, $checkrewrite);
     }
 
     $dbprefix = strtolower(str_replace(array(

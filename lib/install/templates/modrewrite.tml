@@ -1,0 +1,3 @@
+<div class="checkbox"><label>
+<input type="checkbox" name="checkrewrite" id="checkbox-checkrewrite" />
+$checkrewrite</label></div>
