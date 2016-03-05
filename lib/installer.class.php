@@ -254,7 +254,7 @@ class tinstaller extends tdata {
     $likeurl = urlencode($lang->homeurl);
     $liketitle = urlencode($lang->homename);
 
-    $form = file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'installform.tml');
+    $form = file_get_contents(litepublisher::$paths->lib . 'install/templates/installform.tml');
     $form = str_replace('"', '\"', $form);
     eval('$form = "' . $form . '\n";');
 
@@ -278,9 +278,7 @@ class tinstaller extends tdata {
   }
 
   public function CreateFirstPost() {
-    $html = tadminhtml::i();
-    $html->section = 'installation';
-    $lang = tlocal::i();
+    $lang = tlocal::usefile('install');
     $theme = ttheme::i();
 
     $post = tpost::i(0);
@@ -290,10 +288,6 @@ class tinstaller extends tdata {
     $post->content = $theme->parse($lang->postcontent);
     $posts = tposts::i();
     $posts->add($post);
-
-    $icons = ticons::i();
-    $cats = tcategories::i();
-    $cats->setvalue($post->categories[0], 'icon', $icons->getid('news'));
 
     $cm = tcommentmanager::i();
     $users = tusers::i();
@@ -308,12 +302,6 @@ class tinstaller extends tdata {
     $users->setvalue($cm->idguest, 'status', 'approved');
 
     tcomments::i()->add($post->id, $cm->idguest, $lang->postcomment, 'approved', '127.0.0.1');
-    /*
-    $plugins = tplugins::i();
-    $plugins->lock();
-    $plugins->add('oldestposts');
-    $plugins->unlock();
-    */
   }
 
   public function SendEmail($password) {
@@ -330,7 +318,7 @@ class tinstaller extends tdata {
 
   public function congratulation($password) {
     global $lang;
-    $tml = file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'install.congratulation.tml');
+    $tml = file_get_contents(litepublisher::$paths->lib . 'install/templates/install.congratulation.tml');
     $theme = ttheme::getinstance('default');
     $template = ttemplate::i();
     $template->view = tview::i();

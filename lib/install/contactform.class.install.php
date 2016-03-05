@@ -7,18 +7,17 @@
  */
 
 function tcontactformInstall($self) {
-  $html = tadminhtml::i();
-  $html->loadinstall();
-  $html->section = 'contactform';
+$ini = parse_ini_file(dirname(__file__) . '/templates/contactform.ini');
   tlocal::usefile('install');
   $lang = tlocal::i('contactform');
+$theme = ttheme::i();
 
   $self->title = $lang->title;
   $self->subject = $lang->subject;
-  $self->success = $html->success();
-  $self->errmesg = $html->errmesg();
-  $self->content = $html->form();
   $self->order = 10;
+  $self->success = $theme->parse($ini['success']);
+  $self->errmesg = $theme->parse($ini['errmesg']);
+  $self->content = $theme->parse($ini['form']);
 
   $menus = tmenus::i();
   $menus->add($self);

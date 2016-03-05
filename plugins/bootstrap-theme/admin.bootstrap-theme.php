@@ -13,9 +13,8 @@ class admin_bootstrap_theme extends tadminmenu {
 
   public function getcontent() {
     $result = '';
-    $views = tviews::i();
-    $theme = tview::i($views->defaults['admin'])->theme;
-$admintheme = $view->admintheme;
+    $theme = $this->theme;
+$admintheme = $this->admintheme;
 
     $lang = tlocal::admin('adminbootstraptheme');
     $args = new targs();
@@ -25,6 +24,7 @@ $admintheme = $view->admintheme;
       'right' => $lang->right,
     );
 
+$views = tviews::i();
     foreach ($views->items as $id => $item) {
       if (!isset($item['custom']['mainsidebar'])) continue;
 
