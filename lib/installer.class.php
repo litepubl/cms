@@ -236,8 +236,7 @@ class tinstaller extends tdata {
   public function wizardform() {
     $this->loadlang();
     $combobox = $this->getlangcombo();
-    $html = tadminhtml::i();
-    $html->section = 'installation';
+
     $lang = tlocal::i('installation');
 
     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
@@ -322,15 +321,13 @@ class tinstaller extends tdata {
     $theme = ttheme::getinstance('default');
     $template = ttemplate::i();
     $template->view = tview::i();
-    $html = tadminhtml::i();
-    $html->section = 'installation';
     $lang = tlocal::i('installation');
-    $args = targs::i();
+    $args = new targs();
     $args->title = litepublisher::$site->name;
     $args->url = litepublisher::$site->url . '/';
     $args->password = $password;
     $args->likeurl = litepublisher::$options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
-    $content = $html->parsearg($tml, $args);
+    $content = $theme->parsearg($tml, $args);
     $this->echohtml($content);
   }
 

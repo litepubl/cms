@@ -9,9 +9,7 @@
 function trssholdcommentsInstall($self) {
   $self->idurl = litepublisher::$urlmap->add($self->url, get_class($self) , null, 'usernormal');
 
-  $html = tadminhtml::i();
-  $html->section = 'installation';
-  $self->template = $html->rsstemplate;
+  $self->template = file_get_contents(dirname(__file__) . '/templates/rss.holdcomments.tml');
   $self->save();
 
   tcomments::i()->changed = $self->commentschanged;

@@ -1,0 +1,11 @@
+<p>$comment.content</p>
+<p>
+<a href="$adminurl=reply">$lang.reply</a>|
+<a href="$adminurl=approve">$lang.approveit</a>|
+<a href="$adminurl=delete">$lang.deleteit</a>
+<a href="$adminurl=hold">$lang.holdit</a>
+</p><p>
+$lang.author: $comment.name<br />
+E-Mail: $comment.email<br />
+$lang.website: $comment.website<br />
+</p>
