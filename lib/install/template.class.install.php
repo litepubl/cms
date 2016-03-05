@@ -39,5 +39,5 @@ function ttemplateInstall($self) {
   ';
 
   $lang = tlocal::i('installation');
-  $self->footer = "$lang->poweredby $lang->copyright"
+  $self->footer = "$lang->poweredby $lang->copyright";
 }
