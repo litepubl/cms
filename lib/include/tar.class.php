@@ -80,7 +80,7 @@ class tar {
 
 
     // Class Constructor -- Does nothing...
-    function tar() {
+    function __construct() {
         return true;
     }
 
