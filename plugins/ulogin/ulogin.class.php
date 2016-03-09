@@ -76,7 +76,9 @@ class ulogin extends tplugin {
     }
 
     if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
-      if ($url = $this->onphone($backurl)) return litepublisher::$urlmap->redir($url);
+      if ($url = $this->onphone($backurl)) {
+return litepublisher::$urlmap->redir($url);
+}
     }
 
     setcookie('backurl', '', 0, litepublisher::$site->subdir, false);
@@ -102,8 +104,13 @@ class ulogin extends tplugin {
     if (!empty($info['email'])) {
       if ($id = $users->emailexists($info['email'])) {
         $user = $users->getitem($id);
-        if ($user['status'] == 'comuser') $users->approve($id);
-        if ($phone && empty($user['phone'])) $users->setvalue($id, 'phone', $phone);
+        if ($user['status'] == 'comuser') {
+$users->approve($id);
+}
+
+        if ($phone && empty($user['phone'])) {
+$users->setvalue($id, 'phone', $phone);
+}
       } elseif (litepublisher::$options->reguser) {
         $newreg = true;
         $id = $users->add(array(
@@ -111,7 +118,10 @@ class ulogin extends tplugin {
           'name' => $name,
           'website' => empty($info['profile']) ? '' : tcontentfilter::clean_website($info['profile']) ,
         ));
-        if ($phone) $users->db->setvalue($id, 'phone', $phone);
+
+        if ($phone) {
+$users->db->setvalue($id, 'phone', $phone);
+}
         if ($uid) {
           $this->add($id, $info['network'], $uid);
         }

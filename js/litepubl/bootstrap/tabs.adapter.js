@@ -1,8 +1,8 @@
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ **/
 (function($, document, litepubl) {
   'use strict';
 
@@ -137,12 +137,12 @@
     setenabled: function(link, enabled) {
       if (enabled) {
         link.attr("data-toggle", "tab");
-link.removeAttr("aria-disabled");
+        link.removeAttr("aria-disabled");
         link.parent().removeClass("disabled");
         link.off("click.disabled");
       } else {
         link.attr("data-toggle", "disabled");
-link.attr("aria-disabled", "true");
+        link.attr("aria-disabled", "true");
         link.parent().addClass("disabled");
         link.on("click.disabled", function() {
           return false;

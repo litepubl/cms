@@ -4,7 +4,7 @@ posteditor.filelist = [
     <div id="posteditor-fileperms">$fileperm</div>
     <div id="uploader"></div>
     <div id="browsefiles-holder">
-        <button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square green" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
+        <button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square text-success" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
 
     <div id="newfiles" class="file-items">
         <h4>$lang.newfiles</h4>

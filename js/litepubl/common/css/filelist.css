@@ -3,6 +3,7 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+
 .image {
     float: left;
     margin: 5px 15px 5px 0;
@@ -26,8 +27,8 @@
 
 .clear-after:after,
 .files-block:after,
-.filelist-1 + div,
-.filelist-2 + div {
+.filelist-1 + div:after,
+.filelist-2 + div:after {
     clear: both;
     content: '.';
     display: block;

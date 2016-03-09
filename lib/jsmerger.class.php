@@ -179,7 +179,6 @@ class tfilemerger extends titems {
           
         } else {
           trigger_error(sprintf('The file "%s" not exists', $filename) , E_USER_WARNING);
-
         }
       }
 
