@@ -188,20 +188,27 @@ class ttheme extends basetheme {
   }
 
   public function keyanounce($postanounce) {
-    if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') return 'excerpt';
-    if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') return 'lite';
+    if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
+return 'excerpt';
+}
+
+    if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') {
+return 'lite';
+}
+
     return 'card';
   }
 
   public function getposts(array $items, $postanounce) {
-    if (!count($items)) return '';
+    if (!count($items)) {
+return '';
+}
 
     $result = '';
     $tml_key = $this->keyanounce($postanounce);
     tposts::i()->loaditems($items);
 
     self::$vars['lang'] = tlocal::i('default');
-    //$tml = $lite ? $this->templates['content.excerpts.lite.excerpt'] : $this->templates['content.excerpts.excerpt'];
     foreach ($items as $id) {
       $post = tpost::i($id);
       $result.= $post->getcontexcerpt($tml_key);

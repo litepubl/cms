@@ -6304,7 +6304,8 @@ A.dashed:focus {
 }
 .postcard-body .post-categories,
 .postcard-body .postcard-date,
-.postcard-body .postcard-comments {
+.postcard-body .postcard-comments,
+.postcard-body .postcard-price {
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
