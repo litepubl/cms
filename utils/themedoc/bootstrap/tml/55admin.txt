@@ -27,8 +27,8 @@ $radioitem = [<div class="radio"><label><input type="radio" name="$name" id="rad
 
 $radio = [
 <div class="radio-group">
-<div class="form-group">
   <h4>$lang.$name</h4>
+<div class="form-group">
 $value
 </div>
 </div>]

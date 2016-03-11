@@ -47,4 +47,10 @@ if ($i < $l - 1) $result .= "\r\n\r\n";
 file_put_contents('d:\OpenServer\domains\cms\themes/' 
 . (isset($_GET['dir']) ? $_GET['dir'] : 'default') .
 '/theme.txt', $result);
+
+//clear theme cache
+$cachedir = dirname(dirname(dirname(__file__))) . '/storage/data/themes/';
+foreach (glob($cachedir . '*.php') as $filename) {
+unlink($filename);
+}
 echo "theme compiled";

@@ -18,8 +18,9 @@
     tooltips.length = 0;
   };
 
-  $.fn.settooltip = function() {
-    return this.on("mouseenter.settooltip focus.settooltip", ".tooltip-toggle:not(.tooltip-ready)", function(event) {
+  $.fn.settooltip = function(selector, options) {
+selector = selector || ".tooltip-toggle";
+    return this.on("mouseenter.settooltip focus.settooltip", selector + ":not(.tooltip-ready)", function(event) {
       var self = $(this);
       self.addClass("tooltip-ready");
       if (self.data("bs.tooltip")) return;
@@ -27,7 +28,7 @@
       self.tooltip({
           container: 'body',
           placement: 'auto top'
-        })
+        }, options)
         .on('show.bs.tooltip.singletip', function() {
           tooltips.push(this);
         })

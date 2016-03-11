@@ -1081,7 +1081,7 @@ content.excerpts.card = [
     <div class="postcard" id="post-$post.id">
         $post.firstimage
         <div class="postcard-body">
-            <h4 class="postcard-header"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>
+            <h4 class="postcard-title"><a href="$post.link" class="postcard-link" rel="bookmark">$post.title</a></h4>
             $post.catlinks
 
             <div class="postcard-date">
@@ -1179,8 +1179,8 @@ $radioitem = [<div class="radio"><label><input type="radio" name="$name" id="rad
 
 $radio = [
 <div class="radio-group">
-<div class="form-group">
   <h4>$lang.$name</h4>
+<div class="form-group">
 $value
 </div>
 </div>]

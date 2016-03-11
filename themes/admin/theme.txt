@@ -507,7 +507,7 @@ posteditor.filelist = [
     <div id="posteditor-fileperms">$fileperm</div>
     <div id="uploader"></div>
     <div id="browsefiles-holder">
-        <button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square green" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
+        <button id="browsefiles" type="button" class="btn btn-default tooltip-toggle" title="$lang.tooltipbrowsefiles "><span class="fa fa-plus-square text-success" aria-hidden="true"></span> $lang.browsefiles</button> $lang.helpbrowsefiles</div>
 
     <div id="newfiles" class="file-items">
         <h4>$lang.newfiles</h4>
@@ -533,7 +533,7 @@ posteditor.filelist = [
 posteditor.categories = [
 $head = [<h4><a target="_blank" href="$site.url/admin/posts/categories/">$lang.catcontrol</a> $lang.toeditcat</h4>]
 <ul class="catitems">
-    $item = [<li><label><input type="checkbox" name="$category-$id" value="$id" $checked /> $title</label> $subitems</li>]
+    $item = [<li><label><input type="checkbox" name="category-$id" value="$id" $checked /> $title</label> $subitems</li>]
 </ul>
 ]
 

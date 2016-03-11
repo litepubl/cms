@@ -12,5 +12,11 @@
         location.href = $(event.target).find("a").attr("href");
       }
     });
+
+$(document).settooltip(".postcard-link", {
+title: function() {
+return $(this).text();
+}
+});
   });
 })(jQuery, document);
