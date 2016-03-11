@@ -6137,11 +6137,16 @@ h6,
 .h6 {
   text-align: center;
 }
-.radio-header {
-  text-align: left;
-}
 ins {
   text-decoration: none;
+}
+.radio-group {
+  text-align: center;
+  margin-bottom: 15px;
+}
+.radio-group .form-group {
+  display: inline-block;
+  margin-bottom: 0;
 }
 /**
 * Lite Publisher
@@ -6466,7 +6471,7 @@ input[id^="text-coupon"] {
 **/
 .buyform > div {
   text-align: center;
-  margin-top: 6px;
+  margin-bottom: 15px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -6535,6 +6540,9 @@ input[id^="text-coupon"] {
   font-size: 14px;
   line-height: 1.42857143;
   border-radius: 4px;
+}
+.buypage-header {
+  text-align: left;
 }
 .buypage-product-header {
   overflow: hidden;

@@ -230,16 +230,10 @@ class tfiles extends titems {
         $args->preview = '';
         $preview->array = array();
 
-        if ((int)$item['midle']) {
-          $midle->array = $this->getitem($item['midle']);
+        if ($idmidle = (int)$item['midle']) {
+          $midle->array = $this->getitem($idmidle);
           $midle->link = $url . $midle->filename;
-          $midle->json = jsonattr(array(
-            'id' => $midle->array['id'],
-            'link' => $midle->link,
-            'width' => $midle->array['width'],
-            'height' => $midle->array['height'],
-            'size' => $midle->array['size'],
-          ));
+          $midle->json = $this->getjson($idmidle);
         } else {
           $midle->array = array();
           $midle->link = '';
@@ -261,9 +255,7 @@ class tfiles extends titems {
           $args->preview = $theme->parsearg($tml['preview'], $args);
         }
 
-        unset($item['title'], $item['keywords'], $item['description'], $item['hash']);
-        $args->json = jsonattr($item);
-
+        $args->json = $this->getjson($id);
         $sublist.= $theme->parsearg($tml[$type], $args);
       }
 
@@ -280,5 +272,18 @@ class tfiles extends titems {
     $post = tpost::i($idpost);
     $this->itemsposts->setitems($idpost, $post->files);
   }
+
+public function getjson($id) {
+$item = $this->getitem($id);
+return jsonattr(array(
+            'id' => $id,
+            'link' => litepublisher::$site->files . '/files/' . $item['filename'],
+            'width' => $item['width'],
+            'height' => $item['height'],
+            'size' => $item['size'],
+'midle' => $item['midle'],
+'preview' => $item['preview'],
+          ));
+}
 
 } //class

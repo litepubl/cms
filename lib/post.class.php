@@ -456,32 +456,26 @@ class tpost extends titem implements itemplate {
         $args = new targs();
         $args->add($item);
         $args->link = litepublisher::$site->files . '/files/' . $item['filename'];
+$args->json = $files->getjson($id);
 
-        $preview = ttheme::$vars['preview'] = new tarray2prop();
+$preview = new tarray2prop();
         $preview->array = $files->getitem($item['preview']);
         $preview->link = litepublisher::$site->files . '/files/' . $preview->filename;
 
-        $midle = ttheme::$vars['midle'] = new tarray2prop();
-        if ((int)$item['midle']) {
-          $midle->array = $files->getitem($item['midle']);
+$midle = new tarray2prop();
+        if ($idmidle = (int)$item['midle']) {
+          $midle->array = $files->getitem($idmidle);
           $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
-          $midle->json = jsonattr(array(
-            'id' => $midle->array['id'],
-            'link' => $midle->link,
-            'width' => $midle->array['width'],
-            'height' => $midle->array['height'],
-            'size' => $midle->array['size'],
-          ));
+          $midle->json = $files->getjson($idmidle);
         } else {
           $midle->array = array();
           $midle->json = '';
         }
 
+$vars = new themevars();
+$vars->preview = $preview;$vars->midle = $midle;
         $theme = $this->theme;
-        $result = $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
-        unset(ttheme::$vars['preview'], ttheme::$vars['midle']);
-
-        return $result;
+return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
       }
     }
     return '';
