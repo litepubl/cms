@@ -273,6 +273,41 @@ class tfiles extends titems {
     $this->itemsposts->setitems($idpost, $post->files);
   }
 
+public function getfirstimage(array $items) {
+    foreach ($items as $id) {
+      $item = $this->getitem($id);
+      if ('image' == $item['media']) {
+$baseurl = litepublisher::$site->files . '/files/';
+        $args = new targs();
+        $args->add($item);
+        $args->link = $baseurl . $item['filename'];
+$args->json = $this->getjson($id);
+
+$preview = new tarray2prop();
+        $preview->array = $this->getitem($item['preview']);
+        $preview->link = $baseurl . $preview->filename;
+
+$midle = new tarray2prop();
+        if ($idmidle = (int)$item['midle']) {
+          $midle->array = $this->getitem($idmidle);
+          $midle->link = $baseurl . $midle->filename;
+          $midle->json = $this->getjson($idmidle);
+        } else {
+          $midle->array = array();
+          $midle->json = '';
+        }
+
+$vars = new themevars();
+$vars->preview = $preview;
+$vars->midle = $midle;
+        $theme = ttheme::i();
+return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
+}
+      }
+
+return '';
+}
+
 public function getjson($id) {
 $item = $this->getitem($id);
 return jsonattr(array(

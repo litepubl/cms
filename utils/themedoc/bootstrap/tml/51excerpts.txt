@@ -1,9 +1,7 @@
 content.excerpts = [
     $excerpt = [
     <div class="anpost" id="post-$post.id">
-        $post.firstimage = [<div class="anpost-image">
-<span class="image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
-<a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$post.title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json"><img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$post.title" itemprop="thumbnail" /></a></div>]
+        $post.firstimage = [<div class="anpost-image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$post.title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json"><img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$post.title" itemprop="thumbnail" /></a></div>]
 
         <div class="anpost-body">
             <h4 class="anpost-title"><a href="$post.link" class="post-link" rel="bookmark">$post.title</a></h4>

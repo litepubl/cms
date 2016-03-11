@@ -445,39 +445,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getfirstimage() {
-    if (!count($this->files)) {
-      return '';
+    if (count($this->files)) {
+return $this->factory->files->getfirstimage($this->files);
     }
 
-    $files = $this->factory->files;
-    foreach ($this->files as $id) {
-      $item = $files->getitem($id);
-      if ('image' == $item['media']) {
-        $args = new targs();
-        $args->add($item);
-        $args->link = litepublisher::$site->files . '/files/' . $item['filename'];
-$args->json = $files->getjson($id);
-
-$preview = new tarray2prop();
-        $preview->array = $files->getitem($item['preview']);
-        $preview->link = litepublisher::$site->files . '/files/' . $preview->filename;
-
-$midle = new tarray2prop();
-        if ($idmidle = (int)$item['midle']) {
-          $midle->array = $files->getitem($idmidle);
-          $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
-          $midle->json = $files->getjson($idmidle);
-        } else {
-          $midle->array = array();
-          $midle->json = '';
-        }
-
-$vars = new themevars();
-$vars->preview = $preview;$vars->midle = $midle;
-        $theme = $this->theme;
-return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
-      }
-    }
     return '';
   }
 
