@@ -12,6 +12,8 @@
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: @border-radius-base;
 }
 
 .jcarousel {
@@ -43,7 +45,7 @@
   display: block;
   overflow:hidden;
   width: @jcarousel-image-width;
-  height: @jcarousel-height;
+  height: jcarousel-height;
 }
 
 .jcarousel-right > li {
@@ -59,17 +61,17 @@
   margin: 0;
 width: @jcarousel-image-width;
 height: @jcarousel-image-height;
-    border: 1px solid transparent;
-    border-radius: @border-radius-base;
 
   img {
     position: absolute;
-    display: block;
+width: 100%;
+height: auto;
+  margin: auto;
     overflow: hidden;
-    left: 50%;
-    top: 50%;
-    margin-left: -50%;
-    margin-top: -50%;
+  top: 0;
+ left: 0;
+ bottom: 0;
+ right: 0;
   }
 }
 

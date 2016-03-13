@@ -6592,6 +6592,8 @@ proppage-form-submit,
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
 .jcarousel {
   position: relative;
@@ -6622,7 +6624,7 @@ proppage-form-submit,
   display: block;
   overflow: hidden;
   width: 420px;
-  height: 402px;
+  height: jcarousel-height;
 }
 .jcarousel-right > li {
   float: right;
@@ -6636,17 +6638,17 @@ proppage-form-submit,
   margin: 0;
   width: 420px;
   height: 315px;
-  border: 1px solid transparent;
-  border-radius: 4px;
 }
 .jcarousel-image img {
   position: absolute;
-  display: block;
+  width: 100%;
+  height: auto;
+  margin: auto;
   overflow: hidden;
-  left: 50%;
-  top: 50%;
-  margin-left: -50%;
-  margin-top: -50%;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 .jcarousel-body {
   display: block;
