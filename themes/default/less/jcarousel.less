@@ -5,10 +5,9 @@
 **/
 @jcarousel-image-width : 420px;
 @jcarousel-image-height : (@jcarousel-image-width / 4 *3);
-//@jcarousel-body-height : (@jcarousel-image-width - @jcarousel-image-height);
 @jcarousel-body-height : 75px;
 @jcarousel-height : (@jcarousel-image-height + @jcarousel-body-height + (@padding-base-vertical * 2));
-//@jcarousel-height : @jcarousel-image-width;
+@jcarousel-item-margin: 10px;
 
 .jcarousel-wrapper {
   display: block;
@@ -39,7 +38,7 @@
 
 .jcarousel-items > li {
   float: left;
-  margin: 0 10px 0 0;
+  margin: 0 @jcarousel-item-margin 0 0;
   padding: 0;
   display: block;
   overflow:hidden;
@@ -49,19 +48,28 @@
 
 .jcarousel-right > li {
   float: right;
-  margin: 0 0 0 10px;
+  margin: 0 0 0 @jcarousel-item-margin;
 }
 
 .jcarousel-image{
+    position: relative;
   display: block;
   overflow:hidden;
   padding: 0;
   margin: 0;
-  text-align: center;
-  
-  img {
+width: @jcarousel-image-width;
+height: @jcarousel-image-height;
     border: 1px solid transparent;
     border-radius: @border-radius-base;
+
+  img {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    left: 50%;
+    top: 50%;
+    margin-left: -50%;
+    margin-top: -50%;
   }
 }
 

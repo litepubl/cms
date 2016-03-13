@@ -6470,8 +6470,7 @@ input[id^="text-coupon"] {
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-.buyform > div,
-.buypage > div {
+.buyform > div {
   text-align: center;
   margin-bottom: 15px;
   margin-left: auto;
@@ -6479,6 +6478,7 @@ input[id^="text-coupon"] {
 }
 .buyform label {
   font-weight: normal;
+  text-align: left;
 }
 /**
 * Lite Publisher
@@ -6543,8 +6543,12 @@ input[id^="text-coupon"] {
   line-height: 1.42857143;
   border-radius: 4px;
 }
-.buypage .summary {
+.buypage-summary {
+  text-align: center;
+}
+.buypage-summary > ul {
   display: inline-block;
+  text-align: left;
 }
 .buypage-header {
   overflow: hidden;
@@ -6625,15 +6629,24 @@ proppage-form-submit,
   margin: 0 0 0 10px;
 }
 .jcarousel-image {
+  position: relative;
   display: block;
   overflow: hidden;
   padding: 0;
   margin: 0;
-  text-align: center;
-}
-.jcarousel-image img {
+  width: 420px;
+  height: 315px;
   border: 1px solid transparent;
   border-radius: 4px;
+}
+.jcarousel-image img {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  left: 50%;
+  top: 50%;
+  margin-left: -50%;
+  margin-top: -50%;
 }
 .jcarousel-body {
   display: block;
