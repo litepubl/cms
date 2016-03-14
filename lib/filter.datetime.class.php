@@ -51,7 +51,7 @@ class datefilter {
 
   public static function gettime($name) {
     $result = 0;
-    if (!empty($_POST[$name] && ($time = trim($_POST[$name])))) {
+    if (!empty($_POST[$name]) && ($time = trim($_POST[$name]))) {
       if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
         $result = intval($m[1]) * 3600 + intval($m[2]) * 60;
         if (isset($m[4])) {
