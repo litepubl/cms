@@ -141,7 +141,10 @@ class tupdater extends tevents {
   }
 
   public function getlatest() {
-    if ($releases = $this->downloadreleases()) return $releases[0];
+    if ($releases = $this->downloadreleases()) {
+return $releases[0];
+}
+
     return false;
   }
 

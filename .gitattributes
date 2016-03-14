@@ -67,7 +67,7 @@
 
 #root scripts
 index.debug.php export-ignore
-utils*  export-ignore
+utils/*  export-ignore
 
 #uploaded files
 files/js* export-ignore
