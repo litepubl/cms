@@ -893,7 +893,7 @@ class IXR_IntrospectionServer extends IXR_Server
     var $signatures;
     var $help;
 
-public function __construct() {
+public function __construct()
     {
         $this->setCallbacks();
         $this->setCapabilities();

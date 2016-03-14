@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function rsschromeInstall($self) {
   $name = basename(dirname(__file__));
   $js = tjsmerger::i();

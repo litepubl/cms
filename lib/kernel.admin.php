@@ -253,15 +253,7 @@ class tadminmenu extends tmenu {
   }
 
   public function gethtml($name = '') {
-    $result = tadminhtml::i();
-    if ($name == '') $name = $this->basename;
-    if (!isset($result->ini[$name]) && $this->parent) {
-      $name = $this->owner->items[$this->parent]['name'];
-    }
-
-    $result->section = $name;
-    $lang = tlocal::i($name);
-    return $result;
+    return tadminhtml::i();
   }
 
   public function getlang() {
@@ -272,18 +264,12 @@ class tadminmenu extends tmenu {
     return tlocal::inifile($this, '.admin.ini');
   }
 
-  public function inihtml($name = '') {
-    $html = $this->gethtml($name);
-    $html->iniplugin(get_class($this));
-    return $html;
-  }
-
   public function getconfirmed() {
     return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
   }
 
   public function getnotfound() {
-    return $this->html->h4red->notfound;
+    return $this->admintheme->geterr(tlocal::i()->notfound);
   }
 
   public function getadminurl() {
@@ -471,11 +457,16 @@ class admintheme extends basetheme {
     return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
   }
 
-  public function gettable($head, $body) {
+  public function form($tml, targs $args) {
+    return $this->parsearg(str_replace('$items', $tml, ttheme::i()->templates['content.admin.form']) , $args);
+  }
+
+  public function gettable($head, $body, $footer = '') {
     return strtr($this->templates['table'], array(
       '$class' => ttheme::i()->templates['content.admin.tableclass'],
       '$head' => $head,
-      '$body' => $body
+      '$body' => $body,
+      '$footer' => $footer,
     ));
   }
 
@@ -503,6 +494,10 @@ class admintheme extends basetheme {
       '$title' => tlocal::i()->error,
       '$content' => $content
     ));
+  }
+
+  public function help($content) {
+    return str_replace('$content', $content, $this->templates['help']);
   }
 
   public function getcalendar($name, $date) {
@@ -621,39 +616,21 @@ class tadminhtml {
     'div',
     'span'
   );
-  public $section;
-  public $searchsect;
-  public $ini;
-  private $map;
-  private $section_stack;
 
   public static function i() {
-    $self = getinstance(__class__);
-    if (count($self->ini) == 0) $self->load();
-    return $self;
+    return getinstance(__class__);
   }
 
   public static function getinstance($section) {
-    $self = self::i();
-    $self->section = $section;
     tlocal::i($section);
-    return $self;
+    return self::i();
   }
 
   public function __construct() {
-    $this->ini = array();
-    $this->searchsect = array(
-      'common'
-    );
     tlocal::usefile('admin');
   }
 
   public function __get($name) {
-    if (isset($this->ini[$this->section][$name])) return $this->ini[$this->section][$name];
-    foreach ($this->searchsect as $section) {
-      if (isset($this->ini[$section][$name])) return $this->ini[$section][$name];
-    }
-
     if (in_array($name, self::$tags)) return new thtmltag($name);
     if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
 
@@ -665,6 +642,7 @@ class tadminhtml {
       ttheme::i() ,
       'getinput'
     ) , $params);
+
     $s = $this->__get($name);
     if (is_object($s) && ($s instanceof thtmltag)) return sprintf('<%1$s>%2$s</%1$s>', $name, $params[0]);
 
@@ -676,31 +654,6 @@ class tadminhtml {
 
   public function parsearg($s, targs $args) {
     return admintheme::i()->parsearg($s, $args);
-  }
-
-  public function addsearch() {
-    $a = func_get_args();
-    foreach ($a as $sect) {
-      if (!in_array($sect, $this->searchsect)) $this->searchsect[] = $sect;
-    }
-  }
-
-  public function push_section($section) {
-    if (!isset($this->section_stack)) $this->section_stack = array();
-    $lang = tlocal::i();
-    $this->section_stack[] = array(
-      $this->section,
-      $lang->section
-    );
-
-    $this->section = $section;
-    $lang->section = $section;
-  }
-
-  public function pop_section() {
-    $a = array_pop($this->section_stack);
-    $this->section = $a[0];
-    tlocal::i()->section = $a[1];
   }
 
   public static function specchars($s) {
@@ -720,13 +673,6 @@ class tadminhtml {
   }
 
   public function load() {
-    $filename = tlocal::getcachedir() . 'adminhtml';
-    if (tfilestorage::loadvar($filename, $v) && is_array($v)) {
-      $this->ini = $v + $this->ini;
-    } else {
-      $merger = tlocalmerger::i();
-      $merger->parsehtml();
-    }
   }
 
   public function loadinstall() {
@@ -766,8 +712,7 @@ class tadminhtml {
   }
 
   public function adminform($tml, targs $args) {
-    $args->items = $this->parsearg($tml, $args);
-    return $this->parsearg(ttheme::i()->templates['content.admin.form'], $args);
+    return admintheme::i()->form($tml, $args);
   }
 
   public function getupload($name) {
@@ -875,27 +820,7 @@ class tadminhtml {
     return $result;
   }
 
-  public function inidir($dir) {
-    $filename = $dir . 'html.ini';
-    if (!isset(inifiles::$files[$filename])) {
-      $html_ini = inifiles::cache($filename);
-      if (is_array($html_ini)) {
-        $this->ini = $html_ini + $this->ini;
-        $keys = array_keys($html_ini);
-        $this->section = array_shift($keys);
-        $this->searchsect[] = $this->section;
-      }
-    }
-
-    tlocal::inicache($dir . litepublisher::$options->language . '.admin.ini');
-    return $this;
-  }
-
-  public function iniplugin($class) {
-    return $this->inidir(litepublisher::$classes->getresourcedir($class));
-  }
-
-} //class
+}
 
 //html.adminform.class.php
 class adminform {
@@ -1098,6 +1023,24 @@ class ulist {
     }
   }
 
+  public function li($name, $value) {
+    return strtr(is_int($name) ? $this->value : $this->item, array(
+      '$name' => $name,
+      '$value' => $value,
+    ));
+  }
+
+  public function link($url, $title) {
+    return strtr($this->link, array(
+      '$name' => $url,
+      '$value' => $title,
+    ));
+  }
+
+  public function ul($items) {
+    return str_replace('$item', $items, $this->ul);
+  }
+
   public function get(array $props) {
     $result = '';
     foreach ($props as $name => $value) {
@@ -1107,14 +1050,11 @@ class ulist {
         $value = $this->get($value);
       }
 
-      $result.= strtr(is_int($name) ? $this->value : $this->item, array(
-        '$name' => $name,
-        '$value' => $value,
-      ));
+      $result.= $this->li($name, $value);
     }
 
     if ($result) {
-      return str_replace('$item', $result, $this->ul);
+      return $this->ul($result);
     }
 
     return '';
@@ -1320,6 +1260,7 @@ class tablebuilder {
   //template head and body table
   public $head;
   public $body;
+  public $footer;
   //targs
   public $args;
   public $data;
@@ -1336,6 +1277,7 @@ class tablebuilder {
   public function __construct() {
     $this->head = '';
     $this->body = '';
+    $this->footer = '';
     $this->callbacks = array();
     $this->args = new targs();
     $this->data = array();
@@ -1361,7 +1303,7 @@ class tablebuilder {
         $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $s);
       } else if (is_callable($s)) {
         $name = '$callback' . $index;
-        $this->body.= sprintf('<td class="%s">$%s</td>', $colclass, $name);
+        $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
         array_unshift($item, $this);
         $this->callbacks[$name] = array(
@@ -1376,7 +1318,7 @@ class tablebuilder {
     $this->body.= '</tr>';
   }
 
-  public function addcallback($varname, $callback, $param) {
+  public function addcallback($varname, $callback, $param = null) {
     $this->callbacks[$varname] = array(
       'callback' => $callback,
       'params' => array(
@@ -1384,6 +1326,14 @@ class tablebuilder {
         $param
       ) ,
     );
+  }
+
+  public function addfooter($footer) {
+    $this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
+  }
+
+  public function td($colclass, $content) {
+    return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass) , $content);
   }
 
   public function getadmintheme() {
@@ -1401,7 +1351,7 @@ class tablebuilder {
       $body.= $this->parseitem($id, $item);
     }
 
-    return $this->getadmintheme()->gettable($this->head, $body);
+    return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
   }
 
   public function parseitem($id, $item) {
@@ -1446,7 +1396,7 @@ class tablebuilder {
   }
 
   public function setposts(array $struct) {
-    array_unshift($struct, self::checkbox('checkbox'));
+    array_unshift($struct, $this->checkbox('checkbox'));
     $this->setstruct($struct);
     $this->addcallback('$tempcallback' . count($this->callbacks) , array(
       $this,
@@ -1553,8 +1503,8 @@ class tablebuilder {
     );
   }
 
-  public static function checkbox($name) {
-    $admin = admintheme::i();
+  public function checkbox($name) {
+    $admin = $this->getadmintheme();
 
     return array(
       'text-center col-checkbox',
@@ -1593,6 +1543,22 @@ class tablebuilder {
     }
 
     return implode(' ', $list);
+  }
+
+  public function date($date) {
+    if ($date == tdata::zerodate) {
+      return tlocal::i()->noword;
+    } else {
+      return tlocal::date(strtotime($date) , 'd F Y');
+    }
+  }
+
+  public function datetime($date) {
+    if ($date == tdata::zerodate) {
+      return tlocal::i()->noword;
+    } else {
+      return tlocal::date(strtotime($date) , 'd F Y H:i');
+    }
   }
 
 }
@@ -1698,17 +1664,6 @@ class tajaxposteditor extends tevents {
     return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . turlmap::htmlheader(false) . 'Forbidden';
   }
 
-  public function getviewicon($idview, $icon) {
-    $result = tadminviews::getcomboview($idview);
-    if ($icons = tadminicons::getradio($icon)) {
-      $html = tadminhtml::i();
-      if ($html->section == '') $html->section = 'editor';
-      $result.= $html->h2->icons;
-      $result.= $icons;
-    }
-    return $result;
-  }
-
   public static function auth() {
     $options = litepublisher::$options;
     if (!$options->user) return self::error403();
@@ -1790,7 +1745,7 @@ class tajaxposteditor extends tevents {
 
 
       case 'view':
-        $result = $this->getviewicon($post->idview, $post->icon);
+        $result = tadminviews::getcomboview($post->idview);
         break;
 
 

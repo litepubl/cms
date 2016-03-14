@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tmetatagsInstall($self) {
   litepublisher::$classes->classes['metatags'] = get_class($self);
   litepublisher::$classes->save();

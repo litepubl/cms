@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tcodedocfilter extends titems {
   private $fix;
   private $classes;

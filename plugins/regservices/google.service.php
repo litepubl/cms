@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tgoogleregservice extends tregservice {
 
   public static function i() {

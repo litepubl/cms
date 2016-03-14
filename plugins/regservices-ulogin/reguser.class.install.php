@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function treguserInstall($self) {
   litepublisher::$classes->remap['tregserviceuser'] = get_class($self);
   litepublisher::$classes->save();

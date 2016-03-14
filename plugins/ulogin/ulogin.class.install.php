@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function uloginInstall($self) {
   $self->data['nets'] = array(
     'vkontakte',

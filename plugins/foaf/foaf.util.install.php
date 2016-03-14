@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tfoafutilInstall($self) {
   $cron = tcron::i();
   $cron->add('day', get_class($self) , 'CheckFriendship', null);

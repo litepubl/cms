@@ -7,10 +7,10 @@
  */
 
 function tcontactformInstall($self) {
-$ini = parse_ini_file(dirname(__file__) . '/templates/contactform.ini');
+  $ini = parse_ini_file(dirname(__file__) . '/templates/contactform.ini');
   tlocal::usefile('install');
   $lang = tlocal::i('contactform');
-$theme = ttheme::i();
+  $theme = ttheme::i();
 
   $self->title = $lang->title;
   $self->subject = $lang->subject;

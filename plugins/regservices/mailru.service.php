@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tmailruregservice extends tregservice {
 
   public static function i() {

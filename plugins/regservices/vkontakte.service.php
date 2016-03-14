@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tvkontakteregservice extends tregservice {
 
   public static function i() {

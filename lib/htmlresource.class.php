@@ -21,12 +21,12 @@ class tadminhtml {
   );
 
   public static function i() {
-return getinstance(__class__);
+    return getinstance(__class__);
   }
 
   public static function getinstance($section) {
     tlocal::i($section);
-return self::i();
+    return self::i();
   }
 
   public function __construct() {

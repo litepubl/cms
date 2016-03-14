@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tprofile extends tevents_itemplate implements itemplate {
 
   public static function i($id = 0) {
@@ -133,7 +134,7 @@ class tprofile extends tevents_itemplate implements itemplate {
     $theme = ttheme::i();
     $tml = $this->template;
     if (!$tml) {
-$tml = file_get_contents(litepublisher::$paths->plugins . 'foaf/resource/profile.tml');
+      $tml = file_get_contents(litepublisher::$paths->plugins . 'foaf/resource/profile.tml');
     }
 
     return $theme->parse($tml);

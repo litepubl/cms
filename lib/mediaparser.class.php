@@ -499,16 +499,16 @@ class tmediaparser extends tevents {
   }
 
   public static function createthumb($source, $destfilename, $x, $y, $quality, $mode) {
-if ($result = self::scale($source, $x, $y, $mode)) {
-    imagejpeg($result['image'], $destfilename, $quality);
-    imagedestroy($result['image']);
-    @chmod($destfilename, 0666);
-unset($result['image']);
-return $result;
-}
+    if ($result = self::scale($source, $x, $y, $mode)) {
+      imagejpeg($result['image'], $destfilename, $quality);
+      imagedestroy($result['image']);
+      @chmod($destfilename, 0666);
+      unset($result['image']);
+      return $result;
+    }
 
-return false;
-}
+    return false;
+  }
 
   public static function scale($source, $x, $y, $mode) {
     if (!$source) return false;
@@ -551,7 +551,7 @@ return false;
     return array(
       'width' => $x,
       'height' => $y,
-'image' => $dest,
+      'image' => $dest,
     );
   }
 

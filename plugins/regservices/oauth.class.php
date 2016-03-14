@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class toauth extends tdata {
   public $urllist;
   public $key;

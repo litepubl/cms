@@ -47,7 +47,7 @@ class tadminposts extends tadminmenu {
       return $this->html->confirmform($args);
     }
 
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     switch ($_GET['action']) {
       case 'delete':
         $posts->delete($id);
@@ -80,7 +80,7 @@ $admintheme = $this->admintheme;
     $items = $posts->select($where, " order by posted desc limit $from, $perpage");
     if (!$items) $items = array();
 
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     $lang = tlocal::admin();
     $form = new adminform(new targs());
     $form->items = $admintheme->getcount($from, $from + count($items) , $count);

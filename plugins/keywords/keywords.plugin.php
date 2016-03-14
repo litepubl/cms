@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tkeywordsplugin extends tplugin {
   public $blackwords;
 

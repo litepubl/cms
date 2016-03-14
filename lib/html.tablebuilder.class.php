@@ -14,7 +14,7 @@ class tablebuilder {
   //template head and body table
   public $head;
   public $body;
-public $footer;
+  public $footer;
   //targs
   public $args;
   public $data;
@@ -82,13 +82,13 @@ public $footer;
     );
   }
 
-public function addfooter($footer) {
-$this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
-}
+  public function addfooter($footer) {
+    $this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
+  }
 
-public function td($colclass, $content) {
-return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass), $content);
-}
+  public function td($colclass, $content) {
+    return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass) , $content);
+  }
 
   public function getadmintheme() {
     if (!$this->admintheme) {
@@ -299,20 +299,20 @@ return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass), $content)
     return implode(' ', $list);
   }
 
-public function date($date) {
+  public function date($date) {
     if ($date == tdata::zerodate) {
       return tlocal::i()->noword;
     } else {
       return tlocal::date(strtotime($date) , 'd F Y');
     }
-}
+  }
 
-public function datetime($date) {
+  public function datetime($date) {
     if ($date == tdata::zerodate) {
       return tlocal::i()->noword;
     } else {
       return tlocal::date(strtotime($date) , 'd F Y H:i');
     }
-}
+  }
 
 }

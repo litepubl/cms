@@ -446,7 +446,7 @@ class tpost extends titem implements itemplate {
 
   public function getfirstimage() {
     if (count($this->files)) {
-return $this->factory->files->getfirstimage($this->files);
+      return $this->factory->files->getfirstimage($this->files);
     }
 
     return '';

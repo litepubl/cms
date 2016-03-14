@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tlivejournalposterInstall($self) {
   $posts = tposts::i();
   $posts->singlecron = $self->sendpost;

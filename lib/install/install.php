@@ -11,7 +11,7 @@ litepublisher::$options = toptions::i();
 litepublisher::$site = tsite::i();
 
 if (!defined('litepublisher_mode')) {
-define('litepublisher_mode', 'install');
+  define('litepublisher_mode', 'install');
 }
 
 /*

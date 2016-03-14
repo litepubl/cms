@@ -16,15 +16,15 @@ class tusersman extends tdata {
     $users = tusers::i();
     $email = trim($values['email']);
     if ($users->emailexists($email)) {
-return false;
-}
+      return false;
+    }
 
     $groups = tusergroups::i();
     if (isset($values['idgroups'])) {
       $idgroups = $this->cleangroups($values['idgroups']);
       if (!count($idgroups)) {
-$idgroups = $groups->defaults;
-}
+        $idgroups = $groups->defaults;
+      }
     } else {
       $idgroups = $groups->defaults;
     }
@@ -48,8 +48,8 @@ $idgroups = $groups->defaults;
     $users->items[$id] = $item;
     $users->setgroups($id, $item['idgroups']);
     if ('approved' == $item['status']) {
-tuserpages::i()->add($id);
-}
+      tuserpages::i()->add($id);
+    }
 
     $users->added($id);
     return $id;

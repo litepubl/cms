@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function twikiwordsInstall($self) {
   if ($self->dbversion) {
     $manager = tdbmanager::i();

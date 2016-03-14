@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class textrasidebars extends tplugin {
   public $themes;
 

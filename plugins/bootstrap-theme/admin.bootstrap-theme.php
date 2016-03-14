@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class admin_bootstrap_theme extends tadminmenu {
 
   public static function i($id = 0) {
@@ -14,7 +15,7 @@ class admin_bootstrap_theme extends tadminmenu {
   public function getcontent() {
     $result = '';
     $theme = $this->theme;
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
 
     $lang = tlocal::admin('adminbootstraptheme');
     $args = new targs();
@@ -24,7 +25,7 @@ $admintheme = $this->admintheme;
       'right' => $lang->right,
     );
 
-$views = tviews::i();
+    $views = tviews::i();
     foreach ($views->items as $id => $item) {
       if (!isset($item['custom']['mainsidebar'])) continue;
 

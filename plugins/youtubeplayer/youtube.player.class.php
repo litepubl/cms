@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tyoutubeplayer extends tplugin {
 
   public static function i() {

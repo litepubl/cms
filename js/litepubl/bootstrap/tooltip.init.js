@@ -1,8 +1,9 @@
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- **/
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+
 (function($) {
   'use strict';
 
@@ -19,7 +20,7 @@
   };
 
   $.fn.settooltip = function(selector, options) {
-selector = selector || ".tooltip-toggle";
+    selector = selector || ".tooltip-toggle";
     return this.on("mouseenter.settooltip focus.settooltip", selector + ":not(.tooltip-ready)", function(event) {
       var self = $(this);
       self.addClass("tooltip-ready");

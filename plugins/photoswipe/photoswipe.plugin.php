@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class photoswipe extends tplugin {
 
   public static function i() {

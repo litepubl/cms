@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tfriendswidgetInstall($self) {
   litepublisher::$urlmap->add($self->redirlink, get_class($self) , false, 'get');
   litepublisher::$classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));

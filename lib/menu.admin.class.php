@@ -138,7 +138,7 @@ class tadminmenu extends tmenu {
   }
 
   public function gethtml($name = '') {
-return tadminhtml::i();
+    return tadminhtml::i();
   }
 
   public function getlang() {

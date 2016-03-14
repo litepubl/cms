@@ -189,20 +189,20 @@ class ttheme extends basetheme {
 
   public function keyanounce($postanounce) {
     if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
-return 'excerpt';
-}
+      return 'excerpt';
+    }
 
     if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') {
-return 'lite';
-}
+      return 'lite';
+    }
 
     return 'card';
   }
 
   public function getposts(array $items, $postanounce) {
     if (!count($items)) {
-return '';
-}
+      return '';
+    }
 
     $result = '';
     $tml_key = $this->keyanounce($postanounce);

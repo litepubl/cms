@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function likebuttonsInstall($self) {
   $name = basename(dirname(__file__));
   $js = tjsmerger::i();

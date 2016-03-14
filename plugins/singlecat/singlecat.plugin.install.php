@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tsinglecatInstall($self) {
   if (!dbversion) die('Required database version');
   tthemeparser::i()->parsed = $self->themeparsed;

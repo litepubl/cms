@@ -1,8 +1,9 @@
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- **/
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
+
 (function($) {
   $.parsetml = $.simpletml = function(tml, view) {
     tml = tml.replace(/[%\u007b]{2}(\w*)\.(\w*)[%\u007d]{2}/gim, function(str, obj, prop, offset, src) {

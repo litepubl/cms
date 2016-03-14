@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class topenid extends tevents {
   public $keys;
   public $trusted;
@@ -303,30 +304,30 @@ class topenid extends tevents {
     return $this->checkid(true);
   }
 
-private function getform() {
-        $lang = tlocal::i('openidserver');
-$admintheme = admintheme::admin();
-$result = $admintheme->h($lang->trustform);
-$result .= $admintheme->h('<a href="$trust_root">$trust_root</a>');
-$result .= $admintheme->h($lang->confirmtrust);
+  private function getform() {
+    $lang = tlocal::i('openidserver');
+    $admintheme = admintheme::admin();
+    $result = $admintheme->h($lang->trustform);
+    $result.= $admintheme->h('<a href="$trust_root">$trust_root</a>');
+    $result.= $admintheme->h($lang->confirmtrust);
 
-$form = new adminform();
-$form->body = $form->hidden('accept', 'yes');
-$form->body .= $form->hidden('assoc_handle', '$assoc_handle');
-$form->submit = 'yestrust';
-$result .= $form->get();
+    $form = new adminform();
+    $form->body = $form->hidden('accept', 'yes');
+    $form->body.= $form->hidden('assoc_handle', '$assoc_handle');
+    $form->submit = 'yestrust';
+    $result.= $form->get();
 
-$form->body = $form->hidden('accept', 'yesall');
-$form->body .= $form->hidden('assoc_handle', '$assoc_handle');
-$form->submit = 'yestrust';
-$result .= $form->get();
+    $form->body = $form->hidden('accept', 'yesall');
+    $form->body.= $form->hidden('assoc_handle', '$assoc_handle');
+    $form->submit = 'yestrust';
+    $result.= $form->get();
 
-$form->body = $form->hidden('accept', 'no');
-$form->submit = 'notrust';
-$result .= $form->get();
+    $form->body = $form->hidden('accept', 'no');
+    $form->submit = 'notrust';
+    $result.= $form->get();
 
-return $result;
-}
+    return $result;
+  }
 
   private function checkid($wait) {
     if (empty($_REQUEST['openid_return_to'])) return $this->error400('return_to');
@@ -369,11 +370,11 @@ return $result;
         $args->trust_root = $trust_root;
         $args->assoc_handle = $assoc_handle;
 
-$result = litepublisher::$urlmap->cache->get('openid.txt');
-if (!$result) {
-$result = $this->getform();
-litepublisher::$urlmap->cache->set('openid.txt', $result);
-}
+        $result = litepublisher::$urlmap->cache->get('openid.txt');
+        if (!$result) {
+          $result = $this->getform();
+          litepublisher::$urlmap->cache->set('openid.txt', $result);
+        }
 
         return tsimplecontent::html(ttheme::i()->parsearg($result, $args));
       } else {

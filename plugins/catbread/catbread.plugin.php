@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class catbread extends tplugin {
   public $tml;
   public $cats;

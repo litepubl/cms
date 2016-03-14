@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tsmilesInstall($self) {
   $filter = tcontentfilter::i();
   $filter->lock();

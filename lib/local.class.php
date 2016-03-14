@@ -153,7 +153,6 @@ class tlocal {
   }
 
 } //class
-
 class tdateformater {
   public $date;
   public function __construct($date) {

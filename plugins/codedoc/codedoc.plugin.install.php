@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tcodedocpluginInstall($self) {
   if (!dbversion) die("Ticket  system only for database version");
   $name = basename(dirname(__file__));

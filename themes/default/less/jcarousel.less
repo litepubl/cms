@@ -3,6 +3,7 @@
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+
 @jcarousel-image-width : 420px;
 @jcarousel-image-height : (@jcarousel-image-width / 4 *3);
 @jcarousel-body-height : 75px;
@@ -12,8 +13,8 @@
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
-    border: 1px solid transparent;
-    border-radius: @border-radius-base;
+  border: 1px solid transparent;
+  border-radius: @border-radius-base;
 }
 
 .jcarousel {
@@ -54,24 +55,24 @@
 }
 
 .jcarousel-image{
-    position: relative;
+  position: relative;
   display: block;
   overflow:hidden;
   padding: 0;
   margin: 0;
-width: @jcarousel-image-width;
-height: @jcarousel-image-height;
-
+  width: @jcarousel-image-width;
+  height: @jcarousel-image-height;
+  
   img {
     position: absolute;
-width: 100%;
-height: auto;
-  margin: auto;
+    width: 100%;
+    height: auto;
+    margin: auto;
     overflow: hidden;
-  top: 0;
- left: 0;
- bottom: 0;
- right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
   }
 }
 

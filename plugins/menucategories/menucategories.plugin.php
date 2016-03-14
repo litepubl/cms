@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tcategoriesmenu extends tplugin {
   public $tree;
   public $exitems;

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function long($b) {
   $bytes = array_merge(unpack('C*', $b));
   $n = 0;

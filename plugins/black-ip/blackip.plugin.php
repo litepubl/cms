@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tblackip extends tplugin {
   public $ip;
   public $words;

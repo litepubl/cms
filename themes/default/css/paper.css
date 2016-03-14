@@ -6882,6 +6882,15 @@ h6,
 ins {
   text-decoration: none;
 }
+.radio-group {
+  text-align: center;
+  margin-bottom: 15px;
+}
+.radio-group .form-group {
+  display: inline-block;
+  margin-bottom: 0;
+  text-align: left;
+}
 /**
 * Lite Publisher
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -6970,6 +6979,27 @@ A.dashed:focus {
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
+.post-header {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.post-date,
+.post-tags {
+  float: left;
+}
+.post-date,
+.post-tags,
+.post-categories {
+  display: block;
+  overflow: hidden;
+  margin: 6px 16px;
+}
+/**
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 .anpost {
   position: relative;
   display: block;
@@ -7009,7 +7039,7 @@ A.dashed:focus {
     width: 50%;
   }
 }
-.postcard-header {
+.postcard-title {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -7022,7 +7052,8 @@ A.dashed:focus {
 }
 .postcard-body .post-categories,
 .postcard-body .postcard-date,
-.postcard-body .postcard-comments {
+.postcard-body .postcard-comments,
+.postcard-body .postcard-price {
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -7046,27 +7077,6 @@ A.dashed:focus {
 }
 .video-fallback {
   font-size: 2em;
-}
-/**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
-.post-header {
-  position: relative;
-  display: block;
-  overflow: hidden;
-}
-.post-date,
-.post-tags {
-  float: left;
-}
-.post-date,
-.post-tags,
-.post-categories {
-  display: block;
-  overflow: hidden;
-  margin: 6px 16px;
 }
 /**
 * Lite Publisher
@@ -7167,11 +7177,11 @@ A.dashed:focus {
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 #text-count,
-input[name^="count"] {
+input[id^="text-count"] {
   width: 5em;
 }
 #text-coupon,
-input[name^="coupon"] {
+input[id^="text-coupon"] {
   width: 10em;
 }
 /**
@@ -7179,10 +7189,7 @@ input[name^="coupon"] {
 * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * Licensed under the MIT (LICENSE.txt) license.
 **/
-.prop-gtin,
-.prop-gtin8,
-.prop-gtin13,
-.prop-gtin14,
+.propname-gtin,
 .prop-mpn,
 .prop-id,
 .prop-productID,
@@ -7207,12 +7214,13 @@ input[name^="coupon"] {
 **/
 .buyform > div {
   text-align: center;
-  margin-top: 6px;
+  margin-bottom: 15px;
   margin-left: auto;
   margin-right: auto;
 }
 .buyform label {
   font-weight: normal;
+  text-align: left;
 }
 /**
 * Lite Publisher
@@ -7277,20 +7285,24 @@ input[name^="coupon"] {
   line-height: 1.846;
   border-radius: 3px;
 }
-.buypage-product-header {
+.buypage-summary {
+  text-align: center;
+}
+.buypage-summary > ul {
+  display: inline-block;
+  text-align: left;
+}
+.buypage-header {
   overflow: hidden;
   position: relative;
   margin: 6px 16px;
 }
-.buypage-product-header .thumbnail {
-  float: left;
-  display: block;
-  overflow: hidden;
-  margin: 0;
-}
-.buypage-product-header .buypage-product-link {
+.buypage-header .buypage-title {
   overflow: hidden;
   margin: 0 16px 0 0;
+}
+.buypage-header .buypage-price {
+  text-align: center;
 }
 /**
 * Lite Publisher
@@ -7322,6 +7334,8 @@ proppage-form-submit,
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 3px;
 }
 .jcarousel {
   position: relative;
@@ -7331,7 +7345,7 @@ proppage-form-submit,
   margin-right: auto;
   padding: 0;
   width: 840px;
-  height: 443px;
+  height: 402px;
   background-image: -webkit-linear-gradient(top, #ffffff 0%, #ca61dc 100%);
   background-image: -o-linear-gradient(top, #ffffff 0%, #ca61dc 100%);
   background-image: linear-gradient(to bottom, #ffffff 0%, #ca61dc 100%);
@@ -7352,25 +7366,46 @@ proppage-form-submit,
   display: block;
   overflow: hidden;
   width: 420px;
-  height: 443px;
+  height: jcarousel-height;
 }
 .jcarousel-right > li {
   float: right;
   margin: 0 0 0 10px;
 }
 .jcarousel-image {
+  position: relative;
   display: block;
   overflow: hidden;
   padding: 0;
   margin: 0;
-  text-align: center;
+  width: 420px;
+  height: 315px;
+}
+.jcarousel-image img {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  margin: auto;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
 }
 .jcarousel-body {
   display: block;
   overflow: hidden;
-  margin: 6px;
+  margin-bottom: 6px;
   padding: 0;
-  height: 116px;
+  height: 75px;
+}
+.jcarousel-body .post-categories {
+  display: inline-block;
+  margin: 0;
+  padding-left: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 /**
 * Lite Publisher

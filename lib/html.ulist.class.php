@@ -22,23 +22,23 @@ class ulist {
     }
   }
 
-public function li($name, $value) {
-return strtr(is_int($name) ? $this->value : $this->item, array(
-        '$name' => $name,
-        '$value' => $value,
-      ));
-}
+  public function li($name, $value) {
+    return strtr(is_int($name) ? $this->value : $this->item, array(
+      '$name' => $name,
+      '$value' => $value,
+    ));
+  }
 
-public function link($url, $title) {
-return strtr($this->link, array(
-        '$name' => $url,
-        '$value' => $title,
-      ));
-}
+  public function link($url, $title) {
+    return strtr($this->link, array(
+      '$name' => $url,
+      '$value' => $title,
+    ));
+  }
 
-public function ul($items) {
-      return str_replace('$item', $items, $this->ul);
-}
+  public function ul($items) {
+    return str_replace('$item', $items, $this->ul);
+  }
 
   public function get(array $props) {
     $result = '';

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tfaqmenu extends tmenu {
 
   public static function i($id = 0) {

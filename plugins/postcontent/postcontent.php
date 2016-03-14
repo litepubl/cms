@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tpostcontentplugin extends tplugin {
 
   public static function i() {

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class ulogin extends tplugin {
 
   public static function i() {
@@ -77,8 +78,8 @@ class ulogin extends tplugin {
 
     if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
       if ($url = $this->onphone($backurl)) {
-return litepublisher::$urlmap->redir($url);
-}
+        return litepublisher::$urlmap->redir($url);
+      }
     }
 
     setcookie('backurl', '', 0, litepublisher::$site->subdir, false);
@@ -105,12 +106,12 @@ return litepublisher::$urlmap->redir($url);
       if ($id = $users->emailexists($info['email'])) {
         $user = $users->getitem($id);
         if ($user['status'] == 'comuser') {
-$users->approve($id);
-}
+          $users->approve($id);
+        }
 
         if ($phone && empty($user['phone'])) {
-$users->setvalue($id, 'phone', $phone);
-}
+          $users->setvalue($id, 'phone', $phone);
+        }
       } elseif (litepublisher::$options->reguser) {
         $newreg = true;
         $id = $users->add(array(
@@ -120,8 +121,8 @@ $users->setvalue($id, 'phone', $phone);
         ));
 
         if ($phone) {
-$users->db->setvalue($id, 'phone', $phone);
-}
+          $users->db->setvalue($id, 'phone', $phone);
+        }
         if ($uid) {
           $this->add($id, $info['network'], $uid);
         }

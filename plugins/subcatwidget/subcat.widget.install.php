@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tsubcatwidgetInstall($self) {
   $widgets = twidgets::i();
   $widgets->deleted = $self->widgetdeleted;

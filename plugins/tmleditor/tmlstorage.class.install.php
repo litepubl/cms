@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tmlstorageInstall($self) {
   litepublisher::$classes->added = $self->classadded;
   litepublisher::$classes->deleted = $self->classdeleted;

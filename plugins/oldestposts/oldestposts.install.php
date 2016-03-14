@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function toldestpostsInstall($self) {
   $widgets = twidgets::i();
   $widgets->addclass($self, 'tpost');

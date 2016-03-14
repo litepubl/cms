@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tfoafInstall($self) {
   $merger = tlocalmerger::i();
   $merger->addplugin(tplugins::getname(__file__));
@@ -80,7 +81,6 @@ function tfoafUninstall($self) {
   $admin->deleteurl('/admin/foaf/profile/');
   $admin->deleteurl('/admin/foaf/');
   $admin->unlock();
-
 
   if ($self->dbversion) {
     $manager = tdbmanager::i();

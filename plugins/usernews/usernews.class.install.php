@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tusernewsInstall($self) {
   $name = basename(dirname(__file__));
   $self->data['dir'] = $name;

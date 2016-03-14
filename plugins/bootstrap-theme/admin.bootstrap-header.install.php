@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function admin_bootstrap_headerInstall($self) {
   $about = tplugins::getabout(tplugins::getname(__file__));
 

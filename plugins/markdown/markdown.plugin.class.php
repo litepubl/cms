@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tmarkdownplugin extends tplugin {
   public $parser;
 

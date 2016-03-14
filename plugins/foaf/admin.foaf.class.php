@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadminfoaf extends tadminmenu {
   private $user;
 
@@ -18,42 +19,43 @@ class tadminfoaf extends tadminmenu {
     $total = $foaf->getcount();
     $from = $this->getfrom($perpage, $total);
 
-      $items = $foaf->select('', " order by status asc, added desc limit $from, $perpage");
-      if (!$items) $items = array();
+    $items = $foaf->select('', " order by status asc, added desc limit $from, $perpage");
+    if (!$items) $items = array();
 
-$tb = new tablebuilder();
-$tb->admintheme = $this->admintheme;
-$tb->setowner($foaf);
-$tb->setstruct(array(
-$tb->checkbox('checkbox'),
-array(
-$lang->nick,
-'$nick'
-),
+    $tb = new tablebuilder();
+    $tb->admintheme = $this->admintheme;
+    $tb->setowner($foaf);
+    $tb->setstruct(array(
+      $tb->checkbox('checkbox') ,
+      array(
+        $lang->nick,
+        '$nick'
+      ) ,
 
-array(
-$lang->url,
-'$url',
-),
+      array(
+        $lang->url,
+        '$url',
+      ) ,
 
-array(
-$lang->status,
-function(tablebuilder $b) {
-return tlocal::i()->__get($b->item['status']);
-}),
+      array(
+        $lang->status,
+        function (tablebuilder $b) {
+          return tlocal::i()->__get($b->item['status']);
+        }
+      ) ,
 
-array(
-$lang->edit,
-"<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>",
-),
-));
+      array(
+        $lang->edit,
+        "<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>",
+      ) ,
+    ));
 
-$form = new adminform();
-$fform->body = $tb->build($items);
-    $form->body .= $form->centergroup($this->html->getsubmit('approve', 'hold', 'delete'));
-$form->body .= $form->hidden('foaftable', 1);
-$form->submit = false;
-$result = $form->get();
+    $form = new adminform();
+    $fform->body = $tb->build($items);
+    $form->body.= $form->centergroup($this->html->getsubmit('approve', 'hold', 'delete'));
+    $form->body.= $form->hidden('foaftable', 1);
+    $form->submit = false;
+    $result = $form->get();
 
     $result.= $this->theme->getpages('/admin/foaf/', litepublisher::$urlmap->page, ceil($total / $perpage));
     return $result;
@@ -62,20 +64,20 @@ $result = $form->get();
   public function getcontent() {
     $result = '';
     $foaf = tfoaf::i();
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     $lang = tlocal::i('foaf');
     $html = $this->html;
-$args = new targs();
+    $args = new targs();
 
     switch ($this->name) {
       case 'foaf':
         switch ($this->action) {
           case false:
-$args->url = '';
-$form = new adminform($args);
-$form->title = $lang->addform;
-$form->body = '[text=url]';
-$form->submit = 'add';
+            $args->url = '';
+            $form = new adminform($args);
+            $form->title = $lang->addform;
+            $form->body = '[text=url]';
+            $form->submit = 'add';
             $result = $form->get();
             break;
 
@@ -88,14 +90,14 @@ $form->submit = 'add';
 
             $item = $foaf->getitem($id);
             $args->add($item);
-    $statuses = array(
-      'approved' => $lang->approved,
-      'hold' => $lang->hold,
-      'invated' => $lang->invated,
-      'rejected' => $lang->rejected,
-      'spam' => $lang->spam,
-      'error' => $lang->error,
-    );
+            $statuses = array(
+              'approved' => $lang->approved,
+              'hold' => $lang->hold,
+              'invated' => $lang->invated,
+              'rejected' => $lang->rejected,
+              'spam' => $lang->spam,
+              'error' => $lang->error,
+            );
 
             $args->status = tadminhtml::array2combo($statuses, $item['status']);
             $result.= $admintheme->form('
@@ -118,7 +120,7 @@ $form->submit = 'add';
               $result.= $admintheme->h($lang->deleted);
             } else {
               $item = $foaf->getitem($id);
-$mesg = "$lang->confirmdelete {$item['nick']} ({$item['url']})?";
+              $mesg = "$lang->confirmdelete {$item['nick']} ({$item['url']})?";
               $result.= $this->html->confirmdelete($id, $this->adminurl, $mesg);
             }
             break;
@@ -129,8 +131,8 @@ $mesg = "$lang->confirmdelete {$item['nick']} ({$item['url']})?";
 
       case 'profile':
         $profile = tprofile::i();
-$vars = new themevars();
-$vars->profile  = $profile;
+        $vars = new themevars();
+        $vars->profile = $profile;
         $args = targs::i();
         $form = '';
         foreach (array(

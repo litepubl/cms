@@ -555,45 +555,10 @@ class tpost extends titem implements itemplate {
   }
 
   public function getfirstimage() {
-    if (!count($this->files)) {
-      return '';
+    if (count($this->files)) {
+      return $this->factory->files->getfirstimage($this->files);
     }
 
-    $files = $this->factory->files;
-    foreach ($this->files as $id) {
-      $item = $files->getitem($id);
-      if ('image' == $item['media']) {
-        $args = new targs();
-        $args->add($item);
-        $args->link = litepublisher::$site->files . '/files/' . $item['filename'];
-
-        $preview = ttheme::$vars['preview'] = new tarray2prop();
-        $preview->array = $files->getitem($item['preview']);
-        $preview->link = litepublisher::$site->files . '/files/' . $preview->filename;
-
-        $midle = ttheme::$vars['midle'] = new tarray2prop();
-        if ((int)$item['midle']) {
-          $midle->array = $files->getitem($item['midle']);
-          $midle->link = litepublisher::$site->files . '/files/' . $midle->filename;
-          $midle->json = jsonattr(array(
-            'id' => $midle->array['id'],
-            'link' => $midle->link,
-            'width' => $midle->array['width'],
-            'height' => $midle->array['height'],
-            'size' => $midle->array['size'],
-          ));
-        } else {
-          $midle->array = array();
-          $midle->json = '';
-        }
-
-        $theme = $this->theme;
-        $result = $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
-        unset(ttheme::$vars['preview'], ttheme::$vars['midle']);
-
-        return $result;
-      }
-    }
     return '';
   }
 
@@ -2812,16 +2777,10 @@ class tfiles extends titems {
         $args->preview = '';
         $preview->array = array();
 
-        if ((int)$item['midle']) {
-          $midle->array = $this->getitem($item['midle']);
+        if ($idmidle = (int)$item['midle']) {
+          $midle->array = $this->getitem($idmidle);
           $midle->link = $url . $midle->filename;
-          $midle->json = jsonattr(array(
-            'id' => $midle->array['id'],
-            'link' => $midle->link,
-            'width' => $midle->array['width'],
-            'height' => $midle->array['height'],
-            'size' => $midle->array['size'],
-          ));
+          $midle->json = $this->getjson($idmidle);
         } else {
           $midle->array = array();
           $midle->link = '';
@@ -2843,9 +2802,7 @@ class tfiles extends titems {
           $args->preview = $theme->parsearg($tml['preview'], $args);
         }
 
-        unset($item['title'], $item['keywords'], $item['description'], $item['hash']);
-        $args->json = jsonattr($item);
-
+        $args->json = $this->getjson($id);
         $sublist.= $theme->parsearg($tml[$type], $args);
       }
 
@@ -2861,6 +2818,54 @@ class tfiles extends titems {
   public function postedited($idpost) {
     $post = tpost::i($idpost);
     $this->itemsposts->setitems($idpost, $post->files);
+  }
+
+  public function getfirstimage(array $items) {
+    foreach ($items as $id) {
+      $item = $this->getitem($id);
+      if ('image' == $item['media']) {
+        $baseurl = litepublisher::$site->files . '/files/';
+        $args = new targs();
+        $args->add($item);
+        $args->link = $baseurl . $item['filename'];
+        $args->json = $this->getjson($id);
+
+        $preview = new tarray2prop();
+        $preview->array = $this->getitem($item['preview']);
+        $preview->link = $baseurl . $preview->filename;
+
+        $midle = new tarray2prop();
+        if ($idmidle = (int)$item['midle']) {
+          $midle->array = $this->getitem($idmidle);
+          $midle->link = $baseurl . $midle->filename;
+          $midle->json = $this->getjson($idmidle);
+        } else {
+          $midle->array = array();
+          $midle->json = '';
+        }
+
+        $vars = new themevars();
+        $vars->preview = $preview;
+        $vars->midle = $midle;
+        $theme = ttheme::i();
+        return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
+      }
+    }
+
+    return '';
+  }
+
+  public function getjson($id) {
+    $item = $this->getitem($id);
+    return jsonattr(array(
+      'id' => $id,
+      'link' => litepublisher::$site->files . '/files/' . $item['filename'],
+      'width' => $item['width'],
+      'height' => $item['height'],
+      'size' => $item['size'],
+      'midle' => $item['midle'],
+      'preview' => $item['preview'],
+    ));
   }
 
 } //class

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tregservice extends tplugin {
   public $sessdata;
   public $session_id;

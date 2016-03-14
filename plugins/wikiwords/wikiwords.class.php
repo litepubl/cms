@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class twikiwords extends titems {
   public $itemsposts;
   private $fix;

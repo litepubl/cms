@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tfriendswidget extends twidget {
 
   public static function i() {

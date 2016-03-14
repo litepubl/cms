@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tblackipInstall($self) {
   tcommentmanager::i()->oncreatestatus = $self->filter;
 }

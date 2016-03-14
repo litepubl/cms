@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class admincatbread implements iadmin {
 
   public static function i() {

@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 function tcustomtitleInstall($self) {
   $template = ttemplate::i();
   $template->ontitle = $self->ontitle;

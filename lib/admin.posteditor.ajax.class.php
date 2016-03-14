@@ -127,7 +127,7 @@ class tajaxposteditor extends tevents {
 
 
       case 'view':
-    $result = tadminviews::getcomboview($post->idview);
+        $result = tadminviews::getcomboview($post->idview);
         break;
 
 

@@ -165,7 +165,7 @@ class admintheme extends basetheme {
   }
 
   public function form($tml, targs $args) {
-    return $this->parsearg(str_replace('$items', $tml, ttheme::i()->templates['content.admin.form']), $args);
+    return $this->parsearg(str_replace('$items', $tml, ttheme::i()->templates['content.admin.form']) , $args);
   }
 
   public function gettable($head, $body, $footer = '') {
@@ -173,7 +173,7 @@ class admintheme extends basetheme {
       '$class' => ttheme::i()->templates['content.admin.tableclass'],
       '$head' => $head,
       '$body' => $body,
-'$footer' => $footer,
+      '$footer' => $footer,
     ));
   }
 
@@ -205,7 +205,7 @@ class admintheme extends basetheme {
 
   public function help($content) {
     return str_replace('$content', $content, $this->templates['help']);
-}
+  }
 
   public function getcalendar($name, $date) {
     $date = datefilter::timestamp($date);

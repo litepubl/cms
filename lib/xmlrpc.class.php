@@ -30,7 +30,6 @@ class TXMLRPCParser extends IXR_Server {
   }
 
 } //class
-
 class TXMLRPC extends titems {
   public $Server;
 
@@ -67,7 +66,7 @@ class TXMLRPC extends titems {
     $this->getmethods();
 
     $this->Server = new TXMLRPCParser();
-$this->server->owner = $this;
+    $this->server->owner = $this;
     $this->Server->IXR_Server($this->items);
     $Result = $this->Server->XMLResult;
 

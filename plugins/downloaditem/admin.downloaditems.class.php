@@ -5,6 +5,7 @@
  * Licensed under the MIT (LICENSE.txt) license.
  *
  */
+
 class tadmindownloaditems extends tadminmenu {
 
   public static function i($id = 0) {
@@ -13,7 +14,7 @@ class tadmindownloaditems extends tadminmenu {
 
   public function getcontent() {
     $result = '';
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     $lang = tlocal::admin('downloaditems');
     $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
 
