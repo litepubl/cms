@@ -28,6 +28,7 @@ class tcommontagswidget extends twidget {
       'subcount' => $theme->getwidgettml($sidebar, $this->template, 'subcount') ,
       'subitems' => $this->showsubitems ? $theme->getwidgettml($sidebar, $this->template, 'subitems') : ''
     ) , 0, $this->sortname, $this->maxcount, $this->showcount);
+
     return str_replace('$parent', 0, $theme->getwidgetcontent($items, $this->template, $sidebar));
   }
 

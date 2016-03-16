@@ -432,33 +432,19 @@ class baseparser extends tevents {
     return $result;
   }
 
-  public function add_tagfile($filename) {
-    if (!in_array($filename, $this->tagfiles)) {
-      $this->tagfiles[] = $filename;
-      array_clean($this->tagfiles);
-      $this->save();
-    }
-  }
-
-  public function delete_tagfile($filename) {
-    if (array_delete_value($this->tagfiles, $filename)) {
-      array_clean($this->tagfiles);
-      $this->save();
-    }
-  }
-
   public function addtags($filetheme, $filetags) {
-    if (!in_array($filetheme, $this->themefiles)) {
+    if ($filetheme && !in_array($filetheme, $this->themefiles)) {
       $this->themefiles[] = $filetheme;
     }
 
-    if (!in_array($filetags, $this->tagfiles)) {
+    if ($filetags && !in_array($filetags, $this->tagfiles)) {
       $this->tagfiles[] = $filetags;
     }
 
     array_clean($this->themefiles);
     array_clean($this->tagfiles);
     $this->save();
+basetheme::clearcache();
   }
 
   public function removetags($filetheme, $filetags) {
@@ -467,6 +453,7 @@ class baseparser extends tevents {
     array_clean($this->themefiles);
     array_clean($this->tagfiles);
     $this->save();
+basetheme::clearcache();
   }
 
 } //class

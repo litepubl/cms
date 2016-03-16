@@ -31,10 +31,7 @@ function pollsInstall($self) {
   $js->unlock();
 
   $parser = tthemeparser::i();
-  $parser->lock();
-  $parser->add_tagfile('plugins/polls/resource/themetags.ini');
-  $parser->themefiles[] = 'plugins/polls/resource/theme.txt';
-  $parser->unlock();
+  $parser->addtags('plugins/polls/resource/theme.txt', 'plugins/polls/resource/themetags.ini');
 
   tlocalmerger::i()->addplugin($name);
   tcron::i()->addnightly(get_class($self) , 'optimize', null);
@@ -61,11 +58,7 @@ function pollsUninstall($self) {
   $js->unlock();
 
   $parser = tthemeparser::i();
-  $parser->lock();
-  $parser->delete_tagfile('plugins/polls/resource/themetags.ini');
-  array_delete_value($parser->themefiles, 'plugins/polls/resource/theme.txt');
-  array_clean($parser->themefiles);
-  $parser->unlock();
+  $parser->removetags('plugins/polls/resource/theme.txt', 'plugins/polls/resource/themetags.ini');
 
   $manager = tdbmanager::i();
   $manager->deletetable($self->table);

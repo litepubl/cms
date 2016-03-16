@@ -13,13 +13,9 @@ class tadminmenumanager extends tadminmenu {
   }
 
   public function gethead() {
-    $result = parent::gethead();
-
     $template = ttemplate::i();
     $template->ltoptions['idpost'] = $this->idget();
-    $template->ltoptions['lang'] = litepublisher::$options->language;
-    $result.= $template->getready('$("#tabs").tabs({ beforeLoad: litepubl.uibefore});');
-    return $result . tajaxmenueditor::i()->gethead();
+return parent::gethead();
   }
 
   public function gettitle() {
