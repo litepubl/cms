@@ -3,6 +3,7 @@ build/*
 old/
 PLUGINS/SHOP*
 PLUGINS/IMGRESIZE
+plugins/smalplugs*
 temp/
 THEMES/SHOP*
 .sonar/*
