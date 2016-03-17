@@ -1,6 +1,6 @@
 <?php
 function update607() {
-  litepublisher::$site->jquery_version = '1.12.1';
+  litepublisher::$site->jquery_version = '1.12.2';
 litepublisher::$site->save();
 
 $classes = litepublisher::$classes;
