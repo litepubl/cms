@@ -15,7 +15,7 @@ class tadminmenumanager extends tadminmenu {
   public function gethead() {
     $template = ttemplate::i();
     $template->ltoptions['idpost'] = $this->idget();
-return parent::gethead();
+    return parent::gethead();
   }
 
   public function gettitle() {

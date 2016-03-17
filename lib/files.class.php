@@ -276,7 +276,7 @@ class tfiles extends titems {
   public function getfirstimage(array $items) {
     foreach ($items as $id) {
       $item = $this->getitem($id);
-      if (('image' == $item['media']) && ($idpreview = (int) $item['preview'])) {
+      if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
         $baseurl = litepublisher::$site->files . '/files/';
         $args = new targs();
         $args->add($item);

@@ -444,7 +444,7 @@ class baseparser extends tevents {
     array_clean($this->themefiles);
     array_clean($this->tagfiles);
     $this->save();
-basetheme::clearcache();
+    basetheme::clearcache();
   }
 
   public function removetags($filetheme, $filetags) {
@@ -453,7 +453,7 @@ basetheme::clearcache();
     array_clean($this->themefiles);
     array_clean($this->tagfiles);
     $this->save();
-basetheme::clearcache();
+    basetheme::clearcache();
   }
 
 } //class

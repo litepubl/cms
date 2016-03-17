@@ -2499,6 +2499,7 @@ class tcommontagswidget extends twidget {
       'subcount' => $theme->getwidgettml($sidebar, $this->template, 'subcount') ,
       'subitems' => $this->showsubitems ? $theme->getwidgettml($sidebar, $this->template, 'subitems') : ''
     ) , 0, $this->sortname, $this->maxcount, $this->showcount);
+
     return str_replace('$parent', 0, $theme->getwidgetcontent($items, $this->template, $sidebar));
   }
 
@@ -2823,7 +2824,7 @@ class tfiles extends titems {
   public function getfirstimage(array $items) {
     foreach ($items as $id) {
       $item = $this->getitem($id);
-      if ('image' == $item['media']) {
+      if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
         $baseurl = litepublisher::$site->files . '/files/';
         $args = new targs();
         $args->add($item);
@@ -2831,7 +2832,7 @@ class tfiles extends titems {
         $args->json = $this->getjson($id);
 
         $preview = new tarray2prop();
-        $preview->array = $this->getitem($item['preview']);
+        $preview->array = $this->getitem($idpreview);
         $preview->link = $baseurl . $preview->filename;
 
         $midle = new tarray2prop();
