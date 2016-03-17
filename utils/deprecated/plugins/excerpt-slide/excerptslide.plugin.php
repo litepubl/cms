@@ -88,7 +88,7 @@ class texcerptslide extends  twidget {
   
   public function getcont() {
     $a = array_keys($this->items);
-    return twidgets::i()->getwidgetcache($a[0], 0);
+return twidgetscache::i()->getcontent($a[0], 0, false);
     //return $this->getwidget($a[0], 0);
   }
   

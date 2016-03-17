@@ -85,12 +85,12 @@ class tpingbacks extends tabstractpingbacks implements ipingbacks {
     ttheme::$vars['pingback'] = $pingback;
     $lang = tlocal::i('comment');
     $theme = ttheme::i();
-    $tml = $theme->content->post->templatecomments->pingbacks->pingback;
+    $tml = $theme->templates['content.post.templatecomments.pingbacks.pingback'];
     foreach ($items as $item) {
       $pingback->array = $item;
       $result.= $theme->parse($tml);
     }
-    return str_replace('$pingback', $result, $theme->parse($theme->content->post->templatecomments->pingbacks));
+    return str_replace('$pingback', $result, $theme->parse($theme->templates['content.post.templatecomments.pingbacks']));
   }
 
 } //class

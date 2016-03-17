@@ -139,12 +139,16 @@ class twidgets extends titems_storage {
   }
 
   public function getwidget($id) {
-    if (!isset($this->items[$id])) return $this->error("The requested $id widget not found");
+    if (!isset($this->items[$id])) {
+return $this->error("The requested $id widget not found");
+}
+
     $class = $this->items[$id]['class'];
     if (!class_exists($class)) {
       $this->delete($id);
       return $this->error("The $class class not found");
     }
+
     $result = getinstance($class);
     $result->id = $id;
     return $result;

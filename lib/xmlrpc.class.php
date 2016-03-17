@@ -31,7 +31,7 @@ class TXMLRPCParser extends IXR_Server {
 
 } //class
 class TXMLRPC extends titems {
-  public $Server;
+  public $server;
 
   public static function i() {
     return getinstance(__class__);
@@ -65,10 +65,10 @@ class TXMLRPC extends titems {
 
     $this->getmethods();
 
-    $this->Server = new TXMLRPCParser();
+    $this->server = new TXMLRPCParser();
     $this->server->owner = $this;
-    $this->Server->IXR_Server($this->items);
-    $Result = $this->Server->XMLResult;
+    $this->server->IXR_Server($this->items);
+    $Result = $this->server->XMLResult;
 
     $this->aftercall();
     if (litepublisher::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
