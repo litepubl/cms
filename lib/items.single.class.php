@@ -7,26 +7,61 @@
  */
 
 class tsingleitems extends titems {
+public $copyprops;
   public static $instances;
-  public $id;
 
-  public static function singleinstance($class, $id = 0) {
-    if (!isset(self::$instances)) self::$instances = array();
-    if (isset(self::$instances[$class][$id])) return self::$instances[$class][$id];
-    $self = litepublisher::$classes->newinstance($class);
-    self::$instances[$class][$id] = $self;
-    $self->id = $id;
-    $self->load();
-    return $self;
+  protected function create() {
+    $this->dbversion = false;
+    parent::create();
+$this->copyprops = array();
+}
+
+  public function addinstance($instance) {
+$classname = get_class($instance);
+$item = array(
+'classname' => $classname,
+    );
+
+foreach ($this->copyprops as $prop) {
+$item[$prop] = $instance->{$prop};
+}
+
+$id = $this->additem($item);
+$instance->id = $id;
+$instance->save();
+
+if (isset(self::$instances[$classname])) {
+self::$instances[$classname][$id] = $instance;
+} else {
+self::$instances[$classname] = array($id => $instance);
+}
+
+return $id;
   }
 
-  public function load() {
-    if (!isset($this->id)) return false;
-    return parent::load();
-  }
+public function get($id) {
+$id = (int) $id;
+$classname = $this->items[$id]['classname'];
+$result = getinstance($classname);
+if ($id != $result->id) {
+if (!isset(self::$instances[$classname])) {
+self::$instances[$classname] = array();
+}
 
-  public function free() {
-    unset(self::$instances[get_class($this) ][$this->id]);
-  }
+if (isset(self::$instances[$classname][$id])) {
+$result = self::$instances[$classname][$id];
+} else {
+if ($result->id) {
+$result = new $classname();
+}
 
-} //class
+$result->id = $id;
+$result->load();
+self::$instances[$classname][$id] = $result;
+}
+}
+
+return $result;
+}
+
+}//class

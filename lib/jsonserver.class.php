@@ -72,7 +72,9 @@ class tjsonserver extends tevents {
   public function request($idurl) {
     $this->beforerequest();
     $args = $this->getargs();
-    if (!$args || !isset($args['method'])) return $this->json_error(false, 403, 'Method not found in arguments');
+    if (!$args || !isset($args['method'])) {
+return $this->json_error(false, 403, 'Method not found in arguments');
+}
 
     $rpc = isset($args['jsonrpc']) ? ($args['jsonrpc'] == '2.0') : false;
     $id = $rpc && isset($args['id']) ? $args['id'] : false;
@@ -90,8 +92,10 @@ class tjsonserver extends tevents {
     if (isset($params['litepubl_user'])) $_COOKIE['litepubl_user'] = $params['litepubl_user'];
     if (isset($params['litepubl_user_id'])) $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
 
-    $a = array(&$params
+    $a = array(
+&$params
     );
+
     $this->callevent('beforecall', $a);
     try {
       $result = $this->callevent($args['method'], $a);
@@ -145,14 +149,12 @@ class tjsonserver extends tevents {
     return "<?php
     header('Connection: close');
     header('Content-Length: " . strlen($js) . "');
-    header('Content-Type: text/javascript; charset=utf-8');
+    header('Content-Type: application/json; charset=utf-8');
     header('Date: " . date('r') . "');
     Header( 'Cache-Control: no-cache, must-revalidate');
     Header( 'Pragma: no-cache');
-    ?>" . $js;
-
-    //header('Content-Type: application/json');
-    
+    ?>" .
+ $js;
   }
 
   public function json_error($id, $code, $message) {
