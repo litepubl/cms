@@ -102,9 +102,7 @@ class tremotefiler {
     if (!$this->is_dir($dir)) {
       $this->forcedir(dirname($dir));
       $this->mkdir($dir, $this->chmod_dir);
-      //$this->chmod($dir, $this->chmod_dir);
-      
-    }
+          }
   }
 
   protected function getfileinfo($filename) {
@@ -138,4 +136,44 @@ class tremotefiler {
     }
   }
 
-} //
+  public function getroot($root) {
+    $temp = litepublisher::$paths->data . md5rand();
+    file_put_contents($temp, ' ');
+    @chmod($temp, 0666);
+
+    $filename = str_replace('\\\\', '/', $temp);
+    $filename = str_replace('\\', '/', $filename);
+
+$this->chdir('/');
+    if (!$root || !strbegin($filename, $root) || !$this->exists(substr($filename, strlen($root)))) {
+$root = $this->findroot($temp);
+    }
+
+    unlink($temp);
+return $root;
+  }
+
+  public function findroot($filename) {
+    $root = '';
+    $filename = str_replace('\\\\', '/', $filename);
+    $filename = str_replace('\\', '/', $filename);
+
+    if ($i = strpos($filename, ':')) {
+      $root = substr($filename, 0, $i);
+      $filename = substr($filename, $i);
+    }
+
+$this->chdir('/');
+    while ($filename && !$this->exists($filename)) {
+      if ($i = strpos($filename, '/', 1)) {
+        $root.= substr($filename, 0, $i);
+        $filename = substr($filename, $i);
+      } else {
+        return false;
+      }
+    }
+
+    return $root;
+  }
+
+} //class

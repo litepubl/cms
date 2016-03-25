@@ -114,7 +114,11 @@ class tbackuper extends tevents {
   public function connect($host, $login, $password) {
     if ($this->filer->connected) return true;
     if ($this->filer->connect($host, $login, $password)) {
-      if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) $this->check_ftp_root();
+      if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
+if (($root = $this->filer->getroot($this->ftproot)) && ($root != $this->ftproot)) {
+      $this->ftproot = $root;
+$this->save();
+}
       return true;
     }
     return false;
@@ -275,41 +279,6 @@ class tbackuper extends tevents {
     if ($i = strpos($dir, '/')) $dir = substr($dir, 0, $i);
     if (!isset(litepublisher::$paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
     $this->chdir(dirname(rtrim(litepublisher::$paths->$dir, DIRECTORY_SEPARATOR)));
-  }
-
-  public function check_ftp_root() {
-    $temp = litepublisher::$paths->data . md5rand();
-    file_put_contents($temp, ' ');
-    @chmod($temp, 0666);
-    $filename = str_replace('\\\\', '/', $temp);
-    $filename = str_replace('\\', '/', $filename);
-    $this->filer->chdir('/');
-    if (($this->ftproot == '') || !strbegin($filename, $this->ftproot) || !$this->filer->exists(substr($filename, strlen($this->ftproot)))) {
-      $this->ftproot = $this->find_ftp_root($temp);
-      $this->save();
-    }
-    unlink($temp);
-  }
-
-  public function find_ftp_root($filename) {
-    $root = '';
-    $filename = str_replace('\\\\', '/', $filename);
-    $filename = str_replace('\\', '/', $filename);
-    if ($i = strpos($filename, ':')) {
-      $root = substr($filename, 0, $i);
-      $filename = substr($filename, $i);
-    }
-
-    $this->filer->chdir('/');
-    while (($filename != '') && !$this->filer->exists($filename)) {
-      if ($i = strpos($filename, '/', 1)) {
-        $root.= substr($filename, 0, $i);
-        $filename = substr($filename, $i);
-      } else {
-        return false;
-      }
-    }
-    return $root;
   }
 
   public function getpartial($plugins, $theme, $lib) {

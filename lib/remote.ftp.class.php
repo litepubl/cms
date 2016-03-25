@@ -22,7 +22,15 @@ class tftpfiler extends tremotefiler {
   }
 
   public function __destruct() {
-    if ($this->handle) ftp_close($this->handle);
+$this->close();
+}
+
+  public function close() {
+    if ($this->handle) {
+@ftp_close($this->handle);
+$this->handle = false;
+}
+
     if ($this->tempfilehandle) {
       @fclose($this->tempfilehandle);
       $this->tempfilehandle = false;
@@ -276,4 +284,5 @@ class tftpfiler extends tremotefiler {
     if (count($result) == 0) return false;
     return $result;
   }
-} //class
+
+}//class
