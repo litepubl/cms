@@ -26,6 +26,7 @@ class ulist {
     return strtr(is_int($name) ? $this->value : $this->item, array(
       '$name' => $name,
       '$value' => $value,
+'$site.url' => litepublisher::$site->url,
     ));
   }
 
