@@ -105,7 +105,7 @@ $lang->image,
       ) ,
       array(
         $lang->delete,
-        "<a href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
+        "<a href=\"$this->adminurl=\$id&action=delete\" class=\"confirm-delete-link\">$lang->delete</a>"
       )
     ));
 

@@ -139,11 +139,10 @@
 
     getitems: function(idpost, idfile) {
       var result = [];
-      var ismobile = $(window).width() <= 768;
-      var animatethumbs = this.animatethumbs;
-
       var options = this.getoptions();
       options.galleryUID = parseInt(idpost);
+      var ismobile = $(window).width() <= 768;
+      var animatethumbs = this.animatethumbs;
 
       this.links.each(function(linkindex) {
         var link = $(this);
