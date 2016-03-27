@@ -27,7 +27,7 @@ class tmlstorage extends tplugin {
   }
 
   public function classdeleted($classname) {
-    if (false !== ($i = array_search($classname, $this->items)) {
+    if (false !== ($i = array_search($classname, $this->items))) {
       array_splice($this->items, $i, 1);
       $this->save();
     }
