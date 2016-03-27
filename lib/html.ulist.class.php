@@ -6,20 +6,27 @@
  *
  */
 
-//namespace litepubl\admin
 class ulist {
+const aslinks = true;
   public $ul;
   public $item;
   public $link;
   public $value;
+public $result;
 
-  public function __construct($admin = null) {
+  public function __construct($admin = null, $islink = false) {
     if ($admin) {
       $this->ul = $admin->templates['list'];
       $this->item = $admin->templates['list.item'];
       $this->link = $admin->templates['list.link'];
       $this->value = $admin->templates['list.value'];
+
+if ($islink == self::aslinks) {
+$this->item = $this->link;
+}
     }
+
+$this->result = '';
   }
 
   public function li($name, $value) {
@@ -40,6 +47,14 @@ class ulist {
   public function ul($items) {
     return str_replace('$item', $items, $this->ul);
   }
+
+public function getresult() {
+return $this->ul($this->result);
+}
+
+public function add($name, $value) {
+$this->result .= $this->li($name, $value);
+}
 
   public function get(array $props) {
     $result = '';

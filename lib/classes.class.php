@@ -56,9 +56,11 @@ class tclasses extends titems {
     if (!class_exists($class)) {
       $this->error("Class $class not found");
     }
+
     if (!isset($this->instances[$class])) {
       $this->instances[$class] = $this->newinstance($class);
     }
+
     return $this->instances[$class];
   }
 

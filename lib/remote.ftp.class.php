@@ -129,8 +129,22 @@ $this->handle = false;
   }
 
   public function delete($file) {
-    if (empty($file)) return false;
-    if ($this->is_file($file)) return @ftp_delete($this->handle, $file);
+    if ($file) {
+    if ($this->is_file($file)) {
+return @ftp_delete($this->handle, $file);
+} else {
+    return @ftp_rmdir($this->handle, $file);
+}
+}
+
+return false;
+  }
+
+  public function unlink($file) {
+return @ftp_delete($this->handle, $file);
+}
+
+  public function rm($file) {
     return @ftp_rmdir($this->handle, $file);
   }
 

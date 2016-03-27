@@ -129,14 +129,8 @@ class tadminhtml {
   public function getradioitems($name, array $items, $selected) {
     $result = '';
     $theme = ttheme::i();
-    $tml = $theme->templates['content.admin.radioitem'];
-    foreach ($items as $index => $value) {
-      $result.= strtr($tml, array(
-        '$index' => $index,
-        '$checked' => $index == $selected ? 'checked="checked"' : '',
-        '$name' => $name,
-        '$value' => self::specchars($value)
-      ));
+    foreach ($items as $index => $title) {
+      $result.= $theme->getradio($name, $index, self::specchars($title), $index == $selected);
     }
     return $result;
   }

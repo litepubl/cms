@@ -26,6 +26,9 @@ class tremotefiler {
     $this->connected = false;
   }
 
+  public function close() {
+}
+
   public function connect($host, $login, $password) {
     if (empty($host) || empty($login) || empty($password)) return false;
     $this->host = $host;
