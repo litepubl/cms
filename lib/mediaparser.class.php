@@ -257,8 +257,8 @@ class tmediaparser extends tevents {
           $midle = $this->createmidle($srcfilename, $image);
         }
 
-        if ($resize) {
-          $sizes = $this->resize($srcfilename, $image, $maxwidth, $maxheight);
+        if ($resize &&($item['width'] > $maxwidth || $item['height'] > $maxheight) &&
+          ($sizes = $this->resize($srcfilename, $image, $maxwidth, $maxheight))) {
           $item['width'] = $sizes['width'];
           $item['height'] = $sizes['height'];
 
@@ -524,9 +524,9 @@ class tmediaparser extends tevents {
         $ratio = $x / $y;
         //clip source size
         if ($sourcex / $sourcey > $ratio) {
-          $sourcex = $sourcey * $ratio;
+          $sourcex = (int) round($sourcey * $ratio);
         } else {
-          $sourcey = $sourcex / $ratio;
+          $sourcey = (int) round($sourcex / $ratio);
         }
         break;
 
@@ -535,9 +535,9 @@ class tmediaparser extends tevents {
       case 'min':
         $ratio = $sourcex / $sourcey;
         if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
-          $x = $y * $ratio;
+          $x = (int) round($y * $ratio);
         } else {
-          $y = $x / $ratio;
+          $y = (int) round($x / $ratio);
         }
         break;
 
