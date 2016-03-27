@@ -148,38 +148,39 @@ class tadminmenumanager extends tadminmenu {
     $menus = tmenus::i();
     $lang = tlocal::admin();
     $editurl = litepublisher::$site->url . $this->url . 'edit/' . litepublisher::$site->q . 'id';
-    $html = $this->html;
-    ttheme::$vars['menuitem'] = new menu_item();
-    $result = $html->buildtable($menus->items, array(
+
+return tablebuilder::fromitems($menus->items, array(
       array(
-        'left',
         $lang->menutitle,
-        '$menuitem.link'
-      ) ,
+function (tablebuilder $tb) use ($menus) {
+        return $menus->getlink($tb->item['id']);
+      }) ,
+
       array(
-        'center',
+        'right',
         $lang->order,
         '$order'
       ) ,
+
       array(
         'center',
         $lang->parent,
-        '$menuitem.parent'
-      ) ,
+function (tablebuilder $tb) use($menus) {
+        return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
+      }) ,
+
       array(
         'center',
         $lang->edit,
         "<a href='$editurl=\$id'>$lang->edit</a>"
       ) ,
+
       array(
         'center',
         $lang->delete,
         "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
       ) ,
     ));
-
-    unset(ttheme::$vars['menuitem']);
-    return str_replace("'", '"', $result);
   }
 
   private function doaction($id, $action) {
@@ -216,27 +217,3 @@ class tadminmenumanager extends tadminmenu {
   }
 
 } //class
-class menu_item {
-  public $menus;
-
-  public function __construct() {
-    $this->menus = tmenus::i();
-  }
-
-  public function __get($name) {
-    $item = ttheme::$vars['item'];
-    switch ($name) {
-      case 'parent':
-        return $item['parent'] == 0 ? '---' : $this->menus->getlink($item['parent']);
-
-      case 'status':
-        return tlocal::get('common', $item['status']);
-
-      case 'link':
-        return $this->menus->getlink($item['id']);
-    }
-
-    return '';
-  }
-
-}
