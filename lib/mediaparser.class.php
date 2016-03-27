@@ -234,7 +234,8 @@ class tmediaparser extends tevents {
       $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->previewmode != 'none');
       $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
 
-      if (($resize || $enablepreview || $enablemidle) && ($image = self::readimage($srcfilename))) {
+      if (($resize || $enablepreview || $enablemidle) &&
+ ($image = self::readimage($srcfilename))) {
         $this->onimage($image);
 
         if ($enablepreview && ($preview = $this->getsnapshot($srcfilename, $image))) {
@@ -571,6 +572,10 @@ class tmediaparser extends tevents {
   }
 
   public function createmidle($srcfilename, $image) {
+if (imagesx($image) <= $this->midlewidth && imagesy($image) <= $this->midleheight) {
+return false;
+}
+
     $destfilename = self::replace_ext($srcfilename, '.midle.jpg');
     $destfilename = self::makeunique($destfilename);
 

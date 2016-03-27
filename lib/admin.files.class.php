@@ -15,7 +15,7 @@ class tadminfiles extends tadminmenu {
   public function getcontent() {
     $result = '';
     $files = tfiles::i();
-    $html = $this->html;
+$admintheme = $this->admintheme;
     $lang = $this->lang;
     $args = new targs();
     if (!isset($_GET['action'])) {
@@ -48,15 +48,10 @@ class tadminfiles extends tadminmenu {
           if ($this->confirmed) {
             if (('author' == litepublisher::$options->group) && ($r = tauthor_rights::i()->candeletefile($id))) return $r;
             $files->delete($id);
-            $result.= $html->h2->deleted;
+            $result.= $admintheme->success($lang->deleted);
           } else {
             $item = $files->getitem($id);
-            $args->add($item);
-            $args->id = $id;
-            $args->adminurl = $this->adminurl;
-            $args->action = 'delete';
-            $args->confirm = sprintf($this->lang->confirm, $item['filename']);
-            return $html->confirmform($args);
+            return $this->html->confirmdelete($id, $this->adminurl, sprintf($lang->confirm, $item['filename']));
           }
           break;
 
@@ -68,7 +63,7 @@ class tadminfiles extends tadminmenu {
           $args->description = tcontentfilter::unescape($item['description']);
           $args->keywords = tcontentfilter::unescape($item['keywords']);
           $args->formtitle = $this->lang->editfile;
-          $result.= $html->adminform('[text=title] [text=description] [text=keywords]' . (litepublisher::$options->show_file_perm ? tadminperms::getcombo($item['idperm'], 'idperm') : '') , $args);
+          $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepublisher::$options->show_file_perm ? tadminperms::getcombo($item['idperm'], 'idperm') : '') , $args);
           break;
         }
     }
@@ -82,10 +77,10 @@ class tadminfiles extends tadminmenu {
     $from = $this->getfrom($perpage, $count);
     $list = $files->select($sql, " order by posted desc limit $from, $perpage");
     if (!$list) $list = array();
-    $result.= sprintf($html->h4->countfiles, $count, $from, $from + count($list));
+    $result.= $admintheme->getcount($count, $from, $from + count($list));
 
     $args->adminurl = $this->adminurl;
-    $result.= $html->buildtable($files->items, array(
+    $result.= tablebuilder::fromitems($files->items, array(
       array(
         'right',
         'ID',
@@ -97,42 +92,41 @@ class tadminfiles extends tadminmenu {
         '<a href="$site.files/files/$filename">$filename</a>'
       ) ,
       array(
-        'left',
-        $lang->title,
+$lang->image,
         $type != 'icon' ? '$title' : '<img src="$site.files/files/$filename" alt="$filename" />'
       ) ,
       array(
-        'center',
         $lang->edit,
         "<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>"
       ) ,
       array(
-        'center',
         $lang->thumbnail,
         '<a href="' . tadminhtml::getadminlink('/admin/files/thumbnail/', 'id=') . "\$id\" target=\"_blank\">$lang->thumbnail</a>"
       ) ,
       array(
-        'center',
         $lang->delete,
         "<a href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
       )
     ));
 
-    $theme = ttheme::i();
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $this->theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
   public function processform() {
     $files = tfiles::i();
-    $html = $this->html;
+$admintheme = $this->admintheme;
+$lang = $this->lang;
+
     if (empty($_GET['action'])) {
       $isauthor = 'author' == litepublisher::$options->group;
       if ($_POST['uploadmode'] == 'file') {
         if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
-          return $html->h4(tlocal::get('uploaderrors', $_FILES['filename']['error']));
+          return $admintheme->geterr(tlocal::get('uploaderrors', $_FILES['filename']['error']));
         }
-        if (!is_uploaded_file($_FILES['filename']['tmp_name'])) return sprintf($this->html->h4red->attack, $_FILES["filename"]["name"]);
+        if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
+return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
+}
         if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
         $overwrite = isset($_POST['overwrite']);
         $parser = tmediaparser::i();
@@ -140,7 +134,9 @@ class tadminfiles extends tadminmenu {
       } else {
         //downloadurl
         $content = http::get($_POST['downloadurl']);
-        if ($content == false) return $this->html->h2->errordownloadurl;
+        if ($content == false) {
+return $admintheme->geterr($lang->errordownloadurl);
+}
         $filename = basename(trim($_POST['downloadurl'], '/'));
         if ($filename == '') $filename = 'noname.txt';
         if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
@@ -149,14 +145,17 @@ class tadminfiles extends tadminmenu {
         $id = $parser->upload($filename, $content, $_POST['title'], $_POST['description'], $_POST['keywords'], $overwrite);
       }
 
-      if (isset($_POST['idperm'])) tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
-      return $this->html->h4->success;
+      if (isset($_POST['idperm'])) {
+tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
+}
+
+      return $admintheme->success($lang->success);
     } elseif ($_GET['action'] == 'edit') {
       $id = $this->idget();
       if (!$files->itemexists($id)) return $this->notfound;
       $files->edit($id, $_POST['title'], $_POST['description'], $_POST['keywords']);
       if (isset($_POST['idperm'])) tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
-      return $this->html->h4->edited;
+      return $admintheme->success($lang->edited);
     }
 
     return '';

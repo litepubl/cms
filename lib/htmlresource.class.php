@@ -37,7 +37,7 @@ class tadminhtml {
     if (in_array($name, self::$tags)) return new thtmltag($name);
     if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
 
-    throw new Exception("the requested $name item not found in $this->section section");
+    throw new Exception("the requested $name item not found");
   }
 
   public function __call($name, $params) {
