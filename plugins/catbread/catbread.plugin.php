@@ -7,8 +7,6 @@
  */
 
 class catbread extends tplugin {
-  public $tml;
-  public $cats;
 
   public static function i() {
     return getinstance(__class__);
@@ -16,26 +14,30 @@ class catbread extends tplugin {
 
   protected function create() {
     parent::create();
-    $this->addmap('tml', array());
     $this->data['showhome'] = true;
-    $this->data['showchilds'] = true;
+    $this->data['showchilds'] = false;
     $this->data['childsortname'] = 'title';
-    $this->data['showsimilar'] = true;
+    $this->data['showsimilar'] = false;
     $this->data['breadpos'] = 'before';
     $this->data['similarpos'] = 'after';
-
-    $this->cats = tcategories::i();
   }
+
+public function getcats() {
+return tcategories::i();
+}
 
   public function beforecat(&$result) {
     $cats = $this->cats;
     $idcat = $cats->id;
-    if (!$idcat) return;
+    if (!$idcat) {
+    return $result;
+}
+
     $result.= $this->getbread($idcat);
 
     if ($this->showsimilar) {
-      $idposts = $cats->getidposts($idcat);
       $list = array();
+      $idposts = $cats->getidposts($idcat);
       foreach ($idposts as $idpost) {
         $list = array_merge($list, tpost::i($idpost)->categories);
       }
@@ -78,15 +80,24 @@ class catbread extends tplugin {
 
   public function getpostbread() {
     $post = ttheme::$vars['post'];
-    if (!count($post->categories)) return '';
+    if (count($post->categories)) {
     return $this->getbread($post->categories[0]);
+}
+
+return '';
   }
 
   public function getpostsimilar() {
-    if (!$this->showsimilar) return '';
+    if (!$this->showsimilar) {
+return '';
+}
+
     $post = ttheme::$vars['post'];
-    if (!count($post->categories)) return '';
+    if (count($post->categories)) {
     return $this->getsimilar($post->categories);
+}
+
+return '';
   }
 
   public function getbread($idcat) {
@@ -112,9 +123,10 @@ class catbread extends tplugin {
 
     $theme = ttheme::i();
     $args = new targs();
-    $tml = $this->tml['item'];
+    $tml = $theme->templates['catbread.items.item'];
     $items = '';
     $index = 1;
+
     if ($this->showhome) {
       $args->url = '/';
       $args->title = tlocal::i()->home;
@@ -130,11 +142,14 @@ class catbread extends tplugin {
 
     $args->add($cats->getitem($idcat));
     $args->index = $index++;
-    $items.= $theme->parsearg($this->tml['active'], $args);
-    if ($showchilds) $items.= $theme->parsearg($this->tml['child'], $args);
+    $items.= $theme->parsearg($theme->templates['catbread.items.active'], $args);
+
+    if ($showchilds) {
+$items.= $theme->parsearg($theme->templates['catbread.child'], $args);
+}
 
     $args->item = $items;
-    $result.= $theme->parsearg($this->tml['items'], $args);
+    $result.= $theme->parsearg($theme->templates['catbread.items'], $args);
 
     if ($showchilds) {
       $args->item = $this->getchildcats($idcat);
@@ -147,12 +162,16 @@ class catbread extends tplugin {
   public function getchildcats($parent) {
     $cats = $this->cats;
     $sorted = $cats->getsorted($parent, $this->childsortname, 0);
-    if (!count($sorted)) return '';
+    if (!count($sorted)) {
+return '';
+}
+
     $result = '';
     $theme = ttheme::i();
     $args = new targs();
     $args->parent = $parent;
-    $tml_sub = $this->tml['childsubitems'];
+    $tml_sub = $theme->templates['childsubitems'];
+
     foreach ($sorted as $id) {
       $item = $cats->getitem($id);
       $args->add($item);
