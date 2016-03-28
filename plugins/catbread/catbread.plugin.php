@@ -187,4 +187,59 @@ $args->item = $items;
     return $theme->parsearg($this->tml['similaritems'], $args);
   }
 
+  public function themeparsed(basetheme $theme) {
+    $tag1 = '$catbread.post';
+    $tag2 = '$catbread.similar';
+
+    foreach (array(
+      'content.post',
+      'shop.product'
+    ) as $k) {
+      if (isset($theme->templates[$k]) && !strpos($theme->templates[$k], $similar)) {
+$v = $theme->templates[$k];
+    $replace = '$post.catlinks';
+
+switch ($this->breadpos) {
+case 'top':
+$v = $tag1 . $v;
+break;
+
+case 'before':
+$replace = $tag1 . $replace;
+break;
+
+case 'after':
+$replace .= $tag1;
+break;
+
+case 'replace':
+$replace = $tag1;
+break;
+
+default:
+////ignore
+}
+
+switch ($this->similarpos) {
+case 'top':
+$v = $tag2 . $v;
+break;
+
+case 'before':
+$replace = $tag2 . $replace
+break;
+
+case 'after':
+$replace .= $tag2;
+break;
+
+default:
+////ignore
+}
+
+      $theme->templates[$k] = str_replace('$post.catlinks', $replace, $v);
+}
+    }
+  }
+
 } //class
