@@ -38,7 +38,7 @@ $css->replacefile('admin',
 );
 
 $css->replacefile('default',
-'/js/litepubl/common/css/form-inline.min.css',
+'/js/litepublisher/css/form-inline.min.css',
 '/js/litepubl/common/css/form.inline.min.css'
 );
 
