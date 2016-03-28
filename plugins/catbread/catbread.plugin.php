@@ -15,7 +15,7 @@ class catbread extends tplugin {
   protected function create() {
     parent::create();
     $this->data['showhome'] = true;
-    $this->data['showchilds'] = false;
+    $this->data['showchilds'] = true;
     $this->data['childsortname'] = 'title';
     $this->data['showsimilar'] = false;
     $this->data['breadpos'] = 'before';
@@ -50,35 +50,7 @@ return tcategories::i();
     return $result;
   }
 
-  public function themeparsed($theme) {
-    $bread = '$' . get_class($this) . '.postbread';
-    $similar = '$' . get_class($this) . '.postsimilar';
-
-    //prepare replace
-    $top = '';
-    if ($this->breadpos == 'top') $top.= $bread;
-    if ($this->similarpos == 'top') $top.= $similar;
-
-    $catlinks = '';
-    if ($this->breadpos == 'before') $catlinks.= $bread;
-    if ($this->similarpos == 'before') $catlinks.= $similar;
-    $catlinks.= '$post.catlinks';
-    if ($this->breadpos == 'after') $catlinks.= $bread;
-    if ($this->similarpos == 'after') $catlinks.= $similar;
-
-    foreach (array(
-      'content.post',
-      'shop.product'
-    ) as $k) {
-      if (!isset($theme->templates[$k]) || strpos($theme->templates[$k], $similar)) continue;
-      $s = $theme->templates[$k];
-      $s = $top . $s;
-      $s = str_replace('$post.catlinks', $catlinks, $s);
-      $theme->templates[$k] = $s;
-    }
-  }
-
-  public function getpostbread() {
+  public function getpost() {
     $post = ttheme::$vars['post'];
     if (count($post->categories)) {
     return $this->getbread($post->categories[0]);
@@ -87,7 +59,7 @@ return tcategories::i();
 return '';
   }
 
-  public function getpostsimilar() {
+  public function getsimilar() {
     if (!$this->showsimilar) {
 return '';
 }
@@ -100,7 +72,7 @@ return '';
 return '';
   }
 
-  public function getbread($idcat) {
+  public function getread($idcat) {
     if (!$idcat) {
       return '';
     }
@@ -122,14 +94,15 @@ return '';
     }
 
     $theme = ttheme::i();
-    $args = new targs();
     $tml = $theme->templates['catbread.items.item'];
+$lang = tlocal::i('catbreads');
+    $args = new targs();
     $items = '';
     $index = 1;
 
     if ($this->showhome) {
       $args->url = '/';
-      $args->title = tlocal::i()->home;
+      $args->title = $lang->home;
       $args->index = $index++;
       $items.= $theme->parsearg($tml, $args);
     }
@@ -142,51 +115,41 @@ return '';
 
     $args->add($cats->getitem($idcat));
     $args->index = $index++;
-    $items.= $theme->parsearg($theme->templates['catbread.items.active'], $args);
+    $current = $theme->parsearg($theme->templates['catbread.items.current'], $args);
 
+$childs = '';
     if ($showchilds) {
-$items.= $theme->parsearg($theme->templates['catbread.child'], $args);
-}
-
-    $args->item = $items;
-    $result.= $theme->parsearg($theme->templates['catbread.items'], $args);
-
-    if ($showchilds) {
-      $args->item = $this->getchildcats($idcat);
-      $result.= $theme->parsearg($this->tml['childitems'], $args);
+$childs = $this->getchilds($idcat);
     }
 
-    return sprintf($this->tml['container'], $result);
+$args->item = $items;
+$args->current = $current;
+$args->childs = $childs;
+$args->items = $theme->parsearg($theme->templates['catbreads.items'], $args);
+$args->similar = '';
+    return $theme->parsearg($templates['catbreads'], $args;
   }
 
-  public function getchildcats($parent) {
+  public function getchilds($parent) {
     $cats = $this->cats;
     $sorted = $cats->getsorted($parent, $this->childsortname, 0);
     if (!count($sorted)) {
 return '';
 }
 
-    $result = '';
     $theme = ttheme::i();
+    $tml = $theme->templates['catbreads.items.childs.item'];
     $args = new targs();
     $args->parent = $parent;
-    $tml_sub = $theme->templates['childsubitems'];
 
+$items = '';
     foreach ($sorted as $id) {
-      $item = $cats->getitem($id);
-      $args->add($item);
-      if ($tml_sub && ($subitems = $this->getchildcats($id))) {
-        $args->subitems = $subitems;
-        $args->item = $subitems;
-        $args->subitems = $theme->parsearg($this->tml['childsubitems'], $args);
-      } else {
-        $args->subitems = '';
-      }
-
-      $result.= $theme->parsearg($this->tml['childitem'], $args);
+      $args->add($cats->getitem($id));
+      $items .= $theme->parsearg($tml, $args);
     }
 
-    return $result;
+$args->item = $items;
+    return $theme->parsearg($theme->templates['catbreads.items.childs'], $args);
   }
 
   public function getsimilar($list) {

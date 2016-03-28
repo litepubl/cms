@@ -1,38 +1,68 @@
+﻿/*
+Шаблоны для плагина хлебных крошек включают на верхнем уровне два тега:
+
+$items - сами хлебные кррошки
+$similar - похожие рубрики
+
+Рассмотрим подробно шаблон $items, который имеет следующие воженные теги:
+
+$item - ссылка на одну рубрику, то есть одна хлебная крошка
+$current - ссылка или текст на текущую рубрику
+$childs - шаблон подрубрик, используется если в плагине  выставлена настройка и имеются сами дочерние рубрики. Для подрубрик есть один вложенный шаблон $item - сама ссылка на дочернию рубрику. Здесь весь шаблон выполнен в виде выпадающего меню.
+
+
+В $similar есть вложенный шаблон $item - ссылка на одну рубрику.
+
+После шаблонов хлебных крошек идут перекрытые шаблоны темы по умолчанию, в которую вставлены хлебные крошки. Вы можете самостоятельно добавить в свою тему хлебные крошки используя следующие шаблоны:
+
+$catbread.post - хлебные крошки одного поста, в частности можете вставлять тег в шаблоны поста
+$catbread.similar - похожие рубрики
+
+
+
+*/
+
 catbread = [
-<div id="breadcrumb-container">%s</div>
-]
+<div class="breadcrumb-container">
 
-catbread.items = [
-<div id="breadcrumb-items">
-    <ol class="breadcrumb" itemprop="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-        $item = [<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="$link" itemprop="url name">$title</a></li>]
-        $active = [<li class="active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">$title</li>]
-    </ol>
+    $items = [
+    <div class="breadcrumb-items">
+        <ol class="breadcrumb" itemprop="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            $item = [
+            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="$link" itemprop="url name">$title</a></li>
+            ]
+            
+            $current  = [
+            <li class="active" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">$title</li>
+            ]
+            
+            $childs = [
+            <li>
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        $lang.more
+                        <span class="caret"></span>
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"                     role="menu">
+                        $item = [
+                        <li><a href="$link" title="$title">$title</a></li>
+                        ]
+                    </ul>
+                </div>
+            </li>
+            ]
+        </ol>
+    </div>
+    ]
+    
+    $similar = [
+    <div id="breadcrumbs-similar">
+        $lang.seealso
+        $item = [<a itemprop="sameAs" href="$link">$title</a>&#032;]
+    </div>
+    ]
+
 </div>
 ]
 
-catbread.child = [
-<li>
-    <button id="breadcrumbs-toggle" class="btn btn-default" data-target="#breadcrumbs-childs" data-toggle="dropdown">
-        <span class="caret"></span>
-        <span class="sr-only">' . $about['showchilds'] . '</span>
-    </button>
-</li>
-]
-
-catbread.childs =[
-<div id="breadcrumbs-childs" class="dropdown">
-    <ul class="dropdown-menu" role="menu">
-        $item = [<li><a href="$link" title="$title">$title</a>
-                                                              $subitems = [<ul>$item</ul>]
-        </li>]
-    </ul>
-</div>
-]
-
-catbread.similar = [
-<div id="breadcrumbs-similar">
-    $about['seealso']
-    $item = [<a itemprop="sameAs" href="$link">$title</a>&#032;]
-</div>
-]
