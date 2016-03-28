@@ -15,9 +15,8 @@ class admincatbread implements iadmin {
   public function getcontent() {
     $plugin = catbread::i();
     $lang = tplugins::getnamelang('catbread');
-    $html = tadminhtml::i();
+    $admintheme = admintheme::i();
     $args = new targs();
-    $args->add($plugin->tml);
     $args->showhome = $plugin->showhome;
     $args->showchilds = $plugin->showchilds;
     $args->showsimilar = $plugin->showsimilar;
@@ -41,26 +40,13 @@ class admincatbread implements iadmin {
     $args->similarpos = tadminhtml::array2combo($pos, $plugin->similarpos);
 
     $args->formtitle = $lang->formtitle;
-    return $html->adminform('
+    return $admintheme->form('
     [checkbox=showhome]
-    
     [combo=breadpos]
-    [text=item]
-    [text=active]
-    [text=child]
-    [editor=items]
-    [editor=container]
-    
     [checkbox=showchilds]
     [combo=sort]
-    [text=childitem]
-    [text=childsubitems]
-    [editor=childitems]
-    
     [checkbox=showsimilar]
     [combo=similarpos]
-    [text=similaritem]
-    [text=similaritems]
     ', $args);
   }
 
@@ -73,10 +59,6 @@ class admincatbread implements iadmin {
     $plugin->childsortname = $sort;
     $plugin->breadpos = $breadpos;
     $plugin->similarpos = $similarpos;
-    foreach ($plugin->tml as $k => $v) {
-      $plugin->tml[$k] = trim($_POST[$k]);
-    }
-
     $plugin->save();
     return '';
   }

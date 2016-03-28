@@ -1,5 +1,13 @@
 <?php
 function update609() {
+if (litepublisher::$classes->exists('catbread')) {
+$catbread = catbread::i();
+unset($catbread->data['tml']);
+$catbread->save();
+
+tthemeparser::i()->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
+}
+
 if (version_compare(PHP_VERSION, '5.4', '<')) {
 $site = litepublisher::$site;
 tmailer::sendtoadmin("Обновление сайта $site.url", " Здравствуйте!
@@ -9,6 +17,4 @@ tmailer::sendtoadmin("Обновление сайта $site.url", " Здравствуйте!
 http://litepublisher.ru/ает
 ");
 }
-
-
 }
