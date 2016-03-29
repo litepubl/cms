@@ -55,6 +55,8 @@ Font Awesome by @davegandy - http://fontawesome.io - @fontawesome License - http
 
 Lobster font by Pablo Impallari released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 
+NautilusPompilius font by PUNK YOU BRANDS Nikita Kanarev released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+
 MediaElement.js Copyright 2010-2015, John Dyer (http://j.hn) License: MIT
 
 SWFUpload is (c) 2006-2007 Lars Huring, Olov Nilzйn and Mammon Media and is released under the MIT License

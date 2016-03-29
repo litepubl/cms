@@ -8,7 +8,7 @@
   'use strict';
 
   litepubl.themefonts['default'] = function() {
-    $.load_font_part('Nautilus', 'nautilus', ltoptions.files + '/plugins/nautilus/font/nautilus');
+    $.load_font_part('Nautilus', 'nautilus', ltoptions.files + '/plugins/nautilus/font/Nautilus');
   };
 
 })(jQuery);
