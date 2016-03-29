@@ -22,16 +22,16 @@ class catbread extends tplugin {
     $this->data['similarpos'] = 'after';
   }
 
-public function getcats() {
-return tcategories::i();
-}
+  public function getcats() {
+    return tcategories::i();
+  }
 
   public function beforecat(&$result) {
     $cats = $this->cats;
     $idcat = $cats->id;
     if (!$idcat) {
-    return $result;
-}
+      return $result;
+    }
 
     $result.= $this->getbread($idcat);
 
@@ -51,30 +51,30 @@ return tcategories::i();
   }
 
   public function getpost() {
-$result = '';
+    $result = '';
     $post = ttheme::$vars['post'];
     if (count($post->categories)) {
-if ($this->breadpos == 'replace') {
-foreach ($post->categories as $idcat) {
-    $result .= $this->getbread($idcat);
-}
-} else {
-    $result = $this->getbread($post->categories[0]);
-}
-}
+      if ($this->breadpos == 'replace') {
+        foreach ($post->categories as $idcat) {
+          $result.= $this->getbread($idcat);
+        }
+      } else {
+        $result = $this->getbread($post->categories[0]);
+      }
+    }
 
-return $result;
+    return $result;
   }
 
   public function getsim() {
     if ($this->showsimilar) {
-    $post = ttheme::$vars['post'];
-    if (count($post->categories)) {
-    return $this->getsimilar($post->categories);
-}
-}
+      $post = ttheme::$vars['post'];
+      if (count($post->categories)) {
+        return $this->getsimilar($post->categories);
+      }
+    }
 
-return '';
+    return '';
   }
 
   public function getbread($idcat) {
@@ -100,7 +100,7 @@ return '';
 
     $theme = ttheme::i();
     $tml = $theme->templates['catbread.items.item'];
-$lang = tlocal::i('catbread');
+    $lang = tlocal::i('catbread');
     $args = new targs();
     $items = '';
     $index = 1;
@@ -122,15 +122,15 @@ $lang = tlocal::i('catbread');
     $args->index = $index++;
     $current = $theme->parsearg($theme->templates['catbread.items.current'], $args);
 
-$childs = '';
+    $childs = '';
     if ($showchilds) {
-$childs = $this->getchilds($idcat);
+      $childs = $this->getchilds($idcat);
     }
 
-$args->item = $items;
-$args->current = $current;
-$args->childs = $childs;
-$args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
+    $args->item = $items;
+    $args->current = $current;
+    $args->childs = $childs;
+    $args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
     return $theme->parsearg($theme->templates['catbread'], $args);
   }
 
@@ -138,28 +138,28 @@ $args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
     $cats = $this->cats;
     $sorted = $cats->getsorted($parent, $this->childsortname, 0);
     if (!count($sorted)) {
-return '';
-}
+      return '';
+    }
 
     $theme = ttheme::i();
     $tml = $theme->templates['catbread.items.childs.item'];
     $args = new targs();
     $args->parent = $parent;
 
-$items = '';
+    $items = '';
     foreach ($sorted as $id) {
       $args->add($cats->getitem($id));
-      $items .= $theme->parsearg($tml, $args);
+      $items.= $theme->parsearg($tml, $args);
     }
 
-$args->item = $items;
+    $args->item = $items;
     return $theme->parsearg($theme->templates['catbread.items.childs'], $args);
   }
 
   public function getsimilar($list) {
     if (!$this->showsimilar || !count($list)) {
-return '';
-}
+      return '';
+    }
 
     $cats = $this->cats;
     $cats->loadall();
@@ -170,8 +170,8 @@ return '';
 
     array_clean($parents);
     if (!count($parents)) {
-return '';
-}
+      return '';
+    }
 
     /* without db cant sort
     $similar = array();
@@ -193,13 +193,13 @@ return '';
       $items.= $theme->parsearg($theme->templates['catbread.similar.item'], $args);
     }
 
-$args->item = $items;
-$args->items = $theme->parsearg($theme->templates['catbread.similar'], $args);
+    $args->item = $items;
+    $args->items = $theme->parsearg($theme->templates['catbread.similar'], $args);
     return $theme->parsearg($theme->templates['catbread'], $args);
   }
 
-public function themeparsed(basetheme $theme) {
-$this->externalfunc(get_class($this), 'Themeparsed', $theme);
-}
+  public function themeparsed(basetheme $theme) {
+    $this->externalfunc(get_class($this) , 'Themeparsed', $theme);
+  }
 
-}//class
+} //class

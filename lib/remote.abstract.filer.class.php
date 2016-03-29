@@ -27,7 +27,7 @@ class tremotefiler {
   }
 
   public function close() {
-}
+  }
 
   public function connect($host, $login, $password) {
     if (empty($host) || empty($login) || empty($password)) return false;
@@ -105,7 +105,7 @@ class tremotefiler {
     if (!$this->is_dir($dir)) {
       $this->forcedir(dirname($dir));
       $this->mkdir($dir, $this->chmod_dir);
-          }
+    }
   }
 
   protected function getfileinfo($filename) {
@@ -147,13 +147,13 @@ class tremotefiler {
     $filename = str_replace('\\\\', '/', $temp);
     $filename = str_replace('\\', '/', $filename);
 
-$this->chdir('/');
+    $this->chdir('/');
     if (!$root || !strbegin($filename, $root) || !$this->exists(substr($filename, strlen($root)))) {
-$root = $this->findroot($temp);
+      $root = $this->findroot($temp);
     }
 
     unlink($temp);
-return $root;
+    return $root;
   }
 
   public function findroot($filename) {
@@ -166,7 +166,7 @@ return $root;
       $filename = substr($filename, $i);
     }
 
-$this->chdir('/');
+    $this->chdir('/');
     while ($filename && !$this->exists($filename)) {
       if ($i = strpos($filename, '/', 1)) {
         $root.= substr($filename, 0, $i);

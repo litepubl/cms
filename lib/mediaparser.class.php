@@ -234,8 +234,7 @@ class tmediaparser extends tevents {
       $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->previewmode != 'none');
       $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
 
-      if (($resize || $enablepreview || $enablemidle) &&
- ($image = self::readimage($srcfilename))) {
+      if (($resize || $enablepreview || $enablemidle) && ($image = self::readimage($srcfilename))) {
         $this->onimage($image);
 
         if ($enablepreview && ($preview = $this->getsnapshot($srcfilename, $image))) {
@@ -257,8 +256,7 @@ class tmediaparser extends tevents {
           $midle = $this->createmidle($srcfilename, $image);
         }
 
-        if ($resize &&($item['width'] > $maxwidth || $item['height'] > $maxheight) &&
-          ($sizes = $this->resize($srcfilename, $image, $maxwidth, $maxheight))) {
+        if ($resize && ($item['width'] > $maxwidth || $item['height'] > $maxheight) && ($sizes = $this->resize($srcfilename, $image, $maxwidth, $maxheight))) {
           $item['width'] = $sizes['width'];
           $item['height'] = $sizes['height'];
 
@@ -524,9 +522,9 @@ class tmediaparser extends tevents {
         $ratio = $x / $y;
         //clip source size
         if ($sourcex / $sourcey > $ratio) {
-          $sourcex = (int) round($sourcey * $ratio);
+          $sourcex = (int)round($sourcey * $ratio);
         } else {
-          $sourcey = (int) round($sourcex / $ratio);
+          $sourcey = (int)round($sourcex / $ratio);
         }
         break;
 
@@ -535,9 +533,9 @@ class tmediaparser extends tevents {
       case 'min':
         $ratio = $sourcex / $sourcey;
         if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
-          $x = (int) round($y * $ratio);
+          $x = (int)round($y * $ratio);
         } else {
-          $y = (int) round($x / $ratio);
+          $y = (int)round($x / $ratio);
         }
         break;
 
@@ -572,9 +570,9 @@ class tmediaparser extends tevents {
   }
 
   public function createmidle($srcfilename, $image) {
-if (imagesx($image) <= $this->midlewidth && imagesy($image) <= $this->midleheight) {
-return false;
-}
+    if (imagesx($image) <= $this->midlewidth && imagesy($image) <= $this->midleheight) {
+      return false;
+    }
 
     $destfilename = self::replace_ext($srcfilename, '.midle.jpg');
     $destfilename = self::makeunique($destfilename);

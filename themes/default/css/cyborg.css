@@ -6342,6 +6342,9 @@ A.dashed:hover,
 A.dashed:focus {
   text-decoration: none;
   border-bottom: 1px dashed #2A9FD6;
+  display: inline-block;
+  height: 1em;
+  line-height: 1.05em;
 }
 .thin-text {
   font-weight: 200;

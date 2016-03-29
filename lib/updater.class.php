@@ -87,13 +87,13 @@ class tupdater extends tevents {
     litepublisher::$urlmap->clearcache();
     tlocal::clearcache();
     tsidebars::fix();
-if (function_exists('apc_clear_cache')) {
-apc_clear_cache();
-}
+    if (function_exists('apc_clear_cache')) {
+      apc_clear_cache();
+    }
 
     if ($log) {
-tfiler::log("update finished", 'update');
-}
+      tfiler::log("update finished", 'update');
+    }
   }
 
   public function autoupdate($protecttimeout = true) {

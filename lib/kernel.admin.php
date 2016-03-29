@@ -634,7 +634,7 @@ class tadminhtml {
     if (in_array($name, self::$tags)) return new thtmltag($name);
     if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
 
-    throw new Exception("the requested $name item not found in $this->section section");
+    throw new Exception("the requested $name item not found");
   }
 
   public function __call($name, $params) {
@@ -726,14 +726,8 @@ class tadminhtml {
   public function getradioitems($name, array $items, $selected) {
     $result = '';
     $theme = ttheme::i();
-    $tml = $theme->templates['content.admin.radioitem'];
-    foreach ($items as $index => $value) {
-      $result.= strtr($tml, array(
-        '$index' => $index,
-        '$checked' => $index == $selected ? 'checked="checked"' : '',
-        '$name' => $name,
-        '$value' => self::specchars($value)
-      ));
+    foreach ($items as $index => $title) {
+      $result.= $theme->getradio($name, $index, self::specchars($title) , $index == $selected);
     }
     return $result;
   }
@@ -1007,26 +1001,34 @@ class tabs {
 } //class
 
 //html.ulist.class.php
-//namespace litepubl\admin
 class ulist {
+  const aslinks = true;
   public $ul;
   public $item;
   public $link;
   public $value;
+  public $result;
 
-  public function __construct($admin = null) {
+  public function __construct($admin = null, $islink = false) {
     if ($admin) {
       $this->ul = $admin->templates['list'];
       $this->item = $admin->templates['list.item'];
       $this->link = $admin->templates['list.link'];
       $this->value = $admin->templates['list.value'];
+
+      if ($islink == self::aslinks) {
+        $this->item = $this->link;
+      }
     }
+
+    $this->result = '';
   }
 
   public function li($name, $value) {
     return strtr(is_int($name) ? $this->value : $this->item, array(
       '$name' => $name,
       '$value' => $value,
+      '$site.url' => litepublisher::$site->url,
     ));
   }
 
@@ -1039,6 +1041,14 @@ class ulist {
 
   public function ul($items) {
     return str_replace('$item', $items, $this->ul);
+  }
+
+  public function getresult() {
+    return $this->ul($this->result);
+  }
+
+  public function add($name, $value) {
+    $this->result.= $this->li($name, $value);
   }
 
   public function get(array $props) {

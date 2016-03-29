@@ -86,8 +86,8 @@ class baseparser extends tevents {
 
     $this->afterparse($theme);
     if ($this->replacelang) {
-$this->doreplacelang($theme);
-}
+      $this->doreplacelang($theme);
+    }
     $this->parsed($theme);
     $theme->unlock();
     return true;
@@ -292,8 +292,8 @@ $this->doreplacelang($theme);
     if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) || preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
       $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
       if (!file_exists($filename)) {
-$this->error("File '$filename' not found");
-}
+        $this->error("File '$filename' not found");
+      }
 
       if ($s = $this->getfile($filename)) {
         $s = $this->replace_about($s, $this->getabout($this->theme->name));

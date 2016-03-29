@@ -15,7 +15,7 @@ class tadminfiles extends tadminmenu {
   public function getcontent() {
     $result = '';
     $files = tfiles::i();
-$admintheme = $this->admintheme;
+    $admintheme = $this->admintheme;
     $lang = $this->lang;
     $args = new targs();
     if (!isset($_GET['action'])) {
@@ -92,7 +92,7 @@ $admintheme = $this->admintheme;
         '<a href="$site.files/files/$filename">$filename</a>'
       ) ,
       array(
-$lang->image,
+        $lang->image,
         $type != 'icon' ? '$title' : '<img src="$site.files/files/$filename" alt="$filename" />'
       ) ,
       array(
@@ -115,8 +115,8 @@ $lang->image,
 
   public function processform() {
     $files = tfiles::i();
-$admintheme = $this->admintheme;
-$lang = $this->lang;
+    $admintheme = $this->admintheme;
+    $lang = $this->lang;
 
     if (empty($_GET['action'])) {
       $isauthor = 'author' == litepublisher::$options->group;
@@ -125,8 +125,8 @@ $lang = $this->lang;
           return $admintheme->geterr(tlocal::get('uploaderrors', $_FILES['filename']['error']));
         }
         if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
-return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
-}
+          return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
+        }
         if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
         $overwrite = isset($_POST['overwrite']);
         $parser = tmediaparser::i();
@@ -135,8 +135,8 @@ return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
         //downloadurl
         $content = http::get($_POST['downloadurl']);
         if ($content == false) {
-return $admintheme->geterr($lang->errordownloadurl);
-}
+          return $admintheme->geterr($lang->errordownloadurl);
+        }
         $filename = basename(trim($_POST['downloadurl'], '/'));
         if ($filename == '') $filename = 'noname.txt';
         if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
@@ -146,8 +146,8 @@ return $admintheme->geterr($lang->errordownloadurl);
       }
 
       if (isset($_POST['idperm'])) {
-tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
-}
+        tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
+      }
 
       return $admintheme->success($lang->success);
     } elseif ($_GET['action'] == 'edit') {

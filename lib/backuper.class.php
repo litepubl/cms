@@ -112,15 +112,21 @@ class tbackuper extends tevents {
   }
 
   public function connect($host, $login, $password) {
-    if ($this->filer->connected) return true;
-    if ($this->filer->connect($host, $login, $password)) {
-      if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
-if (($root = $this->filer->getroot($this->ftproot)) && ($root != $this->ftproot)) {
-      $this->ftproot = $root;
-$this->save();
-}
+    if ($this->filer->connected) {
       return true;
     }
+
+    if ($this->filer->connect($host, $login, $password)) {
+      if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
+        if (($root = $this->filer->getroot($this->ftproot)) && ($root != $this->ftproot)) {
+          $this->ftproot = $root;
+          $this->save();
+        }
+      }
+
+      return true;
+    }
+
     return false;
   }
 

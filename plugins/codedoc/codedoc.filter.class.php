@@ -78,7 +78,7 @@ class tcodedocfilter extends titems {
 
   public function html($key, targs $args) {
     $theme = ttheme::instance();
-    $s = strtr(tlocal::get('htmlcodedoc', $key), array(
+    $s = strtr(tlocal::get('htmlcodedoc', $key) , array(
       '$tableclass' => $theme->templates['content.admin.tableclass'],
       "'" => '"',
     ));

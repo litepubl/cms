@@ -22,14 +22,14 @@ class tftpfiler extends tremotefiler {
   }
 
   public function __destruct() {
-$this->close();
-}
+    $this->close();
+  }
 
   public function close() {
     if ($this->handle) {
-@ftp_close($this->handle);
-$this->handle = false;
-}
+      @ftp_close($this->handle);
+      $this->handle = false;
+    }
 
     if ($this->tempfilehandle) {
       @fclose($this->tempfilehandle);
@@ -130,19 +130,19 @@ $this->handle = false;
 
   public function delete($file) {
     if ($file) {
-    if ($this->is_file($file)) {
-return @ftp_delete($this->handle, $file);
-} else {
-    return @ftp_rmdir($this->handle, $file);
-}
-}
+      if ($this->is_file($file)) {
+        return @ftp_delete($this->handle, $file);
+      } else {
+        return @ftp_rmdir($this->handle, $file);
+      }
+    }
 
-return false;
+    return false;
   }
 
   public function unlink($file) {
-return @ftp_delete($this->handle, $file);
-}
+    return @ftp_delete($this->handle, $file);
+  }
 
   public function rm($file) {
     return @ftp_rmdir($this->handle, $file);
@@ -299,4 +299,4 @@ return @ftp_delete($this->handle, $file);
     return $result;
   }
 
-}//class
+} //class

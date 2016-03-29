@@ -7,12 +7,12 @@
  */
 
 class ulist {
-const aslinks = true;
+  const aslinks = true;
   public $ul;
   public $item;
   public $link;
   public $value;
-public $result;
+  public $result;
 
   public function __construct($admin = null, $islink = false) {
     if ($admin) {
@@ -21,19 +21,19 @@ public $result;
       $this->link = $admin->templates['list.link'];
       $this->value = $admin->templates['list.value'];
 
-if ($islink == self::aslinks) {
-$this->item = $this->link;
-}
+      if ($islink == self::aslinks) {
+        $this->item = $this->link;
+      }
     }
 
-$this->result = '';
+    $this->result = '';
   }
 
   public function li($name, $value) {
     return strtr(is_int($name) ? $this->value : $this->item, array(
       '$name' => $name,
       '$value' => $value,
-'$site.url' => litepublisher::$site->url,
+      '$site.url' => litepublisher::$site->url,
     ));
   }
 
@@ -48,13 +48,13 @@ $this->result = '';
     return str_replace('$item', $items, $this->ul);
   }
 
-public function getresult() {
-return $this->ul($this->result);
-}
+  public function getresult() {
+    return $this->ul($this->result);
+  }
 
-public function add($name, $value) {
-$this->result .= $this->li($name, $value);
-}
+  public function add($name, $value) {
+    $this->result.= $this->li($name, $value);
+  }
 
   public function get(array $props) {
     $result = '';

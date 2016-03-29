@@ -31,11 +31,11 @@ class admincatbread implements iadmin {
     $args->sort = tadminhtml::array2combo($sort, $plugin->childsortname);
 
     $pos = array(
-'replace' => $lang->replace,
+      'replace' => $lang->replace,
       'top' => $lang->top,
       'before' => $lang->before,
       'after' => $lang->after,
-'nothing' => $lang->nothing,
+      'nothing' => $lang->nothing,
     );
 
     $args->breadpos = tadminhtml::array2combo($pos, $plugin->breadpos);
@@ -62,7 +62,7 @@ class admincatbread implements iadmin {
     $plugin->breadpos = $breadpos;
     $plugin->similarpos = $similarpos;
     $plugin->save();
-basetheme::clearcache();
+    basetheme::clearcache();
     return '';
   }
 

@@ -26,8 +26,8 @@ class litepublisher {
   public static function init() {
     if (defined('litepublisher_mode') && (litepublisher_mode == 'debug')) litepublisher::$debug = true;
     if (!preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', strtolower(trim($_SERVER['HTTP_HOST'])) , $domain)) {
-die('cant resolve domain name');
-}
+      die('cant resolve domain name');
+    }
 
     self::$domain = $domain[2];
 

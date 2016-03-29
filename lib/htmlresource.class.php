@@ -130,7 +130,7 @@ class tadminhtml {
     $result = '';
     $theme = ttheme::i();
     foreach ($items as $index => $title) {
-      $result.= $theme->getradio($name, $index, self::specchars($title), $index == $selected);
+      $result.= $theme->getradio($name, $index, self::specchars($title) , $index == $selected);
     }
     return $result;
   }

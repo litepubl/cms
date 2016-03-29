@@ -149,12 +149,13 @@ class tadminmenumanager extends tadminmenu {
     $lang = tlocal::admin();
     $editurl = litepublisher::$site->url . $this->url . 'edit/' . litepublisher::$site->q . 'id';
 
-return tablebuilder::fromitems($menus->items, array(
+    return tablebuilder::fromitems($menus->items, array(
       array(
         $lang->menutitle,
-function (tablebuilder $tb) use ($menus) {
-        return $menus->getlink($tb->item['id']);
-      }) ,
+        function (tablebuilder $tb) use ($menus) {
+          return $menus->getlink($tb->item['id']);
+        }
+      ) ,
 
       array(
         'right',
@@ -165,9 +166,10 @@ function (tablebuilder $tb) use ($menus) {
       array(
         'center',
         $lang->parent,
-function (tablebuilder $tb) use($menus) {
-        return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
-      }) ,
+        function (tablebuilder $tb) use ($menus) {
+          return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
+        }
+      ) ,
 
       array(
         'center',

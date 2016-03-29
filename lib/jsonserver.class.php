@@ -73,8 +73,8 @@ class tjsonserver extends tevents {
     $this->beforerequest();
     $args = $this->getargs();
     if (!$args || !isset($args['method'])) {
-return $this->json_error(false, 403, 'Method not found in arguments');
-}
+      return $this->json_error(false, 403, 'Method not found in arguments');
+    }
 
     $rpc = isset($args['jsonrpc']) ? ($args['jsonrpc'] == '2.0') : false;
     $id = $rpc && isset($args['id']) ? $args['id'] : false;
@@ -92,8 +92,7 @@ return $this->json_error(false, 403, 'Method not found in arguments');
     if (isset($params['litepubl_user'])) $_COOKIE['litepubl_user'] = $params['litepubl_user'];
     if (isset($params['litepubl_user_id'])) $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
 
-    $a = array(
-&$params
+    $a = array(&$params
     );
 
     $this->callevent('beforecall', $a);
@@ -153,8 +152,7 @@ return $this->json_error(false, 403, 'Method not found in arguments');
     header('Date: " . date('r') . "');
     Header( 'Cache-Control: no-cache, must-revalidate');
     Header( 'Pragma: no-cache');
-    ?>" .
- $js;
+    ?>" . $js;
   }
 
   public function json_error($id, $code, $message) {

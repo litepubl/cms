@@ -7,61 +7,63 @@
  */
 
 class tsingleitems extends titems {
-public $copyprops;
+  public $copyprops;
   public static $instances;
 
   protected function create() {
     $this->dbversion = false;
     parent::create();
-$this->copyprops = array();
-}
-
-  public function addinstance($instance) {
-$classname = get_class($instance);
-$item = array(
-'classname' => $classname,
-    );
-
-foreach ($this->copyprops as $prop) {
-$item[$prop] = $instance->{$prop};
-}
-
-$id = $this->additem($item);
-$instance->id = $id;
-$instance->save();
-
-if (isset(self::$instances[$classname])) {
-self::$instances[$classname][$id] = $instance;
-} else {
-self::$instances[$classname] = array($id => $instance);
-}
-
-return $id;
+    $this->copyprops = array();
   }
 
-public function get($id) {
-$id = (int) $id;
-$classname = $this->items[$id]['classname'];
-$result = getinstance($classname);
-if ($id != $result->id) {
-if (!isset(self::$instances[$classname])) {
-self::$instances[$classname] = array();
-}
+  public function addinstance($instance) {
+    $classname = get_class($instance);
+    $item = array(
+      'classname' => $classname,
+    );
 
-if (isset(self::$instances[$classname][$id])) {
-$result = self::$instances[$classname][$id];
-} else {
-if ($result->id) {
-$result = new $classname();
-}
+    foreach ($this->copyprops as $prop) {
+      $item[$prop] = $instance->{$prop};
+    }
 
-$result->id = $id;
-$result->load();
-self::$instances[$classname][$id] = $result;
-}
-}
+    $id = $this->additem($item);
+    $instance->id = $id;
+    $instance->save();
 
-return $result;
-}
+    if (isset(self::$instances[$classname])) {
+      self::$instances[$classname][$id] = $instance;
+    } else {
+      self::$instances[$classname] = array(
+        $id => $instance
+      );
+    }
 
-}//class
+    return $id;
+  }
+
+  public function get($id) {
+    $id = (int)$id;
+    $classname = $this->items[$id]['classname'];
+    $result = getinstance($classname);
+    if ($id != $result->id) {
+      if (!isset(self::$instances[$classname])) {
+        self::$instances[$classname] = array();
+      }
+
+      if (isset(self::$instances[$classname][$id])) {
+        $result = self::$instances[$classname][$id];
+      } else {
+        if ($result->id) {
+          $result = new $classname();
+        }
+
+        $result->id = $id;
+        $result->load();
+        self::$instances[$classname][$id] = $result;
+      }
+    }
+
+    return $result;
+  }
+
+} //class
