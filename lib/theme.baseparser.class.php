@@ -85,7 +85,9 @@ class baseparser extends tevents {
     }
 
     $this->afterparse($theme);
-    if ($this->replacelang) $this->doreplacelang($theme);
+    if ($this->replacelang) {
+$this->doreplacelang($theme);
+}
     $this->parsed($theme);
     $theme->unlock();
     return true;

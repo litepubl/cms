@@ -18,7 +18,7 @@ class catbread extends tplugin {
     $this->data['showchilds'] = true;
     $this->data['childsortname'] = 'title';
     $this->data['showsimilar'] = false;
-    $this->data['breadpos'] = 'before';
+    $this->data['breadpos'] = 'replace';
     $this->data['similarpos'] = 'after';
   }
 
@@ -51,22 +51,27 @@ return tcategories::i();
   }
 
   public function getpost() {
+$result = '';
     $post = ttheme::$vars['post'];
     if (count($post->categories)) {
-    return $this->getbread($post->categories[0]);
+if ($this->breadpos == 'replace') {
+foreach ($post->categories as $idcat) {
+    $result .= $this->getbread($idcat);
+}
+} else {
+    $result = $this->getbread($post->categories[0]);
+}
 }
 
-return '';
+return $result;
   }
 
   public function getsimilar() {
-    if (!$this->showsimilar) {
-return '';
-}
-
+    if ($this->showsimilar) {
     $post = ttheme::$vars['post'];
     if (count($post->categories)) {
     return $this->getsimilar($post->categories);
+}
 }
 
 return '';
@@ -95,7 +100,7 @@ return '';
 
     $theme = ttheme::i();
     $tml = $theme->templates['catbread.items.item'];
-$lang = tlocal::i('catbreads');
+$lang = tlocal::i('catbread');
     $args = new targs();
     $items = '';
     $index = 1;
@@ -125,9 +130,8 @@ $childs = $this->getchilds($idcat);
 $args->item = $items;
 $args->current = $current;
 $args->childs = $childs;
-$args->items = $theme->parsearg($theme->templates['catbreads.items'], $args);
-$args->similar = '';
-    return $theme->parsearg($templates['catbreads'], $args;
+$args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
+    return $theme->parsearg($theme->templates['catbread'], $args;
   }
 
   public function getchilds($parent) {
@@ -138,7 +142,7 @@ return '';
 }
 
     $theme = ttheme::i();
-    $tml = $theme->templates['catbreads.items.childs.item'];
+    $tml = $theme->templates['catbread.items.childs.item'];
     $args = new targs();
     $args->parent = $parent;
 
@@ -149,11 +153,14 @@ $items = '';
     }
 
 $args->item = $items;
-    return $theme->parsearg($theme->templates['catbreads.items.childs'], $args);
+    return $theme->parsearg($theme->templates['catbread.items.childs'], $args);
   }
 
   public function getsimilar($list) {
-    if (!$this->showsimilar || !count($list)) return '';
+    if (!$this->showsimilar || !count($list)) {
+return '';
+}
+
     $cats = $this->cats;
     $cats->loadall();
     $parents = array();
@@ -162,7 +169,10 @@ $args->item = $items;
     }
 
     array_clean($parents);
-    if (!count($parents)) return '';
+    if (!count($parents)) {
+return '';
+}
+
     /* without db cant sort
     $similar = array();
     foreach ($cats->items as $id => $item) {
@@ -180,66 +190,16 @@ $args->item = $items;
     $items = '';
     foreach ($similar as $id) {
       $args->add($cats->getitem($id));
-      $items.= $theme->parsearg($this->tml['similaritem'], $args);
+      $items.= $theme->parsearg($theme->templates['catbread.similar.item'], $args);
     }
 
-    $args->item = $items;
-    return $theme->parsearg($this->tml['similaritems'], $args);
+$args->item = $items;
+$args->items = $theme->parsearg($theme->templates['catbread.similar'], $args);
+    return $theme->parsearg($theme->templates['catbread'], $args;
   }
 
-  public function themeparsed(basetheme $theme) {
-    $tag1 = '$catbread.post';
-    $tag2 = '$catbread.similar';
-
-    foreach (array(
-      'content.post',
-      'shop.product'
-    ) as $k) {
-      if (isset($theme->templates[$k]) && !strpos($theme->templates[$k], $similar)) {
-$v = $theme->templates[$k];
-    $replace = '$post.catlinks';
-
-switch ($this->breadpos) {
-case 'top':
-$v = $tag1 . $v;
-break;
-
-case 'before':
-$replace = $tag1 . $replace;
-break;
-
-case 'after':
-$replace .= $tag1;
-break;
-
-case 'replace':
-$replace = $tag1;
-break;
-
-default:
-////ignore
+public function themeparsed(basetheme $theme) {
+$this->externalfunc(get_class($this), 'Themeparsed', $theme);
 }
 
-switch ($this->similarpos) {
-case 'top':
-$v = $tag2 . $v;
-break;
-
-case 'before':
-$replace = $tag2 . $replace
-break;
-
-case 'after':
-$replace .= $tag2;
-break;
-
-default:
-////ignore
-}
-
-      $theme->templates[$k] = str_replace('$post.catlinks', $replace, $v);
-}
-    }
-  }
-
-} //class
+}//class
