@@ -66,7 +66,7 @@ foreach ($post->categories as $idcat) {
 return $result;
   }
 
-  public function getsimilar() {
+  public function getsim() {
     if ($this->showsimilar) {
     $post = ttheme::$vars['post'];
     if (count($post->categories)) {
@@ -77,7 +77,7 @@ return $result;
 return '';
   }
 
-  public function getread($idcat) {
+  public function getbread($idcat) {
     if (!$idcat) {
       return '';
     }
@@ -131,7 +131,7 @@ $args->item = $items;
 $args->current = $current;
 $args->childs = $childs;
 $args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
-    return $theme->parsearg($theme->templates['catbread'], $args;
+    return $theme->parsearg($theme->templates['catbread'], $args);
   }
 
   public function getchilds($parent) {
@@ -195,7 +195,7 @@ return '';
 
 $args->item = $items;
 $args->items = $theme->parsearg($theme->templates['catbread.similar'], $args);
-    return $theme->parsearg($theme->templates['catbread'], $args;
+    return $theme->parsearg($theme->templates['catbread'], $args);
   }
 
 public function themeparsed(basetheme $theme) {

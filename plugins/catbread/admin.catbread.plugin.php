@@ -62,6 +62,7 @@ class admincatbread implements iadmin {
     $plugin->breadpos = $breadpos;
     $plugin->similarpos = $similarpos;
     $plugin->save();
+basetheme::clearcache();
     return '';
   }
 

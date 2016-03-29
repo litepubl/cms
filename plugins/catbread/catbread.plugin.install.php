@@ -15,6 +15,7 @@ $parser->lock();
 $parser->parsed = $self->themeparsed;
 $parser->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
 $parser->unlock();
+basetheme::clearcache();
 }
 
 function catbreadUninstall($self) {
@@ -25,17 +26,18 @@ $parser->lock();
 $parser->unbind($self);
 $parser->removetags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
 $parser->unlock();
+basetheme::clearcache();
 }
 
 function catbreadThemeparsed(catbread $self, basetheme $theme) {
     $tag1 = '$catbread.post';
-    $tag2 = '$catbread.similar';
+    $tag2 = '$catbread.sim';
 
     foreach (array(
       'content.post',
       'shop.product'
     ) as $k) {
-      if (isset($theme->templates[$k]) && !strpos($theme->templates[$k], $similar)) {
+      if (isset($theme->templates[$k]) && !strpos($theme->templates[$k], '$catbread')) {
 $v = $theme->templates[$k];
     $replace = '$post.catlinks';
 
