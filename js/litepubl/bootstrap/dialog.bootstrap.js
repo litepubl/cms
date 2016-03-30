@@ -74,12 +74,15 @@
 
     remove: function() {
       if (!this.dialog) return false;
+
+this.trigger('remove');
       this.options = false;
       this.footer = false;
       this.dialog.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
-      this.dialog.find(".popover-toggle, .popover-help").popover("destroy");
+      this.dialog.find(".popover-toggle").popover("destroy");
       this.dialog.remove();
       this.dialog = false;
+
       if (this.style) {
         this.style.remove();
         this.style = false;
@@ -146,7 +149,18 @@
     },
 
     opened: function() {
-      if ($.isFunction(this.options.open)) this.options.open(this.dialog);
+      if ($.isFunction(this.options.open)) {
+this.options.open(this.dialog);
+}
+
+this.trigger('opened');
+},
+
+trigger: function(name) {
+this.dialog.trigger($.Event(name + '.dialog.litepubl', {
+        target: this.dialog[0],
+dialog: this
+      }));
     },
 
     getbutton: function(index) {
