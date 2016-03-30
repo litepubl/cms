@@ -26,18 +26,18 @@
       self.addClass("popover-ready");
       if (self.data("bs.popover")) return;
 
-var o = $.extend({
-          container: 'body',
-          placement: 'auto right',
+      var o = $.extend({
+        container: 'body',
+        placement: 'auto right',
         trigger: 'hover focus'
-        }, options);
+      }, options);
 
       self.trigger($.Event('getoptions.popover', {
-target: this,
-        relatedTarget: event.relatedTarget,
-options: o
-}))
-.popover(o)
+          target: this,
+          relatedTarget: event.relatedTarget,
+          options: o
+        }))
+        .popover(o)
         .on('show.bs.popover.singletip', function() {
           popovers.push(this);
         })
@@ -49,7 +49,7 @@ options: o
               return;
             }
           }
-});
+        });
 
       self.trigger(event);
     });
@@ -59,7 +59,7 @@ options: o
     $("body").on("click.singlepopover", function(e) {
       if (!popovers.length) return;
 
-var target = e.target;
+      var target = e.target;
       for (var i = popovers.length - 1; i >= 0; i--) {
         if (target === popovers[i]) return;
         if ($.contains(popovers[i], target)) return;

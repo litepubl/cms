@@ -75,7 +75,7 @@
     remove: function() {
       if (!this.dialog) return false;
 
-this.trigger('remove');
+      this.trigger('remove');
       this.options = false;
       this.footer = false;
       this.dialog.find(".tooltip-toggle, .tooltip-ready").tooltip("destroy");
@@ -150,16 +150,16 @@ this.trigger('remove');
 
     opened: function() {
       if ($.isFunction(this.options.open)) {
-this.options.open(this.dialog);
-}
+        this.options.open(this.dialog);
+      }
 
-this.trigger('opened');
-},
+      this.trigger('opened');
+    },
 
-trigger: function(name) {
-this.dialog.trigger($.Event(name + '.dialog.litepubl', {
+    trigger: function(name) {
+      this.dialog.trigger($.Event(name + '.dialog.litepubl', {
         target: this.dialog[0],
-dialog: this
+        dialog: this
       }));
     },
 

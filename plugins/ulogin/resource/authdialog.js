@@ -20,7 +20,7 @@
     // opened flag
     dialog: false,
     statusline: false,
-    tml: '<p class="help-block text-center"></p>' +
+    tml: '<p class="help-block text-center"><a href="#" id="authdialog-help" class="dashed"><span class="fa fa-question"></span> %%lang.helptitle%%</a></p>' +
       '%%ulogin%%' +
       '%%email%%' +
       //single space for non zero height
@@ -97,10 +97,22 @@
 
         buttons: this.email.buttons(),
         open: function(dialog) {
-          if ("pophelp" in $) {
-            var lng = lang.authdialog;
-            $.pophelp.create(dialog.find(".help-block:first"), lng.helptitle, $.pophelp.text2ul(lng.help));
-          }
+          $("#authdialog-help", dialog).popover({
+            container: 'body',
+            delay: 120,
+            html: true,
+            placement: 'bottom',
+            trigger: 'hover focus click',
+            title: function() {
+              return $(this).text();
+            },
+
+            content: function() {
+              return "<ul><li>" +
+                lang.authdialog.help.replace(/\n/gm, "</li><li>") +
+                "</li></ul>";
+            }
+          });
 
           self.statusline = $("#authdialog-status", dialog);
 
