@@ -22,11 +22,10 @@
     statusline: false,
     tml: '<p class="help-block text-center"></p>' +
       '%%ulogin%%' +
-      //'<hr>' +
-      //'<h5>%%lang.emaillogin%%</h5>' +
       '%%email%%' +
       //single space for non zero height
       '<p id="authdialog-status">&nbsp;</p>',
+
     tml_status: '<span class="text-%%status%%">%%icon%% %%text%%</span>',
 
     init: function() {

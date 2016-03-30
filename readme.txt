@@ -2,13 +2,13 @@ LitePublisher is content management system. LitePublisher is a simple and lightw
 http://litepublisher.com/ 
 
 Minimum System Requirements: 
-- PHP 5.2
+- PHP 5.4
 - MySQL or pdo driver
 
  Optional:
 - apache server with rewrite module
 
-Installation. If you have a shell access to the server you can upload files:
+Installation. If you have a shell access to the server you can download file:
 wget https://github.com/litepubl/cms/archive/vx.xx.tar.gz
 tar -xf cms.x.xx.tar.gz
 
