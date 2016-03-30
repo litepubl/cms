@@ -1,6 +1,7 @@
 <?php
 
 foreach (array(
+'litepubl.php',
 //'debugproxy.class.php');
 'data.class.php',
 'array2prop.class.php',
@@ -27,6 +28,8 @@ foreach (array(
 'classes.functions.php',
 'options.class.php',
 'site.class.php',
+
+'init.php',
 ) as $filename) {
-    require (litepublisher::$paths->lib . $filename);
+    require (__DIR__ . '/' . $filename);
 }
