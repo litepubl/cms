@@ -1,6 +1,7 @@
 <?php
 
 foreach (array(
+'paths.php',
 'litepubl.php',
 //'debugproxy.class.php');
 'data.class.php',

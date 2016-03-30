@@ -22,7 +22,9 @@ class litepubl {
   public static $microtime;
 
   public static function init() {
-    if (defined('litepublisher_mode') && (litepublisher_mode == 'debug')) litepublisher::$debug = true;
+    if (defined('litepublisher_mode') && (litepublisher_mode == 'debug')) {
+static::$debug = true;
+}
     if (!preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', strtolower(trim($_SERVER['HTTP_HOST'])) , $domain)) {
       die('cant resolve domain name');
     }

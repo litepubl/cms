@@ -100,8 +100,8 @@ function strend($s, $end) {
 
 function BuildKernel($dir){
 makekernel($dir, 'kernel.php', array(
-'litepubl.php',
 'paths.php',
+'litepubl.php',
 'db.class.php',
 'data.class.php',
 'array2prop.class.php',

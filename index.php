@@ -8,7 +8,7 @@
 
 namespace litepubl;
 class config {
-public static $debug = false;
+public static $debug = true;
 }
 
 if (config::$debug) {

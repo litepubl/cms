@@ -1,10 +1,10 @@
 <?php
 
-if (version_compare(PHP_VERSION, '5.1', '<')) {
-  die('Lite Publisher requires PHP 5.1 or later. You are using PHP ' . PHP_VERSION);
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+  die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . PHP_VERSION);
 }
 
-\class_alias('litepubl\litepubl', '\litepublisher');
+\class_alias('litepubl\litepubl', 'litepublisher');
 
 try {
   litepublisher::init();
