@@ -26,10 +26,10 @@
       self.addClass("tooltip-ready");
       if (self.data("bs.tooltip")) return;
 
-      self.tooltip({
+      self.tooltip($.extend({
           container: 'body',
           placement: 'auto top'
-        }, options)
+        }, options))
         .on('show.bs.tooltip.singletip', function() {
           tooltips.push(this);
         })
