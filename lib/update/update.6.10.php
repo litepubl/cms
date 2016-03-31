@@ -4,14 +4,6 @@ $js = tjsmerger::i();
 $js->lock();
 $js->deletefile('default', '/js/litepubl/bootstrap/popover.post.min.js');
 $js->unlock();
-}
-$catbread = catbread::i();
-unset($catbread->data['tml']);
-$catbread->save();
-
-tlocalmerger::i()->addplugin('catebrad');
-tthemeparser::i()->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
-}
 
 if (version_compare(PHP_VERSION, '5.4', '<')) {
 $site = litepublisher::$site;

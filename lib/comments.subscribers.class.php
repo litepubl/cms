@@ -23,13 +23,8 @@ class tsubscribers extends titemsposts {
     $this->addmap('blacklist', array());
   }
 
-  public function load() {
-    return tfilestorage::load($this);
-  }
-
-  public function save() {
-    if ($this->lockcount > 0) return;
-    tfilestorage::save($this);
+  public function getstorage() {
+    return litepubl::$storage;
   }
 
   public function update($pid, $uid, $subscribed) {

@@ -196,21 +196,6 @@ return false;
       return $this->getstorage()->save($this);
   }
 
-  public function loadfromstring($s) {
-    try {
-      if (!empty($s)) {
-        $this->data = unserialize($s) + $this->data;
-      }
-
-      $this->afterload();
-      return true;
-    }
-    catch(Exception $e) {
-      echo 'Caught exception: ' . $e->getMessage();
-      return false;
-    }
-  }
-
   public function afterload() {
     foreach ($this->coinstances as $coinstance) {
       if (method_exists($coinstance, 'afterload')) {
@@ -245,20 +230,10 @@ return false;
   public function getdb($table = '') {
     $table = $table ? $table : $this->table;
     if ($table) {
-      litepublisher::$db->table = $table;
+      litepubl::$db->table = $table;
     }
 
-    return litepublisher::$db;
-  }
-
-  protected function SaveToDB() {
-    $this->db->add($this->getbasename() , $this->savetostring());
-  }
-
-  protected function LoadFromDB() {
-    if ($r = $this->db->select('basename = ' . $this->getbasename() . "'")) {
-      return $this->loadfromstring($r['data']);
-    }
+    return litepubl::$db;
   }
 
   protected function getthistable() {

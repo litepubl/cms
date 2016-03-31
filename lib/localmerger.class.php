@@ -80,7 +80,7 @@ class tlocalmerger extends tfilemerger {
       $ini[$section] = isset($ini[$section]) ? $itemsini + $ini[$section] : $itemsini;
     }
 
-    tfilestorage::savevar(tlocal::getcachedir() . $name, $ini);
+    litepubl::$storage->savedata(tlocal::getcachedir() . $name, $ini);
     $lang->ini = $ini + $lang->ini;
     $lang->loaded[] = $name;
     if (isset($ini['searchsect'])) $lang->joinsearch($ini['searchsect']);
