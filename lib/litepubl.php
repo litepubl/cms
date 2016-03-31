@@ -52,13 +52,18 @@ static::createStorage();
 }
 
 public static function createStorage() {
-if (config::$memcache) {
-static::$memcache = 
+if (config::$memcache && class_exists('Memcache')) {
+    static::$memcache =  new Memcache;
+    static::$memcache->connect(
+isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1',
+isset(config::$memcache['post']) ? config::$memcache['post'] :  1211);
 }
 
 if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
 $classname = config::$classes['storage'];
   static::$storage = new $classname();
+} else if (static::$memcache) {
+  static::$storage = new memcachestorage();
 } else {
   static::$storage = new storage();
 }
