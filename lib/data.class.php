@@ -170,13 +170,22 @@ class tdata {
           );
         }
 
-        return call_user_func_array($fnc, $args);
+        return \call_user_func_array($fnc, $args);
       }
     }
   }
 
+  public function getstorage() {
+return litepubl\litepubl::$storage;
+}
+
   public function load() {
-    return tfilestorage::load($this);
+    if ($this->getstorage()->load($this)) {
+      $this->afterload();
+      return true;
+}
+
+return false;
   }
 
   public function save() {
@@ -184,15 +193,7 @@ class tdata {
       return;
     }
 
-    if ($this->dbversion) {
-      $this->SaveToDB();
-    } else {
-      tfilestorage::save($this);
-    }
-  }
-
-  public function savetostring() {
-    return serialize($this->data);
+      return $this->getstorage()->save($this);
   }
 
   public function loadfromstring($s) {
