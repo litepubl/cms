@@ -8,6 +8,10 @@ foreach (array(
 'array2prop.class.php',
 'utils.functions.php',
 
+'storage.php',
+'storage.inc.php',
+
+//old storages
 'storage.file.class.php',
 'storage.class.php',
 'storage.mem.class.php',
