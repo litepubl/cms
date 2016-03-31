@@ -7,8 +7,11 @@
  */
 
 namespace litepubl;
+
 class config {
-public static $debug = true;
+public static $debug = false;
+public static $host = false;
+public static $dieOnInvalidHost = true;
 }
 
 if (config::$debug) {
