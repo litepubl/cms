@@ -30,7 +30,7 @@ foreach (array(
 'options.class.php',
 'site.class.php',
 
-'init.php',
+'litepubl.init.php',
 ) as $filename) {
     require (__DIR__ . '/' . $filename);
 }

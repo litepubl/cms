@@ -133,7 +133,7 @@ makekernel($dir, 'kernel.php', array(
 'storage.mem.class.php',
 'storage.cache.file.class.php',
 'storage.cache.memcache.class.php',
-'init.php',
+'litepubl.init.php',
 ));
 
 makekernel($dir, 'kernel.templates.php',  array(
