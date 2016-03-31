@@ -5,6 +5,10 @@ $js->lock();
 $js->deletefile('default', '/js/litepubl/bootstrap/popover.post.min.js');
 $js->unlock();
 
+$cl = litepublisher::$classes;
+unset($cl->items['tfilestorage']);
+$cl->save();
+
 if (version_compare(PHP_VERSION, '5.4', '<')) {
 $site = litepublisher::$site;
 tmailer::sendtoadmin("Обновление сайта $site.url", " Здравствуйте!

@@ -16,6 +16,7 @@ public static $cache;
   public static $debug ;
   public static $domain;
   public static $log;
+  public static $memcache;
   public static $microtime;
   public static $options;
   public static $paths;
@@ -51,6 +52,10 @@ static::createStorage();
 }
 
 public static function createStorage() {
+if (config::$memcache) {
+static::$memcache = 
+}
+
 if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
 $classname = config::$classes['storage'];
   static::$storage = new $classname();

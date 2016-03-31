@@ -128,7 +128,10 @@ makekernel($dir, 'kernel.php', array(
 'users.class.php',
 //'users.groups.class.php'
 'items.pool.class.php',
-'storage.file.class.php',
+
+'storage.php',
+'storage.inc.php',
+'storage.memcache.php',
 'storage.class.php',
 'storage.mem.class.php',
 'storage.cache.file.class.php',
