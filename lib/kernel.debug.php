@@ -10,6 +10,8 @@ foreach (array(
 
 'storage.php',
 'storage.inc.php',
+'storage.json.php',
+'storage.memcache.php',
 
 //old storages
 'storage.file.class.php',
