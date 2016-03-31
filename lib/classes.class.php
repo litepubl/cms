@@ -44,13 +44,9 @@ class tclasses extends titems {
     }
   }
 
-  public function load() {
-    return tstorage::load($this);
-  }
-
-  public function save() {
-    return tstorage::save($this);
-  }
+  public function getstorage() {
+return litepubl\litepubl::$datastorage;
+}
 
   public function getinstance($class) {
     if (!class_exists($class)) {

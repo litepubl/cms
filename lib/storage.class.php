@@ -6,59 +6,89 @@
  *
  */
 
-class tstorage extends tfilestorage {
-  public static $data;
-  private static $modified;
+namespace litepubl {
+class datastorage {
+  public  $data;
+  private  $modified;
 
-  public static function save(tdata $obj) {
-    self::$modified = true;
+public function __construct() {
+    $this->data = [];
+}
+
+public function getStorage() {
+return litepubl::$storage;
+}
+
+  public  function save(tdata $obj) {
+    $this->modified = true;
     $base = $obj->getbasename();
-    if (!isset(self::$data[$base])) self::$data[$base] = & $obj->data;
+    if (!isset($this->data[$base])) {
+$this->data[$base] = & $obj->data;
+}
+
     return true;
   }
 
-  public static function load(tdata $obj) {
+  public  function load(tdata $obj) {
     $base = $obj->getbasename();
-    if (isset(self::$data[$base])) {
-      $obj->data = & self::$data[$base];
-      $obj->afterload();
+    if (isset($this->data[$base])) {
+      $obj->data = & $this->data[$base];
       return true;
     } else {
-      self::$data[$base] = & $obj->data;
+      $this->data[$base] = & $obj->data;
       return false;
     }
   }
 
-  public static function remove(tdata $obj) {
+  public  function remove(tdata $obj) {
     $base = $obj->getbasename();
-    if (isset(self::$data[$base])) {
-      unset(self::$data[$base]);
-      self::$modified = true;
+    if (isset($this->data[$base])) {
+      unset($this->data[$base]);
+      $this->modified = true;
       return true;
     }
   }
 
-  public static function savemodified() {
-    if (self::$modified) {
-      if (self::$disabled) return false;
-      $lock = litepublisher::$paths->data . 'storage.lok';
-      if (($fh = @fopen($lock, 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
-        self::savetofile(litepublisher::$paths->data . 'storage', serialize(self::$data));
-        flock($fh, LOCK_UN);
-        fclose($fh);
-        @chmod($lock, 0666);
+  public  function loaddata() {
+if ($data = $this->getStorage()->loaddata(litepubl::$paths->data . 'storage')) {
+$this->data = $data;
+return true;
+}
+
+return false;
+  }
+
+  public  function saveModified() {
+    if (!$this->modified) {
+return false;
+}
+
+      $lockfile = litepubl::$paths->data . 'storage.lok';
+      if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
+$this->getStorage()->savedata(litepubl::$paths->data . 'storage', $this->data);
+      $this->modified = false;
+        \flock($fh, LOCK_UN);
+        \fclose($fh);
+        @\chmod($lockfile, 0666);
+      return true;
       } else {
-        tfiler::log('Storage locked, data not saved');
-      }
-      self::$modified = false;
-      return true;
-    }
+if ($fh) {
+@\fclose($fh);
+}
+
+        $this->error('Storage locked, data not saved');
     return false;
+      }
   }
 
-  public static function loaddata() {
-    self::$data = array();
-    return self::loadvar(litepublisher::$paths->data . 'storage', self::$data);
-  }
+public function error($mesg) {
+tfiler::log($mesg);
+}
+
+public function isInstalled() {
+return count($this->data);
+}
 
 } //class
+
+}//namespace

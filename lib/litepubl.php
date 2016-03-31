@@ -11,9 +11,11 @@ namespace litepubl {
 class litepubl {
 public static $cache;
   public static $classes;
+  public static $datastorage;
   public static $db;
   public static $debug ;
   public static $domain;
+  public static $log;
   public static $microtime;
   public static $options;
   public static $paths;
@@ -33,18 +35,19 @@ static::createInstances();
 
 public function createAliases() {
 \class_alias(get_called_class(), 'litepublisher');
-\class_alias('litepubl\storage', 'storage');
+\class_alias(get_called_class(), 'litepubl');
+\class_alias('tdata', 'litepubl\tdata');
 }
 
 public static function createInstances() {
     static::$paths = new tpaths();
 static::createStorage();
-  static::$classes = tclasses::i();
-  static::$options = toptions::i();
-  static::$site = tsite::i();
-  static::$db = tdatabase::i();
-static::$cache = new cache();
-  static::$urlmap = turlmap::i();
+  static::$classes = \tclasses::i();
+  static::$options = \toptions::i();
+  static::$site = \tsite::i();
+  static::$db = \tdatabase::i();
+//static::$cache = new cache();
+  static::$urlmap = \turlmap::i();
 }
 
 public static function createStorage() {
@@ -55,7 +58,9 @@ $classname = config::$classes['storage'];
   static::$storage = new storage();
 }
 
-if (!static::$storage->installed) {
+static::$datastorage = new datastorage();
+static::$datastorage->loaddata();
+if (!static::$datastorage->isInstalled()) {
     require(static::$paths->lib . 'install/install.php');
 //exit() in lib/install/install.php
 }
@@ -78,10 +83,10 @@ if (config::$dieOnInvalidHost ) {
 
 public static function request() {
 if (static::$debug) {
-    error_reporting(-1);
-    ini_set('display_errors', 1);
- Header( 'Cache-Control: no-cache, must-revalidate');
-  Header( 'Pragma: no-cache');
+    \error_reporting(-1);
+    \ini_set('display_errors', 1);
+ \Header( 'Cache-Control: no-cache, must-revalidate');
+  \Header( 'Pragma: no-cache');
 }
 
 if (config::$beforeRequest && \is_callable(config::$beforeRequest)) {

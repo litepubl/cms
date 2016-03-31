@@ -8,7 +8,7 @@
 
 namespace litepubl {
 
-class incstorage extend storage {
+class incstorage extends storage {
 
 public function __construct() {
 $this->ext = '.inc.php';

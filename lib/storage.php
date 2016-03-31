@@ -21,7 +21,7 @@ public function serialize(array $data) {
 
 public function unserialize($str) {
 if ($str) {
-return \unserialize($str;
+return \unserialize($str);
 }
 
 return false;
