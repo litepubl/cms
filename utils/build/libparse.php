@@ -27,7 +27,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (strend($filename, 'php')) {
+if (false && strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -100,8 +100,6 @@ function strend($s, $end) {
 
 function BuildKernel($dir){
 makekernel($dir, 'kernel.php', array(
-'paths.php',
-'litepubl.php',
 'db.class.php',
 'data.class.php',
 'array2prop.class.php',
@@ -129,13 +127,17 @@ makekernel($dir, 'kernel.php', array(
 //'users.groups.class.php'
 'items.pool.class.php',
 
+'storage.mem.class.php',
+'storage.cache.file.class.php',
+'storage.cache.memcache.class.php',
+
+//namespaces
+'paths.php',
+'litepubl.php',
 'storage.php',
 'storage.inc.php',
 'storage.memcache.php',
 'storage.class.php',
-'storage.mem.class.php',
-'storage.cache.file.class.php',
-'storage.cache.memcache.class.php',
 'litepubl.init.php',
 ));
 

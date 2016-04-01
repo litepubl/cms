@@ -99,7 +99,7 @@ class tlocal {
   public function loadfile($name) {
     $this->loaded[] = $name;
     $filename = self::getcachedir() . $name;
-    if ($data = litepubl::$storage->loaddata($filename) && is_array($data)) {
+    if (($data = litepubl::$storage->loaddata($filename)) && is_array($data)) {
       $this->ini = $data + $this->ini;
       if (isset($data['searchsect'])) {
         $this->joinsearch($data['searchsect']);

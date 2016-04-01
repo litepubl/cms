@@ -1,10 +1,9 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher
+* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* Licensed under the MIT (LICENSE.txt) license.
+**/
 
 class tlocal {
   public static $self;
@@ -105,7 +104,7 @@ class tlocal {
   public function loadfile($name) {
     $this->loaded[] = $name;
     $filename = self::getcachedir() . $name;
-    if ($data = litepubl::$storage->loaddata($filename) && is_array($data)) {
+    if (($data = litepubl::$storage->loaddata($filename)) && is_array($data)) {
       $this->ini = $data + $this->ini;
       if (isset($data['searchsect'])) {
         $this->joinsearch($data['searchsect']);
