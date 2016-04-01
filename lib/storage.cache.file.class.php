@@ -33,7 +33,7 @@ return false;
   public function getString($filename) {
     $fn = $this->getdir() . $filename;
     if (file_exists($fn)) {
-return file_get_contents($fn))) {
+return file_get_contents($fn);
     }
 
     return false;

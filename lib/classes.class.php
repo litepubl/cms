@@ -136,12 +136,21 @@ return litepubl\litepubl::$datastorage;
   public function getclassfilename($class, $debug = false) {
     if (isset($this->items[$class])) {
       $item = $this->items[$class];
+} else if (($subclass = basename($class)) && ($subclass != $class) && isset($this->items[$subclass])) {
+$item = $this->items[$subclass];
+    } else if (isset($this->interfaces[$class])) {
+      return litepublisher::$paths->lib . $this->interfaces[$class];
+} else {
+return false;
+}
+
       /*
        * item is indexed array
        * 0 = filename
        * 1 = releative path
        * 2 = filename for debug
       */
+
       $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
       if (Empty($item[1])) {
         return litepublisher::$paths->lib . $filename;
@@ -158,11 +167,6 @@ return litepubl\litepubl::$datastorage;
       }
 
       return false;
-    } else if (isset($this->interfaces[$class])) {
-      return litepublisher::$paths->lib . $this->interfaces[$class];
-    }
-
-    return false;
   }
 
   public function exists($class) {
