@@ -7,6 +7,14 @@ $js->unlock();
 
 $cl = litepublisher::$classes;
 unset($cl->items['tfilestorage']);
+unset($cl->items['tstorage']);
+$cl->items['litepubl\litepubl'] = array('kernel.php', '', 'litepubl.php');
+$cl->items['litepubl\paths'] = array('kernel.php', '', 'paths.php');
+$cl->items['litepubl\storage'] = array('kernel.php', '', 'storage.php');
+$cl->items['litepubl\incstorage'] = array('kernel.php', '', 'storage.inc.php');
+$cl->items['litepubl\jsonstorage'] = array('storage.json.php', '', 'storage.json.php');
+$cl->items['litepubl\memcachestorage'] = array('kernel.php', '', 'storage.memcache.php');
+$cl->items['litepubl\datastorage'] = array('kernel.php', '', 'storage.class.php');
 $cl->save();
 
 if (version_compare(PHP_VERSION, '5.4', '<')) {
