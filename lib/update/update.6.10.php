@@ -17,13 +17,18 @@ $cl->items['litepubl\memcachestorage'] = array('kernel.php', '', 'storage.memcac
 $cl->items['litepubl\datastorage'] = array('kernel.php', '', 'storage.class.php');
 $cl->save();
 
-if (version_compare(PHP_VERSION, '5.4', '<')) {
 $site = litepublisher::$site;
-tmailer::sendtoadmin("Обновление сайта $site.url", " Здравствуйте!
-Это письмо отправлено скриптом обновления вашего сайта $site.url/ Пожалуйста, переведите работу вашего сайта на PHP версии 5.4 как минимум. Желательно перейти на PHP 7 версии. Долгие годы мы поддерживали работу движка на старых версиях PHP. С каждым днем это становится все более сложным. Отрасль растет и развивается и мы должны не отставать. Поддержка старых версий PHP не позволяет развивать движок сайта.
 
+$body = " Здравствуйте!
+Это письмо отправлено скриптом обновления вашего сайта $site->url/ Пожалуйста, обновите файл index.php в корне вашего сайта. Новую версию файла можно скачать по ссылке:
+https://raw.githubusercontent.com/litepubl/cms/master/index.php
+
+После этого работа вашего сайта возобновиться
 Спасибо за понимание, разработчик Владимир Юшко
-http://litepublisher.ru/ает
-");
-}
+http://litepublisher.ru/
+";
+
+tmailer::sendtoadmin("Обновление сайта $site->url", $body);
+
+echo tcontentfilter::i()->filter($body);
 }
