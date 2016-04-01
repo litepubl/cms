@@ -32,6 +32,9 @@ public static $canRequest = true;
 //callback function
 public static $beforeRequest = false;
 
+//random string to mix solt encrypt and generate passwords
+public static $secret = '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ';
+
 //database config
 public static $db = false;
 
