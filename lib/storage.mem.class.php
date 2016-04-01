@@ -23,7 +23,7 @@ class memstorage {
     $this->table = 'memstorage';
     $this->table_checked = false;
     $this->data = array();
-    if ($this->memcache = tfilestorage::$memcache) {
+    if ($this->memcache = litepubl::$memcache) {
       $this->lifetime = 3600;
     } else {
       $this->lifetime = 10800;

@@ -523,11 +523,7 @@ class ttagcontent extends tdata {
       'rawcontent' => ''
     );
 
-    if ($this->owner->dbversion) {
       if ($r = $this->db->getitem($id)) $item = $r;
-    } else {
-      tfilestorage::loadvar($this->getfilename($id) , $item);
-    }
     $this->items[$id] = $item;
     return $item;
   }
@@ -535,12 +531,8 @@ class ttagcontent extends tdata {
   public function setitem($id, $item) {
     if (isset($this->items[$id]) && ($this->items[$id] == $item)) return;
     $this->items[$id] = $item;
-    if ($this->owner->dbversion) {
       $item['id'] = $id;
       $this->db->addupdate($item);
-    } else {
-      tfilestorage::savevar($this->getfilename($id) , $item);
-    }
   }
 
   public function edit($id, $content, $description, $keywords, $head) {

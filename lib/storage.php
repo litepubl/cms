@@ -101,6 +101,11 @@ $this->error(sprintf('Error rename temp file "%s" to "%s"', $tmp, $curfile));
     return true;
   }
 
+  public  function remove($filename) {
+$this->delete($filename . $this->ext);
+$this->delete($filename . '.bak' . $this->ext);
+}
+
   public  function delete($filename) {
     if (\file_exists($filename)) {
       if (!\unlink($filename)) {

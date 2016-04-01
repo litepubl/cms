@@ -14,11 +14,12 @@ class inifiles {
       return self::$inifiles[$filename];
     }
 
-    $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
-    if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
+    $datafile = tlocal::getcachedir() . 'cacheini.' . md5($filename);
+$ini = litepubl::$storage->loaddata($datafile);
+    if (!is_array($ini)) {
       if (file_exists($filename)) {
         $ini = parse_ini_file($filename, true);
-        tfilestorage::savevar($datafile, $ini);
+        litepubl::$storage->savedata($datafile, $ini);
       } else {
         $ini = array();
       }

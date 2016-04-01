@@ -35,7 +35,6 @@ class tfiler {
         if (is_dir($file)) {
           if ($subdirs) self::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
         } else {
-          //tfilestorage::delete($file);
           self::_delete($file);
         }
       }
@@ -47,7 +46,6 @@ class tfiler {
   public static function deletemask($mask) {
     if ($list = glob($mask)) {
       foreach ($list as $filename)
-      //tfilestorage::delete($filename);
       self::_delete($filename);
     }
   }
@@ -57,7 +55,6 @@ class tfiler {
       if (is_dir($filename)) {
         self::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
       } else {
-        //tfilestorage::delete($filename);
         self::_delete($filename);
       }
     }
@@ -128,14 +125,7 @@ class tfiler {
   }
 
   public static function _delete($filename) {
-    if (file_exists($filename)) {
-      if (!unlink($filename)) {
-        chmod($filename, 0666);
-        unlink($filename);
-      }
-    }
-
-    if (tfilestorage::$memcache) tfilestorage::$memcache->delete($filename);
+litepubl::$storage->delete($filename);
   }
 
 } //class
