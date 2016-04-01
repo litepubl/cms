@@ -262,7 +262,7 @@ class turlmap extends titems {
   }
 
   protected function save_file($filename, $content) {
-      $this->cache->setString($filename, $content);
+    $this->cache->setString($filename, $content);
   }
 
   protected function include_file($fn) {

@@ -176,16 +176,16 @@ class tdata {
   }
 
   public function getstorage() {
-return litepubl\litepubl::$storage;
-}
+    return litepubl\litepubl::$storage;
+  }
 
   public function load() {
     if ($this->getstorage()->load($this)) {
       $this->afterload();
       return true;
-}
+    }
 
-return false;
+    return false;
   }
 
   public function save() {
@@ -193,7 +193,7 @@ return false;
       return;
     }
 
-      return $this->getstorage()->save($this);
+    return $this->getstorage()->save($this);
   }
 
   public function afterload() {

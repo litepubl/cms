@@ -36,9 +36,9 @@ class tdatabase {
 
   public function getconfig() {
     $this->debug = & litepubl::$debug;
-if (litepubl\config::$db) {
-return litepubl\config::$db;
-}
+    if (litepubl\config::$db) {
+      return litepubl\config::$db;
+    }
 
     if (isset(litepubl::$options->dbconfig)) {
       $result = litepubl::$options->dbconfig;
@@ -284,8 +284,8 @@ return litepubl\config::$db;
 
   public function idexists($id) {
     if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
-return $r && $r->fetch_assoc();
-}
+      return $r && $r->fetch_assoc();
+    }
 
     return false;
   }
@@ -401,8 +401,8 @@ return $r && $r->fetch_assoc();
     $result = array();
     foreach (explode(',', $s) as $value) {
       if ($v = (int)trim($value)) {
-      $result[] = $v;
-}
+        $result[] = $v;
+      }
     }
 
     return $result;

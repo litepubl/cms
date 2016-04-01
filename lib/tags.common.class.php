@@ -523,7 +523,7 @@ class ttagcontent extends tdata {
       'rawcontent' => ''
     );
 
-      if ($r = $this->db->getitem($id)) $item = $r;
+    if ($r = $this->db->getitem($id)) $item = $r;
     $this->items[$id] = $item;
     return $item;
   }
@@ -531,8 +531,8 @@ class ttagcontent extends tdata {
   public function setitem($id, $item) {
     if (isset($this->items[$id]) && ($this->items[$id] == $item)) return;
     $this->items[$id] = $item;
-      $item['id'] = $id;
-      $this->db->addupdate($item);
+    $item['id'] = $id;
+    $this->db->addupdate($item);
   }
 
   public function edit($id, $content, $description, $keywords, $head) {

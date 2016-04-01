@@ -15,7 +15,7 @@ class inifiles {
     }
 
     $datafile = tlocal::getcachedir() . 'cacheini.' . md5($filename);
-$ini = litepubl::$storage->loaddata($datafile);
+    $ini = litepubl::$storage->loaddata($datafile);
     if (!is_array($ini)) {
       if (file_exists($filename)) {
         $ini = parse_ini_file($filename, true);

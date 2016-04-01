@@ -50,7 +50,7 @@ class tusernews extends tplugin {
     if ($this->insertsource) $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
 
     //$form = litepubl::$cache->getString(litepubl::$paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
-$form = file_get_contents(litepubl::$paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
+    $form = file_get_contents(litepubl::$paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
     $args->raw = $post->rawcontent;
     $html = tadminhtml::i();
     $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;

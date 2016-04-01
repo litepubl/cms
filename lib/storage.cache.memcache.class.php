@@ -23,8 +23,8 @@ class cachestorage_memcache {
   }
 
   public function getPrefix() {
-return $this->prefix . $this->revision . '.';
-}
+    return $this->prefix . $this->revision . '.';
+  }
 
   public function getRevision() {
     return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
@@ -44,20 +44,20 @@ return $this->prefix . $this->revision . '.';
   }
 
   public function setString($filename, $str) {
-    $this->memcache->set($this->getPrefix () . $filename, $str, false, $this->lifetime);
-}
+    $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
+  }
 
   public function set($filename, $data) {
     $this->setString($filename, $this->serialize($data));
   }
 
   public function getString($filename) {
-return $this->memcache->get($this->getPrefix() . $filename);
-}
+    return $this->memcache->get($this->getPrefix() . $filename);
+  }
 
   public function get($filename) {
     if ($s = $this->getString($filename)) {
-return $this->unserialize($s);
+      return $this->unserialize($s);
     }
 
     return false;

@@ -76,7 +76,7 @@ class tsimpleimporter extends timporter {
     foreach ($a['rss']['channel'][0]['item'] as $item) {
       $post = $this->add($item);
       $posts->add($post);
-$post->free();
+      $post->free();
     }
     $posts->unlock();
     $tags->unlock();

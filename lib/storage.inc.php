@@ -8,40 +8,40 @@
 
 namespace litepubl {
 
-class incstorage extends storage {
+  class incstorage extends storage {
 
-public function __construct() {
-$this->ext = '.inc.php';
-}
+    public function __construct() {
+      $this->ext = '.inc.php';
+    }
 
-public function serialize(array $data) {
-    return \var_export($data, true);
-}
+    public function serialize(array $data) {
+      return \var_export($data, true);
+    }
 
-public function unserialize($str) {
-$this->error('Call unserialize');
-}
+    public function unserialize($str) {
+      $this->error('Call unserialize');
+    }
 
-public function before($str) {
-    return \sprintf('<?php return %s;', $str);
-}
+    public function before($str) {
+      return \sprintf('<?php return %s;', $str);
+    }
 
-public function after($str) {
-$this->error('Call after method');
-}
+    public function after($str) {
+      $this->error('Call after method');
+    }
 
-public function loaddata($filename) {
-if (\file_exists($filename . $this->ext)) {
-return include ($filename . $this->ext);
-}
+    public function loaddata($filename) {
+      if (\file_exists($filename . $this->ext)) {
+        return include ($filename . $this->ext);
+      }
 
-return false;
-}
+      return false;
+    }
 
-  public  function loadfile($filename) {
-$this->error('Call loadfile');
-}
+    public function loadfile($filename) {
+      $this->error('Call loadfile');
+    }
 
-}//class
-
-}//namespace
+  } //class
+  
+} //namespace

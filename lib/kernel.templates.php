@@ -99,9 +99,11 @@ class tlocal {
   public function loadfile($name) {
     $this->loaded[] = $name;
     $filename = self::getcachedir() . $name;
-    if (tfilestorage::loadvar($filename, $v) && is_array($v)) {
-      $this->ini = $v + $this->ini;
-      if (isset($v['searchsect'])) $this->joinsearch($v['searchsect']);
+    if ($data = litepubl::$storage->loaddata($filename) && is_array($data)) {
+      $this->ini = $data + $this->ini;
+      if (isset($data['searchsect'])) {
+        $this->joinsearch($data['searchsect']);
+      }
     } else {
       $merger = tlocalmerger::i();
       $merger->parse($name);
@@ -168,11 +170,12 @@ class inifiles {
       return self::$inifiles[$filename];
     }
 
-    $datafile = tlocal::getcachedir() . sprintf('cacheini.%s.php', md5($filename));
-    if (!tfilestorage::loadvar($datafile, $ini) || !is_array($ini)) {
+    $datafile = tlocal::getcachedir() . 'cacheini.' . md5($filename);
+    $ini = litepubl::$storage->loaddata($datafile);
+    if (!is_array($ini)) {
       if (file_exists($filename)) {
         $ini = parse_ini_file($filename, true);
-        tfilestorage::savevar($datafile, $ini);
+        litepubl::$storage->savedata($datafile, $ini);
       } else {
         $ini = array();
       }
@@ -2145,16 +2148,20 @@ class twidgetscache extends titems {
   }
 
   public function load() {
-    if ($s = litepublisher::$urlmap->cache->get($this->getbasename() . '.php')) {
-      return $this->loadfromstring($s);
+    if ($data = litepubl::$storage->loaddata(litepubl::$paths->cache . $this->getbasename())) {
+      $this->data = $data;
+      $this->afterload();
+      return true;
     }
+
     return false;
   }
 
   public function savemodified() {
     if ($this->modified) {
-      litepublisher::$urlmap->cache->set($this->getbasename() , $this->savetostring());
+      litepubl::$storage->savedata(litepubl::$paths->cache . $this->getbasename() , $this->data);
     }
+
     $this->modified = false;
   }
 

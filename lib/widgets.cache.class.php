@@ -26,8 +26,8 @@ class twidgetscache extends titems {
 
   public function load() {
     if ($data = litepubl::$storage->loaddata(litepubl::$paths->cache . $this->getbasename())) {
-$this->data = $data;
-$this->afterload();
+      $this->data = $data;
+      $this->afterload();
       return true;
     }
 
@@ -36,7 +36,7 @@ $this->afterload();
 
   public function savemodified() {
     if ($this->modified) {
-litepubl::$storage->savedata(litepubl::$paths->cache . $this->getbasename(), $this->data);
+      litepubl::$storage->savedata(litepubl::$paths->cache . $this->getbasename() , $this->data);
     }
 
     $this->modified = false;

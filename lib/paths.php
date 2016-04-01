@@ -1,4 +1,10 @@
 <?php
+/**
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -15,7 +21,7 @@ class tpaths {
   public $themes;
   public $files;
 
-public function __construct() {
+  public function __construct() {
     $this->home = dirname(__DIR__) . '/';
     $this->lib = __DIR__ . '/';
     $this->libinclude = $this->lib . 'include/';
@@ -28,5 +34,5 @@ public function __construct() {
     $this->themes = $this->home . 'themes/';
     $this->files = $this->home . 'files/';
     $this->js = $this->home . 'js/';
-}
+  }
 }

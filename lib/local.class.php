@@ -108,8 +108,8 @@ class tlocal {
     if ($data = litepubl::$storage->loaddata($filename) && is_array($data)) {
       $this->ini = $data + $this->ini;
       if (isset($data['searchsect'])) {
-$this->joinsearch($data['searchsect']);
-}
+        $this->joinsearch($data['searchsect']);
+      }
     } else {
       $merger = tlocalmerger::i();
       $merger->parse($name);

@@ -45,8 +45,7 @@ class tfiler {
 
   public static function deletemask($mask) {
     if ($list = glob($mask)) {
-      foreach ($list as $filename)
-      self::_delete($filename);
+      foreach ($list as $filename) self::_delete($filename);
     }
   }
 
@@ -125,7 +124,7 @@ class tfiler {
   }
 
   public static function _delete($filename) {
-litepubl::$storage->delete($filename);
+    litepubl::$storage->delete($filename);
   }
 
 } //class

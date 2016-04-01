@@ -69,8 +69,8 @@ class tbackuper extends tevents {
       $libowner = fileowner(__DIR__);
 
       if (($libowner !== false) && ($libowner === $dataowner)) {
-return 'file';
-}
+        return 'file';
+      }
     }
     //if (extension_loaded('ssh2') && function_exists('stream_get_contents') ) return 'ssh2';
     if (extension_loaded('ftp')) return 'ftp';

@@ -62,17 +62,17 @@ class tsameposts extends tclasswidget {
   }
 
   public function getsame($id) {
-      $items = $this->db->getvalue($id, 'items');
-      if (is_string($items)) {
-        return $items == '' ? array() : explode(',', $items);
-      } else {
-        $result = $this->findsame($id);
-        $this->db->add(array(
-          'id' => $id,
-          'items' => implode(',', $result)
-        ));
-        return $result;
-      }
+    $items = $this->db->getvalue($id, 'items');
+    if (is_string($items)) {
+      return $items == '' ? array() : explode(',', $items);
+    } else {
+      $result = $this->findsame($id);
+      $this->db->add(array(
+        'id' => $id,
+        'items' => implode(',', $result)
+      ));
+      return $result;
+    }
   }
 
   public function getcontent($id, $sidebar) {
