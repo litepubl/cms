@@ -251,7 +251,7 @@ return litepubl\config::$db;
 
   public function assoctorow(array $a) {
     $vals = array();
-    foreach ($a as $name => $val) {
+    foreach ($a as $val) {
       if (is_bool($val)) {
         $vals[] = $val ? '1' : '0';
       } else {
@@ -283,7 +283,10 @@ return litepubl\config::$db;
   }
 
   public function idexists($id) {
-    if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) return true;
+    if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
+return $r && $r->fetch_assoc();
+}
+
     return false;
   }
 
@@ -396,11 +399,12 @@ return litepubl\config::$db;
 
   public static function str2array($s) {
     $result = array();
-    foreach (explode(',', $s) as $i => $value) {
-      $v = (int)trim($value);
-      if ($v == 0) continue;
+    foreach (explode(',', $s) as $value) {
+      if ($v = (int)trim($value)) {
       $result[] = $v;
+}
     }
+
     return $result;
   }
 

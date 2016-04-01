@@ -107,12 +107,10 @@ $this->delete($filename . '.bak' . $this->ext);
 }
 
   public  function delete($filename) {
-    if (\file_exists($filename)) {
-      if (!\unlink($filename)) {
+    if (\file_exists($filename) && !\unlink($filename)) {
         \chmod($filename, 0666);
         \unlink($filename);
       }
-    }
   }
 
   public  function error($mesg) {

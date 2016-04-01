@@ -27,7 +27,8 @@ public static $cache;
 
   public static function init() {
     static::$microtime = microtime(true);
-static::$secret = '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ';
+//backward compability, in near future will be removed on config::$secret
+static::$secret = config::$secret;
 static::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
     static::$domain = static::getHost();
 static::createAliases();
