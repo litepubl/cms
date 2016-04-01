@@ -5,7 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
+
   if (\version_compare(\PHP_VERSION, '5.4', '<')) {
     die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
   }
@@ -15,5 +16,3 @@ namespace litepubl {
   } else {
     litepubl::run();
   }
-
-}//namespace

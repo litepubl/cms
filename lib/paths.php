@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
 class tpaths {
   public $home;
@@ -35,5 +35,3 @@ class tpaths {
     $this->js = $this->home . 'js/';
   }
 }
-
-}//namespace

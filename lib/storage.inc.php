@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
   class incstorage extends storage {
 
@@ -42,5 +42,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace

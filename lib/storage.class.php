@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
   class datastorage {
     public $data;
     private $modified;
@@ -89,5 +89,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace

@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
   class litepubl {
     public static $cache;
@@ -136,5 +136,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace

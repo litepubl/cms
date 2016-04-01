@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
   class storage {
     public $ext;
@@ -118,5 +118,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace

@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
   class jsonstorage extends storage {
 
@@ -30,5 +30,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace

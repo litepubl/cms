@@ -5,7 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl {
+namespace litepubl;
 
   class memcachestorage extends storage {
     public $memcache;
@@ -38,5 +38,3 @@ namespace litepubl {
     }
 
   } //class
-
-}//namespace
