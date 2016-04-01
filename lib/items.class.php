@@ -26,7 +26,7 @@ class titems extends tevents {
 
   public function load() {
     if ($this->dbversion) {
-      return tstorage::load($this);
+      return litepubl::$datastorage->load($this);
     } else {
       return parent::load();
     }
@@ -38,7 +38,7 @@ class titems extends tevents {
     }
 
     if ($this->dbversion) {
-      return tstorage::save($this);
+      return litepubl::$datastorage->save($this);
     } else {
       return parent::save();
     }

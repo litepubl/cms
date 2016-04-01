@@ -35,9 +35,13 @@ class tdatabase {
   }
 
   public function getconfig() {
-    $this->debug = & litepublisher::$debug;
-    if (isset(litepublisher::$options->dbconfig)) {
-      $result = litepublisher::$options->dbconfig;
+    $this->debug = & litepubl::$debug;
+    if (litepubl\config::$db) {
+      return litepubl\config::$db;
+    }
+
+    if (isset(litepubl::$options->dbconfig)) {
+      $result = litepubl::$options->dbconfig;
       //decrypt db password
       $result['password'] = litepublisher::$options->dbpassword;
       return $result;
@@ -247,7 +251,7 @@ class tdatabase {
 
   public function assoctorow(array $a) {
     $vals = array();
-    foreach ($a as $name => $val) {
+    foreach ($a as $val) {
       if (is_bool($val)) {
         $vals[] = $val ? '1' : '0';
       } else {
@@ -279,7 +283,10 @@ class tdatabase {
   }
 
   public function idexists($id) {
-    if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) return true;
+    if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
+      return $r && $r->fetch_assoc();
+    }
+
     return false;
   }
 
@@ -392,11 +399,12 @@ class tdatabase {
 
   public static function str2array($s) {
     $result = array();
-    foreach (explode(',', $s) as $i => $value) {
-      $v = (int)trim($value);
-      if ($v == 0) continue;
-      $result[] = $v;
+    foreach (explode(',', $s) as $value) {
+      if ($v = (int)trim($value)) {
+        $result[] = $v;
+      }
     }
+
     return $result;
   }
 

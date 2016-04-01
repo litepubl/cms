@@ -1,12 +1,19 @@
 <?php
 
 foreach (array(
+'paths.php',
+'litepubl.php',
 //'debugproxy.class.php');
 'data.class.php',
 'array2prop.class.php',
 'utils.functions.php',
 
-'storage.file.class.php',
+'storage.php',
+'storage.inc.php',
+'storage.json.php',
+'storage.memcache.php',
+
+//old storages
 'storage.class.php',
 'storage.mem.class.php',
 'storage.cache.file.class.php',
@@ -27,6 +34,8 @@ foreach (array(
 'classes.functions.php',
 'options.class.php',
 'site.class.php',
+
+'litepubl.init.php',
 ) as $filename) {
-    require (litepublisher::$paths->lib . $filename);
+    require (__DIR__ . '/' . $filename);
 }

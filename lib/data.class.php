@@ -170,13 +170,22 @@ class tdata {
           );
         }
 
-        return call_user_func_array($fnc, $args);
+        return \call_user_func_array($fnc, $args);
       }
     }
   }
 
+  public function getstorage() {
+    return litepubl\litepubl::$storage;
+  }
+
   public function load() {
-    return tfilestorage::load($this);
+    if ($this->getstorage()->load($this)) {
+      $this->afterload();
+      return true;
+    }
+
+    return false;
   }
 
   public function save() {
@@ -184,30 +193,7 @@ class tdata {
       return;
     }
 
-    if ($this->dbversion) {
-      $this->SaveToDB();
-    } else {
-      tfilestorage::save($this);
-    }
-  }
-
-  public function savetostring() {
-    return serialize($this->data);
-  }
-
-  public function loadfromstring($s) {
-    try {
-      if (!empty($s)) {
-        $this->data = unserialize($s) + $this->data;
-      }
-
-      $this->afterload();
-      return true;
-    }
-    catch(Exception $e) {
-      echo 'Caught exception: ' . $e->getMessage();
-      return false;
-    }
+    return $this->getstorage()->save($this);
   }
 
   public function afterload() {
@@ -244,20 +230,10 @@ class tdata {
   public function getdb($table = '') {
     $table = $table ? $table : $this->table;
     if ($table) {
-      litepublisher::$db->table = $table;
+      litepubl::$db->table = $table;
     }
 
-    return litepublisher::$db;
-  }
-
-  protected function SaveToDB() {
-    $this->db->add($this->getbasename() , $this->savetostring());
-  }
-
-  protected function LoadFromDB() {
-    if ($r = $this->db->select('basename = ' . $this->getbasename() . "'")) {
-      return $this->loadfromstring($r['data']);
-    }
+    return litepubl::$db;
   }
 
   protected function getthistable() {

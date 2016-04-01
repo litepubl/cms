@@ -62,31 +62,15 @@ class tsameposts extends tclasswidget {
   }
 
   public function getsame($id) {
-    if (dbversion) {
-      $items = $this->db->getvalue($id, 'items');
-      if (is_string($items)) {
-        return $items == '' ? array() : explode(',', $items);
-      } else {
-        $result = $this->findsame($id);
-        $this->db->add(array(
-          'id' => $id,
-          'items' => implode(',', $result)
-        ));
-        return $result;
-      }
+    $items = $this->db->getvalue($id, 'items');
+    if (is_string($items)) {
+      return $items == '' ? array() : explode(',', $items);
     } else {
-      $filename = litepublisher::$paths->data . 'posts' . DIRECTORY_SEPARATOR . $id . DIRECTORY_SEPARATOR . 'same.php';
-      $data = null;
-      if (tfilestorage::loadvar($filename, $data)) {
-        if ($data['revision'] == $this->revision) return $data['items'];
-      }
-
       $result = $this->findsame($id);
-      $data = array(
-        'revision' => $this->revision,
-        'items' => $result
-      );
-      tfilestorage::savevar($filename, $data);
+      $this->db->add(array(
+        'id' => $id,
+        'items' => implode(',', $result)
+      ));
       return $result;
     }
   }

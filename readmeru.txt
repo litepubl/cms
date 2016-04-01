@@ -1,7 +1,7 @@
 ﻿Система управления сайтом"LitePublisher" это простой и легкий движок блога. Все подробности на официальном сайте проекта:
 http://litepublisher.ru/
 
-Минимальные требование к системе: php версии не ниже 5. Опционально модуль апача rewrite, mysql или pdo драйвер.
+Минимальные требование к системе: php версии не ниже 5.4 Опционально модуль апача rewrite, mysql или pdo драйвер.
 
 Установка. Если у вас есть шелл доступ к серверу, то рекомендую устанавливать из шел следующим образом:
 
@@ -13,7 +13,9 @@ https://github.com/litepubl/cms/releases/latest
 
 Иначе  вам следует скопировать файлы и папки движка в корень домена, установить права для записи (0777) на папки files, storage, storage/backup, storage/cache, storage/data. Во всех этих папках установить права 0666 на файлы index.htm (в них производится тестовая запись). 
 
-После копирования файлов на сервер следует открыть адрес домена в браузере и заполнить форму создания. Если конфигурация устраивает, то будет запущен инсталятор litepublisher, где вы заполните простую форму с названием и E-Mail администратора. В самом начале стоит форма выбора языка. Если по каким то причинам инсталятор не смог определить язык установки, то смените язык, нажав кнопку "Change language".
+После копирования файлов на сервер следует открыть адрес домена в браузере и заполнить форму создания. Если конфигурация устраивает, то будет запущен инсталятор litepublisher, где вы заполните простую форму с названием и E-Mail администратора. В самом начале стоит форма выбора языка. Есть дава способа задать параметры доступа к базе MySQL: в файле index.php в корне домена или в форме инсталятора. Что вам удобнее - решать вам. Если доступ к базе будет прописан в index.php, то инсталятор не будет запрашивать эти данные.
+
+ Если по каким то причинам инсталятор не смог определить язык установки, то смените язык, нажав кнопку "Change language".
 
 Установка в подпапку домена ничем не отличается, за исключением того, что необходимо исправить файл .htaccess изменив строку 
 RewriteRule . /index.php [L]
@@ -54,6 +56,8 @@ jQuery UI. Copyright jQuery Foundation and other contributors, https://jquery.or
 Font Awesome by @davegandy - http://fontawesome.io - @fontawesome License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
 
 Lobster font by Pablo Impallari released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+
+NautilusPompilius font by PUNK YOU BRANDS Nikita Kanarev released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 
 MediaElement.js Copyright 2010-2015, John Dyer (http://j.hn) License: MIT
 

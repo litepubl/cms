@@ -2,13 +2,13 @@ LitePublisher is content management system. LitePublisher is a simple and lightw
 http://litepublisher.com/ 
 
 Minimum System Requirements: 
-- PHP 5.2
+- PHP 5.4
 - MySQL or pdo driver
 
  Optional:
 - apache server with rewrite module
 
-Installation. If you have a shell access to the server you can upload files:
+Installation. If you have a shell access to the server you can download file:
 wget https://github.com/litepubl/cms/archive/vx.xx.tar.gz
 tar -xf cms.x.xx.tar.gz
 
@@ -23,7 +23,8 @@ Otherwise you must upload files into root folder of website. set write permissio
 - storage / data
 
 In these folders you should set permissions 0666 on index.htm  files
-After that  open your website in browser. Installer will ask you some questions such as E-Mail, site name and database account. 
+After that  open your website in browser. Installer will ask you some questions such as E-Mail, site name and database account.  You can set database account in index.php from root folder or in installation form.
+
 Sometime installer can not determine language. You can change language pressing by "change language button".
 Thats all. Click install to begin instalation.
 
@@ -61,6 +62,8 @@ jQuery UI. Copyright jQuery Foundation and other contributors, https://jquery.or
 Font Awesome by @davegandy - http://fontawesome.io - @fontawesome License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
 
 Lobster font by Pablo Impallari released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
+
+NautilusPompilius font by PUNK YOU BRANDS Nikita Kanarev released under the SIL Open Font License  (http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 
 MediaElement.js Copyright 2010-2015, John Dyer (http://j.hn) License: MIT
 

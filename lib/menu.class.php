@@ -156,8 +156,7 @@ class tmenus extends titems {
     $this->sort();
     $this->unlock();
     $this->deleted($id);
-    tfilestorage::delete($this->dir . $id . '.php');
-    tfilestorage::delete($this->dir . $id . '.bak.php');
+    litepubl::$storage->remove($this->dir . $id);
     litepublisher::$urlmap->clearcache();
     return true;
   }

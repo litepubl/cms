@@ -100,6 +100,8 @@ function strend($s, $end) {
 
 function BuildKernel($dir){
 makekernel($dir, 'kernel.php', array(
+'paths.php',
+'litepubl.php',
 'db.class.php',
 'data.class.php',
 'array2prop.class.php',
@@ -126,11 +128,15 @@ makekernel($dir, 'kernel.php', array(
 'users.class.php',
 //'users.groups.class.php'
 'items.pool.class.php',
-'storage.file.class.php',
+
+'storage.php',
+'storage.inc.php',
+'storage.memcache.php',
 'storage.class.php',
 'storage.mem.class.php',
 'storage.cache.file.class.php',
 'storage.cache.memcache.class.php',
+'litepubl.init.php',
 ));
 
 makekernel($dir, 'kernel.templates.php',  array(

@@ -45,7 +45,7 @@ class toptions extends tevents_storage {
   }
 
   public function savemodified() {
-    $result = tstorage::savemodified();
+    $result = $this->getstorage()->saveModified();
     $this->onsave($result);
     return $result;
   }

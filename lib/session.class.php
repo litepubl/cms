@@ -35,15 +35,15 @@ class tsession {
   }
 
   public function read($id) {
-    return tfilestorage::$memcache->get($this->prefix . $id);
+    return litepubl::$memcache->get($this->prefix . $id);
   }
 
   public function write($id, $data) {
-    return tfilestorage::$memcache->set($this->prefix . $id, $data, false, $this->lifetime);
+    return litepubl::$memcache->set($this->prefix . $id, $data, false, $this->lifetime);
   }
 
   public function destroy($id) {
-    return tfilestorage::$memcache->delete($this->prefix . $id);
+    return litepubl::$memcache->delete($this->prefix . $id);
   }
 
   public static function init($usecookie = false) {
@@ -60,7 +60,7 @@ class tsession {
       }
     }
 
-    if (tfilestorage::$memcache) {
+    if (litepubl::$memcache) {
       return getinstance(__class__);
     } else {
       //ini_set('session.gc_probability', 1);

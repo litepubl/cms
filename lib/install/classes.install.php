@@ -42,6 +42,8 @@ function parse_classes_ini($inifile) {
   foreach ($ini['items'] as $class => $filename) {
     //exclude files
     if (strpos($filename, $exclude)) continue;
+
+    $class = trim($class, "\"' ");
     if (!file_exists(litepublisher::$paths->lib . $filename)) {
       $filename = str_replace('.class.', $replace, $filename);
       if (!file_exists(litepublisher::$paths->lib . $filename)) continue;

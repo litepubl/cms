@@ -30,8 +30,8 @@ class turlmap extends titems {
 
   public function __construct() {
     parent::__construct();
-    if (tfilestorage::$memcache) {
-      $this->cache = new cachestorage_memcache(tfilestorage::$memcache);
+    if (litepubl::$memcache) {
+      $this->cache = new cachestorage_memcache();
     } else {
       $this->cache = new cachestorage_file();
     }
@@ -262,18 +262,12 @@ class turlmap extends titems {
   }
 
   protected function save_file($filename, $content) {
-    if (tfilestorage::$memcache) {
-      $this->cache->set($filename, $content);
-    } else {
-      $fn = litepublisher::$paths->cache . $filename;
-      file_put_contents($fn, $content);
-      @chmod($fn, 0666);
-    }
+    $this->cache->setString($filename, $content);
   }
 
   protected function include_file($fn) {
-    if (tfilestorage::$memcache) {
-      if ($s = $this->cache->get($fn)) {
+    if (litepubl::$memcache) {
+      if ($s = $this->cache->getString($fn)) {
         eval('?>' . $s);
         return true;
       }

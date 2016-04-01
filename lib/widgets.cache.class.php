@@ -25,16 +25,20 @@ class twidgetscache extends titems {
   }
 
   public function load() {
-    if ($s = litepublisher::$urlmap->cache->get($this->getbasename() . '.php')) {
-      return $this->loadfromstring($s);
+    if ($data = litepubl::$storage->loaddata(litepubl::$paths->cache . $this->getbasename())) {
+      $this->data = $data;
+      $this->afterload();
+      return true;
     }
+
     return false;
   }
 
   public function savemodified() {
     if ($this->modified) {
-      litepublisher::$urlmap->cache->set($this->getbasename() , $this->savetostring());
+      litepubl::$storage->savedata(litepubl::$paths->cache . $this->getbasename() , $this->data);
     }
+
     $this->modified = false;
   }
 

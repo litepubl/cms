@@ -6,100 +6,58 @@
  *
  */
 
-if (version_compare(PHP_VERSION, '5.1', '<')) {
-  die('Lite Publisher requires PHP 5.1 or later. You are using PHP ' . PHP_VERSION);
-}
+namespace litepubl;
 
-class litepublisher {
-  public static $db;
-  public static $storage;
-  public static $classes;
-  public static $options;
-  public static $site;
-  public static $urlmap;
-  public static $paths;
-  public static $domain;
+class config {
+  //set to true to enable debug
   public static $debug = false;
+
+  // host name or false
+  public static $host = false;
+
+  //die if invalid host name in current request. Set to false if use in command line mode
+  public static $dieOnInvalidHost = true;
+
+  //set to false to ignore request, cms will be initilized
+  public static $canRequest = true;
+
+  //callback function
+  public static $beforeRequest = false;
+
+  //random string to mix solt encrypt and generate passwords
   public static $secret = '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ';
-  public static $microtime;
 
-  public static function init() {
-    if (defined('litepublisher_mode') && (litepublisher_mode == 'debug')) litepublisher::$debug = true;
-    if (!preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', strtolower(trim($_SERVER['HTTP_HOST'])) , $domain)) {
-      die('cant resolve domain name');
-    }
+  //database config
+  public static $db = false;
 
-    self::$domain = $domain[2];
-
-    $home = dirname(__file__) . DIRECTORY_SEPARATOR;
-    $storage = $home . 'storage' . DIRECTORY_SEPARATOR;
-
-    $paths = new tpaths();
-    self::$paths = $paths;
-    $paths->home = $home;
-    $paths->lib = $home . 'lib' . DIRECTORY_SEPARATOR;
-    $paths->data = $storage . 'data' . DIRECTORY_SEPARATOR;
-    $paths->cache = $storage . 'cache' . DIRECTORY_SEPARATOR;
-    $paths->libinclude = $home . 'lib' . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR;
-    $paths->languages = $home . 'lib' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
-    $paths->storage = $storage;
-    $paths->backup = $storage . 'backup' . DIRECTORY_SEPARATOR;
-    $paths->plugins = $home . 'plugins' . DIRECTORY_SEPARATOR;
-    $paths->themes = $home . 'themes' . DIRECTORY_SEPARATOR;
-    $paths->files = $home . 'files' . DIRECTORY_SEPARATOR;
-    $paths->js = $home . 'js' . DIRECTORY_SEPARATOR;
-    self::$microtime = microtime(true);
-  }
-
-} //class
-class tpaths {
-  public $home;
-  public $lib;
-  public $data;
-  public $cache;
-  public $backup;
-  public $storage;
-  public $libinclude;
-  public $js;
-  public $plugins;
-  public $themes;
-  public $files;
-}
-
-try {
-  litepublisher::init();
-  if (litepublisher::$debug) {
-    error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING);
-    ini_set('display_errors', 1);
-    require (litepublisher::$paths->lib . 'kernel.debug.php');
-  } else {
-    require (litepublisher::$paths->lib . 'kernel.php');
-  }
-
-  define('dbversion', true);
-  /*
-  if (class_exists('Memcache')) {
-    tfilestorage::$memcache =  new Memcache;
-    tfilestorage::$memcache->connect('127.0.0.1', 11211);
-  }
+  /* you can configure database account here or
+  public static $db = [
+  // driver name not used, reserved for future
+    'driver' => 'mysqli',
+    'host' => 'localhost',
+  // 0 to ignore
+    'port' => 0,
+    'dbname' => 'database_name',
+    'login' => 'database_user',
+    'password' => '***',
+  //table names prefix
+    'prefix' => 'prefix_'
+  ];
   */
-  if (!tstorage::loaddata()) {
-    if (file_exists(litepublisher::$paths->data . 'storage.php') && filesize(litepublisher::$paths->data . 'storage.php')) die('Storage not loaded');
-    require_once (litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'install.php');
-  }
 
-  litepublisher::$classes = tclasses::i();
-  litepublisher::$options = toptions::i();
-  litepublisher::$db = tdatabase::i();
-  litepublisher::$site = tsite::i();
-  litepublisher::$urlmap = turlmap::i();
+  // false | true | array('host' => '127.0.0.1', 'port' => 11211);
+  public static $memcache = false;
 
-  if (!defined('litepublisher_mode')) {
-    litepublisher::$urlmap->request(strtolower($_SERVER['HTTP_HOST']) , $_SERVER['REQUEST_URI']);
-  }
+  //replacement classes on startup
+  public static $classes = [
+  //'root' => 'litepubl\litepubl',
+  //'storage' => 'litepubl\storage',
+  //'cache' => 'litepubl\cache',
+  ];
 }
-catch(Exception $e) {
-  litepublisher::$options->handexception($e);
+
+if (config::$debug) {
+  require (__DIR__ . '/lib/kernel.debug.php');
+} else {
+  require (__DIR__ . '/lib/kernel.php');
 }
-litepublisher::$options->savemodified();
-litepublisher::$options->showerrors();

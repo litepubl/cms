@@ -1,120 +1,68 @@
 <?php
-//$_COOKIE = array ( 'litepubl_regservice' => 'twitter', 'litepubl_user_id' => '1', 'litepubl_user' => '3U+bl6S+No/lHRd3mGTP7g', 'litepubl_user_flag' => 'true', );
-//$_COOKIE = array ( 'litepubl_regservice' => 'twitter', 'litepubl_user_id' => '3', 'litepubl_user' => 'Nc241SNn1C/VIOkJ0pNeNQ', );
-//set_time_limit(4);
-error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING );
-ini_set('display_errors', 1);
- Header( 'Cache-Control: no-cache, must-revalidate');
-  Header( 'Pragma: no-cache');
+/**
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
-class litepublisher {
-  public static $db;
-  public static $storage;
-  public static $classes;
-  public static $options;
-  public static $site;
-  public static $urlmap;
-  public static $paths;
-  public static $domain;
-  public static $debug = true;
-  public static $secret = '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ';
-  public static $microtime;
-  
-  public static function init() {
-    if (defined('litepublisher_mode') && (litepublisher_mode == 'debug')) litepublisher::$debug = true;
-    if (!preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', strtolower(trim($_SERVER['HTTP_HOST'])) , $domain)) die('cant resolve domain name');
-    self::$domain = $domain[2];
+namespace litepubl;
 
-    $home = dirname(__file__) . DIRECTORY_SEPARATOR;
-    $storage = $home . 'storage' . DIRECTORY_SEPARATOR;
+class config {
+//replacement classes on startup
+public static $classes = [
+//'root' => 'litepubl\litepubl',
+//'storage' => 'litepubl\storage',
+'storage' => 'litepubl\incstorage',
+//'cache' => 'litepubl\cache',
+];
 
-$paths = new tpaths();
-    self::$paths = $paths;
-    $paths->home = $home;
-    $paths->lib = $home .'lib'. DIRECTORY_SEPARATOR;
-    $paths->data = $storage . 'data'. DIRECTORY_SEPARATOR;
-    $paths->cache = $storage . 'cache'. DIRECTORY_SEPARATOR;
-    $paths->libinclude = $home .'lib'. DIRECTORY_SEPARATOR . 'include'. DIRECTORY_SEPARATOR;
-    $paths->languages = $home .'lib'. DIRECTORY_SEPARATOR . 'languages'. DIRECTORY_SEPARATOR;
-    $paths->storage = $storage;
-    $paths->backup = $storage . 'backup' . DIRECTORY_SEPARATOR;
-    $paths->plugins =  $home . 'plugins' . DIRECTORY_SEPARATOR;
-    $paths->themes = $home . 'themes'. DIRECTORY_SEPARATOR;
-    $paths->files = $home . 'files' . DIRECTORY_SEPARATOR;
-   $paths->js = $home . 'js' . DIRECTORY_SEPARATOR;
-    self::$microtime = microtime(true);
-  }
-  
-}//class
+//set to true to enable debug
+public static $debug = true;
 
-class tpaths {
-public $home;
-public $lib;
-public $data;
-public $cache;
-public $backup;
-public $storage;
-public $libinclude;
-public $js;
-public $plugins;
-public $themes;
-public $files;
+// host name or false
+public static $host = false;
+
+//die if invalid host name in current request. Set to false if use in command line mode
+public static $dieOnInvalidHost = true;
+
+//set to false to ignore request, cms will be initilized
+public static $canRequest = true;
+
+//callback function
+public static $beforeRequest = false;
+
+//random string to mix solt encrypt and generate passwords
+public static $secret = '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ';
+
+//database config
+public static $db = false;
+
+/* you can configure database account here or
+public static $db = [
+// driver name not used, reserved for future
+    'driver' => 'mysqli',
+    'host' => 'localhost',
+// 0 to ignore
+    'port' => 0,
+    'dbname' => 'database_name',
+    'login' => 'database_user',
+    'password' => '***',
+//table names prefix
+    'prefix' => 'prefix_'
+  ];
+*/
+
+  // false | true | array('host' => '127.0.0.1', 'port' => 11211);
+  public static $memcache =  false;
 }
 
-try {
-  litepublisher::init();
-if (litepublisher::$domain== 'fireflyblog.ru') {
-define('dbversion' , false);
-litepublisher::$paths->data .= 'fire\\';
-}
+config::$beforeRequest  = function() {
+include (__DIR__ . '/temp/zdebug.php');
+};
 
-if (litepublisher::$debug) {
-    require (litepublisher::$paths->lib . 'kernel.debug.php');
+if (config::$debug) {
+require (__DIR__ . '/lib/kernel.debug.php');
 } else {
-require_once(litepublisher::$paths->lib . 'kernel.php');
+require (__DIR__ . '/lib/kernel.php');
 }
-
-/*
-if (class_exists('Memcache')) {
-tfilestorage::$memcache =  new Memcache;
-tfilestorage::$memcache->connect('127.0.0.1', 11211);
-}
-*/
-
-if (!tstorage::loaddata()) {
-if (file_exists(litepublisher::$paths->data . 'storage.php') && filesize(litepublisher::$paths->data . 'storage.php')) die('Storage not loaded');
-  //if (!litepublisher::$options->installed) require_once(litepublisher::$paths->lib .'install' . DIRECTORY_SEPARATOR . 'install.php');
-require_once(litepublisher::$paths->lib .'install' . DIRECTORY_SEPARATOR . 'install.php');
-}
-
-  litepublisher::$classes = tclasses::i();
-  litepublisher::$options = toptions::i();
-litepublisher::$db = new tdatabase();
-  litepublisher::$site = tsite::i();
-  litepublisher::$urlmap = turlmap::i();
-
-/*
-litepublisher::$db->query('SET sort_buffer_size = ' . 1024*1024*32);
-litepublisher::$db->query('SET read_rnd_buffer_size = ' . 1024*1024*32);
-*/
-
-include(dirname(__file__) . '/temp/zdebug.php');
-  if (!defined('litepublisher_mode')) {
-    litepublisher::$urlmap->request(strtolower($_SERVER['HTTP_HOST']), $_SERVER['REQUEST_URI']);
-  }
-} catch (Exception $e) {
-// echo $e->GetMessage();
-litepublisher::$options->handexception($e);
-}
-litepublisher::$options->savemodified();
-litepublisher::$options->showerrors();
-
-/*
-echo "<pre>\n";
-$man = tdbmanager::i();
-echo $man->performance();
-echo round(microtime(true) - litepublisher::$microtime, 2), "\n";
-*/
-
-//tdebugproxy::showperformance();
-
