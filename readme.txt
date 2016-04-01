@@ -23,7 +23,8 @@ Otherwise you must upload files into root folder of website. set write permissio
 - storage / data
 
 In these folders you should set permissions 0666 on index.htm  files
-After that  open your website in browser. Installer will ask you some questions such as E-Mail, site name and database account. 
+After that  open your website in browser. Installer will ask you some questions such as E-Mail, site name and database account.  You can set database account in index.php from root folder or in installation form.
+
 Sometime installer can not determine language. You can change language pressing by "change language button".
 Thats all. Click install to begin instalation.
 

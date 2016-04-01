@@ -35,9 +35,13 @@ class tdatabase {
   }
 
   public function getconfig() {
-    $this->debug = & litepublisher::$debug;
-    if (isset(litepublisher::$options->dbconfig)) {
-      $result = litepublisher::$options->dbconfig;
+    $this->debug = & litepubl::$debug;
+if (litepubl\config::$db) {
+return litepubl\config::$db;
+}
+
+    if (isset(litepubl::$options->dbconfig)) {
+      $result = litepubl::$options->dbconfig;
       //decrypt db password
       $result['password'] = litepublisher::$options->dbpassword;
       return $result;
