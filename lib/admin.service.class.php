@@ -221,12 +221,12 @@ class tadminservice extends tadminmenu {
             $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
             if (isset($saveurl)) {
-              $storage = new tdata();
-              $storage->basename = 'storage';
-              $storage->load();
-              $storage->data['site'] = litepublisher::$site->data;
+              $data = new tdata();
+              $data->basename = 'storage';
+              $data->load();
+              $data->data['site'] = litepublisher::$site->data;
               $data->data['options']['dbconfig'] = $dbconfig;
-              $storage->save();
+              $data->save();
             }
           }
 

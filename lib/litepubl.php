@@ -76,6 +76,20 @@ if (!static::$datastorage->isInstalled()) {
 }
 }
 
+public static function cachefile($filename) {
+if (!static::$memcache) {
+return file_get_contents($filename);
+}
+
+if ($s = static::$memcache->get($filename)) {
+return $s;
+}
+
+$s = file_get_contents($filename);
+static::$memcache->set($filename, $s, false, 3600);
+return $s;
+}
+
 public static function getHost() {
 if (config::$host) {
 return config::$host;

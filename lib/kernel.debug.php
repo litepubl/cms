@@ -14,7 +14,6 @@ foreach (array(
 'storage.memcache.php',
 
 //old storages
-'storage.file.class.php',
 'storage.class.php',
 'storage.mem.class.php',
 'storage.cache.file.class.php',
