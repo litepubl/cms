@@ -7,28 +7,32 @@
  */
 
 class cachestorage_memcache {
-  public $prefix;
   public $memcache;
   public $lifetime;
+  public $prefix;
   public $revision;
-  public $revision_key;
+  public $revisionKey;
 
-  public function __construct($memcache) {
-    $this->prefix = litepublisher::$domain . ':cache:';
-    $this->memcache = $memcache;
+  public function __construct() {
+    $this->memcache = litepubl::$memcache;
     $this->lifetime = 3600;
+    $this->prefix = litepubl::$domain . ':cache:';
     $this->revision = 0;
-    $this->revision_key = 'cache_revision';
-    $this->getrevision();
+    $this->revisionKey = 'cache_revision';
+    $this->getRevision();
   }
 
-  public function getrevision() {
-    return $this->revision = (int)$this->memcache->get($this->prefix . $this->revision_key);
+  public function getPrefix() {
+return $this->prefix . $this->revision . '.';
+}
+
+  public function getRevision() {
+    return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
   }
 
   public function clear() {
     $this->revision++;
-    $this->memcache->set($this->prefix . $this->revision_key, "$this->revision", false, $this->lifetime);
+    $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
   }
 
   public function serialize($data) {
@@ -39,29 +43,28 @@ class cachestorage_memcache {
     return unserialize($data);
   }
 
+  public function setString($filename, $str) {
+    $this->memcache->set($this->getPrefix () . $filename, $str, false, $this->lifetime);
+}
+
   public function set($filename, $data) {
-    $this->memcache->set($this->prefix . $filename, $this->serialize(array(
-      'revision' => $this->revision,
-      //'time' => time(),
-      'data' => $data
-    )) , false, $this->lifetime);
+    $this->setString($filename, $this->serialize($data));
   }
 
+  public function getString($filename) {
+return $this->memcache->get($this->getPrefix() . $filename);
+}
+
   public function get($filename) {
-    if ($s = $this->memcache->get($this->prefix . $filename)) {
-      $a = $this->unserialize($s);
-      if ($a['revision'] == $this->revision) {
-        return $a['data'];
-      } else {
-        $this->memcache->delete($this->prefix . $filename);
-      }
+    if ($s = $this->getString($filename)) {
+return $this->unserialize($s);
     }
 
     return false;
   }
 
   public function delete($filename) {
-    $this->memcache->delete($this->prefix . $filename);
+    $this->memcache->delete($this->getPrefix() . $filename);
   }
 
   public function exists($filename) {

@@ -13,15 +13,27 @@ class cachestorage_file {
   }
 
   public function set($filename, $data) {
+$this->setString($filename, serialize($data));
+}
+
+  public function setString($filename, $str) {
     $fn = $this->getdir() . $filename;
-    file_put_contents($fn, serialize($data));
+    file_put_contents($fn, $str);
     @chmod($fn, 0666);
   }
 
   public function get($filename) {
-    $fn = $this->getdir() . $filename;
-    if (file_exists($fn) && ($s = file_get_contents($fn))) {
+if ($s = $this->getString($filename)) {
       return unserialize($s);
+}
+
+return false;
+}
+
+  public function getString($filename) {
+    $fn = $this->getdir() . $filename;
+    if (file_exists($fn)) {
+return file_get_contents($fn))) {
     }
 
     return false;
