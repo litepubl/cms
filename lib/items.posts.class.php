@@ -12,10 +12,6 @@ class titemsposts extends titems {
   public $postprop;
   public $itemprop;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->basename = 'itemsposts';
@@ -101,7 +97,7 @@ class titemsposts extends titems {
 } //class
 class titemspostsowner extends titemsposts {
   private $owner;
-  public function __construct($owner) {
+  public function __construct($owner = null) {
     if (!isset($owner)) return;
     parent::__construct();
     $this->owner = $owner;

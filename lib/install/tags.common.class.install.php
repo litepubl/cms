@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tcommontagsInstall($self) {
-  if ('tcommontags' == get_class($self)) return;
+  if ('litepubl\tcommontags' == get_class($self)) return;
 
   $posts = tposts::i();
   $posts->lock();
@@ -20,18 +20,11 @@ function tcommontagsInstall($self) {
   $urlmap = turlmap::i();
   $urlmap->add("/$self->PermalinkIndex/", get_class($self) , 0);
 
-  if (dbversion) {
     $manager = tdbmanager::i();
     $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir . 'tags.sql'));
     $manager->createtable($self->itemsposts->table, file_get_contents($dir . 'items.posts.sql'));
     $manager->createtable($self->contents->table, file_get_contents($dir . 'tags.content.sql'));
-  } else {
-    $dir = litepubl::$paths->data . $self->basename;
-    @mkdir($dir, 0777);
-    @chmod($dir, 0777);
-  }
-
 }
 
 function tcommontagsUninstall($self) {

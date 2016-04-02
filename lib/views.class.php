@@ -21,7 +21,7 @@ class tviews extends titems_storage {
   public function add($name) {
     $this->lock();
     $id = ++$this->autoid;
-    $view = litepubl::$classes->newitem(tview::getinstancename() , 'tview', $id);
+    $view = tview::newitem($id);
     $view->id = $id;
     $view->name = $name;
     $view->data['class'] = get_class($view);

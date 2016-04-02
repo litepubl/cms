@@ -1,11 +1,4 @@
 <?php
-/**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
-
 namespace litepubl;
 
 class config {
@@ -13,7 +6,8 @@ class config {
 public static $classes = [
 //'root' => 'litepubl\litepubl',
 //'storage' => 'litepubl\storage',
-'storage' => 'litepubl\incstorage',
+//'storage' => 'litepubl\incstorage',
+'storage' => 'litepubl\jsonstorage',
 //'cache' => 'litepubl\cache',
 ];
 

@@ -41,7 +41,7 @@ namespace litepubl;
     }
 
     public static function createInstances() {
-      static ::$paths = new tpaths();
+      static ::$paths = new paths();
       static ::createStorage();
       static ::$classes = tclasses::i();
       static ::$options = toptions::i();

@@ -23,6 +23,10 @@ class tview extends titem_storage {
     return parent::iteminstance($class, $id);
   }
 
+public function newitem($id) {
+return litepubl::$classes->newitem(static::getinstancename() , get_called_class(), $id);
+}
+
   public static function getinstancename() {
     return 'view';
   }

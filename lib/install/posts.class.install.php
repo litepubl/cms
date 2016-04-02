@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tpostsInstall($self) {
-  if ('tposts' != get_class($self)) return;
+  if ('litepubl\tposts' != get_class($self)) return;
 
   $manager = tdbmanager::i();
   $dir = dirname(__file__) . '/sql/';

@@ -7,7 +7,7 @@
 
 namespace litepubl;
 
-class tpaths {
+class paths {
   public $home;
   public $lib;
   public $libinclude;

@@ -52,7 +52,7 @@ return $this->instances[$class];
 }
 
 if (!($newclass = $this->class_exists($class))) {
-      $this->error(sprintf('Class $class "%s" not found', $class));
+      $this->error(sprintf('Class "%s" not found', $class));
 }
 
     if (($newclass != $class) && isset($this->instances[$newclass])) {
@@ -208,6 +208,10 @@ $classname = 'litepubl\\' . $classname;
 }
 
       if (is_a($instance, $classname)) {
+if (!strpos($factory, '\\')) {
+$factory= 'litepubl\\' . $factory;
+}
+
         return $this->getinstance($factory);
       }
     }

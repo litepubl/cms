@@ -20,7 +20,9 @@ class cachestorage_memcache {
     $this->prefix = litepubl::$domain . ':cache:';
     $this->revision = 0;
     $this->revisionKey = 'cache_revision';
+if ($this->memcache) {
     $this->getRevision();
+}
   }
 
   public function getPrefix() {

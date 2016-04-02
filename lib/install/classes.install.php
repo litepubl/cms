@@ -91,7 +91,7 @@ function installClasses() {
   ttheme::$defaultargs = array();
   $theme = ttheme::getinstance('default');
   foreach (litepubl::$classes->items as $class => $item) {
-    if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
+    if (preg_match('/^litepubl\\\(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
     $obj = getinstance($class);
     if (method_exists($obj, 'install')) $obj->install();
   }
