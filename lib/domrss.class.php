@@ -127,7 +127,7 @@ function xml2array($xml) {
   return $result;
 }
 
-class tdomrss extends domDocument {
+class tdomrss extends \domDocument {
   public $items;
   public $rss;
   public $channel;

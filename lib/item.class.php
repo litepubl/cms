@@ -9,14 +9,26 @@ namespace litepubl;
 
 class titem extends tdata {
   public static $instances;
-  //public $id;
+
   public static function iteminstance($class, $id = 0) {
+//fix namespace
+if (!strpos($class, '\\') && !class_exists($class)) {
+$class = 'litepubl\\' . $class;
+}
+
     $name = call_user_func_array(array(
       $class,
       'getinstancename'
     ) , array());
-    if (!isset(self::$instances)) self::$instances = array();
-    if (isset(self::$instances[$name][$id])) return self::$instances[$name][$id];
+
+    if (!isset(static::$instances)) {
+static::$instances = array();
+}
+
+    if (isset(static::$instances[$name][$id])) {
+return static::$instances[$name][$id];
+}
+
     $self = litepublisher::$classes->newitem($name, $class, $id);
     return $self->loaddata($id);
   }

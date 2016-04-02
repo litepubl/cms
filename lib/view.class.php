@@ -14,10 +14,10 @@ class tview extends titem_storage {
 
   public static function i($id = 1) {
     if ($id == 1) {
-      $class = __class__;
+      $class = get_called_class();
     } else {
       $views = tviews::i();
-      $class = $views->itemexists($id) ? $views->items[$id]['class'] : __class__;
+      $class = $views->itemexists($id) ? $views->items[$id]['class'] : get_called_class();
     }
 
     return parent::iteminstance($class, $id);

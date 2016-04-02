@@ -16,15 +16,12 @@ class tclasses extends titems {
 
   public static function i() {
     if (!isset(litepublisher::$classes)) {
-      $class = __class__;
-      litepublisher::$classes = new $class();
-      litepublisher::$classes->instances[$class] = litepublisher::$classes;
+      $classname = get_called_class();
+      litepublisher::$classes = new $classname();
+      litepublisher::$classes->instances[$classname] = litepublisher::$classes;
     }
-    return litepublisher::$classes;
-  }
 
-  public static function instance() {
-    return self::i();
+    return litepublisher::$classes;
   }
 
   protected function create() {
@@ -76,10 +73,11 @@ public function class_exists($classname) {
 return $classname;
 }
 
-if (!strpos($classname, '\\')) 
+if (!strpos($classname, '\\')) {
 foreach (array('litepubl\\', 'litepubl\plugins', 'litepubl\shop') as $ns) {
 if (class_exists($ns . $classname, false)) {
 return $ns . $classname;
+}
 }
 }
 
@@ -206,7 +204,12 @@ $class = $this->remap[$class];
 
   public function getfactory($instance) {
     foreach ($this->factories as $classname => $factory) {
-      if (@is_a($instance, $classname)) {
+//fix namespace
+if (!strpos($classname, '\\')) {
+$classname = 'litepubl\\' . $classname;
+}
+
+      if (is_a($instance, $classname)) {
         return $this->getinstance($factory);
       }
     }

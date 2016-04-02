@@ -155,7 +155,7 @@ class TSMTPMailer extends tevents {
 
   public function auth() {
     litepublisher::$classes->include_file(litepublisher::$paths->libinclude . 'class-smtp.php');
-    $this->smtp = new SMTP();
+    $this->smtp = new \SMTP();
     if ($this->smtp->Connect($this->host, $this->port, 10)) {
       $this->smtp->Hello($_SERVER['SERVER_NAME']);
       if ($this->smtp->Authenticate($this->login, $this->password)) {

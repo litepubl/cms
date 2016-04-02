@@ -138,19 +138,19 @@ class tbackuper extends tevents {
     switch ($this->archtype) {
       case 'tar':
         self::include_tar();
-        $this->tar = new tar();
+        $this->tar = new \tar();
         break;
 
 
       case 'zip':
         self::include_zip();
-        $this->zip = new zipfile();
+        $this->zip = new \zipfile();
         break;
 
 
       case 'unzip':
         self::include_unzip();
-        $this->unzip = new StrSimpleUnzip();
+        $this->unzip = new \StrSimpleUnzip();
         break;
 
 
@@ -369,7 +369,7 @@ class tbackuper extends tevents {
   public function uploaddump($s, $filename) {
     if (strend($filename, '.zip')) {
       self::include_unzip();
-      $unzip = new StrSimpleUnzip();
+      $unzip = new \StrSimpleUnzip();
       $unzip->ReadData($s);
       foreach ($unzip->Entries as $item) {
         if ($item->Error != 0) continue;
@@ -381,7 +381,7 @@ class tbackuper extends tevents {
       unset($unzip);
     } elseif (strend($filename, '.tar.gz') || strend($filename, '.tar')) {
       self::include_tar();
-      $tar = new tar();
+      $tar = new \tar();
       $tar->loadfromstring($s);
       foreach ($tar->files as $item) {
         if (!strend($item['name'], '.sql')) {
@@ -553,7 +553,7 @@ class tbackuper extends tevents {
     $path_root = false;
 
     if (class_exists('ZipArchive')) {
-      $zip = new ZipArchive();
+      $zip = new \ZipArchive();
       if ($zip->open($filename) !== true) {
         return $this->errorarch();
       }
@@ -637,7 +637,7 @@ class tbackuper extends tevents {
     switch ($archtype) {
       case 'tar':
         self::include_tar();
-        $tar = new tar();
+        $tar = new \tar();
         $tar->loadfromstring($content);
         if (!is_array($tar->files)) {
           unset($tar);
@@ -658,7 +658,7 @@ class tbackuper extends tevents {
           file_put_contents($filename, $content);
           @chmod($filename, 0666);
           $content = '';
-          $zip = new ZipArchive();
+          $zip = new \ZipArchive();
           if ($zip->open($filename) === true) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
               if ($s = $zip->getFromIndex($i)) {
@@ -672,7 +672,7 @@ class tbackuper extends tevents {
           @unlink($filename);
         } else {
           self::include_unzip();
-          $unzip = new StrSimpleUnzip();
+          $unzip = new \StrSimpleUnzip();
           $unzip->ReadData($content);
           foreach ($unzip->Entries as $item) {
             $result[$item->Path . '/' . $item->Name] = $item->Data;

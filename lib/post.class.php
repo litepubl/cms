@@ -21,15 +21,15 @@ class tpost extends titem implements itemplate {
   public static function i($id = 0) {
     $id = (int)$id;
     if ($id > 0) {
-      if (isset(self::$instances['post'][$id])) {
-        $result = self::$instances['post'][$id];
-      } else if ($result = self::loadpost($id)) {
-        self::$instances['post'][$id] = $result;
+      if (isset(static::$instances['post'][$id])) {
+        $result = static::$instances['post'][$id];
+      } else if ($result = static::loadpost($id)) {
+        static::$instances['post'][$id] = $result;
       } else {
         $result = null;
       }
     } else {
-      $result = parent::iteminstance(__class__, $id);
+      $result = parent::iteminstance(get_called_class(), $id);
     }
 
     return $result;
@@ -60,18 +60,30 @@ class tpost extends titem implements itemplate {
   }
 
   public static function newpost($classname) {
-    $classname = $classname ? $classname : __class__;
+    $classname = $classname ? static::fixClassname($classname) : get_called_class();
     return new $classname();
   }
+
+public static function fixClassname($classname) {
+if (strpos($classname, '\\')) {
+return $classname;
+}
+
+if ($classname == 'tpost') {
+$ns = 'litepubl\\';
+} else if ($classname == 'product') {
+$ns = 'litepubl\shop';
+} else {
+$ns = 'litepubl\plugins';
+}
+
+return $ns . $classname;
+}
 
   protected function create() {
     $this->table = 'posts';
     $this->syncdata = array();
-    //last binding, like cache
-    $this->childtable = call_user_func_array(array(
-      get_class($this) ,
-      'getchildtable'
-    ) , array());
+    $this->childtable = static::      getchildtable();
 
     $this->data = array(
       'id' => 0,
@@ -110,7 +122,6 @@ class tpost extends titem implements itemplate {
     );
 
     $this->data['childdata'] = & $this->childdata;
-
     $this->factory = $this->getfactory();
     $posts = $this->factory->posts;
     foreach ($posts->itemcoclasses as $class) {
@@ -204,7 +215,7 @@ class tpost extends titem implements itemplate {
   }
 
   public static function loadpost($id) {
-    if ($a = self::getassoc($id)) {
+    if ($a = static::getassoc($id)) {
       $self = self::newpost($a['class']);
       $self->setassoc($a);
       return $self;

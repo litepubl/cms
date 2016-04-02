@@ -77,7 +77,7 @@ class turlmap extends titems {
     try {
       $this->dorequest($this->url);
     }
-    catch(Exception $e) {
+    catch(\Exception $e) {
       litepublisher::$options->handexception($e);
     }
 
@@ -282,10 +282,9 @@ class turlmap extends titems {
       return;
     }
 
-    if (class_exists($item['class'])) {
+    if (litepubl::$classes->class_exists($item['class'])) {
       return $this->GenerateHTML($item);
     } else {
-      //$this->deleteclass($item['class']);
       $this->notfound404();
     }
   }
@@ -296,17 +295,17 @@ class turlmap extends titems {
   }
 
   public function getcontext(array $item) {
-    $class = $item['class'];
-    $parents = class_parents($class);
-    if (in_array('titem', $parents)) {
+    $classname = litepubl::$classes->class_exists($item['class']);
+    $parents = class_parents($classname);
+    if (in_array('litepubl\titem', $parents)) {
       return call_user_func_array(array(
-        $class,
+        $classname,
         'i'
       ) , array(
         $item['arg']
       ));
     } else {
-      return litepubl::$classes->getinstance($class);
+      return litepubl::$classes->getinstance($classname);
     }
   }
 
