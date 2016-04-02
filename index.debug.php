@@ -6,8 +6,8 @@ class config {
 public static $classes = [
 //'root' => 'litepubl\litepubl',
 //'storage' => 'litepubl\storage',
-//'storage' => 'litepubl\incstorage',
-'storage' => 'litepubl\jsonstorage',
+'storage' => 'litepubl\incstorage',
+//'storage' => 'litepubl\jsonstorage',
 //'cache' => 'litepubl\cache',
 ];
 

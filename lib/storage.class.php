@@ -64,9 +64,7 @@ namespace litepubl;
 
       $lockfile = litepubl::$paths->data . 'storage.lok';
       if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-echo "must save<br>";
         $this->getStorage()->savedata(litepubl::$paths->data . 'storage', $this->data);
-dumpvar(json_last_error());
         $this->modified = false;
         \flock($fh, LOCK_UN);
         \fclose($fh);

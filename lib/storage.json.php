@@ -14,7 +14,6 @@ namespace litepubl;
     }
 
     public function serialize(array $data) {
-      return \json_encode($data, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | (litepubl::$debug ? JSON_PRETTY_PRINT : 0));
       return \json_encode($data, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | (litepubl::$debug ? JSON_PRETTY_PRINT : 0));
     }
 
@@ -30,4 +29,4 @@ namespace litepubl;
       return $str;
     }
 
-  } //class
+}//class

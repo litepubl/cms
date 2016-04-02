@@ -163,6 +163,8 @@ $class = $this->remap[$class];
       $item = $this->items[$class];
     } else if (($subclass = basename($class)) && ($subclass != $class) && isset($this->items[$subclass])) {
       $item = $this->items[$subclass];
+} else if (!strpos($class, '\\') && isset($this->items['litepubl\\' . $class])) {
+$item = $this->items['litepubl\\' . $class];
     } else if (isset($this->interfaces[$class])) {
       return litepubl::$paths->lib . $this->interfaces[$class];
     } else if ($subclass && ($subclass != $class) && isset($this->interfaces[$subclass])) {
