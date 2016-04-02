@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function appcache_manifestInstall($self) {
   $self->lock();
   turlmap::unsub($self);

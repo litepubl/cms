@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tcronInstall($self) {
   $manager = tdbmanager::i();
   $manager->CreateTable('cron', file_get_contents(dirname(__file__) . '/sql/cron.sql'));

@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class tprofile extends tevents_itemplate implements itemplate {
 
   public static function i($id = 0) {

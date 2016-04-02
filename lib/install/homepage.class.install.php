@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function thomepageInstall($self) {
   litepublisher::$site->home = '/';
   $menus = tmenus::i();

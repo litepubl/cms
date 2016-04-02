@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class twikiwords extends titems {
   public $itemsposts;
   private $fix;

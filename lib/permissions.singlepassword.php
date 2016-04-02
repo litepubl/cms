@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tsinglepassword extends tperm {
   private $password;
   private $checked;

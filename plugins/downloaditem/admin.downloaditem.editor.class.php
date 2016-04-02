@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class tdownloaditemeditor extends tposteditor {
 
   public static function i($id = 0) {

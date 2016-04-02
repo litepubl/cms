@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tadmincssmerger extends tadminjsmerger {
 
   public static function i($id = 0) {

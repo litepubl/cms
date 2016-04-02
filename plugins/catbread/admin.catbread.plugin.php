@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class admincatbread implements iadmin {
 
   public static function i() {

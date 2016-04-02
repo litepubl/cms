@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tjsonfilesInstall($self) {
   $json = tjsonserver::i();
   $json->lock();

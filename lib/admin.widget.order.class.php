@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tadminorderwidget extends tadminwidget {
 
   public static function i() {

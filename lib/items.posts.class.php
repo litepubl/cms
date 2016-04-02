@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class titemsposts extends titems {
   public $tablepost;
   public $postprop;

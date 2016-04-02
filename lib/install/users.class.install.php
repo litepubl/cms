@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tusersInstall($self) {
   $manager = tdbmanager::i();
   $dir = dirname(__file__) . '/sql/';

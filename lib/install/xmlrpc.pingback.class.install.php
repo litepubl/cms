@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function TXMLRPCPingbackInstall($self) {
   $Caller = TXMLRPC::i();
   $Caller->Add('pingback.ping', 'ping', get_class($self));

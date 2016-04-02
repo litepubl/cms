@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tlinkswidgetInstall($self) {
   if (get_class($self) != 'tlinkswidget') return;
   tlocal::usefile('admin');

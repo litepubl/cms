@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function twidgetUninstall($self) {
   twidgets::i()->deleteclass(get_class($self));
 }

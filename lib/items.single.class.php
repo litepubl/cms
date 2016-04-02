@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tsingleitems extends titems {
   public $copyprops;
   public static $instances;

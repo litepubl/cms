@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tcontactform extends tsinglemenu {
 
   public static function i($id = 0) {

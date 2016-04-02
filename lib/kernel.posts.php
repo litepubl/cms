@@ -1,5 +1,7 @@
 <?php
 //items.posts.class.php
+namespace litepubl;
+
 class titemsposts extends titems {
   public $tablepost;
   public $postprop;
@@ -116,6 +118,8 @@ class titemspostsowner extends titemsposts {
 } //class
 
 //post.class.php
+namespace litepubl;
+
 class tpost extends titem implements itemplate {
   public $childdata;
   public $childtable;
@@ -1107,6 +1111,8 @@ class tpost extends titem implements itemplate {
 } //class
 
 //post.factory.class.php
+namespace litepubl;
+
 class tpostfactory extends tdata {
 
   public static function i() {
@@ -1160,6 +1166,8 @@ class tpostfactory extends tdata {
 } //class
 
 //posts.class.php
+namespace litepubl;
+
 class tposts extends titems {
   public $itemcoclasses;
   public $archives;
@@ -1515,6 +1523,8 @@ class tposts extends titems {
 } //class
 
 //post.transform.class.php
+namespace litepubl;
+
 class tposttransform {
   public $post;
   public static $arrayprops = array(
@@ -1681,6 +1691,8 @@ class tposttransform {
 } //class
 
 //post.meta.class.php
+namespace litepubl;
+
 class tmetapost extends titem {
 
   public static function i($id = 0) {
@@ -1781,6 +1793,8 @@ class tmetapost extends titem {
 } //class
 
 //widget.posts.class.php
+namespace litepubl;
+
 class tpostswidget extends twidget {
 
   public static function i() {
@@ -1809,6 +1823,8 @@ class tpostswidget extends twidget {
 } //class
 
 //tags.common.class.php
+namespace litepubl;
+
 class tcommontags extends titems implements itemplate {
   public $factory;
   public $contents;
@@ -2394,6 +2410,8 @@ class ttagcontent extends tdata {
 } //class
 
 //tags.factory.class.php
+namespace litepubl;
+
 class ttagfactory extends tdata {
 
   public static function i() {
@@ -2411,6 +2429,8 @@ class ttagfactory extends tdata {
 } //class
 
 //tags.categories.class.php
+namespace litepubl;
+
 class tcategories extends tcommontags {
   //public  $defaultid;
   public static function i() {
@@ -2443,6 +2463,8 @@ class tcategories extends tcommontags {
 } //class
 
 //tags.class.php
+namespace litepubl;
+
 class ttags extends tcommontags {
 
   public static function i() {
@@ -2469,6 +2491,8 @@ class ttags extends tcommontags {
 } //class
 
 //widget.commontags.class.php
+namespace litepubl;
+
 class tcommontagswidget extends twidget {
 
   protected function create() {
@@ -2498,6 +2522,8 @@ class tcommontagswidget extends twidget {
 } //class
 
 //widget.categories.class.php
+namespace litepubl;
+
 class tcategorieswidget extends tcommontagswidget {
 
   public static function i() {
@@ -2521,6 +2547,8 @@ class tcategorieswidget extends tcommontagswidget {
 } //class
 
 //widget.tags.class.php
+namespace litepubl;
+
 class ttagswidget extends tcommontagswidget {
 
   public static function i() {
@@ -2546,6 +2574,8 @@ class ttagswidget extends tcommontagswidget {
 } //class
 
 //files.class.php
+namespace litepubl;
+
 class tfiles extends titems {
   public $itemsposts;
   public $cachetml;
@@ -2864,6 +2894,8 @@ class tfiles extends titems {
 } //class
 
 //files.items.class.php
+namespace litepubl;
+
 class tfileitems extends titemsposts {
 
   public static function i() {

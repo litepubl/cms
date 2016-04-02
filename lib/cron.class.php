@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tcron extends tevents {
   public static $pinged = false;
   public $disableadd;

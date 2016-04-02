@@ -1,5 +1,7 @@
 <?php
 //local.class.php
+namespace litepubl;
+
 class tlocal {
   public static $self;
   public $loaded;
@@ -162,6 +164,8 @@ class tdateformater {
 }
 
 //inifiles.class.php
+namespace litepubl;
+
 class inifiles {
   public static $files = array();
 
@@ -194,6 +198,8 @@ class inifiles {
 }
 
 //view.class.php
+namespace litepubl;
+
 class tview extends titem_storage {
   public $sidebars;
   protected $_theme;
@@ -353,6 +359,8 @@ class tview extends titem_storage {
 } //class
 
 //views.class.php
+namespace litepubl;
+
 class tviews extends titems_storage {
   public $defaults;
 
@@ -429,6 +437,8 @@ class tviews extends titems_storage {
 } //class
 
 //events.itemplate.class.php
+namespace litepubl;
+
 class tevents_itemplate extends tevents {
 
   protected function create() {
@@ -461,6 +471,8 @@ class tevents_itemplate extends tevents {
 } //class
 
 //items.itemplate.class.php
+namespace litepubl;
+
 class titems_itemplate extends titems {
 
   protected function create() {
@@ -501,6 +513,8 @@ class titems_itemplate extends titems {
 } //class
 
 //template.class.php
+namespace litepubl;
+
 class ttemplate extends tevents_storage {
   public $path;
   public $url;
@@ -768,6 +782,8 @@ class ttemplate extends tevents_storage {
 } //class
 
 //theme.base.class.php
+namespace litepubl;
+
 class basetheme extends tevents {
   public static $instances = array();
   public static $vars = array();
@@ -1018,6 +1034,8 @@ class basetheme extends tevents {
 } //class
 
 //theme.class.php
+namespace litepubl;
+
 class ttheme extends basetheme {
 
   public static function i() {
@@ -1379,6 +1397,8 @@ class emptyclass {
 }
 
 //theme.args.class.php
+namespace litepubl;
+
 class targs {
   public $data;
   public $callbacks;
@@ -1463,6 +1483,8 @@ class targs {
 } //class
 
 //theme.vars.class.php
+namespace litepubl;
+
 class themevars {
   public $keys = array();
 
@@ -1497,6 +1519,8 @@ class themevars {
 }
 
 //widget.class.php
+namespace litepubl;
+
 class twidget extends tevents {
   public $id;
   public $template;
@@ -1622,6 +1646,8 @@ class twidget extends tevents {
 } //class
 
 //widget.order.class.php
+namespace litepubl;
+
 class torderwidget extends twidget {
 
   protected function create() {
@@ -1646,6 +1672,8 @@ class torderwidget extends twidget {
 } //class
 
 //widget.class.class.php
+namespace litepubl;
+
 class tclasswidget extends twidget {
   private $item;
 
@@ -1688,6 +1716,8 @@ class tclasswidget extends twidget {
 } //class
 
 //widgets.class.php
+namespace litepubl;
+
 class twidgets extends titems_storage {
   public $classes;
   public $currentsidebar;
@@ -2129,6 +2159,8 @@ class twidgets extends titems_storage {
 } //class
 
 //widgets.cache.class.php
+namespace litepubl;
+
 class twidgetscache extends titems {
   private $modified;
 
@@ -2209,6 +2241,8 @@ class twidgetscache extends titems {
 } //class
 
 //guard.class.php
+namespace litepubl;
+
 class tguard {
   //prevent double call post()
   private static $posted;

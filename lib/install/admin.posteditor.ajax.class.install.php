@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tajaxposteditorInstall($self) {
   litepublisher::$urlmap->addget('/admin/ajaxposteditor.htm', get_class($self));
 }

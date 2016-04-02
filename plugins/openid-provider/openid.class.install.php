@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function topenidInstall($self) {
   litepublisher::$urlmap->add($self->url, get_class($self) , null, 'get');
 

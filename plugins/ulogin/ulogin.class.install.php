@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function uloginInstall($self) {
   $self->data['nets'] = array(
     'vkontakte',

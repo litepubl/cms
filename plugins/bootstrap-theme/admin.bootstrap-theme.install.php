@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function admin_bootstrap_themeInstall($self) {
   tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
   $about = tplugins::getabout(tplugins::getname(__file__));

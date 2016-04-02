@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class ttagswidget extends tcommontagswidget {
 
   public static function i() {

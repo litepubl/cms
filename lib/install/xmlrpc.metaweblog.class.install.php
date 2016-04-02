@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function TXMLRPCMetaWeblogInstall($self) {
   $caller = TXMLRPC::i();
   $caller->lock();

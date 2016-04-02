@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tcommontagsInstall($self) {
   if ('tcommontags' == get_class($self)) return;
 

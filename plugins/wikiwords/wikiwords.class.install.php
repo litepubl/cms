@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function twikiwordsInstall($self) {
   if ($self->dbversion) {
     $manager = tdbmanager::i();

@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function ttidyfilterInstall($self) {
   if (!class_exists('tidy')) die('PHP tidy extension is required');
   $filter = tcontentfilter::i();

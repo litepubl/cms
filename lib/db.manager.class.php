@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tdbmanager {
   public $engine;
   private $max_allowed_packet;

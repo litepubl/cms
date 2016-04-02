@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tajaxmenueditor extends tajaxposteditor {
 
   public static function i() {

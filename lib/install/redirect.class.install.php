@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tredirectorInstall($self) {
   $self->lock();
   $self->add('/rss/', '/rss.xml');

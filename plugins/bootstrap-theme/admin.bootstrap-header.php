@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class admin_bootstrap_header extends tadminmenu {
 
   public static function i($id = 0) {

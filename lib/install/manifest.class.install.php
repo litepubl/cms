@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tmanifestInstall($self) {
   $urlmap = turlmap::i();
   $urlmap->lock();

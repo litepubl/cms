@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function admin_bootstrap_headerInstall($self) {
   $about = tplugins::getabout(tplugins::getname(__file__));
 

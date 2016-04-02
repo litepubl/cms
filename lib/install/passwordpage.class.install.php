@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tpasswordpageInstall($self) {
   litepublisher::$urlmap->delete('/check-password.php');
   tlocal::usefile('install');

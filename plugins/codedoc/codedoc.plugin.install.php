@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tcodedocpluginInstall($self) {
   if (!dbversion) die("Ticket  system only for database version");
   $name = basename(dirname(__file__));

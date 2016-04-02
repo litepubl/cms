@@ -1,6 +1,7 @@
 <?php
-namespace {
 //db.class.php
+namespace litepubl;
+
 class tdatabase {
   public $mysqli;
   public $result;
@@ -406,6 +407,8 @@ class tdatabase {
 } //class
 
 //data.class.php
+namespace litepubl;
+
 class tdata {
   const zerodate = '0000-00-00 00:00:00';
   public $data;
@@ -671,6 +674,8 @@ class tdata {
 } //class
 
 //array2prop.class.php
+namespace litepubl;
+
 class tarray2prop {
   public $array;
   public function __construct(array $a = null) {
@@ -691,6 +696,8 @@ class tarray2prop {
 } //class
 
 //utils.functions.php
+namespace litepubl;
+
 function sqldate($date = 0) {
   if ($date == 0) $date = time();
   return date('Y-m-d H:i:s', $date);
@@ -818,6 +825,8 @@ function dumpvar($v) {
 }
 
 //getter.class.php
+namespace litepubl;
+
 class getter {
   public $get;
   public $set;
@@ -843,6 +852,8 @@ class getter {
 }
 
 //events.class.php
+namespace litepubl;
+
 class tevents extends tdata {
   protected $events;
   protected $eventnames;
@@ -1153,6 +1164,8 @@ class tevents extends tdata {
 } //class
 
 //events.exception.class.php
+namespace litepubl;
+
 class ECancelEvent extends Exception {
   public $result;
 
@@ -1163,6 +1176,8 @@ class ECancelEvent extends Exception {
 }
 
 //events.coclass.php
+namespace litepubl;
+
 class tcoevents extends tevents {
   protected $owner;
   protected $callbacks;
@@ -1258,6 +1273,8 @@ class tcoevents extends tevents {
 } //class
 
 //events.storage.class.php
+namespace litepubl;
+
 class tevents_storage extends tevents {
 
   public function getstorage() {
@@ -1267,6 +1284,8 @@ class tevents_storage extends tevents {
 } //class
 
 //items.class.php
+namespace litepubl;
+
 class titems extends tevents {
   public $items;
   public $dbversion;
@@ -1455,6 +1474,8 @@ class titems extends tevents {
 } //class
 
 //items.storage.class.php
+namespace litepubl;
+
 class titems_storage extends titems {
 
   public function getstorage() {
@@ -1464,6 +1485,8 @@ class titems_storage extends titems {
 } //class
 
 //items.single.class.php
+namespace litepubl;
+
 class tsingleitems extends titems {
   public $copyprops;
   public static $instances;
@@ -1527,6 +1550,8 @@ class tsingleitems extends titems {
 } //class
 
 //item.class.php
+namespace litepubl;
+
 class titem extends tdata {
   public static $instances;
   //public $id;
@@ -1600,6 +1625,8 @@ class titem extends tdata {
 }
 
 //item.storage.class.php
+namespace litepubl;
+
 class titem_storage extends titem {
 
   public function getowner() {
@@ -1622,6 +1649,8 @@ class titem_storage extends titem {
 } //class
 
 //classes.class.php
+namespace litepubl;
+
 class tclasses extends titems {
   public $classes;
   public $interfaces;
@@ -1806,6 +1835,8 @@ class tclasses extends titems {
 } //class
 
 //classes.functions.php
+namespace litepubl;
+
 if (!function_exists('spl_autoload_register')) {
   function __autoload($class) {
     litepublisher::$classes->_autoload($class);
@@ -1817,6 +1848,8 @@ function getinstance($class) {
 }
 
 //options.class.php
+namespace litepubl;
+
 class toptions extends tevents_storage {
   public $groupnames;
   public $parentgroups;
@@ -2184,6 +2217,8 @@ class toptions extends tevents_storage {
 } //class
 
 //site.class.php
+namespace litepubl;
+
 class tsite extends tevents_storage {
   public $mapoptions;
   private $users;
@@ -2291,6 +2326,8 @@ class tsite extends tevents_storage {
 } //class
 
 //urlmap.class.php
+namespace litepubl;
+
 class turlmap extends titems {
   public $host;
   public $url;
@@ -2930,6 +2967,8 @@ class turlmap extends titems {
 } //class
 
 //interfaces.php
+namespace litepubl;
+
 interface itemplate {
   public function request($arg);
   public function gettitle();
@@ -2958,6 +2997,8 @@ interface iposts {
 }
 
 //plugin.class.php
+namespace litepubl;
+
 class tplugin extends tevents {
 
   protected function create() {
@@ -2968,6 +3009,8 @@ class tplugin extends tevents {
 }
 
 //users.class.php
+namespace litepubl;
+
 class tusers extends titems {
   public $grouptable;
 
@@ -3125,6 +3168,8 @@ class tusers extends titems {
 } //class
 
 //items.pool.class.php
+namespace litepubl;
+
 class tpoolitems extends tdata {
   protected $perpool;
   protected $pool;
@@ -3204,6 +3249,8 @@ class tpoolitems extends tdata {
 } //class
 
 //storage.mem.class.php
+namespace litepubl;
+
 class memstorage {
   public $memcache;
   public $memcache_prefix;
@@ -3384,6 +3431,8 @@ class memstorage {
 } //class
 
 //storage.cache.file.class.php
+namespace litepubl;
+
 class cachestorage_file {
 
   public function getdir() {
@@ -3447,6 +3496,8 @@ class cachestorage_file {
 } //class
 
 //storage.cache.memcache.class.php
+namespace litepubl;
+
 class cachestorage_memcache {
   public $memcache;
   public $lifetime;
@@ -3513,9 +3564,9 @@ class cachestorage_memcache {
   }
 
 } //class
-}
+
 //paths.php
-namespace litepubl {
+namespace litepubl;
 
 class tpaths {
   public $home;
@@ -3547,7 +3598,7 @@ class tpaths {
 }
 
 //litepubl.php
-//namespace litepubl;
+namespace litepubl;
 
   class litepubl {
     public static $cache;
@@ -3680,7 +3731,7 @@ class tpaths {
   } //class
 
 //storage.php
-//namespace litepubl;
+namespace litepubl;
 
   class storage {
     public $ext;
@@ -3795,7 +3846,7 @@ class tpaths {
   } //class
 
 //storage.inc.php
-//namespace litepubl;
+namespace litepubl;
 
   class incstorage extends storage {
 
@@ -3834,7 +3885,7 @@ class tpaths {
   } //class
 
 //storage.memcache.php
-//namespace litepubl;
+namespace litepubl;
 
   class memcachestorage extends storage {
     public $memcache;
@@ -3869,7 +3920,7 @@ class tpaths {
   } //class
 
 //storage.class.php
-//namespace litepubl;
+namespace litepubl;
   class datastorage {
     public $data;
     private $modified;
@@ -3955,7 +4006,8 @@ class tpaths {
   } //class
 
 //litepubl.init.php
-//namespace litepubl;
+namespace litepubl;
+
   if (\version_compare(\PHP_VERSION, '5.4', '<')) {
     die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
   }
@@ -3966,4 +4018,3 @@ class tpaths {
     litepubl::run();
   }
 
-}

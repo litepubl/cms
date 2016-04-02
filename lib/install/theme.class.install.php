@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tthemeInstall($self) {
   $dir = litepublisher::$paths->data . 'themes';
   if (!is_dir($dir)) {

@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tadminreguser extends tadminform {
   private $regstatus;
   private $backurl;

@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tadminboardInstall($self) {
   litepublisher::$urlmap->add('/admin/', get_class($self) , null, 'normal');
 }

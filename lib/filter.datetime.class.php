@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 // namespace litepubl\admin;
 class datefilter {
   //only date without time

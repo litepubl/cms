@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function toldestpostsInstall($self) {
   $widgets = twidgets::i();
   $widgets->addclass($self, 'tpost');

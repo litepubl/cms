@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class tadminticketoptions extends tadminmenu {
 
   public static function i($id = 0) {

@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function trssfilelistInstall($self) {
   $rss = trss::i();
   $rss->beforepost = $self->beforepost;

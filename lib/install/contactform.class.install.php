@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tcontactformInstall($self) {
   $ini = parse_ini_file(dirname(__file__) . '/templates/contactform.ini');
   tlocal::usefile('install');

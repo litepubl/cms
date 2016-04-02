@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tpingbacks extends tabstractpingbacks implements ipingbacks {
 
   public static function i($pid = 0) {

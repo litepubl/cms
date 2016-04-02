@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function likebuttonsInstall($self) {
   $name = basename(dirname(__file__));
   $js = tjsmerger::i();

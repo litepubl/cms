@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class tadminpostcatwidget extends tadmincustomwidget {
 
   public static function i() {

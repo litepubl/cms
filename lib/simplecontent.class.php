@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tsimplecontent extends tevents_itemplate implements itemplate {
   public $text;
   public $html;

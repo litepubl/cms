@@ -1,5 +1,7 @@
 <?php
 //menus.admin.class.php
+namespace litepubl;
+
 class tadminmenus extends tmenus {
 
   public static function i() {
@@ -121,6 +123,8 @@ class tadminmenus extends tmenus {
 } //class
 
 //menu.admin.class.php
+namespace litepubl;
+
 class tadminmenu extends tmenu {
   public static $adminownerprops = array(
     'title',
@@ -284,6 +288,8 @@ class tadminmenu extends tmenu {
 } //class
 
 //author-rights.class.php
+namespace litepubl;
+
 class tauthor_rights extends tevents {
 
   public static function i() {
@@ -299,6 +305,8 @@ class tauthor_rights extends tevents {
 }
 
 //theme.admin.class.php
+namespace litepubl;
+
 class admintheme extends basetheme {
   public $onfileperm;
 
@@ -603,6 +611,8 @@ class admintheme extends basetheme {
 } //class
 
 //htmlresource.class.php
+namespace litepubl;
+
 class tadminhtml {
   public static $tags = array(
     'h1',
@@ -817,6 +827,8 @@ class tadminhtml {
 }
 
 //html.adminform.class.php
+namespace litepubl;
+
 class adminform {
   public $args;
   public $title;
@@ -940,6 +952,8 @@ class adminform {
 } //class
 
 //html.tabs.class.php
+namespace litepubl;
+
 class tabs {
   public $tabs;
   public $panels;
@@ -1001,6 +1015,8 @@ class tabs {
 } //class
 
 //html.ulist.class.php
+namespace litepubl;
+
 class ulist {
   const aslinks = true;
   public $ul;
@@ -1079,6 +1095,8 @@ class ulist {
 } //class
 
 //html.tag.class.php
+namespace litepubl;
+
 class thtmltag {
   public $tag;
 
@@ -1099,6 +1117,8 @@ class redtag extends thtmltag {
 } //class
 
 //html.autoform.class.php
+namespace litepubl;
+
 class tautoform {
   const editor = 'editor';
   const text = 'text';
@@ -1262,6 +1282,8 @@ class tautoform {
 } //class
 
 //html.tablebuilder.class.php
+namespace litepubl;
+
 class tablebuilder {
   //current item in items
   public $item;
@@ -1574,6 +1596,8 @@ class tablebuilder {
 }
 
 //filter.datetime.class.php
+namespace litepubl;
+
 // namespace litepubl\admin;
 class datefilter {
   //only date without time
@@ -1634,6 +1658,8 @@ class datefilter {
 } //class
 
 //admin.posteditor.ajax.class.php
+namespace litepubl;
+
 class tajaxposteditor extends tevents {
   public $idpost;
   private $isauthor;
@@ -1798,6 +1824,8 @@ class tajaxposteditor extends tevents {
 } //class
 
 //admin.posteditor.class.php
+namespace litepubl;
+
 class tposteditor extends tadminmenu {
   public $idpost;
   protected $isauthor;

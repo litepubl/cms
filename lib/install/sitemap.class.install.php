@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tsitemapInstall($self) {
   tcron::i()->addnightly(get_class($self) , 'Cron', null);
 

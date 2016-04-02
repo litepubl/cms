@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tlocalmergerInstall($self) {
   $dir = litepublisher::$paths->data . 'languages';
   if (!is_dir($dir)) @mkdir($dir, 0777);

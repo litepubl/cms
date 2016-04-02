@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tfiler {
 
   public static function callback($callback, $path, $subdir) {

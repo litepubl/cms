@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 class tsourcefiles extends tplugin implements itemplate {
   public $item;
   public $geshi;

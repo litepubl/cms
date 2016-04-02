@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tsubscribersInstall($self) {
   $dbmanager = tdbmanager::i();
   $dbmanager->CreateTable($self->table, file_get_contents(dirname(__file__) . '/sql/items.posts.sql'));

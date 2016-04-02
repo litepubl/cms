@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tadminsubscribersInstall($self) {
   litepublisher::$urlmap->addget('/admin/subscribers/', get_class($self));
 }

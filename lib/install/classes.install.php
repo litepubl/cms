@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function install_engine($email, $language) {
   //forward create folders
   @mkdir(litepublisher::$paths->data . 'themes', 0777);

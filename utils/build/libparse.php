@@ -1,4 +1,5 @@
 <?php
+use litepubl\tfiler as tfiler;
 set_time_limit(120);
 
 function ParseFile($filename) {
@@ -27,7 +28,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (false && strend($filename, 'php')) {
+if (strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -270,6 +271,13 @@ $s = ltrim(substr($s, 5));
 if (strbegin($s, '/*')) {
 $s = ltrim(substr($s, strpos($s, '*/') + 2));
 }
+
+/*
+if ($php && ! strbegin($s, 'namespace')) {
+$s = "namespace litepubl\shop;\nuse litepubl;\n\n" . $s;
+}
+*/
+
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }

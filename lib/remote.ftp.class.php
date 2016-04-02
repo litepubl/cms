@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tftpfiler extends tremotefiler {
   public $ssl;
   private $tempfilehandle;

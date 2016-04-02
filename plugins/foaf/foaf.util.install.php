@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tfoafutilInstall($self) {
   $cron = tcron::i();
   $cron->add('day', get_class($self) , 'CheckFriendship', null);

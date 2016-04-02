@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tusergroupsInstall($self) {
   tlocal::usefile('install');
   $lang = tlocal::i('initgroups');

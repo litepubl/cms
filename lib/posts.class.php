@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tposts extends titems {
   public $itemcoclasses;
   public $archives;

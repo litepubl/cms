@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tprivatefilesInstall($self) {
   $dir = litepublisher::$paths->files . 'private';
   @mkdir($dir, 0777);

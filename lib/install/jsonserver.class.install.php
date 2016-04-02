@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tjsonserverInstall($self) {
   litepublisher::$urlmap->addget($self->url, get_class($self));
 }

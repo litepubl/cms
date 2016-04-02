@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function twidgetsInstall($self) {
   litepublisher::$urlmap->addget('/getwidget.htm', get_class($self));
   $robot = trobotstxt::i();

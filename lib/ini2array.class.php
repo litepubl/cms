@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tini2array {
 
   public static function extractvalue(&$lines, &$name, &$value) {

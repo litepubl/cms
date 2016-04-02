@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tuseroptions extends titems {
   public $defvalues;
   private $defitems;

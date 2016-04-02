@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tclearcacheInstall($self) {
   litepublisher::$urlmap->beforerequest = $self->clearcache;
   $parser = tthemeparser::i();

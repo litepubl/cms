@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tcommontags extends titems implements itemplate {
   public $factory;
   public $contents;

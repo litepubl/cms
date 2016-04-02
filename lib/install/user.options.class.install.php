@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tuseroptionsInstall($self) {
   $self->defvalues['subscribe'] = 'enabled';
   if (isset(litepublisher::$options->defaultsubscribe)) $self->defvalues['subscribe'] = litepublisher::$options->defaultsubscribe ? 'enabled' : 'disabled';

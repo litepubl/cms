@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tarchives extends titems_itemplate implements itemplate {
   public $date;
   private $_idposts;

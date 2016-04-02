@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
   public static function i() {
     return getinstance(__class__);

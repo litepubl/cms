@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tjsmergerInstall($self) {
   $dir = litepublisher::$paths->files . 'js';
   @mkdir($dir, 0777);

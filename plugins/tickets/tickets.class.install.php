@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tticketsInstall($self) {
   if (version_compare(PHP_VERSION, '5.3', '<')) {
     die('Ticket system requires PHP 5.3 or later. You are using PHP ' . PHP_VERSION);

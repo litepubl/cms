@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function trobotstxtInstall($self) {
   $self->lock();
   $urlmap = turlmap::i();

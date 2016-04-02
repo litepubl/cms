@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tdownloaditemcounterInstall($self) {
   $cron = tcron::i();
   $cron->add('hour', get_class($self) , 'updatestat');

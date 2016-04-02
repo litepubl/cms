@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tmetapostInstall($self) {
   if (dbversion) {
     $dir = dirname(__file__) . '/sql/';

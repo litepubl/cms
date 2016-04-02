@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tsitemap extends titems_itemplate implements itemplate {
   public $classes;
   private $lastmod;

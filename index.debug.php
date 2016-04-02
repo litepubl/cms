@@ -60,8 +60,8 @@ public static $db = [
 config::$beforeRequest  = function() {
 include (__DIR__ . '/temp/zdebug.php');
 };
-require (__DIR__ . '/lib/kernel.php');
-return;
+//return require (__DIR__ . '/lib/kernel.php');
+
 if (config::$debug) {
 require (__DIR__ . '/lib/kernel.debug.php');
 } else {

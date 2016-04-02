@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tftpsocketfiler extends tremotefiler {
   private $ftp;
 

@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tsite extends tevents_storage {
   public $mapoptions;
   private $users;

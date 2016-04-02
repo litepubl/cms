@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class toptions extends tevents_storage {
   public $groupnames;
   public $parentgroups;

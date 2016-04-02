@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tview extends titem_storage {
   public $sidebars;
   protected $_theme;

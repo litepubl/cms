@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class cachestorage_memcache {
   public $memcache;
   public $lifetime;

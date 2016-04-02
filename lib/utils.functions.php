@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function sqldate($date = 0) {
   if ($date == 0) $date = time();
   return date('Y-m-d H:i:s', $date);

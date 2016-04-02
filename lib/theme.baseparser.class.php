@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class baseparser extends tevents {
   public $theme;
   public $themefiles;

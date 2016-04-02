@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tposteditor extends tadminmenu {
   public $idpost;
   protected $isauthor;

@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 function tpostsInstall($self) {
   if ('tposts' != get_class($self)) return;
 

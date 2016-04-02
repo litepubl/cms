@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class tssh2filer extends tremotefiler {
   public $sftp;
   protected $hostkey;

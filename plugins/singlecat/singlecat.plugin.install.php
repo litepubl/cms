@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tsinglecatInstall($self) {
   if (!dbversion) die('Required database version');
   tthemeparser::i()->parsed = $self->themeparsed;

@@ -5,6 +5,9 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl\plugins;
+use litepubl;
+
 function tsingletagwidgetInstall($self) {
   $widgets = twidgets::i();
   $widgets->deleted = $self->widgetdeleted;

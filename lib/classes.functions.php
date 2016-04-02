@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 if (!function_exists('spl_autoload_register')) {
   function __autoload($class) {
     litepublisher::$classes->_autoload($class);

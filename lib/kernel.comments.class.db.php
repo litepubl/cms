@@ -1,5 +1,7 @@
 <?php
 //comments.class.db.php
+namespace litepubl;
+
 class tcomments extends titems {
   public $rawtable;
   private $pid;
@@ -352,6 +354,8 @@ class tcomment extends tdata {
 } //class
 
 //comments.manager.class.php
+namespace litepubl;
+
 class tcommentmanager extends tevents_storage {
 
   public static function i() {
@@ -488,6 +492,8 @@ class tcommentmanager extends tevents_storage {
 } //class
 
 //comments.form.class.php
+namespace litepubl;
+
 class tcommentform extends tevents {
   public $helper;
 
@@ -764,6 +770,8 @@ class tcommentform extends tevents {
 } //class
 
 //comments.subscribers.class.php
+namespace litepubl;
+
 class tsubscribers extends titemsposts {
   public $blacklist;
 
@@ -922,6 +930,8 @@ class tsubscribers extends titemsposts {
 } //class
 
 //template.comments.class.php
+namespace litepubl;
+
 class ttemplatecomments extends tevents {
 
   public static function i() {
@@ -1052,6 +1062,8 @@ class ttemplatecomments extends tevents {
 } //class
 
 //widget.comments.class.php
+namespace litepubl;
+
 class tcommentswidget extends twidget {
 
   public static function i() {

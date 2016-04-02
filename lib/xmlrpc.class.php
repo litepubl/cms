@@ -5,6 +5,8 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
+namespace litepubl;
+
 class TXMLRPCParser extends IXR_Server {
   public $XMLResult;
   public $owner;
