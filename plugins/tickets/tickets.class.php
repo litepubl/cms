@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class ttickets extends tposts {
   public $cats;
@@ -58,7 +57,7 @@ class ttickets extends tposts {
   private function notify(tticket $ticket) {
     ttheme::$vars['ticket'] = $ticket;
     $args = new targs();
-    $args->adminurl = litepublisher::$site->url . '/admin/tickets/editor/' . litepublisher::$site->q . 'id=' . $ticket->id;
+    $args->adminurl = litepubl::$site->url . '/admin/tickets/editor/' . litepubl::$site->q . 'id=' . $ticket->id;
 
     tlocal::usefile('mail');
     $lang = tlocal::i('mailticket');
@@ -78,7 +77,7 @@ class ttickets extends tposts {
   }
 
   public function onexclude($id) {
-    if (litepublisher::$options->group == 'ticket') {
+    if (litepubl::$options->group == 'ticket') {
       $admin = tadminmenus::i();
       return $admin->items[$id]['url'] == '/admin/posts/';
     }

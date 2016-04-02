@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function pollsInstall($self) {
   $name = basename(dirname(__file__));
@@ -26,7 +25,7 @@ function pollsInstall($self) {
 
   tplugins::i()->add('ulogin');
   $js->add('default', '/plugins/polls/resource/polls.min.js');
-  $js->add('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+  $js->add('default', '/plugins/polls/resource/' . litepubl::$options->language . '.polls.min.js');
 
   $css->add('default', 'plugins/polls/resource/polls.min.css');
   $css->unlock();
@@ -53,7 +52,7 @@ function pollsUninstall($self) {
   tplugins::i()->delete('ulogin');
 
   $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
-  $js->deletefile('default', '/plugins/polls/resource/' . litepublisher::$options->language . '.polls.min.js');
+  $js->deletefile('default', '/plugins/polls/resource/' . litepubl::$options->language . '.polls.min.js');
 
   $css->deletefile('default', 'plugins/polls/resource/polls.min.css');
   $css->unlock();

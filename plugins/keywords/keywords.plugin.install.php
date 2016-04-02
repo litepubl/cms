@@ -5,15 +5,14 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tkeywordspluginInstall($self) {
-  @mkdir(litepublisher::$paths->data . 'keywords', 0777);
-  @chmod(litepublisher::$paths->data . 'keywords', 0777);
+  @mkdir(litepubl::$paths->data . 'keywords', 0777);
+  @chmod(litepubl::$paths->data . 'keywords', 0777);
 
-  $item = litepublisher::$classes->items[get_class($self) ];
-  litepublisher::$classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
+  $item = litepubl::$classes->items[get_class($self) ];
+  litepubl::$classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
 
   $widget = tkeywordswidget::i();
   $widgets = twidgets::i();
@@ -34,7 +33,7 @@ function tkeywordspluginUninstall($self) {
   turlmap::unsub($self);
   $widgets = twidgets::i();
   $widgets->deleteclass('tkeywordswidget');
-  litepublisher::$classes->delete('tkeywordswidget');
-  //TFiler::DeleteFiles(litepublisher::$paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
+  litepubl::$classes->delete('tkeywordswidget');
+  //TFiler::DeleteFiles(litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
   
 }

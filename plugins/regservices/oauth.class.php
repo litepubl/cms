@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class toauth extends tdata {
   public $urllist;
@@ -30,7 +29,7 @@ class toauth extends tdata {
       'request' => 'https://api.twitter.com/oauth/request_token',
       'authorize' => 'https://api.twitter.com/oauth/authorize',
       'access' => 'https://api.twitter.com/oauth/access_token',
-      //'callback' => litepublisher::$site->url . '/twitter-oauth1callback.php'
+      //'callback' => litepubl::$site->url . '/twitter-oauth1callback.php'
       'callback' => ''
     );
   }

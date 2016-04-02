@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class todnoklassnikiservice extends tregservice {
 
@@ -26,7 +25,7 @@ class todnoklassnikiservice extends tregservice {
   public function getauthurl() {
     $url = 'http://www.odnoklassniki.ru/oauth/authorize?';
     $url.= 'response_type=code';
-    $url.= '&redirect_uri=' . urlencode(litepublisher::$site->url . $this->url . litepublisher::$site->q . 'state=' . $this->newstate());
+    $url.= '&redirect_uri=' . urlencode(litepubl::$site->url . $this->url . litepubl::$site->q . 'state=' . $this->newstate());
     $url.= '&client_id=' . $this->client_id;
     return $url;
   }
@@ -49,7 +48,7 @@ class todnoklassnikiservice extends tregservice {
       'code' => $code,
       'client_id' => $this->client_id,
       'client_secret' => $this->client_secret,
-      'redirect_uri' => litepublisher::$site->url . $this->url . litepublisher::$site->q . 'state=' . $_GET['state'],
+      'redirect_uri' => litepubl::$site->url . $this->url . litepubl::$site->q . 'state=' . $_GET['state'],
     ));
 
     if ($resp) {

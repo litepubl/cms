@@ -5,11 +5,10 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function topenidInstall($self) {
-  litepublisher::$urlmap->add($self->url, get_class($self) , null, 'get');
+  litepubl::$urlmap->add($self->url, get_class($self) , null, 'get');
 
   $template = ttemplate::i();
   $template->addtohead($self->get_head());
@@ -26,5 +25,5 @@ function topenidUninstall($self) {
   $merger = tlocalmerger::i();
   $merger->deleteplugin(tplugins::getname(__file__));
 
-  litepublisher::$urlmap->clearcache();
+  litepubl::$urlmap->clearcache();
 }

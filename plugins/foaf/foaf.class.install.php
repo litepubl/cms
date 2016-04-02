@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tfoafInstall($self) {
   $merger = tlocalmerger::i();
@@ -27,12 +26,12 @@ function tfoafInstall($self) {
   $actions->add('acceptfriend', get_class($self) , 'Accept');
   $actions->unlock();
 
-  $urlmap = litepublisher::$urlmap;
+  $urlmap = litepubl::$urlmap;
   turlmap::unsub($self);
   $urlmap->add('/foaf.xml', get_class($self) , null);
 
   $name = tplugins::getname(__file__);
-  $classes = litepublisher::$classes;
+  $classes = litepubl::$classes;
   $classes->lock();
   $classes->add('tadminfoaf', 'admin.foaf.class.php', $name);
   $classes->add('tfoafutil', 'foaf.util.class.php', $name);
@@ -66,10 +65,10 @@ function tfoafUninstall($self) {
   $actions = TXMLRPCAction::i();
   $actions->deleteclass(get_class($self));
 
-  $urlmap = litepublisher::$urlmap;
+  $urlmap = litepubl::$urlmap;
   turlmap::unsub($self);
 
-  $classes = litepublisher::$classes;
+  $classes = litepubl::$classes;
   $classes->lock();
   $classes->delete('tfoafutil');
   $classes->delete('tprofile');

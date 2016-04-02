@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tticketeditor extends tposteditor {
   private $newstatus;
@@ -29,7 +28,7 @@ class tticketeditor extends tposteditor {
     $this->basename = 'tickets';
     if ($this->idpost > 0) {
       $ticket = tticket::i($this->idpost);
-      if ((litepublisher::$options->group == 'ticket') && (litepublisher::$options->user != $ticket->author)) return 403;
+      if ((litepubl::$options->group == 'ticket') && (litepubl::$options->user != $ticket->author)) return 403;
     }
   }
 
@@ -119,9 +118,9 @@ class tticketeditor extends tposteditor {
     $id = (int)$_POST['id'];
     if ($id == 0) {
       $this->newstatus = 'published';
-      if (litepublisher::$options->group == 'ticket') {
-        $hold = $tickets->db->getcount('status = \'draft\' and author = ' . litepublisher::$options->user);
-        $approved = $tickets->db->getcount('status = \'published\' and author = ' . litepublisher::$options->user);
+      if (litepubl::$options->group == 'ticket') {
+        $hold = $tickets->db->getcount('status = \'draft\' and author = ' . litepubl::$options->user);
+        $approved = $tickets->db->getcount('status = \'published\' and author = ' . litepubl::$options->user);
         if ($approved < 3) {
           if ($hold - $approved >= 2) {
             return tlocal::admin('tickets')->noapproved;
@@ -150,7 +149,7 @@ class tticketeditor extends tposteditor {
     }
 
     if ($ticket->author == 0) {
-      $ticket->author = litepublisher::$options->user;
+      $ticket->author = litepubl::$options->user;
     }
 
     if ($ticket->id == 0) {

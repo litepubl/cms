@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tusernews extends tplugin {
 
@@ -68,8 +67,8 @@ class tusernews extends tplugin {
 
     if ($this->checkspam && ($id == 0)) {
       $post->status = 'published';
-      $hold = $posts->db->getcount('status = \'draft\' and author = ' . litepublisher::$options->user);
-      $approved = $posts->db->getcount('status = \'published\' and author = ' . litepublisher::$options->user);
+      $hold = $posts->db->getcount('status = \'draft\' and author = ' . litepubl::$options->user);
+      $approved = $posts->db->getcount('status = \'published\' and author = ' . litepubl::$options->user);
       if ($approved < 3) {
         if ($hold - $approved >= 2) return $this->norights;
         $post->status = 'draft';
@@ -79,8 +78,8 @@ class tusernews extends tplugin {
     if ($this->insertsource) $post->meta->sourceurl = $sourceurl;
     $post->title = $title;
     $post->categories = admintheme::i()->processcategories();
-    if (litepublisher::$options->user > 1) {
-      $post->author = litepublisher::$options->user;
+    if (litepubl::$options->user > 1) {
+      $post->author = litepubl::$options->user;
     }
 
     if (isset($files)) {

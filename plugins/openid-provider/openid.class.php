@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class topenid extends tevents {
   public $keys;
@@ -41,7 +40,7 @@ class topenid extends tevents {
   }
 
   private function LoadBigMath() {
-    litepublisher::$classes->include_file(litepublisher::$paths->plugins . 'openid-provider' . DIRECTORY_SEPARATOR . 'bigmath.php');
+    litepubl::$classes->include_file(litepubl::$paths->plugins . 'openid-provider' . DIRECTORY_SEPARATOR . 'bigmath.php');
     if (!extension_loaded('bcmath')) {
       if (!@dl('bcmath.' . PHP_SHLIB_SUFFIX) && !@dl('php_bcmath.' . PHP_SHLIB_SUFFIX)) {
         if (!extension_loaded('gmp')) {
@@ -59,7 +58,7 @@ class topenid extends tevents {
       }
     }
 
-    if (litepublisher::$debug) {
+    if (litepubl::$debug) {
       $log = $_SERVER['REQUEST_URI'];
       $log.= var_export($_REQUEST, true);
       $log.= "\nget:\n";
@@ -114,9 +113,9 @@ class topenid extends tevents {
   }
 
   private function id_res() {
-    if (!litepublisher::$options->user) {
-      litepublisher::$urlmap->nocache();
-      return litepublisher::$urlmap->redir('/admin/login/?backurl=' . urlencode(litepublisher::$urlmap->url));
+    if (!litepubl::$options->user) {
+      litepubl::$urlmap->nocache();
+      return litepubl::$urlmap->redir('/admin/login/?backurl=' . urlencode(litepubl::$urlmap->url));
     }
 
     return tsimplecontent::html(tlocal::get('openidserver', 'logged'));
@@ -150,7 +149,7 @@ class topenid extends tevents {
   }
 
   private function redir($url) {
-    return "<?php litepublisher::\$urlmap->redir('$url', 302); ?>";
+    return "<?php litepubl::\$urlmap->redir('$url', 302); ?>";
   }
 
   private function DoError() {
@@ -337,7 +336,7 @@ class topenid extends tevents {
 
     if (empty($_REQUEST['openid_identity'])) return $this->error_get($return_to, 'identity');
     $identity = $_REQUEST['openid_identity'];
-    if ($identity != litepublisher::$site->url . $this->url) return $this->error_get($return_to, 'identity');
+    if ($identity != litepubl::$site->url . $this->url) return $this->error_get($return_to, 'identity');
 
     $trust_root = !empty($_REQUEST['openid_trust_root']) ? $_REQUEST['openid_trust_root'] : $return_to;
     if ($trust_root != $return_to) {
@@ -351,10 +350,10 @@ class topenid extends tevents {
     $sreg_required.= ',' . $sreg_optional;
 
     $auth = tauthdigest::i();
-    if (litepublisher::$options->cookieenabled) {
-      if (!litepublisher::$options->user) return litepublisher::$urlmap->redir('/admin/login/');
+    if (litepubl::$options->cookieenabled) {
+      if (!litepubl::$options->user) return litepubl::$urlmap->redir('/admin/login/');
     } elseif (!$auth->Auth()) return $auth->headers();
-    if (litepublisher::$options->group != 'admin') return 404;
+    if (litepubl::$options->group != 'admin') return 404;
 
     $q = strpos($return_to, '?') ? '&' : '?';
     $cancel_url = $return_to . $q . 'openid.mode=cancel';
@@ -372,10 +371,10 @@ class topenid extends tevents {
         $args->trust_root = $trust_root;
         $args->assoc_handle = $assoc_handle;
 
-        $result = litepublisher::$urlmap->cache->get('openid.txt');
+        $result = litepubl::$urlmap->cache->get('openid.txt');
         if (!$result) {
           $result = $this->getform();
-          litepublisher::$urlmap->cache->set('openid.txt', $result);
+          litepubl::$urlmap->cache->set('openid.txt', $result);
         }
 
         return tsimplecontent::html(ttheme::i()->parsearg($result, $args));
@@ -400,7 +399,7 @@ class topenid extends tevents {
 
     $keys = array(
       'mode' => 'id_res',
-      'identity' => litepublisher::$site->url . $this->url,
+      'identity' => litepubl::$site->url . $this->url,
       'return_to' => $return_to
     );
 

@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tsourcefiles extends tplugin implements itemplate {
   public $item;
@@ -24,7 +23,7 @@ class tsourcefiles extends tplugin implements itemplate {
   }
 
   public function getdir() {
-    return litepublisher::$paths->data . 'sourcecache';
+    return litepubl::$paths->data . 'sourcecache';
   }
 
   public function getfilename($url) {
@@ -49,7 +48,7 @@ class tsourcefiles extends tplugin implements itemplate {
   }
 
   public function request($arg) {
-    $url = substr(litepublisher::$urlmap->url, strlen($this->url));
+    $url = substr(litepubl::$urlmap->url, strlen($this->url));
     $url = trim($url, '/');
     if (!$url) $url = '.';
 
@@ -57,9 +56,9 @@ class tsourcefiles extends tplugin implements itemplate {
       while ($url && $url != '.') {
         $url = dirname($url);
         if ($url == '.') {
-          return litepublisher::$urlmap->redir($this->url);
+          return litepubl::$urlmap->redir($this->url);
         } else if (file_exists($this->getfilename($url))) {
-          return litepublisher::$urlmap->redir($this->url . $url . '/');
+          return litepubl::$urlmap->redir($this->url . $url . '/');
         }
       }
 
@@ -219,7 +218,7 @@ class tsourcefiles extends tplugin implements itemplate {
       }
     }
 
-    $tml = '<li><a href="' . litepublisher::$site->url . $this->url . '%s">%s</a></li>';
+    $tml = '<li><a href="' . litepubl::$site->url . $this->url . '%s">%s</a></li>';
     $tml_list = '<ul>%s</ul>';
     $dirnames = array_keys($dirlist);
     foreach ($dirlist as $dir => $filelist) {

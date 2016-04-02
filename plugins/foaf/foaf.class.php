@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tfoaf extends titems {
   public $title;
@@ -162,7 +161,7 @@ class tfoaf extends titems {
 
   private function validateurl($url, $foafurl) {
     if (($url = $this->getdomain($url)) && ($foafurl = $this->getdomain($foafurl))) {
-      $self = $this->getdomain(litepublisher::$site->url);
+      $self = $this->getdomain(litepubl::$site->url);
       return ($url == $foafurl) && ($url != $self);
     }
     return false;
@@ -221,8 +220,8 @@ class tfoaf extends titems {
     $profile = tprofile::i();
     return array(
       'nick' => $profile->nick,
-      'url' => litepublisher::$site->url . litepublisher::$site->home,
-      'foafurl' => litepublisher::$site->url . '/foaf.xml'
+      'url' => litepubl::$site->url . litepubl::$site->home,
+      'foafurl' => litepubl::$site->url . '/foaf.xml'
     );
   }
 

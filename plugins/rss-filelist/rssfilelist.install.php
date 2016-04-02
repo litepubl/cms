@@ -5,19 +5,18 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function trssfilelistInstall($self) {
   $rss = trss::i();
   $rss->beforepost = $self->beforepost;
 
-  litepublisher::$urlmap->clearcache();
+  litepubl::$urlmap->clearcache();
 }
 
 function trssfilelistUninstall($self) {
   $rss = trss::i();
   $rss->unbind($self);
 
-  litepublisher::$urlmap->clearcache();
+  litepubl::$urlmap->clearcache();
 }

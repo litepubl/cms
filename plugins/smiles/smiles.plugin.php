@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tsmiles extends tplugin {
 
@@ -18,7 +17,7 @@ class tsmiles extends tplugin {
     $content = str_replace(array(
       ':)',
       ';)'
-    ) , sprintf('<img src="%s/plugins/%s/1.gif" alt="smile" title="smile" />', litepublisher::$site->files, basename(dirname(__file__))) , $content);
+    ) , sprintf('<img src="%s/plugins/%s/1.gif" alt="smile" title="smile" />', litepubl::$site->files, basename(dirname(__file__))) , $content);
   }
 
 }

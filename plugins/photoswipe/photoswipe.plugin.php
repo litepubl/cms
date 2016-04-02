@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class photoswipe extends tplugin {
 
@@ -16,7 +15,7 @@ class photoswipe extends tplugin {
 
   public function install() {
     $plugindir = basename(dirname(__file__));
-    $lang = litepublisher::$options->language;
+    $lang = litepubl::$options->language;
 
     $js = tjsmerger::i();
     $js->lock();
@@ -40,7 +39,7 @@ class photoswipe extends tplugin {
 
   public function uninstall() {
     $plugindir = basename(dirname(__file__));
-    $lang = litepublisher::$options->language;
+    $lang = litepubl::$options->language;
 
     $js = tjsmerger::i();
     $js->lock();

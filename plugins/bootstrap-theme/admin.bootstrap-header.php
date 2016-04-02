@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class admin_bootstrap_header extends tadminmenu {
 
@@ -72,7 +71,7 @@ class admin_bootstrap_header extends tadminmenu {
       $css = str_replace('%%file%%', 'data:%s;base64,%s', $css);
       $css = sprintf($css, $_FILES[$name]['type'], base64_encode($data));
 
-      $filename = litepublisher::$paths->files . "js/$name.css";
+      $filename = litepubl::$paths->files . "js/$name.css";
       file_put_contents($filename, $css);
       @chmod($filename, 0666);
 

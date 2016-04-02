@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class ttwitterregservice extends tregservice {
 
@@ -35,7 +34,7 @@ class ttwitterregservice extends tregservice {
 
   public function getoauth() {
     $oauth = new toauth();
-    $oauth->urllist['callback'] = litepublisher::$site->url . $this->url;
+    $oauth->urllist['callback'] = litepubl::$site->url . $this->url;
     $oauth->key = $this->client_id;
     $oauth->secret = $this->client_secret;
     return $oauth;

@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class photoswipethumbnail extends tplugin {
 
@@ -69,8 +68,8 @@ class photoswipethumbnail extends tplugin {
     "));
 
     foreach ($items as $i => $item) {
-      $srcfilename = litepublisher::$paths->files . $item['filename'];
-      $destfilename = litepublisher::$paths->files . $item['filenamethumb'];
+      $srcfilename = litepubl::$paths->files . $item['filename'];
+      $destfilename = litepubl::$paths->files . $item['filenamethumb'];
       $image = tmediaparser::readimage($srcfilename);
       if ($size = tmediaparser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
         imagedestroy($image);

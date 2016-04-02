@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tgoogleregservice extends tregservice {
 
@@ -37,7 +36,7 @@ class tgoogleregservice extends tregservice {
       'code' => $code,
       'client_id' => $this->client_id,
       'client_secret' => $this->client_secret,
-      'redirect_uri' => litepublisher::$site->url . $this->url,
+      'redirect_uri' => litepubl::$site->url . $this->url,
       'grant_type' => 'authorization_code'
     ));
 

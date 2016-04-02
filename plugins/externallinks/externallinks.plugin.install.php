@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function texternallinksInstall($self) {
   if (dbversion) {
@@ -29,7 +28,7 @@ function texternallinksInstall($self) {
   $cron = tcron::i();
   $cron->add('hour', get_class($self) , 'updatestat');
 
-  litepublisher::$urlmap->addget('/externallink.htm', get_class($self));
+  litepubl::$urlmap->addget('/externallink.htm', get_class($self));
 
   $robot = trobotstxt::i();
   $robot->AddDisallow('/externallink.htm');

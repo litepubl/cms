@@ -272,13 +272,18 @@ if (strbegin($s, '/*')) {
 $s = ltrim(substr($s, strpos($s, '*/') + 2));
 }
 
-/*
-if ($php && ! strbegin($s, 'namespace')) {
-$s = "namespace litepubl\shop;\nuse litepubl;\n\n" . $s;
-}
-*/
 
-if ($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
+/*
+//if ($php && ! strbegin($s, 'namespace')) {
+if ($php) {
+$s = str_replace(
+"namespace litepubl\plugins;\nuse litepubl;\n\n",
+"namespace litepubl;\n\n",
+$s);
+}
+
+if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
+*/
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }

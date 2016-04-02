@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tstatfooter extends tplugin {
 
@@ -17,7 +16,7 @@ class tstatfooter extends tplugin {
   public function getfooter() {
     return ' | <?php echo round(memory_get_usage()/1024/1024, 2), \'MB | \';' .
     //' echo round(memory_get_peak_usage(true)/1024/1024, 2), \'MB | \';' .
-    ' echo round(microtime(true) - litepublisher::$microtime, 2), \'Sec \'; ?>';
+    ' echo round(microtime(true) - litepubl::$microtime, 2), \'Sec \'; ?>';
   }
 
   public function install() {

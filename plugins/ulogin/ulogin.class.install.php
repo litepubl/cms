@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function uloginInstall($self) {
   $self->data['nets'] = array(
@@ -46,14 +45,14 @@ function uloginInstall($self) {
   $areg->widget.= $self->panel;
   $areg->save();
 
-  litepublisher::$urlmap->addget($self->url, get_class($self));
+  litepubl::$urlmap->addget($self->url, get_class($self));
 
   $js = tjsmerger::i();
   $js->lock();
   $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-  litepublisher::$classes->add('emailauth', 'emailauth.class.php', 'ulogin');
+  litepubl::$classes->add('emailauth', 'emailauth.class.php', 'ulogin');
 
-  $js->add('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.authdialog.min.js');
+  $js->add('default', '/plugins/ulogin/resource/' . litepubl::$options->language . '.authdialog.min.js');
   $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
   $js->unlock();
 
@@ -82,10 +81,10 @@ function uloginUninstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $js->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-  $js->deletefile('default', '/plugins/ulogin/resource/' . litepublisher::$options->language . '.authdialog.min.js');
+  $js->deletefile('default', '/plugins/ulogin/resource/' . litepubl::$options->language . '.authdialog.min.js');
   $js->deletefile('default', '/plugins/ulogin/resource/authdialog.min.js');
 
-  litepublisher::$classes->delete('emailauth');
+  litepubl::$classes->delete('emailauth');
   $js->unlock();
 
   tjsonserver::i()->unbind($self);

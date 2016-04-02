@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tregservice extends tplugin {
   public $sessdata;
@@ -38,7 +37,7 @@ class tregservice extends tplugin {
   }
 
   public function install() {
-    if ($this->url) litepublisher::$urlmap->addget($this->url, get_class($this));
+    if ($this->url) litepubl::$urlmap->addget($this->url, get_class($this));
   }
 
   public function uninstall() {
@@ -79,7 +78,7 @@ class tregservice extends tplugin {
 
   public function getauthurl() {
     $url = 'response_type=code';
-    $url.= '&redirect_uri=' . urlencode(litepublisher::$site->url . $this->url);
+    $url.= '&redirect_uri=' . urlencode(litepubl::$site->url . $this->url);
     $url.= '&client_id=' . $this->client_id;
     $url.= '&state=' . $this->newstate();
     return $url;
@@ -95,7 +94,7 @@ class tregservice extends tplugin {
 
   public function gettab($html, $args, $lang) {
     $a = $this->getadmininfo($lang);
-    $result = $html->p(sprintf($lang->reg, $a['regurl'], litepublisher::$site->url . $this->url));
+    $result = $html->p(sprintf($lang->reg, $a['regurl'], litepubl::$site->url . $this->url));
     $result.= $html->getinput('text', "client_id_$this->name", tadminhtml::specchars($this->client_id) , $a['client_id']);
     $result.= $html->getinput('text', "client_secret_$this->name", tadminhtml::specchars($this->client_secret) , $a['client_secret']);
     return $result;
@@ -118,7 +117,7 @@ class tregservice extends tplugin {
       if ($id = $users->emailexists($item['email'])) {
         $user = $users->getitem($id);
         if ($user['status'] == 'comuser') $users->approve($id);
-      } elseif (litepublisher::$options->reguser) {
+      } elseif (litepubl::$options->reguser) {
         $id = $users->add(array(
           'email' => $item['email'],
           'name' => $item['name'],
@@ -140,7 +139,7 @@ class tregservice extends tplugin {
         if ($id = $reguser->find($this->name, $uid)) {
           //nothing
           
-        } elseif (litepublisher::$options->reguser) {
+        } elseif (litepubl::$options->reguser) {
           $id = $users->add(array(
             'email' => '',
             'name' => $item['name'],
@@ -160,12 +159,12 @@ class tregservice extends tplugin {
 
     $expired = time() + 31536000;
     $cookie = md5uniq();
-    litepublisher::$options->user = $id;
-    litepublisher::$options->updategroup();
-    litepublisher::$options->setcookies($cookie, $expired);
-    if (litepublisher::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepublisher::$site->subdir . '/', false);
+    litepubl::$options->user = $id;
+    litepubl::$options->updategroup();
+    litepubl::$options->setcookies($cookie, $expired);
+    if (litepubl::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepubl::$site->subdir . '/', false);
 
-    setcookie('litepubl_regservice', $this->name, $expired, litepublisher::$site->subdir . '/', false);
+    setcookie('litepubl_regservice', $this->name, $expired, litepubl::$site->subdir . '/', false);
 
     $this->onadd($id, $rawdata);
 
@@ -180,7 +179,7 @@ class tregservice extends tplugin {
       $backurl = tusergroups::i()->gethome($user['idgroups'][0]);
     }
 
-    return litepublisher::$urlmap->redir($backurl);
+    return litepubl::$urlmap->redir($backurl);
   }
 
 } //class

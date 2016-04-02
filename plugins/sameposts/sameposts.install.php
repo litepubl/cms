@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tsamepostsInstall($self) {
   if (dbversion) {
@@ -32,7 +31,7 @@ function tsamepostsUninstall($self) {
     $manager->deletetable($self->table);
   } else {
     $posts = tposts::i();
-    $dir = litepublisher::$paths->data . 'posts' . DIRECTORY_SEPARATOR;
+    $dir = litepubl::$paths->data . 'posts' . DIRECTORY_SEPARATOR;
     foreach ($posts->items as $id => $item) {
       @unlink($dir . $id . DIRECTORY_SEPARATOR . 'same.php');
     }

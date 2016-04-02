@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tusernewsInstall($self) {
   $name = basename(dirname(__file__));
@@ -19,8 +18,8 @@ function tusernewsInstall($self) {
   $filter->phpcode = true;
   $filter->save();
 
-  litepublisher::$options->parsepost = false;
-  litepublisher::$options->reguser = true;
+  litepubl::$options->parsepost = false;
+  litepubl::$options->reguser = true;
   $adminoptions = tadminoptions::i();
   $adminoptions->usersenabled = true;
 

@@ -5,12 +5,11 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function treguserInstall($self) {
-  litepublisher::$classes->remap['tregserviceuser'] = get_class($self);
-  litepublisher::$classes->save();
+  litepubl::$classes->remap['tregserviceuser'] = get_class($self);
+  litepubl::$classes->save();
 
   $items = $self->getdb('regservices')->getitems('id > 0');
   $db = $self->db;
@@ -20,6 +19,6 @@ function treguserInstall($self) {
 }
 
 function treguserUninstall($self) {
-  unset(litepublisher::$classes->remap['tregserviceuser']);
-  litepublisher::$classes->save();
+  unset(litepubl::$classes->remap['tregserviceuser']);
+  litepubl::$classes->save();
 }

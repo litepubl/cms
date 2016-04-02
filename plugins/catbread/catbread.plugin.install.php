@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function catbreadInstall($self) {
   tlocalmerger::i()->addplugin(basename(dirname(__file__)));

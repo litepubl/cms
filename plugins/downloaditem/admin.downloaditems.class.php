@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tadmindownloaditems extends tadminmenu {
 
@@ -27,7 +26,7 @@ class tadmindownloaditems extends tadminmenu {
 
     $downloaditems = tdownloaditems::i();
     $perpage = 20;
-    $where = litepublisher::$options->group == 'downloaditem' ? ' and author = ' . litepublisher::$options->user : '';
+    $where = litepubl::$options->group == 'downloaditem' ? ' and author = ' . litepubl::$options->user : '';
 
     switch ($this->name) {
       case 'addurl':
@@ -95,7 +94,7 @@ class tadmindownloaditems extends tadminmenu {
     $result.= $form->get();
 
     $theme = $this->view->theme;
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -106,7 +105,7 @@ class tadmindownloaditems extends tadminmenu {
       if ($url == '') return '';
       if ($downloaditem = taboutparser::parse($url)) {
         $id = $downloaditems->add($downloaditem);
-        litepublisher::$urlmap->redir(tadminhtml::getadminlink('/admin/downloaditems/editor/', "id=$id"));
+        litepubl::$urlmap->redir(tadminhtml::getadminlink('/admin/downloaditems/editor/', "id=$id"));
       }
       return '';
     }

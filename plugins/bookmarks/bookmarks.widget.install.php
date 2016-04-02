@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tbookmarkswidgetInstall($self) {
   $self->lock();
@@ -20,7 +19,7 @@ function tbookmarkswidgetInstall($self) {
 
   $self->add('http://twitter.com/home/?status=$url?p=801+$title', 'Twitter', 'twitter.png');
 
-  if (litepublisher::$options->language == 'ru') {
+  if (litepubl::$options->language == 'ru') {
     $self->add('http://zakladki.yandex.ru/addlink.xml?name=$title&url=$url', 'Закладки Yandex', 'ya.png');
 
     $self->add('http://vkontakte.ru/share.php?url=$url', 'Vkontakte', 'vkontakte.png');

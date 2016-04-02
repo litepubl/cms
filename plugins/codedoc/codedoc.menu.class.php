@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tcodedocmenu extends tmenu {
 
@@ -32,7 +31,7 @@ class tcodedocmenu extends tmenu {
 
   public function getcontent() {
     $result = parent::getcontent();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $items = $db->res2items($db->query("select id, class from {$db->prefix}codedoc order by class"));
     if (count($items) == 0) return $result;
     tposts::i()->loaditems(array_keys($items));

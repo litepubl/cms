@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tticketsInstall($self) {
   if (version_compare(PHP_VERSION, '5.3', '<')) {
@@ -32,7 +31,7 @@ function tticketsInstall($self) {
   $filter = tcontentfilter::i();
   $filter->phpcode = true;
   $filter->save();
-  litepublisher::$options->parsepost = false;
+  litepubl::$options->parsepost = false;
 
   $manager = tdbmanager::i();
   $manager->CreateTable($self->childtable, file_get_contents($dir . 'ticket.sql'));
@@ -44,18 +43,18 @@ function tticketsInstall($self) {
   $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
   $optimizer->unlock();
 
-  litepublisher::$classes->lock();
+  litepubl::$classes->lock();
   //install polls if its needed
   $plugins = tplugins::i();
   if (!isset($plugins->items['polls'])) $plugins->add('polls');
 
-  litepublisher::$classes->Add('tticket', 'ticket.class.php', $dirname);
-  //litepublisher::$classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
-  litepublisher::$classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
-  litepublisher::$classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
-  litepublisher::$classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
+  litepubl::$classes->Add('tticket', 'ticket.class.php', $dirname);
+  //litepubl::$classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
+  litepubl::$classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
+  litepubl::$classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
+  litepubl::$classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
 
-  litepublisher::$options->reguser = true;
+  litepubl::$options->reguser = true;
   $adminsecure = adminsecure::i();
   $adminsecure->usersenabled = true;
 
@@ -82,7 +81,7 @@ function tticketsInstall($self) {
   /*
   $menus = tmenus::i();
   $menus->lock();
-  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
+  $ini = parse_ini_file($dir . litepubl::$options->language . '.install.ini', false);
   
   $menu = tticketsmenu::i();
   $menu->type = 'tickets';
@@ -102,7 +101,7 @@ function tticketsInstall($self) {
   }
   $menus->unlock();
   */
-  litepublisher::$classes->unlock();
+  litepubl::$classes->unlock();
 
   $linkgen = tlinkgenerator::i();
   $linkgen->data['ticket'] = '/tickets/[title].htm';
@@ -115,21 +114,21 @@ function tticketsInstall($self) {
     $idticket,
     $groups->getidgroup('author')
   );
-  $groups->items[litepublisher::$options->groupnames['author']]['parents'][] = $idticket;
-  $groups->items[litepublisher::$options->groupnames['commentator']]['parents'][] = $idticket;
+  $groups->items[litepubl::$options->groupnames['author']]['parents'][] = $idticket;
+  $groups->items[litepubl::$options->groupnames['commentator']]['parents'][] = $idticket;
   $groups->unlock();
 }
 
 function tticketsUninstall($self) {
   //die("Warning! You can lost all tickets!");
-  litepublisher::$classes->lock();
-  //if (litepublisher::$debug) litepublisher::$classes->delete('tpostclasses');
+  litepubl::$classes->lock();
+  //if (litepubl::$debug) litepubl::$classes->delete('tpostclasses');
   tposts::unsub($self);
 
-  litepublisher::$classes->delete('tticket');
-  litepublisher::$classes->delete('tticketeditor');
-  litepublisher::$classes->delete('tadmintickets');
-  litepublisher::$classes->delete('tadminticketoptions');
+  litepubl::$classes->delete('tticket');
+  litepubl::$classes->delete('tticketeditor');
+  litepubl::$classes->delete('tadmintickets');
+  litepubl::$classes->delete('tadminticketoptions');
 
   $adminmenus = tadminmenus::i();
   $adminmenus->lock();
@@ -145,9 +144,9 @@ function tticketsUninstall($self) {
   $menus->deleteurl('/tickets/');
   $menus->unlock();
   
-  litepublisher::$classes->delete('tticketsmenu');
+  litepubl::$classes->delete('tticketsmenu');
   */
-  litepublisher::$classes->unlock();
+  litepubl::$classes->unlock();
 
   $manager = tdbmanager::i();
   $manager->deletetable($self->childtable);

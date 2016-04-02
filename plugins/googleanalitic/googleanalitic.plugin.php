@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tgoogleanalitic extends tplugin {
 
@@ -50,7 +49,7 @@ class tgoogleanalitic extends tplugin {
   }
 
   public function install() {
-    $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . litepublisher::$options->language . 'se.js');
+    $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . litepubl::$options->language . 'se.js');
     $this->save();
   }
 

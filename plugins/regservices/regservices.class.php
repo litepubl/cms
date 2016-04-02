@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tregservices extends titems {
 
@@ -34,7 +33,7 @@ class tregservices extends titems {
 
   public function update_widget() {
     $widget = '';
-    $url = litepublisher::$site->url . $this->url . litepublisher::$site->q . 'id';
+    $url = litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
     foreach ($this->items as $name => $classname) {
       $service = getinstance($classname);
       if ($service->valid()) {
@@ -69,13 +68,13 @@ class tregservices extends titems {
     // hook for clien disabled cookies
     if (!isset($_GET['cookietest'])) {
       $backurl = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
-      if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, litepublisher::$site->subdir . '/', false);
-      setcookie('litepubl_cookie_test', 'test', time() + 8000, litepublisher::$site->subdir . '/', false);
-      return litepublisher::$urlmap->redir(litepublisher::$urlmap->url . '&cookietest=true');
+      if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, litepubl::$site->subdir . '/', false);
+      setcookie('litepubl_cookie_test', 'test', time() + 8000, litepubl::$site->subdir . '/', false);
+      return litepubl::$urlmap->redir(litepubl::$urlmap->url . '&cookietest=true');
     }
 
     if (!isset($_COOKIE['litepubl_cookie_test'])) return 403;
-    setcookie('litepubl_cookie_test', '', 0, litepublisher::$site->subdir . '/', false);
+    setcookie('litepubl_cookie_test', '', 0, litepubl::$site->subdir . '/', false);
 
     $id = empty($_GET['id']) ? 0 : $_GET['id'];
     if (!isset($this->items[$id])) return 404;
@@ -83,7 +82,7 @@ class tregservices extends titems {
     if (!$service->valid()) return 403;
     $url = $service->getauthurl();
     if (!$url) return 403;
-    return litepublisher::$urlmap->redir($url);
+    return litepubl::$urlmap->redir($url);
   }
 
   public function oncomuser(array $values, $comfirmed) {

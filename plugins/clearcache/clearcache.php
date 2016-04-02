@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tclearcache extends tplugin {
 
@@ -15,8 +14,8 @@ class tclearcache extends tplugin {
   }
 
   public function clearcache() {
-    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-    litepublisher::$urlmap->clearcache();
+    tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+    litepubl::$urlmap->clearcache();
   }
 
   public function themeparsed(ttheme $theme) {

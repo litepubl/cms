@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tcodedocfilter extends titems {
   private $fix;
@@ -148,7 +147,7 @@ class tcodedocfilter extends titems {
       $class = $headers['interface'];
       $parentclass = '';
       $args->class = $class;
-      $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepublisher::$site->url, $headers['source']);
+      $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepubl::$site->url, $headers['source']);
       $args->body = $body;
       $result = $this->html('interface', $args);
     } else {
@@ -264,7 +263,7 @@ class tcodedocfilter extends titems {
     $args->class = $class;
     $args->parent = isset($headers['parent']) ? sprintf('[[%s]]', $headers['parent']) : $lang->noparent;
     $args->childs = $this->getchilds($class);
-    $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepublisher::$site->url, $headers['source']);
+    $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepubl::$site->url, $headers['source']);
     $args->interfaces = $this->getclasses($headers, 'interface');
     $args->dependent = $this->getclasses($headers, 'dependent');
     $args->body = $body;

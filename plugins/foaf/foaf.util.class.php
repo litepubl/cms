@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tfoafutil extends tevents {
 
@@ -71,7 +70,7 @@ class tfoafutil extends tevents {
     foreach ($knows as $node) {
       $blog = $node->getElementsByTagName('Person')->item(0)->getElementsByTagName('weblog')->item(0)->attributes->getNamedItem('resource')->nodeValue;
       $seealso = $node->getElementsByTagName('Person')->item(0)->getElementsByTagName('seeAlso')->item(0)->attributes->getNamedItem('resource')->nodeValue;
-      if (($blog == litepublisher::$site->url . '/') && ($seealso == litepublisher::$site->url . '/foaf.xml')) {
+      if (($blog == litepubl::$site->url . '/') && ($seealso == litepubl::$site->url . '/foaf.xml')) {
         return true;
       }
     }

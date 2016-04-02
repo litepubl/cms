@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tbookmarkswidget extends tlinkswidget {
 
@@ -33,14 +32,14 @@ class tbookmarkswidget extends tlinkswidget {
   }
 
   public function getcontent($id, $sidebar) {
-    if (litepublisher::$urlmap->is404) return '';
+    if (litepubl::$urlmap->is404) return '';
     $result = '';
     $a = array(
-      '$url' => urlencode(litepublisher::$site->url . litepublisher::$urlmap->url) ,
+      '$url' => urlencode(litepubl::$site->url . litepubl::$urlmap->url) ,
       '$title' => urlencode(ttemplate::i()->title)
     );
-    $redirlink = litepublisher::$site->url . $this->redirlink . litepublisher::$site->q . strtr('url=$url&title=$title&id=', $a);
-    $iconurl = litepublisher::$site->files . '/plugins/bookmarks/icons/';
+    $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . strtr('url=$url&title=$title&id=', $a);
+    $iconurl = litepubl::$site->files . '/plugins/bookmarks/icons/';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('links', $sidebar);
     $args = targs::i();
@@ -74,7 +73,7 @@ class tbookmarkswidget extends tlinkswidget {
       '$title' => urlencode($_GET['title'])
     );
     $url = strtr($url, $a);
-    return litepublisher::$urlmap->redir($url);
+    return litepubl::$urlmap->redir($url);
   }
 
 } //class

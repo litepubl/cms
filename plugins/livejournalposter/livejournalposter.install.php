@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tlivejournalposterInstall($self) {
   $posts = tposts::i();
@@ -16,8 +15,8 @@ function tlivejournalposterInstall($self) {
 function tlivejournalposterUninstall($self) {
   tposts::unsub($self);
   if (dbversion) {
-    //litepublisher::$db->table = 'postsmeta';
-    //litepublisher::$db->delete("name = 'ljid'");
+    //litepubl::$db->table = 'postsmeta';
+    //litepubl::$db->delete("name = 'ljid'");
     
   }
 }

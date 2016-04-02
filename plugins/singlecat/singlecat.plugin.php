@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tsinglecat extends tplugin {
 
@@ -30,12 +29,12 @@ class tsinglecat extends tplugin {
   }
 
   public function getcontent() {
-    $post = litepublisher::$urlmap->context;
+    $post = litepubl::$urlmap->context;
     if (!($post instanceof tpost)) return '';
     if (count($post->categories) == 0) return '';
     $idcat = $post->categories[0];
     if ($idcat == 0) return '';
-    $table = litepublisher::$db->prefix . 'categoriesitems';
+    $table = litepubl::$db->prefix . 'categoriesitems';
     $order = $this->invertorder ? 'asc' : 'desc';
     $posts = tposts::i();
     $result = $posts->getlinks("$posts->thistable.id in

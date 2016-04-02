@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tsapeplugin extends twidget {
   public $sape;
@@ -34,7 +33,7 @@ class tsapeplugin extends twidget {
   private function createsape() {
     if (!defined('_SAPE_USER')) {
       define('_SAPE_USER', $this->user);
-      litepublisher::$classes->include_file(litepublisher::$paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
+      litepubl::$classes->include_file(litepubl::$paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
       $o['charset'] = 'UTF-8';
       $o['multi_site'] = true;
       if ($this->force) $o['force_show_code'] = $this->force;
@@ -44,7 +43,7 @@ class tsapeplugin extends twidget {
 
   public function getwidget($id, $sidebar) {
     if ($this->user == '') return '';
-    if (litepublisher::$urlmap->is404 || litepublisher::$urlmap->adminpanel) return '';
+    if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel) return '';
     return parent::getwidget($id, $sidebar);
   }
 
@@ -59,7 +58,7 @@ class tsapeplugin extends twidget {
   }
   public function getlinks() {
     if ($this->user == '') return '';
-    if (litepublisher::$urlmap->is404 || litepublisher::$urlmap->adminpanel) return '';
+    if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel) return '';
     if (!isset($this->sape)) $this->createsape();
     return $this->sape->return_links($this->counts[$id]);
   }

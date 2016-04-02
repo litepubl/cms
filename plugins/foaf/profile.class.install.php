@@ -5,11 +5,10 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tprofileInstall($self) {
-  litepublisher::$urlmap->add($self->url, get_class($self) , null);
+  litepubl::$urlmap->add($self->url, get_class($self) , null);
 
   $sitemap = tsitemap::i();
   $sitemap->add($self->url, 7);

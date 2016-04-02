@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class polls extends titems {
   const votes = 'pollvotes';
@@ -62,7 +61,7 @@ class polls extends titems {
       return '';
     }
 
-    if (litepublisher::$debug) $this->getdb(self::votes)->delete('iduser = ' . litepublisher::$options->user);
+    if (litepubl::$debug) $this->getdb(self::votes)->delete('iduser = ' . litepubl::$options->user);
     $item = $this->getitem($id);
 
     $lang = tlocal::i('poll');
@@ -112,7 +111,7 @@ class polls extends titems {
       $this->error('Invalid data', 403);
     }
 
-    $iduser = litepublisher::$options->user;
+    $iduser = litepubl::$options->user;
     if (!$iduser) {
       $result = $this->err('notauth');
     } else if (!$this->itemexists($idpoll)) {

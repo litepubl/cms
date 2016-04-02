@@ -5,11 +5,10 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function admin_bootstrap_themeInstall($self) {
-  tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
+  tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepubl::$options->language . '.admin.ini');
   $about = tplugins::getabout(tplugins::getname(__file__));
 
   $admin = tadminmenus::i();
@@ -23,15 +22,15 @@ function admin_bootstrap_themeInstall($self) {
     'group' => 'admin'
   ));
 
-  litepublisher::$classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
+  litepubl::$classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
   $admin->unlock();
 }
 
 function admin_bootstrap_themeUninstall($self) {
-  tlocalmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' . litepublisher::$options->language . '.admin.ini');
+  tlocalmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' . litepubl::$options->language . '.admin.ini');
   $admin = tadminmenus::i();
   $admin->lock();
   $admin->deleteurl('/admin/views/bootstraptheme/');
-  litepublisher::$classes->delete('admin_bootstrap_header');
+  litepubl::$classes->delete('admin_bootstrap_header');
   $admin->unlock();
 }

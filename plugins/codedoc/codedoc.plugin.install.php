@@ -5,16 +5,15 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tcodedocpluginInstall($self) {
   if (!dbversion) die("Ticket  system only for database version");
   $name = basename(dirname(__file__));
-  $language = litepublisher::$options->language;
+  $language = litepubl::$options->language;
   $about = tplugins::getabout($name);
-  litepublisher::$classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
-  litepublisher::$classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
+  litepubl::$classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
+  litepubl::$classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
   $menu = tcodedocmenu::i();
   $menu->url = '/doc/';
   $menu->title = $about['menutitle'];
@@ -66,8 +65,8 @@ function tcodedocpluginUninstall($self) {
   $menus = tmenus::i();
   $menus->deleteurl('/doc/');
 
-  litepublisher::$classes->delete('tcodedocmenu');
-  litepublisher::$classes->delete('tcodedocfilter');
+  litepubl::$classes->delete('tcodedocmenu');
+  litepubl::$classes->delete('tcodedocfilter');
 
   $filter = tcontentfilter::i();
   $filter->unbind($self);

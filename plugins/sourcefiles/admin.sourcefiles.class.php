@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tadminsourcefiles {
 
@@ -32,7 +31,7 @@ class tadminsourcefiles {
       $plugin->data['zipurl'] = $url;
       $plugin->save();
       set_time_limit(120);
-      $filename = litepublisher::$paths->data . 'sourcefile.temp.zip';
+      $filename = litepubl::$paths->data . 'sourcefile.temp.zip';
       file_put_contents($filename, $s);
       @chmod($filename, 0666);
       $plugin->clear();

@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tsimpleimporter extends timporter {
   public $tagsmap;
@@ -64,7 +63,7 @@ class tsimpleimporter extends timporter {
   }
 
   public function import($s) {
-    require_once (litepublisher::$paths->lib . 'domrss.class.php');
+    require_once (litepubl::$paths->lib . 'domrss.class.php');
     $a = xml2array($s);
 
     $urlmap = turlmap::i();

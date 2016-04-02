@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class taboutparser {
 
@@ -58,8 +57,8 @@ class taboutparser {
       //trim unicode sign
       $about_ini = substr($about_ini, strpos($about_ini, '['));
       $about = tini2array::parse($about_ini);
-      if (isset($about[litepublisher::$options->language])) {
-        $about['about'] = $about[litepublisher::$options->language] + $about['about'];
+      if (isset($about[litepubl::$options->language])) {
+        $about['about'] = $about[litepubl::$options->language] + $about['about'];
       }
       return $about['about'];
     }

@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function twikiwordsInstall($self) {
   if ($self->dbversion) {
@@ -15,7 +14,7 @@ function twikiwordsInstall($self) {
     `word` text NOT NULL,
     PRIMARY KEY  (`id`)");
 
-    $manager->createtable($self->itemsposts->table, file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
+    $manager->createtable($self->itemsposts->table, file_get_contents(litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
   }
 
   $filter = tcontentfilter::i();
@@ -24,13 +23,13 @@ function twikiwordsInstall($self) {
   $posts = tposts::i();
   $posts->deleted = $self->postdeleted;
 
-  litepublisher::$classes->classes['wikiwords'] = get_class($self);
-  litepublisher::$classes->save();
+  litepubl::$classes->classes['wikiwords'] = get_class($self);
+  litepubl::$classes->save();
 }
 
 function twikiwordsUninstall($self) {
-  unset(litepublisher::$classes->classes['wikiword']);
-  litepublisher::$classes->save();
+  unset(litepubl::$classes->classes['wikiword']);
+  litepubl::$classes->save();
 
   $filter = tcontentfilter::i();
   $filter->unbind($self);

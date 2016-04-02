@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tprofile extends tevents_itemplate implements itemplate {
 
@@ -33,7 +32,7 @@ class tprofile extends tevents_itemplate implements itemplate {
       'yahooChatID' => '',
       'mbox' => '',
 
-      'country' => litepublisher::$options->language,
+      'country' => litepubl::$options->language,
       'region' => '',
       'city' => '',
       'geourl' => 'http://beta-maps.yandex.ru/?text=',
@@ -45,10 +44,10 @@ class tprofile extends tevents_itemplate implements itemplate {
   }
 
   public function getfoaf() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $posts = tposts::i();
     $postscount = $posts->archivescount;
-    $manager = litepublisher::$classes->commentmanager;
+    $manager = litepubl::$classes->commentmanager;
 
     $result = tfoaf::getparam('name', $this->nick);
     foreach (array(
@@ -66,17 +65,17 @@ class tprofile extends tevents_itemplate implements itemplate {
     }
 
     $result.= '<foaf:img rdf:resource="' . tfoaf::escape($this->img) . '" />';
-    $result.= tfoaf::getparam('homepage', litepublisher::$site->url . '/');
+    $result.= tfoaf::getparam('homepage', litepubl::$site->url . '/');
 
-    $result.= '<foaf:weblog ' . 'dc:title="' . tfoaf::escape(litepublisher::$site->name) . '" ' . 'rdf:resource="' . tfoaf::escape(litepublisher::$site->url) . '/" />' .
+    $result.= '<foaf:weblog ' . 'dc:title="' . tfoaf::escape(litepubl::$site->name) . '" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/" />' .
 
-    '<foaf:page>' . '<foaf:Document rdf:about="' . tfoaf::escape(litepublisher::$site->url . $this->url) . '">' . '<dc:title>' . tfoaf::escape(litepublisher::$site->name) . ' Profile</dc:title>' . '<dc:description>Full profile, including information such as interests and bio.</dc:description>' . '</foaf:Document>' . '</foaf:page>' .
+    '<foaf:page>' . '<foaf:Document rdf:about="' . tfoaf::escape(litepubl::$site->url . $this->url) . '">' . '<dc:title>' . tfoaf::escape(litepubl::$site->name) . ' Profile</dc:title>' . '<dc:description>Full profile, including information such as interests and bio.</dc:description>' . '</foaf:Document>' . '</foaf:page>' .
 
-    '<lj:journaltitle>' . tfoaf::escape(litepublisher::$site->name) . '</lj:journaltitle>' . '<lj:journalsubtitle>' . tfoaf::escape(litepublisher::$site->description) . '</lj:journalsubtitle>' .
+    '<lj:journaltitle>' . tfoaf::escape(litepubl::$site->name) . '</lj:journaltitle>' . '<lj:journalsubtitle>' . tfoaf::escape(litepubl::$site->description) . '</lj:journalsubtitle>' .
 
-    '<ya:blogActivity>' . '<ya:Posts>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepublisher::$site->url) . '/rss.xml" />' . "<ya:posted>$postscount</ya:posted>" . '</ya:Posts>' . '</ya:blogActivity>' .
+    '<ya:blogActivity>' . '<ya:Posts>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/rss.xml" />' . "<ya:posted>$postscount</ya:posted>" . '</ya:Posts>' . '</ya:blogActivity>' .
 
-    '<ya:blogActivity>' . '<ya:Comments>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepublisher::$site->url) . '/comments.xml"/>' . "<ya:posted>$postscount</ya:posted>" . "<ya:received>$manager->count</ya:received>" . '</ya:Comments>' . '</ya:blogActivity>';
+    '<ya:blogActivity>' . '<ya:Comments>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/comments.xml"/>' . "<ya:posted>$postscount</ya:posted>" . "<ya:received>$manager->count</ya:received>" . '</ya:Comments>' . '</ya:blogActivity>';
 
     if ($this->bio != '') $result.= '<ya:bio>' . tfoaf::escape($this->bio) . '</ya:bio>';
 
@@ -98,7 +97,7 @@ class tprofile extends tevents_itemplate implements itemplate {
   }
 
   public function GetFoafOpenid() {
-    return '<foaf:openid rdf:resource="' . tfoaf::escape(litepublisher::$site->url) . '/" />';
+    return '<foaf:openid rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/" />';
   }
 
   public function GetFoafCountry() {
@@ -136,7 +135,7 @@ class tprofile extends tevents_itemplate implements itemplate {
     $theme = ttheme::i();
     $tml = $this->template;
     if (!$tml) {
-      $tml = file_get_contents(litepublisher::$paths->plugins . 'foaf/resource/profile.tml');
+      $tml = file_get_contents(litepubl::$paths->plugins . 'foaf/resource/profile.tml');
     }
 
     return $theme->parse($tml);
@@ -228,7 +227,7 @@ class tprofile extends tevents_itemplate implements itemplate {
     $widget = tfriendswidget::i();
     $foaf->loadall();
     foreach ($foaf->items As $id => $item) {
-      $url = $widget->redir ? "litepublisher::$site->url$widget->redirlink{litepublisher::$site->q}friend=$id" : $item['url'];
+      $url = $widget->redir ? "litepubl::$site->url$widget->redirlink{litepubl::$site->q}friend=$id" : $item['url'];
       $result.= "<a href=\"$url\" rel=\"friend\">{$item['nick']}</a>,\n";
     }
     $result.= "</p>\n";

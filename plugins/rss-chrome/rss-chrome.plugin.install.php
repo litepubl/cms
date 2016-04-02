@@ -5,15 +5,14 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function rsschromeInstall($self) {
   $name = basename(dirname(__file__));
   $js = tjsmerger::i();
   $js->lock();
   $section = 'default';
-  $js->add($section, "/plugins/$name/resource/" . litepublisher::$options->language . ".rss-chrome.min.js");
+  $js->add($section, "/plugins/$name/resource/" . litepubl::$options->language . ".rss-chrome.min.js");
   $js->add($section, "/plugins/$name/resource/rss-chrome.min.js");
   $js->unlock();
 }
@@ -23,7 +22,7 @@ function rsschromeUninstall($self) {
   $js = tjsmerger::i();
   $js->lock();
   $section = 'default';
-  $js->deletefile($section, "/plugins/$name/resource/" . litepublisher::$options->language . ".rss-chrome.min.js");
+  $js->deletefile($section, "/plugins/$name/resource/" . litepubl::$options->language . ".rss-chrome.min.js");
   $js->deletefile($section, "/plugins/$name/resource/rss-chrome.min.js");
   $js->unlock();
 }

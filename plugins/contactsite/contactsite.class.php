@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tcontactsite extends tmenu {
 
@@ -30,7 +29,7 @@ class tcontactsite extends tmenu {
 
     if (!tcontentfilter::ValidateEmail($email)) return sprintf('<p><strong>%s</strong></p>', tlocal::get('comment', 'invalidemail'));
     $url = trim($_POST['site']);
-    if (empty($url) || strbegin($url, litepublisher::$site->url)) return $this->errmesg;
+    if (empty($url) || strbegin($url, litepubl::$site->url)) return $this->errmesg;
     if ($s = http::get($url)) {
       if (!strpos($s, '<meta name="generator" content="Lite Publisher')) return $this->errmesg;
     } else {
@@ -40,7 +39,7 @@ class tcontactsite extends tmenu {
     $content = trim($_POST['content']);
     if (strlen($content) <= 15) return sprintf('<p><strong>%s</strong></p>', tlocal::get('comment', 'emptycontent'));
     $content = "$url\n" . $_POST['sitetitle'] . "\n\n" . $content;
-    tmailer::sendmail('', $email, '', litepublisher::$options->email, $this->subject, $content);
+    tmailer::sendmail('', $email, '', litepubl::$options->email, $this->subject, $content);
     return $this->success;
   }
 

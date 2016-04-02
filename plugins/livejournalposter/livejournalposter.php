@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tlivejournalposter extends tplugin {
 
@@ -38,7 +37,7 @@ class tlivejournalposter extends tplugin {
     $client = new IXR_Client($this->host, '/interface/xmlrpc');
     //$client = new IXR_Client($this->host, '/rpc.xml');
     if (!$client->query('LJ.XMLRPC.getchallenge')) {
-      if (litepublisher::$debug) tfiler::log('live journal: error challenge');
+      if (litepubl::$debug) tfiler::log('live journal: error challenge');
       return false;
     }
     $response = $client->getResponse();
@@ -90,7 +89,7 @@ class tlivejournalposter extends tplugin {
     }
 
     if (!$client->query($method, $args)) {
-      if (litepublisher::$debug) tfiler::log('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+      if (litepubl::$debug) tfiler::log('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
       return false;
     }
 

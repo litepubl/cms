@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class emailauth extends tplugin {
 
@@ -30,18 +29,18 @@ class emailauth extends tplugin {
 
     $expired = time() + 31536000;
     $cookie = md5uniq();
-    litepublisher::$options->setcookies($cookie, $expired);
+    litepubl::$options->setcookies($cookie, $expired);
 
     return array(
-      'id' => litepublisher::$options->user,
+      'id' => litepubl::$options->user,
       'pass' => $cookie,
       'regservice' => 'email',
-      'adminflag' => litepublisher::$options->ingroup('admin') ? 'true' : '',
+      'adminflag' => litepubl::$options->ingroup('admin') ? 'true' : '',
     );
   }
 
   public function email_reg(array $args) {
-    if (!litepublisher::$options->usersenabled || !litepublisher::$options->reguser) return array(
+    if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return array(
       'error' => array(
         'message' => tlocal::admin('users')->regdisabled,
         'code' => 403,

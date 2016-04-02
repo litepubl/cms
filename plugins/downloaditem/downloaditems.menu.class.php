@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tdownloaditemsmenu extends tmenu {
 
@@ -22,17 +21,17 @@ class tdownloaditemsmenu extends tmenu {
   public function getcont() {
     $result = '';
     $theme = ttheme::i();
-    if ((litepublisher::$urlmap->page == 1) && ($this->content != '')) {
+    if ((litepubl::$urlmap->page == 1) && ($this->content != '')) {
       $result.= $theme->simple($theme->parse($this->rawcontent));
     }
 
-    $perpage = litepublisher::$options->perpage;
+    $perpage = litepubl::$options->perpage;
     $downloaditems = tdownloaditems::i();
-    $d = litepublisher::$db->prefix . $downloaditems->childtable;
-    $p = litepublisher::$db->posts;
+    $d = litepubl::$db->prefix . $downloaditems->childtable;
+    $p = litepubl::$db->posts;
     $where = $this->type == '' ? '' : " and $d.type = '$this->type'";
     $count = $downloaditems->getchildscount($where);
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+    $from = (litepubl::$urlmap->page - 1) * $perpage;
     if ($from <= $count) {
       $items = $downloaditems->select("$p.status = 'published' $where", " order by $p.posted desc limit $from, $perpage");
       ttheme::$vars['lang'] = tlocal::i('downloaditem');
@@ -45,7 +44,7 @@ class tdownloaditemsmenu extends tmenu {
         }
       }
     }
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 

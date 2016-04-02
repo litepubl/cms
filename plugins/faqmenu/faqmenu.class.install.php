@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tfaqmenuInstall($self) {
   $about = tplugins::getabout(tplugins::getname(__file__));

@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tadminsingletagwidget extends tadminwidget {
 
@@ -44,7 +43,7 @@ class tadminsingletagwidget extends tadminwidget {
       $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
       $widget->items[$id]['invertorder'] = isset($_POST['invertorder']);
       $widget->save();
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
       return '';
     }
 
@@ -65,7 +64,7 @@ class tadminsingletagwidget extends tadminwidget {
       $widget->add($idtag);
     }
     $widget->unlock();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
 } //class

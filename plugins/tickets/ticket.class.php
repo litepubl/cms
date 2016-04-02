@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tticket extends tpost {
 
@@ -32,7 +31,7 @@ class tticket extends tpost {
       'prio' => 'major',
       'assignto' => 0,
       'closed' => '',
-      'version' => litepublisher::$options->version,
+      'version' => litepubl::$options->version,
       'os' => '*',
       'reproduced' => false,
       'code' => ''
@@ -103,7 +102,7 @@ class tticket extends tpost {
   }
 
   public static function getresource() {
-    return litepublisher::$paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
   }
 
   public function getschemalink() {

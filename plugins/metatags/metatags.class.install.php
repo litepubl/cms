@@ -5,12 +5,11 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tmetatagsInstall($self) {
-  litepublisher::$classes->classes['metatags'] = get_class($self);
-  litepublisher::$classes->save();
+  litepubl::$classes->classes['metatags'] = get_class($self);
+  litepubl::$classes->save();
 
   $t = ttemplate::i();
   $t->heads = strtr($t->heads, array(
@@ -34,6 +33,6 @@ function tmetatagsUninstall($self) {
   tthemeparser::i()->unbind($self);
   ttheme::clearcache();
 
-  unset(litepublisher::$classes->classes['metatags']);
-  litepublisher::$classes->save();
+  unset(litepubl::$classes->classes['metatags']);
+  litepubl::$classes->save();
 }

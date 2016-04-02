@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tadminfoaf extends tadminmenu {
   private $user;
@@ -59,7 +58,7 @@ class tadminfoaf extends tadminmenu {
     $form->submit = false;
     $result = $form->get();
 
-    $result.= $this->theme->getpages('/admin/foaf/', litepublisher::$urlmap->page, ceil($total / $perpage));
+    $result.= $this->theme->getpages('/admin/foaf/', litepubl::$urlmap->page, ceil($total / $perpage));
     return $result;
   }
 

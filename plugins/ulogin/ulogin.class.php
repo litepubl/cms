@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class ulogin extends tplugin {
 
@@ -80,12 +79,12 @@ class ulogin extends tplugin {
 
     if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
       if ($url = $this->onphone($backurl)) {
-        return litepublisher::$urlmap->redir($url);
+        return litepubl::$urlmap->redir($url);
       }
     }
 
-    setcookie('backurl', '', 0, litepublisher::$site->subdir, false);
-    return litepublisher::$urlmap->redir($backurl);
+    setcookie('backurl', '', 0, litepubl::$site->subdir, false);
+    return litepubl::$urlmap->redir($backurl);
   }
 
   public function auth($token) {
@@ -114,7 +113,7 @@ class ulogin extends tplugin {
         if ($phone && empty($user['phone'])) {
           $users->setvalue($id, 'phone', $phone);
         }
-      } elseif (litepublisher::$options->reguser) {
+      } elseif (litepubl::$options->reguser) {
         $newreg = true;
         $id = $users->add(array(
           'email' => $info['email'],
@@ -137,7 +136,7 @@ class ulogin extends tplugin {
         if ($id = $this->find($info['network'], $uid)) {
           //nothing
           
-        } elseif (litepublisher::$options->reguser) {
+        } elseif (litepubl::$options->reguser) {
           $newreg = true;
           $id = $users->add(array(
             'email' => '',
@@ -159,12 +158,12 @@ class ulogin extends tplugin {
 
     $expired = time() + 31536000;
     $cookie = md5uniq();
-    litepublisher::$options->user = $id;
-    litepublisher::$options->updategroup();
-    litepublisher::$options->setcookies($cookie, $expired);
-    if (litepublisher::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepublisher::$site->subdir . '/', false);
+    litepubl::$options->user = $id;
+    litepubl::$options->updategroup();
+    litepubl::$options->setcookies($cookie, $expired);
+    if (litepubl::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepubl::$site->subdir . '/', false);
 
-    setcookie('litepubl_regservice', $info['network'], $expired, litepublisher::$site->subdir . '/', false);
+    setcookie('litepubl_regservice', $info['network'], $expired, litepubl::$site->subdir . '/', false);
     $this->onadd($id, $info, $newreg);
 
     return array(
@@ -182,7 +181,7 @@ class ulogin extends tplugin {
   }
 
   public function check_logged(array $args) {
-    if (litepublisher::$options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
+    if (litepubl::$options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
       return array(
         'logged' => true
       );

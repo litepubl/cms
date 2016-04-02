@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tadmintickets extends tadminmenu {
 
@@ -18,7 +17,7 @@ class tadmintickets extends tadminmenu {
     $result = '';
     $tickets = ttickets::i();
     $perpage = 20;
-    $where = litepublisher::$options->group == 'ticket' ? ' and author = ' . litepublisher::$options->user : '';
+    $where = litepubl::$options->group == 'ticket' ? ' and author = ' . litepubl::$options->user : '';
 
     switch ($this->name) {
       case 'opened':
@@ -92,7 +91,7 @@ class tadmintickets extends tadminmenu {
     $table = $tb->build($items);
 
     //wrap form
-    if (litepublisher::$options->group != 'ticket') {
+    if (litepubl::$options->group != 'ticket') {
       $args = new targs();
       $form = new adminform($args);
       $form->body = $table;
@@ -104,12 +103,12 @@ class tadmintickets extends tadminmenu {
     }
 
     $theme = $this->theme;
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
   public function processform() {
-    if (litepublisher::$options->group == 'ticket') return '';
+    if (litepubl::$options->group == 'ticket') return '';
     $tickets = ttickets::i();
     $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : (isset($_POST['setfixed']) ? 'fixed' : 'delete'));
     foreach ($_POST as $key => $id) {

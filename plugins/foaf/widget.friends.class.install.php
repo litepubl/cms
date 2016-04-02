@@ -5,16 +5,15 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tfriendswidgetInstall($self) {
-  litepublisher::$urlmap->add($self->redirlink, get_class($self) , false, 'get');
-  litepublisher::$classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));
+  litepubl::$urlmap->add($self->redirlink, get_class($self) , false, 'get');
+  litepubl::$classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));
   $self->addtosidebar(0);
 }
 
 function tfriendswidgetUninstall($self) {
   turlmap::unsub($self);
-  litepublisher::$classes->delete('tadminfriendswidget');
+  litepubl::$classes->delete('tadminfriendswidget');
 }

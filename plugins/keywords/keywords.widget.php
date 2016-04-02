@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tkeywordswidget extends twidget {
   public $links;
@@ -40,10 +39,10 @@ class tkeywordswidget extends twidget {
   }
 
   public function getcontent($id, $sidebar) {
-    if (litepublisher::$urlmap->is404 || litepublisher::$urlmap->adminpanel || strbegin(litepublisher::$urlmap->url, '/croncron.php') || strend(litepublisher::$urlmap->url, '.xml')) return '';
+    if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel || strbegin(litepubl::$urlmap->url, '/croncron.php') || strend(litepubl::$urlmap->url, '.xml')) return '';
 
-    $id = litepublisher::$urlmap->itemrequested['id'];
-    $filename = litepublisher::$paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . litepublisher::$urlmap->page . '.php';
+    $id = litepubl::$urlmap->itemrequested['id'];
+    $filename = litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . litepubl::$urlmap->page . '.php';
     if (@file_exists($filename)) {
       $links = file_get_contents($filename);
     } else {

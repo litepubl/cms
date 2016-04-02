@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tcodedocplugin extends tplugin {
   private $post;
@@ -32,7 +31,7 @@ class tcodedocplugin extends tplugin {
   }
 
   public function postdeleted($id) {
-    litepublisher::$db->table = 'codedoc';
-    litepublisher::$db->delete("id = $id");
+    litepubl::$db->table = 'codedoc';
+    litepubl::$db->delete("id = $id");
   }
 } //class

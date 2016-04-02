@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 function tdownloaditemsInstall($self) {
   if (!dbversion) die("Downloads require database");
@@ -21,15 +20,15 @@ function tdownloaditemsInstall($self) {
   $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
   $optimizer->unlock();
 
-  tlocalmerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" . litepublisher::$options->language . ".ini");
+  tlocalmerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" . litepubl::$options->language . ".ini");
 
-  $ini = parse_ini_file($dir . litepublisher::$options->language . '.install.ini', false);
+  $ini = parse_ini_file($dir . litepubl::$options->language . '.install.ini', false);
 
   $tags = ttags::i();
-  litepublisher::$options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
-  litepublisher::$options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
+  litepubl::$options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
+  litepubl::$options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
   $base = basename(dirname(__file__));
-  $classes = litepublisher::$classes;
+  $classes = litepubl::$classes;
   $classes->lock();
   /*
   //install polls if its needed
@@ -78,7 +77,7 @@ function tdownloaditemsInstall($self) {
   $menu->title = $ini['downloads'];
   $menu->content = '';
   $id = $menus->add($menu);
-  litepublisher::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
+  litepubl::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
 
   foreach (array(
     'theme',
@@ -91,7 +90,7 @@ function tdownloaditemsInstall($self) {
     $menu->title = $lang->__get($type . 's');
     $menu->content = '';
     $menus->add($menu);
-    litepublisher::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
+    litepubl::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
   }
   $menus->unlock();
 
@@ -104,7 +103,7 @@ function tdownloaditemsInstall($self) {
   $linkgen = tlinkgenerator::i();
   $linkgen->data['downloaditem'] = '/[type]/[title].htm';
   $linkgen->save();
-  litepublisher::$options->savemodified();
+  litepubl::$options->savemodified();
 }
 
 function tdownloaditemsUninstall($self) {
@@ -121,7 +120,7 @@ function tdownloaditemsUninstall($self) {
   $parser->unbind($self);
   ttheme::clearcache();
 
-  $classes = litepublisher::$classes;
+  $classes = litepubl::$classes;
   $classes->lock();
   $classes->delete('tdownloaditem');
   $classes->delete('tdownloaditemsmenu');
@@ -148,9 +147,9 @@ function tdownloaditemsUninstall($self) {
 
   tjsmerger::i()->deletefile('default', '/plugins/downloaditem/downloaditem.min.js');
 
-  litepublisher::$options->delete('downloaditem_themetag');
-  litepublisher::$options->delete('downloaditem_plugintag');
-  litepublisher::$options->savemodified();
+  litepubl::$options->delete('downloaditem_themetag');
+  litepubl::$options->delete('downloaditem_plugintag');
+  litepubl::$options->savemodified();
 }
 
 function getd_download_js() {

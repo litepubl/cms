@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tdownloaditems extends tposts {
 
@@ -48,7 +47,7 @@ class tdownloaditems extends tposts {
   }
 
   public function themeparsed($theme) {
-    include_once (litepublisher::$paths->plugins . 'downloaditem' . DIRECTORY_SEPARATOR . 'downloaditems.class.install.php');
+    include_once (litepubl::$paths->plugins . 'downloaditem' . DIRECTORY_SEPARATOR . 'downloaditems.class.install.php');
     add_downloaditems_to_theme($theme);
   }
 

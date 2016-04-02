@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tdownloaditem extends tpost {
 
@@ -47,7 +46,7 @@ class tdownloaditem extends tpost {
   }
 
   public function getparenttag() {
-    return $this->type == 'theme' ? litepublisher::$options->downloaditem_themetag : litepublisher::$options->downloaditem_plugintag;
+    return $this->type == 'theme' ? litepubl::$options->downloaditem_themetag : litepubl::$options->downloaditem_plugintag;
   }
 
   public function settagnames($names) {

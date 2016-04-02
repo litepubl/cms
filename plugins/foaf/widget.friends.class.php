@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tfriendswidget extends twidget {
 
@@ -34,8 +33,8 @@ class tfriendswidget extends twidget {
     $items = $foaf->getapproved($this->maxcount);
     if (count($items) == 0) return '';
     $result = '';
-    $url = litepublisher::$site->url;
-    $redirlink = litepublisher::$site->url . $this->redirlink . litepublisher::$site->q . 'id=';
+    $url = litepubl::$site->url;
+    $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . 'id=';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('friends', $sidebar);
     $args = targs::i();
@@ -62,7 +61,7 @@ class tfriendswidget extends twidget {
     if (!$foaf->itemexists($id)) return 404;
     $item = $foaf->getitem($id);
     $this->cache = false;
-    return sprintf('<?php litepublisher::$urlmap->redir(\'%s\'); ?>', $item['url']);
+    return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
   }
 
 } //class

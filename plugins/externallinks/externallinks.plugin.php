@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class texternallinks extends titems {
   public $exclude;
@@ -42,7 +41,7 @@ class texternallinks extends titems {
   }
 
   public function updatestat() {
-    $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
+    $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
     if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
       @unlink($filename);
       $stat = array();
@@ -76,19 +75,19 @@ class texternallinks extends titems {
     if (!$this->itemexists($id)) return 404;
     $item = $this->getitem($id);
     $url = $item['url'];
-    $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
+    $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
     return "<?php tfiler::append('$id\n', '$filename');
-    litepublisher::\$urlmap->redir('$url');";
+    litepubl::\$urlmap->redir('$url');";
   }
 
   public function filter(&$content) {
     if (!preg_match_all('/<a\s*.*?href\s*=\s*[\'"]([^"\'>]*).*?>(.*?)<\/a>/i', $content, $links)) return;
-    $redir = litepublisher::$site->url . '/externallink.htm' . litepublisher::$site->q . 'id=';
+    $redir = litepubl::$site->url . '/externallink.htm' . litepubl::$site->q . 'id=';
     $external = array();
     foreach ($links[1] as $num => $link) {
       if (isset($external[$link])) continue;
       if (!strbegin($link, 'http', 'ftp')) continue;
-      if (strbegin($link, litepublisher::$site->url)) continue;
+      if (strbegin($link, litepubl::$site->url)) continue;
       if ($this->inexclude($link)) continue;
       $id = $this->add($link);
       $external[$link] = $redir . $id;

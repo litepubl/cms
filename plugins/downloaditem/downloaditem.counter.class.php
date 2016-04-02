@@ -5,8 +5,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-namespace litepubl\plugins;
-use litepubl;
+namespace litepubl;
 
 class tdownloaditemcounter extends titems {
 
@@ -21,7 +20,7 @@ class tdownloaditemcounter extends titems {
   }
 
   public function updatestat() {
-    $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
+    $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
     if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
       @unlink($filename);
       $stat = array();
@@ -50,9 +49,9 @@ class tdownloaditemcounter extends titems {
     if (!$this->itemexists($id)) return 404;
     $item = $this->getitem($id);
     $url = $item['downloadurl'];
-    $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
+    $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
     return "<?php tfiler::append('$id\n', '$filename');
-    return litepublisher::\$urlmap->redir('$url');";
+    return litepubl::\$urlmap->redir('$url');";
   }
 
 } //class

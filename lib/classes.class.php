@@ -54,7 +54,9 @@ return $this->instances[$class];
 if (!($newclass = $this->class_exists($class))) {
       $this->error(sprintf('Class $class "%s" not found', $class));
 }
+
     if (($newclass != $class) && isset($this->instances[$newclass])) {
+//\class_alias($newclass, $class);
       $this->instances[$class] = $this->instances[$newclass];
 return $this->instances[$newclass];
 }
