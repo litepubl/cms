@@ -6,7 +6,7 @@
   revision int unsigned NOT NULL default '0',
   icon int unsigned NOT NULL default '0',
   idview int unsigned NOT NULL default '1',
-  class enum('tpost') default 'tpost',
+  class enum('litepubl\\tpost') default 'litepubl\\tpost',
   status enum('published','draft','future','deleted') default 'published',
   comstatus enum('closed','reg','guest','comuser') default 'comuser',
   pingenabled boolean default true,

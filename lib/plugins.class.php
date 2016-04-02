@@ -69,7 +69,7 @@ if (!strpos($classname, '\\')) {
 $classname = 'litepubl\\' . $classname;
 }
 
-if (!strpos($adminclassname, '\\')) {
+if ($adminclassname && !strpos($adminclassname, '\\')) {
 $adminclassname = 'litepubl\\' . $adminclassname;
 }
 
