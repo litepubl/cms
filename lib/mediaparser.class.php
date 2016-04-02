@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tmediaparser extends tevents {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->basename = 'mediaparser';

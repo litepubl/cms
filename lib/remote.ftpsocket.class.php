@@ -10,10 +10,6 @@ namespace litepubl;
 class tftpsocketfiler extends tremotefiler {
   private $ftp;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function __construct() {
     parent::__construct();
     if (empty($this->port)) $this->port = 21;

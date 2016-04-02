@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tpostfactory extends tdata {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function getposts() {
     return tposts::i();
   }

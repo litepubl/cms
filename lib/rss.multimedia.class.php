@@ -10,10 +10,6 @@ namespace litepubl;
 class trssMultimedia extends tevents {
   public $domrss;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->basename = 'rssmultimedia';

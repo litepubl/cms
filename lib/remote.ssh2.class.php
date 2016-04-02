@@ -13,10 +13,6 @@ class tssh2filer extends tremotefiler {
   protected $public_key;
   protected $private_key;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function __construct() {
     parent::__construct();
     $this->port = 22;

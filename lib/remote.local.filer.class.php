@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tlocalfiler extends tremotefiler {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function __construct() {
     parent::__construct();
     $this->connected = true;

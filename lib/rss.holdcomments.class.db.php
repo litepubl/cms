@@ -10,10 +10,6 @@ namespace litepubl;
 class trssholdcomments extends tevents {
   public $url;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->basename = 'rss.holdcomments';

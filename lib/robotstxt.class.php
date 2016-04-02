@@ -9,10 +9,6 @@ namespace litepubl;
 
 class trobotstxt extends titems {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function create() {
     parent::create();
     $this->basename = 'robots.txt';

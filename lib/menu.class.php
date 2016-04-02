@@ -10,10 +10,6 @@ namespace litepubl;
 class tmenus extends titems {
   public $tree;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->addevents('edited', 'onprocessform', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
@@ -358,6 +354,7 @@ class tmenus extends titems {
 
 } //class
 class tmenu extends titem implements itemplate {
+  public $formresult;
   public static $ownerprops = array(
     'title',
     'url',
@@ -366,16 +363,18 @@ class tmenu extends titem implements itemplate {
     'order',
     'status'
   );
-  public $formresult;
 
   public static function i($id = 0) {
-    $class = $id == 0 ? __class__ : static::getowner()->items[$id]['class'];
+    $class = $id == 0 ? get_called_class() : static::getowner()->items[$id]['class'];
     return static::iteminstance($class, $id);
   }
 
   public static function iteminstance($class, $id = 0) {
     $single = getinstance($class);
-    if ($single->id == $id) return $single;
+    if ($single->id == $id) {
+return $single;
+}
+
     if (($id == 0) && ($single->id > 0)) return $single;
     if (($single->id == 0) && ($id > 0)) return $single->loaddata($id);
     return parent::iteminstance($class, $id);
@@ -399,10 +398,7 @@ class tmenu extends titem implements itemplate {
   }
 
   public function get_owner() {
-    return call_user_func_array(array(
-      get_class($this) ,
-      'getowner'
-    ) , array());
+return static::getowner();
   }
 
   protected function create() {

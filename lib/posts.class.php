@@ -13,10 +13,6 @@ class tposts extends titems {
   public $rawtable;
   public $childtable;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public static function unsub($obj) {
     static::i()->unbind($obj);
   }

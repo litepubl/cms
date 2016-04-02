@@ -18,10 +18,6 @@ class tbackuper extends tevents {
   private $lastdir;
   private $hasdata;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public static function include_tar() {
     litepubl::$classes->include_file(litepubl::$paths->libinclude . 'tar.class.php');
   }

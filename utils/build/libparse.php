@@ -28,7 +28,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (false&& strend($filename, 'php')) {
+if (strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -283,7 +283,7 @@ $s);
 }
 */
 //if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
-if($php) $s = str_replace('self::', 'static::', $s);
+//if($php) $s = str_replace('self::', 'static::', $s);
 
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;

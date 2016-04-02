@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tmetapost extends titem {
 
-  public static function i($id = 0) {
-    return parent::iteminstance(__class__, (int)$id);
-  }
-
   public static function getinstancename() {
     return 'postmeta';
   }

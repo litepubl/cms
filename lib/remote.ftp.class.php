@@ -11,10 +11,6 @@ class tftpfiler extends tremotefiler {
   public $ssl;
   private $tempfilehandle;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   public function __construct() {
     parent::__construct();
     $this->timeout = 240;

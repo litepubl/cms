@@ -10,6 +10,10 @@ namespace litepubl;
 class titem extends tdata {
   public static $instances;
 
+  public static function i($id = 0) {
+    return static::iteminstance(get_called_class(), (int)$id);
+  }
+
   public static function iteminstance($class, $id = 0) {
 //fix namespace
 if (!strpos($class, '\\') && !class_exists($class)) {

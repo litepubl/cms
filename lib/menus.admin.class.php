@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tadminmenus extends tmenus {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     parent::create();
     $this->basename = 'adminmenu';

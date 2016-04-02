@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tredirector extends titems {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     $this->dbversion = false;
     parent::create();

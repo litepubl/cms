@@ -10,13 +10,17 @@ namespace litepubl;
 class tremotefiler {
   protected $host;
   protected $login;
-  protected $password;
   public $port;
+  protected $password;
   protected $handle;
   protected $timeout;
   public $chmod_file;
   public $chmod_dir;
   public $connected;
+
+  public static function i() {
+    return litepubl::$classes->getinstance(get_called_class());
+  }
 
   public function __construct() {
     $this->port = 21;
