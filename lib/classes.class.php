@@ -46,23 +46,51 @@ class tclasses extends titems {
   }
 
   public function getstorage() {
-    return litepubl\litepubl::$datastorage;
+    return litepubl::$datastorage;
   }
 
   public function getinstance($class) {
-    if (!class_exists($class)) {
-      $this->error("Class $class not found");
-    }
+    if (isset($this->instances[$class])) {
+return $this->instances[$class];
+}
 
-    if (!isset($this->instances[$class])) {
-      $this->instances[$class] = $this->newinstance($class);
-    }
+if (!($newclass = $this->class_exists($class))) {
+      $this->error(sprintf('Class $class "%s" not found', $class));
+}
+    if (($newclass != $class) && isset($this->instances[$newclass])) {
+      $this->instances[$class] = $this->instances[$newclass];
+return $this->instances[$newclass];
+}
 
-    return $this->instances[$class];
+$instance = $this->newinstance($newclass);
+      $this->instances[$class] = $instance;
+if ($newclass != $class) {
+      $this->instances[$newclass] = $instance;
+}
+
+    return $instance;
   }
 
+public function class_exists($classname) {
+    if (class_exists($classname)) {
+return $classname;
+}
+
+if (!strpos($classname, '\\')) 
+foreach (array('litepubl\\', 'litepubl\plugins', 'litepubl\shop') as $ns) {
+if (class_exists($ns . $classname, false)) {
+return $ns . $classname;
+}
+}
+
+return false;
+    }
+
   public function newinstance($class) {
-    if (!empty($this->remap[$class])) $class = $this->remap[$class];
+    if (!empty($this->remap[$class])) {
+$class = $this->remap[$class];
+}
+
     return new $class();
   }
 
@@ -141,6 +169,8 @@ class tclasses extends titems {
       $item = $this->items[$subclass];
     } else if (isset($this->interfaces[$class])) {
       return litepublisher::$paths->lib . $this->interfaces[$class];
+    } else if ($subclass && ($subclass != $class) && isset($this->interfaces[$subclass])) {
+      return litepublisher::$paths->lib . $this->interfaces[$subclass];
     } else {
       return false;
     }

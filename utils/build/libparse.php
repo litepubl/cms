@@ -28,7 +28,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (strend($filename, 'php')) {
+if (false&& strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -278,6 +278,7 @@ $s = "namespace litepubl\shop;\nuse litepubl;\n\n" . $s;
 }
 */
 
+if ($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }

@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tlocalmerger extends tfilemerger {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     $this->dbversion = false;
     parent::create();
@@ -51,7 +47,7 @@ class tlocalmerger extends tfilemerger {
   }
 
   public function merge() {
-    $lang = getinstance('tlocal');
+    $lang = tlocal::getinstance();
     $lang->ini = array();
     inifiles::$files = array();
     foreach ($this->items as $name => $items) {
@@ -60,7 +56,7 @@ class tlocalmerger extends tfilemerger {
   }
 
   public function parse($name) {
-    $lang = getinstance('tlocal');
+    $lang = tlocal::getinstance();
     if (!isset($this->items[$name])) $this->error(sprintf('The "%s" partition not found', $name));
     $ini = array();
     foreach ($this->items[$name]['files'] as $filename) {

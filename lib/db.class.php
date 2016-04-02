@@ -37,8 +37,8 @@ class tdatabase {
 
   public function getconfig() {
     $this->debug = & litepubl::$debug;
-    if (litepubl\config::$db) {
-      return litepubl\config::$db;
+    if (config::$db) {
+      return config::$db;
     }
 
     if (isset(litepubl::$options->dbconfig)) {
@@ -56,10 +56,10 @@ class tdatabase {
     $this->dbname = $dbconfig['dbname'];
     $this->prefix = $dbconfig['prefix'];
 
-    $this->mysqli = new mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
+    $this->mysqli = new \mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
 
     if (mysqli_connect_error()) {
-      throw new Exception('Error connect to database');
+      throw new \Exception('Error connect to database');
     }
 
     $this->mysqli->set_charset('utf8');
@@ -135,7 +135,7 @@ class tdatabase {
     if (!$this->debug) return litepublisher::$options->trace($this->sql . "\n" . $mesg);
     $log = "exception:\n$mesg\n$this->sql\n";
     try {
-      throw new Exception();
+      throw new \Exception();
     }
     catch(Exception $e) {
       $log.= str_replace(litepublisher::$paths->home, '', $e->getTraceAsString());

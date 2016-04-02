@@ -16,12 +16,17 @@ class tlocal {
 
   public static function i($section = '') {
     if (!isset(self::$self)) {
-      self::$self = getinstance(__class__);
+      self::$self = static::getinstance();
       self::$self->loadfile('default');
     }
+
     if ($section != '') self::$self->section = $section;
     return self::$self;
   }
+
+public static function getinstance() {
+return litepubl::$classes->getinstance(get_called_class());
+}
 
   public static function admin($section = '') {
     $result = self::i($section);

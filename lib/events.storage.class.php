@@ -10,7 +10,7 @@ namespace litepubl;
 class tevents_storage extends tevents {
 
   public function getstorage() {
-    return litepubl\litepubl::$datastorage;
+    return litepubl::$datastorage;
   }
 
 } //class

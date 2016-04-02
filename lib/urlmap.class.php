@@ -21,14 +21,6 @@ class turlmap extends titems {
   public $prefilter;
   protected $close_events;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
-  public static function instance() {
-    return getinstance(__class__);
-  }
-
   public function __construct() {
     parent::__construct();
     if (litepubl::$memcache) {
@@ -314,7 +306,7 @@ class turlmap extends titems {
         $item['arg']
       ));
     } else {
-      return getinstance($class);
+      return litepubl::$classes->getinstance($class);
     }
   }
 
@@ -356,12 +348,12 @@ class turlmap extends titems {
   }
 
   private function printclasspage($classname) {
-    $cachefile = $classname . '.php';
+    $cachefile = str_replace('\\', '_', $classname) . '.php';
     if ($this->cache_enabled && $this->include_file($cachefile)) {
       return;
     }
 
-    $obj = getinstance($classname);
+    $obj = litepubl::$classes->getinstance($classname);
     $Template = ttemplate::i();
     $s = $Template->request($obj);
     eval('?>' . $s);
@@ -618,7 +610,7 @@ class turlmap extends titems {
   }
 
   public static function htmlheader($cache) {
-    return sprintf('<?php turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
+    return sprintf('<?php litepubl\turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
   }
 
   public static function nocache() {

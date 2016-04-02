@@ -36,19 +36,19 @@ namespace litepubl;
 
     public function createAliases() {
       \class_alias(get_called_class() , 'litepublisher');
+      \class_alias(get_called_class() , 'litepubl\litepublisher');
       \class_alias(get_called_class() , 'litepubl');
-      \class_alias('tdata', 'litepubl\tdata');
     }
 
     public static function createInstances() {
       static ::$paths = new tpaths();
       static ::createStorage();
-      static ::$classes = \tclasses::i();
-      static ::$options = \toptions::i();
-      static ::$site = \tsite::i();
-      static ::$db = \tdatabase::i();
+      static ::$classes = tclasses::i();
+      static ::$options = toptions::i();
+      static ::$site = tsite::i();
+      static ::$db = tdatabase::i();
       //static::$cache = new cache();
-      static ::$urlmap = \turlmap::i();
+      static ::$urlmap = turlmap::i();
     }
 
     public static function createStorage() {

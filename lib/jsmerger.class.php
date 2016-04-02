@@ -9,10 +9,6 @@ namespace litepubl;
 
 class tfilemerger extends titems {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     $this->dbversion = false;
     parent::create();
@@ -200,10 +196,6 @@ class tfilemerger extends titems {
 
 } //class
 class tjsmerger extends tfilemerger {
-
-  public static function i() {
-    return getinstance(__class__);
-  }
 
   public function addlang($section, $key, array $lang) {
     return $this->addtext($section, $key, 'window.lang = window.lang || {};' . sprintf('lang.%s = %s;', $section, json_encode($lang)));

@@ -1,4 +1,5 @@
 <?php
+namespace litepubl;
 /**
  * IXR - The Incutio XML-RPC Library
  *

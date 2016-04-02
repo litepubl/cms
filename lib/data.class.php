@@ -19,11 +19,11 @@ class tdata {
   public static $guid = 0;
 
   public static function i() {
-    return getinstance(get_called_class());
+    return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function instance() {
-    return getinstance(get_called_class());
+    return static::i();
   }
 
   public function __construct() {
@@ -34,7 +34,7 @@ class tdata {
     $this->coclasses = array();
 
     if (!$this->basename) {
-      $this->basename = ltrim(get_class($this) , 'tT');
+      $this->basename = ltrim(basename(get_class($this)) , 'tT');
     }
 
     $this->create();
@@ -119,7 +119,7 @@ class tdata {
   }
 
   public function error($Msg, $code = 0) {
-    throw new Exception($Msg, $code);
+    throw new \Exception($Msg, $code);
   }
 
   public function getbasename() {
@@ -177,7 +177,7 @@ class tdata {
   }
 
   public function getstorage() {
-    return litepubl\litepubl::$storage;
+    return litepubl::$storage;
   }
 
   public function load() {

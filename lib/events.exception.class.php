@@ -7,7 +7,7 @@
 
 namespace litepubl;
 
-class ECancelEvent extends Exception {
+class ECancelEvent extends \Exception {
   public $result;
 
   public function __construct($message, $code = 0) {
