@@ -14,10 +14,10 @@ class tadminuserpages extends tadminmenu {
   }
 
   public function getiduser() {
-    if (litepublisher::$options->ingroup('admin')) {
+    if (litepubl::$options->ingroup('admin')) {
       $id = $this->idget();
     } else {
-      $id = litepublisher::$options->user;
+      $id = litepubl::$options->user;
     }
 
     $users = tusers::i();
@@ -33,20 +33,20 @@ class tadminuserpages extends tadminmenu {
     $args = new targs();
 
     if (!($id = $this->getiduser())) {
-      if (litepublisher::$options->ingroup('admin')) return $this->getuserlist();
+      if (litepubl::$options->ingroup('admin')) return $this->getuserlist();
       return $this->notfound;
     }
 
     $pages = tuserpages::i();
     $item = tusers::i()->getitem($id) + $pages->getitem($id);
     if (!isset($item['url'])) {
-      $item['url'] = $item['idurl'] ? litepublisher::$urlmap->getidurl($item['idurl']) : '';
+      $item['url'] = $item['idurl'] ? litepubl::$urlmap->getidurl($item['idurl']) : '';
     }
     $args->add($item);
     $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
     $tabs = new tabs($this->admintheme);
     $tabs->add($lang->title, '[text=name] [text=website]');
-    if ('admin' == litepublisher::$options->group) {
+    if ('admin' == litepubl::$options->group) {
       $tabs->add($lang->view, tadminviews::getcomboview($item['idview']));
       $tabs->add('SEO', '[text=url] [text=keywords] [text=description] [editor=head]');
     }
@@ -71,7 +71,7 @@ class tadminuserpages extends tadminmenu {
       'content' => tcontentfilter::i()->filter($rawcontent)
     );
 
-    if ('admin' == litepublisher::$options->group) {
+    if ('admin' == litepubl::$options->group) {
       $item['idview'] = (int)$idview;
       $item['url'] = $url;
       $item['head'] = $head;
@@ -124,7 +124,7 @@ class tadminuserpages extends tadminmenu {
     $result.= $tb->build($items);
 
     $theme = ttheme::i();
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 

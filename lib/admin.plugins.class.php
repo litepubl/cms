@@ -16,7 +16,7 @@ class tadminplugins extends tadminmenu {
 
   protected function create() {
     parent::create();
-    $this->names = tfiler::getdir(litepublisher::$paths->plugins);
+    $this->names = tfiler::getdir(litepubl::$paths->plugins);
     sort($this->names);
   }
 
@@ -117,7 +117,7 @@ class tadminplugins extends tadminmenu {
         $plugins->update($list);
       }
       catch(Exception $e) {
-        litepublisher::$options->handexception($e);
+        litepubl::$options->handexception($e);
       }
       $result = $this->view->theme->h(tlocal::i()->updated);
     } else {
@@ -128,7 +128,7 @@ class tadminplugins extends tadminmenu {
       }
     }
 
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $result;
   }
 
@@ -136,7 +136,7 @@ class tadminplugins extends tadminmenu {
     $about = tplugins::getabout($name);
     if (empty($about['adminclassname'])) return false;
     $class = $about['adminclassname'];
-    if (!class_exists($class)) litepublisher::$classes->include_file(litepublisher::$paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
+    if (!class_exists($class)) litepubl::$classes->include_file(litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
     return getinstance($class);
   }
 

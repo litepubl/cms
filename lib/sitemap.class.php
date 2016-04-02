@@ -52,9 +52,9 @@ class tsitemap extends titems_itemplate implements itemplate {
     $theme = $this->view->theme;
     $perpage = 1000;
     $count = 0;
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
-    $siteurl = litepublisher::$site->url;
-    $classes = litepublisher::$urlmap->page == 1 ? $this->classes : 'tposts';
+    $from = (litepubl::$urlmap->page - 1) * $perpage;
+    $siteurl = litepubl::$site->url;
+    $classes = litepubl::$urlmap->page == 1 ? $this->classes : 'tposts';
     foreach ($classes as $class) {
       $instance = getinstance($class);
       $links = $instance->getsitemap($from, $perpage - $count);
@@ -74,7 +74,7 @@ class tsitemap extends titems_itemplate implements itemplate {
       if ($count > $perpage) break;
     }
     $result.= '</ul>';
-    //    $result .=$theme->getpages('/sitemap.htm', litepublisher::$urlmap->page, ceil($posts->archivescount / $perpage));
+    //    $result .=$theme->getpages('/sitemap.htm', litepubl::$urlmap->page, ceil($posts->archivescount / $perpage));
     return $result;
   }
 
@@ -87,11 +87,11 @@ class tsitemap extends titems_itemplate implements itemplate {
   public function getIndex() {
     $lastmod = date('Y-m-d', $this->date);
     $result = '<sitemapindex xmlns="http://www.google.com/schemas/sitemap/0.84">';
-    $url = litepublisher::$site->files . '/files/' . litepublisher::$domain;
+    $url = litepubl::$site->files . '/files/' . litepubl::$domain;
     $exists = true;
     for ($i = 1; $i <= $this->countfiles; $i++) {
       $result.= "<sitemap><loc>$url.$i.xml.gz</loc>      <lastmod>$lastmod</lastmod></sitemap>";
-      if ($exists) $exists = file_exists(litepublisher::$paths->files . "$i.xml.gz");
+      if ($exists) $exists = file_exists(litepubl::$paths->files . "$i.xml.gz");
     }
     $this->callevent('onindex', array(&$result
     ));
@@ -109,7 +109,7 @@ class tsitemap extends titems_itemplate implements itemplate {
 
     $home = thomepage::i();
     $this->prio = 9;
-    $this->write('/', $home->showposts && $home->showpagenator ? ceil($home->archcount / litepublisher::$options->perpage) : 1);
+    $this->write('/', $home->showposts && $home->showpagenator ? ceil($home->archcount / litepubl::$options->perpage) : 1);
 
     $perpage = 1000;
     foreach ($this->classes as $prio => $class) {
@@ -143,7 +143,7 @@ class tsitemap extends titems_itemplate implements itemplate {
   }
 
   private function writeitem($url, $prio) {
-    $url = litepublisher::$site->url . $url;
+    $url = litepubl::$site->url . $url;
     gzwrite($this->fd, "<url><loc>$url</loc><lastmod>$this->lastmod</lastmod>" . "<changefreq>daily</changefreq><priority>0.$prio</priority></url>");
 
     if (++$this->count >= 30000) {
@@ -155,10 +155,10 @@ class tsitemap extends titems_itemplate implements itemplate {
   private function openfile() {
     $this->count = 0;
     $this->countfiles++;
-    if ($this->fd = gzopen(litepublisher::$paths->files . litepublisher::$domain . ".$this->countfiles.xml.gz", 'w')) {
+    if ($this->fd = gzopen(litepubl::$paths->files . litepubl::$domain . ".$this->countfiles.xml.gz", 'w')) {
       $this->WriteHeader();
     } else {
-      tfiler::log("error write file to folder " . litepublisher::$paths->files);
+      tfiler::log("error write file to folder " . litepubl::$paths->files);
       exit();
     }
   }
@@ -166,7 +166,7 @@ class tsitemap extends titems_itemplate implements itemplate {
   private function closefile() {
     $this->WriteFooter();
     gzclose($this->fd);
-    @chmod(litepublisher::$paths->files . litepublisher::$domain . ".$this->countfiles.xml.gz", 0666);
+    @chmod(litepubl::$paths->files . litepubl::$domain . ".$this->countfiles.xml.gz", 0666);
     $this->fd = false;
   }
 

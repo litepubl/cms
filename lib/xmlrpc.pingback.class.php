@@ -14,17 +14,17 @@ class TXMLRPCPingback extends TXMLRPCAbstract {
   }
 
   public function ping($from, $to) {
-    if (!strbegin($to, litepublisher::$site->url)) {
+    if (!strbegin($to, litepubl::$site->url)) {
       return new IXR_Error(0, 'Is there no link to us?');
     }
 
-    $url = substr($to, strlen(litepublisher::$site->url));
+    $url = substr($to, strlen(litepubl::$site->url));
     $urlmap = turlmap::i();
     if (!($item = $urlmap->find_item($url))) {
       return $this->xerror(0, 'Is there no link to us?');
     }
 
-    if ($item['class'] != litepublisher::$classes->classes['post']) {
+    if ($item['class'] != litepubl::$classes->classes['post']) {
       return $this->xerror(33, 'The specified target URL cannot be used as a target. It either doesn\'t exist, or it is not a pingback-enabled resource.');
     }
 

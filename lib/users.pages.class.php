@@ -71,7 +71,7 @@ class tuserpages extends titems implements itemplate {
   public function select($where, $limit) {
     if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
     if ($where) $where.= ' and ';
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $table = $this->thistable;
     $res = $db->query("select $table.*, $db->urlmap.url as url from $table, $db->urlmap
     where $where $db->urlmap.id  = $table.idurl $limit");
@@ -81,7 +81,7 @@ class tuserpages extends titems implements itemplate {
   public function getitem($id) {
     $item = parent::getitem($id);
     if (!isset($item['url'])) {
-      $item['url'] = $item['idurl'] == 0 ? '' : litepublisher::$urlmap->getidurl($item['idurl']);
+      $item['url'] = $item['idurl'] == 0 ? '' : litepubl::$urlmap->getidurl($item['idurl']);
       $this->items[$id]['url'] = $item['url'];
     }
     return $item;
@@ -94,9 +94,9 @@ class tuserpages extends titems implements itemplate {
       if (!$users->itemexists($id)) return 404;
       $item = $users->getitem($id);
       $website = $item['website'];
-      if (!strpos($website, '.')) $website = litepublisher::$site->url . litepublisher::$site->home;
+      if (!strpos($website, '.')) $website = litepubl::$site->url . litepubl::$site->home;
       if (!strbegin($website, 'http://')) $website = 'http://' . $website;
-      return "<?php litepublisher::\$urlmap->redir('$website');";
+      return "<?php litepubl::\$urlmap->redir('$website');";
     }
 
     $this->id = (int)$id;
@@ -104,11 +104,11 @@ class tuserpages extends titems implements itemplate {
     $item = $this->getitem($id);
 
     $view = tview::getview($this);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
-    $pages = (int)ceil(litepublisher::$classes->posts->archivescount / $perpage);
-    if ((litepublisher::$urlmap->page > 1) && (litepublisher::$urlmap->page > $pages)) {
-      $url = litepublisher::$urlmap->getvalue($item['idurl'], 'url');
-      return "<?php litepublisher::\$urlmap->redir('$url'); ?>";
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+    $pages = (int)ceil(litepubl::$classes->posts->archivescount / $perpage);
+    if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+      $url = litepubl::$urlmap->getvalue($item['idurl'], 'url');
+      return "<?php litepubl::\$urlmap->redir('$url'); ?>";
     }
 
   }
@@ -145,9 +145,9 @@ class tuserpages extends titems implements itemplate {
     $theme = $view->theme;
     $result = $theme->parse($theme->templates['content.author']);
 
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
-    $posts = litepublisher::$classes->posts;
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+    $posts = litepubl::$classes->posts;
+    $from = (litepubl::$urlmap->page - 1) * $perpage;
 
     $poststable = $posts->thistable;
     $count = $posts->db->getcount("$poststable.status = 'published' and $poststable.author = $this->id");
@@ -155,7 +155,7 @@ class tuserpages extends titems implements itemplate {
     $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id", "order by $poststable.posted $order limit $from, $perpage");
 
     $result.= $theme->getposts($items, $view->postanounce);
-    $result.= $theme->getpages($item['url'], litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($item['url'], litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -175,7 +175,7 @@ class tuserpages extends titems implements itemplate {
     $linkitem = tusers::i()->getitem($item['id']) + $item;
     $linkgen = tlinkgenerator::i();
     $item['url'] = $linkgen->addurl(new tarray2prop($linkitem) , 'user');
-    $item['idurl'] = litepublisher::$urlmap->add($item['url'], get_class($this) , $item['id']);
+    $item['idurl'] = litepubl::$urlmap->add($item['url'], get_class($this) , $item['id']);
     return $item;
   }
 
@@ -207,7 +207,7 @@ class tuserpages extends titems implements itemplate {
     if ($id <= 1) return false;
     if (!$this->itemexists($id)) return false;
     $idurl = $this->getvalue($id, 'idurl');
-    if ($idurl > 0) litepublisher::$urlmap->deleteitem($idurl);
+    if ($idurl > 0) litepubl::$urlmap->deleteitem($idurl);
     return parent::delete($id);
   }
 
@@ -223,10 +223,10 @@ class tuserpages extends titems implements itemplate {
     $item['content'] = tcontentfilter::i()->filter($item['rawcontent']);
     if ($url && ($url != $item['url'])) {
       if ($item['idurl'] == 0) {
-        $item['idurl'] = litepublisher::$urlmap->add($url, get_class($this) , $id);
+        $item['idurl'] = litepubl::$urlmap->add($url, get_class($this) , $id);
       } else {
-        litepublisher::$urlmap->addredir($item['url'], $url);
-        litepublisher::$urlmap->setidurl($item['idurl'], $url);
+        litepubl::$urlmap->addredir($item['url'], $url);
+        litepubl::$urlmap->setidurl($item['idurl'], $url);
       }
       $item['url'] = $url;
     }

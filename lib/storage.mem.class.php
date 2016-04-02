@@ -20,7 +20,7 @@ class memstorage {
   }
 
   public function __construct() {
-    $this->memcache_prefix = litepublisher::$domain . ':';
+    $this->memcache_prefix = litepubl::$domain . ':';
     $this->table = 'memstorage';
     $this->table_checked = false;
     $this->data = array();
@@ -55,7 +55,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
         $result = $this->unserialize($r['value']);
         $this->data[$name] = $result;
@@ -80,7 +80,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       $v = $db->quote($this->serialize($value));
       if ($exists) {
         $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
@@ -106,7 +106,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
   }
@@ -123,7 +123,7 @@ class memstorage {
     $this->table_checked = true;
 
     //exclude throw exception
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
     if (is_object($res) && ($r = $res->fetch_assoc())) {
       $res->close();
@@ -141,7 +141,7 @@ class memstorage {
   }
 
   public function loadall() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $res = $db->query("select * from $db->prefix$this->table");
     if (is_object($res)) {
       while ($item = $res->fetch_assoc()) {
@@ -151,7 +151,7 @@ class memstorage {
   }
 
   public function saveall() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $a = array();
     foreach ($this->data as $name => $value) {
       $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
@@ -162,7 +162,7 @@ class memstorage {
   }
 
   public function create_table() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $db->mysqli->query("create table if not exists $db->prefix$this->table (
     name varchar(32) not null,
     value varchar(255),
@@ -174,7 +174,7 @@ class memstorage {
   }
 
   public function clear_table() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     try {
       $db->query("truncate table $db->prefix$this->table");
     }

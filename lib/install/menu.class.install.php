@@ -8,9 +8,9 @@
 namespace litepubl;
 
 function tmenusInstall($self) {
-  @mkdir(litepublisher::$paths->data . 'menus', 0777);
+  @mkdir(litepubl::$paths->data . 'menus', 0777);
   if (get_class($self) != 'tmenus') return;
-  @chmod(litepublisher::$paths->data . 'menus', 0777);
+  @chmod(litepubl::$paths->data . 'menus', 0777);
 }
 
 function tmenusUninstall($self) {

@@ -45,7 +45,7 @@ class twidgetscache extends titems {
 
   public function save() {
     if (!$this->modified) {
-      litepublisher::$urlmap->onclose = array(
+      litepubl::$urlmap->onclose = array(
         $this,
         'savemodified'
       );

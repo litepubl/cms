@@ -37,8 +37,8 @@ class tlinkswidget extends twidget {
     $result = '';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('links', $sidebar);
-    $redirlink = litepublisher::$site->url . $this->redirlink . litepublisher::$site->q . 'id=';
-    $url = litepublisher::$site->url;
+    $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . 'id=';
+    $url = litepubl::$site->url;
     $args = targs::i();
     $args->subcount = '';
     $args->subitems = '';
@@ -85,7 +85,7 @@ class tlinkswidget extends twidget {
     if (isset($this->items[$id])) {
       unset($this->items[$id]);
       $this->save();
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
   }
 
@@ -93,7 +93,7 @@ class tlinkswidget extends twidget {
     $this->cache = false;
     $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
     if (!isset($this->items[$id])) return 404;
-    return '<?php litepublisher::$urlmap->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
+    return '<?php litepubl::$urlmap->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
   }
 
 } //class

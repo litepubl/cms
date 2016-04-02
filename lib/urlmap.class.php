@@ -43,7 +43,7 @@ class turlmap extends titems {
     $this->is404 = false;
     $this->isredir = false;
     $this->adminpanel = false;
-    $this->cache_enabled = litepublisher::$options->cache && !litepublisher::$options->admincookie;
+    $this->cache_enabled = litepubl::$options->cache && !litepubl::$options->admincookie;
     $this->page = 1;
     $this->close_events = array();
   }
@@ -52,8 +52,8 @@ class turlmap extends titems {
     $this->host = $host;
     $this->page = 1;
     $this->uripath = array();
-    if (litepublisher::$site->q == '?') {
-      $this->url = substr($url, strlen(litepublisher::$site->subdir));
+    if (litepubl::$site->q == '?') {
+      $this->url = substr($url, strlen(litepubl::$site->subdir));
     } else {
       $this->url = $_GET['url'];
     }
@@ -63,14 +63,14 @@ class turlmap extends titems {
     $this->prepareurl($host, $url);
     $this->adminpanel = strbegin($this->url, '/admin/') || ($this->url == '/admin');
     if ($this->redirdom) {
-      $parsedurl = parse_url(litepublisher::$site->url . '/');
+      $parsedurl = parse_url(litepubl::$site->url . '/');
       if ($host != strtolower($parsedurl['host'])) {
         return $this->redir($url);
       }
     }
 
     $this->beforerequest();
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
+    if (!litepubl::$debug && litepubl::$options->ob_cache) {
       ob_start();
     }
 
@@ -78,13 +78,13 @@ class turlmap extends titems {
       $this->dorequest($this->url);
     }
     catch(\Exception $e) {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
 
     // production mode: no debug and enabled buffer
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
-      litepublisher::$options->showerrors();
-      litepublisher::$options->errorlog = '';
+    if (!litepubl::$debug && litepubl::$options->ob_cache) {
+      litepubl::$options->showerrors();
+      litepubl::$options->errorlog = '';
 
       $afterclose = $this->isredir || count($this->close_events);
       if ($afterclose) {
@@ -244,10 +244,10 @@ class turlmap extends titems {
         return sprintf('%s-%d.php', $item['id'], $this->page);
 
       case 'usernormal':
-        return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepublisher::$options->user);
+        return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepubl::$options->user);
 
       case 'userget':
-        return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepublisher::$options->user, md5($_SERVER['REQUEST_URI']));
+        return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepubl::$options->user, md5($_SERVER['REQUEST_URI']));
 
       default: //get
         return sprintf('%s-%d-%s.php', $item['id'], $this->page, md5($_SERVER['REQUEST_URI']));
@@ -267,8 +267,8 @@ class turlmap extends titems {
       return false;
     }
 
-    $filename = litepublisher::$paths->cache . $fn;
-    if (file_exists($filename) && ((filemtime($filename) + litepublisher::$options->expiredcache - litepublisher::$options->filetime_offset) >= time())) {
+    $filename = litepubl::$paths->cache . $fn;
+    if (file_exists($filename) && ((filemtime($filename) + litepubl::$options->expiredcache - litepubl::$options->filetime_offset) >= time())) {
       include ($filename);
       return true;
     }
@@ -277,7 +277,7 @@ class turlmap extends titems {
   }
 
   private function printcontent(array $item) {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
       return;
     }
@@ -535,7 +535,7 @@ class turlmap extends titems {
         call_user_func_array($c, $a);
       }
       catch(Exception $e) {
-        litepublisher::$options->handexception($e);
+        litepubl::$options->handexception($e);
       }
     }
 
@@ -560,7 +560,7 @@ class turlmap extends titems {
   }
 
   public function redir($url, $status = 301) {
-    litepublisher::$options->savemodified();
+    litepubl::$options->savemodified();
     $this->isredir = true;
 
     switch ($status) {
@@ -579,7 +579,7 @@ class turlmap extends titems {
         break;
     }
 
-    if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepublisher::$site->url . $url;
+    if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepubl::$site->url . $url;
     header('Location: ' . $url);
   }
 
@@ -596,7 +596,7 @@ class turlmap extends titems {
 
   public function getnextpage() {
     $url = $this->itemrequested['url'];
-    return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
+    return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
   }
 
   public function getprevpage() {
@@ -605,7 +605,7 @@ class turlmap extends titems {
       return url;
     }
 
-    return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
+    return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }
 
   public static function htmlheader($cache) {
@@ -624,13 +624,13 @@ class turlmap extends titems {
 
     header('Content-Type: text/html; charset=utf-8');
     header('Last-Modified: ' . date('r'));
-    header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
+    header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
   }
 
   public static function sendxml() {
     header('Content-Type: text/xml; charset=utf-8');
     header('Last-Modified: ' . date('r'));
-    header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
+    header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
     echo '<?xml version="1.0" encoding="utf-8" ?>';
   }
 

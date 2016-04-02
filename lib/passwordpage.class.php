@@ -49,7 +49,7 @@ class tpasswordpage extends tevents_itemplate implements itemplate {
     $backurl = isset($_GET['backurl']) ? $_GET['backurl'] : '';
 
     if ($this->perm->checkpassword($password)) {
-      if ($backurl != '') litepublisher::$urlmap->redir($backurl);
+      if ($backurl != '') litepubl::$urlmap->redir($backurl);
     } else {
       $this->formresult = $this->invalidpassword;
     }

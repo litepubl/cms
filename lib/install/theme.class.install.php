@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tthemeInstall($self) {
-  $dir = litepublisher::$paths->data . 'themes';
+  $dir = litepubl::$paths->data . 'themes';
   if (!is_dir($dir)) {
     mkdir($dir, 0777);
     chmod($dir, 0777);

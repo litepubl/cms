@@ -19,7 +19,7 @@ class tmarkdownplugin extends tplugin {
     $this->data['deletep'] = false;
     litepubl::$classes->include_file(litepubl::$paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'MarkdownInterface.php');
     litepubl::$classes->include_file(litepubl::$paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'Markdown.php');
-    $this->parser = new Markdown();
+    $this->parser = new Michelf\Markdown();
   }
 
   public function filter(&$content) {

@@ -19,8 +19,8 @@ class tdatabase extends PDO {
   }
 
   public function __construct() {
-    if (!isset(litepublisher::$options->dbconfig)) return false;
-    $dbconfig = litepublisher::$options->dbconfig;
+    if (!isset(litepubl::$options->dbconfig)) return false;
+    $dbconfig = litepubl::$options->dbconfig;
     $this->table = '';
     $this->prefix = $dbconfig['prefix'];
     $this->sql = '';
@@ -62,7 +62,7 @@ class tdatabase extends PDO {
   private function doquery($sql, $isquery) {
     //if ($sql == $this->sql) return $this->result;
     $this->sql = $sql;
-    if (litepublisher::$debug) {
+    if (litepubl::$debug) {
       $this->history[] = array(
         'sql' => $sql,
         'started' => microtime() ,
@@ -79,7 +79,7 @@ class tdatabase extends PDO {
       } else {
         $this->result = parent::exec($sql);
       }
-      if (litepublisher::$debug) {
+      if (litepubl::$debug) {
         $this->history[count($this->history) - 1]['finished'] = microtime();
       }
     }
@@ -90,16 +90,16 @@ class tdatabase extends PDO {
   }
 
   private function doerror($e) {
-    if (litepublisher::$debug) {
+    if (litepubl::$debug) {
       $log = "exception:\n" . $e->getMessage();
       $log.= "\n$this->sql\n";
-      $log.= str_replace(litepublisher::$paths->home, '', $e->getTraceAsString());
+      $log.= str_replace(litepubl::$paths->home, '', $e->getTraceAsString());
       $man = tdbmanager::i();
       $log.= $man->performance();
       $log = str_replace("\n", "<br />\n", htmlspecialchars($log));
       die($log);
     } else {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
   }
 

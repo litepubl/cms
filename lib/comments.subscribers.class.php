@@ -97,7 +97,7 @@ class tsubscribers extends titemsposts {
     $item = $comments->getitem($id);
     if (($item['status'] != 'approved')) return;
 
-    if (litepublisher::$options->mailer == 'smtp') {
+    if (litepubl::$options->mailer == 'smtp') {
       tcron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
     } else {
       $this->cronsendmail($id);
@@ -126,7 +126,7 @@ class tsubscribers extends titemsposts {
     $body = $theme->parsearg($lang->subscribebody, $args);
 
     $body.= "\n";
-    $adminurl = litepublisher::$site->url . '/admin/subscribers/';
+    $adminurl = litepubl::$site->url . '/admin/subscribers/';
 
     $users = tusers::i();
     $users->loaditems($subscribers);
@@ -141,7 +141,7 @@ class tsubscribers extends titemsposts {
 
       $admin = $adminurl;
       if ('comuser' == $user['status']) {
-        $admin.= litepublisher::$site->q . 'auth=';
+        $admin.= litepubl::$site->q . 'auth=';
         if (empty($user['cookie'])) {
           $user['cookie'] = md5uniq();
           $users->setvalue($user['id'], 'cookie', $user['cookie']);
@@ -150,7 +150,7 @@ class tsubscribers extends titemsposts {
       }
 
       $list[] = array(
-        'fromname' => litepublisher::$site->name,
+        'fromname' => litepubl::$site->name,
         'fromemail' => $this->fromemail,
         'toname' => $user['name'],
         'toemail' => $email,

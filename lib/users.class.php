@@ -26,7 +26,7 @@ class tusers extends titems {
   public function res2items($res) {
     if (!$res) return array();
     $result = array();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     while ($item = $db->fetchassoc($res)) {
       $id = (int)$item['id'];
       $item['idgroups'] = tdatabase::str2array($item['idgroups']);
@@ -72,7 +72,7 @@ class tusers extends titems {
 
   public function emailexists($email) {
     if ($email == '') return false;
-    if ($email == litepublisher::$options->email) return 1;
+    if ($email == litepubl::$options->email) return 1;
 
     foreach ($this->items as $id => $item) {
       if ($email == $item['email']) return $id;
@@ -88,12 +88,12 @@ class tusers extends titems {
   }
 
   public function getpassword($id) {
-    return $id == 1 ? litepublisher::$options->password : $this->getvalue($id, 'password');
+    return $id == 1 ? litepubl::$options->password : $this->getvalue($id, 'password');
   }
 
   public function changepassword($id, $password) {
     $item = $this->getitem($id);
-    $this->setvalue($id, 'password', litepublisher::$options->hash($item['email'] . $password));
+    $this->setvalue($id, 'password', litepubl::$options->hash($item['email'] . $password));
   }
 
   public function approve($id) {
@@ -109,7 +109,7 @@ class tusers extends titems {
   public function authpassword($id, $password) {
     if (!$id || !$password) return false;
     $item = $this->getitem($id);
-    if ($item['password'] == litepublisher::$options->hash($item['email'] . $password)) {
+    if ($item['password'] == litepubl::$options->hash($item['email'] . $password)) {
       if ($item['status'] == 'wait') $this->approve($id);
       return $id;
     }
@@ -119,8 +119,8 @@ class tusers extends titems {
   public function authcookie($cookie) {
     $cookie = (string)$cookie;
     if (empty($cookie)) return false;
-    $cookie = litepublisher::$options->hash($cookie);
-    if ($cookie == litepublisher::$options->hash('')) return false;
+    $cookie = litepubl::$options->hash($cookie);
+    if ($cookie == litepubl::$options->hash('')) return false;
     if ($id = $this->findcookie($cookie)) {
       $item = $this->getitem($id);
       if (strtotime($item['expired']) > time()) return $id;
@@ -147,7 +147,7 @@ class tusers extends titems {
   }
 
   public function setcookie($id, $cookie, $expired) {
-    if ($cookie) $cookie = litepublisher::$options->hash($cookie);
+    if ($cookie) $cookie = litepubl::$options->hash($cookie);
     $expired = sqldate($expired);
     if (isset($this->items[$id])) {
       $this->items[$id]['cookie'] = $cookie;

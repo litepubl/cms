@@ -77,11 +77,11 @@ class titemsposts extends titems {
   }
 
   public function getitems($idpost) {
-    return litepublisher::$db->res2id(litepublisher::$db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+    return litepubl::$db->res2id(litepubl::$db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
   }
 
   public function getposts($iditem) {
-    return litepublisher::$db->res2id(litepublisher::$db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+    return litepubl::$db->res2id(litepubl::$db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
   }
 
   public function getpostscount($ititem) {

@@ -81,14 +81,14 @@ class tadminusers extends tadminmenu {
     if (!empty($_GET['idgroup'])) {
       $idgroup = (int)tadminhtml::getparam('idgroup', 0);
       if ($groups->itemexists($idgroup)) {
-        $grouptable = litepublisher::$db->prefix . $users->grouptable;
+        $grouptable = litepubl::$db->prefix . $users->grouptable;
         $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
         $params = "idgroup=$idgroup";
       }
     } elseif ($search = trim(tadminhtml::getparam('search', ''))) {
       $params = 'search=' . urlencode($search);
       $args->search = $search;
-      $search = litepublisher::$db->escape($search);
+      $search = litepubl::$db->escape($search);
       $search = strtr($search, array(
         '%' => '\%',
         '_' => '\_'
@@ -133,7 +133,7 @@ class tadminusers extends tadminmenu {
     $result.= $form->getdelete($tb->build($items));
 
     $theme = ttheme::i();
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage) , $params);
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage) , $params);
 
     $form = new adminform($args);
     $form->method = 'get';
@@ -153,7 +153,7 @@ class tadminusers extends tadminmenu {
         if (!is_numeric($value)) continue;
         $id = (int)$value;
         $users->delete($id);
-        //if (litepublisher::$classes->exists('tregservices')) $users->getdb('
+        //if (litepubl::$classes->exists('tregservices')) $users->getdb('
         
       }
       return;
@@ -163,7 +163,7 @@ class tadminusers extends tadminmenu {
       case 'add':
         $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
         if ($id = $users->add($_POST)) {
-          litepublisher::$urlmap->redir("$this->adminurl=$id&action=edit");
+          litepubl::$urlmap->redir("$this->adminurl=$id&action=edit");
         } else {
           return $this->html->h4red->invalidregdata;
         }
@@ -176,8 +176,8 @@ class tadminusers extends tadminmenu {
         $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
         if (!$users->edit($id, $_POST)) return $this->notfound;
         if ($id == 1) {
-          litepublisher::$site->author = $_POST['name'];
-          //litepublisher::$site->email = $_POST['email'];
+          litepubl::$site->author = $_POST['name'];
+          //litepubl::$site->email = $_POST['email'];
           
         }
         break;

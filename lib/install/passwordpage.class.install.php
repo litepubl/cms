@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tpasswordpageInstall($self) {
-  litepublisher::$urlmap->delete('/check-password.php');
+  litepubl::$urlmap->delete('/check-password.php');
   tlocal::usefile('install');
   $lang = tlocal::i('passwordpage');
 
@@ -33,9 +33,9 @@ function tpasswordpageInstall($self) {
 
   trobotstxt::i()->AddDisallow('/check-password.php');
 
-  litepublisher::$urlmap->addget('/check-password.php', get_class($self));
+  litepubl::$urlmap->addget('/check-password.php', get_class($self));
 }
 
 function tpasswordpageUninstall($self) {
-  litepublisher::$urlmap->delete('/check-password.php');
+  litepubl::$urlmap->delete('/check-password.php');
 }

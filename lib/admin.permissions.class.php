@@ -127,7 +127,7 @@ class tadminperms extends tadminmenu {
           $perm = new $class();
           $id = tperms::i()->add($perm);
           $perm->admin->processform();
-          return litepublisher::$urlmap->redir(tadminhtml::getadminlink($this->url, 'action=edit&id=' . $id));
+          return litepubl::$urlmap->redir(tadminhtml::getadminlink($this->url, 'action=edit&id=' . $id));
         }
       }
   }

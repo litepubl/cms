@@ -18,11 +18,11 @@ class tjsonfiles extends tevents {
   }
 
   public function auth($idpost) {
-    if (!litepublisher::$options->user) return false;
-    if (litepublisher::$options->ingroup('editor')) return true;
+    if (!litepubl::$options->user) return false;
+    if (litepubl::$options->ingroup('editor')) return true;
     if ($idpost == 0) return true;
     if ($idauthor = $this->getdb('posts')->getvalue($idpost, 'author')) {
-      return litepublisher::$options->user == (int)$idauthor;
+      return litepubl::$options->user == (int)$idauthor;
     }
     return false;
   }
@@ -35,7 +35,7 @@ class tjsonfiles extends tevents {
     $idpost = (int)$args['idpost'];
     if (!$this->auth($idpost)) return $this->forbidden();
 
-    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
+    $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
     $files = tfiles::i();
     $result = array(
@@ -51,7 +51,7 @@ class tjsonfiles extends tevents {
       }
     }
 
-    if (litepublisher::$options->show_file_perm) {
+    if (litepubl::$options->show_file_perm) {
       $theme = ttheme::getinstance('default');
       $result['fileperm'] = tadminperms::getcombo(0, 'idperm_upload');
     }
@@ -60,12 +60,12 @@ class tjsonfiles extends tevents {
   }
 
   public function files_getpage(array $args) {
-    if (!litepublisher::$options->hasgroup('author')) return $this->forbidden();
+    if (!litepubl::$options->hasgroup('author')) return $this->forbidden();
     $page = (int)$args['page'];
     $perpage = isset($args['perpage']) ? (int)$args['perpage'] : 10;
 
     $from = $page * $perpage;
-    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
+    $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
     $files = tfiles::i();
     $db = $files->db;
@@ -84,7 +84,7 @@ class tjsonfiles extends tevents {
   }
 
   public function files_setprops(array $args) {
-    if (!litepublisher::$options->hasgroup('author')) return $this->forbidden();
+    if (!litepubl::$options->hasgroup('author')) return $this->forbidden();
     $id = (int)$args['idfile'];
     $files = tfiles::i();
     if (!$files->itemexists($id)) return $this->forbidden();
@@ -104,9 +104,9 @@ class tjsonfiles extends tevents {
   }
 
   public function canupload() {
-    if (!litepublisher::$options->hasgroup('author')) return false;
+    if (!litepubl::$options->hasgroup('author')) return false;
 
-    if (in_array(litepublisher::$options->groupnames['author'], litepublisher::$options->idgroups) && ($err = tauthor_rights::i()->canupload())) {
+    if (in_array(litepubl::$options->groupnames['author'], litepubl::$options->idgroups) && ($err = tauthor_rights::i()->canupload())) {
       return false;
     }
 
@@ -118,7 +118,7 @@ class tjsonfiles extends tevents {
     if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES['Filedata']['tmp_name']) || $_FILES['Filedata']['error'] != 0) return $this->forbidden();
 
     //psevdo logout
-    litepublisher::$options->user = null;
+    litepubl::$options->user = null;
     if (!$this->canupload()) return $this->forbidden();
 
     $parser = tmediaparser::i();

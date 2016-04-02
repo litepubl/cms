@@ -10,7 +10,7 @@ namespace litepubl;
 function tcommentformInstall($self) {
   $url = '/send-comment.php';
 
-  litepublisher::$urlmap->Add($url, get_class($self) , null);
+  litepubl::$urlmap->Add($url, get_class($self) , null);
 }
 
 function tcommentformUninstall($self) {

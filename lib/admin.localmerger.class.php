@@ -30,11 +30,11 @@ class tadminlocalmerger extends tadminmenu {
     }
 
     $args->formtitle = $lang->optionslocal;
-    $args->dateformat = litepublisher::$options->dateformat;
-    $dirs = tfiler::getdir(litepublisher::$paths->languages);
-    $args->language = tadminhtml::array2combo(array_combine($dirs, $dirs) , litepublisher::$options->language);
+    $args->dateformat = litepubl::$options->dateformat;
+    $dirs = tfiler::getdir(litepubl::$paths->languages);
+    $args->language = tadminhtml::array2combo(array_combine($dirs, $dirs) , litepubl::$options->language);
     $zones = timezone_identifiers_list();
-    $args->timezone = tadminhtml::array2combo(array_combine($zones, $zones) , litepublisher::$options->timezone);
+    $args->timezone = tadminhtml::array2combo(array_combine($zones, $zones) , litepubl::$options->timezone);
 
     return $html->adminform('[text=dateformat]
     [combo=language]
@@ -42,10 +42,10 @@ class tadminlocalmerger extends tadminmenu {
   }
 
   public function processform() {
-    litepublisher::$options->dateformat = $_POST['dateformat'];
-    litepublisher::$options->language = $_POST['language'];
-    if (litepublisher::$options->timezone != $_POST['timezone']) {
-      litepublisher::$options->timezone = $_POST['timezone'];
+    litepubl::$options->dateformat = $_POST['dateformat'];
+    litepubl::$options->language = $_POST['language'];
+    if (litepubl::$options->timezone != $_POST['timezone']) {
+      litepubl::$options->timezone = $_POST['timezone'];
       $archives = tarchives::i();
       turlmap::unsub($archives);
       $archives->PostsChanged();

@@ -84,7 +84,7 @@ class titems extends tevents {
     }
 
     $result = array();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     while ($item = $db->fetchassoc($res)) {
       $id = $item[$this->idprop];
       $result[] = $id;

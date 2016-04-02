@@ -148,7 +148,7 @@ class tadminmenumanager extends tadminmenu {
   private function getmenulist() {
     $menus = tmenus::i();
     $lang = tlocal::admin();
-    $editurl = litepublisher::$site->url . $this->url . 'edit/' . litepublisher::$site->q . 'id';
+    $editurl = litepubl::$site->url . $this->url . 'edit/' . litepubl::$site->q . 'id';
 
     return tablebuilder::fromitems($menus->items, array(
       array(

@@ -14,7 +14,7 @@ class adminsecure extends tadminmenu {
   }
 
   public function getcontent() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $lang = tlocal::admin('options');
     $html = $this->gethtml('options');
     $args = new targs();
@@ -71,7 +71,7 @@ class adminsecure extends tadminmenu {
   }
 
   public function processform() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if (isset($_POST['oldpassword'])) {
       $h4 = $this->html->h4;
       if ($oldpassword == '') {
@@ -126,11 +126,11 @@ class adminsecure extends tadminmenu {
   }
 
   public function setusersenabled($value) {
-    if (litepublisher::$options->usersenabled == $value) {
+    if (litepubl::$options->usersenabled == $value) {
       return;
     }
 
-    litepublisher::$options->usersenabled = $value;
+    litepubl::$options->usersenabled = $value;
     $menus = tadminmenus::i();
     $menus->lock();
     if ($value) {

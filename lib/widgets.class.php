@@ -166,10 +166,10 @@ class twidgets extends titems_storage {
 
     }
 
-    if (litepublisher::$options->admincookie) $this->callevent('onadminlogged', array(&$items,
+    if (litepubl::$options->admincookie) $this->callevent('onadminlogged', array(&$items,
       $sidebar
     ));
-    if (litepublisher::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items,
+    if (litepubl::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items,
       $sidebar
     ));
     $this->callevent('ongetwidgets', array(&$items,
@@ -334,14 +334,14 @@ class twidgets extends titems_storage {
 
   private function includewidget($id, $sidebar) {
     $filename = twidget::getcachefilename($id, $sidebar);
-    if (!litepublisher::$urlmap->cache->exists($filename)) {
+    if (!litepubl::$urlmap->cache->exists($filename)) {
       $widget = $this->getwidget($id);
       $content = $widget->getcontent($id, $sidebar);
-      litepublisher::$urlmap->cache->set($filename, $content);
+      litepubl::$urlmap->cache->set($filename, $content);
     }
 
     $theme = ttheme::i();
-    return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepublisher::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
+    return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
   }
 
   private function getcode($id, $sidebar) {
@@ -411,11 +411,11 @@ class twidgets extends titems_storage {
 
       case 'include':
         $filename = twidget::getcachefilename($id, $sidebar);
-        $result = litepublisher::$urlmap->cache->get($filename);
+        $result = litepubl::$urlmap->cache->get($filename);
         if (!$result) {
           $widget = $this->getwidget($id);
           $result = $widget->getcontent($id, $sidebar);
-          litepublisher::$urlmap->cache->set($filename, $result);
+          litepubl::$urlmap->cache->set($filename, $result);
         }
         break;
 

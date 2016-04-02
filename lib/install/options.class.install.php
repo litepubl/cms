@@ -25,14 +25,14 @@ function installoptions($email, $language) {
 
   $options->setdbpassword($_REQUEST['dbpassword']);
   try {
-    litepublisher::$db = new tdatabase();
+    litepubl::$db = new tdatabase();
   }
   catch(Exception $e) {
     die($e->GetMessage());
   }
 
-  if (litepublisher::$debug) {
-    $db = litepublisher::$db;
+  if (litepubl::$debug) {
+    $db = litepubl::$db;
     $list = $db->res2array($db->query("show tables from " . $options->dbconfig['dbname']));
     foreach ($list as $row) {
       $table = $row[0];

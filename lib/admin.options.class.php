@@ -50,7 +50,7 @@ class tadminoptions extends tadminmenu {
       return $form->getform();
     }
 
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $template = ttemplate::i();
     ttheme::$vars['template'] = $template;
     $result = '';
@@ -60,9 +60,9 @@ class tadminoptions extends tadminmenu {
 
     switch ($this->name) {
       case 'options':
-        $site = litepublisher::$site;
+        $site = litepubl::$site;
         $args->fixedurl = $site->fixedurl;
-        $args->redirdom = litepublisher::$urlmap->redirdom;
+        $args->redirdom = litepubl::$urlmap->redirdom;
         $args->url = $site->url;
         $args->name = $site->name;
         $args->description = $site->description;
@@ -162,8 +162,8 @@ class tadminoptions extends tadminmenu {
         $args->audioext = $parser->audioext;
         $args->videoext = $parser->videoext;
 
-        $args->video_width = litepublisher::$site->video_width;
-        $args->video_height = litepublisher::$site->video_height;
+        $args->video_width = litepubl::$site->video_width;
+        $args->video_height = litepubl::$site->video_height;
 
         $args->formtitle = $lang->files;
         return $html->adminform('
@@ -237,11 +237,11 @@ class tadminoptions extends tadminmenu {
 
       case 'catstags':
       case 'lite': //old version suports
-        $cats = litepublisher::$classes->categories;
+        $cats = litepubl::$classes->categories;
         $args->parentcats = $cats->includeparents;
         $args->childcats = $cats->includechilds;
 
-        $tags = litepublisher::$classes->tags;
+        $tags = litepubl::$classes->tags;
         $args->parenttags = $tags->includeparents;
         $args->childtags = $tags->includechilds;
         $lang = tlocal::admin('options');
@@ -274,12 +274,12 @@ class tadminoptions extends tadminmenu {
     }
 
     extract($_POST, EXTR_SKIP);
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
 
     switch ($this->name) {
       case 'options':
-        litepublisher::$urlmap->redirdom = isset($redirdom);
-        $site = litepublisher::$site;
+        litepubl::$urlmap->redirdom = isset($redirdom);
+        $site = litepubl::$site;
         $site->fixedurl = isset($fixedurl);
         $site->url = $url;
         $site->name = $name;
@@ -357,8 +357,8 @@ class tadminoptions extends tadminmenu {
 
         $parser->save();
 
-        litepublisher::$site->video_width = $video_width;
-        litepublisher::$site->video_height = $video_height;
+        litepubl::$site->video_width = $video_width;
+        litepubl::$site->video_height = $video_height;
         break;
 
 
@@ -411,12 +411,12 @@ class tadminoptions extends tadminmenu {
 
       case 'lite':
       case 'catstags':
-        $cats = litepublisher::$classes->categories;
+        $cats = litepubl::$classes->categories;
         $cats->includeparents = isset($parentcats);
         $cats->includechilds = isset($childcats);
         $cats->save();
 
-        $tags = litepublisher::$classes->tags;
+        $tags = litepubl::$classes->tags;
         $tags->includeparents = isset($parenttags);
         $tags->includechilds = isset($childtags);
         $tags->save();

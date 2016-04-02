@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function twidgetsInstall($self) {
-  litepublisher::$urlmap->addget('/getwidget.htm', get_class($self));
+  litepubl::$urlmap->addget('/getwidget.htm', get_class($self));
   $robot = trobotstxt::i();
   $robot->AddDisallow('/getwidget.htm');
 

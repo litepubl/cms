@@ -22,7 +22,7 @@ class trssMultimedia extends tevents {
   }
 
   public function fileschanged() {
-    litepublisher::$urlmap->expiredclass(get_class($this));
+    litepubl::$urlmap->expiredclass(get_class($this));
   }
 
   public function request($arg) {
@@ -30,18 +30,18 @@ class trssMultimedia extends tevents {
     if (($arg == null) && ($this->feedburner != '')) {
       $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepublisher::\$urlmap->redir('$this->feedburner', 307);
+        return litepubl::\$urlmap->redir('$this->feedburner', 307);
       }
       ?>";
     }
 
-    $result.= '<?php turlmap::sendxml(); ?>';
+    $result.= '<?php litepubl::turlmap::sendxml(); ?>';
 
     $this->domrss = new tdomrss;
-    $this->domrss->CreateRootMultimedia(litepublisher::$site->url . litepublisher::$urlmap->url, 'media');
+    $this->domrss->CreateRootMultimedia(litepubl::$site->url . litepubl::$urlmap->url, 'media');
     $this->onroot($this->domrss);
 
-    $list = $this->getrecent($arg, litepublisher::$options->perpage);
+    $list = $this->getrecent($arg, litepubl::$options->perpage);
     foreach ($list as $id) {
       $this->addfile($id);
     }
@@ -62,7 +62,7 @@ class trssMultimedia extends tevents {
     $posts = $files->itemsposts->getposts($id);
 
     if (count($posts) == 0) {
-      $postlink = litepublisher::$site->url . '/';
+      $postlink = litepubl::$site->url . '/';
     } else {
       $post = tpost::i($posts[0]);
       $postlink = $post->link;
@@ -129,7 +129,7 @@ class trssMultimedia extends tevents {
     if (($this->feedburner != $url)) {
       $this->data['feedburner'] = $url;
       $this->save();
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
   }
 

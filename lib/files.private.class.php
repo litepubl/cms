@@ -32,12 +32,12 @@ class tprivatefiles extends tevents {
     $files->setvalue($id, 'idperm', $idperm);
     if (($idperm == 0) || ($item['idperm'] == 0)) {
       $filename = basename($item['filename']);
-      $path = litepublisher::$paths->files;
+      $path = litepubl::$paths->files;
       if ($idperm) {
         rename($path . $item['filename'], $path . 'private/' . $filename);
-        litepublisher::$urlmap->add('/files/' . $item['filename'], get_class($this) , $id);
+        litepubl::$urlmap->add('/files/' . $item['filename'], get_class($this) , $id);
       } else {
-        litepublisher::$urlmap->delete('/files/' . $item['filename']);
+        litepubl::$urlmap->delete('/files/' . $item['filename']);
         rename($path . 'private/' . $filename, $path . $item['filename']);
       }
     }
@@ -51,12 +51,12 @@ class tprivatefiles extends tevents {
     $item = $files->getitem($id);
     $filename = '/files/' . $item['filename'];
     if ((int)$item['idperm'] == 0) {
-      if ($filename == litepublisher::$urlmap->url) {
+      if ($filename == litepubl::$urlmap->url) {
         header('HTTP/1.1 500 Internal Server Error', true, 500);
         exit();
       }
 
-      return litepublisher::$urlmap->redir($filename);
+      return litepubl::$urlmap->redir($filename);
     }
 
     $this->id = $id;
@@ -102,7 +102,7 @@ class tprivatefiles extends tevents {
 
   private static function send(array $item, $from, $end) {
     $filename = basename($item['filename']);
-    $realfile = litepublisher::$paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
+    $realfile = litepubl::$paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
 
     header('Cache-Control: private');
     header('Content-type: ' . $item['mime']);

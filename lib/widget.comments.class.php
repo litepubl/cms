@@ -32,7 +32,7 @@ class tcommentswidget extends twidget {
     $result = '';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('comments', $sidebar);
-    $url = litepublisher::$site->url;
+    $url = litepubl::$site->url;
     $args = targs::i();
     $args->onrecent = tlocal::get('comment', 'onrecent');
     foreach ($recent as $item) {
@@ -49,7 +49,7 @@ class tcommentswidget extends twidget {
   }
 
   public function getrecent($count, $status = 'approved') {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $result = $db->res2assoc($db->query("select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as url,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
@@ -63,9 +63,9 @@ class tcommentswidget extends twidget {
     $db->posts.idperm = 0
     order by $db->comments.posted desc limit $count"));
 
-    if (litepublisher::$options->commentpages && !litepublisher::$options->comments_invert_order) {
+    if (litepubl::$options->commentpages && !litepubl::$options->comments_invert_order) {
       foreach ($result as $i => $item) {
-        $page = ceil($item['commentscount'] / litepublisher::$options->commentsperpage);
+        $page = ceil($item['commentscount'] / litepubl::$options->commentsperpage);
         if ($page > 1) $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
       }
     }

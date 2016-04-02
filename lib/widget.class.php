@@ -27,7 +27,7 @@ class twidget extends tevents {
     $sidebars = tsidebars::i();
     $sidebars->insert($id, false, $sidebar, -1);
 
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $id;
   }
 
@@ -47,7 +47,7 @@ class twidget extends tevents {
       $content = $this->getcontent($id, $sidebar);
     }
     catch(Exception $e) {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
       return '';
     }
 
@@ -100,7 +100,7 @@ class twidget extends tevents {
       case 'include':
         $sidebar = self::findsidebar($id);
         $filename = self::getcachefilename($id, $sidebar);
-        litepublisher::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
+        litepubl::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
         break;
     }
   }
@@ -123,10 +123,10 @@ class twidget extends tevents {
   }
 
   public function getcontext($class) {
-    if (litepublisher::$urlmap->context instanceof $class) return litepublisher::$urlmap->context;
+    if (litepubl::$urlmap->context instanceof $class) return litepubl::$urlmap->context;
     //ajax
     $widgets = twidgets::i();
-    return litepublisher::$urlmap->getidcontext($widgets->idurlcontext);
+    return litepubl::$urlmap->getidcontext($widgets->idurlcontext);
   }
 
 } //class

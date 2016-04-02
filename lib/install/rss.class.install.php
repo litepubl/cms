@@ -8,11 +8,11 @@
 namespace litepubl;
 
 function trssInstall($self) {
-  litepublisher::$urlmap->add('/rss.xml', get_class($self) , 'posts');
-  $self->idcomments = litepublisher::$urlmap->add('/comments.xml', get_class($self) , 'comments');
-  $self->idpostcomments = litepublisher::$urlmap->add('/comments/', get_class($self) , null, 'begin');
-  litepublisher::$urlmap->add('/rss/categories/', get_class($self) , 'categories', 'begin');
-  litepublisher::$urlmap->add('/rss/tags/', get_class($self) , 'tags', 'begin');
+  litepubl::$urlmap->add('/rss.xml', get_class($self) , 'posts');
+  $self->idcomments = litepubl::$urlmap->add('/comments.xml', get_class($self) , 'comments');
+  $self->idpostcomments = litepubl::$urlmap->add('/comments/', get_class($self) , null, 'begin');
+  litepubl::$urlmap->add('/rss/categories/', get_class($self) , 'categories', 'begin');
+  litepubl::$urlmap->add('/rss/tags/', get_class($self) , 'tags', 'begin');
 
   tcomments::i()->changed = $self->commentschanged;
 
@@ -27,7 +27,7 @@ function trssInstall($self) {
 
 function trssUninstall($self) {
   turlmap::unsub($self);
-  litepublisher::$urlmap->updatefilter();
+  litepubl::$urlmap->updatefilter();
   tcomments::i()->unbind($self);
   $meta = tmetawidget::i();
   $meta->lock();

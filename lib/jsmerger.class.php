@@ -27,7 +27,7 @@ class tfilemerger extends titems {
 
   public function normfilename($filename) {
     $filename = trim($filename);
-    if (strbegin($filename, litepublisher::$paths->home)) $filename = substr($filename, strlen(litepublisher::$paths->home));
+    if (strbegin($filename, litepubl::$paths->home)) $filename = substr($filename, strlen(litepubl::$paths->home));
     if (empty($filename)) return false;
     $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
     $filename = '/' . ltrim($filename, '/');
@@ -147,7 +147,7 @@ class tfilemerger extends titems {
   }
 
   public function deletesection($section) {
-    $home = rtrim(litepublisher::$paths->home, DIRECTORY_SEPARATOR);
+    $home = rtrim(litepubl::$paths->home, DIRECTORY_SEPARATOR);
     @unlink($home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision)));
 
     $template = ttemplate::i();
@@ -160,7 +160,7 @@ class tfilemerger extends titems {
   }
 
   public function merge() {
-    $home = rtrim(litepublisher::$paths->home, DIRECTORY_SEPARATOR);
+    $home = rtrim(litepubl::$paths->home, DIRECTORY_SEPARATOR);
     $theme = ttheme::i();
     $template = ttemplate::i();
     $template->data[$this->basename] = $this->revision;
@@ -187,7 +187,7 @@ class tfilemerger extends titems {
       $template->data[$this->basename . '_' . $section] = $savefile;
     }
     $template->save();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     foreach (array_keys($this->items) as $section) {
       $old = $home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision - 1));
       @unlink($old);

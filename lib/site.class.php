@@ -41,7 +41,7 @@ class tsite extends tevents_storage {
         ));
       }
 
-      return litepublisher::$options->data[$prop];
+      return litepubl::$options->data[$prop];
     }
 
     return parent::__get($name);
@@ -53,7 +53,7 @@ class tsite extends tevents_storage {
       $this->addevent($name, $value['class'], $value['func']);
     } elseif (isset($this->mapoptions[$name])) {
       $prop = $this->mapoptions[$name];
-      if (is_string($prop)) litepublisher::$options->{$prop} = $value;
+      if (is_string($prop)) litepubl::$options->{$prop} = $value;
     } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
       $this->data[$name] = $value;
       $this->save();
@@ -63,12 +63,12 @@ class tsite extends tevents_storage {
 
   public function geturl() {
     if ($this->fixedurl) return $this->data['url'];
-    return 'http://' . litepublisher::$domain;
+    return 'http://' . litepubl::$domain;
   }
 
   public function getfiles() {
     if ($this->fixedurl) return $this->data['files'];
-    return 'http://' . litepublisher::$domain;
+    return 'http://' . litepubl::$domain;
   }
 
   public function seturl($url) {
@@ -83,11 +83,11 @@ class tsite extends tevents_storage {
   }
 
   public function getdomain() {
-    return litepublisher::$domain;
+    return litepubl::$domain;
   }
 
   public function getuserlink() {
-    if ($id = litepublisher::$options->user) {
+    if ($id = litepubl::$options->user) {
       if (!isset($this->users)) $this->users = array();
       if (isset($this->users[$id])) return $this->users[$id];
       $item = tusers::i()->getitem($id);
@@ -96,7 +96,7 @@ class tsite extends tevents_storage {
       } else {
         $page = $this->getdb('userpage')->getitem($id);
         if ((int)$page['idurl']) {
-          $result = sprintf('<a href="%s%s">%s</a>', $this->url, litepublisher::$urlmap->getvalue($page['idurl'], 'url') , $item['name']);
+          $result = sprintf('<a href="%s%s">%s</a>', $this->url, litepubl::$urlmap->getvalue($page['idurl'], 'url') , $item['name']);
         } else {
           $result = $item['name'];
         }
@@ -108,7 +108,7 @@ class tsite extends tevents_storage {
   }
 
   public function getliveuser() {
-    return '<?php echo litepublisher::$site->getuserlink(); ?>';
+    return '<?php echo litepubl::$site->getuserlink(); ?>';
   }
 
 } //class

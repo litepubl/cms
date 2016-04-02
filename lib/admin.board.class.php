@@ -27,17 +27,17 @@ class tadminboard extends tevents implements itemplate {
 
   public function request($id) {
     if ($s = tguard::checkattack()) return $s;
-    if (!litepublisher::$options->user) {
-      return litepublisher::$urlmap->redir('/admin/login/' . litepublisher::$site->q . 'backurl=' . urlencode(litepublisher::$urlmap->url));
+    if (!litepubl::$options->user) {
+      return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
     }
 
-    if (!litepublisher::$options->hasgroup('editor')) {
-      $url = tusergroups::i()->gethome(litepublisher::$options->group);
+    if (!litepubl::$options->hasgroup('editor')) {
+      $url = tusergroups::i()->gethome(litepubl::$options->group);
       if ($url == '/admin/') {
         return 403;
       }
 
-      return litepublisher::$urlmap->redir($url);
+      return litepubl::$urlmap->redir($url);
     }
 
     tlocal::usefile('admin');

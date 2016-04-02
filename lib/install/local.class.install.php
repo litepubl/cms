@@ -11,19 +11,19 @@ function tlocalInstall($self) {
   tlocal::$self = $self;
   //check double install
   if (count($self->ini) > 0) return;
-  preloadlanguage($self, litepublisher::$options->language);
-  litepublisher::$options->timezone = tlocal::get('installation', 'timezone');
+  preloadlanguage($self, litepubl::$options->language);
+  litepubl::$options->timezone = tlocal::get('installation', 'timezone');
 }
 
 function tlocalPreinstall($language) {
   $lang = new tlocal();
   tlocal::$self = $lang;
-  litepublisher::$classes->instances['tlocal'] = $lang;
+  litepubl::$classes->instances['tlocal'] = $lang;
   preloadlanguage($lang, $language);
 }
 
 function preloadlanguage($lang, $language) {
-  $dir = litepublisher::$paths->languages . $language . DIRECTORY_SEPARATOR;
+  $dir = litepubl::$paths->languages . $language . DIRECTORY_SEPARATOR;
   foreach (array(
     'default',
     'admin',

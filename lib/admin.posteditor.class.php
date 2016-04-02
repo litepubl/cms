@@ -66,7 +66,7 @@ class tposteditor extends tadminmenu {
   }
 
   public function getajaxlink($idpost) {
-    return litepublisher::$site->url . '/admin/ajaxposteditor.htm' . litepublisher::$site->q . "id=$idpost&get";
+    return litepubl::$site->url . '/admin/ajaxposteditor.htm' . litepubl::$site->q . "id=$idpost&get";
   }
 
   public function gettabs($post = null) {
@@ -127,10 +127,10 @@ class tposteditor extends tadminmenu {
     }
 
     $post = tpost::i($this->idpost);
-    if (!litepublisher::$options->hasgroup('editor')) {
-      if (litepublisher::$options->hasgroup('author')) {
+    if (!litepubl::$options->hasgroup('editor')) {
+      if (litepubl::$options->hasgroup('author')) {
         $this->isauthor = true;
-        if (($post->id != 0) && (litepublisher::$options->user != $post->author)) {
+        if (($post->id != 0) && (litepubl::$options->user != $post->author)) {
           return 403;
         }
       }
@@ -190,8 +190,8 @@ class tposteditor extends tadminmenu {
     $post->title = $title;
     $post->categories = $this->admintheme->processcategories();
 
-    if (($post->id == 0) && (litepublisher::$options->user > 1)) {
-      $post->author = litepublisher::$options->user;
+    if (($post->id == 0) && (litepubl::$options->user > 1)) {
+      $post->author = litepubl::$options->user;
     }
 
     if (isset($tags)) {

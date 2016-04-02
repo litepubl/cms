@@ -32,8 +32,8 @@ function tpostsUninstall($self) {
 
 function tpostsGetsitemap($self, $from, $count) {
   $result = array();
-  $commentpages = litepublisher::$options->commentpages;
-  $commentsperpage = litepublisher::$options->commentsperpage;
+  $commentpages = litepubl::$options->commentpages;
+  $commentsperpage = litepubl::$options->commentsperpage;
 
   $db = $self->db;
   $now = sqldate();

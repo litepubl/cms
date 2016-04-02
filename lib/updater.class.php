@@ -27,7 +27,7 @@ class tupdater extends tevents {
   }
 
   public static function getversions() {
-    return strtoarray(file_get_contents(litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
+    return strtoarray(file_get_contents(litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
   }
 
   public function getversion() {
@@ -39,7 +39,7 @@ class tupdater extends tevents {
   }
 
   public function getnext(array $versions) {
-    $cur = litepublisher::$options->version;
+    $cur = litepubl::$options->version;
     for ($i = count($versions) - 1; $i >= 0; $i--) {
       if (version_compare($cur, $versions[$i]) < 0) return $versions[$i];
     }
@@ -50,7 +50,7 @@ class tupdater extends tevents {
     $ver = (string)$ver;
     if (strlen($ver) == 3) $ver.= '0';
     if (strlen($ver) == 1) $ver.= '.00';
-    $filename = litepublisher::$paths->lib . 'update' . DIRECTORY_SEPARATOR . "update.$ver.php";
+    $filename = litepubl::$paths->lib . 'update' . DIRECTORY_SEPARATOR . "update.$ver.php";
     if (file_exists($filename)) {
       require_once ($filename);
       if ($this->log) tfiler::log("$filename is required file", 'update');
@@ -58,7 +58,7 @@ class tupdater extends tevents {
       if (function_exists($func)) {
         $func();
         if ($this->log) tfiler::log("$func is called", 'update');
-        litepublisher::$options->savemodified();
+        litepubl::$options->savemodified();
       }
     }
   }
@@ -70,22 +70,22 @@ class tupdater extends tevents {
     tlocal::clearcache();
     $this->versions = self::getversions();
     $nextver = $this->nextversion;
-    if ($log) tfiler::log("update started from litepublisher::$options->version to $this->version", 'update');
-    $v = litepublisher::$options->version + 0.01;
+    if ($log) tfiler::log("update started from litepubl::$options->version to $this->version", 'update');
+    $v = litepubl::$options->version + 0.01;
     while (version_compare($v, $nextver) <= 0) {
       $ver = (string)$v;
       if (strlen($ver) == 3) $ver.= '0';
       if (strlen($ver) == 1) $ver.= '.00';
       if ($log) tfiler::log("$v selected to update", 'update');
       $this->run($v);
-      litepublisher::$options->version = $ver;
-      litepublisher::$options->savemodified();
+      litepubl::$options->version = $ver;
+      litepubl::$options->savemodified();
       $v = $v + 0.01;
     }
 
     //ttheme::clearcache();
-    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-    litepublisher::$urlmap->clearcache();
+    tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+    litepubl::$urlmap->clearcache();
     tlocal::clearcache();
     tsidebars::fix();
     if (function_exists('apc_clear_cache')) {
@@ -128,7 +128,7 @@ class tupdater extends tevents {
   public function auto2($ver) {
     $lang = tlocal::i('service');
     $latest = $this->latest;
-    if ($latest == litepublisher::$options->version) return 'Already updated';
+    if ($latest == litepubl::$options->version) return 'Already updated';
     if (($ver == 0) || ($ver > $latest)) $ver = $latest;
     if ($this->download($ver)) {
       $this->result = $lang->successdownload;
@@ -141,7 +141,7 @@ class tupdater extends tevents {
 
   public function islatest() {
     if ($latest = $this->getlatest()) {
-      return version_compare($latest, litepublisher::$options->version);
+      return version_compare($latest, litepubl::$options->version);
     }
     return false;
   }
@@ -159,7 +159,7 @@ class tupdater extends tevents {
       return $this->releases;
     }
 
-    if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . litepublisher::$db->mysqli->server_info . '&litepubl=' . litepublisher::$options->version)) ||
+    if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . litepubl::$db->mysqli->server_info . '&litepubl=' . litepubl::$options->version)) ||
 
     ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))) {
       $this->releases = strtoarray($s);
@@ -195,11 +195,11 @@ class tupdater extends tevents {
   public function downloadshell($version) {
     $filename = "litepublisher.$version.tar.gz";
     $cmd = array();
-    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $cmd[] = 'cd ' . litepubl::$paths->backup;
     $cmd[] = 'wget http://litepublisher.googlecode.com/files/' . $filename;
-    $cmd[] = 'cd ' . litepublisher::$paths->home;
-    $cmd[] = sprintf('tar -xf %s%s -p --overwrite', litepublisher::$paths->backup, $filename);
-    $cmd[] = 'rm ' . litepublisher::$paths->backup . $filename;
+    $cmd[] = 'cd ' . litepubl::$paths->home;
+    $cmd[] = sprintf('tar -xf %s%s -p --overwrite', litepubl::$paths->backup, $filename);
+    $cmd[] = 'rm ' . litepubl::$paths->backup . $filename;
     //dumpstr(implode("\n", $cmd));
     exec(implode("\n", $cmd) , $r);
     if ($s = implode("\n", $r)) return $s;

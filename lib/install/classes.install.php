@@ -9,8 +9,8 @@ namespace litepubl;
 
 function install_engine($email, $language) {
   //forward create folders
-  @mkdir(litepublisher::$paths->data . 'themes', 0777);
-  @chmod(litepublisher::$paths->data . 'themes', 0777);
+  @mkdir(litepubl::$paths->data . 'themes', 0777);
+  @chmod(litepubl::$paths->data . 'themes', 0777);
 
   $options = toptions::i();
   $options->lock();
@@ -24,30 +24,29 @@ function install_engine($email, $language) {
 }
 
 function parse_classes_ini($inifile) {
-  $install_dir = litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'ini' . DIRECTORY_SEPARATOR;
+  $install_dir = litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'ini' . DIRECTORY_SEPARATOR;
   if (!$inifile) {
     $inifile = $install_dir . 'classes.ini';
   } elseif (file_exists($install_dir . $inifile)) {
     $inifile = $install_dir . $inifile;
-  } elseif (file_exists(litepublisher::$paths->home . $inifile)) {
-    $inifile = litepublisher::$paths->home . $inifile;
+  } elseif (file_exists(litepubl::$paths->home . $inifile)) {
+    $inifile = litepubl::$paths->home . $inifile;
   } elseif (!file_exists($inifile)) {
     $inifile = $install_dir . 'classes.ini';
   }
 
   $ini = parse_ini_file($inifile, true);
 
-  $classes = litepublisher::$classes;
+  $classes = litepubl::$classes;
   $replace = dbversion ? '.class.db.' : '.class.files.';
   $exclude = !dbversion ? '.class.db.' : '.class.files.';
   foreach ($ini['items'] as $class => $filename) {
     //exclude files
     if (strpos($filename, $exclude)) continue;
 
-    $class = trim($class, "\"' ");
-    if (!file_exists(litepublisher::$paths->lib . $filename)) {
+    if (!file_exists(litepubl::$paths->lib . $filename)) {
       $filename = str_replace('.class.', $replace, $filename);
-      if (!file_exists(litepublisher::$paths->lib . $filename)) continue;
+      if (!file_exists(litepubl::$paths->lib . $filename)) continue;
     }
 
     $item = array(
@@ -57,17 +56,17 @@ function parse_classes_ini($inifile) {
 
     if (isset($ini['debug'][$class])) {
       $filename = $ini['debug'][$class];
-      if (file_exists(litepublisher::$paths->lib . $filename)) {
+      if (file_exists(litepubl::$paths->lib . $filename)) {
         $item[2] = $filename;
       } else {
         $filename = str_replace('.class.', $replace, $filename);
-        if (file_exists(litepublisher::$paths->lib . $filename)) {
+        if (file_exists(litepubl::$paths->lib . $filename)) {
           $item[2] = $filename;
         }
       }
     }
 
-    $classes->items[$class] = $item;
+    $classes->items['litepubl\\' . $class] = $item;
   }
 
   $classes->classes = $ini['classes'];
@@ -77,8 +76,8 @@ function parse_classes_ini($inifile) {
 }
 
 function installClasses() {
-  litepublisher::$urlmap = turlmap::i();
-  litepublisher::$urlmap->lock();
+  litepubl::$urlmap = turlmap::i();
+  litepubl::$urlmap->lock();
   $posts = tposts::i();
   $posts->lock();
   $js = tjsmerger::i();
@@ -91,10 +90,7 @@ function installClasses() {
   $xmlrpc->lock();
   ttheme::$defaultargs = array();
   $theme = ttheme::getinstance('default');
-  //  $html = tadminhtml::i();
-  //      $html->loadinstall();
-  foreach (litepublisher::$classes->items as $class => $item) {
-    //echo "$class<br>\n";
+  foreach (litepubl::$classes->items as $class => $item) {
     if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
     $obj = getinstance($class);
     if (method_exists($obj, 'install')) $obj->install();
@@ -114,5 +110,5 @@ function installClasses() {
   $css->unlock();
   $js->unlock();
   $posts->unlock();
-  litepublisher::$urlmap->unlock();
+  litepubl::$urlmap->unlock();
 }

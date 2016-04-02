@@ -24,11 +24,11 @@ class tadminsubscribers extends tadminform {
 
   public function request($arg) {
     $this->cache = false;
-    if (!($this->iduser = litepublisher::$options->user)) {
+    if (!($this->iduser = litepubl::$options->user)) {
       //trick - hidden registration of comuser. Auth by get
       $users = tusers::i();
       if (isset($_GET['auth']) && ($cookie = trim($_GET['auth']))) {
-        if (($this->iduser = $users->findcookie($cookie)) && litepublisher::$options->reguser) {
+        if (($this->iduser = $users->findcookie($cookie)) && litepubl::$options->reguser) {
           if ('comuser' == $users->getvalue($this->iduser, 'status')) {
             // bingo!
             $this->newreg = true;
@@ -40,15 +40,15 @@ class tadminsubscribers extends tadminform {
             $cookie = md5uniq();
             $expired = time() + 31536000;
 
-            $item['cookie'] = litepublisher::$options->hash($cookie);
+            $item['cookie'] = litepubl::$options->hash($cookie);
             $item['expired'] = sqldate($expired);
             $users->edit($this->iduser, $item);
 
-            litepublisher::$options->user = $this->iduser;
-            litepublisher::$options->updategroup();
+            litepubl::$options->user = $this->iduser;
+            litepubl::$options->updategroup();
 
-            litepublisher::$options->setcookie('litepubl_user_id', $this->iduser, $expired);
-            litepublisher::$options->setcookie('litepubl_user', $cookie, $expired);
+            litepubl::$options->setcookie('litepubl_user_id', $this->iduser, $expired);
+            litepubl::$options->setcookie('litepubl_user', $cookie, $expired);
           } else {
             $this->iduser = false;
           }
@@ -57,8 +57,8 @@ class tadminsubscribers extends tadminform {
     }
 
     if (!$this->iduser) {
-      $url = litepublisher::$site->url . '/admin/login/' . litepublisher::$site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
-      return litepublisher::$urlmap->redir($url);
+      $url = litepubl::$site->url . '/admin/login/' . litepubl::$site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
+      return litepubl::$urlmap->redir($url);
     }
 
     if ('hold' == tusers::i()->getvalue($this->iduser, 'status')) return 403;

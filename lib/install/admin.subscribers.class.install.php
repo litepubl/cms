@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tadminsubscribersInstall($self) {
-  litepublisher::$urlmap->addget('/admin/subscribers/', get_class($self));
+  litepubl::$urlmap->addget('/admin/subscribers/', get_class($self));
 }
 
 function tadminsubscribersUninstall($self) {

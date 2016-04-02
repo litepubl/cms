@@ -29,7 +29,7 @@ static::$instances = array();
 return static::$instances[$name][$id];
 }
 
-    $self = litepublisher::$classes->newitem($name, $class, $id);
+    $self = litepubl::$classes->newitem($name, $class, $id);
     return $self->loaddata($id);
   }
 

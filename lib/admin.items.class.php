@@ -52,7 +52,7 @@ class adminitems {
 
     $result = $html->fixquote($result);
     $theme = ttheme::i();
-    $result.= $theme->getpages($menu->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($menu->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 

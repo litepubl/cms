@@ -19,12 +19,12 @@ class tadminmenus extends tmenus {
     if ($id && isset($this->items[$id])) {
       $this->items[$id]['title'] = $title;
       $this->save();
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
   }
 
   public function getdir() {
-    return litepublisher::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
   }
 
   public function getadmintitle($name) {
@@ -87,7 +87,7 @@ class tadminmenus extends tmenus {
   public function getchilds($id) {
     if ($id == 0) {
       $result = array();
-      $options = litepublisher::$options;
+      $options = litepubl::$options;
       foreach ($this->tree as $iditem => $items) {
         if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
       }
@@ -116,7 +116,7 @@ class tadminmenus extends tmenus {
   }
 
   public function exclude($id) {
-    if (!litepublisher::$options->hasgroup($this->items[$id]['group'])) return true;
+    if (!litepubl::$options->hasgroup($this->items[$id]['group'])) return true;
     return $this->onexclude($id);
   }
 
@@ -183,15 +183,15 @@ class tadminmenu extends tmenu {
       return $err;
     }
 
-    if (!litepublisher::$options->user) {
+    if (!litepubl::$options->user) {
       turlmap::nocache();
-      return litepublisher::$urlmap->redir('/admin/login/' . litepublisher::$site->q . 'backurl=' . urlencode(litepublisher::$urlmap->url));
+      return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
     }
 
-    if (!litepublisher::$options->hasgroup($group)) {
-      $url = tusergroups::i()->gethome(litepublisher::$options->group);
+    if (!litepubl::$options->hasgroup($group)) {
+      $url = tusergroups::i()->gethome(litepubl::$options->group);
       turlmap::nocache();
-      return litepublisher::$urlmap->redir($url);
+      return litepubl::$urlmap->redir($url);
     }
   }
 
@@ -226,22 +226,22 @@ class tadminmenu extends tmenu {
 
   protected function doprocessform() {
     if (tguard::post()) {
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
 
     return parent::doprocessform();
   }
 
   public function getcont() {
-    if (litepublisher::$options->admincache) {
+    if (litepubl::$options->admincache) {
       $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-      $filename = 'adminmenu.' . litepublisher::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-      if ($result = litepublisher::$urlmap->cache->get($filename)) {
+      $filename = 'adminmenu.' . litepubl::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+      if ($result = litepubl::$urlmap->cache->get($filename)) {
         return $result;
       }
 
       $result = parent::getcont();
-      litepublisher::$urlmap->cache->set($filename, $result);
+      litepubl::$urlmap->cache->set($filename, $result);
       return $result;
     } else {
       return parent::getcont();
@@ -277,12 +277,12 @@ class tadminmenu extends tmenu {
   }
 
   public function getadminurl() {
-    return litepublisher::$site->url . $this->url . litepublisher::$site->q . 'id';
+    return litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
   }
 
   public function getfrom($perpage, $count) {
-    if (litepublisher::$urlmap->page <= 1) return 0;
-    return min($count, (litepublisher::$urlmap->page - 1) * $perpage);
+    if (litepubl::$urlmap->page <= 1) return 0;
+    return min($count, (litepubl::$urlmap->page - 1) * $perpage);
   }
 
 } //class
@@ -312,7 +312,7 @@ class admintheme extends basetheme {
 
   public static function i() {
     $result = getinstance(__class__);
-    if (!$result->name && ($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+    if (!$result->name && ($context = litepubl::$urlmap->context) && isset($context->idview)) {
       $result->name = tview::getview($context)->adminname;
       $result->load();
     }
@@ -437,9 +437,9 @@ class admintheme extends basetheme {
       }
     }
 
-    $a['href'] = str_replace('?', litepublisher::$site->q, $a['href']);
+    $a['href'] = str_replace('?', litepubl::$site->q, $a['href']);
     if (!strbegin($a['href'], 'http')) {
-      $a['href'] = litepublisher::$site->url . $a['href'];
+      $a['href'] = litepubl::$site->url . $a['href'];
     }
 
     if (isset($a['icon'])) {
@@ -584,12 +584,12 @@ class admintheme extends basetheme {
       call_user_func_array($this->onfileperm, array(
         $args
       ));
-    } else if (litepublisher::$options->show_file_perm) {
+    } else if (litepubl::$options->show_file_perm) {
       $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
     }
 
     $files = tfiles::i();
-    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
+    $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
     $db = $files->db;
     //total count files
@@ -688,7 +688,7 @@ class tadminhtml {
   public function loadinstall() {
     if (isset($this->ini['installation'])) return;
     tlocal::usefile('install');
-    if ($v = parse_ini_file(litepublisher::$paths->languages . 'install.ini', true)) {
+    if ($v = parse_ini_file(litepubl::$paths->languages . 'install.ini', true)) {
       $this->ini = $v + $this->ini;
     }
   }
@@ -702,11 +702,11 @@ class tadminhtml {
   }
 
   public static function getadminlink($path, $params) {
-    return litepublisher::$site->url . $path . litepublisher::$site->q . $params;
+    return litepubl::$site->url . $path . litepubl::$site->q . $params;
   }
 
   public static function getlink($url, $title) {
-    return sprintf('<a href="%s%s">%s</a>', litepublisher::$site->url, $url, $title);
+    return sprintf('<a href="%s%s">%s</a>', litepubl::$site->url, $url, $title);
   }
 
   public static function array2combo(array $items, $selected) {
@@ -1044,7 +1044,7 @@ class ulist {
     return strtr(is_int($name) ? $this->value : $this->item, array(
       '$name' => $name,
       '$value' => $value,
-      '$site.url' => litepublisher::$site->url,
+      '$site.url' => litepubl::$site->url,
     ));
   }
 
@@ -1089,7 +1089,7 @@ class ulist {
   public function links(array $props) {
     $this->item = $this->link;
     $result = $this->get($props);
-    return str_replace('$site.url', litepublisher::$site->url, $result);
+    return str_replace('$site.url', litepubl::$site->url, $result);
   }
 
 } //class
@@ -1701,7 +1701,7 @@ class tajaxposteditor extends tevents {
   }
 
   public static function auth() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if (!$options->user) return self::error403();
     if (!$options->hasgroup('editor')) {
       if (!$options->hasgroup('author')) return self::error403();
@@ -1714,15 +1714,15 @@ class tajaxposteditor extends tevents {
 
     if ($err = self::auth()) return $err;
     $this->idpost = tadminhtml::idparam();
-    $this->isauthor = litepublisher::$options->ingroup('author');
+    $this->isauthor = litepubl::$options->ingroup('author');
     if ($this->idpost > 0) {
       $posts = tposts::i();
       if (!$posts->itemexists($this->idpost)) return self::error403();
-      if (!litepublisher::$options->hasgroup('editor')) {
-        if (litepublisher::$options->hasgroup('author')) {
+      if (!litepubl::$options->hasgroup('editor')) {
+        if (litepubl::$options->hasgroup('author')) {
           $this->isauthor = true;
           $post = tpost::i($this->idpost);
-          if (litepublisher::$options->user != $post->author) return self::error403();
+          if (litepubl::$options->user != $post->author) return self::error403();
         }
       }
     }
@@ -1885,7 +1885,7 @@ class tposteditor extends tadminmenu {
   }
 
   public function getajaxlink($idpost) {
-    return litepublisher::$site->url . '/admin/ajaxposteditor.htm' . litepublisher::$site->q . "id=$idpost&get";
+    return litepubl::$site->url . '/admin/ajaxposteditor.htm' . litepubl::$site->q . "id=$idpost&get";
   }
 
   public function gettabs($post = null) {
@@ -1946,10 +1946,10 @@ class tposteditor extends tadminmenu {
     }
 
     $post = tpost::i($this->idpost);
-    if (!litepublisher::$options->hasgroup('editor')) {
-      if (litepublisher::$options->hasgroup('author')) {
+    if (!litepubl::$options->hasgroup('editor')) {
+      if (litepubl::$options->hasgroup('author')) {
         $this->isauthor = true;
-        if (($post->id != 0) && (litepublisher::$options->user != $post->author)) {
+        if (($post->id != 0) && (litepubl::$options->user != $post->author)) {
           return 403;
         }
       }
@@ -2009,8 +2009,8 @@ class tposteditor extends tadminmenu {
     $post->title = $title;
     $post->categories = $this->admintheme->processcategories();
 
-    if (($post->id == 0) && (litepublisher::$options->user > 1)) {
-      $post->author = litepublisher::$options->user;
+    if (($post->id == 0) && (litepubl::$options->user > 1)) {
+      $post->author = litepubl::$options->user;
     }
 
     if (isset($tags)) {

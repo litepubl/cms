@@ -12,7 +12,7 @@ class admintheme extends basetheme {
 
   public static function i() {
     $result = getinstance(__class__);
-    if (!$result->name && ($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+    if (!$result->name && ($context = litepubl::$urlmap->context) && isset($context->idview)) {
       $result->name = tview::getview($context)->adminname;
       $result->load();
     }
@@ -137,9 +137,9 @@ class admintheme extends basetheme {
       }
     }
 
-    $a['href'] = str_replace('?', litepublisher::$site->q, $a['href']);
+    $a['href'] = str_replace('?', litepubl::$site->q, $a['href']);
     if (!strbegin($a['href'], 'http')) {
-      $a['href'] = litepublisher::$site->url . $a['href'];
+      $a['href'] = litepubl::$site->url . $a['href'];
     }
 
     if (isset($a['icon'])) {
@@ -284,12 +284,12 @@ class admintheme extends basetheme {
       call_user_func_array($this->onfileperm, array(
         $args
       ));
-    } else if (litepublisher::$options->show_file_perm) {
+    } else if (litepubl::$options->show_file_perm) {
       $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
     }
 
     $files = tfiles::i();
-    $where = litepublisher::$options->ingroup('editor') ? '' : ' and author = ' . litepublisher::$options->user;
+    $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
     $db = $files->db;
     //total count files

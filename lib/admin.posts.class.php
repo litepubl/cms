@@ -16,8 +16,8 @@ class tadminposts extends tadminmenu {
 
   public function canrequest() {
     $this->isauthor = false;
-    if (!litepublisher::$options->hasgroup('editor')) {
-      $this->isauthor = litepublisher::$options->hasgroup('author');
+    if (!litepubl::$options->hasgroup('editor')) {
+      $this->isauthor = litepubl::$options->hasgroup('author');
     }
   }
 
@@ -38,7 +38,7 @@ class tadminposts extends tadminmenu {
     if (!$posts->itemexists($id)) return $this->notfound;
     $post = tpost::i($id);
     if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($action))) return $r;
-    if ($this->isauthor && (litepublisher::$options->user != $post->author)) return $this->notfound;
+    if ($this->isauthor && (litepubl::$options->user != $post->author)) return $this->notfound;
     if (!$this->confirmed) {
       $args = new targs();
       $args->id = $id;
@@ -75,7 +75,7 @@ class tadminposts extends tadminmenu {
 
   public function gettable($posts, $where) {
     $perpage = 20;
-    if ($this->isauthor) $where.= ' and author = ' . litepublisher::$options->user;
+    if ($this->isauthor) $where.= ' and author = ' . litepubl::$options->user;
     $count = $posts->db->getcount($where);
     $from = $this->getfrom($perpage, $count);
     $items = $posts->select($where, " order by posted desc limit $from, $perpage");
@@ -122,7 +122,7 @@ class tadminposts extends tadminmenu {
 
     $form->submit = false;
     $result = $form->get();
-    $result.= $this->theme->getpages('/admin/posts/', litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $this->theme->getpages('/admin/posts/', litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -131,7 +131,7 @@ class tadminposts extends tadminmenu {
     $posts->lock();
     $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
     if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($status))) return $r;
-    $iduser = litepublisher::$options->user;
+    $iduser = litepubl::$options->user;
     foreach ($_POST as $key => $id) {
       if (!is_numeric($id)) continue;
       $id = (int)$id;

@@ -13,7 +13,7 @@ class tsession {
   public $lifetime;
 
   public function __construct() {
-    $this->prefix = 'ses-' . litepublisher::$domain . '-';
+    $this->prefix = 'ses-' . litepubl::$domain . '-';
     $this->lifetime = 3600;
     $truefunc = array(
       $this,

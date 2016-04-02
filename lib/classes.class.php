@@ -15,13 +15,13 @@ class tclasses extends titems {
   public $instances;
 
   public static function i() {
-    if (!isset(litepublisher::$classes)) {
+    if (!isset(litepubl::$classes)) {
       $classname = get_called_class();
-      litepublisher::$classes = new $classname();
-      litepublisher::$classes->instances[$classname] = litepublisher::$classes;
+      litepubl::$classes = new $classname();
+      litepubl::$classes->instances[$classname] = litepubl::$classes;
     }
 
-    return litepublisher::$classes;
+    return litepubl::$classes;
   }
 
   protected function create() {
@@ -75,12 +75,8 @@ public function class_exists($classname) {
 return $classname;
 }
 
-if (!strpos($classname, '\\')) {
-foreach (array('litepubl\\', 'litepubl\plugins', 'litepubl\shop') as $ns) {
-if (class_exists($ns . $classname, false)) {
-return $ns . $classname;
-}
-}
+if (!strpos($classname, '\\') && class_exists('litepubl\\' . $classname, false)) {
+return 'litepubl\\'  . $classname;
 }
 
 return false;
@@ -168,9 +164,9 @@ $class = $this->remap[$class];
     } else if (($subclass = basename($class)) && ($subclass != $class) && isset($this->items[$subclass])) {
       $item = $this->items[$subclass];
     } else if (isset($this->interfaces[$class])) {
-      return litepublisher::$paths->lib . $this->interfaces[$class];
+      return litepubl::$paths->lib . $this->interfaces[$class];
     } else if ($subclass && ($subclass != $class) && isset($this->interfaces[$subclass])) {
-      return litepublisher::$paths->lib . $this->interfaces[$subclass];
+      return litepubl::$paths->lib . $this->interfaces[$subclass];
     } else {
       return false;
     }
@@ -182,19 +178,19 @@ $class = $this->remap[$class];
      * 2 = filename for debug
     */
 
-    $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
+    $filename = (litepubl::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
     if (Empty($item[1])) {
-      return litepublisher::$paths->lib . $filename;
+      return litepubl::$paths->lib . $filename;
     }
 
     //may be is subdir
     $filename = trim($item[1], '\\/') . DIRECTORY_SEPARATOR . $filename;
-    if (file_exists(litepublisher::$paths->plugins . $filename)) {
-      return litepublisher::$paths->plugins . $filename;
+    if (file_exists(litepubl::$paths->plugins . $filename)) {
+      return litepubl::$paths->plugins . $filename;
     }
 
-    if (file_exists(litepublisher::$paths->home . $filename)) {
-      return litepublisher::$paths->home . $filename;
+    if (file_exists(litepubl::$paths->home . $filename)) {
+      return litepubl::$paths->home . $filename;
     }
 
     return false;

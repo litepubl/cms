@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function twidgetscacheInstall($self) {
-  litepublisher::$urlmap->onclearcache = $self->onclearcache;
+  litepubl::$urlmap->onclearcache = $self->onclearcache;
 }
 
 function twidgetscacheUninstall($self) {

@@ -24,12 +24,12 @@ class tadminmenus extends tmenus {
     if ($id && isset($this->items[$id])) {
       $this->items[$id]['title'] = $title;
       $this->save();
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
   }
 
   public function getdir() {
-    return litepublisher::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
   }
 
   public function getadmintitle($name) {
@@ -92,7 +92,7 @@ class tadminmenus extends tmenus {
   public function getchilds($id) {
     if ($id == 0) {
       $result = array();
-      $options = litepublisher::$options;
+      $options = litepubl::$options;
       foreach ($this->tree as $iditem => $items) {
         if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
       }
@@ -121,7 +121,7 @@ class tadminmenus extends tmenus {
   }
 
   public function exclude($id) {
-    if (!litepublisher::$options->hasgroup($this->items[$id]['group'])) return true;
+    if (!litepubl::$options->hasgroup($this->items[$id]['group'])) return true;
     return $this->onexclude($id);
   }
 

@@ -32,7 +32,7 @@ class tcommontags extends titems implements itemplate {
   }
 
   protected function createfactory() {
-    $this->factory = litepublisher::$classes->getfactory($this);
+    $this->factory = litepubl::$classes->getfactory($this);
     $this->contents = new ttagcontent($this);
     if (!$this->dbversion) $this->data['itemsposts'] = array();
     $this->itemsposts = new titemspostsowner($this);
@@ -47,7 +47,7 @@ class tcommontags extends titems implements itemplate {
 
   public function select($where, $limit) {
     if ($where != '') $where.= ' and ';
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $t = $this->thistable;
     $u = $db->urlmap;
     $res = $db->query("select $t.*, $u.url from $t, $u
@@ -65,7 +65,7 @@ class tcommontags extends titems implements itemplate {
     $sorted = $this->getsorted($parent, $sortname, $count);
     if (count($sorted) == 0) return '';
     $result = '';
-    $iconenabled = !litepublisher::$options->icondisabled;
+    $iconenabled = !litepubl::$options->icondisabled;
     $theme = ttheme::i();
     $args = new targs();
     $args->rel = $this->PermalinkIndex;
@@ -120,7 +120,7 @@ class tcommontags extends titems implements itemplate {
 
   protected function updatecount(array $items) {
     if (count($items) == 0) return;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     //next queries update values
     $items = implode(',', $items);
     $thistable = $this->thistable;
@@ -168,12 +168,12 @@ class tcommontags extends titems implements itemplate {
 
     $id = $this->db->add($item);
     $this->items[$id] = $item;
-    $idurl = litepublisher::$urlmap->add($url, get_class($this) , $id, $this->urltype);
+    $idurl = litepubl::$urlmap->add($url, get_class($this) , $id, $this->urltype);
     $this->setvalue($id, 'idurl', $idurl);
     $this->items[$id]['url'] = $url;
     $this->added($id);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $id;
   }
 
@@ -196,30 +196,30 @@ class tcommontags extends titems implements itemplate {
     }
 
     if ($item['url'] != $url) {
-      if (($urlitem = litepublisher::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
+      if (($urlitem = litepubl::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
         $url = $linkgen->MakeUnique($url);
       }
-      litepublisher::$urlmap->setidurl($item['idurl'], $url);
-      litepublisher::$urlmap->addredir($item['url'], $url);
+      litepubl::$urlmap->setidurl($item['idurl'], $url);
+      litepubl::$urlmap->addredir($item['url'], $url);
       $item['url'] = $url;
     }
 
     $this->items[$id] = $item;
     $this->save();
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {
     $item = $this->getitem($id);
-    litepublisher::$urlmap->deleteitem($item['idurl']);
+    litepubl::$urlmap->deleteitem($item['idurl']);
     $this->contents->delete($id);
     $list = $this->itemsposts->getposts($id);
     $this->itemsposts->deleteitem($id);
     parent::delete($id);
     if ($this->postpropname) $this->itemsposts->updateposts($list, $this->postpropname);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function createnames($list) {
@@ -252,7 +252,7 @@ class tcommontags extends titems implements itemplate {
     foreach ($list as $id) {
       if (!isset($this->items[$id])) continue;
       $item = $this->items[$id];
-      $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', litepublisher::$site->url . $item['url'], $item['title']);
+      $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', litepubl::$site->url . $item['url'], $item['title']);
     }
     return $result;
   }
@@ -302,10 +302,10 @@ class tcommontags extends titems implements itemplate {
     }
 
     $view = tview::getview($this);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
     $pages = (int)ceil($item['itemscount'] / $perpage);
-    if ((litepublisher::$urlmap->page > 1) && (litepublisher::$urlmap->page > $pages)) {
-      return sprintf('<?php litepublisher::$urlmap->redir(\'%s\'); ?>', $item['url']);
+    if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+      return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
     }
 
   }
@@ -368,7 +368,7 @@ class tcommontags extends titems implements itemplate {
   public function getcontent() {
     if ($s = $this->contents->getcontent($this->id)) {
       $pages = explode('<!--nextpage-->', $s);
-      $page = litepublisher::$urlmap->page - 1;
+      $page = litepubl::$urlmap->page - 1;
       if (isset($pages[$page])) return $pages[$page];
     }
 
@@ -431,9 +431,9 @@ class tcommontags extends titems implements itemplate {
     $includechilds = (int)$item['includechilds'];
 
     $view = tview::i($item['idview']);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
     $order = $view->invertorder ? 'asc' : 'desc';
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+    $from = (litepubl::$urlmap->page - 1) * $perpage;
 
     $posts = $this->factory->posts;
     $p = $posts->thistable;
@@ -511,7 +511,7 @@ class ttagcontent extends tdata {
   }
 
   private function getfilename($id) {
-    return litepublisher::$paths->data . $this->owner->basename . DIRECTORY_SEPARATOR . $id;
+    return litepubl::$paths->data . $this->owner->basename . DIRECTORY_SEPARATOR . $id;
   }
 
   public function getitem($id) {

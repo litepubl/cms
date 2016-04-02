@@ -26,11 +26,11 @@ class tmenus extends titems {
   }
 
   public function getlink($id) {
-    return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>', litepublisher::$site->url, $this->items[$id]['url'], $this->items[$id]['title']);
+    return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>', litepubl::$site->url, $this->items[$id]['url'], $this->items[$id]['title']);
   }
 
   public function getdir() {
-    return litepublisher::$paths->data . 'menus' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->data . 'menus' . DIRECTORY_SEPARATOR;
   }
 
   public function add(tmenu $item) {
@@ -68,14 +68,14 @@ class tmenus extends titems {
     }
 
     $item->id = $id;
-    $item->idurl = litepublisher::$urlmap->Add($item->url, get_class($item) , $item->id);
+    $item->idurl = litepubl::$urlmap->Add($item->url, get_class($item) , $item->id);
     if ($item->status != 'draft') $item->status = 'published';
     $this->lock();
     $this->sort();
     $item->save();
     $this->unlock();
     $this->added($id);
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $id;
   }
 
@@ -109,7 +109,7 @@ class tmenus extends titems {
     $this->sort();
     $this->added($this->autoid);
     $this->unlock();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $this->autoid;
   }
 
@@ -118,16 +118,16 @@ class tmenus extends titems {
     $item['order'] = $this->autoid;
     $item['status'] = 'published';
 
-    if ($idurl = litepublisher::$urlmap->urlexists($item['url'])) {
+    if ($idurl = litepubl::$urlmap->urlexists($item['url'])) {
       $item['idurl'] = $idurl;
     } else {
-      $item['idurl'] = litepublisher::$urlmap->add($item['url'], $item['class'], $this->autoid, 'get');
+      $item['idurl'] = litepubl::$urlmap->add($item['url'], $item['class'], $this->autoid, 'get');
     }
 
     $this->items[$this->autoid] = $item;
     $this->sort();
     $this->save();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $this->autoid;
   }
 
@@ -142,7 +142,7 @@ class tmenus extends titems {
     $item->save();
     $this->unlock();
     $this->edited($item->id);
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {
@@ -150,7 +150,7 @@ class tmenus extends titems {
     if ($id == $this->idhome) return false;
     if ($this->haschilds($id)) return false;
     if ($this->items[$id]['idurl'] > 0) {
-      litepublisher::$urlmap->delete($this->items[$id]['url']);
+      litepubl::$urlmap->delete($this->items[$id]['url']);
     }
     $this->lock();
     unset($this->items[$id]);
@@ -158,7 +158,7 @@ class tmenus extends titems {
     $this->unlock();
     $this->deleted($id);
     litepubl::$storage->remove($this->dir . $id);
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return true;
   }
 
@@ -193,7 +193,7 @@ class tmenus extends titems {
     $this->sort();
     $this->unlock();
     $this->deleted($id);
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return true;
   }
 
@@ -530,7 +530,7 @@ class tmenu extends titem implements itemplate {
   }
 
   public function getlink() {
-    return litepublisher::$site->url . $this->url;
+    return litepubl::$site->url . $this->url;
   }
 
   public function getcontent() {

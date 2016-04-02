@@ -28,7 +28,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
 
           default:
-            $post->comstatus = litepublisher::$options->comstatus;
+            $post->comstatus = litepubl::$options->comstatus;
             break;
         }
       } else {
@@ -44,12 +44,12 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
 
           default:
-            $post->comstatus = litepublisher::$options->comstatus;
+            $post->comstatus = litepubl::$options->comstatus;
             break;
         }
       }
     } else {
-      $post->comstatus = litepublisher::$options->comstatus;
+      $post->comstatus = litepubl::$options->comstatus;
     }
 
     if (isset($struct["mt_allow_pings"])) {
@@ -66,7 +66,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
 
           default:
-            $post->pingenabled = litepublisher::$options->pingenabled;
+            $post->pingenabled = litepubl::$options->pingenabled;
             break;
         }
       } else {
@@ -82,12 +82,12 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
 
           default:
-            $post->pingenabled = litepublisher::$options->pingenabled;
+            $post->pingenabled = litepubl::$options->pingenabled;
             break;
         }
       }
     } else {
-      $post->pingenabled = litepublisher::$options->pingenabled;
+      $post->pingenabled = litepubl::$options->pingenabled;
     }
   }
 
@@ -234,8 +234,8 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         'description' => $categories->contents->getdescription($item['id']) ,
         'categoryName' => $item['title'],
         'title' => $item['title'],
-        'htmlUrl' => litepublisher::$site->url . $item['url'],
-        'rssUrl' => litepublisher::$site->url . "/rss/categories/$id.xml"
+        'htmlUrl' => litepubl::$site->url . $item['url'],
+        'rssUrl' => litepubl::$site->url . "/rss/categories/$id.xml"
       );
     }
 
@@ -330,7 +330,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
       'wp_password' => $post->password,
       'wp_author_id' => $post->author,
       'wp_author_display_name' => 'admin',
-      'date_created_gmt' => new IXR_Date($post->posted - litepublisher::$options->gmt) ,
+      'date_created_gmt' => new IXR_Date($post->posted - litepubl::$options->gmt) ,
       'publish' => $post->status == 'published' ? 1 : 0
     );
   }
@@ -340,7 +340,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     $this->auth($username, $password, 'author');
     $count = (int)$numberOfPosts;
     $posts = tposts::i();
-    $list = $posts->getrecent(litepublisher::$options->user, $count);
+    $list = $posts->getrecent(litepubl::$options->user, $count);
     $result = array();
     foreach ($list as $id) {
       $post = tpost::i($id);

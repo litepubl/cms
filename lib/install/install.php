@@ -7,30 +7,30 @@
 
 namespace litepubl;
 
-litepublisher::$classes = tclasses::i();
-litepublisher::$options = toptions::i();
-litepublisher::$site = tsite::i();
+litepubl::$classes = tclasses::i();
+litepubl::$options = toptions::i();
+litepubl::$site = tsite::i();
 
 if (!defined('litepublisher_mode')) {
   define('litepublisher_mode', 'install');
 }
 
 /*
-if (litepublisher::$debug) {
-  require_once(litepublisher::$paths->lib . 'filer.class.php');
-  if (is_dir(litepublisher::$paths->data)) tfiler::delete(litepublisher::$paths->data, true, true);
+if (litepubl::$debug) {
+  require_once(litepubl::$paths->lib . 'filer.class.php');
+  if (is_dir(litepubl::$paths->data)) tfiler::delete(litepubl::$paths->data, true, true);
 }
 */
 
-require_once (litepublisher::$paths->lib . 'installer.class.php');
+require_once (litepubl::$paths->lib . 'installer.class.php');
 
 $installer = new tinstaller();
 $installer->install();
 
-if (litepublisher::$options instanceof toptions) {
-  litepublisher::$options->savemodified();
-  if (!empty(litepublisher::$options->errorlog)) {
-    echo litepublisher::$options->errorlog;
+if (litepubl::$options instanceof toptions) {
+  litepubl::$options->savemodified();
+  if (!empty(litepubl::$options->errorlog)) {
+    echo litepubl::$options->errorlog;
   }
 }
 

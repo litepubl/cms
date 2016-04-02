@@ -22,7 +22,7 @@ class tdboptimizer extends tevents {
   }
 
   public function garbageposts($table) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $deleted = $db->res2id($db->query("select id from $db->prefix$table where id not in
     (select $db->posts.id from $db->posts)"));
     if (count($deleted) > 0) {
@@ -33,7 +33,7 @@ class tdboptimizer extends tevents {
 
   public function deletedeleted() {
     //posts
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $db->table = 'posts';
     $items = $db->idselect("status = 'deleted'");
     if (count($items) > 0) {

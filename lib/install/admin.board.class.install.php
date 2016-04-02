@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tadminboardInstall($self) {
-  litepublisher::$urlmap->add('/admin/', get_class($self) , null, 'normal');
+  litepubl::$urlmap->add('/admin/', get_class($self) , null, 'normal');
 }
 
 function tadminboardUninstall($self) {

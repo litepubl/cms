@@ -25,7 +25,7 @@ class TXMLRPCParser extends IXR_Server {
     @header('Date: " . date('r') . "');
     @Header( 'Cache-Control: no-cache, must-revalidate');
     @Header( 'Pragma: no-cache');
-    @header('X-Pingback: " . litepublisher::$site->url . "/rpc.xml');
+    @header('X-Pingback: " . litepubl::$site->url . "/rpc.xml');
     echo'$head';
     ?>" . $xml;
   }
@@ -55,9 +55,9 @@ class TXMLRPC extends titems {
       $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
     }
 
-    if (litepublisher::$debug) {
+    if (litepubl::$debug) {
       tfiler::log("request:\n" . $HTTP_RAW_POST_DATA, 'xmlrpc.txt');
-      $reqname = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'request.xml';
+      $reqname = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'request.xml';
       file_put_contents($reqname, $HTTP_RAW_POST_DATA);
       @chmod($reqname, 0666);
       //$HTTP_RAW_POST_DATA = file_get_contents($GLOBALS['paths']['home'] . 'raw.txt');
@@ -72,7 +72,7 @@ class TXMLRPC extends titems {
     $Result = $this->server->XMLResult;
 
     $this->aftercall();
-    if (litepublisher::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
+    if (litepubl::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
     return $Result;
   }
 
@@ -120,8 +120,8 @@ class TXMLRPC extends titems {
         ) , $args);
       }
       catch(Exception $e) {
-        //litepublisher::$options->handexception($e);
-        //echo (litepublisher::$options->errorlog);
+        //litepubl::$options->handexception($e);
+        //echo (litepubl::$options->errorlog);
         return new IXR_Error($e->getCode() , $e->getMessage());
       }
     }
@@ -153,19 +153,19 @@ class TXMLRPCAbstract extends tevents {
   }
 
   public static function auth($email, $password, $group) {
-    if (litepublisher::$options->auth($email, $password)) {
-      if (litepublisher::$options->hasgroup($group)) return true;
+    if (litepubl::$options->auth($email, $password)) {
+      if (litepubl::$options->hasgroup($group)) return true;
     }
     throw new Exception('Bad login/pass combination.', 403);
   }
 
   public static function canedit($email, $password, $idpost) {
-    if (litepublisher::$options->auth($email, $password)) {
-      if (litepublisher::$options->hasgroup('editor')) return true;
-      if (litepublisher::$options->hasgroup('author')) {
+    if (litepubl::$options->auth($email, $password)) {
+      if (litepubl::$options->hasgroup('editor')) return true;
+      if (litepubl::$options->hasgroup('author')) {
         if ($idpost == 0) return true;
         $post = tpost::i($idpost);
-        return $post->author == litepublisher::$options->user;
+        return $post->author == litepubl::$options->user;
       }
     }
     throw new Exception('Bad login/pass combination.', 403);

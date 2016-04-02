@@ -36,7 +36,7 @@ class tadminpassword extends tadminform {
 
     $email = $_GET['email'];
     $confirm = $_GET['confirm'];
-    tsession::start('password-restore-' . md5(litepublisher::$options->hash($email)));
+    tsession::start('password-restore-' . md5(litepubl::$options->hash($email)));
 
     if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
       if (!isset($_SESSION['email'])) {
@@ -51,7 +51,7 @@ class tadminpassword extends tadminform {
 
     if ($id = $this->getiduser($email)) {
       if ($id == 1) {
-        litepublisher::$options->changepassword($password);
+        litepubl::$options->changepassword($password);
       } else {
         tusers::i()->changepassword($id, $password);
       }
@@ -70,7 +70,7 @@ class tadminpassword extends tadminform {
 
   public function getiduser($email) {
     if (empty($email)) return false;
-    if ($email == strtolower(trim(litepublisher::$options->email))) return 1;
+    if ($email == strtolower(trim(litepubl::$options->email))) return 1;
     return tusers::i()->emailexists($email);
   }
 
@@ -94,7 +94,7 @@ class tadminpassword extends tadminform {
 
     $args = new targs();
 
-    tsession::start('password-restore-' . md5(litepublisher::$options->hash($email)));
+    tsession::start('password-restore-' . md5(litepubl::$options->hash($email)));
     if (!isset($_SESSION['count'])) {
       $_SESSION['count'] = 1;
     } else {
@@ -110,7 +110,7 @@ class tadminpassword extends tadminform {
 
     $args->email = urlencode($email);
     if ($id == 1) {
-      $name = litepublisher::$site->author;
+      $name = litepubl::$site->author;
     } else {
       $item = tusers::i()->getitem($id);
       $args->add($item);
@@ -125,7 +125,7 @@ class tadminpassword extends tadminform {
     $subject = $theme->parsearg($lang->subject, $args);
     $body = $theme->parsearg($lang->body, $args);
 
-    tmailer::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail, $name, $email, $subject, $body);
+    tmailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
     return true;
   }
 

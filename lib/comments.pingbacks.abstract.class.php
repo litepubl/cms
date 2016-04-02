@@ -42,7 +42,7 @@ class tabstractpingbacks extends titems {
     $args->id = $id;
     $status = dbversion ? $item['status'] : ($item['approved'] ? 'approved' : 'hold');
     $args->localstatus = tlocal::get('commentstatus', $status);
-    $args->adminurl = litepublisher::$site->url . '/admin/comments/pingback/' . litepublisher::$site->q . "id=$id&post={$item['post']}&action";
+    $args->adminurl = litepubl::$site->url . '/admin/comments/pingback/' . litepubl::$site->q . "id=$id&post={$item['post']}&action";
     $post = tpost::i($item['post']);
     $args->posttitle = $post->title;
     $args->postlink = $post->link;
@@ -54,7 +54,7 @@ class tabstractpingbacks extends titems {
     $subject = $theme->parsearg($lang->pingbacksubj, $args);
     $body = $theme->parsearg($lang->pingbackbody, $args);
 
-    tmailer::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail, 'admin', litepublisher::$options->email, $subject, $body);
+    tmailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
 
   }
 

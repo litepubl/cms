@@ -16,7 +16,7 @@ class tadmintags extends tadminmenu {
   public function getcontent() {
     $result = '';
     $istags = ($this->name == 'tags') || ($this->name == 'addtag');
-    $tags = $istags ? litepublisher::$classes->tags : litepublisher::$classes->categories;
+    $tags = $istags ? litepubl::$classes->tags : litepubl::$classes->categories;
     if (dbversion) $tags->loadall();
     $parents = array(
       0 => '-----'
@@ -126,7 +126,7 @@ class tadmintags extends tadminmenu {
     ));
     $result = $html->fixquote($result);
     $theme = ttheme::i();
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -144,7 +144,7 @@ class tadmintags extends tadminmenu {
     if (empty($_POST['title'])) return '';
     extract($_POST, EXTR_SKIP);
     $istags = ($this->name == 'tags') || ($this->name == 'addtag');
-    $tags = $istags ? litepublisher::$classes->tags : litepublisher::$classes->categories;
+    $tags = $istags ? litepubl::$classes->tags : litepubl::$classes->categories;
     $tags->lock();
     $id = $this->idget();
     if ($id == 0) {

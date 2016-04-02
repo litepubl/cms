@@ -10,10 +10,6 @@ namespace litepubl;
 class tviews extends titems_storage {
   public $defaults;
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
   protected function create() {
     $this->dbversion = false;
     parent::create();
@@ -25,7 +21,7 @@ class tviews extends titems_storage {
   public function add($name) {
     $this->lock();
     $id = ++$this->autoid;
-    $view = litepublisher::$classes->newitem(tview::getinstancename() , 'tview', $id);
+    $view = litepubl::$classes->newitem(tview::getinstancename() , 'tview', $id);
     $view->id = $id;
     $view->name = $name;
     $view->data['class'] = get_class($view);

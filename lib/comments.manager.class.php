@@ -20,8 +20,8 @@ class tcommentmanager extends tevents_storage {
   }
 
   public function getcount() {
-    litepublisher::$db->table = 'comments';
-    return litepublisher::$db->getcount();
+    litepubl::$db->table = 'comments';
+    return litepubl::$db->getcount();
   }
 
   public function addcomuser($name, $email, $website, $ip) {
@@ -61,7 +61,7 @@ class tcommentmanager extends tevents_storage {
     $idpost = $comments->getvalue($id, 'post');
     $count = $comments->db->getcount("post = $idpost and status = 'approved'");
     $comments->getdb('posts')->setvalue($idpost, 'commentscount', $count);
-    if (litepublisher::$options->commentspool) {
+    if (litepubl::$options->commentspool) {
       tcommentspool::i()->set($idpost, $count);
     }
 
@@ -82,7 +82,7 @@ class tcommentmanager extends tevents_storage {
 
   public function sendmail($id) {
     if ($this->sendnotification) {
-      litepublisher::$urlmap->onclose($this, 'send_mail', $id);
+      litepubl::$urlmap->onclose($this, 'send_mail', $id);
     }
   }
 
@@ -93,8 +93,8 @@ class tcommentmanager extends tevents_storage {
     if ($comment->author == 1) return;
     ttheme::$vars['comment'] = $comment;
     $args = new targs();
-    $adminurl = litepublisher::$site->url . '/admin/comments/' . litepublisher::$site->q . "id=$id";
-    $ref = md5(litepublisher::$secret . $adminurl . litepublisher::$options->solt);
+    $adminurl = litepubl::$site->url . '/admin/comments/' . litepubl::$site->q . "id=$id";
+    $ref = md5(litepubl::$secret . $adminurl . litepubl::$options->solt);
     $adminurl.= "&ref=$ref&action";
     $args->adminurl = $adminurl;
 
@@ -132,12 +132,12 @@ class tcommentmanager extends tevents_storage {
   public function request($arg) {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
     $users = tusers::i();
-    if (!$users->itemexists($id)) return "<?php litepublisher::$urlmap->redir('/');";
+    if (!$users->itemexists($id)) return "<?php litepubl::$urlmap->redir('/');";
     $item = $users->getitem($id);
     $url = $item['website'];
-    if (!strpos($url, '.')) $url = litepublisher::$site->url . '/';
+    if (!strpos($url, '.')) $url = litepubl::$site->url . '/';
     if (!strbegin($url, 'http://')) $url = 'http://' . $url;
-    return "<?php litepublisher::$urlmap->redir('$url');";
+    return "<?php litepubl::$urlmap->redir('$url');";
   }
 
 } //class

@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tjsonserverInstall($self) {
-  litepublisher::$urlmap->addget($self->url, get_class($self));
+  litepubl::$urlmap->addget($self->url, get_class($self));
 }
 
 function tjsonserverUninstall($self) {

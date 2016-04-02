@@ -50,7 +50,7 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
       "wp_page_order" => $menu->order,
       "wp_author_id" => $menu->author,
       "wp_author_display_name" => 'ADMIN',
-      "date_created_gmt" => new IXR_Date(time() - litepublisher::$options->gmt)
+      "date_created_gmt" => new IXR_Date(time() - litepubl::$options->gmt)
     );
 
     return $Result;
@@ -124,8 +124,8 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
         'name' => $item['title'],
         'count' => $item['itemscount'],
         'slug' => '',
-        'html_url' => litepublisher::$site->url . $item['url'],
-        'rss_url' => litepublisher::$site->url . $item['url']
+        'html_url' => litepubl::$site->url . $item['url'],
+        'rss_url' => litepubl::$site->url . $item['url']
       );
     }
     return $result;

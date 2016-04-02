@@ -44,7 +44,7 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function get($section, $key) {
-    //if (!isset(self::i()->ini[$section][$key])) litepublisher::$options->error("$section:$key");
+    //if (!isset(self::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
     return self::i()->ini[$section][$key];
   }
 
@@ -95,7 +95,7 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public function getdateformat() {
-    $format = litepublisher::$options->dateformat;
+    $format = litepubl::$options->dateformat;
     return $format != '' ? $format : $this->ini['datetime']['dateformat'];
   }
 
@@ -128,7 +128,7 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function inifile($class, $filename) {
-    return self::inicache(litepublisher::$classes->getresourcedir($class) . litepublisher::$options->language . $filename);
+    return self::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
   }
 
   public static function inicache($filename) {
@@ -152,7 +152,7 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function getcachedir() {
-    return litepublisher::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
   }
 
   public static function clearcache() {

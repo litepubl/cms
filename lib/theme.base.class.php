@@ -17,7 +17,7 @@ class basetheme extends tevents {
   public $extratml;
 
   public static function exists($name) {
-    return file_exists(litepublisher::$paths->themes . $name . '/about.ini');
+    return file_exists(litepubl::$paths->themes . $name . '/about.ini');
   }
 
   public static function getbyname($classname, $name) {
@@ -27,7 +27,7 @@ class basetheme extends tevents {
 
     $result = getinstance($classname);
     if ($result->name) {
-      $result = litepublisher::$classes->newinstance($classname);
+      $result = litepubl::$classes->newinstance($classname);
     }
 
     $result->name = $name;
@@ -50,10 +50,10 @@ class basetheme extends tevents {
 
   public static function set_defaultargs() {
     self::$defaultargs = array(
-      '$site.url' => litepublisher::$site->url,
-      '$site.files' => litepublisher::$site->files,
-      '{$site.q}' => litepublisher::$site->q,
-      '$site.q' => litepublisher::$site->q
+      '$site.url' => litepubl::$site->url,
+      '$site.files' => litepubl::$site->files,
+      '{$site.q}' => litepubl::$site->q,
+      '$site.q' => litepubl::$site->q
     );
   }
 
@@ -114,13 +114,13 @@ class basetheme extends tevents {
   protected function getvar($name) {
     switch ($name) {
       case 'site':
-        return litepublisher::$site;
+        return litepubl::$site;
 
       case 'lang':
         return tlocal::i();
 
       case 'post':
-        $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
+        $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
         if ($context instanceof tpost) {
           return $context;
         }
@@ -136,7 +136,7 @@ class basetheme extends tevents {
     if (isset($GLOBALS[$name])) {
       $var = $GLOBALS[$name];
     } else {
-      $classes = litepublisher::$classes;
+      $classes = litepubl::$classes;
       $var = $classes->gettemplatevar($name);
       if (!$var) {
         if (isset($classes->classes[$name])) {
@@ -151,7 +151,7 @@ class basetheme extends tevents {
     }
 
     if (!is_object($var)) {
-      litepublisher::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+      litepubl::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
       return false;
     }
 
@@ -179,7 +179,7 @@ class basetheme extends tevents {
       return $var->{$prop};
     }
     catch(Exception $e) {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
     return '';
   }
@@ -198,7 +198,7 @@ class basetheme extends tevents {
     }
     catch(Exception $e) {
       $result = '';
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
     array_pop($this->parsing);
     return $result;
@@ -231,8 +231,8 @@ class basetheme extends tevents {
   }
 
   public static function clearcache() {
-    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-    litepublisher::$urlmap->clearcache();
+    tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+    litepubl::$urlmap->clearcache();
   }
 
   public function h($s) {
@@ -240,7 +240,7 @@ class basetheme extends tevents {
   }
 
   public function link($url, $title) {
-    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
+    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepubl::$site->url, $url, $title);
   }
 
   public static function quote($s) {

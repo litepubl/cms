@@ -11,11 +11,11 @@ class tmailer {
   private static $hold;
 
   protected static function send($from, $to, $subj, $body) {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
     $date = date('r');
-    if (litepublisher::$debug) {
-      $dir = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR;
+    if (litepubl::$debug) {
+      $dir = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR;
       if (!is_dir($dir)) {
         mkdir($dir, 0777);
         @chmod($dir, 0777);
@@ -24,11 +24,11 @@ class tmailer {
       return file_put_contents($dir . date('H-i-s.d.m.Y.') . microtime(true) . '.eml.mhtml', $eml);
     }
 
-    return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepublisher::$options->version);
+    return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
   }
 
   public static function sendmail($fromname, $fromemail, $toname, $toemail, $subj, $body) {
-    if (litepublisher::$options->mailer == 'smtp') {
+    if (litepubl::$options->mailer == 'smtp') {
       $mailer = TSMTPMailer::i();
       return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
     }
@@ -57,16 +57,16 @@ class tmailer {
       return;
     }
 
-    return self::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail, 'admin', litepublisher::$options->email, $subject, $body);
+    return self::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
   }
 
   public static function onshutdown() {
-    if (litepublisher::$options->mailer == 'smtp') {
+    if (litepubl::$options->mailer == 'smtp') {
       $mailer = TSMTPMailer::i();
       if ($mailer->auth()) {
-        $fromname = litepublisher::$site->name;
-        $fromemail = litepublisher::$options->fromemail;
-        $toemail = litepublisher::$options->email;
+        $fromname = litepubl::$site->name;
+        $fromemail = litepubl::$options->fromemail;
+        $toemail = litepubl::$options->email;
 
         foreach (self::$hold as $i => $item) {
           $mailer->send($fromname, $fromemail, 'admin', $toemail, $item['subject'], $item['body'], false);
@@ -84,7 +84,7 @@ class tmailer {
 
   public static function sendlist(array $list) {
     if (!count($list)) return;
-    if (litepublisher::$options->mailer == 'smtp') {
+    if (litepubl::$options->mailer == 'smtp') {
       $mailer = TSMTPMailer::i();
       if ($mailer->auth()) {
         foreach ($list as $item) {
@@ -102,7 +102,7 @@ class tmailer {
   }
 
   public static function SendAttachmentToAdmin($subj, $body, $filename, $attachment) {
-    return self::sendattachment(litepublisher::$site->name, litepublisher::$options->fromemail, 'admin', litepublisher::$options->email, $subj, $body, $filename, $attachment);
+    return self::sendattachment(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subj, $body, $filename, $attachment);
   }
 
   public static function sendattachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment) {
@@ -119,10 +119,10 @@ class tmailer {
     $attachpart.= base64_encode($attachment);
 
     $body = $textpart . "\n\n" . $attachpart . "\n\n";
-    $options = litepublisher::$options;
-    if (litepublisher::$debug) return file_put_contents(litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+    $options = litepubl::$options;
+    if (litepubl::$debug) return file_put_contents(litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
 
-    return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepublisher::$options->version);
+    return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
   }
 
 } //class
@@ -154,7 +154,7 @@ class TSMTPMailer extends tevents {
   }
 
   public function auth() {
-    litepublisher::$classes->include_file(litepublisher::$paths->libinclude . 'class-smtp.php');
+    litepubl::$classes->include_file(litepubl::$paths->libinclude . 'class-smtp.php');
     $this->smtp = new \SMTP();
     if ($this->smtp->Connect($this->host, $this->port, 10)) {
       $this->smtp->Hello($_SERVER['SERVER_NAME']);
@@ -167,7 +167,7 @@ class TSMTPMailer extends tevents {
 
   public function send($fromname, $fromemail, $toname, $toemail, $subj, $body) {
     if ($this->smtp->Mail($this->login) && $this->smtp->Recipient($toemail)) {
-      $options = litepublisher::$options;
+      $options = litepubl::$options;
       $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
       $date = date('r');
       $from = tmailer::CreateEmail($fromname, $fromemail);

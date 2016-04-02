@@ -24,7 +24,7 @@ class tarchives extends titems_itemplate implements itemplate {
   public function getheadlinks() {
     $result = '';
     foreach ($this->items as $date => $item) {
-      $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\"litepublisher::$site->url{$item['url']}\" />\n";
+      $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\"litepubl::$site->url{$item['url']}\" />\n";
     }
     return ttheme::i()->parse($result);
   }
@@ -35,7 +35,7 @@ class tarchives extends titems_itemplate implements itemplate {
     $this->items = array();
     //sort archive by months
     $linkgen = tlinkgenerator::i();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $res = $db->query("SELECT YEAR(posted) AS 'year', MONTH(posted) AS 'month', count(id) as 'count' FROM  $db->posts
     where status = 'published' GROUP BY YEAR(posted), MONTH(posted) ORDER BY posted DESC ");
 
@@ -58,17 +58,17 @@ class tarchives extends titems_itemplate implements itemplate {
   public function CreatePageLinks() {
     $this->lock();
     //Compare links
-    $old = litepublisher::$urlmap->GetClassUrls(get_class($this));
+    $old = litepubl::$urlmap->GetClassUrls(get_class($this));
     foreach ($this->items as $date => $item) {
       $j = array_search($item['url'], $old);
       if (is_int($j)) {
         array_splice($old, $j, 1);
       } else {
-        $this->items[$date]['idurl'] = litepublisher::$urlmap->Add($item['url'], get_class($this) , $date);
+        $this->items[$date]['idurl'] = litepubl::$urlmap->Add($item['url'], get_class($this) , $date);
       }
     }
     foreach ($old as $url) {
-      litepublisher::$urlmap->delete($url);
+      litepubl::$urlmap->delete($url);
     }
 
     $this->unlock();
@@ -83,10 +83,10 @@ class tarchives extends titems_itemplate implements itemplate {
     $item = $this->items[$date];
 
     $view = tview::getview($this);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
     $pages = (int)ceil($item['count'] / $perpage);
-    if ((litepublisher::$urlmap->page > 1) && (litepublisher::$urlmap->page > $pages)) {
-      return "<?php litepublisher::\$urlmap->redir('{$item['url']}'); ?>";
+    if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+      return "<?php litepubl::\$urlmap->redir('{$item['url']}'); ?>";
     }
   }
 
@@ -105,10 +105,10 @@ class tarchives extends titems_itemplate implements itemplate {
     if (count($items) == 0) return '';
 
     $view = tview::getview($this);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
-    $list = array_slice($items, (litepublisher::$urlmap->page - 1) * $perpage, $perpage);
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+    $list = array_slice($items, (litepubl::$urlmap->page - 1) * $perpage, $perpage);
     $result = $view->theme->getposts($list, $view->postanounce);
-    $result.= $view->theme->getpages($this->items[$this->date]['url'], litepublisher::$urlmap->page, ceil(count($items) / $perpage));
+    $result.= $view->theme->getpages($this->items[$this->date]['url'], litepubl::$urlmap->page, ceil(count($items) / $perpage));
     return $result;
   }
 

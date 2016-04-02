@@ -20,7 +20,7 @@ class ttheme extends basetheme {
   public static function context() {
     $result = self::i();
     if (!$result->name) {
-      if (($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+      if (($context = litepubl::$urlmap->context) && isset($context->idview)) {
         $result = tview::getview($context)->theme;
       } else {
         $result = tview::i()->theme;
@@ -68,7 +68,7 @@ class ttheme extends basetheme {
     return count($this->templates['sidebars']);
   }
   private function get_author() {
-    $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
+    $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
     if (!is_object($context)) {
       if (!isset(self::$vars['post'])) return new emptyclass();
       $context = self::$vars['post'];
@@ -115,7 +115,7 @@ class ttheme extends basetheme {
     $args->count = $count;
     $from = 1;
     $to = $count;
-    $perpage = litepublisher::$options->perpage;
+    $perpage = litepubl::$options->perpage;
     $args->perpage = $perpage;
     $items = array();
     if ($count > $perpage * 2) {
@@ -150,9 +150,9 @@ class ttheme extends basetheme {
 
     $currenttml = $this->templates['content.navi.current'];
     $tml = $this->templates['content.navi.link'];
-    if (!strbegin($url, 'http')) $url = litepublisher::$site->url . $url;
+    if (!strbegin($url, 'http')) $url = litepubl::$site->url . $url;
     $pageurl = rtrim($url, '/') . '/page/';
-    if ($params) $params = litepublisher::$site->q . $params;
+    if ($params) $params = litepubl::$site->q . $params;
 
     $a = array();
     if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
@@ -229,8 +229,8 @@ class ttheme extends basetheme {
 
   public function getpostsnavi(array $items, $url, $count, $postanounce, $perpage) {
     $result = $this->getposts($items, $postanounce);
-    if (!$perpage) $perpage = litepublisher::$options->perpage;
-    $result.= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    if (!$perpage) $perpage = litepubl::$options->perpage;
+    $result.= $this->getpages($url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 

@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tadminpasswordInstall($self) {
-  litepublisher::$urlmap->addget('/admin/password/', get_class($self));
+  litepubl::$urlmap->addget('/admin/password/', get_class($self));
 }
 
 function tadminpasswordUninstall($self) {

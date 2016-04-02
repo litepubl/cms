@@ -10,7 +10,7 @@ namespace litepubl;
 class cachestorage_file {
 
   public function getdir() {
-    return litepublisher::$paths->cache;
+    return litepubl::$paths->cache;
   }
 
   public function set($filename, $data) {

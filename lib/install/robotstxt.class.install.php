@@ -12,7 +12,7 @@ function trobotstxtInstall($self) {
   $urlmap = turlmap::i();
   $self->idurl = $urlmap->add('/robots.txt', get_class($self) , null);
 
-  $self->add("#" . litepublisher::$site->url . "/");
+  $self->add("#" . litepubl::$site->url . "/");
   $self->add('User-agent: *');
   //$self->AddDisallow('/rss.xml');
   //$self->AddDisallow('/comments.xml');

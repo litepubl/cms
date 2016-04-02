@@ -22,7 +22,7 @@ class tcommentform extends tevents {
   }
 
   public function request($arg) {
-    if (litepublisher::$options->commentsdisabled) return 404;
+    if (litepubl::$options->commentsdisabled) return 404;
     if ('POST' != $_SERVER['REQUEST_METHOD']) {
       return "<?php
       header('HTTP/1.1 405 Method Not Allowed', true, 405);
@@ -43,7 +43,7 @@ class tcommentform extends tevents {
   public function getshortpost($id) {
     $id = (int)$id;
     if ($id == 0) return false;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     return $db->selectassoc("select id, idurl, idperm, status, comstatus, commentscount from $db->posts where id = $id");
   }
 
@@ -87,9 +87,9 @@ class tcommentform extends tevents {
     unset($values['submitbutton']);
 
     if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
-    if (litepublisher::$options->ingroups($cm->idgroups)) {
+    if (litepubl::$options->ingroups($cm->idgroups)) {
       if (!$confirmed && $cm->confirmlogged) return $this->request_confirm($values, $shortpost);
-      $iduser = litepublisher::$options->user;
+      $iduser = litepubl::$options->user;
     } else {
       switch ($shortpost['comstatus']) {
         case 'reg':
@@ -175,17 +175,17 @@ class tcommentform extends tevents {
 
     //$post->lastcommenturl;
     $shortpost['commentscount']++;
-    if (!litepublisher::$options->commentpages || ($shortpost['commentscount'] <= litepublisher::$options->commentsperpage)) {
+    if (!litepubl::$options->commentpages || ($shortpost['commentscount'] <= litepubl::$options->commentsperpage)) {
       $c = 1;
     } else {
-      $c = ceil($shortpost['commentscount'] / litepublisher::$options->commentsperpage);
+      $c = ceil($shortpost['commentscount'] / litepubl::$options->commentsperpage);
     }
 
-    $url = litepublisher::$urlmap->getvalue($shortpost['idurl'], 'url');
-    if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+    $url = litepubl::$urlmap->getvalue($shortpost['idurl'], 'url');
+    if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
 
-    litepublisher::$urlmap->setexpired($shortpost['idurl']);
-    return $this->sendresult(litepublisher::$site->url . $url, isset($cookies) ? $cookies : array());
+    litepubl::$urlmap->setexpired($shortpost['idurl']);
+    return $this->sendresult(litepubl::$site->url . $url, isset($cookies) ? $cookies : array());
   }
 
   public function confirm_recevied($confirmid) {
@@ -220,7 +220,7 @@ class tcommentform extends tevents {
   }
 
   public function getpermheader(array $shortpost) {
-    $urlmap = litepublisher::$urlmap;
+    $urlmap = litepubl::$urlmap;
     $url = $urlmap->url;
     $saveitem = $urlmap->itemrequested;
     $urlmap->itemrequested = $urlmap->getitem($shortpost['idurl']);
@@ -277,7 +277,7 @@ class tcommentform extends tevents {
       setcookie($name, $value, time() + 30000000, '/', false);
     }
 
-    return litepublisher::$urlmap->redir($link);
+    return litepubl::$urlmap->redir($link);
   }
 
 } //class

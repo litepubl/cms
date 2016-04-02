@@ -36,7 +36,7 @@ class tusersman extends tdata {
       'email' => $email,
       'name' => isset($values['name']) ? trim($values['name']) : '',
       'website' => isset($values['website']) ? trim($values['website']) : '',
-      'password' => litepublisher::$options->hash($email . $password) ,
+      'password' => litepubl::$options->hash($email . $password) ,
       'cookie' => md5uniq() ,
       'expired' => sqldate() ,
       'idgroups' => implode(',', $idgroups) ,
@@ -65,7 +65,7 @@ class tusersman extends tdata {
       switch ($k) {
         case 'password':
           if ($values['password'] != '') {
-            $item['password'] = litepublisher::$options->hash($values['email'] . $values['password']);
+            $item['password'] = litepubl::$options->hash($values['email'] . $values['password']);
           }
           break;
 

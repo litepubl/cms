@@ -14,7 +14,7 @@ class tajaxtageditor extends tajaxposteditor {
   }
 
   public function install() {
-    litepublisher::$urlmap->addget('/admin/ajaxtageditor.htm', get_class($this));
+    litepubl::$urlmap->addget('/admin/ajaxtageditor.htm', get_class($this));
   }
 
   public function request($arg) {

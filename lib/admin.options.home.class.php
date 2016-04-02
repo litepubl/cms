@@ -114,12 +114,12 @@ class adminhomeoptions extends tadminmenu {
       $index = 1;
       if (preg_match('/^\/files\/home(\d*+)\.jpg$/', $home->image, $m)) {
         $index = (int)$m[1];
-        $filename = litepublisher::$paths->files . "home$index.jpg";
+        $filename = litepubl::$paths->files . "home$index.jpg";
         if (file_exists($filename)) {
           @unlink($filename);
         }
 
-        $filename = litepublisher::$paths->files . "home$index.small.jpg";
+        $filename = litepubl::$paths->files . "home$index.small.jpg";
         if (file_exists($filename)) {
           @unlink($filename);
         }
@@ -130,7 +130,7 @@ class adminhomeoptions extends tadminmenu {
       $home->image = "/files/home$index.jpg";
       $home->smallimage = "/files/home$index.small.jpg";
 
-      $filename = litepublisher::$paths->files . "home$index.jpg";
+      $filename = litepubl::$paths->files . "home$index.jpg";
       if (file_exists($filename)) {
         @unlink($filename);
       }
@@ -152,7 +152,7 @@ class adminhomeoptions extends tadminmenu {
           }
 
           //create small image
-          $smallfile = litepublisher::$paths->files . "home$index.small.jpg";
+          $smallfile = litepubl::$paths->files . "home$index.small.jpg";
           if (file_exists($smallfile)) {
             @unlink($smallfile);
           }

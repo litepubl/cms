@@ -47,17 +47,17 @@ class baseparser extends tevents {
       $filename = ltrim($filename, '/');
       if (!$filename) continue;
 
-      if (file_exists(litepublisher::$paths->home . $filename)) {
-        $result[] = litepublisher::$paths->home . $filename;
-      } else if (file_exists(litepublisher::$paths->themes . $filename)) {
-        $result[] = litepublisher::$paths->themes . $filename;
-      } else if (file_exists(litepublisher::$paths->plugins . $filename)) {
-        $result[] = litepublisher::$paths->plugins . $filename;
+      if (file_exists(litepubl::$paths->home . $filename)) {
+        $result[] = litepubl::$paths->home . $filename;
+      } else if (file_exists(litepubl::$paths->themes . $filename)) {
+        $result[] = litepubl::$paths->themes . $filename;
+      } else if (file_exists(litepubl::$paths->plugins . $filename)) {
+        $result[] = litepubl::$paths->plugins . $filename;
       }
     }
 
     $about = $this->getabout($name);
-    $result[] = litepublisher::$paths->themes . $name . '/' . $about['file'];
+    $result[] = litepubl::$paths->themes . $name . '/' . $about['file'];
     return $result;
   }
 
@@ -174,12 +174,12 @@ class baseparser extends tevents {
   public function getabout($name) {
     if (!isset($this->abouts)) $this->abouts = array();
     if (!isset($this->abouts[$name])) {
-      $filename = litepublisher::$paths->themes . $name . DIRECTORY_SEPARATOR . 'about.ini';
+      $filename = litepubl::$paths->themes . $name . DIRECTORY_SEPARATOR . 'about.ini';
       if (file_exists($filename) && ($about = parse_ini_file($filename, true))) {
         if (empty($about['about']['type'])) $about['about']['type'] = 'litepublisher3';
         //join languages
-        if (isset($about[litepublisher::$options->language])) {
-          $about['about'] = $about[litepublisher::$options->language] + $about['about'];
+        if (isset($about[litepubl::$options->language])) {
+          $about['about'] = $about[litepubl::$options->language] + $about['about'];
         }
 
         $this->abouts[$name] = $about['about'];
@@ -291,7 +291,7 @@ class baseparser extends tevents {
     }
 
     if (preg_match('/file\s*=\s*(\w[\w\._\-]*?\.\w\w*+\s*)/i', $s, $m) || preg_match('/\@import\s*\(\s*(\w[\w\._\-]*?\.\w\w*+\s*)\)/i', $s, $m)) {
-      $filename = litepublisher::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
+      $filename = litepubl::$paths->themes . $this->theme->name . DIRECTORY_SEPARATOR . $m[1];
       if (!file_exists($filename)) {
         $this->error("File '$filename' not found");
       }
@@ -386,7 +386,7 @@ class baseparser extends tevents {
     $this->onfix($theme);
     $this->reuse($this->theme->templates);
 
-    if (!litepublisher::$debug && $this->removespaces) {
+    if (!litepubl::$debug && $this->removespaces) {
       foreach ($theme->templates as $k => $v) {
         if (is_string($v)) {
           $theme->templates[$k] = $this->remove_spaces($v);
@@ -423,7 +423,7 @@ class baseparser extends tevents {
   public function loadpaths() {
     $result = array();
     foreach ($this->tagfiles as $filename) {
-      $filename = litepublisher::$paths->home . trim($filename, '/');
+      $filename = litepubl::$paths->home . trim($filename, '/');
       if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
         if (isset($a['remap'])) {
           $this->pathmap = $this->pathmap + $a['remap'];

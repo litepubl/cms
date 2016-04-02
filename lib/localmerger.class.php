@@ -40,10 +40,10 @@ class tlocalmerger extends tfilemerger {
   public function getrealfilename($filename) {
     $filename = ltrim($filename, '/');
     $name = substr($filename, 0, strpos($filename, '/'));
-    if (isset(litepublisher::$paths->$name)) {
-      return litepublisher::$paths->$name . str_replace('/', DIRECTORY_SEPARATOR, substr($filename, strlen($name) + 1));
+    if (isset(litepubl::$paths->$name)) {
+      return litepubl::$paths->$name . str_replace('/', DIRECTORY_SEPARATOR, substr($filename, strlen($name) + 1));
     }
-    return litepublisher::$paths->home . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+    return litepubl::$paths->home . str_replace('/', DIRECTORY_SEPARATOR, $filename);
   }
 
   public function merge() {
@@ -84,8 +84,8 @@ class tlocalmerger extends tfilemerger {
   }
 
   public function addplugin($name) {
-    $language = litepublisher::$options->language;
-    $dir = litepublisher::$paths->plugins . $name . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+    $language = litepubl::$options->language;
+    $dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     $this->lock();
     if (file_exists($dir . $language . '.ini')) $this->add('default', "plugins/$name/resource/$language.ini");
     if (file_exists($dir . $language . '.admin.ini')) $this->add('admin', "plugins/$name/resource/$language.admin.ini");
@@ -95,7 +95,7 @@ class tlocalmerger extends tfilemerger {
   }
 
   public function deleteplugin($name) {
-    $language = litepublisher::$options->language;
+    $language = litepubl::$options->language;
     $this->lock();
     $this->deletefile('default', "plugins/$name/resource/$language.ini");
     $this->deletefile('admin', "plugins/$name/resource/$language.admin.ini");

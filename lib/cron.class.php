@@ -29,14 +29,14 @@ class tcron extends tevents {
   }
 
   protected function geturl() {
-    return sprintf('/croncron.htm%scronpass=%s', litepublisher::$site->q, urlencode($this->password));
+    return sprintf('/croncron.htm%scronpass=%s', litepubl::$site->q, urlencode($this->password));
   }
 
   public function getlockpath() {
     if ($result = $this->path) {
       if (is_dir($result)) return $result;
     }
-    return litepublisher::$paths->data;
+    return litepubl::$paths->data;
   }
 
   public function request($arg) {
@@ -44,10 +44,10 @@ class tcron extends tevents {
     if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
       try {
         set_time_limit(300);
-        if (litepublisher::$debug) {
+        if (litepubl::$debug) {
           ignore_user_abort(true);
         } else {
-          litepublisher::$urlmap->close_connection();
+          litepubl::$urlmap->close_connection();
         }
 
         if (ob_get_level()) ob_end_flush();
@@ -58,7 +58,7 @@ class tcron extends tevents {
         $this->execute();
       }
       catch(Exception $e) {
-        litepublisher::$options->handexception($e);
+        litepubl::$options->handexception($e);
       }
       flock($fh, LOCK_UN);
       fclose($fh);
@@ -80,7 +80,7 @@ class tcron extends tevents {
         $this->execute();
       }
       catch(Exception $e) {
-        litepublisher::$options->handexception($e);
+        litepubl::$options->handexception($e);
       }
 
       flock($fh, LOCK_UN);
@@ -103,7 +103,7 @@ class tcron extends tevents {
             $func($arg);
           }
           catch(Exception $e) {
-            litepublisher::$options->handexception($e);
+            litepubl::$options->handexception($e);
           }
         } else {
           $this->db->iddelete($id);
@@ -115,7 +115,7 @@ class tcron extends tevents {
           $obj->$func($arg);
         }
         catch(Exception $e) {
-          litepublisher::$options->handexception($e);
+          litepubl::$options->handexception($e);
         }
       } else {
         $this->db->iddelete($id);
@@ -135,7 +135,7 @@ class tcron extends tevents {
     $id = $this->doadd($type, $class, $func, $arg);
 
     if (($type == 'single') && !$this->disableping && !self::$pinged) {
-      if (litepublisher::$debug) tfiler::log("cron added $id");
+      if (litepubl::$debug) tfiler::log("cron added $id");
 
       $memstorage = memstorage::i();
       if (!$memstorage->singlecron) {
@@ -205,7 +205,7 @@ class tcron extends tevents {
   }
 
   public function ping() {
-    $p = parse_url(litepublisher::$site->url . $this->url);
+    $p = parse_url(litepubl::$site->url . $this->url);
     $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
   }
 
@@ -219,21 +219,21 @@ class tcron extends tevents {
   }
 
   public function sendexceptions() {
-    $filename = litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
+    $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
     if (!file_exists($filename)) return;
 
     $time = @filectime($filename);
     if (($time === false) || ($time + 3600 > time())) return;
     $s = file_get_contents($filename);
     litepubl::$storage->delete($filename);
-    tmailer::SendAttachmentToAdmin('[error] ' . litepublisher::$site->name, 'See attachment', 'errors.txt', $s);
+    tmailer::SendAttachmentToAdmin('[error] ' . litepubl::$site->name, 'See attachment', 'errors.txt', $s);
     sleep(2);
   }
 
   public function log($s) {
     echo date('r') . "\n$s\n\n";
     flush();
-    if (litepublisher::$debug) tfiler::log($s, 'cron.log');
+    if (litepubl::$debug) tfiler::log($s, 'cron.log');
   }
 
 } //class

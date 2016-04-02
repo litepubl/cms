@@ -28,7 +28,7 @@ class tadminviewsgroup extends tadminmenu {
     $args->formtitle = $lang->themeviews;
     $view = tview::i();
 
-    $dirlist = tfiler::getdir(litepublisher::$paths->themes);
+    $dirlist = tfiler::getdir(litepubl::$paths->themes);
     sort($dirlist);
     $list = array();
     foreach ($dirlist as $dir) {

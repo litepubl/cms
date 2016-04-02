@@ -11,12 +11,17 @@ class tlocal {
 
   public static function i($section = '') {
     if (!isset(self::$self)) {
-      self::$self = getinstance(__class__);
+      self::$self = static::getinstance();
       self::$self->loadfile('default');
     }
+
     if ($section != '') self::$self->section = $section;
     return self::$self;
   }
+
+public static function getinstance() {
+return litepubl::$classes->getinstance(get_called_class());
+}
 
   public static function admin($section = '') {
     $result = self::i($section);
@@ -34,7 +39,7 @@ class tlocal {
   }
 
   public static function get($section, $key) {
-    //if (!isset(self::i()->ini[$section][$key])) litepublisher::$options->error("$section:$key");
+    //if (!isset(self::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
     return self::i()->ini[$section][$key];
   }
 
@@ -85,7 +90,7 @@ class tlocal {
   }
 
   public function getdateformat() {
-    $format = litepublisher::$options->dateformat;
+    $format = litepubl::$options->dateformat;
     return $format != '' ? $format : $this->ini['datetime']['dateformat'];
   }
 
@@ -118,7 +123,7 @@ class tlocal {
   }
 
   public static function inifile($class, $filename) {
-    return self::inicache(litepublisher::$classes->getresourcedir($class) . litepublisher::$options->language . $filename);
+    return self::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
   }
 
   public static function inicache($filename) {
@@ -142,7 +147,7 @@ class tlocal {
   }
 
   public static function getcachedir() {
-    return litepublisher::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
+    return litepubl::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
   }
 
   public static function clearcache() {
@@ -191,7 +196,7 @@ class inifiles {
   }
 
   public static function getresource($class, $filename) {
-    $dir = litepublisher::$classes->getresourcedir($class);
+    $dir = litepubl::$classes->getresourcedir($class);
     return self::cache($dir . $filename);
   }
 
@@ -207,10 +212,10 @@ class tview extends titem_storage {
 
   public static function i($id = 1) {
     if ($id == 1) {
-      $class = __class__;
+      $class = get_called_class();
     } else {
       $views = tviews::i();
-      $class = $views->itemexists($id) ? $views->items[$id]['class'] : __class__;
+      $class = $views->itemexists($id) ? $views->items[$id]['class'] : get_called_class();
     }
 
     return parent::iteminstance($class, $id);
@@ -379,7 +384,7 @@ class tviews extends titems_storage {
   public function add($name) {
     $this->lock();
     $id = ++$this->autoid;
-    $view = litepublisher::$classes->newitem(tview::getinstancename() , 'tview', $id);
+    $view = litepubl::$classes->newitem(tview::getinstancename() , 'tview', $id);
     $view->id = $id;
     $view->name = $name;
     $view->data['class'] = get_class($view);
@@ -534,20 +539,20 @@ class ttemplate extends tevents_storage {
 
   protected function create() {
     //prevent recursion
-    litepublisher::$classes->instances[get_class($this) ] = $this;
+    litepubl::$classes->instances[get_class($this) ] = $this;
     parent::create();
     $this->basename = 'template';
     $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-    $this->path = litepublisher::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
-    $this->url = litepublisher::$site->files . '/themes/default';
+    $this->path = litepubl::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
+    $this->url = litepubl::$site->files . '/themes/default';
     $this->itemplate = false;
     $this->ltoptions = array(
-      'url' => litepublisher::$site->url,
-      'files' => litepublisher::$site->files,
-      'idurl' => litepublisher::$urlmap->itemrequested['id'],
-      'lang' => litepublisher::$site->language,
-      'video_width' => litepublisher::$site->video_width,
-      'video_height' => litepublisher::$site->video_height,
+      'url' => litepubl::$site->url,
+      'files' => litepubl::$site->files,
+      'idurl' => litepubl::$urlmap->itemrequested['id'],
+      'lang' => litepubl::$site->language,
+      'video_width' => litepubl::$site->video_width,
+      'video_height' => litepubl::$site->video_height,
       'theme' => array() ,
       'custom' => array() ,
     );
@@ -599,9 +604,9 @@ class ttemplate extends tevents_storage {
     $this->view = $this->get_view($context);
     $theme = $this->view->theme;
     $this->ltoptions['theme']['name'] = $theme->name;
-    litepublisher::$classes->instances[get_class($theme) ] = $theme;
-    $this->path = litepublisher::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
-    $this->url = litepublisher::$site->files . '/themes/' . $theme->name;
+    litepubl::$classes->instances[get_class($theme) ] = $theme;
+    $this->path = litepubl::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
+    $this->url = litepubl::$site->files . '/themes/' . $theme->name;
     if ($this->view->hovermenu) {
       $this->hover = $theme->templates['menu.hover'];
       if ($this->hover != 'bootstrap') $this->hover = ($this->hover == 'true');
@@ -658,7 +663,7 @@ class ttemplate extends tevents_storage {
     $result = $this->view->theme->parsearg($tml, $args);
     //$result = trim($result, sprintf(' |.:%c%c', 187, 150));
     $result = trim($result, " |.:\n\r\t");
-    if ($result == '') return litepublisher::$site->name;
+    if ($result == '') return litepubl::$site->name;
     return $result;
   }
 
@@ -671,19 +676,19 @@ class ttemplate extends tevents_storage {
         if ($files->itemexists($icon)) $result = $files->geturl($icon);
       }
     }
-    if ($result == '') return litepublisher::$site->files . '/favicon.ico';
+    if ($result == '') return litepubl::$site->files . '/favicon.ico';
     return $result;
   }
 
   public function getkeywords() {
     $result = $this->itemplate ? $this->context->getkeywords() : '';
-    if ($result == '') return litepublisher::$site->keywords;
+    if ($result == '') return litepubl::$site->keywords;
     return $result;
   }
 
   public function getdescription() {
     $result = $this->itemplate ? $this->context->getdescription() : '';
-    if ($result == '') return litepublisher::$site->description;
+    if ($result == '') return litepubl::$site->description;
     return $result;
   }
 
@@ -692,13 +697,13 @@ class ttemplate extends tevents_storage {
     //$current = $this->context instanceof tmenu ? $this->context->id : 0;
     $view = $this->view;
     $menuclass = $view->menuclass;
-    $filename = $view->theme->name . sprintf('.%s.%s.php', $menuclass, litepublisher::$options->group ? litepublisher::$options->group : 'nobody');
+    $filename = $view->theme->name . sprintf('.%s.%s.php', $menuclass, litepubl::$options->group ? litepubl::$options->group : 'nobody');
 
-    if ($result = litepublisher::$urlmap->cache->get($filename)) return $result;
+    if ($result = litepubl::$urlmap->cache->get($filename)) return $result;
 
     $menus = getinstance($menuclass);
     $result = $menus->getmenu($this->hover, 0);
-    litepublisher::$urlmap->cache->set($filename, $result);
+    litepubl::$urlmap->cache->set($filename, $result);
     return $result;
   }
 
@@ -707,7 +712,7 @@ class ttemplate extends tevents_storage {
   }
 
   public function getjavascript($filename) {
-    return sprintf($this->js, litepublisher::$site->files . $filename);
+    return sprintf($this->js, litepubl::$site->files . $filename);
   }
 
   public function getready($s) {
@@ -765,7 +770,7 @@ class ttemplate extends tevents_storage {
   }
 
   public function getpage() {
-    $page = litepublisher::$urlmap->page;
+    $page = litepubl::$urlmap->page;
     if ($page <= 1) return '';
     return sprintf(tlocal::get('default', 'pagetitle') , $page);
   }
@@ -794,7 +799,7 @@ class basetheme extends tevents {
   public $extratml;
 
   public static function exists($name) {
-    return file_exists(litepublisher::$paths->themes . $name . '/about.ini');
+    return file_exists(litepubl::$paths->themes . $name . '/about.ini');
   }
 
   public static function getbyname($classname, $name) {
@@ -804,7 +809,7 @@ class basetheme extends tevents {
 
     $result = getinstance($classname);
     if ($result->name) {
-      $result = litepublisher::$classes->newinstance($classname);
+      $result = litepubl::$classes->newinstance($classname);
     }
 
     $result->name = $name;
@@ -827,10 +832,10 @@ class basetheme extends tevents {
 
   public static function set_defaultargs() {
     self::$defaultargs = array(
-      '$site.url' => litepublisher::$site->url,
-      '$site.files' => litepublisher::$site->files,
-      '{$site.q}' => litepublisher::$site->q,
-      '$site.q' => litepublisher::$site->q
+      '$site.url' => litepubl::$site->url,
+      '$site.files' => litepubl::$site->files,
+      '{$site.q}' => litepubl::$site->q,
+      '$site.q' => litepubl::$site->q
     );
   }
 
@@ -891,13 +896,13 @@ class basetheme extends tevents {
   protected function getvar($name) {
     switch ($name) {
       case 'site':
-        return litepublisher::$site;
+        return litepubl::$site;
 
       case 'lang':
         return tlocal::i();
 
       case 'post':
-        $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
+        $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
         if ($context instanceof tpost) {
           return $context;
         }
@@ -913,7 +918,7 @@ class basetheme extends tevents {
     if (isset($GLOBALS[$name])) {
       $var = $GLOBALS[$name];
     } else {
-      $classes = litepublisher::$classes;
+      $classes = litepubl::$classes;
       $var = $classes->gettemplatevar($name);
       if (!$var) {
         if (isset($classes->classes[$name])) {
@@ -928,7 +933,7 @@ class basetheme extends tevents {
     }
 
     if (!is_object($var)) {
-      litepublisher::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+      litepubl::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
       return false;
     }
 
@@ -956,7 +961,7 @@ class basetheme extends tevents {
       return $var->{$prop};
     }
     catch(Exception $e) {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
     return '';
   }
@@ -975,7 +980,7 @@ class basetheme extends tevents {
     }
     catch(Exception $e) {
       $result = '';
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
     }
     array_pop($this->parsing);
     return $result;
@@ -1008,8 +1013,8 @@ class basetheme extends tevents {
   }
 
   public static function clearcache() {
-    tfiler::delete(litepublisher::$paths->data . 'themes', false, false);
-    litepublisher::$urlmap->clearcache();
+    tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+    litepubl::$urlmap->clearcache();
   }
 
   public function h($s) {
@@ -1017,7 +1022,7 @@ class basetheme extends tevents {
   }
 
   public function link($url, $title) {
-    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepublisher::$site->url, $url, $title);
+    return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepubl::$site->url, $url, $title);
   }
 
   public static function quote($s) {
@@ -1049,7 +1054,7 @@ class ttheme extends basetheme {
   public static function context() {
     $result = self::i();
     if (!$result->name) {
-      if (($context = litepublisher::$urlmap->context) && isset($context->idview)) {
+      if (($context = litepubl::$urlmap->context) && isset($context->idview)) {
         $result = tview::getview($context)->theme;
       } else {
         $result = tview::i()->theme;
@@ -1097,7 +1102,7 @@ class ttheme extends basetheme {
     return count($this->templates['sidebars']);
   }
   private function get_author() {
-    $context = isset(litepublisher::$urlmap->context) ? litepublisher::$urlmap->context : ttemplate::i()->context;
+    $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
     if (!is_object($context)) {
       if (!isset(self::$vars['post'])) return new emptyclass();
       $context = self::$vars['post'];
@@ -1144,7 +1149,7 @@ class ttheme extends basetheme {
     $args->count = $count;
     $from = 1;
     $to = $count;
-    $perpage = litepublisher::$options->perpage;
+    $perpage = litepubl::$options->perpage;
     $args->perpage = $perpage;
     $items = array();
     if ($count > $perpage * 2) {
@@ -1179,9 +1184,9 @@ class ttheme extends basetheme {
 
     $currenttml = $this->templates['content.navi.current'];
     $tml = $this->templates['content.navi.link'];
-    if (!strbegin($url, 'http')) $url = litepublisher::$site->url . $url;
+    if (!strbegin($url, 'http')) $url = litepubl::$site->url . $url;
     $pageurl = rtrim($url, '/') . '/page/';
-    if ($params) $params = litepublisher::$site->q . $params;
+    if ($params) $params = litepubl::$site->q . $params;
 
     $a = array();
     if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
@@ -1258,8 +1263,8 @@ class ttheme extends basetheme {
 
   public function getpostsnavi(array $items, $url, $count, $postanounce, $perpage) {
     $result = $this->getposts($items, $postanounce);
-    if (!$perpage) $perpage = litepublisher::$options->perpage;
-    $result.= $this->getpages($url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    if (!$perpage) $perpage = litepubl::$options->perpage;
+    $result.= $this->getpages($url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -1405,7 +1410,7 @@ class targs {
   public $callback_params;
 
   public static function i() {
-    return litepublisher::$classes->newinstance(__class__);
+    return litepubl::$classes->newinstance(__class__);
   }
 
   public function __construct($thisthis = null) {
@@ -1422,7 +1427,7 @@ class targs {
 
   public function __get($name) {
     if (($name == 'link') && !isset($this->data['$link']) && isset($this->data['$url'])) {
-      return litepublisher::$site->url . $this->data['$url'];
+      return litepubl::$site->url . $this->data['$url'];
     }
 
     return $this->data['$' . $name];
@@ -1445,8 +1450,8 @@ class targs {
     $this->data["%%$name%%"] = $value;
 
     if (($name == 'url') && !isset($this->data['$link'])) {
-      $this->data['$link'] = litepublisher::$site->url . $value;
-      $this->data['%%link%%'] = litepublisher::$site->url . $value;
+      $this->data['$link'] = litepubl::$site->url . $value;
+      $this->data['%%link%%'] = litepubl::$site->url . $value;
     }
   }
 
@@ -1454,8 +1459,8 @@ class targs {
     foreach ($a as $k => $v) {
       $this->__set($k, $v);
       if ($k == 'url') {
-        $this->data['$link'] = litepublisher::$site->url . $v;
-        $this->data['%%link%%'] = litepublisher::$site->url . $v;
+        $this->data['$link'] = litepubl::$site->url . $v;
+        $this->data['%%link%%'] = litepubl::$site->url . $v;
       }
     }
 
@@ -1541,7 +1546,7 @@ class twidget extends tevents {
     $sidebars = tsidebars::i();
     $sidebars->insert($id, false, $sidebar, -1);
 
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $id;
   }
 
@@ -1561,7 +1566,7 @@ class twidget extends tevents {
       $content = $this->getcontent($id, $sidebar);
     }
     catch(Exception $e) {
-      litepublisher::$options->handexception($e);
+      litepubl::$options->handexception($e);
       return '';
     }
 
@@ -1614,7 +1619,7 @@ class twidget extends tevents {
       case 'include':
         $sidebar = self::findsidebar($id);
         $filename = self::getcachefilename($id, $sidebar);
-        litepublisher::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
+        litepubl::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
         break;
     }
   }
@@ -1637,10 +1642,10 @@ class twidget extends tevents {
   }
 
   public function getcontext($class) {
-    if (litepublisher::$urlmap->context instanceof $class) return litepublisher::$urlmap->context;
+    if (litepubl::$urlmap->context instanceof $class) return litepubl::$urlmap->context;
     //ajax
     $widgets = twidgets::i();
-    return litepublisher::$urlmap->getidcontext($widgets->idurlcontext);
+    return litepubl::$urlmap->getidcontext($widgets->idurlcontext);
   }
 
 } //class
@@ -1877,10 +1882,10 @@ class twidgets extends titems_storage {
 
     }
 
-    if (litepublisher::$options->admincookie) $this->callevent('onadminlogged', array(&$items,
+    if (litepubl::$options->admincookie) $this->callevent('onadminlogged', array(&$items,
       $sidebar
     ));
-    if (litepublisher::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items,
+    if (litepubl::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items,
       $sidebar
     ));
     $this->callevent('ongetwidgets', array(&$items,
@@ -2045,14 +2050,14 @@ class twidgets extends titems_storage {
 
   private function includewidget($id, $sidebar) {
     $filename = twidget::getcachefilename($id, $sidebar);
-    if (!litepublisher::$urlmap->cache->exists($filename)) {
+    if (!litepubl::$urlmap->cache->exists($filename)) {
       $widget = $this->getwidget($id);
       $content = $widget->getcontent($id, $sidebar);
-      litepublisher::$urlmap->cache->set($filename, $content);
+      litepubl::$urlmap->cache->set($filename, $content);
     }
 
     $theme = ttheme::i();
-    return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepublisher::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
+    return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
   }
 
   private function getcode($id, $sidebar) {
@@ -2122,11 +2127,11 @@ class twidgets extends titems_storage {
 
       case 'include':
         $filename = twidget::getcachefilename($id, $sidebar);
-        $result = litepublisher::$urlmap->cache->get($filename);
+        $result = litepubl::$urlmap->cache->get($filename);
         if (!$result) {
           $widget = $this->getwidget($id);
           $result = $widget->getcontent($id, $sidebar);
-          litepublisher::$urlmap->cache->set($filename, $result);
+          litepubl::$urlmap->cache->set($filename, $result);
         }
         break;
 
@@ -2199,7 +2204,7 @@ class twidgetscache extends titems {
 
   public function save() {
     if (!$this->modified) {
-      litepublisher::$urlmap->onclose = array(
+      litepubl::$urlmap->onclose = array(
         $this,
         'savemodified'
       );
@@ -2265,7 +2270,7 @@ class tguard {
       $ref = $_GET['ref'];
       $url = $_SERVER['REQUEST_URI'];
       $url = substr($url, 0, strpos($url, '&ref='));
-      if ($ref == md5(litepublisher::$secret . litepublisher::$site->url . $url . litepublisher::$options->solt)) return false;
+      if ($ref == md5(litepubl::$secret . litepubl::$site->url . $url . litepubl::$options->solt)) return false;
     }
 
     $host = '';
@@ -2277,7 +2282,7 @@ class tguard {
   }
 
   public static function checkattack() {
-    if (litepublisher::$options->xxxcheck && self::is_xxx()) {
+    if (litepubl::$options->xxxcheck && self::is_xxx()) {
       turlmap::nocache();
       tlocal::usefile('admin');
       if ($_POST) {

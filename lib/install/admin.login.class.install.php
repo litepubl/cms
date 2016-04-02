@@ -8,8 +8,8 @@
 namespace litepubl;
 
 function tadminloginInstall($self) {
-  litepublisher::$urlmap->addget('/admin/login/', get_class($self));
-  litepublisher::$urlmap->add('/admin/logout/', get_class($self) , 'out', 'get');
+  litepubl::$urlmap->addget('/admin/login/', get_class($self));
+  litepubl::$urlmap->add('/admin/logout/', get_class($self) , 'out', 'get');
 }
 
 function tadminloginUninstall($self) {

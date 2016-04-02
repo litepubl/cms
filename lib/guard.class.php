@@ -29,7 +29,7 @@ class tguard {
       $ref = $_GET['ref'];
       $url = $_SERVER['REQUEST_URI'];
       $url = substr($url, 0, strpos($url, '&ref='));
-      if ($ref == md5(litepublisher::$secret . litepublisher::$site->url . $url . litepublisher::$options->solt)) return false;
+      if ($ref == md5(litepubl::$secret . litepubl::$site->url . $url . litepubl::$options->solt)) return false;
     }
 
     $host = '';
@@ -41,7 +41,7 @@ class tguard {
   }
 
   public static function checkattack() {
-    if (litepublisher::$options->xxxcheck && self::is_xxx()) {
+    if (litepubl::$options->xxxcheck && self::is_xxx()) {
       turlmap::nocache();
       tlocal::usefile('admin');
       if ($_POST) {

@@ -45,7 +45,7 @@ class ttidyfilter extends tplugin {
       'wrap' => 200
     );
 
-    $tidy = new tidy;
+    $tidy = new \tidy;
     $tidy->parseString($this->gethtml($content) , $config, 'utf8');
     $tidy->cleanRepair();
     $content = $this->getbody((string)$tidy);

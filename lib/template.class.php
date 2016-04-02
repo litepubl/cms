@@ -26,20 +26,20 @@ class ttemplate extends tevents_storage {
 
   protected function create() {
     //prevent recursion
-    litepublisher::$classes->instances[get_class($this) ] = $this;
+    litepubl::$classes->instances[get_class($this) ] = $this;
     parent::create();
     $this->basename = 'template';
     $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-    $this->path = litepublisher::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
-    $this->url = litepublisher::$site->files . '/themes/default';
+    $this->path = litepubl::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
+    $this->url = litepubl::$site->files . '/themes/default';
     $this->itemplate = false;
     $this->ltoptions = array(
-      'url' => litepublisher::$site->url,
-      'files' => litepublisher::$site->files,
-      'idurl' => litepublisher::$urlmap->itemrequested['id'],
-      'lang' => litepublisher::$site->language,
-      'video_width' => litepublisher::$site->video_width,
-      'video_height' => litepublisher::$site->video_height,
+      'url' => litepubl::$site->url,
+      'files' => litepubl::$site->files,
+      'idurl' => litepubl::$urlmap->itemrequested['id'],
+      'lang' => litepubl::$site->language,
+      'video_width' => litepubl::$site->video_width,
+      'video_height' => litepubl::$site->video_height,
       'theme' => array() ,
       'custom' => array() ,
     );
@@ -91,9 +91,9 @@ class ttemplate extends tevents_storage {
     $this->view = $this->get_view($context);
     $theme = $this->view->theme;
     $this->ltoptions['theme']['name'] = $theme->name;
-    litepublisher::$classes->instances[get_class($theme) ] = $theme;
-    $this->path = litepublisher::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
-    $this->url = litepublisher::$site->files . '/themes/' . $theme->name;
+    litepubl::$classes->instances[get_class($theme) ] = $theme;
+    $this->path = litepubl::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
+    $this->url = litepubl::$site->files . '/themes/' . $theme->name;
     if ($this->view->hovermenu) {
       $this->hover = $theme->templates['menu.hover'];
       if ($this->hover != 'bootstrap') $this->hover = ($this->hover == 'true');
@@ -150,7 +150,7 @@ class ttemplate extends tevents_storage {
     $result = $this->view->theme->parsearg($tml, $args);
     //$result = trim($result, sprintf(' |.:%c%c', 187, 150));
     $result = trim($result, " |.:\n\r\t");
-    if ($result == '') return litepublisher::$site->name;
+    if ($result == '') return litepubl::$site->name;
     return $result;
   }
 
@@ -163,19 +163,19 @@ class ttemplate extends tevents_storage {
         if ($files->itemexists($icon)) $result = $files->geturl($icon);
       }
     }
-    if ($result == '') return litepublisher::$site->files . '/favicon.ico';
+    if ($result == '') return litepubl::$site->files . '/favicon.ico';
     return $result;
   }
 
   public function getkeywords() {
     $result = $this->itemplate ? $this->context->getkeywords() : '';
-    if ($result == '') return litepublisher::$site->keywords;
+    if ($result == '') return litepubl::$site->keywords;
     return $result;
   }
 
   public function getdescription() {
     $result = $this->itemplate ? $this->context->getdescription() : '';
-    if ($result == '') return litepublisher::$site->description;
+    if ($result == '') return litepubl::$site->description;
     return $result;
   }
 
@@ -184,13 +184,13 @@ class ttemplate extends tevents_storage {
     //$current = $this->context instanceof tmenu ? $this->context->id : 0;
     $view = $this->view;
     $menuclass = $view->menuclass;
-    $filename = $view->theme->name . sprintf('.%s.%s.php', $menuclass, litepublisher::$options->group ? litepublisher::$options->group : 'nobody');
+    $filename = $view->theme->name . sprintf('.%s.%s.php', $menuclass, litepubl::$options->group ? litepubl::$options->group : 'nobody');
 
-    if ($result = litepublisher::$urlmap->cache->get($filename)) return $result;
+    if ($result = litepubl::$urlmap->cache->get($filename)) return $result;
 
     $menus = getinstance($menuclass);
     $result = $menus->getmenu($this->hover, 0);
-    litepublisher::$urlmap->cache->set($filename, $result);
+    litepubl::$urlmap->cache->set($filename, $result);
     return $result;
   }
 
@@ -199,7 +199,7 @@ class ttemplate extends tevents_storage {
   }
 
   public function getjavascript($filename) {
-    return sprintf($this->js, litepublisher::$site->files . $filename);
+    return sprintf($this->js, litepubl::$site->files . $filename);
   }
 
   public function getready($s) {
@@ -257,7 +257,7 @@ class ttemplate extends tevents_storage {
   }
 
   public function getpage() {
-    $page = litepublisher::$urlmap->page;
+    $page = litepubl::$urlmap->page;
     if ($page <= 1) return '';
     return sprintf(tlocal::get('default', 'pagetitle') , $page);
   }

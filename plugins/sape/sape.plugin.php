@@ -37,7 +37,7 @@ class tsapeplugin extends twidget {
       $o['charset'] = 'UTF-8';
       $o['multi_site'] = true;
       if ($this->force) $o['force_show_code'] = $this->force;
-      $this->sape = new SAPE_client($o);
+      $this->sape = new \SAPE_client($o);
     }
   }
 

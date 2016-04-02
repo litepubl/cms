@@ -14,7 +14,7 @@ class tajaxmenueditor extends tajaxposteditor {
   }
 
   public function install() {
-    litepublisher::$urlmap->addget('/admin/ajaxmenueditor.htm', get_class($this));
+    litepubl::$urlmap->addget('/admin/ajaxmenueditor.htm', get_class($this));
   }
 
   public function request($arg) {
@@ -27,7 +27,7 @@ class tajaxmenueditor extends tajaxposteditor {
     $menus = tmenus::i();
     if (($id != 0) && !$menus->itemexists($id)) return self::error403();
     $menu = tmenu::i($id);
-    if ((litepublisher::$options->group == 'author') && (litepublisher::$options->user != $menu->author)) return self::error403();
+    if ((litepubl::$options->group == 'author') && (litepubl::$options->user != $menu->author)) return self::error403();
     if (($id > 0) && !$menus->itemexists($id)) return self::error403();
 
     $views = tviews::i();

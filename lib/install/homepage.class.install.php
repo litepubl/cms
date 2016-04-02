@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function thomepageInstall($self) {
-  litepublisher::$site->home = '/';
+  litepubl::$site->home = '/';
   $menus = tmenus::i();
   $menus->lock();
   $self->lock();

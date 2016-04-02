@@ -16,7 +16,7 @@ class tadmincommentmanager extends tadminmenu {
   public function getcontent() {
     $result = '';
     $cm = tcommentmanager::i();
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $html = $this->gethtml('comments');
     $lang = tlocal::admin('commentmanager');
     $args = new targs();
@@ -112,7 +112,7 @@ class tadmincommentmanager extends tadminmenu {
 
   public function processform() {
     extract($_POST, EXTR_SKIP);
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $cm = tcommentmanager::i();
     $cm->lock();
 

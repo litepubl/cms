@@ -118,7 +118,7 @@ class tadminpingbacks extends tadminmenu {
     $result = $form->get();
 
     $theme = ttheme::i();
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total / $perpage));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
     return $result;
   }
 

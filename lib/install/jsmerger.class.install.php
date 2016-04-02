@@ -8,14 +8,14 @@
 namespace litepubl;
 
 function tjsmergerInstall($self) {
-  $dir = litepublisher::$paths->files . 'js';
+  $dir = litepubl::$paths->files . 'js';
   @mkdir($dir, 0777);
   @chmod($dir, 0777);
   $file = $dir . DIRECTORY_SEPARATOR . 'index.htm';
   file_put_contents($file, ' ');
   @chmod($file, 0666);
 
-  $language = litepublisher::$options->language;
+  $language = litepubl::$options->language;
   $self->lock();
   $self->items = array();
   $section = 'default';

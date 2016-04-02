@@ -34,7 +34,7 @@ class tfiles extends titems {
 
   public function geturl($id) {
     $item = $this->getitem($id);
-    return litepublisher::$site->files . '/files/' . $item['filename'];
+    return litepubl::$site->files . '/files/' . $item['filename'];
   }
 
   public function getlink($id) {
@@ -43,7 +43,7 @@ class tfiles extends titems {
     if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
       $icon = $this->geticon($item['icon']);
     }
-    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepublisher::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
+    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepubl::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
   }
 
   public function geticon($id) {
@@ -55,8 +55,8 @@ class tfiles extends titems {
   }
 
   public function additem(array $item) {
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
-    $item['author'] = litepublisher::$options->user;
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+    $item['author'] = litepubl::$options->user;
     $item['posted'] = sqldate();
     $item['hash'] = $this->gethash($realfile);
     $item['size'] = filesize($realfile);
@@ -116,10 +116,10 @@ class tfiles extends titems {
 
     $item = $this->getitem($id);
     if ($item['idperm'] == 0) {
-      @unlink(litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
+      @unlink(litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
     } else {
-      @unlink(litepublisher::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
-      litepublisher::$urlmap->delete('/files/' . $item['filename']);
+      @unlink(litepubl::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
+      litepubl::$urlmap->delete('/files/' . $item['filename']);
     }
 
     parent::delete($id);
@@ -140,7 +140,7 @@ class tfiles extends titems {
   public function setcontent($id, $content) {
     if (!$this->itemexists($id)) return false;
     $item = $this->getitem($id);
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
     if (file_put_contents($realfile, $content)) {
       $item['hash'] = $this->gethash($realfile);
       $item['size'] = filesize($realfile);
@@ -211,7 +211,7 @@ class tfiles extends titems {
     $args = new targs();
     $args->count = count($list);
 
-    $url = litepublisher::$site->files . '/files/';
+    $url = litepubl::$site->files . '/files/';
 
     $preview = ttheme::$vars['preview'] = new tarray2prop();
     $midle = ttheme::$vars['midle'] = new tarray2prop();
@@ -278,7 +278,7 @@ class tfiles extends titems {
     foreach ($items as $id) {
       $item = $this->getitem($id);
       if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
-        $baseurl = litepublisher::$site->files . '/files/';
+        $baseurl = litepubl::$site->files . '/files/';
         $args = new targs();
         $args->add($item);
         $args->link = $baseurl . $item['filename'];
@@ -313,7 +313,7 @@ class tfiles extends titems {
     $item = $this->getitem($id);
     return jsonattr(array(
       'id' => $id,
-      'link' => litepublisher::$site->files . '/files/' . $item['filename'],
+      'link' => litepubl::$site->files . '/files/' . $item['filename'],
       'width' => $item['width'],
       'height' => $item['height'],
       'size' => $item['size'],

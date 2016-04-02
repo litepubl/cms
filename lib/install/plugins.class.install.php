@@ -8,6 +8,6 @@
 namespace litepubl;
 
 function tpluginsInstall($self) {
-  @mkdir(litepublisher::$paths->data . 'plugins', 0777);
-  @chmod(litepublisher::$paths->data . 'plugins', 0777);
+  @mkdir(litepubl::$paths->data . 'plugins', 0777);
+  @chmod(litepubl::$paths->data . 'plugins', 0777);
 }

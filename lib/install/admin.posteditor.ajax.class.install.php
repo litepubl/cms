@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tajaxposteditorInstall($self) {
-  litepublisher::$urlmap->addget('/admin/ajaxposteditor.htm', get_class($self));
+  litepubl::$urlmap->addget('/admin/ajaxposteditor.htm', get_class($self));
 }
 
 function tajaxposteditorUninstall($self) {

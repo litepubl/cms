@@ -45,7 +45,7 @@ class tdownloadcounter extends titems {
     }
 
     $url = $files->geturl($id);
-    litepublisher::$urlmap->redir($url);
+    litepubl::$urlmap->redir($url);
   }
 
 } //class

@@ -25,7 +25,7 @@ class appcache_manifest extends titems {
     if (!in_array($value, $this->items)) {
       $this->items[] = $value;
       $this->save();
-      litepublisher::$urlmap->setexpired($this->idurl);
+      litepubl::$urlmap->setexpired($this->idurl);
       $this->added($value);
     }
   }

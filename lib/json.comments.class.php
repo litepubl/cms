@@ -14,10 +14,10 @@ class tjsoncomments extends tevents {
   }
 
   public function auth($id, $action) {
-    if (!litepublisher::$options->user) return false;
+    if (!litepubl::$options->user) return false;
     $comments = tcomments::i();
     if (!$comments->itemexists($id)) return false;
-    if (litepublisher::$options->ingroup('moderator')) return true;
+    if (litepubl::$options->ingroup('moderator')) return true;
     $cm = tcommentmanager::i();
     switch ($action) {
       case 'edit':
@@ -25,22 +25,22 @@ class tjsoncomments extends tevents {
           return false;
         }
 
-        if ('closed' == litepublisher::$db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+        if ('closed' == litepubl::$db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
           return false;
         }
 
-        return $comments->getvalue($id, 'author') == litepublisher::$options->user;
+        return $comments->getvalue($id, 'author') == litepubl::$options->user;
 
       case 'delete':
         if (!$cm->candelete) {
           return false;
         }
 
-        if ('closed' == litepublisher::$db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+        if ('closed' == litepubl::$db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
           return false;
         }
 
-        return $comments->getvalue($id, 'author') == litepublisher::$options->user;
+        return $comments->getvalue($id, 'author') == litepubl::$options->user;
     }
 
     return false;
@@ -91,15 +91,15 @@ class tjsoncomments extends tevents {
   }
 
   public function comments_get_hold(array $args) {
-    if (!litepublisher::$options->user) return $this->forbidden();
+    if (!litepubl::$options->user) return $this->forbidden();
 
     $idpost = (int)$args['idpost'];
     $comments = tcomments::i($idpost);
 
-    if (litepublisher::$options->ingroup('moderator')) {
+    if (litepubl::$options->ingroup('moderator')) {
       $where = '';
     } else {
-      $where = "and $comments->thistable.author = " . litepublisher::$options->user;
+      $where = "and $comments->thistable.author = " . litepubl::$options->user;
     }
 
     return array(
@@ -108,7 +108,7 @@ class tjsoncomments extends tevents {
   }
 
   public function comment_add(array $args) {
-    if (litepublisher::$options->commentsdisabled) return array(
+    if (litepubl::$options->commentsdisabled) return array(
       'error' => array(
         'message' => 'Comments disabled',
         'code' => 403
@@ -150,13 +150,13 @@ class tjsoncomments extends tevents {
   }
 
   public function comments_get_logged(array $args) {
-    if (!litepublisher::$options->user) return $this->forbidden();
+    if (!litepubl::$options->user) return $this->forbidden();
 
     $theme = ttheme::i();
     if (!$theme->name) $theme = tview::i()->theme;
 
     $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
-    $mesg = str_replace('$site.liveuser', litepublisher::$site->getuserlink() , $mesg);
+    $mesg = str_replace('$site.liveuser', litepubl::$site->getuserlink() , $mesg);
 
     $lang = tlocal::i('comment');
     return $theme->parse($mesg);

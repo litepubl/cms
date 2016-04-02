@@ -34,7 +34,7 @@ class tjsonserver extends tevents {
       $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
     }
 
-    if (litepublisher::$debug) {
+    if (litepubl::$debug) {
       tfiler::log("request:\n" . $HTTP_RAW_POST_DATA, 'json.txt');
     }
 
@@ -101,9 +101,9 @@ class tjsonserver extends tevents {
       $result = $this->callevent($args['method'], $a);
     }
     catch(Exception $e) {
-      if (litepublisher::$debug || $this->debug) {
-        litepublisher::$options->handexception($e);
-        throw new Exception(litepublisher::$options->errorlog);
+      if (litepubl::$debug || $this->debug) {
+        litepubl::$options->handexception($e);
+        throw new Exception(litepubl::$options->errorlog);
       }
 
       return $this->json_error($id, $e->getCode() , $e->getMessage());
@@ -145,7 +145,7 @@ class tjsonserver extends tevents {
 
   public function json($result) {
     $js = tojson($result);
-    //if (litepublisher::$debug) tfiler::log("response:\n".$js, 'json.txt');
+    //if (litepubl::$debug) tfiler::log("response:\n".$js, 'json.txt');
     return "<?php
     header('Connection: close');
     header('Content-Length: " . strlen($js) . "');

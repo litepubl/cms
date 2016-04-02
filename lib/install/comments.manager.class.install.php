@@ -28,7 +28,7 @@ function tcommentmanagerInstall($self) {
   $self->data['comuser_subscribe'] = true;
 
   $self->data['idguest'] = 0; //create user in installer after create users table
-  $groups = litepublisher::$options->groupnames;
+  $groups = litepubl::$options->groupnames;
   $self->data['idgroups'] = array(
     $groups['admin'],
     $groups['editor'],
@@ -45,7 +45,7 @@ function tcommentmanagerInstall($self) {
   $comments->added = $self->sendmail;
   $comments->unlock();
 
-  litepublisher::$urlmap->addget('/comusers.htm', get_class($self));
+  litepubl::$urlmap->addget('/comusers.htm', get_class($self));
 
   trobotstxt::i()->AddDisallow('/comusers.htm');
 }

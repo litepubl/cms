@@ -26,9 +26,9 @@ class trssholdcomments extends tevents {
   public function setkey($key) {
     if ($this->key != $key) {
       if ($key == '') {
-        litepublisher::$classes->commentmanager->unbind($self);
+        litepubl::$classes->commentmanager->unbind($self);
       } else {
-        litepublisher::$classes->commentmanager->changed = $this->commentschanged;
+        litepubl::$classes->commentmanager->changed = $this->commentschanged;
       }
       $this->data['key'] = $key;
       $this->save();
@@ -36,12 +36,12 @@ class trssholdcomments extends tevents {
   }
 
   public function commentschanged($idpost) {
-    litepublisher::$urlmap->setexpired($this->idurl);
+    litepubl::$urlmap->setexpired($this->idurl);
   }
 
   public function request($arg) {
-    if (!litepublisher::$options->user) return 403;
-    $result = '<?php turlmap::sendxml(); ?>';
+    if (!litepubl::$options->user) return 403;
+    $result = '<?php litepubl::turlmap::sendxml(); ?>';
     $rss = trss::i();
     $rss->domrss = new tdomrss;
     $this->dogetholdcomments($rss);
@@ -50,10 +50,10 @@ class trssholdcomments extends tevents {
   }
 
   private function dogetholdcomments($rss) {
-    $rss->domrss->CreateRoot(litepublisher::$site->url . $this->url, tlocal::get('comment', 'onrecent') . ' ' . litepublisher::$site->name);
+    $rss->domrss->CreateRoot(litepubl::$site->url . $this->url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
 
-    $db = litepublisher::$db;
-    $author = litepublisher::$options->ingroup('moderator') ? '' : sprintf('%s.author = %d and ', $db->comments, litepublisher::$options->user);
+    $db = litepubl::$db;
+    $author = litepubl::$options->ingroup('moderator') ? '' : sprintf('%s.author = %d and ', $db->comments, litepubl::$options->user);
     $recent = $db->res2assoc($db->query("select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as website,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
@@ -70,7 +70,7 @@ class trssholdcomments extends tevents {
     $comment = new tarray2prop();
     ttheme::$vars['comment'] = $comment;
     $theme = ttheme::i();
-    $tml = str_replace('$adminurl', '/admin/comments/' . litepublisher::$site->q . 'id=$comment.id&action', $this->template);
+    $tml = str_replace('$adminurl', '/admin/comments/' . litepubl::$site->q . 'id=$comment.id&action', $this->template);
     $lang = tlocal::admin('comments');
 
     foreach ($recent as $item) {

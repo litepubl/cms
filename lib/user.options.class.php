@@ -25,11 +25,11 @@ class tuseroptions extends titems {
   }
 
   public function getval($name) {
-    return $this->getvalue(litepublisher::$options->user, $name);
+    return $this->getvalue(litepubl::$options->user, $name);
   }
 
   public function setval($name, $value) {
-    return $this->setvalue(litepublisher::$options->user, $name, $value);
+    return $this->setvalue(litepubl::$options->user, $name, $value);
   }
 
   public function getitem($id) {

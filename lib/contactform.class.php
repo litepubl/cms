@@ -39,7 +39,7 @@ class tcontactform extends tsinglemenu {
       }
     }
 
-    tmailer::sendmail('', $email, '', litepublisher::$options->email, $this->subject, $content);
+    tmailer::sendmail('', $email, '', litepubl::$options->email, $this->subject, $content);
     return $this->success;
   }
 

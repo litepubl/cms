@@ -22,14 +22,14 @@ class tadminlogin extends tadminform {
 
   public function auth() {
     if ($s = tguard::checkattack()) return $s;
-    if (!litepublisher::$options->authcookie()) return litepublisher::$urlmap->redir('/admin/login/');
+    if (!litepubl::$options->authcookie()) return litepubl::$urlmap->redir('/admin/login/');
   }
 
   private function logout() {
-    litepublisher::$options->logout();
-    setcookie('backurl', '', 0, litepublisher::$site->subdir, false);
-    litepublisher::$urlmap->nocache();
-    return litepublisher::$urlmap->redir('/admin/login/');
+    litepubl::$options->logout();
+    setcookie('backurl', '', 0, litepubl::$site->subdir, false);
+    litepubl::$urlmap->nocache();
+    return litepubl::$urlmap->redir('/admin/login/');
   }
 
   //return error string message if not logged
@@ -37,18 +37,18 @@ class tadminlogin extends tadminform {
     tlocal::admin();
     if (empty($email) || empty($password)) return tlocal::get('login', 'empty');
 
-    $iduser = litepublisher::$options->emailexists($email);
+    $iduser = litepubl::$options->emailexists($email);
     if (!$iduser) {
       if (self::confirm_reg($email, $password)) return;
       return tlocal::get('login', 'unknownemail');
     }
 
-    if (litepublisher::$options->authpassword($iduser, $password)) return;
+    if (litepubl::$options->authpassword($iduser, $password)) return;
     if (self::confirm_restore($email, $password)) return;
 
     //check if password is empty and neet to restore password
     if ($iduser == 1) {
-      if (!litepublisher::$options->password) return tlocal::get('login', 'torestorepass');
+      if (!litepubl::$options->password) return tlocal::get('login', 'torestorepass');
     } else {
       if (!tusers::i()->getpassword($iduser)) return tlocal::get('login', 'torestorepass');
     }
@@ -72,25 +72,25 @@ class tadminlogin extends tadminform {
 
     $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
     $cookie = md5uniq();
-    litepublisher::$options->setcookies($cookie, $expired);
-    litepublisher::$options->setcookie('litepubl_regservice', 'email', $expired);
+    litepubl::$options->setcookies($cookie, $expired);
+    litepubl::$options->setcookie('litepubl_regservice', 'email', $expired);
 
     $url = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
 
-    if ($url && strbegin($url, litepublisher::$site->url)) $url = substr($url, strlen(litepublisher::$site->url));
+    if ($url && strbegin($url, litepubl::$site->url)) $url = substr($url, strlen(litepubl::$site->url));
     if ($url && (strbegin($url, '/admin/login/') || strbegin($url, '/admin/password/'))) $url = false;
 
     if (!$url) {
       $url = '/admin/';
-      if (litepublisher::$options->group != 'admin') {
+      if (litepubl::$options->group != 'admin') {
         $groups = tusergroups::i();
-        $url = $groups->gethome(litepublisher::$options->group);
+        $url = $groups->gethome(litepubl::$options->group);
       }
     }
 
-    litepublisher::$options->setcookie('backurl', '', 0);
+    litepubl::$options->setcookie('backurl', '', 0);
     turlmap::nocache();
-    return litepublisher::$urlmap->redir($url);
+    return litepubl::$urlmap->redir($url);
   }
 
   public function createform() {
@@ -98,7 +98,7 @@ class tadminlogin extends tadminform {
     $theme = tview::getview($this)->theme;
     $args = new targs();
 
-    if (litepublisher::$options->usersenabled && litepublisher::$options->reguser) {
+    if (litepubl::$options->usersenabled && litepubl::$options->reguser) {
       $lang = tlocal::admin('users');
       $form = new adminform($args);
       $form->title = $lang->regform;
@@ -156,9 +156,9 @@ class tadminlogin extends tadminform {
   }
 
   public static function confirm_reg($email, $password) {
-    if (!litepublisher::$options->usersenabled || !litepublisher::$options->reguser) return false;
+    if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return false;
 
-    tsession::start('reguser-' . md5(litepublisher::$options->hash($email)));
+    tsession::start('reguser-' . md5(litepubl::$options->hash($email)));
     if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
       if (isset($_SESSION['email'])) {
         session_write_close();
@@ -178,15 +178,15 @@ class tadminlogin extends tadminform {
     session_destroy();
 
     if ($id) {
-      litepublisher::$options->user = $id;
-      litepublisher::$options->updategroup();
+      litepubl::$options->user = $id;
+      litepubl::$options->updategroup();
     }
 
     return $id;
   }
 
   public static function confirm_restore($email, $password) {
-    tsession::start('password-restore-' . md5(litepublisher::$options->hash($email)));
+    tsession::start('password-restore-' . md5(litepubl::$options->hash($email)));
     if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
       if (isset($_SESSION['email'])) {
         session_write_close();
@@ -197,8 +197,8 @@ class tadminlogin extends tadminform {
     }
 
     session_destroy();
-    if ($email == strtolower(trim(litepublisher::$options->email))) {
-      litepublisher::$options->changepassword($password);
+    if ($email == strtolower(trim(litepubl::$options->email))) {
+      litepubl::$options->changepassword($password);
       return 1;
     } else {
       $users = tusers::i();

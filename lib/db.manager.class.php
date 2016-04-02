@@ -16,13 +16,13 @@ class tdbmanager {
   }
 
   public function __get($name) {
-    if ($name == 'db') return litepublisher::$db;
-    return litepublisher::$db->$name;
+    if ($name == 'db') return litepubl::$db;
+    return litepubl::$db->$name;
   }
 
   public function __call($name, $arg) {
     return call_user_func_array(array(
-      litepublisher::$db,
+      litepubl::$db,
       $name
     ) , $arg);
   }
@@ -43,7 +43,7 @@ class tdbmanager {
   }
 
   public function deletealltables() {
-    $list = $this->res2array($this->query("show tables from " . litepublisher::$options->dbconfig['dbname']));
+    $list = $this->res2array($this->query("show tables from " . litepubl::$options->dbconfig['dbname']));
     foreach ($list as $row) {
       $this->exec("DROP TABLE IF EXISTS " . $row[0]);
     }
@@ -151,7 +151,7 @@ class tdbmanager {
   }
 
   public function gettables() {
-    if ($res = $this->query(sprintf("show tables from %s like '%s%%'", litepublisher::$options->dbconfig['dbname'], litepublisher::$options->dbconfig['prefix']))) {
+    if ($res = $this->query(sprintf("show tables from %s like '%s%%'", litepubl::$options->dbconfig['dbname'], litepubl::$options->dbconfig['prefix']))) {
       return $this->res2id($res);
     }
     return false;
@@ -170,7 +170,7 @@ class tdbmanager {
   }
 
   public function optimize() {
-    $prefix = strtolower(litepublisher::$options->dbconfig['prefix']);
+    $prefix = strtolower(litepubl::$options->dbconfig['prefix']);
     $tables = $this->gettables();
     foreach ($tables as $table) {
       if (strbegin(strtolower($table) , $prefix)) {
@@ -182,7 +182,7 @@ class tdbmanager {
   }
 
   public function export() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     $v = $this->fetchassoc($this->query("show variables like 'max_allowed_packet'"));
     $this->max_allowed_packet = floor($v['Value'] * 0.8);
 
@@ -239,13 +239,13 @@ class tdbmanager {
       if ($this->iscomment($s)) continue;
       $sql.= $s . "\n";
       if ($s[strlen($s) - 1] != ';') continue;
-      litepublisher::$db->exec($sql);
+      litepubl::$db->exec($sql);
       $sql = '';
     }
 
     $s = substr($dump, $i);
     if (!$this->iscomment($s)) $sql.= $s;
-    if ($sql != '') litepublisher::$db->exec($sql);
+    if ($sql != '') litepubl::$db->exec($sql);
   }
 
   private function iscomment(&$s) {

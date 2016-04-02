@@ -18,7 +18,7 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
     $this->auth($username, $password, 'author');
     $count = (int)$count;
     $posts = tposts::i();
-    $list = $posts->getrecent(litepublisher::$options->user, $count);
+    $list = $posts->getrecent(litepubl::$options->user, $count);
     $result = array();
     foreach ($list as $id) {
       $post = tpost::i($id);

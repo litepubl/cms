@@ -206,7 +206,7 @@ class toptions extends tevents_storage {
 
   public function getdbpassword() {
     if (function_exists('mcrypt_encrypt')) {
-      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepublisher::$secret);
+      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
     } else {
       return str_rot13(base64_decode($this->data['dbconfig']['password']));
     }
@@ -214,7 +214,7 @@ class toptions extends tevents_storage {
 
   public function setdbpassword($password) {
     if (function_exists('mcrypt_encrypt')) {
-      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepublisher::$secret);
+      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepubl::$secret);
     } else {
       $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
     }
@@ -227,7 +227,7 @@ class toptions extends tevents_storage {
   }
 
   public function setcookie($name, $value, $expired) {
-    setcookie($name, $value, $expired, litepublisher::$site->subdir . '/', false, '', $this->securecookie);
+    setcookie($name, $value, $expired, litepubl::$site->subdir . '/', false, '', $this->securecookie);
   }
 
   public function setcookies($cookie, $expired) {
@@ -262,7 +262,7 @@ class toptions extends tevents_storage {
   }
 
   public function hash($s) {
-    return basemd5((string)$s . $this->solt . litepublisher::$secret);
+    return basemd5((string)$s . $this->solt . litepubl::$secret);
   }
 
   public function ingroup($groupname) {
@@ -317,11 +317,11 @@ class toptions extends tevents_storage {
       $log.= "\n";
     }
 
-    $log = str_replace(litepublisher::$paths->home, '', $log);
+    $log = str_replace(litepubl::$paths->home, '', $log);
     $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
     tfiler::log($log, 'exceptions.log');
 
-    if (!(litepublisher::$debug || $this->echoexception || $this->admincookie || litepublisher::$urlmap->adminpanel)) {
+    if (!(litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
       tfiler::log($log, 'exceptionsmail.log');
     }
   }
@@ -336,7 +336,7 @@ class toptions extends tevents_storage {
   }
 
   public function showerrors() {
-    if (!empty($this->errorlog) && (litepublisher::$debug || $this->echoexception || $this->admincookie || litepublisher::$urlmap->adminpanel)) {
+    if (!empty($this->errorlog) && (litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
       echo $this->errorlog;
     }
   }

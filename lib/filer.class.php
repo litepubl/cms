@@ -96,7 +96,7 @@ class tfiler {
   public static function log($s, $filename = '') {
     if (!is_string($s)) $s = var_export($s, true);
     if ($filename == '') $filename = 'log.txt';
-    self::append(date('r') . "\n$s\n\n", litepublisher::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+    self::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
   }
 
   public static function append($s, $filename) {
@@ -115,7 +115,7 @@ class tfiler {
   }
 
   public static function get_filetime_offset() {
-    $filename = litepublisher::$paths->data . md5(microtime()) . '.tmp';
+    $filename = litepubl::$paths->data . md5(microtime()) . '.tmp';
     $t = time();
     touch($filename, $t, $t);
     clearstatcache();

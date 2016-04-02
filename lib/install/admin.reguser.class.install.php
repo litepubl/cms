@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tadminreguserInstall($self) {
-  litepublisher::$urlmap->addget('/admin/reguser/', get_class($self));
+  litepubl::$urlmap->addget('/admin/reguser/', get_class($self));
 }
 
 function tadminreguserUninstall($self) {

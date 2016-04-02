@@ -141,7 +141,7 @@ class tremotefiler {
   }
 
   public function getroot($root) {
-    $temp = litepublisher::$paths->data . md5rand();
+    $temp = litepubl::$paths->data . md5rand();
     file_put_contents($temp, ' ');
     @chmod($temp, 0666);
 

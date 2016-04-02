@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tprivatefilesInstall($self) {
-  $dir = litepublisher::$paths->files . 'private';
+  $dir = litepubl::$paths->files . 'private';
   @mkdir($dir, 0777);
   @chmod($dir, 0777);
   $dir.= DIRECTORY_SEPARATOR;

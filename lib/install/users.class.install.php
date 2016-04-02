@@ -15,9 +15,9 @@ function tusersInstall($self) {
   $manager->CreateTable($self->grouptable, file_get_contents($dir . 'user.groups.sql'));
 
   $id = $self->db->add(array(
-    'email' => litepublisher::$options->email,
-    'name' => litepublisher::$site->author,
-    'website' => litepublisher::$site->url . '/',
+    'email' => litepubl::$options->email,
+    'name' => litepubl::$site->author,
+    'website' => litepubl::$site->url . '/',
     'password' => '',
     'cookie' => '',
     'expired' => sqldate() ,

@@ -81,7 +81,7 @@ class tposts extends titems {
   }
 
   public function select($where, $limit) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     if ($this->childtable) {
       $childtable = $db->prefix . $this->childtable;
       return $this->setassoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
@@ -135,7 +135,7 @@ class tposts extends titems {
 
   public function getchildscount($where) {
     if ($this->childtable == '') return 0;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $childtable = $db->prefix . $this->childtable;
     if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childtable
     where $db->posts.status <> 'deleted' and $childtable.id = $db->posts.id $where")) {
@@ -184,7 +184,7 @@ class tposts extends titems {
       if ($post->status == 'published') $post->status = 'future';
     }
 
-    if (($post->icon == 0) && !litepublisher::$options->icondisabled) {
+    if (($post->icon == 0) && !litepubl::$options->icondisabled) {
       $icons = ticons::i();
       $post->icon = $icons->getid('post');
     }
@@ -201,7 +201,7 @@ class tposts extends titems {
     $this->cointerface('add', $post);
     $this->added($post->id);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $post->id;
   }
 
@@ -222,7 +222,7 @@ class tposts extends titems {
     $this->edited($post->id);
     $this->changed();
 
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {
@@ -313,7 +313,7 @@ class tposts extends titems {
   public function addrevision() {
     $this->data['revision']++;
     $this->save();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function getanhead(array $items) {

@@ -32,12 +32,12 @@ class ttemplatecomments extends tevents {
     $result.= $theme->parsearg($theme->templates['content.post.templatecomments.comments.count'], $args);
     $result.= $list;
 
-    if ((litepublisher::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
+    if ((litepubl::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
       $pingbacks = tpingbacks::i($post->id);
       $result.= $pingbacks->getcontent();
     }
 
-    if (litepublisher::$options->commentsdisabled || ($post->comstatus == 'closed')) {
+    if (litepubl::$options->commentsdisabled || ($post->comstatus == 'closed')) {
       $result.= $theme->parse($theme->templates['content.post.templatecomments.closed']);
       return $result;
     }
@@ -47,9 +47,9 @@ class ttemplatecomments extends tevents {
 
     $cm = tcommentmanager::i();
     // if user can see hold comments
-    $result.= sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+    $result.= sprintf('<?php if (litepubl::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
 
-    $holdmesg = '<?php if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+    $holdmesg = '<?php if ($ismoder = litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
     //hide template hold comments in html comment
     '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -65,20 +65,20 @@ class ttemplatecomments extends tevents {
 
     switch ($post->comstatus) {
       case 'reg':
-        $args->mesg = $this->getmesg('reqlogin', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('reqlogin', litepubl::$options->reguser ? 'regaccount' : false);
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         break;
 
 
       case 'guest':
-        $args->mesg = $this->getmesg('guest', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('guest', litepubl::$options->reguser ? 'regaccount' : false);
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result.= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
         break;
 
 
       case 'comuser':
-        $args->mesg = $this->getmesg('comuser', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('comuser', litepubl::$options->reguser ? 'regaccount' : false);
 
         foreach (array(
           'name',
@@ -112,7 +112,7 @@ class ttemplatecomments extends tevents {
     $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
     //insert back url
-    $result = str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url) , $result);
+    $result = str_replace('backurl=', 'backurl=' . urlencode(litepubl::$urlmap->url) , $result);
 
     return $theme->parse($result);
   }

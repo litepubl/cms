@@ -82,7 +82,7 @@ class tadminhtml {
   public function loadinstall() {
     if (isset($this->ini['installation'])) return;
     tlocal::usefile('install');
-    if ($v = parse_ini_file(litepublisher::$paths->languages . 'install.ini', true)) {
+    if ($v = parse_ini_file(litepubl::$paths->languages . 'install.ini', true)) {
       $this->ini = $v + $this->ini;
     }
   }
@@ -96,11 +96,11 @@ class tadminhtml {
   }
 
   public static function getadminlink($path, $params) {
-    return litepublisher::$site->url . $path . litepublisher::$site->q . $params;
+    return litepubl::$site->url . $path . litepubl::$site->q . $params;
   }
 
   public static function getlink($url, $title) {
-    return sprintf('<a href="%s%s">%s</a>', litepublisher::$site->url, $url, $title);
+    return sprintf('<a href="%s%s">%s</a>', litepubl::$site->url, $url, $title);
   }
 
   public static function array2combo(array $items, $selected) {

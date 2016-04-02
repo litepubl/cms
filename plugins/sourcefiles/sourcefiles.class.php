@@ -113,7 +113,7 @@ class tsourcefiles extends tplugin implements itemplate {
     if (!isset($this->geshi)) {
       define('GESHI_ROOT', dirname(__file__) . '/');
       require (dirname(__file__) . '/geshi.php');
-      $this->geshi = new GeSHi();
+      $this->geshi = new \GeSHi();
       $this->geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
       $this->geshi->enable_classes();
       //$this->geshi->enable_keyword_links(false);
@@ -164,7 +164,7 @@ class tsourcefiles extends tplugin implements itemplate {
   }
 
   public function readzip($zipname) {
-    $zip = new zipArchive();
+    $zip = new \zipArchive();
     if ($zip->open($zipname) !== true) {
       $this->error(sprintf('Error open "%s" zip archive', $zipname));
     }

@@ -88,7 +88,7 @@ class tmetapost extends titem {
     }
 
     $instances = & self::$instances['postmeta'];
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $db->table = 'postsmeta';
     $res = $db->select(sprintf('id in (%s)', implode(',', $items)));
     while ($row = $db->fetchassoc($res)) {

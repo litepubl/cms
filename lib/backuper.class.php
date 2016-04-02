@@ -23,15 +23,15 @@ class tbackuper extends tevents {
   }
 
   public static function include_tar() {
-    litepublisher::$classes->include_file(litepublisher::$paths->libinclude . 'tar.class.php');
+    litepubl::$classes->include_file(litepubl::$paths->libinclude . 'tar.class.php');
   }
 
   public static function include_zip() {
-    litepublisher::$classes->include_file(litepublisher::$paths->libinclude . 'zip.lib.php');
+    litepubl::$classes->include_file(litepubl::$paths->libinclude . 'zip.lib.php');
   }
 
   public static function include_unzip() {
-    litepublisher::$classes->include_file(litepublisher::$paths->libinclude . 'strunzip.lib.php');
+    litepubl::$classes->include_file(litepubl::$paths->libinclude . 'strunzip.lib.php');
   }
 
   protected function create() {
@@ -227,7 +227,7 @@ class tbackuper extends tevents {
     $path = rtrim($path, DIRECTORY_SEPARATOR);
     $filer = tlocalfiler::i();
     if ($list = $filer->getdir($path)) {
-      $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen(litepublisher::$paths->data)));
+      $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen(litepubl::$paths->data)));
       $this->adddir($dir, $filer->getchmod($path));
       $dir = rtrim($dir, '/') . '/';
       $hasindex = false;
@@ -258,7 +258,7 @@ class tbackuper extends tevents {
 
   private function readhome() {
     $filer = $this->filer;
-    $this->chdir(rtrim(litepublisher::$paths->home, DIRECTORY_SEPARATOR));
+    $this->chdir(rtrim(litepubl::$paths->home, DIRECTORY_SEPARATOR));
     if ($list = $filer->getdir('.')) {
       foreach ($list as $name => $item) {
         if ($item['isdir']) continue;
@@ -286,8 +286,8 @@ class tbackuper extends tevents {
   public function setdir($dir) {
     $dir = trim($dir, '/');
     if ($i = strpos($dir, '/')) $dir = substr($dir, 0, $i);
-    if (!isset(litepublisher::$paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
-    $this->chdir(dirname(rtrim(litepublisher::$paths->$dir, DIRECTORY_SEPARATOR)));
+    if (!isset(litepubl::$paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
+    $this->chdir(dirname(rtrim(litepubl::$paths->$dir, DIRECTORY_SEPARATOR)));
   }
 
   public function getpartial($plugins, $theme, $lib) {
@@ -295,7 +295,7 @@ class tbackuper extends tevents {
     $this->createarchive();
     if (dbversion) $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
-    //$this->readdata(litepublisher::$paths->data);
+    //$this->readdata(litepubl::$paths->data);
     $this->setdir('storage');
     $this->readdir('storage/data');
 
@@ -323,7 +323,7 @@ class tbackuper extends tevents {
       $this->setdir('plugins');
       $plugins = tplugins::i();
       foreach ($plugins->items as $name => $item) {
-        if (@is_dir(litepublisher::$paths->plugins . $name)) {
+        if (@is_dir(litepubl::$paths->plugins . $name)) {
           $this->readdir('plugins/' . $name);
         }
       }
@@ -337,7 +337,7 @@ class tbackuper extends tevents {
     $this->createarchive();
     if (dbversion) $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
-    //$this->readdata(litepublisher::$paths->data);
+    //$this->readdata(litepubl::$paths->data);
     $this->setdir('storage');
     $this->readdir('storage/data');
 
@@ -404,7 +404,7 @@ class tbackuper extends tevents {
     $this->hasdata = true;
     $filename = substr($filename, strlen('storage/data/'));
     $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
-    $filename = litepublisher::$paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
+    $filename = litepubl::$paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
     tfiler::forcedir(dirname($filename));
     if (file_put_contents($filename, $content) === false) return false;
     @chmod($filename, $mode);
@@ -606,14 +606,14 @@ class tbackuper extends tevents {
   }
 
   private function renamedata() {
-    if (!is_dir(litepublisher::$paths->backup)) {
-      mkdir(litepublisher::$paths->backup, 0777);
-      @chmod(litepublisher::$paths->backup, 0777);
+    if (!is_dir(litepubl::$paths->backup)) {
+      mkdir(litepubl::$paths->backup, 0777);
+      @chmod(litepubl::$paths->backup, 0777);
     }
-    $backup = litepublisher::$paths->backup . 'data-' . time();
-    $data = rtrim(litepublisher::$paths->data, DIRECTORY_SEPARATOR);
+    $backup = litepubl::$paths->backup . 'data-' . time();
+    $data = rtrim(litepubl::$paths->data, DIRECTORY_SEPARATOR);
     rename($data, $backup);
-    rename(litepublisher::$paths->storage . 'newdata', $data);
+    rename(litepubl::$paths->storage . 'newdata', $data);
     tfiler::delete($backup, true, true);
   }
 
@@ -654,7 +654,7 @@ class tbackuper extends tevents {
       case 'unzip':
       case 'zip':
         if (class_exists('ZipArchive')) {
-          $filename = litepublisher::$paths->storage . 'backup/unpack.zip';
+          $filename = litepubl::$paths->storage . 'backup/unpack.zip';
           file_put_contents($filename, $content);
           @chmod($filename, 0666);
           $content = '';
@@ -705,7 +705,7 @@ class tbackuper extends tevents {
   }
 
   public function getfilename($ext) {
-    $filename = litepublisher::$paths->backup . litepublisher::$domain . date('-Y-m-d');
+    $filename = litepubl::$paths->backup . litepubl::$domain . date('-Y-m-d');
     $result = $filename . $ext;
     $i = 2;
     while (file_exists($result) && ($i < 100)) {
@@ -727,9 +727,9 @@ class tbackuper extends tevents {
   }
 
   public function createshellbackup() {
-    $dbconfig = litepublisher::$options->dbconfig;
+    $dbconfig = litepubl::$options->dbconfig;
     $cmd = array();
-    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $cmd[] = 'cd ' . litepubl::$paths->backup;
     $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
     $filename = $this->getshellfilename();
     $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
@@ -739,13 +739,13 @@ class tbackuper extends tevents {
     $cmd[] = "chmod 0666 $filename.tar.gz";
     exec(implode("\n", $cmd) , $r);
     //echo implode("\n", $r);
-    return litepublisher::$paths->backup . $filename . '.tar.gz';
+    return litepubl::$paths->backup . $filename . '.tar.gz';
   }
 
   public function createshellfullbackup() {
-    $dbconfig = litepublisher::$options->dbconfig;
+    $dbconfig = litepubl::$options->dbconfig;
     $cmd = array();
-    $cmd[] = 'cd ' . litepublisher::$paths->backup;
+    $cmd[] = 'cd ' . litepubl::$paths->backup;
     $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
     $filename = $this->getshellfilename();
     $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
@@ -755,24 +755,24 @@ class tbackuper extends tevents {
     $cmd[] = "chmod 0666 $filename.tar.gz";
     exec(implode("\n", $cmd) , $r);
     //echo implode("\n", $r);
-    return litepublisher::$paths->backup . $filename . '.tar.gz';
+    return litepubl::$paths->backup . $filename . '.tar.gz';
   }
 
   public function createshellfilesbackup() {
     $cmd = array();
-    $cmd[] = 'cd ' . litepublisher::$paths->backup;
-    $filename = 'files_' . litepublisher::$domain . date('-Y-m-d');
+    $cmd[] = 'cd ' . litepubl::$paths->backup;
+    $filename = 'files_' . litepubl::$domain . date('-Y-m-d');
     $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
     $cmd[] = "gzip $filename.tar";
     $cmd[] = "rm $filename.tar";
     $cmd[] = "chmod 0666 $filename.tar.gz";
     exec(implode("\n", $cmd) , $r);
     //echo implode("\n", $r);
-    return litepublisher::$paths->backup . $filename . '.tar.gz';
+    return litepubl::$paths->backup . $filename . '.tar.gz';
   }
 
   public function test() {
-    if (!@file_put_contents(litepublisher::$paths->data . 'index.htm', ' ')) return false;
+    if (!@file_put_contents(litepubl::$paths->data . 'index.htm', ' ')) return false;
     if (!$this->filer->connected) return false;
     $this->setdir('lib');
     return $this->uploadfile('lib/index.htm', ' ', $this->filer->chmod_file);

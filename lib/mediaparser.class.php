@@ -65,7 +65,7 @@ class tmediaparser extends tevents {
     $filename = self::linkgen($filename);
     $parts = pathinfo($filename);
     $newtemp = $this->gettempname($parts);
-    if (!move_uploaded_file($tempfilename, litepublisher::$paths->files . $newtemp)) return $this->error('Error access to uploaded file');
+    if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $newtemp)) return $this->error('Error access to uploaded file');
     //return $this->addfile($filename, $newtemp, $title, $description, $keywords, $overwrite);
     return $this->add(array(
       'filename' => $filename,
@@ -81,7 +81,7 @@ class tmediaparser extends tevents {
     $filename = self::linkgen($filename);
     $filename = self::create_filename($filename, $subdir, false);
     $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-    if (!move_uploaded_file($tempfilename, litepublisher::$paths->files . $sep . $filename)) return false;
+    if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $sep . $filename)) return false;
     return $subdir == '' ? $filename : "$subdir/$filename";
   }
 
@@ -125,8 +125,8 @@ class tmediaparser extends tevents {
     $filename = self::fixfilename($filename);
     $parts = pathinfo($filename);
     $filename = $this->gettempname($parts);
-    if (@file_put_contents(litepublisher::$paths->files . $filename, $content)) {
-      @chmod(litepublisher::$paths->files . $filename, 0666);
+    if (@file_put_contents(litepubl::$paths->files . $filename, $content)) {
+      @chmod(litepubl::$paths->files . $filename, 0666);
       return $filename;
     }
     return false;
@@ -161,7 +161,7 @@ class tmediaparser extends tevents {
   }
 
   public static function create_filename($filename, $subdir, $overwrite) {
-    $dir = litepublisher::$paths->files . $subdir;
+    $dir = litepubl::$paths->files . $subdir;
     if (!is_dir($dir)) {
       mkdir($dir, 0777);
       @chmod($dir, 0777);
@@ -186,7 +186,7 @@ class tmediaparser extends tevents {
   public function movetofolder($filename, $tempfilename, $subdir, $overwrite) {
     $filename = self::create_filename($filename, $subdir, $overwrite);
     $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-    if (!rename(litepublisher::$paths->files . $tempfilename, litepublisher::$paths->files . $sep . $filename)) return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
+    if (!rename(litepubl::$paths->files . $tempfilename, litepubl::$paths->files . $sep . $filename)) return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
     return $subdir == '' ? $filename : "$subdir/$filename";
   }
 
@@ -205,9 +205,9 @@ class tmediaparser extends tevents {
     if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
 
     $files = tfiles::i();
-    $hash = $files->gethash(litepublisher::$paths->files . $file['tempfilename']);
+    $hash = $files->gethash(litepubl::$paths->files . $file['tempfilename']);
     if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . dbquote($hash)))) {
-      @unlink(litepublisher::$paths->files . $file['tempfilename']);
+      @unlink(litepubl::$paths->files . $file['tempfilename']);
       return $id;
     }
 
@@ -222,7 +222,7 @@ class tmediaparser extends tevents {
     $preview = false;
     $midle = false;
     if ($item['media'] == 'image') {
-      $srcfilename = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+      $srcfilename = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
       $this->callevent('onbefore', array(&$item,
         $srcfilename
       ));
@@ -265,7 +265,7 @@ class tmediaparser extends tevents {
           if (!strend($srcfilename, '.jpg')) {
             $fixfilename = self::replace_ext($srcfilename, '.jpg');
             $fixfilename = self::makeunique($fixfilename);
-            $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepublisher::$paths->files)));
+            $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepubl::$paths->files)));
 
             rename($srcfilename, $fixfilename);
             @chmod($fixfilename, 0666);
@@ -325,11 +325,11 @@ class tmediaparser extends tevents {
     }
 
     if ($image = imagecreatefromstring($content)) {
-      if (!strbegin($filename, litepublisher::$paths->files)) $filename = litepublisher::$paths->files . ltrim($filename, '\/');
+      if (!strbegin($filename, litepubl::$paths->files)) $filename = litepubl::$paths->files . ltrim($filename, '\/');
       $destfilename = self::replace_ext($filename, '.jpg');
       $destfilename = self::makeunique($destfilename);
       if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-        $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
+        $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
         $item['media'] = 'image';
         $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
         $item['width'] = $size['width'];
@@ -371,7 +371,7 @@ class tmediaparser extends tevents {
   }
 
   public function getinfo($filename) {
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
     $result = $this->getdefaultvalues($filename);
     if (preg_match("/\\.($this->videoext)\$/", $filename, $m)) {
       $ext = $m[1];
@@ -426,17 +426,17 @@ class tmediaparser extends tevents {
       $result['media'] = 'flash';
       $result['mime'] = 'application/x-shockwave-flash';
 
-      require_once (litepublisher::$paths->libinclude . 'getid3.php');
-      require_once (litepublisher::$paths->libinclude . 'getid3.lib.php');
-      require_once (litepublisher::$paths->libinclude . 'module.audio-video.swf.php');
+      require_once (litepubl::$paths->libinclude . 'getid3.php');
+      require_once (litepubl::$paths->libinclude . 'getid3.lib.php');
+      require_once (litepubl::$paths->libinclude . 'module.audio-video.swf.php');
 
-      $getID3 = new getID3;
+      $getID3 = new \getID3;
       $getID3->option_md5_data = true;
       $getID3->option_md5_data_source = true;
       $getID3->encoding = 'UTF-8';
       //$info = $getID3->analyze($realfile);
       $getID3->openfile($realfile);
-      $swf = new getid3_swf($getID3);
+      $swf = new \getid3_swf($getID3);
       $swf->analyze();
       fclose($getID3->fp);
       $info = $getID3->info;
@@ -542,7 +542,7 @@ class tmediaparser extends tevents {
 
 
       default:
-        throw new Exception("Unknow thumbnail options $mode");
+        throw new \Exception("Unknow thumbnail options $mode");
     }
 
     $dest = imagecreatetruecolor($x, $y);
@@ -559,7 +559,7 @@ class tmediaparser extends tevents {
     $destfilename = self::replace_ext($srcfilename, '.preview.jpg');
     $destfilename = self::makeunique($destfilename);
     if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-      $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
+      $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
       $result['media'] = 'image';
       $result['mime'] = 'image/jpeg';
       $result['width'] = $size['width'];
@@ -579,7 +579,7 @@ class tmediaparser extends tevents {
     $destfilename = self::makeunique($destfilename);
 
     if ($sizes = $this->resize($destfilename, $image, $this->midlewidth, $this->midleheight)) {
-      $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepublisher::$paths->files))));
+      $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
       $result['media'] = 'image';
       $result['mime'] = 'image/jpeg';
       $result['width'] = $sizes['width'];
@@ -627,10 +627,10 @@ class tmediaparser extends tevents {
     return false;
     /*
     if (!class_exists('getID3')) return false;
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
     
     // Initialize getID3 engine
-    $getID3 = new getID3;
+    $getID3 = new \getID3;
     $getID3->option_md5_data        = true;
     $getID3->option_md5_data_source = true;
     $getID3->encoding               = 'UTF-8';

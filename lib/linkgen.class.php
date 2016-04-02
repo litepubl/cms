@@ -77,7 +77,7 @@ class tlinkgenerator extends tevents {
     $this->callevent('onencode', array(&$s
     ));
     if ($this->urlencode) return rawurlencode($s);
-    if (litepublisher::$options->language != 'en') $s = $this->translit($s);
+    if (litepubl::$options->language != 'en') $s = $this->translit($s);
     return strtolower($s);
   }
 

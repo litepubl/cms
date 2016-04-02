@@ -92,7 +92,7 @@ class tstaticpages extends titems implements itemplate {
       'idview' => $item['idview']
     );
     $this->save();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {

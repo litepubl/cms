@@ -117,8 +117,8 @@ class tcomments extends titems {
   public function select($where, $limit) {
     if ($where != '') $where.= ' and ';
     $table = $this->thistable;
-    $authors = litepublisher::$db->users;
-    $res = litepublisher::$db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    $authors = litepubl::$db->users;
+    $res = litepubl::$db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
     where $where $authors.id = $table.author $limit");
 
     return $this->res2items($res);
@@ -173,10 +173,10 @@ class tcomments extends titems {
     $post = tpost::i($this->pid);
     $theme = $post->theme;
     if ($status == 'approved') {
-      if (litepublisher::$options->commentpages) {
-        $page = litepublisher::$urlmap->page;
-        if (litepublisher::$options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
-        $count = litepublisher::$options->commentsperpage;
+      if (litepubl::$options->commentpages) {
+        $page = litepubl::$urlmap->page;
+        if (litepubl::$options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
+        $count = litepubl::$options->commentsperpage;
         $from = ($page - 1) * $count;
       } else {
         $from = 0;
@@ -184,7 +184,7 @@ class tcomments extends titems {
       }
     } else {
       $from = 0;
-      $count = litepublisher::$options->commentsperpage;
+      $count = litepubl::$options->commentsperpage;
     }
 
     $table = $this->thistable;
@@ -266,7 +266,7 @@ class tcomment extends tdata {
     if ($manager->hidelink || ($this->trust <= $manager->trustlevel)) return $name;
     $rel = $manager->nofollow ? 'rel="nofollow"' : '';
     if ($manager->redir) {
-      return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, litepublisher::$site->url, litepublisher::$site->q, $this->author, $name);
+      return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, litepubl::$site->url, litepubl::$site->q, $this->author, $name);
     } else {
       if (!strbegin($website, 'http://')) $website = 'http://' . $website;
       return sprintf('<a class="url fn" %s href="%s" itemprop="url">%s</a>', $rel, $website, $name);
@@ -369,8 +369,8 @@ class tcommentmanager extends tevents_storage {
   }
 
   public function getcount() {
-    litepublisher::$db->table = 'comments';
-    return litepublisher::$db->getcount();
+    litepubl::$db->table = 'comments';
+    return litepubl::$db->getcount();
   }
 
   public function addcomuser($name, $email, $website, $ip) {
@@ -410,7 +410,7 @@ class tcommentmanager extends tevents_storage {
     $idpost = $comments->getvalue($id, 'post');
     $count = $comments->db->getcount("post = $idpost and status = 'approved'");
     $comments->getdb('posts')->setvalue($idpost, 'commentscount', $count);
-    if (litepublisher::$options->commentspool) {
+    if (litepubl::$options->commentspool) {
       tcommentspool::i()->set($idpost, $count);
     }
 
@@ -431,7 +431,7 @@ class tcommentmanager extends tevents_storage {
 
   public function sendmail($id) {
     if ($this->sendnotification) {
-      litepublisher::$urlmap->onclose($this, 'send_mail', $id);
+      litepubl::$urlmap->onclose($this, 'send_mail', $id);
     }
   }
 
@@ -442,8 +442,8 @@ class tcommentmanager extends tevents_storage {
     if ($comment->author == 1) return;
     ttheme::$vars['comment'] = $comment;
     $args = new targs();
-    $adminurl = litepublisher::$site->url . '/admin/comments/' . litepublisher::$site->q . "id=$id";
-    $ref = md5(litepublisher::$secret . $adminurl . litepublisher::$options->solt);
+    $adminurl = litepubl::$site->url . '/admin/comments/' . litepubl::$site->q . "id=$id";
+    $ref = md5(litepubl::$secret . $adminurl . litepubl::$options->solt);
     $adminurl.= "&ref=$ref&action";
     $args->adminurl = $adminurl;
 
@@ -481,12 +481,12 @@ class tcommentmanager extends tevents_storage {
   public function request($arg) {
     $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
     $users = tusers::i();
-    if (!$users->itemexists($id)) return "<?php litepublisher::$urlmap->redir('/');";
+    if (!$users->itemexists($id)) return "<?php litepubl::$urlmap->redir('/');";
     $item = $users->getitem($id);
     $url = $item['website'];
-    if (!strpos($url, '.')) $url = litepublisher::$site->url . '/';
+    if (!strpos($url, '.')) $url = litepubl::$site->url . '/';
     if (!strbegin($url, 'http://')) $url = 'http://' . $url;
-    return "<?php litepublisher::$urlmap->redir('$url');";
+    return "<?php litepubl::$urlmap->redir('$url');";
   }
 
 } //class
@@ -509,7 +509,7 @@ class tcommentform extends tevents {
   }
 
   public function request($arg) {
-    if (litepublisher::$options->commentsdisabled) return 404;
+    if (litepubl::$options->commentsdisabled) return 404;
     if ('POST' != $_SERVER['REQUEST_METHOD']) {
       return "<?php
       header('HTTP/1.1 405 Method Not Allowed', true, 405);
@@ -530,7 +530,7 @@ class tcommentform extends tevents {
   public function getshortpost($id) {
     $id = (int)$id;
     if ($id == 0) return false;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     return $db->selectassoc("select id, idurl, idperm, status, comstatus, commentscount from $db->posts where id = $id");
   }
 
@@ -574,9 +574,9 @@ class tcommentform extends tevents {
     unset($values['submitbutton']);
 
     if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
-    if (litepublisher::$options->ingroups($cm->idgroups)) {
+    if (litepubl::$options->ingroups($cm->idgroups)) {
       if (!$confirmed && $cm->confirmlogged) return $this->request_confirm($values, $shortpost);
-      $iduser = litepublisher::$options->user;
+      $iduser = litepubl::$options->user;
     } else {
       switch ($shortpost['comstatus']) {
         case 'reg':
@@ -662,17 +662,17 @@ class tcommentform extends tevents {
 
     //$post->lastcommenturl;
     $shortpost['commentscount']++;
-    if (!litepublisher::$options->commentpages || ($shortpost['commentscount'] <= litepublisher::$options->commentsperpage)) {
+    if (!litepubl::$options->commentpages || ($shortpost['commentscount'] <= litepubl::$options->commentsperpage)) {
       $c = 1;
     } else {
-      $c = ceil($shortpost['commentscount'] / litepublisher::$options->commentsperpage);
+      $c = ceil($shortpost['commentscount'] / litepubl::$options->commentsperpage);
     }
 
-    $url = litepublisher::$urlmap->getvalue($shortpost['idurl'], 'url');
-    if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+    $url = litepubl::$urlmap->getvalue($shortpost['idurl'], 'url');
+    if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
 
-    litepublisher::$urlmap->setexpired($shortpost['idurl']);
-    return $this->sendresult(litepublisher::$site->url . $url, isset($cookies) ? $cookies : array());
+    litepubl::$urlmap->setexpired($shortpost['idurl']);
+    return $this->sendresult(litepubl::$site->url . $url, isset($cookies) ? $cookies : array());
   }
 
   public function confirm_recevied($confirmid) {
@@ -707,7 +707,7 @@ class tcommentform extends tevents {
   }
 
   public function getpermheader(array $shortpost) {
-    $urlmap = litepublisher::$urlmap;
+    $urlmap = litepubl::$urlmap;
     $url = $urlmap->url;
     $saveitem = $urlmap->itemrequested;
     $urlmap->itemrequested = $urlmap->getitem($shortpost['idurl']);
@@ -764,7 +764,7 @@ class tcommentform extends tevents {
       setcookie($name, $value, time() + 30000000, '/', false);
     }
 
-    return litepublisher::$urlmap->redir($link);
+    return litepubl::$urlmap->redir($link);
   }
 
 } //class
@@ -862,7 +862,7 @@ class tsubscribers extends titemsposts {
     $item = $comments->getitem($id);
     if (($item['status'] != 'approved')) return;
 
-    if (litepublisher::$options->mailer == 'smtp') {
+    if (litepubl::$options->mailer == 'smtp') {
       tcron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
     } else {
       $this->cronsendmail($id);
@@ -891,7 +891,7 @@ class tsubscribers extends titemsposts {
     $body = $theme->parsearg($lang->subscribebody, $args);
 
     $body.= "\n";
-    $adminurl = litepublisher::$site->url . '/admin/subscribers/';
+    $adminurl = litepubl::$site->url . '/admin/subscribers/';
 
     $users = tusers::i();
     $users->loaditems($subscribers);
@@ -906,7 +906,7 @@ class tsubscribers extends titemsposts {
 
       $admin = $adminurl;
       if ('comuser' == $user['status']) {
-        $admin.= litepublisher::$site->q . 'auth=';
+        $admin.= litepubl::$site->q . 'auth=';
         if (empty($user['cookie'])) {
           $user['cookie'] = md5uniq();
           $users->setvalue($user['id'], 'cookie', $user['cookie']);
@@ -915,7 +915,7 @@ class tsubscribers extends titemsposts {
       }
 
       $list[] = array(
-        'fromname' => litepublisher::$site->name,
+        'fromname' => litepubl::$site->name,
         'fromemail' => $this->fromemail,
         'toname' => $user['name'],
         'toemail' => $email,
@@ -957,12 +957,12 @@ class ttemplatecomments extends tevents {
     $result.= $theme->parsearg($theme->templates['content.post.templatecomments.comments.count'], $args);
     $result.= $list;
 
-    if ((litepublisher::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
+    if ((litepubl::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
       $pingbacks = tpingbacks::i($post->id);
       $result.= $pingbacks->getcontent();
     }
 
-    if (litepublisher::$options->commentsdisabled || ($post->comstatus == 'closed')) {
+    if (litepubl::$options->commentsdisabled || ($post->comstatus == 'closed')) {
       $result.= $theme->parse($theme->templates['content.post.templatecomments.closed']);
       return $result;
     }
@@ -972,9 +972,9 @@ class ttemplatecomments extends tevents {
 
     $cm = tcommentmanager::i();
     // if user can see hold comments
-    $result.= sprintf('<?php if (litepublisher::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+    $result.= sprintf('<?php if (litepubl::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
 
-    $holdmesg = '<?php if ($ismoder = litepublisher::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+    $holdmesg = '<?php if ($ismoder = litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
     //hide template hold comments in html comment
     '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -990,20 +990,20 @@ class ttemplatecomments extends tevents {
 
     switch ($post->comstatus) {
       case 'reg':
-        $args->mesg = $this->getmesg('reqlogin', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('reqlogin', litepubl::$options->reguser ? 'regaccount' : false);
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         break;
 
 
       case 'guest':
-        $args->mesg = $this->getmesg('guest', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('guest', litepubl::$options->reguser ? 'regaccount' : false);
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
         $result.= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
         break;
 
 
       case 'comuser':
-        $args->mesg = $this->getmesg('comuser', litepublisher::$options->reguser ? 'regaccount' : false);
+        $args->mesg = $this->getmesg('comuser', litepubl::$options->reguser ? 'regaccount' : false);
 
         foreach (array(
           'name',
@@ -1037,7 +1037,7 @@ class ttemplatecomments extends tevents {
     $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
     //insert back url
-    $result = str_replace('backurl=', 'backurl=' . urlencode(litepublisher::$urlmap->url) , $result);
+    $result = str_replace('backurl=', 'backurl=' . urlencode(litepubl::$urlmap->url) , $result);
 
     return $theme->parse($result);
   }
@@ -1089,7 +1089,7 @@ class tcommentswidget extends twidget {
     $result = '';
     $theme = ttheme::i();
     $tml = $theme->getwidgetitem('comments', $sidebar);
-    $url = litepublisher::$site->url;
+    $url = litepubl::$site->url;
     $args = targs::i();
     $args->onrecent = tlocal::get('comment', 'onrecent');
     foreach ($recent as $item) {
@@ -1106,7 +1106,7 @@ class tcommentswidget extends twidget {
   }
 
   public function getrecent($count, $status = 'approved') {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $result = $db->res2assoc($db->query("select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as url,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
@@ -1120,9 +1120,9 @@ class tcommentswidget extends twidget {
     $db->posts.idperm = 0
     order by $db->comments.posted desc limit $count"));
 
-    if (litepublisher::$options->commentpages && !litepublisher::$options->comments_invert_order) {
+    if (litepubl::$options->commentpages && !litepubl::$options->comments_invert_order) {
       foreach ($result as $i => $item) {
-        $page = ceil($item['commentscount'] / litepublisher::$options->commentsperpage);
+        $page = ceil($item['commentscount'] / litepubl::$options->commentsperpage);
         if ($page > 1) $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
       }
     }

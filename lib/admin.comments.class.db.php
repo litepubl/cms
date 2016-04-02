@@ -16,13 +16,13 @@ class tadminmoderator extends tadminmenu {
   }
 
   public function canrequest() {
-    $this->moder = litepublisher::$options->ingroup('moderator');
-    $this->iduser = $this->moder ? (isset($_GET['iduser']) ? (int)$_GET['iduser'] : 0) : litepublisher::$options->user;
+    $this->moder = litepubl::$options->ingroup('moderator');
+    $this->iduser = $this->moder ? (isset($_GET['iduser']) ? (int)$_GET['iduser'] : 0) : litepubl::$options->user;
   }
 
   public function can($id, $action) {
     if ($this->moder) return true;
-    if (litepublisher::$options->user != tcomments::i()->getvalue($id, 'author')) return false;
+    if (litepubl::$options->user != tcomments::i()->getvalue($id, 'author')) return false;
     $cm = tcommentmanager::i();
     switch ($action) {
       case 'edit':
@@ -252,7 +252,7 @@ class tadminmoderator extends tadminmenu {
     $result = $form->get();
 
     $theme = $this->view->theme;
-    $result.= $theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
+    $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
 
     return $result;
   }
@@ -273,7 +273,7 @@ class tadminmoderator extends tadminmenu {
     $args = targs::i();
     $args->id = $id;
     $args->action = 'delete';
-    $args->adminurl = litepublisher::$site->url . $this->url . litepublisher::$site->q . 'id';
+    $args->adminurl = litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
     $args->confirm = $confirm;
     return $this->html->confirmform($args);
   }
@@ -290,7 +290,7 @@ class tadminmoderator extends tadminmenu {
           $item = $comments->getitem($this->idget());
           $post = tpost::i((int)$item['post']);
           $this->manager->reply($this->idget() , $_POST['content']);
-          return litepublisher::$urlmap->redir($post->lastcommenturl);
+          return litepubl::$urlmap->redir($post->lastcommenturl);
           break;
 
 
@@ -322,7 +322,7 @@ class tadminmoderator extends tadminmenu {
   }
 
   public static function refilter() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $filter = tcontentfilter::i();
     $from = 0;
     while ($a = $db->res2assoc($db->query("select id, rawcontent from $db->rawcomments where id > $from limit 500"))) {

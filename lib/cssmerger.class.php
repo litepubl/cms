@@ -29,10 +29,10 @@ class tcssmerger extends tfilemerger {
     }
 
     if ($realfile = realpath($url)) {
-      $url = substr($realfile, strlen(litepublisher::$paths->home));
+      $url = substr($realfile, strlen(litepubl::$paths->home));
     } // else must be absolute url
     $url = str_replace(DIRECTORY_SEPARATOR, '/', $url);
-    $url = litepublisher::$site->files . '/' . ltrim($url, '/');
+    $url = litepubl::$site->files . '/' . ltrim($url, '/');
     $url = substr($url, strpos($url, '/', 9));
     return " url('$url$args')";
   }

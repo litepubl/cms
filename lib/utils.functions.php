@@ -18,15 +18,15 @@ function sqltime($date = 0) {
 }
 
 function dbquote($s) {
-  return litepublisher::$db->quote($s);
+  return litepubl::$db->quote($s);
 }
 
 function md5rand() {
-  return md5(mt_rand() . litepublisher::$secret . microtime());
+  return md5(mt_rand() . litepubl::$secret . microtime());
 }
 
 function md5uniq() {
-  return basemd5(mt_rand() . litepublisher::$secret . microtime());
+  return basemd5(mt_rand() . litepubl::$secret . microtime());
 }
 
 function basemd5($s) {

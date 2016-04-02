@@ -90,7 +90,7 @@ class tcontentfilter extends tevents {
   }
 
   public static function getpostdescription($description) {
-    if (litepublisher::$options->parsepost) {
+    if (litepubl::$options->parsepost) {
       $theme = ttheme::i();
       $description = $theme->parse($description);
     }

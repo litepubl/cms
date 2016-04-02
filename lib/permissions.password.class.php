@@ -33,28 +33,28 @@ class tpermpassword extends tperm {
     $p = trim($p);
     if ($p == '') return false;
     $this->data['login'] = md5uniq();
-    $this->data['password'] = md5($this->login . litepublisher::$secret . $p . litepublisher::$options->solt);
+    $this->data['password'] = md5($this->login . litepubl::$secret . $p . litepubl::$options->solt);
     $this->save();
   }
 
   public function checkpassword($p) {
-    if ($this->password != md5($this->login . litepublisher::$secret . $p . litepublisher::$options->solt)) return false;
+    if ($this->password != md5($this->login . litepubl::$secret . $p . litepubl::$options->solt)) return false;
     $login = md5rand();
-    $password = md5($login . litepublisher::$secret . $this->password . litepublisher::$options->solt);
+    $password = md5($login . litepubl::$secret . $this->password . litepubl::$options->solt);
     $cookie = $login . '.' . $password;
     $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-    setcookie($this->getcookiename() , $cookie, $expired, litepublisher::$site->subdir . '/', false);
+    setcookie($this->getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
     return true;
   }
 
   public function authcookie() {
-    if (litepublisher::$options->group == 'admin') return true;
+    if (litepubl::$options->group == 'admin') return true;
     $cookiename = $this->getcookiename();
     $cookie = isset($_COOKIE[$cookiename]) ? $_COOKIE[$cookiename] : '';
     if (($cookie == '') || !strpos($cookie, '.')) return $this->redir();
     list($login, $password) = explode('.', $cookie);
-    if ($password == md5($login . litepublisher::$secret . $this->password . litepublisher::$options->solt)) return true;
+    if ($password == md5($login . litepubl::$secret . $this->password . litepubl::$options->solt)) return true;
     return false;
   }
 
@@ -64,9 +64,9 @@ class tpermpassword extends tperm {
   }
 
   public function redir() {
-    $url = litepublisher::$site->url . '/check-password.php' . litepublisher::$site->q;
-    $url.= "idperm=$this->id&backurl=" . urlencode(litepublisher::$urlmap->url);
-    litepublisher::$urlmap->redir($url, 307);
+    $url = litepubl::$site->url . '/check-password.php' . litepubl::$site->q;
+    $url.= "idperm=$this->id&backurl=" . urlencode(litepubl::$urlmap->url);
+    litepubl::$urlmap->redir($url, 307);
   }
 
 } //class

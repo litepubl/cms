@@ -48,7 +48,7 @@ class tajaxposteditor extends tevents {
   }
 
   public static function auth() {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if (!$options->user) return self::error403();
     if (!$options->hasgroup('editor')) {
       if (!$options->hasgroup('author')) return self::error403();
@@ -61,15 +61,15 @@ class tajaxposteditor extends tevents {
 
     if ($err = self::auth()) return $err;
     $this->idpost = tadminhtml::idparam();
-    $this->isauthor = litepublisher::$options->ingroup('author');
+    $this->isauthor = litepubl::$options->ingroup('author');
     if ($this->idpost > 0) {
       $posts = tposts::i();
       if (!$posts->itemexists($this->idpost)) return self::error403();
-      if (!litepublisher::$options->hasgroup('editor')) {
-        if (litepublisher::$options->hasgroup('author')) {
+      if (!litepubl::$options->hasgroup('editor')) {
+        if (litepubl::$options->hasgroup('author')) {
           $this->isauthor = true;
           $post = tpost::i($this->idpost);
-          if (litepublisher::$options->user != $post->author) return self::error403();
+          if (litepubl::$options->user != $post->author) return self::error403();
         }
       }
     }

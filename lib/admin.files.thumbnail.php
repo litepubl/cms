@@ -17,8 +17,8 @@ class tadminfilethumbnails extends tadminmenu {
     $files = tfiles::i();
     $id = $this->idget();
     if (($id == 0) || !$files->itemexists($id)) return false;
-    if (litepublisher::$options->hasgroup('editor')) return $id;
-    $user = litepublisher::$options->user;
+    if (litepubl::$options->hasgroup('editor')) return $id;
+    $user = litepubl::$options->user;
     $item = $files->getitem($id);
     if ($user == $item['author']) return $id;
     return false;
@@ -65,7 +65,7 @@ class tadminfilethumbnails extends tadminmenu {
       return $this->html->h4->deleted;
     }
 
-    $isauthor = 'author' == litepublisher::$options->group;
+    $isauthor = 'author' == litepubl::$options->group;
     if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
       $error = tlocal::get('uploaderrors', $_FILES["filename"]["error"]);
       return "<h3>$error</h3>\n";
@@ -80,7 +80,7 @@ class tadminfilethumbnails extends tadminmenu {
     $filename = tmediaparser::linkgen($filename);
     $parts = pathinfo($filename);
     $newtemp = $parser->gettempname($parts);
-    if (!move_uploaded_file($tempfilename, litepublisher::$paths->files . $newtemp)) return sprintf($this->html->h4->attack, $_FILES["filename"]["name"]);
+    if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $newtemp)) return sprintf($this->html->h4->attack, $_FILES["filename"]["name"]);
 
     $resize = !isset($_POST['noresize']);
 

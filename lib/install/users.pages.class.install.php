@@ -17,8 +17,8 @@ function tuserpagesInstall($self) {
   $v = $self->createpage;
   $self->lock();
   $self->createpage = false;
-  $self->add(1, 'Admin', litepublisher::$options->email, litepublisher::$site->url . '/');
-  $itemurl = litepublisher::$urlmap->findurl('/');
+  $self->add(1, 'Admin', litepubl::$options->email, litepubl::$site->url . '/');
+  $itemurl = litepubl::$urlmap->findurl('/');
   $self->setvalue(1, 'idurl', $itemurl['id']);
   $self->createpage = $v;
   $self->unlock();
@@ -27,7 +27,7 @@ function tuserpagesInstall($self) {
   $linkgen->data['user'] = '/user/[name].htm';
   $linkgen->save();
 
-  litepublisher::$urlmap->add('/users.htm', get_class($self) , 'url', 'get');
+  litepubl::$urlmap->add('/users.htm', get_class($self) , 'url', 'get');
 
   $robots = trobotstxt::i();
   $robots->AddDisallow('/users.htm');

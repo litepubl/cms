@@ -65,15 +65,15 @@ class tadminmenu extends tmenu {
       return $err;
     }
 
-    if (!litepublisher::$options->user) {
+    if (!litepubl::$options->user) {
       turlmap::nocache();
-      return litepublisher::$urlmap->redir('/admin/login/' . litepublisher::$site->q . 'backurl=' . urlencode(litepublisher::$urlmap->url));
+      return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
     }
 
-    if (!litepublisher::$options->hasgroup($group)) {
-      $url = tusergroups::i()->gethome(litepublisher::$options->group);
+    if (!litepubl::$options->hasgroup($group)) {
+      $url = tusergroups::i()->gethome(litepubl::$options->group);
       turlmap::nocache();
-      return litepublisher::$urlmap->redir($url);
+      return litepubl::$urlmap->redir($url);
     }
   }
 
@@ -108,22 +108,22 @@ class tadminmenu extends tmenu {
 
   protected function doprocessform() {
     if (tguard::post()) {
-      litepublisher::$urlmap->clearcache();
+      litepubl::$urlmap->clearcache();
     }
 
     return parent::doprocessform();
   }
 
   public function getcont() {
-    if (litepublisher::$options->admincache) {
+    if (litepubl::$options->admincache) {
       $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-      $filename = 'adminmenu.' . litepublisher::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-      if ($result = litepublisher::$urlmap->cache->get($filename)) {
+      $filename = 'adminmenu.' . litepubl::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+      if ($result = litepubl::$urlmap->cache->get($filename)) {
         return $result;
       }
 
       $result = parent::getcont();
-      litepublisher::$urlmap->cache->set($filename, $result);
+      litepubl::$urlmap->cache->set($filename, $result);
       return $result;
     } else {
       return parent::getcont();
@@ -159,12 +159,12 @@ class tadminmenu extends tmenu {
   }
 
   public function getadminurl() {
-    return litepublisher::$site->url . $this->url . litepublisher::$site->q . 'id';
+    return litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
   }
 
   public function getfrom($perpage, $count) {
-    if (litepublisher::$urlmap->page <= 1) return 0;
-    return min($count, (litepublisher::$urlmap->page - 1) * $perpage);
+    if (litepubl::$urlmap->page <= 1) return 0;
+    return min($count, (litepubl::$urlmap->page - 1) * $perpage);
   }
 
 } //class

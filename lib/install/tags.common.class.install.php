@@ -27,7 +27,7 @@ function tcommontagsInstall($self) {
     $manager->createtable($self->itemsposts->table, file_get_contents($dir . 'items.posts.sql'));
     $manager->createtable($self->contents->table, file_get_contents($dir . 'tags.content.sql'));
   } else {
-    $dir = litepublisher::$paths->data . $self->basename;
+    $dir = litepubl::$paths->data . $self->basename;
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
   }
@@ -49,7 +49,7 @@ function tcommontagsGetsitemap($self, $from, $count) {
     $result[] = array(
       'url' => $item['url'],
       'title' => $item['title'],
-      'pages' => (int)$item['lite'] ? 1 : ceil($item['itemscount'] / litepublisher::$options->perpage)
+      'pages' => (int)$item['lite'] ? 1 : ceil($item['itemscount'] / litepubl::$options->perpage)
     );
   }
   return $result;

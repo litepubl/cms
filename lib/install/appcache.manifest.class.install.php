@@ -10,7 +10,7 @@ namespace litepubl;
 function appcache_manifestInstall($self) {
   $self->lock();
   turlmap::unsub($self);
-  $self->idurl = litepublisher::$urlmap->add($self->url, get_class($self) , null);
+  $self->idurl = litepubl::$urlmap->add($self->url, get_class($self) , null);
 
   $self->add('$template.jsmerger_default');
   $self->add('$template.cssmerger_default');

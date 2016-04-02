@@ -29,7 +29,7 @@ class tadminheaders extends tadminmenu {
     $ajax = tajaxposteditor::i();
     $args->ajaxvisual = $ajax->ajaxvisual;
     $args->visual = $ajax->visual;
-    $args->show_file_perm = litepublisher::$options->show_file_perm;
+    $args->show_file_perm = litepubl::$options->show_file_perm;
     $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
 
     $args->formtitle = $lang->headstitle;
@@ -52,7 +52,7 @@ class tadminheaders extends tadminmenu {
     $ajax->visual = trim($_POST['visual']);
     $ajax->unlock();
 
-    litepublisher::$options->show_file_perm = isset($_POST['show_file_perm']);
+    litepubl::$options->show_file_perm = isset($_POST['show_file_perm']);
   }
 
 } //class

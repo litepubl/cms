@@ -55,10 +55,10 @@ class tusergroups extends titems {
   }
 
   public function update() {
-    litepublisher::$options->data['groupnames'] = array();
-    $groupnames = & litepublisher::$options->data['groupnames'];
-    litepublisher::$options->data['parentgroups'] = array();
-    $parentgroups = & litepublisher::$options->data['parentgroups'];
+    litepubl::$options->data['groupnames'] = array();
+    $groupnames = & litepubl::$options->data['groupnames'];
+    litepubl::$options->data['parentgroups'] = array();
+    $parentgroups = & litepubl::$options->data['parentgroups'];
 
     foreach ($this->items as $id => $group) {
       $names = explode(',', $group['name']);
@@ -67,12 +67,12 @@ class tusergroups extends titems {
       }
       $parentgroups[$id] = $group['parents'];
     }
-    litepublisher::$options->save();
+    litepubl::$options->save();
   }
 
   public function getidgroup($name) {
     $name = trim($name);
-    return isset(litepublisher::$options->groupnames[$name]) ? litepublisher::$options->groupnames[$name] : false;
+    return isset(litepubl::$options->groupnames[$name]) ? litepubl::$options->groupnames[$name] : false;
   }
 
   public function addparent($id, $name) {

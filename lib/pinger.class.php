@@ -21,7 +21,7 @@ class tpinger extends tevents {
   }
 
   public function install() {
-    if ($this->services == '') $this->services = file_get_contents(litepublisher::$paths->libinclude . 'pingservices.txt');
+    if ($this->services == '') $this->services = file_get_contents(litepubl::$paths->libinclude . 'pingservices.txt');
     $posts = tposts::i();
     $posts->singlecron = $this->pingpost;
   }
@@ -83,7 +83,7 @@ class tpinger extends tevents {
     foreach ($links[0] as $link) {
       if (in_array($link, $result)) continue;
       if ($link == $posturl) continue;
-      if (strbegin($link, litepublisher::$site->url)) continue;
+      if (strbegin($link, litepubl::$site->url)) continue;
       $parts = parse_url($link);
       if (empty($parts['query']) && (empty($parts['path']) || ($parts['path'] == '/'))) continue;
       $result[] = $link;
@@ -95,7 +95,7 @@ class tpinger extends tevents {
     if ($ping = self::discover($link)) {
       $client = new IXR_Client($ping);
       $client->timeout = 3;
-      $client->useragent.= " -- Lite Publisher/" . litepublisher::$options->version;
+      $client->useragent.= " -- Lite Publisher/" . litepubl::$options->version;
       $client->debug = false;
 
       if ($client->query('pingback.ping', $posturl, $link) || (isset($client->error->code) && 48 == $client->error->code)) return true;
@@ -127,7 +127,7 @@ class tpinger extends tevents {
     return false;
 
     // Send the GET request
-    $version = litepublisher::$options->version;
+    $version = litepubl::$options->version;
     $request = "GET $path HTTP/1.1\r\nHost: $host\r\nUser-Agent: Lite Publisher/$version\r\n\r\n";
     fputs($fp, $request);
 
@@ -184,12 +184,12 @@ class tpinger extends tevents {
 
   public function pingservices($url) {
     $m = microtime(true);
-    $client = new IXR_Client(litepublisher::$site->url);
+    $client = new IXR_Client(litepubl::$site->url);
     $client->timeout = 3;
-    $client->useragent.= ' -- Lite Publisher/' . litepublisher::$options->version;
+    $client->useragent.= ' -- Lite Publisher/' . litepubl::$options->version;
     $client->debug = false;
 
-    $home = litepublisher::$site->url . litepublisher::$site->home;
+    $home = litepubl::$site->url . litepubl::$site->home;
     $list = explode("\n", $this->services);
     foreach ($list as $service) {
       $service = trim($service);
@@ -199,8 +199,8 @@ class tpinger extends tevents {
       $client->path = isset($bits['path']) ? $bits['path'] : '/';
       if (!$client->path) $client->path = '/';
 
-      if (!$client->query('weblogUpdates.extendedPing', litepublisher::$site->name, $home, $url, litepublisher::$site->url . '/rss.xml')) {
-        $client->query('weblogUpdates.ping', litepublisher::$site->name, $url);
+      if (!$client->query('weblogUpdates.extendedPing', litepubl::$site->name, $home, $url, litepubl::$site->url . '/rss.xml')) {
+        $client->query('weblogUpdates.ping', litepubl::$site->name, $url);
       }
 
       if ((microtime(true) - $m) > 180) break;

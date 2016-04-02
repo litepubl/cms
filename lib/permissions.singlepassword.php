@@ -25,32 +25,32 @@ class tsinglepassword extends tperm {
   }
 
   public static function encryptpassword($p) {
-    return md5(litepublisher::$urlmap->itemrequested['id'] . litepublisher::$secret . $p . litepublisher::$options->solt);
+    return md5(litepubl::$urlmap->itemrequested['id'] . litepubl::$secret . $p . litepubl::$options->solt);
   }
 
   public static function getcookiename() {
-    return 'singlepwd_' . litepublisher::$urlmap->itemrequested['id'];
+    return 'singlepwd_' . litepubl::$urlmap->itemrequested['id'];
   }
 
   public function checkpassword($p) {
     if ($this->password != self::encryptpassword($p)) return false;
     $login = md5rand();
-    $password = md5($login . litepublisher::$secret . $this->password . litepublisher::$options->solt);
+    $password = md5($login . litepubl::$secret . $this->password . litepubl::$options->solt);
     $cookie = $login . '.' . $password;
     $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-    setcookie(self::getcookiename() , $cookie, $expired, litepublisher::$site->subdir . '/', false);
+    setcookie(self::getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
     $this->checked = true;
     return true;
   }
 
   public static function authcookie($p) {
-    if (litepublisher::$options->group == 'admin') return true;
+    if (litepubl::$options->group == 'admin') return true;
     $cookiename = self::getcookiename();
     $cookie = isset($_COOKIE[$cookiename]) ? $_COOKIE[$cookiename] : '';
     if (($cookie != '') && strpos($cookie, '.')) {
       list($login, $password) = explode('.', $cookie);
-      if ($password == md5($login . litepublisher::$secret . $p . litepublisher::$options->solt)) return true;
+      if ($password == md5($login . litepubl::$secret . $p . litepubl::$options->solt)) return true;
     }
     return false;
   }
@@ -70,10 +70,10 @@ class tsinglepassword extends tperm {
 
     switch ($result) {
       case 404:
-        return litepublisher::$urlmap->notfound404();
+        return litepubl::$urlmap->notfound404();
 
       case 403:
-        return litepublisher::$urlmap->forbidden();
+        return litepubl::$urlmap->forbidden();
     }
 
     $html = ttemplate::i()->request($page);

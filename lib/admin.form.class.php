@@ -58,11 +58,11 @@ class tadminform extends tevents implements itemplate {
   }
 
   public function set_cache($content) {
-    litepublisher::$urlmap->cache->set($this->basename, $content);
+    litepubl::$urlmap->cache->set($this->basename, $content);
   }
 
   public function get_cache() {
-    return litepublisher::$urlmap->cache->get($this->basename);
+    return litepubl::$urlmap->cache->get($this->basename);
   }
 
   public function getform() {

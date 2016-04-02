@@ -72,11 +72,11 @@ class titemsposts extends titems {
   }
 
   public function getitems($idpost) {
-    return litepublisher::$db->res2id(litepublisher::$db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+    return litepubl::$db->res2id(litepubl::$db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
   }
 
   public function getposts($iditem) {
-    return litepublisher::$db->res2id(litepublisher::$db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+    return litepubl::$db->res2id(litepubl::$db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
   }
 
   public function getpostscount($ititem) {
@@ -134,15 +134,15 @@ class tpost extends titem implements itemplate {
   public static function i($id = 0) {
     $id = (int)$id;
     if ($id > 0) {
-      if (isset(self::$instances['post'][$id])) {
-        $result = self::$instances['post'][$id];
-      } else if ($result = self::loadpost($id)) {
-        self::$instances['post'][$id] = $result;
+      if (isset(static::$instances['post'][$id])) {
+        $result = static::$instances['post'][$id];
+      } else if ($result = static::loadpost($id)) {
+        static::$instances['post'][$id] = $result;
       } else {
         $result = null;
       }
     } else {
-      $result = parent::iteminstance(__class__, $id);
+      $result = parent::iteminstance(get_called_class(), $id);
     }
 
     return $result;
@@ -165,7 +165,7 @@ class tpost extends titem implements itemplate {
       return array();
     }
 
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $childtable = $db->prefix . $table;
     $list = implode(',', $items);
     return $db->res2items($db->query("select $childtable.*
@@ -173,18 +173,30 @@ class tpost extends titem implements itemplate {
   }
 
   public static function newpost($classname) {
-    $classname = $classname ? $classname : __class__;
+    $classname = $classname ? static::fixClassname($classname) : get_called_class();
     return new $classname();
   }
+
+public static function fixClassname($classname) {
+if (strpos($classname, '\\')) {
+return $classname;
+}
+
+if ($classname == 'tpost') {
+$ns = 'litepubl\\';
+} else if ($classname == 'product') {
+$ns = 'litepubl\shop';
+} else {
+$ns = 'litepubl\plugins';
+}
+
+return $ns . $classname;
+}
 
   protected function create() {
     $this->table = 'posts';
     $this->syncdata = array();
-    //last binding, like cache
-    $this->childtable = call_user_func_array(array(
-      get_class($this) ,
-      'getchildtable'
-    ) , array());
+    $this->childtable = static::      getchildtable();
 
     $this->data = array(
       'id' => 0,
@@ -213,8 +225,8 @@ class tpost extends titem implements itemplate {
       'tags' => array() ,
       'files' => array() ,
       'status' => 'published',
-      'comstatus' => litepublisher::$options->comstatus,
-      'pingenabled' => litepublisher::$options->pingenabled,
+      'comstatus' => litepubl::$options->comstatus,
+      'pingenabled' => litepubl::$options->pingenabled,
       'password' => '',
       'commentscount' => 0,
       'pingbackscount' => 0,
@@ -223,18 +235,17 @@ class tpost extends titem implements itemplate {
     );
 
     $this->data['childdata'] = & $this->childdata;
-
     $this->factory = $this->getfactory();
     $posts = $this->factory->posts;
     foreach ($posts->itemcoclasses as $class) {
-      $coinstance = litepublisher::$classes->newinstance($class);
+      $coinstance = litepubl::$classes->newinstance($class);
       $coinstance->post = $this;
       $this->coinstances[] = $coinstance;
     }
   }
 
   public function getfactory() {
-    return litepublisher::$classes->getfactory($this);
+    return litepubl::$classes->getfactory($this);
   }
 
   public function __get($name) {
@@ -317,7 +328,7 @@ class tpost extends titem implements itemplate {
   }
 
   public static function loadpost($id) {
-    if ($a = self::getassoc($id)) {
+    if ($a = static::getassoc($id)) {
       $self = self::newpost($a['class']);
       $self->setassoc($a);
       return $self;
@@ -326,7 +337,7 @@ class tpost extends titem implements itemplate {
   }
 
   public static function getassoc($id) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     return $db->selectassoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
   }
@@ -379,7 +390,7 @@ class tpost extends titem implements itemplate {
   }
 
   public function create_url() {
-    return litepublisher::$urlmap->add($this->url, get_class($this) , (int)$this->id);
+    return litepubl::$urlmap->add($this->url, get_class($this) , (int)$this->id);
   }
 
   public function onid() {
@@ -389,7 +400,7 @@ class tpost extends titem implements itemplate {
           call_user_func($call, $this);
         }
         catch(Exception $e) {
-          litepublisher::$options->handexception($e);
+          litepubl::$options->handexception($e);
         }
       }
       unset($this->_onid);
@@ -457,7 +468,7 @@ class tpost extends titem implements itemplate {
   }
 
   public function Getlink() {
-    return litepublisher::$site->url . $this->url;
+    return litepubl::$site->url . $this->url;
   }
 
   public function Setlink($link) {
@@ -499,7 +510,7 @@ class tpost extends titem implements itemplate {
   }
 
   public function getrsscomments() {
-    return litepublisher::$site->url . "/comments/$this->id.xml";
+    return litepubl::$site->url . "/comments/$this->id.xml";
   }
 
   public function Getisodate() {
@@ -587,7 +598,7 @@ class tpost extends titem implements itemplate {
     foreach ($items as $id) {
       $item = $tags->getitem($id);
       $args->add($item);
-      if (($item['icon'] == 0) || litepublisher::$options->icondisabled) {
+      if (($item['icon'] == 0) || litepubl::$options->icondisabled) {
         $args->icon = '';
       } else {
         $files = $this->factory->files;
@@ -689,16 +700,16 @@ class tpost extends titem implements itemplate {
   public function request($id) {
     parent::request((int)$id);
     if ($this->status != 'published') {
-      if (!litepublisher::$options->show_draft_post) {
+      if (!litepubl::$options->show_draft_post) {
         return 404;
       }
 
-      $groupname = litepublisher::$options->group;
+      $groupname = litepubl::$options->group;
       if (($groupname == 'admin') || ($groupname == 'editor')) {
         return;
       }
 
-      if ($this->author == litepublisher::$options->user) {
+      if ($this->author == litepubl::$options->user) {
         return;
       }
 
@@ -783,7 +794,7 @@ class tpost extends titem implements itemplate {
   }
 
   public function geticonlink() {
-    if (($this->icon == 0) || litepublisher::$options->icondisabled) return '';
+    if (($this->icon == 0) || litepubl::$options->icondisabled) return '';
     $files = $this->factory->files;
     if ($files->itemexists($this->icon)) return $files->geticon($this->icon);
     $this->icon = 0;
@@ -797,7 +808,7 @@ class tpost extends titem implements itemplate {
   }
 
   public function getfilelist() {
-    if ((count($this->files) == 0) || ((litepublisher::$urlmap->page > 1) && litepublisher::$options->hidefilesonpage)) {
+    if ((count($this->files) == 0) || ((litepubl::$urlmap->page > 1) && litepubl::$options->hidefilesonpage)) {
       return '';
     }
 
@@ -862,8 +873,8 @@ class tpost extends titem implements itemplate {
   }
 
   public function getcommentslink() {
-    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
-    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspool) {
+    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepubl::$site->url, $this->getlastcommenturl());
+    if (($this->comstatus == 'closed') || !litepubl::$options->commentspool) {
       if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
         return '';
       }
@@ -891,7 +902,7 @@ class tpost extends titem implements itemplate {
 
   public function gettemplatecomments() {
     $result = '';
-    $page = litepublisher::$urlmap->page;
+    $page = litepubl::$urlmap->page;
     $countpages = $this->countpages;
     if ($countpages > 1) $result.= $this->theme->getpages($this->url, $page, $countpages);
 
@@ -916,7 +927,7 @@ class tpost extends titem implements itemplate {
     $result = $this->excerpt;
     $posts->beforeexcerpt($this, $result);
     $result = $this->replacemore($result, true);
-    if (litepublisher::$options->parsepost) {
+    if (litepubl::$options->parsepost) {
       $result = $this->theme->parse($result);
     }
     $posts->afterexcerpt($this, $result);
@@ -964,8 +975,8 @@ class tpost extends titem implements itemplate {
     $posts = $this->factory->posts;
     $posts->beforecontent($this, $result);
     if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
-    $result.= $this->getcontentpage(litepublisher::$urlmap->page);
-    if (litepublisher::$options->parsepost) {
+    $result.= $this->getcontentpage(litepubl::$urlmap->page);
+    if (litepubl::$options->parsepost) {
       $result = $this->theme->parse($result);
     }
     $posts->aftercontent($this, $result);
@@ -1051,19 +1062,19 @@ class tpost extends titem implements itemplate {
   }
 
   public function getcommentpages() {
-    if (!litepublisher::$options->commentpages || ($this->commentscount <= litepublisher::$options->commentsperpage)) return 1;
-    return ceil($this->commentscount / litepublisher::$options->commentsperpage);
+    if (!litepubl::$options->commentpages || ($this->commentscount <= litepubl::$options->commentsperpage)) return 1;
+    return ceil($this->commentscount / litepubl::$options->commentsperpage);
   }
 
   public function getlastcommenturl() {
     $c = $this->commentpages;
     $url = $this->url;
-    if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+    if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
     return $url;
   }
 
   public function clearcache() {
-    litepublisher::$urlmap->setexpired($this->idurl);
+    litepubl::$urlmap->setexpired($this->idurl);
   }
 
   public function getschemalink() {
@@ -1082,29 +1093,29 @@ class tpost extends titem implements itemplate {
   protected function getusername($id, $link) {
     if ($id <= 1) {
       if ($link) {
-        return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepublisher::$site->url, litepublisher::$site->author);
+        return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
       } else {
-        return litepublisher::$site->author;
+        return litepubl::$site->author;
       }
     } else {
       $users = tusers::i();
       if (!$users->itemexists($id)) return '';
       $item = $users->getitem($id);
       if (!$link || ($item['website'] == '')) return $item['name'];
-      return sprintf('<a href="%s/users.htm%sid=%s">%s</a>', litepublisher::$site->url, litepublisher::$site->q, $id, $item['name']);
+      return sprintf('<a href="%s/users.htm%sid=%s">%s</a>', litepubl::$site->url, litepubl::$site->q, $id, $item['name']);
     }
   }
 
   public function getauthorpage() {
     $id = $this->author;
     if ($id <= 1) {
-      return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepublisher::$site->url, litepublisher::$site->author);
+      return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
     } else {
       $pages = tuserpages::i();
       if (!$pages->itemexists($id)) return '';
       $pages->id = $id;
       if ($pages->url == '') return '';
-      return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepublisher::$site->url, $pages->url, $pages->name);
+      return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepubl::$site->url, $pages->url, $pages->name);
     }
   }
 
@@ -1242,7 +1253,7 @@ class tposts extends titems {
   }
 
   public function select($where, $limit) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     if ($this->childtable) {
       $childtable = $db->prefix . $this->childtable;
       return $this->setassoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
@@ -1296,7 +1307,7 @@ class tposts extends titems {
 
   public function getchildscount($where) {
     if ($this->childtable == '') return 0;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $childtable = $db->prefix . $this->childtable;
     if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childtable
     where $db->posts.status <> 'deleted' and $childtable.id = $db->posts.id $where")) {
@@ -1345,7 +1356,7 @@ class tposts extends titems {
       if ($post->status == 'published') $post->status = 'future';
     }
 
-    if (($post->icon == 0) && !litepublisher::$options->icondisabled) {
+    if (($post->icon == 0) && !litepubl::$options->icondisabled) {
       $icons = ticons::i();
       $post->icon = $icons->getid('post');
     }
@@ -1362,7 +1373,7 @@ class tposts extends titems {
     $this->cointerface('add', $post);
     $this->added($post->id);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $post->id;
   }
 
@@ -1383,7 +1394,7 @@ class tposts extends titems {
     $this->edited($post->id);
     $this->changed();
 
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {
@@ -1474,7 +1485,7 @@ class tposts extends titems {
   public function addrevision() {
     $this->data['revision']++;
     $this->save();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function getanhead(array $items) {
@@ -1774,7 +1785,7 @@ class tmetapost extends titem {
     }
 
     $instances = & self::$instances['postmeta'];
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $db->table = 'postsmeta';
     $res = $db->select(sprintf('id in (%s)', implode(',', $items)));
     while ($row = $db->fetchassoc($res)) {
@@ -1850,7 +1861,7 @@ class tcommontags extends titems implements itemplate {
   }
 
   protected function createfactory() {
-    $this->factory = litepublisher::$classes->getfactory($this);
+    $this->factory = litepubl::$classes->getfactory($this);
     $this->contents = new ttagcontent($this);
     if (!$this->dbversion) $this->data['itemsposts'] = array();
     $this->itemsposts = new titemspostsowner($this);
@@ -1865,7 +1876,7 @@ class tcommontags extends titems implements itemplate {
 
   public function select($where, $limit) {
     if ($where != '') $where.= ' and ';
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $t = $this->thistable;
     $u = $db->urlmap;
     $res = $db->query("select $t.*, $u.url from $t, $u
@@ -1883,7 +1894,7 @@ class tcommontags extends titems implements itemplate {
     $sorted = $this->getsorted($parent, $sortname, $count);
     if (count($sorted) == 0) return '';
     $result = '';
-    $iconenabled = !litepublisher::$options->icondisabled;
+    $iconenabled = !litepubl::$options->icondisabled;
     $theme = ttheme::i();
     $args = new targs();
     $args->rel = $this->PermalinkIndex;
@@ -1938,7 +1949,7 @@ class tcommontags extends titems implements itemplate {
 
   protected function updatecount(array $items) {
     if (count($items) == 0) return;
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     //next queries update values
     $items = implode(',', $items);
     $thistable = $this->thistable;
@@ -1986,12 +1997,12 @@ class tcommontags extends titems implements itemplate {
 
     $id = $this->db->add($item);
     $this->items[$id] = $item;
-    $idurl = litepublisher::$urlmap->add($url, get_class($this) , $id, $this->urltype);
+    $idurl = litepubl::$urlmap->add($url, get_class($this) , $id, $this->urltype);
     $this->setvalue($id, 'idurl', $idurl);
     $this->items[$id]['url'] = $url;
     $this->added($id);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
     return $id;
   }
 
@@ -2014,30 +2025,30 @@ class tcommontags extends titems implements itemplate {
     }
 
     if ($item['url'] != $url) {
-      if (($urlitem = litepublisher::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
+      if (($urlitem = litepubl::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
         $url = $linkgen->MakeUnique($url);
       }
-      litepublisher::$urlmap->setidurl($item['idurl'], $url);
-      litepublisher::$urlmap->addredir($item['url'], $url);
+      litepubl::$urlmap->setidurl($item['idurl'], $url);
+      litepubl::$urlmap->addredir($item['url'], $url);
       $item['url'] = $url;
     }
 
     $this->items[$id] = $item;
     $this->save();
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function delete($id) {
     $item = $this->getitem($id);
-    litepublisher::$urlmap->deleteitem($item['idurl']);
+    litepubl::$urlmap->deleteitem($item['idurl']);
     $this->contents->delete($id);
     $list = $this->itemsposts->getposts($id);
     $this->itemsposts->deleteitem($id);
     parent::delete($id);
     if ($this->postpropname) $this->itemsposts->updateposts($list, $this->postpropname);
     $this->changed();
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
   }
 
   public function createnames($list) {
@@ -2070,7 +2081,7 @@ class tcommontags extends titems implements itemplate {
     foreach ($list as $id) {
       if (!isset($this->items[$id])) continue;
       $item = $this->items[$id];
-      $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', litepublisher::$site->url . $item['url'], $item['title']);
+      $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', litepubl::$site->url . $item['url'], $item['title']);
     }
     return $result;
   }
@@ -2120,10 +2131,10 @@ class tcommontags extends titems implements itemplate {
     }
 
     $view = tview::getview($this);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
     $pages = (int)ceil($item['itemscount'] / $perpage);
-    if ((litepublisher::$urlmap->page > 1) && (litepublisher::$urlmap->page > $pages)) {
-      return sprintf('<?php litepublisher::$urlmap->redir(\'%s\'); ?>', $item['url']);
+    if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+      return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
     }
 
   }
@@ -2186,7 +2197,7 @@ class tcommontags extends titems implements itemplate {
   public function getcontent() {
     if ($s = $this->contents->getcontent($this->id)) {
       $pages = explode('<!--nextpage-->', $s);
-      $page = litepublisher::$urlmap->page - 1;
+      $page = litepubl::$urlmap->page - 1;
       if (isset($pages[$page])) return $pages[$page];
     }
 
@@ -2249,9 +2260,9 @@ class tcommontags extends titems implements itemplate {
     $includechilds = (int)$item['includechilds'];
 
     $view = tview::i($item['idview']);
-    $perpage = $view->perpage ? $view->perpage : litepublisher::$options->perpage;
+    $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
     $order = $view->invertorder ? 'asc' : 'desc';
-    $from = (litepublisher::$urlmap->page - 1) * $perpage;
+    $from = (litepubl::$urlmap->page - 1) * $perpage;
 
     $posts = $this->factory->posts;
     $p = $posts->thistable;
@@ -2329,7 +2340,7 @@ class ttagcontent extends tdata {
   }
 
   private function getfilename($id) {
-    return litepublisher::$paths->data . $this->owner->basename . DIRECTORY_SEPARATOR . $id;
+    return litepubl::$paths->data . $this->owner->basename . DIRECTORY_SEPARATOR . $id;
   }
 
   public function getitem($id) {
@@ -2603,7 +2614,7 @@ class tfiles extends titems {
 
   public function geturl($id) {
     $item = $this->getitem($id);
-    return litepublisher::$site->files . '/files/' . $item['filename'];
+    return litepubl::$site->files . '/files/' . $item['filename'];
   }
 
   public function getlink($id) {
@@ -2612,7 +2623,7 @@ class tfiles extends titems {
     if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
       $icon = $this->geticon($item['icon']);
     }
-    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepublisher::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
+    return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepubl::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
   }
 
   public function geticon($id) {
@@ -2624,8 +2635,8 @@ class tfiles extends titems {
   }
 
   public function additem(array $item) {
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
-    $item['author'] = litepublisher::$options->user;
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+    $item['author'] = litepubl::$options->user;
     $item['posted'] = sqldate();
     $item['hash'] = $this->gethash($realfile);
     $item['size'] = filesize($realfile);
@@ -2685,10 +2696,10 @@ class tfiles extends titems {
 
     $item = $this->getitem($id);
     if ($item['idperm'] == 0) {
-      @unlink(litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
+      @unlink(litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
     } else {
-      @unlink(litepublisher::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
-      litepublisher::$urlmap->delete('/files/' . $item['filename']);
+      @unlink(litepubl::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
+      litepubl::$urlmap->delete('/files/' . $item['filename']);
     }
 
     parent::delete($id);
@@ -2709,7 +2720,7 @@ class tfiles extends titems {
   public function setcontent($id, $content) {
     if (!$this->itemexists($id)) return false;
     $item = $this->getitem($id);
-    $realfile = litepublisher::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+    $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
     if (file_put_contents($realfile, $content)) {
       $item['hash'] = $this->gethash($realfile);
       $item['size'] = filesize($realfile);
@@ -2780,7 +2791,7 @@ class tfiles extends titems {
     $args = new targs();
     $args->count = count($list);
 
-    $url = litepublisher::$site->files . '/files/';
+    $url = litepubl::$site->files . '/files/';
 
     $preview = ttheme::$vars['preview'] = new tarray2prop();
     $midle = ttheme::$vars['midle'] = new tarray2prop();
@@ -2847,7 +2858,7 @@ class tfiles extends titems {
     foreach ($items as $id) {
       $item = $this->getitem($id);
       if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
-        $baseurl = litepublisher::$site->files . '/files/';
+        $baseurl = litepubl::$site->files . '/files/';
         $args = new targs();
         $args->add($item);
         $args->link = $baseurl . $item['filename'];
@@ -2882,7 +2893,7 @@ class tfiles extends titems {
     $item = $this->getitem($id);
     return jsonattr(array(
       'id' => $id,
-      'link' => litepublisher::$site->files . '/files/' . $item['filename'],
+      'link' => litepubl::$site->files . '/files/' . $item['filename'],
       'width' => $item['width'],
       'height' => $item['height'],
       'size' => $item['size'],

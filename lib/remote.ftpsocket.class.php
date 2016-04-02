@@ -29,8 +29,8 @@ class tftpsocketfiler extends tremotefiler {
 
   public function connect($host, $login, $password) {
     if (!parent::connect($host, $login, $password)) return false;
-    require_once (litepublisher::$paths->libinclude . 'class-ftp.php');
-    $this->ftp = new ftp();
+    require_once (litepubl::$paths->libinclude . 'class-ftp.php');
+    $this->ftp = new \ftp();
 
     $this->ftp->setTimeout($this->timeout);
     if ($this->ftp->SetServer($this->host, $this->port) && $this->ftp->connect() && $this->ftp->login($this->login, $this->password)) {

@@ -44,7 +44,7 @@ class tdatabase {
     if (isset(litepubl::$options->dbconfig)) {
       $result = litepubl::$options->dbconfig;
       //decrypt db password
-      $result['password'] = litepublisher::$options->dbpassword;
+      $result['password'] = litepubl::$options->dbpassword;
       return $result;
     }
 
@@ -132,13 +132,13 @@ class tdatabase {
   }
 
   protected function doerror($mesg) {
-    if (!$this->debug) return litepublisher::$options->trace($this->sql . "\n" . $mesg);
+    if (!$this->debug) return litepubl::$options->trace($this->sql . "\n" . $mesg);
     $log = "exception:\n$mesg\n$this->sql\n";
     try {
       throw new \Exception();
     }
     catch(Exception $e) {
-      $log.= str_replace(litepublisher::$paths->home, '', $e->getTraceAsString());
+      $log.= str_replace(litepubl::$paths->home, '', $e->getTraceAsString());
     }
 
     $log.= $this->performance();

@@ -26,12 +26,12 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
 
   private function _auth(array $struct) {
     extract($struct, EXTR_SKIP);
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if ($username != $options->email) return false;
 
     switch ($auth_method) {
       case 'challenge':
-        if (litepublisher::$debug) return ($this->_challenge == $auth_challenge);
+        if (litepubl::$debug) return ($this->_challenge == $auth_challenge);
         return ($this->_challenge == $auth_challenge) && ($auth_response == md5($this->challenge . $options->password));
 
       case 'clear':
@@ -104,7 +104,7 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
 
     if (isset($struct['props'])) {
       $props = & $struct['props'];
-      $post->comstatus = $props['opt_nocomments'] ? 'closed' : litepublisher::$options->comstatus;
+      $post->comstatus = $props['opt_nocomments'] ? 'closed' : litepubl::$options->comstatus;
       if ($props['opt_preformatted']) {
         $post->filtered = $struct['event'];
       }

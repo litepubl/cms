@@ -169,7 +169,7 @@ class tadminwidgets extends tadminmenu {
   }
 
   public function processform() {
-    litepublisher::$urlmap->clearcache();
+    litepubl::$urlmap->clearcache();
 
     $idwidget = (int)tadminhtml::getparam('idwidget', 0);
     $widgets = twidgets::i();

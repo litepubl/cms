@@ -40,7 +40,7 @@ class tpoolitems extends tdata {
   }
 
   public function loadpool($idpool) {
-    if ($data = litepublisher::$urlmap->cache->get($this->getfilename($idpool))) {
+    if ($data = litepubl::$urlmap->cache->get($this->getfilename($idpool))) {
       $this->pool[$idpool] = $data;
     } else {
       $this->pool[$idpool] = array();
@@ -49,7 +49,7 @@ class tpoolitems extends tdata {
 
   public function savepool($idpool) {
     if (!isset($this->modified[$idpool])) {
-      litepublisher::$urlmap->onclose = array(
+      litepubl::$urlmap->onclose = array(
         $this,
         'savemodified',
         $idpool
@@ -59,7 +59,7 @@ class tpoolitems extends tdata {
   }
 
   public function savemodified($idpool) {
-    litepublisher::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+    litepubl::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
   }
 
   public function getidpool($id) {

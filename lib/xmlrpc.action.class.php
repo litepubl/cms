@@ -36,7 +36,7 @@ class TXMLRPCAction extends titems {
   public function confirm($id, $to, $name, $args) {
     $this->DeleteExpired();
     if (!isset($this->actions[$id])) return new IXR_Error(403, 'Action not found');
-    if ($to != litepublisher::$site->url . '/rpc.xml') return new IXR_Error(403, 'Bad xmlrpc server');
+    if ($to != litepubl::$site->url . '/rpc.xml') return new IXR_Error(403, 'Bad xmlrpc server');
     return true;
   }
 
@@ -100,7 +100,7 @@ class TXMLRPCAction extends titems {
     $this->unlock();
 
     $Client = new IXR_Client($to);
-    if ($Client->query('litepublisher.action.send', $id, litepublisher::$site->url . '/rpc.xml', $name, $args)) {
+    if ($Client->query('litepublisher.action.send', $id, litepubl::$site->url . '/rpc.xml', $name, $args)) {
       return $Client->getResponse();
     }
     return false;
@@ -108,7 +108,7 @@ class TXMLRPCAction extends titems {
 
   private function DeleteExpired() {
     $this->lock();
-    $expired = time() - litepublisher::$options->expiredcache;
+    $expired = time() - litepubl::$options->expiredcache;
     foreach ($this->actions as $id => $item) {
       if ($item['date'] < $expired) unset($this->actions[$id]);
     }

@@ -28,10 +28,10 @@ class tredirector extends titems {
 
   public function get($url) {
     if (isset($this->items[$url])) return $this->items[$url];
-    if (strbegin($url, litepublisher::$site->url)) return substr($url, strlen(litepublisher::$site->url));
+    if (strbegin($url, litepubl::$site->url)) return substr($url, strlen(litepubl::$site->url));
 
     //redir jquery scripts
-    if (strbegin($url, '/js/jquery/jquery')) return '/js/jquery/jquery-' . litepublisher::$site->jquery_version . '.min.js';
+    if (strbegin($url, '/js/jquery/jquery')) return '/js/jquery/jquery-' . litepubl::$site->jquery_version . '.min.js';
 
     //fix for 2.xx versions
     if (preg_match('/^\/comments\/(\d*?)\/?$/', $url, $m)) return sprintf('/comments/%d.xml', $m[1]);
@@ -39,8 +39,8 @@ class tredirector extends titems {
 
     if (strpos($url, '%')) {
       $url = rawurldecode($url);
-      if (strbegin($url, litepublisher::$site->url)) return substr($url, strlen(litepublisher::$site->url));
-      if (litepublisher::$urlmap->urlexists($url)) return $url;
+      if (strbegin($url, litepubl::$site->url)) return substr($url, strlen(litepubl::$site->url));
+      if (litepubl::$urlmap->urlexists($url)) return $url;
     }
 
     //fix php warnings e.g. function.preg-split

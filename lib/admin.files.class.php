@@ -39,7 +39,7 @@ class tadminfiles extends tadminmenu {
       [text=keywords]
       [checkbox=overwrite]';
 
-      if (litepublisher::$options->show_file_perm) $form->items.= tadminperms::getcombo(0, 'idperm');
+      if (litepubl::$options->show_file_perm) $form->items.= tadminperms::getcombo(0, 'idperm');
       $result.= $form->get();
     } else {
       $id = $this->idget();
@@ -47,7 +47,7 @@ class tadminfiles extends tadminmenu {
       switch ($_GET['action']) {
         case 'delete':
           if ($this->confirmed) {
-            if (('author' == litepublisher::$options->group) && ($r = tauthor_rights::i()->candeletefile($id))) return $r;
+            if (('author' == litepubl::$options->group) && ($r = tauthor_rights::i()->candeletefile($id))) return $r;
             $files->delete($id);
             $result.= $admintheme->success($lang->deleted);
           } else {
@@ -64,7 +64,7 @@ class tadminfiles extends tadminmenu {
           $args->description = tcontentfilter::unescape($item['description']);
           $args->keywords = tcontentfilter::unescape($item['keywords']);
           $args->formtitle = $this->lang->editfile;
-          $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepublisher::$options->show_file_perm ? tadminperms::getcombo($item['idperm'], 'idperm') : '') , $args);
+          $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? tadminperms::getcombo($item['idperm'], 'idperm') : '') , $args);
           break;
         }
     }
@@ -72,7 +72,7 @@ class tadminfiles extends tadminmenu {
     $perpage = 20;
     $type = $this->name == 'files' ? '' : $this->name;
     $sql = 'parent =0';
-    $sql.= litepublisher::$options->user <= 1 ? '' : ' and author = ' . litepublisher::$options->user;
+    $sql.= litepubl::$options->user <= 1 ? '' : ' and author = ' . litepubl::$options->user;
     $sql.= $type == '' ? " and media<> 'icon'" : " and media = '$type'";
     $count = $files->db->getcount($sql);
     $from = $this->getfrom($perpage, $count);
@@ -110,7 +110,7 @@ class tadminfiles extends tadminmenu {
       )
     ));
 
-    $result.= $this->theme->getpages($this->url, litepublisher::$urlmap->page, ceil($count / $perpage));
+    $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
     return $result;
   }
 
@@ -120,7 +120,7 @@ class tadminfiles extends tadminmenu {
     $lang = $this->lang;
 
     if (empty($_GET['action'])) {
-      $isauthor = 'author' == litepublisher::$options->group;
+      $isauthor = 'author' == litepubl::$options->group;
       if ($_POST['uploadmode'] == 'file') {
         if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
           return $admintheme->geterr(tlocal::get('uploaderrors', $_FILES['filename']['error']));

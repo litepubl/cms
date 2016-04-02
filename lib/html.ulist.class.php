@@ -34,7 +34,7 @@ class ulist {
     return strtr(is_int($name) ? $this->value : $this->item, array(
       '$name' => $name,
       '$value' => $value,
-      '$site.url' => litepublisher::$site->url,
+      '$site.url' => litepubl::$site->url,
     ));
   }
 
@@ -79,7 +79,7 @@ class ulist {
   public function links(array $props) {
     $this->item = $this->link;
     $result = $this->get($props);
-    return str_replace('$site.url', litepublisher::$site->url, $result);
+    return str_replace('$site.url', litepubl::$site->url, $result);
   }
 
 } //class

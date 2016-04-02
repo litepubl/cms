@@ -22,9 +22,9 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
 
     $result = array(
       //'isAdmin'  => true,
-      'url' => litepublisher::$site->url . '/',
+      'url' => litepubl::$site->url . '/',
       'blogid' => '1',
-      'blogName' => litepublisher::$site->name
+      'blogName' => litepubl::$site->name
     );
     return array(
       $result
@@ -36,8 +36,8 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
 
     $result = array(
       'nickname' => $login,
-      'userid' => litepublisher::$options->user,
-      'url' => litepublisher::$site->url . '/',
+      'userid' => litepubl::$options->user,
+      'url' => litepubl::$site->url . '/',
       'lastname' => '',
       'firstname' => ''
     );
@@ -81,7 +81,7 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
       $content.= $Post->content;
 
       $result[] = array(
-        'userid' => litepublisher::$options->user,
+        'userid' => litepubl::$options->user,
         'dateCreated' => new IXR_Date($Post->date) ,
         'content' => $content,
         'postid' => $Post->id,

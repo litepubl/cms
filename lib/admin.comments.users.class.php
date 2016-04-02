@@ -33,7 +33,7 @@ class tadmincomusers extends tadminmenu {
     $total = $users->db->getcount("status = 'comuser'");
     $from = $this->getfrom($perpage, $total);
     $res = $users->db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
-    $items = litepublisher::$db->res2assoc($res);
+    $items = litepubl::$db->res2assoc($res);
 
     $result.= sprintf($html->h4->itemscount, $from, $from + count($items) , $total);
     $adminurl = $this->adminurl;
@@ -67,7 +67,7 @@ class tadmincomusers extends tadminmenu {
     ));
 
     $result.= $tb->build($items);
-    $result.= $this->view->theme->getpages($this->url, litepublisher::$urlmap->page, ceil($total / $perpage));
+    $result.= $this->view->theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
     return $result;
   }
 
@@ -82,7 +82,7 @@ class tadmincomusers extends tadminmenu {
   }
 
   private function getsubscribed($authorid) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $authorid = (int)$authorid;
     $users = tusers::i();
     if (!$users->itemexists($authorid)) return '';

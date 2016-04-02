@@ -147,7 +147,7 @@ class tdata {
   }
 
   public function externalfunc($class, $func, $args) {
-    if ($filename = litepublisher::$classes->getclassfilename($class, true)) {
+    if ($filename = litepubl::$classes->getclassfilename($class, true)) {
       $externalname = basename($filename, '.php') . '.install.php';
       $dir = dirname($filename) . DIRECTORY_SEPARATOR;
       $file = $dir . 'install' . DIRECTORY_SEPARATOR . $externalname;
@@ -238,7 +238,7 @@ class tdata {
   }
 
   protected function getthistable() {
-    return litepublisher::$db->prefix . $this->table;
+    return litepubl::$db->prefix . $this->table;
   }
 
   public static function get_class_name($c) {

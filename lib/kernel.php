@@ -32,14 +32,14 @@ class tdatabase {
 
   public function getconfig() {
     $this->debug = & litepubl::$debug;
-    if (litepubl\config::$db) {
-      return litepubl\config::$db;
+    if (config::$db) {
+      return config::$db;
     }
 
     if (isset(litepubl::$options->dbconfig)) {
       $result = litepubl::$options->dbconfig;
       //decrypt db password
-      $result['password'] = litepublisher::$options->dbpassword;
+      $result['password'] = litepubl::$options->dbpassword;
       return $result;
     }
 
@@ -51,10 +51,10 @@ class tdatabase {
     $this->dbname = $dbconfig['dbname'];
     $this->prefix = $dbconfig['prefix'];
 
-    $this->mysqli = new mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
+    $this->mysqli = new \mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
 
     if (mysqli_connect_error()) {
-      throw new Exception('Error connect to database');
+      throw new \Exception('Error connect to database');
     }
 
     $this->mysqli->set_charset('utf8');
@@ -127,13 +127,13 @@ class tdatabase {
   }
 
   protected function doerror($mesg) {
-    if (!$this->debug) return litepublisher::$options->trace($this->sql . "\n" . $mesg);
+    if (!$this->debug) return litepubl::$options->trace($this->sql . "\n" . $mesg);
     $log = "exception:\n$mesg\n$this->sql\n";
     try {
-      throw new Exception();
+      throw new \Exception();
     }
     catch(Exception $e) {
-      $log.= str_replace(litepublisher::$paths->home, '', $e->getTraceAsString());
+      $log.= str_replace(litepubl::$paths->home, '', $e->getTraceAsString());
     }
 
     $log.= $this->performance();
@@ -421,11 +421,11 @@ class tdata {
   public static $guid = 0;
 
   public static function i() {
-    return getinstance(get_called_class());
+    return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function instance() {
-    return getinstance(get_called_class());
+    return static::i();
   }
 
   public function __construct() {
@@ -436,7 +436,7 @@ class tdata {
     $this->coclasses = array();
 
     if (!$this->basename) {
-      $this->basename = ltrim(get_class($this) , 'tT');
+      $this->basename = ltrim(basename(get_class($this)) , 'tT');
     }
 
     $this->create();
@@ -521,7 +521,7 @@ class tdata {
   }
 
   public function error($Msg, $code = 0) {
-    throw new Exception($Msg, $code);
+    throw new \Exception($Msg, $code);
   }
 
   public function getbasename() {
@@ -549,7 +549,7 @@ class tdata {
   }
 
   public function externalfunc($class, $func, $args) {
-    if ($filename = litepublisher::$classes->getclassfilename($class, true)) {
+    if ($filename = litepubl::$classes->getclassfilename($class, true)) {
       $externalname = basename($filename, '.php') . '.install.php';
       $dir = dirname($filename) . DIRECTORY_SEPARATOR;
       $file = $dir . 'install' . DIRECTORY_SEPARATOR . $externalname;
@@ -579,7 +579,7 @@ class tdata {
   }
 
   public function getstorage() {
-    return litepubl\litepubl::$storage;
+    return litepubl::$storage;
   }
 
   public function load() {
@@ -640,7 +640,7 @@ class tdata {
   }
 
   protected function getthistable() {
-    return litepublisher::$db->prefix . $this->table;
+    return litepubl::$db->prefix . $this->table;
   }
 
   public static function get_class_name($c) {
@@ -709,15 +709,15 @@ function sqltime($date = 0) {
 }
 
 function dbquote($s) {
-  return litepublisher::$db->quote($s);
+  return litepubl::$db->quote($s);
 }
 
 function md5rand() {
-  return md5(mt_rand() . litepublisher::$secret . microtime());
+  return md5(mt_rand() . litepubl::$secret . microtime());
 }
 
 function md5uniq() {
-  return basemd5(mt_rand() . litepublisher::$secret . microtime());
+  return basemd5(mt_rand() . litepubl::$secret . microtime());
 }
 
 function basemd5($s) {
@@ -906,7 +906,7 @@ class tevents extends tdata {
   }
 
   public function free() {
-    unset(litepublisher::$classes->instances[get_class($this) ]);
+    unset(litepubl::$classes->instances[get_class($this) ]);
     foreach ($this->coinstances as $coinstance) {
       $coinstance->free();
     }
@@ -1166,7 +1166,7 @@ class tevents extends tdata {
 //events.exception.class.php
 namespace litepubl;
 
-class ECancelEvent extends Exception {
+class ECancelEvent extends \Exception {
   public $result;
 
   public function __construct($message, $code = 0) {
@@ -1278,7 +1278,7 @@ namespace litepubl;
 class tevents_storage extends tevents {
 
   public function getstorage() {
-    return litepubl\litepubl::$datastorage;
+    return litepubl::$datastorage;
   }
 
 } //class
@@ -1363,7 +1363,7 @@ class titems extends tevents {
     }
 
     $result = array();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     while ($item = $db->fetchassoc($res)) {
       $id = $item[$this->idprop];
       $result[] = $id;
@@ -1554,15 +1554,27 @@ namespace litepubl;
 
 class titem extends tdata {
   public static $instances;
-  //public $id;
+
   public static function iteminstance($class, $id = 0) {
+//fix namespace
+if (!strpos($class, '\\') && !class_exists($class)) {
+$class = 'litepubl\\' . $class;
+}
+
     $name = call_user_func_array(array(
       $class,
       'getinstancename'
     ) , array());
-    if (!isset(self::$instances)) self::$instances = array();
-    if (isset(self::$instances[$name][$id])) return self::$instances[$name][$id];
-    $self = litepublisher::$classes->newitem($name, $class, $id);
+
+    if (!isset(static::$instances)) {
+static::$instances = array();
+}
+
+    if (isset(static::$instances[$name][$id])) {
+return static::$instances[$name][$id];
+}
+
+    $self = litepubl::$classes->newitem($name, $class, $id);
     return $self->loaddata($id);
   }
 
@@ -1659,16 +1671,13 @@ class tclasses extends titems {
   public $instances;
 
   public static function i() {
-    if (!isset(litepublisher::$classes)) {
-      $class = __class__;
-      litepublisher::$classes = new $class();
-      litepublisher::$classes->instances[$class] = litepublisher::$classes;
+    if (!isset(litepubl::$classes)) {
+      $classname = get_called_class();
+      litepubl::$classes = new $classname();
+      litepubl::$classes->instances[$classname] = litepubl::$classes;
     }
-    return litepublisher::$classes;
-  }
 
-  public static function instance() {
-    return self::i();
+    return litepubl::$classes;
   }
 
   protected function create() {
@@ -1690,23 +1699,54 @@ class tclasses extends titems {
   }
 
   public function getstorage() {
-    return litepubl\litepubl::$datastorage;
+    return litepubl::$datastorage;
   }
 
   public function getinstance($class) {
-    if (!class_exists($class)) {
-      $this->error("Class $class not found");
-    }
+    if (isset($this->instances[$class])) {
+return $this->instances[$class];
+}
 
-    if (!isset($this->instances[$class])) {
-      $this->instances[$class] = $this->newinstance($class);
-    }
+if (!($newclass = $this->class_exists($class))) {
+      $this->error(sprintf('Class $class "%s" not found', $class));
+}
 
-    return $this->instances[$class];
+    if (($newclass != $class) && isset($this->instances[$newclass])) {
+//\class_alias($newclass, $class);
+      $this->instances[$class] = $this->instances[$newclass];
+return $this->instances[$newclass];
+}
+
+$instance = $this->newinstance($newclass);
+      $this->instances[$class] = $instance;
+if ($newclass != $class) {
+      $this->instances[$newclass] = $instance;
+}
+
+    return $instance;
   }
 
+public function class_exists($classname) {
+    if (class_exists($classname)) {
+return $classname;
+}
+
+if (!strpos($classname, '\\')) {
+foreach (array('litepubl\\', 'litepubl\plugins', 'litepubl\shop') as $ns) {
+if (class_exists($ns . $classname, false)) {
+return $ns . $classname;
+}
+}
+}
+
+return false;
+    }
+
   public function newinstance($class) {
-    if (!empty($this->remap[$class])) $class = $this->remap[$class];
+    if (!empty($this->remap[$class])) {
+$class = $this->remap[$class];
+}
+
     return new $class();
   }
 
@@ -1784,7 +1824,9 @@ class tclasses extends titems {
     } else if (($subclass = basename($class)) && ($subclass != $class) && isset($this->items[$subclass])) {
       $item = $this->items[$subclass];
     } else if (isset($this->interfaces[$class])) {
-      return litepublisher::$paths->lib . $this->interfaces[$class];
+      return litepubl::$paths->lib . $this->interfaces[$class];
+    } else if ($subclass && ($subclass != $class) && isset($this->interfaces[$subclass])) {
+      return litepubl::$paths->lib . $this->interfaces[$subclass];
     } else {
       return false;
     }
@@ -1796,19 +1838,19 @@ class tclasses extends titems {
      * 2 = filename for debug
     */
 
-    $filename = (litepublisher::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
+    $filename = (litepubl::$debug || $debug) && isset($item[2]) ? $item[2] : $item[0];
     if (Empty($item[1])) {
-      return litepublisher::$paths->lib . $filename;
+      return litepubl::$paths->lib . $filename;
     }
 
     //may be is subdir
     $filename = trim($item[1], '\\/') . DIRECTORY_SEPARATOR . $filename;
-    if (file_exists(litepublisher::$paths->plugins . $filename)) {
-      return litepublisher::$paths->plugins . $filename;
+    if (file_exists(litepubl::$paths->plugins . $filename)) {
+      return litepubl::$paths->plugins . $filename;
     }
 
-    if (file_exists(litepublisher::$paths->home . $filename)) {
-      return litepublisher::$paths->home . $filename;
+    if (file_exists(litepubl::$paths->home . $filename)) {
+      return litepubl::$paths->home . $filename;
     }
 
     return false;
@@ -1820,7 +1862,12 @@ class tclasses extends titems {
 
   public function getfactory($instance) {
     foreach ($this->factories as $classname => $factory) {
-      if (@is_a($instance, $classname)) {
+//fix namespace
+if (!strpos($classname, '\\')) {
+$classname = 'litepubl\\' . $classname;
+}
+
+      if (is_a($instance, $classname)) {
         return $this->getinstance($factory);
       }
     }
@@ -1837,14 +1884,8 @@ class tclasses extends titems {
 //classes.functions.php
 namespace litepubl;
 
-if (!function_exists('spl_autoload_register')) {
-  function __autoload($class) {
-    litepublisher::$classes->_autoload($class);
-  }
-}
-
 function getinstance($class) {
-  return litepublisher::$classes->getinstance($class);
+  return litepubl::$classes->getinstance($class);
 }
 
 //options.class.php
@@ -2049,7 +2090,7 @@ class toptions extends tevents_storage {
 
   public function getdbpassword() {
     if (function_exists('mcrypt_encrypt')) {
-      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepublisher::$secret);
+      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
     } else {
       return str_rot13(base64_decode($this->data['dbconfig']['password']));
     }
@@ -2057,7 +2098,7 @@ class toptions extends tevents_storage {
 
   public function setdbpassword($password) {
     if (function_exists('mcrypt_encrypt')) {
-      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepublisher::$secret);
+      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepubl::$secret);
     } else {
       $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
     }
@@ -2070,7 +2111,7 @@ class toptions extends tevents_storage {
   }
 
   public function setcookie($name, $value, $expired) {
-    setcookie($name, $value, $expired, litepublisher::$site->subdir . '/', false, '', $this->securecookie);
+    setcookie($name, $value, $expired, litepubl::$site->subdir . '/', false, '', $this->securecookie);
   }
 
   public function setcookies($cookie, $expired) {
@@ -2105,7 +2146,7 @@ class toptions extends tevents_storage {
   }
 
   public function hash($s) {
-    return basemd5((string)$s . $this->solt . litepublisher::$secret);
+    return basemd5((string)$s . $this->solt . litepubl::$secret);
   }
 
   public function ingroup($groupname) {
@@ -2160,11 +2201,11 @@ class toptions extends tevents_storage {
       $log.= "\n";
     }
 
-    $log = str_replace(litepublisher::$paths->home, '', $log);
+    $log = str_replace(litepubl::$paths->home, '', $log);
     $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
     tfiler::log($log, 'exceptions.log');
 
-    if (!(litepublisher::$debug || $this->echoexception || $this->admincookie || litepublisher::$urlmap->adminpanel)) {
+    if (!(litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
       tfiler::log($log, 'exceptionsmail.log');
     }
   }
@@ -2179,7 +2220,7 @@ class toptions extends tevents_storage {
   }
 
   public function showerrors() {
-    if (!empty($this->errorlog) && (litepublisher::$debug || $this->echoexception || $this->admincookie || litepublisher::$urlmap->adminpanel)) {
+    if (!empty($this->errorlog) && (litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
       echo $this->errorlog;
     }
   }
@@ -2253,7 +2294,7 @@ class tsite extends tevents_storage {
         ));
       }
 
-      return litepublisher::$options->data[$prop];
+      return litepubl::$options->data[$prop];
     }
 
     return parent::__get($name);
@@ -2265,7 +2306,7 @@ class tsite extends tevents_storage {
       $this->addevent($name, $value['class'], $value['func']);
     } elseif (isset($this->mapoptions[$name])) {
       $prop = $this->mapoptions[$name];
-      if (is_string($prop)) litepublisher::$options->{$prop} = $value;
+      if (is_string($prop)) litepubl::$options->{$prop} = $value;
     } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
       $this->data[$name] = $value;
       $this->save();
@@ -2275,12 +2316,12 @@ class tsite extends tevents_storage {
 
   public function geturl() {
     if ($this->fixedurl) return $this->data['url'];
-    return 'http://' . litepublisher::$domain;
+    return 'http://' . litepubl::$domain;
   }
 
   public function getfiles() {
     if ($this->fixedurl) return $this->data['files'];
-    return 'http://' . litepublisher::$domain;
+    return 'http://' . litepubl::$domain;
   }
 
   public function seturl($url) {
@@ -2295,11 +2336,11 @@ class tsite extends tevents_storage {
   }
 
   public function getdomain() {
-    return litepublisher::$domain;
+    return litepubl::$domain;
   }
 
   public function getuserlink() {
-    if ($id = litepublisher::$options->user) {
+    if ($id = litepubl::$options->user) {
       if (!isset($this->users)) $this->users = array();
       if (isset($this->users[$id])) return $this->users[$id];
       $item = tusers::i()->getitem($id);
@@ -2308,7 +2349,7 @@ class tsite extends tevents_storage {
       } else {
         $page = $this->getdb('userpage')->getitem($id);
         if ((int)$page['idurl']) {
-          $result = sprintf('<a href="%s%s">%s</a>', $this->url, litepublisher::$urlmap->getvalue($page['idurl'], 'url') , $item['name']);
+          $result = sprintf('<a href="%s%s">%s</a>', $this->url, litepubl::$urlmap->getvalue($page['idurl'], 'url') , $item['name']);
         } else {
           $result = $item['name'];
         }
@@ -2320,7 +2361,7 @@ class tsite extends tevents_storage {
   }
 
   public function getliveuser() {
-    return '<?php echo litepublisher::$site->getuserlink(); ?>';
+    return '<?php echo litepubl::$site->getuserlink(); ?>';
   }
 
 } //class
@@ -2341,14 +2382,6 @@ class turlmap extends titems {
   public $adminpanel;
   public $prefilter;
   protected $close_events;
-
-  public static function i() {
-    return getinstance(__class__);
-  }
-
-  public static function instance() {
-    return getinstance(__class__);
-  }
 
   public function __construct() {
     parent::__construct();
@@ -2372,7 +2405,7 @@ class turlmap extends titems {
     $this->is404 = false;
     $this->isredir = false;
     $this->adminpanel = false;
-    $this->cache_enabled = litepublisher::$options->cache && !litepublisher::$options->admincookie;
+    $this->cache_enabled = litepubl::$options->cache && !litepubl::$options->admincookie;
     $this->page = 1;
     $this->close_events = array();
   }
@@ -2381,8 +2414,8 @@ class turlmap extends titems {
     $this->host = $host;
     $this->page = 1;
     $this->uripath = array();
-    if (litepublisher::$site->q == '?') {
-      $this->url = substr($url, strlen(litepublisher::$site->subdir));
+    if (litepubl::$site->q == '?') {
+      $this->url = substr($url, strlen(litepubl::$site->subdir));
     } else {
       $this->url = $_GET['url'];
     }
@@ -2392,28 +2425,28 @@ class turlmap extends titems {
     $this->prepareurl($host, $url);
     $this->adminpanel = strbegin($this->url, '/admin/') || ($this->url == '/admin');
     if ($this->redirdom) {
-      $parsedurl = parse_url(litepublisher::$site->url . '/');
+      $parsedurl = parse_url(litepubl::$site->url . '/');
       if ($host != strtolower($parsedurl['host'])) {
         return $this->redir($url);
       }
     }
 
     $this->beforerequest();
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
+    if (!litepubl::$debug && litepubl::$options->ob_cache) {
       ob_start();
     }
 
     try {
       $this->dorequest($this->url);
     }
-    catch(Exception $e) {
-      litepublisher::$options->handexception($e);
+    catch(\Exception $e) {
+      litepubl::$options->handexception($e);
     }
 
     // production mode: no debug and enabled buffer
-    if (!litepublisher::$debug && litepublisher::$options->ob_cache) {
-      litepublisher::$options->showerrors();
-      litepublisher::$options->errorlog = '';
+    if (!litepubl::$debug && litepubl::$options->ob_cache) {
+      litepubl::$options->showerrors();
+      litepubl::$options->errorlog = '';
 
       $afterclose = $this->isredir || count($this->close_events);
       if ($afterclose) {
@@ -2573,10 +2606,10 @@ class turlmap extends titems {
         return sprintf('%s-%d.php', $item['id'], $this->page);
 
       case 'usernormal':
-        return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepublisher::$options->user);
+        return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepubl::$options->user);
 
       case 'userget':
-        return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepublisher::$options->user, md5($_SERVER['REQUEST_URI']));
+        return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepubl::$options->user, md5($_SERVER['REQUEST_URI']));
 
       default: //get
         return sprintf('%s-%d-%s.php', $item['id'], $this->page, md5($_SERVER['REQUEST_URI']));
@@ -2596,8 +2629,8 @@ class turlmap extends titems {
       return false;
     }
 
-    $filename = litepublisher::$paths->cache . $fn;
-    if (file_exists($filename) && ((filemtime($filename) + litepublisher::$options->expiredcache - litepublisher::$options->filetime_offset) >= time())) {
+    $filename = litepubl::$paths->cache . $fn;
+    if (file_exists($filename) && ((filemtime($filename) + litepubl::$options->expiredcache - litepubl::$options->filetime_offset) >= time())) {
       include ($filename);
       return true;
     }
@@ -2606,15 +2639,14 @@ class turlmap extends titems {
   }
 
   private function printcontent(array $item) {
-    $options = litepublisher::$options;
+    $options = litepubl::$options;
     if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
       return;
     }
 
-    if (class_exists($item['class'])) {
+    if (litepubl::$classes->class_exists($item['class'])) {
       return $this->GenerateHTML($item);
     } else {
-      //$this->deleteclass($item['class']);
       $this->notfound404();
     }
   }
@@ -2625,17 +2657,17 @@ class turlmap extends titems {
   }
 
   public function getcontext(array $item) {
-    $class = $item['class'];
-    $parents = class_parents($class);
-    if (in_array('titem', $parents)) {
+    $classname = litepubl::$classes->class_exists($item['class']);
+    $parents = class_parents($classname);
+    if (in_array('litepubl\titem', $parents)) {
       return call_user_func_array(array(
-        $class,
+        $classname,
         'i'
       ) , array(
         $item['arg']
       ));
     } else {
-      return getinstance($class);
+      return litepubl::$classes->getinstance($classname);
     }
   }
 
@@ -2677,12 +2709,12 @@ class turlmap extends titems {
   }
 
   private function printclasspage($classname) {
-    $cachefile = $classname . '.php';
+    $cachefile = str_replace('\\', '_', $classname) . '.php';
     if ($this->cache_enabled && $this->include_file($cachefile)) {
       return;
     }
 
-    $obj = getinstance($classname);
+    $obj = litepubl::$classes->getinstance($classname);
     $Template = ttemplate::i();
     $s = $Template->request($obj);
     eval('?>' . $s);
@@ -2865,7 +2897,7 @@ class turlmap extends titems {
         call_user_func_array($c, $a);
       }
       catch(Exception $e) {
-        litepublisher::$options->handexception($e);
+        litepubl::$options->handexception($e);
       }
     }
 
@@ -2890,7 +2922,7 @@ class turlmap extends titems {
   }
 
   public function redir($url, $status = 301) {
-    litepublisher::$options->savemodified();
+    litepubl::$options->savemodified();
     $this->isredir = true;
 
     switch ($status) {
@@ -2909,7 +2941,7 @@ class turlmap extends titems {
         break;
     }
 
-    if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepublisher::$site->url . $url;
+    if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepubl::$site->url . $url;
     header('Location: ' . $url);
   }
 
@@ -2926,7 +2958,7 @@ class turlmap extends titems {
 
   public function getnextpage() {
     $url = $this->itemrequested['url'];
-    return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
+    return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
   }
 
   public function getprevpage() {
@@ -2935,11 +2967,11 @@ class turlmap extends titems {
       return url;
     }
 
-    return litepublisher::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
+    return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
   }
 
   public static function htmlheader($cache) {
-    return sprintf('<?php turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
+    return sprintf('<?php litepubl\turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
   }
 
   public static function nocache() {
@@ -2954,13 +2986,13 @@ class turlmap extends titems {
 
     header('Content-Type: text/html; charset=utf-8');
     header('Last-Modified: ' . date('r'));
-    header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
+    header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
   }
 
   public static function sendxml() {
     header('Content-Type: text/xml; charset=utf-8');
     header('Last-Modified: ' . date('r'));
-    header('X-Pingback: ' . litepublisher::$site->url . '/rpc.xml');
+    header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
     echo '<?xml version="1.0" encoding="utf-8" ?>';
   }
 
@@ -3030,7 +3062,7 @@ class tusers extends titems {
   public function res2items($res) {
     if (!$res) return array();
     $result = array();
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     while ($item = $db->fetchassoc($res)) {
       $id = (int)$item['id'];
       $item['idgroups'] = tdatabase::str2array($item['idgroups']);
@@ -3076,7 +3108,7 @@ class tusers extends titems {
 
   public function emailexists($email) {
     if ($email == '') return false;
-    if ($email == litepublisher::$options->email) return 1;
+    if ($email == litepubl::$options->email) return 1;
 
     foreach ($this->items as $id => $item) {
       if ($email == $item['email']) return $id;
@@ -3092,12 +3124,12 @@ class tusers extends titems {
   }
 
   public function getpassword($id) {
-    return $id == 1 ? litepublisher::$options->password : $this->getvalue($id, 'password');
+    return $id == 1 ? litepubl::$options->password : $this->getvalue($id, 'password');
   }
 
   public function changepassword($id, $password) {
     $item = $this->getitem($id);
-    $this->setvalue($id, 'password', litepublisher::$options->hash($item['email'] . $password));
+    $this->setvalue($id, 'password', litepubl::$options->hash($item['email'] . $password));
   }
 
   public function approve($id) {
@@ -3113,7 +3145,7 @@ class tusers extends titems {
   public function authpassword($id, $password) {
     if (!$id || !$password) return false;
     $item = $this->getitem($id);
-    if ($item['password'] == litepublisher::$options->hash($item['email'] . $password)) {
+    if ($item['password'] == litepubl::$options->hash($item['email'] . $password)) {
       if ($item['status'] == 'wait') $this->approve($id);
       return $id;
     }
@@ -3123,8 +3155,8 @@ class tusers extends titems {
   public function authcookie($cookie) {
     $cookie = (string)$cookie;
     if (empty($cookie)) return false;
-    $cookie = litepublisher::$options->hash($cookie);
-    if ($cookie == litepublisher::$options->hash('')) return false;
+    $cookie = litepubl::$options->hash($cookie);
+    if ($cookie == litepubl::$options->hash('')) return false;
     if ($id = $this->findcookie($cookie)) {
       $item = $this->getitem($id);
       if (strtotime($item['expired']) > time()) return $id;
@@ -3151,7 +3183,7 @@ class tusers extends titems {
   }
 
   public function setcookie($id, $cookie, $expired) {
-    if ($cookie) $cookie = litepublisher::$options->hash($cookie);
+    if ($cookie) $cookie = litepubl::$options->hash($cookie);
     $expired = sqldate($expired);
     if (isset($this->items[$id])) {
       $this->items[$id]['cookie'] = $cookie;
@@ -3203,7 +3235,7 @@ class tpoolitems extends tdata {
   }
 
   public function loadpool($idpool) {
-    if ($data = litepublisher::$urlmap->cache->get($this->getfilename($idpool))) {
+    if ($data = litepubl::$urlmap->cache->get($this->getfilename($idpool))) {
       $this->pool[$idpool] = $data;
     } else {
       $this->pool[$idpool] = array();
@@ -3212,7 +3244,7 @@ class tpoolitems extends tdata {
 
   public function savepool($idpool) {
     if (!isset($this->modified[$idpool])) {
-      litepublisher::$urlmap->onclose = array(
+      litepubl::$urlmap->onclose = array(
         $this,
         'savemodified',
         $idpool
@@ -3222,7 +3254,7 @@ class tpoolitems extends tdata {
   }
 
   public function savemodified($idpool) {
-    litepublisher::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+    litepubl::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
   }
 
   public function getidpool($id) {
@@ -3264,7 +3296,7 @@ class memstorage {
   }
 
   public function __construct() {
-    $this->memcache_prefix = litepublisher::$domain . ':';
+    $this->memcache_prefix = litepubl::$domain . ':';
     $this->table = 'memstorage';
     $this->table_checked = false;
     $this->data = array();
@@ -3299,7 +3331,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
         $result = $this->unserialize($r['value']);
         $this->data[$name] = $result;
@@ -3324,7 +3356,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       $v = $db->quote($this->serialize($value));
       if ($exists) {
         $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
@@ -3350,7 +3382,7 @@ class memstorage {
         $this->check();
       }
 
-      $db = litepublisher::$db;
+      $db = litepubl::$db;
       $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
   }
@@ -3367,7 +3399,7 @@ class memstorage {
     $this->table_checked = true;
 
     //exclude throw exception
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
     if (is_object($res) && ($r = $res->fetch_assoc())) {
       $res->close();
@@ -3385,7 +3417,7 @@ class memstorage {
   }
 
   public function loadall() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $res = $db->query("select * from $db->prefix$this->table");
     if (is_object($res)) {
       while ($item = $res->fetch_assoc()) {
@@ -3395,7 +3427,7 @@ class memstorage {
   }
 
   public function saveall() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $a = array();
     foreach ($this->data as $name => $value) {
       $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
@@ -3406,7 +3438,7 @@ class memstorage {
   }
 
   public function create_table() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $db->mysqli->query("create table if not exists $db->prefix$this->table (
     name varchar(32) not null,
     value varchar(255),
@@ -3418,7 +3450,7 @@ class memstorage {
   }
 
   public function clear_table() {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     try {
       $db->query("truncate table $db->prefix$this->table");
     }
@@ -3436,7 +3468,7 @@ namespace litepubl;
 class cachestorage_file {
 
   public function getdir() {
-    return litepublisher::$paths->cache;
+    return litepubl::$paths->cache;
   }
 
   public function set($filename, $data) {
@@ -3629,19 +3661,19 @@ namespace litepubl;
 
     public function createAliases() {
       \class_alias(get_called_class() , 'litepublisher');
+      \class_alias(get_called_class() , 'litepubl\litepublisher');
       \class_alias(get_called_class() , 'litepubl');
-      \class_alias('tdata', 'litepubl\tdata');
     }
 
     public static function createInstances() {
       static ::$paths = new tpaths();
       static ::createStorage();
-      static ::$classes = \tclasses::i();
-      static ::$options = \toptions::i();
-      static ::$site = \tsite::i();
-      static ::$db = \tdatabase::i();
+      static ::$classes = tclasses::i();
+      static ::$options = toptions::i();
+      static ::$site = tsite::i();
+      static ::$db = tdatabase::i();
       //static::$cache = new cache();
-      static ::$urlmap = \turlmap::i();
+      static ::$urlmap = turlmap::i();
     }
 
     public static function createStorage() {

@@ -8,11 +8,11 @@
 namespace litepubl;
 
 function tlocalmergerInstall($self) {
-  $dir = litepublisher::$paths->data . 'languages';
+  $dir = litepubl::$paths->data . 'languages';
   if (!is_dir($dir)) @mkdir($dir, 0777);
   @chmod($dir, 0777);
 
-  $lang = litepublisher::$options->language;
+  $lang = litepubl::$options->language;
   $self->lock();
   $self->add('default', "lib/languages/$lang/default.ini");
 
@@ -20,7 +20,7 @@ function tlocalmergerInstall($self) {
 
   $self->add('mail', "lib/languages/$lang/mail.ini");
 
-  if (litepublisher::$options->language != 'en') {
+  if (litepubl::$options->language != 'en') {
     $self->add('translit', "lib/languages/$lang/translit.ini");
   } else {
     $self->items['translit'] = array(
@@ -33,6 +33,6 @@ function tlocalmergerInstall($self) {
   $self->unlock();
 
   //after install
-  litepublisher::$options->timezone = tlocal::get('installation', 'timezone');
+  litepubl::$options->timezone = tlocal::get('installation', 'timezone');
   date_default_timezone_set(tlocal::get('installation', 'timezone'));
 }

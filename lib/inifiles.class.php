@@ -32,7 +32,7 @@ class inifiles {
   }
 
   public static function getresource($class, $filename) {
-    $dir = litepublisher::$classes->getresourcedir($class);
+    $dir = litepubl::$classes->getresourcedir($class);
     return self::cache($dir . $filename);
   }
 

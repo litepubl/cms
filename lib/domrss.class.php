@@ -139,7 +139,7 @@ class tdomrss extends \domDocument {
 
   public function CreateRoot($url, $title) {
     $this->encoding = 'utf-8';
-    $this->appendChild($this->createComment('generator="Lite Publisher/' . litepublisher::$options->version . ' version"'));
+    $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$options->version . ' version"'));
     $this->rss = $this->createElement('rss');
     $this->appendChild($this->rss);
 
@@ -158,15 +158,15 @@ class tdomrss extends \domDocument {
 
     tnode::addvalue($this->channel, 'title', $title);
     tnode::addvalue($this->channel, 'link', $url);
-    tnode::addvalue($this->channel, 'description', litepublisher::$site->description);
+    tnode::addvalue($this->channel, 'description', litepubl::$site->description);
     tnode::addvalue($this->channel, 'pubDate', date('r'));
-    tnode::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepublisher::$options->version);
+    tnode::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$options->version);
     tnode::addvalue($this->channel, 'language', 'en');
   }
 
   public function CreateRootMultimedia($url, $title) {
     $this->encoding = 'utf-8';
-    $this->appendChild($this->createComment('generator="Lite Publisher/' . litepublisher::$options->version . ' version"'));
+    $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$options->version . ' version"'));
     $this->rss = $this->createElement('rss');
     $this->appendChild($this->rss);
 
@@ -183,9 +183,9 @@ class tdomrss extends \domDocument {
 
     tnode::addvalue($this->channel, 'title', $title);
     tnode::addvalue($this->channel, 'link', $url);
-    tnode::addvalue($this->channel, 'description', litepublisher::$site->description);
+    tnode::addvalue($this->channel, 'description', litepubl::$site->description);
     tnode::addvalue($this->channel, 'pubDate', date('r'));
-    tnode::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepublisher::$options->version);
+    tnode::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$options->version);
     tnode::addvalue($this->channel, 'language', 'en');
   }
 

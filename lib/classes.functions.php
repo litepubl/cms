@@ -8,5 +8,5 @@
 namespace litepubl;
 
 function getinstance($class) {
-  return litepublisher::$classes->getinstance($class);
+  return litepubl::$classes->getinstance($class);
 }

@@ -281,9 +281,9 @@ $s = str_replace(
 "namespace litepubl;\n\n",
 $s);
 }
-
-if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
 */
+//if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
+
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }

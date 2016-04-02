@@ -58,14 +58,14 @@ class tinstaller extends tdata {
 
   public function OutputResult($password) {
     if ($this->mode != 'remote') return;
-    litepublisher::$options->savemodified();
+    litepubl::$options->savemodified();
 
     $result = array(
-      'url' => litepublisher::$site->url,
-      'email' => litepublisher::$options->email,
+      'url' => litepubl::$site->url,
+      'email' => litepubl::$options->email,
       'password' => $password,
-      'name' => litepublisher::$site->name,
-      'description' => litepublisher::$site->description
+      'name' => litepubl::$site->name,
+      'description' => litepubl::$site->description
     );
 
     switch ($this->resulttype) {
@@ -129,7 +129,7 @@ class tinstaller extends tdata {
       }
     }
 
-    require_once (litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'classes.install.php');
+    require_once (litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'classes.install.php');
     parse_classes_ini(isset($_REQUEST['classes']) ? $_REQUEST['classes'] : false);
     return install_engine($_REQUEST['email'], $this->language);
   }
@@ -165,23 +165,23 @@ class tinstaller extends tdata {
   }
 
   public function processform($email, $name, $description, $rewrite) {
-    litepublisher::$options->lock();
-    litepublisher::$options->email = $email;
-    litepublisher::$site->name = $name;
-    litepublisher::$site->description = $description;
-    litepublisher::$options->fromemail = 'litepublisher@' . $_SERVER['SERVER_NAME'];
+    litepubl::$options->lock();
+    litepubl::$options->email = $email;
+    litepubl::$site->name = $name;
+    litepubl::$site->description = $description;
+    litepubl::$options->fromemail = 'litepublisher@' . $_SERVER['SERVER_NAME'];
     $this->CheckApache($rewrite);
-    if (litepublisher::$site->q == '&') litepublisher::$site->data['url'].= '/index.php?url=';
-    litepublisher::$options->unlock();
+    if (litepubl::$site->q == '&') litepubl::$site->data['url'].= '/index.php?url=';
+    litepubl::$options->unlock();
   }
 
   public function CheckFolders() {
-    $this->checkFolder(litepublisher::$paths->data);
-    $this->CheckFolder(litepublisher::$paths->cache);
-    $this->CheckFolder(litepublisher::$paths->files);
-    //$this->CheckFolder(litepublisher::$paths->languages);
-    //$this->CheckFolder(litepublisher::$paths->plugins);
-    //$this->CheckFolder(litepublisher::$paths->themes);
+    $this->checkFolder(litepubl::$paths->data);
+    $this->CheckFolder(litepubl::$paths->cache);
+    $this->CheckFolder(litepubl::$paths->files);
+    //$this->CheckFolder(litepubl::$paths->languages);
+    //$this->CheckFolder(litepubl::$paths->plugins);
+    //$this->CheckFolder(litepubl::$paths->themes);
     
   }
 
@@ -228,9 +228,9 @@ class tinstaller extends tdata {
 
   public function CheckApache($rewrite) {
     if ($rewrite || (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()))) {
-      litepublisher::$site->q = '?';
+      litepubl::$site->q = '?';
     } else {
-      litepublisher::$site->q = '&';
+      litepubl::$site->q = '&';
     }
   }
 
@@ -243,19 +243,19 @@ class tinstaller extends tdata {
     if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
       $checkrewrite = '';
     } else {
-      $checkrewrite = file_get_contents(litepublisher::$paths->lib . 'install/templates/modrewrite.tml');
+      $checkrewrite = file_get_contents(litepubl::$paths->lib . 'install/templates/modrewrite.tml');
       $checkrewrite = str_replace('$checkrewrite', $lang->checkrewrite, $checkrewrite);
     }
 
     $dbprefix = strtolower(str_replace(array(
       '.',
       '-'
-    ) , '', litepublisher::$domain)) . '_';
+    ) , '', litepubl::$domain)) . '_';
     $langcode = $this->language;
     $likeurl = urlencode($lang->homeurl);
     $liketitle = urlencode($lang->homename);
 
-    $form = file_get_contents(litepublisher::$paths->lib . 'install/templates/installform.tml');
+    $form = file_get_contents(litepubl::$paths->lib . 'install/templates/installform.tml');
     $form = str_replace('"', '\"', $form);
     eval('$form = "' . $form . '\n";');
 
@@ -312,39 +312,39 @@ class tinstaller extends tdata {
 
   public static function sendmail() {
     $lang = tlocal::$self->ini['installation'];
-    $body = sprintf($lang['body'], litepublisher::$site->url, litepublisher::$options->email, mailpassword);
+    $body = sprintf($lang['body'], litepubl::$site->url, litepubl::$options->email, mailpassword);
 
-    tmailer::sendmail('', litepublisher::$options->fromemail, '', litepublisher::$options->email, $lang['subject'], $body);
+    tmailer::sendmail('', litepubl::$options->fromemail, '', litepubl::$options->email, $lang['subject'], $body);
   }
 
   public function congratulation($password) {
     global $lang;
-    $tml = file_get_contents(litepublisher::$paths->lib . 'install/templates/install.congratulation.tml');
+    $tml = file_get_contents(litepubl::$paths->lib . 'install/templates/install.congratulation.tml');
     $theme = ttheme::getinstance('default');
     $template = ttemplate::i();
     $template->view = tview::i();
     $lang = tlocal::i('installation');
     $args = new targs();
-    $args->title = litepublisher::$site->name;
-    $args->url = litepublisher::$site->url . '/';
+    $args->title = litepubl::$site->name;
+    $args->url = litepubl::$site->url . '/';
     $args->password = $password;
-    $args->likeurl = litepublisher::$options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
+    $args->likeurl = litepubl::$options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
     $content = $theme->parsearg($tml, $args);
     $this->echohtml($content);
   }
 
   public function uninstall() {
-    tfiler::delete(litepublisher::$paths->data, true);
-    tfiler::delete(litepublisher::$paths->cache, true);
-    tfiler::delete(litepublisher::$pathsfiles, true);
+    tfiler::delete(litepubl::$paths->data, true);
+    tfiler::delete(litepubl::$paths->cache, true);
+    tfiler::delete(litepubl::$pathsfiles, true);
   }
 
   private function loadlang() {
-    //litepublisher::$options = $this;
-    //require_once(litepublisher::$paths->lib . 'filer.class.php');
-    require_once (litepublisher::$paths->lib . 'local.class.php');
-    require_once (litepublisher::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
-    require_once (litepublisher::$paths->lib . 'htmlresource.class.php');
+    //litepubl::$options = $this;
+    //require_once(litepubl::$paths->lib . 'filer.class.php');
+    require_once (litepubl::$paths->lib . 'local.class.php');
+    require_once (litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
+    require_once (litepubl::$paths->lib . 'htmlresource.class.php');
     tlocalPreinstall($this->language);
   }
 
@@ -363,7 +363,7 @@ class tinstaller extends tdata {
   }
 
   public function langexists($language) {
-    return @file_exists(litepublisher::$paths->languages . $language . DIRECTORY_SEPARATOR . 'default.ini');
+    return @file_exists(litepubl::$paths->languages . $language . DIRECTORY_SEPARATOR . 'default.ini');
   }
 
   public function echohtml($html) {

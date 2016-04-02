@@ -29,17 +29,17 @@ class tadminreguser extends tadminform {
   }
 
   public function getlogged() {
-    return litepublisher::$options->authcookie();
+    return litepubl::$options->authcookie();
   }
 
   public function request($arg) {
-    if (!litepublisher::$options->usersenabled || !litepublisher::$options->reguser) return 403;
+    if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return 403;
     parent::request($arg);
 
     if (!empty($_GET['confirm'])) {
       $confirm = $_GET['confirm'];
       $email = $_GET['email'];
-      tsession::start('reguser-' . md5(litepublisher::$options->hash($email)));
+      tsession::start('reguser-' . md5(litepubl::$options->hash($email)));
       if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
         if (!isset($_SESSION['email'])) session_destroy();
         $this->regstatus = 'error';
@@ -60,9 +60,9 @@ class tadminreguser extends tadminform {
         $this->regstatus = 'ok';
         $expired = time() + 31536000;
         $cookie = md5uniq();
-        litepublisher::$options->user = $id;
-        litepublisher::$options->updategroup();
-        litepublisher::$options->setcookies($cookie, $expired);
+        litepubl::$options->user = $id;
+        litepubl::$options->updategroup();
+        litepubl::$options->setcookies($cookie, $expired);
       } else {
         $this->regstatus = 'error';
       }
@@ -83,8 +83,8 @@ class tadminreguser extends tadminform {
       switch ($this->regstatus) {
         case 'ok':
           $backurl = $this->backurl;
-          if (!$backurl) $backurl = tusergroups::i()->gethome(litepublisher::$options->group);
-          if (!strbegin($backurl, 'http')) $backurl = litepublisher::$site->url . $backurl;
+          if (!$backurl) $backurl = tusergroups::i()->gethome(litepubl::$options->group);
+          if (!strbegin($backurl, 'http')) $backurl = litepubl::$site->url . $backurl;
           return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
         case 'mail':
@@ -98,7 +98,7 @@ class tadminreguser extends tadminform {
       $args = new targs();
       $args->email = isset($_POST['email']) ? $_POST['email'] : '';
       $args->name = isset($_POST['name']) ? $_POST['name'] : '';
-      $args->action = litepublisher::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
+      $args->action = litepubl::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
       $result.= $theme->parsearg($this->getform() , $args);
 
       if (!empty($_GET['backurl'])) {
@@ -150,7 +150,7 @@ class tadminreguser extends tadminform {
       if ('comuser' != $users->getvalue($id, 'status')) return $this->error(tlocal::i()->invalidregdata);
     }
 
-    tsession::start('reguser-' . md5(litepublisher::$options->hash($email)));
+    tsession::start('reguser-' . md5(litepubl::$options->hash($email)));
     $_SESSION['email'] = $email;
     $_SESSION['name'] = $name;
     $confirm = md5rand();
@@ -165,7 +165,7 @@ class tadminreguser extends tadminform {
     $args->email = $email;
     $args->confirm = $confirm;
     $args->password = $password;
-    $args->confirmurl = litepublisher::$site->url . '/admin/reguser/' . litepublisher::$site->q . 'email=' . urlencode($email);
+    $args->confirmurl = litepubl::$site->url . '/admin/reguser/' . litepubl::$site->q . 'email=' . urlencode($email);
 
     tlocal::usefile('mail');
     $lang = tlocal::i('mailusers');
@@ -174,7 +174,7 @@ class tadminreguser extends tadminform {
     $subject = $theme->parsearg($lang->subject, $args);
     $body = $theme->parsearg($lang->body, $args);
 
-    tmailer::sendmail(litepublisher::$site->name, litepublisher::$options->fromemail, $name, $email, $subject, $body);
+    tmailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
 
     return true;
   }

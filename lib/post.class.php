@@ -52,7 +52,7 @@ class tpost extends titem implements itemplate {
       return array();
     }
 
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     $childtable = $db->prefix . $table;
     $list = implode(',', $items);
     return $db->res2items($db->query("select $childtable.*
@@ -65,19 +65,11 @@ class tpost extends titem implements itemplate {
   }
 
 public static function fixClassname($classname) {
-if (strpos($classname, '\\')) {
+if (!strpos($classname, '\\')) {
+$classname = 'litepubl\\' . $classname;
+}
+
 return $classname;
-}
-
-if ($classname == 'tpost') {
-$ns = 'litepubl\\';
-} else if ($classname == 'product') {
-$ns = 'litepubl\shop';
-} else {
-$ns = 'litepubl\plugins';
-}
-
-return $ns . $classname;
 }
 
   protected function create() {
@@ -112,8 +104,8 @@ return $ns . $classname;
       'tags' => array() ,
       'files' => array() ,
       'status' => 'published',
-      'comstatus' => litepublisher::$options->comstatus,
-      'pingenabled' => litepublisher::$options->pingenabled,
+      'comstatus' => litepubl::$options->comstatus,
+      'pingenabled' => litepubl::$options->pingenabled,
       'password' => '',
       'commentscount' => 0,
       'pingbackscount' => 0,
@@ -125,14 +117,14 @@ return $ns . $classname;
     $this->factory = $this->getfactory();
     $posts = $this->factory->posts;
     foreach ($posts->itemcoclasses as $class) {
-      $coinstance = litepublisher::$classes->newinstance($class);
+      $coinstance = litepubl::$classes->newinstance($class);
       $coinstance->post = $this;
       $this->coinstances[] = $coinstance;
     }
   }
 
   public function getfactory() {
-    return litepublisher::$classes->getfactory($this);
+    return litepubl::$classes->getfactory($this);
   }
 
   public function __get($name) {
@@ -224,7 +216,7 @@ return $ns . $classname;
   }
 
   public static function getassoc($id) {
-    $db = litepublisher::$db;
+    $db = litepubl::$db;
     return $db->selectassoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
   }
@@ -277,7 +269,7 @@ return $ns . $classname;
   }
 
   public function create_url() {
-    return litepublisher::$urlmap->add($this->url, get_class($this) , (int)$this->id);
+    return litepubl::$urlmap->add($this->url, get_class($this) , (int)$this->id);
   }
 
   public function onid() {
@@ -287,7 +279,7 @@ return $ns . $classname;
           call_user_func($call, $this);
         }
         catch(Exception $e) {
-          litepublisher::$options->handexception($e);
+          litepubl::$options->handexception($e);
         }
       }
       unset($this->_onid);
@@ -355,7 +347,7 @@ return $ns . $classname;
   }
 
   public function Getlink() {
-    return litepublisher::$site->url . $this->url;
+    return litepubl::$site->url . $this->url;
   }
 
   public function Setlink($link) {
@@ -397,7 +389,7 @@ return $ns . $classname;
   }
 
   public function getrsscomments() {
-    return litepublisher::$site->url . "/comments/$this->id.xml";
+    return litepubl::$site->url . "/comments/$this->id.xml";
   }
 
   public function Getisodate() {
@@ -485,7 +477,7 @@ return $ns . $classname;
     foreach ($items as $id) {
       $item = $tags->getitem($id);
       $args->add($item);
-      if (($item['icon'] == 0) || litepublisher::$options->icondisabled) {
+      if (($item['icon'] == 0) || litepubl::$options->icondisabled) {
         $args->icon = '';
       } else {
         $files = $this->factory->files;
@@ -587,16 +579,16 @@ return $ns . $classname;
   public function request($id) {
     parent::request((int)$id);
     if ($this->status != 'published') {
-      if (!litepublisher::$options->show_draft_post) {
+      if (!litepubl::$options->show_draft_post) {
         return 404;
       }
 
-      $groupname = litepublisher::$options->group;
+      $groupname = litepubl::$options->group;
       if (($groupname == 'admin') || ($groupname == 'editor')) {
         return;
       }
 
-      if ($this->author == litepublisher::$options->user) {
+      if ($this->author == litepubl::$options->user) {
         return;
       }
 
@@ -681,7 +673,7 @@ return $ns . $classname;
   }
 
   public function geticonlink() {
-    if (($this->icon == 0) || litepublisher::$options->icondisabled) return '';
+    if (($this->icon == 0) || litepubl::$options->icondisabled) return '';
     $files = $this->factory->files;
     if ($files->itemexists($this->icon)) return $files->geticon($this->icon);
     $this->icon = 0;
@@ -695,7 +687,7 @@ return $ns . $classname;
   }
 
   public function getfilelist() {
-    if ((count($this->files) == 0) || ((litepublisher::$urlmap->page > 1) && litepublisher::$options->hidefilesonpage)) {
+    if ((count($this->files) == 0) || ((litepubl::$urlmap->page > 1) && litepubl::$options->hidefilesonpage)) {
       return '';
     }
 
@@ -760,8 +752,8 @@ return $ns . $classname;
   }
 
   public function getcommentslink() {
-    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepublisher::$site->url, $this->getlastcommenturl());
-    if (($this->comstatus == 'closed') || !litepublisher::$options->commentspool) {
+    $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepubl::$site->url, $this->getlastcommenturl());
+    if (($this->comstatus == 'closed') || !litepubl::$options->commentspool) {
       if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
         return '';
       }
@@ -789,7 +781,7 @@ return $ns . $classname;
 
   public function gettemplatecomments() {
     $result = '';
-    $page = litepublisher::$urlmap->page;
+    $page = litepubl::$urlmap->page;
     $countpages = $this->countpages;
     if ($countpages > 1) $result.= $this->theme->getpages($this->url, $page, $countpages);
 
@@ -814,7 +806,7 @@ return $ns . $classname;
     $result = $this->excerpt;
     $posts->beforeexcerpt($this, $result);
     $result = $this->replacemore($result, true);
-    if (litepublisher::$options->parsepost) {
+    if (litepubl::$options->parsepost) {
       $result = $this->theme->parse($result);
     }
     $posts->afterexcerpt($this, $result);
@@ -862,8 +854,8 @@ return $ns . $classname;
     $posts = $this->factory->posts;
     $posts->beforecontent($this, $result);
     if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
-    $result.= $this->getcontentpage(litepublisher::$urlmap->page);
-    if (litepublisher::$options->parsepost) {
+    $result.= $this->getcontentpage(litepubl::$urlmap->page);
+    if (litepubl::$options->parsepost) {
       $result = $this->theme->parse($result);
     }
     $posts->aftercontent($this, $result);
@@ -949,19 +941,19 @@ return $ns . $classname;
   }
 
   public function getcommentpages() {
-    if (!litepublisher::$options->commentpages || ($this->commentscount <= litepublisher::$options->commentsperpage)) return 1;
-    return ceil($this->commentscount / litepublisher::$options->commentsperpage);
+    if (!litepubl::$options->commentpages || ($this->commentscount <= litepubl::$options->commentsperpage)) return 1;
+    return ceil($this->commentscount / litepubl::$options->commentsperpage);
   }
 
   public function getlastcommenturl() {
     $c = $this->commentpages;
     $url = $this->url;
-    if (($c > 1) && !litepublisher::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+    if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
     return $url;
   }
 
   public function clearcache() {
-    litepublisher::$urlmap->setexpired($this->idurl);
+    litepubl::$urlmap->setexpired($this->idurl);
   }
 
   public function getschemalink() {
@@ -980,29 +972,29 @@ return $ns . $classname;
   protected function getusername($id, $link) {
     if ($id <= 1) {
       if ($link) {
-        return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepublisher::$site->url, litepublisher::$site->author);
+        return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
       } else {
-        return litepublisher::$site->author;
+        return litepubl::$site->author;
       }
     } else {
       $users = tusers::i();
       if (!$users->itemexists($id)) return '';
       $item = $users->getitem($id);
       if (!$link || ($item['website'] == '')) return $item['name'];
-      return sprintf('<a href="%s/users.htm%sid=%s">%s</a>', litepublisher::$site->url, litepublisher::$site->q, $id, $item['name']);
+      return sprintf('<a href="%s/users.htm%sid=%s">%s</a>', litepubl::$site->url, litepubl::$site->q, $id, $item['name']);
     }
   }
 
   public function getauthorpage() {
     $id = $this->author;
     if ($id <= 1) {
-      return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepublisher::$site->url, litepublisher::$site->author);
+      return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
     } else {
       $pages = tuserpages::i();
       if (!$pages->itemexists($id)) return '';
       $pages->id = $id;
       if ($pages->url == '') return '';
-      return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepublisher::$site->url, $pages->url, $pages->name);
+      return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepubl::$site->url, $pages->url, $pages->name);
     }
   }
 

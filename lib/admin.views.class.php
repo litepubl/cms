@@ -19,7 +19,7 @@ class tadminviews extends tadminmenu {
     $args = new targs();
     $args->idview = self::getcombo(tadminhtml::getparam('idview', 1));
     $form = new adminform($args);
-    $form->action = litepublisher::$site->url . $url;
+    $form->action = litepubl::$site->url . $url;
     $form->inline = true;
     $form->method = 'get';
     $form->items = '[combo=idview]';
@@ -163,7 +163,7 @@ class tadminviews extends tadminmenu {
         $itemview = $views->items[$id];
         $args->add($itemview);
 
-        $dirlist = tfiler::getdir(litepublisher::$paths->themes);
+        $dirlist = tfiler::getdir(litepubl::$paths->themes);
         sort($dirlist);
         $list = array();
         foreach ($dirlist as $dir) {

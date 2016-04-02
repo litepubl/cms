@@ -128,7 +128,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
     $data = $comment->data;
 
     return array(
-      "date_created_gmt" => new IXR_Date($comment->posted - litepublisher::$options->gmt) ,
+      "date_created_gmt" => new IXR_Date($comment->posted - litepubl::$options->gmt) ,
       "user_id" => $data['author'],
       "comment_id" => $id,
       "parent" => $data['parent'],
@@ -212,7 +212,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
         return $this->xerror(404, 'Invalid post ID.');
       }
 
-      if ($item['class'] != litepublisher::$classes->classes['post']) {
+      if ($item['class'] != litepubl::$classes->classes['post']) {
         return $this->xerror(404, 'Invalid post ID.');
       }
       $idpost = $item['arg'];

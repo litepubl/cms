@@ -32,9 +32,9 @@ class tadminservice extends tadminmenu {
         $result.= $this->doupdate($_GET);
         $tb = new tablebuilder();
         $result.= $tb->props(array(
-          'postscount' => litepublisher::$classes->posts->count,
-          'commentscount' => litepublisher::$classes->commentmanager->count,
-          'version' => litepublisher::$site->version
+          'postscount' => litepubl::$classes->posts->count,
+          'commentscount' => litepubl::$classes->commentmanager->count,
+          'version' => litepubl::$site->version
         ));
         $updater = tupdater::i();
         $islatest = $updater->islatest();
@@ -87,13 +87,13 @@ class tadminservice extends tadminmenu {
             return $this->notfound;
           }
 
-          if (!file_exists(litepublisher::$paths->backup . $filename)) {
+          if (!file_exists(litepubl::$paths->backup . $filename)) {
             return $this->notfound;
           }
 
           switch ($_GET['action']) {
             case 'download':
-              if ($s = @file_get_contents(litepublisher::$paths->backup . $filename)) {
+              if ($s = @file_get_contents(litepubl::$paths->backup . $filename)) {
                 $this->sendfile($s, $filename);
               } else {
                 return $this->notfound;
@@ -103,7 +103,7 @@ class tadminservice extends tadminmenu {
 
             case 'delete':
               if ($this->confirmed) {
-                @unlink(litepublisher::$paths->backup . $filename);
+                @unlink(litepubl::$paths->backup . $filename);
                 return $html->h2->backupdeleted;
               } else {
                 $args->adminurl = $this->adminurl;
@@ -125,7 +125,7 @@ class tadminservice extends tadminmenu {
 
 
       case 'upload':
-        $args->url = str_replace('$mysite', rawurlencode(litepublisher::$site->url) , tadminhtml::getparam('url', ''));
+        $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , tadminhtml::getparam('url', ''));
         $lang = tlocal::admin();
         $form = new adminform($args);
         $form->title = $lang->uploaditem;
@@ -217,15 +217,15 @@ class tadminservice extends tadminmenu {
           if (strpos($_FILES['filename']['name'], '.sql')) {
             $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]) , $_FILES["filename"]["name"]);
           } else {
-            $url = litepublisher::$site->url;
-            $dbconfig = litepublisher::$options->dbconfig;
+            $url = litepubl::$site->url;
+            $dbconfig = litepubl::$options->dbconfig;
             $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
             if (isset($saveurl)) {
               $data = new tdata();
               $data->basename = 'storage';
               $data->load();
-              $data->data['site'] = litepublisher::$site->data;
+              $data->data['site'] = litepubl::$site->data;
               $data->data['options']['dbconfig'] = $dbconfig;
               $data->save();
             }
@@ -237,16 +237,16 @@ class tadminservice extends tadminmenu {
           exit();
 
         } elseif (isset($downloadpartial)) {
-          $filename = str_replace('.', '-', litepublisher::$domain) . date('-Y-m-d') . $backuper->getfiletype();
+          $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
           $content = $backuper->getpartial(isset($plugins) , isset($theme) , isset($lib));
           $this->sendfile($content, $filename);
         } elseif (isset($fullbackup)) {
-          $filename = str_replace('.', '-', litepublisher::$domain) . date('-Y-m-d') . $backuper->getfiletype();
+          $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
           $content = $backuper->getfull();
           $this->sendfile($content, '');
         } elseif (isset($sqlbackup)) {
           $content = $backuper->getdump();
-          $filename = litepublisher::$domain . date('-Y-m-d') . '.sql';
+          $filename = litepubl::$domain . date('-Y-m-d') . '.sql';
 
           switch ($backuper->archtype) {
             case 'tar':
@@ -309,7 +309,7 @@ class tadminservice extends tadminmenu {
           }
 
           if (($archtype == 'zip') && class_exists('zipArchive')) {
-            $filename = litepublisher::$paths->storage . 'backup/temp.zip';
+            $filename = litepubl::$paths->storage . 'backup/temp.zip';
             file_put_contents($filename, $s);
             @chmod($filename, 0666);
             $s = '';
@@ -331,8 +331,8 @@ class tadminservice extends tadminmenu {
   }
 
   private function sendfile(&$content, $filename) {
-    //@file_put_contents(litepublisher::$domain . ".zip", $content);
-    if ($filename == '') $filename = str_replace('.', '-', litepublisher::$domain) . date('-Y-m-d') . '.zip';
+    //@file_put_contents(litepubl::$domain . ".zip", $content);
+    if ($filename == '') $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . '.zip';
     if (ob_get_level()) ob_end_clean();
 
     header('HTTP/1.1 200 OK', true, 200);
@@ -348,7 +348,7 @@ class tadminservice extends tadminmenu {
   }
 
   private function getbackupfilelist() {
-    $list = tfiler::getfiles(litepublisher::$paths->backup);
+    $list = tfiler::getfiles(litepubl::$paths->backup);
     if (!count($list)) {
       return '';
     }

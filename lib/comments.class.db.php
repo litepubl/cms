@@ -122,8 +122,8 @@ class tcomments extends titems {
   public function select($where, $limit) {
     if ($where != '') $where.= ' and ';
     $table = $this->thistable;
-    $authors = litepublisher::$db->users;
-    $res = litepublisher::$db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    $authors = litepubl::$db->users;
+    $res = litepubl::$db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
     where $where $authors.id = $table.author $limit");
 
     return $this->res2items($res);
@@ -178,10 +178,10 @@ class tcomments extends titems {
     $post = tpost::i($this->pid);
     $theme = $post->theme;
     if ($status == 'approved') {
-      if (litepublisher::$options->commentpages) {
-        $page = litepublisher::$urlmap->page;
-        if (litepublisher::$options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
-        $count = litepublisher::$options->commentsperpage;
+      if (litepubl::$options->commentpages) {
+        $page = litepubl::$urlmap->page;
+        if (litepubl::$options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
+        $count = litepubl::$options->commentsperpage;
         $from = ($page - 1) * $count;
       } else {
         $from = 0;
@@ -189,7 +189,7 @@ class tcomments extends titems {
       }
     } else {
       $from = 0;
-      $count = litepublisher::$options->commentsperpage;
+      $count = litepubl::$options->commentsperpage;
     }
 
     $table = $this->thistable;
@@ -271,7 +271,7 @@ class tcomment extends tdata {
     if ($manager->hidelink || ($this->trust <= $manager->trustlevel)) return $name;
     $rel = $manager->nofollow ? 'rel="nofollow"' : '';
     if ($manager->redir) {
-      return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, litepublisher::$site->url, litepublisher::$site->q, $this->author, $name);
+      return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, litepubl::$site->url, litepubl::$site->q, $this->author, $name);
     } else {
       if (!strbegin($website, 'http://')) $website = 'http://' . $website;
       return sprintf('<a class="url fn" %s href="%s" itemprop="url">%s</a>', $rel, $website, $name);
