@@ -379,9 +379,9 @@ class twidgets extends titems_storage {
 
   public function request($arg) {
     $this->cache = false;
-    $id = self::getget('id');
-    $sidebar = self::getget('sidebar');
-    $this->idurlcontext = self::getget('idurl');
+    $id = static::getget('id');
+    $sidebar = static::getget('sidebar');
+    $this->idurlcontext = static::getget('idurl');
     if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) return $this->error_request('Invalid params');
     $themename = isset($_GET['themename']) ? trim($_GET['themename']) : tview::i(1)->themename;
     if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = tviews::i(1)->themename;

@@ -38,7 +38,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
     $html->section = 'widgets';
     $args->add($item);
     $args->widgettitle = $item['title'];
-    $args->template = tadminhtml::array2combo(self::gettemplates() , $item['template']);
+    $args->template = tadminhtml::array2combo(static::gettemplates() , $item['template']);
     $args->formtitle = $item['title'] == '' ? $this->lang->widget : $item['title'];
     $result = $html->adminform('
     [text=widgettitle]

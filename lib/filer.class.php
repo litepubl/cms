@@ -16,7 +16,7 @@ class tfiler {
         if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
         $file = $path . $filename;
         if (is_dir($file)) {
-          if ($subdir) self::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
+          if ($subdir) static::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
         } else {
           call_user_func_array($callback, array(
             $filename
@@ -34,9 +34,9 @@ class tfiler {
         if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
         $file = $path . $filename;
         if (is_dir($file)) {
-          if ($subdirs) self::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
+          if ($subdirs) static::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
         } else {
-          self::_delete($file);
+          static::_delete($file);
         }
       }
       closedir($h);
@@ -46,16 +46,16 @@ class tfiler {
 
   public static function deletemask($mask) {
     if ($list = glob($mask)) {
-      foreach ($list as $filename) self::_delete($filename);
+      foreach ($list as $filename) static::_delete($filename);
     }
   }
 
   public static function deletedirmask($path, $mask) {
     foreach (glob($path . $mask) as $filename) {
       if (is_dir($filename)) {
-        self::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
+        static::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
       } else {
-        self::_delete($filename);
+        static::_delete($filename);
       }
     }
   }
@@ -87,7 +87,7 @@ class tfiler {
     $dir = rtrim(str_replace('\\', '/', $dir) , '/');
     if (is_dir($dir)) return true;
     $up = rtrim(dirname($dir) , '/');
-    if (($up != '') || ($up != '.')) self::forcedir($up);
+    if (($up != '') || ($up != '.')) static::forcedir($up);
     if (!is_dir($dir)) mkdir($dir, 0777);
     chmod($dir, 0777);
     return is_dir($dir);
@@ -96,7 +96,7 @@ class tfiler {
   public static function log($s, $filename = '') {
     if (!is_string($s)) $s = var_export($s, true);
     if ($filename == '') $filename = 'log.txt';
-    self::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+    static::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
   }
 
   public static function append($s, $filename) {

@@ -46,7 +46,7 @@ class tnode {
       if ($child->nodeName == "#text") {
         $result->appendChild($node->ownerDocument->createTextNode($child->nodeValue));
       } else {
-        $result->appendChild(self::copy($child));
+        $result->appendChild(static::copy($child));
       }
     }
 

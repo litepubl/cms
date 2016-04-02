@@ -18,7 +18,7 @@ class tposts extends titems {
   }
 
   public static function unsub($obj) {
-    self::i()->unbind($obj);
+    static::i()->unbind($obj);
   }
 
   protected function create() {

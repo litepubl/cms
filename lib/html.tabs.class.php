@@ -30,7 +30,7 @@ class tabs {
 
   public function get() {
     return strtr($this->getadmintheme()->templates['tabs'], array(
-      '$id' => $this->id ? $this->id : 'tabs-' . self::$index++,
+      '$id' => $this->id ? $this->id : 'tabs-' . static::$index++,
       '$tab' => implode("\n", $this->tabs) ,
       '$panel' => implode("\n", $this->panels) ,
     ));
@@ -45,7 +45,7 @@ class tabs {
   }
 
   public function addtab($url, $title, $content) {
-    $id = self::$index++;
+    $id = static::$index++;
     $this->tabs[] = $this->gettab($id, $url, $title);
     $this->panels[] = $this->getpanel($id, $content);
   }

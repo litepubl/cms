@@ -115,7 +115,7 @@ class tfoaf extends titems {
   private function getknows() {
     $result = '';
     foreach ($this->items as $id => $item) {
-      $result.= '<foaf:knows>' . '<foaf:Person>' . '<foaf:nick>' . self::escape($item['nick']) . '</foaf:nick>' . '<rdfs:seeAlso rdf:resource="' . self::escape($item['foafurl']) . '"/>' . '<foaf:weblog rdf:resource="' . self::escape($item['url']) . '"/>' . '</foaf:Person>' . '</foaf:knows>';
+      $result.= '<foaf:knows>' . '<foaf:Person>' . '<foaf:nick>' . static::escape($item['nick']) . '</foaf:nick>' . '<rdfs:seeAlso rdf:resource="' . static::escape($item['foafurl']) . '"/>' . '<foaf:weblog rdf:resource="' . static::escape($item['url']) . '"/>' . '</foaf:Person>' . '</foaf:knows>';
     }
 
     return $result;
@@ -273,7 +273,7 @@ class tfoaf extends titems {
   }
 
   public static function getparam($name, $value) {
-    return sprintf('<foaf:%1$s>%2$s</foaf:%1$s>', $name, self::escape($value));
+    return sprintf('<foaf:%1$s>%2$s</foaf:%1$s>', $name, static::escape($value));
   }
 
 } //class

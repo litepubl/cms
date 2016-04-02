@@ -33,7 +33,7 @@ class tadminmenu extends tmenu {
   }
 
   public function get_owner_props() {
-    return self::$adminownerprops;
+    return static::$adminownerprops;
   }
 
   public function load() {
@@ -90,7 +90,7 @@ class tadminmenu extends tmenu {
       $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
     }
 
-    if ($s = self::auth($this->group)) {
+    if ($s = static::auth($this->group)) {
       return $s;
     }
 

@@ -80,14 +80,14 @@ class tmetapost extends titem {
   public static function loaditems(array $items) {
     if (!count($items)) return;
     //exclude already loaded items
-    if (isset(self::$instances['postmeta'])) {
-      $items = array_diff($items, array_keys(self::$instances['postmeta']));
+    if (isset(static::$instances['postmeta'])) {
+      $items = array_diff($items, array_keys(static::$instances['postmeta']));
       if (!count($items)) return;
     } else {
-      self::$instances['postmeta'] = array();
+      static::$instances['postmeta'] = array();
     }
 
-    $instances = & self::$instances['postmeta'];
+    $instances = & static::$instances['postmeta'];
     $db = litepubl::$db;
     $db->table = 'postsmeta';
     $res = $db->select(sprintf('id in (%s)', implode(',', $items)));

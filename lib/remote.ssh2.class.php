@@ -101,7 +101,7 @@ class tssh2filer extends tremotefiler {
   }
 
   public function owner($file) {
-    return self::getownername(@fileowner($this->$file));
+    return static::getownername(@fileowner($this->$file));
   }
 
   public function group($file) {

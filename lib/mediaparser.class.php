@@ -41,7 +41,7 @@ class tmediaparser extends tevents {
 
   public static function linkgen($filename) {
     $filename = tlinkgenerator::i()->filterfilename($filename);
-    return self::fixfilename($filename);
+    return static::fixfilename($filename);
   }
 
   public function addlocal($filename) {
@@ -50,7 +50,7 @@ class tmediaparser extends tevents {
 
   public function upload($filename, $content, $title, $description, $keywords, $overwrite) {
     if ($title == '') $title = $filename;
-    $filename = self::linkgen($filename);
+    $filename = static::linkgen($filename);
     $tempfilename = $this->doupload($filename, $content);
     return $this->addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite);
   }
@@ -62,7 +62,7 @@ class tmediaparser extends tevents {
   public function uploadfile($filename, $tempfilename, $title, $description, $keywords, $overwrite) {
     if ($title == '') $title = $filename;
     if ($description == '') $description = $title;
-    $filename = self::linkgen($filename);
+    $filename = static::linkgen($filename);
     $parts = pathinfo($filename);
     $newtemp = $this->gettempname($parts);
     if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $newtemp)) return $this->error('Error access to uploaded file');
@@ -78,21 +78,21 @@ class tmediaparser extends tevents {
   }
 
   public static function move_uploaded($filename, $tempfilename, $subdir) {
-    $filename = self::linkgen($filename);
-    $filename = self::create_filename($filename, $subdir, false);
+    $filename = static::linkgen($filename);
+    $filename = static::create_filename($filename, $subdir, false);
     $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
     if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $sep . $filename)) return false;
     return $subdir == '' ? $filename : "$subdir/$filename";
   }
 
   public static function prepare_filename($filename, $subdir) {
-    $filename = self::linkgen($filename);
-    $filename = self::create_filename($filename, $subdir, false);
+    $filename = static::linkgen($filename);
+    $filename = static::create_filename($filename, $subdir, false);
     return $subdir == '' ? $filename : "$subdir/$filename";
   }
 
   public function uploadicon($filename, $content, $overwrite) {
-    $filename = self::linkgen($filename);
+    $filename = static::linkgen($filename);
     $tempfilename = $this->doupload($filename, $content, $overwrite);
     $info = $this->getinfo($tempfilename);
     if ($info['media'] != 'image') $this->error('Invalid icon file format ' . $info['media']);
@@ -122,7 +122,7 @@ class tmediaparser extends tevents {
   }
 
   private function doupload($filename, &$content) {
-    $filename = self::fixfilename($filename);
+    $filename = static::fixfilename($filename);
     $parts = pathinfo($filename);
     $filename = $this->gettempname($parts);
     if (@file_put_contents(litepubl::$paths->files . $filename, $content)) {
@@ -143,7 +143,7 @@ class tmediaparser extends tevents {
     $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
     $i = strrpos($filename, DIRECTORY_SEPARATOR);
     $dir = substr($filename, 0, $i + 1);
-    return $dir . self::getunique($dir, substr($filename, $i + 1));
+    return $dir . static::getunique($dir, substr($filename, $i + 1));
   }
 
   public static function getunique($dir, $filename) {
@@ -170,7 +170,7 @@ class tmediaparser extends tevents {
     if ($overwrite) {
       if (file_exists($dir . $filename)) unlink($dir . $filename);
     } else {
-      $filename = self::getunique($dir, $filename);
+      $filename = static::getunique($dir, $filename);
     }
 
     return $filename;
@@ -184,7 +184,7 @@ class tmediaparser extends tevents {
   }
 
   public function movetofolder($filename, $tempfilename, $subdir, $overwrite) {
-    $filename = self::create_filename($filename, $subdir, $overwrite);
+    $filename = static::create_filename($filename, $subdir, $overwrite);
     $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
     if (!rename(litepubl::$paths->files . $tempfilename, litepubl::$paths->files . $sep . $filename)) return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
     return $subdir == '' ? $filename : "$subdir/$filename";
@@ -235,7 +235,7 @@ class tmediaparser extends tevents {
       $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->previewmode != 'none');
       $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
 
-      if (($resize || $enablepreview || $enablemidle) && ($image = self::readimage($srcfilename))) {
+      if (($resize || $enablepreview || $enablemidle) && ($image = static::readimage($srcfilename))) {
         $this->onimage($image);
 
         if ($enablepreview && ($preview = $this->getsnapshot($srcfilename, $image))) {
@@ -263,8 +263,8 @@ class tmediaparser extends tevents {
 
           // after resize only jpg format
           if (!strend($srcfilename, '.jpg')) {
-            $fixfilename = self::replace_ext($srcfilename, '.jpg');
-            $fixfilename = self::makeunique($fixfilename);
+            $fixfilename = static::replace_ext($srcfilename, '.jpg');
+            $fixfilename = static::makeunique($fixfilename);
             $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepubl::$paths->files)));
 
             rename($srcfilename, $fixfilename);
@@ -326,9 +326,9 @@ class tmediaparser extends tevents {
 
     if ($image = imagecreatefromstring($content)) {
       if (!strbegin($filename, litepubl::$paths->files)) $filename = litepubl::$paths->files . ltrim($filename, '\/');
-      $destfilename = self::replace_ext($filename, '.jpg');
-      $destfilename = self::makeunique($destfilename);
-      if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
+      $destfilename = static::replace_ext($filename, '.jpg');
+      $destfilename = static::makeunique($destfilename);
+      if ($size = static::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
         $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
         $item['media'] = 'image';
         $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
@@ -489,17 +489,17 @@ class tmediaparser extends tevents {
   }
 
   public static function createsnapshot($srcfilename, $destfilename, $x, $y, $mode) {
-    if (!($source = self::readimage($srcfilename))) {
+    if (!($source = static::readimage($srcfilename))) {
       return false;
     }
 
-    $r = self::createthumb($source, $destfilename, $x, $y, 85, $mode);
+    $r = static::createthumb($source, $destfilename, $x, $y, 85, $mode);
     imagedestroy($source);
     return $r;
   }
 
   public static function createthumb($source, $destfilename, $x, $y, $quality, $mode) {
-    if ($result = self::scale($source, $x, $y, $mode)) {
+    if ($result = static::scale($source, $x, $y, $mode)) {
       imagejpeg($result['image'], $destfilename, $quality);
       imagedestroy($result['image']);
       @chmod($destfilename, 0666);
@@ -556,9 +556,9 @@ class tmediaparser extends tevents {
   }
 
   public function getsnapshot($srcfilename, $image) {
-    $destfilename = self::replace_ext($srcfilename, '.preview.jpg');
-    $destfilename = self::makeunique($destfilename);
-    if ($size = self::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
+    $destfilename = static::replace_ext($srcfilename, '.preview.jpg');
+    $destfilename = static::makeunique($destfilename);
+    if ($size = static::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
       $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
       $result['media'] = 'image';
       $result['mime'] = 'image/jpeg';
@@ -575,8 +575,8 @@ class tmediaparser extends tevents {
       return false;
     }
 
-    $destfilename = self::replace_ext($srcfilename, '.midle.jpg');
-    $destfilename = self::makeunique($destfilename);
+    $destfilename = static::replace_ext($srcfilename, '.midle.jpg');
+    $destfilename = static::makeunique($destfilename);
 
     if ($sizes = $this->resize($destfilename, $image, $this->midlewidth, $this->midleheight)) {
       $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));

@@ -283,6 +283,7 @@ $s);
 }
 */
 //if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
+if($php) $s = str_replace('self::', 'static::', $s);
 
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;

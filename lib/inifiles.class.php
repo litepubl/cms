@@ -11,8 +11,8 @@ class inifiles {
   public static $files = array();
 
   public static function cache($filename) {
-    if (isset(self::$files[$filename])) {
-      return self::$inifiles[$filename];
+    if (isset(static::$files[$filename])) {
+      return static::$inifiles[$filename];
     }
 
     $datafile = tlocal::getcachedir() . 'cacheini.' . md5($filename);
@@ -26,14 +26,14 @@ class inifiles {
       }
     }
 
-    if (!isset(self::$files)) self::$files = array();
-    self::$files[$filename] = $ini;
+    if (!isset(static::$files)) static::$files = array();
+    static::$files[$filename] = $ini;
     return $ini;
   }
 
   public static function getresource($class, $filename) {
     $dir = litepubl::$classes->getresourcedir($class);
-    return self::cache($dir . $filename);
+    return static::cache($dir . $filename);
   }
 
 }

@@ -39,12 +39,12 @@ class tadminlogin extends tadminform {
 
     $iduser = litepubl::$options->emailexists($email);
     if (!$iduser) {
-      if (self::confirm_reg($email, $password)) return;
+      if (static::confirm_reg($email, $password)) return;
       return tlocal::get('login', 'unknownemail');
     }
 
     if (litepubl::$options->authpassword($iduser, $password)) return;
-    if (self::confirm_restore($email, $password)) return;
+    if (static::confirm_restore($email, $password)) return;
 
     //check if password is empty and neet to restore password
     if ($iduser == 1) {
@@ -65,7 +65,7 @@ class tadminlogin extends tadminform {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    if ($mesg = self::autherror($email, $password)) {
+    if ($mesg = static::autherror($email, $password)) {
       $this->formresult = $this->html->h4red($mesg);
       return turlmap::nocache();;
     }

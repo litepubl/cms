@@ -17,7 +17,7 @@ class tadminviews extends tadminmenu {
     $html = tadminhtml::i();
     $lang = tlocal::admin();
     $args = new targs();
-    $args->idview = self::getcombo(tadminhtml::getparam('idview', 1));
+    $args->idview = static::getcombo(tadminhtml::getparam('idview', 1));
     $form = new adminform($args);
     $form->action = litepubl::$site->url . $url;
     $form->inline = true;
@@ -34,7 +34,7 @@ class tadminviews extends tadminmenu {
     return strtr($theme->templates['content.admin.combo'], array(
       '$lang.$name' => $lang->view,
       '$name' => $name,
-      '$value' => self::getcombo($idview)
+      '$value' => static::getcombo($idview)
     ));
   }
 
@@ -152,7 +152,7 @@ class tadminviews extends tadminmenu {
           return $result;
         }
 
-        $result = self::getviewform($this->url);
+        $result = static::getviewform($this->url);
         $tabs = new tabs($this->admintheme);
         $menuitems = array();
         foreach ($views->items as $itemview) {
@@ -218,7 +218,7 @@ class tadminviews extends tadminmenu {
         $tml = $theme->templates['content.admin.combo'];
         foreach ($views->defaults as $name => $id) {
           $args->name = $name;
-          $args->value = self::getcombo($id);
+          $args->value = static::getcombo($id);
           $args->data['$lang.$name'] = $lang->$name;
           $items.= $theme->parsearg($tml, $args);
         }

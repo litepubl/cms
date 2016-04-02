@@ -199,7 +199,7 @@ return $classname;
   }
 
   protected function LoadFromDB() {
-    if ($a = self::getassoc($this->id)) {
+    if ($a = static::getassoc($this->id)) {
       $this->setassoc($a);
       return true;
     }
@@ -208,7 +208,7 @@ return $classname;
 
   public static function loadpost($id) {
     if ($a = static::getassoc($id)) {
-      $self = self::newpost($a['class']);
+      $self = static::newpost($a['class']);
       $self->setassoc($a);
       return $self;
     }
@@ -324,7 +324,7 @@ return $classname;
 
     $this->aprev = false;
     if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
-      $this->aprev = self::i($id);
+      $this->aprev = static::i($id);
     }
     return $this->aprev;
   }
@@ -336,7 +336,7 @@ return $classname;
 
     $this->anext = false;
     if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
-      $this->anext = self::i($id);
+      $this->anext = static::i($id);
     }
     return $this->anext;
   }

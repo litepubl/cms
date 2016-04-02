@@ -10,7 +10,7 @@ namespace litepubl;
 class tadminjsmerger extends tadminmenu {
 
   public static function i($id = 0) {
-    return self::iteminstance(__class__, $id);
+    return static::iteminstance(__class__, $id);
   }
 
   public function getmerger() {

@@ -15,13 +15,13 @@ class tlocal {
   public $searchsect;
 
   public static function i($section = '') {
-    if (!isset(self::$self)) {
-      self::$self = static::getinstance();
-      self::$self->loadfile('default');
+    if (!isset(static::$self)) {
+      static::$self = static::getinstance();
+      static::$self->loadfile('default');
     }
 
-    if ($section != '') self::$self->section = $section;
-    return self::$self;
+    if ($section != '') static::$self->section = $section;
+    return static::$self;
   }
 
 public static function getinstance() {
@@ -29,7 +29,7 @@ return litepubl::$classes->getinstance(get_called_class());
 }
 
   public static function admin($section = '') {
-    $result = self::i($section);
+    $result = static::i($section);
     $result->check('admin');
     return $result;
   }
@@ -44,8 +44,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function get($section, $key) {
-    //if (!isset(self::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
-    return self::i()->ini[$section][$key];
+    //if (!isset(static::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
+    return static::i()->ini[$section][$key];
   }
 
   public function __get($name) {
@@ -90,8 +90,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function date($date, $format = '') {
-    if (empty($format)) $format = self::i()->getdateformat();
-    return self::i()->translate(date($format, $date) , 'datetime');
+    if (empty($format)) $format = static::i()->getdateformat();
+    return static::i()->translate(date($format, $date) , 'datetime');
   }
 
   public function getdateformat() {
@@ -110,7 +110,7 @@ return litepubl::$classes->getinstance(get_called_class());
 
   public function loadfile($name) {
     $this->loaded[] = $name;
-    $filename = self::getcachedir() . $name;
+    $filename = static::getcachedir() . $name;
     if (($data = litepubl::$storage->loaddata($filename)) && is_array($data)) {
       $this->ini = $data + $this->ini;
       if (isset($data['searchsect'])) {
@@ -123,16 +123,16 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function usefile($name) {
-    self::i()->check($name);
-    return self::$self;
+    static::i()->check($name);
+    return static::$self;
   }
 
   public static function inifile($class, $filename) {
-    return self::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
+    return static::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
   }
 
   public static function inicache($filename) {
-    $self = self::i();
+    $self = static::i();
     if (!isset(inifiles::$files[$filename])) {
       $ini = inifiles::cache($filename);
       if (is_array($ini)) {
@@ -148,7 +148,7 @@ return litepubl::$classes->getinstance(get_called_class());
 
   //backward
   public static function loadlang($name) {
-    self::usefile($name);
+    static::usefile($name);
   }
 
   public static function getcachedir() {
@@ -156,8 +156,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function clearcache() {
-    tfiler::delete(self::getcachedir() , false, false);
-    self::i()->loaded = array();
+    tfiler::delete(static::getcachedir() , false, false);
+    static::i()->loaded = array();
   }
 
 } //class

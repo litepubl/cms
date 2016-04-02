@@ -58,7 +58,7 @@ class tini2array {
       $section = array();
       $name = '';
       $value = '';
-      while (self::extractvalue($lines, $name, $value)) {
+      while (static::extractvalue($lines, $name, $value)) {
         $section[$name] = $value;
       }
 
@@ -84,7 +84,7 @@ class tini2array {
     $lines = explode("\n", $s);
     $name = '';
     $value = '';
-    while (self::extractvalue($lines, $name, $value)) {
+    while (static::extractvalue($lines, $name, $value)) {
       $result[$name] = $value;
     }
     return $result;

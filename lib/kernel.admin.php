@@ -151,7 +151,7 @@ class tadminmenu extends tmenu {
   }
 
   public function get_owner_props() {
-    return self::$adminownerprops;
+    return static::$adminownerprops;
   }
 
   public function load() {
@@ -208,7 +208,7 @@ class tadminmenu extends tmenu {
       $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
     }
 
-    if ($s = self::auth($this->group)) {
+    if ($s = static::auth($this->group)) {
       return $s;
     }
 
@@ -321,7 +321,7 @@ class admintheme extends basetheme {
   }
 
   public static function getinstance($name) {
-    return self::getbyname(__class__, $name);
+    return static::getbyname(__class__, $name);
   }
 
   public static function admin() {
@@ -362,7 +362,7 @@ class admintheme extends basetheme {
           case 'email':
           case 'password':
             if (isset($args->data[$varname])) {
-              $args->data[$varname] = self::quote($args->data[$varname]);
+              $args->data[$varname] = static::quote($args->data[$varname]);
             } else {
               $args->data[$varname] = '';
             }
@@ -633,7 +633,7 @@ class tadminhtml {
 
   public static function getinstance($section) {
     tlocal::i($section);
-    return self::i();
+    return static::i();
   }
 
   public function __construct() {
@@ -641,8 +641,8 @@ class tadminhtml {
   }
 
   public function __get($name) {
-    if (in_array($name, self::$tags)) return new thtmltag($name);
-    if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
+    if (in_array($name, static::$tags)) return new thtmltag($name);
+    if (strend($name, 'red') && in_array(substr($name, 0, -3) , static::$tags)) return new redtag($name);
 
     throw new Exception("the requested $name item not found");
   }
@@ -698,7 +698,7 @@ class tadminhtml {
   }
 
   public static function idparam() {
-    return (int)self::getparam('id', 0);
+    return (int)static::getparam('id', 0);
   }
 
   public static function getadminlink($path, $params) {
@@ -712,13 +712,13 @@ class tadminhtml {
   public static function array2combo(array $items, $selected) {
     $result = '';
     foreach ($items as $i => $title) {
-      $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', self::specchars($title));
+      $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static::specchars($title));
     }
     return $result;
   }
 
   public static function getcombobox($name, array $items, $selected) {
-    return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, self::array2combo($items, $selected));
+    return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, static::array2combo($items, $selected));
   }
 
   public function adminform($tml, targs $args) {
@@ -737,7 +737,7 @@ class tadminhtml {
     $result = '';
     $theme = ttheme::i();
     foreach ($items as $index => $title) {
-      $result.= $theme->getradio($name, $index, self::specchars($title) , $index == $selected);
+      $result.= $theme->getradio($name, $index, static::specchars($title) , $index == $selected);
     }
     return $result;
   }
@@ -797,7 +797,7 @@ class tadminhtml {
   }
 
   public function confirm_delete($owner, $adminurl) {
-    $id = (int)self::getparam('id', 0);
+    $id = (int)static::getparam('id', 0);
     if (!$owner->itemexists($id)) return $this->h4red->notfound;
     if (isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1)) {
       $owner->delete($id);
@@ -977,7 +977,7 @@ class tabs {
 
   public function get() {
     return strtr($this->getadmintheme()->templates['tabs'], array(
-      '$id' => $this->id ? $this->id : 'tabs-' . self::$index++,
+      '$id' => $this->id ? $this->id : 'tabs-' . static::$index++,
       '$tab' => implode("\n", $this->tabs) ,
       '$panel' => implode("\n", $this->panels) ,
     ));
@@ -992,7 +992,7 @@ class tabs {
   }
 
   public function addtab($url, $title, $content) {
-    $id = self::$index++;
+    $id = static::$index++;
     $this->tabs[] = $this->gettab($id, $url, $title);
     $this->panels[] = $this->getpanel($id, $content);
   }
@@ -1032,7 +1032,7 @@ class ulist {
       $this->link = $admin->templates['list.link'];
       $this->value = $admin->templates['list.value'];
 
-      if ($islink == self::aslinks) {
+      if ($islink == static::aslinks) {
         $this->item = $this->link;
       }
     }
@@ -1325,7 +1325,7 @@ class tablebuilder {
       if (count($item) == 2) {
         $colclass = 'text-left';
       } else {
-        $colclass = self::getcolclass(array_shift($item));
+        $colclass = static::getcolclass(array_shift($item));
       }
 
       $this->head.= sprintf('<th class="%s">%s</th>', $colclass, array_shift($item));
@@ -1365,7 +1365,7 @@ class tablebuilder {
   }
 
   public function td($colclass, $content) {
-    return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass) , $content);
+    return sprintf('<td class="%s">%s</td>', static::getcolclass($colclass) , $content);
   }
 
   public function getadmintheme() {
@@ -1626,15 +1626,15 @@ class datefilter {
     if (!$date) return 0;
 
     if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      if (!$format) $format = self::$format;
+      if (!$format) $format = static::$format;
       $d = DateTime::createFromFormat($format, $date);
       if ($d && $d->format($format) == $date) {
         $d->setTime(0, 0, 0);
-        return $d->getTimestamp() + self::gettime($name . '-time');
+        return $d->getTimestamp() + static::gettime($name . '-time');
       }
     } else {
       if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
-        return mktime(0, 0, 0, $m, $d, $y) + self::gettime($name . '-time');
+        return mktime(0, 0, 0, $m, $d, $y) + static::gettime($name . '-time');
       }
     }
 
@@ -1702,9 +1702,9 @@ class tajaxposteditor extends tevents {
 
   public static function auth() {
     $options = litepubl::$options;
-    if (!$options->user) return self::error403();
+    if (!$options->user) return static::error403();
     if (!$options->hasgroup('editor')) {
-      if (!$options->hasgroup('author')) return self::error403();
+      if (!$options->hasgroup('author')) return static::error403();
     }
   }
 
@@ -1712,17 +1712,17 @@ class tajaxposteditor extends tevents {
     $this->cache = false;
     turlmap::sendheader(false);
 
-    if ($err = self::auth()) return $err;
+    if ($err = static::auth()) return $err;
     $this->idpost = tadminhtml::idparam();
     $this->isauthor = litepubl::$options->ingroup('author');
     if ($this->idpost > 0) {
       $posts = tposts::i();
-      if (!$posts->itemexists($this->idpost)) return self::error403();
+      if (!$posts->itemexists($this->idpost)) return static::error403();
       if (!litepubl::$options->hasgroup('editor')) {
         if (litepubl::$options->hasgroup('author')) {
           $this->isauthor = true;
           $post = tpost::i($this->idpost);
-          if (litepubl::$options->user != $post->author) return self::error403();
+          if (litepubl::$options->user != $post->author) return static::error403();
         }
       }
     }

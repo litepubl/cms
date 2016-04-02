@@ -67,7 +67,7 @@ class tlocalfiler extends tremotefiler {
   }
 
   public function owner($file) {
-    return self::getownername(@fileowner($file));
+    return static::getownername(@fileowner($file));
   }
 
   public function getchmod($file) {

@@ -40,13 +40,13 @@ return static::$instances[$name][$id];
         $this->free();
         return false;
       }
-      self::$instances[$this->instancename][$id] = $this;
+      static::$instances[$this->instancename][$id] = $this;
     }
     return $this;
   }
 
   public function free() {
-    unset(self::$instances[$this->getinstancename() ][$this->id]);
+    unset(static::$instances[$this->getinstancename() ][$this->id]);
   }
 
   public function __construct() {
@@ -66,9 +66,9 @@ return static::$instances[$name][$id];
   public function setid($id) {
     if ($id != $this->id) {
       $name = $this->instancename;
-      if (!isset(self::$instances)) self::$instances = array();
-      if (!isset(self::$instances[$name])) self::$instances[$name] = array();
-      $a = & self::$instances[$this->instancename];
+      if (!isset(static::$instances)) static::$instances = array();
+      if (!isset(static::$instances[$name])) static::$instances[$name] = array();
+      $a = & static::$instances[$this->instancename];
       if (isset($a[$this->id])) unset($a[$this->id]);
       if (isset($a[$id])) $a[$id] = 0;
       $a[$id] = $this;

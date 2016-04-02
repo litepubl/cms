@@ -22,7 +22,7 @@ class tupdater extends tevents {
     $this->basename = 'updater';
     $this->addevents('onupdated');
     $this->data['useshell'] = false;
-    $this->versions = self::getversions();
+    $this->versions = static::getversions();
     $this->log = false;
   }
 
@@ -68,7 +68,7 @@ class tupdater extends tevents {
     false;
     if ($log) tfiler::log("begin update", 'update');
     tlocal::clearcache();
-    $this->versions = self::getversions();
+    $this->versions = static::getversions();
     $nextver = $this->nextversion;
     if ($log) tfiler::log("update started from litepubl::$options->version to $this->version", 'update');
     $v = litepubl::$options->version + 0.01;

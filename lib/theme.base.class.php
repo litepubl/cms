@@ -21,8 +21,8 @@ class basetheme extends tevents {
   }
 
   public static function getbyname($classname, $name) {
-    if (isset(self::$instances[$name])) {
-      return self::$instances[$name];
+    if (isset(static::$instances[$name])) {
+      return static::$instances[$name];
     }
 
     $result = getinstance($classname);
@@ -44,12 +44,12 @@ class basetheme extends tevents {
     $this->addmap('templates', array());
     $this->templates = array();
 
-    if (!isset(self::$defaultargs)) self::set_defaultargs();
+    if (!isset(static::$defaultargs)) static::set_defaultargs();
     $this->extratml = '';
   }
 
   public static function set_defaultargs() {
-    self::$defaultargs = array(
+    static::$defaultargs = array(
       '$site.url' => litepubl::$site->url,
       '$site.files' => litepubl::$site->files,
       '{$site.q}' => litepubl::$site->q,
@@ -58,7 +58,7 @@ class basetheme extends tevents {
   }
 
   public function __destruct() {
-    unset(self::$instances[$this->name], $this->templates);
+    unset(static::$instances[$this->name], $this->templates);
     parent::__destruct();
   }
 
@@ -74,7 +74,7 @@ class basetheme extends tevents {
     if (!$this->name) return false;
 
     if (parent::load()) {
-      self::$instances[$this->name] = $this;
+      static::$instances[$this->name] = $this;
       return true;
     }
 
@@ -82,13 +82,13 @@ class basetheme extends tevents {
   }
 
   public function parsetheme() {
-    if (!self::exists($this->name)) {
+    if (!static::exists($this->name)) {
       $this->error(sprintf('The %s theme not exists', $this->name));
     }
 
     $parser = $this->getparser();
     if ($parser->parse($this)) {
-      self::$instances[$this->name] = $this;
+      static::$instances[$this->name] = $this;
     } else {
       $this->error(sprintf('Theme file %s not exists', $filename));
     }
@@ -128,10 +128,10 @@ class basetheme extends tevents {
 
 
       case 'author':
-        return self::get_author();
+        return static::get_author();
 
       case 'metapost':
-        return isset(self::$vars['post']) ? self::$vars['post']->meta : new emptyclass();
+        return isset(static::$vars['post']) ? static::$vars['post']->meta : new emptyclass();
     } //switch
     if (isset($GLOBALS[$name])) {
       $var = $GLOBALS[$name];
@@ -161,16 +161,16 @@ class basetheme extends tevents {
   public function parsecallback($names) {
     $name = $names[1];
     $prop = $names[2];
-    if (isset(self::$vars[$name])) {
-      $var = self::$vars[$name];
+    if (isset(static::$vars[$name])) {
+      $var = static::$vars[$name];
     } elseif ($name == 'custom') {
       return $this->parse($this->templates['custom'][$prop]);
     } elseif ($name == 'label') {
       return "\$$name.$prop";
     } elseif ($var = $this->getvar($name)) {
-      self::$vars[$name] = $var;
-    } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
-      $var = self::$vars['post']->meta;
+      static::$vars[$name] = $var;
+    } elseif (($name == 'metapost') && isset(static::$vars['post'])) {
+      $var = static::$vars['post']->meta;
     } else {
       return '';
     }
@@ -186,7 +186,7 @@ class basetheme extends tevents {
 
   public function parse($s) {
     if (!$s) return '';
-    $s = strtr((string)$s, self::$defaultargs);
+    $s = strtr((string)$s, static::$defaultargs);
     if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
     array_push($this->parsing, $s);
     try {
@@ -212,8 +212,8 @@ class basetheme extends tevents {
 
   public function replacelang($s, $lang) {
     $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
-    self::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
-    $s = strtr($s, self::$defaultargs);
+    static::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
+    $s = strtr($s, static::$defaultargs);
     if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
       foreach ($m as $item) {
         $name = $item[1];
@@ -226,8 +226,8 @@ class basetheme extends tevents {
   }
 
   public static function parsevar($name, $var, $s) {
-    self::$vars[$name] = $var;
-    return self::i()->parse($s);
+    static::$vars[$name] = $var;
+    return static::i()->parse($s);
   }
 
   public static function clearcache() {

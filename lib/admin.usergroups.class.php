@@ -50,7 +50,7 @@ class tadmingroups extends tadminmenu {
       [text=title]
       [text=name]
       [text=home]
-      [hidden=action]' . $html->h4->parentgroups . self::getgroups(array()) , $args);
+      [hidden=action]' . $html->h4->parentgroups . static::getgroups(array()) , $args);
         break;
 
 
@@ -65,7 +65,7 @@ class tadmingroups extends tadminmenu {
       [text=name]
       [text=home]
       [hidden=id]
-      [hidden=action]' . $html->h4->parentgroups . self::getgroups($groups->items[$id]['parents']) , $args);
+      [hidden=action]' . $html->h4->parentgroups . static::getgroups($groups->items[$id]['parents']) , $args);
         break;
 
 

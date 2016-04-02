@@ -31,7 +31,7 @@ class tcontentfilter extends tevents {
       "\r\n",
       "\r"
     ) , "\n", $result);
-    $result = self::quote(htmlspecialchars($result));
+    $result = static::quote(htmlspecialchars($result));
 
     if ($this->callevent('oncomment', array(&$result
     ))) {
@@ -40,10 +40,10 @@ class tcontentfilter extends tevents {
       return $result;
     }
 
-    $result = self::simplebbcode($result);
-    if ($this->commentautolinks) $result = self::createlinks($result);
+    $result = static::simplebbcode($result);
+    if ($this->commentautolinks) $result = static::createlinks($result);
     $result = $this->replacecode($result);
-    $result = self::auto_p($result);
+    $result = static::auto_p($result);
     if ((strlen($result) > 4) && !strpos($result, '<p>', 4)) {
       if (strbegin($result, '<p>')) $result = substr($result, 3);
       if (strend($result, '</p>')) $result = substr($result, 0, strlen($result) - 4);
@@ -66,26 +66,26 @@ class tcontentfilter extends tevents {
       $parts = explode($matches[0], $s, 2);
       $excerpt = $this->filter(trim($parts[0]) . $moretag);
       $post->filtered = $excerpt . $this->extract_pages($post, trim($parts[1]));
-      $this->setexcerpt($post, $excerpt, self::gettitle($matches[1]));
+      $this->setexcerpt($post, $excerpt, static::gettitle($matches[1]));
       if ($post->moretitle == '') $post->moretitle = tlocal::get('default', 'more');
     } else {
       if ($this->automore) {
         $post->filtered = $this->extract_pages($post, $s);
-        $this->setexcerpt($post, $this->filter(trim(self::GetExcerpt($post->pagescount == 1 ? $s : $post->filtered, $this->automorelength)) . $moretag) , tlocal::get('default', 'more'));
+        $this->setexcerpt($post, $this->filter(trim(static::GetExcerpt($post->pagescount == 1 ? $s : $post->filtered, $this->automorelength)) . $moretag) , tlocal::get('default', 'more'));
       } else {
         $post->filtered = $this->extract_pages($post, $s);
         $this->setexcerpt($post, $post->filtered, '');
       }
     }
 
-    $post->description = self::getpostdescription($post->excerpt);
+    $post->description = static::getpostdescription($post->excerpt);
     $this->aftercontent($post);
   }
 
   public function setexcerpt(tpost $post, $excerpt, $more) {
     $post->excerpt = $excerpt;
     $post->rss = $excerpt;
-    $post->description = self::getpostdescription($excerpt);
+    $post->description = static::getpostdescription($excerpt);
     $post->moretitle = $more;
   }
 
@@ -94,7 +94,7 @@ class tcontentfilter extends tevents {
       $theme = ttheme::i();
       $description = $theme->parse($description);
     }
-    $description = self::gettitle($description);
+    $description = static::gettitle($description);
     $description = str_replace(array(
       "\r",
       "\n",
@@ -173,9 +173,9 @@ class tcontentfilter extends tevents {
     if ($s == '') return '';
     $this->callevent('onsimplefilter', array(&$s
     ));
-    if ($this->autolinks) $s = self::createlinks($s);
+    if ($this->autolinks) $s = static::createlinks($s);
     $s = $this->replacecode($s);
-    $s = self::auto_p($s);
+    $s = static::auto_p($s);
     $this->callevent('onaftersimple', array(&$s
     ));
     return $s;
@@ -231,11 +231,11 @@ class tcontentfilter extends tevents {
   }
 
   public function callback_replace_code($found) {
-    return self::replace_code($found[1]);
+    return static::replace_code($found[1]);
   }
 
   public function callback_replace_php($found) {
-    return self::replace_code($found[0]);
+    return static::replace_code($found[0]);
   }
 
   public function callback_fix_php($m) {
@@ -333,10 +333,10 @@ class tcontentfilter extends tevents {
   }
 
   public static function simplebbcode($s) {
-    $s = self::bbcode2tag($s, 'b', 'cite');
-    $s = self::bbcode2tag($s, 'i', 'em');
-    $s = self::bbcode2tag($s, 'code', 'code');
-    //$s = self::bbcode2tag($s, 'quote', 'blockquote');
+    $s = static::bbcode2tag($s, 'b', 'cite');
+    $s = static::bbcode2tag($s, 'i', 'em');
+    $s = static::bbcode2tag($s, 'code', 'code');
+    //$s = static::bbcode2tag($s, 'quote', 'blockquote');
     if (strpos($s, '[/quote]') !== false) {
       $low = strtolower($s);
       if (substr_count($low, '[quote]') == substr_count($low, '[/quote]')) {

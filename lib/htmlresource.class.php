@@ -27,7 +27,7 @@ class tadminhtml {
 
   public static function getinstance($section) {
     tlocal::i($section);
-    return self::i();
+    return static::i();
   }
 
   public function __construct() {
@@ -35,8 +35,8 @@ class tadminhtml {
   }
 
   public function __get($name) {
-    if (in_array($name, self::$tags)) return new thtmltag($name);
-    if (strend($name, 'red') && in_array(substr($name, 0, -3) , self::$tags)) return new redtag($name);
+    if (in_array($name, static::$tags)) return new thtmltag($name);
+    if (strend($name, 'red') && in_array(substr($name, 0, -3) , static::$tags)) return new redtag($name);
 
     throw new Exception("the requested $name item not found");
   }
@@ -92,7 +92,7 @@ class tadminhtml {
   }
 
   public static function idparam() {
-    return (int)self::getparam('id', 0);
+    return (int)static::getparam('id', 0);
   }
 
   public static function getadminlink($path, $params) {
@@ -106,13 +106,13 @@ class tadminhtml {
   public static function array2combo(array $items, $selected) {
     $result = '';
     foreach ($items as $i => $title) {
-      $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', self::specchars($title));
+      $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static::specchars($title));
     }
     return $result;
   }
 
   public static function getcombobox($name, array $items, $selected) {
-    return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, self::array2combo($items, $selected));
+    return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, static::array2combo($items, $selected));
   }
 
   public function adminform($tml, targs $args) {
@@ -131,7 +131,7 @@ class tadminhtml {
     $result = '';
     $theme = ttheme::i();
     foreach ($items as $index => $title) {
-      $result.= $theme->getradio($name, $index, self::specchars($title) , $index == $selected);
+      $result.= $theme->getradio($name, $index, static::specchars($title) , $index == $selected);
     }
     return $result;
   }
@@ -191,7 +191,7 @@ class tadminhtml {
   }
 
   public function confirm_delete($owner, $adminurl) {
-    $id = (int)self::getparam('id', 0);
+    $id = (int)static::getparam('id', 0);
     if (!$owner->itemexists($id)) return $this->h4red->notfound;
     if (isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1)) {
       $owner->delete($id);

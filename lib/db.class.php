@@ -23,7 +23,7 @@ class tdatabase {
   }
 
   public static function instance() {
-    return self::i();
+    return static::i();
   }
 
   public function __construct() {

@@ -35,15 +35,15 @@ class datefilter {
     if (!$date) return 0;
 
     if (version_compare(PHP_VERSION, '5.3', '>=')) {
-      if (!$format) $format = self::$format;
+      if (!$format) $format = static::$format;
       $d = DateTime::createFromFormat($format, $date);
       if ($d && $d->format($format) == $date) {
         $d->setTime(0, 0, 0);
-        return $d->getTimestamp() + self::gettime($name . '-time');
+        return $d->getTimestamp() + static::gettime($name . '-time');
       }
     } else {
       if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
-        return mktime(0, 0, 0, $m, $d, $y) + self::gettime($name . '-time');
+        return mktime(0, 0, 0, $m, $d, $y) + static::gettime($name . '-time');
       }
     }
 

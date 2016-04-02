@@ -265,7 +265,7 @@ class baseparser extends tevents {
         $tag = $m[1];
         $s = ltrim(substr($s, strlen($m[0])));
         if (isset($m[5])) {
-          $i = self::find_close($s, $m[5]);
+          $i = static::find_close($s, $m[5]);
         } else {
           $i = strpos($s, "\n");
         }
@@ -321,7 +321,7 @@ class baseparser extends tevents {
       $j = strpos($s, $m[0]);
       $pre = rtrim(substr($s, 0, $j));
       $s = ltrim(substr($s, $j + strlen($m[0])));
-      $i = self::find_close($s, $m[3]);
+      $i = static::find_close($s, $m[3]);
       $value = trim(substr($s, 0, $i));
       $s = ltrim(substr($s, $i + 1));
 

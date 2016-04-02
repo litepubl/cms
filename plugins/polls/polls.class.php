@@ -39,7 +39,7 @@ class polls extends titems {
   public function setstatus($id, $status) {
     $this->setvalue($id, 'status', $status);
     if ($status == 'closed') {
-      $this->getdb(self::votes)->delete("idpoll = $id");
+      $this->getdb(static::votes)->delete("idpoll = $id");
     }
   }
 
@@ -61,7 +61,7 @@ class polls extends titems {
       return '';
     }
 
-    if (litepubl::$debug) $this->getdb(self::votes)->delete('iduser = ' . litepubl::$options->user);
+    if (litepubl::$debug) $this->getdb(static::votes)->delete('iduser = ' . litepubl::$options->user);
     $item = $this->getitem($id);
 
     $lang = tlocal::i('poll');
@@ -136,18 +136,18 @@ class polls extends titems {
   }
 
   public function hasvote($idpoll, $iduser) {
-    return $this->getdb(self::votes)->findprop('idpoll', "idpoll = $idpoll and iduser = $iduser");
+    return $this->getdb(static::votes)->findprop('idpoll', "idpoll = $idpoll and iduser = $iduser");
   }
 
   public function addvote($id, $iduser, $vote) {
-    $db = $this->getdb(self::votes);
+    $db = $this->getdb(static::votes);
     $db->insert(array(
       'idpoll' => (int)$id,
       'iduser' => (int)$iduser,
       'vote' => (int)$vote,
     ));
 
-    $t = $db->prefix . self::votes;
+    $t = $db->prefix . static::votes;
     $statitems = $db->res2assoc($db->query("select count(idpoll) as count, vote from $t
 where idpoll = $id group by vote order by vote asc"));
 
@@ -176,7 +176,7 @@ where idpoll = $id group by vote order by vote asc"));
   public function addfakevote($id) {
     $item = $this->getitem($id);
     $best = (int)$item['best'];
-    $this->getdb(self::votes)->insert(array(
+    $this->getdb(static::votes)->insert(array(
       'idpoll' => (int)$id,
       'iduser' => 1,
       'vote' => $best,
@@ -197,7 +197,7 @@ where idpoll = $id group by vote order by vote asc"));
     if (count($list)) {
       $ids = implode(',', $list);
       $this->db->update("status = 'closed'", "id in ($ids)");
-      $this->getdb(self::votes)->delete("idpoll in ($ids)");
+      $this->getdb(static::votes)->delete("idpoll in ($ids)");
     }
   }
 

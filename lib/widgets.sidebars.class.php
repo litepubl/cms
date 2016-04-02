@@ -51,7 +51,7 @@ class tsidebars extends tdata {
   }
 
   public function remove($id) {
-    if ($pos = self::getpos($this->items, $id)) {
+    if ($pos = static::getpos($this->items, $id)) {
       array_delete($this->items[$pos[0]], $pos[1]);
       $this->save();
       return $pos[0];
@@ -112,7 +112,7 @@ class tsidebars extends tdata {
   }
 
   public static function setpos(array & $items, $id, $newsidebar, $neworder) {
-    if ($pos = self::getpos($items, $id)) {
+    if ($pos = static::getpos($items, $id)) {
       list($oldsidebar, $oldorder) = $pos;
       if (($oldsidebar != $newsidebar) || ($oldorder != $neworder)) {
         $item = $items[$oldsidebar][$oldorder];

@@ -253,7 +253,7 @@ class tevents extends tdata {
   }
 
   public function unbind($c) {
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     foreach ($this->events as $name => $events) {
       foreach ($events as $i => $item) {
         if ((isset($item[0]) && $item[0] == $class) || (isset($item['class']) && $item['class'] == $class)) {
@@ -271,7 +271,7 @@ class tevents extends tdata {
     }
 
     $events = & $this->events[$eventname];
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     $count = count($events);
     if (($order < 0) || ($order >= $count)) {
       $order = $count - 1;

@@ -29,13 +29,13 @@ class tview extends titem_storage {
 
   public static function getview($instance) {
     $id = $instance->getidview();
-    if (isset(self::$instances['view'][$id])) return self::$instances['view'][$id];
+    if (isset(static::$instances['view'][$id])) return static::$instances['view'][$id];
     $views = tviews::i();
     if (!$views->itemexists($id)) {
       $id = 1; //default, wich always exists
       $instance->setidview($id);
     }
-    return self::i($id);
+    return static::i($id);
   }
 
   protected function create() {
@@ -100,7 +100,7 @@ class tview extends titem_storage {
     $this->data['custom'] = $this->_theme->templates['custom'];
     $this->save();
 
-    self::getowner()->themechanged($this);
+    static::getowner()->themechanged($this);
   }
 
   public function setadminname($name) {

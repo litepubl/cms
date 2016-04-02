@@ -55,28 +55,28 @@ class tdebugproxy {
   public function addstat($s, $time) {
     $name = get_class($this->obj) . $s;
     //echo "$name<br>";
-    self::$trace[] = array(
+    static::$trace[] = array(
       $name,
       $time
     );
-    if (isset(self::$total[$name])) {
-      self::$total[$name]+= $time;
-      ++self::$counts[$name];
+    if (isset(static::$total[$name])) {
+      static::$total[$name]+= $time;
+      ++static::$counts[$name];
     } else {
-      self::$total[$name] = $time;
-      self::$counts[$name] = 1;
+      static::$total[$name] = $time;
+      static::$counts[$name] = 1;
     }
   }
 
   public static function showperformance() {
     echo "<pre>\n";
-    arsort(self::$total);
+    arsort(static::$total);
     $total = 0;
-    foreach (self::$total as $k => $v) {
+    foreach (static::$total as $k => $v) {
       $total+= $v;
       $v = round($v * 1000, 4);
       //$v = round($v * 100000);
-      echo self::$counts[$k];
+      echo static::$counts[$k];
       echo " $k $v\n";
     }
     $total = $total * 1000;

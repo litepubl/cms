@@ -98,8 +98,8 @@ class twidget extends tevents {
 
 
       case 'include':
-        $sidebar = self::findsidebar($id);
-        $filename = self::getcachefilename($id, $sidebar);
+        $sidebar = static::findsidebar($id);
+        $filename = static::getcachefilename($id, $sidebar);
         litepubl::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
         break;
     }

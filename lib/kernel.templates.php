@@ -10,13 +10,13 @@ class tlocal {
   public $searchsect;
 
   public static function i($section = '') {
-    if (!isset(self::$self)) {
-      self::$self = static::getinstance();
-      self::$self->loadfile('default');
+    if (!isset(static::$self)) {
+      static::$self = static::getinstance();
+      static::$self->loadfile('default');
     }
 
-    if ($section != '') self::$self->section = $section;
-    return self::$self;
+    if ($section != '') static::$self->section = $section;
+    return static::$self;
   }
 
 public static function getinstance() {
@@ -24,7 +24,7 @@ return litepubl::$classes->getinstance(get_called_class());
 }
 
   public static function admin($section = '') {
-    $result = self::i($section);
+    $result = static::i($section);
     $result->check('admin');
     return $result;
   }
@@ -39,8 +39,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function get($section, $key) {
-    //if (!isset(self::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
-    return self::i()->ini[$section][$key];
+    //if (!isset(static::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
+    return static::i()->ini[$section][$key];
   }
 
   public function __get($name) {
@@ -85,8 +85,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function date($date, $format = '') {
-    if (empty($format)) $format = self::i()->getdateformat();
-    return self::i()->translate(date($format, $date) , 'datetime');
+    if (empty($format)) $format = static::i()->getdateformat();
+    return static::i()->translate(date($format, $date) , 'datetime');
   }
 
   public function getdateformat() {
@@ -105,7 +105,7 @@ return litepubl::$classes->getinstance(get_called_class());
 
   public function loadfile($name) {
     $this->loaded[] = $name;
-    $filename = self::getcachedir() . $name;
+    $filename = static::getcachedir() . $name;
     if (($data = litepubl::$storage->loaddata($filename)) && is_array($data)) {
       $this->ini = $data + $this->ini;
       if (isset($data['searchsect'])) {
@@ -118,16 +118,16 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function usefile($name) {
-    self::i()->check($name);
-    return self::$self;
+    static::i()->check($name);
+    return static::$self;
   }
 
   public static function inifile($class, $filename) {
-    return self::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
+    return static::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
   }
 
   public static function inicache($filename) {
-    $self = self::i();
+    $self = static::i();
     if (!isset(inifiles::$files[$filename])) {
       $ini = inifiles::cache($filename);
       if (is_array($ini)) {
@@ -143,7 +143,7 @@ return litepubl::$classes->getinstance(get_called_class());
 
   //backward
   public static function loadlang($name) {
-    self::usefile($name);
+    static::usefile($name);
   }
 
   public static function getcachedir() {
@@ -151,8 +151,8 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function clearcache() {
-    tfiler::delete(self::getcachedir() , false, false);
-    self::i()->loaded = array();
+    tfiler::delete(static::getcachedir() , false, false);
+    static::i()->loaded = array();
   }
 
 } //class
@@ -175,8 +175,8 @@ class inifiles {
   public static $files = array();
 
   public static function cache($filename) {
-    if (isset(self::$files[$filename])) {
-      return self::$inifiles[$filename];
+    if (isset(static::$files[$filename])) {
+      return static::$inifiles[$filename];
     }
 
     $datafile = tlocal::getcachedir() . 'cacheini.' . md5($filename);
@@ -190,14 +190,14 @@ class inifiles {
       }
     }
 
-    if (!isset(self::$files)) self::$files = array();
-    self::$files[$filename] = $ini;
+    if (!isset(static::$files)) static::$files = array();
+    static::$files[$filename] = $ini;
     return $ini;
   }
 
   public static function getresource($class, $filename) {
     $dir = litepubl::$classes->getresourcedir($class);
-    return self::cache($dir . $filename);
+    return static::cache($dir . $filename);
   }
 
 }
@@ -227,13 +227,13 @@ class tview extends titem_storage {
 
   public static function getview($instance) {
     $id = $instance->getidview();
-    if (isset(self::$instances['view'][$id])) return self::$instances['view'][$id];
+    if (isset(static::$instances['view'][$id])) return static::$instances['view'][$id];
     $views = tviews::i();
     if (!$views->itemexists($id)) {
       $id = 1; //default, wich always exists
       $instance->setidview($id);
     }
-    return self::i($id);
+    return static::i($id);
   }
 
   protected function create() {
@@ -298,7 +298,7 @@ class tview extends titem_storage {
     $this->data['custom'] = $this->_theme->templates['custom'];
     $this->save();
 
-    self::getowner()->themechanged($this);
+    static::getowner()->themechanged($this);
   }
 
   public function setadminname($name) {
@@ -368,10 +368,6 @@ namespace litepubl;
 
 class tviews extends titems_storage {
   public $defaults;
-
-  public static function i() {
-    return getinstance(__class__);
-  }
 
   protected function create() {
     $this->dbversion = false;
@@ -803,8 +799,8 @@ class basetheme extends tevents {
   }
 
   public static function getbyname($classname, $name) {
-    if (isset(self::$instances[$name])) {
-      return self::$instances[$name];
+    if (isset(static::$instances[$name])) {
+      return static::$instances[$name];
     }
 
     $result = getinstance($classname);
@@ -826,12 +822,12 @@ class basetheme extends tevents {
     $this->addmap('templates', array());
     $this->templates = array();
 
-    if (!isset(self::$defaultargs)) self::set_defaultargs();
+    if (!isset(static::$defaultargs)) static::set_defaultargs();
     $this->extratml = '';
   }
 
   public static function set_defaultargs() {
-    self::$defaultargs = array(
+    static::$defaultargs = array(
       '$site.url' => litepubl::$site->url,
       '$site.files' => litepubl::$site->files,
       '{$site.q}' => litepubl::$site->q,
@@ -840,7 +836,7 @@ class basetheme extends tevents {
   }
 
   public function __destruct() {
-    unset(self::$instances[$this->name], $this->templates);
+    unset(static::$instances[$this->name], $this->templates);
     parent::__destruct();
   }
 
@@ -856,7 +852,7 @@ class basetheme extends tevents {
     if (!$this->name) return false;
 
     if (parent::load()) {
-      self::$instances[$this->name] = $this;
+      static::$instances[$this->name] = $this;
       return true;
     }
 
@@ -864,13 +860,13 @@ class basetheme extends tevents {
   }
 
   public function parsetheme() {
-    if (!self::exists($this->name)) {
+    if (!static::exists($this->name)) {
       $this->error(sprintf('The %s theme not exists', $this->name));
     }
 
     $parser = $this->getparser();
     if ($parser->parse($this)) {
-      self::$instances[$this->name] = $this;
+      static::$instances[$this->name] = $this;
     } else {
       $this->error(sprintf('Theme file %s not exists', $filename));
     }
@@ -910,10 +906,10 @@ class basetheme extends tevents {
 
 
       case 'author':
-        return self::get_author();
+        return static::get_author();
 
       case 'metapost':
-        return isset(self::$vars['post']) ? self::$vars['post']->meta : new emptyclass();
+        return isset(static::$vars['post']) ? static::$vars['post']->meta : new emptyclass();
     } //switch
     if (isset($GLOBALS[$name])) {
       $var = $GLOBALS[$name];
@@ -943,16 +939,16 @@ class basetheme extends tevents {
   public function parsecallback($names) {
     $name = $names[1];
     $prop = $names[2];
-    if (isset(self::$vars[$name])) {
-      $var = self::$vars[$name];
+    if (isset(static::$vars[$name])) {
+      $var = static::$vars[$name];
     } elseif ($name == 'custom') {
       return $this->parse($this->templates['custom'][$prop]);
     } elseif ($name == 'label') {
       return "\$$name.$prop";
     } elseif ($var = $this->getvar($name)) {
-      self::$vars[$name] = $var;
-    } elseif (($name == 'metapost') && isset(self::$vars['post'])) {
-      $var = self::$vars['post']->meta;
+      static::$vars[$name] = $var;
+    } elseif (($name == 'metapost') && isset(static::$vars['post'])) {
+      $var = static::$vars['post']->meta;
     } else {
       return '';
     }
@@ -968,7 +964,7 @@ class basetheme extends tevents {
 
   public function parse($s) {
     if (!$s) return '';
-    $s = strtr((string)$s, self::$defaultargs);
+    $s = strtr((string)$s, static::$defaultargs);
     if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
     array_push($this->parsing, $s);
     try {
@@ -994,8 +990,8 @@ class basetheme extends tevents {
 
   public function replacelang($s, $lang) {
     $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
-    self::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
-    $s = strtr($s, self::$defaultargs);
+    static::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
+    $s = strtr($s, static::$defaultargs);
     if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
       foreach ($m as $item) {
         $name = $item[1];
@@ -1008,8 +1004,8 @@ class basetheme extends tevents {
   }
 
   public static function parsevar($name, $var, $s) {
-    self::$vars[$name] = $var;
-    return self::i()->parse($s);
+    static::$vars[$name] = $var;
+    return static::i()->parse($s);
   }
 
   public static function clearcache() {
@@ -1048,11 +1044,11 @@ class ttheme extends basetheme {
   }
 
   public static function getinstance($name) {
-    return self::getbyname(__class__, $name);
+    return static::getbyname(__class__, $name);
   }
 
   public static function context() {
-    $result = self::i();
+    $result = static::i();
     if (!$result->name) {
       if (($context = litepubl::$urlmap->context) && isset($context->idview)) {
         $result = tview::getview($context)->theme;
@@ -1104,8 +1100,8 @@ class ttheme extends basetheme {
   private function get_author() {
     $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
     if (!is_object($context)) {
-      if (!isset(self::$vars['post'])) return new emptyclass();
-      $context = self::$vars['post'];
+      if (!isset(static::$vars['post'])) return new emptyclass();
+      $context = static::$vars['post'];
     }
 
     if ($context instanceof tuserpages) return $context;
@@ -1128,7 +1124,7 @@ class ttheme extends basetheme {
     return $pages;
   }
   public function gethtml($context) {
-    self::$vars['context'] = $context;
+    static::$vars['context'] = $context;
     if (isset($context->index_tml) && ($tml = $context->index_tml)) {
       return $this->parse($tml);
     }
@@ -1243,13 +1239,13 @@ class ttheme extends basetheme {
     $tml_key = $this->keyanounce($postanounce);
     tposts::i()->loaditems($items);
 
-    self::$vars['lang'] = tlocal::i('default');
+    static::$vars['lang'] = tlocal::i('default');
     foreach ($items as $id) {
       $post = tpost::i($id);
       $result.= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
-      if (isset(self::$vars['author'])) {
-        unset(self::$vars['author']);
+      if (isset(static::$vars['author'])) {
+        unset(static::$vars['author']);
       }
     }
 
@@ -1257,7 +1253,7 @@ class ttheme extends basetheme {
       $result = str_replace('$excerpt', $result, $this->parse($tml));
     }
 
-    unset(self::$vars['post']);
+    unset(static::$vars['post']);
     return $result;
   }
 
@@ -1273,10 +1269,10 @@ class ttheme extends basetheme {
     $result = '';
     if ($tml == '') $tml = $this->getwidgetitem('posts', $sidebar);
     foreach ($items as $id) {
-      self::$vars['post'] = tpost::i($id);
+      static::$vars['post'] = tpost::i($id);
       $result.= $this->parse($tml);
     }
-    unset(self::$vars['post']);
+    unset(static::$vars['post']);
     return str_replace('$item', $result, $this->getwidgetitems('posts', $sidebar));
   }
 
@@ -1617,8 +1613,8 @@ class twidget extends tevents {
 
 
       case 'include':
-        $sidebar = self::findsidebar($id);
-        $filename = self::getcachefilename($id, $sidebar);
+        $sidebar = static::findsidebar($id);
+        $filename = static::getcachefilename($id, $sidebar);
         litepubl::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
         break;
     }
@@ -2095,9 +2091,9 @@ class twidgets extends titems_storage {
 
   public function request($arg) {
     $this->cache = false;
-    $id = self::getget('id');
-    $sidebar = self::getget('sidebar');
-    $this->idurlcontext = self::getget('idurl');
+    $id = static::getget('id');
+    $sidebar = static::getget('sidebar');
+    $this->idurlcontext = static::getget('idurl');
     if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) return $this->error_request('Invalid params');
     $themename = isset($_GET['themename']) ? trim($_GET['themename']) : tview::i(1)->themename;
     if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = tviews::i(1)->themename;
@@ -2253,15 +2249,15 @@ class tguard {
   private static $posted;
 
   public static function post() {
-    if (is_bool(self::$posted)) return self::$posted;
-    self::$posted = false;
+    if (is_bool(static::$posted)) return static::$posted;
+    static::$posted = false;
     if (!isset($_POST) || !count($_POST)) return false;
     if (get_magic_quotes_gpc()) {
       foreach ($_POST as $name => $value) {
         $_POST[$name] = stripslashes($_POST[$name]);
       }
     }
-    self::$posted = true;
+    static::$posted = true;
     return true;
   }
 
@@ -2282,7 +2278,7 @@ class tguard {
   }
 
   public static function checkattack() {
-    if (litepubl::$options->xxxcheck && self::is_xxx()) {
+    if (litepubl::$options->xxxcheck && static::is_xxx()) {
       turlmap::nocache();
       tlocal::usefile('admin');
       if ($_POST) {

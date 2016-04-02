@@ -18,7 +18,7 @@ class tdownloaditem extends tpost {
   }
 
   public static function selectitems(array $items) {
-    return self::select_child_items('tickets', $items);
+    return static::select_child_items('tickets', $items);
   }
 
   protected function create() {

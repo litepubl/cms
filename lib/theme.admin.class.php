@@ -21,7 +21,7 @@ class admintheme extends basetheme {
   }
 
   public static function getinstance($name) {
-    return self::getbyname(__class__, $name);
+    return static::getbyname(__class__, $name);
   }
 
   public static function admin() {
@@ -62,7 +62,7 @@ class admintheme extends basetheme {
           case 'email':
           case 'password':
             if (isset($args->data[$varname])) {
-              $args->data[$varname] = self::quote($args->data[$varname]);
+              $args->data[$varname] = static::quote($args->data[$varname]);
             } else {
               $args->data[$varname] = '';
             }

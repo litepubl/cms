@@ -206,7 +206,7 @@ class toptions extends tevents_storage {
 
   public function getdbpassword() {
     if (function_exists('mcrypt_encrypt')) {
-      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
+      return static::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
     } else {
       return str_rot13(base64_decode($this->data['dbconfig']['password']));
     }
@@ -214,7 +214,7 @@ class toptions extends tevents_storage {
 
   public function setdbpassword($password) {
     if (function_exists('mcrypt_encrypt')) {
-      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepubl::$secret);
+      $this->data['dbconfig']['password'] = static::encrypt($password, $this->solt . litepubl::$secret);
     } else {
       $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
     }
@@ -307,7 +307,7 @@ class toptions extends tevents_storage {
       if (isset($item['args']) && count($item['args'])) {
         $args = array();
         foreach ($item['args'] as $arg) {
-          $args[] = self::var_export($arg);
+          $args[] = static::var_export($arg);
         }
 
         $log.= "\n";
@@ -360,7 +360,7 @@ class toptions extends tevents_storage {
       case 'array':
         $result = "array (\n";
         foreach ($v as $k => $item) {
-          $s = self::var_export($item);
+          $s = static::var_export($item);
           $result.= "$k = $s;\n";
         }
         $result.= ")\n";

@@ -33,7 +33,7 @@ class tmailer {
       return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
     }
 
-    return self::send(self::CreateEmail($fromname, $fromemail) , self::CreateEmail($toname, $toemail) , $subj, $body);
+    return static::send(static::CreateEmail($fromname, $fromemail) , static::CreateEmail($toname, $toemail) , $subj, $body);
   }
 
   public static function CreateEmail($name, $email) {
@@ -43,21 +43,21 @@ class tmailer {
 
   public static function sendtoadmin($subject, $body, $onshutdown = false) {
     if ($onshutdown) {
-      if (!isset(self::$hold)) {
-        self::$hold = array();
+      if (!isset(static::$hold)) {
+        static::$hold = array();
         register_shutdown_function(array(
           __class__,
           'onshutdown'
         ));
       }
-      self::$hold[] = array(
+      static::$hold[] = array(
         'subject' => $subject,
         'body' => $body
       );
       return;
     }
 
-    return self::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
+    return static::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
   }
 
   public static function onshutdown() {
@@ -68,16 +68,16 @@ class tmailer {
         $fromemail = litepubl::$options->fromemail;
         $toemail = litepubl::$options->email;
 
-        foreach (self::$hold as $i => $item) {
+        foreach (static::$hold as $i => $item) {
           $mailer->send($fromname, $fromemail, 'admin', $toemail, $item['subject'], $item['body'], false);
-          unset(self::$hold[$i]);
+          unset(static::$hold[$i]);
         }
         $mailer->close();
       }
     } else {
-      foreach (self::$hold as $i => $item) {
-        self::sendtoadmin($item['subject'], $item['body'], false);
-        unset(self::$hold[$i]);
+      foreach (static::$hold as $i => $item) {
+        static::sendtoadmin($item['subject'], $item['body'], false);
+        unset(static::$hold[$i]);
       }
     }
   }
@@ -96,20 +96,20 @@ class tmailer {
       return false;
     } else {
       foreach ($list as $item) {
-        self::sendmail($item['fromname'], $item['fromemail'], $item['toname'], $item['toemail'], $item['subject'], $item['body']);
+        static::sendmail($item['fromname'], $item['fromemail'], $item['toname'], $item['toemail'], $item['subject'], $item['body']);
       }
     }
   }
 
   public static function SendAttachmentToAdmin($subj, $body, $filename, $attachment) {
-    return self::sendattachment(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subj, $body, $filename, $attachment);
+    return static::sendattachment(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subj, $body, $filename, $attachment);
   }
 
   public static function sendattachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment) {
     $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
     $date = date('r');
-    $from = self::CreateEmail($fromname, $fromemail);
-    $to = self::CreateEmail($toname, $toemail);
+    $from = static::CreateEmail($fromname, $fromemail);
+    $to = static::CreateEmail($toname, $toemail);
 
     $boundary = md5(microtime());
     $textpart = "--$boundary\nContent-Type: text/plain; charset=\"UTF-8\"\nContent-Transfer-Encoding: base64\n\n";

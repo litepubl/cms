@@ -501,7 +501,7 @@ class turlmap extends titems {
   }
 
   public static function unsub($obj) {
-    $self = self::i();
+    $self = static::i();
     $self->lock();
     $self->unbind($obj);
     $self->deleteclass(get_class($obj));
@@ -619,7 +619,7 @@ class turlmap extends titems {
 
   public static function sendheader($cache) {
     if (!$cache) {
-      self::nocache();
+      static::nocache();
     }
 
     header('Content-Type: text/html; charset=utf-8');

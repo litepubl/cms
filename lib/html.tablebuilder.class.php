@@ -48,7 +48,7 @@ class tablebuilder {
       if (count($item) == 2) {
         $colclass = 'text-left';
       } else {
-        $colclass = self::getcolclass(array_shift($item));
+        $colclass = static::getcolclass(array_shift($item));
       }
 
       $this->head.= sprintf('<th class="%s">%s</th>', $colclass, array_shift($item));
@@ -88,7 +88,7 @@ class tablebuilder {
   }
 
   public function td($colclass, $content) {
-    return sprintf('<td class="%s">%s</td>', self::getcolclass($colclass) , $content);
+    return sprintf('<td class="%s">%s</td>', static::getcolclass($colclass) , $content);
   }
 
   public function getadmintheme() {

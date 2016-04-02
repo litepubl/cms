@@ -22,11 +22,11 @@ class tplugins extends titems {
   }
 
   public static function getabout($name) {
-    if (!isset(self::$abouts[$name])) {
-      if (!isset(self::$abouts)) self::$abouts = array();
-      self::$abouts[$name] = self::localabout(litepubl::$paths->plugins . $name);
+    if (!isset(static::$abouts[$name])) {
+      if (!isset(static::$abouts)) static::$abouts = array();
+      static::$abouts[$name] = static::localabout(litepubl::$paths->plugins . $name);
     }
-    return self::$abouts[$name];
+    return static::$abouts[$name];
   }
 
   public static function localabout($dir) {
@@ -44,11 +44,11 @@ class tplugins extends titems {
   }
 
   public static function getlangabout($filename) {
-    return self::getnamelang(self::getname($filename));
+    return static::getnamelang(static::getname($filename));
   }
 
   public static function getnamelang($name) {
-    $about = self::getabout($name);
+    $about = static::getabout($name);
     $lang = tlocal::admin();
     $lang->ini[$name] = $about;
     $lang->section = $name;
@@ -60,7 +60,7 @@ class tplugins extends titems {
       return false;
     }
 
-    $about = self::getabout($name);
+    $about = static::getabout($name);
     return $this->AddExt($name, $about['classname'], $about['filename'], $about['adminclassname'], $about['adminfilename']);
   }
 

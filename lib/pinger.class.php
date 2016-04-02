@@ -92,7 +92,7 @@ class tpinger extends tevents {
   }
 
   protected function ping($link, $posturl) {
-    if ($ping = self::discover($link)) {
+    if ($ping = static::discover($link)) {
       $client = new IXR_Client($ping);
       $client->timeout = 3;
       $client->useragent.= " -- Lite Publisher/" . litepubl::$options->version;

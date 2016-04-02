@@ -178,19 +178,11 @@ class tpost extends titem implements itemplate {
   }
 
 public static function fixClassname($classname) {
-if (strpos($classname, '\\')) {
+if (!strpos($classname, '\\')) {
+$classname = 'litepubl\\' . $classname;
+}
+
 return $classname;
-}
-
-if ($classname == 'tpost') {
-$ns = 'litepubl\\';
-} else if ($classname == 'product') {
-$ns = 'litepubl\shop';
-} else {
-$ns = 'litepubl\plugins';
-}
-
-return $ns . $classname;
 }
 
   protected function create() {
@@ -320,7 +312,7 @@ return $ns . $classname;
   }
 
   protected function LoadFromDB() {
-    if ($a = self::getassoc($this->id)) {
+    if ($a = static::getassoc($this->id)) {
       $this->setassoc($a);
       return true;
     }
@@ -329,7 +321,7 @@ return $ns . $classname;
 
   public static function loadpost($id) {
     if ($a = static::getassoc($id)) {
-      $self = self::newpost($a['class']);
+      $self = static::newpost($a['class']);
       $self->setassoc($a);
       return $self;
     }
@@ -445,7 +437,7 @@ return $ns . $classname;
 
     $this->aprev = false;
     if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
-      $this->aprev = self::i($id);
+      $this->aprev = static::i($id);
     }
     return $this->aprev;
   }
@@ -457,7 +449,7 @@ return $ns . $classname;
 
     $this->anext = false;
     if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
-      $this->anext = self::i($id);
+      $this->anext = static::i($id);
     }
     return $this->anext;
   }
@@ -1190,7 +1182,7 @@ class tposts extends titems {
   }
 
   public static function unsub($obj) {
-    self::i()->unbind($obj);
+    static::i()->unbind($obj);
   }
 
   protected function create() {
@@ -1599,9 +1591,9 @@ class tposttransform {
   }
 
   public static function add(tpost $post) {
-    $self = self::i($post);
+    $self = static::i($post);
     $values = array();
-    foreach (self::$props as $name) {
+    foreach (static::$props as $name) {
       $values[$name] = $self->__get($name);
     }
     $db = $post->db;
@@ -1629,7 +1621,7 @@ class tposttransform {
     $post = $this->post;
     $db = $post->db;
     $list = array();
-    foreach (self::$props As $name) {
+    foreach (static::$props As $name) {
       if ($name == 'id') continue;
       $list[] = "$name = " . $db->quote($this->__get($name));
     }
@@ -1663,11 +1655,11 @@ class tposttransform {
       return $this->$get();
     }
 
-    if (in_array($name, self::$arrayprops)) {
+    if (in_array($name, static::$arrayprops)) {
       return implode(',', $this->post->$name);
     }
 
-    if (in_array($name, self::$boolprops)) {
+    if (in_array($name, static::$boolprops)) {
       return $this->post->$name ? 1 : 0;
     }
 
@@ -1676,11 +1668,11 @@ class tposttransform {
 
   public function __set($name, $value) {
     if (method_exists($this, $set = "set$name")) return $this->$set($value);
-    if (in_array($name, self::$arrayprops)) {
+    if (in_array($name, static::$arrayprops)) {
       $this->post->data[$name] = tdatabase::str2array($value);
-    } elseif (in_array($name, self::$intprops)) {
+    } elseif (in_array($name, static::$intprops)) {
       $this->post->$name = (int)$value;
-    } elseif (in_array($name, self::$boolprops)) {
+    } elseif (in_array($name, static::$boolprops)) {
       $this->post->data[$name] = $value == '1';
     } else {
       $this->post->$name = $value;
@@ -1777,14 +1769,14 @@ class tmetapost extends titem {
   public static function loaditems(array $items) {
     if (!count($items)) return;
     //exclude already loaded items
-    if (isset(self::$instances['postmeta'])) {
-      $items = array_diff($items, array_keys(self::$instances['postmeta']));
+    if (isset(static::$instances['postmeta'])) {
+      $items = array_diff($items, array_keys(static::$instances['postmeta']));
       if (!count($items)) return;
     } else {
-      self::$instances['postmeta'] = array();
+      static::$instances['postmeta'] = array();
     }
 
-    $instances = & self::$instances['postmeta'];
+    $instances = & static::$instances['postmeta'];
     $db = litepubl::$db;
     $db->table = 'postsmeta';
     $res = $db->select(sprintf('id in (%s)', implode(',', $items)));

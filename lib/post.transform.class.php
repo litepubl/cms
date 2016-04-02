@@ -70,9 +70,9 @@ class tposttransform {
   }
 
   public static function add(tpost $post) {
-    $self = self::i($post);
+    $self = static::i($post);
     $values = array();
-    foreach (self::$props as $name) {
+    foreach (static::$props as $name) {
       $values[$name] = $self->__get($name);
     }
     $db = $post->db;
@@ -100,7 +100,7 @@ class tposttransform {
     $post = $this->post;
     $db = $post->db;
     $list = array();
-    foreach (self::$props As $name) {
+    foreach (static::$props As $name) {
       if ($name == 'id') continue;
       $list[] = "$name = " . $db->quote($this->__get($name));
     }
@@ -134,11 +134,11 @@ class tposttransform {
       return $this->$get();
     }
 
-    if (in_array($name, self::$arrayprops)) {
+    if (in_array($name, static::$arrayprops)) {
       return implode(',', $this->post->$name);
     }
 
-    if (in_array($name, self::$boolprops)) {
+    if (in_array($name, static::$boolprops)) {
       return $this->post->$name ? 1 : 0;
     }
 
@@ -147,11 +147,11 @@ class tposttransform {
 
   public function __set($name, $value) {
     if (method_exists($this, $set = "set$name")) return $this->$set($value);
-    if (in_array($name, self::$arrayprops)) {
+    if (in_array($name, static::$arrayprops)) {
       $this->post->data[$name] = tdatabase::str2array($value);
-    } elseif (in_array($name, self::$intprops)) {
+    } elseif (in_array($name, static::$intprops)) {
       $this->post->$name = (int)$value;
-    } elseif (in_array($name, self::$boolprops)) {
+    } elseif (in_array($name, static::$boolprops)) {
       $this->post->data[$name] = $value == '1';
     } else {
       $this->post->$name = $value;

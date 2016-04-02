@@ -22,7 +22,7 @@ class ulist {
       $this->link = $admin->templates['list.link'];
       $this->value = $admin->templates['list.value'];
 
-      if ($islink == self::aslinks) {
+      if ($islink == static::aslinks) {
         $this->item = $this->link;
       }
     }

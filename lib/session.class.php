@@ -48,8 +48,8 @@ class tsession {
   }
 
   public static function init($usecookie = false) {
-    if (!self::$initialized) {
-      self::$initialized = true;
+    if (!static::$initialized) {
+      static::$initialized = true;
       ini_set('session.use_cookies', $usecookie);
       ini_set('session.use_only_cookies', $usecookie);
       ini_set('session.use_trans_sid', 0);
@@ -70,7 +70,7 @@ class tsession {
   }
 
   public static function start($id) {
-    $r = self::init(false);
+    $r = static::init(false);
     session_id($id);
     session_start();
     return $r;

@@ -13,13 +13,13 @@ class tsinglepassword extends tperm {
 
   public function getheader($obj) {
     if (isset($obj->password) && ($p = $obj->password)) {
-      return sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, self::encryptpassword($p));
+      return sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static::encryptpassword($p));
     }
   }
 
   public function hasperm($obj) {
     if (isset($obj->password) && ($p = $obj->password)) {
-      return self::authcookie(self::encryptpassword($p));
+      return static::authcookie(static::encryptpassword($p));
     }
     return true;
   }
@@ -33,20 +33,20 @@ class tsinglepassword extends tperm {
   }
 
   public function checkpassword($p) {
-    if ($this->password != self::encryptpassword($p)) return false;
+    if ($this->password != static::encryptpassword($p)) return false;
     $login = md5rand();
     $password = md5($login . litepubl::$secret . $this->password . litepubl::$options->solt);
     $cookie = $login . '.' . $password;
     $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-    setcookie(self::getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
+    setcookie(static::getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
     $this->checked = true;
     return true;
   }
 
   public static function authcookie($p) {
     if (litepubl::$options->group == 'admin') return true;
-    $cookiename = self::getcookiename();
+    $cookiename = static::getcookiename();
     $cookie = isset($_COOKIE[$cookiename]) ? $_COOKIE[$cookiename] : '';
     if (($cookie != '') && strpos($cookie, '.')) {
       list($login, $password) = explode('.', $cookie);
@@ -56,8 +56,8 @@ class tsinglepassword extends tperm {
   }
 
   public static function auth($id, $p) {
-    if (self::authcookie($p)) return true;
-    $self = self::i($id);
+    if (static::authcookie($p)) return true;
+    $self = static::i($id);
     return $self->getform($p);
   }
 

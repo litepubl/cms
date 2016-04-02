@@ -34,11 +34,11 @@ class tuserpages extends titems implements itemplate {
   }
 
   public function __get($name) {
-    if (in_array($name, self::$userprops)) {
+    if (in_array($name, static::$userprops)) {
       return tusers::i()->getvalue($this->id, $name);
     }
 
-    if (in_array($name, self::$pageprops)) {
+    if (in_array($name, static::$pageprops)) {
       return $this->getvalue($this->id, $name);
     }
 

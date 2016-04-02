@@ -18,17 +18,17 @@ class tajaxmenueditor extends tajaxposteditor {
   }
 
   public function request($arg) {
-    if ($err = self::auth()) return $err;
+    if ($err = static::auth()) return $err;
     return $this->getcontent();
   }
 
   public function getcontent() {
     $id = tadminhtml::idparam();
     $menus = tmenus::i();
-    if (($id != 0) && !$menus->itemexists($id)) return self::error403();
+    if (($id != 0) && !$menus->itemexists($id)) return static::error403();
     $menu = tmenu::i($id);
-    if ((litepubl::$options->group == 'author') && (litepubl::$options->user != $menu->author)) return self::error403();
-    if (($id > 0) && !$menus->itemexists($id)) return self::error403();
+    if ((litepubl::$options->group == 'author') && (litepubl::$options->user != $menu->author)) return static::error403();
+    if (($id > 0) && !$menus->itemexists($id)) return static::error403();
 
     $views = tviews::i();
     $theme = tview::i($views->defaults['admin'])->theme;

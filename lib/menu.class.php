@@ -369,8 +369,8 @@ class tmenu extends titem implements itemplate {
   public $formresult;
 
   public static function i($id = 0) {
-    $class = $id == 0 ? __class__ : self::getowner()->items[$id]['class'];
-    return self::iteminstance($class, $id);
+    $class = $id == 0 ? __class__ : static::getowner()->items[$id]['class'];
+    return static::iteminstance($class, $id);
   }
 
   public static function iteminstance($class, $id = 0) {
@@ -442,7 +442,7 @@ class tmenu extends titem implements itemplate {
   }
 
   public function get_owner_props() {
-    return self::$ownerprops;
+    return static::$ownerprops;
   }
 
   public function is_owner_prop($name) {
@@ -554,7 +554,7 @@ class tmenu extends titem implements itemplate {
 class tfakemenu extends tmenu {
 
   public static function i($id = 0) {
-    return self::iteminstance(__class__, $id);
+    return static::iteminstance(__class__, $id);
   }
 
   public function load() {

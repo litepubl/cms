@@ -31,10 +31,10 @@ class tsingleitems extends titems {
     $instance->id = $id;
     $instance->save();
 
-    if (isset(self::$instances[$classname])) {
-      self::$instances[$classname][$id] = $instance;
+    if (isset(static::$instances[$classname])) {
+      static::$instances[$classname][$id] = $instance;
     } else {
-      self::$instances[$classname] = array(
+      static::$instances[$classname] = array(
         $id => $instance
       );
     }
@@ -47,12 +47,12 @@ class tsingleitems extends titems {
     $classname = $this->items[$id]['classname'];
     $result = getinstance($classname);
     if ($id != $result->id) {
-      if (!isset(self::$instances[$classname])) {
-        self::$instances[$classname] = array();
+      if (!isset(static::$instances[$classname])) {
+        static::$instances[$classname] = array();
       }
 
-      if (isset(self::$instances[$classname][$id])) {
-        $result = self::$instances[$classname][$id];
+      if (isset(static::$instances[$classname][$id])) {
+        $result = static::$instances[$classname][$id];
       } else {
         if ($result->id) {
           $result = new $classname();
@@ -60,7 +60,7 @@ class tsingleitems extends titems {
 
         $result->id = $id;
         $result->load();
-        self::$instances[$classname][$id] = $result;
+        static::$instances[$classname][$id] = $result;
       }
     }
 

@@ -59,7 +59,7 @@ class tbackuper extends tevents {
 
   public function load() {
     $result = parent::load();
-    if ($this->filertype == 'auto') $this->filertype = self::getprefered();
+    if ($this->filertype == 'auto') $this->filertype = static::getprefered();
     return $result;
   }
 
@@ -137,19 +137,19 @@ class tbackuper extends tevents {
     if (!$this->filer->connected) $this->error('Filer not connected');
     switch ($this->archtype) {
       case 'tar':
-        self::include_tar();
+        static::include_tar();
         $this->tar = new \tar();
         break;
 
 
       case 'zip':
-        self::include_zip();
+        static::include_zip();
         $this->zip = new \zipfile();
         break;
 
 
       case 'unzip':
-        self::include_unzip();
+        static::include_unzip();
         $this->unzip = new \StrSimpleUnzip();
         break;
 
@@ -368,7 +368,7 @@ class tbackuper extends tevents {
 
   public function uploaddump($s, $filename) {
     if (strend($filename, '.zip')) {
-      self::include_unzip();
+      static::include_unzip();
       $unzip = new \StrSimpleUnzip();
       $unzip->ReadData($s);
       foreach ($unzip->Entries as $item) {
@@ -380,7 +380,7 @@ class tbackuper extends tevents {
       }
       unset($unzip);
     } elseif (strend($filename, '.tar.gz') || strend($filename, '.tar')) {
-      self::include_tar();
+      static::include_tar();
       $tar = new \tar();
       $tar->loadfromstring($s);
       foreach ($tar->files as $item) {
@@ -636,7 +636,7 @@ class tbackuper extends tevents {
 
     switch ($archtype) {
       case 'tar':
-        self::include_tar();
+        static::include_tar();
         $tar = new \tar();
         $tar->loadfromstring($content);
         if (!is_array($tar->files)) {
@@ -671,7 +671,7 @@ class tbackuper extends tevents {
 
           @unlink($filename);
         } else {
-          self::include_unzip();
+          static::include_unzip();
           $unzip = new \StrSimpleUnzip();
           $unzip->ReadData($content);
           foreach ($unzip->Entries as $item) {

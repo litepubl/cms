@@ -19,7 +19,7 @@ class taboutparser {
       $archtype = $backuper->getarchtype($url);
       if ($files = $backuper->unpack($s, $archtype)) {
         list($filename, $content) = each($files);
-        if ($about = self::getabout($files)) {
+        if ($about = static::getabout($files)) {
           $item = new tdownloaditem();
           $item->type = strbegin($filename, 'plugins/') ? 'plugin' : 'theme';
           $item->title = $about['name'];
@@ -29,7 +29,7 @@ class taboutparser {
           $item->rawcontent = $about['description'];
           $item->version = $about['version'];
           $item->tagnames = empty($about['tags']) ? '' : trim($about['tags']);
-          if ($screenshot = self::getfile($files, 'screenshot.png')) {
+          if ($screenshot = static::getfile($files, 'screenshot.png')) {
             $media = tmediaparser::i();
             $idscreenshot = $media->uploadthumbnail($about['name'] . '.png', $screenshot);
             $item->files = array(
@@ -52,7 +52,7 @@ class taboutparser {
   }
 
   public static function getabout(array & $files) {
-    if ($about_ini = self::getfile($files, 'about.ini')) {
+    if ($about_ini = static::getfile($files, 'about.ini')) {
       $about_ini = trim($about_ini);
       //trim unicode sign
       $about_ini = substr($about_ini, strpos($about_ini, '['));

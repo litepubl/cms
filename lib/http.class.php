@@ -23,7 +23,7 @@ class http {
 
     if (($parsed['scheme'] == 'http') && ini_get('allow_url_fopen') && !(is_array($headers) && count($headers))) {
       if ($fp = @fopen($url, 'r')) {
-        @stream_set_timeout($fp, self::$timeout);
+        @stream_set_timeout($fp, static::$timeout);
 
         $result = '';
         while ($remote_read = fread($fp, 4096)) $result.= $remote_read;
@@ -35,8 +35,8 @@ class http {
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$timeout);
-      curl_setopt($ch, CURLOPT_TIMEOUT, self::$timeout);
+      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, static::$timeout);
+      curl_setopt($ch, CURLOPT_TIMEOUT, static::$timeout);
       curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
       curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
       if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -52,7 +52,7 @@ class http {
         if (($code == 200) || ($code == 201)) return $result;
         return false;
       } else {
-        return self::curl_follow($ch);
+        return static::curl_follow($ch);
       }
     }
 
@@ -65,8 +65,8 @@ class http {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$timeout);
-    curl_setopt($ch, CURLOPT_TIMEOUT, self::$timeout);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, static::$timeout);
+    curl_setopt($ch, CURLOPT_TIMEOUT, static::$timeout);
     if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
@@ -78,7 +78,7 @@ class http {
   }
 
   public static function post($url, $post, $headers = false) {
-    $ch = self::createcurl($url, $post, $headers);
+    $ch = static::createcurl($url, $post, $headers);
     $response = curl_exec($ch);
     //$respheaders = curl_getinfo($ch);
     $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);

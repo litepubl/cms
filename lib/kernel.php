@@ -18,7 +18,7 @@ class tdatabase {
   }
 
   public static function instance() {
-    return self::i();
+    return static::i();
   }
 
   public function __construct() {
@@ -1100,7 +1100,7 @@ class tevents extends tdata {
   }
 
   public function unbind($c) {
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     foreach ($this->events as $name => $events) {
       foreach ($events as $i => $item) {
         if ((isset($item[0]) && $item[0] == $class) || (isset($item['class']) && $item['class'] == $class)) {
@@ -1118,7 +1118,7 @@ class tevents extends tdata {
     }
 
     $events = & $this->events[$eventname];
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     $count = count($events);
     if (($order < 0) || ($order >= $count)) {
       $order = $count - 1;
@@ -1511,10 +1511,10 @@ class tsingleitems extends titems {
     $instance->id = $id;
     $instance->save();
 
-    if (isset(self::$instances[$classname])) {
-      self::$instances[$classname][$id] = $instance;
+    if (isset(static::$instances[$classname])) {
+      static::$instances[$classname][$id] = $instance;
     } else {
-      self::$instances[$classname] = array(
+      static::$instances[$classname] = array(
         $id => $instance
       );
     }
@@ -1527,12 +1527,12 @@ class tsingleitems extends titems {
     $classname = $this->items[$id]['classname'];
     $result = getinstance($classname);
     if ($id != $result->id) {
-      if (!isset(self::$instances[$classname])) {
-        self::$instances[$classname] = array();
+      if (!isset(static::$instances[$classname])) {
+        static::$instances[$classname] = array();
       }
 
-      if (isset(self::$instances[$classname][$id])) {
-        $result = self::$instances[$classname][$id];
+      if (isset(static::$instances[$classname][$id])) {
+        $result = static::$instances[$classname][$id];
       } else {
         if ($result->id) {
           $result = new $classname();
@@ -1540,7 +1540,7 @@ class tsingleitems extends titems {
 
         $result->id = $id;
         $result->load();
-        self::$instances[$classname][$id] = $result;
+        static::$instances[$classname][$id] = $result;
       }
     }
 
@@ -1585,13 +1585,13 @@ return static::$instances[$name][$id];
         $this->free();
         return false;
       }
-      self::$instances[$this->instancename][$id] = $this;
+      static::$instances[$this->instancename][$id] = $this;
     }
     return $this;
   }
 
   public function free() {
-    unset(self::$instances[$this->getinstancename() ][$this->id]);
+    unset(static::$instances[$this->getinstancename() ][$this->id]);
   }
 
   public function __construct() {
@@ -1611,9 +1611,9 @@ return static::$instances[$name][$id];
   public function setid($id) {
     if ($id != $this->id) {
       $name = $this->instancename;
-      if (!isset(self::$instances)) self::$instances = array();
-      if (!isset(self::$instances[$name])) self::$instances[$name] = array();
-      $a = & self::$instances[$this->instancename];
+      if (!isset(static::$instances)) static::$instances = array();
+      if (!isset(static::$instances[$name])) static::$instances[$name] = array();
+      $a = & static::$instances[$this->instancename];
       if (isset($a[$this->id])) unset($a[$this->id]);
       if (isset($a[$id])) $a[$id] = 0;
       $a[$id] = $this;
@@ -1731,12 +1731,8 @@ public function class_exists($classname) {
 return $classname;
 }
 
-if (!strpos($classname, '\\')) {
-foreach (array('litepubl\\', 'litepubl\plugins', 'litepubl\shop') as $ns) {
-if (class_exists($ns . $classname, false)) {
-return $ns . $classname;
-}
-}
+if (!strpos($classname, '\\') && class_exists('litepubl\\' . $classname, false)) {
+return 'litepubl\\'  . $classname;
 }
 
 return false;
@@ -1874,7 +1870,7 @@ $classname = 'litepubl\\' . $classname;
   }
 
   public function getresourcedir($c) {
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     $dir = dirname($this->getclassfilename($class));
     return $dir . '/resource/';
   }
@@ -2090,7 +2086,7 @@ class toptions extends tevents_storage {
 
   public function getdbpassword() {
     if (function_exists('mcrypt_encrypt')) {
-      return self::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
+      return static::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
     } else {
       return str_rot13(base64_decode($this->data['dbconfig']['password']));
     }
@@ -2098,7 +2094,7 @@ class toptions extends tevents_storage {
 
   public function setdbpassword($password) {
     if (function_exists('mcrypt_encrypt')) {
-      $this->data['dbconfig']['password'] = self::encrypt($password, $this->solt . litepubl::$secret);
+      $this->data['dbconfig']['password'] = static::encrypt($password, $this->solt . litepubl::$secret);
     } else {
       $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
     }
@@ -2191,7 +2187,7 @@ class toptions extends tevents_storage {
       if (isset($item['args']) && count($item['args'])) {
         $args = array();
         foreach ($item['args'] as $arg) {
-          $args[] = self::var_export($arg);
+          $args[] = static::var_export($arg);
         }
 
         $log.= "\n";
@@ -2244,7 +2240,7 @@ class toptions extends tevents_storage {
       case 'array':
         $result = "array (\n";
         foreach ($v as $k => $item) {
-          $s = self::var_export($item);
+          $s = static::var_export($item);
           $result.= "$k = $s;\n";
         }
         $result.= ")\n";
@@ -2863,7 +2859,7 @@ class turlmap extends titems {
   }
 
   public static function unsub($obj) {
-    $self = self::i();
+    $self = static::i();
     $self->lock();
     $self->unbind($obj);
     $self->deleteclass(get_class($obj));
@@ -2981,7 +2977,7 @@ class turlmap extends titems {
 
   public static function sendheader($cache) {
     if (!$cache) {
-      self::nocache();
+      static::nocache();
     }
 
     header('Content-Type: text/html; charset=utf-8');

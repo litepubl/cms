@@ -21,7 +21,7 @@ class tadminperms extends tadminmenu {
     $result = strtr($theme->templates['content.admin.combo'], array(
       '$lang.$name' => $lang->perm,
       '$name' => $name,
-      '$value' => self::getcomboitems($idperm)
+      '$value' => static::getcomboitems($idperm)
     ));
 
     $lang->section = $section;

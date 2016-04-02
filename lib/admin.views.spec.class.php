@@ -31,7 +31,7 @@ class tadminviewsspec extends tadminmenu {
 
     $tabs = new tabs($this->admintheme);
     $inputs = '';
-    foreach (self::getspecclasses() as $classname) {
+    foreach (static::getspecclasses() as $classname) {
       $obj = getinstance($classname);
       $args->classname = $classname;
       $name = substr($classname, 1);
@@ -52,7 +52,7 @@ class tadminviewsspec extends tadminmenu {
 
   public function processform() {
 
-    foreach (self::getspecclasses() as $classname) {
+    foreach (static::getspecclasses() as $classname) {
       $obj = getinstance($classname);
       $obj->lock();
       $obj->setidview($_POST["idview-$classname"]);

@@ -14,11 +14,11 @@ class ttheme extends basetheme {
   }
 
   public static function getinstance($name) {
-    return self::getbyname(__class__, $name);
+    return static::getbyname(__class__, $name);
   }
 
   public static function context() {
-    $result = self::i();
+    $result = static::i();
     if (!$result->name) {
       if (($context = litepubl::$urlmap->context) && isset($context->idview)) {
         $result = tview::getview($context)->theme;
@@ -70,8 +70,8 @@ class ttheme extends basetheme {
   private function get_author() {
     $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
     if (!is_object($context)) {
-      if (!isset(self::$vars['post'])) return new emptyclass();
-      $context = self::$vars['post'];
+      if (!isset(static::$vars['post'])) return new emptyclass();
+      $context = static::$vars['post'];
     }
 
     if ($context instanceof tuserpages) return $context;
@@ -94,7 +94,7 @@ class ttheme extends basetheme {
     return $pages;
   }
   public function gethtml($context) {
-    self::$vars['context'] = $context;
+    static::$vars['context'] = $context;
     if (isset($context->index_tml) && ($tml = $context->index_tml)) {
       return $this->parse($tml);
     }
@@ -209,13 +209,13 @@ class ttheme extends basetheme {
     $tml_key = $this->keyanounce($postanounce);
     tposts::i()->loaditems($items);
 
-    self::$vars['lang'] = tlocal::i('default');
+    static::$vars['lang'] = tlocal::i('default');
     foreach ($items as $id) {
       $post = tpost::i($id);
       $result.= $post->getcontexcerpt($tml_key);
       // has $author.* tags in tml
-      if (isset(self::$vars['author'])) {
-        unset(self::$vars['author']);
+      if (isset(static::$vars['author'])) {
+        unset(static::$vars['author']);
       }
     }
 
@@ -223,7 +223,7 @@ class ttheme extends basetheme {
       $result = str_replace('$excerpt', $result, $this->parse($tml));
     }
 
-    unset(self::$vars['post']);
+    unset(static::$vars['post']);
     return $result;
   }
 
@@ -239,10 +239,10 @@ class ttheme extends basetheme {
     $result = '';
     if ($tml == '') $tml = $this->getwidgetitem('posts', $sidebar);
     foreach ($items as $id) {
-      self::$vars['post'] = tpost::i($id);
+      static::$vars['post'] = tpost::i($id);
       $result.= $this->parse($tml);
     }
-    unset(self::$vars['post']);
+    unset(static::$vars['post']);
     return str_replace('$item', $result, $this->getwidgetitems('posts', $sidebar));
   }
 

@@ -335,9 +335,9 @@ class tcomment extends tdata {
   public function getmd5email() {
     $email = $this->data['email'];
     if ($email) {
-      if (isset(self::$md5[$email])) return self::$md5[$email];
+      if (isset(static::$md5[$email])) return static::$md5[$email];
       $md5 = md5($email);
-      self::$md5[$email] = $md5;
+      static::$md5[$email] = $md5;
       return $md5;
     }
     return '';

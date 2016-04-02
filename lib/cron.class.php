@@ -134,7 +134,7 @@ class tcron extends tevents {
     if ($this->disableadd) return false;
     $id = $this->doadd($type, $class, $func, $arg);
 
-    if (($type == 'single') && !$this->disableping && !self::$pinged) {
+    if (($type == 'single') && !$this->disableping && !static::$pinged) {
       if (litepubl::$debug) tfiler::log("cron added $id");
 
       $memstorage = memstorage::i();
@@ -190,13 +190,13 @@ class tcron extends tevents {
   }
 
   public function deleteclass($c) {
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     $this->db->delete("class = '$class'");
   }
 
   public static function pingonshutdown() {
-    if (self::$pinged) return;
-    self::$pinged = true;
+    if (static::$pinged) return;
+    static::$pinged = true;
 
     register_shutdown_function(array(
       tcron::i() ,

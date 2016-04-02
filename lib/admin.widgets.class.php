@@ -60,7 +60,7 @@ class tadminwidgets extends tadminmenu {
     $args->idview = $idview;
     $form->before = $admintheme->parsearg($admintheme->templates['addwidgets'], $args);
     $count = count($view->sidebars);
-    $sidebarnames = self::getsidebarnames($view);
+    $sidebarnames = static::getsidebarnames($view);
 
     //items for table builder
     $items = array();

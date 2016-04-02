@@ -12,15 +12,15 @@ class tguard {
   private static $posted;
 
   public static function post() {
-    if (is_bool(self::$posted)) return self::$posted;
-    self::$posted = false;
+    if (is_bool(static::$posted)) return static::$posted;
+    static::$posted = false;
     if (!isset($_POST) || !count($_POST)) return false;
     if (get_magic_quotes_gpc()) {
       foreach ($_POST as $name => $value) {
         $_POST[$name] = stripslashes($_POST[$name]);
       }
     }
-    self::$posted = true;
+    static::$posted = true;
     return true;
   }
 
@@ -41,7 +41,7 @@ class tguard {
   }
 
   public static function checkattack() {
-    if (litepubl::$options->xxxcheck && self::is_xxx()) {
+    if (litepubl::$options->xxxcheck && static::is_xxx()) {
       turlmap::nocache();
       tlocal::usefile('admin');
       if ($_POST) {

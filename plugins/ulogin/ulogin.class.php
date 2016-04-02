@@ -99,7 +99,7 @@ class ulogin extends tplugin {
     $uid = !empty($info['uid']) ? $info['uid'] : (!empty($info['id']) ? $info['id'] : (!empty($info['identity']) ? $info['identity'] : (!empty($info['profile']) ? $info['profile'] : '')));
     if (strlen($uid) >= 22) $uid = basemd5($uid);
 
-    $phone = !empty($info['phone']) ? self::filterphone($info['phone']) : false;
+    $phone = !empty($info['phone']) ? static::filterphone($info['phone']) : false;
 
     $newreg = false;
     $users = tusers::i();

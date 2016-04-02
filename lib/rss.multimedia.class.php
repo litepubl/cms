@@ -91,7 +91,7 @@ class trssMultimedia extends tevents {
     if (!empty($file['channels'])) tnode::attr($media, 'channels', $file['channels']);
     if (!empty($file['duration'])) tnode::attr($media, 'duration', $file['duration']);
     */
-    $hash = tnode::addvalue($item, 'media:hash', self::hashtomd5($file['hash']));
+    $hash = tnode::addvalue($item, 'media:hash', static::hashtomd5($file['hash']));
     tnode::attr($hash, 'algo', "md5");
 
     if (!empty($file['keywords'])) {

@@ -214,7 +214,7 @@ $classname = 'litepubl\\' . $classname;
   }
 
   public function getresourcedir($c) {
-    $class = self::get_class_name($c);
+    $class = static::get_class_name($c);
     $dir = dirname($this->getclassfilename($class));
     return $dir . '/resource/';
   }

@@ -85,7 +85,7 @@ class tprivatefiles extends tevents {
 
     if (!isset($_SERVER['HTTP_RANGE'])) {
       header('HTTP/1.1 200 OK', true, 200);
-      self::send($item, 0, $item['size'] - 1);
+      static::send($item, 0, $item['size'] - 1);
     } else {
       list($unit, $ranges) = explode('=', $_SERVER['HTTP_RANGE'], 2);
       list($range) = explode(',', $ranges, 2);
@@ -96,7 +96,7 @@ class tprivatefiles extends tevents {
 
       header('HTTP/1.1 206 Partial Content', true, 206);
       header("Content-Range: bytes $from-$end/" . $item['size']);
-      self::send($item, $from, $end);
+      static::send($item, $from, $end);
     }
   }
 

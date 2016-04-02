@@ -339,7 +339,7 @@ class tthemeparser extends baseparser {
       }
 
       if (is_string($sidebar['meta.classes'])) {
-        $sidebar['meta.classes'] = self::getmetaclasses($sidebar['meta.classes']);
+        $sidebar['meta.classes'] = static::getmetaclasses($sidebar['meta.classes']);
       }
     }
 
