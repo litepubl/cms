@@ -73,6 +73,7 @@ function installClasses() {
 
 //ignore interfaces and traits
 if (class_exists('litepubl\\' . $class)) {
+//echo "$class<br>";
     $obj = getinstance('litepubl\\' . $class);
     if (method_exists($obj, 'install')) {
 $obj->install();

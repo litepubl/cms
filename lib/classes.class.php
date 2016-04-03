@@ -278,7 +278,7 @@ litepubl::$urlmap->db->update("class = '$newclass'", "class = '$oldclass'");
 }
 
   public function getresourcedir($c) {
-$reflector = new ReflectionClass($c);
+$reflector = new \ReflectionClass($c);
 $filename = $reflector->getFileName();
     return dirname($filename) . '/resource/';
   }

@@ -83,9 +83,9 @@ $adminclassname = 'litepubl\\' . $adminclassname;
     );
 
     litepubl::$classes->lock();
-    litepubl::$classes->Add($classname, $filename, $name);
+    litepubl::$classes->Add($classname, "plugins/$name/$filename");
     if ($adminclassname) {
-      litepubl::$classes->Add($adminclassname, $adminfilename, $name);
+      litepubl::$classes->Add($adminclassname, "plugins/$name/$adminfilename");
     }
 
     litepubl::$classes->unlock();
