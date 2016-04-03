@@ -9,12 +9,12 @@ foreach (array(
 'utils.functions.php',
 
 'storage.php',
-'storage.inc.php',
-'storage.json.php',
-'storage.memcache.php',
+'storageinc.php',
+'storagejson.php',
+'storagememcache.php',
 
 //old storages
-'storage.class.php',
+'datastorage.php',
 'storage.mem.class.php',
 'storage.cache.file.class.php',
 'storage.cache.memcache.class.php',

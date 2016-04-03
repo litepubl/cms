@@ -1,7 +1,7 @@
 <?php
 namespace litepubl;
 define('litepubl_mode', 'config');
-reqire (__DIR__ . '/index.php');
+require (__DIR__ . '/index.php');
 
 config::$debug = true;
 config::$classes['storage'] = 'litepubl\storageinc';

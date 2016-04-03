@@ -8,8 +8,8 @@
 namespace litepubl;
 
 class tclasses extends titems {
+public $namespaces;
   public $classes;
-  public $interfaces;
   public $remap;
   public $factories;
   public $instances;
@@ -29,17 +29,16 @@ class tclasses extends titems {
     $this->basename = 'classes';
     $this->dbversion = false;
     $this->addevents('onnewitem', 'gettemplatevar');
+    $this->addmap('namespaces', array());
     $this->addmap('classes', array());
-    $this->addmap('interfaces', array());
     $this->addmap('remap', array());
     $this->addmap('factories', array());
     $this->instances = array();
-    if (function_exists('spl_autoload_register')) {
+
       spl_autoload_register(array(
         $this,
         '_autoload'
       ));
-    }
   }
 
   public function getstorage() {
@@ -167,10 +166,6 @@ class_alias($class, $subclass);
 } else if (!strpos($class, '\\') && isset($this->items['litepubl\\' . $class])) {
 $item = $this->items['litepubl\\' . $class];
 class_alias('litepubl\\' . $class, $class);
-    } else if (isset($this->interfaces[$class])) {
-return litepubl::$paths->lib . $this->interfaces[$class];
-    } else if ($subclass && ($subclass != $class) && isset($this->interfaces[$subclass])) {
-      return litepubl::$paths->lib . $this->interfaces[$subclass];
     } else {
       return false;
     }
