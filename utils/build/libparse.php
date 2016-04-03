@@ -136,9 +136,9 @@ makekernel($dir, 'kernel.php', array(
 'paths.php',
 'litepubl.php',
 'storage.php',
-'storage.inc.php',
-'storage.memcache.php',
-'storage.class.php',
+'storageinc.php',
+'storagememcache.php',
+'datastorage.php',
 'litepubl.init.php',
 ));
 

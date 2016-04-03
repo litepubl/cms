@@ -7,7 +7,7 @@
 
 namespace litepubl;
 
-  class jsonstorage extends storage {
+  class storagejson extends storage {
 
     public function __construct() {
       $this->ext = '.json';

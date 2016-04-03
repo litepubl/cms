@@ -6,6 +6,7 @@
 **/
 
 namespace litepubl;
+
   class datastorage {
     public $data;
     private $modified;

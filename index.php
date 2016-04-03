@@ -8,8 +8,13 @@
 namespace litepubl;
 
 class config {
-  //set to true to enable debug
+  //set to true to enable debug: logging, error message, 
   public static $debug = false;
+// use joined php files lib/kernel.*.  debug = true disable kernel
+  public static $useKernel = true;
+
+// enable logging
+  public static $logLevel = false;
 
   // host name or false
   public static $host = false;
@@ -55,8 +60,10 @@ class config {
   ];
 }
 
-if (config::$debug) {
+if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
+if (config::$debug || !config::$useKernel) {
   require (__DIR__ . '/lib/kernel.debug.php');
 } else {
   require (__DIR__ . '/lib/kernel.php');
+}
 }

@@ -7,7 +7,7 @@
 
 namespace litepubl;
 
-  class memcachestorage extends storage {
+  class storagememcache extends storage {
     public $memcache;
 
     public function __construct() {

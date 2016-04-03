@@ -50,7 +50,7 @@ class tupdater extends tevents {
     $ver = (string)$ver;
     if (strlen($ver) == 3) $ver.= '0';
     if (strlen($ver) == 1) $ver.= '.00';
-    $filename = litepubl::$paths->lib . 'update' . DIRECTORY_SEPARATOR . "update.$ver.php";
+    $filename = litepubl::$paths->lib . "update/update.$ver.php";
     if (file_exists($filename)) {
       require_once ($filename);
       if ($this->log) tfiler::log("$filename is required file", 'update');
@@ -59,6 +59,11 @@ class tupdater extends tevents {
         $func();
         if ($this->log) tfiler::log("$func is called", 'update');
         litepubl::$options->savemodified();
+} else if (function_exists('litepubl\\' . $func)) {
+call_user_func_array('litepubl\\' . $func, array());
+        if ($this->log) tfiler::log("$func is called", 'update');
+        litepubl::$options->savemodified();
+}
       }
     }
   }
