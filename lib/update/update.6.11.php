@@ -30,12 +30,27 @@ $cl->items['tsubscribers'][0] = kernel.comments.php
 $cl->items['trssholdcomments'][0] = 'rssholdcomments.php';
 $cl->items['tpingbacks'][0] = 'pingbacks.php';
 
-$cl->data['namespaces'] = array();
+$cl->data['namespaces'] = array(
+'litepubl' => 'lib',
+);
 
 foreach ($cl->data['interfaces'] as $name => $filename) {
 $cl->items[$name] = array($filename, '');
 }
 
 unset($cl->data['interfaces']);
+
+$cl->items['itemplate'] = array('kernel.php', '', 'itemplate.php');
+$cl->data['kernel'] = array();
+foreach ($cl->items as $name => $item) {
+$dir = (empty($item[1]) ? 'lib/': 'plugins/' . $item[1] . '/');
+if (count($item) == 2) {
+$cl->item[$name] = $dir . $item[0];
+} else {
+$cl->item[$name] = $dir . $item[2];
+$cl->data['kernel'][$name] = $dir . $item[0];
+}
+}
+
 $cl->save();
 }

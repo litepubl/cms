@@ -7,17 +7,6 @@
 
 namespace litepubl;
 
-interface itemplate {
-  public function request($arg);
-  public function gettitle();
-  public function getkeywords();
-  public function getdescription();
-  public function gethead();
-  public function getcont();
-  public function getidview();
-  public function setidview($id);
-}
-
 interface iwidgets {
   public function getwidgets(array & $items, $sidebar);
   public function getsidebar(&$content, $sidebar);

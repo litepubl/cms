@@ -122,6 +122,7 @@ makekernel($dir, 'kernel.php', array(
  'options.class.php',
  'site.class.php',
  'urlmap.class.php',
+'itemplate.php',
  'interfaces.php',
  'plugin.class.php',
 'users.class.php',

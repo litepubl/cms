@@ -38,20 +38,15 @@ function parse_classes_ini($inifile) {
   $ini = parse_ini_file($inifile, true);
   $classes = litepubl::$classes;
   foreach ($ini['items'] as $class => $filename) {
-    $item = array(
-      $filename,
-      ''
-    );
+    $classes->items[$class] = "lib/$filename";
+}
 
-    if (isset($ini['debug'][$class])) {
-        $item[2] = $ini['debug'][$class];
-    }
-
-    $classes->items[$class] = $item;
-  }
+$kernel = parse_ini_file(litepubl::$paths->lib . 'install/ini/kernel.ini', false);
+  foreach ($kernel as $class => $filename) {
+    $classes->kernel[$class] = "lib/$filename";
+}
 
   $classes->classes = $ini['classes'];
-  $classes->interfaces = $ini['interfaces'];
   $classes->factories = $ini['factories'];
   $classes->Save();
 }
@@ -72,9 +67,15 @@ function installClasses() {
   ttheme::$defaultargs = array();
   $theme = ttheme::getinstance('default');
   foreach (litepubl::$classes->items as $class => $item) {
-    if (preg_match('/^litepubl\\\(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
+    if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
+
+//ignore interfaces and traits
+if (class_exists('litepubl\\' . $class)) {
     $obj = getinstance($class);
-    if (method_exists($obj, 'install')) $obj->install();
+    if (method_exists($obj, 'install')) {
+$obj->install();
+}
+}
   }
 
   //default installed plugins
