@@ -24,7 +24,7 @@ function install_engine($email, $language) {
 }
 
 function parse_classes_ini($inifile) {
-  $install_dir = litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'ini' . DIRECTORY_SEPARATOR;
+  $install_dir = litepubl::$paths->lib . 'install/ini/';
   if (!$inifile) {
     $inifile = $install_dir . 'classes.ini';
   } elseif (file_exists($install_dir . $inifile)) {
@@ -36,37 +36,18 @@ function parse_classes_ini($inifile) {
   }
 
   $ini = parse_ini_file($inifile, true);
-
   $classes = litepubl::$classes;
-  $replace = dbversion ? '.class.db.' : '.class.files.';
-  $exclude = !dbversion ? '.class.db.' : '.class.files.';
   foreach ($ini['items'] as $class => $filename) {
-    //exclude files
-    if (strpos($filename, $exclude)) continue;
-
-    if (!file_exists(litepubl::$paths->lib . $filename)) {
-      $filename = str_replace('.class.', $replace, $filename);
-      if (!file_exists(litepubl::$paths->lib . $filename)) continue;
-    }
-
     $item = array(
       $filename,
       ''
     );
 
     if (isset($ini['debug'][$class])) {
-      $filename = $ini['debug'][$class];
-      if (file_exists(litepubl::$paths->lib . $filename)) {
-        $item[2] = $filename;
-      } else {
-        $filename = str_replace('.class.', $replace, $filename);
-        if (file_exists(litepubl::$paths->lib . $filename)) {
-          $item[2] = $filename;
-        }
-      }
+        $item[2] = $ini['debug'][$class];
     }
 
-    $classes->items['litepubl\\' . $class] = $item;
+    $classes->items[$class] = $item;
   }
 
   $classes->classes = $ini['classes'];

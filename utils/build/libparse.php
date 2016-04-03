@@ -181,8 +181,8 @@ makekernel($dir, 'kernel.posts.php',  array(
 'files.items.class.php',
 ));
 
-makekernel($dir, 'kernel.comments.class.db.php',  array(
-'comments.class.db.php',
+makekernel($dir, 'kernel.comments.php',  array(
+'comments.php',
 'comments.manager.class.php',
 'comments.form.class.php',
 'comments.subscribers.class.php',

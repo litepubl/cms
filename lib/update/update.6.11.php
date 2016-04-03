@@ -21,6 +21,14 @@ $cl->items['storageinc'] = array('kernel.php', '', 'storageinc.php');
 $cl->items[storagejson'] = array('storage.json.php', '', 'storagejson.php');
 $cl->items['storagememcache'] = array('kernel.php', '', 'storagememcache.php');
 $cl->items['datastorage'] = array('kernel.php', '', 'datastorage.php');
+$cl->items['tadminmoderator'][0] = 'adminmoderator.php';
+$cl->items['tcomments'] = array('kernel.comments.php', '', 'comments.php');
+$cl->items['tcomment'][0] = 'kernel.comments.php';
+$cl->items['tcommentmanager'][0] = 'kernel.comments.php';
+$cl->items['tcommentform'][0] = 'kernel.comments.php';
+$cl->items['tsubscribers'][0] = kernel.comments.php
+$cl->items['trssholdcomments'][0] = 'rssholdcomments.php';
+$cl->items['tpingbacks'][0] = 'pingbacks.php';
 
 $cl->data['namespaces'] = array();
 
