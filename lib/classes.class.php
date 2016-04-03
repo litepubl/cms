@@ -89,7 +89,7 @@ $class = $this->remap[$class];
 $result = $this->getinstance($this->classes[$name]);
     } else if (isset($this->items[$name])) {
 $result = $this->getinstance($name);
-    } else if (isset('t' . $this->items[$class])) {
+    } else if (isset($this->items['t' . $class])) {
 $result = $this->getinstance('t' . $class);
 } else {
     $result = parent::__get($name);
@@ -160,6 +160,10 @@ public function includeClass($classname) {
 if (isset($this->items[$classname])) {
 $filename = litepubl::$paths->home . $this->items[$classname];
 $this->include_file($filename);
+if (!strpos($classname, '\\')) {
+class_alias('litepubl\\' . $classname, $classname, false);
+$this->aliases[$classname] = 'litepubl\\' . $classname;
+}
     } else if (($subclass = basename($classname)) && ($subclass != $classname) && isset($this->items[$subclass])) {
 $filename = litepubl::$paths->home . $this->items[$subclass];
 $this->include_file($filename);
@@ -170,7 +174,7 @@ $filename = litepubl::$paths->home . $this->items['litepubl\\' . $classname];
 $this->include_file($filename);
 class_alias('litepubl\\' . $classname, $classname, false);
 $this->aliases[$classname] = 'litepubl\\' . $classname;
-     } else {}
+     } else {
 return false;
 }
 
@@ -191,7 +195,7 @@ $filename = litepubl::$paths->home . $this->kernel['litepubl\\' . $classname];
 $this->include_file($filename);
 class_alias('litepubl\\' . $classname, $classname, false);
 $this->aliases[$classname] = 'litepubl\\' . $classname;
-     } else {}
+     } else {
 return false;
 }
 
