@@ -46,10 +46,11 @@ class ttemplatecomments extends tevents {
     $args->antispam = base64_encode('superspamer' . strtotime("+1 hour"));
 
     $cm = tcommentmanager::i();
-    // if user can see hold comments
-    $result.= sprintf('<?php if (litepubl::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
 
-    $holdmesg = '<?php if ($ismoder = litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+    // if user can see hold comments
+    $result.= sprintf('<?php if (litepubl\litepubl::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+
+    $holdmesg = '<?php if ($ismoder = litepubl\litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
     //hide template hold comments in html comment
     '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
