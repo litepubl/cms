@@ -44,7 +44,6 @@ return litepubl::$classes->getinstance(get_called_class());
   }
 
   public static function get($section, $key) {
-    //if (!isset(static::i()->ini[$section][$key])) litepubl::$options->error("$section:$key");
     return static::i()->ini[$section][$key];
   }
 

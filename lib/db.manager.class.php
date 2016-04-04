@@ -138,7 +138,7 @@ $default = dbquote($newvalues[0]);
 
 public function quoteArray(array $values) {
 foreach ($values as $i => $value) {
-$vaues[$i] = dbquote(trim($value, ' \'"'));
+$values[$i] = dbquote(trim($value, ' \'"'));
 }
 
 return implode(', ', $values);

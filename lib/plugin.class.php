@@ -11,7 +11,7 @@ class tplugin extends tevents {
 
   protected function create() {
     parent::create();
-    $this->basename = 'plugins/' . strtolower(get_class($this));
+    $this->basename = 'plugins/' . strtolower(str_replace('\\', '-', get_class($this)));
   }
 
 public function addClass($classname, $filename) {
