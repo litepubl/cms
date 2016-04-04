@@ -14,8 +14,8 @@ function tcronInstall($self) {
   litepubl::$urlmap->add('/croncron.htm', get_class($self) , null, 'get');
 
   $self->password = md5uniq();
-  $self->addnightly('turlmap', 'updatefilter', null);
-  $self->addnightly('tdboptimizer', 'optimize', null);
+  $self->addnightly('litepubl\turlmap', 'updatefilter', null);
+  $self->addnightly('litepubl\tdboptimizer', 'optimize', null);
   $self->save();
 }
 

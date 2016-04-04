@@ -60,17 +60,9 @@ class tpost extends titem implements itemplate {
   }
 
   public static function newpost($classname) {
-    $classname = $classname ? static::fixClassname($classname) : get_called_class();
+    $classname = $classname ? str_replace('-', '\\', $classname) : get_called_class();
     return new $classname();
   }
-
-public static function fixClassname($classname) {
-if (!strpos($classname, '\\')) {
-$classname = 'litepubl\\' . $classname;
-}
-
-return $classname;
-}
 
   protected function create() {
     $this->table = 'posts';
@@ -86,7 +78,7 @@ return $classname;
       'revision' => 0,
       'icon' => 0,
       'idperm' => 0,
-      'class' => __class__,
+      'class' => str_replace('\\', '-', get_class($this)),
       'posted' => 0,
       'modified' => 0,
       'url' => '',
@@ -762,7 +754,7 @@ return $classname;
     }
 
     //inject php code
-    return sprintf('<?php echo tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
+    return sprintf('<?php echo litepubl\tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
   }
 
   public function getcmtcount() {

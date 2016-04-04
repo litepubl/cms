@@ -54,9 +54,9 @@ $cl->data['kernel'][$name] = $dir . $item[0];
 $cl->save();
 }
 
-$man = litepubl\tdbmanager::i();
-$man->renameEnumValue('posts', 'class', 'tpost', 'litepubl\tpost');
-$man->renameEnumValue('posts', 'class', 'tticket', 'litepubl\tticket');
-$man->renameEnumValue('posts', 'class', 'tdownloaditem', 'litepubl\tdownloaditem');
-$man->renameEnumValue('posts', 'class', 'product', 'litepubl\product');
+$man = litepubl-tdbmanager::i();
+$man->renameEnumValue('posts', 'class', 'tpost', 'litepubl-tpost');
+$man->renameEnumValue('posts', 'class', 'tticket', 'litepubl-tticket');
+$man->renameEnumValue('posts', 'class', 'tdownloaditem', 'litepubl-tdownloaditem');
+$man->renameEnumValue('posts', 'class', 'product', 'litepubl-product');
 }

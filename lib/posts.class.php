@@ -106,7 +106,7 @@ $items[$id]['class'] = static::POSTCLASS;
 
     foreach ($subclasses as $class => $list) {
       $subitems = call_user_func_array(array(
-        $class,
+        str_replace('-', '\\', $class),
         'selectitems'
       ) , array(
         $list
@@ -157,7 +157,7 @@ $items[$id]['class'] = static::POSTCLASS;
     $post->title = trim($post->title);
     $post->modified = time();
     $post->revision = $this->revision;
-    $post->class = get_class($post);
+    $post->class = str_replace('\\', '-', get_class($post));
     if (($post->status == 'published') && ($post->posted > time())) {
       $post->status = 'future';
     } elseif (($post->status == 'future') && ($post->posted <= time())) {

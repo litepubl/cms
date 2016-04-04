@@ -35,7 +35,7 @@ function tticketsInstall($self) {
 
   $manager = tdbmanager::i();
   $manager->CreateTable($self->childtable, file_get_contents($dir . 'ticket.sql'));
-  $manager->addenum('posts', 'class', 'tticket');
+  $manager->addenum('posts', 'class', 'litepubl-tticket');
 
   $optimizer = tdboptimizer::i();
   $optimizer->lock();

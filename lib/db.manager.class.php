@@ -70,15 +70,17 @@ class tdbmanager {
     if ($res = $this->query("describe $this->prefix$table $column")) {
       $r = $this->fetchassoc($res);
       $s = $r['Type'];
-      if (preg_match('/enum\((.*?)\)/', $s, $m)) {
+      if (preg_match('/enum\((.*?)\)/i', $s, $m)) {
         $values = $m[1];
         $result = explode(',', $values);
         foreach ($result as $i => $v) {
           $result[$i] = trim($v, ' \'"');
         }
+
         return $result;
       }
     }
+
     return false;
   }
 
@@ -88,7 +90,8 @@ class tdbmanager {
     $this->exec("alter table $this->prefix$table add $tmp enum($items)");
     $this->exec("update $this->prefix$table set $tmp = $column + 0");
     $this->exec("alter table $this->prefix$table drop $column");
-    $this->exec("alter table $this->prefix$table change $tmp $column enum($items)");
+$default = dbquote($enum[0]);
+    $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
   }
 
   public function addenum($table, $column, $value) {
@@ -128,10 +131,10 @@ array_splice($values, $i, 1);
 
       $i = array_search($oldvalue, $values);
       if (false !== $i) {
-$wvalues[$i] = $newvalue;
+$values[$i] = $newvalue;
 $items = $this->quoteArray($values);
-$default = dbquote($newvalues[0]);
-      $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
+$default = dbquote($values[0]);
+      $this->exec("alter table $this->prefix$table change $column $column enum($items) default $default");
     }
 }
 }

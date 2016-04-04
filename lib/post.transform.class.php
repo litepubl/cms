@@ -142,6 +142,10 @@ class tposttransform {
       return $this->post->$name ? 1 : 0;
     }
 
+if ($name == 'class') {
+return str_replace('\\', '-', get_class($this->post));
+}
+
     return $this->post->$name;
   }
 

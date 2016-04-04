@@ -12,7 +12,7 @@ function tdownloaditemsInstall($self) {
   $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
   $manager = tdbmanager::i();
   $manager->CreateTable($self->childtable, file_get_contents($dir . 'downloaditem.sql'));
-  $manager->addenum('posts', 'class', 'tdownloaditem');
+  $manager->addenum('posts', 'class', 'litepubl-tdownloaditem');
 
   $optimizer = tdboptimizer::i();
   $optimizer->lock();
