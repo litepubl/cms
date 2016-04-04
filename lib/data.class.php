@@ -126,15 +126,6 @@ class tdata {
     return $this->basename;
   }
 
-public function addClass($classname, $filename) {
-$ns = dirname(get_class($this));
-$reflector = new \ReflectionClass($class);
-$dir = dirname($reflector->getFileName());
-
-litepubl::$classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
-}
-
-
   public function install() {
     $this->externalchain('Install');
   }

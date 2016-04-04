@@ -11,7 +11,15 @@ class tplugin extends tevents {
 
   protected function create() {
     parent::create();
-    $this->basename = 'plugins' . DIRECTORY_SEPARATOR . strtolower(get_class($this));
+    $this->basename = 'plugins/' . strtolower(get_class($this));
   }
+
+public function addClass($classname, $filename) {
+$ns = dirname(get_class($this));
+$reflector = new \ReflectionClass($class);
+$dir = dirname($reflector->getFileName());
+
+litepubl::$classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
+}
 
 }

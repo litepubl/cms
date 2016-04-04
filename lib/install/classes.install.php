@@ -49,8 +49,6 @@ $kernel = parse_ini_file(litepubl::$paths->lib . 'install/ini/kernel.ini', false
   $classes->classes = $ini['classes'];
   $classes->factories = $ini['factories'];
   $classes->Save();
-
-$classes->namespaces['litepubl'] = 'lib';
 }
 
 function installClasses() {

@@ -98,12 +98,17 @@ $result = $this->getinstance('t' . $class);
 return $result;
   }
 
-  public function add($class, $filename) {
+  public function add($class, $filename, $deprecatedPath = false) {
     if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
 return false;
 }
 
     $this->lock();
+if (!strpos($class, '\\')) {
+$class = 'litepubl\\' . $class;
+$filename = 'plugins/' .($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
+}
+
     $this->items[$class] = $filename;
     $instance = $this->getinstance($class);
     if (method_exists($instance, 'install')) {
@@ -216,6 +221,15 @@ public function getpsr4($classname) {
 if ($i = strrpos($classname, '\\')) {
 $ns = substr($classname, 0, $i);
 $baseclass = strtolower(substr($classname, $i + 1));
+
+if ($ns == 'litepubl') {
+$filename = litepubl::$paths->lib . $baseclass . '.php';
+if (file_exists($filename)) {
+return $filename;
+}
+
+return false;
+}
 
 if (isset($this->namespaces[$ns])) {
 $filename = sprintf('%s%s/%s.php', litepubl::$paths->home, $this->namespaces[$ns], $baseclass);

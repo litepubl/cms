@@ -4,7 +4,7 @@
 * Licensed under the MIT (LICENSE.txt) license.
 **/
 
-(function($, document, window) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.Posteditor = Class.extend({
@@ -87,4 +87,4 @@
     litepubl.posteditor = new litepubl.Posteditor();
   });
 
-}(jQuery, document, window));
+}(jQuery, litepubl));

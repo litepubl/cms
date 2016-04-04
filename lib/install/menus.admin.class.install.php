@@ -8,7 +8,7 @@
 namespace litepubl;
 
 function tadminmenusInstall($self) {
-  if ('tadminmenus' != get_class($self)) return;
+  if ('litepubl\tadminmenus' != get_class($self)) return;
   $self->lock();
   $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>';

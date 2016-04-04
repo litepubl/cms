@@ -180,8 +180,10 @@ class ttemplate extends tevents_storage {
   }
 
   public function getmenu() {
-    if ($r = $this->ongetmenu()) return $r;
-    //$current = $this->context instanceof tmenu ? $this->context->id : 0;
+    if ($r = $this->ongetmenu()) {
+return $r;
+}
+
     $view = $this->view;
     $menuclass = $view->menuclass;
     $filename = $view->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass), litepubl::$options->group ? litepubl::$options->group : 'nobody');

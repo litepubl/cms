@@ -117,6 +117,7 @@ class turlmap extends titems {
 
   protected function dorequest($url) {
     $this->itemrequested = $this->find_item($url);
+
     if ($this->isredir) {
       return;
     }
@@ -282,7 +283,7 @@ class turlmap extends titems {
       return;
     }
 
-    if (litepubl::$classes->class_exists($item['class'])) {
+    if (class_exists($item['class'])) {
       return $this->GenerateHTML($item);
     } else {
       $this->notfound404();
@@ -295,7 +296,7 @@ class turlmap extends titems {
   }
 
   public function getcontext(array $item) {
-    $classname = litepubl::$classes->class_exists($item['class']);
+$classname = $item['class'];
     $parents = class_parents($classname);
     if (in_array('litepubl\titem', $parents)) {
       return call_user_func_array(array(
@@ -343,7 +344,7 @@ class turlmap extends titems {
     }
 
     $this->is404 = true;
-    $this->printclasspage('tnotfound404');
+    $this->printclasspage('litepubl\tnotfound404');
   }
 
   private function printclasspage($classname) {
@@ -364,7 +365,7 @@ class turlmap extends titems {
 
   public function forbidden() {
     $this->is404 = true;
-    $this->printclasspage('tforbidden');
+    $this->printclasspage('litepubl\tforbidden');
   }
 
   public function addget($url, $class) {

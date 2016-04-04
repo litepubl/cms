@@ -6,6 +6,7 @@ $cl = tclasses::i();
 $cl = litepubl\tclasses::i();
 }
 
+if (!isset($cl->data['namespaces'])) {
 unset($cl->items['litepubl\litepubl']);
 unset($cl->items['litepubl\paths']);
 unset($cl->items['litepubl\storage']);
@@ -30,9 +31,7 @@ $cl->items['tsubscribers'][0] = kernel.comments.php
 $cl->items['trssholdcomments'][0] = 'rssholdcomments.php';
 $cl->items['tpingbacks'][0] = 'pingbacks.php';
 
-$cl->data['namespaces'] = array(
-'litepubl' => 'lib',
-);
+$cl->data['namespaces'] = array();
 
 foreach ($cl->data['interfaces'] as $name => $filename) {
 $cl->items[$name] = array($filename, '');
@@ -53,4 +52,11 @@ $cl->data['kernel'][$name] = $dir . $item[0];
 }
 
 $cl->save();
+}
+
+$man = litepubl\tdbmanager::i();
+$man->renameEnumValue('posts', 'class', 'tpost', 'litepubl\tpost');
+$man->renameEnumValue('posts', 'class', 'tticket', 'litepubl\tticket');
+$man->renameEnumValue('posts', 'class', 'tdownloaditem', 'litepubl\tdownloaditem');
+$man->renameEnumValue('posts', 'class', 'product', 'litepubl\product');
 }

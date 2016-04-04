@@ -12,7 +12,7 @@ class tdbmanager {
   private $max_allowed_packet;
 
   public static function i() {
-    return getinstance(__class__);
+    return getinstance(get_called_class());
   }
 
   public function __get($name) {
@@ -83,10 +83,7 @@ class tdbmanager {
   }
 
   public function setenum($table, $column, array $enum) {
-    foreach ($enum as $i => $item) {
-      $enum[$i] = sprintf('\'%s\'', trim($item));
-    }
-    $items = implode(',', $enum);
+    $items = $this->quoteArray($enum);
     $tmp = $column . '_tmp';
     $this->exec("alter table $this->prefix$table add $tmp enum($items)");
     $this->exec("update $this->prefix$table set $tmp = $column + 0");
@@ -109,11 +106,11 @@ class tdbmanager {
       $i = array_search($value, $values);
       if (false === $i) return;
 
-      unset($values[$i]);
+array_splice($values, $i, 1);
       $default = $values[0];
       $this->exec("update $this->prefix$table set $column = '$default' where $column = '$value'");
-      $items = implode("','", $values);
-      $items = "'$items'";
+
+      $items = $this->quoteArray($values);
       $tmp = $column . '_tmp';
       $this->exec("alter table $this->prefix$table add $tmp enum($items)");
       foreach ($values as $name) {
@@ -123,6 +120,29 @@ class tdbmanager {
       $this->exec("alter table $this->prefix$table change $tmp $column enum($items)");
     }
   }
+
+  public function renameEnumValue($table, $column, $oldvalue, $newvalue) {
+    if ($values = $this->getenum($table, $column)) {
+      $oldvalue = trim($oldvalue, ' \'"');
+      $newvalue = trim($newvalue, ' \'"');
+
+      $i = array_search($oldvalue, $values);
+      if (false !== $i) {
+$wvalues[$i] = $newvalue;
+$items = $this->quoteArray($values);
+$default = dbquote($newvalues[0]);
+      $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
+    }
+}
+}
+
+public function quoteArray(array $values) {
+foreach ($values as $i => $value) {
+$vaues[$i] = dbquote(trim($value, ' \'"'));
+}
+
+return implode(', ', $values);
+}
 
   public function column_exists($table, $column) {
     return $this->query("SHOW COLUMNS FROM $this->prefix$table LIKE '$column'")->num_rows;

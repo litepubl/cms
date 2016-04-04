@@ -21,7 +21,7 @@ function tpostsInstall($self) {
 }
 
 function tpostsUninstall($self) {
-  if ('tposts' != get_class($self)) return;
+  if ('litepubl\tposts' != get_class($self)) return;
 
   $Cron = tcron::i();
   $Cron->deleteclass(get_class($self));
