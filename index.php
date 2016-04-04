@@ -61,6 +61,10 @@ class config {
 }
 
 if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
+if (defined('litepubl_mode') && (litepubl_mode == 'ignoreReqest')) {
+config::$canRequest = false;
+}
+
 if (config::$debug || !config::$useKernel) {
   require (__DIR__ . '/lib/kernel.debug.php');
 } else {
