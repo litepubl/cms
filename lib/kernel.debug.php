@@ -34,6 +34,8 @@ foreach (array(
 'classes.functions.php',
 'options.class.php',
 'site.class.php',
+'urlmap.class.php',
+'db.class.php',
 
 'litepubl.init.php',
 ) as $filename) {

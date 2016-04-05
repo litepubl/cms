@@ -27,7 +27,7 @@ $cl->items['tcomments'] = array('kernel.comments.php', '', 'comments.php');
 $cl->items['tcomment'][0] = 'kernel.comments.php';
 $cl->items['tcommentmanager'][0] = 'kernel.comments.php';
 $cl->items['tcommentform'][0] = 'kernel.comments.php';
-$cl->items['tsubscribers'][0] = kernel.comments.php
+$cl->items['tsubscribers'][0] = 'kernel.comments.php';
 $cl->items['trssholdcomments'][0] = 'rssholdcomments.php';
 $cl->items['tpingbacks'][0] = 'pingbacks.php';
 
