@@ -133,5 +133,3 @@ class tfiler {
   }
 
 } //class
-
-class_alias(litepubl\tfiler', 'tfiler');
