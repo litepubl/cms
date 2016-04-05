@@ -62,11 +62,8 @@ class tplugins extends titems {
         }
 
         $about = static ::getabout($name);
-        return $this->AddExt($name, $about['classname'], $about['filename'], $about['adminclassname'], $about['adminfilename']);
-    }
-
-    public function AddExt($name, $classname, $filename, $adminclassname, $adminfilename) {
-        if (!strpos($classname, '\\')) {
+if (isset($about['namespace'])) {
+        } elseif (!strpos($classname, '\\')) {
             $classname = 'litepubl\\' . $classname;
         }
 
@@ -77,6 +74,7 @@ class tplugins extends titems {
         $this->lock();
         $this->items[$name] = array(
             'id' => ++$this->autoid,
+'namespace' => $namespace,
             'class' => $classname,
             'file' => $filename,
             'adminclass' => $adminclassname,
@@ -84,6 +82,9 @@ class tplugins extends titems {
         );
 
         litepubl::$classes->lock();
+if ($namespace) {
+litepubl::$classes->namespaces[$namespace] = "plugins/$name';
+} else {
         litepubl::$classes->Add($classname, "plugins/$name/$filename");
         if ($adminclassname) {
             litepubl::$classes->Add($adminclassname, "plugins/$name/$adminfilename");

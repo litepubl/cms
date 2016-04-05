@@ -98,6 +98,9 @@ class tclasses extends titems {
     }
 
     public function add($class, $filename, $deprecatedPath = false) {
+        if ($filename = $this->getpsr4($class)) {
+            $this->include($filename);
+} else {
         if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
             return false;
         }
@@ -109,8 +112,11 @@ class tclasses extends titems {
         }
 
         $this->items[$class] = $filename;
+}
+
         $instance = $this->getinstance($class);
-        if (method_exists($instance, 'install')) {
+        if (method_exists($instance, 'install') &&
+!(isset($instance->installed) && $instance->installed)) {
             $instance->install();
         }
 
@@ -263,12 +269,21 @@ class tclasses extends titems {
 
             foreach ($this->namespaces as $name => $dir) {
                 if (strbegin($ns, $name)) {
-                    $filename = sprintf('%s%s%s/%s.php', litepubl::$paths->home, $this->namespaces[$name], substr($ns, strlen($name)) , $baseclass);
+                    $filename = sprintf('%s%s%s/%s.php', litepubl::$paths->home, $this->namespaces[$name], substr($ns, strlen($name) + 1) , $baseclass);
                     if (file_exists($filename)) {
                         return $filename;
                     }
                 }
             }
+
+//last chanse
+$name = 'litepubl\plugins';
+                if (strbegin($ns, $name)) {
+                    $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins,
+ substr($ns, strlen($name) + 1) , $baseclass);
+                    if (file_exists($filename)) {
+                        return $filename;
+                    }
         }
 
         return false;
