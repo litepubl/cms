@@ -1,44 +1,45 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadminregservices implements iadmin {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
-  public function getcontent() {
-    $plugin = tregservices::i();
-    $html = tadminhtml::i();
-    $tabs = new tabs();
-    $args = targs::i();
-    $lang = tplugins::getnamelang($plugin->dirname);
-    $args->formtitle = $lang->options;
-    foreach ($plugin->items as $id => $classname) {
-      $service = getinstance($classname);
-      $tabs->add($service->title, $service->gettab($html, $args, $lang));
+    public static function i() {
+        return getinstance(__class__);
     }
 
-    return $html->adminform($tabs->get() , $args);
-  }
+    public function getcontent() {
+        $plugin = tregservices::i();
+        $html = tadminhtml::i();
+        $tabs = new tabs();
+        $args = targs::i();
+        $lang = tplugins::getnamelang($plugin->dirname);
+        $args->formtitle = $lang->options;
+        foreach ($plugin->items as $id => $classname) {
+            $service = getinstance($classname);
+            $tabs->add($service->title, $service->gettab($html, $args, $lang));
+        }
 
-  public function processform() {
-    $plugin = tregservices::i();
-    $plugin->lock();
-    foreach ($plugin->items as $name => $classname) {
-      $service = getinstance($classname);
-      $service->processform();
+        return $html->adminform($tabs->get() , $args);
     }
 
-    $plugin->update_widget();
-    $plugin->unlock();
-    return '';
-  }
+    public function processform() {
+        $plugin = tregservices::i();
+        $plugin->lock();
+        foreach ($plugin->items as $name => $classname) {
+            $service = getinstance($classname);
+            $service->processform();
+        }
+
+        $plugin->update_widget();
+        $plugin->unlock();
+        return '';
+    }
 
 } //class

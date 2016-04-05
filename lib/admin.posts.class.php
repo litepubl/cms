@@ -1,151 +1,152 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadminposts extends tadminmenu {
-  private $isauthor;
+    private $isauthor;
 
-  public static function i($id = 0) {
-    return parent::iteminstance(__class__, $id);
-  }
-
-  public function canrequest() {
-    $this->isauthor = false;
-    if (!litepubl::$options->hasgroup('editor')) {
-      $this->isauthor = litepubl::$options->hasgroup('author');
-    }
-  }
-
-  public function getcontent() {
-    if (isset($_GET['action']) && in_array($_GET['action'], array(
-      'delete',
-      'setdraft',
-      'publish'
-    ))) {
-      return $this->doaction(tposts::i() , $_GET['action']);
+    public static function i($id = 0) {
+        return parent::iteminstance(__class__, $id);
     }
 
-    return $this->gettable(tposts::i() , $where = "status <> 'deleted' ");
-  }
-
-  public function doaction($posts, $action) {
-    $id = $this->idget();
-    if (!$posts->itemexists($id)) return $this->notfound;
-    $post = tpost::i($id);
-    if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($action))) return $r;
-    if ($this->isauthor && (litepubl::$options->user != $post->author)) return $this->notfound;
-    if (!$this->confirmed) {
-      $args = new targs();
-      $args->id = $id;
-      $args->adminurl = $this->adminurl;
-      $args->action = $action;
-      $args->confirm = sprintf($this->lang->confirm, $this->lang->$action, "<a href='$post->link'>$post->title</a>");
-      return $this->html->confirmform($args);
+    public function canrequest() {
+        $this->isauthor = false;
+        if (!litepubl::$options->hasgroup('editor')) {
+            $this->isauthor = litepubl::$options->hasgroup('author');
+        }
     }
 
-    $admintheme = $this->admintheme;
-    switch ($_GET['action']) {
-      case 'delete':
-        $posts->delete($id);
-        $result = $admintheme->h($lang->confirmeddelete);
-        break;
+    public function getcontent() {
+        if (isset($_GET['action']) && in_array($_GET['action'], array(
+            'delete',
+            'setdraft',
+            'publish'
+        ))) {
+            return $this->doaction(tposts::i() , $_GET['action']);
+        }
 
-
-      case 'setdraft':
-        $post->status = 'draft';
-        $posts->edit($post);
-        $result = $admintheme->h($lang->confirmedsetdraft);
-        break;
-
-
-      case 'publish':
-        $post->status = 'published';
-        $posts->edit($post);
-        $result = $admintheme->h($lang->confirmedpublish);
-        break;
+        return $this->gettable(tposts::i() , $where = "status <> 'deleted' ");
     }
 
-    return $result;
-  }
+    public function doaction($posts, $action) {
+        $id = $this->idget();
+        if (!$posts->itemexists($id)) return $this->notfound;
+        $post = tpost::i($id);
+        if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($action))) return $r;
+        if ($this->isauthor && (litepubl::$options->user != $post->author)) return $this->notfound;
+        if (!$this->confirmed) {
+            $args = new targs();
+            $args->id = $id;
+            $args->adminurl = $this->adminurl;
+            $args->action = $action;
+            $args->confirm = sprintf($this->lang->confirm, $this->lang->$action, "<a href='$post->link'>$post->title</a>");
+            return $this->html->confirmform($args);
+        }
 
-  public function gettable($posts, $where) {
-    $perpage = 20;
-    if ($this->isauthor) $where.= ' and author = ' . litepubl::$options->user;
-    $count = $posts->db->getcount($where);
-    $from = $this->getfrom($perpage, $count);
-    $items = $posts->select($where, " order by posted desc limit $from, $perpage");
-    if (!$items) $items = array();
+        $admintheme = $this->admintheme;
+        switch ($_GET['action']) {
+            case 'delete':
+                $posts->delete($id);
+                $result = $admintheme->h($lang->confirmeddelete);
+                break;
 
-    $admintheme = $this->admintheme;
-    $lang = tlocal::admin();
-    $form = new adminform(new targs());
-    $form->items = $admintheme->getcount($from, $from + count($items) , $count);
 
-    $tb = new tablebuilder();
-    $tb->setposts(array(
-      array(
-        'center',
-        $lang->date,
-        '$post.date'
-      ) ,
-      array(
-        $lang->posttitle,
-        '$post.bookmark'
-      ) ,
-      array(
-        $lang->category,
-        '$post.category'
-      ) ,
-      array(
-        $lang->status,
-        '$poststatus'
-      ) ,
-      array(
-        $lang->edit,
-        '<a href="' . tadminhtml::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
-      ) ,
-      array(
-        $lang->delete,
-        "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"
-      ) ,
-    ));
+            case 'setdraft':
+                $post->status = 'draft';
+                $posts->edit($post);
+                $result = $admintheme->h($lang->confirmedsetdraft);
+                break;
 
-    $form->items.= $tb->build($items);
-    $form->items.= $form->centergroup('[button=publish]
+
+            case 'publish':
+                $post->status = 'published';
+                $posts->edit($post);
+                $result = $admintheme->h($lang->confirmedpublish);
+                break;
+        }
+
+        return $result;
+    }
+
+    public function gettable($posts, $where) {
+        $perpage = 20;
+        if ($this->isauthor) $where.= ' and author = ' . litepubl::$options->user;
+        $count = $posts->db->getcount($where);
+        $from = $this->getfrom($perpage, $count);
+        $items = $posts->select($where, " order by posted desc limit $from, $perpage");
+        if (!$items) $items = array();
+
+        $admintheme = $this->admintheme;
+        $lang = tlocal::admin();
+        $form = new adminform(new targs());
+        $form->items = $admintheme->getcount($from, $from + count($items) , $count);
+
+        $tb = new tablebuilder();
+        $tb->setposts(array(
+            array(
+                'center',
+                $lang->date,
+                '$post.date'
+            ) ,
+            array(
+                $lang->posttitle,
+                '$post.bookmark'
+            ) ,
+            array(
+                $lang->category,
+                '$post.category'
+            ) ,
+            array(
+                $lang->status,
+                '$poststatus'
+            ) ,
+            array(
+                $lang->edit,
+                '<a href="' . tadminhtml::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
+            ) ,
+            array(
+                $lang->delete,
+                "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"
+            ) ,
+        ));
+
+        $form->items.= $tb->build($items);
+        $form->items.= $form->centergroup('[button=publish]
     [button=setdraft]
     [button=delete]');
 
-    $form->submit = false;
-    $result = $form->get();
-    $result.= $this->theme->getpages('/admin/posts/', litepubl::$urlmap->page, ceil($count / $perpage));
-    return $result;
-  }
-
-  public function processform() {
-    $posts = tposts::i();
-    $posts->lock();
-    $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
-    if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($status))) return $r;
-    $iduser = litepubl::$options->user;
-    foreach ($_POST as $key => $id) {
-      if (!is_numeric($id)) continue;
-      $id = (int)$id;
-      if ($status == 'delete') {
-        if ($this->isauthor && ($iduser != $posts->db->getvalue('author'))) continue;
-        $posts->delete($id);
-      } else {
-        $post = tpost::i($id);
-        if ($this->isauthor && ($iduser != $post->author)) continue;
-        $post->status = $status;
-        $posts->edit($post);
-      }
+        $form->submit = false;
+        $result = $form->get();
+        $result.= $this->theme->getpages('/admin/posts/', litepubl::$urlmap->page, ceil($count / $perpage));
+        return $result;
     }
-    $posts->unlock();
-  }
+
+    public function processform() {
+        $posts = tposts::i();
+        $posts->lock();
+        $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
+        if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($status))) return $r;
+        $iduser = litepubl::$options->user;
+        foreach ($_POST as $key => $id) {
+            if (!is_numeric($id)) continue;
+            $id = (int)$id;
+            if ($status == 'delete') {
+                if ($this->isauthor && ($iduser != $posts->db->getvalue('author'))) continue;
+                $posts->delete($id);
+            } else {
+                $post = tpost::i($id);
+                if ($this->isauthor && ($iduser != $post->author)) continue;
+                $post->status = $status;
+                $posts->edit($post);
+            }
+        }
+        $posts->unlock();
+    }
 
 } //class

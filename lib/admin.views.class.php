@@ -1,191 +1,192 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadminviews extends tadminmenu {
 
-  public static function i($id = 0) {
-    return parent::iteminstance(__class__, $id);
-  }
-
-  public static function getviewform($url) {
-    $html = tadminhtml::i();
-    $lang = tlocal::admin();
-    $args = new targs();
-    $args->idview = static::getcombo(tadminhtml::getparam('idview', 1));
-    $form = new adminform($args);
-    $form->action = litepubl::$site->url . $url;
-    $form->inline = true;
-    $form->method = 'get';
-    $form->items = '[combo=idview]';
-    $form->submit = 'select';
-    return $form->get();
-  }
-
-  public static function getcomboview($idview, $name = 'idview') {
-    $lang = tlocal::i();
-    $lang->addsearch('views');
-    $theme = ttheme::i();
-    return strtr($theme->templates['content.admin.combo'], array(
-      '$lang.$name' => $lang->view,
-      '$name' => $name,
-      '$value' => static::getcombo($idview)
-    ));
-  }
-
-  public static function getcombo($idview) {
-    $result = '';
-    $views = tviews::i();
-    foreach ($views->items as $id => $item) {
-      $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idview == $id ? 'selected="selected"' : '', $item['name']);
+    public static function i($id = 0) {
+        return parent::iteminstance(__class__, $id);
     }
-    return $result;
-  }
 
-  public static function replacemenu($src, $dst) {
-    $views = tviews::i();
-    foreach ($views->items as & $viewitem) {
-      if ($viewitem['menuclass'] == $src) $viewitem['menuclass'] = $dst;
+    public static function getviewform($url) {
+        $html = tadminhtml::i();
+        $lang = tlocal::admin();
+        $args = new targs();
+        $args->idview = static ::getcombo(tadminhtml::getparam('idview', 1));
+        $form = new adminform($args);
+        $form->action = litepubl::$site->url . $url;
+        $form->inline = true;
+        $form->method = 'get';
+        $form->items = '[combo=idview]';
+        $form->submit = 'select';
+        return $form->get();
     }
-    $views->save();
-  }
 
-  private function get_custom(tview $view) {
-    $result = '';
-    $html = $this->html;
-    $customadmin = $view->theme->templates['customadmin'];
-
-    foreach ($view->data['custom'] as $name => $value) {
-      if (!isset($customadmin[$name])) continue;
-      switch ($customadmin[$name]['type']) {
-        case 'text':
-        case 'editor':
-          $value = tadminhtml::specchars($value);
-          break;
-
-
-        case 'checkbox':
-          $value = $value ? 'checked="checked"' : '';
-          break;
-
-
-        case 'combo':
-          $value = tadminhtml::array2combo($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
-          break;
-
-
-        case 'radio':
-          $value = $html->getradioitems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
-          break;
-      }
-
-      $result.= $html->getinput($customadmin[$name]['type'], "custom-$name", $value, tadminhtml::specchars($customadmin[$name]['title']));
-    }
-    return $result;
-  }
-
-  private function set_custom($idview) {
-    $view = tview::i($idview);
-    if (count($view->custom) == 0) return;
-    $customadmin = $view->theme->templates['customadmin'];
-    foreach ($view->data['custom'] as $name => $value) {
-      if (!isset($customadmin[$name])) continue;
-      switch ($customadmin[$name]['type']) {
-        case 'checkbox':
-          $view->data['custom'][$name] = isset($_POST["custom-$name"]);
-          break;
-
-
-        case 'radio':
-        case 'combo':
-          $view->data['custom'][$name] = $customadmin[$name]['values'][(int)$_POST["custom-$name"]];
-          break;
-
-
-        default:
-          $view->data['custom'][$name] = $_POST["custom-$name"];
-          break;
-      }
-    }
-  }
-
-  public function getcontent() {
-    $result = '';
-    $views = tviews::i();
-    $html = $this->html;
-    $lang = tlocal::i('views');
-    $args = new targs();
-
-    switch ($this->name) {
-      case 'views':
+    public static function getcomboview($idview, $name = 'idview') {
+        $lang = tlocal::i();
         $lang->addsearch('views');
+        $theme = ttheme::i();
+        return strtr($theme->templates['content.admin.combo'], array(
+            '$lang.$name' => $lang->view,
+            '$name' => $name,
+            '$value' => static ::getcombo($idview)
+        ));
+    }
 
-        $id = tadminhtml::getparam('idview', 0);
-        if (!$id || !$views->itemexists($id)) {
-          $adminurl = $this->adminurl . 'view';
-          $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
-
-          $tb = new tablebuilder();
-          $tb->setstruct(array(
-            array(
-              $lang->name,
-              "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
-            ) ,
-
-            array(
-              $lang->widgets,
-              "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
-            ) ,
-
-            array(
-              $lang->delete,
-              "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
-            )
-          ));
-
-          $result.= $tb->build($views->items);
-          return $result;
+    public static function getcombo($idview) {
+        $result = '';
+        $views = tviews::i();
+        foreach ($views->items as $id => $item) {
+            $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idview == $id ? 'selected="selected"' : '', $item['name']);
         }
+        return $result;
+    }
 
-        $result = static::getviewform($this->url);
-        $tabs = new tabs($this->admintheme);
-        $menuitems = array();
-        foreach ($views->items as $itemview) {
-          $class = $itemview['menuclass'];
-          $menuitems[$class] = $class == 'tmenus' ? $lang->stdmenu : ($class == 'tadminmenus' ? $lang->adminmenu : $class);
+    public static function replacemenu($src, $dst) {
+        $views = tviews::i();
+        foreach ($views->items as & $viewitem) {
+            if ($viewitem['menuclass'] == $src) $viewitem['menuclass'] = $dst;
         }
+        $views->save();
+    }
 
-        $itemview = $views->items[$id];
-        $args->add($itemview);
+    private function get_custom(tview $view) {
+        $result = '';
+        $html = $this->html;
+        $customadmin = $view->theme->templates['customadmin'];
 
-        $dirlist = tfiler::getdir(litepubl::$paths->themes);
-        sort($dirlist);
-        $list = array();
-        foreach ($dirlist as $dir) {
-          if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
+        foreach ($view->data['custom'] as $name => $value) {
+            if (!isset($customadmin[$name])) continue;
+            switch ($customadmin[$name]['type']) {
+                case 'text':
+                case 'editor':
+                    $value = tadminhtml::specchars($value);
+                    break;
+
+
+                case 'checkbox':
+                    $value = $value ? 'checked="checked"' : '';
+                    break;
+
+
+                case 'combo':
+                    $value = tadminhtml::array2combo($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    break;
+
+
+                case 'radio':
+                    $value = $html->getradioitems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    break;
+            }
+
+            $result.= $html->getinput($customadmin[$name]['type'], "custom-$name", $value, tadminhtml::specchars($customadmin[$name]['title']));
         }
+        return $result;
+    }
 
-        $args->themename = tadminhtml::array2combo($list, $itemview['themename']);
+    private function set_custom($idview) {
+        $view = tview::i($idview);
+        if (count($view->custom) == 0) return;
+        $customadmin = $view->theme->templates['customadmin'];
+        foreach ($view->data['custom'] as $name => $value) {
+            if (!isset($customadmin[$name])) continue;
+            switch ($customadmin[$name]['type']) {
+                case 'checkbox':
+                    $view->data['custom'][$name] = isset($_POST["custom-$name"]);
+                    break;
 
-        $list = array();
-        foreach ($dirlist as $dir) {
-          if (strbegin($dir, 'admin')) $list[$dir] = $dir;
+
+                case 'radio':
+                case 'combo':
+                    $view->data['custom'][$name] = $customadmin[$name]['values'][(int)$_POST["custom-$name"]];
+                    break;
+
+
+                default:
+                    $view->data['custom'][$name] = $_POST["custom-$name"];
+                    break;
+            }
         }
+    }
 
-        $args->adminname = tadminhtml::array2combo($list, $itemview['adminname']);
-        $args->menu = tadminhtml::array2combo($menuitems, $itemview['menuclass']);
-        $args->postanounce = tadminhtml::array2combo(array(
-          'excerpt' => $lang->postexcerpt,
-          'card' => $lang->postcard,
-          'lite' => $lang->postlite
-        ) , $itemview['postanounce']);
+    public function getcontent() {
+        $result = '';
+        $views = tviews::i();
+        $html = $this->html;
+        $lang = tlocal::i('views');
+        $args = new targs();
 
-        $tabs->add($lang->name, '[text=name]
+        switch ($this->name) {
+            case 'views':
+                $lang->addsearch('views');
+
+                $id = tadminhtml::getparam('idview', 0);
+                if (!$id || !$views->itemexists($id)) {
+                    $adminurl = $this->adminurl . 'view';
+                    $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
+
+                    $tb = new tablebuilder();
+                    $tb->setstruct(array(
+                        array(
+                            $lang->name,
+                            "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
+                        ) ,
+
+                        array(
+                            $lang->widgets,
+                            "<a href=\"{$this->link}widgets/?idview=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
+                        ) ,
+
+                        array(
+                            $lang->delete,
+                            "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
+                        )
+                    ));
+
+                    $result.= $tb->build($views->items);
+                    return $result;
+                }
+
+                $result = static ::getviewform($this->url);
+                $tabs = new tabs($this->admintheme);
+                $menuitems = array();
+                foreach ($views->items as $itemview) {
+                    $class = $itemview['menuclass'];
+                    $menuitems[$class] = $class == 'tmenus' ? $lang->stdmenu : ($class == 'tadminmenus' ? $lang->adminmenu : $class);
+                }
+
+                $itemview = $views->items[$id];
+                $args->add($itemview);
+
+                $dirlist = tfiler::getdir(litepubl::$paths->themes);
+                sort($dirlist);
+                $list = array();
+                foreach ($dirlist as $dir) {
+                    if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
+                }
+
+                $args->themename = tadminhtml::array2combo($list, $itemview['themename']);
+
+                $list = array();
+                foreach ($dirlist as $dir) {
+                    if (strbegin($dir, 'admin')) $list[$dir] = $dir;
+                }
+
+                $args->adminname = tadminhtml::array2combo($list, $itemview['adminname']);
+                $args->menu = tadminhtml::array2combo($menuitems, $itemview['menuclass']);
+                $args->postanounce = tadminhtml::array2combo(array(
+                    'excerpt' => $lang->postexcerpt,
+                    'card' => $lang->postcard,
+                    'lite' => $lang->postlite
+                ) , $itemview['postanounce']);
+
+                $tabs->add($lang->name, '[text=name]
       [combo=themename]
       [combo=adminname]' . ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) . '[checkbox=hovermenu]
       [combo=menu]
@@ -194,100 +195,100 @@ class tadminviews extends tadminmenu {
       [checkbox=invertorder]
       ');
 
-        $view = tview::i($id);
-        if (count($view->custom)) {
-          $tabs->add($lang->custom, $this->get_custom($view));
-        }
+                $view = tview::i($id);
+                if (count($view->custom)) {
+                    $tabs->add($lang->custom, $this->get_custom($view));
+                }
 
-        $result.= $html->h4->help;
+                $result.= $html->h4->help;
 
-        $args->formtitle = $lang->edit;
-        $result.= $html->adminform($tabs->get() , $args);
-        break;
-
-
-      case 'addview':
-        $args->formtitle = $lang->addview;
-        $result.= $html->adminform('[text=name]', $args);
-        break;
+                $args->formtitle = $lang->edit;
+                $result.= $html->adminform($tabs->get() , $args);
+                break;
 
 
-      case 'defaults':
-        $items = '';
-        $theme = ttheme::i();
-        $tml = $theme->templates['content.admin.combo'];
-        foreach ($views->defaults as $name => $id) {
-          $args->name = $name;
-          $args->value = static::getcombo($id);
-          $args->data['$lang.$name'] = $lang->$name;
-          $items.= $theme->parsearg($tml, $args);
-        }
-        $args->items = $items;
-        $args->formtitle = $lang->defaultsform;
-        $result.= $theme->parsearg($theme->content->admin->form, $args);
-        break;
-      }
+            case 'addview':
+                $args->formtitle = $lang->addview;
+                $result.= $html->adminform('[text=name]', $args);
+                break;
 
-      return $html->fixquote($result);
-    }
 
-    public function processform() {
-      $result = '';
-      switch ($this->name) {
-        case 'views':
-          $views = tviews::i();
-          $idview = (int)tadminhtml::getparam('idview', 0);
-          if (!$idview || !$views->itemexists($idview)) {
-            return '';
-          }
-
-          if ($this->action == 'delete') {
-            if ($idview > 1) {
-              $views->delete($idview);
+            case 'defaults':
+                $items = '';
+                $theme = ttheme::i();
+                $tml = $theme->templates['content.admin.combo'];
+                foreach ($views->defaults as $name => $id) {
+                    $args->name = $name;
+                    $args->value = static ::getcombo($id);
+                    $args->data['$lang.$name'] = $lang->$name;
+                    $items.= $theme->parsearg($tml, $args);
+                }
+                $args->items = $items;
+                $args->formtitle = $lang->defaultsform;
+                $result.= $theme->parsearg($theme->content->admin->form, $args);
+                break;
             }
 
-            return '';
-          }
+            return $html->fixquote($result);
+        }
 
-          $view = tview::i($idview);
-          if ($idview > 1) {
-            $view->customsidebar = isset($_POST['customsidebar']);
-            $view->disableajax = isset($_POST['disableajax']);
-          }
+        public function processform() {
+            $result = '';
+            switch ($this->name) {
+                case 'views':
+                    $views = tviews::i();
+                    $idview = (int)tadminhtml::getparam('idview', 0);
+                    if (!$idview || !$views->itemexists($idview)) {
+                        return '';
+                    }
 
-          $view->name = trim($_POST['name']);
-          $view->themename = trim($_POST['themename']);
-          $view->adminname = trim($_POST['adminname']);
-          $view->menuclass = $_POST['menu'];
-          $view->hovermenu = isset($_POST['hovermenu']);
-          $view->postanounce = $_POST['postanounce'];
-          $view->perpage = (int)$_POST['perpage'];
-          $view->invertorder = isset($_POST['invertorder']);
+                    if ($this->action == 'delete') {
+                        if ($idview > 1) {
+                            $views->delete($idview);
+                        }
 
-          $this->set_custom($idview);
-          $view->save();
-          break;
+                        return '';
+                    }
+
+                    $view = tview::i($idview);
+                    if ($idview > 1) {
+                        $view->customsidebar = isset($_POST['customsidebar']);
+                        $view->disableajax = isset($_POST['disableajax']);
+                    }
+
+                    $view->name = trim($_POST['name']);
+                    $view->themename = trim($_POST['themename']);
+                    $view->adminname = trim($_POST['adminname']);
+                    $view->menuclass = $_POST['menu'];
+                    $view->hovermenu = isset($_POST['hovermenu']);
+                    $view->postanounce = $_POST['postanounce'];
+                    $view->perpage = (int)$_POST['perpage'];
+                    $view->invertorder = isset($_POST['invertorder']);
+
+                    $this->set_custom($idview);
+                    $view->save();
+                    break;
 
 
-        case 'addview':
-          $name = trim($_POST['name']);
-          if ($name != '') {
-            $views = tviews::i();
-            $id = $views->add($name);
-          }
-          break;
+                case 'addview':
+                    $name = trim($_POST['name']);
+                    if ($name != '') {
+                        $views = tviews::i();
+                        $id = $views->add($name);
+                    }
+                    break;
 
 
-        case 'defaults':
-          $views = tviews::i();
-          foreach ($views->defaults as $name => $id) {
-            $views->defaults[$name] = (int)$_POST[$name];
-          }
-          $views->save();
-          break;
-      }
+                case 'defaults':
+                    $views = tviews::i();
+                    foreach ($views->defaults as $name => $id) {
+                        $views->defaults[$name] = (int)$_POST[$name];
+                    }
+                    $views->save();
+                    break;
+            }
 
-      ttheme::clearcache();
-    }
+            ttheme::clearcache();
+        }
 
 } //class

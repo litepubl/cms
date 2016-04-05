@@ -1,56 +1,57 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tsimplecontent extends tevents_itemplate implements itemplate {
-  public $text;
-  public $html;
+    public $text;
+    public $html;
 
-  public static function i() {
-    return Getinstance(__class__);
-  }
+    public static function i() {
+        return Getinstance(__class__);
+    }
 
-  protected function create() {
-    parent::create();
-    $this->basename = 'simplecontent';
-  }
+    protected function create() {
+        parent::create();
+        $this->basename = 'simplecontent';
+    }
 
-  public function httpheader() {
-    return turlmap::htmlheader(false);
-  }
+    public function httpheader() {
+        return turlmap::htmlheader(false);
+    }
 
-  public function request($arg) {
-  }
-  public function gettitle() {
-  }
+    public function request($arg) {
+    }
+    public function gettitle() {
+    }
 
-  public function getcont() {
-    $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
-    return $this->view->theme->simple($result);
-  }
+    public function getcont() {
+        $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
+        return $this->view->theme->simple($result);
+    }
 
-  public static function html($content) {
-    $class = __class__;
-    $self = static::i();
-    $self->html = $content;
-    $template = ttemplate::i();
-    return $template->request($self);
-  }
+    public static function html($content) {
+        $class = __class__;
+        $self = static ::i();
+        $self->html = $content;
+        $template = ttemplate::i();
+        return $template->request($self);
+    }
 
-  public static function content($content) {
-    $self = static::i();
-    $self->text = $content;
-    $template = ttemplate::i();
-    return $template->request($self);
-  }
+    public static function content($content) {
+        $self = static ::i();
+        $self->text = $content;
+        $template = ttemplate::i();
+        return $template->request($self);
+    }
 
-  public static function gettheme() {
-    return tview::getview(static::i())->theme;
-  }
+    public static function gettheme() {
+        return tview::getview(static ::i())->theme;
+    }
 
 } //class

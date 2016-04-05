@@ -1,68 +1,69 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class taboutparser {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
+    public static function i() {
+        return getinstance(__class__);
+    }
 
-  public static function parse($url) {
-    if ($s = http::get($url)) {
-      $backuper = tbackuper::i();
-      $archtype = $backuper->getarchtype($url);
-      if ($files = $backuper->unpack($s, $archtype)) {
-        list($filename, $content) = each($files);
-        if ($about = static::getabout($files)) {
-          $item = new tdownloaditem();
-          $item->type = strbegin($filename, 'plugins/') ? 'plugin' : 'theme';
-          $item->title = $about['name'];
-          $item->downloadurl = $url;
-          $item->authorurl = $about['url'];
-          $item->authorname = $about['author'];
-          $item->rawcontent = $about['description'];
-          $item->version = $about['version'];
-          $item->tagnames = empty($about['tags']) ? '' : trim($about['tags']);
-          if ($screenshot = static::getfile($files, 'screenshot.png')) {
-            $media = tmediaparser::i();
-            $idscreenshot = $media->uploadthumbnail($about['name'] . '.png', $screenshot);
-            $item->files = array(
-              $idscreenshot
-            );
-          }
+    public static function parse($url) {
+        if ($s = http::get($url)) {
+            $backuper = tbackuper::i();
+            $archtype = $backuper->getarchtype($url);
+            if ($files = $backuper->unpack($s, $archtype)) {
+                list($filename, $content) = each($files);
+                if ($about = static ::getabout($files)) {
+                    $item = new tdownloaditem();
+                    $item->type = strbegin($filename, 'plugins/') ? 'plugin' : 'theme';
+                    $item->title = $about['name'];
+                    $item->downloadurl = $url;
+                    $item->authorurl = $about['url'];
+                    $item->authorname = $about['author'];
+                    $item->rawcontent = $about['description'];
+                    $item->version = $about['version'];
+                    $item->tagnames = empty($about['tags']) ? '' : trim($about['tags']);
+                    if ($screenshot = static ::getfile($files, 'screenshot.png')) {
+                        $media = tmediaparser::i();
+                        $idscreenshot = $media->uploadthumbnail($about['name'] . '.png', $screenshot);
+                        $item->files = array(
+                            $idscreenshot
+                        );
+                    }
 
-          return $item;
+                    return $item;
+                }
+            }
         }
-      }
+        return false;
     }
-    return false;
-  }
 
-  public static function getfile(array & $files, $name) {
-    foreach ($files as $filename => & $content) {
-      if ($name == basename($filename)) return $content;
+    public static function getfile(array & $files, $name) {
+        foreach ($files as $filename => & $content) {
+            if ($name == basename($filename)) return $content;
+        }
+        return false;
     }
-    return false;
-  }
 
-  public static function getabout(array & $files) {
-    if ($about_ini = static::getfile($files, 'about.ini')) {
-      $about_ini = trim($about_ini);
-      //trim unicode sign
-      $about_ini = substr($about_ini, strpos($about_ini, '['));
-      $about = tini2array::parse($about_ini);
-      if (isset($about[litepubl::$options->language])) {
-        $about['about'] = $about[litepubl::$options->language] + $about['about'];
-      }
-      return $about['about'];
+    public static function getabout(array & $files) {
+        if ($about_ini = static ::getfile($files, 'about.ini')) {
+            $about_ini = trim($about_ini);
+            //trim unicode sign
+            $about_ini = substr($about_ini, strpos($about_ini, '['));
+            $about = tini2array::parse($about_ini);
+            if (isset($about[litepubl::$options->language])) {
+                $about['about'] = $about[litepubl::$options->language] + $about['about'];
+            }
+            return $about['about'];
+        }
+        return false;
     }
-    return false;
-  }
 
 } //class

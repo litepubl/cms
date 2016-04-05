@@ -1,110 +1,112 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 function tadminmenusInstall($self) {
-  if ('litepubl\tadminmenus' != get_class($self)) return;
+    if ('litepubl\tadminmenus' != get_class($self)) return;
 
-litepubl::$classes->onrename = $self->classRenamed;
+    litepubl::$classes->onrename = $self->classRenamed;
 
-  $self->lock();
-  $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
+    $self->lock();
+    $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>';
 
-  //posts
-  $posts = $self->createitem(0, 'posts', 'author', 'tadminposts'); {
-    $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
-    $self->items[$id]['title'] = tlocal::i()->newpost;
-    $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
-    $self->createitem($posts, 'categories', 'editor', 'tadmintags');
-    $self->createitem($posts, 'addtag', 'editor', 'tadmintags');
-    $self->createitem($posts, 'tags', 'editor', 'tadmintags');
-    $self->createitem($posts, 'staticpages', 'editor', 'tadminstaticpages');
-  }
+    //posts
+    $posts = $self->createitem(0, 'posts', 'author', 'tadminposts'); {
+        $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
+        $self->items[$id]['title'] = tlocal::i()->newpost;
+        $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
+        $self->createitem($posts, 'categories', 'editor', 'tadmintags');
+        $self->createitem($posts, 'addtag', 'editor', 'tadmintags');
+        $self->createitem($posts, 'tags', 'editor', 'tadmintags');
+        $self->createitem($posts, 'staticpages', 'editor', 'tadminstaticpages');
+    }
 
-  $moder = $self->createitem(0, 'comments', 'commentator', 'tadminmoderator'); {
-    $self->createitem($moder, 'hold', 'commentator', 'tadminmoderator');
-    $self->createitem($moder, 'authors', 'moderator', 'tadmincomusers');
-    $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
-  }
+    $moder = $self->createitem(0, 'comments', 'commentator', 'tadminmoderator'); {
+        $self->createitem($moder, 'hold', 'commentator', 'tadminmoderator');
+        $self->createitem($moder, 'authors', 'moderator', 'tadmincomusers');
+        $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
+    }
 
-  $plugins = $self->createitem(0, 'plugins', 'admin', 'tadminplugins');
-  $files = $self->createitem(0, 'files', 'author', 'tadminfiles'); {
-    $self->createitem($files, 'thumbnail', 'editor', 'tadminfilethumbnails');
-    $self->createitem($files, 'image', 'editor', 'tadminfiles');
-    $self->createitem($files, 'video', 'editor', 'tadminfiles');
-    $self->createitem($files, 'audio', 'editor', 'tadminfiles');
-    $self->createitem($files, 'bin', 'editor', 'tadminfiles');
-  }
+    $plugins = $self->createitem(0, 'plugins', 'admin', 'tadminplugins');
+    $files = $self->createitem(0, 'files', 'author', 'tadminfiles'); {
+        $self->createitem($files, 'thumbnail', 'editor', 'tadminfilethumbnails');
+        $self->createitem($files, 'image', 'editor', 'tadminfiles');
+        $self->createitem($files, 'video', 'editor', 'tadminfiles');
+        $self->createitem($files, 'audio', 'editor', 'tadminfiles');
+        $self->createitem($files, 'bin', 'editor', 'tadminfiles');
+    }
 
-  $views = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
-    $self->createitem($views, 'addview', 'admin', 'tadminviews');
-    //$self->createitem($views, 'themes', 'admin', 'tadminthemes');
-    $self->createitem($views, 'widgets', 'admin', 'tadminwidgets');
-    $self->createitem($views, 'addcustom', 'admin', 'addcustomwidget');
-    $self->createitem($views, 'group', 'admin', 'tadminviewsgroup');
-    $self->createitem($views, 'defaults', 'admin', 'tadminviews');
-    $self->createitem($views, 'spec', 'admin', 'tadminviewsspec');
-    $self->createitem($views, 'headers', 'admin', 'tadminheaders');
-    $self->createitem($views, 'jsmerger', 'admin', 'tadminjsmerger');
-    $self->createitem($views, 'cssmerger', 'admin', 'tadmincssmerger');
-  }
+    $views = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
+        $self->createitem($views, 'addview', 'admin', 'tadminviews');
+        //$self->createitem($views, 'themes', 'admin', 'tadminthemes');
+        $self->createitem($views, 'widgets', 'admin', 'tadminwidgets');
+        $self->createitem($views, 'addcustom', 'admin', 'addcustomwidget');
+        $self->createitem($views, 'group', 'admin', 'tadminviewsgroup');
+        $self->createitem($views, 'defaults', 'admin', 'tadminviews');
+        $self->createitem($views, 'spec', 'admin', 'tadminviewsspec');
+        $self->createitem($views, 'headers', 'admin', 'tadminheaders');
+        $self->createitem($views, 'jsmerger', 'admin', 'tadminjsmerger');
+        $self->createitem($views, 'cssmerger', 'admin', 'tadmincssmerger');
+    }
 
-  $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager'); {
-    $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
-    $self->items[$id]['title'] = tlocal::get('menu', 'addmenu');
-    $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');
-    $self->items[$id]['title'] = tlocal::get('menu', 'addfake');
-  }
+    $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager'); {
+        $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
+        $self->items[$id]['title'] = tlocal::get('menu', 'addmenu');
+        $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');
+        $self->items[$id]['title'] = tlocal::get('menu', 'addfake');
+    }
 
-  $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions'); {
-    $self->createitem($opt, 'home', 'admin', 'adminhomeoptions');
-    $self->createitem($opt, 'mail', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'rss', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'view', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'files', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'comments', 'admin', 'tadmincommentmanager');
-    $self->createitem($opt, 'ping', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'links', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'cache', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'catstags', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'secure', 'admin', 'adminsecure');
-    $self->createitem($opt, 'robots', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'local', 'admin', 'tadminlocalmerger');
-    $self->createitem($opt, 'parser', 'admin', 'adminthemeparser');
-    $self->createitem($opt, 'notfound404', 'admin', 'tadminoptions');
-    $self->createitem($opt, 'redir', 'admin', 'tadminredirector');
-  }
+    $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions'); {
+        $self->createitem($opt, 'home', 'admin', 'adminhomeoptions');
+        $self->createitem($opt, 'mail', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'rss', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'view', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'files', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'comments', 'admin', 'tadmincommentmanager');
+        $self->createitem($opt, 'ping', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'links', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'cache', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'catstags', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'secure', 'admin', 'adminsecure');
+        $self->createitem($opt, 'robots', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'local', 'admin', 'tadminlocalmerger');
+        $self->createitem($opt, 'parser', 'admin', 'adminthemeparser');
+        $self->createitem($opt, 'notfound404', 'admin', 'tadminoptions');
+        $self->createitem($opt, 'redir', 'admin', 'tadminredirector');
+    }
 
-  $service = $self->createitem(0, 'service', 'admin', 'tadminservice'); {
-    $self->createitem($service, 'backup', 'admin', 'tadminservice');
-    $self->createitem($service, 'upload', 'admin', 'tadminservice');
-    $self->createitem($service, 'run', 'admin', 'tadminservice');
-  }
+    $service = $self->createitem(0, 'service', 'admin', 'tadminservice'); {
+        $self->createitem($service, 'backup', 'admin', 'tadminservice');
+        $self->createitem($service, 'upload', 'admin', 'tadminservice');
+        $self->createitem($service, 'run', 'admin', 'tadminservice');
+    }
 
-  $id = $self->addfake('/admin/logout/', tlocal::i()->logout);
-  $self->items[$id]['order'] = 9999999;
-  /*
-  $board = $self->additem(array(
-  'parent' => 0,
-  'url' => '/admin/',
-  'title' => tlocal::get('adminmenus', 'board'),
-  'name' => 'board',
-  'class' => 'tadminboard',
-  'group' => 'author'
-  ));
-  */
-  $self->unlock();
+    $id = $self->addfake('/admin/logout/', tlocal::i()->logout);
+    $self->items[$id]['order'] = 9999999;
+    /*
+    $board = $self->additem(array(
+    'parent' => 0,
+    'url' => '/admin/',
+    'title' => tlocal::get('adminmenus', 'board'),
+    'name' => 'board',
+    'class' => 'tadminboard',
+    'group' => 'author'
+    ));
+    */
+    $self->unlock();
 
-  $redir = tredirector::i();
-  $redir->add('/admin/', '/admin/posts/editor/');
+    $redir = tredirector::i();
+    $redir->add('/admin/', '/admin/posts/editor/');
 }
 
 function tadminmenusUninstall($self) {
-  //rmdir(. 'menus');
- }
+    //rmdir(. 'menus');
+    
+}

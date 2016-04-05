@@ -1,67 +1,68 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tmetatags extends tplugin {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
-
-  public function themeparsed(ttheme $theme) {
-    $theme->templates['index'] = strtr($theme->templates['index'], array(
-      '$template.keywords' => '$metatags.keywords',
-      '$template.description' => '$metatags.description',
-    ));
-  }
-
-  public function getlist() {
-    $context = ttemplate::i()->context;
-    if ($context instanceof tcommontags) {
-      $list = $context->getidposts($context->id);
-    } elseif (isset($context) && isset($context->idposts)) {
-      $list = $context->idposts;
-    } else {
-      return false;
+    public static function i() {
+        return getinstance(__class__);
     }
 
-    if (count($list) > 0) {
-      tposts::i()->loaditems($list);
-      return array_slice($list, 0, 3);
+    public function themeparsed(ttheme $theme) {
+        $theme->templates['index'] = strtr($theme->templates['index'], array(
+            '$template.keywords' => '$metatags.keywords',
+            '$template.description' => '$metatags.description',
+        ));
     }
 
-    return false;
-  }
+    public function getlist() {
+        $context = ttemplate::i()->context;
+        if ($context instanceof tcommontags) {
+            $list = $context->getidposts($context->id);
+        } elseif (isset($context) && isset($context->idposts)) {
+            $list = $context->idposts;
+        } else {
+            return false;
+        }
 
-  public function getkeywords() {
-    if ($list = $this->getlist()) {
-      $result = '';
-      foreach ($list as $id) {
-        $post = tpost::i($id);
-        $result.= $post->keywords . ', ';
-      }
-      return trim($result, ', ');
-    }
-    return ttemplate::i()->getkeywords();
-  }
+        if (count($list) > 0) {
+            tposts::i()->loaditems($list);
+            return array_slice($list, 0, 3);
+        }
 
-  public function getdescription() {
-    if ($list = $this->getlist()) {
-      $result = '';
-      foreach ($list as $id) {
-        $post = tpost::i($id);
-        $result.= $post->title . ' ';
-        if (strlen($result) > 250) break;
-      }
-      //return tcontentfilter::getexcerpt($result, 300);
-      return $result;
+        return false;
     }
-    return ttemplate::i()->getdescription();
-  }
+
+    public function getkeywords() {
+        if ($list = $this->getlist()) {
+            $result = '';
+            foreach ($list as $id) {
+                $post = tpost::i($id);
+                $result.= $post->keywords . ', ';
+            }
+            return trim($result, ', ');
+        }
+        return ttemplate::i()->getkeywords();
+    }
+
+    public function getdescription() {
+        if ($list = $this->getlist()) {
+            $result = '';
+            foreach ($list as $id) {
+                $post = tpost::i($id);
+                $result.= $post->title . ' ';
+                if (strlen($result) > 250) break;
+            }
+            //return tcontentfilter::getexcerpt($result, 300);
+            return $result;
+        }
+        return ttemplate::i()->getdescription();
+    }
 
 } //class

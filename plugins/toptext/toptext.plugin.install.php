@@ -1,21 +1,22 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 function ttoptextinstall($self) {
-  $filter = tcontentfilter::i();
-  $filter->lock();
-  $filter->beforecontent = $self->beforecontent;
-  $filter->aftercontent = $self->aftercontent;
-  $filter->unlock();
+    $filter = tcontentfilter::i();
+    $filter->lock();
+    $filter->beforecontent = $self->beforecontent;
+    $filter->aftercontent = $self->aftercontent;
+    $filter->unlock();
 }
 
 function ttoptextuninstall($self) {
-  $filter = tcontentfilter::i();
-  $filter->unbind($self);
+    $filter = tcontentfilter::i();
+    $filter->unbind($self);
 }

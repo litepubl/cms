@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 function tjsonserverInstall($self) {
-  litepubl::$urlmap->addget($self->url, get_class($self));
+    litepubl::$urlmap->addget($self->url, get_class($self));
 }
 
 function tjsonserverUninstall($self) {
-  turlmap::unsub($self);
+    turlmap::unsub($self);
 }

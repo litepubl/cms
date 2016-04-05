@@ -1,266 +1,267 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class trss extends tevents {
-  public $domrss;
+    public $domrss;
 
-  protected function create() {
-    parent::create();
-    $this->basename = 'rss';
-    $this->addevents('beforepost', 'afterpost', 'onpostitem');
-    $this->data['feedburner'] = '';
-    $this->data['feedburnercomments'] = '';
-    $this->data['template'] = '';
-    $this->data['idcomments'] = 0;
-    $this->data['idpostcomments'] = 0;
-  }
+    protected function create() {
+        parent::create();
+        $this->basename = 'rss';
+        $this->addevents('beforepost', 'afterpost', 'onpostitem');
+        $this->data['feedburner'] = '';
+        $this->data['feedburnercomments'] = '';
+        $this->data['template'] = '';
+        $this->data['idcomments'] = 0;
+        $this->data['idpostcomments'] = 0;
+    }
 
-  public function commentschanged() {
-    litepubl::$urlmap->setexpired($this->idcomments);
-    litepubl::$urlmap->setexpired($this->idpostcomments);
-  }
+    public function commentschanged() {
+        litepubl::$urlmap->setexpired($this->idcomments);
+        litepubl::$urlmap->setexpired($this->idpostcomments);
+    }
 
-  public function request($arg) {
-    $result = '';
-    if (($arg == 'posts') && ($this->feedburner != '')) {
-      $result.= "<?php
+    public function request($arg) {
+        $result = '';
+        if (($arg == 'posts') && ($this->feedburner != '')) {
+            $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
         return litepubl::\$urlmap->redir('$this->feedburner', 307);
       }
       ?>";
-    } elseif (($arg == 'comments') && ($this->feedburnercomments != '')) {
-      $result.= "<?php
+        } elseif (($arg == 'comments') && ($this->feedburnercomments != '')) {
+            $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
         return litepubl::\$urlmap->redir('$this->feedburnercomments', 307);
       }
       ?>";
+        }
+
+        $result.= '<?php litepubl\turlmap::sendxml(); ?>';
+        $this->domrss = new tdomrss;
+        switch ($arg) {
+            case 'posts':
+                $this->getrecentposts();
+                break;
+
+
+            case 'comments':
+                $this->GetRecentComments();
+                break;
+
+
+            case 'categories':
+            case 'tags':
+                if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
+                    return 404;
+                }
+
+                $id = (int)$match[1];
+                $tags = $arg == 'categories' ? tcategories::i() : ttags::i();
+                if (!$tags->itemexists($id)) {
+                    return 404;
+                }
+
+                $tags->id = $id;
+                if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
+                    $perm = tperm::i($idperm);
+                    if ($header = $perm->getheader($tags)) {
+                        $result = $header . $result;
+                    }
+                }
+
+                $this->gettagrss($tags, $id);
+                break;
+
+
+            default:
+                if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
+                    return 404;
+                }
+
+                $idpost = (int)$match[1];
+                $posts = tposts::i();
+                if (!$posts->itemexists($idpost)) {
+                    return 404;
+                }
+
+                $post = tpost::i($idpost);
+                if ($post->status != 'published') {
+                    return 404;
+                }
+
+                if (isset($post->idperm) && ($post->idperm > 0)) {
+                    $perm = tperm::i($post->idperm);
+                    if ($header = $perm->getheader($post)) {
+                        $result = $header . $result;
+                    }
+                }
+
+                $this->GetRSSPostComments($idpost);
+        }
+
+        $result.= $this->domrss->GetStripedXML();
+        return $result;
     }
 
-    $result.= '<?php litepubl\turlmap::sendxml(); ?>';
-    $this->domrss = new tdomrss;
-    switch ($arg) {
-      case 'posts':
-        $this->getrecentposts();
-        break;
-
-
-      case 'comments':
-        $this->GetRecentComments();
-        break;
-
-
-      case 'categories':
-      case 'tags':
-        if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
-          return 404;
-        }
-
-        $id = (int)$match[1];
-        $tags = $arg == 'categories' ? tcategories::i() : ttags::i();
-        if (!$tags->itemexists($id)) {
-          return 404;
-        }
-
-        $tags->id = $id;
-        if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
-          $perm = tperm::i($idperm);
-          if ($header = $perm->getheader($tags)) {
-            $result = $header . $result;
-          }
-        }
-
-        $this->gettagrss($tags, $id);
-        break;
-
-
-      default:
-        if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
-          return 404;
-        }
-
-        $idpost = (int)$match[1];
+    public function getrecentposts() {
+        $this->domrss->CreateRoot(litepubl::$site->url . '/rss.xml', litepubl::$site->name);
         $posts = tposts::i();
-        if (!$posts->itemexists($idpost)) {
-          return 404;
-        }
+        $this->getrssposts($posts->getpage(0, 1, litepubl::$options->perpage, false));
+    }
 
+    public function getrssposts(array $list) {
+        foreach ($list as $id) {
+            $this->addpost(tpost::i($id));
+        }
+    }
+
+    public function gettagrss(tcommontags $tags, $id) {
+        $this->domrss->CreateRoot(litepubl::$site->url . litepubl::$urlmap->url, $tags->getvalue($id, 'title'));
+
+        $items = $tags->getidposts($id);
+        $this->getrssposts(array_slice($items, 0, litepubl::$options->perpage));
+    }
+
+    public function GetRecentComments() {
+        $this->domrss->CreateRoot(litepubl::$site->url . '/comments.xml', tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
+
+        $title = tlocal::get('comment', 'onpost') . ' ';
+        $comment = new tarray2prop();
+        $recent = tcommentswidget::i()->getrecent(litepubl::$options->perpage);
+        foreach ($recent as $item) {
+            $comment->array = $item;
+            $this->AddRSSComment($comment, $title . $comment->title);
+        }
+    }
+
+    public function getholdcomments($url, $count) {
+        $result = '<?php litepubl\turlmap::sendxml(); ?>';
+        $this->dogetholdcomments($url, $count);
+        $result.= $this->domrss->GetStripedXML();
+        return $result;
+    }
+
+    private function dogetholdcomments($url, $count) {
+        $this->domrss->CreateRoot(litepubl::$site->url . $url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
+        $manager = tcommentmanager::i();
+        $recent = $manager->getrecent($count, 'hold');
+        $title = tlocal::get('comment', 'onpost') . ' ';
+        $comment = new tarray2prop();
+        foreach ($recent as $item) {
+            $comment->array = $item;
+            $this->AddRSSComment($comment, $title . $comment->title);
+        }
+    }
+
+    public function GetRSSPostComments($idpost) {
         $post = tpost::i($idpost);
-        if ($post->status != 'published') {
-          return 404;
+        $lang = tlocal::i('comment');
+        $title = $lang->from . ' ';
+        $this->domrss->CreateRoot($post->rsscomments, "$lang->onpost $post->title");
+        $comments = tcomments::i($idpost);
+        $comtable = $comments->thistable;
+        $comment = new tarray2prop();
+
+        $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " . litepubl::$options->perpage);
+
+        foreach ($recent as $id) {
+            $comment->array = $comments->getitem($id);
+            $comment->posturl = $post->url;
+            $comment->title = $post->title;
+            $this->AddRSSComment($comment, $title . $comment->name);
+        }
+    }
+
+    public function addpost(tpost $post) {
+        $item = $this->domrss->AddItem();
+        tnode::addvalue($item, 'title', $post->title);
+        tnode::addvalue($item, 'link', $post->link);
+        tnode::addvalue($item, 'comments', $post->link . '#comments');
+        tnode::addvalue($item, 'pubDate', $post->pubdate);
+
+        $guid = tnode::addvalue($item, 'guid', $post->link);
+        tnode::attr($guid, 'isPermaLink', 'true');
+
+        if (class_exists('tprofile')) {
+            $profile = tprofile::i();
+            tnode::addvalue($item, 'dc:creator', $profile->nick);
+        } else {
+            tnode::addvalue($item, 'dc:creator', 'admin');
         }
 
-        if (isset($post->idperm) && ($post->idperm > 0)) {
-          $perm = tperm::i($post->idperm);
-          if ($header = $perm->getheader($post)) {
-            $result = $header . $result;
-          }
+        $categories = tcategories::i();
+        $names = $categories->getnames($post->categories);
+        foreach ($names as $name) {
+            if (empty($name)) continue;
+            tnode::addcdata($item, 'category', $name);
         }
 
-        $this->GetRSSPostComments($idpost);
+        $tags = ttags::i();
+        $names = $tags->getnames($post->tags);
+        foreach ($names as $name) {
+            if (empty($name)) continue;
+            tnode::addcdata($item, 'category', $name);
+        }
+
+        $content = '';
+        $this->callevent('beforepost', array(
+            $post->id, &$content
+        ));
+        if ($this->template == '') {
+            $content.= $post->replacemore($post->rss, true);
+        } else {
+            $content.= ttheme::parsevar('post', $post, $this->template);
+        }
+        $this->callevent('afterpost', array(
+            $post->id, &$content
+        ));
+        tnode::addcdata($item, 'content:encoded', $content);
+        tnode::addcdata($item, 'description', strip_tags($content));
+        tnode::addvalue($item, 'wfw:commentRss', $post->rsscomments);
+
+        if (count($post->files) > 0) {
+            $files = tfiles::i();
+            $files->loaditems($post->files);
+            foreach ($post->files as $idfile) {
+                $file = $files->getitem($idfile);
+                $enclosure = tnode::add($item, 'enclosure');
+                tnode::attr($enclosure, 'url', litepubl::$site->files . '/files/' . $file['filename']);
+                tnode::attr($enclosure, 'length', $file['size']);
+                tnode::attr($enclosure, 'type', $file['mime']);
+            }
+        }
+        $post->onrssitem($item);
+        $this->onpostitem($item, $post);
+        return $item;
     }
 
-    $result.= $this->domrss->GetStripedXML();
-    return $result;
-  }
-
-  public function getrecentposts() {
-    $this->domrss->CreateRoot(litepubl::$site->url . '/rss.xml', litepubl::$site->name);
-    $posts = tposts::i();
-    $this->getrssposts($posts->getpage(0, 1, litepubl::$options->perpage, false));
-  }
-
-  public function getrssposts(array $list) {
-    foreach ($list as $id) {
-      $this->addpost(tpost::i($id));
-    }
-  }
-
-  public function gettagrss(tcommontags $tags, $id) {
-    $this->domrss->CreateRoot(litepubl::$site->url . litepubl::$urlmap->url, $tags->getvalue($id, 'title'));
-
-    $items = $tags->getidposts($id);
-    $this->getrssposts(array_slice($items, 0, litepubl::$options->perpage));
-  }
-
-  public function GetRecentComments() {
-    $this->domrss->CreateRoot(litepubl::$site->url . '/comments.xml', tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
-
-    $title = tlocal::get('comment', 'onpost') . ' ';
-    $comment = new tarray2prop();
-    $recent = tcommentswidget::i()->getrecent(litepubl::$options->perpage);
-    foreach ($recent as $item) {
-      $comment->array = $item;
-      $this->AddRSSComment($comment, $title . $comment->title);
-    }
-  }
-
-  public function getholdcomments($url, $count) {
-    $result = '<?php litepubl\turlmap::sendxml(); ?>';
-    $this->dogetholdcomments($url, $count);
-    $result.= $this->domrss->GetStripedXML();
-    return $result;
-  }
-
-  private function dogetholdcomments($url, $count) {
-    $this->domrss->CreateRoot(litepubl::$site->url . $url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
-    $manager = tcommentmanager::i();
-    $recent = $manager->getrecent($count, 'hold');
-    $title = tlocal::get('comment', 'onpost') . ' ';
-    $comment = new tarray2prop();
-    foreach ($recent as $item) {
-      $comment->array = $item;
-      $this->AddRSSComment($comment, $title . $comment->title);
-    }
-  }
-
-  public function GetRSSPostComments($idpost) {
-    $post = tpost::i($idpost);
-    $lang = tlocal::i('comment');
-    $title = $lang->from . ' ';
-    $this->domrss->CreateRoot($post->rsscomments, "$lang->onpost $post->title");
-    $comments = tcomments::i($idpost);
-    $comtable = $comments->thistable;
-    $comment = new tarray2prop();
-
-    $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " . litepubl::$options->perpage);
-
-    foreach ($recent as $id) {
-      $comment->array = $comments->getitem($id);
-      $comment->posturl = $post->url;
-      $comment->title = $post->title;
-      $this->AddRSSComment($comment, $title . $comment->name);
-    }
-  }
-
-  public function addpost(tpost $post) {
-    $item = $this->domrss->AddItem();
-    tnode::addvalue($item, 'title', $post->title);
-    tnode::addvalue($item, 'link', $post->link);
-    tnode::addvalue($item, 'comments', $post->link . '#comments');
-    tnode::addvalue($item, 'pubDate', $post->pubdate);
-
-    $guid = tnode::addvalue($item, 'guid', $post->link);
-    tnode::attr($guid, 'isPermaLink', 'true');
-
-    if (class_exists('tprofile')) {
-      $profile = tprofile::i();
-      tnode::addvalue($item, 'dc:creator', $profile->nick);
-    } else {
-      tnode::addvalue($item, 'dc:creator', 'admin');
+    public function AddRSSComment($comment, $title) {
+        $link = litepubl::$site->url . $comment->posturl . '#comment-' . $comment->id;
+        $date = is_int($comment->posted) ? $comment->posted : strtotime($comment->posted);
+        $item = $this->domrss->AddItem();
+        tnode::addvalue($item, 'title', $title);
+        tnode::addvalue($item, 'link', $link);
+        tnode::addvalue($item, 'dc:creator', $comment->name);
+        tnode::addvalue($item, 'pubDate', date('r', $date));
+        tnode::addvalue($item, 'guid', $link);
+        tnode::addcdata($item, 'description', strip_tags($comment->content));
+        tnode::addcdata($item, 'content:encoded', $comment->content);
     }
 
-    $categories = tcategories::i();
-    $names = $categories->getnames($post->categories);
-    foreach ($names as $name) {
-      if (empty($name)) continue;
-      tnode::addcdata($item, 'category', $name);
+    public function SetFeedburnerLinks($rss, $comments) {
+        if (($this->feedburner != $rss) || ($this->feedburnercomments != $comments)) {
+            $this->feedburner = $rss;
+            $this->feedburnercomments = $comments;
+            $this->save();
+            litepubl::$urlmap->clearcache();
+        }
     }
-
-    $tags = ttags::i();
-    $names = $tags->getnames($post->tags);
-    foreach ($names as $name) {
-      if (empty($name)) continue;
-      tnode::addcdata($item, 'category', $name);
-    }
-
-    $content = '';
-    $this->callevent('beforepost', array(
-      $post->id, &$content
-    ));
-    if ($this->template == '') {
-      $content.= $post->replacemore($post->rss, true);
-    } else {
-      $content.= ttheme::parsevar('post', $post, $this->template);
-    }
-    $this->callevent('afterpost', array(
-      $post->id, &$content
-    ));
-    tnode::addcdata($item, 'content:encoded', $content);
-    tnode::addcdata($item, 'description', strip_tags($content));
-    tnode::addvalue($item, 'wfw:commentRss', $post->rsscomments);
-
-    if (count($post->files) > 0) {
-      $files = tfiles::i();
-      $files->loaditems($post->files);
-      foreach ($post->files as $idfile) {
-        $file = $files->getitem($idfile);
-        $enclosure = tnode::add($item, 'enclosure');
-        tnode::attr($enclosure, 'url', litepubl::$site->files . '/files/' . $file['filename']);
-        tnode::attr($enclosure, 'length', $file['size']);
-        tnode::attr($enclosure, 'type', $file['mime']);
-      }
-    }
-    $post->onrssitem($item);
-    $this->onpostitem($item, $post);
-    return $item;
-  }
-
-  public function AddRSSComment($comment, $title) {
-    $link = litepubl::$site->url . $comment->posturl . '#comment-' . $comment->id;
-    $date = is_int($comment->posted) ? $comment->posted : strtotime($comment->posted);
-    $item = $this->domrss->AddItem();
-    tnode::addvalue($item, 'title', $title);
-    tnode::addvalue($item, 'link', $link);
-    tnode::addvalue($item, 'dc:creator', $comment->name);
-    tnode::addvalue($item, 'pubDate', date('r', $date));
-    tnode::addvalue($item, 'guid', $link);
-    tnode::addcdata($item, 'description', strip_tags($comment->content));
-    tnode::addcdata($item, 'content:encoded', $comment->content);
-  }
-
-  public function SetFeedburnerLinks($rss, $comments) {
-    if (($this->feedburner != $rss) || ($this->feedburnercomments != $comments)) {
-      $this->feedburner = $rss;
-      $this->feedburnercomments = $comments;
-      $this->save();
-      litepubl::$urlmap->clearcache();
-    }
-  }
 
 } //class

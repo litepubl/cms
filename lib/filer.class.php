@@ -1,135 +1,136 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tfiler {
 
-  public static function callback($callback, $path, $subdir) {
-    $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-    if ($h = opendir($path)) {
-      while (FALSE !== ($filename = readdir($h))) {
-        if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
-        $file = $path . $filename;
-        if (is_dir($file)) {
-          if ($subdir) static::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
-        } else {
-          call_user_func_array($callback, array(
-            $filename
-          ));
+    public static function callback($callback, $path, $subdir) {
+        $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($h = opendir($path)) {
+            while (FALSE !== ($filename = readdir($h))) {
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                $file = $path . $filename;
+                if (is_dir($file)) {
+                    if ($subdir) static ::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
+                } else {
+                    call_user_func_array($callback, array(
+                        $filename
+                    ));
+                }
+            }
+            closedir($h);
         }
-      }
-      closedir($h);
     }
-  }
 
-  public static function delete($path, $subdirs, $rmdir = false) {
-    $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-    if ($h = @opendir($path)) {
-      while (FALSE !== ($filename = readdir($h))) {
-        if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
-        $file = $path . $filename;
-        if (is_dir($file)) {
-          if ($subdirs) static::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
-        } else {
-          static::_delete($file);
+    public static function delete($path, $subdirs, $rmdir = false) {
+        $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($h = @opendir($path)) {
+            while (FALSE !== ($filename = readdir($h))) {
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                $file = $path . $filename;
+                if (is_dir($file)) {
+                    if ($subdirs) static ::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
+                } else {
+                    static ::_delete($file);
+                }
+            }
+            closedir($h);
         }
-      }
-      closedir($h);
+        if ($rmdir && is_dir($path)) rmdir($path);
     }
-    if ($rmdir && is_dir($path)) rmdir($path);
-  }
 
-  public static function deletemask($mask) {
-    if ($list = glob($mask)) {
-      foreach ($list as $filename) static::_delete($filename);
-    }
-  }
-
-  public static function deletedirmask($path, $mask) {
-    foreach (glob($path . $mask) as $filename) {
-      if (is_dir($filename)) {
-        static::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
-      } else {
-        static::_delete($filename);
-      }
-    }
-  }
-
-  public static function getfiles($path) {
-    $result = array();
-    if ($h = opendir($path)) {
-      while (FALSE !== ($filename = readdir($h))) {
-        if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
-        if (!is_dir($path . $filename)) $result[] = $filename;
-      }
-      closedir($h);
-    }
-    return $result;
-  }
-
-  public static function getdir($dir) {
-    $result = array();
-    if ($fp = opendir($dir)) {
-      while (FALSE !== ($file = readdir($fp))) {
-        if (is_dir($dir . $file) && ($file != '.') && ($file != '..') && ($file != '.svn')) {
-          $result[] = $file;
+    public static function deletemask($mask) {
+        if ($list = glob($mask)) {
+            foreach ($list as $filename) static ::_delete($filename);
         }
-      }
-    }
-    return $result;
-  }
-  public static function forcedir($dir) {
-    $dir = rtrim(str_replace('\\', '/', $dir) , '/');
-    if (is_dir($dir)) return true;
-    $up = rtrim(dirname($dir) , '/');
-    if (($up != '') || ($up != '.')) static::forcedir($up);
-    if (!is_dir($dir)) mkdir($dir, 0777);
-    chmod($dir, 0777);
-    return is_dir($dir);
-  }
-
-  public static function log($s, $filename = '') {
-    if (!is_string($s)) $s = var_export($s, true);
-    if ($filename == '') $filename = 'log.txt';
-    static::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
-  }
-
-  public static function append($s, $filename) {
-    $s = $_SERVER['REQUEST_URI'] . "\n" . $s;
-    $dir = dirname($filename);
-    if (!is_dir($dir)) {
-      mkdir($dir, 0777);
-      @chmod($dir, 0777);
     }
 
-    if ($fp = fopen($filename, 'a+')) {
-      fwrite($fp, $s);
-      fclose($fp);
-      @chmod($filename, 0666);
+    public static function deletedirmask($path, $mask) {
+        foreach (glob($path . $mask) as $filename) {
+            if (is_dir($filename)) {
+                static ::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
+            } else {
+                static ::_delete($filename);
+            }
+        }
     }
-  }
 
-  public static function get_filetime_offset() {
-    $filename = litepubl::$paths->data . md5(microtime()) . '.tmp';
-    $t = time();
-    touch($filename, $t, $t);
-    clearstatcache();
-    $t2 = filemtime($filename);
-    @unlink($filename);
-    return $t2 - $t;
-  }
-
-  public static function _delete($filename) {
-    //litepubl::$storage->delete($filename);
-      if (\file_exists($filename) && !\unlink($filename)) {
-        \chmod($filename, 0666);
-        \unlink($filename);
+    public static function getfiles($path) {
+        $result = array();
+        if ($h = opendir($path)) {
+            while (FALSE !== ($filename = readdir($h))) {
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                if (!is_dir($path . $filename)) $result[] = $filename;
+            }
+            closedir($h);
+        }
+        return $result;
     }
-  }
+
+    public static function getdir($dir) {
+        $result = array();
+        if ($fp = opendir($dir)) {
+            while (FALSE !== ($file = readdir($fp))) {
+                if (is_dir($dir . $file) && ($file != '.') && ($file != '..') && ($file != '.svn')) {
+                    $result[] = $file;
+                }
+            }
+        }
+        return $result;
+    }
+    public static function forcedir($dir) {
+        $dir = rtrim(str_replace('\\', '/', $dir) , '/');
+        if (is_dir($dir)) return true;
+        $up = rtrim(dirname($dir) , '/');
+        if (($up != '') || ($up != '.')) static ::forcedir($up);
+        if (!is_dir($dir)) mkdir($dir, 0777);
+        chmod($dir, 0777);
+        return is_dir($dir);
+    }
+
+    public static function log($s, $filename = '') {
+        if (!is_string($s)) $s = var_export($s, true);
+        if ($filename == '') $filename = 'log.txt';
+        static ::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+    }
+
+    public static function append($s, $filename) {
+        $s = $_SERVER['REQUEST_URI'] . "\n" . $s;
+        $dir = dirname($filename);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777);
+            @chmod($dir, 0777);
+        }
+
+        if ($fp = fopen($filename, 'a+')) {
+            fwrite($fp, $s);
+            fclose($fp);
+            @chmod($filename, 0666);
+        }
+    }
+
+    public static function get_filetime_offset() {
+        $filename = litepubl::$paths->data . md5(microtime()) . '.tmp';
+        $t = time();
+        touch($filename, $t, $t);
+        clearstatcache();
+        $t2 = filemtime($filename);
+        @unlink($filename);
+        return $t2 - $t;
+    }
+
+    public static function _delete($filename) {
+        //litepubl::$storage->delete($filename);
+        if (\file_exists($filename) && !\unlink($filename)) {
+            \chmod($filename, 0666);
+            \unlink($filename);
+        }
+    }
 
 } //class

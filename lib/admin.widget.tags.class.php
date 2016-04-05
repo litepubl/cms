@@ -1,32 +1,33 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadmintagswidget extends tadminwidget {
 
-  public static function i() {
-    return getinstance(__class__);
-  }
+    public static function i() {
+        return getinstance(__class__);
+    }
 
-  protected function dogetcontent(twidget $widget, targs $args) {
-    $args->showcount = $widget->showcount;
-    $args->showsubitems = $widget->showsubitems;
-    $args->maxcount = $widget->maxcount;
-    $args->sort = tadminhtml::array2combo(tlocal::i()->ini['sortnametags'], $widget->sortname);
-    return $this->html->parsearg('[combo=sort] [checkbox=showsubitems] [checkbox=showcount] [text=maxcount]', $args);
-  }
+    protected function dogetcontent(twidget $widget, targs $args) {
+        $args->showcount = $widget->showcount;
+        $args->showsubitems = $widget->showsubitems;
+        $args->maxcount = $widget->maxcount;
+        $args->sort = tadminhtml::array2combo(tlocal::i()->ini['sortnametags'], $widget->sortname);
+        return $this->html->parsearg('[combo=sort] [checkbox=showsubitems] [checkbox=showcount] [text=maxcount]', $args);
+    }
 
-  protected function doprocessform(twidget $widget) {
-    extract($_POST, EXTR_SKIP);
-    $widget->maxcount = (int)$maxcount;
-    $widget->showcount = isset($showcount);
-    $widget->showsubitems = isset($showsubitems);
-    $widget->sortname = $sort;
-  }
+    protected function doprocessform(twidget $widget) {
+        extract($_POST, EXTR_SKIP);
+        $widget->maxcount = (int)$maxcount;
+        $widget->showcount = isset($showcount);
+        $widget->showsubitems = isset($showsubitems);
+        $widget->sortname = $sort;
+    }
 
 } //class

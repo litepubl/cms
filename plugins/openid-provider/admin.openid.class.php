@@ -1,44 +1,45 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadminopenid {
-  public static function i() {
-    return getinstance(__class__);
-  }
+    public static function i() {
+        return getinstance(__class__);
+    }
 
-  public function getcontent() {
-    $openid = topenid::i();
-    $args = targs::i();
-    $args->confirm = $openid->confirm;
-    $args->usebigmath = $openid->usebigmath;
-    $args->trusted = implode("\n", $openid->trusted);
+    public function getcontent() {
+        $openid = topenid::i();
+        $args = targs::i();
+        $args->confirm = $openid->confirm;
+        $args->usebigmath = $openid->usebigmath;
+        $args->trusted = implode("\n", $openid->trusted);
 
-    $tml = '[checkbox:confirm]
+        $tml = '[checkbox:confirm]
     [checkbox:usebigmath]
     [editor:trusted]';
-    $about = tplugins::getabout(tplugins::getname(__file__));
-    $args->formtitle = $about['formtitle'];
-    $args->data['$lang.confirm'] = $about['confirm'];
-    $args->data['$lang.usebigmath'] = $about['usebigmath'];
-    $args->data['$lang.trusted'] = $about['trusted'];
+        $about = tplugins::getabout(tplugins::getname(__file__));
+        $args->formtitle = $about['formtitle'];
+        $args->data['$lang.confirm'] = $about['confirm'];
+        $args->data['$lang.usebigmath'] = $about['usebigmath'];
+        $args->data['$lang.trusted'] = $about['trusted'];
 
-    $html = tadminhtml::i();
-    return $html->adminform($tml, $args);
-  }
+        $html = tadminhtml::i();
+        return $html->adminform($tml, $args);
+    }
 
-  public function processform() {
-    extract($_POST, EXTR_SKIP);
-    $openid = topenid::i();
-    $openid->confirm = isset($confirm);
-    $openid->usebigmath = isset($usebigmath);
-    $openid->trusted = explode("\n", trim($trusted));
-    $openid->save();
-  }
+    public function processform() {
+        extract($_POST, EXTR_SKIP);
+        $openid = topenid::i();
+        $openid->confirm = isset($confirm);
+        $openid->usebigmath = isset($usebigmath);
+        $openid->trusted = explode("\n", trim($trusted));
+        $openid->save();
+    }
 
 } //class

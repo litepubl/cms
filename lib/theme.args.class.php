@@ -1,91 +1,92 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class targs {
-  public $data;
-  public $callbacks;
-  public $callback_params;
+    public $data;
+    public $callbacks;
+    public $callback_params;
 
-  public static function i() {
-    return litepubl::$classes->newinstance(__class__);
-  }
-
-  public function __construct($thisthis = null) {
-    $this->callbacks = array();
-    $this->callback_params = array();
-
-    if (!isset(basetheme::$defaultargs)) {
-      basetheme::set_defaultargs();
+    public static function i() {
+        return litepubl::$classes->newinstance(__class__);
     }
 
-    $this->data = basetheme::$defaultargs;
-    if (isset($thisthis)) $this->data['$this'] = $thisthis;
-  }
+    public function __construct($thisthis = null) {
+        $this->callbacks = array();
+        $this->callback_params = array();
 
-  public function __get($name) {
-    if (($name == 'link') && !isset($this->data['$link']) && isset($this->data['$url'])) {
-      return litepubl::$site->url . $this->data['$url'];
+        if (!isset(basetheme::$defaultargs)) {
+            basetheme::set_defaultargs();
+        }
+
+        $this->data = basetheme::$defaultargs;
+        if (isset($thisthis)) $this->data['$this'] = $thisthis;
     }
 
-    return $this->data['$' . $name];
-  }
+    public function __get($name) {
+        if (($name == 'link') && !isset($this->data['$link']) && isset($this->data['$url'])) {
+            return litepubl::$site->url . $this->data['$url'];
+        }
 
-  public function __set($name, $value) {
-    if (!$name || !is_string($name)) return;
-    if (is_array($value)) return;
-
-    if (!is_string($value) && is_callable($value)) {
-      $this->callbacks['$' . $name] = $value;
-      return;
+        return $this->data['$' . $name];
     }
 
-    if (is_bool($value)) {
-      $value = $value ? 'checked="checked"' : '';
+    public function __set($name, $value) {
+        if (!$name || !is_string($name)) return;
+        if (is_array($value)) return;
+
+        if (!is_string($value) && is_callable($value)) {
+            $this->callbacks['$' . $name] = $value;
+            return;
+        }
+
+        if (is_bool($value)) {
+            $value = $value ? 'checked="checked"' : '';
+        }
+
+        $this->data['$' . $name] = $value;
+        $this->data["%%$name%%"] = $value;
+
+        if (($name == 'url') && !isset($this->data['$link'])) {
+            $this->data['$link'] = litepubl::$site->url . $value;
+            $this->data['%%link%%'] = litepubl::$site->url . $value;
+        }
     }
 
-    $this->data['$' . $name] = $value;
-    $this->data["%%$name%%"] = $value;
+    public function add(array $a) {
+        foreach ($a as $k => $v) {
+            $this->__set($k, $v);
+            if ($k == 'url') {
+                $this->data['$link'] = litepubl::$site->url . $v;
+                $this->data['%%link%%'] = litepubl::$site->url . $v;
+            }
+        }
 
-    if (($name == 'url') && !isset($this->data['$link'])) {
-      $this->data['$link'] = litepubl::$site->url . $value;
-      $this->data['%%link%%'] = litepubl::$site->url . $value;
-    }
-  }
-
-  public function add(array $a) {
-    foreach ($a as $k => $v) {
-      $this->__set($k, $v);
-      if ($k == 'url') {
-        $this->data['$link'] = litepubl::$site->url . $v;
-        $this->data['%%link%%'] = litepubl::$site->url . $v;
-      }
+        if (isset($a['title']) && !isset($a['text'])) $this->__set('text', $a['title']);
+        if (isset($a['text']) && !isset($a['title'])) $this->__set('title', $a['text']);
     }
 
-    if (isset($a['title']) && !isset($a['text'])) $this->__set('text', $a['title']);
-    if (isset($a['text']) && !isset($a['title'])) $this->__set('title', $a['text']);
-  }
-
-  public function parse($s) {
-    return basetheme::i()->parsearg($s, $this);
-  }
-
-  public function callback($s) {
-    if (!count($this->callbacks)) return $s;
-
-    $params = $this->callback_params;
-    array_unshift($params, $this);
-
-    foreach ($this->callbacks as $tag => $callback) {
-      $s = str_replace($tag, call_user_func_array($callback, $params) , $s);
+    public function parse($s) {
+        return basetheme::i()->parsearg($s, $this);
     }
 
-    return $s;
-  }
+    public function callback($s) {
+        if (!count($this->callbacks)) return $s;
+
+        $params = $this->callback_params;
+        array_unshift($params, $this);
+
+        foreach ($this->callbacks as $tag => $callback) {
+            $s = str_replace($tag, call_user_func_array($callback, $params) , $s);
+        }
+
+        return $s;
+    }
 
 } //class

@@ -1,18 +1,19 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 function tpasswordpageInstall($self) {
-  litepubl::$urlmap->delete('/check-password.php');
-  tlocal::usefile('install');
-  $lang = tlocal::i('passwordpage');
+    litepubl::$urlmap->delete('/check-password.php');
+    tlocal::usefile('install');
+    $lang = tlocal::i('passwordpage');
 
-  $form = '<h3>$lang.formtitle</h3>
+    $form = '<h3>$lang.formtitle</h3>
   <form name="form" action="" method="post" >
   <p><input type="password" name="password" id="password-password" value="" size="22" />
   <label for="password-password"><strong>$lang.password</strong></label></p>
@@ -26,16 +27,16 @@ function tpasswordpageInstall($self) {
   </p>
   </form>';
 
-  $self->data['form'] = ttheme::i()->parse($form);
-  $self->data['title'] = $lang->reqpassword;
-  $self->data['invalidpassword'] = $lang->invalidpassword;
-  $self->save();
+    $self->data['form'] = ttheme::i()->parse($form);
+    $self->data['title'] = $lang->reqpassword;
+    $self->data['invalidpassword'] = $lang->invalidpassword;
+    $self->save();
 
-  trobotstxt::i()->AddDisallow('/check-password.php');
+    trobotstxt::i()->AddDisallow('/check-password.php');
 
-  litepubl::$urlmap->addget('/check-password.php', get_class($self));
+    litepubl::$urlmap->addget('/check-password.php', get_class($self));
 }
 
 function tpasswordpageUninstall($self) {
-  litepubl::$urlmap->delete('/check-password.php');
+    litepubl::$urlmap->delete('/check-password.php');
 }

@@ -1,190 +1,191 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
 class tadminperms extends tadminmenu {
 
-  public static function i($id = 0) {
-    return parent::iteminstance(__class__, $id);
-  }
-
-  public static function getcombo($idperm, $name = 'idperm') {
-    $lang = tlocal::admin();
-    $section = $lang->section;
-    $lang->section = 'perms';
-    $theme = ttheme::i();
-    $result = strtr($theme->templates['content.admin.combo'], array(
-      '$lang.$name' => $lang->perm,
-      '$name' => $name,
-      '$value' => static::getcomboitems($idperm)
-    ));
-
-    $lang->section = $section;
-    return $result;
-  }
-
-  public static function getcomboitems($idperm) {
-    $result = sprintf('<option value="0" %s>%s</option>', $idperm == 0 ? 'selected="selected"' : '', tlocal::get('perms', 'nolimits'));
-    $perms = tperms::i();
-    foreach ($perms->items as $id => $item) {
-      $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idperm == $id ? 'selected="selected"' : '', $item['name']);
+    public static function i($id = 0) {
+        return parent::iteminstance(__class__, $id);
     }
-    return $result;
-  }
 
-  public function getcontent() {
-    $result = '';
-    $perms = tperms::i();
-    $html = $this->html;
-    $lang = tlocal::i('perms');
-    $args = new targs();
-    if (!($action = $this->action)) $action = 'perms';
-    switch ($action) {
-      case 'perms':
-        $tb = new tablebuilder();
-        $tb->setowner($perms);
-        $tb->setstruct(array(
-          $tb->checkbox('perm') ,
-          array(
-            $lang->edit,
-            "<a href=\"$this->adminurl=\$id&action=edit\">\$name</a>"
-          ) ,
+    public static function getcombo($idperm, $name = 'idperm') {
+        $lang = tlocal::admin();
+        $section = $lang->section;
+        $lang->section = 'perms';
+        $theme = ttheme::i();
+        $result = strtr($theme->templates['content.admin.combo'], array(
+            '$lang.$name' => $lang->perm,
+            '$name' => $name,
+            '$value' => static ::getcomboitems($idperm)
         ));
 
-        $items = array_keys($perms->items);
-        array_shift($items);
+        $lang->section = $section;
+        return $result;
+    }
 
-        $form = new adminform($args);
-        $form->title = $lang->table;
-        $result.= $form->getdelete($tb->build($items));
-
-        $result.= $html->h4->newperms;
-        $result.= '<ul>';
-        $addurl = tadminhtml::getadminlink($this->url, 'action=add&class');
-        foreach ($perms->classes as $class => $name) {
-          if ($class == 'tsinglepassword') continue;
-          $result.= $html->li("<a href='$addurl=$class'>$name</a>");
+    public static function getcomboitems($idperm) {
+        $result = sprintf('<option value="0" %s>%s</option>', $idperm == 0 ? 'selected="selected"' : '', tlocal::get('perms', 'nolimits'));
+        $perms = tperms::i();
+        foreach ($perms->items as $id => $item) {
+            $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idperm == $id ? 'selected="selected"' : '', $item['name']);
         }
+        return $result;
+    }
 
-        $result.= '</ul>';
-        return $html->fixquote($result);
+    public function getcontent() {
+        $result = '';
+        $perms = tperms::i();
+        $html = $this->html;
+        $lang = tlocal::i('perms');
+        $args = new targs();
+        if (!($action = $this->action)) $action = 'perms';
+        switch ($action) {
+            case 'perms':
+                $tb = new tablebuilder();
+                $tb->setowner($perms);
+                $tb->setstruct(array(
+                    $tb->checkbox('perm') ,
+                    array(
+                        $lang->edit,
+                        "<a href=\"$this->adminurl=\$id&action=edit\">\$name</a>"
+                    ) ,
+                ));
 
-      case 'add':
-        $class = tadminhtml::getparam('class', '');
-        if (!isset($perms->classes[$class])) {
-          return $this->notfound();
-        }
+                $items = array_keys($perms->items);
+                array_shift($items);
 
-        $perm = new $class();
-        return $perm->admin->getcont();
+                $form = new adminform($args);
+                $form->title = $lang->table;
+                $result.= $form->getdelete($tb->build($items));
 
-      case 'edit':
-        $id = $this->idget();
-        if (!$perms->itemexists($id)) {
-          return $this->notfound();
-        }
+                $result.= $html->h4->newperms;
+                $result.= '<ul>';
+                $addurl = tadminhtml::getadminlink($this->url, 'action=add&class');
+                foreach ($perms->classes as $class => $name) {
+                    if ($class == 'tsinglepassword') continue;
+                    $result.= $html->li("<a href='$addurl=$class'>$name</a>");
+                }
 
-        $perm = tperm::i($id);
-        return $perm->admin->getcont();
+                $result.= '</ul>';
+                return $html->fixquote($result);
 
-      case 'delete':
-        return $html->confirm_delete($perms, $this->adminurl);
-      }
+            case 'add':
+                $class = tadminhtml::getparam('class', '');
+                if (!isset($perms->classes[$class])) {
+                    return $this->notfound();
+                }
 
-  }
+                $perm = new $class();
+                return $perm->admin->getcont();
 
-  public function processform() {
-    $perms = tperms::i();
-    if (!($action = $this->action)) $action = 'perms';
-    switch ($action) {
-      case 'perms':
-        $perms->lock();
-        foreach ($_POST as $name => $val) {
-          if (!is_numeric($value)) continue;
-          $id = (int)$val;
-          $perms->delete($id);
-        }
-        $perms->unlock();
-        return;
+            case 'edit':
+                $id = $this->idget();
+                if (!$perms->itemexists($id)) {
+                    return $this->notfound();
+                }
 
-      case 'edit':
-        $id = $this->idget();
-        if (!$perms->itemexists($id)) {
-          return $this->notfound();
-        }
+                $perm = tperm::i($id);
+                return $perm->admin->getcont();
 
-        $perm = tperm::i($id);
-        return $perm->admin->processform();
+            case 'delete':
+                return $html->confirm_delete($perms, $this->adminurl);
+            }
 
-      case 'add':
-        $class = tadminhtml::getparam('class', '');
-        if (isset($perms->classes[$class])) {
-          $perm = new $class();
-          $id = tperms::i()->add($perm);
-          $perm->admin->processform();
-          return litepubl::$urlmap->redir(tadminhtml::getadminlink($this->url, 'action=edit&id=' . $id));
-        }
-      }
-  }
+    }
+
+    public function processform() {
+        $perms = tperms::i();
+        if (!($action = $this->action)) $action = 'perms';
+        switch ($action) {
+            case 'perms':
+                $perms->lock();
+                foreach ($_POST as $name => $val) {
+                    if (!is_numeric($value)) continue;
+                    $id = (int)$val;
+                    $perms->delete($id);
+                }
+                $perms->unlock();
+                return;
+
+            case 'edit':
+                $id = $this->idget();
+                if (!$perms->itemexists($id)) {
+                    return $this->notfound();
+                }
+
+                $perm = tperm::i($id);
+                return $perm->admin->processform();
+
+            case 'add':
+                $class = tadminhtml::getparam('class', '');
+                if (isset($perms->classes[$class])) {
+                    $perm = new $class();
+                    $id = tperms::i()->add($perm);
+                    $perm->admin->processform();
+                    return litepubl::$urlmap->redir(tadminhtml::getadminlink($this->url, 'action=edit&id=' . $id));
+                }
+            }
+    }
 
 } //class
 class tadminperm {
-  public $perm;
+    public $perm;
 
-  public function getcont() {
-    $html = tadminhtml::i();
-    $lang = tlocal::i('perms');
-    $args = new targs();
-    $args->add($this->perm->data);
-    $args->formtitle = $lang->editperm;
-    $form = '[text=name] [hidden=id]';
-    $form.= $this->getform($args);
-    return $html->adminform($form, $args);
-  }
+    public function getcont() {
+        $html = tadminhtml::i();
+        $lang = tlocal::i('perms');
+        $args = new targs();
+        $args->add($this->perm->data);
+        $args->formtitle = $lang->editperm;
+        $form = '[text=name] [hidden=id]';
+        $form.= $this->getform($args);
+        return $html->adminform($form, $args);
+    }
 
-  public function getform(targs $args) {
-    return '';
-  }
+    public function getform(targs $args) {
+        return '';
+    }
 
-  public function processform() {
-    $name = trim($_POST['name']);
-    if ($name != '') $this->perm->name = $name;
-    $this->perm->save();
-  }
+    public function processform() {
+        $name = trim($_POST['name']);
+        if ($name != '') $this->perm->name = $name;
+        $this->perm->save();
+    }
 
 } //class
 class tadminpermpassword extends tadminperm {
 
-  public function getform(targs $args) {
-    $args->password = '';
-    return '[password=password]';
-  }
+    public function getform(targs $args) {
+        $args->password = '';
+        return '[password=password]';
+    }
 
-  public function processform() {
-    $this->perm->password = $_POST['password'];
-    parent::processform();
-  }
+    public function processform() {
+        $this->perm->password = $_POST['password'];
+        parent::processform();
+    }
 
 } //class
 class tadminpermgroups extends tadminperm {
 
-  public function getform(targs $args) {
-    $result = '[checkbox=author]
+    public function getform(targs $args) {
+        $result = '[checkbox=author]
     <h4>$lang.groups</h4>';
-    $args->author = $this->perm->author;
-    $result.= tadmingroups::getgroups($this->perm->groups);
-    return $result;
-  }
+        $args->author = $this->perm->author;
+        $result.= tadmingroups::getgroups($this->perm->groups);
+        return $result;
+    }
 
-  public function processform() {
-    $this->perm->author = isset($_POST['author']);
-    $this->perm->groups = array_unique(tadminhtml::check2array('idgroup-'));
-    parent::processform();
-  }
+    public function processform() {
+        $this->perm->author = isset($_POST['author']);
+        $this->perm->groups = array_unique(tadminhtml::check2array('idgroup-'));
+        parent::processform();
+    }
 
 } //class

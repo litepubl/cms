@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -12,7 +13,7 @@ litepubl::$options = toptions::i();
 litepubl::$site = tsite::i();
 
 if (!defined('litepublisher_mode')) {
-  define('litepublisher_mode', 'install');
+    define('litepublisher_mode', 'install');
 }
 
 /*
@@ -28,10 +29,10 @@ $installer = new tinstaller();
 $installer->install();
 
 if (litepubl::$options instanceof toptions) {
-  litepubl::$options->savemodified();
-  if (!empty(litepubl::$options->errorlog)) {
-    echo litepubl::$options->errorlog;
-  }
+    litepubl::$options->savemodified();
+    if (!empty(litepubl::$options->errorlog)) {
+        echo litepubl::$options->errorlog;
+    }
 }
 
 exit();
