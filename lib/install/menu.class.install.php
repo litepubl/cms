@@ -11,11 +11,13 @@ function tmenusInstall($self) {
   @mkdir(litepubl::$paths->data . 'menus', 0777);
   if (get_class($self) != 'tmenus') return;
   @chmod(litepubl::$paths->data . 'menus', 0777);
+
+litepubl::$classes->onrename = $self->classRenamed;
 }
 
 function tmenusUninstall($self) {
   //rmdir(. 'menus');
-  
+  litepubl::$classes->unbind($self);
 }
 
 function tmenusGetsitemap($self, $from, $count) {
