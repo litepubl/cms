@@ -352,7 +352,18 @@ class tmenus extends titems {
     ));
   }
 
+public function classRenamed($oldclass, $newclass) {
+foreach ($this->items as $id => $item) {
+if ($oldclass == $item['class']) {
+$this->items[$id]['class'] = $newclass;
+}
+}
+
+$this->save();
+}
+
 } //class
+
 class tmenu extends titem implements itemplate {
   public $formresult;
   public static $ownerprops = array(
