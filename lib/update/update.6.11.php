@@ -44,17 +44,18 @@ $cl->data['kernel'] = array();
 foreach ($cl->items as $name => $item) {
 $dir = (empty($item[1]) ? 'lib/': 'plugins/' . $item[1] . '/');
 if (count($item) == 2) {
-$cl->item[$name] = $dir . $item[0];
+$cl->items[$name] = $dir . $item[0];
 } else {
-$cl->item[$name] = $dir . $item[2];
+$cl->items[$name] = $dir . $item[2];
 $cl->data['kernel'][$name] = $dir . $item[0];
 }
 }
 
 $cl->save();
+litepubl::$options->savemodified();
 }
 
-$man = litepubl-tdbmanager::i();
+$man = tdbmanager::i();
 $man->renameEnumValue('posts', 'class', 'tpost', 'litepubl-tpost');
 $man->renameEnumValue('posts', 'class', 'tticket', 'litepubl-tticket');
 $man->renameEnumValue('posts', 'class', 'tdownloaditem', 'litepubl-tdownloaditem');

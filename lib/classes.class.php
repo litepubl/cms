@@ -152,6 +152,36 @@ class tclasses extends titems {
         }
     }
 
+    public function baseclass($classname) {
+        if ($i = strrpos($classname, '\\')) {
+            return substr($classname, $i + 1);
+        }
+
+        return $classname;
+    }
+
+    public function addAlias($classname, $alias) {
+        if (!$alias) {
+            if ($i = strrpos($classname, '\\')) {
+                $alias = substr($classname, $i + 1);
+            } else {
+                $alias = 'litepubl\\' . $classname;
+            }
+        }
+
+        //may be exchange class names
+        if (class_exists($alias, false) && !class_exists($classname, false)) {
+            $tmp = $classname;
+            $classname = $alias;
+            $alias = $tmp;
+        }
+
+        if (!isset($this->aliases[$classname])) {
+            class_alias($classname, $alias, false);
+            $this->aliases[$classname] = $alias;
+        }
+    }
+
     public function autoload($classname) {
         if ($filename = $this->getpsr4($classname)) {
             $this->include($filename);
@@ -164,20 +194,15 @@ class tclasses extends titems {
         if (isset($this->items[$classname])) {
             $filename = litepubl::$paths->home . $this->items[$classname];
             $this->include_file($filename);
-            if (!strpos($classname, '\\')) {
-                class_alias('litepubl\\' . $classname, $classname, false);
-                $this->aliases[$classname] = 'litepubl\\' . $classname;
-            }
-        } else if (($subclass = basename($classname)) && ($subclass != $classname) && isset($this->items[$subclass])) {
+            $this->addAlias($classname, false);
+        } else if (($subclass = $this->baseclass($classname)) && ($subclass != $classname) && isset($this->items[$subclass])) {
             $filename = litepubl::$paths->home . $this->items[$subclass];
             $this->include_file($filename);
-            class_alias($classname, $subclass, false);
-            $this->aliases[$subclass] = $classname;
+            $this->addAlias($classname, $subclass);
         } else if (!strpos($classname, '\\') && isset($this->items['litepubl\\' . $classname])) {
             $filename = litepubl::$paths->home . $this->items['litepubl\\' . $classname];
             $this->include_file($filename);
-            class_alias('litepubl\\' . $classname, $classname, false);
-            $this->aliases[$classname] = 'litepubl\\' . $classname;
+            $this->addAlias('litepubl\\' . $classname, $classname);
         } else {
             return false;
         }
@@ -189,20 +214,15 @@ class tclasses extends titems {
         if (isset($this->kernel[$classname])) {
             $filename = litepubl::$paths->home . $this->kernel[$classname];
             $this->include_file($filename);
-            if (!strpos($classname, '\\')) {
-                class_alias('litepubl\\' . $classname, $classname, false);
-                $this->aliases[$classname] = 'litepubl\\' . $classname;
-            }
-        } else if (($subclass = basename($classname)) && ($subclass != $classname) && isset($this->kernel[$subclass])) {
+            $this->addAlias($classname, false);
+        } else if (($subclass = $this->baseclass($classname)) && ($subclass != $classname) && isset($this->kernel[$subclass])) {
             $filename = litepubl::$paths->home . $this->kernel[$subclass];
             $this->include_file($filename);
-            class_alias($classname, $subclass, false);
-            $this->aliases[$subclass] = $classname;
+            $this->addAlias($classname, $subclass);
         } else if (!strpos($classname, '\\') && isset($this->kernel['litepubl\\' . $classname])) {
             $filename = litepubl::$paths->home . $this->kernel['litepubl\\' . $classname];
             $this->include_file($filename);
-            class_alias('litepubl\\' . $classname, $classname, false);
-            $this->aliases[$classname] = 'litepubl\\' . $classname;
+            $this->addAlias('litepubl\\' . $classname, $classname);
         } else {
             return false;
         }
