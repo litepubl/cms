@@ -123,7 +123,7 @@ namespace litepubl;
       try {
         static ::init();
 
-        if (config::$canRequest) {
+        if (!config::$ignoreRequest) {
           static ::request();
         }
       }

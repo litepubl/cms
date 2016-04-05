@@ -32,10 +32,10 @@ class tthemeparser extends baseparser {
   public function doreplacelang(basetheme $theme) {
     parent::doreplacelang($theme);
 
-    foreach ($theme->templates['sidebars'] as & $sidebar) {
-      unset($widget);
-      foreach ($sidebar as & $widget) {
-        $widget = $theme->replacelang($widget, $lang);
+$sidebars = &$theme->templates['sidebars'];
+    foreach ($sidebars as $i =>  $sidebar) {
+      foreach ($sidebar as $j =>  $widget) {
+        $sidebars[$i][$j] = $theme->replacelang($widget, $lang);
       }
     }
 

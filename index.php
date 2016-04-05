@@ -22,8 +22,8 @@ class config {
   //die if invalid host name in current request. Set to false if use in command line mode
   public static $dieOnInvalidHost = true;
 
-  //set to false to ignore request, cms will be initilized
-  public static $canRequest = true;
+  //set to true to ignore request, cms will be initilized
+  public static $ignoreRequest = false;
 
   //callback function
   public static $beforeRequest = false;
@@ -62,7 +62,7 @@ class config {
 
 if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
 if (defined('litepubl_mode') && (litepubl_mode == 'ignoreReqest')) {
-config::$canRequest = false;
+config::$ignoreRequest = true;
 }
 
 if (config::$debug || !config::$useKernel) {

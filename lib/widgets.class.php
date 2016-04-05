@@ -166,12 +166,14 @@ class twidgets extends titems_storage {
 
     }
 
-    if (litepubl::$options->admincookie) $this->callevent('onadminlogged', array(&$items,
-      $sidebar
-    ));
-    if (litepubl::$urlmap->adminpanel) $this->callevent('onadminpanel', array(&$items,
-      $sidebar
-    ));
+    if (litepubl::$options->admincookie) {
+$this->callevent('onadminlogged', array(&$items, $sidebar));
+}
+
+    if (litepubl::$urlmap->adminpanel) {
+$this->callevent('onadminpanel', array(&$items, $sidebar));
+}
+
     $this->callevent('ongetwidgets', array(&$items,
       $sidebar
     ));

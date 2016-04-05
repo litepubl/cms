@@ -299,7 +299,7 @@ require($dir . 'filer.class.php');
 $m = microtime(true);
 require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
         $oBeautify = new PHP_Beautifier();
-$oBeautify->setIndentNumber(2);
+$oBeautify->setIndentNumber(4);
         $oBeautify->addFilter('ArrayNested');
         $oBeautify->addFilter('Pear',array('add_header'=>'php'));
         $oBeautify->addFilter('KeepEmptyLines');
