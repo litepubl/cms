@@ -1853,6 +1853,10 @@ class tclasses extends titems {
         if (isset($this->kernel[$classname])) {
             $filename = litepubl::$paths->home . $this->kernel[$classname];
             $this->include_file($filename);
+            if (!strpos($classname, '\\')) {
+                class_alias('litepubl\\' . $classname, $classname, false);
+                $this->aliases[$classname] = 'litepubl\\' . $classname;
+            }
         } else if (($subclass = basename($classname)) && ($subclass != $classname) && isset($this->kernel[$subclass])) {
             $filename = litepubl::$paths->home . $this->kernel[$subclass];
             $this->include_file($filename);
