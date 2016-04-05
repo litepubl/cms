@@ -435,10 +435,13 @@ $classname = $item['class'];
   }
 
   public function deleteclass($class) {
-    if ($items = $this->db->getitems("class = '$class'")) {
-      $this->db->delete("class = '$class'");
-      foreach ($items as $item) $this->deleted($item['id']);
+    if ($items = $this->db->getitems('class = '. dbquote($class))) {
+      foreach ($items as $item) {
+      $this->db->iddelete($item['id']);
+$this->deleted($item['id']);
+}
     }
+
     $this->clearcache();
   }
 
@@ -452,7 +455,7 @@ $classname = $item['class'];
 
   //for Archives
   public function GetClassUrls($class) {
-    $res = $this->db->query("select url from $this->thistable where class = '$class'");
+    $res = $this->db->query("select url from $this->thistable where class = " . dbquote($class));
     return $this->db->res2id($res);
   }
 
@@ -478,8 +481,8 @@ $classname = $item['class'];
   }
 
   public function expiredclass($class) {
-    $items = $this->db->getitems("class = '$class'");
-    if (count($items) == 0) {
+    $items = $this->db->getitems('class = ' . dbquote($class));
+    if (!count($items)) {
       return;
     }
 
@@ -545,7 +548,7 @@ $classname = $item['class'];
 
   protected function close() {
     $this->call_close_events();
-    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'tcron'))) {
+    if ($this->disabledcron || ($this->context && (get_class($this->context) == 'litepubl\tcron'))) {
       return;
     }
 

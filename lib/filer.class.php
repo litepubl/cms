@@ -125,7 +125,13 @@ class tfiler {
   }
 
   public static function _delete($filename) {
-    litepubl::$storage->delete($filename);
+    //litepubl::$storage->delete($filename);
+      if (\file_exists($filename) && !\unlink($filename)) {
+        \chmod($filename, 0666);
+        \unlink($filename);
+    }
   }
 
 } //class
+
+class_alias(litepubl\tfiler', 'tfiler');

@@ -30,7 +30,7 @@ public $aliases;
     parent::create();
     $this->basename = 'classes';
     $this->dbversion = false;
-    $this->addevents('onnewitem', 'gettemplatevar');
+    $this->addevents('onnewitem', 'gettemplatevar', 'onrename');
     $this->addmap('namespaces', array());
     $this->addmap('kernel', array());
     $this->addmap('classes', array());
@@ -251,10 +251,6 @@ return $filename;
 return false;
 }
 
-  public function getclassfilename($class, $debug = false) {
-    return false;
-  }
-
   public function exists($class) {
     return isset($this->items[$class]);
   }
@@ -285,9 +281,9 @@ $this->kernel[$newclass] = $this->items[$oldclass];
 unset($this->kernel[$oldclass]);
 }
 
+litepubl::$urlmap->db->update('class =' . dbquote($newclass), 'class = ' . dbquote($oldclass));
 $this->save();
-
-litepubl::$urlmap->db->update("class = '$newclass'", "class = '$oldclass'");
+$this->onrename($oldclass, $newclass);
 }
 }
 
