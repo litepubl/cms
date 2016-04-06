@@ -8,7 +8,12 @@ $cl = tclasses::i();
 $cl = litepubl\tclasses::i();
 }
 
-$cl->data['kernel'] = parse_ini_file(dirname(__DIR__) . '/install/ini/kernel.ini', false);
+$ini = parse_ini_file(dirname(__DIR__) . '/install/ini/kernel.ini', false);
+foreach ($ini as $k => $v) {
+$ini[$k] = 'lib/' . $v;
+}
+$cl->data['kernel'] = $ini;
+
 $cl->items['tcomment'] = 'lib/comments.php';
 $cl->save();
 }

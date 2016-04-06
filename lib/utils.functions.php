@@ -6,7 +6,6 @@
  *
  */
 
-namespace litepubl;
 function sqldate($date = 0) {
     if (!$date) {
         $date = time();

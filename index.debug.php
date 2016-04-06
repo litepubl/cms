@@ -10,3 +10,4 @@ include (__DIR__ . '/temp/zdebug.php');
 };
 
 require (__DIR__ . '/lib/kernel.debug.php');
+//require (__DIR__ . '/lib/kernel.php');

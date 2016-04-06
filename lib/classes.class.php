@@ -250,13 +250,6 @@ class tclasses extends titems {
             $ns = substr($classname, 0, $i);
             $baseclass = strtolower(substr($classname, $i + 1));
 
-            if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
-                $filename = litepubl::$paths->home . $this->kernel[$ns];
-                if (file_exists($filename)) {
-                    return $filename;
-                }
-            }
-
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';
                 if (file_exists($filename)) {
@@ -264,6 +257,13 @@ class tclasses extends titems {
                 }
 
                 return false;
+            }
+
+            if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
+                $filename = litepubl::$paths->home . $this->kernel[$ns];
+                if (file_exists($filename)) {
+                    return $filename;
+                }
             }
 
             if (isset($this->namespaces[$ns])) {
