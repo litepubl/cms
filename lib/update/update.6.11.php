@@ -51,7 +51,13 @@ $cl->data['kernel'][$name] = $dir . $item[0];
 }
 }
 
+$cl->data['kernel']['tplugin'] = 'kernel.php';
+$cl->data['kernel']['tclasses'] = 'kernel.php';
+$cl->data['kernel']['tdata'] = 'kernel.php';
 $cl->save();
+
+$cl->save();
+
 litepubl::$options->savemodified();
 }
 

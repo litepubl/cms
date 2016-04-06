@@ -100,48 +100,21 @@ function strend($s, $end) {
 }
 
 function BuildKernel($dir){
-makekernel($dir, 'kernel.php', array(
-'db.class.php',
-'data.class.php',
-'array2prop.class.php',
-'utils.functions.php',
-'getter.class.php',
+$iniclass  = parse_ini_file($dir . 'install/ini/classes.ini', true);
+$items = $iniclasses['items'];
+$inikernel = parse_ini_file($dir . 'install/ini/kernel.ini', true);
 
- 'events.class.php',
-'events.exception.class.php',
-'events.coclass.php',
-'events.storage.class.php',
+foreach ($inikernel as $kernelfile => $kernitems) {
+$filelist = array();
+foreach ($kernitems as $classname => $kfile) {
+$filelist[] = $items[$classname];
+}
 
- 'items.class.php',
-'items.storage.class.php',
-'items.single.class.php',
-'item.class.php',
-'item.storage.class.php',
- 'classes.class.php',
+makekernel($dir, kernelfile, array_unique($filelist));
+}
+'utils.functions.php';
 'classes.functions.php',
- 'options.class.php',
- 'site.class.php',
- 'urlmap.class.php',
-'itemplate.php',
- 'interfaces.php',
- 'plugin.class.php',
-'users.class.php',
-//'users.groups.class.php'
-'items.pool.class.php',
-
-'storage.mem.class.php',
-'storage.cache.file.class.php',
-'storage.cache.memcache.class.php',
-
-//namespaces
-'paths.php',
-'litepubl.php',
-'storage.php',
-'storageinc.php',
-'storagememcache.php',
-'datastorage.php',
 'litepubl.init.php',
-));
 
 makekernel($dir, 'kernel.templates.php',  array(
 'local.class.php',

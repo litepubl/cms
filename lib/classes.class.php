@@ -115,8 +115,7 @@ class tclasses extends titems {
 }
 
         $instance = $this->getinstance($class);
-        if (method_exists($instance, 'install') &&
-!(isset($instance->installed) && $instance->installed)) {
+        if (method_exists($instance, 'install')) {
             $instance->install();
         }
 
@@ -250,6 +249,13 @@ class tclasses extends titems {
         if ($i = strrpos($classname, '\\')) {
             $ns = substr($classname, 0, $i);
             $baseclass = strtolower(substr($classname, $i + 1));
+
+if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
+                $filename = litepubl::$paths->home .$this->kernel[$ns];
+                if (file_exists($filename)) {
+                    return $filename;
+                }
+}
 
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';

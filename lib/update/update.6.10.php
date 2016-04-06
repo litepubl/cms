@@ -11,10 +11,10 @@ unset($cl->items['tstorage']);
 $cl->items['litepubl'] = array('kernel.php', '', 'litepubl.php');
 $cl->items['paths'] = array('kernel.php', '', 'paths.php');
 $cl->items['storage'] = array('kernel.php', '', 'storage.php');
-$cl->items['incstorage'] = array('kernel.php', '', 'storage.inc.php');
-$cl->items['jsonstorage'] = array('storage.json.php', '', 'storage.json.php');
-$cl->items['memcachestorage'] = array('kernel.php', '', 'storage.memcache.php');
-$cl->items['datastorage'] = array('kernel.php', '', 'storage.class.php');
+$cl->items['storageinc'] = array('kernel.php', '', 'storageinc.php');
+$cl->items['storagejson'] = array('storagejson.php', '');
+$cl->items['storagememcache'] = array('kernel.php', '', 'storagememcache.php');
+$cl->items['datastorage'] = array('kernel.php', '', 'datastorage.php');
 $cl->save();
 
 $site = litepublisher::$site;
