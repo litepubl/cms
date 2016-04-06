@@ -1,16 +1,16 @@
 <?php
 
 foreach (array(
+'utils.functions.php',
 'paths.php',
 'litepubl.php',
 //'debugproxy.class.php');
 'data.class.php',
 'array2prop.class.php',
-'utils.functions.php',
 
 'storage.php',
 'storageinc.php',
-'storagejson.php',
+//'storagejson.php',
 'storagememcache.php',
 
 //old storages
@@ -31,7 +31,6 @@ foreach (array(
 'item.storage.class.php',
 
 'classes.class.php',
-'classes.functions.php',
 'options.class.php',
 'site.class.php',
 'urlmap.class.php',

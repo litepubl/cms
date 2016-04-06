@@ -496,7 +496,7 @@ class tmenu extends titem implements itemplate {
     }
 
     protected function doprocessform() {
-        if (tguard::post()) {
+        if (isset($_POST) && count($_POST)) {
             $this->formresult.= $this->processform();
         }
     }

@@ -108,7 +108,7 @@ class tadminmenu extends tmenu {
     }
 
     protected function doprocessform() {
-        if (tguard::post()) {
+        if (isset($_POST) && count($_POST)) {
             litepubl::$urlmap->clearcache();
         }
 

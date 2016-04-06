@@ -9,21 +9,6 @@
 namespace litepubl;
 
 class tguard {
-    //prevent double call post()
-    private static $posted;
-
-    public static function post() {
-        if (is_bool(static ::$posted)) return static ::$posted;
-        static ::$posted = false;
-        if (!isset($_POST) || !count($_POST)) return false;
-        if (get_magic_quotes_gpc()) {
-            foreach ($_POST as $name => $value) {
-                $_POST[$name] = stripslashes($_POST[$name]);
-            }
-        }
-        static ::$posted = true;
-        return true;
-    }
 
     public static function is_xxx() {
         if (isset($_GET['ref'])) {

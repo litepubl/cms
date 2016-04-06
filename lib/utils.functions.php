@@ -6,16 +6,22 @@
  *
  */
 
-namespace litepubl;
+//namespace litepubl;
 
 function sqldate($date = 0) {
-    if ($date == 0) $date = time();
+    if (!$date) {
+$date = time();
+}
+
     return date('Y-m-d H:i:s', $date);
 }
 
 function sqltime($date = 0) {
-    if ($date == 0) return '0000-00-00 00:00:00';
+    if ($date) {
     return date('Y-m-d H:i:s', $date);
+}
+
+return '0000-00-00 00:00:00';
 }
 
 function dbquote($s) {
@@ -103,16 +109,15 @@ function array_move(array & $a, $oldindex, $newindex) {
 
 function strtoarray($s) {
     $a = explode("\n", trim($s));
-    foreach ($a as $k => $v) $a[$k] = trim($v);
+    foreach ($a as $k => $v) {
+$a[$k] = trim($v);
+}
+
     return $a;
 }
 
 function tojson($a) {
-    if (defined('JSON_NUMERIC_CHECK')) {
-        return json_encode($a, JSON_NUMERIC_CHECK | (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0));
-    }
-
-    return json_encode($a);
+        return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
 }
 
 function jsonattr($a) {
@@ -122,6 +127,10 @@ function jsonattr($a) {
 function toenum($v, array $a) {
     $v = trim($v);
     return in_array($v, $a) ? $v : $a[0];
+}
+
+function getinstance($class) {
+    return litepubl\litepubl::$classes->getinstance($class);
 }
 
 function dumpstr($s) {

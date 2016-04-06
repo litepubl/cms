@@ -106,94 +106,21 @@ $inikernel = parse_ini_file($dir . 'install/ini/kernel.ini', true);
 
 foreach ($inikernel as $kernelfile => $kernitems) {
 $filelist = array();
+if ($kernelfile == 'kernel.php') {
+$filelist[] = 'utils.functions.php';
+}
+
+
 foreach ($kernitems as $classname => $kfile) {
 $filelist[] = $items[$classname];
 }
 
+if ($kernelfile == 'kernel.php') {
+$filelist[] = 'litepubl.init.php';
+}
+
 makekernel($dir, kernelfile, array_unique($filelist));
 }
-'utils.functions.php';
-'classes.functions.php',
-'litepubl.init.php',
-
-makekernel($dir, 'kernel.templates.php',  array(
-'local.class.php',
-'inifiles.class.php',
-'view.class.php', 
-'views.class.php', 
-'events.itemplate.class.php',
-'items.itemplate.class.php',
-'template.class.php',
-'theme.base.class.php',
-'theme.class.php',
-'theme.args.class.php',
-'theme.vars.class.php',
-'widget.class.php',
-'widget.order.class.php',
-'widget.class.class.php',
-'widgets.class.php',
-'widgets.cache.class.php',
-'guard.class.php'
-));
-
-makekernel($dir, 'kernel.posts.php',  array(
-'items.posts.class.php',
-'post.class.php',
-'post.factory.class.php',
-'posts.class.php',
-'post.transform.class.php',
-'post.meta.class.php',
-'widget.posts.class.php',
-'tags.common.class.php',
-'tags.factory.class.php',
-'tags.categories.class.php',
-'tags.class.php',
-'widget.commontags.class.php',
-'widget.categories.class.php',
-'widget.tags.class.php',
-'files.class.php',
-'files.items.class.php',
-));
-
-makekernel($dir, 'kernel.comments.php',  array(
-'comments.php',
-'comments.manager.class.php',
-'comments.form.class.php',
-'comments.subscribers.class.php',
-'template.comments.class.php',
-'widget.comments.class.php'
-));
-
-/*
-makekernel($dir, 'kernel.comments.class.files.php',  array(
-'comments.class.files.php',
-'comments.manager.class.files.php',
-'comments.form.class.files.php',
-'comments.spamfilter.class.php',
-'comments.subscribers.class.php',
-'comments.users.class.files.php',
-'template.comments.class.php',
-'widget.comments.class.php'
-));
-*/
-
-makekernel($dir, 'kernel.admin.php',  array(
-'menus.admin.class.php',
-'menu.admin.class.php',
-'author-rights.class.php',
-'theme.admin.class.php',
-'htmlresource.class.php',
-'html.adminform.class.php',
-'html.tabs.class.php',
-'html.ulist.class.php',
-'html.tag.class.php',
-'html.autoform.class.php',
-'html.tablebuilder.class.php',
-'filter.datetime.class.php',
-'admin.posteditor.ajax.class.php',
-'admin.posteditor.class.php',
-));
-
 }
 
 function makekernel($dir, $kernelfilename, array $files) {

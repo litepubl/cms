@@ -34,7 +34,7 @@ class tpasswordpage extends tevents_itemplate implements itemplate {
 
     public function request($arg) {
         $this->cache = false;
-        if (!tguard::post()) return;
+        if (!isset($_POST) || !count($_POST)) return;
 
         $antispam = isset($_POST['antispam']) ? $_POST['antispam'] : '';
         if (!$this->checkspam($antispam)) return 403;

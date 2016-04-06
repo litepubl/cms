@@ -53,12 +53,10 @@ class tjsonserver extends tevents {
         if (isset($_GET['method'])) return $_GET;
 
         if (isset($_POST['method'])) {
-            tguard::post();
             return $_POST;
         }
 
         if (isset($_POST['json'])) {
-            tguard::post();
             if (($s = trim($_POST['json'])) && ($args = json_decode($s, true))) {
                 if (isset($args['method'])) return $args;
             }

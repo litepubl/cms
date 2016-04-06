@@ -35,7 +35,7 @@ class tadminform extends tevents implements itemplate {
         $this->cache = false;
         tlocal::usefile('admin');
         $this->formresult = '';
-        if (tguard::post()) {
+        if (isset($_POST) && count($_POST)) {
             $this->formresult = $this->processform();
         }
     }
