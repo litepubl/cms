@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -18,6 +19,10 @@ class basetheme extends tevents {
 
     public static function exists($name) {
         return file_exists(litepubl::$paths->themes . $name . '/about.ini');
+    }
+
+    public static function getinstance($name) {
+        return static ::getbyname(get_called_class() , $name);
     }
 
     public static function getbyname($classname, $name) {

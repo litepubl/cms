@@ -1,26 +1,26 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
-//namespace litepubl;
-
+namespace litepubl;
 function sqldate($date = 0) {
     if (!$date) {
-$date = time();
-}
+        $date = time();
+    }
 
     return date('Y-m-d H:i:s', $date);
 }
 
 function sqltime($date = 0) {
     if ($date) {
-    return date('Y-m-d H:i:s', $date);
-}
+        return date('Y-m-d H:i:s', $date);
+    }
 
-return '0000-00-00 00:00:00';
+    return '0000-00-00 00:00:00';
 }
 
 function dbquote($s) {
@@ -109,14 +109,14 @@ function array_move(array & $a, $oldindex, $newindex) {
 function strtoarray($s) {
     $a = explode("\n", trim($s));
     foreach ($a as $k => $v) {
-$a[$k] = trim($v);
-}
+        $a[$k] = trim($v);
+    }
 
     return $a;
 }
 
 function tojson($a) {
-        return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+    return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
 }
 
 function jsonattr($a) {

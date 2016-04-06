@@ -1,142 +1,4 @@
 <?php
-//utils.functions.php
-//namespace litepubl;
-
-function sqldate($date = 0) {
-    if (!$date) {
-$date = time();
-}
-
-    return date('Y-m-d H:i:s', $date);
-}
-
-function sqltime($date = 0) {
-    if ($date) {
-    return date('Y-m-d H:i:s', $date);
-}
-
-return '0000-00-00 00:00:00';
-}
-
-function dbquote($s) {
-    return litepubl::$db->quote($s);
-}
-
-function md5rand() {
-    return md5(mt_rand() . litepubl::$secret . microtime());
-}
-
-function md5uniq() {
-    return basemd5(mt_rand() . litepubl::$secret . microtime());
-}
-
-function basemd5($s) {
-    return trim(base64_encode(md5($s, true)) , '=');
-}
-
-function strbegin($s, $begin) {
-    return strncmp($s, $begin, strlen($begin)) == 0;
-}
-
-function strbegins() {
-    $a = func_get_args();
-    $s = array_shift($a);
-    while ($begin = array_shift($a)) {
-        if (strncmp($s, $begin, strlen($begin)) == 0) return true;
-    }
-    return false;
-}
-
-function strend($s, $end) {
-    return $end == substr($s, 0 - strlen($end));
-}
-
-function strip_utf($s) {
-    $utf = "\xEF\xBB\xBF";
-    return strbegin($s, $utf) ? substr($s, strlen($utf)) : $s;
-}
-
-function array_delete(array & $a, $i) {
-    array_splice($a, $i, 1);
-}
-
-function array_delete_value(array & $a, $value) {
-    $i = array_search($value, $a);
-    if ($i !== false) {
-        array_splice($a, $i, 1);
-        return true;
-    }
-
-    return false;
-}
-
-function array_clean(array & $items) {
-    $items = array_unique($items);
-    foreach (array(
-        0,
-        false,
-        null,
-        ''
-    ) as $v) {
-        $i = array_search($v, $items);
-        if (($i !== false) && ($items[$i] === $v)) {
-            array_splice($items, $i, 1);
-        }
-    }
-}
-
-function array_insert(array & $a, $item, $index) {
-    array_splice($a, $index, 0, array(
-        $item
-    ));
-}
-
-function array_move(array & $a, $oldindex, $newindex) {
-    //delete and insert
-    if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
-    $item = $a[$oldindex];
-    array_splice($a, $oldindex, 1);
-    array_splice($a, $newindex, 0, array(
-        $item
-    ));
-}
-
-function strtoarray($s) {
-    $a = explode("\n", trim($s));
-    foreach ($a as $k => $v) {
-$a[$k] = trim($v);
-}
-
-    return $a;
-}
-
-function tojson($a) {
-        return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
-}
-
-function jsonattr($a) {
-    return str_replace('"', '&quot;', tojson($a));
-}
-
-function toenum($v, array $a) {
-    $v = trim($v);
-    return in_array($v, $a) ? $v : $a[0];
-}
-
-function getinstance($class) {
-    return litepubl\litepubl::$classes->getinstance($class);
-}
-
-function dumpstr($s) {
-    echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
-}
-
-function dumpvar($v) {
-    echo "<pre>\n";
-    var_dump($v);
-    echo "</pre>\n";
-}
-
 //db.class.php
 namespace litepubl;
 
@@ -864,139 +726,6 @@ class getter {
     }
 
 }
-
-//litepubl.php
-namespace litepubl;
-
-class litepubl {
-    public static $cache;
-    public static $classes;
-    public static $datastorage;
-    public static $db;
-    public static $debug;
-    public static $domain;
-    public static $log;
-    public static $memcache;
-    public static $microtime;
-    public static $options;
-    public static $paths;
-    public static $secret;
-    public static $site;
-    public static $storage;
-    public static $urlmap;
-
-    public static function init() {
-        static ::$microtime = microtime(true);
-        //backward compability, in near future will be removed on config::$secret
-        static ::$secret = config::$secret;
-        static ::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
-        static ::$domain = static ::getHost();
-        static ::createAliases();
-        static ::createInstances();
-    }
-
-    public function createAliases() {
-        \class_alias(get_called_class() , 'litepublisher');
-        \class_alias(get_called_class() , 'litepubl\litepublisher');
-        \class_alias(get_called_class() , 'litepubl');
-    }
-
-    public static function createInstances() {
-        static ::$paths = new paths();
-        static ::createStorage();
-        static ::$classes = tclasses::i();
-        static ::$options = toptions::i();
-        static ::$site = tsite::i();
-        static ::$db = tdatabase::i();
-        //static::$cache = new cache();
-        static ::$urlmap = turlmap::i();
-    }
-
-    public static function createStorage() {
-        if (config::$memcache && class_exists('Memcache')) {
-            static ::$memcache = new Memcache;
-            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['post']) ? config::$memcache['post'] : 1211);
-        }
-
-        if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
-            $classname = config::$classes['storage'];
-            static ::$storage = new $classname();
-        } else if (static ::$memcache) {
-            static ::$storage = new memcachestorage();
-        } else {
-            static ::$storage = new storage();
-        }
-
-        static ::$datastorage = new datastorage();
-        static ::$datastorage->loaddata();
-        if (!static ::$datastorage->isInstalled()) {
-            require (static ::$paths->lib . 'install/install.php');
-            //exit() in lib/install/install.php
-            
-        }
-    }
-
-    public static function cachefile($filename) {
-        if (!static ::$memcache) {
-            return file_get_contents($filename);
-        }
-
-        if ($s = static ::$memcache->get($filename)) {
-            return $s;
-        }
-
-        $s = file_get_contents($filename);
-        static ::$memcache->set($filename, $s, false, 3600);
-        return $s;
-    }
-
-    public static function getHost() {
-        if (config::$host) {
-            return config::$host;
-        }
-
-        $host = isset($_SERVER['HTTP_HOST']) ? \strtolower(\trim($_SERVER['HTTP_HOST'])) : false;
-        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
-            return $m[2];
-        }
-
-        if (config::$dieOnInvalidHost) {
-            die('cant resolve domain name');
-        }
-    }
-
-    public static function request() {
-        if (static ::$debug) {
-            \error_reporting(-1);
-            \ini_set('display_errors', 1);
-            \Header('Cache-Control: no-cache, must-revalidate');
-            \Header('Pragma: no-cache');
-        }
-
-        if (config::$beforeRequest && \is_callable(config::$beforeRequest)) {
-            \call_user_func_array(config::$beforeRequest, []);
-        }
-
-        return static ::$urlmap->request(static ::$domain, $_SERVER['REQUEST_URI']);
-    }
-
-    public static function run() {
-        try {
-            static ::init();
-
-            if (!config::$ignoreRequest) {
-                static ::request();
-            }
-        }
-        catch(\Exception $e) {
-            static ::$options->handexception($e);
-        }
-
-        static ::$options->savemodified();
-        static ::$options->showerrors();
-    }
-
-} //class
 
 //paths.php
 namespace litepubl;
@@ -2614,19 +2343,19 @@ class tclasses extends titems {
     public function add($class, $filename, $deprecatedPath = false) {
         if ($filename = $this->getpsr4($class)) {
             $this->include($filename);
-} else {
-        if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
-            return false;
-        }
+        } else {
+            if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
+                return false;
+            }
 
-        $this->lock();
-        if (!strpos($class, '\\')) {
-            $class = 'litepubl\\' . $class;
-            $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
-        }
+            $this->lock();
+            if (!strpos($class, '\\')) {
+                $class = 'litepubl\\' . $class;
+                $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
+            }
 
-        $this->items[$class] = $filename;
-}
+            $this->items[$class] = $filename;
+        }
 
         $instance = $this->getinstance($class);
         if (method_exists($instance, 'install')) {
@@ -2764,12 +2493,12 @@ class tclasses extends titems {
             $ns = substr($classname, 0, $i);
             $baseclass = strtolower(substr($classname, $i + 1));
 
-if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
-                $filename = litepubl::$paths->home .$this->kernel[$ns];
+            if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
+                $filename = litepubl::$paths->home . $this->kernel[$ns];
                 if (file_exists($filename)) {
                     return $filename;
                 }
-}
+            }
 
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';
@@ -2796,14 +2525,14 @@ if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
                 }
             }
 
-//last chanse
-$name = 'litepubl\plugins';
-                if (strbegin($ns, $name)) {
-                    $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins,
- substr($ns, strlen($name) + 1) , $baseclass);
-                    if (file_exists($filename)) {
-                        return $filename;
-                    }
+            //last chanse
+            $name = 'litepubl\plugins';
+            if (strbegin($ns, $name)) {
+                $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins, substr($ns, strlen($name) + 1) , $baseclass);
+                if (file_exists($filename)) {
+                    return $filename;
+                }
+            }
         }
 
         return false;
@@ -2865,14 +2594,6 @@ class toptions extends tevents_storage {
     protected $_admincookie;
     public $gmt;
     public $errorlog;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    public static function instance() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -4179,16 +3900,153 @@ interface iposts {
     public function delete($id);
 }
 
-//litepubl.init.php
+//litepubl.php
 namespace litepubl;
 
-if (\version_compare(\PHP_VERSION, '5.4', '<')) {
-    die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
-}
+class litepubl {
+    public static $cache;
+    public static $classes;
+    public static $datastorage;
+    public static $db;
+    public static $debug;
+    public static $domain;
+    public static $log;
+    public static $memcache;
+    public static $microtime;
+    public static $options;
+    public static $paths;
+    public static $secret;
+    public static $site;
+    public static $storage;
+    public static $urlmap;
 
-if (isset(config::$classes['root']) && class_exists(config::$classes['root'])) {
-    \call_user_func_array(config::$classes['root'], 'run', []);
-} else {
-    litepubl::run();
-}
+    public static function init() {
+        static ::$microtime = microtime(true);
+
+        //functions in global namespace
+        require_once (__DIR__ . '/utils.functions.php');
+
+        //backward compability, in near future will be removed on config::$secret
+        static ::$secret = config::$secret;
+        static ::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
+        static ::$domain = static ::getHost();
+        static ::createAliases();
+        static ::createInstances();
+    }
+
+    public function createAliases() {
+        \class_alias(get_called_class() , 'litepublisher');
+        \class_alias(get_called_class() , 'litepubl\litepublisher');
+        \class_alias(get_called_class() , 'litepubl');
+    }
+
+    public static function createInstances() {
+        static ::$paths = new paths();
+        static ::createStorage();
+        static ::$classes = tclasses::i();
+        static ::$options = toptions::i();
+        static ::$site = tsite::i();
+        static ::$db = tdatabase::i();
+        //static::$cache = new cache();
+        static ::$urlmap = turlmap::i();
+    }
+
+    public static function createStorage() {
+        if (config::$memcache && class_exists('Memcache')) {
+            static ::$memcache = new Memcache;
+            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['post']) ? config::$memcache['post'] : 1211);
+        }
+
+        if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
+            $classname = config::$classes['storage'];
+            static ::$storage = new $classname();
+        } else if (static ::$memcache) {
+            static ::$storage = new memcachestorage();
+        } else {
+            static ::$storage = new storage();
+        }
+
+        static ::$datastorage = new datastorage();
+        static ::$datastorage->loaddata();
+        if (!static ::$datastorage->isInstalled()) {
+            require (static ::$paths->lib . 'install/install.php');
+            //exit() in lib/install/install.php
+            
+        }
+    }
+
+    public static function cachefile($filename) {
+        if (!static ::$memcache) {
+            return file_get_contents($filename);
+        }
+
+        if ($s = static ::$memcache->get($filename)) {
+            return $s;
+        }
+
+        $s = file_get_contents($filename);
+        static ::$memcache->set($filename, $s, false, 3600);
+        return $s;
+    }
+
+    public static function getHost() {
+        if (config::$host) {
+            return config::$host;
+        }
+
+        $host = isset($_SERVER['HTTP_HOST']) ? \strtolower(\trim($_SERVER['HTTP_HOST'])) : false;
+        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
+            return $m[2];
+        }
+
+        if (config::$dieOnInvalidHost) {
+            die('cant resolve domain name');
+        }
+    }
+
+    public static function request() {
+        if (static ::$debug) {
+            \error_reporting(-1);
+            \ini_set('display_errors', 1);
+            \Header('Cache-Control: no-cache, must-revalidate');
+            \Header('Pragma: no-cache');
+        }
+
+        if (config::$beforeRequest && \is_callable(config::$beforeRequest)) {
+            \call_user_func_array(config::$beforeRequest, []);
+        }
+
+        return static ::$urlmap->request(static ::$domain, $_SERVER['REQUEST_URI']);
+    }
+
+    public static function run() {
+        try {
+            static ::init();
+
+            if (!config::$ignoreRequest) {
+                static ::request();
+            }
+        }
+        catch(\Exception $e) {
+            static ::$options->handexception($e);
+        }
+
+        static ::$options->savemodified();
+        static ::$options->showerrors();
+    }
+
+    public static function start() {
+        if (\version_compare(\PHP_VERSION, '5.4', '<')) {
+            die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
+        }
+
+        if (isset(config::$classes['root']) && class_exists(config::$classes['root'])) {
+            \call_user_func_array(config::$classes['root'], 'run', []);
+        } else {
+            static ::run();
+        }
+    }
+
+} //class
+litepubl::start();
 

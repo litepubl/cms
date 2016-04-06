@@ -6,17 +6,13 @@ class admintheme extends basetheme {
     public $onfileperm;
 
     public static function i() {
-        $result = getinstance(__class__);
+        $result = getinstance(get_called_class());
         if (!$result->name && ($context = litepubl::$urlmap->context) && isset($context->idview)) {
             $result->name = tview::getview($context)->adminname;
             $result->load();
         }
 
         return $result;
-    }
-
-    public static function getinstance($name) {
-        return static ::getbyname(__class__, $name);
     }
 
     public static function admin() {

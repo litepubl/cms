@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -61,7 +62,7 @@ class tplugins extends titems {
         }
 
         $about = static ::getabout($name);
-if (isset($about['namespace'])) {
+        if (isset($about['namespace'])) {
         } elseif (!strpos($classname, '\\')) {
             $classname = 'litepubl\\' . $classname;
         }
@@ -73,7 +74,7 @@ if (isset($about['namespace'])) {
         $this->lock();
         $this->items[$name] = array(
             'id' => ++$this->autoid,
-'namespace' => $namespace,
+            'namespace' => $namespace,
             'class' => $classname,
             'file' => $filename,
             'adminclass' => $adminclassname,
@@ -81,12 +82,12 @@ if (isset($about['namespace'])) {
         );
 
         litepubl::$classes->lock();
-if ($namespace) {
-litepubl::$classes->namespaces[$namespace] = "plugins/$name';
+        if ($namespace) {
+            litepubl::$classes->namespaces[$namespace] = "plugins/$name';
 } else {
-        litepubl::$classes->Add($classname, "plugins/$name/$filename");
+        litepubl::$classes->Add($classname, "plugins / $name / $filename");
         if ($adminclassname) {
-            litepubl::$classes->Add($adminclassname, "plugins/$name/$adminfilename");
+            litepubl::$classes->Add($adminclassname, "plugins / $name / $adminfilename");
         }
 
         litepubl::$classes->unlock();
@@ -167,7 +168,7 @@ litepubl::$classes->namespaces[$namespace] = "plugins/$name';
 
     public function upload($name, $files) {
         if (!@file_exists(litepubl::$paths->plugins . $name)) {
-            if (!@mkdir(litepubl::$paths->plugins . $name, 0777)) return $this->Error("Cant create $name folder in plugins");
+            if (!@mkdir(litepubl::$paths->plugins . $name, 0777)) return $this->Error("Cantcreate $namefolderinplugins");
             @chmod(litepubl::$paths->plugins . $name, 0777);
         }
         $dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;

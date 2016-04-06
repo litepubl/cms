@@ -28,7 +28,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (false && strend($filename, 'php')) {
+if (strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -106,16 +106,8 @@ $inikernel = parse_ini_file($dir . 'install/ini/kernel.ini', true);
 
 foreach ($inikernel as $kernelfile => $kernitems) {
 $filelist = array();
-if ($kernelfile == 'kernel.php') {
-$filelist[] = 'utils.functions.php';
-}
-
 foreach ($kernitems as $classname => $kfile) {
 $filelist[] = $items[$classname];
-}
-
-if ($kernelfile == 'kernel.php') {
-$filelist[] = 'litepubl.init.php';
 }
 
 makekernel($dir, $kernelfile, array_unique($filelist));

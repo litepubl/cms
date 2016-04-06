@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -26,6 +27,10 @@ class litepubl {
 
     public static function init() {
         static ::$microtime = microtime(true);
+
+        //functions in global namespace
+        require_once (__DIR__ . '/utils.functions.php');
+
         //backward compability, in near future will be removed on config::$secret
         static ::$secret = config::$secret;
         static ::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
@@ -135,4 +140,17 @@ class litepubl {
         static ::$options->showerrors();
     }
 
+    public static function start() {
+        if (\version_compare(\PHP_VERSION, '5.4', '<')) {
+            die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
+        }
+
+        if (isset(config::$classes['root']) && class_exists(config::$classes['root'])) {
+            \call_user_func_array(config::$classes['root'], 'run', []);
+        } else {
+            static ::run();
+        }
+    }
+
 } //class
+litepubl::start();

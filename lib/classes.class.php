@@ -1,9 +1,10 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
-**/
+ * Lite Publisher
+ * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * Licensed under the MIT (LICENSE.txt) license.
+ *
+ */
 
 namespace litepubl;
 
@@ -99,19 +100,19 @@ class tclasses extends titems {
     public function add($class, $filename, $deprecatedPath = false) {
         if ($filename = $this->getpsr4($class)) {
             $this->include($filename);
-} else {
-        if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
-            return false;
-        }
+        } else {
+            if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
+                return false;
+            }
 
-        $this->lock();
-        if (!strpos($class, '\\')) {
-            $class = 'litepubl\\' . $class;
-            $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
-        }
+            $this->lock();
+            if (!strpos($class, '\\')) {
+                $class = 'litepubl\\' . $class;
+                $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
+            }
 
-        $this->items[$class] = $filename;
-}
+            $this->items[$class] = $filename;
+        }
 
         $instance = $this->getinstance($class);
         if (method_exists($instance, 'install')) {
@@ -249,12 +250,12 @@ class tclasses extends titems {
             $ns = substr($classname, 0, $i);
             $baseclass = strtolower(substr($classname, $i + 1));
 
-if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
-                $filename = litepubl::$paths->home .$this->kernel[$ns];
+            if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
+                $filename = litepubl::$paths->home . $this->kernel[$ns];
                 if (file_exists($filename)) {
                     return $filename;
                 }
-}
+            }
 
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';
@@ -281,14 +282,14 @@ if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
                 }
             }
 
-//last chanse
-$name = 'litepubl\plugins';
-                if (strbegin($ns, $name)) {
-                    $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins,
- substr($ns, strlen($name) + 1) , $baseclass);
-                    if (file_exists($filename)) {
-                        return $filename;
-                    }
+            //last chanse
+            $name = 'litepubl\plugins';
+            if (strbegin($ns, $name)) {
+                $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins, substr($ns, strlen($name) + 1) , $baseclass);
+                if (file_exists($filename)) {
+                    return $filename;
+                }
+            }
         }
 
         return false;

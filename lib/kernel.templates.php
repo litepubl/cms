@@ -805,6 +805,10 @@ class basetheme extends tevents {
         return file_exists(litepubl::$paths->themes . $name . '/about.ini');
     }
 
+    public static function getinstance($name) {
+        return static ::getbyname(get_called_class() , $name);
+    }
+
     public static function getbyname($classname, $name) {
         if (isset(static ::$instances[$name])) {
             return static ::$instances[$name];
@@ -1045,14 +1049,6 @@ class basetheme extends tevents {
 namespace litepubl;
 
 class ttheme extends basetheme {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    public static function getinstance($name) {
-        return static ::getbyname(__class__, $name);
-    }
 
     public static function context() {
         $result = static ::i();
