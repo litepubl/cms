@@ -1404,6 +1404,42 @@ class emptyclass {
     }
 }
 
+//theme.vars.class.php
+namespace litepubl;
+
+class themevars {
+    public $keys = array();
+
+    public function __destruct() {
+        foreach ($this->keys as $name) {
+            if (isset(basetheme::$vars[$name])) {
+                unset(basetheme::$vars[$name]);
+            }
+        }
+    }
+
+    public function __get($name) {
+        return basetheme::$vars[$name];
+    }
+
+    public function __set($name, $value) {
+        basetheme::$vars[$name] = $value;
+
+        if (!in_array($name, $this->keys)) {
+            $this->keys[] = $name;
+        }
+    }
+
+    public function __isset($name) {
+        return isset(basetheme::$vars[$name]);
+    }
+
+    public function __unset($name) {
+        unset(basetheme::$vars[$name]);
+    }
+
+}
+
 //theme.args.class.php
 namespace litepubl;
 
@@ -1489,42 +1525,6 @@ class targs {
     }
 
 } //class
-
-//theme.vars.class.php
-namespace litepubl;
-
-class themevars {
-    public $keys = array();
-
-    public function __destruct() {
-        foreach ($this->keys as $name) {
-            if (isset(basetheme::$vars[$name])) {
-                unset(basetheme::$vars[$name]);
-            }
-        }
-    }
-
-    public function __get($name) {
-        return basetheme::$vars[$name];
-    }
-
-    public function __set($name, $value) {
-        basetheme::$vars[$name] = $value;
-
-        if (!in_array($name, $this->keys)) {
-            $this->keys[] = $name;
-        }
-    }
-
-    public function __isset($name) {
-        return isset(basetheme::$vars[$name]);
-    }
-
-    public function __unset($name) {
-        unset(basetheme::$vars[$name]);
-    }
-
-}
 
 //widget.class.php
 namespace litepubl;
@@ -2258,21 +2258,6 @@ class twidgetscache extends titems {
 namespace litepubl;
 
 class tguard {
-    //prevent double call post()
-    private static $posted;
-
-    public static function post() {
-        if (is_bool(static ::$posted)) return static ::$posted;
-        static ::$posted = false;
-        if (!isset($_POST) || !count($_POST)) return false;
-        if (get_magic_quotes_gpc()) {
-            foreach ($_POST as $name => $value) {
-                $_POST[$name] = stripslashes($_POST[$name]);
-            }
-        }
-        static ::$posted = true;
-        return true;
-    }
 
     public static function is_xxx() {
         if (isset($_GET['ref'])) {

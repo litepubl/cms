@@ -2549,6 +2549,24 @@ class ttagswidget extends tcommontagswidget {
 
 } //class
 
+//files.items.class.php
+namespace litepubl;
+
+class tfileitems extends titemsposts {
+
+    public static function i() {
+        return getinstance(__class__);
+    }
+
+    protected function create() {
+        $this->dbversion = dbversion;
+        parent::create();
+        $this->basename = 'fileitems';
+        $this->table = 'filesitemsposts';
+    }
+
+}
+
 //files.class.php
 namespace litepubl;
 
@@ -2868,22 +2886,4 @@ class tfiles extends titems {
     }
 
 } //class
-
-//files.items.class.php
-namespace litepubl;
-
-class tfileitems extends titemsposts {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function create() {
-        $this->dbversion = dbversion;
-        parent::create();
-        $this->basename = 'fileitems';
-        $this->table = 'filesitemsposts';
-    }
-
-}
 

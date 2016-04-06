@@ -518,7 +518,6 @@ class tcommentform extends tevents {
       ?>";
         }
 
-        tguard::post();
         return $this->dorequest($_POST);
     }
 

@@ -1,305 +1,4 @@
 <?php
-//menus.admin.class.php
-namespace litepubl;
-
-class tadminmenus extends tmenus {
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'adminmenu';
-        $this->addevents('onexclude');
-        $this->data['heads'] = '';
-    }
-
-    public function settitle($id, $title) {
-        if ($id && isset($this->items[$id])) {
-            $this->items[$id]['title'] = $title;
-            $this->save();
-            litepubl::$urlmap->clearcache();
-        }
-    }
-
-    public function getdir() {
-        return litepubl::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
-    }
-
-    public function getadmintitle($name) {
-        $lang = tlocal::i();
-        $ini = & $lang->ini;
-        if (isset($ini[$name]['title'])) {
-            return $ini[$name]['title'];
-        }
-
-        tlocal::usefile('install');
-        if (!in_array('adminmenus', $lang->searchsect)) {
-            array_unshift($lang->searchsect, 'adminmenus');
-        }
-
-        if ($result = $lang->__get($name)) {
-            return $result;
-        }
-
-        return $name;
-    }
-
-    public function createurl($parent, $name) {
-        return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
-    }
-
-    public function createitem($parent, $name, $group, $class) {
-        $title = $this->getadmintitle($name);
-        $url = $this->createurl($parent, $name);
-        return $this->additem(array(
-            'parent' => $parent,
-            'url' => $url,
-            'title' => $title,
-            'name' => $name,
-            'class' => $class,
-            'group' => $group
-        ));
-    }
-
-    public function additem(array $item) {
-        if (empty($item['group'])) {
-            $groups = tusergroups::i();
-            $item['group'] = $groups->items[$groups->defaults[0]]['name'];
-        }
-        return parent::additem($item);
-    }
-
-    public function addfakemenu(tmenu $menu) {
-        $this->lock();
-        $id = parent::addfakemenu($menu);
-        if (empty($this->items[$id]['group'])) {
-            $groups = tusergroups::i();
-            $group = count($groups->defaults) ? $groups->items[$groups->defaults[0]]['name'] : 'commentator';
-            $this->items[$id]['group'] = $group;
-        }
-
-        $this->unlock();
-        return $id;
-    }
-
-    public function getchilds($id) {
-        if ($id == 0) {
-            $result = array();
-            $options = litepubl::$options;
-            foreach ($this->tree as $iditem => $items) {
-                if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
-            }
-            return $result;
-        }
-
-        $parents = array(
-            $id
-        );
-        $parent = $this->items[$id]['parent'];
-        while ($parent != 0) {
-            array_unshift($parents, $parent);
-            $parent = $this->items[$parent]['parent'];
-        }
-
-        $tree = $this->tree;
-        foreach ($parents as $parent) {
-            foreach ($tree as $iditem => $items) {
-                if ($iditem == $parent) {
-                    $tree = $items;
-                    break;
-                }
-            }
-        }
-        return array_keys($tree);
-    }
-
-    public function exclude($id) {
-        if (!litepubl::$options->hasgroup($this->items[$id]['group'])) return true;
-        return $this->onexclude($id);
-    }
-
-} //class
-
-//menu.admin.class.php
-namespace litepubl;
-
-class tadminmenu extends tmenu {
-    public static $adminownerprops = array(
-        'title',
-        'url',
-        'idurl',
-        'parent',
-        'order',
-        'status',
-        'name',
-        'group'
-    );
-
-    public static function getinstancename() {
-        return 'adminmenu';
-    }
-
-    public static function getowner() {
-        return tadminmenus::i();
-    }
-
-    protected function create() {
-        parent::create();
-        $this->cache = false;
-    }
-
-    public function get_owner_props() {
-        return static ::$adminownerprops;
-    }
-
-    public function load() {
-        return true;
-    }
-
-    public function save() {
-        return true;
-    }
-
-    public function gethead() {
-        return tadminmenus::i()->heads;
-    }
-
-    public function getidview() {
-        return tviews::i()->defaults['admin'];
-    }
-
-    public function gettheme() {
-        return $this->view->theme;
-    }
-
-    public function getadmintheme() {
-        return $this->view->admintheme;
-    }
-
-    public static function auth($group) {
-        if ($err = tguard::checkattack()) {
-            return $err;
-        }
-
-        if (!litepubl::$options->user) {
-            turlmap::nocache();
-            return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
-        }
-
-        if (!litepubl::$options->hasgroup($group)) {
-            $url = tusergroups::i()->gethome(litepubl::$options->group);
-            turlmap::nocache();
-            return litepubl::$urlmap->redir($url);
-        }
-    }
-
-    public function request($id) {
-        error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING);
-        ini_set('display_errors', 1);
-
-        if (is_null($id)) {
-            $id = $this->owner->class2id(get_class($this));
-        }
-
-        $this->data['id'] = (int)$id;
-        if ($id > 0) {
-            $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
-        }
-
-        if ($s = static ::auth($this->group)) {
-            return $s;
-        }
-
-        tlocal::usefile('admin');
-
-        if ($s = $this->canrequest()) {
-            return $s;
-        }
-
-        $this->doprocessform();
-    }
-
-    public function canrequest() {
-    }
-
-    protected function doprocessform() {
-        if (tguard::post()) {
-            litepubl::$urlmap->clearcache();
-        }
-
-        return parent::doprocessform();
-    }
-
-    public function getcont() {
-        if (litepubl::$options->admincache) {
-            $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-            $filename = 'adminmenu.' . litepubl::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-            if ($result = litepubl::$urlmap->cache->get($filename)) {
-                return $result;
-            }
-
-            $result = parent::getcont();
-            litepubl::$urlmap->cache->set($filename, $result);
-            return $result;
-        } else {
-            return parent::getcont();
-        }
-    }
-
-    public static function idget() {
-        return (int)tadminhtml::getparam('id', 0);
-    }
-
-    public function getaction() {
-        return isset($_REQUEST['action']) ? $_REQUEST['action'] : false;
-    }
-
-    public function gethtml($name = '') {
-        return tadminhtml::i();
-    }
-
-    public function getlang() {
-        return tlocal::i($this->name);
-    }
-
-    public function getadminlang() {
-        return tlocal::inifile($this, '.admin.ini');
-    }
-
-    public function getconfirmed() {
-        return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
-    }
-
-    public function getnotfound() {
-        return $this->admintheme->geterr(tlocal::i()->notfound);
-    }
-
-    public function getadminurl() {
-        return litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
-    }
-
-    public function getfrom($perpage, $count) {
-        if (litepubl::$urlmap->page <= 1) return 0;
-        return min($count, (litepubl::$urlmap->page - 1) * $perpage);
-    }
-
-} //class
-
-//author-rights.class.php
-namespace litepubl;
-
-class tauthor_rights extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function create() {
-        parent::create();
-        $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
-        $this->basename = 'authorrights';
-    }
-
-}
-
 //theme.admin.class.php
 namespace litepubl;
 
@@ -606,6 +305,755 @@ class admintheme extends basetheme {
 
 } //class
 
+//menus.admin.class.php
+namespace litepubl;
+
+class tadminmenus extends tmenus {
+
+    protected function create() {
+        parent::create();
+        $this->basename = 'adminmenu';
+        $this->addevents('onexclude');
+        $this->data['heads'] = '';
+    }
+
+    public function settitle($id, $title) {
+        if ($id && isset($this->items[$id])) {
+            $this->items[$id]['title'] = $title;
+            $this->save();
+            litepubl::$urlmap->clearcache();
+        }
+    }
+
+    public function getdir() {
+        return litepubl::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
+    }
+
+    public function getadmintitle($name) {
+        $lang = tlocal::i();
+        $ini = & $lang->ini;
+        if (isset($ini[$name]['title'])) {
+            return $ini[$name]['title'];
+        }
+
+        tlocal::usefile('install');
+        if (!in_array('adminmenus', $lang->searchsect)) {
+            array_unshift($lang->searchsect, 'adminmenus');
+        }
+
+        if ($result = $lang->__get($name)) {
+            return $result;
+        }
+
+        return $name;
+    }
+
+    public function createurl($parent, $name) {
+        return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
+    }
+
+    public function createitem($parent, $name, $group, $class) {
+        $title = $this->getadmintitle($name);
+        $url = $this->createurl($parent, $name);
+        return $this->additem(array(
+            'parent' => $parent,
+            'url' => $url,
+            'title' => $title,
+            'name' => $name,
+            'class' => $class,
+            'group' => $group
+        ));
+    }
+
+    public function additem(array $item) {
+        if (empty($item['group'])) {
+            $groups = tusergroups::i();
+            $item['group'] = $groups->items[$groups->defaults[0]]['name'];
+        }
+        return parent::additem($item);
+    }
+
+    public function addfakemenu(tmenu $menu) {
+        $this->lock();
+        $id = parent::addfakemenu($menu);
+        if (empty($this->items[$id]['group'])) {
+            $groups = tusergroups::i();
+            $group = count($groups->defaults) ? $groups->items[$groups->defaults[0]]['name'] : 'commentator';
+            $this->items[$id]['group'] = $group;
+        }
+
+        $this->unlock();
+        return $id;
+    }
+
+    public function getchilds($id) {
+        if ($id == 0) {
+            $result = array();
+            $options = litepubl::$options;
+            foreach ($this->tree as $iditem => $items) {
+                if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
+            }
+            return $result;
+        }
+
+        $parents = array(
+            $id
+        );
+        $parent = $this->items[$id]['parent'];
+        while ($parent != 0) {
+            array_unshift($parents, $parent);
+            $parent = $this->items[$parent]['parent'];
+        }
+
+        $tree = $this->tree;
+        foreach ($parents as $parent) {
+            foreach ($tree as $iditem => $items) {
+                if ($iditem == $parent) {
+                    $tree = $items;
+                    break;
+                }
+            }
+        }
+        return array_keys($tree);
+    }
+
+    public function exclude($id) {
+        if (!litepubl::$options->hasgroup($this->items[$id]['group'])) return true;
+        return $this->onexclude($id);
+    }
+
+} //class
+
+//menu.admin.class.php
+namespace litepubl;
+
+class tadminmenu extends tmenu {
+    public static $adminownerprops = array(
+        'title',
+        'url',
+        'idurl',
+        'parent',
+        'order',
+        'status',
+        'name',
+        'group'
+    );
+
+    public static function getinstancename() {
+        return 'adminmenu';
+    }
+
+    public static function getowner() {
+        return tadminmenus::i();
+    }
+
+    protected function create() {
+        parent::create();
+        $this->cache = false;
+    }
+
+    public function get_owner_props() {
+        return static ::$adminownerprops;
+    }
+
+    public function load() {
+        return true;
+    }
+
+    public function save() {
+        return true;
+    }
+
+    public function gethead() {
+        return tadminmenus::i()->heads;
+    }
+
+    public function getidview() {
+        return tviews::i()->defaults['admin'];
+    }
+
+    public function gettheme() {
+        return $this->view->theme;
+    }
+
+    public function getadmintheme() {
+        return $this->view->admintheme;
+    }
+
+    public static function auth($group) {
+        if ($err = tguard::checkattack()) {
+            return $err;
+        }
+
+        if (!litepubl::$options->user) {
+            turlmap::nocache();
+            return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
+        }
+
+        if (!litepubl::$options->hasgroup($group)) {
+            $url = tusergroups::i()->gethome(litepubl::$options->group);
+            turlmap::nocache();
+            return litepubl::$urlmap->redir($url);
+        }
+    }
+
+    public function request($id) {
+        error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING);
+        ini_set('display_errors', 1);
+
+        if (is_null($id)) {
+            $id = $this->owner->class2id(get_class($this));
+        }
+
+        $this->data['id'] = (int)$id;
+        if ($id > 0) {
+            $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
+        }
+
+        if ($s = static ::auth($this->group)) {
+            return $s;
+        }
+
+        tlocal::usefile('admin');
+
+        if ($s = $this->canrequest()) {
+            return $s;
+        }
+
+        $this->doprocessform();
+    }
+
+    public function canrequest() {
+    }
+
+    protected function doprocessform() {
+        if (isset($_POST) && count($_POST)) {
+            litepubl::$urlmap->clearcache();
+        }
+
+        return parent::doprocessform();
+    }
+
+    public function getcont() {
+        if (litepubl::$options->admincache) {
+            $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+            $filename = 'adminmenu.' . litepubl::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+            if ($result = litepubl::$urlmap->cache->get($filename)) {
+                return $result;
+            }
+
+            $result = parent::getcont();
+            litepubl::$urlmap->cache->set($filename, $result);
+            return $result;
+        } else {
+            return parent::getcont();
+        }
+    }
+
+    public static function idget() {
+        return (int)tadminhtml::getparam('id', 0);
+    }
+
+    public function getaction() {
+        return isset($_REQUEST['action']) ? $_REQUEST['action'] : false;
+    }
+
+    public function gethtml($name = '') {
+        return tadminhtml::i();
+    }
+
+    public function getlang() {
+        return tlocal::i($this->name);
+    }
+
+    public function getadminlang() {
+        return tlocal::inifile($this, '.admin.ini');
+    }
+
+    public function getconfirmed() {
+        return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
+    }
+
+    public function getnotfound() {
+        return $this->admintheme->geterr(tlocal::i()->notfound);
+    }
+
+    public function getadminurl() {
+        return litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
+    }
+
+    public function getfrom($perpage, $count) {
+        if (litepubl::$urlmap->page <= 1) return 0;
+        return min($count, (litepubl::$urlmap->page - 1) * $perpage);
+    }
+
+} //class
+
+//author-rights.class.php
+namespace litepubl;
+
+class tauthor_rights extends tevents {
+
+    public static function i() {
+        return getinstance(__class__);
+    }
+
+    protected function create() {
+        parent::create();
+        $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
+        $this->basename = 'authorrights';
+    }
+
+}
+
+//admin.posteditor.class.php
+namespace litepubl;
+
+class tposteditor extends tadminmenu {
+    public $idpost;
+    protected $isauthor;
+
+    public static function i($id = 0) {
+        return parent::iteminstance(__class__, $id);
+    }
+
+    public function gethead() {
+        $result = parent::gethead();
+
+        $template = ttemplate::i();
+        $template->ltoptions['idpost'] = $this->idget();
+        $result.= $template->getjavascript($template->jsmerger_posteditor);
+
+        if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) {
+            $result.= $h;
+        }
+
+        return $result;
+    }
+
+    public static function getcombocategories(array $items, $idselected) {
+        $result = '';
+        $categories = tcategories::i();
+        $categories->loadall();
+
+        if (!count($items)) {
+            $items = array_keys($categories->items);
+        }
+
+        foreach ($items as $id) {
+            $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', basetheme::quote($categories->getvalue($id, 'title')));
+        }
+
+        return $result;
+    }
+
+    protected function getcategories(tpost $post) {
+        $postitems = $post->categories;
+        $categories = tcategories::i();
+        if (!count($postitems)) {
+            $postitems = array(
+                $categories->defaultid
+            );
+        }
+
+        return $this->admintheme->getcats($postitems);
+    }
+
+    public function getvarpost($post) {
+        if (!$post) {
+            return basetheme::$vars['post'];
+        }
+
+        return $post;
+    }
+
+    public function getajaxlink($idpost) {
+        return litepubl::$site->url . '/admin/ajaxposteditor.htm' . litepubl::$site->q . "id=$idpost&get";
+    }
+
+    public function gettabs($post = null) {
+        $post = $this->getvarpost($post);
+        $args = new targs();
+        $this->getargstab($post, $args);
+        return $this->admintheme->parsearg($this->gettabstemplate() , $args);
+    }
+
+    public function gettabstemplate() {
+        $admintheme = $this->admintheme;
+        return strtr($admintheme->templates['tabs'], array(
+            '$id' => 'tabs',
+            '$tab' => $admintheme->templates['posteditor.tabs.tabs'],
+            '$panel' => $admintheme->templates['posteditor.tabs.panels'],
+        ));
+    }
+
+    public function getargstab(tpost $post, targs $args) {
+        $args->id = $post->id;
+        $args->ajax = $this->getajaxlink($post->id);
+        //categories tab
+        $args->categories = $this->getcategories($post);
+
+        //datetime tab
+        $args->posted = $post->posted;
+
+        //seo tab
+        $args->url = $post->url;
+        $args->title2 = $post->title2;
+        $args->keywords = $post->keywords;
+        $args->description = $post->description;
+        $args->head = $post->rawhead;
+    }
+
+    // $posteditor.files in template editor
+    public function getfilelist($post = null) {
+        $post = $this->getvarpost($post);
+        return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
+    }
+
+    public function gettext($post = null) {
+        $post = $this->getvarpost($post);
+        $ajax = tajaxposteditor::i();
+        return $ajax->gettext($post->rawcontent, $this->admintheme);
+    }
+
+    public function canrequest() {
+        tlocal::admin()->searchsect[] = 'editor';
+        $this->isauthor = false;
+        $this->basename = 'editor';
+        $this->idpost = $this->idget();
+        if ($this->idpost > 0) {
+            $posts = tposts::i();
+            if (!$posts->itemexists($this->idpost)) {
+                return 404;
+            }
+        }
+
+        $post = tpost::i($this->idpost);
+        if (!litepubl::$options->hasgroup('editor')) {
+            if (litepubl::$options->hasgroup('author')) {
+                $this->isauthor = true;
+                if (($post->id != 0) && (litepubl::$options->user != $post->author)) {
+                    return 403;
+                }
+            }
+        }
+    }
+
+    public function gettitle() {
+        if ($this->idpost == 0) {
+            return parent::gettitle();
+        } else {
+            if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
+            return tlocal::get('editor', 'editor');
+        }
+    }
+
+    public function getexternal() {
+        $this->basename = 'editor';
+        $this->idpost = 0;
+        return $this->getcontent();
+    }
+
+    public function getpostargs(tpost $post, targs $args) {
+        $args->id = $post->id;
+        $args->ajax = $this->getajaxlink($post->id);
+        $args->title = tcontentfilter::unescape($post->title);
+    }
+
+    public function getcontent() {
+        $result = '';
+        $admintheme = $this->admintheme;
+        $lang = tlocal::admin('editor');
+        $args = new targs();
+
+        $post = $this->idpost ? tpost::i($this->idpost) : $this->newpost();
+        $vars = new themevars();
+        $vars->post = $post;
+        $vars->posteditor = $this;
+
+        if ($post->id != 0) {
+            $result.= $admintheme->h($lang->formhead . $post->bookmark);
+        }
+
+        if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {
+            return $r;
+        }
+
+        $args->id = $post->id;
+        $args->title = $post->title;
+        $args->adminurl = $this->url;
+        $result.= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
+        return $result;
+    }
+
+    protected function processtab(tpost $post) {
+        extract($_POST, EXTR_SKIP);
+
+        $post->title = $title;
+        $post->categories = $this->admintheme->processcategories();
+
+        if (($post->id == 0) && (litepubl::$options->user > 1)) {
+            $post->author = litepubl::$options->user;
+        }
+
+        if (isset($tags)) {
+            $post->tagnames = $tags;
+        }
+
+        if (isset($icon)) {
+            $post->icon = (int)$icon;
+        }
+
+        if (isset($idview)) {
+            $post->idview = (int)$idview;
+        }
+
+        if (isset($posted) && $posted) {
+            $post->posted = datefilter::getdate('posted');
+        }
+
+        if (isset($status)) {
+            $post->status = $status == 'draft' ? 'draft' : 'published';
+            $post->comstatus = $comstatus;
+            $post->pingenabled = isset($pingenabled);
+            $post->idperm = (int)$idperm;
+            if ($password) {
+                $post->password = $password;
+            }
+        }
+
+        if (isset($url)) {
+            $post->url = $url;
+            $post->title2 = $title2;
+            $post->keywords = $keywords;
+
+            $post->description = $description;
+            $post->rawhead = $head;
+        }
+
+        $post->content = $raw;
+    }
+
+    protected function processfiles(tpost $post) {
+        if (isset($_POST['files'])) {
+            $post->files = tdatabase::str2array(trim($_POST['files'], ', '));
+        }
+    }
+
+    public function newpost() {
+        return new tpost();
+    }
+
+    public function canprocess() {
+        if (empty($_POST['title'])) {
+            $lang = tlocal::admin('editor');
+            return $lang->emptytitle;
+        }
+    }
+
+    public function afterprocess(tpost $post) {
+    }
+
+    public function processform() {
+        $lang = tlocal::admin('editor');
+        $admintheme = $this->admintheme;
+
+        if ($error = $this->canprocess()) {
+            return $admintheme->geterr($lang->error, $error);
+        }
+
+        $id = (int)$_POST['id'];
+        $post = $id ? tpost::i($id) : $this->newpost();
+
+        if ($this->isauthor && ($r = tauthor_rights::i()->editpost($post))) {
+            $this->idpost = $post->id;
+            return $r;
+        }
+
+        $this->processtab($post);
+        $this->processfiles($post);
+
+        $posts = $post->factory->posts;
+        if ($id == 0) {
+            $this->idpost = $posts->add($post);
+            $_POST['id'] = $this->idpost;
+        } else {
+            $posts->edit($post);
+        }
+        $_GET['id'] = $this->idpost;
+
+        $this->afterprocess($post);
+        return $admintheme->success($lang->success);
+    }
+
+} //class
+
+//admin.posteditor.ajax.class.php
+namespace litepubl;
+
+class tajaxposteditor extends tevents {
+    public $idpost;
+    private $isauthor;
+
+    public static function i() {
+        return getinstance(__class__);
+    }
+
+    protected function create() {
+        parent::create();
+        $this->basename = 'ajaxposteditor';
+        $this->data['eventnames'] = & $this->eventnames;
+        $this->map['eventnames'] = 'eventnames';
+
+        $this->data['head'] = '';
+        $this->data['visual'] = '';
+        //'/plugins/ckeditor/init.js';
+        $this->data['ajaxvisual'] = true;
+    }
+
+    public function addevent($name, $class, $func, $once = false) {
+        if (!in_array($name, $this->eventnames)) {
+            $this->eventnames[] = $name;
+        }
+
+        return parent::addevent($name, $class, $func, $once);
+    }
+
+    public function delete_event($name) {
+        if (isset($this->events[$name])) {
+            unset($this->events[$name]);
+            array_delete_value($this->eventnames, $name);
+            $this->save();
+        }
+    }
+
+    protected static function error403() {
+        return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . turlmap::htmlheader(false) . 'Forbidden';
+    }
+
+    public static function auth() {
+        $options = litepubl::$options;
+        if (!$options->user) return static ::error403();
+        if (!$options->hasgroup('editor')) {
+            if (!$options->hasgroup('author')) return static ::error403();
+        }
+    }
+
+    public function request($arg) {
+        $this->cache = false;
+        turlmap::sendheader(false);
+
+        if ($err = static ::auth()) return $err;
+        $this->idpost = tadminhtml::idparam();
+        $this->isauthor = litepubl::$options->ingroup('author');
+        if ($this->idpost > 0) {
+            $posts = tposts::i();
+            if (!$posts->itemexists($this->idpost)) return static ::error403();
+            if (!litepubl::$options->hasgroup('editor')) {
+                if (litepubl::$options->hasgroup('author')) {
+                    $this->isauthor = true;
+                    $post = tpost::i($this->idpost);
+                    if (litepubl::$options->user != $post->author) return static ::error403();
+                }
+            }
+        }
+
+        return $this->getcontent();
+    }
+
+    public function getcontent() {
+        $theme = tview::i(tviews::i()->defaults['admin'])->theme;
+        $lang = tlocal::i('editor');
+        $post = tpost::i($this->idpost);
+        $vars = new themevars();
+        $vars->post = $post;
+
+        switch ($_GET['get']) {
+            case 'tags':
+                $result = $theme->getinput('text', 'tags', $post->tagnames, $lang->tags);
+                $lang->section = 'editor';
+                $result.= $theme->h($lang->addtags);
+                $items = array();
+                $tags = $post->factory->tags;
+                $list = $tags->getsorted(-1, 'name', 0);
+                foreach ($list as $id) {
+                    $items[] = '<a href="" class="posteditor-tag">' . $tags->items[$id]['title'] . "</a>";
+                }
+                $result.= sprintf('<p>%s</p>', implode(', ', $items));
+                break;
+
+
+            case 'status':
+            case 'access':
+                $args = new targs();
+                $args->comstatus = tadminhtml::array2combo(array(
+                    'closed' => $lang->closed,
+                    'reg' => $lang->reg,
+                    'guest' => $lang->guest,
+                    'comuser' => $lang->comuser
+                ) , $post->comstatus);
+
+                $args->pingenabled = $post->pingenabled;
+                $args->status = tadminhtml::array2combo(array(
+                    'published' => $lang->published,
+                    'draft' => $lang->draft
+                ) , $post->status);
+
+                $args->perms = tadminperms::getcombo($post->idperm);
+                $args->password = $post->password;
+                $result = admintheme::admin()->parsearg('[combo=comstatus]
+      [checkbox=pingenabled]
+      [combo=status]
+      $perms
+      [password=password]
+      <p>$lang.notepassword</p>', $args);
+
+                break;
+
+
+            case 'view':
+                $result = tadminviews::getcomboview($post->idview);
+                break;
+
+
+            default:
+                $name = trim($_GET['get']);
+                if (isset($this->events[$name])) {
+                    $result = $this->callevent($name, array(
+                        $post
+                    ));
+                } else {
+                    $result = var_export($_GET, true);
+                }
+        }
+
+        //tfiler::log($result);
+        return turlmap::htmlheader(false) . $result;
+    }
+
+    public function gettext($text, $admintheme = null) {
+        if (!$admintheme) {
+            $admintheme = admintheme::admin();
+        }
+
+        $args = new targs();
+        if ($this->visual) {
+            if ($this->ajaxvisual) {
+                $args->scripturl = $this->visual;
+                $args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
+            } else {
+                $args->visual = ttemplate::i()->getjavascript($this->visual);
+            }
+        } else {
+            $args->visual = '';
+        }
+
+        $args->raw = $text;
+        return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
+    }
+
+} //class
+
 //htmlresource.class.php
 namespace litepubl;
 
@@ -822,292 +1270,64 @@ class tadminhtml {
 
 }
 
-//html.adminform.class.php
+//filter.datetime.class.php
 namespace litepubl;
 
-class adminform {
-    public $args;
-    public $title;
-    public $before;
-    public $body;
-    //items deprecated
-    public $items;
-    public $submit;
-    public $inline;
+// namespace litepubl\admin;
+class datefilter {
+    //only date without time
+    public static $format = 'd.m.Y';
+    public static $timeformat = 'H:i';
 
-    //attribs for <form>
-    public $action;
-    public $method;
-    public $enctype;
-    public $id;
-    public $class;
-    public $target;
-
-    public function __construct($args = null) {
-        $this->args = $args;
-        $this->title = '';
-        $this->before = '';
-        $this->body = '';
-        $this->items = & $this->body;
-        $this->submit = 'update';
-        $this->inline = false;
-
-        $this->action = '';
-        $this->method = 'post';
-        $this->enctype = '';
-        $this->id = '';
-        $this->class = '';
-        $this->target = '';
-    }
-
-    public function line($content) {
-        return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
-    }
-
-    public function getadmintheme() {
-        return admintheme::i();
-    }
-
-    public function __set($k, $v) {
-        switch ($k) {
-            case 'upload':
-                if ($v) {
-                    $this->enctype = 'multipart/form-data';
-                    $this->submit = 'upload';
-                } else {
-                    $this->enctype = '';
-                    $this->submit = 'update';
-                }
-                break;
-        }
-    }
-
-    public function centergroup($buttons) {
-        return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
-    }
-
-    public function hidden($name, $value) {
-        return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
-    }
-
-    public function getdelete($table) {
-        $this->body = $table;
-        $this->body.= $this->hidden('delete', 'delete');
-        $this->submit = 'delete';
-
-        return $this->get();
-    }
-
-    public function __tostring() {
-        return $this->get();
-    }
-
-    public function gettml() {
-        $admin = $this->getadmintheme();
-        $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
-
-        $attr = "action=\"$this->action\"";
-        foreach (array(
-            'method',
-            'enctype',
-            'target',
-            'id',
-            'class'
-        ) as $k) {
-            if ($v = $this->$k) $attr.= sprintf(' %s="%s"', $k, $v);
-        }
-
-        $theme = ttheme::i();
-        $lang = tlocal::i();
-        $body = $this->body;
-
-        if ($this->inline) {
-            if ($this->submit) {
-                $body.= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
-            }
-
-            $body = $this->line($body);
+    public static function timestamp($date) {
+        if (is_numeric($date)) {
+            $date = (int)$date;
+        } else if ($date == '0000-00-00 00:00:00') {
+            $date = 0;
+        } elseif ($date == '0000-00-00') {
+            $date = 0;
+        } elseif ($date = trim($date)) {
+            $date = strtotime($date);
         } else {
-            if ($this->submit) {
-                $body.= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
+            $date = 0;
+        }
+
+        return $date;
+    }
+
+    public static function getdate($name, $format = false) {
+        if (empty($_POST[$name])) return 0;
+        $date = trim($_POST[$name]);
+        if (!$date) return 0;
+
+        if (version_compare(PHP_VERSION, '5.3', '>=')) {
+            if (!$format) $format = static ::$format;
+            $d = DateTime::createFromFormat($format, $date);
+            if ($d && $d->format($format) == $date) {
+                $d->setTime(0, 0, 0);
+                return $d->getTimestamp() + static ::gettime($name . '-time');
+            }
+        } else {
+            if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
+                return mktime(0, 0, 0, $m, $d, $y) + static ::gettime($name . '-time');
             }
         }
 
-        return strtr($admin->templates['form'], array(
-            '$title' => $title,
-            '$before' => $this->before,
-            '$attr' => $attr,
-            '$body' => $body,
-        ));
+        return 0;
     }
 
-    public function get() {
-        return tadminhtml::i()->parsearg($this->gettml() , $this->args);
-    }
-
-} //class
-
-//html.tabs.class.php
-namespace litepubl;
-
-class tabs {
-    public $tabs;
-    public $panels;
-    public $id;
-    public $_admintheme;
-    private static $index = 0;
-
-    public function __construct($admintheme = null) {
-        $this->_admintheme = $admintheme;
-        $this->tabs = array();
-        $this->panels = array();
-    }
-
-    public function getadmintheme() {
-        if (!$this->_admintheme) {
-            $this->_admintheme = admintheme::i();
-        }
-
-        return $this->_admintheme;
-    }
-
-    public function get() {
-        return strtr($this->getadmintheme()->templates['tabs'], array(
-            '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
-            '$tab' => implode("\n", $this->tabs) ,
-            '$panel' => implode("\n", $this->panels) ,
-        ));
-    }
-
-    public function add($title, $content) {
-        $this->addtab('', $title, $content);
-    }
-
-    public function ajax($title, $url) {
-        $this->addtab($url, $title, '');
-    }
-
-    public function addtab($url, $title, $content) {
-        $id = static ::$index++;
-        $this->tabs[] = $this->gettab($id, $url, $title);
-        $this->panels[] = $this->getpanel($id, $content);
-    }
-
-    public function gettab($id, $url, $title) {
-        return strtr($this->getadmintheme()->templates['tabs.tab'], array(
-            '$id' => $id,
-            '$title' => $title,
-            '$url' => $url,
-        ));
-    }
-
-    public function getpanel($id, $content) {
-        return strtr($this->getadmintheme()->templates['tabs.panel'], array(
-            '$id' => $id,
-            '$content' => $content,
-        ));
-    }
-
-} //class
-
-//html.ulist.class.php
-namespace litepubl;
-
-class ulist {
-    const aslinks = true;
-    public $ul;
-    public $item;
-    public $link;
-    public $value;
-    public $result;
-
-    public function __construct($admin = null, $islink = false) {
-        if ($admin) {
-            $this->ul = $admin->templates['list'];
-            $this->item = $admin->templates['list.item'];
-            $this->link = $admin->templates['list.link'];
-            $this->value = $admin->templates['list.value'];
-
-            if ($islink == static ::aslinks) {
-                $this->item = $this->link;
+    public static function gettime($name) {
+        $result = 0;
+        if (!empty($_POST[$name]) && ($time = trim($_POST[$name]))) {
+            if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
+                $result = intval($m[1]) * 3600 + intval($m[2]) * 60;
+                if (isset($m[4])) {
+                    $result+= (int)$m[4];
+                }
             }
         }
 
-        $this->result = '';
-    }
-
-    public function li($name, $value) {
-        return strtr(is_int($name) ? $this->value : $this->item, array(
-            '$name' => $name,
-            '$value' => $value,
-            '$site.url' => litepubl::$site->url,
-        ));
-    }
-
-    public function link($url, $title) {
-        return strtr($this->link, array(
-            '$name' => $url,
-            '$value' => $title,
-        ));
-    }
-
-    public function ul($items) {
-        return str_replace('$item', $items, $this->ul);
-    }
-
-    public function getresult() {
-        return $this->ul($this->result);
-    }
-
-    public function add($name, $value) {
-        $this->result.= $this->li($name, $value);
-    }
-
-    public function get(array $props) {
-        $result = '';
-        foreach ($props as $name => $value) {
-            if ($value === false) continue;
-
-            if (is_array($value)) {
-                $value = $this->get($value);
-            }
-
-            $result.= $this->li($name, $value);
-        }
-
-        if ($result) {
-            return $this->ul($result);
-        }
-
-        return '';
-    }
-
-    public function links(array $props) {
-        $this->item = $this->link;
-        $result = $this->get($props);
-        return str_replace('$site.url', litepubl::$site->url, $result);
-    }
-
-} //class
-
-//html.tag.class.php
-namespace litepubl;
-
-class thtmltag {
-    public $tag;
-
-    public function __construct($tag = '') {
-        $this->tag = $tag;
-    }
-    public function __get($name) {
-        return sprintf('<%1$s>%2$s</%1$s>', $this->tag, tlocal::i()->$name);
-    }
-
-} //class
-class redtag extends thtmltag {
-
-    public function __get($name) {
-        return sprintf('<%1$s class="red">%2$s</%1$s>', $this->tag, tlocal::i()->$name);
+        return $result;
     }
 
 } //class
@@ -1273,6 +1493,274 @@ class tautoform {
         foreach ($this->props as $prop) {
             if (method_exists($prop['obj'], 'unlock')) $prop['obj']->unlock();
         }
+    }
+
+} //class
+
+//html.tabs.class.php
+namespace litepubl;
+
+class tabs {
+    public $tabs;
+    public $panels;
+    public $id;
+    public $_admintheme;
+    private static $index = 0;
+
+    public function __construct($admintheme = null) {
+        $this->_admintheme = $admintheme;
+        $this->tabs = array();
+        $this->panels = array();
+    }
+
+    public function getadmintheme() {
+        if (!$this->_admintheme) {
+            $this->_admintheme = admintheme::i();
+        }
+
+        return $this->_admintheme;
+    }
+
+    public function get() {
+        return strtr($this->getadmintheme()->templates['tabs'], array(
+            '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
+            '$tab' => implode("\n", $this->tabs) ,
+            '$panel' => implode("\n", $this->panels) ,
+        ));
+    }
+
+    public function add($title, $content) {
+        $this->addtab('', $title, $content);
+    }
+
+    public function ajax($title, $url) {
+        $this->addtab($url, $title, '');
+    }
+
+    public function addtab($url, $title, $content) {
+        $id = static ::$index++;
+        $this->tabs[] = $this->gettab($id, $url, $title);
+        $this->panels[] = $this->getpanel($id, $content);
+    }
+
+    public function gettab($id, $url, $title) {
+        return strtr($this->getadmintheme()->templates['tabs.tab'], array(
+            '$id' => $id,
+            '$title' => $title,
+            '$url' => $url,
+        ));
+    }
+
+    public function getpanel($id, $content) {
+        return strtr($this->getadmintheme()->templates['tabs.panel'], array(
+            '$id' => $id,
+            '$content' => $content,
+        ));
+    }
+
+} //class
+
+//html.adminform.class.php
+namespace litepubl;
+
+class adminform {
+    public $args;
+    public $title;
+    public $before;
+    public $body;
+    //items deprecated
+    public $items;
+    public $submit;
+    public $inline;
+
+    //attribs for <form>
+    public $action;
+    public $method;
+    public $enctype;
+    public $id;
+    public $class;
+    public $target;
+
+    public function __construct($args = null) {
+        $this->args = $args;
+        $this->title = '';
+        $this->before = '';
+        $this->body = '';
+        $this->items = & $this->body;
+        $this->submit = 'update';
+        $this->inline = false;
+
+        $this->action = '';
+        $this->method = 'post';
+        $this->enctype = '';
+        $this->id = '';
+        $this->class = '';
+        $this->target = '';
+    }
+
+    public function line($content) {
+        return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
+    }
+
+    public function getadmintheme() {
+        return admintheme::i();
+    }
+
+    public function __set($k, $v) {
+        switch ($k) {
+            case 'upload':
+                if ($v) {
+                    $this->enctype = 'multipart/form-data';
+                    $this->submit = 'upload';
+                } else {
+                    $this->enctype = '';
+                    $this->submit = 'update';
+                }
+                break;
+        }
+    }
+
+    public function centergroup($buttons) {
+        return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
+    }
+
+    public function hidden($name, $value) {
+        return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
+    }
+
+    public function getdelete($table) {
+        $this->body = $table;
+        $this->body.= $this->hidden('delete', 'delete');
+        $this->submit = 'delete';
+
+        return $this->get();
+    }
+
+    public function __tostring() {
+        return $this->get();
+    }
+
+    public function gettml() {
+        $admin = $this->getadmintheme();
+        $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
+
+        $attr = "action=\"$this->action\"";
+        foreach (array(
+            'method',
+            'enctype',
+            'target',
+            'id',
+            'class'
+        ) as $k) {
+            if ($v = $this->$k) $attr.= sprintf(' %s="%s"', $k, $v);
+        }
+
+        $theme = ttheme::i();
+        $lang = tlocal::i();
+        $body = $this->body;
+
+        if ($this->inline) {
+            if ($this->submit) {
+                $body.= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
+            }
+
+            $body = $this->line($body);
+        } else {
+            if ($this->submit) {
+                $body.= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
+            }
+        }
+
+        return strtr($admin->templates['form'], array(
+            '$title' => $title,
+            '$before' => $this->before,
+            '$attr' => $attr,
+            '$body' => $body,
+        ));
+    }
+
+    public function get() {
+        return tadminhtml::i()->parsearg($this->gettml() , $this->args);
+    }
+
+} //class
+
+//html.ulist.class.php
+namespace litepubl;
+
+class ulist {
+    const aslinks = true;
+    public $ul;
+    public $item;
+    public $link;
+    public $value;
+    public $result;
+
+    public function __construct($admin = null, $islink = false) {
+        if ($admin) {
+            $this->ul = $admin->templates['list'];
+            $this->item = $admin->templates['list.item'];
+            $this->link = $admin->templates['list.link'];
+            $this->value = $admin->templates['list.value'];
+
+            if ($islink == static ::aslinks) {
+                $this->item = $this->link;
+            }
+        }
+
+        $this->result = '';
+    }
+
+    public function li($name, $value) {
+        return strtr(is_int($name) ? $this->value : $this->item, array(
+            '$name' => $name,
+            '$value' => $value,
+            '$site.url' => litepubl::$site->url,
+        ));
+    }
+
+    public function link($url, $title) {
+        return strtr($this->link, array(
+            '$name' => $url,
+            '$value' => $title,
+        ));
+    }
+
+    public function ul($items) {
+        return str_replace('$item', $items, $this->ul);
+    }
+
+    public function getresult() {
+        return $this->ul($this->result);
+    }
+
+    public function add($name, $value) {
+        $this->result.= $this->li($name, $value);
+    }
+
+    public function get(array $props) {
+        $result = '';
+        foreach ($props as $name => $value) {
+            if ($value === false) continue;
+
+            if (is_array($value)) {
+                $value = $this->get($value);
+            }
+
+            $result.= $this->li($name, $value);
+        }
+
+        if ($result) {
+            return $this->ul($result);
+        }
+
+        return '';
+    }
+
+    public function links(array $props) {
+        $this->item = $this->link;
+        $result = $this->get($props);
+        return str_replace('$site.url', litepubl::$site->url, $result);
     }
 
 } //class
@@ -1591,512 +2079,24 @@ class tablebuilder {
 
 }
 
-//filter.datetime.class.php
+//html.tag.class.php
 namespace litepubl;
 
-// namespace litepubl\admin;
-class datefilter {
-    //only date without time
-    public static $format = 'd.m.Y';
-    public static $timeformat = 'H:i';
+class thtmltag {
+    public $tag;
 
-    public static function timestamp($date) {
-        if (is_numeric($date)) {
-            $date = (int)$date;
-        } else if ($date == '0000-00-00 00:00:00') {
-            $date = 0;
-        } elseif ($date == '0000-00-00') {
-            $date = 0;
-        } elseif ($date = trim($date)) {
-            $date = strtotime($date);
-        } else {
-            $date = 0;
-        }
-
-        return $date;
+    public function __construct($tag = '') {
+        $this->tag = $tag;
     }
-
-    public static function getdate($name, $format = false) {
-        if (empty($_POST[$name])) return 0;
-        $date = trim($_POST[$name]);
-        if (!$date) return 0;
-
-        if (version_compare(PHP_VERSION, '5.3', '>=')) {
-            if (!$format) $format = static ::$format;
-            $d = DateTime::createFromFormat($format, $date);
-            if ($d && $d->format($format) == $date) {
-                $d->setTime(0, 0, 0);
-                return $d->getTimestamp() + static ::gettime($name . '-time');
-            }
-        } else {
-            if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
-                return mktime(0, 0, 0, $m, $d, $y) + static ::gettime($name . '-time');
-            }
-        }
-
-        return 0;
-    }
-
-    public static function gettime($name) {
-        $result = 0;
-        if (!empty($_POST[$name]) && ($time = trim($_POST[$name]))) {
-            if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
-                $result = intval($m[1]) * 3600 + intval($m[2]) * 60;
-                if (isset($m[4])) {
-                    $result+= (int)$m[4];
-                }
-            }
-        }
-
-        return $result;
+    public function __get($name) {
+        return sprintf('<%1$s>%2$s</%1$s>', $this->tag, tlocal::i()->$name);
     }
 
 } //class
+class redtag extends thtmltag {
 
-//admin.posteditor.ajax.class.php
-namespace litepubl;
-
-class tajaxposteditor extends tevents {
-    public $idpost;
-    private $isauthor;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'ajaxposteditor';
-        $this->data['eventnames'] = & $this->eventnames;
-        $this->map['eventnames'] = 'eventnames';
-
-        $this->data['head'] = '';
-        $this->data['visual'] = '';
-        //'/plugins/ckeditor/init.js';
-        $this->data['ajaxvisual'] = true;
-    }
-
-    public function addevent($name, $class, $func, $once = false) {
-        if (!in_array($name, $this->eventnames)) {
-            $this->eventnames[] = $name;
-        }
-
-        return parent::addevent($name, $class, $func, $once);
-    }
-
-    public function delete_event($name) {
-        if (isset($this->events[$name])) {
-            unset($this->events[$name]);
-            array_delete_value($this->eventnames, $name);
-            $this->save();
-        }
-    }
-
-    protected static function error403() {
-        return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . turlmap::htmlheader(false) . 'Forbidden';
-    }
-
-    public static function auth() {
-        $options = litepubl::$options;
-        if (!$options->user) return static ::error403();
-        if (!$options->hasgroup('editor')) {
-            if (!$options->hasgroup('author')) return static ::error403();
-        }
-    }
-
-    public function request($arg) {
-        $this->cache = false;
-        turlmap::sendheader(false);
-
-        if ($err = static ::auth()) return $err;
-        $this->idpost = tadminhtml::idparam();
-        $this->isauthor = litepubl::$options->ingroup('author');
-        if ($this->idpost > 0) {
-            $posts = tposts::i();
-            if (!$posts->itemexists($this->idpost)) return static ::error403();
-            if (!litepubl::$options->hasgroup('editor')) {
-                if (litepubl::$options->hasgroup('author')) {
-                    $this->isauthor = true;
-                    $post = tpost::i($this->idpost);
-                    if (litepubl::$options->user != $post->author) return static ::error403();
-                }
-            }
-        }
-
-        return $this->getcontent();
-    }
-
-    public function getcontent() {
-        $theme = tview::i(tviews::i()->defaults['admin'])->theme;
-        $lang = tlocal::i('editor');
-        $post = tpost::i($this->idpost);
-        $vars = new themevars();
-        $vars->post = $post;
-
-        switch ($_GET['get']) {
-            case 'tags':
-                $result = $theme->getinput('text', 'tags', $post->tagnames, $lang->tags);
-                $lang->section = 'editor';
-                $result.= $theme->h($lang->addtags);
-                $items = array();
-                $tags = $post->factory->tags;
-                $list = $tags->getsorted(-1, 'name', 0);
-                foreach ($list as $id) {
-                    $items[] = '<a href="" class="posteditor-tag">' . $tags->items[$id]['title'] . "</a>";
-                }
-                $result.= sprintf('<p>%s</p>', implode(', ', $items));
-                break;
-
-
-            case 'status':
-            case 'access':
-                $args = new targs();
-                $args->comstatus = tadminhtml::array2combo(array(
-                    'closed' => $lang->closed,
-                    'reg' => $lang->reg,
-                    'guest' => $lang->guest,
-                    'comuser' => $lang->comuser
-                ) , $post->comstatus);
-
-                $args->pingenabled = $post->pingenabled;
-                $args->status = tadminhtml::array2combo(array(
-                    'published' => $lang->published,
-                    'draft' => $lang->draft
-                ) , $post->status);
-
-                $args->perms = tadminperms::getcombo($post->idperm);
-                $args->password = $post->password;
-                $result = admintheme::admin()->parsearg('[combo=comstatus]
-      [checkbox=pingenabled]
-      [combo=status]
-      $perms
-      [password=password]
-      <p>$lang.notepassword</p>', $args);
-
-                break;
-
-
-            case 'view':
-                $result = tadminviews::getcomboview($post->idview);
-                break;
-
-
-            default:
-                $name = trim($_GET['get']);
-                if (isset($this->events[$name])) {
-                    $result = $this->callevent($name, array(
-                        $post
-                    ));
-                } else {
-                    $result = var_export($_GET, true);
-                }
-        }
-
-        //tfiler::log($result);
-        return turlmap::htmlheader(false) . $result;
-    }
-
-    public function gettext($text, $admintheme = null) {
-        if (!$admintheme) {
-            $admintheme = admintheme::admin();
-        }
-
-        $args = new targs();
-        if ($this->visual) {
-            if ($this->ajaxvisual) {
-                $args->scripturl = $this->visual;
-                $args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
-            } else {
-                $args->visual = ttemplate::i()->getjavascript($this->visual);
-            }
-        } else {
-            $args->visual = '';
-        }
-
-        $args->raw = $text;
-        return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
-    }
-
-} //class
-
-//admin.posteditor.class.php
-namespace litepubl;
-
-class tposteditor extends tadminmenu {
-    public $idpost;
-    protected $isauthor;
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
-    public function gethead() {
-        $result = parent::gethead();
-
-        $template = ttemplate::i();
-        $template->ltoptions['idpost'] = $this->idget();
-        $result.= $template->getjavascript($template->jsmerger_posteditor);
-
-        if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) {
-            $result.= $h;
-        }
-
-        return $result;
-    }
-
-    public static function getcombocategories(array $items, $idselected) {
-        $result = '';
-        $categories = tcategories::i();
-        $categories->loadall();
-
-        if (!count($items)) {
-            $items = array_keys($categories->items);
-        }
-
-        foreach ($items as $id) {
-            $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', basetheme::quote($categories->getvalue($id, 'title')));
-        }
-
-        return $result;
-    }
-
-    protected function getcategories(tpost $post) {
-        $postitems = $post->categories;
-        $categories = tcategories::i();
-        if (!count($postitems)) {
-            $postitems = array(
-                $categories->defaultid
-            );
-        }
-
-        return $this->admintheme->getcats($postitems);
-    }
-
-    public function getvarpost($post) {
-        if (!$post) {
-            return basetheme::$vars['post'];
-        }
-
-        return $post;
-    }
-
-    public function getajaxlink($idpost) {
-        return litepubl::$site->url . '/admin/ajaxposteditor.htm' . litepubl::$site->q . "id=$idpost&get";
-    }
-
-    public function gettabs($post = null) {
-        $post = $this->getvarpost($post);
-        $args = new targs();
-        $this->getargstab($post, $args);
-        return $this->admintheme->parsearg($this->gettabstemplate() , $args);
-    }
-
-    public function gettabstemplate() {
-        $admintheme = $this->admintheme;
-        return strtr($admintheme->templates['tabs'], array(
-            '$id' => 'tabs',
-            '$tab' => $admintheme->templates['posteditor.tabs.tabs'],
-            '$panel' => $admintheme->templates['posteditor.tabs.panels'],
-        ));
-    }
-
-    public function getargstab(tpost $post, targs $args) {
-        $args->id = $post->id;
-        $args->ajax = $this->getajaxlink($post->id);
-        //categories tab
-        $args->categories = $this->getcategories($post);
-
-        //datetime tab
-        $args->posted = $post->posted;
-
-        //seo tab
-        $args->url = $post->url;
-        $args->title2 = $post->title2;
-        $args->keywords = $post->keywords;
-        $args->description = $post->description;
-        $args->head = $post->rawhead;
-    }
-
-    // $posteditor.files in template editor
-    public function getfilelist($post = null) {
-        $post = $this->getvarpost($post);
-        return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
-    }
-
-    public function gettext($post = null) {
-        $post = $this->getvarpost($post);
-        $ajax = tajaxposteditor::i();
-        return $ajax->gettext($post->rawcontent, $this->admintheme);
-    }
-
-    public function canrequest() {
-        tlocal::admin()->searchsect[] = 'editor';
-        $this->isauthor = false;
-        $this->basename = 'editor';
-        $this->idpost = $this->idget();
-        if ($this->idpost > 0) {
-            $posts = tposts::i();
-            if (!$posts->itemexists($this->idpost)) {
-                return 404;
-            }
-        }
-
-        $post = tpost::i($this->idpost);
-        if (!litepubl::$options->hasgroup('editor')) {
-            if (litepubl::$options->hasgroup('author')) {
-                $this->isauthor = true;
-                if (($post->id != 0) && (litepubl::$options->user != $post->author)) {
-                    return 403;
-                }
-            }
-        }
-    }
-
-    public function gettitle() {
-        if ($this->idpost == 0) {
-            return parent::gettitle();
-        } else {
-            if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
-            return tlocal::get('editor', 'editor');
-        }
-    }
-
-    public function getexternal() {
-        $this->basename = 'editor';
-        $this->idpost = 0;
-        return $this->getcontent();
-    }
-
-    public function getpostargs(tpost $post, targs $args) {
-        $args->id = $post->id;
-        $args->ajax = $this->getajaxlink($post->id);
-        $args->title = tcontentfilter::unescape($post->title);
-    }
-
-    public function getcontent() {
-        $result = '';
-        $admintheme = $this->admintheme;
-        $lang = tlocal::admin('editor');
-        $args = new targs();
-
-        $post = $this->idpost ? tpost::i($this->idpost) : $this->newpost();
-        $vars = new themevars();
-        $vars->post = $post;
-        $vars->posteditor = $this;
-
-        if ($post->id != 0) {
-            $result.= $admintheme->h($lang->formhead . $post->bookmark);
-        }
-
-        if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {
-            return $r;
-        }
-
-        $args->id = $post->id;
-        $args->title = $post->title;
-        $args->adminurl = $this->url;
-        $result.= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
-        return $result;
-    }
-
-    protected function processtab(tpost $post) {
-        extract($_POST, EXTR_SKIP);
-
-        $post->title = $title;
-        $post->categories = $this->admintheme->processcategories();
-
-        if (($post->id == 0) && (litepubl::$options->user > 1)) {
-            $post->author = litepubl::$options->user;
-        }
-
-        if (isset($tags)) {
-            $post->tagnames = $tags;
-        }
-
-        if (isset($icon)) {
-            $post->icon = (int)$icon;
-        }
-
-        if (isset($idview)) {
-            $post->idview = (int)$idview;
-        }
-
-        if (isset($posted) && $posted) {
-            $post->posted = datefilter::getdate('posted');
-        }
-
-        if (isset($status)) {
-            $post->status = $status == 'draft' ? 'draft' : 'published';
-            $post->comstatus = $comstatus;
-            $post->pingenabled = isset($pingenabled);
-            $post->idperm = (int)$idperm;
-            if ($password) {
-                $post->password = $password;
-            }
-        }
-
-        if (isset($url)) {
-            $post->url = $url;
-            $post->title2 = $title2;
-            $post->keywords = $keywords;
-
-            $post->description = $description;
-            $post->rawhead = $head;
-        }
-
-        $post->content = $raw;
-    }
-
-    protected function processfiles(tpost $post) {
-        if (isset($_POST['files'])) {
-            $post->files = tdatabase::str2array(trim($_POST['files'], ', '));
-        }
-    }
-
-    public function newpost() {
-        return new tpost();
-    }
-
-    public function canprocess() {
-        if (empty($_POST['title'])) {
-            $lang = tlocal::admin('editor');
-            return $lang->emptytitle;
-        }
-    }
-
-    public function afterprocess(tpost $post) {
-    }
-
-    public function processform() {
-        $lang = tlocal::admin('editor');
-        $admintheme = $this->admintheme;
-
-        if ($error = $this->canprocess()) {
-            return $admintheme->geterr($lang->error, $error);
-        }
-
-        $id = (int)$_POST['id'];
-        $post = $id ? tpost::i($id) : $this->newpost();
-
-        if ($this->isauthor && ($r = tauthor_rights::i()->editpost($post))) {
-            $this->idpost = $post->id;
-            return $r;
-        }
-
-        $this->processtab($post);
-        $this->processfiles($post);
-
-        $posts = $post->factory->posts;
-        if ($id == 0) {
-            $this->idpost = $posts->add($post);
-            $_POST['id'] = $this->idpost;
-        } else {
-            $posts->edit($post);
-        }
-        $_GET['id'] = $this->idpost;
-
-        $this->afterprocess($post);
-        return $admintheme->success($lang->success);
+    public function __get($name) {
+        return sprintf('<%1$s class="red">%2$s</%1$s>', $this->tag, tlocal::i()->$name);
     }
 
 } //class

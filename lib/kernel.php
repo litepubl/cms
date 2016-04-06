@@ -1,4 +1,142 @@
 <?php
+//utils.functions.php
+//namespace litepubl;
+
+function sqldate($date = 0) {
+    if (!$date) {
+$date = time();
+}
+
+    return date('Y-m-d H:i:s', $date);
+}
+
+function sqltime($date = 0) {
+    if ($date) {
+    return date('Y-m-d H:i:s', $date);
+}
+
+return '0000-00-00 00:00:00';
+}
+
+function dbquote($s) {
+    return litepubl::$db->quote($s);
+}
+
+function md5rand() {
+    return md5(mt_rand() . litepubl::$secret . microtime());
+}
+
+function md5uniq() {
+    return basemd5(mt_rand() . litepubl::$secret . microtime());
+}
+
+function basemd5($s) {
+    return trim(base64_encode(md5($s, true)) , '=');
+}
+
+function strbegin($s, $begin) {
+    return strncmp($s, $begin, strlen($begin)) == 0;
+}
+
+function strbegins() {
+    $a = func_get_args();
+    $s = array_shift($a);
+    while ($begin = array_shift($a)) {
+        if (strncmp($s, $begin, strlen($begin)) == 0) return true;
+    }
+    return false;
+}
+
+function strend($s, $end) {
+    return $end == substr($s, 0 - strlen($end));
+}
+
+function strip_utf($s) {
+    $utf = "\xEF\xBB\xBF";
+    return strbegin($s, $utf) ? substr($s, strlen($utf)) : $s;
+}
+
+function array_delete(array & $a, $i) {
+    array_splice($a, $i, 1);
+}
+
+function array_delete_value(array & $a, $value) {
+    $i = array_search($value, $a);
+    if ($i !== false) {
+        array_splice($a, $i, 1);
+        return true;
+    }
+
+    return false;
+}
+
+function array_clean(array & $items) {
+    $items = array_unique($items);
+    foreach (array(
+        0,
+        false,
+        null,
+        ''
+    ) as $v) {
+        $i = array_search($v, $items);
+        if (($i !== false) && ($items[$i] === $v)) {
+            array_splice($items, $i, 1);
+        }
+    }
+}
+
+function array_insert(array & $a, $item, $index) {
+    array_splice($a, $index, 0, array(
+        $item
+    ));
+}
+
+function array_move(array & $a, $oldindex, $newindex) {
+    //delete and insert
+    if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
+    $item = $a[$oldindex];
+    array_splice($a, $oldindex, 1);
+    array_splice($a, $newindex, 0, array(
+        $item
+    ));
+}
+
+function strtoarray($s) {
+    $a = explode("\n", trim($s));
+    foreach ($a as $k => $v) {
+$a[$k] = trim($v);
+}
+
+    return $a;
+}
+
+function tojson($a) {
+        return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+}
+
+function jsonattr($a) {
+    return str_replace('"', '&quot;', tojson($a));
+}
+
+function toenum($v, array $a) {
+    $v = trim($v);
+    return in_array($v, $a) ? $v : $a[0];
+}
+
+function getinstance($class) {
+    return litepubl\litepubl::$classes->getinstance($class);
+}
+
+function dumpstr($s) {
+    echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
+}
+
+function dumpvar($v) {
+    echo "<pre>\n";
+    var_dump($v);
+    echo "</pre>\n";
+}
+
 //db.class.php
 namespace litepubl;
 
@@ -700,135 +838,6 @@ class tarray2prop {
     }
 } //class
 
-//utils.functions.php
-namespace litepubl;
-
-function sqldate($date = 0) {
-    if ($date == 0) $date = time();
-    return date('Y-m-d H:i:s', $date);
-}
-
-function sqltime($date = 0) {
-    if ($date == 0) return '0000-00-00 00:00:00';
-    return date('Y-m-d H:i:s', $date);
-}
-
-function dbquote($s) {
-    return litepubl::$db->quote($s);
-}
-
-function md5rand() {
-    return md5(mt_rand() . litepubl::$secret . microtime());
-}
-
-function md5uniq() {
-    return basemd5(mt_rand() . litepubl::$secret . microtime());
-}
-
-function basemd5($s) {
-    return trim(base64_encode(md5($s, true)) , '=');
-}
-
-function strbegin($s, $begin) {
-    return strncmp($s, $begin, strlen($begin)) == 0;
-}
-
-function strbegins() {
-    $a = func_get_args();
-    $s = array_shift($a);
-    while ($begin = array_shift($a)) {
-        if (strncmp($s, $begin, strlen($begin)) == 0) return true;
-    }
-    return false;
-}
-
-function strend($s, $end) {
-    return $end == substr($s, 0 - strlen($end));
-}
-
-function strip_utf($s) {
-    $utf = "\xEF\xBB\xBF";
-    return strbegin($s, $utf) ? substr($s, strlen($utf)) : $s;
-}
-
-function array_delete(array & $a, $i) {
-    array_splice($a, $i, 1);
-}
-
-function array_delete_value(array & $a, $value) {
-    $i = array_search($value, $a);
-    if ($i !== false) {
-        array_splice($a, $i, 1);
-        return true;
-    }
-
-    return false;
-}
-
-function array_clean(array & $items) {
-    $items = array_unique($items);
-    foreach (array(
-        0,
-        false,
-        null,
-        ''
-    ) as $v) {
-        $i = array_search($v, $items);
-        if (($i !== false) && ($items[$i] === $v)) {
-            array_splice($items, $i, 1);
-        }
-    }
-}
-
-function array_insert(array & $a, $item, $index) {
-    array_splice($a, $index, 0, array(
-        $item
-    ));
-}
-
-function array_move(array & $a, $oldindex, $newindex) {
-    //delete and insert
-    if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
-    $item = $a[$oldindex];
-    array_splice($a, $oldindex, 1);
-    array_splice($a, $newindex, 0, array(
-        $item
-    ));
-}
-
-function strtoarray($s) {
-    $a = explode("\n", trim($s));
-    foreach ($a as $k => $v) $a[$k] = trim($v);
-    return $a;
-}
-
-function tojson($a) {
-    if (defined('JSON_NUMERIC_CHECK')) {
-        return json_encode($a, JSON_NUMERIC_CHECK | (defined('JSON_UNESCAPED_UNICODE') ? JSON_UNESCAPED_UNICODE : 0));
-    }
-
-    return json_encode($a);
-}
-
-function jsonattr($a) {
-    return str_replace('"', '&quot;', tojson($a));
-}
-
-function toenum($v, array $a) {
-    $v = trim($v);
-    return in_array($v, $a) ? $v : $a[0];
-}
-
-function dumpstr($s) {
-    echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
-}
-
-function dumpvar($v) {
-    echo "<pre>\n";
-    var_dump($v);
-    echo "</pre>\n";
-}
-
 //getter.class.php
 namespace litepubl;
 
@@ -855,6 +864,766 @@ class getter {
     }
 
 }
+
+//litepubl.php
+namespace litepubl;
+
+class litepubl {
+    public static $cache;
+    public static $classes;
+    public static $datastorage;
+    public static $db;
+    public static $debug;
+    public static $domain;
+    public static $log;
+    public static $memcache;
+    public static $microtime;
+    public static $options;
+    public static $paths;
+    public static $secret;
+    public static $site;
+    public static $storage;
+    public static $urlmap;
+
+    public static function init() {
+        static ::$microtime = microtime(true);
+        //backward compability, in near future will be removed on config::$secret
+        static ::$secret = config::$secret;
+        static ::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
+        static ::$domain = static ::getHost();
+        static ::createAliases();
+        static ::createInstances();
+    }
+
+    public function createAliases() {
+        \class_alias(get_called_class() , 'litepublisher');
+        \class_alias(get_called_class() , 'litepubl\litepublisher');
+        \class_alias(get_called_class() , 'litepubl');
+    }
+
+    public static function createInstances() {
+        static ::$paths = new paths();
+        static ::createStorage();
+        static ::$classes = tclasses::i();
+        static ::$options = toptions::i();
+        static ::$site = tsite::i();
+        static ::$db = tdatabase::i();
+        //static::$cache = new cache();
+        static ::$urlmap = turlmap::i();
+    }
+
+    public static function createStorage() {
+        if (config::$memcache && class_exists('Memcache')) {
+            static ::$memcache = new Memcache;
+            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['post']) ? config::$memcache['post'] : 1211);
+        }
+
+        if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
+            $classname = config::$classes['storage'];
+            static ::$storage = new $classname();
+        } else if (static ::$memcache) {
+            static ::$storage = new memcachestorage();
+        } else {
+            static ::$storage = new storage();
+        }
+
+        static ::$datastorage = new datastorage();
+        static ::$datastorage->loaddata();
+        if (!static ::$datastorage->isInstalled()) {
+            require (static ::$paths->lib . 'install/install.php');
+            //exit() in lib/install/install.php
+            
+        }
+    }
+
+    public static function cachefile($filename) {
+        if (!static ::$memcache) {
+            return file_get_contents($filename);
+        }
+
+        if ($s = static ::$memcache->get($filename)) {
+            return $s;
+        }
+
+        $s = file_get_contents($filename);
+        static ::$memcache->set($filename, $s, false, 3600);
+        return $s;
+    }
+
+    public static function getHost() {
+        if (config::$host) {
+            return config::$host;
+        }
+
+        $host = isset($_SERVER['HTTP_HOST']) ? \strtolower(\trim($_SERVER['HTTP_HOST'])) : false;
+        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
+            return $m[2];
+        }
+
+        if (config::$dieOnInvalidHost) {
+            die('cant resolve domain name');
+        }
+    }
+
+    public static function request() {
+        if (static ::$debug) {
+            \error_reporting(-1);
+            \ini_set('display_errors', 1);
+            \Header('Cache-Control: no-cache, must-revalidate');
+            \Header('Pragma: no-cache');
+        }
+
+        if (config::$beforeRequest && \is_callable(config::$beforeRequest)) {
+            \call_user_func_array(config::$beforeRequest, []);
+        }
+
+        return static ::$urlmap->request(static ::$domain, $_SERVER['REQUEST_URI']);
+    }
+
+    public static function run() {
+        try {
+            static ::init();
+
+            if (!config::$ignoreRequest) {
+                static ::request();
+            }
+        }
+        catch(\Exception $e) {
+            static ::$options->handexception($e);
+        }
+
+        static ::$options->savemodified();
+        static ::$options->showerrors();
+    }
+
+} //class
+
+//paths.php
+namespace litepubl;
+
+class paths {
+    public $home;
+    public $lib;
+    public $libinclude;
+    public $storage;
+    public $data;
+    public $cache;
+    public $backup;
+    public $js;
+    public $plugins;
+    public $themes;
+    public $files;
+
+    public function __construct() {
+        $this->home = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+        $this->lib = __DIR__ . DIRECTORY_SEPARATOR;
+        $this->libinclude = $this->lib . 'include' . DIRECTORY_SEPARATOR;
+        $this->languages = $this->lib . 'languages' . DIRECTORY_SEPARATOR;
+        $this->storage = $this->home . 'storage' . DIRECTORY_SEPARATOR;
+        $this->data = $this->storage . 'data' . DIRECTORY_SEPARATOR;
+        $this->cache = $this->storage . 'cache' . DIRECTORY_SEPARATOR;
+        $this->backup = $this->storage . 'backup' . DIRECTORY_SEPARATOR;
+        $this->plugins = $this->home . 'plugins' . DIRECTORY_SEPARATOR;
+        $this->themes = $this->home . 'themes' . DIRECTORY_SEPARATOR;
+        $this->files = $this->home . 'files' . DIRECTORY_SEPARATOR;
+        $this->js = $this->home . 'js/';
+    }
+}
+
+//storage.php
+namespace litepubl;
+
+class storage {
+    public $ext;
+
+    public function __construct() {
+        $this->ext = '.php';
+    }
+
+    public function serialize(array $data) {
+        return \serialize($data);
+    }
+
+    public function unserialize($str) {
+        if ($str) {
+            return \unserialize($str);
+        }
+
+        return false;
+    }
+
+    public function before($str) {
+        return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
+    }
+
+    public function after($str) {
+        return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
+    }
+
+    public function getfilename(tdata $obj) {
+        return litepubl::$paths->data . $obj->getbasename();
+    }
+
+    public function save(tdata $obj) {
+        return $this->savefile($this->getfilename($obj) , $this->serialize($obj->data));
+    }
+
+    public function savedata($filename, array $data) {
+        return $this->savefile($filename, $this->serialize($data));
+    }
+
+    public function load(tdata $obj) {
+        try {
+            if ($data = $this->loaddata($this->getfilename($obj))) {
+                $obj->data = $data + $obj->data;
+                return true;
+            }
+        }
+        catch(\Exception $e) {
+            echo 'Caught exception: ' . $e->getMessage();
+        }
+
+        return false;
+    }
+
+    public function loaddata($filename) {
+        if ($s = $this->loadfile($filename)) {
+            return $this->unserialize($s);
+        }
+
+        return false;
+    }
+
+    public function loadfile($filename) {
+        if (\file_exists($filename . $this->ext) && ($s = \file_get_contents($filename . $this->ext))) {
+            return $this->after($s);
+        }
+
+        return false;
+    }
+
+    public function savefile($filename, $content) {
+        $tmp = $filename . '.tmp' . $this->ext;
+        if (false === \file_put_contents($tmp, $this->before($content))) {
+            $this->error(\sprintf('Error write to file "%s"', $tmp));
+            return false;
+        }
+
+        \chmod($tmp, 0666);
+
+        //replace file
+        $curfile = $filename . $this->ext;
+        if (\file_exists($curfile)) {
+            $backfile = $filename . '.bak' . $this->ext;
+            $this->delete($backfile);
+            \rename($curfile, $backfile);
+        }
+
+        if (!\rename($tmp, $curfile)) {
+            $this->error(sprintf('Error rename temp file "%s" to "%s"', $tmp, $curfile));
+            return false;
+        }
+
+        return true;
+    }
+
+    public function remove($filename) {
+        $this->delete($filename . $this->ext);
+        $this->delete($filename . '.bak' . $this->ext);
+    }
+
+    public function delete($filename) {
+        if (\file_exists($filename) && !\unlink($filename)) {
+            \chmod($filename, 0666);
+            \unlink($filename);
+        }
+    }
+
+    public function error($mesg) {
+        litepubl::$options->trace($mesg);
+    }
+
+} //class
+
+//datastorage.php
+namespace litepubl;
+
+class datastorage {
+    public $data;
+    private $modified;
+
+    public function __construct() {
+        $this->data = [];
+    }
+
+    public function getStorage() {
+        return litepubl::$storage;
+    }
+
+    public function save(tdata $obj) {
+        $this->modified = true;
+        $base = $obj->getbasename();
+        if (!isset($this->data[$base])) {
+            $this->data[$base] = & $obj->data;
+        }
+
+        return true;
+    }
+
+    public function load(tdata $obj) {
+        $base = $obj->getbasename();
+        if (isset($this->data[$base])) {
+            $obj->data = & $this->data[$base];
+            return true;
+        } else {
+            $this->data[$base] = & $obj->data;
+            return false;
+        }
+    }
+
+    public function remove(tdata $obj) {
+        $base = $obj->getbasename();
+        if (isset($this->data[$base])) {
+            unset($this->data[$base]);
+            $this->modified = true;
+            return true;
+        }
+    }
+
+    public function loaddata() {
+        if ($data = $this->getStorage()->loaddata(litepubl::$paths->data . 'storage')) {
+            $this->data = $data;
+            return true;
+        }
+
+        return false;
+    }
+
+    public function saveModified() {
+        if (!$this->modified) {
+            return false;
+        }
+
+        $lockfile = litepubl::$paths->data . 'storage.lok';
+        if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
+            $this->getStorage()->savedata(litepubl::$paths->data . 'storage', $this->data);
+            $this->modified = false;
+            \flock($fh, LOCK_UN);
+            \fclose($fh);
+            @\chmod($lockfile, 0666);
+            return true;
+        } else {
+            if ($fh) {
+                @\fclose($fh);
+            }
+
+            $this->error('Storage locked, data not saved');
+            return false;
+        }
+    }
+
+    public function error($mesg) {
+        tfiler::log($mesg);
+    }
+
+    public function isInstalled() {
+        return count($this->data);
+    }
+
+} //class
+
+//storageinc.php
+namespace litepubl;
+
+class storageinc extends storage {
+
+    public function __construct() {
+        $this->ext = '.inc.php';
+    }
+
+    public function serialize(array $data) {
+        return \var_export($data, true);
+    }
+
+    public function unserialize($str) {
+        $this->error('Call unserialize');
+    }
+
+    public function before($str) {
+        return \sprintf('<?php return %s;', $str);
+    }
+
+    public function after($str) {
+        $this->error('Call after method');
+    }
+
+    public function loaddata($filename) {
+        if (\file_exists($filename . $this->ext)) {
+            return include ($filename . $this->ext);
+        }
+
+        return false;
+    }
+
+    public function loadfile($filename) {
+        $this->error('Call loadfile');
+    }
+
+} //class
+
+//storagememcache.php
+namespace litepubl;
+
+class storagememcache extends storage {
+    public $memcache;
+
+    public function __construct() {
+        $this->memcache = litepubl::$memcache;
+    }
+
+    public function loadfile($filename) {
+        if ($s = $this->memcache->get($filename)) {
+            return $s;
+        }
+
+        if ($s = parent::loadfile($filename)) {
+            $this->memcache->set($filename, $s, false, 3600);
+            return $s;
+        }
+
+        return false;
+    }
+
+    public function savefile($filename, $content) {
+        $this->memcache->set($filename, $content, false, 3600);
+        return parent::savefile($filename, $content);
+    }
+
+    public function delete($filename) {
+        parent::delete($filename);
+        $this->memcache->delete($filename);
+    }
+
+} //class
+
+//storage.mem.class.php
+namespace litepubl;
+
+class memstorage {
+    public $memcache;
+    public $memcache_prefix;
+    public $lifetime;
+    public $table;
+    public $data;
+    private $table_checked;
+
+    public static function i() {
+        return getinstance(__class__);
+    }
+
+    public function __construct() {
+        $this->memcache_prefix = litepubl::$domain . ':';
+        $this->table = 'memstorage';
+        $this->table_checked = false;
+        $this->data = array();
+        if ($this->memcache = litepubl::$memcache) {
+            $this->lifetime = 3600;
+        } else {
+            $this->lifetime = 10800;
+        }
+    }
+
+    public function __get($name) {
+        if (strlen($name) > 32) {
+            $name = md5($name);
+        }
+
+        if (isset($this->data[$name])) {
+            return $this->data[$name];
+        }
+
+        return $this->get($name);
+    }
+
+    public function get($name) {
+        $result = false;
+        if ($this->memcache) {
+            if ($s = $this->memcache->get($this->memcache_prefix . $name)) {
+                $result = $this->unserialize($s);
+                $this->data[$name] = $result;
+            }
+        } else {
+            if (!$this->table_checked) {
+                $this->check();
+            }
+
+            $db = litepubl::$db;
+            if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
+                $result = $this->unserialize($r['value']);
+                $this->data[$name] = $result;
+            }
+        }
+
+        return $result;
+    }
+
+    public function __set($name, $value) {
+        if (strlen($name) > 32) {
+            $name = md5($name);
+        }
+
+        $exists = isset($this->data[$name]);
+        $this->data[$name] = $value;
+
+        if ($this->memcache) {
+            $this->memcache->set($this->memcache_prefix . $name, $this->serialize($value) , false, $this->lifetime);
+        } else {
+            if (!$this->table_checked) {
+                $this->check();
+            }
+
+            $db = litepubl::$db;
+            $v = $db->quote($this->serialize($value));
+            if ($exists) {
+                $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
+            } else {
+                $db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
+            }
+        }
+    }
+
+    public function __unset($name) {
+        if (strlen($name) > 32) {
+            $name = md5($name);
+        }
+
+        if (isset($this->data[$name])) {
+            unset($this->data[$name]);
+        }
+
+        if ($this->memcache) {
+            $this->memcache->delete($this->memcache_prefix . $name);
+        } else {
+            if (!$this->table_checked) {
+                $this->check();
+            }
+
+            $db = litepubl::$db;
+            $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
+        }
+    }
+
+    public function serialize($data) {
+        return serialize($data);
+    }
+
+    public function unserialize(&$data) {
+        return unserialize($data);
+    }
+
+    public function check() {
+        $this->table_checked = true;
+
+        //exclude throw exception
+        $db = litepubl::$db;
+        $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
+        if (is_object($res) && ($r = $res->fetch_assoc())) {
+            $res->close();
+            $created = $this->unserialize($r['value']);
+            if ($created + $this->lifetime < time()) {
+                $this->loadall();
+                $this->clear_table();
+                $this->data['created'] = time();
+                $this->saveall();
+            }
+        } else {
+            $this->create_table();
+            $this->created = time();
+        }
+    }
+
+    public function loadall() {
+        $db = litepubl::$db;
+        $res = $db->query("select * from $db->prefix$this->table");
+        if (is_object($res)) {
+            while ($item = $res->fetch_assoc()) {
+                $this->data[$item['name']] = $this->unserialize($item['value']);
+            }
+        }
+    }
+
+    public function saveall() {
+        $db = litepubl::$db;
+        $a = array();
+        foreach ($this->data as $name => $value) {
+            $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
+        }
+
+        $values = implode(',', $a);
+        $db->query("insert into $db->prefix$this->table (name, value) values $values");
+    }
+
+    public function create_table() {
+        $db = litepubl::$db;
+        $db->mysqli->query("create table if not exists $db->prefix$this->table (
+    name varchar(32) not null,
+    value varchar(255),
+    key (name)
+    )
+    ENGINE=MEMORY
+    DEFAULT CHARSET=utf8
+    COLLATE = utf8_general_ci");
+    }
+
+    public function clear_table() {
+        $db = litepubl::$db;
+        try {
+            $db->query("truncate table $db->prefix$this->table");
+        }
+        catch(Exception $e) {
+            //silince
+            
+        }
+    }
+
+} //class
+
+//storage.cache.memcache.class.php
+namespace litepubl;
+
+class cachestorage_memcache {
+    public $memcache;
+    public $lifetime;
+    public $prefix;
+    public $revision;
+    public $revisionKey;
+
+    public function __construct() {
+        $this->memcache = litepubl::$memcache;
+        $this->lifetime = 3600;
+        $this->prefix = litepubl::$domain . ':cache:';
+        $this->revision = 0;
+        $this->revisionKey = 'cache_revision';
+        if ($this->memcache) {
+            $this->getRevision();
+        }
+    }
+
+    public function getPrefix() {
+        return $this->prefix . $this->revision . '.';
+    }
+
+    public function getRevision() {
+        return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
+    }
+
+    public function clear() {
+        $this->revision++;
+        $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
+    }
+
+    public function serialize($data) {
+        return serialize($data);
+    }
+
+    public function unserialize(&$data) {
+        return unserialize($data);
+    }
+
+    public function setString($filename, $str) {
+        $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
+    }
+
+    public function set($filename, $data) {
+        $this->setString($filename, $this->serialize($data));
+    }
+
+    public function getString($filename) {
+        return $this->memcache->get($this->getPrefix() . $filename);
+    }
+
+    public function get($filename) {
+        if ($s = $this->getString($filename)) {
+            return $this->unserialize($s);
+        }
+
+        return false;
+    }
+
+    public function delete($filename) {
+        $this->memcache->delete($this->getPrefix() . $filename);
+    }
+
+    public function exists($filename) {
+        return !!$this->memcache->get($this->prefix . $filename);
+    }
+
+} //class
+
+//storage.cache.file.class.php
+namespace litepubl;
+
+class cachestorage_file {
+
+    public function getdir() {
+        return litepubl::$paths->cache;
+    }
+
+    public function set($filename, $data) {
+        $this->setString($filename, serialize($data));
+    }
+
+    public function setString($filename, $str) {
+        $fn = $this->getdir() . $filename;
+        file_put_contents($fn, $str);
+        @chmod($fn, 0666);
+    }
+
+    public function get($filename) {
+        if ($s = $this->getString($filename)) {
+            return unserialize($s);
+        }
+
+        return false;
+    }
+
+    public function getString($filename) {
+        $fn = $this->getdir() . $filename;
+        if (file_exists($fn)) {
+            return file_get_contents($fn);
+        }
+
+        return false;
+    }
+
+    public function delete($filename) {
+        $fn = $this->getdir() . $filename;
+        if (file_exists($fn)) {
+            unlink($fn);
+        }
+    }
+
+    public function exists($filename) {
+        return file_exists($this->getdir() . $filename);
+    }
+
+    public function clear() {
+        $path = $this->getdir();
+        if ($h = @opendir($path)) {
+            while (FALSE !== ($filename = @readdir($h))) {
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                $file = $path . $filename;
+                if (is_dir($file)) {
+                    tfiler::delete($file . DIRECTORY_SEPARATOR, true, true);
+                } else {
+                    unlink($file);
+                }
+            }
+            closedir($h);
+        }
+    }
+
+} //class
 
 //events.class.php
 namespace litepubl;
@@ -1180,6 +1949,17 @@ class ECancelEvent extends \Exception {
     }
 }
 
+//events.storage.class.php
+namespace litepubl;
+
+class tevents_storage extends tevents {
+
+    public function getstorage() {
+        return litepubl::$datastorage;
+    }
+
+} //class
+
 //events.coclass.php
 namespace litepubl;
 
@@ -1277,13 +2057,117 @@ class tcoevents extends tevents {
 
 } //class
 
-//events.storage.class.php
+//item.class.php
 namespace litepubl;
 
-class tevents_storage extends tevents {
+class titem extends tdata {
+    public static $instances;
 
-    public function getstorage() {
-        return litepubl::$datastorage;
+    public static function i($id = 0) {
+        return static ::iteminstance(get_called_class() , (int)$id);
+    }
+
+    public static function iteminstance($class, $id = 0) {
+        //fix namespace
+        if (!strpos($class, '\\') && !class_exists($class)) {
+            $class = 'litepubl\\' . $class;
+        }
+
+        $name = call_user_func_array(array(
+            $class,
+            'getinstancename'
+        ) , array());
+
+        if (!isset(static ::$instances)) {
+            static ::$instances = array();
+        }
+
+        if (isset(static ::$instances[$name][$id])) {
+            return static ::$instances[$name][$id];
+        }
+
+        $self = litepubl::$classes->newitem($name, $class, $id);
+        return $self->loaddata($id);
+    }
+
+    public function loaddata($id) {
+        $this->data['id'] = $id;
+        if ($id != 0) {
+            if (!$this->load()) {
+                $this->free();
+                return false;
+            }
+            static ::$instances[$this->instancename][$id] = $this;
+        }
+        return $this;
+    }
+
+    public function free() {
+        unset(static ::$instances[$this->getinstancename() ][$this->id]);
+    }
+
+    public function __construct() {
+        parent::__construct();
+        $this->data['id'] = 0;
+    }
+
+    public function __destruct() {
+        $this->free();
+    }
+
+    public function __set($name, $value) {
+        if (parent::__set($name, $value)) return true;
+        return $this->Error("Field $name not exists in class " . get_class($this));
+    }
+
+    public function setid($id) {
+        if ($id != $this->id) {
+            $name = $this->instancename;
+            if (!isset(static ::$instances)) static ::$instances = array();
+            if (!isset(static ::$instances[$name])) static ::$instances[$name] = array();
+            $a = & static ::$instances[$this->instancename];
+            if (isset($a[$this->id])) unset($a[$this->id]);
+            if (isset($a[$id])) $a[$id] = 0;
+            $a[$id] = $this;
+            $this->data['id'] = $id;
+        }
+    }
+
+    public function request($id) {
+        if ($id != $this->id) {
+            $this->setid($id);
+            if (!$this->load()) return 404;
+        }
+    }
+
+    public static function deletedir($dir) {
+        if (!@file_exists($dir)) return false;
+        tfiler::delete($dir, true, true);
+        @rmdir($dir);
+    }
+
+}
+
+//item.storage.class.php
+namespace litepubl;
+
+class titem_storage extends titem {
+
+    public function getowner() {
+        $this->error(sprintf('The "%s" no have owner', get_class($this)));
+    }
+
+    public function load() {
+        $owner = $this->owner;
+        if ($owner->itemexists($this->id)) {
+            $this->data = & $owner->items[$this->id];
+            return true;
+        }
+        return false;
+    }
+
+    public function save() {
+        return $this->owner->save();
     }
 
 } //class
@@ -1554,117 +2438,83 @@ class tsingleitems extends titems {
 
 } //class
 
-//item.class.php
+//items.pool.class.php
 namespace litepubl;
 
-class titem extends tdata {
-    public static $instances;
+class tpoolitems extends tdata {
+    protected $perpool;
+    protected $pool;
+    protected $modified;
+    protected $ongetitem;
 
-    public static function i($id = 0) {
-        return static ::iteminstance(get_called_class() , (int)$id);
+    public static function i() {
+        return getinstance(__class__);
     }
 
-    public static function iteminstance($class, $id = 0) {
-        //fix namespace
-        if (!strpos($class, '\\') && !class_exists($class)) {
-            $class = 'litepubl\\' . $class;
+    protected function create() {
+        parent::create();
+        $this->basename = 'poolitems';
+        $this->perpool = 20;
+        $this->pool = array();
+        $this->modified = array();
+    }
+
+    public function getitem($id) {
+        if (isset($this->ongetitem)) {
+            return call_user_func_array($this->ongetitem, array(
+                $id
+            ));
         }
 
-        $name = call_user_func_array(array(
-            $class,
-            'getinstancename'
-        ) , array());
-
-        if (!isset(static ::$instances)) {
-            static ::$instances = array();
-        }
-
-        if (isset(static ::$instances[$name][$id])) {
-            return static ::$instances[$name][$id];
-        }
-
-        $self = litepubl::$classes->newitem($name, $class, $id);
-        return $self->loaddata($id);
+        $this->error('Call abastract method getitem in class' . get_class($this));
     }
 
-    public function loaddata($id) {
-        $this->data['id'] = $id;
-        if ($id != 0) {
-            if (!$this->load()) {
-                $this->free();
-                return false;
-            }
-            static ::$instances[$this->instancename][$id] = $this;
-        }
-        return $this;
+    public function getfilename($idpool) {
+        return $this->basename . '.pool.' . $idpool;
     }
 
-    public function free() {
-        unset(static ::$instances[$this->getinstancename() ][$this->id]);
-    }
-
-    public function __construct() {
-        parent::__construct();
-        $this->data['id'] = 0;
-    }
-
-    public function __destruct() {
-        $this->free();
-    }
-
-    public function __set($name, $value) {
-        if (parent::__set($name, $value)) return true;
-        return $this->Error("Field $name not exists in class " . get_class($this));
-    }
-
-    public function setid($id) {
-        if ($id != $this->id) {
-            $name = $this->instancename;
-            if (!isset(static ::$instances)) static ::$instances = array();
-            if (!isset(static ::$instances[$name])) static ::$instances[$name] = array();
-            $a = & static ::$instances[$this->instancename];
-            if (isset($a[$this->id])) unset($a[$this->id]);
-            if (isset($a[$id])) $a[$id] = 0;
-            $a[$id] = $this;
-            $this->data['id'] = $id;
+    public function loadpool($idpool) {
+        if ($data = litepubl::$urlmap->cache->get($this->getfilename($idpool))) {
+            $this->pool[$idpool] = $data;
+        } else {
+            $this->pool[$idpool] = array();
         }
     }
 
-    public function request($id) {
-        if ($id != $this->id) {
-            $this->setid($id);
-            if (!$this->load()) return 404;
+    public function savepool($idpool) {
+        if (!isset($this->modified[$idpool])) {
+            litepubl::$urlmap->onclose = array(
+                $this,
+                'savemodified',
+                $idpool
+            );
+            $this->modified[$idpool] = true;
         }
     }
 
-    public static function deletedir($dir) {
-        if (!@file_exists($dir)) return false;
-        tfiler::delete($dir, true, true);
-        @rmdir($dir);
+    public function savemodified($idpool) {
+        litepubl::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
     }
 
-}
-
-//item.storage.class.php
-namespace litepubl;
-
-class titem_storage extends titem {
-
-    public function getowner() {
-        $this->error(sprintf('The "%s" no have owner', get_class($this)));
+    public function getidpool($id) {
+        $idpool = (int)floor($id / $this->perpool);
+        if (!isset($this->pool[$idpool])) $this->loadpool($idpool);
+        return $idpool;
     }
 
-    public function load() {
-        $owner = $this->owner;
-        if ($owner->itemexists($this->id)) {
-            $this->data = & $owner->items[$this->id];
-            return true;
-        }
-        return false;
+    public function get($id) {
+        $idpool = $this->getidpool($id);
+        if (isset($this->pool[$idpool][$id])) return $this->pool[$idpool][$id];
+        $result = $this->getitem($id);
+        $this->pool[$idpool][$id] = $result;
+        $this->savepool($idpool);
+        return $result;
     }
 
-    public function save() {
-        return $this->owner->save();
+    public function set($id, $item) {
+        $idpool = $this->getidpool($id);
+        $this->pool[$idpool][$id] = $item;
+        $this->savepool($idpool);
     }
 
 } //class
@@ -1762,6 +2612,9 @@ class tclasses extends titems {
     }
 
     public function add($class, $filename, $deprecatedPath = false) {
+        if ($filename = $this->getpsr4($class)) {
+            $this->include($filename);
+} else {
         if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
             return false;
         }
@@ -1773,6 +2626,8 @@ class tclasses extends titems {
         }
 
         $this->items[$class] = $filename;
+}
+
         $instance = $this->getinstance($class);
         if (method_exists($instance, 'install')) {
             $instance->install();
@@ -1909,6 +2764,13 @@ class tclasses extends titems {
             $ns = substr($classname, 0, $i);
             $baseclass = strtolower(substr($classname, $i + 1));
 
+if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
+                $filename = litepubl::$paths->home .$this->kernel[$ns];
+                if (file_exists($filename)) {
+                    return $filename;
+                }
+}
+
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';
                 if (file_exists($filename)) {
@@ -1927,12 +2789,21 @@ class tclasses extends titems {
 
             foreach ($this->namespaces as $name => $dir) {
                 if (strbegin($ns, $name)) {
-                    $filename = sprintf('%s%s%s/%s.php', litepubl::$paths->home, $this->namespaces[$name], substr($ns, strlen($name)) , $baseclass);
+                    $filename = sprintf('%s%s%s/%s.php', litepubl::$paths->home, $this->namespaces[$name], substr($ns, strlen($name) + 1) , $baseclass);
                     if (file_exists($filename)) {
                         return $filename;
                     }
                 }
             }
+
+//last chanse
+$name = 'litepubl\plugins';
+                if (strbegin($ns, $name)) {
+                    $filename = sprintf('%s%s/%s.php', litepubl::$paths->plugins,
+ substr($ns, strlen($name) + 1) , $baseclass);
+                    if (file_exists($filename)) {
+                        return $filename;
+                    }
         }
 
         return false;
@@ -1981,13 +2852,6 @@ class tclasses extends titems {
     }
 
 } //class
-
-//classes.functions.php
-namespace litepubl;
-
-function getinstance($class) {
-    return litepubl::$classes->getinstance($class);
-}
 
 //options.class.php
 namespace litepubl;
@@ -3103,59 +3967,6 @@ class turlmap extends titems {
 
 } //class
 
-//itemplate.php
-namespace litepubl;
-
-interface itemplate {
-    public function request($arg);
-    public function gettitle();
-    public function getkeywords();
-    public function getdescription();
-    public function gethead();
-    public function getcont();
-    public function getidview();
-    public function setidview($id);
-}
-
-//interfaces.php
-namespace litepubl;
-
-interface iwidgets {
-    public function getwidgets(array & $items, $sidebar);
-    public function getsidebar(&$content, $sidebar);
-}
-
-interface iadmin {
-    public function getcontent();
-    public function processform();
-}
-
-interface iposts {
-    public function add(tpost $post);
-    public function edit(tpost $post);
-    public function delete($id);
-}
-
-//plugin.class.php
-namespace litepubl;
-
-class tplugin extends tevents {
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'plugins/' . strtolower(str_replace('\\', '-', get_class($this)));
-    }
-
-    public function addClass($classname, $filename) {
-        $ns = dirname(get_class($this));
-        $reflector = new \ReflectionClass($class);
-        $dir = dirname($reflector->getFileName());
-
-        litepubl::$classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
-    }
-
-}
-
 //users.class.php
 namespace litepubl;
 
@@ -3315,846 +4126,58 @@ class tusers extends titems {
 
 } //class
 
-//items.pool.class.php
+//plugin.class.php
 namespace litepubl;
 
-class tpoolitems extends tdata {
-    protected $perpool;
-    protected $pool;
-    protected $modified;
-    protected $ongetitem;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class tplugin extends tevents {
 
     protected function create() {
         parent::create();
-        $this->basename = 'poolitems';
-        $this->perpool = 20;
-        $this->pool = array();
-        $this->modified = array();
+        $this->basename = 'plugins/' . strtolower(str_replace('\\', '-', get_class($this)));
     }
 
-    public function getitem($id) {
-        if (isset($this->ongetitem)) {
-            return call_user_func_array($this->ongetitem, array(
-                $id
-            ));
-        }
+    public function addClass($classname, $filename) {
+        $ns = dirname(get_class($this));
+        $reflector = new \ReflectionClass($class);
+        $dir = dirname($reflector->getFileName());
 
-        $this->error('Call abastract method getitem in class' . get_class($this));
+        litepubl::$classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
     }
 
-    public function getfilename($idpool) {
-        return $this->basename . '.pool.' . $idpool;
-    }
-
-    public function loadpool($idpool) {
-        if ($data = litepubl::$urlmap->cache->get($this->getfilename($idpool))) {
-            $this->pool[$idpool] = $data;
-        } else {
-            $this->pool[$idpool] = array();
-        }
-    }
-
-    public function savepool($idpool) {
-        if (!isset($this->modified[$idpool])) {
-            litepubl::$urlmap->onclose = array(
-                $this,
-                'savemodified',
-                $idpool
-            );
-            $this->modified[$idpool] = true;
-        }
-    }
-
-    public function savemodified($idpool) {
-        litepubl::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
-    }
-
-    public function getidpool($id) {
-        $idpool = (int)floor($id / $this->perpool);
-        if (!isset($this->pool[$idpool])) $this->loadpool($idpool);
-        return $idpool;
-    }
-
-    public function get($id) {
-        $idpool = $this->getidpool($id);
-        if (isset($this->pool[$idpool][$id])) return $this->pool[$idpool][$id];
-        $result = $this->getitem($id);
-        $this->pool[$idpool][$id] = $result;
-        $this->savepool($idpool);
-        return $result;
-    }
-
-    public function set($id, $item) {
-        $idpool = $this->getidpool($id);
-        $this->pool[$idpool][$id] = $item;
-        $this->savepool($idpool);
-    }
-
-} //class
-
-//storage.mem.class.php
-namespace litepubl;
-
-class memstorage {
-    public $memcache;
-    public $memcache_prefix;
-    public $lifetime;
-    public $table;
-    public $data;
-    private $table_checked;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    public function __construct() {
-        $this->memcache_prefix = litepubl::$domain . ':';
-        $this->table = 'memstorage';
-        $this->table_checked = false;
-        $this->data = array();
-        if ($this->memcache = litepubl::$memcache) {
-            $this->lifetime = 3600;
-        } else {
-            $this->lifetime = 10800;
-        }
-    }
-
-    public function __get($name) {
-        if (strlen($name) > 32) {
-            $name = md5($name);
-        }
-
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
-        }
-
-        return $this->get($name);
-    }
-
-    public function get($name) {
-        $result = false;
-        if ($this->memcache) {
-            if ($s = $this->memcache->get($this->memcache_prefix . $name)) {
-                $result = $this->unserialize($s);
-                $this->data[$name] = $result;
-            }
-        } else {
-            if (!$this->table_checked) {
-                $this->check();
-            }
-
-            $db = litepubl::$db;
-            if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
-                $result = $this->unserialize($r['value']);
-                $this->data[$name] = $result;
-            }
-        }
-
-        return $result;
-    }
-
-    public function __set($name, $value) {
-        if (strlen($name) > 32) {
-            $name = md5($name);
-        }
-
-        $exists = isset($this->data[$name]);
-        $this->data[$name] = $value;
-
-        if ($this->memcache) {
-            $this->memcache->set($this->memcache_prefix . $name, $this->serialize($value) , false, $this->lifetime);
-        } else {
-            if (!$this->table_checked) {
-                $this->check();
-            }
-
-            $db = litepubl::$db;
-            $v = $db->quote($this->serialize($value));
-            if ($exists) {
-                $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
-            } else {
-                $db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
-            }
-        }
-    }
-
-    public function __unset($name) {
-        if (strlen($name) > 32) {
-            $name = md5($name);
-        }
-
-        if (isset($this->data[$name])) {
-            unset($this->data[$name]);
-        }
-
-        if ($this->memcache) {
-            $this->memcache->delete($this->memcache_prefix . $name);
-        } else {
-            if (!$this->table_checked) {
-                $this->check();
-            }
-
-            $db = litepubl::$db;
-            $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
-        }
-    }
-
-    public function serialize($data) {
-        return serialize($data);
-    }
-
-    public function unserialize(&$data) {
-        return unserialize($data);
-    }
-
-    public function check() {
-        $this->table_checked = true;
-
-        //exclude throw exception
-        $db = litepubl::$db;
-        $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
-        if (is_object($res) && ($r = $res->fetch_assoc())) {
-            $res->close();
-            $created = $this->unserialize($r['value']);
-            if ($created + $this->lifetime < time()) {
-                $this->loadall();
-                $this->clear_table();
-                $this->data['created'] = time();
-                $this->saveall();
-            }
-        } else {
-            $this->create_table();
-            $this->created = time();
-        }
-    }
-
-    public function loadall() {
-        $db = litepubl::$db;
-        $res = $db->query("select * from $db->prefix$this->table");
-        if (is_object($res)) {
-            while ($item = $res->fetch_assoc()) {
-                $this->data[$item['name']] = $this->unserialize($item['value']);
-            }
-        }
-    }
-
-    public function saveall() {
-        $db = litepubl::$db;
-        $a = array();
-        foreach ($this->data as $name => $value) {
-            $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
-        }
-
-        $values = implode(',', $a);
-        $db->query("insert into $db->prefix$this->table (name, value) values $values");
-    }
-
-    public function create_table() {
-        $db = litepubl::$db;
-        $db->mysqli->query("create table if not exists $db->prefix$this->table (
-    name varchar(32) not null,
-    value varchar(255),
-    key (name)
-    )
-    ENGINE=MEMORY
-    DEFAULT CHARSET=utf8
-    COLLATE = utf8_general_ci");
-    }
-
-    public function clear_table() {
-        $db = litepubl::$db;
-        try {
-            $db->query("truncate table $db->prefix$this->table");
-        }
-        catch(Exception $e) {
-            //silince
-            
-        }
-    }
-
-} //class
-
-//storage.cache.file.class.php
-namespace litepubl;
-
-class cachestorage_file {
-
-    public function getdir() {
-        return litepubl::$paths->cache;
-    }
-
-    public function set($filename, $data) {
-        $this->setString($filename, serialize($data));
-    }
-
-    public function setString($filename, $str) {
-        $fn = $this->getdir() . $filename;
-        file_put_contents($fn, $str);
-        @chmod($fn, 0666);
-    }
-
-    public function get($filename) {
-        if ($s = $this->getString($filename)) {
-            return unserialize($s);
-        }
-
-        return false;
-    }
-
-    public function getString($filename) {
-        $fn = $this->getdir() . $filename;
-        if (file_exists($fn)) {
-            return file_get_contents($fn);
-        }
-
-        return false;
-    }
-
-    public function delete($filename) {
-        $fn = $this->getdir() . $filename;
-        if (file_exists($fn)) {
-            unlink($fn);
-        }
-    }
-
-    public function exists($filename) {
-        return file_exists($this->getdir() . $filename);
-    }
-
-    public function clear() {
-        $path = $this->getdir();
-        if ($h = @opendir($path)) {
-            while (FALSE !== ($filename = @readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
-                $file = $path . $filename;
-                if (is_dir($file)) {
-                    tfiler::delete($file . DIRECTORY_SEPARATOR, true, true);
-                } else {
-                    unlink($file);
-                }
-            }
-            closedir($h);
-        }
-    }
-
-} //class
-
-//storage.cache.memcache.class.php
-namespace litepubl;
-
-class cachestorage_memcache {
-    public $memcache;
-    public $lifetime;
-    public $prefix;
-    public $revision;
-    public $revisionKey;
-
-    public function __construct() {
-        $this->memcache = litepubl::$memcache;
-        $this->lifetime = 3600;
-        $this->prefix = litepubl::$domain . ':cache:';
-        $this->revision = 0;
-        $this->revisionKey = 'cache_revision';
-        if ($this->memcache) {
-            $this->getRevision();
-        }
-    }
-
-    public function getPrefix() {
-        return $this->prefix . $this->revision . '.';
-    }
-
-    public function getRevision() {
-        return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
-    }
-
-    public function clear() {
-        $this->revision++;
-        $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
-    }
-
-    public function serialize($data) {
-        return serialize($data);
-    }
-
-    public function unserialize(&$data) {
-        return unserialize($data);
-    }
-
-    public function setString($filename, $str) {
-        $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
-    }
-
-    public function set($filename, $data) {
-        $this->setString($filename, $this->serialize($data));
-    }
-
-    public function getString($filename) {
-        return $this->memcache->get($this->getPrefix() . $filename);
-    }
-
-    public function get($filename) {
-        if ($s = $this->getString($filename)) {
-            return $this->unserialize($s);
-        }
-
-        return false;
-    }
-
-    public function delete($filename) {
-        $this->memcache->delete($this->getPrefix() . $filename);
-    }
-
-    public function exists($filename) {
-        return !!$this->memcache->get($this->prefix . $filename);
-    }
-
-} //class
-
-//paths.php
-namespace litepubl;
-
-class paths {
-    public $home;
-    public $lib;
-    public $libinclude;
-    public $storage;
-    public $data;
-    public $cache;
-    public $backup;
-    public $js;
-    public $plugins;
-    public $themes;
-    public $files;
-
-    public function __construct() {
-        $this->home = dirname(__DIR__) . DIRECTORY_SEPARATOR;
-        $this->lib = __DIR__ . DIRECTORY_SEPARATOR;
-        $this->libinclude = $this->lib . 'include' . DIRECTORY_SEPARATOR;
-        $this->languages = $this->lib . 'languages' . DIRECTORY_SEPARATOR;
-        $this->storage = $this->home . 'storage' . DIRECTORY_SEPARATOR;
-        $this->data = $this->storage . 'data' . DIRECTORY_SEPARATOR;
-        $this->cache = $this->storage . 'cache' . DIRECTORY_SEPARATOR;
-        $this->backup = $this->storage . 'backup' . DIRECTORY_SEPARATOR;
-        $this->plugins = $this->home . 'plugins' . DIRECTORY_SEPARATOR;
-        $this->themes = $this->home . 'themes' . DIRECTORY_SEPARATOR;
-        $this->files = $this->home . 'files' . DIRECTORY_SEPARATOR;
-        $this->js = $this->home . 'js/';
-    }
 }
 
-//litepubl.php
+//itemplate.php
 namespace litepubl;
 
-class litepubl {
-    public static $cache;
-    public static $classes;
-    public static $datastorage;
-    public static $db;
-    public static $debug;
-    public static $domain;
-    public static $log;
-    public static $memcache;
-    public static $microtime;
-    public static $options;
-    public static $paths;
-    public static $secret;
-    public static $site;
-    public static $storage;
-    public static $urlmap;
+interface itemplate {
+    public function request($arg);
+    public function gettitle();
+    public function getkeywords();
+    public function getdescription();
+    public function gethead();
+    public function getcont();
+    public function getidview();
+    public function setidview($id);
+}
 
-    public static function init() {
-        static ::$microtime = microtime(true);
-        //backward compability, in near future will be removed on config::$secret
-        static ::$secret = config::$secret;
-        static ::$debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
-        static ::$domain = static ::getHost();
-        static ::createAliases();
-        static ::createInstances();
-    }
-
-    public function createAliases() {
-        \class_alias(get_called_class() , 'litepublisher');
-        \class_alias(get_called_class() , 'litepubl\litepublisher');
-        \class_alias(get_called_class() , 'litepubl');
-    }
-
-    public static function createInstances() {
-        static ::$paths = new paths();
-        static ::createStorage();
-        static ::$classes = tclasses::i();
-        static ::$options = toptions::i();
-        static ::$site = tsite::i();
-        static ::$db = tdatabase::i();
-        //static::$cache = new cache();
-        static ::$urlmap = turlmap::i();
-    }
-
-    public static function createStorage() {
-        if (config::$memcache && class_exists('Memcache')) {
-            static ::$memcache = new Memcache;
-            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['post']) ? config::$memcache['post'] : 1211);
-        }
-
-        if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
-            $classname = config::$classes['storage'];
-            static ::$storage = new $classname();
-        } else if (static ::$memcache) {
-            static ::$storage = new memcachestorage();
-        } else {
-            static ::$storage = new storage();
-        }
-
-        static ::$datastorage = new datastorage();
-        static ::$datastorage->loaddata();
-        if (!static ::$datastorage->isInstalled()) {
-            require (static ::$paths->lib . 'install/install.php');
-            //exit() in lib/install/install.php
-            
-        }
-    }
-
-    public static function cachefile($filename) {
-        if (!static ::$memcache) {
-            return file_get_contents($filename);
-        }
-
-        if ($s = static ::$memcache->get($filename)) {
-            return $s;
-        }
-
-        $s = file_get_contents($filename);
-        static ::$memcache->set($filename, $s, false, 3600);
-        return $s;
-    }
-
-    public static function getHost() {
-        if (config::$host) {
-            return config::$host;
-        }
-
-        $host = isset($_SERVER['HTTP_HOST']) ? \strtolower(\trim($_SERVER['HTTP_HOST'])) : false;
-        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
-            return $m[2];
-        }
-
-        if (config::$dieOnInvalidHost) {
-            die('cant resolve domain name');
-        }
-    }
-
-    public static function request() {
-        if (static ::$debug) {
-            \error_reporting(-1);
-            \ini_set('display_errors', 1);
-            \Header('Cache-Control: no-cache, must-revalidate');
-            \Header('Pragma: no-cache');
-        }
-
-        if (config::$beforeRequest && \is_callable(config::$beforeRequest)) {
-            \call_user_func_array(config::$beforeRequest, []);
-        }
-
-        return static ::$urlmap->request(static ::$domain, $_SERVER['REQUEST_URI']);
-    }
-
-    public static function run() {
-        try {
-            static ::init();
-
-            if (!config::$ignoreRequest) {
-                static ::request();
-            }
-        }
-        catch(\Exception $e) {
-            static ::$options->handexception($e);
-        }
-
-        static ::$options->savemodified();
-        static ::$options->showerrors();
-    }
-
-} //class
-
-//storage.php
+//interfaces.php
 namespace litepubl;
 
-class storage {
-    public $ext;
+interface iwidgets {
+    public function getwidgets(array & $items, $sidebar);
+    public function getsidebar(&$content, $sidebar);
+}
 
-    public function __construct() {
-        $this->ext = '.php';
-    }
+interface iadmin {
+    public function getcontent();
+    public function processform();
+}
 
-    public function serialize(array $data) {
-        return \serialize($data);
-    }
-
-    public function unserialize($str) {
-        if ($str) {
-            return \unserialize($str);
-        }
-
-        return false;
-    }
-
-    public function before($str) {
-        return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
-    }
-
-    public function after($str) {
-        return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
-    }
-
-    public function getfilename(tdata $obj) {
-        return litepubl::$paths->data . $obj->getbasename();
-    }
-
-    public function save(tdata $obj) {
-        return $this->savefile($this->getfilename($obj) , $this->serialize($obj->data));
-    }
-
-    public function savedata($filename, array $data) {
-        return $this->savefile($filename, $this->serialize($data));
-    }
-
-    public function load(tdata $obj) {
-        try {
-            if ($data = $this->loaddata($this->getfilename($obj))) {
-                $obj->data = $data + $obj->data;
-                return true;
-            }
-        }
-        catch(\Exception $e) {
-            echo 'Caught exception: ' . $e->getMessage();
-        }
-
-        return false;
-    }
-
-    public function loaddata($filename) {
-        if ($s = $this->loadfile($filename)) {
-            return $this->unserialize($s);
-        }
-
-        return false;
-    }
-
-    public function loadfile($filename) {
-        if (\file_exists($filename . $this->ext) && ($s = \file_get_contents($filename . $this->ext))) {
-            return $this->after($s);
-        }
-
-        return false;
-    }
-
-    public function savefile($filename, $content) {
-        $tmp = $filename . '.tmp' . $this->ext;
-        if (false === \file_put_contents($tmp, $this->before($content))) {
-            $this->error(\sprintf('Error write to file "%s"', $tmp));
-            return false;
-        }
-
-        \chmod($tmp, 0666);
-
-        //replace file
-        $curfile = $filename . $this->ext;
-        if (\file_exists($curfile)) {
-            $backfile = $filename . '.bak' . $this->ext;
-            $this->delete($backfile);
-            \rename($curfile, $backfile);
-        }
-
-        if (!\rename($tmp, $curfile)) {
-            $this->error(sprintf('Error rename temp file "%s" to "%s"', $tmp, $curfile));
-            return false;
-        }
-
-        return true;
-    }
-
-    public function remove($filename) {
-        $this->delete($filename . $this->ext);
-        $this->delete($filename . '.bak' . $this->ext);
-    }
-
-    public function delete($filename) {
-        if (\file_exists($filename) && !\unlink($filename)) {
-            \chmod($filename, 0666);
-            \unlink($filename);
-        }
-    }
-
-    public function error($mesg) {
-        litepubl::$options->trace($mesg);
-    }
-
-} //class
-
-//storageinc.php
-namespace litepubl;
-
-class storageinc extends storage {
-
-    public function __construct() {
-        $this->ext = '.inc.php';
-    }
-
-    public function serialize(array $data) {
-        return \var_export($data, true);
-    }
-
-    public function unserialize($str) {
-        $this->error('Call unserialize');
-    }
-
-    public function before($str) {
-        return \sprintf('<?php return %s;', $str);
-    }
-
-    public function after($str) {
-        $this->error('Call after method');
-    }
-
-    public function loaddata($filename) {
-        if (\file_exists($filename . $this->ext)) {
-            return include ($filename . $this->ext);
-        }
-
-        return false;
-    }
-
-    public function loadfile($filename) {
-        $this->error('Call loadfile');
-    }
-
-} //class
-
-//storagememcache.php
-namespace litepubl;
-
-class storagememcache extends storage {
-    public $memcache;
-
-    public function __construct() {
-        $this->memcache = litepubl::$memcache;
-    }
-
-    public function loadfile($filename) {
-        if ($s = $this->memcache->get($filename)) {
-            return $s;
-        }
-
-        if ($s = parent::loadfile($filename)) {
-            $this->memcache->set($filename, $s, false, 3600);
-            return $s;
-        }
-
-        return false;
-    }
-
-    public function savefile($filename, $content) {
-        $this->memcache->set($filename, $content, false, 3600);
-        return parent::savefile($filename, $content);
-    }
-
-    public function delete($filename) {
-        parent::delete($filename);
-        $this->memcache->delete($filename);
-    }
-
-} //class
-
-//datastorage.php
-namespace litepubl;
-
-class datastorage {
-    public $data;
-    private $modified;
-
-    public function __construct() {
-        $this->data = [];
-    }
-
-    public function getStorage() {
-        return litepubl::$storage;
-    }
-
-    public function save(tdata $obj) {
-        $this->modified = true;
-        $base = $obj->getbasename();
-        if (!isset($this->data[$base])) {
-            $this->data[$base] = & $obj->data;
-        }
-
-        return true;
-    }
-
-    public function load(tdata $obj) {
-        $base = $obj->getbasename();
-        if (isset($this->data[$base])) {
-            $obj->data = & $this->data[$base];
-            return true;
-        } else {
-            $this->data[$base] = & $obj->data;
-            return false;
-        }
-    }
-
-    public function remove(tdata $obj) {
-        $base = $obj->getbasename();
-        if (isset($this->data[$base])) {
-            unset($this->data[$base]);
-            $this->modified = true;
-            return true;
-        }
-    }
-
-    public function loaddata() {
-        if ($data = $this->getStorage()->loaddata(litepubl::$paths->data . 'storage')) {
-            $this->data = $data;
-            return true;
-        }
-
-        return false;
-    }
-
-    public function saveModified() {
-        if (!$this->modified) {
-            return false;
-        }
-
-        $lockfile = litepubl::$paths->data . 'storage.lok';
-        if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-            $this->getStorage()->savedata(litepubl::$paths->data . 'storage', $this->data);
-            $this->modified = false;
-            \flock($fh, LOCK_UN);
-            \fclose($fh);
-            @\chmod($lockfile, 0666);
-            return true;
-        } else {
-            if ($fh) {
-                @\fclose($fh);
-            }
-
-            $this->error('Storage locked, data not saved');
-            return false;
-        }
-    }
-
-    public function error($mesg) {
-        tfiler::log($mesg);
-    }
-
-    public function isInstalled() {
-        return count($this->data);
-    }
-
-} //class
+interface iposts {
+    public function add(tpost $post);
+    public function edit(tpost $post);
+    public function delete($id);
+}
 
 //litepubl.init.php
 namespace litepubl;

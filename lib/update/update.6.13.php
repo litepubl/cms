@@ -6,5 +6,6 @@ $cl->data['kernel']['tplugin'] = 'kernel.php';
 $cl->data['kernel']['tclasses'] = 'kernel.php';
 $cl->data['kernel']['tdata'] = 'kernel.php';
 $cl->data['kernel']['storage'] = 'kernel.php';
+$cl->items['tcomment'] = 'lib/comments.php';
 $cl->save();
 }
