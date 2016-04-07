@@ -87,11 +87,11 @@ class tdbmanager {
 
     public function setenum($table, $column, array $enum) {
         $items = $this->quoteArray($enum);
+        $default = dbquote($enum[0]);
         $tmp = $column . '_tmp';
-        $this->exec("alter table $this->prefix$table add $tmp enum($items)");
+        $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
         $this->exec("update $this->prefix$table set $tmp = $column + 0");
         $this->exec("alter table $this->prefix$table drop $column");
-        $default = dbquote($enum[0]);
         $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
     }
 
@@ -104,7 +104,7 @@ class tdbmanager {
         }
     }
 
-    public function delete_enum($table, $column, $value) {
+    public function deleteEnum($table, $column, $value) {
         if ($values = $this->getenum($table, $column)) {
             $value = trim($value, ' \'"');
             $i = array_search($value, $values);
@@ -125,8 +125,8 @@ class tdbmanager {
         }
     }
 
-    public function renameEnumValue($table, $column, $oldvalue, $newvalue) {
-        if ($values = $this->getenum($table, $column)) {
+    public function renameEnum($table, $column, $oldvalue, $newvalue) {
+        if (($oldvalue != $newvalue) && ($values = $this->getenum($table, $column))) {
             $oldvalue = trim($oldvalue, ' \'"');
             $newvalue = trim($newvalue, ' \'"');
 
@@ -135,7 +135,23 @@ class tdbmanager {
                 $values[$i] = $newvalue;
                 $items = $this->quoteArray($values);
                 $default = dbquote($values[0]);
-                $this->exec("alter table $this->prefix$table change $column $column enum($items) default $default");
+
+        $tmp = $column . '_tmp';
+        $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
+        //$this->exec("update $this->prefix$table set $tmp = $column + 0");
+//exclude changed
+unset($values[$i]);
+foreach ($values as $value) {
+$value = dbquote($value);
+        $this->exec("update $this->prefix$table set $tmp = $value where $column  = $value");
+}
+
+$oldvalue = dbquote($oldvalue);
+$newvalue = dbquote($newvalue);
+        $this->exec("update $this->prefix$table set $tmp = $newvalue where $column  = $oldvalue");
+
+        $this->exec("alter table $this->prefix$table drop $column");
+        $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
             }
         }
     }

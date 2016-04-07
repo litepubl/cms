@@ -62,11 +62,8 @@ litepubl::$options->savemodified();
 }
 
 $man = tdbmanager::i();
-$man->renameEnumValue('posts', 'class', 'tpost', 'litepubl-tpost');
-//$man->renameEnumValue('posts', 'class', 'tticket', 'litepubl-tticket');
-//$man->renameEnumValue('posts', 'class', 'tdownloaditem', 'litepubl-tdownloaditem');
-$man->renameEnumValue('posts', 'class', 'product', 'litepubl-product');
-
+$man->renameEnum('posts', 'class', 'tpost', 'litepubl-tpost');
+$man->renameEnum('posts', 'class', 'product', 'litepubl-product');
 
 if (!class_exists('tfiler', false)) {
 class_alias('litepubl\tfiler', 'tfiler');
