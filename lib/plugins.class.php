@@ -63,47 +63,47 @@ class tplugins extends titems {
 
         $about = static ::getabout($name);
 
-$dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;
-if (file_exists($dir . $about['filename'])) {
-reqire_once($dir . $about['filename']);
-} else {
-$this->error(sprintf('File plugins/%s/%s not found', $name, $about['filename']));
-}
+        $dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;
+        if (file_exists($dir . $about['filename'])) {
+            require_once ($dir . $about['filename']);
+        } else {
+            $this->error(sprintf('File plugins/%s/%s not found', $name, $about['filename']));
+        }
 
-if ($about['adminfilename']) {
-if (file_exists($dir . $about['adminfilename'])) {
-reqire_once($dir . $about['filename']);
-} else {
-$this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
-}
-}
+        if ($about['adminfilename']) {
+            if (file_exists($dir . $about['adminfilename'])) {
+                require_once ($dir . $about['filename']);
+            } else {
+                $this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
+            }
+        }
 
         litepubl::$classes->lock();
         $this->lock();
-$classname = trim($about['classname']);
-if ($i = strrpos($classname, '\\')) {
-        $this->items[$name] = array(
-'spacename' => substr($classname, 0, $i);
-        );
+        $classname = trim($about['classname']);
+        if ($i = strrpos($classname, '\\')) {
+            $this->items[$name] = array(
+                'namespace' => substr($classname, 0, $i) ,
+            );
 
-litepubl::$classes->installClass($classname);
-if ($about['adminclassname']) {
-litepubl::$classes->installClass($about['adminclassname']);
-}
-} else {
-        $this->items[$name] = array(
-'spacename' => false,
-        );
+            litepubl::$classes->installClass($classname);
+            if ($about['adminclassname']) {
+                litepubl::$classes->installClass($about['adminclassname']);
+            }
+        } else {
+            $this->items[$name] = array(
+                'namespace' => false,
+            );
 
-if (!class_exists($classname, false)) {
-            $classname = 'litepubl\\' . $classname;
-}
+            if (!class_exists($classname, false)) {
+                $classname = 'litepubl\\' . $classname;
+            }
 
-        litepubl::$classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
-if ($about['adminclassname']) {
-        litepubl::$classes->Add($about['adminclassname'], sprintf('plugins/%s/%s', $name, $about[admin'filename']));
-}
-}
+            litepubl::$classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
+            if ($about['adminclassname']) {
+                litepubl::$classes->Add($about['adminclassname'], sprintf('plugins/%s/%s', $name, $about['adminfilename']));
+            }
+        }
 
         $this->unlock();
         litepubl::$classes->unlock();
@@ -116,22 +116,38 @@ if ($about['adminclassname']) {
     }
 
     public function delete($name) {
-        if (!isset($this->items[$name])) return false;
-        $item = $this->items[$name];
+        if (!isset($this->items[$name])) {
+            return false;
+        }
+
+        $namespace = $this->items[$name]['namespace'];
         unset($this->items[$name]);
         $this->save();
 
+        $about = static ::getabout($name);
         $datafile = false;
-        if (class_exists($item['class'])) {
-            $plugin = getinstance($item['class']);
+        if (class_exists($about['classname'])) {
+            $plugin = litepubl::$classes->getinstance($about['classname']);
             if ($plugin instanceof tplugin) {
                 $datafile = litepubl::$paths->data . $plugin->getbasename();
             }
         }
 
         litepubl::$classes->lock();
-        if (!empty($item['adminclass'])) litepubl::$classes->delete($item['adminclass']);
-        litepubl::$classes->delete($item['class']);
+        if ($namespace) {
+            if ($about['adminclassname']) {
+                litepubl::$classes->uninstallClass($about['adminclassname']);
+            }
+
+            litepubl::$classes->uninstallClass($about['classname']);
+        } else {
+            if (($about['adminclassname'])) {
+                litepubl::$classes->delete($about['adminclassname']);
+            }
+
+            litepubl::$classes->delete($about['classname']);
+        }
+
         litepubl::$classes->unlock();
 
         if ($datafile) {
@@ -139,6 +155,7 @@ if ($about['adminclassname']) {
         }
 
         $this->deleted($name);
+        return true;
     }
 
     public function deleteclass($class) {

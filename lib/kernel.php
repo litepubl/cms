@@ -2349,7 +2349,7 @@ class tclasses extends titems {
             }
 
             $this->lock();
-            if (!strpos($class, '\\')) {
+            if (!class_exists($class, false) && !strpos($class, '\\')) {
                 $class = 'litepubl\\' . $class;
                 $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
             }
@@ -2357,14 +2357,28 @@ class tclasses extends titems {
             $this->items[$class] = $filename;
         }
 
-        $instance = $this->getinstance($class);
+        $this->installClass($class);
+        $this->unlock();
+        $this->added($class);
+        return true;
+    }
+
+    public function installClass($classname) {
+        $instance = $this->getinstance($classname);
         if (method_exists($instance, 'install')) {
             $instance->install();
         }
 
-        $this->unlock();
-        $this->added($class);
-        return true;
+        return $instance;
+    }
+
+    public function uninstallClass($classname) {
+        if (class_exists($classname)) {
+            $instance = $this->getinstance($classname);
+            if (method_exists($instance, 'uninstall')) {
+                $instance->uninstall();
+            }
+        }
     }
 
     public function delete($class) {
@@ -2373,13 +2387,7 @@ class tclasses extends titems {
         }
 
         $this->lock();
-        if (class_exists($class)) {
-            $instance = $this->getinstance($class);
-            if (method_exists($instance, 'uninstall')) {
-                $instance->uninstall();
-            }
-        }
-
+        $this->uninstallClass($class);
         unset($this->items[$class]);
         unset($this->kernel[$class]);
         $this->unlock();
@@ -2483,7 +2491,7 @@ class tclasses extends titems {
     }
 
     public function include_file($filename) {
-        if (file_exists($filename)) {
+        if ($filename && file_exists($filename)) {
             $this->include($filename);
         }
     }
