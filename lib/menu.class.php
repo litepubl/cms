@@ -377,7 +377,7 @@ class tmenu extends titem implements itemplate {
 
     public static function i($id = 0) {
         $class = $id == 0 ? get_called_class() : static ::getowner()->items[$id]['class'];
-        return static ::iteminstance(get_called_class(), $id);
+        return static ::iteminstance(get_called_class() , $id);
     }
 
     public static function iteminstance($class, $id = 0) {
@@ -387,12 +387,12 @@ class tmenu extends titem implements itemplate {
         }
 
         if (($id == 0) && ($single->id > 0)) {
-return $single;
-}
+            return $single;
+        }
 
         if (($single->id == 0) && ($id > 0)) {
-return $single->loaddata($id);
-}
+            return $single->loaddata($id);
+        }
 
         return parent::iteminstance($class, $id);
     }

@@ -267,8 +267,7 @@ class tclasses extends titems {
             }
 
             if (isset($this->namespaces[$ns])) {
-                $filename = litepubl::$paths->home .
- sprintf('%s/%s.php', $this->namespaces[$ns], $baseclass);
+                $filename = litepubl::$paths->home . sprintf('%s/%s.php', $this->namespaces[$ns], $baseclass);
 
                 if (file_exists($filename)) {
                     return $filename;
@@ -277,8 +276,7 @@ class tclasses extends titems {
 
             foreach ($this->namespaces as $name => $dir) {
                 if (strbegin($ns, $name)) {
-                    $filename = litepubl::$paths->home .
- sprintf('%s%s/%s.php', $this->namespaces[$name], $this->subSpace($ns, $name), $baseclass);
+                    $filename = litepubl::$paths->home . sprintf('%s%s/%s.php', $this->namespaces[$name], $this->subSpace($ns, $name) , $baseclass);
 
                     if (file_exists($filename)) {
                         return $filename;
@@ -289,8 +287,7 @@ class tclasses extends titems {
             //last chanse
             $name = 'litepubl\plugins';
             if (strbegin($ns, $name)) {
-                $filename = litepubl::$paths->plugins .
-sprintf('%s/%s.php', $this->subSpace($ns, $name), $baseclass);
+                $filename = litepubl::$paths->plugins . sprintf('%s/%s.php', $this->subSpace($ns, $name) , $baseclass);
 
                 if (file_exists($filename)) {
                     return $filename;
@@ -301,9 +298,9 @@ sprintf('%s/%s.php', $this->subSpace($ns, $name), $baseclass);
         return false;
     }
 
-public function subSpace($namespace, $root) {
-return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
-}
+    public function subSpace($namespace, $root) {
+        return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
+    }
 
     public function exists($class) {
         return isset($this->items[$class]);

@@ -404,7 +404,10 @@ class tviews extends titems_storage {
     }
 
     public function delete($id) {
-        if ($id == 1) return $this->error('You cant delete default view');
+        if ($id == 1) {
+            return $this->error('You cant delete default view');
+        }
+
         foreach ($this->defaults as $name => $iddefault) {
             if ($id == $iddefault) {
                 $this->defaults[$name] = 1;

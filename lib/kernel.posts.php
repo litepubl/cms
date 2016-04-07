@@ -2087,21 +2087,21 @@ class tcommontags extends titems implements itemplate {
 
     //Itemplate
     public function request($id) {
-        $this->id = (int)$id;
-        try {
-            $item = $this->getitem((int)$id);
-        }
-        catch(Exception $e) {
-            return 404;
-        }
+        if ($this->id = (int)$id) {
+            try {
+                $item = $this->getitem((int)$id);
+            }
+            catch(Exception $e) {
+                return 404;
+            }
 
-        $view = tview::getview($this);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
-        $pages = (int)ceil($item['itemscount'] / $perpage);
-        if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
-            return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+            $view = tview::getview($this);
+            $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+            $pages = (int)ceil($item['itemscount'] / $perpage);
+            if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+                return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+            }
         }
-
     }
 
     public function getname($id) {
@@ -2110,36 +2110,48 @@ class tcommontags extends titems implements itemplate {
     }
 
     public function gettitle() {
-        $item = $this->getitem($this->id);
-        return $item['title'];
+        if ($this->id) {
+            return $this->getvalue($this->id, 'title');
+        }
+
+        return tlocal::i()->categories;
     }
 
     public function gethead() {
-        $result = $this->contents->getvalue($this->id, 'head');
-        $theme = tview::getview($this)->theme;
-        $result.= $theme->templates['head.tags'];
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'head');
+            $theme = tview::getview($this)->theme;
+            $result.= $theme->templates['head.tags'];
 
-        $list = $this->getidposts($this->id);
-        $result.= $this->factory->posts->getanhead($list);
+            $list = $this->getidposts($this->id);
+            $result.= $this->factory->posts->getanhead($list);
 
-        return $theme->parse($result);
+            return $theme->parse($result);
+        }
     }
 
     public function getkeywords() {
-        $result = $this->contents->getvalue($this->id, 'keywords');
-        if ($result == '') $result = $this->title;
-        return $result;
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'keywords');
+            if ($result == '') $result = $this->title;
+            return $result;
+        }
     }
 
     public function getdescription() {
-        $result = $this->contents->getvalue($this->id, 'description');
-        if ($result == '') $result = $this->title;
-        return $result;
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'description');
+            if ($result == '') $result = $this->title;
+            return $result;
+        }
     }
 
     public function getidview() {
-        $item = $this->getitem($this->id);
-        return $item['idview'];
+        if ($this->id) {
+            return $this->getvalue($this->id, 'idview');
+        }
+
+        return 1;
     }
 
     public function setidview($id) {
@@ -2149,8 +2161,12 @@ class tcommontags extends titems implements itemplate {
     }
 
     public function getidperm() {
-        $item = $this->getitem($this->id);
-        return isset($item['idperm']) ? (int)$item['idperm'] : 0;
+        if ($this->id) {
+            $item = $this->getitem($this->id);
+            return isset($item['idperm']) ? (int)$item['idperm'] : 0;
+        }
+
+        return 0;
     }
 
     public function getindex_tml() {

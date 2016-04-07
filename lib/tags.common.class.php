@@ -295,20 +295,20 @@ class tcommontags extends titems implements itemplate {
     //Itemplate
     public function request($id) {
         if ($this->id = (int)$id) {
-        try {
-            $item = $this->getitem((int)$id);
-        }
-        catch(Exception $e) {
-            return 404;
-        }
+            try {
+                $item = $this->getitem((int)$id);
+            }
+            catch(Exception $e) {
+                return 404;
+            }
 
-        $view = tview::getview($this);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
-        $pages = (int)ceil($item['itemscount'] / $perpage);
-        if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
-            return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+            $view = tview::getview($this);
+            $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+            $pages = (int)ceil($item['itemscount'] / $perpage);
+            if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
+                return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+            }
         }
-}
     }
 
     public function getname($id) {
@@ -317,48 +317,48 @@ class tcommontags extends titems implements itemplate {
     }
 
     public function gettitle() {
-if ($this->id) {
-return $this->getvalue($this->id, 'title');
-}
+        if ($this->id) {
+            return $this->getvalue($this->id, 'title');
+        }
 
-return tlocal::i()->categories;
+        return tlocal::i()->categories;
     }
 
     public function gethead() {
-if ($this->id) {
-        $result = $this->contents->getvalue($this->id, 'head');
-        $theme = tview::getview($this)->theme;
-        $result.= $theme->templates['head.tags'];
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'head');
+            $theme = tview::getview($this)->theme;
+            $result.= $theme->templates['head.tags'];
 
-        $list = $this->getidposts($this->id);
-        $result.= $this->factory->posts->getanhead($list);
+            $list = $this->getidposts($this->id);
+            $result.= $this->factory->posts->getanhead($list);
 
-        return $theme->parse($result);
-}
+            return $theme->parse($result);
+        }
     }
 
     public function getkeywords() {
-if ($this->id) {
-        $result = $this->contents->getvalue($this->id, 'keywords');
-        if ($result == '') $result = $this->title;
-        return $result;
-}
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'keywords');
+            if ($result == '') $result = $this->title;
+            return $result;
+        }
     }
 
     public function getdescription() {
-if ($this->id) {
-        $result = $this->contents->getvalue($this->id, 'description');
-        if ($result == '') $result = $this->title;
-        return $result;
-}
+        if ($this->id) {
+            $result = $this->contents->getvalue($this->id, 'description');
+            if ($result == '') $result = $this->title;
+            return $result;
+        }
     }
 
     public function getidview() {
-if ($this->id) {
-return $this->getvalue($this->id, 'idview');
-}
+        if ($this->id) {
+            return $this->getvalue($this->id, 'idview');
+        }
 
-return 1;
+        return 1;
     }
 
     public function setidview($id) {
@@ -368,12 +368,12 @@ return 1;
     }
 
     public function getidperm() {
-if ($this->id) {
-        $item = $this->getitem($this->id);
-        return isset($item['idperm']) ? (int)$item['idperm'] : 0;
-}
+        if ($this->id) {
+            $item = $this->getitem($this->id);
+            return isset($item['idperm']) ? (int)$item['idperm'] : 0;
+        }
 
-return 0;
+        return 0;
     }
 
     public function getindex_tml() {
@@ -412,7 +412,8 @@ return 0;
             $result.= $view->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $view->postanounce, $view->perpage);
         }
 
-        $this->callevent('oncontent', array(&$result));
+        $this->callevent('oncontent', array(&$result
+        ));
         return $result;
     }
 
