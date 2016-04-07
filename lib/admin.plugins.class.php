@@ -11,10 +11,6 @@ namespace litepubl;
 class tadminplugins extends tadminmenu {
     private $names;
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
     protected function create() {
         parent::create();
         $this->names = tfiler::getdir(litepubl::$paths->plugins);
@@ -50,7 +46,7 @@ class tadminplugins extends tadminmenu {
 
     public function getcontent() {
         $result = $this->getpluginsmenu();
-        $admintheme = $this->view->admintheme;
+        $admintheme = $this->admintheme;
         $lang = $this->lang;
         $plugins = tplugins::i();
 

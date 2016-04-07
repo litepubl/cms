@@ -33,6 +33,6 @@ class paths {
         $this->plugins = $this->home . 'plugins' . DIRECTORY_SEPARATOR;
         $this->themes = $this->home . 'themes' . DIRECTORY_SEPARATOR;
         $this->files = $this->home . 'files' . DIRECTORY_SEPARATOR;
-        $this->js = $this->home . 'js/';
+        $this->js = $this->home . 'js' . DIRECTORY_SEPARATOR;
     }
 }
