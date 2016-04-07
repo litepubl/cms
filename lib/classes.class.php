@@ -106,7 +106,7 @@ class tclasses extends titems {
             }
 
             $this->lock();
-            if (!strpos($class, '\\')) {
+            if (!class_exists($class, false) && !strpos($class, '\\')) {
                 $class = 'litepubl\\' . $class;
                 $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
             }
@@ -114,15 +114,20 @@ class tclasses extends titems {
             $this->items[$class] = $filename;
         }
 
-        $instance = $this->getinstance($class);
-        if (method_exists($instance, 'install')) {
-            $instance->install();
-        }
-
+$this->installClass($class);
         $this->unlock();
         $this->added($class);
         return true;
     }
+
+public function installClass($classname) {
+        $instance = $this->getinstance($classname);
+        if (method_exists($instance, 'install')) {
+            $instance->install();
+        }
+
+return $instance;
+}
 
     public function delete($class) {
         if (!isset($this->items[$class])) {

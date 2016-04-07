@@ -62,38 +62,53 @@ class tplugins extends titems {
         }
 
         $about = static ::getabout($name);
-        if (isset($about['namespace'])) {
-        } elseif (!strpos($classname, '\\')) {
-            $classname = 'litepubl\\' . $classname;
-        }
 
-        if ($adminclassname && !strpos($adminclassname, '\\')) {
-            $adminclassname = 'litepubl\\' . $adminclassname;
-        }
+$dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;
+if (file_exists($dir . $about['filename'])) {
+reqire_once($dir . $about['filename']);
+} else {
+$this->error(sprintf('File plugins/%s/%s not found', $name, $about['filename']));
+}
 
-        $this->lock();
-        $this->items[$name] = array(
-            'id' => ++$this->autoid,
-            'namespace' => $namespace,
-            'class' => $classname,
-            'file' => $filename,
-            'adminclass' => $adminclassname,
-            'adminfile' => $adminfilename
-        );
+if ($about['adminfilename']) {
+if (file_exists($dir . $about['adminfilename'])) {
+reqire_once($dir . $about['filename']);
+} else {
+$this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
+}
+}
 
         litepubl::$classes->lock();
-        if ($namespace) {
-            litepubl::$classes->namespaces[$namespace] = "plugins/$name';
-} else {
-        litepubl::$classes->Add($classname, "plugins / $name / $filename");
-        if ($adminclassname) {
-            litepubl::$classes->Add($adminclassname, "plugins / $name / $adminfilename");
-        }
+        $this->lock();
+$classname = trim($about['classname']);
+if ($i = strrpos($classname, '\\')) {
+        $this->items[$name] = array(
+'spacename' => substr($classname, 0, $i);
+        );
 
-        litepubl::$classes->unlock();
+litepubl::$classes->installClass($classname);
+if ($about['adminclassname']) {
+litepubl::$classes->installClass($about['adminclassname']);
+}
+} else {
+        $this->items[$name] = array(
+'spacename' => false,
+        );
+
+if (!class_exists($classname, false)) {
+            $classname = 'litepubl\\' . $classname;
+}
+
+        litepubl::$classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
+if ($about['adminclassname']) {
+        litepubl::$classes->Add($about['adminclassname'], sprintf('plugins/%s/%s', $name, $about[admin'filename']));
+}
+}
+
         $this->unlock();
+        litepubl::$classes->unlock();
         $this->added($name);
-        return $this->autoid;
+        return $name;
     }
 
     public function has($name) {
