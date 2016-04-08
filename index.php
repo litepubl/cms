@@ -59,6 +59,9 @@ class config {
     //'storage' => 'litepubl\storage',
     //'cache' => 'litepubl\cache',
     ];
+
+//not used, reservedfor future
+    public static $extra = [];
 }
 
 if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {

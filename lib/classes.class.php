@@ -352,27 +352,22 @@ class tclasses extends titems {
         return dirname($filename) . '/resource/';
     }
 
-public function getThemeVar($name) {
-$result = false;
-if (isset($this->instances($name)) {
-$result = $this->instances[$name];
-} elseif ($filename = $this->getpsr4($name)) {
-$this->include($filename);
-$result = $this->getinstance($name);
-                } elseif (isset($this->classes[$name])) {
-                    $result = $this->getinstance($this->classes[$name]);
-                } elseif (isset($classes->items[$name])) {
-                    $result = $this->getinstance($name);
-                } else {
-                    $class = 't' . $name;
-                    if (isset($classes->items[$class])) {
-$result = $this->getinstance($class);
-}
-                }
-            }
+    public function getThemeVar($name) {
+        $result = false;
+        if (isset($this->instances[$name])) {
+            $result = $this->instances[$name];
+        } elseif ($filename = $this->getpsr4($name)) {
+            $this->include($filename);
+            $result = $this->getinstance($name);
+        } elseif (isset($this->classes[$name])) {
+            $result = $this->getinstance($this->classes[$name]);
+        } elseif (isset($this->items[$name])) {
+            $result = $this->getinstance($name);
+        } elseif (isset($this->items['t' . $class])) {
+            $result = $this->getinstance('t' . $class);
         }
 
-return $result;
-}
+        return $result;
+    }
 
 } //class

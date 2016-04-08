@@ -138,8 +138,7 @@ class basetheme extends tevents {
             case 'metapost':
                 return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
-
-$var = litepubl::$classes->getThemeVar($name);
+        $var = litepubl::$classes->getThemeVar($name);
         if (!is_object($var)) {
             litepubl::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
             return false;
@@ -240,7 +239,9 @@ $var = litepubl::$classes->getThemeVar($name);
             '\\' => '&#092;',
             '$' => '&#36;',
             '%' => '&#37;',
-            '_' => '&#95;'
+            '_' => '&#95;',
+'<' => '&lt;',
+'>' => '&gt;',
         ));
     }
 
