@@ -10,10 +10,6 @@ namespace litepubl;
 
 class tcssmerger extends tfilemerger {
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
     protected function create() {
         parent::create();
         $this->basename = 'cssmerger';
