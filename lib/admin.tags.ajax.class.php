@@ -72,10 +72,11 @@ class tajaxtageditor extends tajaxposteditor {
                         $item[$prop] = ((int)$item[$prop]) > 0;
                     }
                 }
+
                 $args = new targs();
                 $args->add($item);
-                $result = $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
-                $result.= $this->getviewicon($item['idview'], $item['icon']);
+                $result = tadminviews::getcomboview($item['idview']);
+                $result .= $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
                 $result.= tadminperms::getcombo($item['idperm']);
                 break;
 
