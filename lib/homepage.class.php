@@ -65,7 +65,7 @@ class thomepage extends tsinglemenu {
 
     public function getbefore() {
         if ($result = $this->content) {
-            $theme = ttheme::i();
+            $theme = $this->theme;
             $result = $theme->simple($result);
             if ($this->parsetags || litepubl::$options->parsepost) {
                 $result = $theme->parse($result);

@@ -494,6 +494,10 @@ class tmenu extends titem implements itemplate {
         return tview::getview($this);
     }
 
+    public function gettheme() {
+        return $this->view->theme;
+    }
+
     //ITemplate
     public function request($id) {
         parent::request($id);
@@ -555,7 +559,10 @@ class tmenu extends titem implements itemplate {
     }
 
     public function setcontent($s) {
-        if (!is_string($s)) $this->error('Error! Page content must be string');
+        if (!is_string($s)) {
+$this->error('Error! Page content must be string');
+}
+
         if ($s != $this->rawcontent) {
             $this->rawcontent = $s;
             $filter = tcontentfilter::i();

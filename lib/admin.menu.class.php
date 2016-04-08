@@ -128,7 +128,10 @@ class tadminmenumanager extends tadminmenu {
         $menuitem->order = (int)$order;
         $menuitem->parent = (int)$parent;
         $menuitem->status = $status == 'draft' ? 'draft' : 'published';
-        if (isset($raw)) $menuitem->content = $raw;
+        if (isset($raw)) {
+$menuitem->content = $raw;
+}
+
         if (isset($idview)) $menuitem->idview = $idview;
         if (isset($url)) {
             $menuitem->url = $url;

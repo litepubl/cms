@@ -12,6 +12,7 @@ class tview extends titem_storage {
     public $sidebars;
     protected $_theme;
     protected $_admintheme;
+private $originalCustom;
 
     public static function i($id = 1) {
         if ($id == 1) {
@@ -45,6 +46,7 @@ class tview extends titem_storage {
 
     protected function create() {
         parent::create();
+$this->originalCustom = [];
         $this->data = array(
             'id' => 0,
             'class' => get_class($this) ,
@@ -102,7 +104,8 @@ class tview extends titem_storage {
 
         $this->data['themename'] = $name;
         $this->_theme = $this->get_theme($name);
-        $this->data['custom'] = $this->_theme->templates['custom'];
+$this->originalCustom = $this->_theme->templates['custom'];
+        $this->data['custom'] = $this->originalCustom;
         $this->save();
 
         static ::getowner()->themechanged($this);
@@ -125,15 +128,13 @@ class tview extends titem_storage {
 
         if (ttheme::exists($this->themename)) {
             $this->_theme = $this->get_theme($this->themename);
-
-            $viewcustom = & $this->data['custom'];
-            $themecustom = & $this->_theme->templates['custom'];
+$this->originalCustom = $this->_theme->templates['custom'];
 
             //aray_equal
-            if ((count($viewcustom) == count($themecustom)) && !count(array_diff(array_keys($viewcustom) , array_keys($themecustom)))) {
-                $this->_theme->templates['custom'] = $viewcustom;
+            if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']) , array_keys($this->originalCustom)))) {
+                $this->_theme->templates['custom'] = $this->data['custom'];
             } else {
-                $this->data['custom'] = $themecustom;
+                $this->data['custom'] = $this->originalCustom;
                 $this->save();
             }
         } else {
@@ -153,6 +154,10 @@ class tview extends titem_storage {
 
         return $this->_admintheme = $this->get_admintheme($this->adminname);
     }
+
+public function resetCustom() {
+                $this->data['custom'] = $this->originalCustom;
+}
 
     public function setcustomsidebar($value) {
         if ($value != $this->customsidebar) {
