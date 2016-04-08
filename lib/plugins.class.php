@@ -72,7 +72,7 @@ class tplugins extends titems {
 
         if ($about['adminfilename']) {
             if (file_exists($dir . $about['adminfilename'])) {
-                require_once ($dir . $about['filename']);
+                require_once ($dir . $about['adminfilename']);
             } else {
                 $this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
             }
@@ -100,8 +100,13 @@ class tplugins extends titems {
             }
 
             litepubl::$classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
-            if ($about['adminclassname']) {
-                litepubl::$classes->Add($about['adminclassname'], sprintf('plugins/%s/%s', $name, $about['adminfilename']));
+
+            if ($adminclass = $about['adminclassname']) {
+                if (!class_exists($adminclass, false)) {
+                    $adminclass = 'litepubl\\' . $adminclass;
+                }
+
+                litepubl::$classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
             }
         }
 

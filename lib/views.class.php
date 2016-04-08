@@ -59,20 +59,20 @@ class tviews extends titems_storage {
     public function get($name) {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
-return tview::i($id);
-}
+                return tview::i($id);
+            }
         }
 
         return false;
     }
 
-public function resetCustom() {
+    public function resetCustom() {
         foreach ($this->items as $id => $item) {
-$view = tview::i($id);
-$view->resetCustom();
-$view->save();
-}
-}
+            $view = tview::i($id);
+            $view->resetCustom();
+            $view->save();
+        }
+    }
 
     public function widgetdeleted($idwidget) {
         $deleted = false;

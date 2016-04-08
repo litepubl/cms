@@ -468,10 +468,6 @@ class tadminmenu extends tmenu {
         return tviews::i()->defaults['admin'];
     }
 
-    public function gettheme() {
-        return $this->view->theme;
-    }
-
     public function getadmintheme() {
         return $this->view->admintheme;
     }

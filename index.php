@@ -60,7 +60,7 @@ class config {
     //'cache' => 'litepubl\cache',
     ];
 
-//not used, reservedfor future
+    //not used, reservedfor future
     public static $extra = [];
 }
 

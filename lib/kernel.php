@@ -2341,8 +2341,8 @@ class tclasses extends titems {
     }
 
     public function add($class, $filename, $deprecatedPath = false) {
-        if ($filename = $this->getpsr4($class)) {
-            $this->include($filename);
+        if ($incfilename = $this->getpsr4($class)) {
+            $this->include($incfilename);
         } else {
             if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
                 return false;
@@ -2351,7 +2351,7 @@ class tclasses extends titems {
             $this->lock();
             if (!class_exists($class, false) && !strpos($class, '\\')) {
                 $class = 'litepubl\\' . $class;
-                $filename = 'plugins/' . ($deprecatedPath ? $deprecatedPath . '/' : '') . $filename;
+                $filename = sprintf('plugins/%s%s', $deprecatedPath ? $deprecatedPath . '/' : '', $filename);
             }
 
             $this->items[$class] = $filename;
@@ -2487,6 +2487,7 @@ class tclasses extends titems {
     }
 
     public function include ($filename) {
+        //if (is_dir($filename)) $this->error($filename);
         require_once $filename;
     }
 

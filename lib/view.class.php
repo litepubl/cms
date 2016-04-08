@@ -12,7 +12,7 @@ class tview extends titem_storage {
     public $sidebars;
     protected $_theme;
     protected $_admintheme;
-private $originalCustom;
+    private $originalCustom;
 
     public static function i($id = 1) {
         if ($id == 1) {
@@ -46,7 +46,7 @@ private $originalCustom;
 
     protected function create() {
         parent::create();
-$this->originalCustom = [];
+        $this->originalCustom = [];
         $this->data = array(
             'id' => 0,
             'class' => get_class($this) ,
@@ -104,7 +104,7 @@ $this->originalCustom = [];
 
         $this->data['themename'] = $name;
         $this->_theme = $this->get_theme($name);
-$this->originalCustom = $this->_theme->templates['custom'];
+        $this->originalCustom = $this->_theme->templates['custom'];
         $this->data['custom'] = $this->originalCustom;
         $this->save();
 
@@ -128,7 +128,7 @@ $this->originalCustom = $this->_theme->templates['custom'];
 
         if (ttheme::exists($this->themename)) {
             $this->_theme = $this->get_theme($this->themename);
-$this->originalCustom = $this->_theme->templates['custom'];
+            $this->originalCustom = $this->_theme->templates['custom'];
 
             //aray_equal
             if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']) , array_keys($this->originalCustom)))) {
@@ -155,9 +155,9 @@ $this->originalCustom = $this->_theme->templates['custom'];
         return $this->_admintheme = $this->get_admintheme($this->adminname);
     }
 
-public function resetCustom() {
-                $this->data['custom'] = $this->originalCustom;
-}
+    public function resetCustom() {
+        $this->data['custom'] = $this->originalCustom;
+    }
 
     public function setcustomsidebar($value) {
         if ($value != $this->customsidebar) {

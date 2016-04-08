@@ -560,8 +560,8 @@ class tmenu extends titem implements itemplate {
 
     public function setcontent($s) {
         if (!is_string($s)) {
-$this->error('Error! Page content must be string');
-}
+            $this->error('Error! Page content must be string');
+        }
 
         if ($s != $this->rawcontent) {
             $this->rawcontent = $s;
