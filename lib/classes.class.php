@@ -31,7 +31,7 @@ class tclasses extends titems {
         parent::create();
         $this->basename = 'classes';
         $this->dbversion = false;
-        $this->addevents('onnewitem', 'gettemplatevar', 'onrename');
+        $this->addevents('onnewitem', 'onrename');
         $this->addmap('namespaces', array());
         $this->addmap('kernel', array());
         $this->addmap('classes', array());
@@ -351,5 +351,28 @@ class tclasses extends titems {
         $filename = $reflector->getFileName();
         return dirname($filename) . '/resource/';
     }
+
+public function getThemeVar($name) {
+$result = false;
+if (isset($this->instances($name)) {
+$result = $this->instances[$name];
+} elseif ($filename = $this->getpsr4($name)) {
+$this->include($filename);
+$result = $this->getinstance($name);
+                } elseif (isset($this->classes[$name])) {
+                    $result = $this->getinstance($this->classes[$name]);
+                } elseif (isset($classes->items[$name])) {
+                    $result = $this->getinstance($name);
+                } else {
+                    $class = 't' . $name;
+                    if (isset($classes->items[$class])) {
+$result = $this->getinstance($class);
+}
+                }
+            }
+        }
+
+return $result;
+}
 
 } //class

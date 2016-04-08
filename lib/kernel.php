@@ -2722,7 +2722,7 @@ class toptions extends tevents_storage {
         try {
             $item = $users->getitem($iduser);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return false;
         }
 
@@ -2913,9 +2913,9 @@ class toptions extends tevents_storage {
 
     public function trace($msg) {
         try {
-            throw new Exception($msg);
+            throw new \Exception($msg);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             $this->handexception($e);
         }
     }

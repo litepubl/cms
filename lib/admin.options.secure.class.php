@@ -39,6 +39,7 @@ class adminsecure extends tadminmenu {
             'ftp' => 'ftp',
             'ftpsocket' => 'ftpsocket',
             //'ssh2' => 'ssh2'
+            
         ) , $backuper->filertype);
 
         $args->formtitle = $lang->securehead;

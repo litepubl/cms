@@ -120,7 +120,7 @@ class tplugins extends titems {
             return false;
         }
 
-        $namespace = $this->items[$name]['namespace'];
+        $namespace = isset($this->items[$name]['namespace']) ? $this->items[$name]['namespace'] : false;
         unset($this->items[$name]);
         $this->save();
 
