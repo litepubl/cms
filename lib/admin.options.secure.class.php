@@ -39,7 +39,6 @@ class adminsecure extends tadminmenu {
             'ftp' => 'ftp',
             'ftpsocket' => 'ftpsocket',
             //'ssh2' => 'ssh2'
-            
         ) , $backuper->filertype);
 
         $args->formtitle = $lang->securehead;
@@ -72,6 +71,7 @@ class adminsecure extends tadminmenu {
     }
 
     public function processform() {
+        extract($_POST, EXTR_SKIP);
         $options = litepubl::$options;
         if (isset($_POST['oldpassword'])) {
             $h4 = $this->html->h4;
