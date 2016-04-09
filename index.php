@@ -50,7 +50,7 @@ class config {
     ];
     */
 
-    // false | true | array('host' => '127.0.0.1', 'port' => 11211);
+    // false | true | ['host' => '127.0.0.1', 'port' => 11211];
     public static $memcache = false;
 
     //replacement classes on startup

@@ -59,7 +59,7 @@ class litepubl {
     public static function createStorage() {
         if (config::$memcache && class_exists('Memcache')) {
             static ::$memcache = new Memcache;
-            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['post']) ? config::$memcache['post'] : 1211);
+            static ::$memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['port']) ? config::$memcache['port'] : 1211);
         }
 
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {

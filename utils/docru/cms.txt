@@ -12,7 +12,7 @@
   Предыдущие версии движка можете скачать
   <a href="https://github.com/litepubl/cms/releases">со страницы релизов <span class="fa fa-github"></span> github</a>.
   Перед установкой прочитайте
-  <a href="https://github.com/litepubl/cms/blob/master/readmeru.txt"><span class="fa fa-github">инструкцию по установке</a>,
+  <a href="https://github.com/litepubl/cms/blob/master/readmeru.txt"><span class="fa fa-github">инструкцию</a>,
   которая также есть и в дистрибутиве
 </p><p>
 Вы можете при помощи LitePublisher создавать сайты сильно отличающиеся по набору функций друг от друга. Приведем примеры решений на LitePublisher, не требующих дополнительных затрат или разработки.

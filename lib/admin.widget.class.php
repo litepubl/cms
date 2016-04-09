@@ -25,7 +25,7 @@ class tadminwidget extends tdata {
     }
 
     protected function dogetcontent(twidget $widget, targs $args) {
-        $this->error('Not implemented');
+return '';
     }
 
     protected function optionsform($widgettitle, $content) {
@@ -50,7 +50,7 @@ class tadminwidget extends tdata {
     }
 
     protected function doprocessform(twidget $widget) {
-        $this->error('Not implemented');
+//nothing
     }
 
 } //class
