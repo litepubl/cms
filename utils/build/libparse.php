@@ -191,8 +191,13 @@ $m = microtime(true);
 require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
         $oBeautify = new PHP_Beautifier();
 $oBeautify->setIndentNumber(4);
+$oBeautify->setNewLine("\n");
         $oBeautify->addFilter('ArrayNested');
-        $oBeautify->addFilter('Pear',array('add_header'=>'php'));
+        $oBeautify->addFilter('Pear',array(
+'add_header'=>'php',
+'newline_class'=>true,
+ 'newline_function'=>true,
+));
         $oBeautify->addFilter('KeepEmptyLines');
 //echo round(microtime(true) - $m, 2), ' = load beauty<br>';
 
