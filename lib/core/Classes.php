@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tclasses extends titems {
+class Classes extends Items
+{
     public $namespaces;
     public $kernel;
     public $classes;
@@ -257,7 +258,7 @@ class tclasses extends titems {
     public function getpsr4($classname) {
         if ($i = strrpos($classname, '\\')) {
             $ns = substr($classname, 0, $i);
-            $baseclass = strtolower(substr($classname, $i + 1));
+            $baseclass = substr($classname, $i + 1);
 
             if ($ns == 'litepubl') {
                 $filename = litepubl::$paths->lib . $baseclass . '.php';
