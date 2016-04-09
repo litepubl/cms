@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl\core;
+namespace litepubl\tml;
 
-class LangMerger extends FileMerger
+class LangMerger extends JsMerger
  {
 
     protected function create() {

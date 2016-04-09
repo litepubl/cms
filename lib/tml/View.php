@@ -6,9 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tml;
+use litepubl\core\Item;
+use litepubl\core\DataStorageTrait;
 
-class tview extends titem_storage {
+class View extends Item
+{
+use DataStorageTrait;
+
     public $sidebars;
     protected $_theme;
     protected $_admintheme;

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tml;
 
-class targs {
+class Args
+ {
     public $data;
     public $callbacks;
     public $callback_params;

@@ -6,7 +6,8 @@
  *
  */
 
-namespace litepubl\core;
+namespace litepubl\tml;
+use litepubl\core\Items;
 
 class FileMerger extends Items
  {
