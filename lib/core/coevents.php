@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tcoevents extends tevents {
+class coevents extends events {
     protected $owner;
     protected $callbacks;
 
@@ -32,7 +32,7 @@ class tcoevents extends tevents {
         parent::__construct();
     }
 
-    public function setowner(tdata $owner) {
+    public function setowner(data $owner) {
         $this->owner = $owner;
         if (!isset($owner->data['events'])) {
             $owner->data['events'] = array();

@@ -183,8 +183,10 @@ class tmenus extends titems {
     }
 
     public function remove($id) {
-        if (!$this->itemexists($id)) return false;
-        if ($this->haschilds($id)) return false;
+        if (!$this->itemexists($id) || $this->haschilds($id)) {
+return false;
+}
+
         $this->lock();
         unset($this->items[$id]);
         $this->sort();
@@ -200,6 +202,14 @@ class tmenus extends titems {
         }
         return false;
     }
+
+public function renameClass($oldclass, $newclass) {
+foreach ($this->items as $id => $item) {
+if ($oldcalss == $item['class']) {
+$this->items[$id]['class'] = $newclass;
+}
+}
+}
 
     public function sort() {
         $this->tree = $this->getsubtree(0);

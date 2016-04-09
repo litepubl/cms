@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class ECancelEvent extends \Exception {
+class cancel extends \Exception {
     public $result;
 
     public function __construct($message, $code = 0) {

@@ -19,4 +19,18 @@ unset($cl->kernel[$classname]);
 }
 
 $cl->save();
+
+$m = tmenus::i();
+$admin = tadminmenus::i();
+foreach ([
+'tadminservice' => 'litepubl\admin\service',
+
+] as $oldclass => 
+            litepubl::$urlmap->db->update('class =' . dbquote($newclass) , 'class = ' . dbquote($oldclass));
+$m->renameClass($oldclass, $newclass);
+$admin->renameClass($oldclass, $newclass);
+}
+
+$m->save();
+$admin->save();
 }

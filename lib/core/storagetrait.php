@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tevents_storage extends tevents {
+trait storageTrait {
 
     public function getstorage() {
         return litepubl::$datastorage;

@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tevents_itemplate extends tevents {
+trait templateTrait {
 
     protected function create() {
         parent::create();
@@ -17,10 +17,13 @@ class tevents_itemplate extends tevents {
 
     public function gethead() {
     }
+
     public function getkeywords() {
     }
+
     public function getdescription() {
     }
+
 
     public function getidview() {
         return $this->data['idview'];
@@ -37,4 +40,4 @@ class tevents_itemplate extends tevents {
         return tview::getview($this);
     }
 
-} //class
+}
