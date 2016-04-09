@@ -6,13 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class adminparser extends baseparser {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class AdminParser extends BaseParser
+{
 
     protected function create() {
         parent::create();

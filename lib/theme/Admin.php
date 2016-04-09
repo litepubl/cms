@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class admintheme extends basetheme {
+class Admin extends Base
+{
     public $onfileperm;
 
     public static function i() {

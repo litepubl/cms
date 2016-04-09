@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class ttheme extends basetheme {
+class Theme extends BaseTheme
+ {
 
     public static function context() {
         $result = static ::i();

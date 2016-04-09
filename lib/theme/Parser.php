@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class tthemeparser extends baseparser {
+class Parser extends BaseParser
+ {
     private $sidebar_index;
 
     public static function i() {

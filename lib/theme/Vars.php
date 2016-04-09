@@ -6,25 +6,26 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class themevars {
+class Vars
+ {
     public $keys = array();
 
     public function __destruct() {
         foreach ($this->keys as $name) {
-            if (isset(basetheme::$vars[$name])) {
-                unset(basetheme::$vars[$name]);
+            if (isset(BaseTheme::$vars[$name])) {
+                unset(BaseTheme::$vars[$name]);
             }
         }
     }
 
     public function __get($name) {
-        return basetheme::$vars[$name];
+        return BaseTheme::$vars[$name];
     }
 
     public function __set($name, $value) {
-        basetheme::$vars[$name] = $value;
+        BaseTheme::$vars[$name] = $value;
 
         if (!in_array($name, $this->keys)) {
             $this->keys[] = $name;
@@ -32,11 +33,11 @@ class themevars {
     }
 
     public function __isset($name) {
-        return isset(basetheme::$vars[$name]);
+        return isset(BaseTheme::$vars[$name]);
     }
 
     public function __unset($name) {
-        unset(basetheme::$vars[$name]);
+        unset(BaseTheme::$vars[$name]);
     }
 
 }

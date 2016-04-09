@@ -6,9 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\Items;
 
-class tviews extends titems_storage {
+class Views extends Items
+{
+use DataStorageTrait;
+
     public $defaults;
 
     protected function create() {
@@ -31,7 +35,7 @@ class tviews extends titems_storage {
         return $id;
     }
 
-    public function addview(tview $view) {
+    public function addview(View $view) {
         $this->lock();
         $id = ++$this->autoid;
         $view->id = $id;
@@ -68,7 +72,7 @@ class tviews extends titems_storage {
 
     public function resetCustom() {
         foreach ($this->items as $id => $item) {
-            $view = tview::i($id);
+            $view = View::i($id);
             $view->resetCustom();
             $view->save();
         }

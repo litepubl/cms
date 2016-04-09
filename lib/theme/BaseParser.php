@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\Events;
 
-class baseparser extends tevents {
+class BaseParser extends Events
+ {
     public $theme;
     public $themefiles;
     public $tagfiles;

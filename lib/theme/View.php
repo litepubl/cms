@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
 use litepubl\core\Item;
 use litepubl\core\DataStorageTrait;
 
@@ -15,8 +15,8 @@ class View extends Item
 use DataStorageTrait;
 
     public $sidebars;
-    protected $_theme;
-    protected $_admintheme;
+    protected $themeInstance;
+    protected $adminInstance;
     private $originalCustom;
 
     public static function i($id = 1) {
@@ -72,13 +72,13 @@ use DataStorageTrait;
         );
 
         $this->sidebars = & $this->data['sidebars'];
-        $this->_theme = null;
-        $this->_admintheme = null;
+        $this->themeInstance = null;
+        $this->adminInstance = null;
     }
 
     public function __destruct() {
-        $this->_theme = null;
-        $this->_admintheme = null;
+        $this->themeInstance = null;
+        $this->adminInstance = null;
         parent::__destruct();
     }
 
@@ -108,8 +108,8 @@ use DataStorageTrait;
         if (!basetheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
 
         $this->data['themename'] = $name;
-        $this->_theme = $this->get_theme($name);
-        $this->originalCustom = $this->_theme->templates['custom'];
+        $this->themeInstance = $this->get_theme($name);
+        $this->originalCustom = $this->themeInstance->templates['custom'];
         $this->data['custom'] = $this->originalCustom;
         $this->save();
 
@@ -121,23 +121,23 @@ use DataStorageTrait;
             if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
             if (!admintheme::exists($name)) return $this->error(sprintf('Admin theme %s not exists', $name));
             $this->data['adminname'] = $name;
-            $this->_admintheme = $this->get_admintheme($name);
+            $this->adminInstance = $this->get_admintheme($name);
             $this->save();
         }
     }
 
     public function gettheme() {
-        if ($this->_theme) {
-            return $this->_theme;
+        if ($this->themeInstance) {
+            return $this->themeInstance;
         }
 
         if (ttheme::exists($this->themename)) {
-            $this->_theme = $this->get_theme($this->themename);
-            $this->originalCustom = $this->_theme->templates['custom'];
+            $this->themeInstance = $this->get_theme($this->themename);
+            $this->originalCustom = $this->themeInstance->templates['custom'];
 
             //aray_equal
             if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']) , array_keys($this->originalCustom)))) {
-                $this->_theme->templates['custom'] = $this->data['custom'];
+                $this->themeInstance->templates['custom'] = $this->data['custom'];
             } else {
                 $this->data['custom'] = $this->originalCustom;
                 $this->save();
@@ -145,19 +145,19 @@ use DataStorageTrait;
         } else {
             $this->setthemename('default');
         }
-        return $this->_theme;
+        return $this->themeInstance;
     }
 
     public function getadmintheme() {
-        if ($this->_admintheme) {
-            return $this->_admintheme;
+        if ($this->adminInstance) {
+            return $this->adminInstance;
         }
 
         if (!admintheme::exists($this->adminname)) {
             $this->setadminname('admin');
         }
 
-        return $this->_admintheme = $this->get_admintheme($this->adminname);
+        return $this->adminInstance = $this->get_admintheme($this->adminname);
     }
 
     public function resetCustom() {

@@ -6,9 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\Events;
+use litepubl\core\DataStorageTrait;
 
-class ttemplate extends tevents_storage {
+class Template extends Events
+{
+use DataStorageTrait;
+
     public $path;
     public $url;
     public $context;
@@ -20,10 +25,6 @@ class ttemplate extends tevents_storage {
     public $extrahead;
     public $extrabody;
     public $result;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         //prevent recursion

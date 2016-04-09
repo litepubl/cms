@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\Events;
 
-class basetheme extends tevents {
+class Base extends Events
+ {
     public static $instances = array();
     public static $vars = array();
     public static $defaultargs;
