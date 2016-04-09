@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class coevents extends events {
+class CoEvents extends Events {
     protected $owner;
     protected $callbacks;
 

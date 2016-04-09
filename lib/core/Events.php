@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class events extends data {
+class Events extends Data {
     protected $events;
     protected $eventnames;
     protected $map;

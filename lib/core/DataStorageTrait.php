@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-trait storageTrait {
+trait DataStorageTrait {
 
     public function getstorage() {
         return litepubl::$datastorage;

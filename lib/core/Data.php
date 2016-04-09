@@ -7,8 +7,9 @@
  */
 
 namespace litepubl\core;
-class data {
-    const zerodate = '0000-00-00 00:00:00';
+
+class Data {
+    const ZERODATE = '0000-00-00 00:00:00';
     public $data;
     public $basename;
     public $cache;

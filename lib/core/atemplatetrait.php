@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-trait templateTrait {
+trait TemplateTrait {
 
     protected function create() {
         parent::create();

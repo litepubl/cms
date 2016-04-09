@@ -7,9 +7,9 @@
  */
 
 namespace litepubl\admin;
-use litepubl\core\data;
+use litepubl\core\Data;
 
-class service extends tadminmenu {
+class Service extends tadminmenu {
 
     public function getcont() {
         return ttheme::parsevar('menu', $this, ttheme::i()->templates['content.menu']);
@@ -221,7 +221,7 @@ class service extends tadminmenu {
                         $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
                         if (isset($saveurl)) {
-                            $data = new data();
+                            $Data = new data();
                             $data->basename = 'storage';
                             $data->load();
                             $data->data['site'] = litepubl::$site->data;
