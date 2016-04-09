@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tevents extends tdata {
+class events extends data {
     protected $events;
     protected $eventnames;
     protected $map;

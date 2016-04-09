@@ -6,9 +6,8 @@
  *
  */
 
-namespace litepubl;
-
-class tdata {
+namespace litepubl\core;
+class data {
     const zerodate = '0000-00-00 00:00:00';
     public $data;
     public $basename;

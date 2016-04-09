@@ -6,12 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\core\data;
 
-class tadminservice extends tadminmenu {
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class service extends tadminmenu {
 
     public function getcont() {
         return ttheme::parsevar('menu', $this, ttheme::i()->templates['content.menu']);
@@ -223,7 +221,7 @@ class tadminservice extends tadminmenu {
                         $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
                         if (isset($saveurl)) {
-                            $data = new tdata();
+                            $data = new data();
                             $data->basename = 'storage';
                             $data->load();
                             $data->data['site'] = litepubl::$site->data;
