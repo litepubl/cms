@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class storageinc extends storage {
+class StorageInc extends Storage 
+{
 
     public function __construct() {
         $this->ext = '.inc.php';

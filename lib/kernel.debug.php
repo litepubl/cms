@@ -1,7 +1,7 @@
 <?php
 
 foreach (array(
-'paths.php',
+'Paths.php',
 //'debugproxy.class.php');
 'data.class.php',
 'array2prop.class.php',
@@ -36,5 +36,5 @@ foreach (array(
 
 'litepubl.php',
 ) as $filename) {
-    require (__DIR__ . '/' . $filename);
+    require (__DIR__ . '/core/' . $filename);
 }

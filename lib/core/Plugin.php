@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tplugin extends tevents {
+class Plugin extends Events
+ {
 
     protected function create() {
         parent::create();

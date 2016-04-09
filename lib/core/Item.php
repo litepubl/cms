@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class titem extends tdata {
+class Item extends Data
+{
     public static $instances;
 
     public static function i($id = 0) {

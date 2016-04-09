@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tsession {
+class Session
+ {
     public static $initialized = false;
     public $prefix;
     public $lifetime;

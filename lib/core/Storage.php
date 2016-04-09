@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class storage {
+class Storage {
     public $ext;
 
     public function __construct() {
@@ -35,11 +35,11 @@ class storage {
         return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
     }
 
-    public function getfilename(tdata $obj) {
+    public function getfilename(Data $obj) {
         return litepubl::$paths->data . $obj->getbasename();
     }
 
-    public function save(tdata $obj) {
+    public function save(Data $obj) {
         return $this->savefile($this->getfilename($obj) , $this->serialize($obj->data));
     }
 
@@ -47,7 +47,7 @@ class storage {
         return $this->savefile($filename, $this->serialize($data));
     }
 
-    public function load(tdata $obj) {
+    public function load(Data $obj) {
         try {
             if ($data = $this->loaddata($this->getfilename($obj))) {
                 $obj->data = $data + $obj->data;

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tlocal {
+class Lang
+{
     public static $self;
     public $loaded;
     public $ini;
@@ -161,14 +162,3 @@ class tlocal {
     }
 
 } //class
-class tdateformater {
-    public $date;
-    public function __construct($date) {
-        $this->date = $date;
-    }
-
-    public function __get($name) {
-        return tlocal::translate(date($name, $this->date) , 'datetime');
-    }
-
-}

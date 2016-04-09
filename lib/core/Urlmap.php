@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class turlmap extends titems {
+class Urlmap extends Items
+ {
     public $host;
     public $url;
     public $page;

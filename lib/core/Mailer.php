@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tmailer {
+class Mailer
+ {
     private static $hold;
 
     protected static function send($from, $to, $subj, $body) {
@@ -47,7 +48,7 @@ class tmailer {
             if (!isset(static ::$hold)) {
                 static ::$hold = array();
                 register_shutdown_function(array(
-                    __class__,
+                    get_called_class(),
                     'onshutdown'
                 ));
             }
@@ -126,66 +127,4 @@ class tmailer {
         return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
     }
 
-} //class
-class TSMTPMailer extends tevents {
-    private $smtp;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'smtpmailer';
-        $this->data = $this->data + array(
-            'host' => '',
-            'login' => '',
-            'password' => '',
-            'port' => 25
-        );
-    }
-
-    public function Mail($fromname, $fromemail, $toname, $toemail, $subj, $body) {
-        if ($this->auth()) {
-            $this->send($fromname, $fromemail, $toname, $toemail, $subj, $body);
-            $this->close();
-            return true;
-        }
-        return false;
-    }
-
-    public function auth() {
-        litepubl::$classes->include_file(litepubl::$paths->libinclude . 'class-smtp.php');
-        $this->smtp = new \SMTP();
-        if ($this->smtp->Connect($this->host, $this->port, 10)) {
-            $this->smtp->Hello($_SERVER['SERVER_NAME']);
-            if ($this->smtp->Authenticate($this->login, $this->password)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public function send($fromname, $fromemail, $toname, $toemail, $subj, $body) {
-        if ($this->smtp->Mail($this->login) && $this->smtp->Recipient($toemail)) {
-            $options = litepubl::$options;
-            $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
-            $date = date('r');
-            $from = tmailer::CreateEmail($fromname, $fromemail);
-            $to = tmailer::CreateEmail($toname, $toemail);
-
-            $this->smtp->data("To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nSubject: $subj\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n$body");
-            return true;
-        }
-        return false;
-    }
-
-    public function close() {
-        if ($this->smtp) {
-            $this->smtp->Quit();
-            $this->smtp->Close();
-            $this->smtp = false;
-        }
-    }
-
-} //class
+}

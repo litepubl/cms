@@ -6,18 +6,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\core\Data;
+use litepubl\core\Lang;
+use litepubl\core\Args;
+use litepubl\widgets\Widgets;
 
-class tadminwidget extends tdata {
+class Widget extends Data
+ {
     public $widget;
     protected $html;
     protected $lang;
 
     protected function create() {
-        //parent::i();
         $this->html = tadminhtml::i();
-        $this->html->section = 'widgets';
-        $this->lang = tlocal::i('widgets');
+        $this->lang = Lang::i('widgets');
     }
 
     protected function getadminurl() {
@@ -29,7 +32,7 @@ return '';
     }
 
     protected function optionsform($widgettitle, $content) {
-        $args = targs::i();
+        $args = new targs();
         $args->formtitle = $widgettitle . ' ' . $this->lang->widget;
         $args->title = $widgettitle;
         $args->items = $this->html->getedit('title', $widgettitle, $this->lang->widgettitle) . $content;

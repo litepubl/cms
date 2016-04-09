@@ -8,7 +8,8 @@
 
 namespace litepubl\core;
 
-class CoEvents extends Events {
+class CoEvents extends Events 
+{
     protected $owner;
     protected $callbacks;
 
@@ -18,7 +19,7 @@ class CoEvents extends Events {
             if (is_array($args[0])) {
                 $this->callbacks = array_shift($args);
                 $this->trigger_callback('construct');
-            } else if (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof tdata)) {
+            } else if (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof Data)) {
                 $this->setowner($owner);
             }
         }

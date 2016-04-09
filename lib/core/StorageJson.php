@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class storagejson extends storage {
+class StorageJson extends Storage
+ {
 
     public function __construct() {
         $this->ext = '.json';

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tplugins extends titems {
+class Plugins extends Items
+ {
     public static $abouts;
     public $deprecated;
 

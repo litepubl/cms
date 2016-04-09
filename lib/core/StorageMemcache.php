@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class storagememcache extends storage {
+class StorageMemcache extends Storage
+ {
     public $memcache;
 
     public function __construct() {

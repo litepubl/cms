@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class toptions extends tevents_storage {
+class Options extends Events
+{
+use DataStorageTrait;
+
     public $groupnames;
     public $parentgroups;
     public $group;

@@ -11,6 +11,7 @@ $cl->kernel['litepubl\core'] = 'kernel.core.php';
 foreach ([
 'tdata',
 'tevents',
+'tcoevents'
 
 'tadminservice',
 ] as $classname) {
@@ -23,9 +24,9 @@ $cl->save();
 $m = tmenus::i();
 $admin = tadminmenus::i();
 foreach ([
-'tadminservice' => 'litepubl\admin\service',
+'tadminservice' => 'litepubl\admin\Service',
 
-] as $oldclass => 
+] as $oldclass => $newclass) {
             litepubl::$urlmap->db->update('class =' . dbquote($newclass) , 'class = ' . dbquote($oldclass));
 $m->renameClass($oldclass, $newclass);
 $admin->renameClass($oldclass, $newclass);

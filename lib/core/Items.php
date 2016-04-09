@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class titems extends tevents {
+class Items extends Events 
+{
     public $items;
     public $dbversion;
     protected $idprop;

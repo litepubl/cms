@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tdatabase {
+class DB
+{
     public $mysqli;
     public $result;
     public $sql;

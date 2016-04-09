@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tsite extends tevents_storage {
+class Site extends Events
+{
+use DataStorageTrait;
+
     public $mapoptions;
     private $users;
 

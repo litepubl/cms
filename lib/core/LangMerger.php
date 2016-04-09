@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tlocalmerger extends tfilemerger {
+class LangMerger extends FileMerger
+ {
 
     protected function create() {
         $this->dbversion = false;

@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
+use litepubl\config;
 
-class litepubl {
+class litepubl
+ {
     public static $cache;
     public static $classes;
     public static $datastorage;
@@ -43,17 +45,18 @@ class litepubl {
         \class_alias(get_called_class() , 'litepublisher');
         \class_alias(get_called_class() , 'litepubl\litepublisher');
         \class_alias(get_called_class() , 'litepubl');
+        \class_alias(get_called_class() , 'litepubl\litepubl');
     }
 
     public static function createInstances() {
         static ::$paths = new paths();
         static ::createStorage();
-        static ::$classes = tclasses::i();
-        static ::$options = toptions::i();
-        static ::$site = tsite::i();
-        static ::$db = tdatabase::i();
+        static ::$classes = Classes::i();
+        static ::$options = Options::i();
+        static ::$site = Site::i();
+        static ::$db = DB::i();
         //static::$cache = new cache();
-        static ::$urlmap = turlmap::i();
+        static ::$urlmap = Urlmap::i();
     }
 
     public static function createStorage() {
@@ -66,18 +69,17 @@ class litepubl {
             $classname = config::$classes['storage'];
             static ::$storage = new $classname();
         } else if (static ::$memcache) {
-            static ::$storage = new memcachestorage();
+            static ::$storage = new StorageMemcache();
         } else {
-            static ::$storage = new storage();
+            static ::$storage = new Storage();
         }
 
-        static ::$datastorage = new datastorage();
+        static ::$datastorage = new DataStorage();
         static ::$datastorage->loaddata();
         if (!static ::$datastorage->isInstalled()) {
             require (static ::$paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
-            
-        }
+                    }
     }
 
     public static function cachefile($filename) {
@@ -153,4 +155,5 @@ class litepubl {
     }
 
 } //class
+
 litepubl::start();

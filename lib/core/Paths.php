@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class paths {
+class Paths
+ {
     public $home;
     public $lib;
     public $libinclude;
