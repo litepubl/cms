@@ -6,20 +6,22 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tag;
+use litepubl\core\Data;
 
-class ttagfactory extends tdata {
+class Factory extends Data
+{
 
     public static function i() {
-        return getinstance(__class__);
+        return getinstance(get_called_class());
     }
 
     public function getposts() {
-        return tposts::i();
+        return \litepubl\post\Posts::i();
     }
 
     public function getpost($id) {
-        return tpost::i($id);
+        return \litepubl\post\Post::i($id);
     }
 
 } //class

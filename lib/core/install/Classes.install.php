@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
 function install_engine($email, $language) {
     //forward create folders

@@ -232,7 +232,7 @@ class tcomments extends titems {
     }
 
 } //class
-class tcomment extends tdata {
+class tcomment extends Data {
     private static $md5 = array();
     private $_posted;
 

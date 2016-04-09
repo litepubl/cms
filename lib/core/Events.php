@@ -142,7 +142,7 @@ class Events extends Data {
                 try {
                     $result = call_user_func_array($call, $params);
                 }
-                catch(cancelEvent $e) {
+                catch(CancelEvent $e) {
                     return $e->result;
                 }
 
@@ -166,7 +166,7 @@ class Events extends Data {
     }
 
     public static function cancelevent($result) {
-        throw new cancelEvent($result);
+        throw new CancelEvent($result);
     }
 
     public function setevent($name, $params) {

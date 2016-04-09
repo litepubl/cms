@@ -7,8 +7,9 @@
  */
 
 namespace litepubl;
+use litepubl\core\Data;
 
-class tsidebars extends tdata {
+class Sidebars extends Data {
     public $items;
 
     public static function i($idview = 0) {

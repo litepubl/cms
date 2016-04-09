@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class cancel extends \Exception {
+class CancelEvent extends \Exception {
     public $result;
 
     public function __construct($message, $code = 0) {

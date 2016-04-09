@@ -7,12 +7,9 @@
  */
 
 namespace litepubl;
+use litepubl\core\Data;
 
-class tusersman extends tdata {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class tusersman extends Data {
 
     public function add(array $values) {
         $users = tusers::i();

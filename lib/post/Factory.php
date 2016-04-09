@@ -6,28 +6,29 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\Data;
 
-class tpostfactory extends tdata {
+class Factory extends Data {
 
     public function getposts() {
-        return tposts::i();
+        return Posts::i();
     }
 
     public function getfiles() {
-        return tfiles::i();
+        return Files::i();
     }
 
     public function gettags() {
-        return ttags::i();
+        return \litepubl\tag\Tags::i();
     }
 
     public function getcats() {
-        return tcategories::i();
+        return \litepubl\tag\Categories::i();
     }
 
     public function getcategories() {
-        return tcategories::i();
+        return $this->getcats();
     }
 
     public function gettemplatecomments() {
@@ -35,23 +36,23 @@ class tpostfactory extends tdata {
     }
 
     public function getcomments($id) {
-        return tcomments::i($id);
+        return Comments::i($id);
     }
 
     public function getpingbacks($id) {
-        return tpingbacks::i($id);
+        return Pingbacks::i($id);
     }
 
     public function getmeta($id) {
-        return tmetapost::i($id);
+        return Meta::i($id);
     }
 
     public function gettransform(tpost $post) {
-        return tposttransform::i($post);
+        return Transform::i($post);
     }
 
     public function add(tpost $post) {
-        return tposttransform::add($post);
+        return Transform::add($post);
     }
 
 } //class

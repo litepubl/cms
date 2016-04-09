@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class datastorage {
+class DataStorage
+ {
     public $data;
     private $modified;
 
@@ -20,7 +21,7 @@ class datastorage {
         return litepubl::$storage;
     }
 
-    public function save(tdata $obj) {
+    public function save(Data $obj) {
         $this->modified = true;
         $base = $obj->getbasename();
         if (!isset($this->data[$base])) {
@@ -30,7 +31,7 @@ class datastorage {
         return true;
     }
 
-    public function load(tdata $obj) {
+    public function load(Data $obj) {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             $obj->data = & $this->data[$base];
@@ -41,7 +42,7 @@ class datastorage {
         }
     }
 
-    public function remove(tdata $obj) {
+    public function remove(Data $obj) {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             unset($this->data[$base]);
