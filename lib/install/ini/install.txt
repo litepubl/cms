@@ -1,0 +1,9 @@
+litepubl\core\Classes
+litepubl\core\Options
+litepubl\core\Site
+litepubl\core\Urlmap
+litepubl\core\Cron
+litepubl\core\UserGroups
+litepubl\core\Usersman
+litepubl\core\Users
+litepubl\core\UserOptions
