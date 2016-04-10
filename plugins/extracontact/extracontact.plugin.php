@@ -32,7 +32,7 @@ class textracontact extends tplugin {
 
     public function processform() {
         $contact = tcontactform::singleinstance('tcontactform');
-        $contact->data['extra'] = tini2array::parsesection(trim($_POST['items']));
+        $contact->data['extra'] = parse_ini_string(trim($_POST['items']), false);
         $contact->save();
     }
 

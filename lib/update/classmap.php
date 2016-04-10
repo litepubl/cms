@@ -26,6 +26,7 @@ return [
 'tlocal' => 'litepubl\theme\Lang',
 'tlocalmerger' => 'theme\LangMerger',
 'ttemplate' => 'litepubl\theme\MainControler',
+'itemplate' => 'litepubl\theme\ControlerInterface',
 'ttheme' => 'litepubl\theme\Theme',
 'basetheme' => 'litepubl\theme\BaseTheme',
 'admintheme' => 'litepubl\theme\Admin',

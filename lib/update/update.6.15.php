@@ -8,15 +8,12 @@ $cl->namespaces['litepubl\admin'] = 'lib/admin';
 $cl->namespaces['litepubl\xmlrpc'] = 'lib/xmlrpc';
 $cl->kernel['litepubl\core'] = 'kernel.core.php';
 
-foreach ([
-'tdata',
-'tevents',
-'tcoevents'
+unset($cl->items['tini2array']);
 
-'tadminservice',
-] as $classname) {
-unset($cl->items[$classname]);
-unset($cl->kernel[$classname]);
+$a = include(__DIR__ . '/classmap.php');
+foreach ($a as $oldcalss => $newclass) {
+unset($cl->items[$oldclass]);
+unset($cl->kernel[$oldclass]);
 }
 
 $cl->save();

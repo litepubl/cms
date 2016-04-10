@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class getter {
+class Getter
+ {
     public $get;
     public $set;
 

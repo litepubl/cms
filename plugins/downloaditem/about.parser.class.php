@@ -57,7 +57,7 @@ class taboutparser {
             $about_ini = trim($about_ini);
             //trim unicode sign
             $about_ini = substr($about_ini, strpos($about_ini, '['));
-            $about = tini2array::parse($about_ini);
+            $about = parse_ini_string($about_ini, true);
             if (isset($about[litepubl::$options->language])) {
                 $about['about'] = $about[litepubl::$options->language] + $about['about'];
             }

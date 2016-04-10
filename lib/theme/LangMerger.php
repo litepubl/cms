@@ -19,7 +19,9 @@ class LangMerger extends JsMerger
 
     public function addtext($name, $section, $s) {
         $s = trim($s);
-        if ($s != '') $this->addsection($name, $section, tini2array::parsesection($s));
+        if ($s != '') {
+$this->addsection($name, $section, parse_ini_string($s, false));
+}
     }
 
     public function addsection($name, $section, array $items) {

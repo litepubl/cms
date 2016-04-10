@@ -6,13 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class titem_storage extends titem {
-
-    public function getowner() {
-        $this->error(sprintf('The "%s" no have owner', get_class($this)));
-    }
+trait DataOwnerTrait
+{
 
     public function load() {
         $owner = $this->owner;
@@ -27,4 +24,4 @@ class titem_storage extends titem {
         return $this->owner->save();
     }
 
-} //class
+}

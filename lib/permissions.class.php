@@ -8,7 +8,10 @@
 
 namespace litepubl;
 
-class tperm extends titem_storage {
+class tperm extends \litepubl\core\Item
+{
+use \litepubl\core\DataOwnerTrait;
+
     protected $_admin;
     protected $adminclass;
 

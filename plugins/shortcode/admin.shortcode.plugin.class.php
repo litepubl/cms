@@ -35,7 +35,7 @@ class tadminshortcodeplugin {
     public function processform() {
         $plugin = tshortcode::i();
         //$plugin->setcodes($_POST['codes']);
-        $plugin->items = tini2array::parsesection($_POST['codes']);
+        $plugin->items = parse_ini_string($_POST['codes'], false);
         $plugin->save();
     }
 
