@@ -6,20 +6,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-function tlocalInstall($self) {
-    tlocal::$self = $self;
+function LangInstall($self) {
+    lang::$self = $self;
     //check double install
     if (count($self->ini) > 0) return;
     preloadlanguage($self, litepubl::$options->language);
-    litepubl::$options->timezone = tlocal::get('installation', 'timezone');
+    litepubl::$options->timezone = lang::get('installation', 'timezone');
 }
 
-function tlocalPreinstall($language) {
-    $lang = new tlocal();
-    tlocal::$self = $lang;
-    litepubl::$classes->instances['tlocal'] = $lang;
+function LangPreinstall($language) {
+    $lang = new lang();
+    lang::$self = $lang;
+    litepubl::$classes->instances[get_class($lang)] = $lang;
     preloadlanguage($lang, $language);
 }
 
@@ -34,5 +35,5 @@ function preloadlanguage($lang, $language) {
         $lang->ini = $ini + $lang->ini;
         $lang->loaded[] = $name;
     }
-    date_default_timezone_set(tlocal::get('installation', 'timezone'));
+    date_default_timezone_set(lang::get('installation', 'timezone'));
 }

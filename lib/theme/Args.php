@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
 
 class Args
  {
@@ -74,7 +74,7 @@ class Args
     }
 
     public function parse($s) {
-        return basetheme::i()->parsearg($s, $this);
+        return BaseTheme::i()->parsearg($s, $this);
     }
 
     public function callback($s) {

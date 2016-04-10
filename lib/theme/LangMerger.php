@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
 
 class LangMerger extends JsMerger
  {

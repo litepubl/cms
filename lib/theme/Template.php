@@ -9,14 +9,16 @@
 namespace litepubl\theme;
 use litepubl\core\Events;
 use litepubl\core\DataStorageTrait;
+use litepubl\widget\Widgets;
+
 
 class Template extends Events
 {
 use DataStorageTrait;
 
+    public $context;
     public $path;
     public $url;
-    public $context;
     public $itemplate;
     public $view;
     public $ltoptions;
@@ -69,7 +71,7 @@ use DataStorageTrait;
         if (method_exists($this, $get = 'get' . $name)) return $this->$get();
         if (array_key_exists($name, $this->data)) return $this->data[$name];
         if (preg_match('/^sidebar(\d)$/', $name, $m)) {
-            $widgets = twidgets::i();
+            $widgets = Widgets::i();
             return $widgets->getsidebarindex($this->context, $this->view, (int)$m[1]);
         }
 
@@ -82,7 +84,7 @@ use DataStorageTrait;
     }
 
     protected function get_view($context) {
-        return $this->itemplate ? tview::getview($context) : tview::i();
+        return $this->itemplate ? View::getview($context) : View::i();
     }
 
     public function request($context) {
@@ -133,7 +135,7 @@ use DataStorageTrait;
 
     //html tags
     public function getsidebar() {
-        return twidgets::i()->getsidebar($this->context, $this->view);
+        return Widgets::i()->getsidebar($this->context, $this->view);
     }
 
     public function gettitle() {
@@ -161,7 +163,7 @@ use DataStorageTrait;
         if (isset($this->context) && isset($this->context->icon)) {
             $icon = $this->context->icon;
             if ($icon > 0) {
-                $files = tfiles::i();
+                $files = Files::i();
                 if ($files->itemexists($icon)) $result = $files->geturl($icon);
             }
         }

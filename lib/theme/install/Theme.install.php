@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-function tthemeInstall($self) {
+function ThemeInstall($self) {
     $dir = litepubl::$paths->data . 'themes';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);

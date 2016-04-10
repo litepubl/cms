@@ -6,16 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\widget\Widgets;
 
-function tviewsInstall($self) {
-    $widgets = twidgets::i();
+function ViewsInstall($self) {
+    $widgets = Widgets::i();
     $widgets->deleted = $self->widgetdeleted;
 
     $self->lock();
-    $lang = tlocal::admin('names');
+    $lang = Lang::admin('names');
     $default = $self->add($lang->default);
-    $def = tview::i($default);
+    $def = View::i($default);
     $def->sidebars = array(
         array() ,
         array() ,
@@ -23,8 +24,8 @@ function tviewsInstall($self) {
     );
 
     $idadmin = $self->add($lang->adminpanel);
-    $admin = tview::i($idadmin);
-    $admin->menuclass = 'tadminmenus';
+    $admin = View::i($idadmin);
+    $admin->menuclass = 'litepubl\admin\menus';
 
     $self->defaults = array(
         'post' => $default,

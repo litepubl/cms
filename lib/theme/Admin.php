@@ -7,6 +7,9 @@
  */
 
 namespace litepubl\theme;
+use litepubl\core\litepubl;
+use litepubl\post\Categories;
+use litepubl\post\Files;
 
 class Admin extends Base
 {
@@ -23,11 +26,11 @@ class Admin extends Base
     }
 
     public static function admin() {
-        return tview::i(tviews::i()->defaults['admin'])->admintheme;
+        return View::i(tviews::i()->defaults['admin'])->admintheme;
     }
 
     public function getparser() {
-        return adminparser::i();
+        return AdminParser::i();
     }
 
     public function shortcode($s, targs $args) {
@@ -46,8 +49,8 @@ class Admin extends Base
         }
 
         if (preg_match_all('/\[(editor|text|email|password|upload|checkbox|combo|hidden|submit|button|calendar|tab|ajaxtab|tabpanel)[:=](\w*+)\]/i', $result, $m, PREG_SET_ORDER)) {
-            $theme = ttheme::i();
-            $lang = tlocal::i();
+            $theme = Theme::i();
+            $lang = lang::i();
 
             foreach ($m as $item) {
                 $type = $item[1];
@@ -164,12 +167,12 @@ class Admin extends Base
     }
 
     public function form($tml, targs $args) {
-        return $this->parsearg(str_replace('$items', $tml, ttheme::i()->templates['content.admin.form']) , $args);
+        return $this->parsearg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
     public function gettable($head, $body, $footer = '') {
         return strtr($this->templates['table'], array(
-            '$class' => ttheme::i()->templates['content.admin.tableclass'],
+            '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
             '$body' => $body,
             '$footer' => $footer,
@@ -181,7 +184,7 @@ class Admin extends Base
     }
 
     public function getcount($from, $to, $count) {
-        return $this->h(sprintf(tlocal::i()->itemscount, $from, $to, $count));
+        return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
     public function geticon($name, $screenreader = false) {
@@ -197,7 +200,7 @@ class Admin extends Base
 
     public function geterr($content) {
         return strtr($this->templates['error'], array(
-            '$title' => tlocal::i()->error,
+            '$title' => Lang::i()->error,
             '$content' => $content
         ));
     }
@@ -211,8 +214,8 @@ class Admin extends Base
 
         $args = new targs();
         $args->name = $name;
-        $args->title = tlocal::i()->__get($name);
-        $args->format = datefilter::$format;
+        $args->title = Lang::i()->__get($name);
+        $args->format = DateFilter::$format;
 
         if ($date) {
             $args->date = date(datefilter::$format, $date);
@@ -238,9 +241,9 @@ class Admin extends Base
     }
 
     public function getcats(array $items) {
-        tlocal::i()->addsearch('editor');
+        Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
-        tcategories::i()->loadall();
+        Categories::i()->loadall();
         $result.= $this->getsubcats(0, $items);
         return $result;
     }
@@ -249,7 +252,7 @@ class Admin extends Base
         $result = '';
         $args = new targs();
         $tml = $this->templates['posteditor.categories.item'];
-        $categories = tcategories::i();
+        $categories = Categories::i();
         foreach ($categories->items as $id => $item) {
             if (($parent == $item['parent']) && !($exclude && in_array($id, $exclude))) {
                 $args->add($item);
@@ -286,7 +289,7 @@ class Admin extends Base
             $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
         }
 
-        $files = tfiles::i();
+        $files = Files::i();
         $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
         $db = $files->db;

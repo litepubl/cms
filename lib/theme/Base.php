@@ -8,6 +8,7 @@
 
 namespace litepubl\theme;
 use litepubl\core\Events;
+use litepubl\core\litepubl;
 
 class Base extends Events
  {
@@ -74,7 +75,7 @@ class Base extends Events
     }
 
     public function getparser() {
-        return baseparser::i();
+        return BaseParser::i();
     }
 
     public function load() {
@@ -124,7 +125,7 @@ class Base extends Events
                 return litepubl::$site;
 
             case 'lang':
-                return tlocal::i();
+                return lang::i();
 
             case 'post':
                 $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
@@ -203,7 +204,7 @@ class Base extends Events
 
     public function replacelang($s, $lang) {
         $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
-        static ::$vars['lang'] = isset($lang) ? $lang : tlocal::i('default');
+        static ::$vars['lang'] = isset($lang) ? $lang : lang::i('default');
         $s = strtr($s, static ::$defaultargs);
         if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {

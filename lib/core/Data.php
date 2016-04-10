@@ -10,14 +10,14 @@ namespace litepubl\core;
 
 class Data {
     const ZERODATE = '0000-00-00 00:00:00';
-    public $data;
+    public static $guid = 0;
     public $basename;
     public $cache;
+    public $data;
     public $coclasses;
     public $coinstances;
     public $lockcount;
     public $table;
-    public static $guid = 0;
 
     public static function i() {
         return litepubl::$classes->getinstance(get_called_class());

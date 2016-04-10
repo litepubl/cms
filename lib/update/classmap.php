@@ -21,8 +21,17 @@ return [
 'tusergroups' => 'litepubl\core\UserGroups',
 'tuseroptions' => 'litepubl\core\UserOptions',
 'tusersman' => 'litepubl\core\Usersman',
-'tlocal' => 'litepubl\core\Lang',
 
+//theme
+'tlocal' => 'litepubl\theme\Lang',
+'tlocalmerger' => 'theme\LangMerger',
+'ttemplate' => 'theme\Template',
+'ttheme' => 'litepubl\theme\Theme',
+'basetheme' => 'litepubl\theme\BaseTheme',
+'admintheme' => 'litepubl\theme\Admin',
+'targs' => 'liteubl\theme\Args',
+'themevars' => 'litepubl\theme\Vars',
+'tcssmerger' => 'litepubl\theme\CssMerger',
 
 //pages
 'thomepage' => 'litepubl\pages\Home',

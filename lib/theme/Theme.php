@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\theme;
+use litepubl\core\litepubl;
 
 class Theme extends BaseTheme
  {
@@ -17,7 +18,7 @@ class Theme extends BaseTheme
             if (($context = litepubl::$urlmap->context) && isset($context->idview)) {
                 $result = tview::getview($context)->theme;
             } else {
-                $result = tview::i()->theme;
+                $result = View::i()->theme;
             }
         }
 
@@ -55,14 +56,14 @@ class Theme extends BaseTheme
     }
 
     public function getparser() {
-        return tthemeparser::i();
+        return ThemeParser::i();
     }
 
     public function getsidebarscount() {
         return count($this->templates['sidebars']);
     }
     private function get_author() {
-        $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : ttemplate::i()->context;
+        $context = isset(litepubl::$urlmap->context) ? litepubl::$urlmap->context : Template::i()->context;
         if (!is_object($context)) {
             if (!isset(static ::$vars['post'])) return new emptyclass();
             $context = static ::$vars['post'];
@@ -203,7 +204,7 @@ class Theme extends BaseTheme
         $tml_key = $this->keyanounce($postanounce);
         tposts::i()->loaditems($items);
 
-        static ::$vars['lang'] = tlocal::i('default');
+        static ::$vars['lang'] = Lang::i('default');
         foreach ($items as $id) {
             $post = tpost::i($id);
             $result.= $post->getcontexcerpt($tml_key);

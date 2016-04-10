@@ -8,6 +8,7 @@
 
 namespace litepubl\theme;
 use litepubl\core\Items;
+use litepubl\core\DataStorageTrait;
 
 class Views extends Items
 {

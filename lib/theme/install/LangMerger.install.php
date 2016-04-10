@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-function tlocalmergerInstall($self) {
+function LangMergerInstall($self) {
     $dir = litepubl::$paths->data . 'languages';
     if (!is_dir($dir)) @mkdir($dir, 0777);
     @chmod($dir, 0777);
@@ -34,6 +35,6 @@ function tlocalmergerInstall($self) {
     $self->unlock();
 
     //after install
-    litepubl::$options->timezone = tlocal::get('installation', 'timezone');
-    date_default_timezone_set(tlocal::get('installation', 'timezone'));
+    litepubl::$options->timezone = lang::get('installation', 'timezone');
+    date_default_timezone_set(lang::get('installation', 'timezone'));
 }

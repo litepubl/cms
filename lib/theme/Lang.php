@@ -6,7 +6,8 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
 class Lang
 {

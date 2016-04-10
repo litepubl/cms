@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-class tcssmerger extends tfilemerger {
+class CssMerger extends JsMerger
+ {
 
     protected function create() {
         parent::create();
