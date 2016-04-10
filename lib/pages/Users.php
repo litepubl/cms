@@ -6,12 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
 
-class tuserpages extends titems implements itemplate {
+class Users extends Items implements TemplateInterface {
     public static $userprops = array(
         'email',
-        'name',
+        'name',::i
+
         'website'
     );
     public static $pageprops = array(

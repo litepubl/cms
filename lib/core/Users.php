@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tusers extends titems {
+class Users extends Items
+ {
     public $grouptable;
 
     public static function i() {

@@ -14,6 +14,7 @@ class Classes extends Items
     public $kernel;
     public $classes;
     public $remap;
+public $classmap;
     public $aliases;
     public $factories;
     public $instances;
@@ -39,6 +40,7 @@ class Classes extends Items
         $this->addmap('remap', array());
         $this->addmap('factories', array());
         $this->instances = array();
+$this->classmap = [];
         $this->aliases = array();
 
         spl_autoload_register(array(
@@ -190,13 +192,45 @@ class Classes extends Items
             $alias = $tmp;
         }
 
-        if (!isset($this->aliases[$classname])) {
+        if (!isset($this->aliases[$alias])) {
             class_alias($classname, $alias, false);
-            $this->aliases[$classname] = $alias;
+            $this->aliases[$alias] = $classname;
         }
     }
 
+public function getClassmap($classname) {
+if (isset($this->aliases[$classname])) {
+return $this->aliases[$classname];
+}
+
+if (!count($this->classmap)) {
+$this->classmap = include(litepubl::$paths->lib . 'update/classmap.php');
+}
+$classname = $this->baseclass($classname);
+if (isset($this->classmap($classname) {
+$result = $this->classmap[$classname];
+if (!isset($this->aliases[$classname]) {
+class_alias($result, $classname, false);
+$this->aliases[$classname] = $result;
+}
+
+$classname = 'litepubl\\' . $classname;
+if (!isset($this->aliases[$classname]) {
+class_alias($result, $classname, false);
+$this->aliases[$classname] = $result;
+}
+
+return $result;
+}
+
+return false;
+}
+
     public function autoload($classname) {
+if ($newclass = $this->getClassmap($classname)) {
+$classname = $newclass;
+}
+
         if ($filename = $this->getpsr4($classname)) {
             $this->include($filename);
         } else if (!config::$useKernel || litepubl::$debug || !$this->includeKernel($classname)) {

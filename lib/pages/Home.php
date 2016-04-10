@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\CoEvents;
 
-class thomepage extends tsinglemenu {
+class Home extends SingleMenu
+{
     public $cacheposts;
     public $midleposts;
 
@@ -29,7 +31,7 @@ class thomepage extends tsinglemenu {
         $this->data['showpagenator'] = true;
         $this->data['archcount'] = 0;
         $this->data['parsetags'] = false;
-        $this->coinstances[] = new tcoevents($this, 'onbeforegetitems', 'ongetitems');
+        $this->coinstances[] = new CoEvents($this, 'onbeforegetitems', 'ongetitems');
         $this->cacheposts = false;
         $this->midleposts = false;
     }

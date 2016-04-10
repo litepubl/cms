@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tusergroups extends titems {
+class UserGroups extends Items
+ {
     public $defaults;
 
     public static function i() {

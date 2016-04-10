@@ -6,19 +6,20 @@
  *
  */
 
-namespace litepubl;
-use litepubl\core\Data;
+namespace litepubl\core;
+use litepubl\pages\Users as UserPages;
 
-class tusersman extends Data {
+class Usersman extends Data
+ {
 
     public function add(array $values) {
-        $users = tusers::i();
+        $users = Users::i();
         $email = trim($values['email']);
         if ($users->emailexists($email)) {
             return false;
         }
 
-        $groups = tusergroups::i();
+        $groups = UserGroups::i();
         if (isset($values['idgroups'])) {
             $idgroups = $this->cleangroups($values['idgroups']);
             if (!count($idgroups)) {
@@ -47,7 +48,7 @@ class tusersman extends Data {
         $users->items[$id] = $item;
         $users->setgroups($id, $item['idgroups']);
         if ('approved' == $item['status']) {
-            tuserpages::i()->add($id);
+            UserPages::i()->add($id);
         }
 
         $users->added($id);
@@ -55,7 +56,7 @@ class tusersman extends Data {
     }
 
     public function edit($id, array $values) {
-        $users = tusers::i();
+        $users = Users::i();
         if (!$users->itemexists($id)) return false;
         $item = $users->getitem($id);
         foreach ($item as $k => $v) {
@@ -69,7 +70,7 @@ class tusersman extends Data {
 
 
                 case 'idgroups':
-                    $groups = tusergroups::i();
+                    $groups = UserGroups::i();
                     $item['idgroups'] = $this->cleangroups($values['idgroups']);
                     break;
 
@@ -86,7 +87,7 @@ class tusersman extends Data {
         $item['idgroups'] = implode(',', $item['idgroups']);
         $users->db->updateassoc($item);
 
-        $pages = tuserpages::i();
+        $pages = UserPages::i();
         if (isset($values['status']) && ('approved' == $values['status']) && ($item['status'] != $values['status'])) {
             if ($pages->itemexists($id)) {
                 if ($pages->createpage) $pages->addpage($id);
@@ -124,9 +125,11 @@ class tusersman extends Data {
         if (is_string($v)) $v = trim($v);
         if (is_numeric($v)) {
             $id = (int)$v;
-            if (tusergroups::i()->itemexists($id)) return $id;
+            if (UserGroups::i()->itemexists($id)) {
+return $id;
+}
         } else {
-            return tusergroups::i()->getidgroup($v);
+            return UserGroups::i()->getidgroup($v);
         }
         return false;
     }

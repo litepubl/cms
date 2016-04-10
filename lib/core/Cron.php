@@ -6,16 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tcron extends tevents {
+class Cron extends Events
+ {
     public static $pinged = false;
     public $disableadd;
     private $socket;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();

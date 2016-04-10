@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tuseroptions extends titems {
+class UserOptions extends Items
+ {
     public $defvalues;
     private $defitems;
 
