@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class titemsposts extends titems {
+class ItemsPosts extends Items
+{
     public $tablepost;
     public $postprop;
     public $itemprop;

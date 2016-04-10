@@ -6,6 +6,7 @@ return [
 'tcoevents' => 'litepubl\core\CoEvents',
 'titem' => 'litepubl\core\Item',
 'titems' => 'litepubl\core\Items',
+'titemsposts' => 'litepubl\core\ItemsPosts',
 'tclasses' => 'litepubl\core\Classes',
 'tcron' => 'litepubl\core\Cron',
 'tdatabase' => 'litepubl\core\DB',
