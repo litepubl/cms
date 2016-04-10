@@ -10,7 +10,7 @@ namespace litepubl;
 
 class tperm extends \litepubl\core\Item
 {
-use \litepubl\core\DataOwnerTrait;
+use \litepubl\core\ItemOwnerTrait;
 
     protected $_admin;
     protected $adminclass;

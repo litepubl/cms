@@ -6,14 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tfileitems extends titemsposts {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
+class FileItems extend \litepubl\core\ItemsPosts
+{
     protected function create() {
         $this->dbversion = dbversion;
         parent::create();

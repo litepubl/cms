@@ -97,25 +97,3 @@ class ItemsPosts extends Items
     }
 
 } //class
-class titemspostsowner extends titemsposts {
-    private $owner;
-    public function __construct($owner = null) {
-        if (!isset($owner)) return;
-        parent::__construct();
-        $this->owner = $owner;
-        $this->table = $owner->table . 'items';
-    }
-
-    public function load() {
-    }
-    public function save() {
-        $this->owner->save();
-    }
-    public function lock() {
-        $this->owner->lock();
-    }
-    public function unlock() {
-        $this->owner->unlock();
-    }
-
-} //class

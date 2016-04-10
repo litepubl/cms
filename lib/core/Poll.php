@@ -6,17 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tpoolitems extends tdata {
+class Poll extends Data
+{
     protected $perpool;
     protected $pool;
     protected $modified;
     protected $ongetitem;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -33,7 +30,7 @@ class tpoolitems extends tdata {
             ));
         }
 
-        $this->error('Call abastract method getitem in class' . get_class($this));
+        $this->error('Call abstract method getitem in class' . get_class($this));
     }
 
     public function getfilename($idpool) {
@@ -41,7 +38,7 @@ class tpoolitems extends tdata {
     }
 
     public function loadpool($idpool) {
-        if ($data = litepubl::$urlmap->cache->get($this->getfilename($idpool))) {
+        if ($data = litepubl::$router->cache->get($this->getfilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
             $this->pool[$idpool] = array();
@@ -50,7 +47,7 @@ class tpoolitems extends tdata {
 
     public function savepool($idpool) {
         if (!isset($this->modified[$idpool])) {
-            litepubl::$urlmap->onclose = array(
+            litepubl::$router->onclose = array(
                 $this,
                 'savemodified',
                 $idpool
@@ -60,18 +57,23 @@ class tpoolitems extends tdata {
     }
 
     public function savemodified($idpool) {
-        litepubl::$urlmap->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+        litepubl::$router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
     }
 
     public function getidpool($id) {
         $idpool = (int)floor($id / $this->perpool);
-        if (!isset($this->pool[$idpool])) $this->loadpool($idpool);
+        if (!isset($this->pool[$idpool])) {
+$this->loadpool($idpool);
+}
+
         return $idpool;
     }
 
     public function get($id) {
         $idpool = $this->getidpool($id);
-        if (isset($this->pool[$idpool][$id])) return $this->pool[$idpool][$id];
+        if (isset($this->pool[$idpool][$id])) {
+return $this->pool[$idpool][$id];
+}
         $result = $this->getitem($id);
         $this->pool[$idpool][$id] = $result;
         $this->savepool($idpool);
@@ -84,4 +86,4 @@ class tpoolitems extends tdata {
         $this->savepool($idpool);
     }
 
-} //class
+}

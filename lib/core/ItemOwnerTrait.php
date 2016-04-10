@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-trait DataOwnerTrait
+trait ItemOwnerTrait
 {
 
     public function load() {

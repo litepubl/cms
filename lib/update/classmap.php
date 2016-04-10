@@ -7,6 +7,7 @@ return [
 'titem' => 'litepubl\core\Item',
 'titems' => 'litepubl\core\Items',
 'titemsposts' => 'litepubl\core\ItemsPosts',
+'tpoolitems' => 'litepubl\core\Pool',
 'tclasses' => 'litepubl\core\Classes',
 'tcron' => 'litepubl\core\Cron',
 'tdatabase' => 'litepubl\core\DB',
@@ -31,7 +32,7 @@ return [
 'ttheme' => 'litepubl\theme\Theme',
 'basetheme' => 'litepubl\theme\BaseTheme',
 'admintheme' => 'litepubl\theme\Admin',
-'targs' => 'liteubl\theme\Args',
+'targs' => 'litepubl\theme\Args',
 'themevars' => 'litepubl\theme\Vars',
 'tview' => 'litepubl\theme\Schema',
 'tviews' => 'litepubl\theme\Schemes',
@@ -39,10 +40,14 @@ return [
 'tcontentfilter' => 'litepubl\theme\Filter',
 'tcssmerger' => 'litepubl\theme\CssMerger',
 
+//posts
+'tfileitems' => 'litepubl\post\FileItems',
+
 //pages
 'thomepage' => 'litepubl\pages\Home',
 'tuserpages' => 'litepubl\pages\Users',
 
-
+//widgets
+'tsidebars' => 'litepubl\widget\Sidebars',
 
 ];

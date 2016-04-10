@@ -6,32 +6,35 @@
  *
  */
 
-namespace litepubl;
-use litepubl\core\Data;
+namespace litepubl\widget;
+use litepubl\theme\Schema;
+use litepubl\theme\Schemes;
 
-class Sidebars extends Data {
+class Sidebars extends \litepubl\core\Data
+ {
     public $items;
 
-    public static function i($idview = 0) {
-        $result = getinstance(__class__);
-        if ($idview > 0) {
-            $view = tview::i((int)$idview);
-            $result->items = & $view->sidebars;
+    public static function i($id = 0) {
+        $result = getinstance(get_called_class());
+        if ($id) {
+            $schema = Schema::i((int)$id);
+            $result->items = & $schema->sidebars;
         }
+
         return $result;
     }
 
     protected function create() {
         parent::create();
-        $view = tview::i();
-        $this->items = & $view->sidebars;
+        $schema = Schema::i();
+        $this->items = & $schema->sidebars;
     }
 
     public function load() {
     }
 
     public function save() {
-        tview::i()->save();
+        Schema::i()->save();
     }
 
     public function add($id) {
@@ -71,7 +74,7 @@ class Sidebars extends Data {
 
     public function deleteclass($classname) {
         if ($id = twidgets::i()->class2id($classname)) {
-            tviews::i()->widgetdeleted($id);
+            Schemes::i()->widgetdeleted($id);
         }
     }
 
@@ -133,20 +136,19 @@ class Sidebars extends Data {
             }
         }
 
-        $views = tviews::i();
-        foreach ($views->items as & $viewitem) {
-            if (($viewitem['id'] != 1) && !$viewitem['customsidebar']) continue;
+        $schemes = Schemes::i();
+        foreach ($schemes->items as & $schemaItem) {
+            if (($schemaItem['id'] != 1) && !$schemaItem['customsidebar']) continue;
             unset($sidebar);
-            foreach ($viewitem['sidebars'] as & $sidebar) {
+            foreach ($schemaItem['sidebars'] as & $sidebar) {
                 for ($i = count($sidebar) - 1; $i >= 0; $i--) {
-                    //echo $sidebar[$i]['id'], '<br>';
                     if (!isset($widgets->items[$sidebar[$i]['id']])) {
                         array_delete($sidebar, $i);
                     }
                 }
             }
         }
-        $views->save();
+        $schemes->save();
     }
 
 } //class
