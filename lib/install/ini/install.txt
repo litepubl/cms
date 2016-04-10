@@ -9,5 +9,6 @@ core\UserGroups
 core\Usersman
 core\Users
 core\UserOptions
-theme\Controler
+theme\MainControler
 theme\Theme
+theme\Schemes

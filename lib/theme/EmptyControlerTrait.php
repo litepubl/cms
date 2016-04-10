@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
 
-trait EmptyTemplateTrait
+trait EmptyControlerTrait 
 {
 
     protected function create() {
@@ -25,20 +25,19 @@ trait EmptyTemplateTrait
     public function getdescription() {
     }
 
-
-    public function getidview() {
+    public function getIdSchema() {
         return $this->data['idview'];
     }
 
-    public function setidview($id) {
-        if ($id != $this->idview) {
+    public function setIdSchema($id) {
+        if ($id != $this->IdSchema) {
             $this->data['idview'] = $id;
             $this->save();
         }
     }
 
-    public function getview() {
-        return tview::getview($this);
+    public function getschema() {
+        return Schema::getSchema($this);
     }
 
 }

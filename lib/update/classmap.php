@@ -25,7 +25,7 @@ return [
 //theme
 'tlocal' => 'litepubl\theme\Lang',
 'tlocalmerger' => 'theme\LangMerger',
-'ttemplate' => 'theme\Template',
+'ttemplate' => 'litepubl\theme\MainControler',
 'ttheme' => 'litepubl\theme\Theme',
 'basetheme' => 'litepubl\theme\BaseTheme',
 'admintheme' => 'litepubl\theme\Admin',
@@ -33,6 +33,8 @@ return [
 'themevars' => 'litepubl\theme\Vars',
 'tview' => 'litepubl\theme\Schema',
 'tviews' => 'litepubl\theme\Schemes',
+'tguard' => 'litepubl\theme\Guard',
+'tcontentfilter' => 'litepubl\theme\Filter',
 'tcssmerger' => 'litepubl\theme\CssMerger',
 
 //pages

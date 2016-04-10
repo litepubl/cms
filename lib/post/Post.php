@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tpost extends titem implements itemplate {
+class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInterface
+{
     public $childdata;
     public $childtable;
     public $factory;
@@ -117,7 +118,7 @@ class tpost extends titem implements itemplate {
     }
 
     public function getfactory() {
-        return litepubl::$classes->getfactory($this);
+        return \litepubl\core\litepubl::$classes->getfactory($this);
     }
 
     public function __get($name) {

@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
+use litepubl\core\Router;
 
-class tguard {
+class Guard {
 
     public static function is_xxx() {
         if (isset($_GET['ref'])) {
@@ -28,13 +30,13 @@ class tguard {
 
     public static function checkattack() {
         if (litepubl::$options->xxxcheck && static ::is_xxx()) {
-            turlmap::nocache();
-            tlocal::usefile('admin');
+            Router::nocache();
+            Lang::usefile('admin');
             if ($_POST) {
-                die(tlocal::get('login', 'xxxattack'));
+                die(Lang::get('login', 'xxxattack'));
             }
             if ($_GET) {
-                die(tlocal::get('login', 'confirmxxxattack') . sprintf(' <a href="%1$s">%1$s</a>', $_SERVER['REQUEST_URI']));
+                die(Lang::get('login', 'confirmxxxattack') . sprintf(' <a href="%1$s">%1$s</a>', $_SERVER['REQUEST_URI']));
             }
         }
         return false;

@@ -6,13 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-class tcontentfilter extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Filter extends \litepubl\core\Events
+{
 
     protected function create() {
         parent::create();
@@ -92,7 +90,7 @@ class tcontentfilter extends tevents {
 
     public static function getpostdescription($description) {
         if (litepubl::$options->parsepost) {
-            $theme = ttheme::i();
+            $theme = Theme::i();
             $description = $theme->parse($description);
         }
         $description = static ::gettitle($description);

@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl\tml;
+namespace litepubl\theme;
 
-trait TemplateTrait
+trait ControlerTrait
 {
 
     protected function create() {
@@ -31,19 +31,19 @@ trait TemplateTrait
         return $this->data['description'];
     }
 
-    public function getidview() {
+    public function getIdSchema() {
         return $this->data['idview'];
     }
 
-    public function setidview($id) {
+    public function setIdSchema($id) {
         if ($id != $this->data['idview']) {
             $this->data['idview'] = $id;
             $this->save();
         }
     }
 
-    public function getview() {
-        return tview::getview($this);
+    public function getschema() {
+        return Schema::getSchema($this);
     }
 
 }

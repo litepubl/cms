@@ -15,11 +15,11 @@ class Router extends Items
     public $host;
     public $is404;
     public $isredir;
+    public $item;
     public $model;
     public $page;
     public $url;
     public $uripath;
-    public $itemrequested;
     public $prefilter;
     protected $close_events;
 
@@ -118,14 +118,14 @@ class Router extends Items
     }
 
     protected function dorequest($url) {
-        $this->itemrequested = $this->find_item($url);
+        $this->item = $this->find_item($url);
 
         if ($this->isredir) {
             return;
         }
 
-        if ($this->itemrequested) {
-            return $this->printcontent($this->itemrequested);
+        if ($this->item) {
+            return $this->printcontent($this->item);
         } else {
             $this->notfound404();
         }
@@ -139,7 +139,7 @@ class Router extends Items
     }
 
 public function getControler() {
-return \litepubl\theme\Controler::i();
+return \litepubl\theme\MainControler::i();
 }
 
     public function findurl($url) {
@@ -483,7 +483,7 @@ return \litepubl\theme\Controler::i();
     }
 
     public function setexpiredcurrent() {
-        $this->cache->delete($this->getcachefile($this->itemrequested));
+        $this->cache->delete($this->getcachefile($this->item));
     }
 
     public function expiredclass($class) {
@@ -605,12 +605,12 @@ return \litepubl\theme\Controler::i();
     }
 
     public function getnextpage() {
-        $url = $this->itemrequested['url'];
+        $url = $this->item['url'];
         return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
     }
 
     public function getprevpage() {
-        $url = $this->itemrequested['url'];
+        $url = $this->item['url'];
         if ($this->page <= 2) {
             return url;
         }

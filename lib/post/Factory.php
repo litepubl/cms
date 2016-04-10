@@ -7,9 +7,13 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\Data;
 
-class Factory extends Data {
+class Factory
+{
+
+public function __get($name) {
+return $this->{'get' . $name}();
+}
 
     public function getposts() {
         return Posts::i();
@@ -36,11 +40,11 @@ class Factory extends Data {
     }
 
     public function getcomments($id) {
-        return Comments::i($id);
+        return \litepubl\comments\Comments::i($id);
     }
 
     public function getpingbacks($id) {
-        return Pingbacks::i($id);
+        return \litepubl\comments\Pingbacks::i($id);
     }
 
     public function getmeta($id) {

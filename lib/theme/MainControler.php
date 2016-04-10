@@ -9,7 +9,7 @@
 namespace litepubl\theme;
 use litepubl\widget\Widgets;
 
-class Controler extends \litepubl\core\Events
+class MainControler extends \litepubl\core\Events
 {
 use \litepubl\core\DataStorageTrait;
 

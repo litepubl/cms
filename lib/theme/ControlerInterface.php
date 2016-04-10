@@ -6,15 +6,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
 
-interface itemplate {
+interface ControlerInterface {
     public function request($arg);
     public function gettitle();
     public function getkeywords();
     public function getdescription();
     public function gethead();
     public function getcont();
-    public function getidview();
-    public function setidview($id);
+    public function getIdSchema();
+    public function setIdSchema($id);
 }

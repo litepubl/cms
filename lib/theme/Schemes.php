@@ -76,7 +76,7 @@ $schema->name = 'schema_' . $id;
         foreach ($this->items as $id => $item) {
             $schema= Schema::i($id);
             $schema->resetCustom();
-            $schema->save();
+            $this->save();
         }
     }
 
@@ -93,7 +93,9 @@ $schema->name = 'schema_' . $id;
                 }
             }
         }
-        if ($deleted) $this->save();
+        if ($deleted) {
+$this->save();
+}
     }
 
 } //class

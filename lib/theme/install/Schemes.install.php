@@ -9,14 +9,14 @@
 namespace litepubl\theme;
 use litepubl\widget\Widgets;
 
-function ViewsInstall($self) {
+function SchemesInstall($self) {
     $widgets = Widgets::i();
     $widgets->deleted = $self->widgetdeleted;
 
     $self->lock();
     $lang = Lang::admin('names');
     $default = $self->add($lang->default);
-    $def = View::i($default);
+    $def = Scheme::i($default);
     $def->sidebars = array(
         array() ,
         array() ,
@@ -24,7 +24,7 @@ function ViewsInstall($self) {
     );
 
     $idadmin = $self->add($lang->adminpanel);
-    $admin = View::i($idadmin);
+    $admin = Scheme::i($idadmin);
     $admin->menuclass = 'litepubl\admin\menus';
 
     $self->defaults = array(
