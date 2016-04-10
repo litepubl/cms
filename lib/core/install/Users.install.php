@@ -6,14 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-function tusersInstall($self) {
+function UsersInstall($self) {
     $manager = tdbmanager::i();
     $dir = dirname(__file__) . '/sql/';
-    $manager->CreateTable($self->table, file_get_contents($dir . 'user.sql'));
+    $manager->CreateTable($self->table, file_get_contents($dir . 'users.sql'));
     //$manager->setautoincrement($self->table, 2);
-    $manager->CreateTable($self->grouptable, file_get_contents($dir . 'user.groups.sql'));
+    $manager->CreateTable($self->grouptable, file_get_contents($dir . 'users.groups.sql'));
 
     $id = $self->db->add(array(
         'email' => litepubl::$options->email,
@@ -31,7 +31,6 @@ function tusersInstall($self) {
     ));
 }
 
-function tusersUninstall($self) {
+function UsersUninstall($self) {
     //delete table
-    
-}
+    }

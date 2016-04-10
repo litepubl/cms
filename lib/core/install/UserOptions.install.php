@@ -6,11 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-function tuseroptionsInstall($self) {
+function UserOptionsInstall($self) {
     $self->defvalues['subscribe'] = 'enabled';
-    if (isset(litepubl::$options->defaultsubscribe)) $self->defvalues['subscribe'] = litepubl::$options->defaultsubscribe ? 'enabled' : 'disabled';
+    if (isset(litepubl::$options->defaultsubscribe)) {
+$self->defvalues['subscribe'] = litepubl::$options->defaultsubscribe ? 'enabled' : 'disabled';
+}
+
     $self->defvalues['authorpost_subscribe'] = 'enabled';
     $self->save();
 

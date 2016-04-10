@@ -3,6 +3,7 @@ litepubl\core\Options
 litepubl\core\Site
 litepubl\core\Urlmap
 litepubl\core\Cron
+litepubl\core\Lang
 litepubl\core\UserGroups
 litepubl\core\Usersman
 litepubl\core\Users

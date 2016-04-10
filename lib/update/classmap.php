@@ -21,7 +21,7 @@ return [
 'tusergroups' => 'litepubl\core\UserGroups',
 'tuseroptions' => 'litepubl\core\UserOptions',
 'tusersman' => 'litepubl\core\Usersman',
-
+'tlocal' => 'litepubl\core\Lang',
 
 
 //pages

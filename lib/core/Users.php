@@ -39,11 +39,11 @@ class Users extends Items
     }
 
     public function add(array $values) {
-        return tusersman::i()->add($values);
+        return Usersman::i()->add($values);
     }
 
     public function edit($id, array $values) {
-        return tusersman::i()->edit($id, $values);
+        return Usersman::i()->edit($id, $values);
     }
 
     public function setgroups($id, array $idgroups) {
@@ -140,7 +140,7 @@ class Users extends Items
 
     public function getgroupname($id) {
         $item = $this->getitem($id);
-        $groups = tusergroups::i();
+        $groups = UserGroups::i();
         return $groups->items[$item['idgroups'][0]]['name'];
     }
 

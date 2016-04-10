@@ -6,11 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-function tusergroupsInstall($self) {
-    tlocal::usefile('install');
-    $lang = tlocal::i('initgroups');
+function UserGroupsInstall($self) {
+    lang::usefile('install');
+    $lang = lang::i('initgroups');
     $self->lock();
     $admin = $self->add('admin', $lang->admin, '/admin/');
     $editor = $self->add('editor', $lang->editor, '/admin/posts/');
