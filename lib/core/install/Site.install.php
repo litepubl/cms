@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-function tsiteInstall($self) {
+function SiteInstall($self) {
     $site = $self;
     $site->lock();
     $site->subdir = getrequestdir();

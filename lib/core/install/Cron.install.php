@@ -6,20 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\cron;
 
-function tcronInstall($self) {
+function CronInstall($self) {
     $manager = tdbmanager::i();
     $manager->CreateTable('cron', file_get_contents(dirname(__file__) . '/sql/cron.sql'));
 
     litepubl::$urlmap->add('/croncron.htm', get_class($self) , null, 'get');
 
     $self->password = md5uniq();
-    $self->addnightly('litepubl\turlmap', 'updatefilter', null);
+    $self->addnightly('litepubl\core\Urlmap', 'updatefilter', null);
     $self->addnightly('litepubl\tdboptimizer', 'optimize', null);
     $self->save();
 }
 
-function tcronUninstall($self) {
-    turlmap::unsub($self);
+function CronUninstall($self) {
+    Urlmap::unsub($self);
 }

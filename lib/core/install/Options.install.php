@@ -6,11 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
 /* to prevent recurse call */
 function installoptions($email, $language) {
-    $options = toptions::i();
+    $options = Options::i();
     $options->lock();
     $options->solt = md5uniq();
     $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
