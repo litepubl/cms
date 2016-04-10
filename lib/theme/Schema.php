@@ -7,12 +7,10 @@
  */
 
 namespace litepubl\theme;
-use litepubl\core\Item;
-use litepubl\core\DataStorageTrait;
 
-class View extends Item
+class Schema extends \litepubl\core\Item
 {
-use DataStorageTrait;
+use \litepubl\core\DataStorageTrait;
 
     public $sidebars;
     protected $themeInstance;
@@ -23,29 +21,33 @@ use DataStorageTrait;
         if ($id == 1) {
             $class = get_called_class();
         } else {
-            $views = tviews::i();
-            $class = $views->itemexists($id) ? $views->items[$id]['class'] : get_called_class();
+            $schemes = Schemes::i();
+            $class = $schemes->itemexists($id) ? $schemes->items[$id]['class'] : get_called_class();
         }
 
         return parent::iteminstance($class, $id);
     }
 
     public static function newitem($id) {
-        return litepubl::$classes->newitem(static ::getinstancename() , get_called_class() , $id);
+        return \litepubl\core\litepubl::$classes->newitem(static ::getinstancename() , get_called_class() , $id);
     }
 
     public static function getinstancename() {
-        return 'view';
+        return 'schema';
     }
 
-    public static function getview($instance) {
-        $id = $instance->getidview();
-        if (isset(static ::$instances['view'][$id])) return static ::$instances['view'][$id];
-        $views = tviews::i();
-        if (!$views->itemexists($id)) {
+    public static function getSchema($instance) {
+        $id = $instance->getIdSchema();
+        if (isset(static ::$instances['schema'][$id])) {
+return static ::$instances['schema'][$id];
+}
+
+        $schemes = Schemes::i();
+        if (!$schemes->itemexists($id)) {
             $id = 1; //default, wich always exists
-            $instance->setidview($id);
+            $instance->setIdSchema($id);
         }
+
         return static ::i($id);
     }
 
@@ -83,7 +85,7 @@ use DataStorageTrait;
     }
 
     public function getowner() {
-        return tviews::i();
+        return Schemes::i();
     }
 
     public function load() {
@@ -166,9 +168,12 @@ use DataStorageTrait;
 
     public function setcustomsidebar($value) {
         if ($value != $this->customsidebar) {
-            if ($this->id == 1) return false;
+            if ($this->id == 1) {
+return false;
+}
+
             if ($value) {
-                $default = tview::i(1);
+                $default = static::i(1);
                 $this->sidebars = $default->sidebars;
             } else {
                 $this->sidebars = array();

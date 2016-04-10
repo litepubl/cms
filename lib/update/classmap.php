@@ -31,6 +31,8 @@ return [
 'admintheme' => 'litepubl\theme\Admin',
 'targs' => 'liteubl\theme\Args',
 'themevars' => 'litepubl\theme\Vars',
+'tview' => 'litepubl\theme\Schema',
+'tviews' => 'litepubl\theme\Schemes',
 'tcssmerger' => 'litepubl\theme\CssMerger',
 
 //pages

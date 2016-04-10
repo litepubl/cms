@@ -7,12 +7,10 @@
  */
 
 namespace litepubl\theme;
-use litepubl\core\Items;
-use litepubl\core\DataStorageTrait;
 
-class Views extends Items
+class Schemes extends \litepubl\core\Items
 {
-use DataStorageTrait;
+use \litepubl\core\DataStorageTrait;
 
     public $defaults;
 
@@ -27,22 +25,25 @@ use DataStorageTrait;
     public function add($name) {
         $this->lock();
         $id = ++$this->autoid;
-        $view = tview::newitem($id);
-        $view->id = $id;
-        $view->name = $name;
-        $view->data['class'] = get_class($view);
-        $this->items[$id] = & $view->data;
+        $schema = Schema::newitem($id);
+        $schema->id = $id;
+        $schema->name = $name;
+        $schema->data['class'] = get_class($schema);
+        $this->items[$id] = & $schema->data;
         $this->unlock();
         return $id;
     }
 
-    public function addview(View $view) {
+    public function addSchema(Schema $schema) {
         $this->lock();
         $id = ++$this->autoid;
-        $view->id = $id;
-        if ($view->name == '') $view->name = 'view_' . $id;
-        $view->data['class'] = get_class($view);
-        $this->items[$id] = & $view->data;
+        $schema->id = $id;
+        if (!$schema->name) {
+$schema->name = 'schema_' . $id;
+}
+
+        $schema->data['class'] = get_class($schema);
+        $this->items[$id] = & $schema->data;
         $this->unlock();
         return $id;
     }
@@ -64,7 +65,7 @@ use DataStorageTrait;
     public function get($name) {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
-                return tview::i($id);
+                return Schema::i($id);
             }
         }
 
@@ -73,9 +74,9 @@ use DataStorageTrait;
 
     public function resetCustom() {
         foreach ($this->items as $id => $item) {
-            $view = View::i($id);
-            $view->resetCustom();
-            $view->save();
+            $schema= Schema::i($id);
+            $schema->resetCustom();
+            $schema->save();
         }
     }
 
