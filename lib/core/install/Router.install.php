@@ -10,5 +10,5 @@ namespace litepubl\core;
 
 function UrlmapInstall($self) {
     $manager = tdbmanager::i();
-    $manager->CreateTable('urlmap', file_get_contents(dirname(__file__) . '/sql/urlmap.sql'));
+    $manager->CreateTable('urlmap', file_get_contents(dirname(__file__) . '/sql/router.sql'));
 }

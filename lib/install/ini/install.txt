@@ -1,7 +1,7 @@
 core\Classes
 core\Options
 core\Site
-core\Urlmap
+core\Router
 core\Cron
 theme\Lang
 theme\LangMerger
@@ -9,5 +9,5 @@ core\UserGroups
 core\Usersman
 core\Users
 core\UserOptions
-theme\Template
+theme\Controler
 theme\Theme

@@ -8,7 +8,7 @@
 
 namespace litepubl\theme;
 
-function TemplateInstall($self) {
+function ControlerInstall($self) {
     $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_default"></script>
   <link rel="alternate" type="application/rss+xml" title="$site.name RSS Feed" href="$site.url/rss.xml" />
@@ -40,6 +40,6 @@ function TemplateInstall($self) {
   <meta name="theme-color" content="#ffffff">
   ';
 
-    $lang = lang::i('installation');
+    $lang = Lang::i('installation');
     $self->footer = "$lang->poweredby $lang->copyright";
 }

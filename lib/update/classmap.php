@@ -16,7 +16,7 @@ return [
 'tplugins' => 'litepubl\core\Plugins',
 'tsession' => 'litepubl\core\Session',
 'tsite' => 'litepubl\core\Site',
-'turlmap' => 'litepubl\core\Urlmap',
+'turlmap' => 'litepubl\core\Router',
 'tusers' => 'litepubl\core\Users',
 'tusergroups' => 'litepubl\core\UserGroups',
 'tuseroptions' => 'litepubl\core\UserOptions',

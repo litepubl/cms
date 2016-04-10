@@ -7,16 +7,13 @@
  */
 
 namespace litepubl\theme;
-use litepubl\core\Events;
-use litepubl\core\DataStorageTrait;
 use litepubl\widget\Widgets;
 
-
-class Template extends Events
+class Controler extends \litepubl\core\Events
 {
-use DataStorageTrait;
+use \litepubl\core\DataStorageTrait;
 
-    public $context;
+    public $model;
     public $path;
     public $url;
     public $itemplate;
@@ -72,27 +69,27 @@ use DataStorageTrait;
         if (array_key_exists($name, $this->data)) return $this->data[$name];
         if (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
-            return $widgets->getsidebarindex($this->context, $this->view, (int)$m[1]);
+            return $widgets->getsidebarindex($this->model, $this->view, (int)$m[1]);
         }
 
         if (array_key_exists($name, $this->data['tags'])) {
             $tags = ttemplatetags::i();
             return $tags->$name;
         }
-        if (isset($this->context) && isset($this->context->$name)) return $this->context->$name;
+        if (isset($this->model) && isset($this->model->$name)) return $this->model->$name;
         return parent::__get($name);
     }
 
-    protected function get_view($context) {
-        return $this->itemplate ? View::getview($context) : View::i();
+    protected function get_view($model) {
+        return $this->itemplate ? View::getview($model) : View::i();
     }
 
-    public function request($context) {
-        $this->context = $context;
-        ttheme::$vars['context'] = $context;
+    public function request($model) {
+        $this->model = $model;
+        ttheme::$vars['model'] = $model;
         ttheme::$vars['template'] = $this;
-        $this->itemplate = $context instanceof itemplate;
-        $this->view = $this->get_view($context);
+        $this->itemplate = $model instanceof itemplate;
+        $this->view = $this->get_view($model);
         $theme = $this->view->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
         litepubl::$classes->instances[get_class($theme) ] = $theme;
@@ -106,18 +103,18 @@ use DataStorageTrait;
         }
 
         $this->result = $this->httpheader();
-        $this->result.= $theme->gethtml($context);
+        $this->result.= $theme->gethtml($model);
 
         $this->onbody($this);
         if ($this->extrabody) $this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
         $this->onrequest($this);
 
-        unset(ttheme::$vars['context'], ttheme::$vars['template']);
+        unset(ttheme::$vars['model'], ttheme::$vars['template']);
         return $this->result;
     }
 
     protected function httpheader() {
-        $ctx = $this->context;
+        $ctx = $this->model;
         if (method_exists($ctx, 'httpheader')) {
             $result = $ctx->httpheader();
             if (!empty($result)) return $result;
@@ -135,11 +132,11 @@ use DataStorageTrait;
 
     //html tags
     public function getsidebar() {
-        return Widgets::i()->getsidebar($this->context, $this->view);
+        return Widgets::i()->getsidebar($this->model, $this->view);
     }
 
     public function gettitle() {
-        $title = $this->itemplate ? $this->context->gettitle() : '';
+        $title = $this->itemplate ? $this->model->gettitle() : '';
         if ($this->callevent('ontitle', array(&$title
         ))) {
             return $title;
@@ -160,8 +157,8 @@ use DataStorageTrait;
 
     public function geticon() {
         $result = '';
-        if (isset($this->context) && isset($this->context->icon)) {
-            $icon = $this->context->icon;
+        if (isset($this->model) && isset($this->model->icon)) {
+            $icon = $this->model->icon;
             if ($icon > 0) {
                 $files = Files::i();
                 if ($files->itemexists($icon)) $result = $files->geturl($icon);
@@ -172,13 +169,13 @@ use DataStorageTrait;
     }
 
     public function getkeywords() {
-        $result = $this->itemplate ? $this->context->getkeywords() : '';
+        $result = $this->itemplate ? $this->model->getkeywords() : '';
         if ($result == '') return litepubl::$site->keywords;
         return $result;
     }
 
     public function getdescription() {
-        $result = $this->itemplate ? $this->context->getdescription() : '';
+        $result = $this->itemplate ? $this->model->getdescription() : '';
         if ($result == '') return litepubl::$site->description;
         return $result;
     }
@@ -238,7 +235,7 @@ use DataStorageTrait;
 
     public function gethead() {
         $result = $this->heads;
-        if ($this->itemplate) $result.= $this->context->gethead();
+        if ($this->itemplate) $result.= $this->model->gethead();
         $result = $this->getltoptions() . $result;
         $result.= $this->extrahead;
         $result = $this->view->theme->parse($result);
@@ -251,7 +248,7 @@ use DataStorageTrait;
         $result = '';
         $this->callevent('beforecontent', array(&$result
         ));
-        $result.= $this->itemplate ? $this->context->getcont() : '';
+        $result.= $this->itemplate ? $this->model->getcont() : '';
         $this->callevent('aftercontent', array(&$result
         ));
         return $result;

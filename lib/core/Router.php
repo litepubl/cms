@@ -8,18 +8,18 @@
 
 namespace litepubl\core;
 
-class Urlmap extends Items
+class Router extends Items
  {
-    public $host;
-    public $url;
-    public $page;
-    public $uripath;
-    public $itemrequested;
-    public $context;
+    public $adminpanel;
     public $cache_enabled;
+    public $host;
     public $is404;
     public $isredir;
-    public $adminpanel;
+    public $model;
+    public $page;
+    public $url;
+    public $uripath;
+    public $itemrequested;
     public $prefilter;
     protected $close_events;
 
@@ -137,6 +137,10 @@ class Urlmap extends Items
         }
         return $this->items[$id]['url'];
     }
+
+public function getControler() {
+return \litepubl\theme\Controler::i();
+}
 
     public function findurl($url) {
         if ($result = $this->db->finditem('url = ' . dbquote($url))) {
@@ -292,12 +296,12 @@ class Urlmap extends Items
         }
     }
 
-    public function getidcontext($id) {
+    public function getidmodel($id) {
         $item = $this->getitem($id);
-        return $this->getcontext($item);
+        return $this->getmodel($item);
     }
 
-    public function getcontext(array $item) {
+    public function getmodel(array $item) {
         $classname = $item['class'];
         $parents = class_parents($classname);
         if (in_array('litepubl\titem', $parents)) {
@@ -313,11 +317,11 @@ class Urlmap extends Items
     }
 
     protected function GenerateHTML(array $item) {
-        $context = $this->getcontext($item);
-        $this->context = $context;
+        $model = $this->getmodel($item);
+        $this->model = $model;
 
         //special handling for rss
-        if (method_exists($context, 'request') && ($s = $context->request($item['arg']))) {
+        if (method_exists($model, 'request') && ($s = $model->request($item['arg']))) {
             switch ($s) {
                 case 404:
                     return $this->notfound404();
@@ -329,12 +333,12 @@ class Urlmap extends Items
                 return;
             }
 
-            $template = ttemplate::i();
-            $s = $template->request($context);
+            $controler = $this->getControler();
+            $s = $controler->request($model);
         }
 
         eval('?>' . $s);
-        if ($this->cache_enabled && $context->cache) {
+        if ($this->cache_enabled && $model->cache) {
             $this->save_file($this->getcachefile($item) , $s);
         }
     }
@@ -356,8 +360,8 @@ class Urlmap extends Items
         }
 
         $obj = litepubl::$classes->getinstance($classname);
-        $Template = ttemplate::i();
-        $s = $Template->request($obj);
+        $controler = $this->getControler();
+        $s = $controler->request($obj);
         eval('?>' . $s);
 
         if ($this->cache_enabled && $obj->cache) {
@@ -550,7 +554,7 @@ class Urlmap extends Items
 
     protected function close() {
         $this->call_close_events();
-        if ($this->disabledcron || ($this->context && (get_class($this->context) == 'litepubl\tcron'))) {
+        if ($this->disabledcron || ($this->model && (get_class($this->model) == 'litepubl\tcron'))) {
             return;
         }
 

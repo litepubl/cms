@@ -22,6 +22,7 @@ class litepubl
     public static $microtime;
     public static $options;
     public static $paths;
+    public static $router;
     public static $secret;
     public static $site;
     public static $storage;
@@ -56,7 +57,8 @@ class litepubl
         static ::$site = Site::i();
         static ::$db = DB::i();
         //static::$cache = new cache();
-        static ::$urlmap = Urlmap::i();
+        static ::$router = Router::i();
+static::$urlmap = static::$router;
     }
 
     public static function createStorage() {
