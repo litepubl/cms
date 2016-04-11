@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class CacheMemMysql
+class MemvarMemMysql
 {
     public $lifetime;
     public $table;

@@ -26,8 +26,8 @@ return [
 'tusersman' => 'litepubl\core\Usersman',
 'cachestorage_file' => 'litepubl\core\CacheFile',
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
-'memstorage' => 'litepubl\core\CacheMemMysql',
-
+'tdbmanager' => 'litepubl\core\dbman',
+'tdboptimizer' => 'litepubl\core\DBOptimizer',
 
 //theme
 'tlocal' => 'litepubl\theme\Lang',

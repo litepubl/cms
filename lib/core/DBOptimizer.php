@@ -6,14 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tdboptimizer extends tevents {
+class DbOptimizer extends Events
+ {
     public $childtables;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();

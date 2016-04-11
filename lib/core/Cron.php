@@ -135,9 +135,9 @@ class Cron extends Events
         if (($type == 'single') && !$this->disableping && !static ::$pinged) {
             if (litepubl::$debug) tfiler::log("cron added $id");
 
-            $memstorage = memstorage::i();
-            if (!$memstorage->singlecron) {
-                $memstorage->singlecron = time() + 300;
+            $memvars = Memvars::i();
+            if (!$memvars->singlecron) {
+                $memvars->singlecron = time() + 300;
             }
         }
 

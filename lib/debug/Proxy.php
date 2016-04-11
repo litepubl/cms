@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\debug;
 
-class tdebugproxy {
+class Proxy 
+{
     public static $trace;
     public static $total;
     public static $stat;
@@ -20,9 +21,17 @@ class tdebugproxy {
 
     public function __construct($obj) {
         $this->obj = $obj;
-        if (isset($obj->data)) $this->data = & $obj->data;
-        if ($obj instanceof titems) $this->items = & $obj->items;
-        if ($obj instanceof ttheme) $this->templates = & $obj->templates;
+        if (isset($obj->data)) {
+$this->data = & $obj->data;
+}
+
+        if ($obj instanceof \litepubl\core\Items) {
+$this->items = & $obj->items;
+}
+
+        if ($obj instanceof \litepubl\theme\Base) 
+$this->templates = & $obj->templates;
+}
     }
 
     public function __isset($name) {

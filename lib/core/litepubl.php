@@ -56,9 +56,9 @@ class litepubl
         static ::$options = Options::i();
         static ::$site = Site::i();
         static ::$db = DB::i();
-        //static::$cache = new cache();
         static ::$router = Router::i();
 static::$urlmap = static::$router;
+static::$router->cache = static::$cache;
     }
 
     public static function createStorage() {
@@ -70,10 +70,13 @@ static::$urlmap = static::$router;
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
             static ::$storage = new $classname();
+static::$cache = new CacheFile();
         } else if (static ::$memcache) {
             static ::$storage = new StorageMemcache();
+static::$cache = new CacheMemcache();
         } else {
             static ::$storage = new Storage();
+static::$cache = new CacheFile();
         }
 
         static ::$datastorage = new DataStorage();

@@ -15,7 +15,7 @@ class CacheFile
     }
 
     public function set($filename, $data) {
-        $this->setString($filename, serialize($data));
+        $this->setString($filename, $this->serialize($data));
     }
 
     public function setString($filename, $str) {
@@ -26,7 +26,7 @@ class CacheFile
 
     public function get($filename) {
         if ($s = $this->getString($filename)) {
-            return unserialize($s);
+            return $this->unserialize($s);
         }
 
         return false;
@@ -67,5 +67,13 @@ class CacheFile
             closedir($h);
         }
     }
+
+public function serialize($data) {
+return serialize($data);
+}
+
+public function unserialize($str) {
+return unserialize($str);
+}
 
 }

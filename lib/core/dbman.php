@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tdbmanager {
+class dbman
+{
     public $engine;
     private $max_allowed_packet;
 
@@ -17,7 +18,10 @@ class tdbmanager {
     }
 
     public function __get($name) {
-        if ($name == 'db') return litepubl::$db;
+        if ($name == 'db') {
+return litepubl::$db;
+}
+
         return litepubl::$db->$name;
     }
 

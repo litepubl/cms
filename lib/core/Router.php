@@ -23,15 +23,6 @@ class Router extends Items
     public $prefilter;
     protected $close_events;
 
-    public function __construct() {
-        parent::__construct();
-        if (litepubl::$memcache) {
-            $this->cache = new CacheMemcache();
-        } else {
-            $this->cache = new CacheFile();
-        }
-    }
-
     protected function create() {
         $this->dbversion = true;
         parent::create();
@@ -558,13 +549,13 @@ return \litepubl\theme\MainControler::i();
             return;
         }
 
-        $memstorage = memstorage::i();
-        if ($memstorage->hourcron + 3600 <= time()) {
-            $memstorage->hourcron = time();
-            $memstorage->singlecron = false;
+        $memvars = Memvars::i();
+        if ($memvars->hourcron + 3600 <= time()) {
+            $memvars->hourcron = time();
+            $memvars->singlecron = false;
             Cron::pingonshutdown();
-        } else if ($memstorage->singlecron && ($memstorage->singlecron <= time())) {
-            $memstorage->singlecron = false;
+        } else if ($memvars->singlecron && ($memvars->singlecron <= time())) {
+            $memvars->singlecron = false;
             Cron::pingonshutdown();
         }
     }
