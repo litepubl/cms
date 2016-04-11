@@ -47,7 +47,17 @@ return [
 'tcssmerger' => 'litepubl\theme\CssMerger',
 
 //posts
+'tpost' => 'litepubl\post\Post',
+'tposts' => 'litepubl\post\Posts',
+'tmetapost' => 'litepubl\post\Meta',
+'tposttransform' => 'litepubl\post\Transform',
+'tpostfactory' => 'litepubl\post\Factory',
+'tfiles' => 'litepubl\post\Files',
 'tfileitems' => 'litepubl\post\FileItems',
+'tprivatefiles' => 'litepubl\post\PrivateFiles',
+'tdomrss' => 'litepubl\post\DomRss',
+'trss' => 'litepubl\post\Rss',
+'tnode' => 'litepubl\post\Node',
 
 //pages
 'thomepage' => 'litepubl\pages\Home',

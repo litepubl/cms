@@ -6,15 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
+use litepubl\theme\Theme;
+use litepubl\theme\Args;
 
-class tfiles extends titems {
-    public $itemsposts;
+class Files extends \litepubl\core\Items
+{
     public $cachetml;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         $this->dbversion = true;
@@ -22,9 +21,12 @@ class tfiles extends titems {
         $this->basename = 'files';
         $this->table = 'files';
         $this->addevents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->itemsposts = tfileitems::i();
         $this->cachetml = array();
     }
+
+public function getitemsposts() {
+return FileItems::i();
+}
 
     public function preload(array $items) {
         $items = array_diff($items, array_keys($this->items));
@@ -169,7 +171,7 @@ class tfiles extends titems {
     public function gettml($basekey) {
         if (isset($this->cachetml[$basekey])) return $this->cachetml[$basekey];
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $result = array(
             'container' => $theme->templates[$basekey],
         );
@@ -208,8 +210,8 @@ class tfiles extends titems {
             }
         }
 
-        $theme = ttheme::i();
-        $args = new targs();
+        $theme = Theme::i();
+        $args = new Args();
         $args->count = count($list);
 
         $url = litepubl::$site->files . '/files/';
@@ -271,7 +273,7 @@ class tfiles extends titems {
     }
 
     public function postedited($idpost) {
-        $post = tpost::i($idpost);
+        $post = Post::i($idpost);
         $this->itemsposts->setitems($idpost, $post->files);
     }
 
@@ -280,7 +282,7 @@ class tfiles extends titems {
             $item = $this->getitem($id);
             if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
                 $baseurl = litepubl::$site->files . '/files/';
-                $args = new targs();
+                $args = new Args();
                 $args->add($item);
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getjson($id);
@@ -302,7 +304,7 @@ class tfiles extends titems {
                 $vars = new themevars();
                 $vars->preview = $preview;
                 $vars->midle = $midle;
-                $theme = ttheme::i();
+                $theme = Theme::i();
                 return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
             }
         }

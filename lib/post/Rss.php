@@ -6,9 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
+use litepubl\tag\Categories;
+use litepubl\tag\Tags;
+use litepubl\comments\Comments;
+use litepubl\coments\Manager as CommentManager;
+use litepubl\widget\Comments as CommentWidget;
+use litepubl\perm\Perm;
 
-class trss extends tevents {
+class Rss extends \litepubl\core\Events
+ {
     public $domrss;
 
     protected function create() {
@@ -23,8 +31,8 @@ class trss extends tevents {
     }
 
     public function commentschanged() {
-        litepubl::$urlmap->setexpired($this->idcomments);
-        litepubl::$urlmap->setexpired($this->idpostcomments);
+        litepubl::$router->setexpired($this->idcomments);
+        litepubl::$router->setexpired($this->idpostcomments);
     }
 
     public function request($arg) {
@@ -44,7 +52,8 @@ class trss extends tevents {
         }
 
         $result.= '<?php litepubl\turlmap::sendxml(); ?>';
-        $this->domrss = new tdomrss;
+        $this->domrss = new DomRss();
+
         switch ($arg) {
             case 'posts':
                 $this->getrecentposts();
@@ -63,14 +72,14 @@ class trss extends tevents {
                 }
 
                 $id = (int)$match[1];
-                $tags = $arg == 'categories' ? tcategories::i() : ttags::i();
+                $tags = $arg == 'categories' ? Categories::i() : Tags::i();
                 if (!$tags->itemexists($id)) {
                     return 404;
                 }
 
                 $tags->id = $id;
                 if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
-                    $perm = tperm::i($idperm);
+                    $perm = Perm::i($idperm);
                     if ($header = $perm->getheader($tags)) {
                         $result = $header . $result;
                     }
@@ -86,18 +95,18 @@ class trss extends tevents {
                 }
 
                 $idpost = (int)$match[1];
-                $posts = tposts::i();
+                $posts = Posts::i();
                 if (!$posts->itemexists($idpost)) {
                     return 404;
                 }
 
-                $post = tpost::i($idpost);
+                $post = Post::i($idpost);
                 if ($post->status != 'published') {
                     return 404;
                 }
 
                 if (isset($post->idperm) && ($post->idperm > 0)) {
-                    $perm = tperm::i($post->idperm);
+                    $perm = Perm::i($post->idperm);
                     if ($header = $perm->getheader($post)) {
                         $result = $header . $result;
                     }
@@ -112,13 +121,13 @@ class trss extends tevents {
 
     public function getrecentposts() {
         $this->domrss->CreateRoot(litepubl::$site->url . '/rss.xml', litepubl::$site->name);
-        $posts = tposts::i();
+        $posts = Posts::i();
         $this->getrssposts($posts->getpage(0, 1, litepubl::$options->perpage, false));
     }
 
     public function getrssposts(array $list) {
         foreach ($list as $id) {
-            $this->addpost(tpost::i($id));
+            $this->addpost(Post::i($id));
         }
     }
 
@@ -134,7 +143,7 @@ class trss extends tevents {
 
         $title = tlocal::get('comment', 'onpost') . ' ';
         $comment = new tarray2prop();
-        $recent = tcommentswidget::i()->getrecent(litepubl::$options->perpage);
+        $recent = CommentWidget::i()->getrecent(litepubl::$options->perpage);
         foreach ($recent as $item) {
             $comment->array = $item;
             $this->AddRSSComment($comment, $title . $comment->title);
@@ -150,7 +159,7 @@ class trss extends tevents {
 
     private function dogetholdcomments($url, $count) {
         $this->domrss->CreateRoot(litepubl::$site->url . $url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
-        $manager = tcommentmanager::i();
+        $manager = CommentManager::i();
         $recent = $manager->getrecent($count, 'hold');
         $title = tlocal::get('comment', 'onpost') . ' ';
         $comment = new tarray2prop();
@@ -161,11 +170,11 @@ class trss extends tevents {
     }
 
     public function GetRSSPostComments($idpost) {
-        $post = tpost::i($idpost);
-        $lang = tlocal::i('comment');
+        $post = Post::i($idpost);
+        $lang = Lang::i('comment');
         $title = $lang->from . ' ';
         $this->domrss->CreateRoot($post->rsscomments, "$lang->onpost $post->title");
-        $comments = tcomments::i($idpost);
+        $comments = Comments::i($idpost);
         $comtable = $comments->thistable;
         $comment = new tarray2prop();
 
@@ -181,33 +190,33 @@ class trss extends tevents {
 
     public function addpost(tpost $post) {
         $item = $this->domrss->AddItem();
-        tnode::addvalue($item, 'title', $post->title);
-        tnode::addvalue($item, 'link', $post->link);
-        tnode::addvalue($item, 'comments', $post->link . '#comments');
-        tnode::addvalue($item, 'pubDate', $post->pubdate);
+        Node::addvalue($item, 'title', $post->title);
+        Node::addvalue($item, 'link', $post->link);
+        Node::addvalue($item, 'comments', $post->link . '#comments');
+        Node::addvalue($item, 'pubDate', $post->pubdate);
 
-        $guid = tnode::addvalue($item, 'guid', $post->link);
-        tnode::attr($guid, 'isPermaLink', 'true');
+        $guid = Node::addvalue($item, 'guid', $post->link);
+        Node::attr($guid, 'isPermaLink', 'true');
 
         if (class_exists('tprofile')) {
             $profile = tprofile::i();
-            tnode::addvalue($item, 'dc:creator', $profile->nick);
+            Node::addvalue($item, 'dc:creator', $profile->nick);
         } else {
-            tnode::addvalue($item, 'dc:creator', 'admin');
+            Node::addvalue($item, 'dc:creator', 'admin');
         }
 
-        $categories = tcategories::i();
+        $categories = Categories::i();
         $names = $categories->getnames($post->categories);
         foreach ($names as $name) {
             if (empty($name)) continue;
-            tnode::addcdata($item, 'category', $name);
+            Node::addcdata($item, 'category', $name);
         }
 
-        $tags = ttags::i();
+        $tags = Tags::i();
         $names = $tags->getnames($post->tags);
         foreach ($names as $name) {
             if (empty($name)) continue;
-            tnode::addcdata($item, 'category', $name);
+            Node::addcdata($item, 'category', $name);
         }
 
         $content = '';
@@ -222,19 +231,19 @@ class trss extends tevents {
         $this->callevent('afterpost', array(
             $post->id, &$content
         ));
-        tnode::addcdata($item, 'content:encoded', $content);
-        tnode::addcdata($item, 'description', strip_tags($content));
-        tnode::addvalue($item, 'wfw:commentRss', $post->rsscomments);
+        Node::addcdata($item, 'content:encoded', $content);
+        Node::addcdata($item, 'description', strip_tags($content));
+        Node::addvalue($item, 'wfw:commentRss', $post->rsscomments);
 
         if (count($post->files) > 0) {
-            $files = tfiles::i();
+            $files = Files::i();
             $files->loaditems($post->files);
             foreach ($post->files as $idfile) {
                 $file = $files->getitem($idfile);
-                $enclosure = tnode::add($item, 'enclosure');
-                tnode::attr($enclosure, 'url', litepubl::$site->files . '/files/' . $file['filename']);
-                tnode::attr($enclosure, 'length', $file['size']);
-                tnode::attr($enclosure, 'type', $file['mime']);
+                $enclosure = Node::add($item, 'enclosure');
+                Node::attr($enclosure, 'url', litepubl::$site->files . '/files/' . $file['filename']);
+                Node::attr($enclosure, 'length', $file['size']);
+                Node::attr($enclosure, 'type', $file['mime']);
             }
         }
         $post->onrssitem($item);
@@ -246,13 +255,13 @@ class trss extends tevents {
         $link = litepubl::$site->url . $comment->posturl . '#comment-' . $comment->id;
         $date = is_int($comment->posted) ? $comment->posted : strtotime($comment->posted);
         $item = $this->domrss->AddItem();
-        tnode::addvalue($item, 'title', $title);
-        tnode::addvalue($item, 'link', $link);
-        tnode::addvalue($item, 'dc:creator', $comment->name);
-        tnode::addvalue($item, 'pubDate', date('r', $date));
-        tnode::addvalue($item, 'guid', $link);
-        tnode::addcdata($item, 'description', strip_tags($comment->content));
-        tnode::addcdata($item, 'content:encoded', $comment->content);
+        Node::addvalue($item, 'title', $title);
+        Node::addvalue($item, 'link', $link);
+        Node::addvalue($item, 'dc:creator', $comment->name);
+        Node::addvalue($item, 'pubDate', date('r', $date));
+        Node::addvalue($item, 'guid', $link);
+        Node::addcdata($item, 'description', strip_tags($comment->content));
+        Node::addcdata($item, 'content:encoded', $comment->content);
     }
 
     public function SetFeedburnerLinks($rss, $comments) {

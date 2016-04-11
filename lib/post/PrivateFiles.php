@@ -6,15 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
+use litepubl\utils\Perm;
 
-class tprivatefiles extends tevents {
+class PrivateFiles extends \litepubl\core\Events
+{
     public $id;
     public $item;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -27,7 +26,7 @@ class tprivatefiles extends tevents {
     }
 
     public function setperm($id, $idperm) {
-        $files = tfiles::i();
+        $files = Files::i();
         $item = $files->getitem($id);
         if ($idperm == $item['idperm']) return;
         $files->setvalue($id, 'idperm', $idperm);
@@ -47,8 +46,11 @@ class tprivatefiles extends tevents {
     }
 
     public function request($id) {
-        $files = tfiles::i();
-        if (!$files->itemexists($id)) return 404;
+        $files = Files::i();
+        if (!$files->itemexists($id)) {
+return 404;
+}
+
         $item = $files->getitem($id);
         $filename = '/files/' . $item['filename'];
         if ((int)$item['idperm'] == 0) {
@@ -57,7 +59,7 @@ class tprivatefiles extends tevents {
                 exit();
             }
 
-            return litepubl::$urlmap->redir($filename);
+            return litepubl::$router->redir($filename);
         }
 
         $this->id = $id;
@@ -68,7 +70,7 @@ class tprivatefiles extends tevents {
     Header(\'Pragma: no-cache\');
     ?>';
 
-        $perm = tperm::i($item['idperm']);
+        $perm = Perm::i($item['idperm']);
         $result.= $perm->getheader($this);
         $result.= sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
         //die(htmlspecialchars($result));

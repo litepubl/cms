@@ -6,32 +6,35 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
+use litepubl\core\Cron;
+use litepubl\widget\Widgets;
 
-function tpostsInstall($self) {
-    if ('litepubl\tposts' != get_class($self)) return;
+function PostsInstall($self) {
+    if ('litepubl\post\Posts' != get_class($self)) return;
 
-    $manager = tdbmanager::i();
+    $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
-    $manager->CreateTable($self->table, file_get_contents($dir . 'post.sql'));
-    $manager->CreateTable('pages', file_get_contents($dir . 'post.pages.sql'));
-    $manager->CreateTable($self->rawtable, file_get_contents($dir . 'post.raw.sql'));
+    $manager->CreateTable($self->table, file_get_contents($dir . 'posts.sql'));
+    $manager->CreateTable('pages', file_get_contents($dir . 'pages.sql'));
+    $manager->CreateTable($self->rawtable, file_get_contents($dir . 'raw.sql'));
 
-    $Cron = tcron::i();
+    $Cron = Cron::i();
     $Cron->add('hour', get_class($self) , 'HourCron');
 }
 
-function tpostsUninstall($self) {
-    if ('litepubl\tposts' != get_class($self)) return;
+function PostsUninstall($self) {
+    if ('litepubl\post\Posts' != get_class($self)) return;
 
-    $Cron = tcron::i();
+    $Cron = Cron::i();
     $Cron->deleteclass(get_class($self));
 
-    $widgets = twidgets::i();
+    $widgets = Widgets::i();
     $widgets->deleteclass($self);
 }
 
-function tpostsGetsitemap($self, $from, $count) {
+function PostsGetsitemap($self, $from, $count) {
     $result = array();
     $commentpages = litepubl::$options->commentpages;
     $commentsperpage = litepubl::$options->commentsperpage;

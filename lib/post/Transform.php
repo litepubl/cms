@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tposttransform {
+class Transform
+{
     public $post;
     public static $arrayprops = array(
         'categories',

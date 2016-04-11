@@ -6,10 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tposts extends titems {
-    const POSTCLASS = 'litepubl\tpost';
+class Posts extends \litepubl\core\Iitems
+ {
+    const POSTCLASS = 'litepubl\post\Post';
     public $itemcoclasses;
     public $archives;
     public $rawtable;

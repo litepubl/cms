@@ -3,6 +3,7 @@ core\Options
 core\Site
 core\Router
 core\Cron
+core\Plugins
 theme\Lang
 theme\LangMerger
 core\UserGroups
@@ -14,3 +15,8 @@ theme\Theme
 theme\Schemes
 theme\JsMerger
 theme\CssMerger
+post\Posts
+post\Meta
+post\Files
+post\FilesItems
+post\PrivateFiles

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tmetapost extends titem {
+class Meta extends \litepubl\core\Item
+{
 
     public static function getinstancename() {
         return 'postmeta';

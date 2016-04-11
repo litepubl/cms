@@ -6,24 +6,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-function tfilesInstall($self) {
-    $manager = tdbmanager::i();
+function FilesInstall($self) {
+    $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir . 'files.sql'));
-    $manager->createtable($self->itemsposts->table, file_get_contents($dir . 'items.posts.sql'));
     $manager->createtable('imghashes', file_get_contents($dir . 'imghashes.sql'));
 
-    $posts = tposts::i();
+    $posts = Posts::i();
     $posts->lock();
     $posts->added = $self->postedited;
     $posts->edited = $self->postedited;
-    $posts->deleted = $self->itemsposts->deletepost;
     $posts->unlock();
 }
 
-function tfilesUninstall($self) {
-    tposts::unsub($self);
-    tposts::unsub($self->itemsposts);
+function FilesUninstall($self) {
+   Posts::unsub($self);
 }

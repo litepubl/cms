@@ -9,7 +9,7 @@
 namespace litepubl\cron;
 
 function CronInstall($self) {
-    $manager = tdbmanager::i();
+    $manager = $self->db->man;
     $manager->CreateTable('cron', file_get_contents(dirname(__file__) . '/sql/cron.sql'));
 
     litepubl::$router->add('/croncron.htm', get_class($self) , null, 'get');
