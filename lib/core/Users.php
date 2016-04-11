@@ -12,10 +12,6 @@ class Users extends Items
  {
     public $grouptable;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
     protected function create() {
         $this->dbversion = true;
         parent::create();
@@ -67,10 +63,14 @@ class Users extends Items
         if ($id == 1) return;
         $this->beforedelete($id);
         $this->getdb($this->grouptable)->delete('iduser = ' . (int)$id);
-        tuserpages::i()->delete($id);
+        $this->pages->delete($id);
         $this->getdb('comments')->update("status = 'deleted'", "author = $id");
         return parent::delete($id);
     }
+
+public function getpages() {
+return \litepubl\pages\Users::i();
+}
 
     public function emailexists($email) {
         if ($email == '') return false;
@@ -100,8 +100,10 @@ class Users extends Items
 
     public function approve($id) {
         $this->setvalue($id, 'status', 'approved');
-        $pages = tuserpages::i();
-        if ($pages->createpage) $pages->addpage($id);
+        $pages = $this->pages;
+        if ($pages->createpage) {
+$pages->addpage($id);
+}
     }
 
     public function auth($email, $password) {

@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\core;
-use litepubl\pages\Users as UserPages;
 
 class Usersman extends Data
  {
@@ -48,7 +47,7 @@ class Usersman extends Data
         $users->items[$id] = $item;
         $users->setgroups($id, $item['idgroups']);
         if ('approved' == $item['status']) {
-            UserPages::i()->add($id);
+            $users->pages->add($id);
         }
 
         $users->added($id);
@@ -87,7 +86,7 @@ class Usersman extends Data
         $item['idgroups'] = implode(',', $item['idgroups']);
         $users->db->updateassoc($item);
 
-        $pages = UserPages::i();
+        $pages = $users->pates;
         if (isset($values['status']) && ('approved' == $values['status']) && ($item['status'] != $values['status'])) {
             if ($pages->itemexists($id)) {
                 if ($pages->createpage) $pages->addpage($id);

@@ -55,4 +55,8 @@ return [
 //widgets
 'tsidebars' => 'litepubl\widget\Sidebars',
 
+//admin
+'iadmin' => 'litepubl\admin\AdminInterface',
+
+
 ];
