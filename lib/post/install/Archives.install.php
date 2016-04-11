@@ -6,16 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
 
-function tarchivesInstall($self) {
-    $posts = tposts::i();
+function ArchivesInstall($self) {
+    $posts = Posts::i();
     $posts->changed = $self->postschanged;
 }
 
-function tarchivesUninstall($self) {
-    turlmap::unsub($self);
-    tposts::unsub($self);
+function ArchivesUninstall($self) {
+    litepubl::$router->unbind($self);
+    Posts::unsub($self);
     $widgets = twidgets::i();
     $widgets->deleteclass(get_class($self));
 }

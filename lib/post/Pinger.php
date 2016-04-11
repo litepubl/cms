@@ -6,14 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
 
-class tpinger extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
+class Pinger extends \litepubl\core\Events
+ {
     protected function create() {
         parent::create();
         $this->basename = 'pinger';
@@ -22,8 +19,11 @@ class tpinger extends tevents {
     }
 
     public function install() {
-        if ($this->services == '') $this->services = file_get_contents(litepubl::$paths->libinclude . 'pingservices.txt');
-        $posts = tposts::i();
+        if (!$this->services){
+ $this->services = file_get_contents(litepubl::$paths->libinclude . 'pingservices.txt');
+}
+
+        $posts = Posts::i();
         $posts->singlecron = $this->pingpost;
     }
 
@@ -49,7 +49,7 @@ class tpinger extends tevents {
 
     public function pingpost($id) {
         if (!isset($id)) return;
-        $post = tpost::i((int)$id);
+        $post = Post::i((int)$id);
         if (!is_object($post)) return;
         if ($post->status != 'published') return;
         $posturl = $post->link;

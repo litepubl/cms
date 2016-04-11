@@ -62,9 +62,11 @@ return [
 'tmediaparser' => 'litepubl\post\MediaParser',
 'tarchives' => 'litepubl\post\Archives',
 'tarchiveswidget' => 'litepubl\widget\Archives',
-
+'tpinger' => 'litepubl\post\Pinger",
 
 //pages
+'trobotstxt' => 'litepubl\pages\RobotsTxt',
+
 'thomepage' => 'litepubl\pages\Home',
 'tuserpages' => 'litepubl\pages\Users',
 

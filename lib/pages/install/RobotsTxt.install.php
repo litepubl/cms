@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
 
-function trobotstxtInstall($self) {
+function RobotsTxtInstall($self) {
     $self->lock();
-    $urlmap = turlmap::i();
-    $self->idurl = $urlmap->add('/robots.txt', get_class($self) , null);
+    $self->idurl = litepubl::$router->add('/robots.txt', get_class($self) , null);
 
     $self->add("#" . litepubl::$site->url . "/");
     $self->add('User-agent: *');
@@ -25,6 +25,6 @@ function trobotstxtInstall($self) {
     $self->unlock();
 }
 
-function trobotstxtUninstall($self) {
-    turlmap::unsub($self);
+function RobotsTxtUninstall($self) {
+    litepubl::$router->unbind($self);
 }

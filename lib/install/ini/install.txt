@@ -23,3 +23,5 @@ post\FilesItems
 post\PrivateFiles
 post\Rss
 post\RssFiles
+post\Archives
+pages\RobotsTxt

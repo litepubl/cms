@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
 
-class trobotstxt extends titems {
+class RobotsTxt extends \litepubl\core\Items
+ {
 
     public function create() {
         parent::create();
@@ -25,8 +27,7 @@ class trobotstxt extends titems {
         if (!in_array($value, $this->items)) {
             $this->items[] = $value;
             $this->save();
-            $urlmap = turlmap::i();
-            $urlmap->setexpired($this->idurl);
+            litepubl::$router->setexpired($this->idurl);
             $this->added($value);
         }
     }
