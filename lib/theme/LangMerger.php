@@ -7,8 +7,9 @@
  */
 
 namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-class LangMerger extends JsMerger
+class LangMerger extends Merger
  {
 
     protected function create() {

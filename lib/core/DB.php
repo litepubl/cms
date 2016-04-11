@@ -21,11 +21,7 @@ class DB
     public $debug;
 
     public static function i() {
-        return getinstance(__class__);
-    }
-
-    public static function instance() {
-        return static ::i();
+        return getinstance(get_called_class());
     }
 
     public function __construct() {
@@ -81,6 +77,10 @@ class DB
     }
     */
     public function __get($name) {
+if ($name == 'main') {
+return DBManager::i();
+}
+
         return $this->prefix . $name;
     }
 

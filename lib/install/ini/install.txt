@@ -12,3 +12,5 @@ core\UserOptions
 theme\MainControler
 theme\Theme
 theme\Schemes
+theme\JsMerger
+theme\CssMerger

@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\theme;
+use litepubl\core\litepubl;
 
 class CssMerger extends JsMerger
  {

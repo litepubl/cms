@@ -26,7 +26,7 @@ return [
 'tusersman' => 'litepubl\core\Usersman',
 'cachestorage_file' => 'litepubl\core\CacheFile',
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
-'tdbmanager' => 'litepubl\core\dbman',
+'tdbmanager' => 'litepubl\core\DBManager
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
 
 //theme
@@ -43,6 +43,7 @@ return [
 'tviews' => 'litepubl\theme\Schemes',
 'tguard' => 'litepubl\theme\Guard',
 'tcontentfilter' => 'litepubl\theme\Filter',
+'tjsmerger' => 'litepubl\theme\JsMerger',
 'tcssmerger' => 'litepubl\theme\CssMerger',
 
 //posts

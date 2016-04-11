@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class dbman
+class DBManager 
 {
     public $engine;
     private $max_allowed_packet;

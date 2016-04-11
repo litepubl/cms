@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\theme;
+use litepubl\core\litepubl;
 
-function tjsmergerInstall($self) {
+function JsMergerInstall($self) {
     $dir = litepubl::$paths->files . 'js';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
@@ -93,18 +94,12 @@ function tjsmergerInstall($self) {
     $self->add($section, "/lib/languages/$language/posteditor.min.js");
 
     $self->unlock();
-    /*  moved to template install
-    $template = ttemplate::i();
-    $template->addtohead(sprintf($template->js, '$site.files$template.jsmerger_default'));
-    */
-    tupdater::i()->onupdated = $self->onupdated;
 }
 
-function tjsmergerUninstall($self) {
-    tupdater::i()->unbind($self);
+function JsMergerUninstall($self) {
 }
 
-function tjsmerger_switch($self, $add, $delete) {
+function JsMerger_switch($self, $add, $delete) {
     $self->lock();
 
     foreach ($delete as $filename) {
@@ -118,7 +113,7 @@ function tjsmerger_switch($self, $add, $delete) {
     $self->unlock();
 }
 
-function tjsmerger_pretty_files() {
+function JsMerger_pretty_files() {
     return array(
         '/js/prettyphoto/js/jquery.prettyPhoto.js',
         '/js/litepubl/pretty/dialog.pretty.min.js',
@@ -129,7 +124,7 @@ function tjsmerger_pretty_files() {
     );
 }
 
-function tjsmerger_bootstrap_files() {
+function JsMerger_bootstrap_files() {
     return array(
         // fix
         '/js/fix/ie10.min.js',
@@ -165,7 +160,7 @@ function tjsmerger_bootstrap_files() {
     );
 }
 
-function tjsmerger_bootstrap_admin($js, $add = true) {
+function JsMerger_bootstrap_admin($js, $add = true) {
     $items = array(
         'admin' => array(
             '/js/bootstrap/tab.min.js',
@@ -191,7 +186,7 @@ function tjsmerger_bootstrap_admin($js, $add = true) {
 
 }
 
-function tjsmerger_ui_admin($js, $add = true) {
+function JsMerger_ui_admin($js, $add = true) {
     $items = array(
         'admin' => array(
             '/js/jquery/ui/core.min.js',
