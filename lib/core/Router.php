@@ -502,11 +502,14 @@ return \litepubl\theme\MainControler::i();
     }
 
     public static function unsub($obj) {
-        $self = static ::i();
-        $self->lock();
-        $self->unbind($obj);
-        $self->deleteclass(get_class($obj));
-        $self->unlock();
+static ::i()->unbind($obj);
+}
+
+public function unbind($obj) {
+        $this->lock();
+parent::unbind($obj);
+        $this->deleteclass(get_class($obj));
+        $this->unlock();
     }
 
     public function setonclose(array $a) {

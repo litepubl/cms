@@ -58,6 +58,7 @@ return [
 'tdomrss' => 'litepubl\post\DomRss',
 'trss' => 'litepubl\post\Rss',
 'tnode' => 'litepubl\post\Node',
+'trssMultimedia' => 'litepubl\post\RssFiles',
 
 //pages
 'thomepage' => 'litepubl\pages\Home',

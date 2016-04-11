@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
 
-class trssMultimedia extends tevents {
+class RssFiles extends \litepubl\core\Events
+{
     public $domrss;
 
     protected function create() {
@@ -19,7 +21,7 @@ class trssMultimedia extends tevents {
     }
 
     public function fileschanged() {
-        litepubl::$urlmap->expiredclass(get_class($this));
+        litepubl::$router->expiredclass(get_class($this));
     }
 
     public function request($arg) {
@@ -34,7 +36,7 @@ class trssMultimedia extends tevents {
 
         $result.= '<?php litepubl::turlmap::sendxml(); ?>';
 
-        $this->domrss = new tdomrss;
+        $this->domrss = new DomRss();
         $this->domrss->CreateRootMultimedia(litepubl::$site->url . litepubl::$urlmap->url, 'media');
         $this->onroot($this->domrss);
 
@@ -48,20 +50,20 @@ class trssMultimedia extends tevents {
     }
 
     private function getrecent($type, $count) {
-        $files = tfiles::i();
+        $files = Files::i();
         $sql = $type == '' ? '' : "media = '$type' and ";
         return $files->select($sql . 'parent = 0 and idperm = 0', " order by posted desc limit $count");
     }
 
     public function addfile($id) {
-        $files = tfiles::i();
+        $files = Files::i();
         $file = $files->getitem($id);
         $posts = $files->itemsposts->getposts($id);
 
         if (count($posts) == 0) {
             $postlink = litepubl::$site->url . '/';
         } else {
-            $post = tpost::i($posts[0]);
+            $post = Post::i($posts[0]);
             $postlink = $post->link;
         }
 
