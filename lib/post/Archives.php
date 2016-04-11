@@ -6,15 +6,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tarchives extends titems_itemplate implements itemplate {
+class Archives extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+{
+use \litepubl\theme\ControlerTrait;
+
     public $date;
     private $_idposts;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -27,16 +27,17 @@ class tarchives extends titems_itemplate implements itemplate {
         foreach ($this->items as $date => $item) {
             $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\"litepubl::$site->url{$item['url']}\" />\n";
         }
-        return ttheme::i()->parse($result);
+
+        return $this->schema->theme->parse($result);
     }
 
     public function postschanged() {
-        $posts = tposts::i();
+        $posts = Posts::i();
         $this->lock();
         $this->items = array();
         //sort archive by months
         $linkgen = tlinkgenerator::i();
-        $db = litepubl::$db;
+        $db = $this->db;
         $res = $db->query("SELECT YEAR(posted) AS 'year', MONTH(posted) AS 'month', count(id) as 'count' FROM  $db->posts
     where status = 'published' GROUP BY YEAR(posted), MONTH(posted) ORDER BY posted DESC ");
 
@@ -93,7 +94,7 @@ class tarchives extends titems_itemplate implements itemplate {
 
     public function gethead() {
         $result = parent::gethead();
-        $result.= tposts::i()->getanhead($this->getidposts());
+        $result.= Posts::i()->getanhead($this->getidposts());
         return $result;
     }
 
@@ -129,52 +130,4 @@ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
         ));
     }
 
-} //class
-class tarchiveswidget extends twidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'widget.archives';
-        $this->template = 'archives';
-        $this->adminclass = 'tadminshowcount';
-        $this->data['showcount'] = false;
-    }
-
-    public function getdeftitle() {
-        return tlocal::get('default', 'archives');
-    }
-
-    protected function setshowcount($value) {
-        if ($value != $this->showcount) {
-            $this->data['showcount'] = $value;
-            $this->Save();
-        }
-    }
-
-    public function getcontent($id, $sidebar) {
-        $arch = tarchives::i();
-        if (count($arch->items) == 0) return '';
-        $result = '';
-        $theme = ttheme::i();
-        $tml = $theme->getwidgetitem('archives', $sidebar);
-        if ($this->showcount) $counttml = $theme->getwidgettml($sidebar, 'archives', 'subcount');
-        $args = targs::i();
-        $args->icon = '';
-        $args->subcount = '';
-        $args->subitems = '';
-        $args->rel = 'archives';
-        foreach ($arch->items as $date => $item) {
-            $args->add($item);
-            $args->text = $item['title'];
-            if ($this->showcount) $args->subcount = str_replace($counttml, '$itemscount', $item['count']);
-            $result.= $theme->parsearg($tml, $args);
-        }
-
-        return $theme->getwidgetcontent($result, 'archives', $sidebar);
-    }
-
-} //class
+}

@@ -59,6 +59,10 @@ return [
 'trss' => 'litepubl\post\Rss',
 'tnode' => 'litepubl\post\Node',
 'trssMultimedia' => 'litepubl\post\RssFiles',
+'tmediaparser' => 'litepubl\post\MediaParser',
+'tarchives' => 'litepubl\post\Archives',
+'tarchiveswidget' => 'litepubl\widget\Archives',
+
 
 //pages
 'thomepage' => 'litepubl\pages\Home',

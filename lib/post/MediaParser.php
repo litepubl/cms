@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\core\litepubl;
 
-class tmediaparser extends tevents {
+class MediaParser extends \litepubl\core\Events
+ {
 
     protected function create() {
         parent::create();
@@ -100,7 +102,7 @@ class tmediaparser extends tevents {
             'description' => ''
         );
 
-        $files = tfiles::i();
+        $files = Files::i();
         return $files->additem($item);
     }
 
@@ -114,7 +116,7 @@ class tmediaparser extends tevents {
             'description' => ''
         );
 
-        $files = tfiles::i();
+        $files = Files::i();
         return $files->additem($item);
     }
 
@@ -144,7 +146,7 @@ class tmediaparser extends tevents {
     }
 
     public static function getunique($dir, $filename) {
-        $files = tfiles::i();
+        $files = Files::i();
         $subdir = basename(rtrim($dir, '/' . DIRECTORY_SEPARATOR)) . '/';
         if (!$files->exists($subdir . $filename) && !@file_exists($dir . $filename)) return $filename;
         $parts = pathinfo($filename);
@@ -201,7 +203,7 @@ class tmediaparser extends tevents {
     public function add(array $file) {
         if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
 
-        $files = tfiles::i();
+        $files = Files::i();
         $hash = $files->gethash(litepubl::$paths->files . $file['tempfilename']);
         if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . dbquote($hash)))) {
             @unlink(litepubl::$paths->files . $file['tempfilename']);
@@ -316,7 +318,7 @@ class tmediaparser extends tevents {
     //$filename must be specefied before such as  thumb/img004893.jpg
     public function uploadthumb($filename, &$content) {
         $hash = trim(base64_encode(md5($content, true)) , '=');
-        $files = tfiles::i();
+        $files = Files::i();
         if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . dbquote($hash)))) {
             return $id;
         }

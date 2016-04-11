@@ -19,4 +19,7 @@ post\Posts
 post\Meta
 post\Files
 post\FilesItems
+
 post\PrivateFiles
+post\Rss
+post\RssFiles
