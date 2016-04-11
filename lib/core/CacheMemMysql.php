@@ -10,34 +10,32 @@ namespace litepubl\core;
 
 class CacheMemMysql
 {
-    public $memcache;
-    public $memcache_prefix;
     public $lifetime;
     public $table;
     public $data;
-    private $table_checked;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+    private $checked;
 
     public function __construct() {
-        $this->memcache_prefix = litepubl::$domain . ':';
         $this->table = 'memstorage';
-        $this->table_checked = false;
+        $this->checked = false;
         $this->data = array();
-        if ($this->memcache = litepubl::$memcache) {
-            $this->lifetime = 3600;
-        } else {
             $this->lifetime = 10800;
-        }
     }
 
-    public function __get($name) {
+public function getdb() {
+return litepubl::$db;
+}
+
+public function getname($name) {
         if (strlen($name) > 32) {
-            $name = md5($name);
+return md5($name);
         }
 
+return $name;
+}
+
+    public function __get($name) {
+$name = $this->getname($name);
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
@@ -47,70 +45,48 @@ class CacheMemMysql
 
     public function get($name) {
         $result = false;
-        if ($this->memcache) {
-            if ($s = $this->memcache->get($this->memcache_prefix . $name)) {
-                $result = $this->unserialize($s);
-                $this->data[$name] = $result;
-            }
-        } else {
-            if (!$this->table_checked) {
+            if (!$this->checked) {
                 $this->check();
             }
 
-            $db = litepubl::$db;
+            $db = $this->getdb();
             if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
                 $result = $this->unserialize($r['value']);
                 $this->data[$name] = $result;
             }
-        }
 
         return $result;
     }
 
     public function __set($name, $value) {
-        if (strlen($name) > 32) {
-            $name = md5($name);
-        }
-
+$name = $this->getname($name);
         $exists = isset($this->data[$name]);
         $this->data[$name] = $value;
-
-        if ($this->memcache) {
-            $this->memcache->set($this->memcache_prefix . $name, $this->serialize($value) , false, $this->lifetime);
-        } else {
-            if (!$this->table_checked) {
+            if (!$this->checked) {
                 $this->check();
             }
 
-            $db = litepubl::$db;
+            $db = $this->getdb();
             $v = $db->quote($this->serialize($value));
             if ($exists) {
                 $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
             } else {
                 $db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
             }
-        }
-    }
+}
 
     public function __unset($name) {
-        if (strlen($name) > 32) {
-            $name = md5($name);
-        }
-
+$name = $this->getname($name);
         if (isset($this->data[$name])) {
             unset($this->data[$name]);
         }
 
-        if ($this->memcache) {
-            $this->memcache->delete($this->memcache_prefix . $name);
-        } else {
-            if (!$this->table_checked) {
+            if (!$this->checked) {
                 $this->check();
             }
 
-            $db = litepubl::$db;
+            $db = $this->getdb();
             $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
-        }
     }
 
     public function serialize($data) {
@@ -122,28 +98,28 @@ class CacheMemMysql
     }
 
     public function check() {
-        $this->table_checked = true;
+        $this->checked = true;
 
         //exclude throw exception
-        $db = litepubl::$db;
+        $db = $this->getdb();
         $res = $db->mysqli->query("select value from $db->prefix$this->table where name = 'created' limit 1");
         if (is_object($res) && ($r = $res->fetch_assoc())) {
             $res->close();
             $created = $this->unserialize($r['value']);
             if ($created + $this->lifetime < time()) {
-                $this->loadall();
-                $this->clear_table();
+                $this->loadAll();
+                $this->clear();
                 $this->data['created'] = time();
-                $this->saveall();
+                $this->saveAll();
             }
         } else {
-            $this->create_table();
+            $this->createTable();
             $this->created = time();
         }
     }
 
-    public function loadall() {
-        $db = litepubl::$db;
+    public function loadAll() {
+        $db = $this->getdb();
         $res = $db->query("select * from $db->prefix$this->table");
         if (is_object($res)) {
             while ($item = $res->fetch_assoc()) {
@@ -152,8 +128,8 @@ class CacheMemMysql
         }
     }
 
-    public function saveall() {
-        $db = litepubl::$db;
+    public function saveAll() {
+        $db = $this->getdb();
         $a = array();
         foreach ($this->data as $name => $value) {
             $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
@@ -163,8 +139,8 @@ class CacheMemMysql
         $db->query("insert into $db->prefix$this->table (name, value) values $values");
     }
 
-    public function create_table() {
-        $db = litepubl::$db;
+    public function createTable() {
+        $db = $this->getdb();
         $db->mysqli->query("create table if not exists $db->prefix$this->table (
     name varchar(32) not null,
     value varchar(255),
@@ -175,15 +151,13 @@ class CacheMemMysql
     COLLATE = utf8_general_ci");
     }
 
-    public function clear_table() {
-        $db = litepubl::$db;
+    public function clear() {
+        $db = $this->getdb();
         try {
             $db->query("truncate table $db->prefix$this->table");
         }
-        catch(Exception $e) {
-            //silince
-            
+        catch(\Exception $e) {
         }
     }
 
-} //class
+}
