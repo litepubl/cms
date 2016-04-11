@@ -7,14 +7,18 @@
  */
 
 namespace litepubl\pages;
+use litepubl\core\Users as CoreUsers;
+use litepubl\core\litepubl;
+use litepubl\theme\Filter;
 
-class Users extends Items implements TemplateInterface {
+class Users extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+{
     public static $userprops = array(
         'email',
-        'name',::i
-
+        'name',
         'website'
     );
+
     public static $pageprops = array(
         'url',
         'content',
@@ -22,10 +26,6 @@ class Users extends Items implements TemplateInterface {
     );
     public $id;
     protected $useritem;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         $this->dbversion = dbversion;
@@ -37,7 +37,7 @@ class Users extends Items implements TemplateInterface {
 
     public function __get($name) {
         if (in_array($name, static ::$userprops)) {
-            return tusers::i()->getvalue($this->id, $name);
+            return CoreUsers::i()->getvalue($this->id, $name);
         }
 
         if (in_array($name, static ::$pageprops)) {
@@ -48,7 +48,7 @@ class Users extends Items implements TemplateInterface {
     }
 
     public function getmd5email() {
-        if ($email = tusers::i()->getvalue($this->id, 'email')) {
+        if ($email = CoreUsers::i()->getvalue($this->id, 'email')) {
             return md5($email);
         } else {
             return '';
@@ -92,7 +92,7 @@ class Users extends Items implements TemplateInterface {
     public function request($id) {
         if ($id == 'url') {
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
-            $users = tusers::i();
+            $users = CoreUsers::i();
             if (!$users->itemexists($id)) return 404;
             $item = $users->getitem($id);
             $website = $item['website'];
@@ -127,11 +127,11 @@ class Users extends Items implements TemplateInterface {
         return $this->getvalue($this->id, 'description');
     }
 
-    public function getidview() {
+    public function getIdSchema() {
         return $this->getvalue($this->id, 'idview');
     }
 
-    public function setidview($id) {
+    public function setIdSchema($id) {
         $this->setvalue($this->id, 'idveiw');
     }
 
@@ -174,7 +174,7 @@ class Users extends Items implements TemplateInterface {
     private function addurl(array $item) {
         if ($item['id'] == 1) return $item;
         $item['url'] = '';
-        $linkitem = tusers::i()->getitem($item['id']) + $item;
+        $linkitem = CoreUsers::i()->getitem($item['id']) + $item;
         $linkgen = tlinkgenerator::i();
         $item['url'] = $linkgen->addurl(new tarray2prop($linkitem) , 'user');
         $item['idurl'] = litepubl::$urlmap->add($item['url'], get_class($this) , $item['id']);
@@ -197,7 +197,7 @@ class Users extends Items implements TemplateInterface {
         );
 
         if ($this->createpage) {
-            $users = tusers::i();
+            $users = CoreUsers::i();
             if ('approved' == $users->getvalue($id, 'status')) $item = $this->addurl($item);
         }
         $this->items[$id] = $item;
@@ -222,7 +222,7 @@ class Users extends Items implements TemplateInterface {
             if (isset($values[$k])) $item[$k] = $values[$k];
         }
         $item['id'] = $id;
-        $item['content'] = tcontentfilter::i()->filter($item['rawcontent']);
+        $item['content'] = Filter::i()->filter($item['rawcontent']);
         if ($url && ($url != $item['url'])) {
             if ($item['idurl'] == 0) {
                 $item['idurl'] = litepubl::$urlmap->add($url, get_class($this) , $id);

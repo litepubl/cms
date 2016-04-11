@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
 
-function tredirectorInstall($self) {
+function RedirectorInstall($self) {
     $self->lock();
     $self->add('/rss/', '/rss.xml');
     $self->add('/rss', '/rss.xml');

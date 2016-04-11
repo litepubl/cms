@@ -6,15 +6,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\theme\MainControler;
 
-class tsimplecontent extends tevents_itemplate implements itemplate {
+class Simple extends \litepubl\core\Events implements \litepubl\theme\ControlerInterface
+{
+use \litepubl\theme\EmptyControlerTrait;
+
     public $text;
     public $html;
-
-    public static function i() {
-        return Getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -25,33 +25,21 @@ class tsimplecontent extends tevents_itemplate implements itemplate {
         return turlmap::htmlheader(false);
     }
 
-    public function request($arg) {
-    }
-    public function gettitle() {
-    }
-
     public function getcont() {
         $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
-        return $this->view->theme->simple($result);
+        return $this->getSchema()->theme->simple($result);
     }
 
     public static function html($content) {
-        $class = __class__;
         $self = static ::i();
         $self->html = $content;
-        $template = ttemplate::i();
-        return $template->request($self);
+return MainControler::i()->request($self);
     }
 
     public static function content($content) {
         $self = static ::i();
         $self->text = $content;
-        $template = ttemplate::i();
-        return $template->request($self);
+return MainControler::i()->request($self);
     }
 
-    public static function gettheme() {
-        return tview::getview(static ::i())->theme;
-    }
-
-} //class
+}

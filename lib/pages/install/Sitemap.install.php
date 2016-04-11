@@ -6,28 +6,31 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
+use litepubl\core\Cron;
+use litepubl\widget\Meta;
 
-function tsitemapInstall($self) {
-    tcron::i()->addnightly(get_class($self) , 'Cron', null);
+function SitemapInstall($self) {
+    Cron::i()->addnightly(get_class($self) , 'Cron', null);
 
     litepubl::$urlmap->add('/sitemap.xml', get_class($self) , 'xml');
     litepubl::$urlmap->add('/sitemap.htm', get_class($self) , null);
 
-    $robots = trobotstxt::i();
+    $robots = RobotsTxt::i();
     array_splice($robots->items, 1, 0, "Sitemap: " . litepubl::$site->url . "/sitemap.xml");
     $robots->save();
 
     $self->add('/sitemap.htm', 4);
     $self->createfiles();
 
-    $meta = tmetawidget::i();
+    $meta = Meta::i();
     $meta->add('sitemap', '/sitemap.htm', tlocal::get('default', 'sitemap'));
 }
 
-function tsitemapUninstall($self) {
-    turlmap::unsub($self);
-    tcron::i()->deleteclass($self);
-    $meta = tmetawidget::i();
+function SitemapUninstall($self) {
+    litepubl::$router->unbind($self);
+    Cron::i()->deleteclass($self);
+    $meta = Meta::i();
     $meta->delete('sitemap');
 }

@@ -6,13 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
 
-function tuserpagesInstall($self) {
-    if ($self->dbversion) {
-        $manager = tdbmanager::i();
+function UsersInstall($self) {
+        $manager = $self->db->man;
         $dir = dirname(__file__) . '/sql/';
-        $manager->CreateTable($self->table, file_get_contents($dir . 'user.page.sql'));
+        $manager->CreateTable($self->table, file_get_contents($dir . 'users.sql'));
     }
 
     $v = $self->createpage;
@@ -30,11 +30,10 @@ function tuserpagesInstall($self) {
 
     litepubl::$urlmap->add('/users.htm', get_class($self) , 'url', 'get');
 
-    $robots = trobotstxt::i();
+    $robots = RobotsTxt::i();
     $robots->AddDisallow('/users.htm');
 }
 
-function tuserpagesUninstall($self) {
-    turlmap::unsub($self);
-    turlmap::unsub($self);
+function UsersUninstall($self) {
+    litepubl::$router->unbind($self);
 }

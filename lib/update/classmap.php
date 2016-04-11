@@ -66,7 +66,13 @@ return [
 
 //pages
 'trobotstxt' => 'litepubl\pages\RobotsTxt',
-
+'tsimplecontent' => 'litepubl\pages\Simple',
+'tstaticpages' => 'litepubl\pages\StaticPages',
+'tredirector' => 'litepubl\pages\Redirector',
+'tsitemap' => 'litepubl\pages\Sitemap',
+'tmenus' => 'litepubl\pages\Menus';
+'tmenu' => 'litepubl\pages\Menu',
+'tfakemenu' => 'litepubl\pages\FakeMenu',
 'thomepage' => 'litepubl\pages\Home',
 'tuserpages' => 'litepubl\pages\Users',
 

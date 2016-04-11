@@ -13,17 +13,17 @@ class MainControler extends \litepubl\core\Events
 {
 use \litepubl\core\DataStorageTrait;
 
-    public $model;
-    public $path;
-    public $url;
-    public $itemplate;
-    public $view;
-    public $ltoptions;
+public $controlerImplemented;
     public $custom;
-    public $hover;
     public $extrahead;
     public $extrabody;
+    public $hover;
+    public $ltoptions;
+    public $model;
+    public $path;
     public $result;
+    public $schema;
+    public $url;
 
     protected function create() {
         //prevent recursion
@@ -33,7 +33,7 @@ use \litepubl\core\DataStorageTrait;
         $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
         $this->path = litepubl::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url = litepubl::$site->files . '/themes/default';
-        $this->itemplate = false;
+        $this->controlerImplemented = false;
         $this->ltoptions = array(
             'url' => litepubl::$site->url,
             'files' => litepubl::$site->files,
@@ -65,37 +65,45 @@ use \litepubl\core\DataStorageTrait;
     }
 
     public function __get($name) {
-        if (method_exists($this, $get = 'get' . $name)) return $this->$get();
-        if (array_key_exists($name, $this->data)) return $this->data[$name];
+        if (method_exists($this, $get = 'get' . $name)) {
+return $this->$get();
+}
+
+        if (array_key_exists($name, $this->data)) {
+return $this->data[$name];
+}
+
         if (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
-            return $widgets->getsidebarindex($this->model, $this->view, (int)$m[1]);
+            return $widgets->getsidebarindex($this->model, $this->schema, (int)$m[1]);
         }
 
-        if (array_key_exists($name, $this->data['tags'])) {
-            $tags = ttemplatetags::i();
-            return $tags->$name;
-        }
-        if (isset($this->model) && isset($this->model->$name)) return $this->model->$name;
+        if (isset($this->model) && isset($this->model->$name)) {
+return $this->model->$name;
+}
+
         return parent::__get($name);
     }
 
-    protected function get_view($model) {
-        return $this->itemplate ? View::getview($model) : View::i();
+    protected function getSchema($model) {
+        return $this->controlerImplemented ? Schema::getSchema($model) : Schema::i();
     }
 
     public function request($model) {
         $this->model = $model;
-        ttheme::$vars['model'] = $model;
-        ttheme::$vars['template'] = $this;
-        $this->itemplate = $model instanceof itemplate;
-        $this->view = $this->get_view($model);
-        $theme = $this->view->theme;
+$vars = new Vars();
+$vars->model = $model;
+$vars->template = $this;
+$vars->mainControler = $this;
+
+        $this->controlerImplemented = $model instanceof ControlerInterface;
+        $this->schema = $this->getSchema($model);
+        $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
         litepubl::$classes->instances[get_class($theme) ] = $theme;
         $this->path = litepubl::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
         $this->url = litepubl::$site->files . '/themes/' . $theme->name;
-        if ($this->view->hovermenu) {
+        if ($this->schema->hovermenu) {
             $this->hover = $theme->templates['menu.hover'];
             if ($this->hover != 'bootstrap') $this->hover = ($this->hover == 'true');
         } else {
@@ -106,10 +114,11 @@ use \litepubl\core\DataStorageTrait;
         $this->result.= $theme->gethtml($model);
 
         $this->onbody($this);
-        if ($this->extrabody) $this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
-        $this->onrequest($this);
+        if ($this->extrabody) {
+$this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
+}
 
-        unset(ttheme::$vars['model'], ttheme::$vars['template']);
+        $this->onrequest($this);
         return $this->result;
     }
 
@@ -117,41 +126,45 @@ use \litepubl\core\DataStorageTrait;
         $ctx = $this->model;
         if (method_exists($ctx, 'httpheader')) {
             $result = $ctx->httpheader();
-            if (!empty($result)) return $result;
+            if (!empty($result)) {
+return $result;
+}
         }
 
         if (isset($ctx->idperm) && ($idperm = $ctx->idperm)) {
             $perm = tperm::i($idperm);
             if ($result = $perm->getheader($ctx)) {
-                return $result . turlmap::htmlheader($ctx->cache);
+                return $result . litepubl::$router->htmlheader($ctx->cache);
             }
         }
 
-        return turlmap::htmlheader($ctx->cache);
+        return litepubl::$router->htmlheader($ctx->cache);
     }
 
     //html tags
     public function getsidebar() {
-        return Widgets::i()->getsidebar($this->model, $this->view);
+        return Widgets::i()->getsidebar($this->model, $this->schema);
     }
 
     public function gettitle() {
-        $title = $this->itemplate ? $this->model->gettitle() : '';
+        $title = $this->controlerImplemented ? $this->model->gettitle() : '';
         if ($this->callevent('ontitle', array(&$title
         ))) {
             return $title;
         } else {
-            return $this->parsetitle($this->view->theme->templates['title'], $title);
+            return $this->parsetitle($this->schema->theme->templates['title'], $title);
         }
     }
 
     public function parsetitle($tml, $title) {
-        $args = new targs();
+        $args = new Args();
         $args->title = $title;
-        $result = $this->view->theme->parsearg($tml, $args);
-        //$result = trim($result, sprintf(' |.:%c%c', 187, 150));
+        $result = $this->schema->theme->parsearg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
-        if ($result == '') return litepubl::$site->name;
+        if (!$result) {
+return litepubl::$site->name;
+}
+
         return $result;
     }
 
@@ -169,13 +182,13 @@ use \litepubl\core\DataStorageTrait;
     }
 
     public function getkeywords() {
-        $result = $this->itemplate ? $this->model->getkeywords() : '';
+        $result = $this->controlerImplemented ? $this->model->getkeywords() : '';
         if ($result == '') return litepubl::$site->keywords;
         return $result;
     }
 
     public function getdescription() {
-        $result = $this->itemplate ? $this->model->getdescription() : '';
+        $result = $this->controlerImplemented ? $this->model->getdescription() : '';
         if ($result == '') return litepubl::$site->description;
         return $result;
     }
@@ -185,9 +198,9 @@ use \litepubl\core\DataStorageTrait;
             return $r;
         }
 
-        $view = $this->view;
-        $menuclass = $view->menuclass;
-        $filename = $view->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , litepubl::$options->group ? litepubl::$options->group : 'nobody');
+        $schema = $this->schema;
+        $menuclass = $schema->menuclass;
+        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , litepubl::$options->group ? litepubl::$options->group : 'nobody');
 
         if ($result = litepubl::$urlmap->cache->get($filename)) {
             return $result;
@@ -235,10 +248,10 @@ use \litepubl\core\DataStorageTrait;
 
     public function gethead() {
         $result = $this->heads;
-        if ($this->itemplate) $result.= $this->model->gethead();
+        if ($this->controlerImplemented) $result.= $this->model->gethead();
         $result = $this->getltoptions() . $result;
         $result.= $this->extrahead;
-        $result = $this->view->theme->parse($result);
+        $result = $this->schema->theme->parse($result);
         $this->callevent('onhead', array(&$result
         ));
         return $result;
@@ -248,7 +261,7 @@ use \litepubl\core\DataStorageTrait;
         $result = '';
         $this->callevent('beforecontent', array(&$result
         ));
-        $result.= $this->itemplate ? $this->model->getcont() : '';
+        $result.= $this->controlerImplemented ? $this->model->getcont() : '';
         $this->callevent('aftercontent', array(&$result
         ));
         return $result;

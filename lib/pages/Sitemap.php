@@ -6,18 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
+use litepubl\theme\Lang;
+use litepubl\pages\Home;
 
-class tsitemap extends titems_itemplate implements itemplate {
+class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+{
     public $classes;
     private $lastmod;
     private $count;
     private $fd;
     private $prio;
-
-    public static function i() {
-        return Getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -26,11 +26,11 @@ class tsitemap extends titems_itemplate implements itemplate {
         $this->data['date'] = time();
         $this->data['countfiles'] = 1;
         $this->addmap('classes', array(
-            'tmenus',
-            'tposts',
-            'tcategories',
-            'ttags',
-            'tarchives'
+            'litepubl\pages\Menus',
+            'litepubl\post\Posts',
+            'litepubl\tag\Categories',
+            'litepubl\tag\Tags',
+            'litepubl\post\Archives'
         ));
     }
 
@@ -43,14 +43,13 @@ class tsitemap extends titems_itemplate implements itemplate {
         $this->createfiles();
     }
 
-    //itemplate
     public function gettitle() {
-        return tlocal::get('default', 'sitemap');
+        return Lang::get('default', 'sitemap');
     }
 
     public function getcont() {
         $result = '<h4>' . tlocal::get('default', 'sitemap') . '</h4><ul>';
-        $theme = $this->view->theme;
+        $theme = $this->getSchema()->theme;
         $perpage = 1000;
         $count = 0;
         $from = (litepubl::$urlmap->page - 1) * $perpage;
@@ -108,7 +107,7 @@ class tsitemap extends titems_itemplate implements itemplate {
         $this->lastmod = date('Y-m-d', $this->date);
         $this->openfile();
 
-        $home = thomepage::i();
+        $home = Home::i();
         $this->prio = 9;
         $this->write('/', $home->showposts && $home->showpagenator ? ceil($home->archcount / litepubl::$options->perpage) : 1);
 

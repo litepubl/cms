@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
+use litepubl\theme\MainControler;
 
-class tredirector extends titems {
+class Redirector extends \litepubl\core\Items
+ {
 
     protected function create() {
         $this->dbversion = false;
@@ -49,14 +52,18 @@ class tredirector extends titems {
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.js$/', $url, $m)) {
             $name = $m[1] == 'moderator' ? 'comments' : $m[1];
             $prop = 'jsmerger_' . $name;
-            $template = ttemplate::i();
-            if (isset($template->$prop)) return $template->$prop;
+            $controler = MainControler::i();
+            if (isset($controler->$prop)) {
+return $controler->$prop;
+}
         }
 
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.css$/', $url, $m)) {
             $name = 'cssmerger_' . $m[1];
-            $template = ttemplate::i();
-            if (isset($template->$name)) return $template->$name;
+            $controler = MainControler::i();
+            if (isset($controler->$name)) {
+return $controler->$name;
+}
         }
 
         if ($url = $this->onget($url)) return $url;

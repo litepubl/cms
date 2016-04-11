@@ -6,22 +6,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
 
-function tmenusInstall($self) {
+function MenusInstall($self) {
     @mkdir(litepubl::$paths->data . 'menus', 0777);
-    if (get_class($self) != 'tmenus') return;
+    if (get_class($self) != 'litepubl\pages\Menus') return;
     @chmod(litepubl::$paths->data . 'menus', 0777);
 
     litepubl::$classes->onrename = $self->classRenamed;
 }
 
-function tmenusUninstall($self) {
+function MenusUninstall($self) {
     //rmdir(. 'menus');
     litepubl::$classes->unbind($self);
 }
 
-function tmenusGetsitemap($self, $from, $count) {
+function MenusGetsitemap($self, $from, $count) {
     $result = array();
     foreach ($self->items as $id => $item) {
         if ($item['status'] == 'draft') continue;

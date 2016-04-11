@@ -19,6 +19,9 @@ trait ControlerTrait
         $this->data['head'] = '';
     }
 
+    public function request($arg) {
+}
+
     public function gethead() {
         return $this->data['head'];
     }

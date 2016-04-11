@@ -6,14 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
+use litepubl\theme\Schema;
+use litepubl\theme\Filter;
 
-class tstaticpages extends titems implements itemplate {
+class StaticPages extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+{
     private $id;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -34,6 +34,7 @@ class tstaticpages extends titems implements itemplate {
 
     public function gethead() {
     }
+
     public function getkeywords() {
         return $this->getval('keywords');
     }
@@ -42,37 +43,40 @@ class tstaticpages extends titems implements itemplate {
         return $this->getval('description');
     }
 
-    public function getidview() {
-        return $this->getval('idview');
+    public function getIdSchema() {
+        return $this->getval('idschema');
     }
 
-    public function setidview($id) {
-        if ($id != $this->idview) {
-            $this->items[$this->id]['idview'] = $id;
+    public function setIdSchema($id) {
+        if ($id != $this->data['idschema']) {
+            $this->items[$this->id]['idschema'] = $id;
             $this->save();
         }
     }
 
+    public function getschema() {
+        return Schema::getSchema($this);
+    }
+
     public function getcont() {
-        $theme = tview::getview($this)->theme;
+        $theme = $this->getSchema()->theme;
         return $theme->simple($this->getval('filtered'));
     }
 
     public function add($title, $description, $keywords, $content) {
-        $filter = tcontentfilter::i();
-        $title = tcontentfilter::escape($title);
+        $filter = Filter::i();
+        $title = Filter::escape($title);
         $linkgen = tlinkgenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
-        $urlmap = turlmap::i();
         $this->items[++$this->autoid] = array(
-            'idurl' => $urlmap->add($url, get_class($this) , $this->autoid) ,
+            'idurl' => litepubl::$router->add($url, get_class($this) , $this->autoid) ,
             'url' => $url,
             'title' => $title,
             'filtered' => $filter->filter($content) ,
             'rawcontent' => $content,
-            'description' => tcontentfilter::escape($description) ,
-            'keywords' => tcontentfilter::escape($keywords) ,
-            'idview' => 1
+            'description' => Filter::escape($description) ,
+            'keywords' => Filter::escape($keywords) ,
+            'idschema' => 1
         );
         $this->save();
         return $this->autoid;
@@ -80,7 +84,7 @@ class tstaticpages extends titems implements itemplate {
 
     public function edit($id, $title, $description, $keywords, $content) {
         if (!$this->itemexists($id)) return false;
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $item = $this->items[$id];
         $this->items[$id] = array(
             'idurl' => $item['idurl'],
@@ -88,18 +92,17 @@ class tstaticpages extends titems implements itemplate {
             'title' => $title,
             'filtered' => $filter->filter($content) ,
             'rawcontent' => $content,
-            'description' => tcontentfilter::escape($description) ,
-            'keywords' => tcontentfilter::escape($keywords) ,
-            'idview' => $item['idview']
+            'description' => Filter::escape($description) ,
+            'keywords' => Filter::escape($keywords) ,
+            'idschema' => $item['idschema']
         );
         $this->save();
-        litepubl::$urlmap->clearcache();
+        litepubl::$router->clearcache();
     }
 
     public function delete($id) {
-        $urlmap = turlmap::i();
-        $urlmap->deleteitem($this->items[$id]['idurl']);
+        litepubl::$router->deleteitem($this->items[$id]['idurl']);
         parent::delete($id);
     }
 
-} //class
+}

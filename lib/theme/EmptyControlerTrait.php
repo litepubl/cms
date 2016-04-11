@@ -16,6 +16,9 @@ trait EmptyControlerTrait
         $this->data['idview'] = 1;
     }
 
+    public function request($arg) {
+}
+
     public function gethead() {
     }
 
