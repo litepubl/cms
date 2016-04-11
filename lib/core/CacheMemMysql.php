@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class memstorage {
+class CacheMemMysql
+{
     public $memcache;
     public $memcache_prefix;
     public $lifetime;

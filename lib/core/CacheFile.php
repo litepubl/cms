@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class cachestorage_file {
-
+class CacheFile
+{
     public function getdir() {
         return litepubl::$paths->cache;
     }
@@ -68,4 +68,4 @@ class cachestorage_file {
         }
     }
 
-} //class
+}

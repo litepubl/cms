@@ -8,6 +8,7 @@ return [
 'titems' => 'litepubl\core\Items',
 'titemsposts' => 'litepubl\core\ItemsPosts',
 'tpoolitems' => 'litepubl\core\Pool',
+'tsingleitems' => 'litepubl\core\SingleItems',
 'tclasses' => 'litepubl\core\Classes',
 'tcron' => 'litepubl\core\Cron',
 'tdatabase' => 'litepubl\core\DB',
@@ -23,6 +24,10 @@ return [
 'tusergroups' => 'litepubl\core\UserGroups',
 'tuseroptions' => 'litepubl\core\UserOptions',
 'tusersman' => 'litepubl\core\Usersman',
+'cachestorage_file' => 'litepubl\core\CacheFile',
+'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
+'memstorage' => 'litepubl\core\CacheMemMysql',
+
 
 //theme
 'tlocal' => 'litepubl\theme\Lang',

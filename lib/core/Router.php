@@ -26,9 +26,9 @@ class Router extends Items
     public function __construct() {
         parent::__construct();
         if (litepubl::$memcache) {
-            $this->cache = new cachestorage_memcache();
+            $this->cache = new CacheMemcache();
         } else {
-            $this->cache = new cachestorage_file();
+            $this->cache = new CacheFile();
         }
     }
 
@@ -562,10 +562,10 @@ return \litepubl\theme\MainControler::i();
         if ($memstorage->hourcron + 3600 <= time()) {
             $memstorage->hourcron = time();
             $memstorage->singlecron = false;
-            tcron::pingonshutdown();
+            Cron::pingonshutdown();
         } else if ($memstorage->singlecron && ($memstorage->singlecron <= time())) {
             $memstorage->singlecron = false;
-            tcron::pingonshutdown();
+            Cron::pingonshutdown();
         }
     }
 

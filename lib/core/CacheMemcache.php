@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class cachestorage_memcache {
+class CacheMemcache
+{
     public $memcache;
     public $lifetime;
     public $prefix;
@@ -75,4 +76,4 @@ class cachestorage_memcache {
         return !!$this->memcache->get($this->prefix . $filename);
     }
 
-} //class
+}

@@ -6,11 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\core;
 
-class tsingleitems extends titems {
-    public $copyprops;
+class SingleItems extnds Items
+{
     public static $instances;
+    public $copyprops;
 
     protected function create() {
         $this->dbversion = false;
@@ -68,4 +69,4 @@ class tsingleitems extends titems {
         return $result;
     }
 
-} //class
+}
