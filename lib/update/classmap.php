@@ -53,7 +53,6 @@ return [
 'tpostfactory' => 'litepubl\post\Factory',
 'tfiles' => 'litepubl\post\Files',
 'tfileitems' => 'litepubl\post\FileItems',
-'tprivatefiles' => 'litepubl\post\PrivateFiles',
 'tjsonfiles' => 'litepubl\post\JsonFiles',
 'tdomrss' => 'litepubl\post\DomRss',
 'trss' => 'litepubl\post\Rss',
@@ -98,6 +97,7 @@ return [
 'tsinglepassword' => 'litepubl\perms\Single',
 'tpermpassword' => 'litepubl\perms\Password',
 'tpasswordpage' => 'litepubl\perms\Page',
+'tprivatefiles' => 'litepubl\perms\Files',
 
 
 

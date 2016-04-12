@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl\post;
-use litepubl\utils\Perm;
+namespace litepubl\perms;
+use litepubl\post\Files as PostFiles;
 
-class PrivateFiles extends \litepubl\core\Events
+class Files extends \litepubl\core\Events
 {
     public $id;
     public $item;
@@ -20,14 +20,17 @@ class PrivateFiles extends \litepubl\core\Events
     }
 
     public function __get($name) {
-        if (isset($this->item[$name])) return $this->item[$name];
+        if (isset($this->item[$name])) {
+return $this->item[$name];
+}
+
         return parent::__get($name);
     }
 
     public function setperm($id, $idperm) {
-        $files = Files::i();
+        $files = PostFiles::i();
         $item = $files->getitem($id);
-        if ($idperm == $item['idperm']) return;
+        if ($idperm != $item['idperm']) {
         $files->setvalue($id, 'idperm', $idperm);
         if (($idperm == 0) || ($item['idperm'] == 0)) {
             $filename = basename($item['filename']);
@@ -42,10 +45,11 @@ class PrivateFiles extends \litepubl\core\Events
         }
 
         if ($item['preview'] > 0) $this->setperm($item['preview'], $idperm);
+}
     }
 
     public function request($id) {
-        $files = Files::i();
+        $files = PostFiles::i();
         if (!$files->itemexists($id)) {
 return 404;
 }

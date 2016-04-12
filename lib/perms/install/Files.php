@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\prems;
 
-function tprivatefilesInstall($self) {
+function FilesInstall($self) {
     $dir = litepubl::$paths->files . 'private';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
