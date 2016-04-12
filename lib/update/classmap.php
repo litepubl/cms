@@ -72,7 +72,9 @@ return [
 'tmenus' => 'litepubl\pages\Menus';
 'tmenu' => 'litepubl\pages\Menu',
 'tfakemenu' => 'litepubl\pages\FakeMenu',
+'tsinglemenu' => 'litepubl\pages\SingleMenu',
 'thomepage' => 'litepubl\pages\Home',
+'tcontactform' => 'litepubl\pages\Contacts',
 'tuserpages' => 'litepubl\pages\Users',
 'tforbidden' => 'litepubl\pages\Forbidden',
 'tnotfound404' => 'litepubl\pages\Notfound404',

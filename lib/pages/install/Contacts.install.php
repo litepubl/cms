@@ -6,13 +6,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
-function tcontactformInstall($self) {
+function ContactsInstall($self) {
     $ini = parse_ini_file(dirname(__file__) . '/templates/contactform.ini');
-    tlocal::usefile('install');
-    $lang = tlocal::i('contactform');
-    $theme = ttheme::i();
+    Lang::usefile('install');
+    $lang = Lang::i('contactform');
+    $theme = Theme::i();
 
     $self->title = $lang->title;
     $self->subject = $lang->subject;
@@ -21,11 +23,11 @@ function tcontactformInstall($self) {
     $self->errmesg = $theme->parse($ini['errmesg']);
     $self->content = $theme->parse($ini['form']);
 
-    $menus = tmenus::i();
+    $menus = Menus::i();
     $menus->add($self);
 }
 
-function tcontactformUninstall($self) {
-    $menus = tmenus::i();
+function ContactsUninstall($self) {
+    $menus = Menus::i();
     $menus->delete($self->id);
 }

@@ -7,16 +7,19 @@
  */
 
 namespace litepubl\pages;
+use litepubl\core\litepubl;
 use litepubl\core\CoEvents;
+use litepubl\post\Posts;
+use litepubl\post\Post;
+use litepubl\view\Schema;
+use litepubl\view\Lang;
+use litepubl\view\Vars;
+use litepubl\view\Args;
 
 class Home extends SingleMenu
 {
     public $cacheposts;
     public $midleposts;
-
-    public static function i($id = 0) {
-        return static ::iteminstance(__class__, $id);
-    }
 
     protected function create() {
         parent::create();
@@ -37,8 +40,11 @@ class Home extends SingleMenu
     }
 
     public function getindex_tml() {
-        $theme = ttheme::i();
-        if (!empty($theme->templates['index.home'])) return $theme->templates['index.home'];
+        $theme = $this->theme;
+        if (!empty($theme->templates['index.home'])) {
+return $theme->templates['index.home'];
+}
+
         return false;
     }
 
@@ -55,7 +61,7 @@ class Home extends SingleMenu
 
         if ($this->showposts) {
             $items = $this->getidposts();
-            $result.= tposts::i()->getanhead($items);
+            $result.= Posts::i()->getanhead($items);
         }
 
         ttheme::$vars['home'] = $this;
@@ -109,11 +115,11 @@ class Home extends SingleMenu
     public function getidposts() {
         if (is_array($this->cacheposts)) return $this->cacheposts;
         if ($result = $this->onbeforegetitems()) return $result;
-        $posts = tposts::i();
-        $view = tview::getview($this);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+        $posts = Posts::i();
+        $schema = Schema::getSchema($this);
+        $perpage = $schema->perpage ? $schema->perpage : litepubl::$options->perpage;
         $from = (litepubl::$urlmap->page - 1) * $perpage;
-        $order = $view->invertorder ? 'asc' : 'desc';
+        $order = $schema->invertorder ? 'asc' : 'desc';
 
         $p = litepubl::$db->prefix . 'posts';
         $ci = litepubl::$db->prefix . 'categoriesitems';
@@ -127,7 +133,7 @@ class Home extends SingleMenu
             $posts->loaditems($result);
         } else {
             $this->data['archcount'] = $posts->archivescount;
-            $result = $posts->getpage(0, litepubl::$urlmap->page, $perpage, $view->invertorder);
+            $result = $posts->getpage(0, litepubl::$urlmap->page, $perpage, $schema->invertorder);
         }
 
         $this->callevent('ongetitems', array(&$result
@@ -174,7 +180,7 @@ class Home extends SingleMenu
 
             if ($r = $res->fetch_assoc()) $this->data['archcount'] = (int)$r['count'];
         } else {
-            $this->data['archcount'] = tposts::i()->archivescount;
+            $this->data['archcount'] = Posts::i()->archivescount;
         }
 
         $this->save();
@@ -204,27 +210,32 @@ class Home extends SingleMenu
     public function getmidle() {
         $result = '';
         $items = $this->getmidleposts();
-        if (!count($items)) return '';
-        ttheme::$vars['lang'] = tlocal::i('default');
-        ttheme::$vars['home'] = $this;
-        $theme = ttheme::i();
+        if (!count($items)) {
+return '';
+}
+
+$vars = new Vars();
+$vars->lang = Lang::i('default');
+        $vars->home = $this;
+        $theme = $this->theme;
         $tml = $theme->templates['content.home.midle.post'];
         foreach ($items as $id) {
-            ttheme::$vars['post'] = tpost::i($id);
+            $vars->post = Post::i($id);
             $result.= $theme->parse($tml);
             // has $author.* tags in tml
-            if (isset(ttheme::$vars['author'])) unset(ttheme::$vars['author']);
+            if (isset($vars->author)) {
+unset($vars->author);
+}
         }
 
         $tml = $theme->templates['content.home.midle'];
         if ($tml) {
-            $args = new targs();
+            $args = new Args();
             $args->post = $result;
             $args->midletitle = $this->midletitle;
             $result = $theme->parsearg($tml, $args);
         }
 
-        unset(ttheme::$vars['post'], ttheme::$vars['home']);
         return $result;
     }
 
