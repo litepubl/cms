@@ -78,6 +78,7 @@ return [
 'tuserpages' => 'litepubl\pages\Users',
 'tforbidden' => 'litepubl\pages\Forbidden',
 'tnotfound404' => 'litepubl\pages\Notfound404',
+'appcache_manifest' => 'litepubl\pages\Appcache',
 
 //utils
 'tfiler' => 'litepubl\utils\Filer',

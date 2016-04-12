@@ -6,11 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
 
-function appcache_manifestInstall($self) {
+function AppcacheInstall($self) {
     $self->lock();
-    turlmap::unsub($self);
+    litepubl::$router->unbind($self);
     $self->idurl = litepubl::$urlmap->add($self->url, get_class($self) , null);
 
     $self->add('$template.jsmerger_default');
@@ -18,6 +19,6 @@ function appcache_manifestInstall($self) {
     $self->unlock();
 }
 
-function appcache_manifestUninstall($self) {
-    turlmap::unsub($self);
+function AppcacheUninstall($self) {
+    litepubl::$router->unbind($self);
 }

@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\core\litepubl;
+use litepubl\view\Theme;
 
-class appcache_manifest extends titems {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Appcache extends \litepubl\core\Items
+{
 
     public function create() {
         parent::create();
@@ -50,8 +49,8 @@ class appcache_manifest extends titems {
     ?>';
 
         $s.= "CACHE MANIFEST\r\n";
-        $s.= ttheme::i()->parse($this->text);
+        $s.= Theme::i()->parse($this->text);
         return $s;
     }
 
-} //class
+}
