@@ -11,7 +11,7 @@ use litepubl\view\Lang;
 
 class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\view\ViewTrait;
+use \litepubl\view\EmptyViewTrait;
 
     protected function create() {
         parent::create();
@@ -32,11 +32,7 @@ return $theme->simple($this->text);
 }
 
         $lang = Lang::i('default');
-        if ($this->basename == 'forbidden') {
-            return $theme->simple(sprintf('<h1>%s</h1>', $lang->forbidden));
-        } else {
-            return $theme->parse($theme->templates['content.notfound']);
-        }
+            return $theme->simple($theme->h($lang->forbidden)));
     }
 
 }

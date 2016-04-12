@@ -12,8 +12,6 @@ return [
 'tclasses' => 'litepubl\core\Classes',
 'tcron' => 'litepubl\core\Cron',
 'tdatabase' => 'litepubl\core\DB',
-'tmailer' => 'litepubl\core\Mailer',
-'tsmtp' => 'litepubl\core\Smtp',
 'toptions' => 'litepubl\core\Options',
 'tplugin' => 'litepubl\core\Plugin',
 'tplugins' => 'litepubl\core\Plugins',
@@ -28,6 +26,7 @@ return [
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
 'tdbmanager' => 'litepubl\core\DBManager
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
+'tarray2prop' => 'litepubl\core\Array2prop',
 
 //theme
 'tlocal' => 'litepubl\view\Lang',
@@ -77,6 +76,13 @@ return [
 'tuserpages' => 'litepubl\pages\Users',
 'tforbidden' => 'litepubl\pages\Forbidden',
 'tnotfound404' => 'litepubl\pages\Notfound404',
+
+//utils
+'tfiler' => 'litepubl\utils\Filer',
+'http' => 'litepubl\utils\Http',
+'tmailer' => 'litepubl\utils\Mailer',
+'tsmtp' => 'litepubl\utils\Smtp',
+
 
 //widgets
 'tsidebars' => 'litepubl\widget\Sidebars',

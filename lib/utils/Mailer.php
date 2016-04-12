@@ -6,7 +6,8 @@
  *
  */
 
-namespace litepubl\core;
+namespace litepubl\utils;
+use litepubl\core\litepubl;
 
 class Mailer
  {
@@ -31,7 +32,7 @@ class Mailer
 
     public static function sendmail($fromname, $fromemail, $toname, $toemail, $subj, $body) {
         if (litepubl::$options->mailer == 'smtp') {
-            $mailer = TSMTPMailer::i();
+            $mailer = Smtp::i();
             return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
         }
 
@@ -64,7 +65,7 @@ class Mailer
 
     public static function onshutdown() {
         if (litepubl::$options->mailer == 'smtp') {
-            $mailer = TSMTPMailer::i();
+            $mailer = Smtp::i();
             if ($mailer->auth()) {
                 $fromname = litepubl::$site->name;
                 $fromemail = litepubl::$options->fromemail;
@@ -87,7 +88,7 @@ class Mailer
     public static function sendlist(array $list) {
         if (!count($list)) return;
         if (litepubl::$options->mailer == 'smtp') {
-            $mailer = TSMTPMailer::i();
+            $mailer = Smtp::i();
             if ($mailer->auth()) {
                 foreach ($list as $item) {
                     $mailer->send($item['fromname'], $item['fromemail'], $item['toname'], $item['toemail'], $item['subject'], $item['body']);
@@ -122,7 +123,9 @@ class Mailer
 
         $body = $textpart . "\n\n" . $attachpart . "\n\n";
         $options = litepubl::$options;
-        if (litepubl::$debug) return file_put_contents(litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+        if (litepubl::$debug) {
+return file_put_contents(litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+}
 
         return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
     }

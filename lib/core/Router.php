@@ -335,13 +335,13 @@ return \litepubl\view\MainView::i();
     }
 
     public function notfound404() {
-        $redir = tredirector::i();
+        $redir = Redirector::i();
         if ($url = $redir->get($this->url)) {
             return $this->redir($url);
         }
 
         $this->is404 = true;
-        $this->printclasspage('litepubl\tnotfound404');
+        $this->printclasspage('litepubl\pages\Notfound404');
     }
 
     private function printclasspage($classname) {
@@ -362,7 +362,7 @@ return \litepubl\view\MainView::i();
 
     public function forbidden() {
         $this->is404 = true;
-        $this->printclasspage('litepubl\tforbidden');
+        $this->printclasspage('litepubl\pages\Forbidden');
     }
 
     public function addget($url, $class) {

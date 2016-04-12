@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\utils;
+use litepubl\core\litepubl;
 
-class tfiler {
+class Filer {
 
     public static function callback($callback, $path, $subdir) {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;

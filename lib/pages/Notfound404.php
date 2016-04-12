@@ -8,10 +8,12 @@
 
 namespace litepubl\pages;
 use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\utils\Mailer;
 
 class Notfound404 extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\view\ViewTrait;
+use \litepubl\view\EmptyViewTrait;
 
     protected function create() {
         parent::create();
@@ -28,22 +30,29 @@ use \litepubl\view\ViewTrait;
         if ($this->notify) {
 $this->sendmail();
 }
-        return parent::getcont();
+
+        $schema = $this->getSchema();
+        $theme = $schema->theme;
+        if ($this->text) {
+return $theme->simple($this->text);
+}
+
+            return $theme->notfound;
     }
 
     private function sendmail() {
-        $args = new targs();
+        $args = new Args();
         $args->url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $args->ref = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 
-        tlocal::usefile('mail');
-        $lang = tlocal::i('notfound');
-        $theme = ttheme::i();
+        Lang::usefile('mail');
+        $lang = Lang::i('notfound');
+        $theme = $this->getSchema()->theme;
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
 
-        tmailer::sendtoadmin($subject, $body, true);
+        Mailer::sendtoadmin($subject, $body, true);
     }
 
 } //class

@@ -6,7 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\utils;
+use litepubl\core\litepubl;
+use litepubl\view\Lang;
 
 class inifiles {
     public static $files = array();

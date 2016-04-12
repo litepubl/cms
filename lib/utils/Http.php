@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\utils;
 
-class http {
+class Http {
     public static $timeout = 20;
 
     public static function get($url, $headers = false) {
@@ -45,6 +45,7 @@ class http {
             curl_setopt($ch, CURLOPT_VERBOSE , true);
             curl_setopt($ch, CURLOPT_STDERR, fopen(litepubl::$paths->data . 'logs/curl.txt', 'w+'));
             */
+
             if (!ini_get('open_basedir') && !ini_get('safe_mode')) {
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
                 $result = curl_exec($ch);
