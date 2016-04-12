@@ -129,36 +129,12 @@ class Lang
         return static ::$self;
     }
 
-    public static function inifile($class, $filename) {
-        return static ::inicache(litepubl::$classes->getresourcedir($class) . litepubl::$options->language . $filename);
-    }
-
-    public static function inicache($filename) {
-        $self = static ::i();
-        if (!isset(inifiles::$files[$filename])) {
-            $ini = inifiles::cache($filename);
-            if (is_array($ini)) {
-                $self->ini = $ini + $self->ini;
-                if (isset($ini['searchsect'])) $self->joinsearch($ini['searchsect']);
-                $keys = array_keys($ini);
-                $self->section = array_shift($keys);
-                $self->addsearch($self->section);
-            }
-        }
-        return $self;
-    }
-
-    //backward
-    public static function loadlang($name) {
-        static ::usefile($name);
-    }
-
     public static function getcachedir() {
         return litepubl::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
     }
 
     public static function clearcache() {
-        tfiler::delete(static ::getcachedir() , false, false);
+        \litepubl\utils\Filer::delete(static ::getcachedir() , false, false);
         static ::i()->loaded = array();
     }
 

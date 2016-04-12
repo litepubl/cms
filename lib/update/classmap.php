@@ -82,7 +82,7 @@ return [
 'http' => 'litepubl\utils\Http',
 'tmailer' => 'litepubl\utils\Mailer',
 'tsmtp' => 'litepubl\utils\Smtp',
-
+'tlinkgenerator' => 'litepubl\utils\LinkGenerator',
 
 //widgets
 'tsidebars' => 'litepubl\widget\Sidebars',

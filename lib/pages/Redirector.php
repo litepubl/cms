@@ -8,7 +8,7 @@
 
 namespace litepubl\pages;
 use litepubl\core\litepubl;
-use litepubl\theme\MainControler;
+use litepubl\view\MainView;
 
 class Redirector extends \litepubl\core\Items
  {
@@ -52,17 +52,17 @@ class Redirector extends \litepubl\core\Items
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.js$/', $url, $m)) {
             $name = $m[1] == 'moderator' ? 'comments' : $m[1];
             $prop = 'jsmerger_' . $name;
-            $controler = MainControler::i();
-            if (isset($controler->$prop)) {
-return $controler->$prop;
+            $view = MainView::i();
+            if (isset($view->$prop)) {
+return $view->$prop;
 }
         }
 
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.css$/', $url, $m)) {
             $name = 'cssmerger_' . $m[1];
-            $controler = MainControler::i();
-            if (isset($controler->$name)) {
-return $controler->$name;
+            $view = MainView::i();
+            if (isset($view->$name)) {
+return $view->$name;
 }
         }
 

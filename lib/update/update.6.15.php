@@ -9,9 +9,10 @@ $cl->namespaces['litepubl\xmlrpc'] = 'lib/xmlrpc';
 $cl->kernel['litepubl\core'] = 'kernel.core.php';
 
 unset($cl->items['tini2array']);
+unset($cl->items['inifiles']);
 
 $a = include(__DIR__ . '/classmap.php');
-foreach ($a as $oldcalss => $newclass) {
+foreach ($a as $oldclass => $newclass) {
 unset($cl->items[$oldclass]);
 unset($cl->kernel[$oldclass]);
 }

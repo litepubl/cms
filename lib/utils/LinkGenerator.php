@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\utils;
+use litepubl\core\litepubl;
 
-class tlinkgenerator extends tevents {
+class LinkGenerator extends \litepubl\core\Events
+ {
     public $source;
 
     protected function create() {
@@ -139,8 +141,10 @@ class tlinkgenerator extends tevents {
     }
 
     public function MakeUnique($url) {
-        $urlmap = turlmap::i();
-        if (!$urlmap->urlexists($url)) return $url;
+        if (!litepubl::$router->urlexists($url)) {
+return $url;
+}
+
         $l = strlen($url);
         if (substr($url, $l - 1, 1) == '/') {
             $url = substr($url, 0, $l - 1);
@@ -153,9 +157,12 @@ class tlinkgenerator extends tevents {
             $sufix = $match[1] . $sufix;
             $url = substr($url, 0, strlen($url) - strlen($match[1]));
         }
+
         for ($i = 2; $i < 1000; $i++) {
             $Result = "$url-$i$sufix";
-            if (!$urlmap->urlexists($Result)) return $Result;
+            if (!litepubl::$urlmap->urlexists($Result)) {
+return $Result;
+}
         }
 
         return "/some-wrong" . time();
@@ -176,8 +183,7 @@ class tlinkgenerator extends tevents {
 
     public function editurl($obj, $schema) {
         if (!isset($obj->url) || !isset($obj->idurl) || !isset($obj->url)) return $this->error("The properties url and title not found");
-        $urlmap = turlmap::i();
-        $oldurl = $urlmap->getidurl($obj->idurl);
+        $oldurl = litepubl::$router->getidurl($obj->idurl);
         if ($oldurl == $obj->url) return;
         if ($obj->url == '') {
             $obj->url = $this->createlink($obj, $schema, false);
@@ -206,13 +212,13 @@ class tlinkgenerator extends tevents {
         }
 
         //check unique url
-        if ($urlitem = $urlmap->findurl($url)) {
+        if ($urlitem = litepubl::$router->findurl($url)) {
             $url = $this->MakeUnique($url);
         }
 
         $obj->url = $url;
-        $urlmap->setidurl($obj->idurl, $obj->url);
-        $urlmap->addredir($oldurl, $obj->url);
+        litepubl::$router->setidurl($obj->idurl, $obj->url);
+        litepubl::$router->addredir($oldurl, $obj->url);
     }
 
 } //class

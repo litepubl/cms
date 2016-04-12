@@ -8,8 +8,9 @@
 
 namespace litepubl\pages;
 use litepubl\core\litepubl;
-use litepubl\theme\Schema;
-use litepubl\theme\Filter;
+use litepubl\view\Schema;
+use litepubl\view\Filter;
+use litepubl\utils\LinkGenerator;
 
 class StaticPages extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
 {
@@ -66,7 +67,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
     public function add($title, $description, $keywords, $content) {
         $filter = Filter::i();
         $title = Filter::escape($title);
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
         $this->items[++$this->autoid] = array(
             'idurl' => litepubl::$router->add($url, get_class($this) , $this->autoid) ,

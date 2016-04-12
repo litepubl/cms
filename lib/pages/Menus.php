@@ -4,6 +4,7 @@ namespace litepubl\pages;
 use litepubl\core\litepubl;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\utils\LinkGenerator;
 
 class Menus extends \litepubl\core\Items
 {
@@ -38,7 +39,7 @@ class Menus extends \litepubl\core\Items
         if ($item instanceof thomepage) {
             $item->url = '/';
         } else {
-            $linkgen = tlinkgenerator::i();
+            $linkgen = LinkGenerator::i();
             $item->url = $linkgen->addurl($item, 'menu');
         }
 
@@ -130,7 +131,7 @@ $item->data['idview'] = $schemes->defaults['menu'];
 
     public function edit(tmenu $item) {
         if (!(($item instanceof thomepage) || ($item instanceof tfakemenu))) {
-            $linkgen = tlinkgenerator::i();
+            $linkgen = LinkGenerator::i();
             $linkgen->editurl($item, 'menu');
         }
 

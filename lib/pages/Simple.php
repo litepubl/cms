@@ -7,11 +7,11 @@
  */
 
 namespace litepubl\pages;
-use litepubl\theme\MainControler;
+use litepubl\view\MainView;
 
-class Simple extends \litepubl\core\Events implements \litepubl\theme\ControlerInterface
+class Simple extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\theme\EmptyControlerTrait;
+use \litepubl\view\EmptyViewTrait;
 
     public $text;
     public $html;

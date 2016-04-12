@@ -54,7 +54,6 @@ $this->addsection($name, $section, parse_ini_string($s, false));
     public function merge() {
         $lang = tlocal::getinstance();
         $lang->ini = array();
-        inifiles::$files = array();
         foreach ($this->items as $name => $items) {
             $this->parse($name);
         }
