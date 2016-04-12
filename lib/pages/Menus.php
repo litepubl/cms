@@ -2,8 +2,8 @@
 
 namespace litepubl\pages;
 use litepubl\core\litepubl;
-use litepubl\theme\Theme;
-use litepubl\theme\Args;
+use litepubl\view\Theme;
+use litepubl\view\Args;
 
 class Menus extends \litepubl\core\Items
 {

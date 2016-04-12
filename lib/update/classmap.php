@@ -75,6 +75,8 @@ return [
 'tfakemenu' => 'litepubl\pages\FakeMenu',
 'thomepage' => 'litepubl\pages\Home',
 'tuserpages' => 'litepubl\pages\Users',
+'tforbidden' => 'litepubl\pages\Forbidden',
+'tnotfound404' => 'litepubl\pages\Notfound404',
 
 //widgets
 'tsidebars' => 'litepubl\widget\Sidebars',

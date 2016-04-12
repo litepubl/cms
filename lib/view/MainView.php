@@ -89,7 +89,7 @@ return $this->model->$name;
         return $this->viewImplemented ? Schema::getSchema($model) : Schema::i();
     }
 
-    public function request($model) {
+    public function render($model) {
         $this->model = $model;
 $vars = new Vars();
 $vars->model = $model;

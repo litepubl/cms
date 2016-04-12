@@ -129,8 +129,8 @@ class Router extends Items
         return $this->items[$id]['url'];
     }
 
-public function getControler() {
-return \litepubl\theme\MainControler::i();
+public function getView() {
+return \litepubl\view\MainView::i();
 }
 
     public function findurl($url) {
@@ -324,8 +324,8 @@ return \litepubl\theme\MainControler::i();
                 return;
             }
 
-            $controler = $this->getControler();
-            $s = $controler->request($model);
+            $view = $this->getView();
+            $s = $view->render($model);
         }
 
         eval('?>' . $s);
@@ -351,8 +351,8 @@ return \litepubl\theme\MainControler::i();
         }
 
         $obj = litepubl::$classes->getinstance($classname);
-        $controler = $this->getControler();
-        $s = $controler->request($obj);
+        $view = $this->getView();
+        $s = $view->render($obj);
         eval('?>' . $s);
 
         if ($this->cache_enabled && $obj->cache) {

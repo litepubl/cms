@@ -8,10 +8,10 @@
 
 namespace litepubl\pages;
 use litepubl\core\litepubl;
-use litepubl\theme\Filter;
-use litepubl\theme\Schema;
+use litepubl\view\Filter;
+use litepubl\view\Schema;
 
-class tmenu extends \litepubl\core\Item implements \litepubl\theme\ControlerInterface
+class tmenu extends \litepubl\core\Item implements \litepubl\theme\ViewInterface
 {
     public $formresult;
     public static $ownerprops = array(
