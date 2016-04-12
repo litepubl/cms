@@ -37,7 +37,7 @@ public $viewImplemented;
         $this->ltoptions = array(
             'url' => litepubl::$site->url,
             'files' => litepubl::$site->files,
-            'idurl' => litepubl::$urlmap->itemrequested['id'],
+            'idurl' => litepubl::$urlmap->item['id'],
             'lang' => litepubl::$site->language,
             'video_width' => litepubl::$site->video_width,
             'video_height' => litepubl::$site->video_height,

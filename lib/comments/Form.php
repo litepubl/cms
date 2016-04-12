@@ -222,8 +222,8 @@ class tcommentform extends tevents {
     public function getpermheader(array $shortpost) {
         $urlmap = litepubl::$urlmap;
         $url = $urlmap->url;
-        $saveitem = $urlmap->itemrequested;
-        $urlmap->itemrequested = $urlmap->getitem($shortpost['idurl']);
+        $saveitem = $urlmap->item;
+        $urlmap->item = $urlmap->getitem($shortpost['idurl']);
         $urlmap->url = $urlmap->itemrequested['url'];
         $post = tpost::i((int)$shortpost['id']);
         $perm = tperm::i($post->idperm);

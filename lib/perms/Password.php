@@ -6,20 +6,24 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\perms;
 
-class tpermpassword extends tperm {
+class Password extends Perm
+ {
 
     protected function create() {
         parent::create();
         $this->adminclass = 'tadminpermpassword';
         $this->data['password'] = '';
-        $this->data['login'] = '';
+        $this->data['solt'] = '';
     }
 
     public function getheader($obj) {
-        if ($this->password == '') return '';
+        if ($this->password) {
         return sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this) , $this->id);
+}return '';
+
+return '';
     }
 
     public function hasperm($obj) {
@@ -32,17 +36,25 @@ class tpermpassword extends tperm {
 
     public function setpassword($p) {
         $p = trim($p);
-        if ($p == '') return false;
-        $this->data['login'] = md5uniq();
-        $this->data['password'] = md5($this->login . litepubl::$secret . $p . litepubl::$options->solt);
+        if ($p) {
+        $this->data['solt'] = md5uniq();
+        $this->data['password'] = $this->hash($p, $this->solt);
         $this->save();
+}
     }
 
+public function hash($password, $solt) {
+return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
+}
+
     public function checkpassword($p) {
-        if ($this->password != md5($this->login . litepubl::$secret . $p . litepubl::$options->solt)) return false;
-        $login = md5rand();
-        $password = md5($login . litepubl::$secret . $this->password . litepubl::$options->solt);
-        $cookie = $login . '.' . $password;
+        if ($this->password != $this->hash($p, $this->solt)) {
+return false;
+}
+
+        $solt = md5rand();
+        $hash = $this->hash($this->password, $solt);
+        $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
         setcookie($this->getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
@@ -50,17 +62,25 @@ class tpermpassword extends tperm {
     }
 
     public function authcookie() {
-        if (litepubl::$options->group == 'admin') return true;
+        if (litepubl::$options->group == 'admin') {
+return true;
+}
+
         $cookiename = $this->getcookiename();
         $cookie = isset($_COOKIE[$cookiename]) ? $_COOKIE[$cookiename] : '';
-        if (($cookie == '') || !strpos($cookie, '.')) return $this->redir();
-        list($login, $password) = explode('.', $cookie);
-        if ($password == md5($login . litepubl::$secret . $this->password . litepubl::$options->solt)) return true;
-        return false;
+        if (!$cookie || !strpos($cookie, '.')) {
+return $this->redir();
+}
+
+        list($solt, $hash) = explode('.', $cookie);
+return $hash == $this->hash($this->password, $solt);
     }
 
     public function auth() {
-        if ($this->authcookie()) return true;
+        if ($this->authcookie()) {
+return true;
+}
+
         return $this->redir();
     }
 
@@ -70,4 +90,4 @@ class tpermpassword extends tperm {
         litepubl::$urlmap->redir($url, 307);
     }
 
-} //class
+}

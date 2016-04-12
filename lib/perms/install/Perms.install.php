@@ -6,11 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\perms;
+use litepubl\view\Lang;
 
-function tpermsInstall($self) {
-    tlocal::usefile('install');
-    $lang = tlocal::i('initgroups');
+function PermsInstall($self) {
+    Lang::usefile('install');
+    $lang = Lang::i('initgroups');
 
     $self->lock();
     $single = new tsinglepassword();
@@ -31,5 +32,5 @@ function tpermsInstall($self) {
     $self->unlock();
 }
 
-function tpermsUninstall($self) {
+function PermsUninstall($self) {
 }

@@ -42,7 +42,7 @@ class tkeywordswidget extends twidget {
     public function getcontent($id, $sidebar) {
         if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel || strbegin(litepubl::$urlmap->url, '/croncron.php') || strend(litepubl::$urlmap->url, '.xml')) return '';
 
-        $id = litepubl::$urlmap->itemrequested['id'];
+        $id = litepubl::$urlmap->item['id'];
         $filename = litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . litepubl::$urlmap->page . '.php';
         if (@file_exists($filename)) {
             $links = file_get_contents($filename);

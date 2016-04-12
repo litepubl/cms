@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\perms;
+use litepubl\view\MainView;
 
-class tsinglepassword extends tperm {
+class Single extends Perm
+ {
     private $password;
     private $checked;
 
@@ -22,22 +24,30 @@ class tsinglepassword extends tperm {
         if (isset($obj->password) && ($p = $obj->password)) {
             return static ::authcookie(static ::encryptpassword($p));
         }
+
         return true;
     }
 
     public static function encryptpassword($p) {
-        return md5(litepubl::$urlmap->itemrequested['id'] . litepubl::$secret . $p . litepubl::$options->solt);
+        return md5(litepubl::$urlmap->item['id'] . litepubl::$secret . $p . litepubl::$options->solt);
     }
 
+public static function hash($password, $solt) {
+return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
+}
+
     public static function getcookiename() {
-        return 'singlepwd_' . litepubl::$urlmap->itemrequested['id'];
+        return 'singlepwd_' . litepubl::$urlmap->item['id'];
     }
 
     public function checkpassword($p) {
-        if ($this->password != static ::encryptpassword($p)) return false;
-        $login = md5rand();
-        $password = md5($login . litepubl::$secret . $this->password . litepubl::$options->solt);
-        $cookie = $login . '.' . $password;
+        if ($this->password != static ::encryptpassword($p)) {
+return false;
+}
+
+        $solt = md5rand();
+        $hash = static::hash($this->password, $solt);
+        $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
         setcookie(static ::getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
@@ -45,29 +55,37 @@ class tsinglepassword extends tperm {
         return true;
     }
 
-    public static function authcookie($p) {
-        if (litepubl::$options->group == 'admin') return true;
+    public static function authcookie($password) {
+        if (litepubl::$options->group == 'admin') {
+return true;
+}
+
         $cookiename = static ::getcookiename();
         $cookie = isset($_COOKIE[$cookiename]) ? $_COOKIE[$cookiename] : '';
-        if (($cookie != '') && strpos($cookie, '.')) {
-            list($login, $password) = explode('.', $cookie);
-            if ($password == md5($login . litepubl::$secret . $p . litepubl::$options->solt)) return true;
-        }
-        return false;
+        if ($cookie && strpos($cookie, '.')) {
+            list($solt, $hash) = explode('.', $cookie);
+return $hash == static::hash($password, $solt);
     }
 
+return false;
+}
+
     public static function auth($id, $p) {
-        if (static ::authcookie($p)) return true;
-        $self = static ::i($id);
-        return $self->getform($p);
+        if (static ::authcookie($p)) {
+return true;
+}
+
+return static ::i($id)->getform($p);
     }
 
     public function getform($p) {
         $this->password = $p;
-        $page = tpasswordpage::i();
+        $page = Page::i();
         $page->perm = $this;
         $result = $page->request(null);
-        if ($this->checked) return true;
+        if ($this->checked) {
+return true;
+}
 
         switch ($result) {
             case 404:
@@ -75,11 +93,12 @@ class tsinglepassword extends tperm {
 
             case 403:
                 return litepubl::$urlmap->forbidden();
-        }
 
-        $html = ttemplate::i()->request($page);
+default:
+        $html = MainView::i()->render($page);
         eval('?>' . $html);
         return false;
+}
     }
 
-} //class
+}

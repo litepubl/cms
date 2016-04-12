@@ -179,8 +179,11 @@ $s);
 if($php) {
 $s = strtr([
 ' litepubl::$' => ' \litepubl::$',
+'(litepubl::$' => '(\litepubl::$',
 'litepubl::$urlmap' => 'litepubl::$router',
 'turlmap::unsub', 'litepubl::$router->unbind',
+'tlocal', 'Lang',
+
 ]);
 }
 

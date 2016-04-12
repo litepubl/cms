@@ -82,9 +82,6 @@ return [
 'appcache_manifest' => 'litepubl\pages\Appcache',
 'tmanifest' => 'litepubl\pages\Manifest',
 'tjsonserver' => 'litepubl\pages\Json',
-'tpasswordpage' => 'litepubl\pages\Password',
-
-
 
 //utils
 'tfiler' => 'litepubl\utils\Filer',
@@ -92,6 +89,18 @@ return [
 'tmailer' => 'litepubl\utils\Mailer',
 'tsmtp' => 'litepubl\utils\Smtp',
 'tlinkgenerator' => 'litepubl\utils\LinkGenerator',
+
+//perms
+'tperm' => 'litepubl\perms\Perm.php',
+'tpermgroups' => 'litepubl\perms\Groups',
+//'tadminpermgroups' => 'litepubl\admin\PermGroups',
+'tperms' => 'litepubl\perms\Perms',
+'tsinglepassword' => 'litepubl\perms\Single',
+'tpermpassword' => 'litepubl\perms\Password',
+'tpasswordpage' => 'litepubl\perms\Page',
+
+
+
 
 //widgets
 'tsidebars' => 'litepubl\widget\Sidebars',
