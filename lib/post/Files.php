@@ -8,8 +8,8 @@
 
 namespace litepubl\post;
 use litepubl\core\litepubl;
-use litepubl\theme\Theme;
-use litepubl\theme\Args;
+use litepubl\view\Theme;
+use litepubl\view\Args;
 
 class Files extends \litepubl\core\Items
 {

@@ -51,6 +51,22 @@ return $this->{'get' . $name}();
         return Meta::i($id);
     }
 
+public function getmainview() {
+return \litepubl\view\MainView::i();
+}
+
+public function gettheme() {
+return \litepubl\view\Theme::i();
+}
+
+public function getusers() {
+return \litepubl\core\Users::i();
+}
+
+public function getuserpages() {
+return \litepubl\pages\Users::i();
+}
+
     public function gettransform(tpost $post) {
         return Transform::i($post);
     }

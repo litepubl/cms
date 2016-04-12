@@ -7,8 +7,11 @@
  */
 
 namespace litepubl\post;
+use litepubl\core\litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Filter;
 
-class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInterface
+class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
     public $childdata;
     public $childtable;
@@ -16,8 +19,8 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     public $syncdata;
     private $aprev;
     private $anext;
-    private $_meta;
-    private $_theme;
+    private $metaInstance;
+    private $themeInstance;
     private $_onid;
 
     public static function i($id = 0) {
@@ -279,9 +282,9 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
             unset($this->_onid);
         }
 
-        if (isset($this->_meta)) {
-            $this->_meta->id = $this->id;
-            $this->_meta->save();
+        if (isset($this->metaInstance)) {
+            $this->metaInstance->id = $this->id;
+            $this->metaInstance->save();
         }
     }
 
@@ -298,8 +301,8 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
 
     public function free() {
         foreach ($this->coinstances as $coinstance) $coinstance->free();
-        if (isset($this->_meta)) $this->_meta->free();
-        unset($this->aprev, $this->anext, $this->_meta, $this->_theme, $this->_onid);
+        if (isset($this->metaInstance)) $this->metaInstance->free();
+        unset($this->aprev, $this->anext, $this->metaInstance, $this->themeInstance, $this->_onid);
         parent::free();
     }
 
@@ -336,8 +339,8 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     }
 
     public function getmeta() {
-        if (!isset($this->_meta)) $this->_meta = $this->factory->getmeta($this->id);
-        return $this->_meta;
+        if (!isset($this->metaInstance)) $this->metaInstance = $this->factory->getmeta($this->id);
+        return $this->metaInstance;
     }
 
     public function Getlink() {
@@ -359,13 +362,15 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     }
 
     public function gettheme() {
-        ttheme::$vars['post'] = $this;
-        if (isset($this->_theme)) {
-            return $this->_theme;
+        if ($this->themeInstance) {
+$this->themeInstance->setvar('post, $this);
+            return $this->themeInstance;
         }
 
-        $this->_theme = isset(ttemplate::i()->view) ? ttemplate::i()->view->theme : tview::getview($this)->theme;
-        return $this->_theme;
+$mainview = $this->factory->mainview;
+        $this->themeInstance = $mainview->schema ? $mainview->schema->theme : Schema::getSchema($this)->theme;
+$this->themeInstance->setvar('post, $this);
+        return $this->themeInstance;
     }
 
     public function parsetml($path) {
@@ -596,7 +601,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
 
     public function gethead() {
         $result = $this->rawhead;
-        ttemplate::i()->ltoptions['idpost'] = $this->id;
+        $this->factory->mainview->ltoptions['idpost'] = $this->id;
         $theme = $this->theme;
         $result.= $theme->templates['head.post'];
         if ($prev = $this->prev) {
@@ -610,7 +615,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
         }
 
         if ($this->hascomm) {
-            tlocal::i('comment');
+            Lang::i('comment');
             $result.= $theme->templates['head.post.rss'];
         }
 
@@ -708,7 +713,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     public function getcontexcerpt($tml_name) {
         ttheme::$vars['post'] = $this;
         //no use self theme because post in other context
-        $theme = ttheme::i();
+        $theme = $this->factory->theme;
         $tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name . '.excerpt';
         return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
     }
@@ -760,7 +765,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     }
 
     public function getcmtcount() {
-        $l = tlocal::i()->ini['comment'];
+        $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
             case 0:
                 return $l[0];
@@ -837,7 +842,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
             $result.= $s;
         } elseif ($page <= $this->commentpages) {
         } else {
-            $result.= tlocal::i()->notfound;
+            $result.= Lang::i()->notfound;
         }
 
         return $result;
@@ -862,7 +867,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
         }
 
         $this->rawcontent = $s;
-        tcontentfilter::i()->filterpost($this, $s);
+        Filter::i()->filterpost($this, $s);
     }
 
     public function update_revision($value) {
@@ -875,7 +880,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
     }
 
     public function updatefiltered() {
-        tcontentfilter::i()->filterpost($this, $this->rawcontent);
+        Filter::i()->filterpost($this, $this->rawcontent);
     }
 
     public function getrawcontent() {
@@ -971,7 +976,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
                 return litepubl::$site->author;
             }
         } else {
-            $users = tusers::i();
+            $users = $this->factory->users;
             if (!$users->itemexists($id)) return '';
             $item = $users->getitem($id);
             if (!$link || ($item['website'] == '')) return $item['name'];
@@ -984,7 +989,7 @@ class Post extends \litepubl\core\Item implements \litepubl\theme\ControlerInter
         if ($id <= 1) {
             return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
         } else {
-            $pages = tuserpages::i();
+            $pages = $this->factory->userpages;
             if (!$pages->itemexists($id)) return '';
             $pages->id = $id;
             if ($pages->url == '') return '';
