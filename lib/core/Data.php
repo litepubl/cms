@@ -42,7 +42,12 @@ class Data {
     }
 
     protected function create() {
+$this->createData();
     }
+
+//method to override in traits when in base class declared create method
+    protected function createData() {
+}
 
     public function __get($name) {
         if (method_exists($this, $get = 'get' . $name)) {

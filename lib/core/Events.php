@@ -33,6 +33,7 @@ class Events extends Data {
     }
 
     protected function create() {
+parent::create();
         $this->addmap('events', array());
         $this->addmap('coclasses', array());
     }

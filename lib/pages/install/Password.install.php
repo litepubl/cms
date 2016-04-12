@@ -6,12 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
+use litepubl\view\Lang;
 
-function tpasswordpageInstall($self) {
+function PasswordInstall($self) {
     litepubl::$urlmap->delete('/check-password.php');
-    tlocal::usefile('install');
-    $lang = tlocal::i('passwordpage');
+    Lang::usefile('install');
+    $lang = Lang::i('passwordpage');
 
     $form = '<h3>$lang.formtitle</h3>
   <form name="form" action="" method="post" >
@@ -32,11 +33,10 @@ function tpasswordpageInstall($self) {
     $self->data['invalidpassword'] = $lang->invalidpassword;
     $self->save();
 
-    trobotstxt::i()->AddDisallow('/check-password.php');
-
-    litepubl::$urlmap->addget('/check-password.php', get_class($self));
+    RobotsTxt::i()->AddDisallow($self->url);
+    litepubl::$urlmap->addget($self->url, get_class($self));
 }
 
-function tpasswordpageUninstall($self) {
-    litepubl::$urlmap->delete('/check-password.php');
+function PasswordUninstall($self) {
+    litepubl::$urlmap->umbind($self);
 }

@@ -82,6 +82,7 @@ return [
 'appcache_manifest' => 'litepubl\pages\Appcache',
 'tmanifest' => 'litepubl\pages\Manifest',
 'tjsonserver' => 'litepubl\pages\Json',
+'tpasswordpage' => 'litepubl\pages\Password',
 
 
 

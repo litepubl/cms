@@ -6,40 +6,53 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
 
-class tpasswordpage extends tevents_itemplate implements itemplate {
+class Password extends \litepubl\core\Events implements \litepubl\view\ViewInterface
+{
     public $perm;
+public $url;
     private $formresult;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
         $this->basename = 'passwordpage';
         $this->formresult = '';
+$this->url = '/check-password.php';
         $this->data['form'] = '';
         $this->data['title'] = '';
     }
 
     private function checkspam($s) {
-        if (!($s = @base64_decode($s))) return false;
+        if (!($s = @base64_decode($s))) {
+return false;
+}
+
         $sign = 'megaspamer';
-        if (!strbegin($s, $sign)) return false;
+        if (!strbegin($s, $sign)) {
+return false;
+}
+
         $timekey = (int)substr($s, strlen($sign));
         return time() < $timekey;
     }
 
     public function request($arg) {
         $this->cache = false;
-        if (!isset($_POST) || !count($_POST)) return;
+        if (!isset($_POST) || !count($_POST)) {
+return;
+}
 
         $antispam = isset($_POST['antispam']) ? $_POST['antispam'] : '';
-        if (!$this->checkspam($antispam)) return 403;
+        if (!$this->checkspam($antispam)) {
+return 403;
+}
+
         $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-        if ($password == '') return;
+        if (!$password) {
+return;
+}
+
         if (!isset($this->perm)) {
             $idperm = isset($_GET['idperm']) ? (int)$_GET['idperm'] : 0;
             $perms = tperms::i();
@@ -69,4 +82,4 @@ class tpasswordpage extends tevents_itemplate implements itemplate {
         return $result;
     }
 
-} // class
+}

@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class SingleItems extnds Items
+class SingleItems extends Items
 {
     public static $instances;
     public $copyprops;

@@ -11,8 +11,8 @@ namespace litepubl\view;
 trait EmptyViewTrait 
 {
 
-    protected function create() {
-        parent::create();
+    protected function createData() {
+        parent::createData();
         $this->data['idview'] = 1;
     }
 

@@ -11,8 +11,8 @@ namespace litepubl\view;
 trait ViewTrait
 {
 
-    protected function create() {
-        parent::create();
+    protected function createData() {
+        parent::createData();
         $this->data['idview'] = 1;
         $this->data['keywords'] = '';
         $this->data['description'] = '';
