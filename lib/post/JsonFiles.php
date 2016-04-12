@@ -6,13 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
 
-class tjsonfiles extends tevents {
+class JsonFiles extends \litepubl\core\Events
+ {
 
-    public static function i() {
-        return getinstance(__class__);
-    }
     protected function create() {
         parent::create();
         $this->addevents('uploaded', 'onprops');
@@ -38,7 +36,7 @@ class tjsonfiles extends tevents {
 
         $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
-        $files = tfiles::i();
+        $files = Files::i();
         $result = array(
             'count' => (int)$files->db->getcount(" parent = 0 $where") ,
             'files' => array()
@@ -68,7 +66,7 @@ class tjsonfiles extends tevents {
         $from = $page * $perpage;
         $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
 
-        $files = tfiles::i();
+        $files = Files::i();
         $db = $files->db;
 
         $result = $db->res2items($db->query("select * from $files->thistable where parent = 0 $where order by id desc limit $from, $perpage"));
@@ -87,7 +85,7 @@ class tjsonfiles extends tevents {
     public function files_setprops(array $args) {
         if (!litepubl::$options->hasgroup('author')) return $this->forbidden();
         $id = (int)$args['idfile'];
-        $files = tfiles::i();
+        $files = Files::i();
         if (!$files->itemexists($id)) return $this->forbidden();
         $item = $files->getitem($id);
         $item['title'] = tcontentfilter::escape(tcontentfilter::unescape($args['title']));
@@ -122,16 +120,18 @@ class tjsonfiles extends tevents {
         litepubl::$options->user = null;
         if (!$this->canupload()) return $this->forbidden();
 
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $id = $parser->uploadfile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);
         if (isset($_POST['idperm'])) {
             $idperm = (int)$_POST['idperm'];
-            if ($idperm > 0) tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
+            if ($idperm > 0) {
+PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
+}
         }
 
         $this->uploaded($id);
 
-        $files = tfiles::i();
+        $files = Files::i();
         $item = $files->db->getitem($id);
         $files->items[$id] = $item;
 

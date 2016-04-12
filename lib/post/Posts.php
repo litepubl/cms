@@ -7,8 +7,9 @@
  */
 
 namespace litepubl\post;
+use litepubl\utils\LinkGenerator;
 
-class Posts extends \litepubl\core\Iitems
+class Posts extends \litepubl\core\Items
  {
     const POSTCLASS = 'litepubl\post\Post';
     public $itemcoclasses;
@@ -185,7 +186,7 @@ class Posts extends \litepubl\core\Iitems
             if (isset($views->defaults['post'])) $post->id_view = $views->defaults['post'];
         }
 
-        $post->url = tlinkgenerator::i()->addurl($post, $post->schemalink);
+        $post->url = LinkGenerator::i()->addurl($post, $post->schemalink);
         $id = $post->create_id();
 
         $this->updated($post);
@@ -198,7 +199,7 @@ class Posts extends \litepubl\core\Iitems
 
     public function edit(tpost $post) {
         $this->beforechange($post);
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $linkgen->editurl($post, $post->schemalink);
         if ($post->posted <= time()) {
             if ($post->status == 'future') $post->status = 'published';

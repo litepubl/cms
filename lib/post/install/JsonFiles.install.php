@@ -6,10 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\post;
+use litepubl\pages\Json;
 
-function tjsonfilesInstall($self) {
-    $json = tjsonserver::i();
+function JsonFilesInstall($self) {
+    $json = Json::i();
     $json->lock();
     $json->addevent('files_getpost', get_class($self) , 'files_getpost');
     $json->addevent('files_getpage', get_class($self) , 'files_getpage');
@@ -18,6 +19,6 @@ function tjsonfilesInstall($self) {
     $json->unlock();
 }
 
-function tjsonfilesUninstall($self) {
-    tjsonserver::i()->unbind($self);
+function JsonFilesUninstall($self) {
+    Json::i()->unbind($self);
 }

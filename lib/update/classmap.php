@@ -54,6 +54,7 @@ return [
 'tfiles' => 'litepubl\post\Files',
 'tfileitems' => 'litepubl\post\FileItems',
 'tprivatefiles' => 'litepubl\post\PrivateFiles',
+'tjsonfiles' => 'litepubl\post\JsonFiles',
 'tdomrss' => 'litepubl\post\DomRss',
 'trss' => 'litepubl\post\Rss',
 'tnode' => 'litepubl\post\Node',
