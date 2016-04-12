@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\Schema;
 use litepubl\view\Filter;
 use litepubl\utils\LinkGenerator;

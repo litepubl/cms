@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 
 class Pinger extends \litepubl\core\Events
  {

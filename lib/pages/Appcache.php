@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\Theme;
 
 class Appcache extends \litepubl\core\Items
@@ -25,7 +24,7 @@ class Appcache extends \litepubl\core\Items
         if (!in_array($value, $this->items)) {
             $this->items[] = $value;
             $this->save();
-            litepubl::$urlmap->setexpired($this->idurl);
+            \litepubl::$urlmap->setexpired($this->idurl);
             $this->added($value);
         }
     }

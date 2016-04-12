@@ -6,17 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
 
-class tmanifest extends tevents {
-
-    static function i() {
-        return getinstance(__class__);
-    }
+class Manifest extends \litepubl\core\Events
+ {
 
     public function request($arg) {
         $site = litepubl::$site;
-        $s = '<?php turlmap::sendxml(); ?>';
+        $s = '<?php \litepubl\core\Router::sendxml(); ?>';
         switch ($arg) {
             case 'manifest':
                 $s.= '<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">' . '<options>' . '<clientType>WordPress</clientType>' . '<supportsKeywords>Yes</supportsKeywords>' . '<supportsGetTags>Yes</supportsGetTags>' . '<supportsNewCategories>Yes</supportsNewCategories>' . '</options>' .
@@ -92,4 +89,4 @@ class tmanifest extends tevents {
         return $s;
     }
 
-} //class
+}

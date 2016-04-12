@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\Lang;
 
 class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface

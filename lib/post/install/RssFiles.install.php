@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 use litepubl\widget\Meta as MetaWidget;
 
 function RssFilesInstall($self) {

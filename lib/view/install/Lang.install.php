@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\view;
-use litepubl\core\litepubl;
 
 function LangInstall($self) {
     lang::$self = $self;

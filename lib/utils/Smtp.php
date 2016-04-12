@@ -1,7 +1,6 @@
 <?php
 
 namespace litepubl\utils;
-use litepubl\core\litepubl;
 
 class Smtp extends \litepubl\core\Events
 {

@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\core\CoEvents;
 use litepubl\post\Posts;
 use litepubl\post\Post;

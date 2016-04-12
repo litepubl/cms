@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\view;
-use litepubl\core\litepubl;
 
 function JsMergerInstall($self) {
     $dir = litepubl::$paths->files . 'js';

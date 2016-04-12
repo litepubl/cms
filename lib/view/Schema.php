@@ -29,7 +29,7 @@ use \litepubl\core\DataStorageTrait;
     }
 
     public static function newitem($id) {
-        return \litepubl\core\litepubl::$classes->newitem(static ::getinstancename() , get_called_class() , $id);
+        return litepubl::$classes->newitem(static ::getinstancename() , get_called_class() , $id);
     }
 
     public static function getinstancename() {

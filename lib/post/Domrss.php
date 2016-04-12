@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 
 class DomRss extends \domDocument {
     public $items;

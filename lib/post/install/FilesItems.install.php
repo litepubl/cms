@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 
 function FilesItemsInstall($self) {
     $manager = $self->db->man;

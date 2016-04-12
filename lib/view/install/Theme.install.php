@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\view;
-use litepubl\core\litepubl;
 
 function ThemeInstall($self) {
     $dir = litepubl::$paths->data . 'themes';

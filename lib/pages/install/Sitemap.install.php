@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\core\Cron;
 use litepubl\widget\Meta;
 

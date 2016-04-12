@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 use litepubl\core\Cron;
 use litepubl\widget\Widgets;
 

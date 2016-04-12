@@ -8,9 +8,9 @@
 
 namespace litepubl\post;
 
-class Archives extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
-use \litepubl\theme\ControlerTrait;
+use \litepubl\view\ViewTrait;
 
     public $date;
     private $_idposts;

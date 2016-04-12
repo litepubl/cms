@@ -8,10 +8,9 @@
 
 namespace litepubl\pages;
 use litepubl\core\Users as CoreUsers;
-use litepubl\core\litepubl;
-use litepubl\theme\Filter;
+use litepubl\view\Filter;
 
-class Users extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
     public static $userprops = array(
         'email',

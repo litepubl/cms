@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 use litepubl\utils\Perm;
 
 class PrivateFiles extends \litepubl\core\Events

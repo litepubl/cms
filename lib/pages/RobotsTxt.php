@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 
 class RobotsTxt extends \litepubl\core\Items
  {

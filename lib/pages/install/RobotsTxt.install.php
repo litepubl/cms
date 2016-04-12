@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 
 function RobotsTxtInstall($self) {
     $self->lock();

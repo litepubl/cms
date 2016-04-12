@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\MainView;
 
 class Redirector extends \litepubl\core\Items

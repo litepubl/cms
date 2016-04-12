@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 use litepubl\tag\Categories;
 use litepubl\tag\Tags;
 use litepubl\comments\Comments;

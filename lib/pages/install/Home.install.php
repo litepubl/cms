@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;

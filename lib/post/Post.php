@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\post;
-use litepubl\core\litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Filter;
 
@@ -121,7 +120,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public function getfactory() {
-        return \litepubl\core\litepubl::$classes->getfactory($this);
+        return litepubl::$classes->getfactory($this);
     }
 
     public function __get($name) {

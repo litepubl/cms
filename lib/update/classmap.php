@@ -79,6 +79,10 @@ return [
 'tforbidden' => 'litepubl\pages\Forbidden',
 'tnotfound404' => 'litepubl\pages\Notfound404',
 'appcache_manifest' => 'litepubl\pages\Appcache',
+'tmanifest' => 'litepubl\pages\Manifest',
+'tjsonserver' => 'litepubl\pages\Json',
+
+
 
 //utils
 'tfiler' => 'litepubl\utils\Filer',

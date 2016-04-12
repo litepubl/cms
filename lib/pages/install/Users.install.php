@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 
 function UsersInstall($self) {
         $manager = $self->db->man;

@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\view;
-use litepubl\core\litepubl;
 use litepubl\post\Categories;
 use litepubl\post\Files;
 

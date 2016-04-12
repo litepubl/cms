@@ -1,7 +1,6 @@
 <?php
 
 namespace litepubl\pages;
-use litepubl\core\litepubl;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\utils\LinkGenerator;

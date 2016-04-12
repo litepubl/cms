@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\view;
-use litepubl\core\litepubl;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\pages\Users as UserPages;

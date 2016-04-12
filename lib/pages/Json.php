@@ -6,14 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\pages;
 
-class tjsonserver extends tevents {
+use litepubl\utils\Filer;
+
+class Json extends \litepubl\core\Events
+ {
     public $debug;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();

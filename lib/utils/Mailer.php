@@ -7,7 +7,6 @@
  */
 
 namespace litepubl\utils;
-use litepubl\core\litepubl;
 
 class Mailer
  {
