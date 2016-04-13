@@ -8,7 +8,7 @@
 
 namespace litepubl\widget;
 
-class tclasswidget extends Widget
+class Depended extends Widget
  {
     private $item;
 

@@ -6,14 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class tmetawidget extends twidget {
+class Meta extends Widget
+ {
     public $items;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -24,7 +24,7 @@ class tmetawidget extends twidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'subscribe');
+        return Lang::get('default', 'subscribe');
     }
 
     public function add($name, $url, $title) {
@@ -45,10 +45,10 @@ class tmetawidget extends twidget {
 
     public function getcontent($id, $sidebar) {
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->getwidgetitem('meta', $sidebar);
         $metaclasses = $theme->getwidgettml($sidebar, 'meta', 'classes');
-        $args = targs::i();
+        $args = new Args();
         foreach ($this->items as $name => $item) {
             if (!$item['enabled']) continue;
             $args->add($item);

@@ -118,11 +118,22 @@ return [
 'tcommontagswidget' => 'litepubl\widget\CommonTags',
 'tarchiveswidget' => 'litepubl\widget\Archives',
 'tcommentswidget' => 'litepubl\widget\Comments',
-'tclasswidget' => 'litepubl\widget\
+'tcustomwidget' => 'litepubl\widget\Custom',
+'tlinkswidget' => 'litepubl\widget\Links',
+'tmetawidget' => 'litepubl\widget\Meta',
+'torderwidget' => 'litepubl\widget\Order',
+'tpostswidget' => 'litepubl\wdiget\Posts',
+'tclasswidget' => 'litepubl\widget\Depended',
 'tsidebars' => 'litepubl\widget\Sidebars',
 
 //admin
 'iadmin' => 'litepubl\admin\AdminInterface',
+
+//xmlrpc
+'TXMLRPCParser' => 'litepubl\xmlrpc\Parser',
+'TXMLRPC' => 'litepubl\xmlrpc\Server',
+'TXMLRPCAbstract' => 'litepubl\xmlrpc\Common',
+'TXMLRPCAction' => 'litepubl\xmlrpc\Action',
 
 
 ];

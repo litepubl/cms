@@ -6,16 +6,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class tlinkswidget extends twidget {
+class Links extends Widget
+ {
     public $items;
     public $autoid;
     public $redirlink;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -30,17 +30,17 @@ class tlinkswidget extends twidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'links');
+        return Lang::get('default', 'links');
     }
 
     public function getcontent($id, $sidebar) {
         if (count($this->items) == 0) return '';
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->getwidgetitem('links', $sidebar);
         $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . 'id=';
         $url = litepubl::$site->url;
-        $args = targs::i();
+        $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
         $args->icon = '';
@@ -97,4 +97,4 @@ class tlinkswidget extends twidget {
         return '<?php litepubl::$urlmap->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
     }
 
-} //class
+}

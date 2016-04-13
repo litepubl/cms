@@ -6,14 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-class TXMLRPCAction extends titems {
+class Actionv extends \litepubl\core\Items
+ {
     public $actions;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -131,4 +128,4 @@ class TXMLRPCAction extends titems {
         $this->save();
     }
 
-} //class
+}

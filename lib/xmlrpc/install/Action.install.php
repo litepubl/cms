@@ -6,17 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCActionInstall($self) {
-    $caller = TXMLRPC::i();
+function ActionInstall($self) {
+    $caller = Server::i();
     $caller->lock();
     $caller->add('litepublisher.action.send', 'send', get_class($self));
     $caller->add('litepublisher.action.confirm', 'confirm', get_class($self));
     $caller->unlock();
 }
 
-function TXMLRPCActionUninstall($self) {
-    $caller = TXMLRPC::i();
+function ActionUninstall($self) {
+    $caller = Server::i();
     $caller->deleteclass(get_class($self));
 }

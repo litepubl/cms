@@ -6,14 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
 
-class tcustomwidget extends twidget {
+class Custom extends Widget
+ {
     public $items;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -27,7 +25,7 @@ class tcustomwidget extends twidget {
         if (!isset($this->items[$id])) return '';
         $item = $this->items[$id];
         if ($item['template'] == '') return $item['content'];
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
@@ -40,7 +38,7 @@ class tcustomwidget extends twidget {
     }
 
     public function add($idview, $title, $content, $template) {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         $widgets->lock();
         $id = $widgets->addext($this, $title, $template);
         $this->items[$id] = array(
@@ -49,7 +47,7 @@ class tcustomwidget extends twidget {
             'template' => $template
         );
 
-        $sidebars = tsidebars::i($idview);
+        $sidebars = Sidebars::i($idview);
         $sidebars->add($id);
         $widgets->unlock();
         $this->save();
@@ -65,7 +63,7 @@ class tcustomwidget extends twidget {
         );
         $this->save();
 
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         $widgets->items[$id]['title'] = $title;
         $widgets->save();
         $this->expired($id);
@@ -77,7 +75,7 @@ class tcustomwidget extends twidget {
             unset($this->items[$id]);
             $this->save();
 
-            $widgets = twidgets::i();
+            $widgets = Widgets::i();
             $widgets->delete($id);
             $this->deleted($id);
         }

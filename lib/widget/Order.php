@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
 
-class torderwidget extends twidget {
+class Order extends Widget
+ {
 
     protected function create() {
         parent::create();
@@ -29,4 +31,4 @@ class torderwidget extends twidget {
         ) , $order);
     }
 
-} //class
+}

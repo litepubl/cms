@@ -6,13 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\post\Posts as PostItems;
 
-class tpostswidget extends twidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Posts extends Widget
+ {
 
     protected function create() {
         parent::create();
@@ -23,13 +23,13 @@ class tpostswidget extends twidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'recentposts');
+        return Lang::get('default', 'recentposts');
     }
 
     public function getcontent($id, $sidebar) {
-        $posts = tposts::i();
+        $posts = PostsItems::i();
         $list = $posts->getpage(0, 1, $this->maxcount, false);
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getpostswidgetcontent($list, $sidebar, '');
     }
 

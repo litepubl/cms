@@ -36,8 +36,8 @@ return '';
         $theme = Theme::i();
         $tml = $theme->getwidgetitem('comments', $sidebar);
         $url = litepubl::$site->url;
-        $args = targs::i();
-        $args->onrecent = tlocal::get('comment', 'onrecent');
+        $args = new Args();
+        $args->onrecent = Lang::get('comment', 'onrecent');
         foreach ($recent as $item) {
             $args->add($item);
             $args->link = $url . $item['posturl'];
