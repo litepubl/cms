@@ -6,17 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Schema;
+use litepubl\view\Theme;
 
-class twidgets extends titems_storage {
+class Widgets extends \litepubl\core\Items
+{
+use litepubl\core\DataStorageTrait;
+
     public $classes;
     public $currentsidebar;
     public $idwidget;
     public $idurlcontext;
-
-    public static function i($id = null) {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         $this->dbversion = false;
@@ -195,13 +196,13 @@ class twidgets extends titems_storage {
         return $result;
     }
 
-    private function getwidgets($context, tview $view, $sidebar) {
-        $theme = $view->theme;
-        if (($view->id > 1) && !$view->customsidebar) {
-            $view = tview::i(1);
+    private function getwidgets($context, Schema $schema, $sidebar) {
+        $theme = $schema->theme;
+        if (($schema->id > 1) && !$schema->customsidebar) {
+            $schema = Schema::i(1);
         }
 
-        $items = isset($view->sidebars[$sidebar]) ? $view->sidebars[$sidebar] : array();
+        $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : array();
 
         $subitems = $this->getsubitems($context, $sidebar);
         $items = $this->joinitems($items, $subitems);
@@ -287,7 +288,7 @@ class twidgets extends titems_storage {
             } else {
                 switch ($cachetype) {
                     case 'cache':
-                        $content = twidgetscache::i()->getcontent($id, $sidebar, false);
+                        $content = Cache::i()->getcontent($id, $sidebar, false);
                         break;
 
 
@@ -318,17 +319,17 @@ class twidgets extends titems_storage {
     }
 
     public function getajax($id, $sidebar) {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
         $content = "<!--widgetcontent-$id-->";
         return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
     public function getinline($id, $sidebar) {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
         if ('cache' == $this->items[$id]['cache']) {
-            $cache = twidgetscache::i();
+            $cache = Cache::i();
             $content = $cache->getcontent($id, $sidebar);
         } else {
             $widget = $this->getwidget($id);
@@ -347,7 +348,7 @@ class twidgets extends titems_storage {
             litepubl::$urlmap->cache->set($filename, $content);
         }
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
     }
 
@@ -390,9 +391,9 @@ class twidgets extends titems_storage {
         $sidebar = static ::getget('sidebar');
         $this->idurlcontext = static ::getget('idurl');
         if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) return $this->error_request('Invalid params');
-        $themename = isset($_GET['themename']) ? trim($_GET['themename']) : tview::i(1)->themename;
-        if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = tviews::i(1)->themename;
-        $theme = ttheme::getinstance($themename);
+        $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
+        if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = Schema::i(1)->themename;
+        $theme = Theme::getinstance($themename);
 
         try {
             $result = $this->getwidgetcontent($id, $sidebar);
@@ -411,7 +412,7 @@ class twidgets extends titems_storage {
 
         switch ($this->items[$id]['cache']) {
             case 'cache':
-                $cache = twidgetscache::i();
+                $cache = Cache::i();
                 $result = $cache->getcontent($id, $sidebar);
                 break;
 

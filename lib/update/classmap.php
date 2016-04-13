@@ -111,6 +111,11 @@ return [
 
 
 //widgets
+'twidget' => 'litepubl\widget\Widget',
+'twidgets' => 'litepubl\widget\Widgets',
+'twidgetscache' => 'litepubl\widget\Cache',
+
+
 'tsidebars' => 'litepubl\widget\Sidebars',
 
 //admin

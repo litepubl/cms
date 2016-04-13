@@ -6,14 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
 
-class twidgetscache extends titems {
+class Cache extends litepubl\core\Items
+{
     private $modified;
-
-    public static function i($id = null) {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         $this->dbversion = false;
@@ -22,12 +20,12 @@ class twidgetscache extends titems {
     }
 
     public function getbasename() {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return 'widgetscache.' . $theme->name;
     }
 
     public function load() {
-        if ($data = litepubl::$storage->loaddata(litepubl::$paths->cache . $this->getbasename())) {
+        if ($data = litepubl::$cache->get($this->getbasename())) {
             $this->data = $data;
             $this->afterload();
             return true;
@@ -38,19 +36,18 @@ class twidgetscache extends titems {
 
     public function savemodified() {
         if ($this->modified) {
-            litepubl::$storage->savedata(litepubl::$paths->cache . $this->getbasename() , $this->data);
-        }
-
         $this->modified = false;
+            litepubl::$cache->set($this->getbasename() , $this->data);
+        }
     }
 
     public function save() {
         if (!$this->modified) {
+            $this->modified = true;
             litepubl::$urlmap->onclose = array(
                 $this,
                 'savemodified'
             );
-            $this->modified = true;
         }
     }
 
@@ -60,7 +57,7 @@ class twidgetscache extends titems {
     }
 
     public function setcontent($id, $sidebar, $onlybody = true) {
-        $widget = twidgets::i()->getwidget($id);
+        $widget = Widgets::i()->getwidget($id);
 
         if ($onlybody) {
             $result = $widget->getcontent($id, $sidebar);
@@ -85,4 +82,5 @@ class twidgetscache extends titems {
         $this->modified = false;
     }
 
-} //class
+}
+ //class

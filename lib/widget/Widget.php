@@ -6,9 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
+use litepubl\view\Schema;
 
-class twidget extends tevents {
+class Widget extends \litepubl\core\Events
+ {
     public $id;
     public $template;
     protected $adminclass;
@@ -23,9 +27,9 @@ class twidget extends tevents {
     }
 
     public function addtosidebar($sidebar) {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         $id = $widgets->add($this);
-        $sidebars = tsidebars::i();
+        $sidebars = Sidebars::i();
         $sidebars->insert($id, false, $sidebar, -1);
 
         litepubl::$urlmap->clearcache();
@@ -33,29 +37,29 @@ class twidget extends tevents {
     }
 
     protected function getadmin() {
-        if (($this->adminclass != '') && class_exists($this->adminclass)) {
+        if ($this->adminclass && class_exists($this->adminclass)) {
             $admin = getinstance($this->adminclass);
             $admin->widget = $this;
             return $admin;
         }
+
         $this->error(sprintf('The "%s" admin class not found', $this->adminclass));
     }
 
     public function getwidget($id, $sidebar) {
-        ttheme::$vars['widget'] = $this;
+$vars = new Vars();
+$vars->widget = $this;
+
         try {
             $title = $this->gettitle($id);
             $content = $this->getcontent($id, $sidebar);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             litepubl::$options->handexception($e);
             return '';
         }
-
-        $theme = ttheme::i();
-        $result = $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
-        unset(ttheme::$vars['widget']);
-        return $result;
+        $theme = Theme::i();
+return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
     }
 
     public function getdeftitle() {
@@ -64,7 +68,7 @@ class twidget extends tevents {
 
     public function gettitle($id) {
         if (!isset($id)) $this->error('no id');
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         if (isset($widgets->items[$id])) {
             return $widgets->items[$id]['title'];
         }
@@ -72,7 +76,7 @@ class twidget extends tevents {
     }
 
     public function settitle($id, $title) {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         if (isset($widgets->items[$id]) && ($widgets->items[$id]['title'] != $title)) {
             $widgets->items[$id]['title'] = $title;
             $widgets->save();
@@ -84,17 +88,14 @@ class twidget extends tevents {
     }
 
     public static function getcachefilename($id) {
-        $theme = ttheme::i();
-        if ($theme->name == '') {
-            $theme = tview::i()->theme;
-        }
+        $theme = Theme::context();
         return sprintf('widget.%s.%d.php', $theme->name, $id);
     }
 
     public function expired($id) {
         switch ($this->cache) {
             case 'cache':
-                twidgetscache::i()->expired($id);
+                Cache::i()->expired($id);
                 break;
 
 
@@ -107,17 +108,20 @@ class twidget extends tevents {
     }
 
     public static function findsidebar($id) {
-        $view = tview::i();
-        foreach ($view->sidebars as $i => $sidebar) {
+        $schema = Schema::i();
+        foreach ($schema->sidebars as $i => $sidebar) {
             foreach ($sidebar as $item) {
-                if ($id == $item['id']) return $i;
+                if ($id == $item['id']) {
+return $i;
+}
             }
         }
+
         return 0;
     }
 
     public function expire() {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         foreach ($widgets->items as $id => $item) {
             if ($this instanceof $item['class']) $this->expired($id);
         }
@@ -126,8 +130,9 @@ class twidget extends tevents {
     public function getcontext($class) {
         if (litepubl::$urlmap->context instanceof $class) return litepubl::$urlmap->context;
         //ajax
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         return litepubl::$urlmap->getidcontext($widgets->idurlcontext);
     }
 
-} //class
+}
+ //class

@@ -6,8 +6,8 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
 
-function twidgetUninstall($self) {
-    twidgets::i()->deleteclass(get_class($self));
+function WidgetUninstall($self) {
+    Widgets::i()->deleteclass(get_class($self));
 }

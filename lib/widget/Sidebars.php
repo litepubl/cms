@@ -7,8 +7,8 @@
  */
 
 namespace litepubl\widget;
-use litepubl\theme\Schema;
-use litepubl\theme\Schemes;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
 
 class Sidebars extends \litepubl\core\Data
  {

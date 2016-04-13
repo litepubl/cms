@@ -6,11 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\pages\RobotsTxt;
 
-function twidgetsInstall($self) {
+function WidgetsInstall($self) {
     litepubl::$urlmap->addget('/getwidget.htm', get_class($self));
-    $robot = trobotstxt::i();
+    $robot  = RobotsTxt::i();
     $robot->AddDisallow('/getwidget.htm');
 
     $xmlrpc = TXMLRPC::i();
@@ -19,7 +20,7 @@ function twidgetsInstall($self) {
     install_std_widgets($self);
 }
 
-function twidgetsUninstall($self) {
+function WidgetsUninstall($self) {
     turlmap::unsub($self);
     $xmlrpc = TXMLRPC::i();
     $xmlrpc->deleteclass(get_class($self));
@@ -27,26 +28,26 @@ function twidgetsUninstall($self) {
 
 function install_std_widgets($widgets) {
     $widgets->lock();
-    $sidebars = tsidebars::i();
+    $sidebars = Sidebars::i();
 
-    $id = $widgets->add(tcategorieswidget::i());
+    $id = $widgets->add(Cats::i());
     $sidebars->insert($id, 'inline', 0, -1);
 
-    $id = $widgets->add(ttagswidget::i());
+    $id = $widgets->add(Tags::i());
 
-    $id = $widgets->add(tarchiveswidget::i());
+    $id = $widgets->add(Archives::i());
     $sidebars->insert($id, 'inline', 0, -1);
 
-    $id = $widgets->add(tlinkswidget::i());
+    $id = $widgets->add(Links::i());
     $sidebars->insert($id, 'inline', 0, -1);
 
-    $id = $widgets->add(tpostswidget::i());
+    $id = $widgets->add(Posts::i());
     $sidebars->insert($id, 'inline', 1, -1);
 
-    $id = $widgets->add(tcommentswidget::i());
+    $id = $widgets->add(Comments::i());
     $sidebars->insert($id, true, 1, -1);
 
-    $id = $widgets->add(tmetawidget::i());
+    $id = $widgets->add(Meta::i());
     $sidebars->insert($id, 'inline', 1, -1);
 
     $widgets->unlock();

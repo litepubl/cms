@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
 
-function twidgetscacheInstall($self) {
+function CacheInstall($self) {
     litepubl::$urlmap->onclearcache = $self->onclearcache;
 }
 
-function twidgetscacheUninstall($self) {
+function CacheUninstall($self) {
     turlmap::unsub($self);
 }
