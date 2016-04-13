@@ -6,13 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\view\Lang;
 
-class tcommentspool extends tpoolitems {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Pool extends \litepubl\core\Pool
+{
 
     protected function create() {
         parent::create();
@@ -25,7 +23,7 @@ class tcommentspool extends tpoolitems {
     }
 
     public function getlangcount($count) {
-        $l = tlocal::i()->ini['comment'];
+        $l = Lang::i()->ini['comment'];
         switch ($count) {
             case 0:
                 return $l[0];

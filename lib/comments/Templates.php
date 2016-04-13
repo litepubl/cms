@@ -6,13 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\post\Post;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+use litepubl\view\Args;
 
-class ttemplatecomments extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Templates extends \litepubl\core\Events
+ {
 
     protected function create() {
         parent::create();
@@ -22,19 +23,19 @@ class ttemplatecomments extends tevents {
     public function getcomments($idpost) {
         $result = '';
         $idpost = (int)$idpost;
-        $post = tpost::i($idpost);
-        $comments = tcomments::i($idpost);
-        $lang = tlocal::i('comment');
+        $post = Post::i($idpost);
+        $comments = Comments::i($idpost);
+        $lang = Lang::i('comment');
         $list = $comments->getcontent();
 
         $theme = $post->theme;
-        $args = new targs();
+        $args = new Args();
         $args->count = $post->cmtcount;
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.comments.count'], $args);
         $result.= $list;
 
         if ((litepubl::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
-            $pingbacks = tpingbacks::i($post->id);
+            $pingbacks = Pingbacks::i($post->id);
             $result.= $pingbacks->getcontent();
         }
 
@@ -46,12 +47,12 @@ class ttemplatecomments extends tevents {
         $args->postid = $post->id;
         $args->antispam = base64_encode('superspamer' . strtotime("+1 hour"));
 
-        $cm = tcommentmanager::i();
+        $cm = Manager::i();
 
         // if user can see hold comments
-        $result.= sprintf('<?php if (litepubl\litepubl::$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+        $result.= sprintf('<?php if (\litepubl:$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
 
-        $holdmesg = '<?php if ($ismoder = litepubl\litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+        $holdmesg = '<?php if ($ismoder = \litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
         //hide template hold comments in html comment
         '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -104,7 +105,7 @@ class ttemplatecomments extends tevents {
     }
 
     public function getmesg($k1, $k2) {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
         if ($k2) {
             $result.= "\n" . $theme->templates['content.post.templatecomments.form.mesg.' . $k2];
@@ -120,7 +121,7 @@ class ttemplatecomments extends tevents {
     }
 
     public function getjs($confirmcomment, $authstatus) {
-        $cm = tcommentmanager::i();
+        $cm = Manager::i();
         $params = array(
             'confirmcomment' => $confirmcomment,
             'comuser' => 'comuser' == $authstatus,
@@ -129,10 +130,10 @@ class ttemplatecomments extends tevents {
             'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
         );
 
-        $args = new targs();
+        $args = new Args();
         $args->params = json_encode($params);
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
 

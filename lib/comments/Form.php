@@ -6,14 +6,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\view\Lang;
+use litepubl\view\Vars;
+use litepubl\view\Args;
+use litepubl\view\Filter;
+use litepubl\post\Post;
+use litepubl\perms\Perm;
+use litepubl\core\Users;
+use litepubl\core\UserOptions;
+use litepubl\core\Session;
+use litepubl\pages\Simple;
 
-class tcommentform extends tevents {
+class Form extends \litepubl\core\Events
+ {
     public $helper;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -48,7 +55,7 @@ class tcommentform extends tevents {
     }
 
     public function invalidate(array $shortpost) {
-        $lang = tlocal::i('comment');
+        $lang = Lang::i('comment');
         if (!$shortpost) {
             return $this->geterrorcontent($lang->postnotfound);
         }
@@ -65,7 +72,7 @@ class tcommentform extends tevents {
     }
 
     public function processform(array $values, $confirmed) {
-        $lang = tlocal::i('comment');
+        $lang = Lang::i('comment');
         if (trim($values['content']) == '') return $this->geterrorcontent($lang->emptycontent);
         if (!$this->checkspam(isset($values['antispam']) ? $values['antispam'] : '')) {
             return $this->geterrorcontent($lang->spamdetected);
@@ -74,12 +81,14 @@ class tcommentform extends tevents {
         $shortpost = $this->getshortpost(isset($values['postid']) ? (int)$values['postid'] : 0);
         if ($err = $this->invalidate($shortpost)) return $err;
         if ((int)$shortpost['idperm']) {
-            $post = tpost::i((int)$shortpost['id']);
-            $perm = tperm::i($post->idperm);
-            if (!$perm->hasperm($post)) return 403;
+            $post = Post::i((int)$shortpost['id']);
+            $perm = Perm::i($post->idperm);
+            if (!$perm->hasperm($post)) {
+return 403;
+}
         }
 
-        $cm = tcommentmanager::i();
+        $cm = Manager::i();
         if ($cm->checkduplicate && $cm->is_duplicate($shortpost['id'], $values['content'])) {
             return $this->geterrorcontent($lang->duplicate);
         }
@@ -118,7 +127,7 @@ class tcommentform extends tevents {
                         return $err;
                     }
 
-                    $users = tusers::i();
+                    $users = Users::i();
                     if ($iduser = $users->emailexists($values['email'])) {
                         if ('comuser' != $users->getvalue($iduser, 'status')) {
                             return $this->geterrorcontent($lang->emailregistered);
@@ -139,7 +148,7 @@ class tcommentform extends tevents {
             }
         }
 
-        $user = tusers::i()->getitem($iduser);
+        $user = Users::i()->getitem($iduser);
         if ('hold' == $user['status']) {
             return $this->geterrorcontent($lang->holduser);
         }
@@ -157,9 +166,9 @@ class tcommentform extends tevents {
             case 'approved':
                 if ($user['email'] != '') {
                     // subscribe if its first comment
-                    if (1 == tcomments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
-                        if ('enabled' == tuseroptions::i()->getvalue($iduser, 'subscribe')) {
-                            tsubscribers::i()->update($shortpost['id'], $iduser, true);
+                    if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
+                        if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
+                            Subscribers::i()->update($shortpost['id'], $iduser, true);
                         }
                     }
                 }
@@ -168,7 +177,7 @@ class tcommentform extends tevents {
 
             case 'comuser':
                 if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
-                    tsubscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
+                    Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
                 }
                 break;
         }
@@ -189,8 +198,8 @@ class tcommentform extends tevents {
     }
 
     public function confirm_recevied($confirmid) {
-        $lang = tlocal::i('comment');
-        tsession::start(md5($confirmid));
+        $lang = Lang::i('comment');
+        Session::start(md5($confirmid));
         if (!isset($_SESSION['confirmid']) || ($confirmid != $_SESSION['confirmid'])) {
             session_destroy();
             return $this->geterrorcontent($lang->notfound);
@@ -206,7 +215,7 @@ class tcommentform extends tevents {
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
 
         $confirmid = md5uniq();
-        if ($sess = tsession::start(md5($confirmid))) $sess->lifetime = 900;
+        if ($sess = Session::start(md5($confirmid))) $sess->lifetime = 900;
         $_SESSION['confirmid'] = $confirmid;
         $_SESSION['values'] = $values;
         session_write_close();
@@ -225,29 +234,36 @@ class tcommentform extends tevents {
         $saveitem = $urlmap->item;
         $urlmap->item = $urlmap->getitem($shortpost['idurl']);
         $urlmap->url = $urlmap->itemrequested['url'];
-        $post = tpost::i((int)$shortpost['id']);
-        $perm = tperm::i($post->idperm);
+        $post = Post::i((int)$shortpost['id']);
+        $perm = Perm::i($post->idperm);
         // not restore values because perm will be used this values
         return $perm->getheader($post);
     }
 
     private function getconfirmform($confirmid) {
-        ttheme::$vars['lang'] = tlocal::i('comment');
-        $args = targs::i();
+$vars = new Vars();
+        $vars->lang = Lang::i('comment');
+        $args = new Args();
         $args->confirmid = $confirmid;
-        $theme = tsimplecontent::gettheme();
+        $theme = Simple::i()->getSchema()->theme;
         return $theme->parsearg($theme->templates['content.post.templatecomments.confirmform'], $args);
     }
 
     //htmlhelper
     public function confirm($confirmid) {
-        if (isset($this->helper) && ($this != $this->helper)) return $this->helper->confirm($confirmid);
-        return tsimplecontent::html($this->getconfirmform($confirmid));
+        if (isset($this->helper) && ($this != $this->helper)) {
+return $this->helper->confirm($confirmid);
+}
+
+        return Simple::html($this->getconfirmform($confirmid));
     }
 
     public function geterrorcontent($s) {
-        if (isset($this->helper) && ($this != $this->helper)) return $this->helper->geterrorcontent($s);
-        return tsimplecontent::content($s);
+        if (isset($this->helper) && ($this != $this->helper)) {
+return $this->helper->geterrorcontent($s);
+}
+
+        return Simple::content($s);
     }
 
     private function checkspam($s) {
@@ -259,15 +275,15 @@ class tcommentform extends tevents {
     }
 
     public function processcomuser(array & $values) {
-        $lang = tlocal::i('comment');
+        $lang = Lang::i('comment');
         if (empty($values['name'])) return $this->geterrorcontent($lang->emptyname);
-        $values['name'] = tcontentfilter::escape($values['name']);
+        $values['name'] = Filter::escape($values['name']);
         $values['email'] = isset($values['email']) ? strtolower(trim($values['email'])) : '';
-        if (!tcontentfilter::ValidateEmail($values['email'])) {
+        if (!Filter::ValidateEmail($values['email'])) {
             return $this->geterrorcontent($lang->invalidemail);
         }
 
-        $values['url'] = isset($values['url']) ? tcontentfilter::escape(tcontentfilter::clean_website($values['url'])) : '';
+        $values['url'] = isset($values['url']) ? Filter::escape(Filter::clean_website($values['url'])) : '';
         $values['subscribe'] = isset($values['subscribe']);
     }
 

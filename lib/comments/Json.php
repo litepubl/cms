@@ -6,20 +6,28 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
 
-class tjsoncomments extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Json extends \litepubl\core\Events
+ {
 
     public function auth($id, $action) {
-        if (!litepubl::$options->user) return false;
-        $comments = tcomments::i();
-        if (!$comments->itemexists($id)) return false;
-        if (litepubl::$options->ingroup('moderator')) return true;
-        $cm = tcommentmanager::i();
+        if (!litepubl::$options->user) {
+return false;
+}
+
+        $comments = Comments::i();
+        if (!$comments->itemexists($id)) {
+return false;
+}
+
+        if (litepubl::$options->ingroup('moderator')) {
+return true;
+}
+
+        $cm = Manager::i();
         switch ($action) {
             case 'edit':
                 if (!$cm->canedit) {
@@ -55,13 +63,13 @@ class tjsoncomments extends tevents {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'delete')) return $this->forbidden();
 
-        return tcomments::i()->delete($id);
+        return Comments::i()->delete($id);
     }
 
     public function comment_setstatus($args) {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'status')) return $this->forbidden();
-        return tcomments::i()->setstatus($id, $args['status']);
+        return Comments::i()->setstatus($id, $args['status']);
     }
 
     public function comment_edit(array $args) {
@@ -69,7 +77,7 @@ class tjsoncomments extends tevents {
         if (!$this->auth($id, 'edit')) return $this->forbidden();
         $content = trim($args['content']);
         if (empty($content)) return false;
-        $comments = tcomments::i();
+        $comments = Comments::i();
         if ($comments->edit($id, $content)) {
             return array(
                 'id' => $id,
@@ -83,7 +91,7 @@ class tjsoncomments extends tevents {
     public function comment_getraw(array $args) {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'edit')) return $this->forbidden();
-        $comments = tcomments::i();
+        $comments = Comments::i();
         $raw = $comments->raw->getvalue($id, 'rawcontent');
         return array(
             'id' => $id,
@@ -95,7 +103,7 @@ class tjsoncomments extends tevents {
         if (!litepubl::$options->user) return $this->forbidden();
 
         $idpost = (int)$args['idpost'];
-        $comments = tcomments::i($idpost);
+        $comments = Comments::i($idpost);
 
         if (litepubl::$options->ingroup('moderator')) {
             $where = '';
@@ -116,7 +124,7 @@ class tjsoncomments extends tevents {
             )
         );
 
-        $commentform = tcommentform::i();
+        $commentform = Form::i();
         $commentform->helper = $this;
         return $commentform->dorequest($args);
     }
@@ -153,13 +161,11 @@ class tjsoncomments extends tevents {
     public function comments_get_logged(array $args) {
         if (!litepubl::$options->user) return $this->forbidden();
 
-        $theme = ttheme::i();
-        if (!$theme->name) $theme = tview::i()->theme;
-
+        $theme = Theme::context();
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
         $mesg = str_replace('$site.liveuser', litepubl::$site->getuserlink() , $mesg);
 
-        $lang = tlocal::i('comment');
+        $lang = Lang::i('comment');
         return $theme->parse($mesg);
     }
 

@@ -6,18 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\post\Posts;
 
-function tcommentsInstall($self) {
-    $manager = tdbmanager::i();
+function CommentsInstall($self) {
+    $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->CreateTable($self->table, file_get_contents($dir . 'comments.sql'));
-    $manager->CreateTable($self->rawtable, file_get_contents($dir . 'comments.raw.sql'));
+    $manager->CreateTable($self->rawtable, file_get_contents($dir . 'raw.sql'));
 
-    tposts::i()->deleted = $self->postdeleted;
+    Posts::i()->deleted = $self->postdeleted;
 }
 
-function tcommentsUninstall($self) {
-    tposts::unsub($self);
-
+function CommentsUninstall($self) {
+    Posts::unsub($self);
 }

@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\pages;
+use litepubl\utils\LinkGenerator;
 
 function UsersInstall($self) {
         $manager = $self->db->man;
@@ -23,7 +24,7 @@ function UsersInstall($self) {
     $self->createpage = $v;
     $self->unlock();
 
-    $linkgen = tlinkgenerator::i();
+    $linkgen = LinkGenerator::i();
     $linkgen->data['user'] = '/user/[name].htm';
     $linkgen->save();
 

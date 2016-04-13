@@ -6,10 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\pages\Json as Server;
 
-function tjsoncommentsInstall($self) {
-    $json = tjsonserver::i();
+function JsonInstall($self) {
+    $json = Server::i();
     $json->lock();
     $json->addevent('comment_delete', get_class($self) , 'comment_delete');
     $json->addevent('comment_setstatus', get_class($self) , 'comment_setstatus');
@@ -22,6 +23,6 @@ function tjsoncommentsInstall($self) {
     $json->unlock();
 }
 
-function tjsoncommentsUninstall($self) {
-    tjsonserver::i()->unbind($self);
+function JsonUninstall($self) {
+    Server::i()->unbind($self);
 }

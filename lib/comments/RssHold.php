@@ -6,9 +6,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\post\Rss;
+use litepubl\post\DomRss;
+use litepubl\core\Array2prop;
+use litepubl\view\Lang;
+use litepubl\view\Vars;
+use litepubl\view\Theme;
 
-class trssholdcomments extends tevents {
+class RssHold extends \litepubl\core\Events
+ {
     public $url;
 
     protected function create() {
@@ -39,8 +46,8 @@ class trssholdcomments extends tevents {
     public function request($arg) {
         if (!litepubl::$options->user) return 403;
         $result = '<?php litepubl::turlmap::sendxml(); ?>';
-        $rss = trss::i();
-        $rss->domrss = new tdomrss;
+        $rss = Rss::i();
+        $rss->domrss = new DomRss;
         $this->dogetholdcomments($rss);
         $result.= $rss->domrss->GetStripedXML();
         return $result;
@@ -63,10 +70,11 @@ class trssholdcomments extends tevents {
     $db->posts.status = 'published'
     order by $db->comments.posted desc limit $this->count"));
 
-        $title = tlocal::get('comment', 'onpost') . ' ';
-        $comment = new tarray2prop();
-        ttheme::$vars['comment'] = $comment;
-        $theme = ttheme::i();
+        $title = Lang::get('comment', 'onpost') . ' ';
+        $comment = new Array2prop();
+$vars = new Vars;
+        $vars->comment = $comment;
+        $theme = Theme::i();
         $tml = str_replace('$adminurl', '/admin/comments/' . litepubl::$site->q . 'id=$comment.id&action', $this->template);
         $lang = tlocal::admin('comments');
 
@@ -78,4 +86,4 @@ class trssholdcomments extends tevents {
         }
     }
 
-} //class
+}

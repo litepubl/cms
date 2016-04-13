@@ -6,14 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\core\Users;
+use litepubl\core\UserOptions;
+use litepubl\core\Cron;
+use litepubl\post\Posts;
+use litepubl\post\Post;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
+use litepubl\view\Lang;
+use litepubl\utils\Mailer;
 
-class tsubscribers extends titemsposts {
+class Subscribers extends \litepubl\core\ItemsPosts
+{
     public $blacklist;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         $this->dbversion = true;
@@ -32,7 +38,7 @@ class tsubscribers extends titemsposts {
     public function update($pid, $uid, $subscribed) {
         if ($subscribed == $this->exists($pid, $uid)) return;
         $this->remove($pid, $uid);
-        $user = tusers::i()->getitem($uid);
+        $user = Users::i()->getitem($uid);
         if (in_array($user['email'], $this->blacklist)) return;
         if ($subscribed) $this->add($pid, $uid);
     }
@@ -41,9 +47,9 @@ class tsubscribers extends titemsposts {
         if ($this->enabled != $value) {
             $this->data['enabled'] = $value;
             $this->save();
-            $comments = tcomments::i();
+            $comments = Comments::i();
             if ($value) {
-                tposts::i()->added = $this->postadded;
+                Posts::i()->added = $this->postadded;
 
                 $comments->lock();
                 $comments->added = $this->sendmail;
@@ -51,16 +57,18 @@ class tsubscribers extends titemsposts {
                 $comments->unlock();
             } else {
                 $comments->unbind($this);
-                tposts::i()->delete_event_class('added', get_class($this));
+                Posts::i()->delete_event_class('added', get_class($this));
             }
         }
     }
 
     public function postadded($idpost) {
-        $post = tpost::i($idpost);
-        if ($post->author <= 1) return;
+        $post = Post::i($idpost);
+        if ($post->author <= 1) {
+return;
+}
 
-        $useroptions = tuseroptions::i();
+        $useroptions = UserOptions::i();
         if ('enabled' == $useroptions->getvalue($post->author, 'authorpost_subscribe')) {
             $this->add($idpost, $post->author);
         }
@@ -93,20 +101,20 @@ class tsubscribers extends titemsposts {
 
     public function sendmail($id) {
         if (!$this->enabled) return;
-        $comments = tcomments::i();
+        $comments = Comments::i();
         if (!$comments->itemexists($id)) return;
         $item = $comments->getitem($id);
         if (($item['status'] != 'approved')) return;
 
         if (litepubl::$options->mailer == 'smtp') {
-            tcron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
+            Cron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
         } else {
             $this->cronsendmail($id);
         }
     }
 
     public function cronsendmail($id) {
-        $comments = tcomments::i();
+        $comments = Comments::i();
         try {
             $item = $comments->getitem($id);
         }
@@ -117,10 +125,11 @@ class tsubscribers extends titemsposts {
         $subscribers = $this->getitems($item['post']);
         if (!$subscribers || (count($subscribers) == 0)) return;
         $comment = $comments->getcomment($id);
-        ttheme::$vars['comment'] = $comment;
-        tlocal::usefile('mail');
-        $lang = tlocal::i('mailcomments');
-        $theme = ttheme::i();
+$vars = new Vars();
+        $vars->comment = $comment;
+        Lang::usefile('mail');
+        $lang = Lang::i('mailcomments');
+        $theme = Theme::i();
         $args = new targs();
 
         $subject = $theme->parsearg($lang->subscribesubj, $args);
@@ -129,7 +138,7 @@ class tsubscribers extends titemsposts {
         $body.= "\n";
         $adminurl = litepubl::$site->url . '/admin/subscribers/';
 
-        $users = tusers::i();
+        $users = Users::i();
         $users->loaditems($subscribers);
         $list = array();
         foreach ($subscribers as $uid) {
@@ -160,7 +169,9 @@ class tsubscribers extends titemsposts {
             );
         }
 
-        if (count($list)) tmailer::sendlist($list);
+        if (count($list)) {
+Mailer::sendlist($list);
+}
     }
 
-} //class
+}

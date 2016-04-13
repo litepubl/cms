@@ -6,15 +6,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\post\Post;
+use litepubl\view\Filter;
+use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Vars;
 
-class tcomments extends titems {
+class Comments extends \litepubl\core\Items
+ {
     public $rawtable;
     private $pid;
 
     public static function i($pid = 0) {
-        $result = getinstance(__class__);
-        if ($pid > 0) $result->pid = $pid;
+        $result = getinstance(get_called_class());
+        if ($pid) 
+$result->pid = $pid;
+}
         return $result;
     }
 
@@ -30,7 +38,7 @@ class tcomments extends titems {
 
     public function add($idpost, $idauthor, $content, $status, $ip) {
         if ($idauthor == 0) $this->error('Author id = 0');
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
 
         $item = array(
@@ -63,7 +71,7 @@ class tcomments extends titems {
 
     public function edit($id, $content) {
         if (!$this->itemexists($id)) return false;
-        $filtered = tcontentfilter::i()->filtercomment($content);
+        $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
         $this->getdb($this->rawtable)->updateassoc(array(
             'id' => $id,
@@ -140,7 +148,7 @@ class tcomments extends titems {
 
     //uses in import functions
     public function insert($idauthor, $content, $ip, $posted, $status) {
-        $filtered = tcontentfilter::i()->filtercomment($content);
+        $filtered = Filter::i()->filtercomment($content);
         $item = array(
             'post' => $this->pid,
             'parent' => 0,
@@ -176,7 +184,7 @@ class tcomments extends titems {
 
     public function getcontentwhere($status, $where) {
         $result = '';
-        $post = tpost::i($this->pid);
+        $post = Post::i($this->pid);
         $theme = $post->theme;
         if ($status == 'approved') {
             if (litepubl::$options->commentpages) {
@@ -196,11 +204,12 @@ class tcomments extends titems {
         $table = $this->thistable;
         $items = $this->select("$table.post = $this->pid $where and $table.status = '$status'", "order by $table.posted asc limit $from, $count");
 
-        $args = targs::i();
+        $args = new Args();
         $args->from = $from;
-        $comment = new tcomment(0);
-        ttheme::$vars['comment'] = $comment;
-        $lang = tlocal::i('comment');
+        $comment = new Comment(0);
+$vars = new Vars();
+        $vars->comment = $comment;
+        $lang = Lang::i('comment');
 
         $tml = strtr($theme->templates['content.post.templatecomments.comments.comment'], array(
             '$quotebuttons' => $post->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
@@ -216,9 +225,10 @@ class tcomments extends titems {
             $args->class = ($index % 2) == 0 ? $class1 : $class2;
             $result.= $theme->parsearg($tml, $args);
         }
-        unset(ttheme::$vars['comment']);
 
-        if ($result == '') return '';
+        if (!$result){
+ return '';
+}
 
         if ($status == 'hold') {
             $tml = $theme->templates['content.post.templatecomments.holdcomments'];
@@ -229,132 +239,6 @@ class tcomments extends titems {
         $args->from = $from + 1;
         $args->comment = $result;
         return $theme->parsearg($tml, $args);
-    }
-
-} //class
-class tcomment extends Data {
-    private static $md5 = array();
-    private $_posted;
-
-    public function __construct($id = 0) {
-        if (!isset($id)) return false;
-        parent::__construct();
-        $this->table = 'comments';
-        $id = (int)$id;
-        if ($id > 0) $this->setid($id);
-    }
-
-    public function setid($id) {
-        $comments = tcomments::i();
-        $this->data = $comments->getitem($id);
-        if (!isset($this->data['name'])) $this->data = $this->data + tusers::i()->getitem($this->data['author']);
-        $this->_posted = false;
-    }
-
-    public function save() {
-        extract($this->data, EXTR_SKIP);
-        $this->db->UpdateAssoc(compact('id', 'post', 'author', 'parent', 'posted', 'status', 'content'));
-
-        $this->getdb($this->rawtable)->UpdateAssoc(array(
-            'id' => $id,
-            'modified' => sqldate() ,
-            'rawcontent' => $rawcontent,
-            'hash' => basemd5($rawcontent)
-        ));
-    }
-
-    public function getauthorlink() {
-        $name = $this->data['name'];
-        $website = $this->data['website'];
-        if ($website == '') return $name;
-
-        $manager = tcommentmanager::i();
-        if ($manager->hidelink || ($this->trust <= $manager->trustlevel)) return $name;
-        $rel = $manager->nofollow ? 'rel="nofollow"' : '';
-        if ($manager->redir) {
-            return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, litepubl::$site->url, litepubl::$site->q, $this->author, $name);
-        } else {
-            if (!strbegin($website, 'http://')) $website = 'http://' . $website;
-            return sprintf('<a class="url fn" %s href="%s" itemprop="url">%s</a>', $rel, $website, $name);
-        }
-    }
-
-    public function getdate() {
-        $theme = ttheme::i();
-        return tlocal::date($this->posted, $theme->templates['content.post.templatecomments.comments.comment.date']);
-    }
-
-    public function Getlocalstatus() {
-        return tlocal::get('commentstatus', $this->status);
-    }
-
-    public function getposted() {
-        if ($this->_posted) return $this->_posted;
-        return $this->_posted = strtotime($this->data['posted']);
-    }
-
-    public function setposted($date) {
-        $this->data['posted'] = sqldate($date);
-        $this->_posted = $date;
-    }
-
-    public function gettime() {
-        return date('H:i', $this->posted);
-    }
-
-    public function getiso() {
-        return date('c', $this->posted);
-    }
-
-    public function getrfc() {
-        return date('r', $this->posted);
-    }
-
-    public function geturl() {
-        $post = tpost::i($this->post);
-        return $post->link . "#comment-$this->id";
-    }
-
-    public function getposttitle() {
-        $post = tpost::i($this->post);
-        return $post->title;
-    }
-
-    public function getrawcontent() {
-        if (isset($this->data['rawcontent'])) return $this->data['rawcontent'];
-        $comments = tcomments::i($this->post);
-        return $comments->raw->getvalue($this->id, 'rawcontent');
-    }
-
-    public function setrawcontent($s) {
-        $this->data['rawcontent'] = $s;
-        $filter = tcontentfilter::i();
-        $this->data['content'] = $filter->filtercomment($s);
-    }
-
-    public function getip() {
-        if (isset($this->data['ip'])) return $this->data['ip'];
-        $comments = tcomments::i($this->post);
-        return $comments->raw->getvalue($this->id, 'ip');
-    }
-
-    public function getmd5email() {
-        $email = $this->data['email'];
-        if ($email) {
-            if (isset(static ::$md5[$email])) return static ::$md5[$email];
-            $md5 = md5($email);
-            static ::$md5[$email] = $md5;
-            return $md5;
-        }
-        return '';
-    }
-
-    public function getgravatar() {
-        if ($md5email = $this->getmd5email()) {
-            return sprintf('<img class="avatar photo" src="http://www.gravatar.com/avatar/%s?s=90&amp;r=g&amp;d=wavatar" title="%2$s" alt="%2$s"/>', $md5email, $this->name);
-        } else {
-            return '';
-        }
     }
 
 } //class

@@ -6,14 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
 
-function tcommentformInstall($self) {
+function FormInstall($self) {
     $url = '/send-comment.php';
 
     litepubl::$urlmap->Add($url, get_class($self) , null);
 }
 
-function tcommentformUninstall($self) {
+function FormUninstall($self) {
     turlmap::unsub($self);
 }

@@ -129,6 +129,18 @@ return [
 //admin
 'iadmin' => 'litepubl\admin\AdminInterface',
 
+//comments
+'tcomments' => 'litepubl\comments\Comments',
+'tcomment' => 'litepubl\comments\Comment',
+'tcommentform' => 'litepubl\comments\Form',
+'tcommentmanager' => 'litepubl\comments\Manager',
+'tjsoncomments' => 'litepubl\comments\Json',
+'tsubscribers' => 'litepubl\comments\Subscribers',
+'tcommentspool' => 'litepubl\comments\Pool',
+'trssholdcomments' => 'litepubl\comments\RssHold',
+'tpingbacks' => 'litepubl\comments\Pingbacks',
+'ttemplatecomments' => 'litepubl\comments\Templates,
+
 //xmlrpc
 'TXMLRPCParser' => 'litepubl\xmlrpc\Parser',
 'TXMLRPC' => 'litepubl\xmlrpc\Server',

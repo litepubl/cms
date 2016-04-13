@@ -10,6 +10,7 @@ $cl->kernel['litepubl\core'] = 'kernel.core.php';
 
 unset($cl->items['tini2array']);
 unset($cl->items['inifiles']);
+unset($cl->items['tabstractpingbacks']);
 
 $a = include(__DIR__ . '/classmap.php');
 foreach ($a as $oldclass => $newclass) {

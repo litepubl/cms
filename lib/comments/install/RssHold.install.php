@@ -6,18 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
 
-function trssholdcommentsInstall($self) {
+function RssHoldInstall($self) {
     $self->idurl = litepubl::$urlmap->add($self->url, get_class($self) , null, 'usernormal');
 
-    $self->template = file_get_contents(dirname(__file__) . '/templates/rss.holdcomments.tml');
+    $self->template = file_get_contents(dirname(dirname(__DIR__) . '/install/templates/RssHold.tml');
     $self->save();
 
-    tcomments::i()->changed = $self->commentschanged;
+    Comments::i()->changed = $self->commentschanged;
 }
 
-function trssholdcommentsUninstall($self) {
+function RssHoldUninstall($self) {
     turlmap::unsub($self);
-    tcomments::i()->unbind($self);
+    Comments::i()->unbind($self);
 }

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\comments;
+use litepubl\pages\RobotsTxt;
 
-function tcommentmanagerInstall($self) {
+function ManagerInstall($self) {
     $self->data['filterstatus'] = true;
     $self->data['checkduplicate'] = true;
     $self->data['defstatus'] = 'approved';
@@ -40,17 +41,16 @@ function tcommentmanagerInstall($self) {
 
     $self->save();
 
-    $comments = tcomments::i();
+    $comments = Comments::i();
     $comments->lock();
     $comments->changed = $self->changed;
     $comments->added = $self->sendmail;
     $comments->unlock();
 
     litepubl::$urlmap->addget('/comusers.htm', get_class($self));
-
-    trobotstxt::i()->AddDisallow('/comusers.htm');
+    RobotsTxt::i()->AddDisallow('/comusers.htm');
 }
 
-function tcommentmanagerUninstall($self) {
+function ManagerUninstall($self) {
     turlmap::unsub($self);
 }
