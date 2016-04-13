@@ -8,7 +8,7 @@
 
 namespace litepubl\view;
 
-class CssMerger extends JsMerger
+class Css extends Js
  {
 
     protected function create() {

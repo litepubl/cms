@@ -8,7 +8,7 @@
 
 namespace litepubl\view;
 
-function CssMergerInstall($self) {
+function CssInstall($self) {
     $self->lock();
     $self->items = array();
     $section = 'default';
@@ -16,7 +16,7 @@ function CssMergerInstall($self) {
     $self->add($section, '/js/litepubl/common/css/filelist.min.css');
     $self->add($section, '/js/litepubl/common/css/form.inline.min.css');
 
-    $list = CssMerger_bootstrap_files($self);
+    $list = Css_bootstrap_files($self);
     foreach ($list as $filename) {
         $self->add($section, $filename);
     }
@@ -28,18 +28,18 @@ function CssMergerInstall($self) {
     //tupdater::i()->onupdated = $self->save;
 }
 
-function CssMergerUninstall($self) {
+function CssUninstall($self) {
     //tupdater::i()->unbind($self);
 }
 
-function CssMerger_pretty_files($self) {
+function Css_pretty_files($self) {
     return array(
         '/js/prettyphoto/css/prettyPhoto.css',
         '/js/litepubl/pretty/dialog.pretty.min.css',
     );
 }
 
-function CssMerger_deprecated_files($self) {
+function Css_deprecated_files($self) {
     return array(
         '/js/litepubl/deprecated/css/align.min.css',
         '/js/litepubl/deprecated/css/button.min.css',
@@ -47,7 +47,7 @@ function CssMerger_deprecated_files($self) {
     );
 }
 
-function CssMerger_bootstrap_files($self) {
+function Css_bootstrap_files($self) {
     return array(
         '/js/litepubl/effects/css/homeimage.min.css',
         '/themes/default/css/logo.min.css'

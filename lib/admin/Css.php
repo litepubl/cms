@@ -6,16 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
-class tadmincssmerger extends tadminjsmerger {
-
-    public static function i($id = 0) {
-        return static ::iteminstance(__class__, $id);
-    }
+class Css extends Js
+{
 
     public function getmerger() {
-        return tcssmerger::i();
+        return \litepubl\view\Css::i();
     }
 
-} //class
+}

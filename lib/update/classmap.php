@@ -42,8 +42,8 @@ return [
 'tviews' => 'litepubl\view\Schemes',
 'tguard' => 'litepubl\view\Guard',
 'tcontentfilter' => 'litepubl\view\Filter',
-'tjsmerger' => 'litepubl\view\JsMerger',
-'tcssmerger' => 'litepubl\view\CssMerger',
+'tjsmerger' => 'litepubl\view\Js',
+'tcssmerger' => 'litepubl\view\Css',
 
 //posts
 'tpost' => 'litepubl\post\Post',
@@ -128,6 +128,11 @@ return [
 
 //admin
 'iadmin' => 'litepubl\admin\AdminInterface',
+'tauthor_rights' => 'litepubl\admin\AuthorRights',
+'tadminboard' => 'litepubl\admin\Board',
+'tadmincssmerger' => 'litepubl\admin\Css',
+'tadmincommentmanager' => 'litepubl\admin\Comments',
+
 
 //comments
 'tcomments' => 'litepubl\comments\Comments',

@@ -6,13 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
-class tauthor_rights extends tevents {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class AuthorRights extends \litepubl\core\Events 
+{
 
     protected function create() {
         parent::create();

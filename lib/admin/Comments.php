@@ -6,22 +6,24 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\comments\Manager;
+use litepubl\comments\RssHold;;
+use litepubl\comments\Subscribers;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\core\UserOptions;
 
-class tadmincommentmanager extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Comments extends Menu
+{
 
     public function getcontent() {
         $result = '';
-        $cm = tcommentmanager::i();
+        $cm = Manager::i();
         $options = litepubl::$options;
-        $html = $this->gethtml('comments');
         $lang = tlocal::admin('commentmanager');
-        $args = new targs();
-        $tabs = new tabs($this->admintheme);
+        $args = new Args();
+        $tabs = new Tabs($this->admintheme);
         $args->comstatus = tadminhtml::array2combo(array(
             'closed' => $lang->closed,
             'reg' => $lang->reg,
@@ -60,7 +62,7 @@ class tadmincommentmanager extends tadminmenu {
     [checkbox=nofollow]
     ');
 
-        $rss = trssholdcomments::i();
+        $rss = RssHold::i();
         $args->rsscount = $rss->count;
         $args->rsstemplate = $rss->template;
 
@@ -89,11 +91,11 @@ class tadmincommentmanager extends tadminmenu {
         $args->sendnotification = $cm->sendnotification;
         $args->comuser_subscribe = $cm->comuser_subscribe;
 
-        $useroptions = tuseroptions::i();
+        $useroptions = UserOptions::i();
         $args->defaultsubscribe = $useroptions->defvalues['subscribe'] == 'enabled';
         $args->authorpost_subscribe = $useroptions->defvalues['authorpost_subscribe'] == 'enabled';
 
-        $subscribe = tsubscribers::i();
+        $subscribe = Subscribers::i();
         $args->locklist = $subscribe->locklist;
         $args->subscribe_enabled = $subscribe->enabled;
 
@@ -114,7 +116,7 @@ class tadmincommentmanager extends tadminmenu {
     public function processform() {
         extract($_POST, EXTR_SKIP);
         $options = litepubl::$options;
-        $cm = tcommentmanager::i();
+        $cm = Manager::i();
         $cm->lock();
 
         $options->comstatus = $comstatus;
@@ -122,7 +124,7 @@ class tadmincommentmanager extends tadminmenu {
         $cm->defstatus = isset($commentsapproved) ? 'approved' : 'hold';
         $cm->checkduplicate = isset($checkduplicate);
 
-        $useroptions = tuseroptions::i();
+        $useroptions = UserOptions::i();
         $useroptions->defvalues['subscribe'] = isset($defaultsubscribe) ? 'enabled' : 'disabled';
         $useroptions->defvalues['authorpost_subscribe'] = isset($authorpost_subscribe) ? 'enabled' : 'disabled';
         $useroptions->save();
@@ -142,13 +144,13 @@ class tadmincommentmanager extends tadminmenu {
 
         $cm->unlock();
 
-        $subscr = tsubscribers::i();
+        $subscr = Subscribers::i();
         $subscr->lock();
         $subscr->locklist = $locklist;
         $subscr->enabled = isset($subscribe_enabled);
         $subscr->unlock();
 
-        $rss = trssholdcomments::i();
+        $rss = RssHold::i();
         $rss->count = $rsscount;
         $rss->template = $rsstemplate;
         $rss->save();

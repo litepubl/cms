@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
-function tadminmenusInstall($self) {
-    if ('litepubl\tadminmenus' != get_class($self)) return;
+function MenusInstall($self) {
+    if ('\litepubl\admin\Menus' != get_class($self)) return;
 
     litepubl::$classes->onrename = $self->classRenamed;
 
@@ -18,7 +18,8 @@ function tadminmenusInstall($self) {
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>';
 
     //posts
-    $posts = $self->createitem(0, 'posts', 'author', 'tadminposts'); {
+    $posts = $self->createitem(0, 'posts', 'author', 'litepubl\post\Posts');
+ {
         $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
         $self->items[$id]['title'] = tlocal::i()->newpost;
         $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
@@ -53,7 +54,7 @@ function tadminmenusInstall($self) {
         $self->createitem($views, 'spec', 'admin', 'tadminviewsspec');
         $self->createitem($views, 'headers', 'admin', 'tadminheaders');
         $self->createitem($views, 'jsmerger', 'admin', 'tadminjsmerger');
-        $self->createitem($views, 'cssmerger', 'admin', 'tadmincssmerger');
+        $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
     }
 
     $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager'); {

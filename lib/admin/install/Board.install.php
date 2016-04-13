@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
-function tadminboardInstall($self) {
+function BoardInstall($self) {
     litepubl::$urlmap->add('/admin/', get_class($self) , null, 'normal');
 }
 
-function tadminboardUninstall($self) {
+function BoardUninstall($self) {
     turlmap::unsub($self);
 }

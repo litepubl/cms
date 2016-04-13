@@ -8,7 +8,7 @@
 
 namespace litepubl\view;
 
-function JsMergerInstall($self) {
+function JsInstall($self) {
     $dir = litepubl::$paths->files . 'js';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
@@ -54,8 +54,8 @@ function JsMergerInstall($self) {
         $self->add($section, $filename);
     }
 
-    //tjsmerger_switch($self, tjsmerger_pretty_files(), array());
-    tjsmerger_switch($self, tjsmerger_bootstrap_files() , array());
+    //tJs_switch($self, tJs_pretty_files(), array());
+    tJs_switch($self, tJs_bootstrap_files() , array());
 
     $self->add($section, "/lib/languages/$language/default.min.js");
 
@@ -73,7 +73,7 @@ function JsMergerInstall($self) {
     }
 
     $section = 'admin';
-    tjsmerger_bootstrap_admin($self, true);
+    tJs_bootstrap_admin($self, true);
     $self->add($section, '/js/litepubl/admin/admin.min.js');
     $self->add($section, 'js/litepubl/ui/datepicker.adapter.min.js');
     $self->add($section, '/js/litepubl/admin/calendar.min.js');
@@ -95,10 +95,10 @@ function JsMergerInstall($self) {
     $self->unlock();
 }
 
-function JsMergerUninstall($self) {
+function JsUninstall($self) {
 }
 
-function JsMerger_switch($self, $add, $delete) {
+function Js_switch($self, $add, $delete) {
     $self->lock();
 
     foreach ($delete as $filename) {
@@ -112,7 +112,7 @@ function JsMerger_switch($self, $add, $delete) {
     $self->unlock();
 }
 
-function JsMerger_pretty_files() {
+function Js_pretty_files() {
     return array(
         '/js/prettyphoto/js/jquery.prettyPhoto.js',
         '/js/litepubl/pretty/dialog.pretty.min.js',
@@ -123,7 +123,7 @@ function JsMerger_pretty_files() {
     );
 }
 
-function JsMerger_bootstrap_files() {
+function Js_bootstrap_files() {
     return array(
         // fix
         '/js/fix/ie10.min.js',
@@ -159,7 +159,7 @@ function JsMerger_bootstrap_files() {
     );
 }
 
-function JsMerger_bootstrap_admin($js, $add = true) {
+function Js_bootstrap_admin($js, $add = true) {
     $items = array(
         'admin' => array(
             '/js/bootstrap/tab.min.js',
@@ -185,7 +185,7 @@ function JsMerger_bootstrap_admin($js, $add = true) {
 
 }
 
-function JsMerger_ui_admin($js, $add = true) {
+function Js_ui_admin($js, $add = true) {
     $items = array(
         'admin' => array(
             '/js/jquery/ui/core.min.js',
