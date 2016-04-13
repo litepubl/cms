@@ -1,25 +1,24 @@
 <?php
 
 namespace litepubl\tag;
-use litepubl\core\Data;
+use litepubl\view\Filter;
 
-class Content extends Data
+class Content extends \litepubl\core\Data
  {
     private $owner;
     private $items;
 
-    public function __construct(TCommonTags $owner) {
+    public function __construct(Common $owner) {
         parent::__construct();
         $this->owner = $owner;
         $this->items = array();
     }
 
-    private function getfilename($id) {
-        return litepubl::$paths->data . $this->owner->basename . DIRECTORY_SEPARATOR . $id;
-    }
-
     public function getitem($id) {
-        if (isset($this->items[$id])) return $this->items[$id];
+        if (isset($this->items[$id])) {
+return $this->items[$id];
+}
+
         $item = array(
             'description' => '',
             'keywords' => '',
@@ -28,13 +27,19 @@ class Content extends Data
             'rawcontent' => ''
         );
 
-        if ($r = $this->db->getitem($id)) $item = $r;
+        if ($r = $this->db->getitem($id)) {
+$item = $r;
+}
+
         $this->items[$id] = $item;
         return $item;
     }
 
     public function setitem($id, $item) {
-        if (isset($this->items[$id]) && ($this->items[$id] == $item)) return;
+        if (isset($this->items[$id]) && ($this->items[$id] == $item)) {
+return;
+}
+
         $this->items[$id] = $item;
         $item['id'] = $id;
         $this->db->addupdate($item);
@@ -42,7 +47,7 @@ class Content extends Data
 
     public function edit($id, $content, $description, $keywords, $head) {
         $item = $this->getitem($id);
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $item = array(
             'content' => $filter->filter($content) ,
             'rawcontent' => $content,
@@ -74,7 +79,7 @@ class Content extends Data
 
     public function setcontent($id, $content) {
         $item = $this->getitem($id);
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $item['rawcontent'] = $content;
         $item['content'] = $filter->filterpages($content);
         $item['description'] = tcontentfilter::getexcerpt($content, 80);
@@ -93,4 +98,4 @@ class Content extends Data
         return $this->getvalue($id, 'head');
     }
 
-} //class
+}

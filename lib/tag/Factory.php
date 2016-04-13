@@ -11,9 +11,9 @@ namespace litepubl\tag;
 class Factory
 {
 
-    public static function i() {
-        return getinstance(get_called_class());
-    }
+public function __get($name) {
+return $this->{'get' . $name}();
+}
 
     public function getposts() {
         return \litepubl\post\Posts::i();

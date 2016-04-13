@@ -7,8 +7,13 @@
  */
 
 namespace litepubl\tag;
+use litepubl\core\ItemsPosts;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\view\Schemes;
+use litepubl\view\Schema;
+use litepubl\view\Lang;
+use litepubl\utils\LinkGenerator;
 
 class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterface
  {
@@ -38,7 +43,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
     protected function createfactory() {
         $this->factory = litepubl::$classes->getfactory($this);
         $this->contents = new Content($this);
-        $this->itemsposts = new titemspostsowner($this);
+        $this->itemsposts = new ItemsPosts();
     }
 
     public function loadall() {
@@ -68,7 +73,6 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $sorted = $this->getsorted($parent, $sortname, $count);
         if (count($sorted) == 0) return '';
         $result = '';
-        $iconenabled = !litepubl::$options->icondisabled;
         $theme = Theme::i();
         $args = new Args();
         $args->rel = $this->PermalinkIndex;
@@ -76,7 +80,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         foreach ($sorted as $id) {
             $item = $this->getitem($id);
             $args->add($item);
-            $args->icon = $iconenabled ? $this->geticonlink($id) : '';
+            $args->icon = '';
             $args->subcount = $showcount ? $theme->parsearg($tml['subcount'], $args) : '';
             $args->subitems = $tml['subitems'] ? $this->getsortedcontent($tml, $id, $sortname, $count, $showcount) : '';
             $result.= $theme->parsearg($tml['item'], $args);
@@ -85,21 +89,6 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $args->parent = $parent;
         $args->item = $result;
         return $theme->parsearg($tml['subitems'], $args);
-    }
-
-    public function geticonlink($id) {
-        $item = $this->getitem($id);
-        if ($item['icon'] == 0) return '';
-        $files = tfiles::i();
-        if ($files->itemexists($item['icon'])) return $files->geticon($item['icon'], $item['title']);
-        $this->setvalue($id, 'icon', 0);
-        if (!$this->dbversion) $this->save();
-        return '';
-    }
-
-    public function geticon() {
-        $item = $this->getitem($this->id);
-        return $item['icon'];
     }
 
     public function geturl($id) {
@@ -152,16 +141,16 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $parent = (int)$parent;
         if (($parent != 0) && !$this->itemexists($parent)) $parent = 0;
 
-        $url = tlinkgenerator::i()->createurl($title, $this->PermalinkIndex, true);
-        $views = tviews::i();
-        $idview = isset($views->defaults[$this->PermalinkIndex]) ? $views->defaults[$this->PermalinkIndex] : 1;
+        $url = LinkGenerator::i()->createurl($title, $this->PermalinkIndex, true);
+        $schemes = Schemes::i();
+        $idschema = isset($schemes->defaults[$this->PermalinkIndex]) ? $schemes->defaults[$this->PermalinkIndex] : 1;
 
         $item = array(
             'idurl' => 0,
             'customorder' => 0,
             'parent' => $parent,
             'title' => $title,
-            'idview' => $idview,
+            'idview' => $idschema,
             'idperm' => 0,
             'icon' => 0,
             'itemscount' => 0,
@@ -191,7 +180,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
             ));
         }
 
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $url = trim($url);
         // try rebuild url
         if ($url == '') {
@@ -323,7 +312,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
             return $this->getvalue($this->id, 'title');
         }
 
-        return tlocal::i()->categories;
+        return Lang::i()->categories;
     }
 
     public function gethead() {
@@ -379,7 +368,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
     }
 
     public function getindex_tml() {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         if (!empty($theme->templates['index.tag'])) return $theme->templates['index.tag'];
         return false;
     }
@@ -449,12 +438,12 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $includeparents = (int)$item['includeparents'];
         $includechilds = (int)$item['includechilds'];
 
-        $view = tview::i($item['idview']);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
-        $order = $view->invertorder ? 'asc' : 'desc';
+        $schema = Schema::i($item['idview']);
+        $perpage = $schema->perpage ? $schema->perpage : litepubl::$options->perpage;
+        $order = $schema->invertorder ? 'asc' : 'desc';
         $from = (litepubl::$urlmap->page - 1) * $perpage;
 
-        $posts = $this->factory->posts;
+        $posts = $this->factory->getposts();
         $p = $posts->thistable;
         $t = $this->thistable;
         $ti = $this->itemsposts->thistable;

@@ -25,16 +25,14 @@ function CommonInstall($self) {
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir . 'tags.sql'));
-    $manager->createtable($self->itemsposts->table, file_get_contents($dir . 'items.posts.sql'));
-    $manager->createtable($self->contents->table, file_get_contents($dir . 'tags.content.sql'));
+    $manager->createtable($self->itemsposts->table, file_get_contents(dirname(dirname(__DIR__)). '/core/install/sql/ItemsPosts.sql'));
+    $manager->createtable($self->contents->table, file_get_contents($dir . 'content.sql'));
 }
 
 function CommonUninstall($self) {
     Posts::unsub($self);
     turlmap::unsub($self);
-
-    $widgets = Widgets::i();
-    $widgets->deleteclass(get_class($self));
+Widgets::i()->deleteclass(get_class($self));
 }
 
 function CommonGetsitemap($self, $from, $count) {
