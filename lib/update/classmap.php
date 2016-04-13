@@ -132,6 +132,9 @@ return [
 'tadminboard' => 'litepubl\admin\Board',
 'tadmincssmerger' => 'litepubl\admin\Css',
 'tadmincommentmanager' => 'litepubl\admin\Comments',
+'tadmincomusers' => 'litepubl\admin\Commentators',
+'tadminmoderator' => 'litepubl\admin\Moderator',
+
 
 
 //comments

@@ -6,20 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\core\Users;
+use litepubl\veiw\Args;
+use litepubl\comments\Comments;
+use litepubl\comments\Subscribers;
 
-class tadmincomusers extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Commentators extends Menu 
+{
 
     public function getcontent() {
         $result = '';
         $this->basename = 'authors';
-        $users = tusers::i();
+        $users = Users::i();
         $lang = $this->lang;
-        $html = $this->html;
 
         if ('delete' == $this->action) {
             $id = $this->idget();
@@ -68,15 +68,15 @@ class tadmincomusers extends tadminmenu {
         ));
 
         $result.= $tb->build($items);
-        $result.= $this->view->theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
         return $result;
     }
 
     private function deleteauthor($uid) {
-        $users = tusers::i();
+        $users = Users::i();
         if (!$users->itemexists($uid)) return false;
         if ('comuser' != $users->getvalue($uid, 'status')) return false;
-        $comments = tcomments::i();
+        $comments = Cmments::i();
         $comments->db->delete("author = $uid");
         $users->setvalue($uid, 'status', 'hold');
         return true;
@@ -85,7 +85,7 @@ class tadmincomusers extends tadminmenu {
     private function getsubscribed($authorid) {
         $db = litepubl::$db;
         $authorid = (int)$authorid;
-        $users = tusers::i();
+        $users = Users::i();
         if (!$users->itemexists($authorid)) return '';
         $html = $this->gethtml('moderator');
         $result = '';
@@ -96,9 +96,9 @@ class tadmincomusers extends tadminmenu {
     order by $db->posts.posted desc");
         $items = $db->res2assoc($res);
 
-        $subscribers = tsubscribers::i();
+        $subscribers = Subscribers::i();
         $subscribed = $subscribers->getposts($authorid);
-        $args = targs::i();
+        $args = mew Args();
         foreach ($items as $item) {
             $args->add($item);
             $args->subscribed = in_array($item['id'], $subscribed);
@@ -113,7 +113,7 @@ class tadmincomusers extends tadminmenu {
         $result = '';
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') {
             $id = $this->idget();
-            $subscribers = tsubscribers::i();
+            $subscribers = Subscribers::i();
             $subscribed = $subscribers->getposts($id);
             $checked = array();
             foreach ($_POST as $idpost => $value) {

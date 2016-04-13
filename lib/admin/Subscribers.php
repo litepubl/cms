@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
 class tadminsubscribers extends tadminform {
     private $iduser;

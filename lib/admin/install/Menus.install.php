@@ -29,9 +29,10 @@ function MenusInstall($self) {
         $self->createitem($posts, 'staticpages', 'editor', 'tadminstaticpages');
     }
 
-    $moder = $self->createitem(0, 'comments', 'commentator', 'tadminmoderator'); {
+    $moder = $self->createitem(0, 'comments', 'commentator', '\litepubl\admin\Moderator');
+ {
         $self->createitem($moder, 'hold', 'commentator', 'tadminmoderator');
-        $self->createitem($moder, 'authors', 'moderator', 'tadmincomusers');
+        $self->createitem($moder, 'authors', 'moderator', 'Commentators');
         $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
     }
 

@@ -6,15 +6,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\comments\Comments;
+use litepubl\comments\Manager;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
-class tadminmoderator extends tadminmenu {
+class Moderator extends Menu
+{
     private $moder;
     private $iduser;
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function canrequest() {
         $this->moder = litepubl::$options->ingroup('moderator');
@@ -22,9 +23,15 @@ class tadminmoderator extends tadminmenu {
     }
 
     public function can($id, $action) {
-        if ($this->moder) return true;
-        if (litepubl::$options->user != tcomments::i()->getvalue($id, 'author')) return false;
-        $cm = tcommentmanager::i();
+        if ($this->moder) {
+return true;
+}
+
+        if (litepubl::$options->user != Comments::i()->getvalue($id, 'author')) {
+return false;
+}
+
+        $cm = Manager::i();
         switch ($action) {
             case 'edit':
                 return $cm->canedit;
@@ -37,8 +44,8 @@ class tadminmoderator extends tadminmenu {
 
     public function getcontent() {
         $result = '';
-        $comments = tcomments::i();
-        $cm = tcommentmanager::i();
+        $comments = Comments::i();
+        $cm = Manager::i();
         $lang = $this->lang;
         $html = $this->html;
         if ($action = $this->action) {
@@ -133,7 +140,7 @@ class tadminmoderator extends tadminmenu {
 
     private function editcomment($id) {
         $comment = new tcomment($id);
-        $args = new targs();
+        $args = new Args();
         $args->content = $comment->rawcontent;
         $args->formtitle = tlocal::i()->editform;
         $result = $this->getinfo($comment);
