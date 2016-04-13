@@ -6,22 +6,24 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\pages\Menus;
+use litepubl\pages\Menu;
+use litepubl\tag\Cats;
+use litepubl\tag\Tags;
 
-class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Wordpress extends MetaWeblog
+ {
 
     private function menutostruct($id) {
         if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
-        $menus = tmenus::i();
+        $menus = Menus::i();
         if (!$menus->itemexists($id)) return xerror(404, "Sorry, no such page.");
-        $menu = tmenu::i($id);
+        $menu = Menu::i($id);
 
         if ($menu->parent > 0) {
-            $parent = tmenu::i($menu->parent);
+            $parent = Menu::i($menu->parent);
             $ParentTitle = $parent->title;
         } else {
             $ParentTitle = "";
@@ -66,7 +68,7 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
     public function wp_getPages($blogid, $username, $password) {
         $this->auth($username, $password, 'editor');
         $result = array();
-        $menus = tmenus::i();
+        $menus = Menus::i();
         foreach ($menus->items as $id => $item) {
             $result[] = $this->menutostruct($id);
         }
@@ -76,7 +78,7 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
     public function wp_getPageList($blogid, $username, $password) {
         $this->auth($username, $password, 'editor');
         $result = array();
-        $menus = tmenus::i();
+        $menus = Menus::i();
         foreach ($menus->items as $id => $item) {
             $result[] = array(
                 'page_id' => "menu_" . $id,
@@ -93,7 +95,7 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
         $this->auth($username, $password, 'editor');
         if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
-        $menus = tmenus::i();
+        $menus = Menus::i();
         if (!$menus->itemexists($id)) return xerror(404, "Sorry, no such page.");
         $menus->delete($id);
         return true;
@@ -101,14 +103,14 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
 
     public function wp_newCategory($blogid, $username, $password, $struct) {
         $this->auth($username, $password, 'editor');
-        $categories = tcategories::i();
+        $categories = Cats::i();
         return (int)$categories->add($struct["name"], $category["slug"]);
     }
 
     public function deleteCategory($blogid, $username, $password, $id) {
         $this->auth($username, $password, 'editor');
         $id = (int)$id;
-        $categories = tcategories::i();
+        $categories = Cats::i();
         if (!$categories->itemexists($id)) return xerror(404, "Sorry, no such page.");
         $categories->delete($id);
         return true;
@@ -116,7 +118,7 @@ class TXMLRPCWordpress extends TXMLRPCMetaWeblog {
 
     public function getTags($blogid, $username, $password) {
         $this->auth($username, $password, 'editor');
-        $tags = ttags::i();
+        $tags = Tags::i();
         $result = array();
         $tags->loadall();
         foreach ($tags->items as $id => $item) {

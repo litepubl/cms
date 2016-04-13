@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\post\Posts;
+use litepubl\post\Post;
 
-class TXMLRPCLivejournal extends TXMLRPCAbstract {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Livejournal extends Common
+{
 
     protected function create() {
         parent::create();
@@ -76,11 +75,11 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
     }
 
     private function EditPost($id, $struct) {
-        $posts = tposts::i();
+        $posts = Posts::i();
         if ($id > 0) {
             if ($posts->itemexists($id)) return $this->xerror(403, 'Post not found');
         }
-        $post = tpost::i($id);
+        $post = Post::i($id);
         $post->content = $struct['event'];
         //$lineendings = $struct['lineendings']; canbe \n \r \r\n
         $post->title = $struct['subject'];
@@ -142,9 +141,9 @@ class TXMLRPCLivejournal extends TXMLRPCAbstract {
         $this->lj_auth($struct);
         $id = (int)$struct['itemid'];
         if (empty($struct['event'])) {
-            $posts = tposts::i();
+            $posts = Posts::i();
             if (!$posts->itemexists($id)) return $this->xerror(404, 'Post not found');
-            $post = tpost::i($id);
+            $post = Post::i($id);
             $url = $post->url;
             $posts->delete($id);
             return array(

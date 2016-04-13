@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\post\Post;
+use litepubl\utils\http;
 
-class TXMLRPCPingback extends TXMLRPCAbstract {
+class Pingback extends Common
+{
 
     public static function i() {
         return getinstance(__class__);
@@ -20,8 +23,7 @@ class TXMLRPCPingback extends TXMLRPCAbstract {
         }
 
         $url = substr($to, strlen(litepubl::$site->url));
-        $urlmap = turlmap::i();
-        if (!($item = $urlmap->find_item($url))) {
+        if (!($item = litepubl::$urlmap->find_item($url))) {
             return $this->xerror(0, 'Is there no link to us?');
         }
 
@@ -29,7 +31,7 @@ class TXMLRPCPingback extends TXMLRPCAbstract {
             return $this->xerror(33, 'The specified target URL cannot be used as a target. It either doesn\'t exist, or it is not a pingback-enabled resource.');
         }
 
-        $post = tpost::i($item['arg']);
+        $post = Post::i($item['arg']);
         if (!$post->pingenabled || ($post->status != 'published')) {
             return $this->xerror(33, 'The specified target URL cannot be used as a target. It either doesn\'t exist, or it is not a pingback-enabled resource.');
         }

@@ -6,23 +6,24 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\post\Post;
+use litepubl\post\Posts;
+use litepubl\tag\Cats;
+use litepubl\comments\Pingbacks as PingbackItems;
 
-class TXMLRPCMovableType extends TXMLRPCAbstract {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class MovableType extends Common
+{
 
     // on success, array of structs containing ISO.8601 dateCreated, String userid, String postid, String title; on failure, fault
     public function getRecentPostTitles($blogid, $username, $password, $count) {
         $this->auth($username, $password, 'author');
         $count = (int)$count;
-        $posts = tposts::i();
+        $posts = Posts::i();
         $list = $posts->getrecent(litepubl::$options->user, $count);
         $result = array();
         foreach ($list as $id) {
-            $post = tpost::i($id);
+            $post = Post::i($id);
             $result[] = array(
                 'dateCreated' => new IXR_Date($post->posted) ,
                 'userid' => (string)$post->author,
@@ -37,7 +38,7 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
     // On success, an array of structs containing String categoryId and String categoryName; on failure, fault.
     public function getCategoryList($blogid, $username, $password) {
         $this->auth($username, $password, 'author');
-        $categories = tcategories::i();
+        $categories = Cats::i();
         $categories->loadall();
         $result = array();
         foreach ($categories->items as $id => $item) {
@@ -52,10 +53,10 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
     public function getPostCategories($id, $username, $password) {
         $id = (int)$id;
         $this->canedit($username, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
-        $post = tpost::i($id);
-        $categories = tcategories::i();
+        $post = Post::i($id);
+        $categories = Cats::i();
         $categories->loaditems($post->categories);
         $isPrimary = true;
         $result = array();
@@ -75,9 +76,9 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
     public function setPostCategories($id, $username, $password, $catlist) {
         $id = (int)$id;
         $this->canedit($username, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
-        $post = tpost::i($id);
+        $post = Post::i($id);
 
         $list = array();
         foreach ($catlist as $Cat) {
@@ -94,13 +95,12 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
 
     public function getTrackbackPings($id) {
         $id = (int)$id;
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
-        $post = tpost::i($id);
+        $post = Post::i($id);
         if ($post->status != 'published') return $this->xerror(403, 'Target post not published');
         $result = array();
-        $pingbacks = tpingbacks::i($id);
-        if (dbversion) {
+        $pingbacks = PingbacksItems::i($id);
             $items = $tpingbacks->db->getitems("post = $id and status = 'approved' order by posted");
             foreach ($items as $item) {
                 $result[] = array(
@@ -109,25 +109,15 @@ class TXMLRPCMovableType extends TXMLRPCAbstract {
                     'pingTitle' => $item['title']
                 );
             }
-        } else {
-            foreach ($pingbacks->items as $url => $item) {
-                if (!$item['approved']) continue;
-                $result[] = array(
-                    'pingIP' => $item['ip'],
-                    'pingURL' => $item['url'],
-                    'pingTitle' => $item['title']
-                );
-            }
-        }
         return $result;
     }
 
     public function publishPost($id, $username, $password) {
         $id = (int)$id;
         $this->canedit($username, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
-        $post = tpost::i($id);
+        $post = Post::i($id);
         $post->status = 'published';
         $posts->edit($post);
         return true;

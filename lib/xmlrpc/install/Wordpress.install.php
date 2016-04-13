@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCWordpressInstall($self) {
-    $caller = TXMLRPC::i();
+function WordpressInstall($self) {
+    $caller = Server::i();
     $caller->lock();
     // WordPress API
     $caller->add('wp.getPage', 'wp_getPage', get_class($self));

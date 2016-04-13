@@ -6,21 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-class TXMLRPCSystem extends TXMLRPCAbstract {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class System extends Common
+{
 
     public function listMethods() {
-        $caller = TXMLRPC::i();
+        $caller = Server::i();
         return array_keys($caller->items);
     }
 
     public function methodSignature($name) {
-        $caller = TXMLRPC::i();
+        $caller = Server::i();
         if (!$caller->itemexists($name)) return new IXR_Error(-32601, "server error. requested method $name does not exist.");
         $item = $caller->getitem($name);
         if ($item['class'] != __class__) {
@@ -88,7 +85,7 @@ class TXMLRPCSystem extends TXMLRPCAbstract {
 
     public function multicall(array $items) {
         $result = array();
-        $caller = TXMLRPC::i();
+        $caller = Server::i();
         foreach ($items as $item) {
             $r = $caller->call($item['methodName'], isset($item['params']) ? $item['params'] : null);
             if ($r instanceof IXR_Error) {
@@ -104,7 +101,7 @@ class TXMLRPCSystem extends TXMLRPCAbstract {
     }
 
     public function methodExist($name) {
-        $caller = TXMLRPC::i();
+        $caller = Server::i();
         return $caller->itemexists($name);
     }
 
@@ -116,4 +113,4 @@ class TXMLRPCSystem extends TXMLRPCAbstract {
         return $number1 + $number2;
     }
 
-} //class
+}

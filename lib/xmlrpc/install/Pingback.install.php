@@ -6,9 +6,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCPingbackInstall($self) {
-    $Caller = TXMLRPC::i();
+function PingbackInstall($self) {
+    $Caller = Server::i();
     $Caller->Add('pingback.ping', 'ping', get_class($self));
 }

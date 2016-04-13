@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCMetaWeblogInstall($self) {
-    $caller = TXMLRPC::i();
+function MetaWeblogInstall($self) {
+    $caller = Server::i();
     $caller->lock();
     // MetaWeblog API (with MT extensions to structs)
     $caller->add('metaWeblog.newPost', 'newPost', get_class($self));

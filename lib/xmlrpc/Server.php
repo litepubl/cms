@@ -36,7 +36,10 @@ class Server extends \litepubl\core\Items
             @chmod($reqname, 0666);
                     }
 
+
+
         $this->getmethods();
+require_once(__DIR__ . '/IXR.php');
         $this->parser = new Parser();
         $this->parser->owner = $this;
         $this->parser->IXR_Server($this->items);

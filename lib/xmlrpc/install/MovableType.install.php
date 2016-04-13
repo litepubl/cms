@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCMovableTypeInstall($self) {
-    $caller = TXMLRPC::i();
+function MovableTypeInstall($self) {
+    $caller = Server::i();
     $caller->lock();
 
     // MovableType API

@@ -134,6 +134,12 @@ return [
 'TXMLRPC' => 'litepubl\xmlrpc\Server',
 'TXMLRPCAbstract' => 'litepubl\xmlrpc\Common',
 'TXMLRPCAction' => 'litepubl\xmlrpc\Action',
-
-
+'TXMLRPCBlogger' => 'lib\xmlrpc\Blogger',
+'TXMLRPCComments' => 'lib\xmlrpc\Comments.php',
+'TXMLRPCLivejournal' => litepubl\xmlrpc\Livejournal',
+'TXMLRPCMetaWeblog' => 'litepubl\xmlrpc\MetaWeblog',
+'TXMLRPCMovableType' => 'litepubl\xmlrpc\MovableType',
+'TXMLRPCPingback' => 'litepubl\xmlrpc\Pingback',
+'TXMLRPCSystem' => 'litepubl\xmlrpc\System',
+'TXMLRPCWordpress' => 'litepubl\xmlrpc\Wordpress',
 ];

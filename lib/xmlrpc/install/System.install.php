@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCSystemInstall($self) {
-    $caller = TXMLRPC::i();
+function SystemInstall($self) {
+    $caller = Server::i();
     $caller->lock();
 
     $caller->add('system.listMethods', 'listMethods', get_class($self));

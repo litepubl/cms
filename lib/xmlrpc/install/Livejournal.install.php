@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCLivejournalInstall($self) {
-    $caller = TXMLRPC::i();
+function LivejournalInstall($self) {
+    $caller = Server::i();
     $caller->lock();
 
     //Live journal api

@@ -6,37 +6,37 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\comments\Manager;
+use litepubl\comments\Comments as CommentItems;
+use litepubl\post\Post;
 
-class TXMLRPCComments extends TXMLRPCAbstract {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Comments extends Common
+{
 
     public function delete($login, $password, $id, $idpost) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         if (!$manager->delete((int)$id, (int)$idpost)) return $this->xerror(404, "Comment not deleted");
         return true;
     }
 
     public function setstatus($login, $password, $id, $idpost, $status) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         if (!$manager->setstatus((int)$id, (int)$idpost, $status)) return $this->xerror(404, "Comment status not changed");
         return true;
     }
 
     public function add($login, $password, $idpost, $name, $email, $url, $content) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         return $manager->add((int)$idpost, $name, $email, $url, $content);
     }
 
     public function edit($login, $password, $id, $idpost, $comment) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         if (!$manager->edit((int)$id, (int)$idpost, $comment['name'], $comment['email'], $comment['url'], $comment['content'])) {
             return $this->xerror(404, 'Comment not edited');
         }
@@ -45,13 +45,13 @@ class TXMLRPCComments extends TXMLRPCAbstract {
 
     public function reply($login, $password, $id, $idpost, $content) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         return $manager->reply((int)$id, (int)$idpost, $content);
     }
 
     public function getcomment($login, $password, $id, $idpost) {
         $this->auth($login, $password, 'moderator');
-        $comments = tcomments::i((int)$idpost);
+        $comments = CommentItems::i((int)$idpost);
         $comment = $comments->getcomment((int)$id);
         $result = array(
             'id' => (int)$comment->id,
@@ -67,16 +67,16 @@ class TXMLRPCComments extends TXMLRPCAbstract {
 
     public function getrecent($login, $password, $count) {
         $this->auth($login, $password, 'moderator');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         return $manager->getrecent($count);
     }
 
     public function moderate($login, $password, $idpost, $list, $action) {
         $this->auth($login, $password, 'moderator');
         $idpost = (int)$idpost;
-        $comments = tcomments::i($idpost);
+        $comments = CommentItems::i($idpost);
         $comments->lock();
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         $delete = $action == 'delete';
         foreach ($list as $id) {
             $id = (int)$id;
@@ -95,7 +95,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
     public function wpgetCommentCount($blog_id, $login, $password, $idpost) {
         $this->auth($login, $password, 'moderator');
         $idpost = (int)$idpost;
-        $comments = tcomments::i($idpost);
+        $comments = CommentItems::i($idpost);
         if (dbversion) {
             $approved = $comments->getcount("post = $idpost and status = 'approved'");
             $hold = $comments->getcount("post = $idpost and status = 'hold'");
@@ -119,7 +119,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
     public function wpgetComment($blog_id, $login, $password, $id) {
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
-        $comments = tcomments::i();
+        $comments = CommentItems::i();
         if ($comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
         $comment = $comments->getcomment($id);
         return $this->_wpgetcomment($comment);
@@ -146,7 +146,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
         );
     }
 
-    public function wpgetComments($blog_id, $login, $password, $struct) {
+    public function wpgeCommentItems($blog_id, $login, $password, $struct) {
         $this->auth($login, $password, 'moderator');
         $where = '';
         $where.= isset($struct['status']) ? ' status = ' . dbquote($struct['status']) : '';
@@ -155,7 +155,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
         $count = isset($struct['number']) ? (int)$struct['number'] : 10;
         $limit = " order by posted limit $offset, $count";
 
-        $comments = tcomments::i();
+        $comments = CommentItems::i();
         $items = $comments->select($where, $limit);
         $result = array();
         $comment = new tcomment();
@@ -169,16 +169,16 @@ class TXMLRPCComments extends TXMLRPCAbstract {
     public function wpdeleteComment($blog_id, $login, $password, $id) {
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
-        $comments = tcomments::i();
+        $comments = CommentItems::i();
         if (!$comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         return $manager->delete($id);
     }
 
     public function wpeditComment($blog_id, $login, $password, $id, $struct) {
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
-        $comments = tcomments::i();
+        $comments = CommentItems::i();
         if (!$comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
         $comment = $comment->getcomment($id);
 
@@ -187,7 +187,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
             $comment->status = $struct['status'] == 'approve' ? 'approved' : $struct['status'];
         }
 
-        $comusers = tcomusers::i();
+        $comusers = Users::i();
         $comment->author = $comusers->add(isset($struct['author']) ? $struct['author'] : $comment->name, isset($struct['author_email']) ? $struct['author_email'] : $comment->email, isset($struct['author_url']) ? $struct['author_url'] : $comment->url);
 
         if (!empty($struct['date_created_gmt'])) {
@@ -208,8 +208,7 @@ class TXMLRPCComments extends TXMLRPCAbstract {
         if (is_numeric($idpost)) {
             $idpost = absint($idpost);
         } else {
-            $urlmap = turlmap::i();
-            if (!($item = $urlmap->find_item($url))) {
+            if (!($item = litepubl::$urlmap->find_item($url))) {
                 return $this->xerror(404, 'Invalid post ID.');
             }
 
@@ -219,16 +218,16 @@ class TXMLRPCComments extends TXMLRPCAbstract {
             $idpost = $item['arg'];
         }
 
-        $post = tpost::i($idpost);
+        $post = Post::i($idpost);
         if (!$post->commentenabled || ($post->status != 'published')) {
             return $this->xerror(403, 'The specified post cannot be used to commenting');
         }
 
-        $manager = tcommentmanager::i();
+        $manager = Manager::i();
         return $manager->add($idpost, isset($struct['author']) ? $struct['author'] : '', isset($struct['author_email']) ? $struct['author_email'] : '', isset($struct['author_url']) ? $struct['author_url'] : '', $struct['content']);
     }
 
-    public function wpgetCommentStatusList($blog_id, $login, $password) {
+    public function wpgeCommentItemstatusList($blog_id, $login, $password) {
         $this->auth($login, $password, 'moderator');
         return array(
             'hold' => 'Unapproved',

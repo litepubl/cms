@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCCommentsInstall($self) {
-    $caller = TXMLRPC::i();
+function CommentsInstall($self) {
+    $caller = Server::i();
     $caller->lock();
 
     $caller->add('litepublisher.deletecomment', 'delete', get_class($self));

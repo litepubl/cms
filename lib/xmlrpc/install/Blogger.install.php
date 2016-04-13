@@ -6,10 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
 
-function TXMLRPCBloggerInstall($self) {
-    $caller = TXMLRPC::i();
+function BloggerInstall($self) {
+    $caller = Server::i();
     $caller->lock();
 
     // Blogger API

@@ -6,13 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\post\Posts;
+use litepubl\post\Post;
 
-class TXMLRPCBlogger extends TXMLRPCAbstract {
+class Blogger extends Common
+{
 
-    public static function i() {
-        return getinstance(__class__);
-    }
     /*
     appkey (string): Unique identifier/passcode of the application sending the post. (See access info.)
     username (string): Login for the Blogger user who's blogs will be retrieved.
@@ -48,10 +48,10 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
     public function getPost($appkey, $id, $login, $password) {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Sorry, no such post.");
 
-        $Post = tpost::i($id);
+        $Post = Post::i($id);
         $categories = implode(',', $Post->categories);
 
         $content = '<title>' . $Post->title . '</title>';
@@ -71,11 +71,11 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
     public function getRecentPosts($appkey, $blogid, $login, $password, $count) {
         $this->auth($login, $password, 'author');
 
-        $posts = tposts::i();
+        $posts = Posts::i();
         $Items = $posts->finditems("status = 'published'", " order by posted desc limit 0, " . ((int)$count));
 
         foreach ($Items as $id) {
-            $Post = tpost::i($id);
+            $Post = Post::i($id);
             $categories = implode(',', $Post->categories);
             $content = '<title>' . $Post->title . '</title>';
             $content.= '<category>' . $categories . '</category>';
@@ -132,8 +132,8 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
     public function newPost($appkey, $blogid, $login, $password, $content, $publish) {
         $this->auth($login, $password, 'author');
 
-        $posts = tposts::i();
-        $post = tpost::i(0);
+        $posts = Posts::i();
+        $post = Post::i(0);
         $post->status = $publish ? 'published' : 'draft';
         $post->title = $this->getposttitle($content);
         $post->content = $this->removepostdata($content);
@@ -146,9 +146,9 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
     public function editPost($appkey, $id, $login, $password, $content, $publish) {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, 'Sorry, no such post.');
-        $post = tpost::i($id);
+        $post = Post::i($id);
         $post->status = $publish ? 'published' : 'draft';
         $post->title = $this->getposttitle($content);
         $post->content = $this->removepostdata($content);
@@ -161,7 +161,7 @@ class TXMLRPCBlogger extends TXMLRPCAbstract {
     public function deletePost($appkey, $id, $login, $password) {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, 'Sorry, no such post.');
         $posts->delete($id);
         return true;

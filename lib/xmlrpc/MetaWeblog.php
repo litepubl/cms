@@ -6,13 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\xmlrpc;
+use litepubl\post\Posts;
+use litepubl\post\Post;
+use litepubl\post\MediaParser;
+use litepubl\post\Files;
+use litepubl\pages\Menus;
+use litepubl\pages\Menu;
+use litepubl\utils\LinkGenerator;
+use litepubl\view\Lang;
+use litepubl\tag\Cats;
 
-class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
+class MetaWeblog extends Common
+{
 
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function MWSetPingCommentStatus(array & $Struct, tpost $post) {
         if (isset($struct["mt_allow_comments"])) {
@@ -112,8 +119,8 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     //forward implementation
     public function wp_newPage($blogid, $username, $password, $struct, $publish) {
         $this->auth($username, $password, 'editor');
-        $menus = tmenus::i();
-        $menu = tmenu::i(0);
+        $menus = Menus::i();
+        $menu = Menu::i(0);
         $menu->status = $publish ? 'published' : 'draft';
         $this->WPAssignPage($struct, $menu);
         return "menu_" . $menus->add($menu);
@@ -128,7 +135,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         }
 
         if (!empty($struct["wp_slug"])) {
-            $linkgen = tlinkgenerator::i();
+            $linkgen = LinkGenerator::i();
             $menu->url = $linkgen->AddSlashes($struct['wp_slug']);
         }
 
@@ -155,7 +162,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         if ($more == '') {
             $post->content = $struct['description'];
         } else {
-            $morelink = sprintf("\n<!--more %s-->\n", tlocal::get('post', 'more'));
+            $morelink = sprintf("\n<!--more %s-->\n", Lang::get('post', 'more'));
             $post->content = $struct['description'] . $morelink . $more;
         }
 
@@ -167,7 +174,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         }
 
         if (!empty($struct["wp_slug"])) {
-            $linkgen = tlinkgenerator::i();
+            $linkgen = LinkGenerator::i();
             $post->url = $linkgen->AddSlashes($struct["wp_slug"] . '/');
         } elseif (!empty($struct['link'])) {
             $post->link = $struct['link'];
@@ -212,9 +219,9 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         $this->auth($username, $password, 'editor');
         if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
-        $menus = tmenus::i();
+        $menus = Menus::i();
         if (!$menus->itemexists($id)) return $this->xerror(404, "Sorry, no such page.");
-        $menu = tmenu::i($id);
+        $menu = Menu::i($id);
         $menu->status = $publish ? 'published' : 'draft';
         $this->WPAssignPage($struct, $menu);
         $menus->edit($menu);
@@ -225,7 +232,7 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     public function getCategories($blogid, $username, $password) {
         $this->auth($username, $password, 'author');
 
-        $categories = tcategories::i();
+        $categories = Cats::i();
         $categories->loadall();
         $result = array();
         foreach ($categories->items as $id => $item) {
@@ -250,8 +257,8 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
         }
 
         $this->auth($username, $password, 'author');
-        $posts = tposts::i();
-        $post = tpost::i(0);
+        $posts = Posts::i();
+        $post = Post::i(0);
 
         switch ($publish) {
             case 1:
@@ -278,10 +285,10 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
         $postid = (int)$postid;
         $this->canedit($username, $password, $postid);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($postid)) return $this->xerror(404, "Invalid post id.");
 
-        $post = tpost::i($postid);
+        $post = Post::i($postid);
         switch ($publish) {
             case 1:
             case 'true':
@@ -304,15 +311,15 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     public function getPost($id, $username, $password) {
         $id = (int)$id;
         $this->canedit($username, $password, $id);
-        $posts = tposts::i();
+        $posts = Posts::i();
         if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
 
-        $post = tpost::i($id);
+        $post = Post::i($id);
         return $this->GetStruct($post);
     }
 
     private function GetStruct(tpost $post) {
-        $categories = tcategories::i();
+        $categories = Cats::i();
         return array(
             'dateCreated' => new IXR_Date($post->posted) ,
             'userid' => (string)$post->author,
@@ -340,11 +347,11 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
     public function getRecentPosts($blogid, $username, $password, $numberOfPosts) {
         $this->auth($username, $password, 'author');
         $count = (int)$numberOfPosts;
-        $posts = tposts::i();
+        $posts = Posts::i();
         $list = $posts->getrecent(litepubl::$options->user, $count);
         $result = array();
         foreach ($list as $id) {
-            $post = tpost::i($id);
+            $post = Post::i($id);
             $result[] = $this->GetStruct($post);
         }
 
@@ -362,11 +369,11 @@ class TXMLRPCMetaWeblog extends TXMLRPCAbstract {
 
         if (empty($filename)) return $this->xerror(500, "Empty filename");
 
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $id = $parser->upload($filename, $struct['bits'], '', '', '', $overwrite);
 
         if (!$id) return $this->xerror(500, "Could not write file $name");
-        $files = tfiles::i();
+        $files = Files::i();
         $item = $files->getitem($id);
 
         return array(
