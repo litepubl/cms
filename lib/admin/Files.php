@@ -6,17 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\post\Files as FileItems;
+use litepubl\post\MediaParser;
+use litepubl\view\Lang;
+use litepubl\view\Filter;
+use litepubl\perms\Files as PrivateFiles;
+use litepubl\utils\http;
 
-class tadminfiles extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Files extends Menu
+{
 
     public function getcontent() {
         $result = '';
-        $files = tfiles::i();
+        $files = FileItems::i();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
         $args = new targs();
@@ -61,11 +64,11 @@ class tadminfiles extends tadminmenu {
                 case 'edit':
                     $item = $files->getitem($id);
                     $args->add($item);
-                    $args->title = tcontentfilter::unescape($item['title']);
-                    $args->description = tcontentfilter::unescape($item['description']);
-                    $args->keywords = tcontentfilter::unescape($item['keywords']);
+                    $args->title = Filter::unescape($item['title']);
+                    $args->description = Filter::unescape($item['description']);
+                    $args->keywords = Filter::unescape($item['keywords']);
                     $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? tadminperms::getcombo($item['idperm'], 'idperm') : '') , $args);
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? Perms::getcombo($item['idperm'], 'idperm') : '') , $args);
                     break;
                 }
         }
@@ -116,7 +119,7 @@ class tadminfiles extends tadminmenu {
     }
 
     public function processform() {
-        $files = tfiles::i();
+        $files = FileItems::i();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
 
@@ -129,9 +132,12 @@ class tadminfiles extends tadminmenu {
                 if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
                     return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
                 }
-                if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
+                if ($isauthor && ($r = AuthorRights::i()->canupload())) {
+return $r;
+}
+
                 $overwrite = isset($_POST['overwrite']);
-                $parser = tmediaparser::i();
+                $parser = MediaParser::i();
                 $id = $parser->uploadfile($_FILES['filename']['name'], $_FILES['filename']['tmp_name'], $_POST['title'], $_POST['description'], $_POST['keywords'], $overwrite);
             } else {
                 //downloadurl
@@ -141,14 +147,16 @@ class tadminfiles extends tadminmenu {
                 }
                 $filename = basename(trim($_POST['downloadurl'], '/'));
                 if ($filename == '') $filename = 'noname.txt';
-                if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
+                if ($isauthor && ($r = AuthorRights::i()->canupload())) {
+return $r;
+}
                 $overwrite = isset($_POST['overwrite']);
-                $parser = tmediaparser::i();
+                $parser = MediaParser::i();
                 $id = $parser->upload($filename, $content, $_POST['title'], $_POST['description'], $_POST['keywords'], $overwrite);
             }
 
             if (isset($_POST['idperm'])) {
-                tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
+                PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
             }
 
             return $admintheme->success($lang->success);
@@ -156,7 +164,10 @@ class tadminfiles extends tadminmenu {
             $id = $this->idget();
             if (!$files->itemexists($id)) return $this->notfound;
             $files->edit($id, $_POST['title'], $_POST['description'], $_POST['keywords']);
-            if (isset($_POST['idperm'])) tprivatefiles::i()->setperm($id, (int)$_POST['idperm']);
+            if (isset($_POST['idperm'])) {
+PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
+}
+
             return $admintheme->success($lang->edited);
         }
 

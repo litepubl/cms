@@ -134,6 +134,7 @@ return [
 'tadmincommentmanager' => 'litepubl\admin\Comments',
 'tadmincomusers' => 'litepubl\admin\Commentators',
 'tadminmoderator' => 'litepubl\admin\Moderator',
+'tadminfiles' => 'litepubl\admin\Files',
 
 
 
