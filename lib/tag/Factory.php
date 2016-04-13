@@ -7,9 +7,8 @@
  */
 
 namespace litepubl\tag;
-use litepubl\core\Data;
 
-class Factory extends Data
+class Factory
 {
 
     public static function i() {
@@ -24,4 +23,4 @@ class Factory extends Data
         return \litepubl\post\Post::i($id);
     }
 
-} //class
+}

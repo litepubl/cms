@@ -33,11 +33,7 @@ if (strend($filename, 'php')) {
         $oBeautify->process();
 $s = $oBeautify->get();
 $s = trim($s);
-
-$lastline = substr($s, strrpos($s, "\n") + 1);
-if (strbegin($lastline, ' ')) {
-echo basename($filename), '<br>spaces finished<br>';
-}
+$s .= "\n\n";
 } else if (strend($filename, '.less')) {
 $Lines = explode("\n", $s);
 $s = '';

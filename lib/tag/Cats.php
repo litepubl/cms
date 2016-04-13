@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tag;
+use litepubl\widget\Cats as CatsWidget;
 
-class tcategories extends tcommontags {
+class Cats extends Common
+{
     //public  $defaultid;
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -33,8 +32,8 @@ class tcategories extends tcommontags {
     public function save() {
         parent::save();
         if (!$this->locked) {
-            tcategorieswidget::i()->expire();
+            CatsWidget::i()->expire();
         }
     }
 
-} //class
+}

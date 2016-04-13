@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tag;
+use litepubl\widget\Tags as TagsWidget;
 
-class ttags extends tcommontags {
+class Tags extends Common
+{
 
     public static function i() {
         return getinstance(__class__);
@@ -27,8 +29,8 @@ class ttags extends tcommontags {
     public function save() {
         parent::save();
         if (!$this->locked) {
-            ttagswidget::i()->expire();
+            TagsWidget::i()->expire();
         }
     }
 
-} //class
+}

@@ -76,12 +76,14 @@ return 404;
         $perm = Perm::i($item['idperm']);
         $result.= $perm->getheader($this);
         $result.= sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
-        //die(htmlspecialchars($result));
         return $result;
     }
 
     public static function sendfile(array $item) {
-        if (ob_get_level()) ob_end_clean();
+        if (ob_get_level()) {
+ob_end_clean();
+}
+
         if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($item['size'] . '-' . $item['hash'] == trim($_SERVER['HTTP_IF_NONE_MATCH'], '"\'')) {
                 header('HTTP/1.1 304 Not Modified', true, 304);
@@ -112,7 +114,10 @@ return 404;
 
         header('Cache-Control: private');
         header('Content-type: ' . $item['mime']);
-        if ('application/octet-stream' == $item['mime']) header('Content-Disposition: attachment; filename=' . $filename);
+        if ('application/octet-stream' == $item['mime']) {
+header('Content-Disposition: attachment; filename=' . $filename);
+}
+
         header('Last-Modified: ' . date('r', strtotime($item['posted'])));
         header(sprintf('ETag: "%s-%s"', $item['size'], $item['hash']));
         header('Accept-Ranges: bytes');
@@ -121,20 +126,19 @@ return 404;
         if ($fh = fopen($realfile, 'rb')) {
             fseek($fh, $from);
             $curpos = $from;
-            $bufsize = 1024 * 16;
+            $bufsize = 1024 * 8;
             while (!feof($fh) && !connection_status() && ($curpos <= $end)) {
                 set_time_limit(1);
                 $s = fread($fh, min($bufsize, $end - $curpos + 1));
                 $curpos+= strlen($s);
                 echo $s;
                 flush();
-                //@ob_flush();
-                
             }
+
             fclose($fh);
         }
 
         exit();
     }
 
-} //class
+}

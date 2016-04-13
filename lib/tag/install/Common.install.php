@@ -6,37 +6,38 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\tag;
+use litepubl\post\Posts;
+use litepubl\widget\Widgets;
 
-function tcommontagsInstall($self) {
-    if ('litepubl\tcommontags' == get_class($self)) return;
+function CommonInstall($self) {
+    if ((__NAMESPACE__ . '\Common') == get_class($self)) return;
 
-    $posts = tposts::i();
+    $posts = Posts::i();
     $posts->lock();
     $posts->added = $self->postedited;
     $posts->edited = $self->postedited;
     $posts->deleted = $self->postdeleted;
     $posts->unlock();
 
-    $urlmap = turlmap::i();
-    $urlmap->add("/$self->PermalinkIndex/", get_class($self) , 0);
+    litepubl::$urlmap->add("/$self->PermalinkIndex/", get_class($self) , 0);
 
-    $manager = tdbmanager::i();
+    $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir . 'tags.sql'));
     $manager->createtable($self->itemsposts->table, file_get_contents($dir . 'items.posts.sql'));
     $manager->createtable($self->contents->table, file_get_contents($dir . 'tags.content.sql'));
 }
 
-function tcommontagsUninstall($self) {
-    tposts::unsub($self);
+function CommonUninstall($self) {
+    Posts::unsub($self);
     turlmap::unsub($self);
 
-    $widgets = twidgets::i();
+    $widgets = Widgets::i();
     $widgets->deleteclass(get_class($self));
 }
 
-function tcommontagsGetsitemap($self, $from, $count) {
+function CommonGetsitemap($self, $from, $count) {
     $result = array();
     $self->loadall();
     foreach ($self->items as $id => $item) {
@@ -46,5 +47,6 @@ function tcommontagsGetsitemap($self, $from, $count) {
             'pages' => (int)$item['lite'] ? 1 : ceil($item['itemscount'] / litepubl::$options->perpage)
         );
     }
+
     return $result;
 }

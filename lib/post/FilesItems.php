@@ -11,7 +11,7 @@ namespace litepubl\post;
 class FileItems extend \litepubl\core\ItemsPosts
 {
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->basename = 'fileitems';
         $this->table = 'filesitemsposts';

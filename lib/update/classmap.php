@@ -63,6 +63,14 @@ return [
 'tarchiveswidget' => 'litepubl\widget\Archives',
 'tpinger' => 'litepubl\post\Pinger",
 
+/cats
+'tcategories' => 'litepubl\tag\Cats',
+'tcommontags' => 'litepubl\tag\Common',
+'ttags' => 'litepubl\tag\Tags',
+'ttagfactory' => 'litepubl\tag\Factory',
+'ttagcontent' => 'litepubl\tag\Content',
+
+
 //pages
 'trobotstxt' => 'litepubl\pages\RobotsTxt',
 'tsimplecontent' => 'litepubl\pages\Simple',

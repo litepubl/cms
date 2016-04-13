@@ -7,10 +7,11 @@
  */
 
 namespace litepubl\tag;
-use litepubl\core\Items;
-use litepubl\core\TemplateInterface;
+use litepubl\view\Theme;
+use litepubl\view\Args;
 
-class Common extends Items implements TemplateInterface {
+class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterface
+ {
     public $factory;
     public $contents;
     public $itemsposts;
@@ -22,7 +23,7 @@ class Common extends Items implements TemplateInterface {
     private $_idposts;
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->addevents('changed', 'onbeforecontent', 'oncontent');
         $this->data['includechilds'] = false;
@@ -36,8 +37,7 @@ class Common extends Items implements TemplateInterface {
 
     protected function createfactory() {
         $this->factory = litepubl::$classes->getfactory($this);
-        $this->contents = new ttagcontent($this);
-        if (!$this->dbversion) $this->data['itemsposts'] = array();
+        $this->contents = new Content($this);
         $this->itemsposts = new titemspostsowner($this);
     }
 
@@ -69,8 +69,8 @@ class Common extends Items implements TemplateInterface {
         if (count($sorted) == 0) return '';
         $result = '';
         $iconenabled = !litepubl::$options->icondisabled;
-        $theme = ttheme::i();
-        $args = new targs();
+        $theme = Theme::i();
+        $args = new Args();
         $args->rel = $this->PermalinkIndex;
         $args->parent = $parent;
         foreach ($sorted as $id) {

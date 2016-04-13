@@ -10,10 +10,6 @@ namespace litepubl;
 
 class tdownloadcounter extends titems {
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
     protected function create() {
         parent::create();
         $this->cache = false;
@@ -49,4 +45,4 @@ class tdownloadcounter extends titems {
         litepubl::$urlmap->redir($url);
     }
 
-} //class
+}
