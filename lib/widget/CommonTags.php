@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Theme;
 
-class tcommontagswidget extends twidget {
+class CommonTags extends Widget
+ {
 
     protected function create() {
         parent::create();
@@ -24,7 +26,7 @@ class tcommontagswidget extends twidget {
     }
 
     public function getcontent($id, $sidebar) {
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $items = $this->owner->getsortedcontent(array(
             'item' => $theme->getwidgetitem($this->template, $sidebar) ,
             'subcount' => $theme->getwidgettml($sidebar, $this->template, 'subcount') ,
@@ -34,4 +36,4 @@ class tcommontagswidget extends twidget {
         return str_replace('$parent', 0, $theme->getwidgetcontent($items, $this->template, $sidebar));
     }
 
-} //class
+}

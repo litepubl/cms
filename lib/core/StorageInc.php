@@ -43,4 +43,4 @@ class StorageInc extends Storage
         $this->error('Call loadfile');
     }
 
-} //class
+}

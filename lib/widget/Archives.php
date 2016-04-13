@@ -50,4 +50,4 @@ class Archives extends Widget
         return $theme->getwidgetcontent($result, 'archives', $sidebar);
     }
 
-} //class
+}

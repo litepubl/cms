@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\tag\Tags as Owner;
+use litepubl\view\Lang;
 
-class ttagswidget extends tcommontagswidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Tags extends CommonTags
+{
 
     protected function create() {
         parent::create();
@@ -23,11 +22,11 @@ class ttagswidget extends tcommontagswidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'tags');
+        return Lang::get('default', 'tags');
     }
 
     public function getowner() {
-        return ttags::i();
+        return Owner::i();
     }
 
-} //class
+}

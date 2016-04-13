@@ -60,7 +60,6 @@ return [
 'trssMultimedia' => 'litepubl\post\RssFiles',
 'tmediaparser' => 'litepubl\post\MediaParser',
 'tarchives' => 'litepubl\post\Archives',
-'tarchiveswidget' => 'litepubl\widget\Archives',
 'tpinger' => 'litepubl\post\Pinger",
 
 /cats
@@ -114,8 +113,12 @@ return [
 'twidget' => 'litepubl\widget\Widget',
 'twidgets' => 'litepubl\widget\Widgets',
 'twidgetscache' => 'litepubl\widget\Cache',
-
-
+'tcategorieswidget' => 'litepubl\widget\Cats',
+'ttagswidget' => 'litepubl\widget\Tags',
+'tcommontagswidget' => 'litepubl\widget\CommonTags',
+'tarchiveswidget' => 'litepubl\widget\Archives',
+'tcommentswidget' => 'litepubl\widget\Comments',
+'tclasswidget' => 'litepubl\widget\
 'tsidebars' => 'litepubl\widget\Sidebars',
 
 //admin

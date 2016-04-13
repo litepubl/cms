@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\tag\Cats as Owner;
+use litepubl\view\Lang;
 
-class tcategorieswidget extends tcommontagswidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Cats extends CommonTags
+ {
 
     protected function create() {
         parent::create();
@@ -21,11 +20,11 @@ class tcategorieswidget extends tcommontagswidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'categories');
+        return Lang::get('default', 'categories');
     }
 
     public function getowner() {
-        return tcategories::i();
+        return Owner::i();
     }
 
-} //class
+}

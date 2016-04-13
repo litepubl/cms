@@ -6,13 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
-class tcommentswidget extends twidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Comments extends Widget
+ {
 
     protected function create() {
         parent::create();
@@ -24,14 +23,17 @@ class tcommentswidget extends twidget {
     }
 
     public function getdeftitle() {
-        return tlocal::get('default', 'recentcomments');
+        return Lang::get('default', 'recentcomments');
     }
 
     public function getcontent($id, $sidebar) {
         $recent = $this->getrecent($this->maxcount);
-        if (count($recent) == 0) return '';
+        if (!count($recent)) {
+return '';
+}
+
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->getwidgetitem('comments', $sidebar);
         $url = litepubl::$site->url;
         $args = targs::i();

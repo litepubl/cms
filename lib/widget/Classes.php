@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\widget;
 
-class tclasswidget extends twidget {
+class tclasswidget extends Widget
+ {
     private $item;
 
     private function isvalue($name) {
@@ -22,7 +23,7 @@ class tclasswidget extends twidget {
     public function __get($name) {
         if ($this->isvalue($name)) {
             if (!$this->item) {
-                $widgets = twidgets::i();
+                $widgets = Widgets::i();
                 $this->item = & $widgets->finditem($widgets->find($this));
             }
             return $this->item[$name];
@@ -33,7 +34,7 @@ class tclasswidget extends twidget {
     public function __set($name, $value) {
         if ($this->isvalue($name)) {
             if (!$this->item) {
-                $widgets = twidgets::i();
+                $widgets = Widgets::i();
                 $this->item = & $widgets->finditem($widgets->find($this));
             }
             $this->item[$name] = $value;
@@ -44,7 +45,7 @@ class tclasswidget extends twidget {
 
     public function save() {
         parent::save();
-        twidgets::i()->save();
+        Widgets::i()->save();
     }
 
-} //class
+}

@@ -13,6 +13,7 @@ class StorageMemcache extends Storage
     public $memcache;
 
     public function __construct() {
+parent::__construct();
         $this->memcache = litepubl::$memcache;
     }
 
@@ -39,4 +40,4 @@ class StorageMemcache extends Storage
         $this->memcache->delete($filename);
     }
 
-} //class
+}
