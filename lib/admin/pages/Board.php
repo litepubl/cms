@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\pages;
 use litepul\view\Guard;
 use litepul\view\Lang;
 use litepul\view\Schemes;

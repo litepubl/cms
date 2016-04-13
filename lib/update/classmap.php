@@ -129,7 +129,10 @@ return [
 //admin
 'iadmin' => 'litepubl\admin\AdminInterface',
 'tauthor_rights' => 'litepubl\admin\AuthorRights',
-'tadminboard' => 'litepubl\admin\Board',
+'tadminboard' => 'litepubl\admin\pages\Board',
+'tadminform' => 'litepubl\admin\pages\Form',
+'tadminlogin' => 'litepubl\admin\pages\Login',
+
 'tadmincssmerger' => 'litepubl\admin\Css',
 'tadmincommentmanager' => 'litepubl\admin\Comments',
 'tadmincomusers' => 'litepubl\admin\Commentators',

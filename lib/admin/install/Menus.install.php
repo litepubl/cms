@@ -59,7 +59,8 @@ function MenusInstall($self) {
         $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
     }
 
-    $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager'); {
+    $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager');
+ {
         $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
         $self->items[$id]['title'] = tlocal::get('menu', 'addmenu');
         $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');

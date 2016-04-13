@@ -6,30 +6,40 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin/pages;
+use litepubl\view\Lang;
+use litepubl\view\Schemes;
+use litepubl\view\Schema;
 
-class tadminform extends tevents implements itemplate {
+class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
+{
     protected $formresult;
     protected $title;
     protected $section;
 
     public function gettitle() {
-        return tlocal::get($this->section, 'title');
+        return Lang::get($this->section, 'title');
     }
 
     public function gethead() {
     }
+
     public function getkeywords() {
     }
+
     public function getdescription() {
     }
 
-    public function getidview() {
-        return tviews::i()->defaults['admin'];
+    public function getIdSchema() {
+        return Schemes::i()->defaults['admin'];
     }
 
-    public function setidview($id) {
+    public function setIdSchema($id) {
     }
+
+public function gettheme() {
+return Schema::getSchema($this->theme;
+}
 
     public function request($arg) {
         $this->cache = false;
@@ -47,30 +57,23 @@ class tadminform extends tevents implements itemplate {
     public function getcont() {
         $result = $this->formresult;
         $result.= $this->getcontent();
-        $theme = ttheme::i();
+        $theme = $this->theme;
         return $theme->simple($result);
     }
 
     public function gethtml() {
         $result = tadminhtml::i();
-        $result->section = $this->section;
         $lang = tlocal::admin($this->section);
         return $result;
     }
 
-    public function set_cache($content) {
-        litepubl::$urlmap->cache->set($this->basename, $content);
-    }
-
-    public function get_cache() {
-        return litepubl::$urlmap->cache->get($this->basename);
-    }
-
     public function getform() {
-        if ($result = $this->get_cache()) return $result;
+        if ($result = litepubl::$cache->getString($this->getbasename())) {
+return $result;
+}
 
-        $result = $this->createform();
-        $this->set_cache($result);
+        $result = $this->createForm();
+litepubl::$cache->setString($this->getbasename(), $result);
         return $result;
     }
 
@@ -78,4 +81,4 @@ class tadminform extends tevents implements itemplate {
         return '';
     }
 
-} //class
+}

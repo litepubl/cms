@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\pages;
 
 function BoardInstall($self) {
     litepubl::$urlmap->add('/admin/', get_class($self) , null, 'normal');

@@ -6,13 +6,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
 
-function tadminloginInstall($self) {
+function LoginInstall($self) {
     litepubl::$urlmap->addget('/admin/login/', get_class($self));
     litepubl::$urlmap->add('/admin/logout/', get_class($self) , 'out', 'get');
 }
 
-function tadminloginUninstall($self) {
+function LoginUninstall($self) {
     turlmap::unsub($self);
 }
