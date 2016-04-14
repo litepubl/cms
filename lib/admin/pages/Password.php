@@ -6,29 +6,33 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
+use litepubl\admin\Form as AdminForm;
+use litepubl\admin\UList;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+use litepubl\core\Session;
+use litepubl\core\Users;
+use litepubl\utils\Mailer;
 
-class tadminpassword extends tadminform {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Password extends Form
+{
 
     protected function create() {
         parent::create();
         $this->section = 'password';
     }
 
-    public function createform() {
-        $form = new adminform();
+    public function createForm() {
+        $form = new AdminForm();
         $form->title = tlocal::admin('password')->enteremail;
-        $form->body = tview::getview($this)->theme->getinput('email', 'email', '', 'E-Mail');
+        $form->body = $this->theme->getinput('email', 'email', '', 'E-Mail');
         $form->submit = 'send';
         return $form->gettml();
     }
 
     public function getcontent() {
-        $theme = tview::getview($this)->theme;
+        $theme = $this->theme;
         $lang = tlocal::admin('password');
 
         if (empty($_GET['confirm'])) {
@@ -37,7 +41,7 @@ class tadminpassword extends tadminform {
 
         $email = $_GET['email'];
         $confirm = $_GET['confirm'];
-        tsession::start('password-restore-' . md5(litepubl::$options->hash($email)));
+        Session::start('password-restore-' . md5(litepubl::$options->hash($email)));
 
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
             if (!isset($_SESSION['email'])) {
@@ -54,11 +58,11 @@ class tadminpassword extends tadminform {
             if ($id == 1) {
                 litepubl::$options->changepassword($password);
             } else {
-                tusers::i()->changepassword($id, $password);
+                Users::i()->changepassword($id, $password);
             }
 
-            $admin = tview::getview($this)->admintheme;
-            $ulist = new ulist($admin);
+            $admin = $this->admintheme;
+            $ulist = new UList($admin);
             return $admin->getsection($lang->uselogin, $ulist->get(array(
                 $theme->link('/admin/login/', $lang->controlpanel) ,
                 'E-Mail' => $email,
@@ -72,7 +76,7 @@ class tadminpassword extends tadminform {
     public function getiduser($email) {
         if (empty($email)) return false;
         if ($email == strtolower(trim(litepubl::$options->email))) return 1;
-        return tusers::i()->emailexists($email);
+        return Users::i()->emailexists($email);
     }
 
     public function processform() {
@@ -95,7 +99,7 @@ class tadminpassword extends tadminform {
 
         $args = new targs();
 
-        tsession::start('password-restore-' . md5(litepubl::$options->hash($email)));
+        Session::start('password-restore-' . md5(litepubl::$options->hash($email)));
         if (!isset($_SESSION['count'])) {
             $_SESSION['count'] = 1;
         } else {
@@ -113,7 +117,7 @@ class tadminpassword extends tadminform {
         if ($id == 1) {
             $name = litepubl::$site->author;
         } else {
-            $item = tusers::i()->getitem($id);
+            $item = Users::i()->getitem($id);
             $args->add($item);
             $name = $item['name'];
         }
@@ -121,12 +125,12 @@ class tadminpassword extends tadminform {
         $args->password = $password;
         tlocal::usefile('mail');
         $lang = tlocal::i('mailpassword');
-        $theme = ttheme::i();
+        $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
 
-        tmailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
+        Mailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
         return true;
     }
 

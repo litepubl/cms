@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
 
-function tadminpasswordInstall($self) {
+function PasswordInstall($self) {
     litepubl::$urlmap->addget('/admin/password/', get_class($self));
 }
 
-function tadminpasswordUninstall($self) {
+function PasswordUninstall($self) {
     turlmap::unsub($self);
 }

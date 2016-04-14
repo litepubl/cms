@@ -132,11 +132,12 @@ return [
 'tadminboard' => 'litepubl\admin\pages\Board',
 'tadminform' => 'litepubl\admin\pages\Form',
 'tadminlogin' => 'litepubl\admin\pages\Login',
+'tadminpassword' => 'litepubl\admin\pages\Password',
 
 'tadmincssmerger' => 'litepubl\admin\Css',
-'tadmincommentmanager' => 'litepubl\admin\Comments',
-'tadmincomusers' => 'litepubl\admin\Commentators',
-'tadminmoderator' => 'litepubl\admin\Moderator',
+'tadmincommentmanager' => 'litepubl\admin\comments\Comments',
+'tadmincomusers' => 'litepubl\admin\comments\Authors',
+'tadminmoderator' => 'litepubl\admin\comments\Moderator',
 'tadminfiles' => 'litepubl\admin\Files',
 
 

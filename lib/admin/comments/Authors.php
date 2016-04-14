@@ -6,13 +6,14 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\comments;
 use litepubl\core\Users;
-use litepubl\veiw\Args;
+use litepubl\view\Args;
 use litepubl\comments\Comments;
 use litepubl\comments\Subscribers;
+use litepubl\admin;
 
-class Commentators extends Menu 
+class Authors extends Menu 
 {
 
     public function getcontent() {

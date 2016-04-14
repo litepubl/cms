@@ -8,10 +8,10 @@
 
 namespace litepubl;
 
-function tadminsubscribersInstall($self) {
+function SubscribersInstall($self) {
     litepubl::$urlmap->addget('/admin/subscribers/', get_class($self));
 }
 
-function tadminsubscribersUninstall($self) {
+function SubscribersUninstall($self) {
     turlmap::unsub($self);
 }

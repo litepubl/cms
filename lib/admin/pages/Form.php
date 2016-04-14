@@ -41,6 +41,10 @@ public function gettheme() {
 return Schema::getSchema($this->theme;
 }
 
+public function getadmintheme() {
+return Schema::getSchema($this->admintheme;
+}
+
     public function request($arg) {
         $this->cache = false;
         tlocal::usefile('admin');
@@ -77,7 +81,7 @@ litepubl::$cache->setString($this->getbasename(), $result);
         return $result;
     }
 
-    public function createform() {
+    public function createForm() {
         return '';
     }
 
