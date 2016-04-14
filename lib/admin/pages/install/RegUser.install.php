@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
 
-function tadminreguserInstall($self) {
+function RegUserInstall($self) {
     litepubl::$urlmap->addget('/admin/reguser/', get_class($self));
 }
 
-function tadminreguserUninstall($self) {
+function RegUserUninstall($self) {
     turlmap::unsub($self);
 }

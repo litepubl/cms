@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
 
 function SubscribersInstall($self) {
     litepubl::$urlmap->addget('/admin/subscribers/', get_class($self));

@@ -6,15 +6,19 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\pages;
+use litepubl\core\Session;
+use litepubl\core\Users;
+use litepubl\core\UserGroups;
+use litepubl\view\Lang;
+use litepubl\view\Filter;
+use litepubl\view\Theme;
+use litepubl\utils\Mailer;
 
-class tadminreguser extends tadminform {
+class RegUser extends Form
+{
     private $regstatus;
     private $backurl;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -40,7 +44,7 @@ class tadminreguser extends tadminform {
         if (!empty($_GET['confirm'])) {
             $confirm = $_GET['confirm'];
             $email = $_GET['email'];
-            tsession::start('reguser-' . md5(litepubl::$options->hash($email)));
+            Session::start('reguser-' . md5(litepubl::$options->hash($email)));
             if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
                 if (!isset($_SESSION['email'])) session_destroy();
                 $this->regstatus = 'error';
@@ -49,7 +53,7 @@ class tadminreguser extends tadminform {
 
             $this->backurl = $_SESSION['backurl'];
 
-            $users = tusers::i();
+            $users = Users::i();
             $id = $users->add(array(
                 'password' => $_SESSION['password'],
                 'name' => $_SESSION['name'],
@@ -72,8 +76,7 @@ class tadminreguser extends tadminform {
 
     public function getcontent() {
         $result = '';
-        $view = tview::getview($this);
-        $theme = $view->theme;
+        $theme = $this->theme;
         $lang = tlocal::admin('users');
 
         if ($this->logged) {
@@ -84,7 +87,7 @@ class tadminreguser extends tadminform {
             switch ($this->regstatus) {
                 case 'ok':
                     $backurl = $this->backurl;
-                    if (!$backurl) $backurl = tusergroups::i()->gethome(litepubl::$options->group);
+                    if (!$backurl) $backurl = UserGroups::i()->gethome(litepubl::$options->group);
                     if (!strbegin($backurl, 'http')) $backurl = litepubl::$site->url . $backurl;
                     return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
@@ -116,7 +119,7 @@ class tadminreguser extends tadminform {
 
     public function createform() {
         $lang = tlocal::i('users');
-        $theme = tview::getview($this)->theme;
+        $theme = $this->theme;
 
         $form = new adminform();
         $form->title = $lang->regform;
@@ -142,16 +145,16 @@ class tadminreguser extends tadminform {
 
     public function reguser($email, $name) {
         $email = strtolower(trim($email));
-        if (!tcontentfilter::ValidateEmail($email)) return $this->error(tlocal::get('comment', 'invalidemail'));
+        if (!Filter::ValidateEmail($email)) return $this->error(tlocal::get('comment', 'invalidemail'));
 
         if (substr_count($email, '.', 0, strpos($email, '@')) > 2) return $this->error(tlocal::get('comment', 'invalidemail'));
 
-        $users = tusers::i();
+        $users = Users::i();
         if ($id = $users->emailexists($email)) {
             if ('comuser' != $users->getvalue($id, 'status')) return $this->error(tlocal::i()->invalidregdata);
         }
 
-        tsession::start('reguser-' . md5(litepubl::$options->hash($email)));
+        Session::start('reguser-' . md5(litepubl::$options->hash($email)));
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $name;
         $confirm = md5rand();
@@ -170,12 +173,12 @@ class tadminreguser extends tadminform {
 
         tlocal::usefile('mail');
         $lang = tlocal::i('mailusers');
-        $theme = ttheme::i();
+        $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
 
-        tmailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
+        Mailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
 
         return true;
     }

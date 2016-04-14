@@ -133,6 +133,9 @@ return [
 'tadminform' => 'litepubl\admin\pages\Form',
 'tadminlogin' => 'litepubl\admin\pages\Login',
 'tadminpassword' => 'litepubl\admin\pages\Password',
+'tadminreguser' => 'litepubl\admin\pages\RegUser',
+'tadminsubscribers' => 'litepubl\admin\pages\Subscribers',
+
 
 'tadmincssmerger' => 'litepubl\admin\Css',
 'tadmincommentmanager' => 'litepubl\admin\comments\Comments',

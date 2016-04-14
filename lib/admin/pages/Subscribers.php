@@ -6,15 +6,18 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\pages;
+use litepubl\admin\Menus;
+use litepubl\core\Users;
+use litepubl\core\UserOptions;
+use litepubl\comments\Subscribers as SubscriberItems;
+use litepubl\post\Posts;
+use litepubl\view\Lang;
 
-class tadminsubscribers extends tadminform {
+class Subscribers extends Form
+{
     private $iduser;
     private $newreg;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -27,7 +30,7 @@ class tadminsubscribers extends tadminform {
         $this->cache = false;
         if (!($this->iduser = litepubl::$options->user)) {
             //trick - hidden registration of comuser. Auth by get
-            $users = tusers::i();
+            $users = Users::i();
             if (isset($_GET['auth']) && ($cookie = trim($_GET['auth']))) {
                 if (($this->iduser = $users->findcookie($cookie)) && litepubl::$options->reguser) {
                     if ('comuser' == $users->getvalue($this->iduser, 'status')) {
@@ -62,13 +65,13 @@ class tadminsubscribers extends tadminform {
             return litepubl::$urlmap->redir($url);
         }
 
-        if ('hold' == tusers::i()->getvalue($this->iduser, 'status')) return 403;
+        if ('hold' == Users::i()->getvalue($this->iduser, 'status')) return 403;
         return parent::request($arg);
     }
 
     public function gethead() {
         $result = parent::gethead();
-        $result.= tadminmenus::i()->heads;
+        $result.= Menus::i()->heads;
         return $result;
     }
 
@@ -79,12 +82,12 @@ class tadminsubscribers extends tadminform {
         $args = new targs();
         if ($this->newreg) $result.= $html->h4->newreg;
 
-        $subscribers = tsubscribers::i();
+        $subscribers = SubscriberItems::i();
         $items = $subscribers->getposts($this->iduser);
         if (count($items) == 0) return $html->h4->nosubscribtions;
-        tposts::i()->loaditems($items);
-        $args->default_subscribe = tuseroptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
-        $args->formtitle = tusers::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
+        Posts::i()->loaditems($items);
+        $args->default_subscribe = UserOptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
+        $args->formtitle = Users::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
 
         $tb = new tablebuilder();
         $tb->setposts(array(
@@ -98,9 +101,9 @@ class tadminsubscribers extends tadminform {
     }
 
     public function processform() {
-        tuseroptions::i()->setvalue($this->iduser, 'subscribe', isset($_POST['default_subscribe']) ? 'enabled' : 'disabled');
+        UserOptions::i()->setvalue($this->iduser, 'subscribe', isset($_POST['default_subscribe']) ? 'enabled' : 'disabled');
 
-        $subscribers = tsubscribers::i();
+        $subscribers = SubscriberItems::i();
         foreach ($_POST as $name => $value) {
             if (strbegin($name, 'checkbox-')) {
                 $subscribers->remove((int)$value, $this->iduser);
