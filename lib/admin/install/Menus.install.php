@@ -36,7 +36,7 @@ function MenusInstall($self) {
         $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
     }
 
-    $plugins = $self->createitem(0, 'plugins', 'admin', 'tadminplugins');
+    $plugins = $self->createitem(0, 'plugins', 'admin', '\litepubl\admin\Plugins');
     $files = $self->createitem(0, 'files', 'author', '\litepubl\admin\Files');
  {
         $self->createitem($files, 'thumbnail', 'editor', 'tadminfilethumbnails');

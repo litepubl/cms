@@ -6,45 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\options;
 
-class tadminoptions extends tadminmenu {
-    private $_form;
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Options extends \litepubl\admin\Menu
+{
 
     public function getautoform($name) {
-        if (isset($this->_form)) {
-            return $this->_form;
-        }
-
         switch ($name) {
-            case 'rss':
-                $form = new tautoform(trss::i() , 'options', 'rssoptions');
-                $form->add($form->feedburner, $form->feedburnercomments, $form->template('editor'));
-                break;
-
-
             case 'ping':
                 $form = new tautoform(tpinger::i() , 'options', 'optionsping');
                 $form->add($form->enabled, $form->services('editor'));
                 break;
 
-
-            case 'notfound404':
-                $form = new tautoform(tnotfound404::i() , 'options', 'edit404');
-                $form->add($form->notify, $form->text('editor'));
-                break;
-
-
-            default:
-                return false;
-        }
-        $this->_form = $form;
-        return $form;
-    }
 
     public function getcontent() {
         if ($form = $this->getautoform($this->name)) {

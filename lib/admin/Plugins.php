@@ -6,23 +6,27 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\core\Plugins;
+use litepubl\utils\Filer;
+use litepubl\view\Lang;
 
-class tadminplugins extends tadminmenu {
+class Plugins extends Menu
+{
     private $names;
 
     protected function create() {
         parent::create();
-        $this->names = tfiler::getdir(litepubl::$paths->plugins);
+        $this->names = Filer::getdir(litepubl::$paths->plugins);
         sort($this->names);
     }
 
     public function getpluginsmenu() {
         $result = '';
-        $link = tadminhtml::getadminlink($this->url, 'plugin=');
-        $plugins = tplugins::i();
+        $link = Html::getadminlink($this->url, 'plugin=');
+        $plugins = Plugins::i();
         foreach ($this->names as $name) {
-            $about = tplugins::getabout($name);
+            $about = Plugins::getabout($name);
             if (isset($plugins->items[$name]) && !empty($about['adminclassname'])) {
                 $result.= sprintf('<li><a href="%s%s">%s</a></li>', $link, $name, $about['name']);
             }
@@ -45,10 +49,10 @@ class tadminplugins extends tadminmenu {
     }
 
     public function getcontent() {
-        $result = $this->getpluginsmenu();
+        $result = $this->gePluginsmenu();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
-        $plugins = tplugins::i();
+        $plugins = Plugins::i();
 
         if (empty($_GET['plugin'])) {
             $result.= $admintheme->parse($admintheme->templates['help.plugins']);
@@ -79,7 +83,7 @@ class tadminplugins extends tadminmenu {
             foreach ($this->names as $name) {
                 if (in_array($name, $plugins->deprecated)) continue;
 
-                $about = tplugins::getabout($name);
+                $about = Plugins::getabout($name);
                 $args->add($about);
                 $args->name = $name;
                 $args->checked = isset($plugins->items[$name]);
@@ -109,14 +113,14 @@ class tadminplugins extends tadminmenu {
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
             array_pop($list);
-            $plugins = tplugins::i();
+            $plugins = Plugins::i();
             try {
                 $plugins->update($list);
             }
             catch(Exception $e) {
                 litepubl::$options->handexception($e);
             }
-            $result = $this->view->theme->h(tlocal::i()->updated);
+            $result = $this->theme->h(tlocal::i()->updated);
         } else {
             $name = $_GET['plugin'];
             if (!in_array($name, $this->names)) return $this->notfound;
@@ -130,10 +134,13 @@ class tadminplugins extends tadminmenu {
     }
 
     private function getadminplugin($name) {
-        $about = tplugins::getabout($name);
+        $about = Plugins::getabout($name);
         if (empty($about['adminclassname'])) return false;
         $class = $about['adminclassname'];
-        if (!class_exists($class)) litepubl::$classes->include_file(litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
+        if (!class_exists($class)) {
+litepubl::$classes->include_file(litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
+}
+
         return getinstance($class);
     }
 

@@ -137,6 +137,9 @@ return [
 'thtmltag' => 'litepubl\admin\Tag',
 'tadminmenu'=> 'litepubl\admin\Menu',
 'tadminmenus'=> 'litepubl\admin\Menus',
+'tadminplugins' => 'litepubl\admin\Plugins',
+'tadminoptions' => 'litepubl\admin\options\Options',
+
 
 'tadminboard' => 'litepubl\admin\pages\Board',
 'tadminform' => 'litepubl\admin\pages\Form',
