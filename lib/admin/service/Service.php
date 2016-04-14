@@ -12,7 +12,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\updater\Updater;
 
-class Service extends \litepubl\admin\Menu
+class Service extends Login
 {
 
     public function getcontent() {
@@ -50,24 +50,6 @@ class Service extends \litepubl\admin\Menu
                 break;
 
 
-
-                        case 'delete':
-                            if ($this->confirmed) {
-                                @unlink(litepubl::$paths->backup . $filename);
-                                return $html->h2->backupdeleted;
-                            } else {
-                                $args->adminurl = $this->adminurl;
-                                $args->id = $_GET['id'];
-                                $args->action = 'delete';
-                                $args->confirm = sprintf('%s %s?', $this->lang->confirmdelete, $_GET['id']);
-                                $result.= $html->confirmform($args);
-                            }
-                    }
-                }
-                break;
-
-
-
             case 'upload':
                 $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , tadminhtml::getparam('url', ''));
                 $lang = tlocal::admin();
@@ -81,7 +63,6 @@ class Service extends \litepubl\admin\Menu
                 break;
         }
 
-        $result = str_replace("'", '"', $result);
         return $result;
     }
 
@@ -121,104 +102,58 @@ class Service extends \litepubl\admin\Menu
         return $backuper->connect($host, $login, $password);
     }
 
-    public function getloginform() {
-        $backuper = tbackuper::i();
-        //$backuper->filertype = 'ftp';
-        if ($backuper->filertype == 'file') {
-            return '';
-        }
-
-        $html = $this->html;
-        $args = targs::i();
-        $acc = $backuper->filertype == 'ssh2' ? $html->h3->ssh2account : $html->h3->ftpaccount;
-        $args->host = tadminhtml::getparam('host', '');
-        $args->login = tadminhtml::getparam('login', '');
-        $args->password = tadminhtml::getparam('pasword', '');
-        return $acc . $html->parsearg('[text=host] [text=login] [password=password]', $args);
-    }
-
     public function processform() {
         $html = $this->html;
 
         switch ($this->name) {
             case 'service':
                 return $this->doupdate($_POST);
-                if (!isset($_POST['sqlbackup'])) {
-                    if (!$this->checkbackuper()) {
-                        return $html->h3->erroraccount;
-                    }
-                }
 
-                extract($_POST, EXTR_SKIP);
+
+            case 'upload':
                 $backuper = tbackuper::i();
-                if (isset($restore)) {
-                    if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
-                        return sprintf($html->h4red->attack, $_FILES["filename"]["name"]);
-                    }
-
-                    if (strpos($_FILES['filename']['name'], '.sql')) {
-                        $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]) , $_FILES["filename"]["name"]);
-                    } else {
-                        $url = litepubl::$site->url;
-                        $dbconfig = litepubl::$options->dbconfig;
-                        $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
-
-                        if (isset($saveurl)) {
-                            $Data = new data();
-                            $data->basename = 'storage';
-                            $data->load();
-                            $data->data['site'] = litepubl::$site->data;
-                            $data->data['options']['dbconfig'] = $dbconfig;
-                            $data->save();
-                        }
-                    }
-
-                    ttheme::clearcache();
-                    turlmap::nocache();
-                    @header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-                    exit();
-
-                } elseif (isset($downloadpartial)) {
-                    $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
-                    $content = $backuper->getpartial(isset($plugins) , isset($theme) , isset($lib));
-                    $this->sendfile($content, $filename);
-                } elseif (isset($fullbackup)) {
-                    $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
-                    $content = $backuper->getfull();
-                    $this->sendfile($content, '');
-                } elseif (isset($sqlbackup)) {
-                    $content = $backuper->getdump();
-                    $filename = litepubl::$domain . date('-Y-m-d') . '.sql';
-
-                    switch ($backuper->archtype) {
-                        case 'tar':
-                            tbackuper::include_tar();
-                            $tar = new tar();
-                            $tar->addstring($content, $filename, 0644);
-                            $content = $tar->savetostring(true);
-                            $filename.= '.tar.gz';
-                            unset($tar);
-                            break;
-
-
-                        case 'zip':
-                            tbackuper::include_zip();
-                            $zip = new zipfile();
-                            $zip->addFile($content, $filename);
-                            $content = $zip->file();
-                            $filename.= '.zip';
-                            unset($zip);
-                            break;
-
-
-                        default:
-                            $content = gzencode($content);
-                            $filename.= '.gz';
-                            break;
-                    }
-
-                    $this->sendfile($content, $filename);
+                if (!$this->checkbackuper()) {
+                    return $html->h3->erroraccount;
                 }
-}
+
+                if (is_uploaded_file($_FILES['filename']['tmp_name']) && !(isset($_FILES['filename']['error']) && ($_FILES['filename']['error'] > 0))) {
+                    $result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
+                } else {
+                    $url = trim($_POST['url']);
+                    if (empty($url)) {
+                        return '';
+                    }
+
+                    if (!($s = http::get($url))) {
+                        return $html->h3->errordownload;
+                    }
+
+                    $archtype = $backuper->getarchtype($url);
+                    if (!$archtype) {
+                        //         local file header signature     4 bytes  (0x04034b50)
+                        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
+                    }
+
+                    if (($archtype == 'zip') && class_exists('zipArchive')) {
+                        $filename = litepubl::$paths->storage . 'backup/temp.zip';
+                        file_put_contents($filename, $s);
+                        @chmod($filename, 0666);
+                        $s = '';
+                        $result = $backuper->uploadzip($filename);
+                        @unlink($filename);
+                    } else {
+                        $result = $backuper->upload($s, $archtype);
+                    }
+                }
+
+                if ($result) {
+                    return $html->h3->itemuploaded;
+                } else {
+                    return sprintf('<h3>%s</h3>', $backuper->result);
+                }
+                break;
+        }
+
+    }
 
 }
