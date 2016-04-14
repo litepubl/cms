@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
 
-class ulist {
+class UList
+ {
     const aslinks = true;
     public $ul;
     public $item;

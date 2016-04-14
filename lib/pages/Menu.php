@@ -145,7 +145,11 @@ class tmenu extends \litepubl\core\Item implements \litepubl\theme\ViewInterface
         return $this->schema->theme;
     }
 
-    //ITemplate
+    public function getadmintheme() {
+        return $this->schema->admintheme;
+    }
+
+    //ViewInterface
     public function request($id) {
         parent::request($id);
         if ($this->status == 'draft') return 404;

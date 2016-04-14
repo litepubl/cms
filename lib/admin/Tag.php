@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Lang;
 
-class thtmltag {
+class Tag
+{
     public $tag;
 
     public function __construct($tag = '') {

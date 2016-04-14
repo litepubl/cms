@@ -6,9 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\core\UserGroups;
+use litepubl\view\Guard;
+use litepubl\view\Lang;
+use litepubl\view\Schemes;
 
-class tadminmenu extends tmenu {
+class Menu extends \litepubl\pages\Menu
+ {
     public static $adminownerprops = array(
         'title',
         'url',
@@ -25,7 +30,7 @@ class tadminmenu extends tmenu {
     }
 
     public static function getowner() {
-        return tadminmenus::i();
+        return Menus::i();
     }
 
     protected function create() {
@@ -46,19 +51,15 @@ class tadminmenu extends tmenu {
     }
 
     public function gethead() {
-        return tadminmenus::i()->heads;
+        return Menus::i()->heads;
     }
 
-    public function getidview() {
-        return tviews::i()->defaults['admin'];
-    }
-
-    public function getadmintheme() {
-        return $this->view->admintheme;
+    public function getIdSchema() {
+        return Schemes::i()->defaults['admin'];
     }
 
     public static function auth($group) {
-        if ($err = tguard::checkattack()) {
+        if ($err = Guard::checkattack()) {
             return $err;
         }
 
@@ -68,7 +69,7 @@ class tadminmenu extends tmenu {
         }
 
         if (!litepubl::$options->hasgroup($group)) {
-            $url = tusergroups::i()->gethome(litepubl::$options->group);
+            $url = UserGroups::i()->gethome(litepubl::$options->group);
             turlmap::nocache();
             return litepubl::$urlmap->redir($url);
         }
@@ -128,7 +129,7 @@ class tadminmenu extends tmenu {
     }
 
     public static function idget() {
-        return (int)tadminhtml::getparam('id', 0);
+        return (int)Html::getparam('id', 0);
     }
 
     public function getaction() {
@@ -136,7 +137,7 @@ class tadminmenu extends tmenu {
     }
 
     public function gethtml($name = '') {
-        return tadminhtml::i();
+        return Html::i();
     }
 
     public function getlang() {
@@ -146,6 +147,23 @@ class tadminmenu extends tmenu {
     public function getadminlang() {
         return tlocal::inifile($this, '.admin.ini');
     }
+
+//factories
+public function newTable() {
+return new Table($this->admintheme);
+}
+
+public function newList() {
+return new UList($this->admintheme);
+}
+
+public function newTabs() {
+return new Tabs($this->admintheme);
+}
+
+public function newform() {
+return new Form(new Args());
+}
 
     public function getconfirmed() {
         return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
@@ -164,4 +182,4 @@ class tadminmenu extends tmenu {
         return min($count, (litepubl::$urlmap->page - 1) * $perpage);
     }
 
-} //class
+}

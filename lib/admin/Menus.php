@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Lang;
+use litepubl\core\UserGroups;
 
-class tadminmenus extends tmenus {
+class Menus extends \litepubl\pages\Menus
+ {
 
     protected function create() {
         parent::create();
@@ -67,7 +70,7 @@ class tadminmenus extends tmenus {
 
     public function additem(array $item) {
         if (empty($item['group'])) {
-            $groups = tusergroups::i();
+            $groups = UserGroups::i();
             $item['group'] = $groups->items[$groups->defaults[0]]['name'];
         }
         return parent::additem($item);
@@ -77,7 +80,7 @@ class tadminmenus extends tmenus {
         $this->lock();
         $id = parent::addfakemenu($menu);
         if (empty($this->items[$id]['group'])) {
-            $groups = tusergroups::i();
+            $groups = UserGroups::i();
             $group = count($groups->defaults) ? $groups->items[$groups->defaults[0]]['name'] : 'commentator';
             $this->items[$id]['group'] = $group;
         }

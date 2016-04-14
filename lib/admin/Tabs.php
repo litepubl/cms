@@ -6,9 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Admin;
 
-class tabs {
+class Tabs
+ {
     public $tabs;
     public $panels;
     public $id;
@@ -23,7 +25,7 @@ class tabs {
 
     public function getadmintheme() {
         if (!$this->_admintheme) {
-            $this->_admintheme = admintheme::i();
+            $this->_admintheme = Admin::i();
         }
 
         return $this->_admintheme;

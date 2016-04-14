@@ -179,6 +179,7 @@ $s = strtr([
 'litepubl::$urlmap' => 'litepubl::$router',
 'turlmap::unsub', 'litepubl::$router->unbind',
 'tlocal', 'Lang',
+'new targs' => 'new Args',
 
 ]);
 }

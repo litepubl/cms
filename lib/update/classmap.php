@@ -129,6 +129,15 @@ return [
 //admin
 'iadmin' => 'litepubl\admin\AdminInterface',
 'tauthor_rights' => 'litepubl\admin\AuthorRights',
+'adminform' => 'litepubl\admin\Form',
+'tadminhtml' => 'litepubl\admin\Html',
+'tablebuilder' => 'litepubl\admin\Table',
+'tabs' => 'litepubl\admin\Tabs',
+'ulist' => 'litepubl\admin\UList',
+'thtmltag' => 'litepubl\admin\Tag',
+'tadminmenu'=> 'litepubl\admin\Menu',
+'tadminmenus'=> 'litepubl\admin\Menus',
+
 'tadminboard' => 'litepubl\admin\pages\Board',
 'tadminform' => 'litepubl\admin\pages\Form',
 'tadminlogin' => 'litepubl\admin\pages\Login',

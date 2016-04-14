@@ -6,9 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+use litepubl\view\Admin;
+use litepubl\view\Args;
 
-class tadminhtml {
+class Html
+{
     public static $tags = array(
         'h1',
         'h2',
@@ -23,7 +28,7 @@ class tadminhtml {
     );
 
     public static function i() {
-        return getinstance(__class__);
+        return getinstance(get_called_class());
     }
 
     public static function getinstance($section) {
@@ -36,15 +41,19 @@ class tadminhtml {
     }
 
     public function __get($name) {
-        if (in_array($name, static ::$tags)) return new thtmltag($name);
-        if (strend($name, 'red') && in_array(substr($name, 0, -3) , static ::$tags)) return new redtag($name);
+        if (in_array($name, static ::$tags)) {
+return new Tag($name);
+}
+        if (strend($name, 'red') && in_array(substr($name, 0, -3) , static ::$tags)) {
+return new redtag($name);
+}
 
-        throw new Exception("the requested $name item not found");
+        throw new \Exception("the requested $name item not found");
     }
 
     public function __call($name, $params) {
         if ($name == 'getinput') return call_user_func_array(array(
-            ttheme::i() ,
+            Theme::i() ,
             'getinput'
         ) , $params);
 
@@ -53,12 +62,12 @@ class tadminhtml {
 
         if ($name == 'h4error') return sprintf('<h4 class="red">%s</h4>', $params[0]);
 
-        $args = isset($params[0]) && $params[0] instanceof targs ? $params[0] : new targs();
+        $args = isset($params[0]) && $params[0] instanceof targs ? $params[0] : new Args();
         return $this->parsearg($s, $args);
     }
 
     public function parsearg($s, targs $args) {
-        return admintheme::i()->parsearg($s, $args);
+        return Admin::i()->parsearg($s, $args);
     }
 
     public static function specchars($s) {
@@ -117,7 +126,7 @@ class tadminhtml {
     }
 
     public function adminform($tml, targs $args) {
-        return admintheme::i()->form($tml, $args);
+        return Admin::i()->form($tml, $args);
     }
 
     public function getupload($name) {
@@ -130,7 +139,7 @@ class tadminhtml {
 
     public function getradioitems($name, array $items, $selected) {
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         foreach ($items as $index => $title) {
             $result.= $theme->getradio($name, $index, static ::specchars($title) , $index == $selected);
         }
@@ -139,7 +148,7 @@ class tadminhtml {
 
     public function getsubmit() {
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $lang = tlocal::i();
 
         $a = func_get_args();
@@ -162,16 +171,19 @@ class tadminhtml {
     }
 
     public static function datestr($date) {
-        if ($date == '0000-00-00 00:00:00') return tlocal::i()->noword;
+        if ($date == '0000-00-00 00:00:00') {
+return tlocal::i()->noword;
+}
+
         return tlocal::date(strtotime($date) , 'd F Y');
     }
 
     public function gettable($head, $body) {
-        return admintheme::i()->gettable($head, $body);
+        return Admin::i()->gettable($head, $body);
     }
 
     public function buildtable(array $items, array $tablestruct) {
-        $tb = new tablebuilder();
+        $tb = new Table();
         $tb->setstruct($tablestruct);
         return $tb->build($items);
     }
@@ -181,13 +193,13 @@ class tadminhtml {
     }
 
     public function confirmdelete($id, $adminurl, $mesg) {
-        $args = new targs();
+        $args = new Args();
         $args->id = $id;
         $args->action = 'delete';
         $args->adminurl = $adminurl;
         $args->confirm = $mesg;
 
-        $admin = admintheme::i();
+        $admin = Admin::i();
         return $admin->parsearg($admin->templates['confirmform'], $args);
     }
 
@@ -198,13 +210,13 @@ class tadminhtml {
             $owner->delete($id);
             return $this->h4->successdeleted;
         } else {
-            $args = new targs();
+            $args = new Args();
             $args->id = $id;
             $args->adminurl = $adminurl;
             $args->action = 'delete';
             $args->confirm = tlocal::i()->confirmdelete;
 
-            $admin = admintheme::i();
+            $admin = Admin::i();
             return $this->parsearg($admin->templates['confirmform'], $args);
         }
     }

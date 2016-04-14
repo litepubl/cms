@@ -6,9 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Admin;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
 
-class adminform {
+class Form {
     public $args;
     public $title;
     public $before;
@@ -48,7 +51,7 @@ class adminform {
     }
 
     public function getadmintheme() {
-        return admintheme::i();
+        return Admin::i();
     }
 
     public function __set($k, $v) {
@@ -100,7 +103,7 @@ class adminform {
             if ($v = $this->$k) $attr.= sprintf(' %s="%s"', $k, $v);
         }
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $lang = tlocal::i();
         $body = $this->body;
 
@@ -125,7 +128,7 @@ class adminform {
     }
 
     public function get() {
-        return tadminhtml::i()->parsearg($this->gettml() , $this->args);
+        return Html::i()->parsearg($this->gettml() , $this->args);
     }
 
 } //class

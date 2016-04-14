@@ -10,6 +10,7 @@ namespace litepubl\view;
 
 class Lang
 {
+    const ZERODATE = '0000-00-00 00:00:00';
     public static $self;
     public $loaded;
     public $ini;

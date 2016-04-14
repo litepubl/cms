@@ -6,9 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin;
+use litepubl\view\Admin;
+use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\post\Post;
 
-class tablebuilder {
+class Table
+{
     //current item in items
     public $item;
     //id or index of current item
@@ -94,7 +99,7 @@ class tablebuilder {
 
     public function getadmintheme() {
         if (!$this->admintheme) {
-            $this->admintheme = admintheme::i();
+            $this->admintheme = Admin::i();
         }
 
         return $this->admintheme;
@@ -146,8 +151,8 @@ class tablebuilder {
     }
 
     public function posts_callback(tablebuilder $self) {
-        $post = tpost::i($self->id);
-        basetheme::$vars['post'] = $post;
+        $post = Post::i($self->id);
+        Base::$vars['post'] = $post;
         $self->args->poststatus = tlocal::i()->__get($post->status);
     }
 
@@ -270,7 +275,7 @@ class tablebuilder {
     }
 
     public function namecheck() {
-        $admin = admintheme::i();
+        $admin = Admin::i();
 
         return array(
             'text-center col-checkbox',
@@ -302,7 +307,7 @@ class tablebuilder {
     }
 
     public function date($date) {
-        if ($date == tdata::zerodate) {
+        if ($date == Lang::ZERODATE) {
             return tlocal::i()->noword;
         } else {
             return tlocal::date(strtotime($date) , 'd F Y');
@@ -310,7 +315,7 @@ class tablebuilder {
     }
 
     public function datetime($date) {
-        if ($date == tdata::zerodate) {
+        if ($date == Lang::ZERODATE) {
             return tlocal::i()->noword;
         } else {
             return tlocal::date(strtotime($date) , 'd F Y H:i');
