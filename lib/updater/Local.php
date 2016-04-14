@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tlocalfiler extends tremotefiler {
+class Local extends Remote
+{
 
     public function __construct() {
         parent::__construct();

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tftpsocketfiler extends tremotefiler {
+class FtpSocket extends Remote
+{
     private $ftp;
 
     public function __construct() {
@@ -162,4 +163,4 @@ class tftpsocketfiler extends tremotefiler {
         return $result;
     }
 
-} //class
+}

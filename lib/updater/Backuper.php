@@ -7,6 +7,8 @@
  */
 
 namespace litepubl\updater;
+use litepubl\utils\Filer;
+use litepubl\view\Lang;
 
 class Backuper extends \litepubl\core\Events
 {
@@ -80,28 +82,28 @@ return $this->__filer;
 
         switch ($this->filertype) {
             case 'ftp':
-                $result = new tftpfiler();
+                $result = new Ftp();
                 break;
 
 
             case 'ssh2':
-                $result = new tssh2filer();
+                $result = new Ssh2();
                 break;
 
 
             case 'socket':
-                $result = new tftpsocketfiler();
+                $result = new FtpSocket();
                 break;
 
 
             case 'file':
-                $result = tlocalfiler::i();
+                $result = Local::i();
                 break;
 
 
             default:
                 $this->filertype = 'file';
-                $result = tlocalfiler::i();
+                $result = Local::i();
                 $result->chmod_file = 0666;
                 $result->chmod_dir = 0777;
                 break;
@@ -366,20 +368,28 @@ return litepubl::$db->man->export();
 
     public function uploaddump($s, $filename) {
         if (strend($filename, '.zip')) {
-            static ::include_unzip();
-            $unzip = new \StrSimpleUnzip();
-            $unzip->ReadData($s);
-            foreach ($unzip->Entries as $item) {
-                if ($item->Error != 0) continue;
-                if (strend($item->Name, '.sql')) {
-                    $s = $item->Data;
+
+$tempfile = litepubl::$paths->backup . md5rand() . '.zip';
+file_put_contents($tempfile, $s);
+@chmod($tempfile, 0666);
+
+$zip = new \ZipArchive();
+            if ($zip->open($tempfile) === true) {
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                    $filename = $zip->getNameIndex($i);
+                if (strend($filename, '.sql')) {
+                    $s = $zip->getFromIndex($i);
                     break;
                 }
             }
-            unset($unzip);
+
+$zip->close();
+            unset($zip);
+}
+
+unlink($tempfile);
         } elseif (strend($filename, '.tar.gz') || strend($filename, '.tar')) {
-            static ::include_tar();
-            $tar = new \tar();
+            $tar = $this->newTar();
             $tar->loadfromstring($s);
             foreach ($tar->files as $item) {
                 if (!strend($item['name'], '.sql')) {
@@ -393,6 +403,7 @@ return litepubl::$db->man->export();
                 $s = gzinflate(substr($s, 10, -4));
             }
         }
+
         return $this->setdump($s);
     }
 
@@ -534,8 +545,11 @@ return litepubl::$db->man->export();
     }
 
     public function uploadtar($filename) {
-        if (!file_exists($filename)) return false;
+        if (file_exists($filename)) {
         return $this->upload(file_get_contents($filename) , 'tar');
+}
+
+return false;
     }
 
     public function uploadzip($filename) {
@@ -550,7 +564,6 @@ return litepubl::$db->man->export();
         $path_checked = false;
         $path_root = false;
 
-        if (class_exists('ZipArchive')) {
             $zip = new \ZipArchive();
             if ($zip->open($filename) !== true) {
                 return $this->errorarch();
@@ -574,27 +587,7 @@ return litepubl::$db->man->export();
             }
 
             $zip->close();
-        } else {
-            $this->createarchive();
-            $this->unzip->ReadData($content);
-
-            foreach ($this->unzip->Entries as $item) {
-                if ($item->Error != 0) continue;
-
-                if (!$path_checked) {
-                    $path_checked = true;
-                    $path_root = $this->get_path_root($item->path);
-                }
-
-                $path = $path_root ? trim(substr(trim($item->path, '/') , strlen($path_root)) , '/') : $item->path;
-                if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
-                    return $this->errorwrite($item->Path . $item->Name);
-                }
-            }
-        }
-
         $this->onuploaded($this);
-
         $this->existingfolders = false;
         if ($this->hasdata) {
             $this->renamedata();
@@ -612,7 +605,7 @@ return litepubl::$db->man->export();
         $data = rtrim(litepubl::$paths->data, DIRECTORY_SEPARATOR);
         rename($data, $backup);
         rename(litepubl::$paths->storage . 'newdata', $data);
-        tfiler::delete($backup, true, true);
+        Filer::delete($backup, true, true);
     }
 
     private function errorwrite($filename) {
@@ -629,13 +622,9 @@ return litepubl::$db->man->export();
 
     public function unpack($content, $archtype) {
         $result = array();
-        if ($archtype == 'zip') $archtype = 'unzip';
-        $this->archtype = $archtype;
-
         switch ($archtype) {
             case 'tar':
-                static ::include_tar();
-                $tar = new \tar();
+                $tar = $this->newTar();
                 $tar->loadfromstring($content);
                 if (!is_array($tar->files)) {
                     unset($tar);
@@ -651,11 +640,11 @@ return litepubl::$db->man->export();
 
             case 'unzip':
             case 'zip':
-                if (class_exists('ZipArchive')) {
-                    $filename = litepubl::$paths->storage . 'backup/unpack.zip';
+                    $filename = litepubl::$paths->backup . md5rand() . '.zip';
                     file_put_contents($filename, $content);
                     @chmod($filename, 0666);
                     $content = '';
+
                     $zip = new \ZipArchive();
                     if ($zip->open($filename) === true) {
                         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -668,16 +657,7 @@ return litepubl::$db->man->export();
                     }
 
                     @unlink($filename);
-                } else {
-                    static ::include_unzip();
-                    $unzip = new \StrSimpleUnzip();
-                    $unzip->ReadData($content);
-                    foreach ($unzip->Entries as $item) {
-                        $result[$item->Path . '/' . $item->Name] = $item->Data;
-                    }
-                }
-                break;
-
+break;
 
             default:
                 $this->unknown_archive();

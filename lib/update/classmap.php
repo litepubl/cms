@@ -188,5 +188,10 @@ return [
 
 //updater
 'tupdater' => 'litepubl\updater\Updater',
-
+'tbackuper' => 'litepubl\updater\Backuper',
+'tftpfiler' => 'litepubl\updater\Ftp',
+'tremotefiler' => 'litepubl\updater\Remote',
+'tftpsocketfiler' => 'litepubl\updater\FtpSocket',
+'tlocalfiler' => 'litepubl\updater\Local',
+'tssh2filer' => 'litepubl\updater\Ssh2',
 ];

@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tremotefiler {
+class Remote
+{
     protected $host;
     protected $login;
     public $port;
@@ -185,4 +186,4 @@ class tremotefiler {
         return $root;
     }
 
-} //class
+}

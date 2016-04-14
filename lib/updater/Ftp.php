@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tftpfiler extends tremotefiler {
+class Ftp extends Remote
+{
     public $ssl;
     private $tempfilehandle;
 

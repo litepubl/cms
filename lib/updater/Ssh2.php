@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tssh2filer extends tremotefiler {
+class Ssh2 extends Remote
+{
     public $sftp;
     protected $hostkey;
     protected $public_key;
