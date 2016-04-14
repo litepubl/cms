@@ -6,17 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
+use litepubl\utils\Filer;
+use litepubl\widget\Sidebars;
+use litepubl\utils\http;
 
-class tupdater extends tevents {
+class Updater extends \litepubl\core\Events
+ {
     private $releases;
     public $versions;
     public $result;
     public $log;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -55,16 +55,21 @@ class tupdater extends tevents {
 
         if (file_exists($filename)) {
             require_once ($filename);
-            if ($this->log) tfiler::log("$filename is required file", 'update');
+            if ($this->log) Filer::log("$filename is required file", 'update');
             $func = 'update' . str_replace('.', '', $ver);
 
             if (function_exists($func)) {
                 $func();
-                if ($this->log) tfiler::log("$func is called", 'update');
+                if ($this->log) {
+Filer::log("$func is called", 'update');
+}
                 litepubl::$options->savemodified();
             } else if (function_exists('litepubl\\' . $func)) {
                 call_user_func_array('litepubl\\' . $func, array());
-                if ($this->log) tfiler::log("$func is called", 'update');
+                if ($this->log) {
+Filer::log("$func is called", 'update');
+}
+
                 litepubl::$options->savemodified();
             }
         }
@@ -73,34 +78,42 @@ class tupdater extends tevents {
     public function update() {
         $log = $this->log;
         false;
-        if ($log) tfiler::log("begin update", 'update');
+        if ($log) {
+Filer::log("begin update", 'update');
+}
         tlocal::clearcache();
         $this->versions = static ::getversions();
         $nextver = $this->nextversion;
-        if ($log) tfiler::log("update started from litepubl::$options->version to $this->version", 'update');
+        if ($log) {
+Filer::log("update started from litepubl::$options->version to $this->version", 'update');
+}
+
         $v = litepubl::$options->version + 0.01;
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
             if (strlen($ver) == 3) $ver.= '0';
             if (strlen($ver) == 1) $ver.= '.00';
-            if ($log) tfiler::log("$v selected to update", 'update');
+            if ($log) {
+Filer::log("$v selected to update", 'update');
+}
+
             $this->run($v);
             litepubl::$options->version = $ver;
             litepubl::$options->savemodified();
             $v = $v + 0.01;
         }
 
-        //ttheme::clearcache();
-        tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+        Filer::delete(litepubl::$paths->data . 'themes', false, false);
         litepubl::$urlmap->clearcache();
         tlocal::clearcache();
-        tsidebars::fix();
+        Sidebars::fix();
+
         if (function_exists('apc_clear_cache')) {
             apc_clear_cache();
         }
 
         if ($log) {
-            tfiler::log("update finished", 'update');
+            Filer::log("update finished", 'update');
         }
     }
 
@@ -114,7 +127,7 @@ class tupdater extends tevents {
         }
 
         $lang = tlocal::i('service');
-        $backuper = tbackuper::i();
+        $backuper = Backuper::i();
         if ($this->useshell) {
             $backuper->createshellbackup();
         } else {
@@ -179,7 +192,7 @@ class tupdater extends tevents {
     public function download($version) {
         //if ($this->useshell) return $this->downloadshell($version);
         $lang = tlocal::i('service');
-        $backuper = tbackuper::i();
+        $backuper = Backuper::i();
         if (!$backuper->test()) {
             $this->result = $lang->errorwrite;
             return false;

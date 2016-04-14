@@ -185,4 +185,8 @@ return [
 'TXMLRPCPingback' => 'litepubl\xmlrpc\Pingback',
 'TXMLRPCSystem' => 'litepubl\xmlrpc\System',
 'TXMLRPCWordpress' => 'litepubl\xmlrpc\Wordpress',
+
+//updater
+'tupdater' => 'litepubl\updater\Updater',
+
 ];

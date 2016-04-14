@@ -6,9 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\updater;
 
-class tbackuper extends tevents {
+class Backuper extends \litepubl\core\Events
+{
     public $archtype;
     public $result;
     public $tar;
@@ -18,18 +19,6 @@ class tbackuper extends tevents {
     private $existingfolders;
     private $lastdir;
     private $hasdata;
-
-    public static function include_tar() {
-        litepubl::$classes->include_file(litepubl::$paths->libinclude . 'tar.class.php');
-    }
-
-    public static function include_zip() {
-        litepubl::$classes->include_file(litepubl::$paths->libinclude . 'zip.lib.php');
-    }
-
-    public static function include_unzip() {
-        litepubl::$classes->include_file(litepubl::$paths->libinclude . 'strunzip.lib.php');
-    }
 
     protected function create() {
         parent::create();
@@ -50,13 +39,21 @@ class tbackuper extends tevents {
         parent::__destruct();
     }
 
+    public function newTar() {
+require_once(litepubl::$paths->lib . 'include/tar.class.php');
+return new \tar;
+    }
+
     public function unknown_archive() {
         $this->error('Unknown archive type ' . $this->archtype);
     }
 
     public function load() {
         $result = parent::load();
-        if ($this->filertype == 'auto') $this->filertype = static ::getprefered();
+        if ($this->filertype == 'auto') {
+$this->filertype = static ::getprefered();
+}
+
         return $result;
     }
 
@@ -77,7 +74,10 @@ class tbackuper extends tevents {
     }
 
     public function getfiler() {
-        if ($this->__filer) return $this->__filer;
+        if ($this->__filer) {
+return $this->__filer;
+}
+
         switch ($this->filertype) {
             case 'ftp':
                 $result = new tftpfiler();
@@ -131,23 +131,22 @@ class tbackuper extends tevents {
     }
 
     public function createarchive() {
-        if (!$this->filer->connected) $this->error('Filer not connected');
+        if (!$this->filer->connected) {
+$this->error('Filer not connected');
+}
+
         switch ($this->archtype) {
             case 'tar':
-                static ::include_tar();
-                $this->tar = new \tar();
+                $this->tar = $this->newTar();
                 break;
 
 
             case 'zip':
-                static ::include_zip();
-                $this->zip = new \zipfile();
+                $this->zip = new \ZipArchive();
                 break;
 
-
             case 'unzip':
-                static ::include_unzip();
-                $this->unzip = new \StrSimpleUnzip();
+                $this->unzip = new \ZipArchive();
                 break;
 
 
@@ -165,7 +164,11 @@ class tbackuper extends tevents {
 
             case 'zip':
                 $result = $this->zip->file();
+$filename = $this->zip->filename;
+$this->zip->close();
                 $this->zip = false;
+$result = file_get_contents($filename);
+@unlink($filename);
                 return $result;
 
             default:
@@ -179,7 +182,7 @@ class tbackuper extends tevents {
                 return $this->tar->addstring($content, $filename, $perm);
 
             case 'zip':
-                return $this->zip->addFile($content, $filename);
+                return $this->zip->addFromString($filename, $content);
 
             default:
                 $this->unknown_archive();
@@ -192,7 +195,7 @@ class tbackuper extends tevents {
                 return $this->tar->adddir($dir, $perm);
 
             case 'zip':
-                return true;
+                return $this->zip->addEmptyDir($dir);
 
             default:
                 $this->unknown_archive();
@@ -290,7 +293,7 @@ class tbackuper extends tevents {
     public function getpartial($plugins, $theme, $lib) {
         set_time_limit(300);
         $this->createarchive();
-        if (dbversion) $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+$this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         //$this->readdata(litepubl::$paths->data);
         $this->setdir('storage');
@@ -354,13 +357,11 @@ class tbackuper extends tevents {
     }
 
     public function getdump() {
-        $dbmanager = tdbmanager::i();
-        return $dbmanager->export();
+return litepubl::$db->man->export();
     }
 
     public function setdump(&$dump) {
-        $dbmanager = tdbmanager::i();
-        return $dbmanager->import($dump);
+        return litepubl::$db->man->import($dump);
     }
 
     public function uploaddump($s, $filename) {
