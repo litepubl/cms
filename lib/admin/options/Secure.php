@@ -6,34 +6,42 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\options;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Parser;
+use litepubl\view\Filter;
+use litepubl\view\AdminParser;
+use litepubl\updater\Updater;
+use litepubl\updater\Backuper;
+use litepubl\admin\Html;
+use litepubl\admin\Form;
+use litepubl\admin\Menus;
 
-class adminsecure extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Secure extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
         $options = litepubl::$options;
         $lang = tlocal::admin('options');
-        $html = $this->gethtml('options');
-        $args = new targs();
+        $args = new Args();
         $args->echoexception = $options->echoexception;
         $args->usersenabled = $options->usersenabled;
         $args->reguser = $options->reguser;
         $args->parsepost = $options->parsepost;
         $args->show_draft_post = $options->show_draft_post;
         $args->xxxcheck = $options->xxxcheck;
-        $filter = tcontentfilter::i();
+
+        $filter = Filter::i();
         $args->phpcode = $filter->phpcode;
-        $parser = tthemeparser::i();
+
+        $parser = Parser::i();
         $args->removephp = $parser->removephp;
         $args->removespaces = $parser->removespaces;
 
-        $args->useshell = tupdater::i()->useshell;
-        $backuper = tbackuper::i();
-        $args->filertype = tadminhtml::array2combo(array(
+        $args->useshell = Updater::i()->useshell;
+        $backuper = Backuper::i();
+        $args->filertype = Html::array2combo(array(
             'auto' => 'auto',
             'file' => 'file',
             'ftp' => 'ftp',
@@ -43,7 +51,7 @@ class adminsecure extends tadminmenu {
         ) , $backuper->filertype);
 
         $args->formtitle = $lang->securehead;
-        $result = $html->adminform('
+        $result = $this->admintheme->form('
       [checkbox=echoexception]
       [checkbox=xxxcheck]
       [checkbox=usersenabled]
@@ -57,12 +65,12 @@ class adminsecure extends tadminmenu {
       [checkbox=useshell]
       ', $args);
 
-        $form = new adminform($args);
+        $form = new Form($args);
         $form->title = $lang->changepassword;
         $args->oldpassword = '';
         $args->newpassword = '';
         $args->repassword = '';
-        $form->items = '[password=oldpassword]
+        $form->body = '[password=oldpassword]
       [password=newpassword]
       [password=repassword]';
 
@@ -74,6 +82,8 @@ class adminsecure extends tadminmenu {
     public function processform() {
         extract($_POST, EXTR_SKIP);
         $options = litepubl::$options;
+$admin = $this->admintheme;
+
         if (isset($_POST['oldpassword'])) {
             $h4 = $this->html->h4;
             if ($oldpassword == '') {
@@ -99,28 +109,29 @@ class adminsecure extends tadminmenu {
         $options->parsepost = isset($parsepost);
         $options->show_draft_post = isset($show_draft_post);
         $options->xxxcheck = isset($xxxcheck);
-        $filter = tcontentfilter::i();
+
+        $filter = Filter::i();
         $filter->phpcode = isset($phpcode);
         $filter->save();
 
-        $parser = tthemeparser::i();
+        $parser = Parser::i();
         $parser->removephp = isset($removephp);
         $parser->removespaces = isset($removespaces);
         $parser->save();
 
-        $parser = adminparser::i();
+        $parser = AdminParser::i();
         $parser->removephp = isset($removephp);
         $parser->removespaces = isset($removespaces);
         $parser->save();
 
-        $backuper = tbackuper::i();
+        $backuper = Backuper::i();
         if ($backuper->filertype != $filertype) {
             $backuper->filertype = $filertype;
             $backuper->save();
         }
 
         $useshell = isset($useshell);
-        $updater = tupdater::i();
+        $updater = Updater::i();
         if ($useshell !== $updater->useshell) {
             $updater->useshell = $useshell;
             $updater->save();
@@ -133,7 +144,7 @@ class adminsecure extends tadminmenu {
         }
 
         litepubl::$options->usersenabled = $value;
-        $menus = tadminmenus::i();
+        $menus = Menus::i();
         $menus->lock();
         if ($value) {
             if (!$menus->url2id('/admin/users/')) {
@@ -149,9 +160,8 @@ class adminsecure extends tadminmenu {
         } else {
             $menus->deletetree($menus->url2id('/admin/users/'));
             $menus->deleteurl('/admin/posts/authorpage/');
-
         }
         $menus->unlock();
     }
 
-} //class
+}

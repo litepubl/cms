@@ -6,19 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\options;
+use litepubl\pages\Redirector as Redir;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\admin\Html;
+use litepubl\admin\Table;
 
-class tadminredirector extends tadminmenu {
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
+class Redirector extends \litepubl\admin\Menu
+{
     public function getcontent() {
-        $redir = tredirector::i();
-        $html = $this->html;
+        $redir = Redir::i();
         $lang = $this->lang;
-        $args = targs::i();
-        $from = tadminhtml::getparam('from', '');
+        $args = new Args::i();
+        $from = Html::getparam('from', '');
         if (isset($redir->items[$from])) {
             $args->from = $from;
             $args->to = $redir->items[$from];
@@ -28,7 +29,11 @@ class tadminredirector extends tadminmenu {
         }
         $args->action = 'edit';
         $args->formtitle = $lang->edit;
-        $result = $html->adminform('[text=from] [text=to] [hidden=action]', $args);
+        $result = $this->admintheme->form('
+[text=from]
+ [text=to]
+ [hidden=action]
+', $args);
 
         $id = 1;
         $items = array();
@@ -40,20 +45,18 @@ class tadminredirector extends tadminmenu {
             );
         }
 
-        $adminurl = tadminhtml::getadminlink($this->url, 'from');
-        $args->table = $html->buildtable($items, array(
+        $adminurl = Html::getadminlink($this->url, 'from');
+        $args->table = Table::fromitems($items, array(
             array(
                 'center',
                 '+',
                 '<input type="checkbox" name="checkbox_$id" id="checkbox_$id" value="$from" />'
             ) ,
             array(
-                'left',
                 $lang->from,
                 '<a href="$site.url$from" title="$from">$from</a>'
             ) ,
             array(
-                'left',
                 $lang->to,
                 '<a href="$site.url$to" title="$to">$to</a>'
             ) ,
@@ -65,17 +68,17 @@ class tadminredirector extends tadminmenu {
         ));
 
         $args->action = 'delete';
-        $result.= $html->parsearg('<form name="deleteform" action="" method="post">
+        $result.= $this->admintheme->parsearg('<form name="deleteform" action="" method="post">
     [hidden=action]
     $table
     <p><input type="submit" name="delete" value="$lang.delete" /></p>
     </form>', $args);
-        $result = $html->fixquote($result);
-        return $result;
+
+return $result;
     }
 
     public function processform() {
-        $redir = tredirector::i();
+        $redir = Redir::i();
         switch ($_POST['action']) {
             case 'edit':
                 $redir->items[$_POST['from']] = $_POST['to'];

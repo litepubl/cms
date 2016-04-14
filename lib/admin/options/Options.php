@@ -43,32 +43,6 @@ class Options extends \litepubl\admin\Menu
       [editor=footer]
       ', $args);
 
-            case 'view':
-                $args->perpage = $options->perpage;
-                $filter = tcontentfilter::i();
-                $args->usefilter = $filter->usefilter;
-                $args->automore = $filter->automore;
-                $args->automorelength = $filter->automorelength;
-                $args->autolinks = $filter->autolinks;
-                $args->commentautolinks = $filter->commentautolinks;
-                $args->icondisabled = $options->icondisabled;
-                $args->hidefilesonpage = $options->hidefilesonpage;
-
-                $themeparser = tthemeparser::i();
-                $args->replacelang = $themeparser->replacelang;
-
-                $args->formtitle = $lang->viewoptions;
-                return $html->adminform('
-      [text=perpage]
-      [checkbox=usefilter]
-      [checkbox=automore]
-      [text=automorelength]
-      [checkbox=autolinks]
-      [checkbox=commentautolinks]
-      [checkbox=hidefilesonpage]
-      [checkbox=icondisabled]
-      [checkbox=replacelang]
-      ', $args);
                 break;
 
 
@@ -219,24 +193,6 @@ class Options extends \litepubl\admin\Menu
                 $site->author = $author;
                 $this->getdb('users')->setvalue(1, 'name', $author);
                 ttemplate::i()->footer = $footer;
-                break;
-
-
-            case 'view':
-                $options->icondisabled = isset($icondisabled);
-                if (!empty($perpage)) $options->perpage = (int)$perpage;
-                $options->hidefilesonpage = isset($hidefilesonpage);
-                $filter = tcontentfilter::i();
-                $filter->usefilter = isset($usefilter);
-                $filter->automore = isset($automore);
-                $filter->automorelength = (int)$automorelength;
-                $filter->autolinks = isset($autolinks);
-                $filter->commentautolinks = isset($commentautolinks);
-                $filter->save();
-
-                $themeparser = tthemeparser::i();
-                $themeparser->replacelang = isset($replacelang);
-                $themeparser->save();
                 break;
 
 

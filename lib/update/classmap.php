@@ -139,8 +139,6 @@ return [
 'tadminmenu'=> 'litepubl\admin\Menu',
 'tadminmenus'=> 'litepubl\admin\Menus',
 'tadminplugins' => 'litepubl\admin\Plugins',
-'tadminoptions' => 'litepubl\admin\options\Options',
-
 
 'tadminboard' => 'litepubl\admin\pages\Board',
 'tadminform' => 'litepubl\admin\pages\Form',
@@ -149,14 +147,18 @@ return [
 'tadminreguser' => 'litepubl\admin\pages\RegUser',
 'tadminsubscribers' => 'litepubl\admin\pages\Subscribers',
 
+'tadminoptions' => 'litepubl\admin\options\Options',
+'adminhomeoptions' => 'litepubl\admin\options\Home',
+'tadminlocalmerger' => 'litepubl\admin\options\Lang',
+'tadminredirector' => 'litepubl\admin\options\Redirector',
+'adminsecure' => 'litepubl\admin\options\Secure',
+'adminthemeparser' => 'litepubl\admin\options\ThemeParser',
 
 'tadmincssmerger' => 'litepubl\admin\Css',
 'tadmincommentmanager' => 'litepubl\admin\comments\Comments',
 'tadmincomusers' => 'litepubl\admin\comments\Authors',
 'tadminmoderator' => 'litepubl\admin\comments\Moderator',
 'tadminfiles' => 'litepubl\admin\Files',
-
-
 
 //comments
 'tcomments' => 'litepubl\comments\Comments',

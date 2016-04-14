@@ -7,7 +7,7 @@
  */
 
 namespace litepubl\view;
-use litepubl\post\Categories;
+use litepubl\tag\Cats;
 use litepubl\post\Files;
 
 class Admin extends Base
@@ -242,7 +242,7 @@ class Admin extends Base
     public function getcats(array $items) {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
-        Categories::i()->loadall();
+        Cats::i()->loadall();
         $result.= $this->getsubcats(0, $items);
         return $result;
     }
@@ -251,7 +251,7 @@ class Admin extends Base
         $result = '';
         $args = new targs();
         $tml = $this->templates['posteditor.categories.item'];
-        $categories = Categories::i();
+        $categories = Cats::i();
         foreach ($categories->items as $id => $item) {
             if (($parent == $item['parent']) && !($exclude && in_array($id, $exclude))) {
                 $args->add($item);
@@ -277,7 +277,7 @@ class Admin extends Base
     }
 
     public function getfilelist(array $list) {
-        $args = new targs();
+        $args = new Args();
         $args->fileperm = '';
 
         if (is_callable($this->onfileperm)) {

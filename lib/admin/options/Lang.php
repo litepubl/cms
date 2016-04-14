@@ -6,25 +6,27 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\options;
+use litepubl\view\LangMerger;
+use litepubl\view\Lang as Lng;
+use litepubl\admin\Html;
+use litepubl\utils\Filer;
+use litepubl\post\Archives;
 
-class tadminlocalmerger extends tadminmenu {
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
+class Lang extends \litepubl\admin\Menu
+{
     public function getcontent() {
-        $merger = tlocalmerger::i();
-        $tabs = new tabs($this->admintheme);
-        $html = $this->html;
-        $lang = tlocal::i('options');
-        $args = targs::i();
+        $merger = LangMerger::i();
+        $tabs = $this->newTabs();
+        $lang = Lng::admin('options');
+        $args = mew Args();
+$theme = $this->theme;
 
         foreach ($merger->items as $section => $items) {
-            $tab = new tabs($this->admintheme);
-            $tab->add($lang->files, $html->getinput('editor', $section . '_files', tadminhtml::specchars(implode("\n", $items['files'])) , $lang->files));
+            $tab = $this->newTabs();
+            $tab->add($lang->files, $theme->getinput('editor', $section . '_files', $theme->quote(implode("\n", $items['files'])) , $lang->files));
             foreach ($items['texts'] as $key => $text) {
-                $tab->add($key, $html->getinput('editor', $section . '_text_' . $key, tadminhtml::specchars($text) , $key));
+                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $theme->quote($text) , $key));
             }
 
             $tabs->add($section, $tab->get());
@@ -32,12 +34,12 @@ class tadminlocalmerger extends tadminmenu {
 
         $args->formtitle = $lang->optionslocal;
         $args->dateformat = litepubl::$options->dateformat;
-        $dirs = tfiler::getdir(litepubl::$paths->languages);
-        $args->language = tadminhtml::array2combo(array_combine($dirs, $dirs) , litepubl::$options->language);
+        $dirs = Filer::getdir(litepubl::$paths->languages);
+        $args->language = Html::array2combo(array_combine($dirs, $dirs) , litepubl::$options->language);
         $zones = timezone_identifiers_list();
-        $args->timezone = tadminhtml::array2combo(array_combine($zones, $zones) , litepubl::$options->timezone);
+        $args->timezone = Html::array2combo(array_combine($zones, $zones) , litepubl::$options->timezone);
 
-        return $html->adminform('[text=dateformat]
+        return $admin->form('[text=dateformat]
     [combo=language]
     [combo=timezone]' . $tabs->get() , $args);
     }
@@ -47,12 +49,12 @@ class tadminlocalmerger extends tadminmenu {
         litepubl::$options->language = $_POST['language'];
         if (litepubl::$options->timezone != $_POST['timezone']) {
             litepubl::$options->timezone = $_POST['timezone'];
-            $archives = tarchives::i();
+            $archives = Archives::i();
             turlmap::unsub($archives);
             $archives->PostsChanged();
         }
 
-        $merger = tlocalmerger::i();
+        $merger = LangMerger::i();
         $merger->lock();
         //$merger->items = array();
         //$merger->install();
@@ -67,4 +69,4 @@ class tadminlocalmerger extends tadminmenu {
         $merger->unlock();
     }
 
-} //class
+}
