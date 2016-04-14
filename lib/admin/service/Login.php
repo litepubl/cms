@@ -1,6 +1,5 @@
 <?php
 
-
 namespace litepubl\admin\service;
 use litepubl\updater\Backuper;
 use litepubl\view\Lang;
@@ -30,6 +29,22 @@ $lang = Lang::admin('service');
  [text=login]
  [password=password]
 ', $args);
+    }
+
+    public function checkbackuper() {
+        $backuper = Backuper::i();
+        if ($backuper->filertype == 'file') {
+            return true;
+        }
+
+        $host = Html::getparam('host', '');
+        $login = Html::getparam('login', '');
+        $password = Html::getparam('password', '');
+        if (!$host  || !$login || !$password) {
+            return '';
+        }
+
+        return $backuper->connect($host, $login, $password);
     }
 
 }

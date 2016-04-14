@@ -16,144 +16,59 @@ class Service extends Login
 {
 
     public function getcontent() {
-        $result = '';
+$admin = $this->admintheme;
         $args = new Args();
-
-        switch ($this->name) {
-            case 'service':
-                if (!dbversion) {
-                    return $html->h2->noupdates;
-                }
-
-                $lang = $this->lang;
-                $result.= $html->h3->info;
+                $lang = Lang::admin('service');
+                $result= $admin->h($lang->info);
                 $result.= $this->doupdate($_GET);
-                $tb = new tablebuilder();
+                $tb = $this->newTable();
                 $result.= $tb->props(array(
                     'postscount' => litepubl::$classes->posts->count,
                     'commentscount' => litepubl::$classes->commentmanager->count,
                     'version' => litepubl::$site->version
                 ));
-                $updater = tupdater::i();
+
+                $updater = Updater::i();
                 $islatest = $updater->islatest();
                 if ($islatest === false) {
-                    $result.= $html->h4->errorservice;
+                    $result.= $admin->geterr($lang->errorservice);
                 } elseif ($islatest <= 0) {
-                    $result.= $html->h4->islatest;
+                    $result.= $admin->success($lang->islatest);
                 } else {
-                    $form = new adminform($args);
-                    $form->title = tlocal::i()->requireupdate;
-                    $form->items = $this->getloginform() . '[submit=autoupdate]';
+                    $form = new Form($args);
+                    $form->title = $lang->requireupdate;
+                    $form->body = $this->getloginform() . '[submit=autoupdate]';
                     $form->submit = 'manualupdate';
                     $result.= $form->get();
                 }
                 break;
-
-
-            case 'upload':
-                $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , tadminhtml::getparam('url', ''));
-                $lang = tlocal::admin();
-                $form = new adminform($args);
-                $form->title = $lang->uploaditem;
-                $form->upload = true;
-                $form->items = '[text=url]
-      [upload=filename]' . $this->getloginform();
-                $result = $html->p->uploaditems;
-                $result.= $form->get();
-                break;
-        }
-
-        return $result;
+return $result;
     }
 
     private function doupdate($req) {
-        $html = $this->html;
-        $updater = tupdater::i();
+        $admin = $this->admintheme;
+$lang = Lang::i();
+        $updater = Updater::i();
         if (isset($req['autoupdate'])) {
             if (!$this->checkbackuper()) {
-                return $html->h4->erroraccount;
+                return $admin->geterr($lang->erroraccount);
             }
 
             if ($updater->autoupdate()) {
-                return $html->h4->successupdated;
+                return $admin->success($lang->successupdated);
             }
 
-            return sprintf('<h3>%s</h3>', $updater->result);
+            return $admin->h($updater->result);
         } elseif (isset($req['manualupdate'])) {
             $updater->update();
-            return $html->h4->successupdated;
+            return $admin->success($lang->successupdated);
         }
         return '';
     }
 
-    public function checkbackuper() {
-        $backuper = tbackuper::i();
-        if ($backuper->filertype == 'file') {
-            return true;
-        }
-
-        $host = tadminhtml::getparam('host', '');
-        $login = tadminhtml::getparam('login', '');
-        $password = tadminhtml::getparam('password', '');
-        if (($host == '') || ($login == '') || ($password == '')) {
-            return '';
-        }
-
-        return $backuper->connect($host, $login, $password);
-    }
-
     public function processform() {
-        $html = $this->html;
-
-        switch ($this->name) {
-            case 'service':
                 return $this->doupdate($_POST);
-
-
-            case 'upload':
-                $backuper = tbackuper::i();
-                if (!$this->checkbackuper()) {
-                    return $html->h3->erroraccount;
-                }
-
-                if (is_uploaded_file($_FILES['filename']['tmp_name']) && !(isset($_FILES['filename']['error']) && ($_FILES['filename']['error'] > 0))) {
-                    $result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
-                } else {
-                    $url = trim($_POST['url']);
-                    if (empty($url)) {
-                        return '';
-                    }
-
-                    if (!($s = http::get($url))) {
-                        return $html->h3->errordownload;
-                    }
-
-                    $archtype = $backuper->getarchtype($url);
-                    if (!$archtype) {
-                        //         local file header signature     4 bytes  (0x04034b50)
-                        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
-                    }
-
-                    if (($archtype == 'zip') && class_exists('zipArchive')) {
-                        $filename = litepubl::$paths->storage . 'backup/temp.zip';
-                        file_put_contents($filename, $s);
-                        @chmod($filename, 0666);
-                        $s = '';
-                        $result = $backuper->uploadzip($filename);
-                        @unlink($filename);
-                    } else {
-                        $result = $backuper->upload($s, $archtype);
-                    }
-                }
-
-                if ($result) {
-                    return $html->h3->itemuploaded;
-                } else {
-                    return sprintf('<h3>%s</h3>', $backuper->result);
-                }
-                break;
-        }
-
-    }
+}
 
 }
+

@@ -10,6 +10,7 @@ namespace litepubl\admin;
 use litepubl\core\UserGroups;
 use litepubl\view\Guard;
 use litepubl\view\Lang;
+use litepubl\view\Args;
 use litepubl\view\Schemes;
 
 class Menu extends \litepubl\pages\Menu
@@ -161,10 +162,14 @@ public function newTabs() {
 return new Tabs($this->admintheme);
 }
 
-public function newform() {
+public function newForm() {
 return new Form(new Args());
 }
 
+
+public function newArgs() {
+return new Args();
+}
     public function getconfirmed() {
         return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
     }

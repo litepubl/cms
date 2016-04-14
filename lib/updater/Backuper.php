@@ -462,7 +462,6 @@ unlink($tempfile);
 
     public function upload($content, $archtype) {
         set_time_limit(300);
-        if ($archtype == 'zip') $archtype = 'unzip';
         $this->archtype = $archtype;
         $this->hasdata = false;
         $this->existingfolders = array();
@@ -497,6 +496,7 @@ unlink($tempfile);
 
 
             case 'unzip':
+case 'zip':
                 $mode = $this->filer->chmod_file;
                 $this->unzip->ReadData($content);
 
