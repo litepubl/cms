@@ -10,20 +10,7 @@ namespace litepubl\admin\options;
 
 class Options extends \litepubl\admin\Menu
 {
-
-    public function getautoform($name) {
-        switch ($name) {
-            case 'ping':
-                $form = new tautoform(tpinger::i() , 'options', 'optionsping');
-                $form->add($form->enabled, $form->services('editor'));
-                break;
-
-
     public function getcontent() {
-        if ($form = $this->getautoform($this->name)) {
-            return $form->getform();
-        }
-
         $options = litepubl::$options;
         $template = ttemplate::i();
         ttheme::$vars['template'] = $template;
@@ -54,32 +41,6 @@ class Options extends \litepubl\admin\Menu
       [text=keywords]
       [text=author]
       [editor=footer]
-      ', $args);
-
-            case 'mail':
-                $args->adminemail = $options->email;
-                $args->fromemail = $options->fromemail;
-                $args->mailer = $options->mailer == 'smtp';
-
-                $subscribers = tsubscribers::i();
-                $args->subscribeemail = $subscribers->fromemail;
-
-                $mailer = TSMTPMailer::i();
-                $args->host = $mailer->host;
-                $args->smtplogin = $mailer->login;
-                $args->password = $mailer->password;
-                $args->port = $mailer->port;
-
-                $args->formtitle = $lang->mailoptions;
-                return $html->adminform('
-      [text=adminemail]
-      [text=fromemail]
-      [text=subscribeemail]
-      [checkbox=mailer]
-      [text=host]
-      [text=smtplogin]
-      [password=password]
-      [text=port]
       ', $args);
 
             case 'view':
@@ -243,10 +204,6 @@ class Options extends \litepubl\admin\Menu
     }
 
     public function processform() {
-        if ($form = $this->getautoform($this->name)) {
-            return $form->processform();
-        }
-
         extract($_POST, EXTR_SKIP);
         $options = litepubl::$options;
 
@@ -262,32 +219,6 @@ class Options extends \litepubl\admin\Menu
                 $site->author = $author;
                 $this->getdb('users')->setvalue(1, 'name', $author);
                 ttemplate::i()->footer = $footer;
-                break;
-
-
-            case 'mail':
-                if (!empty($adminemail)) {
-                    $options->email = $adminemail;
-                    $this->getdb('users')->setvalue(1, 'email', $adminemail);
-                }
-
-                if (!empty($fromemail)) $options->fromemail = $fromemail;
-                $options->mailer = empty($mailer) ? '' : 'smtp';
-
-                if (!empty($subscribeemail)) {
-                    $subscribe = tsubscribers::i();
-                    $subscribe->fromemail = $subscribeemail;
-                    $subscribe->save();
-                    $options->fromemail = $subscribeemail;
-                }
-
-                $mailer = TSMTPMailer::i();
-                $mailer->lock();
-                $mailer->host = $host;
-                $mailer->login = $smtplogin;
-                $mailer->password = $password;
-                $mailer->port = (int)$port;
-                $mailer->unlock();
                 break;
 
 

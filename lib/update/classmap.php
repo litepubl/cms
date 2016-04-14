@@ -94,6 +94,7 @@ return [
 'http' => 'litepubl\utils\Http',
 'tmailer' => 'litepubl\utils\Mailer',
 'tsmtp' => 'litepubl\utils\Smtp',
+'TSMTPMailer' => 'litepubl\utils\Smtp',
 'tlinkgenerator' => 'litepubl\utils\LinkGenerator',
 
 //perms
