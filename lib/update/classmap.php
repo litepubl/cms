@@ -160,6 +160,9 @@ return [
 'tadminmoderator' => 'litepubl\admin\comments\Moderator',
 'tadminfiles' => 'litepubl\admin\Files',
 
+'tadminservice' => 'litepubl\admin\service\Service',
+
+
 //comments
 'tcomments' => 'litepubl\comments\Comments',
 'tcomment' => 'litepubl\comments\Comment',

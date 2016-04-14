@@ -6,19 +6,18 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\service;
 use litepubl\core\Data;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\updater\Updater;
 
-class Service extends tadminmenu {
-
-    public function getcont() {
-        return ttheme::parsevar('menu', $this, ttheme::i()->templates['content.menu']);
-    }
+class Service extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
         $result = '';
-        $html = $this->html;
-        $args = targs::i();
+        $args = new Args();
 
         switch ($this->name) {
             case 'service':
@@ -51,54 +50,6 @@ class Service extends tadminmenu {
                 break;
 
 
-            case 'backup':
-                if (empty($_GET['action'])) {
-
-                    $args->plugins = false;
-                    $args->theme = false;
-                    $args->lib = false;
-                    $args->dbversion = dbversion ? '' : 'disabled="disabled"';
-                    $args->saveurl = true;
-
-                    $form = new adminform($args);
-                    $form->upload = true;
-                    $form->items = $html->h4->partialform;
-                    $form->items.= $this->getloginform();
-                    $form->items.= '[checkbox=plugins]
-        [checkbox=theme]
-        [checkbox=lib]
-        [submit=downloadpartial]';
-
-                    $form->items.= $html->p->notefullbackup;
-                    $form->items.= '[submit=fullbackup]
-        [submit=sqlbackup]';
-
-                    $form->items.= $html->h4->uploadhead;
-                    $form->items.= '[upload=filename]
-        [checkbox=saveurl]';
-
-                    $form->submit = 'restore';
-                    $result = $form->get();
-                    $result.= $this->getbackupfilelist();
-                } else {
-                    $filename = $_GET['id'];
-                    if (strpbrk($filename, '/\<>')) {
-                        return $this->notfound;
-                    }
-
-                    if (!file_exists(litepubl::$paths->backup . $filename)) {
-                        return $this->notfound;
-                    }
-
-                    switch ($_GET['action']) {
-                        case 'download':
-                            if ($s = @file_get_contents(litepubl::$paths->backup . $filename)) {
-                                $this->sendfile($s, $filename);
-                            } else {
-                                return $this->notfound;
-                            }
-                            break;
-
 
                         case 'delete':
                             if ($this->confirmed) {
@@ -115,12 +66,6 @@ class Service extends tadminmenu {
                 }
                 break;
 
-
-            case 'run':
-                $args->formtitle = $this->lang->runhead;
-                $args->content = isset($_POST['content']) ? $_POST['content'] : '';
-                $result = $html->adminform('[editor=content]', $args);
-                break;
 
 
             case 'upload':
@@ -198,8 +143,6 @@ class Service extends tadminmenu {
         switch ($this->name) {
             case 'service':
                 return $this->doupdate($_POST);
-
-            case 'backup':
                 if (!isset($_POST['sqlbackup'])) {
                     if (!$this->checkbackuper()) {
                         return $html->h3->erroraccount;
@@ -276,107 +219,6 @@ class Service extends tadminmenu {
 
                     $this->sendfile($content, $filename);
                 }
-                break;
+}
 
-
-            case 'run':
-                $result = eval($_POST['content']);
-                return sprintf('<pre>%s</pre>', $result);
-
-            case 'upload':
-                $backuper = tbackuper::i();
-                if (!$this->checkbackuper()) {
-                    return $html->h3->erroraccount;
-                }
-
-                if (is_uploaded_file($_FILES['filename']['tmp_name']) && !(isset($_FILES['filename']['error']) && ($_FILES['filename']['error'] > 0))) {
-                    $result = $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
-                } else {
-                    $url = trim($_POST['url']);
-                    if (empty($url)) {
-                        return '';
-                    }
-
-                    if (!($s = http::get($url))) {
-                        return $html->h3->errordownload;
-                    }
-
-                    $archtype = $backuper->getarchtype($url);
-                    if (!$archtype) {
-                        //         local file header signature     4 bytes  (0x04034b50)
-                        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
-                    }
-
-                    if (($archtype == 'zip') && class_exists('zipArchive')) {
-                        $filename = litepubl::$paths->storage . 'backup/temp.zip';
-                        file_put_contents($filename, $s);
-                        @chmod($filename, 0666);
-                        $s = '';
-                        $result = $backuper->uploadzip($filename);
-                        @unlink($filename);
-                    } else {
-                        $result = $backuper->upload($s, $archtype);
-                    }
-                }
-
-                if ($result) {
-                    return $html->h3->itemuploaded;
-                } else {
-                    return sprintf('<h3>%s</h3>', $backuper->result);
-                }
-                break;
-        }
-
-    }
-
-    private function sendfile(&$content, $filename) {
-        //@file_put_contents(litepubl::$domain . ".zip", $content);
-        if ($filename == '') $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . '.zip';
-        if (ob_get_level()) ob_end_clean();
-
-        header('HTTP/1.1 200 OK', true, 200);
-        Header('Cache-Control: no-cache, must-revalidate');
-        Header('Pragma: no-cache');
-        header('Content-type: application/octet-stream');
-        header('Content-Disposition: attachment; filename=' . $filename);
-        header('Content-Length: ' . strlen($content));
-        header('Last-Modified: ' . date('r'));
-
-        echo $content;
-        exit();
-    }
-
-    private function getbackupfilelist() {
-        $list = tfiler::getfiles(litepubl::$paths->backup);
-        if (!count($list)) {
-            return '';
-        }
-
-        $items = array();
-        $html = $this->html;
-        foreach ($list as $filename) {
-            if (strend($filename, '.gz') || strend($filename, '.zip')) {
-                $items[]['filename'] = $filename;
-            }
-        }
-
-        if (!count($items)) {
-            return '';
-        }
-
-        $lang = $this->lang;
-        return $this->html->h4->backupheadern . $this->html->buildtable($items, array(
-            array(
-                'right',
-                $lang->download,
-                "<a href=\"$this->adminurl=\$filename&action=download\">\$filename</a>"
-            ) ,
-            array(
-                'right',
-                $lang->delete,
-                "<a href=\"$this->adminurl=\$filename&action=delete\">$lang->delete</a>"
-            )
-        ));
-    }
-
-} //class
+}
