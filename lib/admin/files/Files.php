@@ -6,15 +6,17 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\files;
 use litepubl\post\Files as FileItems;
 use litepubl\post\MediaParser;
 use litepubl\view\Lang;
+use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\perms\Files as PrivateFiles;
 use litepubl\utils\http;
+use litepubl\admin\Form;
 
-class Files extends Menu
+class Files extends \litepubl\admin\Menu
 {
 
     public function getcontent() {
@@ -32,10 +34,10 @@ class Files extends Menu
                 'keywords' => ''
             ));
 
-            $form = new adminform($args);
+            $form = new Form($args);
             $form->upload = true;
             $form->title = "<a id='files-source' href='#'>$lang->switchlink</a>";
-            $form->items = '[upload=filename]
+            $form->body = '[upload=filename]
       [hidden=uploadmode]
       [text=downloadurl]
       [text=title]
@@ -68,7 +70,7 @@ class Files extends Menu
                     $args->description = Filter::unescape($item['description']);
                     $args->keywords = Filter::unescape($item['keywords']);
                     $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? Perms::getcombo($item['idperm'], 'idperm') : '') , $args);
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
                     break;
                 }
         }
