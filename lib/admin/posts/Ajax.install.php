@@ -6,12 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
 
-function tajaxposteditorInstall($self) {
+function AjaxInstall($self) {
     litepubl::$urlmap->addget('/admin/ajaxposteditor.htm', get_class($self));
 }
 
-function tajaxposteditorUninstall($self) {
+function AjaxUninstall($self) {
     turlmap::unsub($self);
 }

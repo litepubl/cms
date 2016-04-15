@@ -162,8 +162,12 @@ return [
 
 'tadminservice' => 'litepubl\admin\service\Service',
 'tadminposts' => 'litepubl\admin\posts\Posts',
+'tposteditor' => 'litepubl\admin\posts\Editor',
+'tajaxposteditor' => 'litepubl\admin\posts\Ajax',
 
 
+
+'tadminviews' => 'litepubl\admin\view\Schemes',
 //comments
 'tcomments' => 'litepubl\comments\Comments',
 'tcomment' => 'litepubl\comments\Comment',

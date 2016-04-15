@@ -93,10 +93,10 @@ return $this->notfound;
 
         $admintheme = $this->admintheme;
         $lang = tlocal::admin();
-        $form = new adminform(new targs());
-        $form->items = $admintheme->getcount($from, $from + count($items) , $count);
+        $form = $this->newForm();
+        $form->body = $admintheme->getcount($from, $from + count($items) , $count);
 
-        $tb = new tablebuilder();
+        $tb = $this->newTable();
         $tb->setposts(array(
             array(
                 'center',
@@ -125,8 +125,8 @@ return $this->notfound;
             ) ,
         ));
 
-        $form->items.= $tb->build($items);
-        $form->items.= $form->centergroup('[button=publish]
+        $form->body .= $tb->build($items);
+        $form->body .= $form->centergroup('[button=publish]
     [button=setdraft]
     [button=delete]');
 

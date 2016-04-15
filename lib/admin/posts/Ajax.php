@@ -6,15 +6,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
+use litepubl\post\Posts as PostItems;
+use litepubl\post\Post;
+use litepubl\view\Schemes;
+use litepubl\view\Schema;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Vars;
+use litepubl\view\Admin;
+use litepubl\view\MainView;
+use litepubl\admin\Html;
+use litepubl\\\adminPerms;
 
-class tajaxposteditor extends tevents {
+class Ajax extends \litepubl\core\Events
+ {
     public $idpost;
     private $isauthor;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -61,15 +69,15 @@ class tajaxposteditor extends tevents {
         turlmap::sendheader(false);
 
         if ($err = static ::auth()) return $err;
-        $this->idpost = tadminhtml::idparam();
+        $this->idpost = Html::idparam();
         $this->isauthor = litepubl::$options->ingroup('author');
         if ($this->idpost > 0) {
-            $posts = tposts::i();
+            $posts = PostItems::i();
             if (!$posts->itemexists($this->idpost)) return static ::error403();
             if (!litepubl::$options->hasgroup('editor')) {
                 if (litepubl::$options->hasgroup('author')) {
                     $this->isauthor = true;
-                    $post = tpost::i($this->idpost);
+                    $post = Post::i($this->idpost);
                     if (litepubl::$options->user != $post->author) return static ::error403();
                 }
             }
@@ -79,10 +87,10 @@ class tajaxposteditor extends tevents {
     }
 
     public function getcontent() {
-        $theme = tview::i(tviews::i()->defaults['admin'])->theme;
+        $theme = Schemes::i(Schemes::i()->defaults['admin'])->theme;
         $lang = tlocal::i('editor');
-        $post = tpost::i($this->idpost);
-        $vars = new themevars();
+        $post = Post::i($this->idpost);
+        $vars = new Vars();
         $vars->post = $post;
 
         switch ($_GET['get']) {
@@ -103,7 +111,7 @@ class tajaxposteditor extends tevents {
             case 'status':
             case 'access':
                 $args = new targs();
-                $args->comstatus = tadminhtml::array2combo(array(
+                $args->comstatus = Html::array2combo(array(
                     'closed' => $lang->closed,
                     'reg' => $lang->reg,
                     'guest' => $lang->guest,
@@ -111,14 +119,14 @@ class tajaxposteditor extends tevents {
                 ) , $post->comstatus);
 
                 $args->pingenabled = $post->pingenabled;
-                $args->status = tadminhtml::array2combo(array(
+                $args->status = Html::array2combo(array(
                     'published' => $lang->published,
                     'draft' => $lang->draft
                 ) , $post->status);
 
-                $args->perms = tadminperms::getcombo($post->idperm);
+                $args->perms = Perms::getcombo($post->idperm);
                 $args->password = $post->password;
-                $result = admintheme::admin()->parsearg('[combo=comstatus]
+                $result = Admin::admin()->parsearg('[combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
@@ -144,13 +152,12 @@ class tajaxposteditor extends tevents {
                 }
         }
 
-        //tfiler::log($result);
         return turlmap::htmlheader(false) . $result;
     }
 
     public function gettext($text, $admintheme = null) {
         if (!$admintheme) {
-            $admintheme = admintheme::admin();
+            $admintheme = Admin::admin();
         }
 
         $args = new targs();
@@ -159,7 +166,7 @@ class tajaxposteditor extends tevents {
                 $args->scripturl = $this->visual;
                 $args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
             } else {
-                $args->visual = ttemplate::i()->getjavascript($this->visual);
+                $args->visual = MainView::i()->getjavascript($this->visual);
             }
         } else {
             $args->visual = '';

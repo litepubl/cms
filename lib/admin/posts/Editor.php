@@ -6,24 +6,33 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
+use litepubl\post\Posts as PostItems;
+use litepubl\post\Post;
+use litepubl\view\Filter;
+use litepubl\view\MainView;
+use litepubl\view\Base;
+use litepubl\view\Vars;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\admin\AuthorRights;
+use litepubl\admin\DateFilter;
+use litepubl\core\DB;
+use litepubl\tag\Cats;
 
-class tposteditor extends tadminmenu {
+class Editor extends \litepubl\admin\Menu
+{
     public $idpost;
     protected $isauthor;
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function gethead() {
         $result = parent::gethead();
 
-        $template = ttemplate::i();
-        $template->ltoptions['idpost'] = $this->idget();
-        $result.= $template->getjavascript($template->jsmerger_posteditor);
+        $mainView = MainView::i();
+        $mainView->ltoptions['idpost'] = $this->idget();
+        $result.= $mainView->getjavascript($template->jsmerger_posteditor);
 
-        if ($this->isauthor && ($h = tauthor_rights::i()->gethead())) {
+        if ($this->isauthor && ($h = AuthorRights::i()->gethead())) {
             $result.= $h;
         }
 
@@ -32,7 +41,7 @@ class tposteditor extends tadminmenu {
 
     public static function getcombocategories(array $items, $idselected) {
         $result = '';
-        $categories = tcategories::i();
+        $categories = Cats::i();
         $categories->loadall();
 
         if (!count($items)) {
@@ -40,7 +49,8 @@ class tposteditor extends tadminmenu {
         }
 
         foreach ($items as $id) {
-            $result.= sprintf('<option value="%s" %s>%s</option>', $id, $id == $idselected ? 'selected' : '', basetheme::quote($categories->getvalue($id, 'title')));
+            $result.= sprintf('<option value="%s" %s>%s</option>',
+ $id, $id == $idselected ? 'selected' : '', Base::quote($categories->getvalue($id, 'title')));
         }
 
         return $result;
@@ -48,7 +58,7 @@ class tposteditor extends tadminmenu {
 
     protected function getcategories(tpost $post) {
         $postitems = $post->categories;
-        $categories = tcategories::i();
+        $categories = Cats::i();
         if (!count($postitems)) {
             $postitems = array(
                 $categories->defaultid
@@ -60,7 +70,7 @@ class tposteditor extends tadminmenu {
 
     public function getvarpost($post) {
         if (!$post) {
-            return basetheme::$vars['post'];
+            return Base::$vars['post'];
         }
 
         return $post;
@@ -111,7 +121,7 @@ class tposteditor extends tadminmenu {
 
     public function gettext($post = null) {
         $post = $this->getvarpost($post);
-        $ajax = tajaxposteditor::i();
+        $Ajax= Ajax::i();
         return $ajax->gettext($post->rawcontent, $this->admintheme);
     }
 
@@ -121,13 +131,13 @@ class tposteditor extends tadminmenu {
         $this->basename = 'editor';
         $this->idpost = $this->idget();
         if ($this->idpost > 0) {
-            $posts = tposts::i();
+            $posts = PostItems::i();
             if (!$posts->itemexists($this->idpost)) {
                 return 404;
             }
         }
 
-        $post = tpost::i($this->idpost);
+        $post = Post::i($this->idpost);
         if (!litepubl::$options->hasgroup('editor')) {
             if (litepubl::$options->hasgroup('author')) {
                 $this->isauthor = true;
@@ -156,7 +166,7 @@ class tposteditor extends tadminmenu {
     public function getpostargs(tpost $post, targs $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
-        $args->title = tcontentfilter::unescape($post->title);
+        $args->title = Filter::unescape($post->title);
     }
 
     public function getcontent() {
@@ -165,8 +175,8 @@ class tposteditor extends tadminmenu {
         $lang = tlocal::admin('editor');
         $args = new targs();
 
-        $post = $this->idpost ? tpost::i($this->idpost) : $this->newpost();
-        $vars = new themevars();
+        $post = $this->idpost ? Post::i($this->idpost) : $this->newpost();
+        $vars = new Vars();
         $vars->post = $post;
         $vars->posteditor = $this;
 
@@ -174,7 +184,7 @@ class tposteditor extends tadminmenu {
             $result.= $admintheme->h($lang->formhead . $post->bookmark);
         }
 
-        if ($this->isauthor && ($r = tauthor_rights::i()->getposteditor($post, $args))) {
+        if ($this->isauthor && ($r = AuthorRights::i()->getposteditor($post, $args))) {
             return $r;
         }
 
@@ -208,7 +218,7 @@ class tposteditor extends tadminmenu {
         }
 
         if (isset($posted) && $posted) {
-            $post->posted = datefilter::getdate('posted');
+            $post->posted = DateFilter::getdate('posted');
         }
 
         if (isset($status)) {
@@ -235,7 +245,7 @@ class tposteditor extends tadminmenu {
 
     protected function processfiles(tpost $post) {
         if (isset($_POST['files'])) {
-            $post->files = tdatabase::str2array(trim($_POST['files'], ', '));
+            $post->files = DB::str2array(trim($_POST['files'], ', '));
         }
     }
 
@@ -262,9 +272,9 @@ class tposteditor extends tadminmenu {
         }
 
         $id = (int)$_POST['id'];
-        $post = $id ? tpost::i($id) : $this->newpost();
+        $post = $id ? Post::i($id) : $this->newpost();
 
-        if ($this->isauthor && ($r = tauthor_rights::i()->editpost($post))) {
+        if ($this->isauthor && ($r = AuthorRights::i()->editpost($post))) {
             $this->idpost = $post->id;
             return $r;
         }

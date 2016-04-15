@@ -6,13 +6,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\views;
 
-class tadminviews extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Schemes extends \litepubl\admin\Menu
+{
 
     public static function getviewform($url) {
         $html = tadminhtml::i();

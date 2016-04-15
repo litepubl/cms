@@ -8,7 +8,7 @@
 
 namespace litepubl\admin;
 
-class datefilter {
+class DateFilter {
     //only date without time
     public static $format = 'd.m.Y';
     public static $timeformat = 'H:i';
