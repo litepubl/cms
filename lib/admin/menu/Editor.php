@@ -199,16 +199,7 @@ class tadminmenumanager extends tadminmenu {
         $menuitem = tmenu::i($id);
         switch ($action) {
             case 'delete':
-                if (!$this->confirmed) {
-                    $args->adminurl = $this->adminurl;
-                    $args->id = $id;
-                    $args->action = 'delete';
-                    $args->confirm = sprintf($this->lang->confirm, tlocal::get('common', $action) , $menus->getlink($id));
-                    return $this->html->confirmform($args);
-                } else {
-                    $menus->delete($id);
-                    return $h2->confirmeddelete;
-                }
+return $this->confirmDeleteItem($menus);
 
             case 'setdraft':
                 $menuitem->status = 'draft';

@@ -38,12 +38,7 @@ $tags->loadall();
         $args->ajax = $ajax;
 
         if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemexists($id)) {
-            if ($this->confirmed) {
-                $tags->delete($id);
-                $result.= $admin->success($lang->successdeleted);
-            } else {
-                return $html->confirmDelete($id, $lang->confirmdelete);
-            }
+$result .= $this->confirmDeleteItem($tags);
         }
 
         $result.= $html->h4(tadminhtml::getlink('/admin/posts/' . ($istags ? 'addtag' : 'addcat') . '/', $lang->add));

@@ -25,11 +25,8 @@ class tadminpingbacks extends tadminmenu {
             if (!$pingbacks->itemexists($id)) return $this->notfound;
             switch ($action) {
                 case 'delete':
-                    if (!$this->confirmed) return $this->html->confirmdelete($id, $this->adminurl, $lang->confirmdelete);
-                    $pingbacks->delete($id);
-                    $result.= $html->h4->successmoderated;
-                    break;
-
+$result .= $this->confirmDeleteItem($pingbacks);
+break;
 
                 case 'hold':
                     $pingbacks->setstatus($id, false);

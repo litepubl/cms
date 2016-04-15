@@ -66,11 +66,7 @@ $args = new Args();
                                 @unlink(litepubl::$paths->backup . $filename);
                                 return $admin->succes($lang->backupdeleted);
                             } else {
-                                $args->adminurl = $this->adminurl;
-                                $args->id = $_GET['id'];
-                                $args->action = 'delete';
-                                $args->confirm = sprintf('%s %s?', $lang->confirmdelete, $_GET['id']);
-                                $result.= $html->confirmform($args);
+                                $result.= $this->confirmDelete($id, sprintf('%s %s?', $lang->confirmdelete, $_GET['id']));
                             }
                     }
                 }

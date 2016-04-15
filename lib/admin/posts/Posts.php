@@ -49,16 +49,16 @@ return $r;
 return $this->notfound;
 }
 
+        $admintheme = $this->admintheme;
         if (!$this->confirmed) {
-            $args = new targs();
+            $args = new Args();
             $args->id = $id;
             $args->adminurl = $this->adminurl;
             $args->action = $action;
-            $args->confirm = sprintf($this->lang->confirm, $this->lang->$action, "<a href='$post->link'>$post->title</a>");
-            return $this->html->confirmform($args);
+            $args->confirm = sprintf($this->lang->confirm, $this->lang->$action, $post->bookmark);
+            return $admintheme->parsearg($admintheme->templates['confirmform'], $args);
         }
 
-        $admintheme = $this->admintheme;
         switch ($_GET['action']) {
             case 'delete':
                 $posts->delete($id);
