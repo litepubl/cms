@@ -195,4 +195,37 @@ return new Args();
         return min($count, (litepubl::$urlmap->page - 1) * $perpage);
     }
 
+    public function confirmDelete($id, $mesg = false) {
+        $args = new Args();
+        $args->id = $id;
+        $args->action = 'delete';
+        $args->adminurl = $this->adminurl;
+        $args->confirm = $mesg ? $mesg : Lang::i()->confirmdelete;
+
+        $admin = $this->admintheme;
+        return $admin->parsearg($admin->templates['confirmform'], $args);
+}
+
+    public function confirmDeleteItem($owner) {
+        $id = (int)$this->getparam('id', 0);
+$admin = $this->admintheme;
+$lang = Lang::i();
+
+        if (!$owner->itemexists($id)) {
+return $admin->geterr($lang->notfound);
+}
+
+        if (isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1)) {
+            $owner->delete($id);
+            return $admin->success($lang->successdeleted);
+        } else {
+
+            $args = new Args();
+            $args->id = $id;
+            $args->adminurl = $this->adminurl;
+            $args->action = 'delete';
+            $args->confirm = $lang->confirmdelete;
+            return $admin->parsearg($admin->templates['confirmform'], $args);
+    }
+
 }

@@ -184,35 +184,6 @@ return tlocal::i()->noword;
         return sprintf($this->h4->itemscount, $from, $to, $count);
     }
 
-    public function confirmdelete($id, $adminurl, $mesg) {
-        $args = new Args();
-        $args->id = $id;
-        $args->action = 'delete';
-        $args->adminurl = $adminurl;
-        $args->confirm = $mesg;
-
-        $admin = Admin::i();
-        return $admin->parsearg($admin->templates['confirmform'], $args);
-    }
-
-    public function confirm_delete($owner, $adminurl) {
-        $id = (int)static ::getparam('id', 0);
-        if (!$owner->itemexists($id)) return $this->h4red->notfound;
-        if (isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1)) {
-            $owner->delete($id);
-            return $this->h4->successdeleted;
-        } else {
-            $args = new Args();
-            $args->id = $id;
-            $args->adminurl = $adminurl;
-            $args->action = 'delete';
-            $args->confirm = tlocal::i()->confirmdelete;
-
-            $admin = Admin::i();
-            return $this->parsearg($admin->templates['confirmform'], $args);
-        }
-    }
-
     public static function check2array($prefix) {
         $result = array();
         foreach ($_POST as $key => $value) {

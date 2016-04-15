@@ -61,7 +61,7 @@ return false;
                     }
 
                     if (!$this->confirmed) {
-                        return $this->confirmdelete($id);
+                        return $this->confirmDelete($id);
                     }
 
                     $comments->delete($id);
@@ -271,7 +271,7 @@ return false;
         return $result;
     }
 
-    private function confirmdelete($id) {
+    public function confirmDelete($id) {
         $result = $this->getconfirmform($id, $this->lang->confirmdelete);
         $result.= $this->getinfo(new tcomment($id));
         return $result;

@@ -41,7 +41,7 @@ $admin = $this->admintheme;
                     $pages->delete($id);
                     $result.= $admin->success($lang->successdeleted);
                 } else {
-                    $result.= $this->html->confirmdelete($id, $this->adminurl, sprintf('%s %s?', $lang->confirmdelete, $item['title']));
+                    $result.= $this->confirmDelete($id, sprintf('%s %s?', $lang->confirmdelete, $item['title']));
                 }
             } else {
                 $result.= $this->editform($args);

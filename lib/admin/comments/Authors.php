@@ -25,7 +25,10 @@ class Authors extends Menu
         if ('delete' == $this->action) {
             $id = $this->idget();
             if (!$users->itemexists($id)) return $this->notfound();
-            if (!$this->confirmed) return $html->confirmdelete($id, $this->adminurl, $lang->confirmdelete);
+            if (!$this->confirmed) {
+return $this->confirmDelete($id, $lang->confirmdelete);
+}
+
             if (!$this->deleteauthor($id)) return $this->notfount;
             $result.= $html->h4->deleted;
         }

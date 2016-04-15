@@ -71,7 +71,7 @@ class tadmingroups extends tadminmenu {
 
 
             case 'delete':
-                $result.= $html->confirm_delete($groups, $this->adminurl);
+                $result.= $this->confirmDeleteItem($groups);
                 break;
         }
 

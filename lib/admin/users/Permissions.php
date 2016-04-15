@@ -67,7 +67,7 @@ class tadminperms extends tadminmenu {
                 return $perm->admin->getcont();
 
             case 'delete':
-                return $html->confirm_delete($perms, $this->adminurl);
+                return $this->confirmDeleteItem($perms);
             }
 
     }

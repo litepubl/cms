@@ -56,7 +56,7 @@ class tadminusers extends tadminmenu {
 
 
             case 'delete':
-                $result.= $html->confirm_delete($users, $this->adminurl);
+                $result.= $this->confirmDeleteItem($users);
                 break;
 
 

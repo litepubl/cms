@@ -40,9 +40,9 @@ $tags->loadall();
         if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemexists($id)) {
             if ($this->confirmed) {
                 $tags->delete($id);
-                $result.= $html->h4->successdeleted;
+                $result.= $admin->success($lang->successdeleted);
             } else {
-                return $html->confirmdelete($id, $this->adminurl, $lang->confirmdelete);
+                return $html->confirmDelete($id, $lang->confirmdelete);
             }
         }
 

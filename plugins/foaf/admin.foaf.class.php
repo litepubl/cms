@@ -123,7 +123,7 @@ class tadminfoaf extends tadminmenu {
                         } else {
                             $item = $foaf->getitem($id);
                             $mesg = "$lang->confirmdelete {$item['nick']} ({$item['url']})?";
-                            $result.= $this->html->confirmdelete($id, $this->adminurl, $mesg);
+                            $result.= $this->confirmDelete($id, $mesg);
                         }
                         break;
                 }

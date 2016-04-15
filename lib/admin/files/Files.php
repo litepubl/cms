@@ -61,7 +61,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
                         $result.= $admintheme->success($lang->deleted);
                     } else {
                         $item = $files->getitem($id);
-                        return $this->html->confirmdelete($id, $this->adminurl, sprintf($lang->confirm, $item['filename']));
+                        return $this->confirmDelete($id, sprintf($lang->confirm, $item['filename']));
                     }
                     break;
 
