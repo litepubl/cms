@@ -16,7 +16,6 @@ class Backuper extends \litepubl\core\Events
     public $result;
     public $tar;
     public $zip;
-    public $unzip;
     private $__filer;
     private $existingfolders;
     private $lastdir;
@@ -30,14 +29,13 @@ class Backuper extends \litepubl\core\Events
         $this->__filer = false;
         $this->tar = false;
         $this->zip = false;
-        $this->unzip = false;
         $this->archtype = 'zip';
         $this->lastdir = '';
         $this->data['filertype'] = 'ftp';
     }
 
     public function __destruct() {
-        unset($this->__filer, $this->tar, $this->zip, $this->unzip);
+        unset($this->__filer, $this->tar, $this->zip);
         parent::__destruct();
     }
 
@@ -144,13 +142,9 @@ $this->error('Filer not connected');
 
 
             case 'zip':
+            case 'unzip':
                 $this->zip = new \ZipArchive();
                 break;
-
-            case 'unzip':
-                $this->unzip = new \ZipArchive();
-                break;
-
 
             default:
                 $this->unknown_archive();
@@ -165,7 +159,6 @@ $this->error('Filer not connected');
                 return $result;
 
             case 'zip':
-                $result = $this->zip->file();
 $filename = $this->zip->filename;
 $this->zip->close();
                 $this->zip = false;
@@ -366,10 +359,14 @@ return litepubl::$db->man->export();
         return litepubl::$db->man->import($dump);
     }
 
+public function getTempName() {
+return litepubl::$paths->backup . md5rand() . '.zip';
+}
+
     public function uploaddump($s, $filename) {
         if (strend($filename, '.zip')) {
 
-$tempfile = litepubl::$paths->backup . md5rand() . '.zip';
+$tempfile = $this->getTempName();
 file_put_contents($tempfile, $s);
 @chmod($tempfile, 0666);
 
