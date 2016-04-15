@@ -6,19 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\tags;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Filter;
+use litepubl\admin\Html;
 
-class tadmintags extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Tags extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
         $result = '';
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
         $tags = $istags ? litepubl::$classes->tags : litepubl::$classes->categories;
-        if (dbversion) $tags->loadall();
+$tags->loadall();
         $parents = array(
             0 => '-----'
         );
@@ -33,7 +34,7 @@ class tadmintags extends tadminmenu {
         $args = new targs();
         $args->id = $id;
         $args->adminurl = $this->adminurl;
-        $ajax = tadminhtml::getadminlink('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
+        $ajax = Html::getadminlink('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
         $args->ajax = $ajax;
 
         if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemexists($id)) {
@@ -125,9 +126,8 @@ class tadmintags extends tadminmenu {
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
             )
         ));
-        $result = $html->fixquote($result);
-        $theme = ttheme::i();
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+
+        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
         return $result;
     }
 
@@ -178,7 +178,7 @@ class tadmintags extends tadminmenu {
         if (isset($raw) || isset($keywords)) {
             $item = $tags->contents->getitem($id);
             if (isset($raw)) {
-                $filter = tcontentfilter::i();
+                $filter = Filter::i();
                 $item['rawcontent'] = $raw;
                 $item['content'] = $filter->filterpages($raw);
             }

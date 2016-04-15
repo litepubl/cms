@@ -6,25 +6,26 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
+use litepubl\pages\StaticPages as Pages;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\admin\Table;
 
-class tadminstaticpages extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class StaticPages extends \litepubl\admin\Menu
+{
 
     private function editform(targs $args) {
         $args->text = $args->rawcontent;
         $args->formtitle = $this->title;
-        return $this->html->adminform('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);
+        return $this->admintheme->form('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);
     }
 
     public function getcontent() {
         $result = '';
-        $pages = tstaticpages::i();
+        $pages = Pages::i();
         $this->basename = 'staticpages';
-        $html = $this->html;
+$admin = $this->admintheme;
         $lang = tlocal::i('staticpages');
         $id = $this->idget();
         if (!$pages->itemexists($id)) $id = 0;
@@ -38,9 +39,9 @@ class tadminstaticpages extends tadminmenu {
             if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
                 if ($this->confirmed) {
                     $pages->delete($id);
-                    $result.= $html->h3->successdeleted;
+                    $result.= $admin->success($lang->successdeleted);
                 } else {
-                    $result.= $html->confirmdelete($id, $this->adminurl, sprintf('%s %s?', $lang->confirmdelete, $item['title']));
+                    $result.= $this->html->confirmdelete($id, $this->adminurl, sprintf('%s %s?', $lang->confirmdelete, $item['title']));
                 }
             } else {
                 $result.= $this->editform($args);
@@ -53,9 +54,8 @@ class tadminstaticpages extends tadminmenu {
             $result.= $this->editform($args);
         }
 
-        $result.= $html->buildtable($pages->items, array(
+        $result.= Table::fromitems($pages->items, array(
             array(
-                'left',
                 $lang->title,
                 '<a href="$site.url$url">$title</a>'
             ) ,
@@ -71,13 +71,13 @@ class tadminstaticpages extends tadminmenu {
             ) ,
         ));
 
-        return $html->fixquote($result);
+        return $result;
     }
 
     public function processform() {
         if (empty($_POST['title'])) return '';
         extract($_POST);
-        $pages = tstaticpages::i();
+        $pages = Pages::i();
         $id = $this->idget();
         if ($id == 0) {
             $_POST['id'] = $pages->add($title, $description, $keywords, $text);

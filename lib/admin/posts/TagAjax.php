@@ -6,13 +6,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
+use litepubl\admin\Html;
+use litepubl\view\Lang;
+use litepubl\view\Schemes;
+use litepubl\view\Schema;
 
-class tajaxtageditor extends tajaxposteditor {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class TagAjax extends Ajax
+{
 
     public function install() {
         litepubl::$urlmap->addget('/admin/ajaxtageditor.htm', get_class($this));
@@ -27,7 +28,7 @@ class tajaxtageditor extends tajaxposteditor {
     }
 
     public function getcontent() {
-        $type = tadminhtml::getparam('type', 'tags') == 'tags' ? 'tags' : 'categories';
+        $type = Html::getparam('type', 'tags') == 'tags' ? 'tags' : 'categories';
         $tags = $type == 'tags' ? ttags::i() : tcategories::i();
         if ($err = static ::auth()) {
             return $err;
@@ -38,13 +39,12 @@ class tajaxtageditor extends tajaxposteditor {
             return static ::error403();
         }
 
-        $theme = tview::i(tviews::i()->defaults['admin'])->theme;
+        $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $html = tadminhtml::i();
-        $html->section = 'tags';
         $lang = tlocal::i('tags');
 
         if ($id == 0) {
-            $views = tviews::i();
+            $schemes = Schemes::i();
             $name = $type == 'tags' ? 'tag' : 'category';
             $item = array(
                 'title' => '',

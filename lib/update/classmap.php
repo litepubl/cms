@@ -164,9 +164,9 @@ return [
 'tadminposts' => 'litepubl\admin\posts\Posts',
 'tposteditor' => 'litepubl\admin\posts\Editor',
 'tajaxposteditor' => 'litepubl\admin\posts\Ajax',
-
-
-
+'tadmintags' => 'litepubl\admin\posts\Tags',
+'tajaxtageditor' => 'litepubl\admin\posts\TagAjax',
+'tadminstaticpages' => 'litepubl\admin\posts\StaticPages',
 'tadminviews' => 'litepubl\admin\view\Schemes',
 //comments
 'tcomments' => 'litepubl\comments\Comments',
