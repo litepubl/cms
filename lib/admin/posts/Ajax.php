@@ -17,6 +17,7 @@ use litepubl\view\Vars;
 use litepubl\view\Admin;
 use litepubl\view\MainView;
 use litepubl\admin\Html;
+use litepubl\admin\GetSchema;
 use litepubl\\\adminPerms;
 
 class Ajax extends \litepubl\core\Events
@@ -137,7 +138,7 @@ class Ajax extends \litepubl\core\Events
 
 
             case 'view':
-                $result = tadminviews::getcomboview($post->idview);
+                $result = GetSchema::combo($post->idschema);
                 break;
 
 

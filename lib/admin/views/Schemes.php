@@ -7,43 +7,11 @@
  */
 
 namespace litepubl\admin\views;
+use litepubl\admin\GetSchema;
 
 class Schemes extends \litepubl\admin\Menu
 {
 
-    public static function getviewform($url) {
-        $html = tadminhtml::i();
-        $lang = tlocal::admin();
-        $args = new targs();
-        $args->idview = static ::getcombo(tadminhtml::getparam('idview', 1));
-        $form = new adminform($args);
-        $form->action = litepubl::$site->url . $url;
-        $form->inline = true;
-        $form->method = 'get';
-        $form->items = '[combo=idview]';
-        $form->submit = 'select';
-        return $form->get();
-    }
-
-    public static function getcomboview($idview, $name = 'idview') {
-        $lang = tlocal::i();
-        $lang->addsearch('views');
-        $theme = ttheme::i();
-        return strtr($theme->templates['content.admin.combo'], array(
-            '$lang.$name' => $lang->view,
-            '$name' => $name,
-            '$value' => static ::getcombo($idview)
-        ));
-    }
-
-    public static function getcombo($idview) {
-        $result = '';
-        $views = tviews::i();
-        foreach ($views->items as $id => $item) {
-            $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idview == $id ? 'selected="selected"' : '', $item['name']);
-        }
-        return $result;
-    }
 
     public static function replacemenu($src, $dst) {
         $views = tviews::i();
@@ -150,8 +118,8 @@ class Schemes extends \litepubl\admin\Menu
                     return $result;
                 }
 
-                $result = static ::getviewform($this->url);
-                $tabs = new tabs($this->admintheme);
+                $result = GetSchema::form($this->url);
+                $tabs = $this->newTabs();
                 $menuitems = array();
                 foreach ($views->items as $itemview) {
                     $class = $itemview['menuclass'];

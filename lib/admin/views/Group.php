@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\GetSchema;
 
 class tadminviewsgroup extends tadminmenu {
 
@@ -21,10 +22,10 @@ class tadminviewsgroup extends tadminmenu {
         $args = new targs();
 
         $args->formtitle = $lang->viewposts;
-        $result = $html->adminform(tadminviews::getcomboview($views->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
+        $result = $html->adminform(GetSchema::combo($views->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
 
         $args->formtitle = $lang->viewmenus;
-        $result.= $html->adminform(tadminviews::getcomboview($views->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
+        $result.= $html->adminform(GetSchema::combo($views->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
 
         $args->formtitle = $lang->themeviews;
         $view = tview::i();

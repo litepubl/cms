@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\GetSchema;
 
 class tadminviewsspec extends tadminmenu {
 
@@ -37,7 +38,7 @@ class tadminviewsspec extends tadminmenu {
             $args->classname = $classname;
             $name = substr($classname, 1);
             $args->title = $lang->{$name};
-            $inputs = tadminviews::getcomboview($obj->idview, "idview-$classname");
+            $inputs = GetSchema::combo($obj->idview, "idview-$classname");
             if (isset($obj->data['keywords'])) $inputs.= $html->getedit("keywords-$classname", $obj->data['keywords'], $lang->keywords);
             if (isset($obj->data['description'])) $inputs.= $html->getedit("description-$classname", $obj->data['description'], $lang->description);
             if (isset($obj->data['head'])) $inputs.= $html->getinput('editor', "head-$classname", tadminhtml::specchars($obj->data['head']) , $lang->head);

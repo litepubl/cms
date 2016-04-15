@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\GetSchema;
 
 class tadmincustomwidget extends tadminwidget {
 
@@ -34,7 +35,7 @@ class tadmincustomwidget extends tadminwidget {
             $viewcombo = '';
         } else {
             $id = 0;
-            $viewcombo = tadminviews::getcomboview(1);
+            $viewcombo = GetSchema::combo(1);
             $args->mode = 'add';
             $item = array(
                 'title' => '',

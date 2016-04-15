@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\GetSchema;
 
 class tadminwidgets extends tadminmenu {
 
@@ -147,7 +148,7 @@ class tadminwidgets extends tadminmenu {
 
         $idview = (int)tadminhtml::getparam('idview', 1);
         $view = tview::i($idview);
-        $result = tadminviews::getviewform('/admin/views/widgets/');
+        $result = GetSchema::form('/admin/views/widgets/');
 
         if (($idview == 1) || $view->customsidebar) {
             $result.= $this->get_table();

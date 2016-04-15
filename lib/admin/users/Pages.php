@@ -7,7 +7,7 @@
  */
 
 namespace litepubl;
-
+use litepubl\admin\GetSchema;
 class tadminuserpages extends tadminmenu {
 
     public static function i($id = 0) {
@@ -48,7 +48,7 @@ class tadminuserpages extends tadminmenu {
         $tabs = new tabs($this->admintheme);
         $tabs->add($lang->title, '[text=name] [text=website]');
         if ('admin' == litepubl::$options->group) {
-            $tabs->add($lang->view, tadminviews::getcomboview($item['idview']));
+            $tabs->add($lang->schema, GetSchema::combo($item['idview']));
             $tabs->add('SEO', '[text=url] [text=keywords] [text=description] [editor=head]');
         }
         $tabs->add($lang->text, '[editor=rawcontent]');

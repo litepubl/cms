@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\GetSchema;
 
 class tajaxmenueditor extends tajaxposteditor {
 
@@ -38,7 +39,7 @@ class tajaxmenueditor extends tajaxposteditor {
 
         switch ($_GET['get']) {
             case 'view':
-                $result = tadminviews::getcomboview($id == 0 ? $views->defaults['menu'] : $menu->idview);
+                $result = GetSchema::combo($id == 0 ? $schemes->defaults['menu'] : $menu->idSchema);
                 break;
 
 

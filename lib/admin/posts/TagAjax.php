@@ -11,6 +11,7 @@ use litepubl\admin\Html;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;
+use litepubl\admin\GetSchema;
 
 class TagAjax extends Ajax
 {
@@ -75,7 +76,7 @@ class TagAjax extends Ajax
 
                 $args = new targs();
                 $args->add($item);
-                $result = tadminviews::getcomboview($item['idview']);
+                $result = GetSchema::combo($item['idview']);
                 $result.= $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
                 $result.= tadminperms::getcombo($item['idperm']);
                 break;
