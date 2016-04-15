@@ -10,33 +10,6 @@ namespace litepubl;
 
 class tadminperms extends tadminmenu {
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
-    public static function getcombo($idperm, $name = 'idperm') {
-        $lang = tlocal::admin();
-        $section = $lang->section;
-        $lang->section = 'perms';
-        $theme = ttheme::i();
-        $result = strtr($theme->templates['content.admin.combo'], array(
-            '$lang.$name' => $lang->perm,
-            '$name' => $name,
-            '$value' => static ::getcomboitems($idperm)
-        ));
-
-        $lang->section = $section;
-        return $result;
-    }
-
-    public static function getcomboitems($idperm) {
-        $result = sprintf('<option value="0" %s>%s</option>', $idperm == 0 ? 'selected="selected"' : '', tlocal::get('perms', 'nolimits'));
-        $perms = tperms::i();
-        foreach ($perms->items as $id => $item) {
-            $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idperm == $id ? 'selected="selected"' : '', $item['name']);
-        }
-        return $result;
-    }
 
     public function getcontent() {
         $result = '';

@@ -13,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\perms\Files as PrivateFiles;
+use litepubl\admin\GetPerm;
 use litepubl\utils\http;
 use litepubl\admin\Form;
 
@@ -45,7 +46,9 @@ class Files extends \litepubl\admin\Menu
       [text=keywords]
       [checkbox=overwrite]';
 
-            if (litepubl::$options->show_file_perm) $form->items.= tadminperms::getcombo(0, 'idperm');
+            if (litepubl::$options->show_file_perm) {
+$form->items.= GetPerm::combo(0, 'idperm');
+}
             $result.= $form->get();
         } else {
             $id = $this->idget();

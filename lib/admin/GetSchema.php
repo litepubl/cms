@@ -1,6 +1,7 @@
 <?php
 
 namespace litepubl\admin;
+use litepubl\view\Schemes;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;

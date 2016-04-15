@@ -12,6 +12,7 @@ unset($cl->items['tini2array']);
 unset($cl->items['inifiles']);
 unset($cl->items['tabstractpingbacks']);
 unset($cl->items['tautoform']);
+unset($cl->items['adminitems']);
 
 $a = include(__DIR__ . '/classmap.php');
 foreach ($a as $oldclass => $newclass) {

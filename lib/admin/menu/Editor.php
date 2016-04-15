@@ -43,7 +43,7 @@ class tadminmenumanager extends tadminmenu {
 
             case 'edit':
             case 'editfake':
-                $id = tadminhtml::idparam();
+                $id = $this->idparam();
                 $menus = tmenus::i();
                 $parents = array(
                     0 => '-----'

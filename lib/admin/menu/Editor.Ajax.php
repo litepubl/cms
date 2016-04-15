@@ -25,7 +25,7 @@ class tajaxmenueditor extends tajaxposteditor {
     }
 
     public function getcontent() {
-        $id = tadminhtml::idparam();
+        $id = $this->idparam();
         $menus = tmenus::i();
         if (($id != 0) && !$menus->itemexists($id)) return static ::error403();
         $menu = tmenu::i($id);

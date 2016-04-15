@@ -65,12 +65,16 @@ class Ajax extends \litepubl\core\Events
         }
     }
 
+    public function idparam() {
+        return !empty($_GET['id']) ? (int) $_GET['id'] : (!empty($_POST['id']) ? (int) $_POST['id'] : 0);
+    }
+
     public function request($arg) {
         $this->cache = false;
         turlmap::sendheader(false);
 
         if ($err = static ::auth()) return $err;
-        $this->idpost = Html::idparam();
+        $this->idpost = $this->idparam();
         $this->isauthor = litepubl::$options->ingroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();

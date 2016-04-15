@@ -12,6 +12,7 @@ use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;
 use litepubl\admin\GetSchema;
+use litepubl\admin\GetPerm;
 
 class TagAjax extends Ajax
 {
@@ -35,7 +36,7 @@ class TagAjax extends Ajax
             return $err;
         }
 
-        $id = tadminhtml::idparam();
+        $id = $this->idparam();
         if (($id > 0) && !$tags->itemexists($id)) {
             return static ::error403();
         }
@@ -78,7 +79,7 @@ class TagAjax extends Ajax
                 $args->add($item);
                 $result = GetSchema::combo($item['idview']);
                 $result.= $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
-                $result.= tadminperms::getcombo($item['idperm']);
+                $result.= GetPerm::combo($item['idperm']);
                 break;
 
 

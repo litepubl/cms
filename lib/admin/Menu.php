@@ -129,8 +129,16 @@ class Menu extends \litepubl\pages\Menu
         }
     }
 
-    public static function idget() {
-        return (int)Html::getparam('id', 0);
+    public function idget() {
+        return (int)$this->getparam('id', 0);
+    }
+
+    public function getparam($name, $default) {
+        return !empty($_GET[$name]) ? $_GET[$name] : (!empty($_POST[$name]) ? $_POST[$name] : $default);
+    }
+
+    public function idparam() {
+        return (int)$this->getparam('id', 0);
     }
 
     public function getaction() {

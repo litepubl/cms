@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\post;
+use litepubl\admin\GetPerm;
 
 class JsonFiles extends \litepubl\core\Events
  {
@@ -52,7 +53,7 @@ class JsonFiles extends \litepubl\core\Events
 
         if (litepubl::$options->show_file_perm) {
             $theme = ttheme::getinstance('default');
-            $result['fileperm'] = tadminperms::getcombo(0, 'idperm_upload');
+            $result['fileperm'] = GetPerm::combo(0, 'idperm_upload');
         }
 
         return $result;

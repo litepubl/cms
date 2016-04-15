@@ -9,6 +9,7 @@
 namespace litepubl\view;
 use litepubl\tag\Cats;
 use litepubl\post\Files;
+use litepubl\admin\GetPerm;
 
 class Admin extends Base
 {
@@ -285,7 +286,7 @@ class Admin extends Base
                 $args
             ));
         } else if (litepubl::$options->show_file_perm) {
-            $args->fileperm = tadminperms::getcombo(0, 'idperm_upload');
+            $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
         $files = Files::i();

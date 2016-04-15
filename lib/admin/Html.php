@@ -97,14 +97,6 @@ return new redtag($name);
         }
     }
 
-    public static function getparam($name, $default) {
-        return !empty($_GET[$name]) ? $_GET[$name] : (!empty($_POST[$name]) ? $_POST[$name] : $default);
-    }
-
-    public static function idparam() {
-        return (int)static ::getparam('id', 0);
-    }
-
     public static function getadminlink($path, $params) {
         return litepubl::$site->url . $path . litepubl::$site->q . $params;
     }
