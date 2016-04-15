@@ -6,14 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\posts;
+use litepubl\post\Posts as PostItems;
+use litepubl\post\Post;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\admin\AuthorRights;
+use litepubl\admin\Html;
 
-class tadminposts extends tadminmenu {
+class Posts extends \litepubl\admin\Menu
+{
     private $isauthor;
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function canrequest() {
         $this->isauthor = false;
@@ -28,18 +31,24 @@ class tadminposts extends tadminmenu {
             'setdraft',
             'publish'
         ))) {
-            return $this->doaction(tposts::i() , $_GET['action']);
+            return $this->doaction(PostItems::i() , $_GET['action']);
         }
 
-        return $this->gettable(tposts::i() , $where = "status <> 'deleted' ");
+        return $this->gettable(PostItems::i() , $where = "status <> 'deleted' ");
     }
 
     public function doaction($posts, $action) {
         $id = $this->idget();
         if (!$posts->itemexists($id)) return $this->notfound;
-        $post = tpost::i($id);
-        if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($action))) return $r;
-        if ($this->isauthor && (litepubl::$options->user != $post->author)) return $this->notfound;
+        $post = Post::i($id);
+        if ($this->isauthor && ($r = AuthorRights::i()->changeposts($action))) {
+return $r;
+}
+
+        if ($this->isauthor && (litepubl::$options->user != $post->author)) {
+return $this->notfound;
+}
+
         if (!$this->confirmed) {
             $args = new targs();
             $args->id = $id;
@@ -108,7 +117,7 @@ class tadminposts extends tadminmenu {
             ) ,
             array(
                 $lang->edit,
-                '<a href="' . tadminhtml::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
+                '<a href="' . Html::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
             ) ,
             array(
                 $lang->delete,
@@ -128,10 +137,12 @@ class tadminposts extends tadminmenu {
     }
 
     public function processform() {
-        $posts = tposts::i();
+        $posts = PostItems::i();
         $posts->lock();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
-        if ($this->isauthor && ($r = tauthor_rights::i()->changeposts($status))) return $r;
+        if ($this->isauthor && ($r = AuthorRights::i()->changeposts($status))) {
+return $r;
+}
         $iduser = litepubl::$options->user;
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) continue;

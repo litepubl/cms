@@ -161,6 +161,7 @@ return [
 'tadminfiles' => 'litepubl\admin\Files',
 
 'tadminservice' => 'litepubl\admin\service\Service',
+'tadminposts' => 'litepubl\admin\posts\Posts',
 
 
 //comments

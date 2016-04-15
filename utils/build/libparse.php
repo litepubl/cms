@@ -1,5 +1,5 @@
 <?php
-use litepubl\tfiler as tfiler;
+use litepubl\utils\Filer as tfiler;
 set_time_limit(120);
 
 function ParseFile($filename) {
@@ -29,6 +29,7 @@ $s = replace_copyright($s);
 //}, $s);
 
 if (strend($filename, 'php')) {
+$s = replaceIfReturn($s);
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -59,6 +60,18 @@ $s = trim($s);
 
 $linescount += substr_count($s, "\n");
 file_put_contents($filename, $s);
+}
+
+function replaceIfReturn($str) {
+$a = explode("\n", $str);
+foreach ($a as $i => $s) {
+if (strpos($s, ' if (') && ($j = strpos($s, ' return'))) {
+$s = substr($s, 0, $j) . " {\n" . substr($s, $j) . "\n}\n\n";
+$a[$i] = $s;
+}
+}
+
+return implode("\n", $a);
 }
 
 function parsedir($dir) {
@@ -117,7 +130,7 @@ foreach ($files as $file) {
 //$s = php_strip_whitespace($dir . $file);
 $s = trim(file_get_contents($dir . $file));
 
-//обрезать теги php 
+//strip php tags
 $s = substr($s, 5);
 if (strend($s, '?>')) $s = substr($s, 0, strlen($s) -2);
 $s = trim($s);
@@ -180,8 +193,9 @@ $s = strtr([
 'turlmap::unsub', 'litepubl::$router->unbind',
 'tlocal', 'Lang',
 'new targs' => 'new Args',
-
+'targs::i()' => 'new Args()'
 ]);
+
 }
 
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;

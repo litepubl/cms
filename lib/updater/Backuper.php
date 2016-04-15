@@ -532,7 +532,6 @@ $this->zip->close();
 unlink($tempfile);
                 break;
 
-
             default:
                 $this->unknown_archive();
             }
