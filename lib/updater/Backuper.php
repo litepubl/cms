@@ -498,27 +498,41 @@ unlink($tempfile);
             case 'unzip':
 case 'zip':
                 $mode = $this->filer->chmod_file;
-                $this->unzip->ReadData($content);
+$tempfile = $this->getTempName();
+file_put_contents($tempfile, $content);
+@chmod($tempfile, 0666);
+
+                if ($this->zip->open($tempfile) !== true) {
+unlink($tempfile);
+                    $this->zip = false;
+                    return $this->errorarch();
+}
 
                 $path_checked = false;
                 $path_root = false;
 
-                foreach ($this->unzip->Entries as $item) {
-                    if ($item->Error != 0) continue;
+            for ($i = 0; $i < $this->zip->numFiles; $i++) {
+                if ($s = $this->zip->getFromIndex($i)) {
+                    $filename = $this->zip->getNameIndex($i);
 
                     if (!$path_checked) {
                         $path_checked = true;
-                        $path_root = $this->get_path_root($item->path);
+                        $path_root = $this->get_path_root($filename);
                     }
 
-                    $path = $path_root ? trim(substr(trim($item->path, '/') , strlen($path_root)) , '/') : $item->path;
-                    if (!$this->uploadfile($path . '/' . $item->Name, $item->Data, $mode)) {
+$filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+                    if (!$this->uploadfile($filename, $s, $mode)) {
+$this->zip->close();
+unlink($tempfile);
                         return $this->errorwrite($item->Path . $item->Name);
                     }
                 }
+}
 
                 $this->onuploaded($this);
-                $this->unzip = false;
+$this->zip->close();
+                $this->zip = false;
+unlink($tempfile);
                 break;
 
 

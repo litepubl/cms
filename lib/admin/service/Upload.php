@@ -47,16 +47,7 @@ $lang = Lang::admin('service');
                         $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
                     }
 
-                    if (($archtype == 'zip') && class_exists('zipArchive')) {
-                        $filename = litepubl::$paths->storage . 'backup/temp.zip';
-                        file_put_contents($filename, $s);
-                        @chmod($filename, 0666);
-                        $s = '';
-                        $result = $backuper->uploadzip($filename);
-                        @unlink($filename);
-                    } else {
                         $result = $backuper->upload($s, $archtype);
-                    }
                 }
 
                 if ($result) {
