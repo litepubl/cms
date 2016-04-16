@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\view;
+use litepubl\utils\Filer;
 
 class Base extends \litepubl\core\Events
  {
@@ -221,7 +222,7 @@ class Base extends \litepubl\core\Events
     }
 
     public static function clearcache() {
-        tfiler::delete(litepubl::$paths->data . 'themes', false, false);
+        Filer::delete(litepubl::$paths->data . 'themes', false, false);
         litepubl::$urlmap->clearcache();
     }
 

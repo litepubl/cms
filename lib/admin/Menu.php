@@ -162,6 +162,12 @@ public function newTable() {
 return new Table($this->admintheme);
 }
 
+public function tableItems(array $items, array $struct) {
+$table = $this->newTable();
+        $table->setstruct($struct);
+        return $table->build($items);
+}
+
 public function newList() {
 return new UList($this->admintheme);
 }

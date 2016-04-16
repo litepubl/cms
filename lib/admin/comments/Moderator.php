@@ -57,7 +57,7 @@ return false;
             switch ($action) {
                 case 'delete':
                     if (!$this->can($id, 'delete')) {
-                        return $html->h4->forbidden;
+                        return $admin->geterr($lang->forbidden);
                     }
 
                     if (!$this->confirmed) {
@@ -65,7 +65,7 @@ return false;
                     }
 
                     $comments->delete($id);
-                    $result.= $html->h4->successmoderated;
+                    $result.= $admin->success($lang->successmoderated);
                     break;
 
 
@@ -271,20 +271,12 @@ return false;
         return $result;
     }
 
-    public function confirmDelete($id) {
-        $result = $this->getconfirmform($id, $this->lang->confirmdelete);
-        $result.= $this->getinfo(new tcomment($id));
+    public function confirmDelete($id, $mesg = false) {
+        $result = parent::confirmDelete($id);
+        $result.= $this->getinfo(new Comment($id));
         return $result;
     }
 
-    private function getconfirmform($id, $confirm) {
-        $args = targs::i();
-        $args->id = $id;
-        $args->action = 'delete';
-        $args->adminurl = litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
-        $args->confirm = $confirm;
-        return $this->html->confirmform($args);
-    }
     public function processform() {
         $result = '';
         $comments = tcomments::i();

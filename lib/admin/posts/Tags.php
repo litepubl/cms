@@ -11,6 +11,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\admin\Html;
+use litepubl\admin\Table;
 
 class Tags extends \litepubl\admin\Menu
 {
@@ -28,7 +29,7 @@ $tags->loadall();
         }
 
         $this->basename = 'tags';
-        $html = $this->html;
+$admin = $this->admintheme;
         $lang = tlocal::i('tags');
         $id = $this->idget();
         $args = new targs();
@@ -41,7 +42,7 @@ $tags->loadall();
 $result .= $this->confirmDeleteItem($tags);
         }
 
-        $result.= $html->h4(tadminhtml::getlink('/admin/posts/' . ($istags ? 'addtag' : 'addcat') . '/', $lang->add));
+        $result.= $admin->h($admin->link('/admin/posts/' . ($istags ? 'addtag' : 'addcat') . '/', $lang->add));
         $item = false;
         if ($id && $tags->itemexists($id)) {
             $item = $tags->getitem($id);
@@ -67,14 +68,15 @@ $result .= $this->confirmDeleteItem($tags);
       [text=title]
       [combo=parent]
       [combo=order]
-      [hidden=id]' . $html->p->ordernote);
+      [hidden=id]' .
+ $admin->help($lang->ordernote));
 
             $tabs->ajax($lang->text, "$ajax=text");
             $tabs->ajax($lang->view, "$ajax=view");
             $tabs->ajax('SEO', "$ajax=seo");
 
             $form = new adminform($args);
-            $result.= $html->adminform($tabs->get() , $args);
+            $result.= $admin->form($tabs->get() , $args);
         }
 
         //table
@@ -94,7 +96,7 @@ $result .= $this->confirmDeleteItem($tags);
             $items[] = $item;
         }
 
-        $result.= $html->buildtable($items, array(
+        $result.= Table::fromitems($items, array(
             array(
                 'right',
                 $lang->count2,
@@ -187,7 +189,7 @@ $result .= $this->confirmDeleteItem($tags);
 
         $tags->unlock();
         $_GET['id'] = $_POST['id'] = $id;
-        return sprintf($this->html->h2->success, $title);
+        return $this->admintheme->success(sprintf($this->lang->success, $title));
     }
 
 } //class
