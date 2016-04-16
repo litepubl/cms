@@ -14,7 +14,6 @@ use litepubl\view\Filter;
 use litepubl\view\AdminParser;
 use litepubl\updater\Updater;
 use litepubl\updater\Backuper;
-use litepubl\admin\Html;
 use litepubl\admin\Form;
 use litepubl\admin\Menus;
 
@@ -83,24 +82,24 @@ class Secure extends \litepubl\admin\Menu
         extract($_POST, EXTR_SKIP);
         $options = litepubl::$options;
 $admin = $this->admintheme;
+$lang = Lang::admin('options');
 
         if (isset($_POST['oldpassword'])) {
-            $h4 = $this->html->h4;
             if ($oldpassword == '') {
-                return $h4->badpassword;
+                return $admin->geterr($lang->badpassword);
             }
 
             if (($newpassword == '') || ($newpassword != $repassword)) {
-                return $h4->difpassword;
+                return $admin->geterr($lang->difpassword);
             }
 
             if (!$options->auth($options->email, $oldpassword)) {
-                return $h4->badpassword;
+                return $admin->geterr($lang->badpassword);
             }
 
             $options->changepassword($newpassword);
             $options->logout();
-            return $h4->passwordchanged;
+                return $admin->success($lang->passwordchanged;
         }
 
         $options->echoexception = isset($echoexception);

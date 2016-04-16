@@ -184,7 +184,7 @@ ob_end_clean();
         }
 
         $items = array();
-        $html = $this->html;
+        $admin = $this->admintheme;
         foreach ($list as $filename) {
             if (strend($filename, '.gz') || strend($filename, '.zip')) {
                 $items[]['filename'] = $filename;
@@ -196,7 +196,8 @@ ob_end_clean();
         }
 
         $lang = $this->lang;
-        return $this->html->h4->backupheadern . $this->html->buildtable($items, array(
+        return $admin->h($lang->backupheader) .
+ $this->tableItems($items, array(
             array(
                 'right',
                 $lang->download,

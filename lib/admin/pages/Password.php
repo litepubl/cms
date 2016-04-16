@@ -87,7 +87,7 @@ class Password extends Form
             return sprintf('<h4 class="red">%s</h4>', $e->getMessage());
         }
 
-        return $this->html->h4->success;
+        return $this->admintheme->success(Lang::admin()->success);
     }
 
     public function restore($email) {

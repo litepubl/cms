@@ -77,14 +77,18 @@ class Subscribers extends Form
 
     public function getcontent() {
         $result = '';
-        $html = $this->html;
+        $admin = $this->admintheme;
         $lang = tlocal::admin();
         $args = new targs();
-        if ($this->newreg) $result.= $html->h4->newreg;
+        if ($this->newreg) {
+$result.= $admin->h(/$lang->newreg);
+}
 
         $subscribers = SubscriberItems::i();
         $items = $subscribers->getposts($this->iduser);
-        if (count($items) == 0) return $html->h4->nosubscribtions;
+        if (count($items) == 0) {
+return $admin->h($lang->nosubscribtions);
+}
         Posts::i()->loaditems($items);
         $args->default_subscribe = UserOptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
         $args->formtitle = Users::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
@@ -97,7 +101,7 @@ class Subscribers extends Form
             )
         ));
 
-        return $html->adminform('[checkbox=default_subscribe]' . $tb->build($items) , $args);
+        return $admin->form('[checkbox=default_subscribe]' . $tb->build($items) , $args);
     }
 
     public function processform() {
@@ -110,7 +114,7 @@ class Subscribers extends Form
             }
         }
 
-        return $this->html->h4->unsubscribed;
+        return $this->admin->h(Lang::admin()->unsubscribed);
     }
 
 } //class

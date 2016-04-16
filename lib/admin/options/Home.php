@@ -89,8 +89,9 @@ str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats
         $home->showposts = isset($showposts);
         $home->getSchema()->invertorder = isset($invertorder);
 $home->getSchema()->save();
-        $home->includecats = tadminhtml::check2array('category-');
-        $home->excludecats = tadminhtml::check2array('exclude_category-');
+
+        $home->includecats = $this->admintheme->check2array('category-');
+        $home->excludecats = $this->admintheme->check2array('exclude_category-');
         $home->showpagenator = isset($showpagenator);
         $home->postschanged();
         $home->unlock();

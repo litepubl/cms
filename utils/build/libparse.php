@@ -195,6 +195,7 @@ $s = strtr([
 'new targs' => 'new Args',
 'targs::i()' => 'new Args()',
 'tadminhtml::array2combo' => '$this->theme->comboItems',
+$form->items ' => '$form->body ','
 
 ]);
 

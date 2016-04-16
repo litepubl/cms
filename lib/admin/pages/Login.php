@@ -89,8 +89,8 @@ return turlmap::nocache();
         $password = trim($_POST['password']);
 
         if ($mesg = static ::autherror($email, $password)) {
-            $this->formresult = $this->html->h4red($mesg);
-            return turlmap::nocache();;
+            $this->formresult = $this->admintheme->geterr($mesg);
+            return turlmap::nocache();
         }
 
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;

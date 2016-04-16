@@ -101,15 +101,6 @@ return new redtag($name);
         return Admin::i()->form($tml, $args);
     }
 
-
-    public function getedit($name, $value, $title) {
-        return $this->getinput('text', $name, $value, $title);
-    }
-
-    public function getcombo($name, $value, $title) {
-        return $this->getinput('combo', $name, $value, $title);
-    }
-
     public static function datestr($date) {
         if ($date == '0000-00-00 00:00:00') {
 return tlocal::i()->noword;
@@ -128,18 +119,5 @@ return tlocal::i()->noword;
         return $tb->build($items);
     }
 
-    public function getitemscount($from, $to, $count) {
-        return sprintf($this->h4->itemscount, $from, $to, $count);
-    }
-
-    public static function check2array($prefix) {
-        $result = array();
-        foreach ($_POST as $key => $value) {
-            if (strbegin($key, $prefix)) {
-                $result[] = is_numeric($value) ? (int)$value : $value;
-            }
-        }
-        return $result;
-    }
 
 }

@@ -59,16 +59,11 @@ return Schema::getSchema($this->admintheme;
     }
 
     public function getcont() {
+tlocal::admin($this->section);
         $result = $this->formresult;
         $result.= $this->getcontent();
         $theme = $this->theme;
         return $theme->simple($result);
-    }
-
-    public function gethtml() {
-        $result = tadminhtml::i();
-        $lang = tlocal::admin($this->section);
-        return $result;
     }
 
     public function getform() {

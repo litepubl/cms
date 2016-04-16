@@ -159,6 +159,7 @@ return [
 'tadmincomusers' => 'litepubl\admin\comments\Authors',
 'tadminmoderator' => 'litepubl\admin\comments\Moderator',
 'tadminfiles' => 'litepubl\admin\Files',
+'tadminfilethumbnails' => 'litepubl\admin\files\Thumbnails',
 
 'tadminservice' => 'litepubl\admin\service\Service',
 'tadminposts' => 'litepubl\admin\posts\Posts',

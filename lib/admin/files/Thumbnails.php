@@ -6,16 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\files;
+use litepubl\post\Files as FileItems;
+use litepubl\post\MediaParser;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class tadminfilethumbnails extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Thumbnails extends \litepubl\admin\Menu
+{
 
     public function getidfile() {
-        $files = tfiles::i();
+        $files = FileItems::i();
         $id = $this->idget();
         if (($id == 0) || !$files->itemexists($id)) return false;
         if (litepubl::$options->hasgroup('editor')) return $id;
@@ -28,8 +29,8 @@ class tadminfilethumbnails extends tadminmenu {
     public function getcontent() {
         if (!($id = $this->getidfile())) return $this->notfound;
         $result = '';
-        $files = tfiles::i();
-        $html = $this->html;
+        $files = FileItems::i();
+$admin = $this->admintheme;
         $lang = tlocal::admin();
         $args = new targs();
         $item = $files->getitem($id);
@@ -39,7 +40,7 @@ class tadminfilethumbnails extends tadminmenu {
             $form = new adminform($args);
             $form->action = "$this->adminurl=$id";
             $form->inline = true;
-            $form->items = $html->p('<img src="$site.files/files/$filename" alt="thumbnail" />' . $lang->wantdelete);
+            $form->body = $admin->help('<img src="$site.files/files/$filename" alt="thumbnail" />' . $lang->wantdelete);
             $form->submit = 'delete';
             $result.= $form->get();
         }
@@ -56,28 +57,35 @@ class tadminfilethumbnails extends tadminmenu {
     }
 
     public function processform() {
-        if (!($id = $this->getidfile())) return $this->notfound;
-        $files = tfiles::i();
+        if (!($id = $this->getidfile())) {
+return $this->notfound;
+}
+
+        $files = FileItems::i();
         $item = $files->getitem($id);
+$admin = $this->admintheme;
+$lang = Lang::admin();
 
         if (isset($_POST['delete'])) {
             $files->delete($item['preview']);
             $files->setvalue($id, 'preview', 0);
-            return $this->html->h4->deleted;
+            return $admintheme->success($lang->deleted);
         }
 
         $isauthor = 'author' == litepubl::$options->group;
         if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
-            $error = tlocal::get('uploaderrors', $_FILES["filename"]["error"]);
-            return "<h3>$error</h3>\n";
+return $admin->geterr(tlocal::get('uploaderrors', $_FILES["filename"]["error"]));
         }
 
-        if (!is_uploaded_file($_FILES['filename']['tmp_name'])) return sprintf($this->html->h4red->attack, $_FILES["filename"]["name"]);
+        if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
+return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
+}
+
         if ($isauthor && ($r = tauthor_rights::i()->canupload())) return $r;
 
         $filename = $_FILES['filename']['name'];
         $tempfilename = $_FILES['filename']['tmp_name'];
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $filename = tmediaparser::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $parser->gettempname($parts);
@@ -100,7 +108,7 @@ class tadminfilethumbnails extends tadminmenu {
                 $files->setvalue($idpreview, 'idperm', $item['idperm']);
                 tprivatefiles::i()->setperm($idpreview, (int)$item['idperm']);
             }
-            return $this->html->h4->success;
+            return $admin->success($lang->success);
         }
     }
 

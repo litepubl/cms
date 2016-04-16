@@ -7,6 +7,7 @@ class Upload extends Login
 {
 
 public function getcontent() {
+$admin = $this->admintheme;
 $lang = Lang::admin('service');
 $args = $this->newArgs();
 
@@ -16,11 +17,14 @@ $args = $this->newArgs();
                 $form = new adminform($args);
                 $form->title = $lang->uploaditem;
                 $form->upload = true;
-                $form->items = '[text=url]
-      [upload=filename]' . $this->getloginform();
-                $result = $html->p->uploaditems;
+                $form->body = '[text=url]
+      [upload=filename]';
+
+$form->body .= $this->getloginform();
+$form->body .=  $admin->help($lang->uploaditems);
 return $form->get();
 }
+
 public function processform() {
 $admin = $this->admintheme;
 $lang = Lang::admin('service');

@@ -62,11 +62,11 @@ break;
     where $t.status <> 'deleted' and $db->posts.id = $t.post and $db->urlmap.id = $db->posts.idurl
     order by $t.posted desc limit $from, $perpage"));
 
-        $html = $this->html;
+        $admin = $this->admintheme;
         $lang = tlocal::i();
         $args = new targs();
-        $form = new adminform($args);
-        $form->items = $html->getitemscount($from, $from + count($items) , $total);
+        $form = $this->newForm();
+        $form->items = $admin->getcount($from, $from + count($items) , $total);
         ttheme::$vars['pingitem'] = new pingitem();
 
         $tb = new tablebuilder();

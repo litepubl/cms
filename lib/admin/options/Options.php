@@ -17,7 +17,7 @@ class Options extends \litepubl\admin\Menu
         $result = '';
         $args = new targs();
         $lang = tlocal::admin('options');
-        $html = $this->html;
+        $admin = $this->admintheme;
 
         switch ($this->name) {
             case 'options':
@@ -32,7 +32,7 @@ class Options extends \litepubl\admin\Menu
                 $args->footer = $template->footer;
 
                 $args->formtitle = $lang->options;
-                return $html->adminform('
+                return $admin->form('
       [checkbox=fixedurl]
       [checkbox=redirdom]
       [text=url]
@@ -75,7 +75,7 @@ class Options extends \litepubl\admin\Menu
                 $args->video_height = litepubl::$site->video_height;
 
                 $args->formtitle = $lang->files;
-                return $html->adminform('
+                return $admin->form('
       <h4>$lang.imagesize</h4>
       [checkbox=alwaysresize]
       [text=maxwidth]
@@ -112,7 +112,7 @@ class Options extends \litepubl\admin\Menu
                 $args->archive = $linkgen->archive;
 
                 $args->formtitle = $lang->schemalinks;
-                return $html->adminform('
+                return $admin->form('
       <p>$lang.taglinks</p>
       [checkbox=urlencode]
       [text=post]
@@ -131,7 +131,7 @@ class Options extends \litepubl\admin\Menu
                 $args->commentspool = $options->commentspool;
 
                 $args->formtitle = $lang->optionscache;
-                $result = $html->adminform('
+                $result = $admin->form('
       [checkbox=enabledcache]
       [text=expiredcache]
       [checkbox=ob_cache]
@@ -155,26 +155,23 @@ class Options extends \litepubl\admin\Menu
                 $args->childtags = $tags->includechilds;
                 $lang = tlocal::admin('options');
                 $args->formtitle = $lang->catstags;
-                $html = $this->html;
-                return $html->adminform('
+                $admin = $this->admintheme;
+                return $admin>form('
       [checkbox=parentcats] [checkbox=childcats]
       [checkbox=parenttags] [checkbox=childtags]', $args);
 
             case 'robots':
-                $html = $this->html;
+                $admin = $this->admintheme;
                 $args->formtitle = 'robots.txt';
                 $args->robots = trobotstxt::i()->text;
                 $args->appcache = appcache_manifest::i()->text;
                 $tabs = new tabs($this->admintheme);
                 $tabs->add('robots.txt', '[editor=robots]');
                 $tabs->add('manifest.appcache', '[editor=appcache]');
-                return $html->adminform($tabs->get() , $args);
-                break;
-
+                return $admin->form($tabs->get() , $args);
         }
 
-        $result = $this->html->{$this->name}($args);
-        return $this->html->fixquote($result);
+        return $result;
     }
 
     public function processform() {

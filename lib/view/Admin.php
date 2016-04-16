@@ -270,4 +270,15 @@ class Admin extends Base
         return $this->parsearg($this->templates['posteditor.filelist'], $args);
     }
 
-} //class
+    public function check2array($prefix) {
+        $result = array();
+        foreach ($_POST as $key => $value) {
+            if (strbegin($key, $prefix)) {
+                $result[] = is_numeric($value) ? (int)$value : $value;
+            }
+        }
+
+        return $result;
+    }
+
+}
