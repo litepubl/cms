@@ -254,8 +254,8 @@ return false;
         ));
 
         $form->before = $this->view->admintheme->templates['tablecols'];
-        $form->items = $tablebuilder->build($list);
-        $form->items.= $form->centergroup($html->getsubmit('approve', 'hold', 'delete'));
+        $form->body = $tablebuilder->build($list);
+        $form->body .= $form->centergroup($formtml->getButtons('approve', 'hold', 'delete'));
         $form->submit = '';
         $result = $form->get();
 

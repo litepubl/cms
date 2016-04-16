@@ -111,7 +111,7 @@ break;
         $form->items.= $tb->build($items);
         unset(ttheme::$vars['pingitem']);
 
-        $form->items.= $html->div($html->getsubmit('approve', 'hold', 'delete'));
+        $form->body .= $form->centergroup($form->getButtons('approve', 'hold', 'delete'));
         $form->submit = false;
         $result = $form->get();
 

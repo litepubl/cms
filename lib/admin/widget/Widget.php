@@ -35,8 +35,8 @@ return '';
         $args = new targs();
         $args->formtitle = $widgettitle . ' ' . $this->lang->widget;
         $args->title = $widgettitle;
-        $args->items = $this->html->getedit('title', $widgettitle, $this->lang->widgettitle) . $content;
-        return $this->html->parsearg(ttheme::i()->templates['content.admin.form'], $args);
+        $args->items = $this->theme->getinput('text', 'title', $widgettitle, $this->lang->widgettitle) . $content;
+        return $this->admintheme->parsearg(ttheme::i()->templates['content.admin.form'], $args);
     }
 
     public function getcontent() {

@@ -51,7 +51,7 @@ class tadminwidgets extends tadminmenu {
 
         if ($idview != 1) {
 
-            $form->items.= $html->getcheckbox('customsidebar', true);
+            $form->body .= $theme->getinput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
         }
         //all widgets
         $checkboxes = '';

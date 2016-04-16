@@ -128,7 +128,23 @@ class Form {
     }
 
     public function get() {
-        return Html::i()->parsearg($this->gettml() , $this->args);
+        return $this->getadmintheme()->parsearg($this->gettml() , $this->args);
+    }
+
+    public function getButtons() {
+        $result = '';
+        $theme = Theme::i();
+        $lang = tlocal::i();
+
+        $a = func_get_args();
+        foreach ($a as $name) {
+            $result.= strtr($theme->templates['content.admin.button'], array(
+                '$lang.$name' => $lang->__get($name) ,
+                '$name' => $name,
+            ));
+        }
+
+        return $result;
     }
 
 } //class

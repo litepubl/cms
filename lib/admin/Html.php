@@ -101,25 +101,6 @@ return new redtag($name);
         return Admin::i()->form($tml, $args);
     }
 
-    public function getcheckbox($name, $value) {
-        return $this->getinput('checkbox', $name, $value ? 'checked="checked"' : '', '$lang.' . $name);
-    }
-
-    public function getsubmit() {
-        $result = '';
-        $theme = Theme::i();
-        $lang = tlocal::i();
-
-        $a = func_get_args();
-        foreach ($a as $name) {
-            $result.= strtr($theme->templates['content.admin.button'], array(
-                '$lang.$name' => $lang->__get($name) ,
-                '$name' => $name,
-            ));
-        }
-
-        return $result;
-    }
 
     public function getedit($name, $value, $title) {
         return $this->getinput('text', $name, $value, $title);
