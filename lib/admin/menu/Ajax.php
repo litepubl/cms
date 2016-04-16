@@ -6,15 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\menu;
+use litepubl\pages\Menus;
+use litepubl\pages\Menu;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
 use litepubl\admin\GetSchema;
+use litepubl\view\Args;
 
-class tajaxmenueditor extends tajaxposteditor {
+class Ajax extends \litepubl\admin\posts\Ajax
+{
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
+//to prevent call parent method
     public function install() {
         litepubl::$urlmap->addget('/admin/ajaxmenueditor.htm', get_class($this));
     }
@@ -26,16 +29,16 @@ class tajaxmenueditor extends tajaxposteditor {
 
     public function getcontent() {
         $id = $this->idparam();
-        $menus = tmenus::i();
+        $menus = Menus::i();
         if (($id != 0) && !$menus->itemexists($id)) return static ::error403();
-        $menu = tmenu::i($id);
+        $menu = Menu::i($id);
         if ((litepubl::$options->group == 'author') && (litepubl::$options->user != $menu->author)) return static ::error403();
         if (($id > 0) && !$menus->itemexists($id)) return static ::error403();
 
-        $views = tviews::i();
-        $theme = tview::i($views->defaults['admin'])->theme;
-        $html = tadminhtml::i();
-        $html->section = 'menu';
+        $schemes = Schemes::i();
+$schema = Schema::i($schemes->defaults['admin'])
+        $theme = $schema->theme;
+$admin = $schema->admintheme;
 
         switch ($_GET['get']) {
             case 'view':
@@ -49,7 +52,7 @@ class tajaxmenueditor extends tajaxposteditor {
                 $args->keywords = $menu->keywords;
                 $args->description = $menu->description;
                 $args->head = $menu->data['head'];
-                $result = $html->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                $result = $admin->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
                 break;
 
 
@@ -59,4 +62,4 @@ class tajaxmenueditor extends tajaxposteditor {
         return turlmap::htmlheader(false) . $result;
     }
 
-} //class
+}

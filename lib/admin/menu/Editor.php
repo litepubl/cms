@@ -6,54 +6,42 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\menu;
+use litepubl\pages\Menus;
+use litepubl\pages\Menu;
+use litepubl\pages\FakeMenu;
+use litepubl\view\MainView;
 use litepubl\admin\Link;
 
-class tadminmenumanager extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Editor extends \litepubl\admin\Menu
+{
 
     public function gethead() {
-        $template = ttemplate::i();
-        $template->ltoptions['idpost'] = $this->idget();
+        $mainView = MainView::i();
+        $mainView->ltoptions['idpost'] = $this->idget();
         return parent::gethead();
     }
 
     public function gettitle() {
-        if (($this->name == 'edit') && ($this->idget() != 0)) {
+if ($this->idget()) {
             return $this->lang->edit;
         }
+
         return parent::gettitle();
     }
 
     public function getcontent() {
-        $result = '';
-        switch ($this->name) {
-            case 'menu':
-                if (isset($_GET['action']) && in_array($_GET['action'], array(
-                    'delete',
-                    'setdraft',
-                    'publish'
-                ))) {
-                    $result.= $this->doaction($this->idget() , $_GET['action']);
-                }
-                $result.= $this->getmenulist();
-                return $result;
-
-            case 'edit':
-            case 'editfake':
                 $id = $this->idparam();
-                $menus = tmenus::i();
+                $menus = Menus::i();
                 $parents = array(
                     0 => '-----'
                 );
+
                 foreach ($menus->items as $item) {
                     $parents[$item['id']] = $item['title'];
                 }
 
-                $html = $this->html;
+$admin = $this->admintheme;
                 $lang = tlocal::i('menu');
                 $args = new targs();
                 $args->adminurl = $this->adminurl;
@@ -67,23 +55,24 @@ class tadminmenumanager extends tadminmenu {
                     $status = 'published';
                 } else {
                     if (!$menus->itemexists($id)) return $this->notfound;
-                    $menuitem = tmenu::i($id);
+                    $menuitem = Menu::i($id);
                     $args->id = $id;
                     $args->title = $menuitem->getownerprop('title');
                     $args->parent = $this->theme->comboItems($parents, $menuitem->parent);
                     $args->order = $this->theme->comboItems(range(0, 10) , $menuitem->order);
                     $status = $menuitem->status;
                 }
+
                 $args->status = $this->theme->comboItems(array(
                     'draft' => $lang->draft,
                     'published' => $lang->published
                 ) , $status);
 
-                if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof tfakemenu))) {
+                if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof FakeMenu))) {
                     $args->url = $id == 0 ? '' : $menuitem->url;
                     $args->type = 'fake';
                     $args->formtitle = $lang->faketitle;
-                    return $html->adminform('[text=title]
+                    return $admin->form('[text=title]
         [text=url]
         [combo=parent]
         [combo=order]
@@ -92,7 +81,7 @@ class tadminmenumanager extends tadminmenu {
         [hidden=id]', $args);
                 }
 
-                $tabs = new tabs($this->admintheme);
+                $tabs = $this->newTabs();
                 $tabs->add($lang->title, '
       [text=title]
       [combo=parent]
@@ -105,24 +94,23 @@ class tadminmenumanager extends tadminmenu {
                 $tabs->ajax($lang->view, "$ajaxurl=view");
                 $tabs->ajax('SEO', "$ajaxurl=seo");
 
-                $ajaxeditor = tajaxmenueditor::i();
+                $ajaxeditor = Ajax::i();
                 $args->formtitle = $lang->edit;
                 $tml = $tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme);
-                return $html->adminform($tml, $args);
+                return $admin->form($tml, $args);
             }
     }
 
     public function processform() {
-        if (!(($this->name == 'edit') || ($this->name == 'editfake'))) return '';
         extract($_POST, EXTR_SKIP);
         if (empty($title)) return '';
         $id = $this->idget();
-        $menus = tmenus::i();
+        $menus = Menus::i();
         if (($id != 0) && !$menus->itemexists($id)) return $this->notfound;
         if (isset($type) && ($type == 'fake')) {
-            $menuitem = tfakemenu::i($id);
+            $menuitem = FakeMenu::i($id);
         } else {
-            $menuitem = tmenu::i($id);
+            $menuitem = Menu::i($id);
         }
 
         $menuitem->title = $title;
@@ -142,77 +130,15 @@ class tadminmenumanager extends tadminmenu {
                 $menuitem->head = $head;
             }
         }
+
         if ($id == 0) {
             $_POST['id'] = $menus->add($menuitem);
         } else {
             $menus->edit($menuitem);
         }
-        return sprintf($this->html->p->success, "<a href=\"$menuitem->link\" title=\"$menuitem->title\">$menuitem->title</a>");
+
+$admin = $this->admintheme;
+        return $admintheme->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title));
     }
 
-    private function getmenulist() {
-        $menus = tmenus::i();
-        $lang = tlocal::admin();
-        $editurl = litepubl::$site->url . $this->url . 'edit/' . litepubl::$site->q . 'id';
-
-        return tablebuilder::fromitems($menus->items, array(
-            array(
-                $lang->menutitle,
-                function (tablebuilder $tb) use ($menus) {
-                    return $menus->getlink($tb->item['id']);
-                }
-            ) ,
-
-            array(
-                'right',
-                $lang->order,
-                '$order'
-            ) ,
-
-            array(
-                'center',
-                $lang->parent,
-                function (tablebuilder $tb) use ($menus) {
-                    return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
-                }
-            ) ,
-
-            array(
-                'center',
-                $lang->edit,
-                "<a href='$editurl=\$id'>$lang->edit</a>"
-            ) ,
-
-            array(
-                'center',
-                $lang->delete,
-                "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
-            ) ,
-        ));
-    }
-
-    private function doaction($id, $action) {
-        $menus = tmenus::i();
-        if (!$menus->itemexists($id)) return $this->notfound;
-        $args = targs::i();
-        $html = $this->html;
-        $h2 = $html->h2;
-        $menuitem = tmenu::i($id);
-        switch ($action) {
-            case 'delete':
-return $this->confirmDeleteItem($menus);
-
-            case 'setdraft':
-                $menuitem->status = 'draft';
-                $menus->edit($menuitem);
-                return $h2->confirmedsetdraft;
-
-            case 'publish':
-                $menuitem->status = 'published';
-                $menus->edit($menuitem);
-                return $h2->confirmedpublish;
-        }
-        return '';
-    }
-
-} //class
+}

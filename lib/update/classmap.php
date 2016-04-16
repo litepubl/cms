@@ -161,6 +161,9 @@ return [
 'tadminfiles' => 'litepubl\admin\Files',
 'tadminfilethumbnails' => 'litepubl\admin\files\Thumbnails',
 
+'tadminmenumanager' => 'litepubl\admin\menu\Manager',
+'tajaxmenueditor' => 'litepubl\admin\menu\Ajax',
+
 'tadminservice' => 'litepubl\admin\service\Service',
 'tadminposts' => 'litepubl\admin\posts\Posts',
 'tposteditor' => 'litepubl\admin\posts\Editor',

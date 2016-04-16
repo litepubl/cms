@@ -26,7 +26,7 @@ class Admin extends Base
     }
 
     public static function admin() {
-        return View::i(tviews::i()->defaults['admin'])->admintheme;
+        return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
     public function getparser() {

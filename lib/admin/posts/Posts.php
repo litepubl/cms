@@ -12,7 +12,6 @@ use litepubl\post\Post;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\admin\AuthorRights;
-use litepubl\admin\Html;
 use litepubl\admin\Link;
 
 class Posts extends \litepubl\admin\Menu

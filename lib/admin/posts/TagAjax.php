@@ -7,7 +7,7 @@
  */
 
 namespace litepubl\admin\posts;
-use litepubl\admin\Html;
+use litepubl\view\Admin;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;
@@ -46,7 +46,7 @@ $type = 'categories';
         }
 
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
-        $html = tadminhtml::i();
+        $admin = Admin::admin();
         $lang = tlocal::i('tags');
 
         if ($id == 0) {
@@ -82,7 +82,7 @@ $type = 'categories';
                 $args = new targs();
                 $args->add($item);
                 $result = GetSchema::combo($item['idview']);
-                $result.= $html->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
+                $result.= $admin->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
                 $result.= GetPerm::combo($item['idperm']);
                 break;
 
@@ -98,7 +98,7 @@ $type = 'categories';
                     $args->add($tags->contents->getitem($id));
                     $args->url = $tags->items[$id]['url'];
                 }
-                $result = $html->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                $result = $admin->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
                 break;
 
 

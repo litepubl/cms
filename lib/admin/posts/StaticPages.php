@@ -84,8 +84,8 @@ $admin = $this->admintheme;
         } else {
             $pages->edit($id, $title, $description, $keywords, $text);
         }
-        $this->basename = 'staticpages';
-        return $this->html->h2->success;
+
+        return $this->admintheme->success(Lang::admin('staticpages')->success);
     }
 
 } //class
