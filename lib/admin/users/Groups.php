@@ -6,18 +6,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\users;
+use litepubl\core\UserGroups;
 use litepubl\admin\Link;
 
-class tadmingroups extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Groups extends \litepubl\admin\Menu
+{
 
     public static function getgroups(array $idgroups) {
         $result = '';
-        $groups = tusergroups::i();
+        $groups = UserGroups::i();
         $tml = '<li><input type="checkbox" name="idgroup-$id" id="checkbox-idgroup-$id" value="$id" $checked />
     <label for="checkbox-idgroup-$id"><strong>$title</strong></label></li>';
         $theme = ttheme::i();
@@ -32,23 +30,24 @@ class tadmingroups extends tadminmenu {
     }
 
     public function getcontent() {
-        $groups = tusergroups::i();
-        $html = $this->html;
+        $groups = UserGroups::i();
+$admin = $this->admintheme;
         $lang = tlocal::admin('users');
         $args = targs::i();
         $adminurl = $this->adminurl;
         $result = "<h4><a href='$adminurl=0&action=add'>$lang->addgroup</a></h4>";
+
         $id = $this->idget();
 
         switch ($this->action) {
             case 'add':
-                $result.= $html->p->notegroup;
+                $result.= $admin->help($lang->notegroup);
                 $args->name = '';
                 $args->title = '';
                 $args->home = '';
                 $args->action = 'add';
                 $args->formtitle = $lang->editgroup;
-                $result.= $html->adminform('
+                $result.= $admin->form('
       [text=title]
       [text=name]
       [text=home]
@@ -57,12 +56,12 @@ class tadmingroups extends tadminmenu {
 
 
             case 'edit':
-                $result.= $html->p->notegroup;
+                $result.= $admin->help($lang->notegroup);
                 $args->add($groups->items[$id]);
                 $args->id = $id;
                 $args->action = 'edit';
                 $args->formtitle = $lang->editgroup;
-                $result.= $html->adminform('
+                $result.= $admin->form('
       [text=title]
       [text=name]
       [text=home]
@@ -76,7 +75,7 @@ class tadmingroups extends tadminmenu {
                 break;
         }
 
-        $tb = new tablebuilder();
+        $tb = $this->newTable();
         $tb->setstruct(array(
             array(
                 $lang->name,
@@ -89,13 +88,13 @@ class tadmingroups extends tadminmenu {
             $tb->action('delete', $adminurl)
         ));
 
-        $result.= $html->h4->grouptable;
+        $result.= $admin->h($lang->grouptable);
         $result.= $tb->build($groups->items);
         return $result;
     }
 
     public function processform() {
-        $groups = tusergroups::i();
+        $groups = UserGroups::i();
         switch ($this->action) {
             case 'add':
                 $groups->lock();
@@ -125,4 +124,4 @@ class tadmingroups extends tadminmenu {
         }
     }
 
-} //class
+}

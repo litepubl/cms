@@ -6,10 +6,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\users;
 use litepubl\admin\Link;
 
-class tadminperms extends tadminmenu {
+class Perms extends \litepubl\admin\Menu
+{
 
 
     public function getcontent() {

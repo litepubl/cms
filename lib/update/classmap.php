@@ -171,6 +171,13 @@ return [
 'tadmintags' => 'litepubl\admin\posts\Tags',
 'tajaxtageditor' => 'litepubl\admin\posts\TagAjax',
 'tadminstaticpages' => 'litepubl\admin\posts\StaticPages',
+
+//admin users
+'tadmingroups' => 'litepubl\admin\users\Groups',
+'tadminuseroptions' => 'litepubl\admin\users\Options',
+'tadminuserpages' => 'litepubl\admin\users\Pages',
+'tadminperms' => 'litepubl\admin\users\Perms',
+
 'tadminviews' => 'litepubl\admin\view\Schemes',
 //comments
 'tcomments' => 'litepubl\comments\Comments',

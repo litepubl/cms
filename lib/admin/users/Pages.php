@@ -6,13 +6,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\users;
+use litepubl\core\Users;
+use litepubl\core\UserOptions;
+use litepubl\pages\Users as UserPages;
 use litepubl\admin\GetSchema;
-class tadminuserpages extends tadminmenu {
+use litepubl\view\Lang;
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+
+
+class Pages extends \litepubl\admin\Menu
+{
 
     public function getiduser() {
         if (litepubl::$options->ingroup('admin')) {
@@ -21,31 +25,31 @@ class tadminuserpages extends tadminmenu {
             $id = litepubl::$options->user;
         }
 
-        $users = tusers::i();
+        $users = Users::i();
         if ($users->itemexists($id) && ('approved' == $users->getvalue($id, 'status'))) return $id;
         return false;
     }
 
     public function getcontent() {
         $result = '';
-        $users = tusers::i();
-        $html = $this->gethtml('users');
+        $users = Users::i();
+$admin = $this->admintheme;
         $lang = tlocal::admin('users');
         $args = new targs();
 
         if (!($id = $this->getiduser())) {
-            if (litepubl::$options->ingroup('admin')) return $this->getuserlist();
+            if (litepubl::$options->ingroup('admin')) return $this->getUserList();
             return $this->notfound;
         }
 
-        $pages = tuserpages::i();
-        $item = tusers::i()->getitem($id) + $pages->getitem($id);
+        $pages = UserPages::i();
+        $item = $users->getitem($id) + $pages->getitem($id);
         if (!isset($item['url'])) {
             $item['url'] = $item['idurl'] ? litepubl::$urlmap->getidurl($item['idurl']) : '';
         }
         $args->add($item);
         $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
-        $tabs = new tabs($this->admintheme);
+        $tabs = $this->newTabs();
         $tabs->add($lang->title, '[text=name] [text=website]');
         if ('admin' == litepubl::$options->group) {
             $tabs->add($lang->schema, GetSchema::combo($item['idview']));
@@ -53,7 +57,7 @@ class tadminuserpages extends tadminmenu {
         }
         $tabs->add($lang->text, '[editor=rawcontent]');
 
-        $opt = tuseroptions::i()->getitem($id);
+        $opt = UserOptions::i()->getitem($id);
         $args->subscribe = $opt['subscribe'] == 'enabled';
         $args->authorpost_subscribe = $opt['authorpost_subscribe'] == 'enabled';
         $tabs->add($lang->options, '
@@ -61,7 +65,7 @@ class tadminuserpages extends tadminmenu {
     [checkbox=authorpost_subscribe]
     ');
 
-        return $html->adminform($tabs->get() , $args);
+        return $admin->form($tabs->get() , $args);
     }
 
     public function processform() {
@@ -69,7 +73,7 @@ class tadminuserpages extends tadminmenu {
         if (!($id = $this->getiduser())) return;
         $item = array(
             'rawcontent' => trim($rawcontent) ,
-            'content' => tcontentfilter::i()->filter($rawcontent)
+            'content' => Filter::i()->filter($rawcontent)
         );
 
         if ('admin' == litepubl::$options->group) {
@@ -80,22 +84,22 @@ class tadminuserpages extends tadminmenu {
             $item['description'] = $description;
         }
 
-        $pages = tuserpages::i();
+        $pages = UserPages::i();
         $pages->edit($id, $item);
 
-        tusers::i()->edit($id, array(
+        Users::i()->edit($id, array(
             'name' => $name,
             'website' => tcontentfilter::clean_website($website) ,
         ));
 
-        $useroptions = tuseroptions::i();
+        $useroptions = UserOptions::i();
         $useroptions->setvalue($id, 'subscribe', isset($subscribe) ? 'enabled' : 'disabled');
         $useroptions->setvalue($id, 'authorpost_subscribe', isset($authorpost_subscribe) ? 'enabled' : 'disabled');
     }
 
-    public function getuserlist() {
-        $users = tusers::i();
-        $pages = tuserpages::i();
+    public function getUserList() {
+        $users = Users::i();
+        $pages = UserPages::i();
         $perpage = 20;
         $count = $pages->count;
         $from = $this->getfrom($perpage, $count);
@@ -107,13 +111,13 @@ class tadminuserpages extends tadminmenu {
     where not $p.id is null
     order by $u.id desc limit $from, $perpage"));
 
-        $html = $this->gethtml('users');
+$admin = $this->admintheme;
         $lang = tlocal::admin('users');
         $args = new targs();
         $args->adminurl = $this->adminurl;
-        $result = $html->h4->userstable;
+        $result = $admin->h($lang->userstable);
 
-        $tb = new tablebuilder();
+        $tb = $this->newTable();
         $tb->setowner($users);
         $tb->setstruct(array(
             array(
@@ -124,9 +128,8 @@ class tadminuserpages extends tadminmenu {
 
         $result.= $tb->build($items);
 
-        $theme = ttheme::i();
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
         return $result;
     }
 
-} //class
+}
