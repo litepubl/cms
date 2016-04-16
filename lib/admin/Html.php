@@ -97,37 +97,12 @@ return new redtag($name);
         }
     }
 
-    public static function array2combo(array $items, $selected) {
-        $result = '';
-        foreach ($items as $i => $title) {
-            $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::specchars($title));
-        }
-        return $result;
-    }
-
-    public static function getcombobox($name, array $items, $selected) {
-        return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, static ::array2combo($items, $selected));
-    }
-
     public function adminform($tml, targs $args) {
         return Admin::i()->form($tml, $args);
     }
 
-    public function getupload($name) {
-        return $this->getinput('upload', $name, '', '');
-    }
-
     public function getcheckbox($name, $value) {
         return $this->getinput('checkbox', $name, $value ? 'checked="checked"' : '', '$lang.' . $name);
-    }
-
-    public function getradioitems($name, array $items, $selected) {
-        $result = '';
-        $theme = Theme::i();
-        foreach ($items as $index => $title) {
-            $result.= $theme->getradio($name, $index, static ::specchars($title) , $index == $selected);
-        }
-        return $result;
     }
 
     public function getsubmit() {

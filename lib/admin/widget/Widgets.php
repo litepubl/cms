@@ -12,10 +12,6 @@ use litepubl\admin\Link;
 
 class tadminwidgets extends tadminmenu {
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
     public static function getsidebarnames(tview $view) {
         $count = $view->theme->sidebarscount;
         $result = range(1, $count);
@@ -27,6 +23,12 @@ class tadminwidgets extends tadminmenu {
 
         return $result;
     }
+
+    public function getCombobox($name, array $items, $selected) {
+        return sprintf('<select name="%1$s" id="%1$s">%2$s</select>',
+ $name, $this->theme->comboItems($items, $selected));
+    }
+
 
     public function get_table() {
         $idview = (int)tadminhtml::getparam('idview', 1);
@@ -79,8 +81,8 @@ class tadminwidgets extends tadminmenu {
                 $items[] = array(
                     'id' => $id,
                     'title' => $w_item['title'],
-                    'sidebarcombo' => tadminhtml::getcombobox("sidebar-$id", $sidebarnames, $i) ,
-                    'ordercombo' => tadminhtml::getcombobox("order-$id", $orders, $j) ,
+                    'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
+                    'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
                     'ajaxbuttons' => str_replace('$button',
 
                     strtr($sb_item['ajax'] == false ? $tml_active : $tml_btn, array(

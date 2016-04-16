@@ -23,7 +23,7 @@ class Schemes extends \litepubl\admin\Menu
 
     private function get_custom(tview $view) {
         $result = '';
-        $html = $this->html;
+        $theme = $this->theme;
         $customadmin = $view->theme->templates['customadmin'];
 
         foreach ($view->data['custom'] as $name => $value) {
@@ -31,7 +31,7 @@ class Schemes extends \litepubl\admin\Menu
             switch ($customadmin[$name]['type']) {
                 case 'text':
                 case 'editor':
-                    $value = tadminhtml::specchars($value);
+                    $value = Theme::quote($value);
                     break;
 
 
@@ -41,17 +41,18 @@ class Schemes extends \litepubl\admin\Menu
 
 
                 case 'combo':
-                    $value = tadminhtml::array2combo($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    $value = $theme->comboItems($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
                     break;
 
 
                 case 'radio':
-                    $value = $html->getradioitems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    $value = $theme->getRadioItems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
                     break;
             }
 
-            $result.= $html->getinput($customadmin[$name]['type'], "custom-$name", $value, tadminhtml::specchars($customadmin[$name]['title']));
+            $result.= $theme->getinput($customadmin[$name]['type'], "custom-$name", $value, tadminhtml::specchars($customadmin[$name]['title']));
         }
+
         return $result;
     }
 
@@ -136,16 +137,16 @@ class Schemes extends \litepubl\admin\Menu
                     if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
                 }
 
-                $args->themename = tadminhtml::array2combo($list, $itemview['themename']);
+                $args->themename = $this->theme->comboItems($list, $itemview['themename']);
 
                 $list = array();
                 foreach ($dirlist as $dir) {
                     if (strbegin($dir, 'admin')) $list[$dir] = $dir;
                 }
 
-                $args->adminname = tadminhtml::array2combo($list, $itemview['adminname']);
-                $args->menu = tadminhtml::array2combo($menuitems, $itemview['menuclass']);
-                $args->postanounce = tadminhtml::array2combo(array(
+                $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
+                $args->menu = $this->theme->comboItems($menuitems, $itemview['menuclass']);
+                $args->postanounce = $this->theme->comboItems(array(
                     'excerpt' => $lang->postexcerpt,
                     'card' => $lang->postcard,
                     'lite' => $lang->postlite

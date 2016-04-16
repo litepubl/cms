@@ -22,7 +22,7 @@ class tadminsubcatwidget extends tadminwidget {
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
-            $args->sort = tadminhtml::array2combo(tlocal::admin()->ini['sortnametags'], $widget->items[$id]['sortname']);
+            $args->sort = $this->theme->comboItems(tlocal::admin()->ini['sortnametags'], $widget->items[$id]['sortname']);
             $args->idwidget = $id;
             $args->data['$lang.invertorder'] = $about['invertorder'];
             $args->formtitle = $widget->gettitle($id);

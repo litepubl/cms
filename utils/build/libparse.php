@@ -193,7 +193,9 @@ $s = strtr([
 'turlmap::unsub', 'litepubl::$router->unbind',
 'tlocal', 'Lang',
 'new targs' => 'new Args',
-'targs::i()' => 'new Args()'
+'targs::i()' => 'new Args()',
+'tadminhtml::array2combo' => '$this->theme->comboItems',
+
 ]);
 
 }

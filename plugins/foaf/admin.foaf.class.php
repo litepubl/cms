@@ -101,7 +101,7 @@ class tadminfoaf extends tadminmenu {
                             'error' => $lang->error,
                         );
 
-                        $args->status = tadminhtml::array2combo($statuses, $item['status']);
+                        $args->status = $this->theme->comboItems($statuses, $item['status']);
                         $result.= $admintheme->form('
 [text=nick]
 [text=url]

@@ -116,7 +116,7 @@ class Ajax extends \litepubl\core\Events
             case 'status':
             case 'access':
                 $args = new targs();
-                $args->comstatus = Html::array2combo(array(
+                $args->comstatus = $theme->comboItems(array(
                     'closed' => $lang->closed,
                     'reg' => $lang->reg,
                     'guest' => $lang->guest,
@@ -124,7 +124,7 @@ class Ajax extends \litepubl\core\Events
                 ) , $post->comstatus);
 
                 $args->pingenabled = $post->pingenabled;
-                $args->status = Html::array2combo(array(
+                $args->status = $theme->comboItems(array(
                     'published' => $lang->published,
                     'draft' => $lang->draft
                 ) , $post->status);

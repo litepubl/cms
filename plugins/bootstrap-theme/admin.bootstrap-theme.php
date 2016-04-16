@@ -32,9 +32,9 @@ class admin_bootstrap_theme extends tadminmenu {
             if (!isset($item['custom']['mainsidebar'])) continue;
 
             $result.= $admintheme->h($item['name']);
-            $result.= $theme->getinput('combo', "mainsidebar-$id", tadminhtml::array2combo($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
+            $result.= $theme->getinput('combo', "mainsidebar-$id", $this->theme->comboItems($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
 
-            $result.= $theme->getinput('combo', "cssfile-$id", tadminhtml::array2combo($lang->ini['subthemes'], $item['custom']['cssfile']) , $lang->cssfile);
+            $result.= $theme->getinput('combo', "cssfile-$id", $this->theme->comboItems($lang->ini['subthemes'], $item['custom']['cssfile']) , $lang->cssfile);
 
             $result.= '<hr>';
         }

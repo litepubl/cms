@@ -61,8 +61,8 @@ $result .= $this->confirmDeleteItem($tags);
 
         if ($item) {
             $args->add($item);
-            $args->parent = tadminhtml::array2combo($parents, $item['parent']);
-            $args->order = tadminhtml::array2combo(array_combine(range(0, 9) , range(1, 10)) , $item['customorder']);
+            $args->parent = $this->theme->comboItems($parents, $item['parent']);
+            $args->order = $this->theme->comboItems(array_combine(range(0, 9) , range(1, 10)) , $item['customorder']);
 
             $tabs = new tabs($this->admintheme);
             $tabs->add($lang->title, '

@@ -24,7 +24,7 @@ class Comments extends Menu
         $lang = tlocal::admin('commentmanager');
         $args = new Args();
         $tabs = new Tabs($this->admintheme);
-        $args->comstatus = tadminhtml::array2combo(array(
+        $args->comstatus = $this->theme->comboItems(array(
             'closed' => $lang->closed,
             'reg' => $lang->reg,
             'guest' => $lang->guest,

@@ -43,7 +43,7 @@ class tadminusers extends tadminmenu {
                     $args->add($item);
                     $args->registered = tuserpages::i()->getvalue($id, 'registered');
                     $args->formtitle = $item['name'];
-                    $args->status = tadminhtml::array2combo($statuses, $item['status']);
+                    $args->status = $this->theme->comboItems($statuses, $item['status']);
 
                     $tabs = new tabs($this->admintheme);
                     $tabs->add($lang->login, '[text=email] [password=password]');

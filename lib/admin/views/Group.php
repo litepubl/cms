@@ -11,21 +11,18 @@ use litepubl\admin\GetSchema;
 
 class tadminviewsgroup extends tadminmenu {
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
     public function getcontent() {
         $views = tviews::i();
-        $html = $this->html;
+$theme = $this->theme;
+$admin = $this->admin;
         $lang = tlocal::i('views');
         $args = new targs();
 
         $args->formtitle = $lang->viewposts;
-        $result = $html->adminform(GetSchema::combo($views->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
+        $result = $admin->form(GetSchema::combo($views->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
 
         $args->formtitle = $lang->viewmenus;
-        $result.= $html->adminform(GetSchema::combo($views->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
+        $result.= $admin->form(GetSchema::combo($views->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
 
         $args->formtitle = $lang->themeviews;
         $view = tview::i();
@@ -34,12 +31,16 @@ class tadminviewsgroup extends tadminmenu {
         sort($dirlist);
         $list = array();
         foreach ($dirlist as $dir) {
-            if (!strbegin($dir, 'admin')) $list[$dir] = $dir;
+            if (!strbegin($dir, 'admin')) {
+$list[$dir] = $dir;
+}
         }
 
-        $result.= $html->adminform($html->getcombo('themeview', tadminhtml::array2combo($list, $view->themename) , $lang->themename) . '<input type="hidden" name="action" value="themes" />', $args);
+        $result.= $admin->form(
+$theme->getinput('combo', 'themeview', $theme->comboItems($list, $view->themename) , $lang->themename) .
+ '<input type="hidden" name="action" value="themes" />', $args);
 
-        return $html->fixquote($result);
+return $result;
     }
 
     public function processform() {

@@ -64,7 +64,7 @@ class tticketeditor extends tposteditor {
             $states[$state] = $lang->$state;
         }
 
-        $args->state = tadminhtml::array2combo($states, $ticket->state);
+        $args->state = $this->theme->comboItems($states, $ticket->state);
 
         $prio = array();
         foreach (array(
@@ -77,7 +77,7 @@ class tticketeditor extends tposteditor {
             $prio[$p] = $lang->$p;
         }
 
-        $args->prio = tadminhtml::array2combo($prio, $ticket->prio);
+        $args->prio = $this->theme->comboItems($prio, $ticket->prio);
 
         $tb = new tablebuilder($this->admintheme);
         $tb->args = $args;

@@ -17,8 +17,8 @@ class tadminorderwidget extends tadminwidget {
     protected function dogetcontent(twidget $widget, targs $args) {
         $idview = tadminhtml::getparam('idview', 1);
         $view = tview::i($idview);
-        $args->sidebar = tadminhtml::array2combo(tadminwidgets::getsidebarnames($view) , $widget->sidebar);
-        $args->order = tadminhtml::array2combo(range(-1, 10) , $widget->order + 1);
+        $args->sidebar = $this->theme->comboItems(tadminwidgets::getsidebarnames($view) , $widget->sidebar);
+        $args->order = $this->theme->comboItems(range(-1, 10) , $widget->order + 1);
         $args->ajax = $widget->ajax;
         return $this->html->parsearg('[combo=sidebar] [combo=order] [checkbox=ajax]', $args);
     }

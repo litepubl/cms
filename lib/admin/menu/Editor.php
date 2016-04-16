@@ -62,19 +62,19 @@ class tadminmenumanager extends tadminmenu {
                 if ($id == 0) {
                     $args->id = 0;
                     $args->title = '';
-                    $args->parent = tadminhtml::array2combo($parents, 0);
-                    $args->order = tadminhtml::array2combo(range(0, 10) , 0);
+                    $args->parent = $this->theme->comboItems($parents, 0);
+                    $args->order = $this->theme->comboItems(range(0, 10) , 0);
                     $status = 'published';
                 } else {
                     if (!$menus->itemexists($id)) return $this->notfound;
                     $menuitem = tmenu::i($id);
                     $args->id = $id;
                     $args->title = $menuitem->getownerprop('title');
-                    $args->parent = tadminhtml::array2combo($parents, $menuitem->parent);
-                    $args->order = tadminhtml::array2combo(range(0, 10) , $menuitem->order);
+                    $args->parent = $this->theme->comboItems($parents, $menuitem->parent);
+                    $args->order = $this->theme->comboItems(range(0, 10) , $menuitem->order);
                     $status = $menuitem->status;
                 }
-                $args->status = tadminhtml::array2combo(array(
+                $args->status = $this->theme->comboItems(array(
                     'draft' => $lang->draft,
                     'published' => $lang->published
                 ) , $status);

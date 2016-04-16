@@ -47,7 +47,7 @@ class tadmincustomwidget extends tadminwidget {
         $args->idwidget = $id;
         $html = $this->html;
         $args->text = $item['content'];
-        $args->template = tadminhtml::array2combo(static ::gettemplates() , $item['template']);
+        $args->template = $this->theme->comboItems(static ::gettemplates() , $item['template']);
         $result = $this->optionsform($item['title'], $viewcombo . $html->parsearg('[editor=text]
     [combo=template]
     [hidden=mode]

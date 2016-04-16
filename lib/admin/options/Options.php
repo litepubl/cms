@@ -50,7 +50,7 @@ class Options extends \litepubl\admin\Menu
                 $parser = tmediaparser::i();
                 $args->previewwidth = $parser->previewwidth;
                 $args->previewheight = $parser->previewheight;
-                $args->previewmode = $html->getradioitems('previewmode', array(
+                $args->previewmode = $this->theme->getRadioItems('previewmode', array(
                     'fixed' => $lang->fixedsize,
                     'max' => $lang->maxsize,
                     'min' => $lang->minsize,

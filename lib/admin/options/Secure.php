@@ -41,7 +41,7 @@ class Secure extends \litepubl\admin\Menu
 
         $args->useshell = Updater::i()->useshell;
         $backuper = Backuper::i();
-        $args->filertype = Html::array2combo(array(
+        $args->filertype = $this->theme->comboItems(array(
             'auto' => 'auto',
             'file' => 'file',
             'ftp' => 'ftp',

@@ -20,8 +20,8 @@ class tadminblackip {
         $args = new targs();
         $args->ip = implode("\n", $plugin->ip);
         $args->words = implode("\n", $plugin->words);
-        $args->ipstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
-        $args->wordstatus = tadminhtml::array2combo(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
+        $args->ipstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
+        $args->wordstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
 
         $tabs = new tabs();
         $tabs->add($lang->wordtitle, '[combo=wordstatus] [editor=words]');

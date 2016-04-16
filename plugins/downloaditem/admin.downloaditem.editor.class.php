@@ -53,7 +53,7 @@ class tdownloaditemeditor extends tposteditor {
             'plugin' => tlocal::get('downloaditem', 'plugin')
         );
 
-        $args->type = tadminhtml::array2combo($types, $post->type);
+        $args->type = $this->theme->comboItems($types, $post->type);
     }
 
     public function newpost() {

@@ -35,9 +35,9 @@ $theme = $this->theme;
         $args->formtitle = $lang->optionslocal;
         $args->dateformat = litepubl::$options->dateformat;
         $dirs = Filer::getdir(litepubl::$paths->languages);
-        $args->language = Html::array2combo(array_combine($dirs, $dirs) , litepubl::$options->language);
+        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) , litepubl::$options->language);
         $zones = timezone_identifiers_list();
-        $args->timezone = Html::array2combo(array_combine($zones, $zones) , litepubl::$options->timezone);
+        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) , litepubl::$options->timezone);
 
         return $admin->form('[text=dateformat]
     [combo=language]

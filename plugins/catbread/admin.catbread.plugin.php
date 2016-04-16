@@ -30,7 +30,7 @@ class admincatbread implements iadmin {
             'customorder' => $lang->customorder,
         );
 
-        $args->sort = tadminhtml::array2combo($sort, $plugin->childsortname);
+        $args->sort = $this->theme->comboItems($sort, $plugin->childsortname);
 
         $pos = array(
             'replace' => $lang->replace,
@@ -40,8 +40,8 @@ class admincatbread implements iadmin {
             'nothing' => $lang->nothing,
         );
 
-        $args->breadpos = tadminhtml::array2combo($pos, $plugin->breadpos);
-        $args->similarpos = tadminhtml::array2combo($pos, $plugin->similarpos);
+        $args->breadpos = $this->theme->comboItems($pos, $plugin->breadpos);
+        $args->similarpos = $this->theme->comboItems($pos, $plugin->similarpos);
 
         $args->formtitle = $lang->formtitle;
         return $admintheme->form('

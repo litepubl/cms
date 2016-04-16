@@ -349,6 +349,24 @@ static::$vars[$name] = $obj;
         ));
     }
 
+    public function getRadioItems($name, array $items, $selected) {
+        $result = '';
+        foreach ($items as $index => $title) {
+            $result.= $this->getradio($name, $index, static ::specchars($title) , $index == $selected);
+        }
+        return $result;
+    }
+
+
+    public function comboItems(array $items, $selected) {
+        $result = '';
+        foreach ($items as $i => $title) {
+            $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::specchars($title));
+        }
+
+        return $result;
+    }
+
     public static function getwidgetpath($path) {
         if ($path === '') return '';
         switch ($path) {
