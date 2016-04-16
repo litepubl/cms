@@ -84,4 +84,4 @@ class UList
         return str_replace('$site.url', litepubl::$site->url, $result);
     }
 
-} //class
+}

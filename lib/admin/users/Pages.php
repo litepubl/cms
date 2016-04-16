@@ -7,13 +7,11 @@
  */
 
 namespace litepubl\admin\users;
-use litepubl\core\Users;
+use litepubl\core\Users as UserItems;
 use litepubl\core\UserOptions;
 use litepubl\pages\Users as UserPages;
 use litepubl\admin\GetSchema;
 use litepubl\view\Lang;
-
-
 
 class Pages extends \litepubl\admin\Menu
 {
@@ -25,14 +23,14 @@ class Pages extends \litepubl\admin\Menu
             $id = litepubl::$options->user;
         }
 
-        $users = Users::i();
+        $users = UserItems::i();
         if ($users->itemexists($id) && ('approved' == $users->getvalue($id, 'status'))) return $id;
         return false;
     }
 
     public function getcontent() {
         $result = '';
-        $users = Users::i();
+        $users = UserItems::i();
 $admin = $this->admintheme;
         $lang = tlocal::admin('users');
         $args = new targs();
@@ -87,7 +85,7 @@ $admin = $this->admintheme;
         $pages = UserPages::i();
         $pages->edit($id, $item);
 
-        Users::i()->edit($id, array(
+        UserItems::i()->edit($id, array(
             'name' => $name,
             'website' => tcontentfilter::clean_website($website) ,
         ));
@@ -98,7 +96,7 @@ $admin = $this->admintheme;
     }
 
     public function getUserList() {
-        $users = Users::i();
+        $users = UserItems::i();
         $pages = UserPages::i();
         $perpage = 20;
         $count = $pages->count;

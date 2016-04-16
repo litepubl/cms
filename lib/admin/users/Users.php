@@ -6,21 +6,24 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\users;
+use litepubl\core\Users as UserItems;
+use litepubl\core\UserGroups;
+use litepubl\pages\Users as UserPages;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 use litepubl\admin\Link;
+use litepubl\admin\Form;
 
-class tadminusers extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Users extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
         $result = '';
-        $users = tusers::i();
-        $groups = tusergroups::i();
+        $users = UserItems::i();
+        $groups = UserGroups::i();
 
-        $html = $this->html;
+$admin = $this->admintheme;
         $lang = tlocal::i('users');
         $args = targs::i();
 
@@ -41,17 +44,17 @@ class tadminusers extends tadminmenu {
 
                     $item = $users->getitem($id);
                     $args->add($item);
-                    $args->registered = tuserpages::i()->getvalue($id, 'registered');
+                    $args->registered = UserPages::i()->getvalue($id, 'registered');
                     $args->formtitle = $item['name'];
                     $args->status = $this->theme->comboItems($statuses, $item['status']);
 
-                    $tabs = new tabs($this->admintheme);
+                    $tabs = $this->newTabs();
                     $tabs->add($lang->login, '[text=email] [password=password]');
                     $tabs->add($lang->groups, '[combo=status]' . tadmingroups::getgroups($item['idgroups']));
                     $tabs->add('Cookie', '[text=cookie] [text=expired] [text=registered] [text=trust]');
 
                     $args->password = '';
-                    $result.= $html->adminform($tabs->get() , $args);
+                    $result.= $admin->form($tabs->get() , $args);
                 }
                 break;
 
@@ -66,11 +69,11 @@ class tadminusers extends tadminmenu {
                 $args->email = '';
                 $args->action = 'add';
 
-                $tabs = new tabs($this->admintheme);
+                $tabs = $this->newTabs();
                 $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
                 $tabs->add($lang->groups, tadmingroups::getgroups(array()));
 
-                $result.= $html->adminform($tabs->get() , $args);
+                $result.= $admin->form($tabs->get() , $args);
         }
         $args->search = '';
 
@@ -104,7 +107,7 @@ class tadminusers extends tadminmenu {
         $items = $users->select($where, " order by id desc limit $from, $perpage");
         if (!$items) $items = array();
 
-        $tb = new tablebuilder();
+        $tb = $thisnewTable();
         $tb->args->adminurl = $this->adminurl;
         $tb->setowner($users);
         $tb->setstruct(array(
@@ -130,14 +133,13 @@ class tadminusers extends tadminmenu {
             ) ,
         ));
 
-        $form = new adminform($args);
+        $form = new Form($args);
         $form->title = $lang->userstable;
         $result.= $form->getdelete($tb->build($items));
 
-        $theme = ttheme::i();
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage) , $params);
+        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage) , $params);
 
-        $form = new adminform($args);
+        $form = new Form($args);
         $form->method = 'get';
         $form->inline = true;
         $form->items = '[text=search]';
@@ -147,27 +149,26 @@ class tadminusers extends tadminmenu {
     }
 
     public function processform() {
-        $users = tusers::i();
-        $groups = tusergroups::i();
+        $users = UserItems::i();
+        $groups = UserGroups::i();
 
         if (isset($_POST['delete'])) {
             foreach ($_POST as $key => $value) {
                 if (!is_numeric($value)) continue;
                 $id = (int)$value;
                 $users->delete($id);
-                //if (litepubl::$classes->exists('tregservices')) $users->getdb('
-                
             }
+
             return;
         }
 
         switch ($this->action) {
             case 'add':
-                $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
+                $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if ($id = $users->add($_POST)) {
                     litepubl::$urlmap->redir("$this->adminurl=$id&action=edit");
                 } else {
-                    return $this->html->h4red->invalidregdata;
+                    return $this->admintheme->geterr($this->lang->invalidregdata);
                 }
                 break;
 
@@ -179,11 +180,9 @@ class tadminusers extends tadminmenu {
                 if (!$users->edit($id, $_POST)) return $this->notfound;
                 if ($id == 1) {
                     litepubl::$site->author = $_POST['name'];
-                    //litepubl::$site->email = $_POST['email'];
-                    
                 }
                 break;
             }
         }
 
-} //class
+}

@@ -6,6 +6,10 @@ checkbox.name = [
    <input type="checkbox" name="$name" value="$name" $checked />
 ]
 
+checkbox.label = [
+<label><input type="checkbox" name="$name-$id" value="$id" $checked /> $title</label>
+]
+
 checkbox.invert= [
    <input type="checkbox" class="invertcheck" />
 ]

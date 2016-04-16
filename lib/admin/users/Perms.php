@@ -7,22 +7,23 @@
  */
 
 namespace litepubl\admin\users;
+use litepubl\perms\Perms as PermItems;
+use litepubl\perms\Perm;
 use litepubl\admin\Link;
 
 class Perms extends \litepubl\admin\Menu
 {
 
-
     public function getcontent() {
         $result = '';
-        $perms = tperms::i();
-        $html = $this->html;
+        $perms = PermItems::i();
+$admin = $this->admintheme;
         $lang = tlocal::i('perms');
         $args = new targs();
         if (!($action = $this->action)) $action = 'perms';
         switch ($action) {
             case 'perms':
-                $tb = new tablebuilder();
+                $tb = $this->newTable();
                 $tb->setowner($perms);
                 $tb->setstruct(array(
                     $tb->checkbox('perm') ,
@@ -35,11 +36,11 @@ class Perms extends \litepubl\admin\Menu
                 $items = array_keys($perms->items);
                 array_shift($items);
 
-                $form = new adminform($args);
+                $form = new Form($args);
                 $form->title = $lang->table;
                 $result.= $form->getdelete($tb->build($items));
 
-                $result.= $html->h4->newperms;
+                $result.= $admin->h($lang->newperms);
                 $result.= '<ul>';
                 $addurl = Link::url($this->url, 'action=add&class');
                 foreach ($perms->classes as $class => $name) {
@@ -48,7 +49,7 @@ class Perms extends \litepubl\admin\Menu
                 }
 
                 $result.= '</ul>';
-                return $html->fixquote($result);
+                return $result;
 
             case 'add':
                 $class = $this->getparam('class', '');
@@ -65,7 +66,7 @@ class Perms extends \litepubl\admin\Menu
                     return $this->notfound();
                 }
 
-                $perm = tperm::i($id);
+                $perm = Perm::i($id);
                 return $perm->admin->getcont();
 
             case 'delete':
@@ -75,7 +76,7 @@ class Perms extends \litepubl\admin\Menu
     }
 
     public function processform() {
-        $perms = tperms::i();
+        $perms = PermItems::i();
         if (!($action = $this->action)) $action = 'perms';
         switch ($action) {
             case 'perms':
@@ -94,73 +95,18 @@ class Perms extends \litepubl\admin\Menu
                     return $this->notfound();
                 }
 
-                $perm = tperm::i($id);
+                $perm = Perm::i($id);
                 return $perm->admin->processform();
 
             case 'add':
                 $class = $this->getparam('class', '');
                 if (isset($perms->classes[$class])) {
                     $perm = new $class();
-                    $id = tperms::i()->add($perm);
+                    $id = PermItems::i()->add($perm);
                     $perm->admin->processform();
                     return litepubl::$urlmap->redir(Link::url($this->url, 'action=edit&id=' . $id));
                 }
             }
     }
 
-} //class
-class tadminperm {
-    public $perm;
-
-    public function getcont() {
-        $html = tadminhtml::i();
-        $lang = tlocal::i('perms');
-        $args = new targs();
-        $args->add($this->perm->data);
-        $args->formtitle = $lang->editperm;
-        $form = '[text=name] [hidden=id]';
-        $form.= $this->getform($args);
-        return $html->adminform($form, $args);
-    }
-
-    public function getform(targs $args) {
-        return '';
-    }
-
-    public function processform() {
-        $name = trim($_POST['name']);
-        if ($name != '') $this->perm->name = $name;
-        $this->perm->save();
-    }
-
-} //class
-class tadminpermpassword extends tadminperm {
-
-    public function getform(targs $args) {
-        $args->password = '';
-        return '[password=password]';
-    }
-
-    public function processform() {
-        $this->perm->password = $_POST['password'];
-        parent::processform();
-    }
-
-} //class
-class tadminpermgroups extends tadminperm {
-
-    public function getform(targs $args) {
-        $result = '[checkbox=author]
-    <h4>$lang.groups</h4>';
-        $args->author = $this->perm->author;
-        $result.= tadmingroups::getgroups($this->perm->groups);
-        return $result;
-    }
-
-    public function processform() {
-        $this->perm->author = isset($_POST['author']);
-        $this->perm->groups = array_unique(tadminhtml::check2array('idgroup-'));
-        parent::processform();
-    }
-
-} //class
+}

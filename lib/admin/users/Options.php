@@ -7,7 +7,7 @@
  */
 
 namespace litepubl\admin\users;
-use litepubl\pages\Users;
+use litepubl\pages\Users as UserPages;
 use litepubl\core\UserGroups;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
@@ -23,7 +23,7 @@ $admin = $this->admintheme;
         $args = new targs();
         $args->formtitle = $lang->useroptions;
 
-        $pages = Users::i();
+        $pages = UserPages::i();
         $args->createpage = $pages->createpage;
 
         $linkgen = LinkGenerator::i();
@@ -34,16 +34,19 @@ $admin = $this->admintheme;
 
         return $htmladmin>form('[checkbox=createpage]
     [text=linkschema]
-    [text=defaulthome]' . $html->h4->defaults . tadmingroups::getgroups($groups->defaults) , $args);
+    [text=defaulthome]
+' . $admin->h($lang->defaults) .
+ GetPerm::groups($groups->defaults) ,
+ $args);
     }
 
     public function processform() {
-        $pages = Users::i();
+        $pages = UserPages::i();
         $pages->createpage = isset($_POST['createpage']);
         $pages->save();
 
         $groups = UserGroups::i();
-        $groups->defaults = tadminhtml::check2array('idgroup-');
+        $groups->defaults = $this->admintheme->check2array('idgroup-');
         $groups->defaulthome = trim($_POST['defaulthome']);
         $groups->save();
 

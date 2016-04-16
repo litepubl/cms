@@ -8,26 +8,11 @@
 
 namespace litepubl\admin\users;
 use litepubl\core\UserGroups;
+use litepubl\admin\GetPerm;
 use litepubl\admin\Link;
 
 class Groups extends \litepubl\admin\Menu
 {
-
-    public static function getgroups(array $idgroups) {
-        $result = '';
-        $groups = UserGroups::i();
-        $tml = '<li><input type="checkbox" name="idgroup-$id" id="checkbox-idgroup-$id" value="$id" $checked />
-    <label for="checkbox-idgroup-$id"><strong>$title</strong></label></li>';
-        $theme = ttheme::i();
-        $args = new targs();
-        foreach ($groups->items as $id => $item) {
-            $args->add($item);
-            $args->id = $id;
-            $args->checked = in_array($id, $idgroups);
-            $result.= strtr($tml, $args->data);
-        }
-        return sprintf('<ul>%s</ul>', $result);
-    }
 
     public function getcontent() {
         $groups = UserGroups::i();
@@ -51,7 +36,8 @@ $admin = $this->admintheme;
       [text=title]
       [text=name]
       [text=home]
-      [hidden=action]' . $html->h4->parentgroups . static ::getgroups(array()) , $args);
+      [hidden=action]
+' . $admin->h($lang->parentgroups) . GetPerm::groups(array()) , $args);
                 break;
 
 
@@ -66,7 +52,8 @@ $admin = $this->admintheme;
       [text=name]
       [text=home]
       [hidden=id]
-      [hidden=action]' . $html->h4->parentgroups . static ::getgroups($groups->items[$id]['parents']) , $args);
+      [hidden=action]
+' . $admin->h($lang->parentgroups) . GetPerm::groups($groups->items[$id]['parents']) , $args);
                 break;
 
 
