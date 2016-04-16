@@ -30,7 +30,11 @@ class TagAjax extends Ajax
     }
 
     public function getcontent() {
-        $type = Html::getparam('type', 'tags') == 'tags' ? 'tags' : 'categories';
+        $type = !empty($_GET['type']) ? $_GET['type'] : (!empty($_POST['type']) ? $_POST['type'] : 'tags');
+if ($type != 'tags') {
+$type = 'categories';
+}
+
         $tags = $type == 'tags' ? ttags::i() : tcategories::i();
         if ($err = static ::auth()) {
             return $err;

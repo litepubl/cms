@@ -16,6 +16,7 @@ use litepubl\perms\Files as PrivateFiles;
 use litepubl\admin\GetPerm;
 use litepubl\utils\http;
 use litepubl\admin\Form;
+use litepubl\admin\Link;
 
 class Files extends \litepubl\admin\Menu
 {
@@ -111,7 +112,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
             ) ,
             array(
                 $lang->thumbnail,
-                '<a href="' . tadminhtml::getadminlink('/admin/files/thumbnail/', 'id=') . "\$id\" target=\"_blank\">$lang->thumbnail</a>"
+                '<a href="' . Link::url('/admin/files/thumbnail/?id=') . "\$id\" target=\"_blank\">$lang->thumbnail</a>"
             ) ,
             array(
                 $lang->delete,

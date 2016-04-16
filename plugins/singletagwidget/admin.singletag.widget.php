@@ -19,7 +19,7 @@ class tadminsingletagwidget extends tadminwidget {
         $about = tplugins::getabout(tplugins::getname(__file__));
         $html = $this->html;
         $args = new targs();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
             $args->idwidget = $id;
@@ -39,7 +39,7 @@ class tadminsingletagwidget extends tadminwidget {
 
     public function processform() {
         $widget = tsingletagwidget::i();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
             $widget->items[$id]['invertorder'] = isset($_POST['invertorder']);

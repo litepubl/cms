@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadmingroups extends tadminmenu {
 
@@ -83,7 +84,7 @@ class tadmingroups extends tadminmenu {
             ) ,
             array(
                 $lang->users,
-                sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/', 'idgroup=$id') , $lang->users)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/?idgroup=$id') , $lang->users)
             ) ,
             $tb->action('delete', $adminurl)
         ));

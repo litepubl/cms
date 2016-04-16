@@ -18,7 +18,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
         $widget = tpostcatwidget::i();
         $about = tplugins::getabout(tplugins::getname(__file__));
         $args = targs::i();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
             $args->mode = 'edit';

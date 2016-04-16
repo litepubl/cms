@@ -97,14 +97,6 @@ return new redtag($name);
         }
     }
 
-    public static function getadminlink($path, $params) {
-        return litepubl::$site->url . $path . litepubl::$site->q . $params;
-    }
-
-    public static function getlink($url, $title) {
-        return sprintf('<a href="%s%s">%s</a>', litepubl::$site->url, $url, $title);
-    }
-
     public static function array2combo(array $items, $selected) {
         $result = '';
         foreach ($items as $i => $title) {

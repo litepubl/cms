@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadminperms extends tadminmenu {
 
@@ -39,7 +40,7 @@ class tadminperms extends tadminmenu {
 
                 $result.= $html->h4->newperms;
                 $result.= '<ul>';
-                $addurl = tadminhtml::getadminlink($this->url, 'action=add&class');
+                $addurl = Link::url($this->url, 'action=add&class');
                 foreach ($perms->classes as $class => $name) {
                     if ($class == 'tsinglepassword') continue;
                     $result.= $html->li("<a href='$addurl=$class'>$name</a>");
@@ -49,7 +50,7 @@ class tadminperms extends tadminmenu {
                 return $html->fixquote($result);
 
             case 'add':
-                $class = tadminhtml::getparam('class', '');
+                $class = $this->getparam('class', '');
                 if (!isset($perms->classes[$class])) {
                     return $this->notfound();
                 }
@@ -96,12 +97,12 @@ class tadminperms extends tadminmenu {
                 return $perm->admin->processform();
 
             case 'add':
-                $class = tadminhtml::getparam('class', '');
+                $class = $this->getparam('class', '');
                 if (isset($perms->classes[$class])) {
                     $perm = new $class();
                     $id = tperms::i()->add($perm);
                     $perm->admin->processform();
-                    return litepubl::$urlmap->redir(tadminhtml::getadminlink($this->url, 'action=edit&id=' . $id));
+                    return litepubl::$urlmap->redir(Link::url($this->url, 'action=edit&id=' . $id));
                 }
             }
     }

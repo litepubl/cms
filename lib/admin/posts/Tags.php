@@ -12,6 +12,7 @@ use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\admin\Html;
 use litepubl\admin\Table;
+use litepubl\admin\Link;
 
 class Tags extends \litepubl\admin\Menu
 {
@@ -35,7 +36,7 @@ $admin = $this->admintheme;
         $args = new targs();
         $args->id = $id;
         $args->adminurl = $this->adminurl;
-        $ajax = Html::getadminlink('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
+        $ajax = Link::url('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
         $args->ajax = $ajax;
 
         if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemexists($id)) {

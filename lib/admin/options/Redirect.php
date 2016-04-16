@@ -10,8 +10,7 @@ namespace litepubl\admin\options;
 use litepubl\pages\Redirector as Redir;
 use litepubl\view\Lang;
 use litepubl\view\Args;
-use litepubl\admin\Html;
-use litepubl\admin\Table;
+use litepubl\admin\Link;
 
 class Redirector extends \litepubl\admin\Menu
 {
@@ -19,7 +18,7 @@ class Redirector extends \litepubl\admin\Menu
         $redir = Redir::i();
         $lang = $this->lang;
         $args = new Args::i();
-        $from = Html::getparam('from', '');
+        $from = $this->getparam('from', '');
         if (isset($redir->items[$from])) {
             $args->from = $from;
             $args->to = $redir->items[$from];
@@ -45,8 +44,8 @@ class Redirector extends \litepubl\admin\Menu
             );
         }
 
-        $adminurl = Html::getadminlink($this->url, 'from');
-        $args->table = Table::fromitems($items, array(
+        $adminurl = Link::url($this->url, 'from');
+        $args->table = $this->tableItems($items, array(
             array(
                 'center',
                 '+',

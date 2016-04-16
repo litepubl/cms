@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadmintickets extends tadminmenu {
 
@@ -84,7 +85,7 @@ class tadmintickets extends tadminmenu {
 
             array(
                 $lang->edit,
-                '<a href="' . tadminhtml::getadminlink('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
+                '<a href="' . Link::url('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
             ) ,
 
         ));

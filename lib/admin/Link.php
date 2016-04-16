@@ -5,6 +5,14 @@ namespace litepubl\admin;
 class Link
 {
 
+    public static function url($path, $params = false) {
+if ($params) {
+        return litepubl::$site->url . $path . litepubl::$site->q . $params;
+} else {
+        return litepubl::$site->url . str_replace('?', litepubl::$site->q, $path);
+    }
+}
+
     public function parse($s) {
         $list = explode(',', $s);
         $a = array();

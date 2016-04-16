@@ -19,7 +19,7 @@ class tadminsubcatwidget extends tadminwidget {
         $about = tplugins::getabout(tplugins::getname(__file__));
         $html = $this->html;
         $args = targs::i();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
             $args->sort = tadminhtml::array2combo(tlocal::admin()->ini['sortnametags'], $widget->items[$id]['sortname']);
@@ -43,7 +43,7 @@ class tadminsubcatwidget extends tadminwidget {
 
     public function processform() {
         $widget = tsubcatwidget::i();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
             extract($_POST, EXTR_SKIP);

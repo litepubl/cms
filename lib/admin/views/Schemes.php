@@ -91,7 +91,7 @@ class Schemes extends \litepubl\admin\Menu
             case 'views':
                 $lang->addsearch('views');
 
-                $id = tadminhtml::getparam('idview', 0);
+                $id = $this->getparam('idview', 0);
                 if (!$id || !$views->itemexists($id)) {
                     $adminurl = $this->adminurl . 'view';
                     $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
@@ -202,7 +202,7 @@ class Schemes extends \litepubl\admin\Menu
             switch ($this->name) {
                 case 'views':
                     $views = tviews::i();
-                    $idview = (int)tadminhtml::getparam('idview', 0);
+                    $idview = (int)$this->getparam('idview', 0);
                     if (!$idview || !$views->itemexists($idview)) {
                         return '';
                     }

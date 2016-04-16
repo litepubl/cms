@@ -12,7 +12,8 @@ class GetSchema
     public static function form($url) {
         $lang = tlocal::admin();
         $args = new Args();
-        $args->idschema = static ::items(tadminhtml::getparam('idview', 1));
+$id = !empty($_GET['idschema']) ? (int) $_GET['idschema'] : (!empty($_POST['idschema']) ? (int) $_POST['idschema'] : 0);
+        $args->idschema = static ::items($id);
         $form = new Form($args);
         $form->action = litepubl::$site->url . $url;
         $form->inline = true;

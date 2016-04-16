@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadmindownloaditems extends tadminmenu {
 
@@ -22,7 +23,7 @@ class tadmindownloaditems extends tadminmenu {
 
         $args = new targs();
         $args->adminurl = $this->adminurl;
-        $editurl = tadminhtml::getadminlink('/admin/downloaditems/editor/', 'id');
+        $editurl = Link::url('/admin/downloaditems/editor/', 'id');
         $args->editurl = $editurl;
 
         $downloaditems = tdownloaditems::i();
@@ -32,7 +33,7 @@ class tadmindownloaditems extends tadminmenu {
         switch ($this->name) {
             case 'addurl':
                 $args->formtitle = $lang->addurl;
-                $args->url = tadminhtml::getparam('url', '');
+                $args->url = $this->getparam('url', '');
                 return $admintheme->form('[text=url]', $args);
 
             case 'theme':
@@ -106,7 +107,7 @@ class tadmindownloaditems extends tadminmenu {
             if ($url == '') return '';
             if ($downloaditem = taboutparser::parse($url)) {
                 $id = $downloaditems->add($downloaditem);
-                litepubl::$urlmap->redir(tadminhtml::getadminlink('/admin/downloaditems/editor/', "id=$id"));
+                litepubl::$urlmap->redir(Link::url('/admin/downloaditems/editor/', "id=$id"));
             }
             return '';
         }

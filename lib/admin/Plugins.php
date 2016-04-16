@@ -23,7 +23,7 @@ class Plugins extends Menu
 
     public function getpluginsmenu() {
         $result = '';
-        $link = Html::getadminlink($this->url, 'plugin=');
+        $link = Link::url($this->url, 'plugin=');
         $plugins = Plugins::i();
         foreach ($this->names as $name) {
             $about = Plugins::getabout($name);

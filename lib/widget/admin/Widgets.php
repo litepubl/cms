@@ -8,6 +8,7 @@
 
 namespace litepubl;
 use litepubl\admin\GetSchema;
+use litepubl\admin\Link;
 
 class tadminwidgets extends tadminmenu {
 
@@ -104,7 +105,7 @@ class tadminwidgets extends tadminmenu {
         }
 
         $tb = new tablebuilder();
-        $tb->args->adminurl = tadminhtml::getadminlink('/admin/views/widgets/', 'idwidget');
+        $tb->args->adminurl = Link::url('/admin/views/widgets/', 'idwidget');
         $tb->setstruct(array(
             array(
                 $lang->widget,

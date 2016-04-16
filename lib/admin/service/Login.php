@@ -20,9 +20,9 @@ $lang = Lang::admin('service');
         $args = new Args();
 
         $result = $backuper->filertype == 'ssh2' ? $admin->h($lang->ssh2account) : $admin->h($lang->ftpaccount);
-        $args->host = Html::getparam('host', '');
-        $args->login = Html::getparam('login', '');
-        $args->password = Html::getparam('pasword', '');
+        $args->host = $this->getparam('host', '');
+        $args->login = $this->getparam('login', '');
+        $args->password = $this->getparam('pasword', '');
         return $result .
  $admin->parsearg('
 [text=host]
@@ -37,9 +37,9 @@ $lang = Lang::admin('service');
             return true;
         }
 
-        $host = Html::getparam('host', '');
-        $login = Html::getparam('login', '');
-        $password = Html::getparam('password', '');
+        $host = $this->getparam('host', '');
+        $login = $this->getparam('login', '');
+        $password = $this->getparam('password', '');
         if (!$host  || !$login || !$password) {
             return '';
         }

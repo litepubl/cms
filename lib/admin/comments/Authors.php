@@ -11,7 +11,7 @@ use litepubl\core\Users;
 use litepubl\view\Args;
 use litepubl\comments\Comments;
 use litepubl\comments\Subscribers;
-use litepubl\admin;
+use litepubl\admin\Link;
 
 class Authors extends Menu 
 {
@@ -42,8 +42,8 @@ return $this->confirmDelete($id, $lang->confirmdelete);
 
         $result.= sprintf($html->h4->itemscount, $from, $from + count($items) , $total);
         $adminurl = $this->adminurl;
-        $editurl = tadminhtml::getadminlink('/admin/users/', 'id');
-        $tb = new tablebuilder();
+        $editurl = Link::url('/admin/users/?id');
+        $tb = $this->newTable();
         $tb->setstruct(array(
             array(
                 $lang->author,

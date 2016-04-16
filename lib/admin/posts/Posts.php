@@ -13,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\admin\AuthorRights;
 use litepubl\admin\Html;
+use litepubl\admin\Link;
 
 class Posts extends \litepubl\admin\Menu
 {
@@ -117,7 +118,7 @@ return $this->notfound;
             ) ,
             array(
                 $lang->edit,
-                '<a href="' . Html::getadminlink('/admin/posts/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
+                '<a href="' . Link::url('/admin/posts/editor/?id') . '=$post.id">' . $lang->edit . '</a>'
             ) ,
             array(
                 $lang->delete,

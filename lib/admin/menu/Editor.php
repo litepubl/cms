@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadminmenumanager extends tadminmenu {
 
@@ -56,8 +57,8 @@ class tadminmenumanager extends tadminmenu {
                 $lang = tlocal::i('menu');
                 $args = new targs();
                 $args->adminurl = $this->adminurl;
-                $args->ajax = tadminhtml::getadminlink('/admin/ajaxmenueditor.htm', "id=$id&get");
-                $args->editurl = tadminhtml::getadminlink('/admin/menu/edit', 'id');
+                $args->ajax = Link::url("/admin/ajaxmenueditor.htm?id=$id&get");
+                $args->editurl = Link::url('/admin/menu/edit?id');
                 if ($id == 0) {
                     $args->id = 0;
                     $args->title = '';
@@ -100,7 +101,7 @@ class tadminmenumanager extends tadminmenu {
       [hidden=id]
       ');
 
-                $ajaxurl = tadminhtml::getadminlink('/admin/ajaxmenueditor.htm', "id=$id&get");
+                $ajaxurl = Link::url("/admin/ajaxmenueditor.htm?id=$id&get");
                 $tabs->ajax($lang->view, "$ajaxurl=view");
                 $tabs->ajax('SEO', "$ajaxurl=seo");
 

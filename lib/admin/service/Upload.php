@@ -11,7 +11,7 @@ $lang = Lang::admin('service');
 $args = $this->newArgs();
 
 
-                $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , tadminhtml::getparam('url', ''));
+                $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , $this->getparam('url', ''));
                 $lang = tlocal::admin();
                 $form = new adminform($args);
                 $form->title = $lang->uploaditem;

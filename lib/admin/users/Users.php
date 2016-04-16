@@ -7,6 +7,7 @@
  */
 
 namespace litepubl;
+use litepubl\admin\Link;
 
 class tadminusers extends tadminmenu {
 
@@ -80,13 +81,13 @@ class tadminusers extends tadminmenu {
         $where = '';
         $params = '';
         if (!empty($_GET['idgroup'])) {
-            $idgroup = (int)tadminhtml::getparam('idgroup', 0);
+            $idgroup = (int)$this->getparam('idgroup', 0);
             if ($groups->itemexists($idgroup)) {
                 $grouptable = litepubl::$db->prefix . $users->grouptable;
                 $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
                 $params = "idgroup=$idgroup";
             }
-        } elseif ($search = trim(tadminhtml::getparam('search', ''))) {
+        } elseif ($search = trim($this->getparam('search', ''))) {
             $params = 'search=' . urlencode($search);
             $args->search = $search;
             $search = litepubl::$db->escape($search);
@@ -120,12 +121,12 @@ class tadminusers extends tadminmenu {
 
             array(
                 $lang->comments,
-                sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/comments/', 'iduser=$id') , $lang->comments)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/comments/', 'iduser=$id') , $lang->comments)
             ) ,
 
             array(
                 $lang->page,
-                sprintf('<a href="%s">%s</a>', tadminhtml::getadminlink('/admin/users/pages/', 'id=$id') , $lang->page)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/pages/', 'id=$id') , $lang->page)
             ) ,
         ));
 
