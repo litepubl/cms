@@ -10,15 +10,18 @@ namespace litepubl\core;
 
 class DataStorage
  {
+public $app;
     public $data;
     private $modified;
 
     public function __construct() {
         $this->data = [];
+        $this->app = litepubl::$app;
+         $this->loadData();
     }
 
     public function getStorage() {
-        return litepubl::$storage;
+        return $this->app->storage;
     }
 
     public function save(Data $obj) {
@@ -51,7 +54,7 @@ class DataStorage
         }
     }
 
-    public function loaddata() {
+    public function loadData() {
         if ($data = $this->getStorage()->loaddata(litepubl::$paths->data . 'storage')) {
             $this->data = $data;
             return true;
