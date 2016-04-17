@@ -183,6 +183,15 @@ return [
 'tadminusers' => 'litepubl\admin\users\Users',
 
 'tadminviews' => 'litepubl\admin\view\Schemes',
+
+'tadminwidgets' => 'litepubl\admin\widget\Widgets',
+'tadminwidget' => 'litepubl\admin\widget\Widget',
+'tadminmaxcount' => 'litepubl\admin\widget\MaxCount',
+'tadminshowcount' => 'litepubl\admin\widget\ShowCount',
+'tadminorderwidget' => 'litepubl\admin\widget\Order',
+'addcustomwidget' => 'liteubl\admin\widget\AddCustom',
+
+
 //comments
 'tcomments' => 'litepubl\comments\Comments',
 'tcomment' => 'litepubl\comments\Comment',

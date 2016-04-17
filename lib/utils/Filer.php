@@ -84,6 +84,7 @@ class Filer {
         }
         return $result;
     }
+
     public static function forcedir($dir) {
         $dir = rtrim(str_replace('\\', '/', $dir) , '/');
         if (is_dir($dir)) return true;

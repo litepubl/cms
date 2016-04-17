@@ -13,7 +13,7 @@ class Archives extends Widget
         parent::create();
         $this->basename = 'widget.archives';
         $this->template = 'archives';
-        $this->adminclass = 'tadminshowcount';
+        $this->adminclass = '\litepubl\admin\widget\ShowCount';
         $this->data['showcount'] = false;
     }
 

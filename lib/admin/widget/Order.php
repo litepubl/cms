@@ -6,27 +6,30 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
 
-class tadminorderwidget extends tadminwidget {
+class Order extends Widget
+{
+use \litepubl\admin\Params;
 
-    public static function i() {
-        return getinstance(__class__);
+    protected function getForm() {
+        $idschema = $this->getparam('idschema', 1);
+        $schema = Schema::i($idschema);
+        $this->args->sidebar = $this->theme->comboItems(Widgets::getSidebarNames($schema) , $this->widget->sidebar);
+        $this->args->order = $this->theme->comboItems(range(-1, 10) , $this->widget->order + 1);
+        $this->args->ajax = $this->widget->ajax;
+        return parent::getForm() .
+ . '[combo=sidebar]
+ [combo=order]
+ [checkbox=ajax]';
     }
 
-    protected function dogetcontent(twidget $widget, targs $args) {
-        $idview = tadminhtml::getparam('idview', 1);
-        $view = tview::i($idview);
-        $args->sidebar = $this->theme->comboItems(tadminwidgets::getsidebarnames($view) , $widget->sidebar);
-        $args->order = $this->theme->comboItems(range(-1, 10) , $widget->order + 1);
-        $args->ajax = $widget->ajax;
-        return $this->html->parsearg('[combo=sidebar] [combo=order] [checkbox=ajax]', $args);
-    }
-
-    protected function doprocessform(twidget $widget) {
-        $widget->sidebar = (int)$_POST['sidebar'];
-        $widget->order = ((int)$_POST['order'] - 1);
-        $widget->ajax = isset($_POST['ajax']);
+    protected function doprocessform() {
+        $this->widget->sidebar = (int)$_POST['sidebar'];
+        $this->widget->order = ((int)$_POST['order'] - 1);
+        $this->widget->ajax = isset($_POST['ajax']);
     }
 
 } //class

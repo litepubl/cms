@@ -3,6 +3,11 @@
 function libReplace($s) {
 $s = strtr([
 '$urlmap' => '$router',
+'idview' => 'idschema';
+'tviews::' =>'Schemas::';
+'tview::' => 'Schema::',
+'$views' => '$schemes',
+'$view' => '$schema',
 ]);
 
 $s = strtr([
@@ -16,6 +21,7 @@ $s = strtr([
 'tablebuilder' => 'Table',
 ' Ulist' => ' UList',
 'processform' => 'processForm',
+'doprocessform' => 'doProcessForm',
 ]);
 
 $s = renameFunctions($s);

@@ -18,7 +18,7 @@ class Comments extends Widget
         $this->basename = 'widget.comments';
         $this->cache = 'include';
         $this->template = 'comments';
-        $this->adminclass = 'tadminmaxcount';
+        $this->adminclass = '\litepubl\admin\widget\MaxCount';
         $this->data['maxcount'] = 7;
     }
 

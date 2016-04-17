@@ -6,54 +6,49 @@
  *
  */
 
-namespace litepubl\admin;
-use litepubl\core\Data;
-use litepubl\core\Lang;
-use litepubl\core\Args;
+namespace litepubl\admin\widget;
 use litepubl\widgets\Widgets;
+use litepubl\admin\Link;
 
-class Widget extends Data
+class Widget extends \litepubl\admin\Simple
  {
     public $widget;
-    protected $html;
-    protected $lang;
 
-    protected function create() {
-        $this->html = tadminhtml::i();
-        $this->lang = Lang::i('widgets');
+public function __construct() {
+parent::__construct();
+        $this->lang->section = 'widgets';
     }
 
     protected function getadminurl() {
-        return litepubl::$site->url . '/admin/views/widgets/' . litepubl::$site->q . 'idwidget=';
+return Link::url('/admin/views/widgets/?idwidget=');
     }
 
-    protected function dogetcontent(twidget $widget, targs $args) {
-return '';
-    }
-
-    protected function optionsform($widgettitle, $content) {
-        $args = new targs();
-        $args->formtitle = $widgettitle . ' ' . $this->lang->widget;
-        $args->title = $widgettitle;
-        $args->items = $this->theme->getinput('text', 'title', $widgettitle, $this->lang->widgettitle) . $content;
-        return $this->admintheme->parsearg(ttheme::i()->templates['content.admin.form'], $args);
+    protected function getForm() {
+$title = $this->widget->gettitle($this->widget->id);
+        $this->args->title = $title;
+        $this->args->formtitle = $title . ' ' . $this->lang->widget;
+return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle) . $content;
     }
 
     public function getcontent() {
-        return $this->optionsform($this->widget->gettitle($this->widget->id) , $this->dogetcontent($this->widget, targs::i()));
+$form = $this->getForm();
+        return $this->admin->form($form, $this->args);
     }
 
     public function processform() {
         $widget = $this->widget;
         $widget->lock();
-        if (isset($_POST['title'])) $widget->settitle($widget->id, $_POST['title']);
-        $this->doprocessform($widget);
+        if (isset($_POST['title'])) {
+$widget->settitle($widget->id, $_POST['title']);
+}
+
+        $this->doprocessform();
         $widget->unlock();
-        return $this->html->h2->updated;
+        return $this->admin->success($this->lang->updated);
     }
 
-    protected function doprocessform(twidget $widget) {
+    protected function doProcessForm() {
 //nothing
     }
 
-} //class
+}

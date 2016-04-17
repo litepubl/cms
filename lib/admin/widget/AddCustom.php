@@ -6,22 +6,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
+use litepubl\widget\Custom as CustomWidget;
 
-class addcustomwidget extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class AddCustom extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
-        $widget = tcustomwidget::i();
+        $widget = CustomWidget::i();
         return $widget->admin->getcontent();
     }
 
     public function processform() {
-        $widget = tcustomwidget::i();
+        $widget = CustomWidget::i();
         return $widget->admin->processform();
     }
 
-} //class
+}

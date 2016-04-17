@@ -18,7 +18,7 @@ class Posts extends Widget
         parent::create();
         $this->basename = 'widget.posts';
         $this->template = 'posts';
-        $this->adminclass = 'tadminmaxcount';
+        $this->adminclass = '\litepubl\admin\widget\MaxCount';
         $this->data['maxcount'] = 10;
     }
 

@@ -5,8 +5,8 @@ namespace litepubl\admin\users;
 class Password extends Perm
 {
 
-    public function getform(targs $args) {
-        $args->password = '';
+    public function getform() {
+        $this->args->password = '';
         return '[password=password]';
     }
 
@@ -15,4 +15,4 @@ class Password extends Perm
         parent::processform();
     }
 
-} //class
+}

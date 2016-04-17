@@ -16,6 +16,7 @@ class Widget extends \litepubl\core\Events
     public $id;
     public $template;
     protected $adminclass;
+protected $adminInstance;
 
     protected function create() {
         parent::create();
@@ -23,27 +24,26 @@ class Widget extends \litepubl\core\Events
         $this->cache = 'cache';
         $this->id = 0;
         $this->template = 'widget';
-        $this->adminclass = 'tadminwidget';
+        $this->adminclass = '\litepubl\admin\widget\Widget';
     }
 
-    public function addtosidebar($sidebar) {
+    public function addToSidebar($sidebar) {
         $widgets = Widgets::i();
         $id = $widgets->add($this);
         $sidebars = Sidebars::i();
         $sidebars->insert($id, false, $sidebar, -1);
 
-        litepubl::$urlmap->clearcache();
+        $this->getApp()->cache->clear();
         return $id;
     }
 
-    protected function getadmin() {
-        if ($this->adminclass && class_exists($this->adminclass)) {
-            $admin = getinstance($this->adminclass);
-            $admin->widget = $this;
-            return $admin;
+    protected function getAdmin() {
+if (!$this->adminInstance) {
+            $this->adminInstance = $this->getApp()->classes->getinstance($this->adminclass);
+            $this->adminInstance->widget = $this;
         }
 
-        $this->error(sprintf('The "%s" admin class not found', $this->adminclass));
+return $this->adminInstance;
     }
 
     public function getwidget($id, $sidebar) {
