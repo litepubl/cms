@@ -15,6 +15,7 @@ $s = strtr([
 '$form->items ' => '$form->body ',
 'tablebuilder' => 'Table',
 ' Ulist' => ' UList',
+'processform' => 'processForm',
 ]);
 
 $s = renameFunctions($s);

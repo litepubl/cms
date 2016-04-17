@@ -41,18 +41,25 @@ $admin = $this->admintheme;
                 $result.= $form->getdelete($tb->build($items));
 
                 $result.= $admin->h($lang->newperms);
-                $result.= '<ul>';
-                $addurl = Link::url($this->url, 'action=add&class');
+$list = $this->newList();
+$list->item = $list->link;
+                $url = Link::url($this->url, 'action=add&class=');
+
                 foreach ($perms->classes as $class => $name) {
-                    if ($class == 'tsinglepassword') continue;
-                    $result.= $html->li("<a href='$addurl=$class'>$name</a>");
+                    if ($class == '\litepubl\perms\Single') {
+continue;
+}
+
+$class = str_replace('\\', '-', $class);
+$list->add($url . $class, $name);
                 }
 
-                $result.= '</ul>';
+                $result.= $list->getResult();
                 return $result;
 
             case 'add':
                 $class = $this->getparam('class', '');
+$class = str_replace('-', '\\', $class);
                 if (!isset($perms->classes[$class])) {
                     return $this->notfound();
                 }
