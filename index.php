@@ -11,6 +11,7 @@ namespace litepubl;
 class config {
     //set to true to enable debug: logging, error message,
     public static $debug = false;
+
     // use joined php files lib/kernel.*.  debug = true disable kernel
     public static $useKernel = true;
 
@@ -26,7 +27,7 @@ class config {
     //set to true to ignore request, cms will be initilized
     public static $ignoreRequest = false;
 
-    //callback function
+    //callback function before make request, if it enabled
     public static $beforeRequest = false;
 
     //random string to mix solt encrypt and generate passwords
@@ -59,6 +60,9 @@ class config {
     //'storage' => 'litepubl\storage',
     //'cache' => 'litepubl\cache',
     ];
+
+//key = value for ini_set
+    public static $phpIni = [];
 
     //not used, reservedfor future
     public static $extra = [];

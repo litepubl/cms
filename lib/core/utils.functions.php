@@ -6,7 +6,7 @@
  *
  */
 
-function sqldate($date = 0) {
+function sqlDate($date = 0) {
     if (!$date) {
         $date = time();
     }
@@ -14,7 +14,7 @@ function sqldate($date = 0) {
     return date('Y-m-d H:i:s', $date);
 }
 
-function sqltime($date = 0) {
+function sqlTime($date = 0) {
     if ($date) {
         return date('Y-m-d H:i:s', $date);
     }
@@ -22,27 +22,27 @@ function sqltime($date = 0) {
     return '0000-00-00 00:00:00';
 }
 
-function dbquote($s) {
+function dbQuote($s) {
     return litepubl::$db->quote($s);
 }
 
-function md5rand() {
+function md5Rand() {
     return md5(mt_rand() . litepubl::$secret . microtime());
 }
 
-function md5uniq() {
-    return basemd5(mt_rand() . litepubl::$secret . microtime());
+function md5Uniq() {
+    return baseMd5(mt_rand() . litepubl::$secret . microtime());
 }
 
-function basemd5($s) {
+function baseMd5($s) {
     return trim(base64_encode(md5($s, true)) , '=');
 }
 
-function strbegin($s, $begin) {
+function strBegin($s, $begin) {
     return strncmp($s, $begin, strlen($begin)) == 0;
 }
 
-function strbegins() {
+function strBegins() {
     $a = func_get_args();
     $s = array_shift($a);
     while ($begin = array_shift($a)) {
@@ -51,20 +51,20 @@ function strbegins() {
     return false;
 }
 
-function strend($s, $end) {
+function strEnd($s, $end) {
     return $end == substr($s, 0 - strlen($end));
 }
 
-function strip_utf($s) {
+function trimUtf($s) {
     $utf = "\xEF\xBB\xBF";
-    return strbegin($s, $utf) ? substr($s, strlen($utf)) : $s;
+    return strBegin($s, $utf) ? substr($s, strlen($utf)) : $s;
 }
 
-function array_delete(array & $a, $i) {
+function arrayDelete(array & $a, $i) {
     array_splice($a, $i, 1);
 }
 
-function array_delete_value(array & $a, $value) {
+function arrayDeleteValue(array & $a, $value) {
     $i = array_search($value, $a);
     if ($i !== false) {
         array_splice($a, $i, 1);
@@ -74,7 +74,7 @@ function array_delete_value(array & $a, $value) {
     return false;
 }
 
-function array_clean(array & $items) {
+function arrayClean(array & $items) {
     $items = array_unique($items);
     foreach (array(
         0,
@@ -89,13 +89,13 @@ function array_clean(array & $items) {
     }
 }
 
-function array_insert(array & $a, $item, $index) {
+function arrayInsert(array & $a, $item, $index) {
     array_splice($a, $index, 0, array(
         $item
     ));
 }
 
-function array_move(array & $a, $oldindex, $newindex) {
+function arrayMove(array & $a, $oldindex, $newindex) {
     //delete and insert
     if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
     $item = $a[$oldindex];
@@ -105,7 +105,7 @@ function array_move(array & $a, $oldindex, $newindex) {
     ));
 }
 
-function strtoarray($s) {
+function strToArray($s) {
     $a = explode("\n", trim($s));
     foreach ($a as $k => $v) {
         $a[$k] = trim($v);
@@ -114,21 +114,21 @@ function strtoarray($s) {
     return $a;
 }
 
-function tojson($a) {
+function toJson($a) {
     return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
 }
 
-function jsonattr($a) {
+function jsonAttr($a) {
     return str_replace('"', '&quot;', tojson($a));
 }
 
-function toenum($v, array $a) {
+function toEnum($v, array $a) {
     $v = trim($v);
     return in_array($v, $a) ? $v : $a[0];
 }
 
 function getinstance($class) {
-    return litepubl\litepubl::$classes->getinstance($class);
+    return \litepubl\core\litepubl::$app->classes->getinstance($class);
 }
 
 function dumpstr($s) {

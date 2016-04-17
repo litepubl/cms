@@ -174,32 +174,10 @@ $s = ltrim(substr($s, strpos($s, '*/') + 2));
 }
 
 
-/*
-//if ($php && ! strbegin($s, 'namespace')) {
 if ($php) {
-$s = str_replace(
-"namespace litepubl\plugins;\nuse litepubl;\n\n",
-"namespace litepubl;\n\n",
-$s);
+$s = libReplace($s);
 }
-*/
-//if($php) $s = str_replace('litepublisher::', 'litepubl::', $s);
-//if($php) $s = str_replace('self::', 'static::', $s);
-if($php) {
-$s = strtr([
-' litepubl::$' => ' \litepubl::$',
-'(litepubl::$' => '(\litepubl::$',
-'litepubl::$urlmap' => 'litepubl::$router',
-'turlmap::unsub', 'litepubl::$router->unbind',
-'tlocal', 'Lang',
-'new targs' => 'new Args',
-'targs::i()' => 'new Args()',
-'tadminhtml::array2combo' => '$this->theme->comboItems',
-'$form->items ' => '$form->body ',
-'tablebuilder' => 'Table',
 
-]);
-}
 
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
@@ -210,7 +188,8 @@ $filecount = 0;
 $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
 $rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
-require($dir . 'filer.class.php');
+require($rootdir . 'lib/utils/Filer.php');
+require (__DIR__ . 'libreplace.php');
 $m = microtime(true);
 require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
         $oBeautify = new PHP_Beautifier();

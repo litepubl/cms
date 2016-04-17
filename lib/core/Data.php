@@ -11,6 +11,7 @@ namespace litepubl\core;
 class Data {
     const ZERODATE = '0000-00-00 00:00:00';
     public static $guid = 0;
+    public $app;
     public $basename;
     public $cache;
     public $data;
@@ -28,6 +29,7 @@ class Data {
     }
 
     public function __construct() {
+$this->app = litepubl::$app;
         $this->lockcount = 0;
         $this->cache = true;
         $this->data = array();
@@ -68,23 +70,19 @@ $this->createData();
     public function __set($name, $value) {
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
-            return true;
-        }
-
-        if (key_exists($name, $this->data)) {
+        } elseif (key_exists($name, $this->data)) {
             $this->data[$name] = $value;
-            return true;
-        }
-
+        } else {
         foreach ($this->coinstances as $coinstance) {
             if (isset($coinstance->$name)) {
                 $coinstance->$name = $value;
-                return true;
+                return;
             }
         }
 
         return false;
     }
+}
 
     public function __call($name, $params) {
         if (method_exists($this, strtolower($name))) {
