@@ -7,7 +7,7 @@ class Groups extends Perm
 
     protected function create() {
         parent::create();
-        $this->adminclass = 'tadminpermgroups';
+        $this->adminclass = '\litepubl\admin\users\PermGroups';
         $this->data['author'] = false;
         $this->data['groups'] = array();
     }

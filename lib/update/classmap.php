@@ -177,6 +177,9 @@ return [
 'tadminuseroptions' => 'litepubl\admin\users\Options',
 'tadminuserpages' => 'litepubl\admin\users\Pages',
 'tadminperms' => 'litepubl\admin\users\Perms',
+'tadminperm' => 'litepubl\admin\users\Perm',
+'tadminpermpassword' => 'litepubl\admin\users\Password',
+'tadminpermgroups' => 'litepubl\admin\users\PermGroups',
 'tadminusers' => 'litepubl\admin\users\Users',
 
 'tadminviews' => 'litepubl\admin\view\Schemes',

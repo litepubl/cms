@@ -65,7 +65,7 @@ $class = str_replace('-', '\\', $class);
                 }
 
                 $perm = new $class();
-                return $perm->admin->getcont();
+                return $perm->admin->getContent();
 
             case 'edit':
                 $id = $this->idget();

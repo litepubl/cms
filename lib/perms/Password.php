@@ -13,7 +13,7 @@ class Password extends Perm
 
     protected function create() {
         parent::create();
-        $this->adminclass = 'tadminpermpassword';
+        $this->adminclass = '\litepubl\admin\users\Password';
         $this->data['password'] = '';
         $this->data['solt'] = '';
     }
