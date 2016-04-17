@@ -11,8 +11,8 @@ namespace litepubl\core;
 class StorageInc extends Storage 
 {
 
-    public function __construct() {
-        $this->ext = '.inc.php';
+    public function getExt() {
+return '.inc.php';
     }
 
     public function serialize(array $data) {
@@ -31,7 +31,7 @@ class StorageInc extends Storage
         $this->error('Call after method');
     }
 
-    public function loaddata($filename) {
+    public function loadData($filename) {
         if (\file_exists($filename . $this->ext)) {
             return include ($filename . $this->ext);
         }
@@ -39,7 +39,7 @@ class StorageInc extends Storage
         return false;
     }
 
-    public function loadfile($filename) {
+    public function loadFile($filename) {
         $this->error('Call loadfile');
     }
 

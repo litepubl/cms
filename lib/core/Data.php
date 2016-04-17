@@ -11,7 +11,6 @@ namespace litepubl\core;
 class Data {
     const ZERODATE = '0000-00-00 00:00:00';
     public static $guid = 0;
-    public $app;
     public $basename;
     public $cache;
     public $data;
@@ -29,7 +28,6 @@ class Data {
     }
 
     public function __construct() {
-$this->app = litepubl::$app;
         $this->lockcount = 0;
         $this->cache = true;
         $this->data = array();
@@ -129,6 +127,10 @@ $this->createData();
     public function getbasename() {
         return $this->basename;
     }
+
+public function getApp() {
+return litepubl::$app;
+}
 
     public function install() {
         $this->externalchain('Install');

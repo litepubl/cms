@@ -6,7 +6,7 @@ $s = strtr([
 ]);
 
 $s = strtr([
-'litepubl::$' => ' $this->app->',
+'litepubl::$' => ' $this->getApp()->',
 'turlmap::unsub', 'litepubl::$router->unbind',
 'tlocal', 'Lang',
 'new targs' => 'new Args',

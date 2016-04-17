@@ -11,8 +11,8 @@ namespace litepubl\core;
 class StorageJson extends Storage
  {
 
-    public function __construct() {
-        $this->ext = '.json';
+    public function getExt() {
+return  '.json';
     }
 
     public function serialize(array $data) {
@@ -31,4 +31,4 @@ class StorageJson extends Storage
         return $str;
     }
 
-} //class
+}

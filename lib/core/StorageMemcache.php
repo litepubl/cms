@@ -17,12 +17,12 @@ parent::__construct();
         $this->memcache = litepubl::$memcache;
     }
 
-    public function loadfile($filename) {
+    public function loadFile($filename) {
         if ($s = $this->memcache->get($filename)) {
             return $s;
         }
 
-        if ($s = parent::loadfile($filename)) {
+        if ($s = parent::loadFile($filename)) {
             $this->memcache->set($filename, $s, false, 3600);
             return $s;
         }
@@ -30,9 +30,9 @@ parent::__construct();
         return false;
     }
 
-    public function savefile($filename, $content) {
+    public function saveFile($filename, $content) {
         $this->memcache->set($filename, $content, false, 3600);
-        return parent::savefile($filename, $content);
+        return parent::saveFile($filename, $content);
     }
 
     public function delete($filename) {

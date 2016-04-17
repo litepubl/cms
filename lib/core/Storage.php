@@ -8,11 +8,13 @@
 
 namespace litepubl\core;
 
-class Storage {
-    public $ext;
+class Storage
+ {
+use AppTrait;
 
-    public function __construct() {
-        $this->ext = '.php';
+
+    public function getExt() {
+return '.php';
     }
 
     public function serialize(array $data) {
@@ -36,20 +38,20 @@ class Storage {
     }
 
     public function getfilename(Data $obj) {
-        return litepubl::$paths->data . $obj->getbasename();
+        return $this->getApp()->paths->data . $obj->getbasename();
     }
 
     public function save(Data $obj) {
-        return $this->savefile($this->getfilename($obj) , $this->serialize($obj->data));
+        return $this->saveFile($this->getfilename($obj) , $this->serialize($obj->data));
     }
 
-    public function savedata($filename, array $data) {
-        return $this->savefile($filename, $this->serialize($data));
+    public function saveData($filename, array $data) {
+        return $this->saveFile($filename, $this->serialize($data));
     }
 
     public function load(Data $obj) {
         try {
-            if ($data = $this->loaddata($this->getfilename($obj))) {
+            if ($data = $this->loadData($this->getfilename($obj))) {
                 $obj->data = $data + $obj->data;
                 return true;
             }
@@ -61,24 +63,24 @@ class Storage {
         return false;
     }
 
-    public function loaddata($filename) {
-        if ($s = $this->loadfile($filename)) {
+    public function loadData($filename) {
+        if ($s = $this->loadFile($filename)) {
             return $this->unserialize($s);
         }
 
         return false;
     }
 
-    public function loadfile($filename) {
-        if (\file_exists($filename . $this->ext) && ($s = \file_get_contents($filename . $this->ext))) {
+    public function loadFile($filename) {
+        if (\file_exists($filename . $this->getExt()) && ($s = \file_get_contents($filename . $this->getExt()))) {
             return $this->after($s);
         }
 
         return false;
     }
 
-    public function savefile($filename, $content) {
-        $tmp = $filename . '.tmp' . $this->ext;
+    public function saveFile($filename, $content) {
+        $tmp = $filename . '.tmp' . $this->getExt();
         if (false === \file_put_contents($tmp, $this->before($content))) {
             $this->error(\sprintf('Error write to file "%s"', $tmp));
             return false;
@@ -87,9 +89,9 @@ class Storage {
         \chmod($tmp, 0666);
 
         //replace file
-        $curfile = $filename . $this->ext;
+        $curfile = $filename . $this->getExt();
         if (\file_exists($curfile)) {
-            $backfile = $filename . '.bak' . $this->ext;
+            $backfile = $filename . '.bak' . $this->getExt();
             $this->delete($backfile);
             \rename($curfile, $backfile);
         }
@@ -103,8 +105,8 @@ class Storage {
     }
 
     public function remove($filename) {
-        $this->delete($filename . $this->ext);
-        $this->delete($filename . '.bak' . $this->ext);
+        $this->delete($filename . $this->getExt());
+        $this->delete($filename . '.bak' . $this->getExt());
     }
 
     public function delete($filename) {
@@ -118,4 +120,4 @@ class Storage {
         litepubl::$options->trace($mesg);
     }
 
-} //class
+}
