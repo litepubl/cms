@@ -61,7 +61,7 @@ $this->createData();
                 }
             }
 
-            $this->error(sprintf('The requested property "%s" not found in class  %s', $name, get_class($this)));
+            throw new PropException(get_class($this), $name);
         }
     }
 

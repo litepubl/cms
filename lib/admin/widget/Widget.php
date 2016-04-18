@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\admin\widget;
+use litepubl\core\PropException;
 use litepubl\widgets\Widgets;
 use litepubl\admin\Link;
 
@@ -24,7 +25,7 @@ if (method_exists($this, $get = 'get' . $name)) {
 return $this->$get();
 }
 
-throw new Exception(sprintf('Property %s not found', $name));
+            throw new PropException(get_class($this), $name);
 }
 
     protected function getadminurl() {
