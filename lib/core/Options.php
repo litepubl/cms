@@ -24,7 +24,7 @@ use DataStorageTrait;
     protected function create() {
         parent::create();
         $this->basename = 'options';
-        $this->addevents('changed', 'perpagechanged', 'onsave');
+        $this->addevents('changed', 'perpagechanged');
         unset($this->cache);
         $this->gmt = 0;
         $this->errorlog = '';
@@ -39,12 +39,6 @@ use DataStorageTrait;
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
         if (!defined('dbversion')) define('dbversion', true);
-    }
-
-    public function savemodified() {
-        $result = $this->getstorage()->saveModified();
-        $this->onsave($result);
-        return $result;
     }
 
     public function __set($name, $value) {

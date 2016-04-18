@@ -142,8 +142,8 @@ $this->cache = new CacheFile();
              $this->logException($e);
         }
 
-         $this->options->saveMmodified();
-         $this->options->showerrors();
+$this->dataStorage->saveMmodified();
+         $this->showErrors();
     }
 
 public function getLogger() {
@@ -161,7 +161,22 @@ $this->getLogger()->log($level, $message, $context);
 }
 
 public function logException(\Exception $e) {
-$this->log('critical', LogException::getString($e));
+$this->log('critical', \litepubl\debug\LogException::getString($e));
 }
+
+    public function showErrors() {
+        if ($this->errorlog && ($this->debug || $this->options->echoexception || $this->options->admincookie || $this->router->adminpanel)) {
+            echo $this->errorlog;
+        }
+    }
+
+    public function trace($msg) {
+        try {
+            throw new \Exception($msg);
+        }
+        catch(\Exception $e) {
+            $this->logException($e);
+        }
+    }
 
 }
