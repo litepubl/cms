@@ -6,28 +6,33 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
 
-class tadmintagswidget extends tadminwidget {
+class Tags extends Widget
+{
 
-    public static function i() {
-        return getinstance(__class__);
-    }
+    protected function getForm() {
+$args = $this->args;
+$widget = $this->widget;
 
-    protected function dogetcontent(twidget $widget, targs $args) {
         $args->showcount = $widget->showcount;
         $args->showsubitems = $widget->showsubitems;
         $args->maxcount = $widget->maxcount;
         $args->sort = $this->theme->comboItems(tlocal::i()->ini['sortnametags'], $widget->sortname);
-        return $this->admintheme->parsearg('[combo=sort] [checkbox=showsubitems] [checkbox=showcount] [text=maxcount]', $args);
+
+        return parent::getForm()
+. '[combo=sort]
+ [checkbox=showsubitems]
+ [checkbox=showcount]
+ [text=maxcount]';
     }
 
-    protected function doprocessform(twidget $widget) {
+    protected function doprocessform() {
         extract($_POST, EXTR_SKIP);
-        $widget->maxcount = (int)$maxcount;
-        $widget->showcount = isset($showcount);
-        $widget->showsubitems = isset($showsubitems);
-        $widget->sortname = $sort;
+        $this->widget->maxcount = (int)$maxcount;
+        $this->widget->showcount = isset($showcount);
+        $this->widget->showsubitems = isset($showsubitems);
+        $this->widget->sortname = $sort;
     }
 
-} //class
+}

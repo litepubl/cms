@@ -16,7 +16,7 @@ class Custom extends Widget
     protected function create() {
         parent::create();
         $this->basename = 'widgets.custom';
-        $this->adminclass = 'tadmincustomwidget';
+        $this->adminclass = '\litepubl\admin\widget\Custom';
         $this->addmap('items', array());
         $this->addevents('added', 'deleted');
     }

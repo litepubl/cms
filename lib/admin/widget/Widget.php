@@ -19,6 +19,14 @@ parent::__construct();
         $this->lang->section = 'widgets';
     }
 
+public function __get($name) {
+if (method_exists($this, $get = 'get' . $name)) {
+return $this->$get();
+}
+
+throw new Exception(sprintf('Property %s not found', $name));
+}
+
     protected function getadminurl() {
 return Link::url('/admin/views/widgets/?idwidget=');
     }
@@ -27,7 +35,7 @@ return Link::url('/admin/views/widgets/?idwidget=');
 $title = $this->widget->gettitle($this->widget->id);
         $this->args->title = $title;
         $this->args->formtitle = $title . ' ' . $this->lang->widget;
-return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle) . $content;
+return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle);
     }
 
     public function getcontent() {

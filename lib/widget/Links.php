@@ -22,7 +22,7 @@ class Links extends Widget
         $this->addevents('added', 'deleted');
         $this->basename = 'widgets.links';
         $this->template = 'links';
-        $this->adminclass = 'tadminlinkswidget';
+        $this->adminclass = '\litepubl\admin\widget\Links';
         $this->addmap('items', array());
         $this->addmap('autoid', 0);
         $this->redirlink = '/linkswidget/';

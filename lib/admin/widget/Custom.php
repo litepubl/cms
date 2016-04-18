@@ -6,36 +6,44 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
+use litepubl\widget\Widgets as WidgetItems;
+use litepubl\view\Theme;
 use litepubl\admin\GetSchema;
 
-class tadmincustomwidget extends tadminwidget {
+class Custom extends Widget
+{
+use \litepubl\admin\Params;
+use \litepubl\admin\Factory;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
+public function getAdminTheme() {
+return $this->admin;
+}
 
-    public static function gettemplates() {
+    public function getTemplates() {
         $result = array();
-        $lang = tlocal::i('widgets');
+        $lang = $this->lang;
+$lang->section = 'widgets';
         $result['widget'] = $lang->defaulttemplate;
-        foreach (ttheme::getwidgetnames() as $name) {
+        foreach (Theme::getwidgetnames() as $name) {
             $result[$name] = $lang->$name;
         }
+
         return $result;
     }
 
     public function getcontent() {
         $widget = $this->widget;
-        $args = new targs();
-        $id = (int)tadminhtml::getparam('idwidget', 0);
+        $args = $this->args;
+        $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
             $args->mode = 'edit';
-            $viewcombo = '';
+$form = $this->theme->getinput('text', 'title', $item['title'], $this->lang->widgettitle);
         } else {
             $id = 0;
-            $viewcombo = GetSchema::combo(1);
+$form = $this->theme->getinput('text', 'title', '', $this->lang->widgettitle);
+            $form .= GetSchema::combo(1);
             $args->mode = 'add';
             $item = array(
                 'title' => '',
@@ -45,16 +53,17 @@ class tadmincustomwidget extends tadminwidget {
         }
 
         $args->idwidget = $id;
-        $html = $this->html;
         $args->text = $item['content'];
-        $args->template = $this->theme->comboItems(static ::gettemplates() , $item['template']);
-        $result = $this->optionsform($item['title'], $viewcombo . $html->parsearg('[editor=text]
+        $args->template = $this->theme->comboItems($this->getTemplates() , $item['template']);
+
+$form .= '[editor=text]
     [combo=template]
     [hidden=mode]
-    [hidden=idwidget]', $args));
+    [hidden=idwidget]';
 
-        $lang = tlocal::i();
-        $tb = new tablebuilder();
+        $result = $this->admin->form($form, $args);
+        $lang = $this->lang;
+        $tb = $this->newTable();
         $tb->setstruct(array(
             $tb->checkbox('widgetcheck') ,
             array(
@@ -63,7 +72,7 @@ class tadmincustomwidget extends tadminwidget {
             ) ,
         ));
 
-        $form = new adminform($args);
+        $form = $this->newForm($args);
         $form->title = $lang->widgets;
         $result.= $form->getdelete($tb->build($widget->items));
         return $result;
@@ -86,19 +95,21 @@ class tadmincustomwidget extends tadminwidget {
                     break;
                 }
         } elseif (isset($_POST['delete'])) {
-            $this->deletewidgets($widget);
+            $this->deleteWidgets($widget);
         }
     }
 
-    public function deletewidgets(twidget $widget) {
-        $widgets = twidgets::i();
+    public function deleteWidgets(twidget $widget) {
+        $widgets = WidgetItems::i();
         $widgets->lock();
         $widget->lock();
         foreach ($_POST as $key => $value) {
-            if (strbegin($key, 'widgetcheck-')) $widget->delete((int)$value);
+            if (strbegin($key, 'widgetcheck-')) {
+$widget->delete((int)$value);
+}
         }
         $widget->unlock();
         $widgets->unlock();
     }
 
-} //class
+}

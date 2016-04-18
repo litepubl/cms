@@ -190,7 +190,10 @@ return [
 'tadminshowcount' => 'litepubl\admin\widget\ShowCount',
 'tadminorderwidget' => 'litepubl\admin\widget\Order',
 'addcustomwidget' => 'liteubl\admin\widget\AddCustom',
-
+'tadmincustomwidget' => 'litepubl\admin\widget\Custom',
+'tadminlinkswidget' => 'litepubl\admin\widget\Links',
+'tadminmetawidget' => 'litepubl\admin\widget\Meta',
+'tadmintagswidget' => 'litepubl\admin\widget\Tags',
 
 //comments
 'tcomments' => 'litepubl\comments\Comments',

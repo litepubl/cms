@@ -19,7 +19,7 @@ class Meta extends Widget
         parent::create();
         $this->basename = 'widget.meta';
         $this->template = 'meta';
-        $this->adminclass = 'tadminmetawidget';
+        $this->adminclass = '\litepubl\admin\widget\Meta';
         $this->addmap('items', array());
     }
 

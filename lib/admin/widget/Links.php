@@ -6,24 +6,22 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
 
-class tadminlinkswidget extends tadminwidget {
+class Links extends Widget
+{
+use \litepubl\admin\Factory;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function dogetcontent(twidget $widget, targs $args) {
-        $args->redir = $widget->redir;
-        return $this->html->parsearg('[checkbox=redir]', $args);
+    protected function getForm() {
+        $this->args->redir = $this->widget->redir;
+return parent::getFormr()
+. '[checkbox=redir]';
     }
 
     public function getcontent() {
         $result = parent::getcontent();
         $widget = $this->widget;
-        $html = $this->html;
-        $args = new targs();
+        $args = $this->args;
         $id = isset($_GET['idlink']) ? (int)$_GET['idlink'] : 0;
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
@@ -39,16 +37,16 @@ class tadminlinkswidget extends tadminwidget {
 
         $args->add($item);
         $args->linktitle = isset($item['title']) ? $item['title'] : (isset($item['linktitle']) ? $item['linktitle'] : '');
-        $lang = tlocal::i();
+        $lang = $this->lang;
         $args->formtitle = $lang->editlink;
-        $result.= $html->adminform('
+        $result.= $this->admin->form('
     [text=url]
     [text=text]
     [text=linktitle]
     [hidden=mode]', $args);
 
         $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
-        $tb = new tablebuilder();
+        $tb = $this->newTable($this->admin);
         $tb->setstruct(array(
             $tb->checkbox('checklink') ,
             array(
@@ -69,7 +67,7 @@ class tadminlinkswidget extends tadminwidget {
             ) ,
         ));
 
-        $form = new adminform($args);
+        $form = $this->newForm($args);
         $form->title = $lang->widgets;
         $result.= $form->getdelete($tb->build($widget->items));
         return $result;
@@ -81,7 +79,9 @@ class tadminlinkswidget extends tadminwidget {
         if (isset($_POST['delete'])) {
             foreach ($_POST as $key => $value) {
                 $id = (int)$value;
-                if (isset($widget->items[$id])) $widget->delete($id);
+                if (isset($widget->items[$id])) {
+$widget->delete($id);
+}
             }
         } elseif (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
@@ -101,7 +101,7 @@ class tadminlinkswidget extends tadminwidget {
             $widget->redir = isset($redir);
         }
         $widget->unlock();
-        return $this->html->h2->updated;
+        return $this->admin->success($this->lang->updated);
     }
 
-} //class
+}

@@ -11,8 +11,8 @@ trait Factory
         return Lang::admin();
     }
 
-public function newTable() {
-return new Table($this->admintheme);
+public function newTable($admin = null) {
+return new Table($admin ? $admin : $this->admintheme);
 }
 
 public function tableItems(array $items, array $struct) {
@@ -29,8 +29,8 @@ public function newTabs() {
 return new Tabs($this->admintheme);
 }
 
-public function newForm() {
-return new Form(new Args());
+public function newForm($args = null) {
+return new Form($args ? $args : new Args());
 }
 
 public function newArgs() {

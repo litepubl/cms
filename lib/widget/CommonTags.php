@@ -14,7 +14,7 @@ class CommonTags extends Widget
 
     protected function create() {
         parent::create();
-        $this->adminclass = 'tadmintagswidget';
+        $this->adminclass = '\litepubl\admin\widget\Tags';
         $this->data['sortname'] = 'count';
         $this->data['showcount'] = true;
         $this->data['showsubitems'] = true;

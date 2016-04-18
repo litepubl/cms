@@ -6,27 +6,25 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\widget;
 
-class tadminmetawidget extends tadminwidget {
+class Meta extends Widget
+{
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    protected function dogetcontent(twidget $widget, targs $args) {
-        $html = $this->html;
-        $result = '';
-        foreach ($widget->items as $name => $item) {
-            $result.= $html->getinput('checkbox', $name, $item['enabled'] ? 'checked="checked"' : '', $item['title']);
+    protected function getForm() {
+        $result = parent::getForm();
+$theme = $this->theme;
+        foreach ($this->widget->items as $name => $item) {
+            $result.= $theme->getinput('checkbox', $name, $item['enabled'] ? 'checked="checked"' : '', $item['title']);
         }
+
         return $result;
     }
 
-    protected function doprocessform(twidget $widget) {
-        foreach ($widget->items as $name => $item) {
+    protected function doprocessform() {
+        foreach ($this->widget->items as $name => $item) {
             $widget->items[$name]['enabled'] = isset($_POST[$name]);
         }
     }
 
-} //class
+}
