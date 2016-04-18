@@ -6,13 +6,15 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\comments;
 use litepubl\comments\Comments;
+use litepubl\comments\Comment;
 use litepubl\comments\Manager;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\view\Filter;
 
-class Moderator extends Menu
+class Moderator extends \litepubl\admin\Menu
 {
     private $moder;
     private $iduser;
@@ -47,7 +49,8 @@ return false;
         $comments = Comments::i();
         $cm = Manager::i();
         $lang = $this->lang;
-        $html = $this->html;
+$admin = $this->admintheme;
+
         if ($action = $this->action) {
             $id = $this->idget();
             if (!$comments->itemexists($id)) {
@@ -71,7 +74,7 @@ return false;
 
                 case 'hold':
                     if (!$this->moder) {
-                        return $html->h4->forbidden;
+                        return $admin->geterr($lang->forbidden);
                     }
 
                     $comments->setstatus($id, 'hold');
@@ -81,7 +84,7 @@ return false;
 
                 case 'approve':
                     if (!$this->moder) {
-                        return $html->h4->forbidden;
+                        return $admin->geterr($lang->forbidden);
                     }
 
                     $comments->setstatus($id, 'approved');
@@ -91,7 +94,7 @@ return false;
 
                 case 'edit':
                     if (!$this->can($id, 'edit')) {
-                        return $html->h4->forbidden;
+                        return $admin->geterr($lang->forbidden);
                     }
 
                     $result.= $this->editcomment($id);
@@ -100,7 +103,7 @@ return false;
 
                 case 'reply':
                     if (!$this->can($id, 'edit')) {
-                        return $html->h4->forbidden;
+                        return $admin->geterr($lang->forbidden);
                     }
 
                     $result.= $this->reply($id);
@@ -113,9 +116,9 @@ return false;
     }
 
     public function getinfo($comment) {
-        $html = $this->html;
+$admin = $this->admintheme;
         $lang = tlocal::admin();
-        $tb = new tablebuilder();
+        $tb = $this->newTable();
         $result = $tb->props(array(
             'commentonpost' => "<a href=\"$comment->url\">$comment->posttitle</a>",
             'author' => $comment->name,
@@ -125,37 +128,38 @@ return false;
             'status' => $comment->localstatus,
         ));
 
-        $result.= $html->p->content . $html->p($comment->content);
+        $result.= $admin->help($lang->content);
+$result .= $admin->help($comment->content);
         $adminurl = $this->adminurl . "=$comment->id&action";
-        $result.= "<p>
+        $result.= $admin->help("
     $lang->cando:
     <a href='$adminurl=reply'>$lang->reply</a>,
     <a href='$adminurl=approve'>$lang->approve</a>,
     <a class'confirm-delete-link' href='$adminurl=delete'>$lang->delete</a>,
     <a href='$adminurl=hold'>$lang->hold</a>.
-    </p>";
+");
 
         return $result;
     }
 
-    private function editcomment($id) {
-        $comment = new tcomment($id);
+    private function editComment($id) {
+        $comment = new Comment($id);
         $args = new Args();
         $args->content = $comment->rawcontent;
         $args->formtitle = tlocal::i()->editform;
         $result = $this->getinfo($comment);
-        $result.= $this->html->adminform('[editor=content]', $args);
+        $result.= $this->admin->form('[editor=content]', $args);
         return $result;
     }
 
     private function reply($id) {
-        $comment = new tcomment($id);
+        $comment = new Comment($id);
         $args = new targs();
         $args->pid = $comment->post;
         $args->formtitle = tlocal::i()->replyform;
         $result = $this->getinfo($comment);
         $args->content = '';
-        $result.= $this->html->adminform('
+        $result.= $this->admintheme->form('
     [editor=content]
     [hidden=pid]
     ', $args);
@@ -163,14 +167,14 @@ return false;
     }
 
     //callback for table builder
-    public function get_excerpt(tablebuilder $tb, tcomment $comment) {
+    public function get_excerpt(tablebuilder $tb, Comment $comment) {
         $comment->id = $tb->id;
         $args = $tb->args;
         $args->id = $tb->id;
         $args->onhold = $comment->status == 'hold';
         $args->email = $comment->email == '' ? '' : "<a href='mailto:$comment->email'>$comment->email</a>";
         $args->website = $comment->website == '' ? '' : "<a href='$comment->website'>$comment->website</a>";
-        return tadminhtml::specchars(tcontentfilter::getexcerpt($comment->content, 120));
+        return $this->admintheme->quote(Filter::getexcerpt($comment->content, 120));
     }
 
     protected function get_table($kind) {
@@ -184,12 +188,12 @@ return false;
         $from = $this->getfrom($perpage, $total);
         $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
 
-        $html = $this->html;
+$admin = $this->admintheme;
         $lang = tlocal::admin('comments');
         $form = new adminform(new targs());
         $form->title = sprintf($lang->itemscount, $from, $from + count($list) , $total);
 
-        $comment = new tcomment(0);
+        $comment = new Comment(0);
         basetheme::$vars['comment'] = $comment;
 
         $tablebuilder = new tablebuilder();
@@ -266,8 +270,8 @@ return false;
     }
 
     private function moderated($id) {
-        $result = $this->html->h4->successmoderated;
-        $result.= $this->getinfo(new tcomment($id));
+        $result = $this->admintheme->success($this->lang->successmoderated);
+        $result.= $this->getinfo(new Comment($id));
         return $result;
     }
 
@@ -284,7 +288,7 @@ return false;
             switch ($_REQUEST['action']) {
                 case 'reply':
                     if (!$this->moder) {
-                        return $this->html->h4->forbidden;
+                        return $this->admintheme->geterr($this->lang->forbidden);
                     }
 
                     $item = $comments->getitem($this->idget());
@@ -296,11 +300,11 @@ return false;
 
                 case 'edit':
                     if (!$this->can($id, 'edit')) {
-                        return $this->html->h4->forbidden;
+                        return $this->admintheme->geterr($this->lang->forbidden);
                     }
 
                     $comments->edit($this->idget() , $_POST['content']);
-                    return $this->html->h4->successmoderated;
+                    return $this->admintheme->success($this->lang->successmoderated);
                     break;
             }
         }
@@ -318,7 +322,7 @@ return false;
             }
         }
 
-        return $this->html->h4->successmoderated;
+                    return $this->admintheme->success($this->lang->successmoderated);
     }
 
     public static function refilter() {

@@ -155,9 +155,11 @@ return [
 'adminthemeparser' => 'litepubl\admin\options\ThemeParser',
 
 'tadmincssmerger' => 'litepubl\admin\Css',
-'tadmincommentmanager' => 'litepubl\admin\comments\Comments',
+'tadmincommentmanager' => 'litepubl\admin\comments\Options',
 'tadmincomusers' => 'litepubl\admin\comments\Authors',
 'tadminmoderator' => 'litepubl\admin\comments\Moderator',
+'tadminpingbacks' => 'litepubl\admin\comments\Pingbacks',
+
 'tadminfiles' => 'litepubl\admin\Files',
 'tadminfilethumbnails' => 'litepubl\admin\files\Thumbnails',
 

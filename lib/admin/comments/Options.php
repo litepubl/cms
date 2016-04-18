@@ -14,7 +14,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\UserOptions;
 
-class Comments extends Menu
+class Options extends \litepubl\admin\Menu
 {
 
     public function getcontent() {
@@ -110,7 +110,7 @@ class Comments extends Menu
         $tabs->add($lang->blackemail, '[editor=locklist]');
 
         $args->formtitle = $lang->title;
-        return $html->adminform($tabs->get() , $args);
+        return $this->admintheme->form($tabs->get() , $args);
     }
 
     public function processform() {

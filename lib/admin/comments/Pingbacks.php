@@ -6,19 +6,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\comments;
+use litepubl\comments\Pingbacks as PingItems;
+use litepubl\admin\Table;
 
-class tadminpingbacks extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Pingbacks extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
         $result = '';
-        $pingbacks = tpingbacks::i();
+        $pingbacks = PingItems::i();
         $lang = $this->lang;
-        $html = $this->html;
+$admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
@@ -30,28 +29,28 @@ break;
 
                 case 'hold':
                     $pingbacks->setstatus($id, false);
-                    $result.= $html->h2->successmoderated;
+                    $result.= $admin->success($lang->successmoderated);
                     break;
 
 
                 case 'approve':
                     $pingbacks->setstatus($id, true);
-                    $result.= $html->h2->successmoderated;
+                    $result.= $admin->success($lang->successmoderated);
                     break;
 
 
                 case 'edit':
-                    $result.= $this->editpingback($id);
+                    $result.= $this->editPingback($id);
                     break;
                 }
         }
-        $result.= $this->getpingbackslist();
+        $result.= $this->getPingList();
         return $result;
     }
 
-    private function getpingbackslist() {
+    private function getPingList() {
         $result = '';
-        $pingbacks = tpingbacks::i();
+        $pingbacks = PingItems::i();
         $perpage = 20;
         $total = $pingbacks->getcount();
         $from = $this->getfrom($perpage, $total);
@@ -65,40 +64,34 @@ break;
         $admin = $this->admintheme;
         $lang = tlocal::i();
         $args = new targs();
-        $form = $this->newForm();
+        $form = $this->newForm($args);
         $form->items = $admin->getcount($from, $from + count($items) , $total);
-        ttheme::$vars['pingitem'] = new pingitem();
-
-        $tb = new tablebuilder();
+        $tb = $this->newTable();
         $tb->setstruct(array(
             $tb->checkbox('id') ,
             array(
-                'left',
                 $lang->date,
-                '$pingitem.date'
-            ) ,
+function (Table $t) {
+return $t->date($t->item['posted']);
+}) ,
             array(
-                'left',
                 $lang->status,
-                '$pingitem.status'
-            ) ,
+function(Table $t) {
+                return tlocal::get('commentstatus', $t->item['status']);
+}) ,
             array(
-                'left',
                 $lang->title,
                 '$title'
             ) ,
             array(
-                'left',
                 $lang->url,
                 '<a href="$url">$url</a>'
             ) ,
             array(
-                'left',
                 'IP',
                 '$ip'
             ) ,
             array(
-                'left',
                 $lang->post,
                 '<a href="$posturl">$posttitle</a>'
             ) ,
@@ -108,8 +101,8 @@ break;
                 "<a href='$this->adminurl=\$id&action=edit'>$lang->edit</a>"
             ) ,
         ));
+
         $form->items.= $tb->build($items);
-        unset(ttheme::$vars['pingitem']);
 
         $form->body .= $form->centergroup($form->getButtons('approve', 'hold', 'delete'));
         $form->submit = false;
@@ -120,19 +113,19 @@ break;
         return $result;
     }
 
-    private function editpingback($id) {
-        $pingbacks = tpingbacks::i();
+    private function editPingback($id) {
+        $pingbacks = PingItems::i();
         $args = targs::i();
         $args->add($pingbacks->getitem($id));
         $args->formtitle = tlocal::i()->edit;
-        return $this->html->adminform('
+        return $this->admintheme->form('
     [text=title]
     [text=url]
     ', $args);
     }
 
     public function processform() {
-        $pingbacks = tpingbacks::i();
+        $pingbacks = PingItems::i();
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') {
             extract($_POST, EXTR_SKIP);
             $pingbacks->edit($this->idget() , $title, $url);
@@ -149,23 +142,7 @@ break;
             }
         }
 
-        return $this->html->h4->successmoderated;
-    }
-
-} //class
-class pingitem {
-
-    public function __get($name) {
-        $item = ttheme::$vars['item'];
-        switch ($name) {
-            case 'status':
-                return tlocal::get('commentstatus', $item['status']);
-
-            case 'date':
-                return tlocal::date(strtotime($item['posted']));
-        }
-
-        return '';
+        return $this->admintheme->success($this->lang->successmoderated);
     }
 
 }
