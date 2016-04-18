@@ -56,9 +56,9 @@ class config {
 
     //replacement classes on startup
     public static $classes = [
-    //'root' => 'litepubl\litepubl',
-    //'storage' => 'litepubl\storage',
-    //'cache' => 'litepubl\cache',
+    //'app' => '\litepubl\core\App',
+    //'storage' => '\litepubl\core\Storage',
+    //'cache' => '\litepubl\core\CacheFile,
     ];
 
 //key = value for ini_set

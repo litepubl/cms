@@ -34,7 +34,7 @@ use DataStorageTrait;
         $this->addmap('parentgroups', array());
     }
 
-    public function afterload() {
+    public function afterLoad() {
         parent::afterload();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
@@ -67,7 +67,7 @@ use DataStorageTrait;
         return true;
     }
 
-    private function dochanged($name, $value) {
+    private function doChanged($name, $value) {
         if ($name == 'perpage') {
             $this->perpagechanged();
             $urlmap = turlmap::i();
@@ -87,14 +87,14 @@ use DataStorageTrait;
         }
     }
 
-    public function getadmincookie() {
+    public function getAdminCookie() {
         if (is_null($this->_admincookie)) {
             return $this->_admincookie = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
         }
         return $this->_admincookie;
     }
 
-    public function setadmincookie($val) {
+    public function setAdminCookie($val) {
         $this->_admincookie = $val;
     }
 
@@ -110,11 +110,11 @@ use DataStorageTrait;
         $this->_user = $id;
     }
 
-    public function authcookie() {
+    public function authCookie() {
         return $this->authcookies(isset($_COOKIE['litepubl_user_id']) ? (int)$_COOKIE['litepubl_user_id'] : 0, isset($_COOKIE['litepubl_user']) ? (string)$_COOKIE['litepubl_user'] : '');
     }
 
-    public function authcookies($iduser, $password) {
+    public function authCookies($iduser, $password) {
         if (!$iduser || !$password) return false;
         $password = $this->hash($password);
         if ($password == $this->emptyhash) return false;
@@ -125,7 +125,7 @@ use DataStorageTrait;
         return $iduser;
     }
 
-    public function finduser($iduser, $cookie) {
+    public function findUser($iduser, $cookie) {
         if ($iduser == 1) return $this->compare_cookie($cookie);
         if (!$this->usersenabled) return false;
 
@@ -145,7 +145,7 @@ use DataStorageTrait;
         return !empty($this->cookiehash) && ($this->cookiehash == $cookie) && ($this->cookieexpired > time());
     }
 
-    public function emailexists($email) {
+    public function emailExists($email) {
         if (!$email) return false;
         if (!$this->authenabled) return false;
         if ($email == $this->email) return 1;
@@ -159,7 +159,7 @@ use DataStorageTrait;
         return $this->authpassword($this->emailexists($email) , $password);
     }
 
-    public function authpassword($iduser, $password) {
+    public function authPassword($iduser, $password) {
         if (!$iduser) return false;
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) return false;
@@ -172,7 +172,7 @@ use DataStorageTrait;
         return $iduser;
     }
 
-    public function updategroup() {
+    public function updateGroup() {
         if ($this->_user == 1) {
             $this->group = 'admin';
             $this->idgroups = array(
@@ -195,12 +195,12 @@ use DataStorageTrait;
         return $users->getvalue($this->user, 'password');
     }
 
-    public function changepassword($newpassword) {
+    public function changePassword($newpassword) {
         $this->data['password'] = $this->hash($newpassword);
         $this->save();
     }
 
-    public function getdbpassword() {
+    public function getDBPassword() {
         if (function_exists('mcrypt_encrypt')) {
             return static ::decrypt($this->data['dbconfig']['password'], $this->solt . litepubl::$secret);
         } else {
@@ -208,7 +208,7 @@ use DataStorageTrait;
         }
     }
 
-    public function setdbpassword($password) {
+    public function setDBPassword($password) {
         if (function_exists('mcrypt_encrypt')) {
             $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . litepubl::$secret);
         } else {
@@ -261,7 +261,7 @@ use DataStorageTrait;
         return basemd5((string)$s . $this->solt . litepubl::$secret);
     }
 
-    public function ingroup($groupname) {
+    public function inGroup($groupname) {
         //admin has all rights
         if ($this->user == 1) return true;
         if (in_array($this->groupnames['admin'], $this->idgroups)) return true;
@@ -273,12 +273,12 @@ use DataStorageTrait;
         return in_array($idgroup, $this->idgroups);
     }
 
-    public function ingroups(array $idgroups) {
+    public function inGroups(array $idgroups) {
         if ($this->ingroup('admin')) return true;
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
-    public function hasgroup($groupname) {
+    public function hasGroup($groupname) {
         if ($this->ingroup($groupname)) return true;
         // if group is children of user groups
         $idgroup = $this->groupnames[$groupname];
@@ -286,85 +286,4 @@ use DataStorageTrait;
         return count(array_intersect($this->idgroups, $this->parentgroups[$idgroup]));
     }
 
-    public function handexception($e) {
-        $log = "Caught exception:\r\n" . $e->getMessage() . "\r\n";
-        $trace = $e->getTrace();
-        foreach ($trace as $i => $item) {
-            if (isset($item['line'])) {
-                $log.= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
-            }
-
-            if (isset($item['class'])) {
-                $log.= $item['class'] . $item['type'] . $item['function'];
-            } else {
-                $log.= $item['function'];
-            }
-
-            if (isset($item['args']) && count($item['args'])) {
-                $args = array();
-                foreach ($item['args'] as $arg) {
-                    $args[] = static ::var_export($arg);
-                }
-
-                $log.= "\n";
-                $log.= implode(', ', $args);
-            }
-
-            $log.= "\n";
-        }
-
-        $log = str_replace(litepubl::$paths->home, '', $log);
-        $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
-        tfiler::log($log, 'exceptions.log');
-
-        if (!(litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
-            tfiler::log($log, 'exceptionsmail.log');
-        }
-    }
-
-    public function trace($msg) {
-        try {
-            throw new \Exception($msg);
-        }
-        catch(\Exception $e) {
-            $this->handexception($e);
-        }
-    }
-
-    public function showerrors() {
-        if (!empty($this->errorlog) && (litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
-            echo $this->errorlog;
-        }
-    }
-
-    public static function var_export(&$v) {
-        switch (gettype($v)) {
-            case 'string':
-                return "'$v'";
-
-            case 'object':
-                return get_class($v);
-
-            case 'boolean':
-                return $v ? 'true' : 'false';
-
-            case 'integer':
-            case 'double':
-            case 'float':
-                return $v;
-
-            case 'array':
-                $result = "array (\n";
-                foreach ($v as $k => $item) {
-                    $s = static ::var_export($item);
-                    $result.= "$k = $s;\n";
-                }
-                $result.= ")\n";
-                return $result;
-
-            default:
-                return gettype($v);
-        }
-    }
-
-} //class
+}

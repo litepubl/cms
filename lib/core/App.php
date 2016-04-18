@@ -17,7 +17,7 @@ class App
     public  $db;
     public  $debug;
     public  $domain;
-    public  $log;
+    public  $logger;
     public  $memcache;
     public  $microtime;
     public  $options;
@@ -26,11 +26,9 @@ class App
     public  $secret;
     public  $site;
     public  $storage;
-    public  $urlmap;
 
     public  function __construct() {
          $this->microtime = microtime(true);
-
 
         //functions in global namespace
         require_once (__DIR__ . '/utils.functions.php');
@@ -39,6 +37,9 @@ class App
          $this->secret = config::$secret;
          $this->debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
          $this->domain =  $this->getHost();
+}
+
+public function init() {
          $this->createAliases();
          $this->createInstances();
     }
@@ -58,7 +59,6 @@ class App
          $this->site = Site::i();
          $this->db = DB::i();
          $this->router = Router::i();
-$this->urlmap = $this->router;
 $this->router->cache = $this->cache;
     }
 
@@ -133,32 +133,35 @@ $this->cache = new CacheFile();
 
     public  function run() {
         try {
-             :init();
-
+             $this->init();
             if (!config::$ignoreRequest) {
-                 ::request();
+                 $this->request();
             }
         }
         catch(\Exception $e) {
-             $this->options->handexception($e);
+             $this->logException($e);
         }
 
-         $this->options->savemodified();
+         $this->options->saveMmodified();
          $this->options->showerrors();
     }
 
-    public  function start() {
-        if (\version_compare(\PHP_VERSION, '5.4', '<')) {
-            die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
-        }
+public function getLogger() {
+if (!$this->logger) {
+$this->logger = new logger();
+}
 
-        if (isset(config::$classes['root']) && class_exists(config::$classes['root'])) {
-            \call_user_func_array(config::$classes['root'], 'run', []);
-        } else {
-             ::run();
-        }
-    }
+return $this->logger;
+}
 
-} //class
+public function log($level, $message, array $context = array()) {
+if (config::$debug || config::$logLevel) {
+$this->getLogger()->log($level, $message, $context);
+}
+}
 
-litepubl::start();
+public function logException(\Exception $e) {
+$this->log('critical', LogException::getString($e));
+}
+
+}
