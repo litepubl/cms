@@ -9,17 +9,18 @@
 namespace litepubl\admin\comments;
 use litepubl\core\Users;
 use litepubl\view\Args;
-use litepubl\comments\Comments;
+use litepubl\comments\Comments as CommentItems;
 use litepubl\comments\Subscribers;
 use litepubl\admin\Link;
 
-class Authors extends Menu 
+class Authors extends \litepubl\admin\Menu 
 {
 
     public function getcontent() {
         $result = '';
         $this->basename = 'authors';
         $users = Users::i();
+$admin = $this->admintheme;
         $lang = $this->lang;
 
         if ('delete' == $this->action) {
@@ -29,18 +30,19 @@ class Authors extends Menu
 return $this->confirmDelete($id, $lang->confirmdelete);
 }
 
-            if (!$this->deleteauthor($id)) return $this->notfount;
-            $result.= $html->h4->deleted;
+            if (!$this->deleteAuthor($id)) return $this->notfount;
+            $result.= $admin->success($lang->deleted);
         }
 
         $args = new targs();
         $perpage = 20;
         $total = $users->db->getcount("status = 'comuser'");
         $from = $this->getfrom($perpage, $total);
-        $res = $users->db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
-        $items = litepubl::$db->res2assoc($res);
+$db = $users->db;
+        $res = $db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
+        $items = $db->res2assoc($res);
 
-        $result.= sprintf($html->h4->itemscount, $from, $from + count($items) , $total);
+        $result.= $admin->getcount($from, $from + count($items) , $total);
         $adminurl = $this->adminurl;
         $editurl = Link::url('/admin/users/?id');
         $tb = $this->newTable();
@@ -76,11 +78,11 @@ return $this->confirmDelete($id, $lang->confirmdelete);
         return $result;
     }
 
-    private function deleteauthor($uid) {
+    private function deleteAuthor($uid) {
         $users = Users::i();
         if (!$users->itemexists($uid)) return false;
         if ('comuser' != $users->getvalue($uid, 'status')) return false;
-        $comments = Cmments::i();
+        $comments = CommentItems::i();
         $comments->db->delete("author = $uid");
         $users->setvalue($uid, 'status', 'hold');
         return true;
@@ -91,7 +93,7 @@ return $this->confirmDelete($id, $lang->confirmdelete);
         $authorid = (int)$authorid;
         $users = Users::i();
         if (!$users->itemexists($authorid)) return '';
-        $html = $this->gethtml('moderator');
+        $admin = $this->admintheme;
         $result = '';
         $res = $db->query("select $db->posts.id as id, $db->posts.title as title, $db->urlmap.url as url
     from $db->posts, $db->urlmap
@@ -109,7 +111,7 @@ return $this->confirmDelete($id, $lang->confirmdelete);
             $result.= $html->subscribeitem($args);
         }
 
-        return $html->fixquote($result);
+        return $result;
     }
 
     public function processform() {
