@@ -24,6 +24,7 @@ $s = strtr([
 ' Ulist' => ' UList',
 'processform' => 'processForm',
 'doprocessform' => 'doProcessForm',
+'DataStorage' => 'SharedStorage',
 ]);
 
 $s = renameFunctions($s);

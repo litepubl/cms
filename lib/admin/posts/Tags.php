@@ -7,6 +7,8 @@
  */
 
 namespace litepubl\admin\tags;
+use litepubl\tag\Tags as TagItems;
+use litepubl\tag\Cats as TatItems;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Filter;
@@ -19,8 +21,8 @@ class Tags extends \litepubl\admin\Menu
     public function getcontent() {
         $result = '';
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
-        $tags = $istags ? litepubl::$classes->tags : litepubl::$classes->categories;
-$tags->loadall();
+        $tags = $istags ? TagItems::i() : CatItems::i();
+$tags->loadAll();
         $parents = array(
             0 => '-----'
         );
@@ -142,7 +144,7 @@ $result .= $this->confirmDeleteItem($tags);
         if (empty($_POST['title'])) return '';
         extract($_POST, EXTR_SKIP);
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
-        $tags = $istags ? litepubl::$classes->tags : litepubl::$classes->categories;
+        $tags = $istags ? TagItems::i() : CatItems::i();
         $tags->lock();
         $id = $this->idget();
         if ($id == 0) {

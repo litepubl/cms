@@ -7,6 +7,8 @@
  */
 
 namespace litepubl\admin\posts;
+use litepubl\tag\Tags as TagItems;
+use litepubl\tag\Cats as TatItems;
 use litepubl\view\Admin;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
@@ -35,7 +37,7 @@ if ($type != 'tags') {
 $type = 'categories';
 }
 
-        $tags = $type == 'tags' ? ttags::i() : tcategories::i();
+        $tags = $type == 'tags' ? Tagitems::i() : CatItems::i();
         if ($err = static ::auth()) {
             return $err;
         }

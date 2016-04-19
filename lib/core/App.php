@@ -13,7 +13,6 @@ class App
  {
     public  $cache;
     public  $classes;
-    public  $datastorage;
     public  $db;
     public  $debug;
     public  $domain;
@@ -24,6 +23,7 @@ class App
     public  $paths;
     public  $router;
     public  $secret;
+    public  $sharedstorage;
     public  $site;
     public  $storage;
 
@@ -80,8 +80,8 @@ $this->cache = new CacheMemcache();
 $this->cache = new CacheFile();
         }
 
-         $this->datastorage = new DataStorage();
-        if (! $this->datastorage->isInstalled()) {
+         $this->sharedstorage = new SharedStorage();
+        if (! $this->sharedstorage->isInstalled()) {
             require ( $this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
                     }
@@ -142,7 +142,7 @@ $this->cache = new CacheFile();
              $this->logException($e);
         }
 
-$this->dataStorage->saveMmodified();
+$this->sharedStorage->saveMmodified();
          $this->showErrors();
     }
 
