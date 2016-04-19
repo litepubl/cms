@@ -16,7 +16,6 @@ class Classes extends Items
     public $remap;
 public $classmap;
     public $aliases;
-    public $factories;
     public $instances;
 public $loaded;
 
@@ -35,11 +34,10 @@ public $loaded;
         $this->basename = 'classes';
         $this->dbversion = false;
         $this->addevents('onnewitem', 'onrename');
-        $this->addmap('namespaces', array());
+        $this->addmap('namespaces', ['litepubl' => 'lib']);
         $this->addmap('kernel', array());
         $this->addmap('classes', array());
         $this->addmap('remap', array());
-        $this->addmap('factories', array());
         $this->instances = array();
 $this->classmap = [];
         $this->aliases = [];
@@ -315,21 +313,25 @@ $this->loaded[$ns] = $dir;
                 }
             }
 
-            foreach ($this->namespaces as $name => $dir) {
-                if (strbegin($ns, $name)) {
-                    $dir = litepubl::$paths->home . $dir . $this->subSpace($ns, $name)  . '/';
+$names = explode('\\', $ns);
+$vendor = array_shift($names);
+while(count($names)) {
+if (isset($this->namespaces[$vendor])) {
+                    $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
                     $filename = $dir . $baseclass . '.php';
                     if (file_exists($filename)) {
 $this->loaded[$ns] = $dir;
                         return $filename;
                     }
                 }
+
+$vendor .= '\\' . array_shift($names);
             }
 
             //last chanse
             $name = 'litepubl\plugins';
             if (strbegin($ns, $name)) {
-                $dir = litepubl::$paths->plugins . $this->subSpace($ns, $name) . '/';
+                $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
                 $filename = $dir . $baseclass . '.php';
                 if (file_exists($filename)) {
 $this->loaded[$ns] = $dir;
@@ -356,10 +358,8 @@ return false;
 
 $home = $this->app->paths->home;
 if (isset($this->kernel[$ns])) {
-
                 $filename = $home . $this->kernel[$ns];
                 if (file_exists($filename)) {
-$this->loaded[$ns] = $filename;
                     return $filename;
                 }
             }
@@ -371,6 +371,21 @@ $this->loaded[$ns] = $filename;
 $this->loaded[$ns] = $dir;
                     return $filename;
                 }
+            }
+
+$names = explode('\\', $ns);
+$vendor = array_shift($names);
+while(count($names)) {
+if (isset($this->namespaces[$vendor])) {
+                    $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
+                    $filename = $dir . 'kernel.php';
+                    if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
+                        return $filename;
+                    }
+                }
+
+$vendor .= '\\' . array_shift($names);
             }
 
                 $dir = $home . $ns . '/';
@@ -389,23 +404,6 @@ $this->loaded[$ns] = $dir;
 
     public function exists($class) {
         return isset($this->items[$class]);
-    }
-
-    public function getfactory($instance) {
-        foreach ($this->factories as $classname => $factory) {
-            //fix namespace
-            if (!strpos($classname, '\\')) {
-                $classname = 'litepubl\\' . $classname;
-            }
-
-            if (is_a($instance, $classname)) {
-                if (!strpos($factory, '\\')) {
-                    $factory = 'litepubl\\' . $factory;
-                }
-
-                return $this->getinstance($factory);
-            }
-        }
     }
 
     public function rename($oldclass, $newclass) {
@@ -447,4 +445,4 @@ $this->loaded[$ns] = $dir;
         return $result;
     }
 
-} //class
+}

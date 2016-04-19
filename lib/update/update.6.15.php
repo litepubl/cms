@@ -3,10 +3,8 @@ namespace litepubl;<?php
 
 function update615() {
 $cl = litepubl::$classes;
-$cl->namespaces['litepubl\core'] = 'lib/core';
-$cl->namespaces['litepubl\admin'] = 'lib/admin';
-$cl->namespaces['litepubl\xmlrpc'] = 'lib/xmlrpc';
-$cl->kernel['litepubl\core'] = 'kernel.core.php';
+unset($cl->data['factories']);
+$cl->kernel = [];
 
 unset($cl->items['tini2array']);
 unset($cl->items['inifiles']);

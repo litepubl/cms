@@ -37,16 +37,16 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $this->postpropname = 'categories';
         $this->all_loaded = false;
         $this->_idposts = array();
-        $this->createfactory();
+        $this->createFactory();
     }
 
-    protected function createfactory() {
-        $this->factory = litepubl::$classes->getfactory($this);
+    protected function createFactory() {
+        $this->factory = new Factory();
         $this->contents = new Content($this);
         $this->itemsposts = new ItemsPosts();
     }
 
-    public function loadall() {
+    public function loadAll() {
         //prevent double request
         if ($this->all_loaded) return;
         $this->all_loaded = true;

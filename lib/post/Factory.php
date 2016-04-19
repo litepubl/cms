@@ -10,6 +10,7 @@ namespace litepubl\post;
 
 class Factory
 {
+use \litepubl\core\Singleton;
 
 public function __get($name) {
 return $this->{'get' . $name}();
@@ -51,7 +52,7 @@ return $this->{'get' . $name}();
         return Meta::i($id);
     }
 
-public function getmainview() {
+public function getMainView() {
 return \litepubl\view\MainView::i();
 }
 

@@ -120,7 +120,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public function getfactory() {
-        return litepubl::$classes->getfactory($this);
+        return Factory::i();
     }
 
     public function __get($name) {
