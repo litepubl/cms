@@ -1,12 +1,14 @@
 <?php
 
+namespace litepubl\debug;
+
 $dir = dirname(__DIR__) . '/core/';
 foreach (array(
 'Paths.php',
 //'debugproxy.class.php');
-'data.classDataphp',
-'array2prop.class.php',
-
+'Data.php',
+'Array2prop.php',
+'AppTrait.php',
 'Storage.php',
 'StorageInc.php',
 //'storagejson.php',
@@ -27,8 +29,8 @@ foreach (array(
 'Site.php',
 'Router.php',
 'DB.php',
-
+'App.php',
 'litepubl.php',
 ) as $filename) {
-    require _once($dir . $filename);
+    require_once($dir . $filename);
 }

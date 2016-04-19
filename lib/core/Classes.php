@@ -18,15 +18,16 @@ public $classmap;
     public $aliases;
     public $factories;
     public $instances;
+public $loaded;
 
     public static function i() {
-        if (!isset(litepubl::$classes)) {
+        if (!isset(litepubl::$app->classes)) {
             $classname = get_called_class();
-            litepubl::$classes = new $classname();
-            litepubl::$classes->instances[$classname] = litepubl::$classes;
+            litepubl::$app->classes = new $classname();
+            litepubl::$app->classes->instances[$classname] = litepubl::$classes;
         }
 
-        return litepubl::$classes;
+        return litepubl::$app->classes;
     }
 
     protected function create() {
@@ -41,7 +42,8 @@ public $classmap;
         $this->addmap('factories', array());
         $this->instances = array();
 $this->classmap = [];
-        $this->aliases = array();
+        $this->aliases = [];
+$this->loaded = [];
 
         spl_autoload_register(array(
             $this,
@@ -101,7 +103,7 @@ $this->classmap = [];
     }
 
     public function add($class, $filename, $deprecatedPath = false) {
-        if ($incfilename = $this->getpsr4($class)) {
+        if ($incfilename = $this->findPSR4($class)) {
             $this->include($incfilename);
         } else {
             if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
@@ -207,15 +209,15 @@ if (!count($this->classmap)) {
 $this->classmap = include(litepubl::$paths->lib . 'update/classmap.php');
 }
 $classname = $this->baseclass($classname);
-if (isset($this->classmap($classname) {
+if (isset($this->classmap[$classname])) {
 $result = $this->classmap[$classname];
-if (!isset($this->aliases[$classname]) {
+if (!isset($this->aliases[$classname])) {
 class_alias($result, $classname, false);
 $this->aliases[$classname] = $result;
 }
 
 $classname = 'litepubl\\' . $classname;
-if (!isset($this->aliases[$classname]) {
+if (!isset($this->aliases[$classname])) {
 class_alias($result, $classname, false);
 $this->aliases[$classname] = $result;
 }
@@ -227,56 +229,49 @@ return false;
 }
 
     public function autoload($classname) {
+if (isset($this->loaded[$classname])) {
+return;
+}
+
+if (config::$useKernel && !config::$debug &&
+($filename = $this->findKernel($classname))) {
+$this->loaded[$classname] = $filename;
+include $filename;
+if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
+return;
+}
+}
+
+$filename = $this->findFile($classname);
+$this->loaded[$classname] = $filename;
+if ($filename) {
+include $filename;
+}
+}
+
+public function findFile($classname) {
+/*
 if ($newclass = $this->getClassmap($classname)) {
 $classname = $newclass;
 }
+*/
 
-        if ($filename = $this->getpsr4($classname)) {
-            $this->include($filename);
-        } else if (!config::$useKernel || litepubl::$debug || !$this->includeKernel($classname)) {
-            $this->includeClass($classname);
+$result = $this->findPSR4($classname);
+if (!$result) {
+            $result = $this->findClassmap($classname);
         }
+
+return $result;
     }
 
-    public function includeClass($classname) {
+    public function findClassmap($classname) {
         if (isset($this->items[$classname])) {
-            $filename = litepubl::$paths->home . $this->items[$classname];
-            $this->include_file($filename);
-            $this->addAlias($classname, false);
-        } else if (($subclass = $this->baseclass($classname)) && ($subclass != $classname) && isset($this->items[$subclass])) {
-            $filename = litepubl::$paths->home . $this->items[$subclass];
-            $this->include_file($filename);
-            $this->addAlias($classname, $subclass);
-        } else if (!strpos($classname, '\\') && isset($this->items['litepubl\\' . $classname])) {
-            $filename = litepubl::$paths->home . $this->items['litepubl\\' . $classname];
-            $this->include_file($filename);
-            $this->addAlias('litepubl\\' . $classname, $classname);
-        } else {
-            return false;
+            $filename = $this->app->paths->home . $this->items[$classname];
+if (file_exists($filename)) {
+return $filename;
+}
         }
-
-        return $filename;
-    }
-
-    public function includeKernel($classname) {
-        if (isset($this->kernel[$classname])) {
-            $filename = litepubl::$paths->home . $this->kernel[$classname];
-            $this->include_file($filename);
-            $this->addAlias($classname, false);
-        } else if (($subclass = $this->baseclass($classname)) && ($subclass != $classname) && isset($this->kernel[$subclass])) {
-            $filename = litepubl::$paths->home . $this->kernel[$subclass];
-            $this->include_file($filename);
-            $this->addAlias($classname, $subclass);
-        } else if (!strpos($classname, '\\') && isset($this->kernel['litepubl\\' . $classname])) {
-            $filename = litepubl::$paths->home . $this->kernel['litepubl\\' . $classname];
-            $this->include_file($filename);
-            $this->addAlias('litepubl\\' . $classname, $classname);
-        } else {
-            return false;
-        }
-
-        return $filename;
-    }
+   }
 
     public function include ($filename) {
         //if (is_dir($filename)) $this->error($filename);
@@ -289,40 +284,43 @@ $classname = $newclass;
         }
     }
 
-    public function getpsr4($classname) {
-        if ($i = strrpos($classname, '\\')) {
+    public function findPSR4($classname) {
+        if (false === ($i = strrpos($classname, '\\'))) {
+return false;
+}
+
             $ns = substr($classname, 0, $i);
+if ($ns[0] == '\\') {
+$ns = substr($ns, 1);
+}
+
             $baseclass = substr($classname, $i + 1);
+$paths = $this->app->paths;
 
-            if ($ns == 'litepubl') {
-                $filename = litepubl::$paths->lib . $baseclass . '.php';
-                if (file_exists($filename)) {
-                    return $filename;
-                }
+if (isset($this->loaded[$ns])) {
+$filename = $this->loaded[$ns] . $baseclass . '.php';
+if (file_exists($filename)) {
+return $filename;
+}
 
-                return false;
-            }
-
-            if (config::$useKernel && !litepubl::$debug && isset($this->kernel[$ns])) {
-                $filename = litepubl::$paths->home . $this->kernel[$ns];
-                if (file_exists($filename)) {
-                    return $filename;
-                }
-            }
+return false;
+}
 
             if (isset($this->namespaces[$ns])) {
-                $filename = litepubl::$paths->home . sprintf('%s/%s.php', $this->namespaces[$ns], $baseclass);
-
+$dir =$paths->home . $this->namespaces[$ns] . '/';
+                $filename = $dir . $baseclass . '.php';
                 if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
                     return $filename;
                 }
             }
 
             foreach ($this->namespaces as $name => $dir) {
                 if (strbegin($ns, $name)) {
-                    $filename = litepubl::$paths->home . sprintf('%s%s/%s.php', $this->namespaces[$name], $this->subSpace($ns, $name) , $baseclass);
-
+                    $dir = litepubl::$paths->home . $dir . $this->subSpace($ns, $name)  . '/';
+                    $filename = $dir . $baseclass . '.php';
                     if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
                         return $filename;
                     }
                 }
@@ -331,13 +329,56 @@ $classname = $newclass;
             //last chanse
             $name = 'litepubl\plugins';
             if (strbegin($ns, $name)) {
-                $filename = litepubl::$paths->plugins . sprintf('%s/%s.php', $this->subSpace($ns, $name) , $baseclass);
-
+                $dir = litepubl::$paths->plugins . $this->subSpace($ns, $name) . '/';
+                $filename = $dir . $baseclass . '.php';
                 if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
+                    return $filename;
+            }
+        }
+
+        return false;
+    }
+
+    public function findKernel($classname) {
+        if (false === ($i = strrpos($classname, '\\'))) {
+return false;
+}
+
+            $ns = substr($classname, 0, $i);
+if ($ns[0] == '\\') {
+$ns = substr($ns, 1);
+}
+
+if (isset($this->loaded[$ns])) {
+return false;
+}
+
+$home = $this->app->paths->home;
+if (isset($this->kernel[$ns])) {
+
+                $filename = $home . $this->kernel[$ns];
+                if (file_exists($filename)) {
+$this->loaded[$ns] = $filename;
                     return $filename;
                 }
             }
-        }
+
+            if (isset($this->namespaces[$ns])) {
+                $dir = $home . $this->namespaces[$ns] . '/';
+                $filename = $dir . 'kernel.php';
+                if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
+                    return $filename;
+                }
+            }
+
+                $dir = $home . $ns . '/';
+                $filename = $dir . 'kernel.php';
+                if (file_exists($filename)) {
+$this->loaded[$ns] = $dir;
+                    return $filename;
+                }
 
         return false;
     }
@@ -392,7 +433,7 @@ $classname = $newclass;
         $result = false;
         if (isset($this->instances[$name])) {
             $result = $this->instances[$name];
-        } elseif ($filename = $this->getpsr4($name)) {
+        } elseif ($filename = $this->findPSR4($name)) {
             $this->include($filename);
             $result = $this->getinstance($name);
         } elseif (isset($this->classes[$name])) {

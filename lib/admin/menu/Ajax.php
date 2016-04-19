@@ -36,7 +36,7 @@ class Ajax extends \litepubl\admin\posts\Ajax
         if (($id > 0) && !$menus->itemexists($id)) return static ::error403();
 
         $schemes = Schemes::i();
-$schema = Schema::i($schemes->defaults['admin'])
+$schema = Schema::i($schemes->defaults['admin']);
         $theme = $schema->theme;
 $admin = $schema->admintheme;
 

@@ -7,18 +7,18 @@
  */
 
 namespace litepubl\admin\options;
-use litepubl\view\LangMerger;
-use litepubl\view\Lang as Lng;
+use litepubl\view\LangMerger as LngMerger;
 use litepubl\utils\Filer;
 use litepubl\post\Archives;
 
 class Lang extends \litepubl\admin\Menu
 {
+
     public function getcontent() {
-        $merger = LangMerger::i();
+        $merger = LngMerger::i();
         $tabs = $this->newTabs();
-        $lang = Lng::admin('options');
-        $args = mew Args();
+        $lang = Lang::admin('options');
+$args = $this->newArgs();
 $theme = $this->theme;
 
         foreach ($merger->items as $section => $items) {
@@ -53,7 +53,7 @@ $theme = $this->theme;
             $archives->PostsChanged();
         }
 
-        $merger = LangMerger::i();
+        $merger = LngMerger::i();
         $merger->lock();
         //$merger->items = array();
         //$merger->install();

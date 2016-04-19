@@ -149,7 +149,7 @@ return [
 
 'tadminoptions' => 'litepubl\admin\options\Options',
 'adminhomeoptions' => 'litepubl\admin\options\Home',
-'tadminlocalmerger' => 'litepubl\admin\options\Lang',
+'tadminlocalmerger' => 'litepubl\admin\options\LangMerger',
 'tadminredirector' => 'litepubl\admin\options\Redirector',
 'adminsecure' => 'litepubl\admin\options\Secure',
 'adminthemeparser' => 'litepubl\admin\options\ThemeParser',

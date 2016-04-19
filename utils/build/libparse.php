@@ -28,8 +28,7 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
-if (strend($filename, 'php')) {
-$s = replaceIfReturn($s);
+if (false && strend($filename, 'php')) {
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
@@ -60,18 +59,6 @@ $s = trim($s);
 
 $linescount += substr_count($s, "\n");
 file_put_contents($filename, $s);
-}
-
-function replaceIfReturn($str) {
-$a = explode("\n", $str);
-foreach ($a as $i => $s) {
-if (strpos($s, ' if (') && ($j = strpos($s, ' return'))) {
-$s = substr($s, 0, $j) . " {\n" . substr($s, $j) . "\n}\n\n";
-$a[$i] = $s;
-}
-}
-
-return implode("\n", $a);
 }
 
 function parsedir($dir) {

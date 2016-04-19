@@ -10,7 +10,7 @@ namespace litepubl\pages;
 use litepubl\view\Filter;
 use litepubl\view\Schema;
 
-class tmenu extends \litepubl\core\Item implements \litepubl\theme\ViewInterface
+class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
     public $formresult;
     public static $ownerprops = array(

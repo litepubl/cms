@@ -17,7 +17,7 @@ use litepubl\view\Vars;
 use litepubl\view\Admin;
 use litepubl\view\MainView;
 use litepubl\admin\GetSchema;
-use litepubl\\\adminPerms;
+use litepubl\admin\GetPerm;
 
 class Ajax extends \litepubl\core\Events
  {

@@ -28,7 +28,7 @@ class Menus extends \litepubl\core\Items
         return litepubl::$paths->data . 'menus' . DIRECTORY_SEPARATOR;
     }
 
-    public function add(tmenu $item) {
+    public function add(Menu $item) {
         if ($item instanceof tfakemenu) return $this->addfakemenu($item);
         //fix null fields
         foreach ($item->get_owner_props() as $prop) {
@@ -86,7 +86,7 @@ $item->data['idview'] = $schemes->defaults['menu'];
         return $this->addfakemenu($fake);
     }
 
-    public function addfakemenu(tmenu $menu) {
+    public function addfakemenu(Menu $menu) {
         $item = array(
             'id' => ++$this->autoid,
             'idurl' => 0,
@@ -128,7 +128,7 @@ $item->data['idview'] = $schemes->defaults['menu'];
         return $this->autoid;
     }
 
-    public function edit(tmenu $item) {
+    public function edit(Menu $item) {
         if (!(($item instanceof thomepage) || ($item instanceof tfakemenu))) {
             $linkgen = LinkGenerator::i();
             $linkgen->editurl($item, 'menu');

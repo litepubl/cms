@@ -41,7 +41,7 @@ class GetPerm
 $admin = Admin::admin();
 $tml =$admin->templates['checkbox.label'];
 $ulist = new UList($admin);
-$ulist->value 
+$ulist->value = $ulist->link;
 
         $args = new targs();
         foreach ($groups->items as $id => $item) {
@@ -49,7 +49,7 @@ $args->add($item);
 $args->id = $id;
 $args->name = 'idgroup';
             $args->checked = in_array($id, $idgroups);
-ulist->add(0, strtr($tml, $args->data));
+$ulist->add(0, strtr($tml, $args->data));
         }
 
         return $ulist->getresult();

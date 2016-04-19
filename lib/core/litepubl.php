@@ -30,4 +30,4 @@ static::$app->run();
 
 }
 
-litepubl::init();
+//litepubl::init();

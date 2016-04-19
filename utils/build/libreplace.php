@@ -8,11 +8,13 @@ $s = strtr([
 'tview::' => 'Schema::',
 '$views' => '$schemes',
 '$view' => '$schema',
+'litepubl::$app' => 'litepubl@app',
+'turlmap::unsub', 'litepubl::$router->unbind',
 ]);
 
 $s = strtr([
 'litepubl::$' => ' $this->getApp()->',
-'turlmap::unsub', 'litepubl::$router->unbind',
+'litepubl@app' => 'litepubl::$app',
 'tlocal', 'Lang',
 'new targs' => 'new Args',
 'targs::i()' => 'new Args()',
@@ -25,6 +27,7 @@ $s = strtr([
 ]);
 
 $s = renameFunctions($s);
+$s = replaceIfReturn($s);
 $s = camelCase($s);
 return $s;
 }
@@ -53,6 +56,20 @@ $s = strtr($s, [
 ]);
 
 return $s;
+}
+
+function replaceIfReturn($str) {
+$a = explode("\n", $str);
+foreach ($a as $i => $s) {
+if (strpos($s, ' if (') && 
+(($j = strpos($s, ' return'))) || 
+($j = strpos($s, ' continue'))) {
+$s = substr($s, 0, $j) . " {\n" . substr($s, $j) . "\n}\n\n";
+$a[$i] = $s;
+}
+}
+
+return implode("\n", $a);
 }
 
 function camelCase($s) {

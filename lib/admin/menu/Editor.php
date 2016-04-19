@@ -98,7 +98,6 @@ $admin = $this->admintheme;
                 $args->formtitle = $lang->edit;
                 $tml = $tabs->get() . $ajaxeditor->gettext($id == 0 ? '' : $menuitem->rawcontent, $this->admintheme);
                 return $admin->form($tml, $args);
-            }
     }
 
     public function processform() {
@@ -138,7 +137,7 @@ $admin = $this->admintheme;
         }
 
 $admin = $this->admintheme;
-        return $admintheme->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title));
+        return $admintheme->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title)));
     }
 
 }

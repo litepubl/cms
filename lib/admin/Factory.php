@@ -69,7 +69,7 @@ return $admin->geterr($lang->notfound);
         if (isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1)) {
             $owner->delete($id);
             return $admin->success($lang->successdeleted);
-        } else {
+}
 
             $args = new Args();
             $args->id = $id;

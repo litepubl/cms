@@ -9,6 +9,7 @@
 namespace litepubl\admin;
 use litepubl\view\Lang;
 use litepubl\core\UserGroups;
+use litepubl\pages\Menu as StdMenu;
 
 class Menus extends \litepubl\pages\Menus
  {
@@ -76,7 +77,7 @@ class Menus extends \litepubl\pages\Menus
         return parent::additem($item);
     }
 
-    public function addfakemenu(tmenu $menu) {
+    public function addfakemenu(StdMenu $menu) {
         $this->lock();
         $id = parent::addfakemenu($menu);
         if (empty($this->items[$id]['group'])) {
