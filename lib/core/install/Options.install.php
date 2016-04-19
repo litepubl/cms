@@ -7,12 +7,26 @@
  */
 
 namespace litepubl\core;
+use litepubl\config;
 
 /* to prevent recurse call */
-function installoptions($email, $language) {
+function installOptions($email, $language) {
+$app = litepubl::$app;
     $options = Options::i();
     $options->lock();
     $options->solt = md5uniq();
+        if (config::$db) {
+//set empty dbconfig to options
+    $options->data['dbconfig'] = array(
+        'driver' => 'mysqli',
+        'host' => 'localhost',
+        'port' => 0,
+        'dbname' => '',
+        'login' => '',
+        'password' => '',
+        'prefix' => config::$db['prefix'],
+    );
+ } else {
     $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
     $options->data['dbconfig'] = array(
         'driver' => 'mysqli',
@@ -25,15 +39,17 @@ function installoptions($email, $language) {
     );
 
     $options->setdbpassword($_REQUEST['dbpassword']);
+}
+
     try {
-        litepubl::$db = new tdatabase();
+        $app->db = new DB();
     }
     catch(Exception $e) {
         die($e->GetMessage());
     }
 
-    if (litepubl::$debug) {
-        $db = litepubl::$db;
+    if (config::$debug) {
+        $db = $app->db;
         $list = $db->res2array($db->query("show tables from " . $options->dbconfig['dbname']));
         foreach ($list as $row) {
             $table = $row[0];

@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\core;
+use litepubl\config;
 
 class DB
 {
@@ -34,7 +35,7 @@ class DB
     }
 
     public function getconfig() {
-        $this->debug = & litepubl::$debug;
+        $this->debug = & config::$debug;
         if (config::$db) {
             return config::$db;
         }

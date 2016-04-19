@@ -7,7 +7,18 @@
  */
 
 namespace litepubl\install;
+use litepubl\core;
 use litepubl\core\litepubl;
+use litepubl\core\Options;
+use litepubl\core\Router;
+use litepubl\post\Posts;
+use litepubl\post\Post;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+use litepubl\view\Js;
+use litepubl\view\Css;
+use litepubl\xmlrpc;
+use litepubl\core\Plugins;
 
 class Installer
 {
@@ -142,10 +153,69 @@ $this->CreateFirstPost();
     public function firstStep() {
         $this->checkFolders();
 
-        require_once ($this->app->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'classes.install.php');
-        parse_classes_ini(isset($_REQUEST['classes']) ? $_REQUEST['classes'] : false);
-        return install_engine($_REQUEST['email'], $this->language);
+        return $this->installEngine($_REQUEST['email'], $this->language);
     }
+
+public function installEngine($email, $language) {
+    //forward create folders
+    @mkdir($this->app->paths->data . 'themes', 0777);
+    @chmod($this->app->paths->data . 'themes', 0777);
+
+    $options = Options::i();
+    $options->lock();
+    require_once (dirname(__file__) . DIRECTORY_SEPARATOR . 'options.class.install.php');
+    $password = core\installOptions($email, $language);
+    $this->installClasses();
+    $options->unlock();
+    return $password;
+}
+
+public function installClasses() {
+$classes = $this->app->classes;
+    $this->app->router = Router::i();
+    $posts = Posts::i();
+    $posts->lock();
+    $js = Js::i();
+    $js->lock();
+
+    $css = Css::i();
+    $css->lock();
+
+    $xmlrpc = xmlrpc\Server::i();
+    $xmlrpc->lock();
+
+    Theme::$defaultargs = array();
+    $theme = Theme::getinstance('default');
+
+$items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
+foreach ($items as $classname) {
+$classname = trim($clssname);
+if (!$classname || ($classname[0] == ';')) {
+continue;
+}
+
+$obj = $classes->getInstance($classname);
+            if (method_exists($obj, 'install')) {
+                $obj->install();
+            }
+        }
+
+    //default installed plugins
+    $plugins = Plugins::i();
+    $plugins->lock();
+    $plugins->add('likebuttons');
+    $plugins->add('oldestposts');
+    $plugins->add('photoswipe');
+    $plugins->add('photoswipe-thumbnail');
+    $plugins->add('bootstrap-theme');
+    $plugins->unlock();
+
+    $xmlrpc->unlock();
+    $css->unlock();
+    $js->unlock();
+    $posts->unlock();
+    litepubl::$urlmap->unlock();
+}
 
     public function run() {
         $this->defineMode();

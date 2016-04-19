@@ -8,22 +8,6 @@
 
 namespace litepubl\core;
 
-function install_engine($email, $language) {
-    //forward create folders
-    @mkdir(litepubl::$paths->data . 'themes', 0777);
-    @chmod(litepubl::$paths->data . 'themes', 0777);
-
-    $options = toptions::i();
-    $options->lock();
-    require_once (dirname(__file__) . DIRECTORY_SEPARATOR . 'options.class.install.php');
-    $password = installoptions($email, $language);
-    //require_once(dirname(__file__) . DIRECTORY_SEPARATOR. 'local.class.install.php');
-    //tlocalInstall(getinstance('tlocal'));
-    installClasses();
-    $options->unlock();
-    return $password;
-}
-
 function parse_classes_ini($inifile) {
     $install_dir = litepubl::$paths->lib . 'install/ini/';
     if (!$inifile) {
