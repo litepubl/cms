@@ -8,7 +8,7 @@
 
 namespace litepubl\admin\users;
 use litepubl\perms\Perms as PermItems;
-use litepubl\perms\Perm;
+use litepubl\perms\Perm as PerItem;
 use litepubl\admin\Link;
 
 class Perms extends \litepubl\admin\Menu
@@ -73,7 +73,7 @@ $class = str_replace('-', '\\', $class);
                     return $this->notfound();
                 }
 
-                $perm = Perm::i($id);
+                $perm = PerItem::i($id);
                 return $perm->admin->getcont();
 
             case 'delete':
@@ -102,7 +102,7 @@ $class = str_replace('-', '\\', $class);
                     return $this->notfound();
                 }
 
-                $perm = Perm::i($id);
+                $perm = PerItem::i($id);
                 return $perm->admin->processform();
 
             case 'add':

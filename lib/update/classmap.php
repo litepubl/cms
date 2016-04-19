@@ -44,6 +44,7 @@ return [
 'tcontentfilter' => 'litepubl\view\Filter',
 'tjsmerger' => 'litepubl\view\Js',
 'tcssmerger' => 'litepubl\view\Css',
+'tadminjsmerger' => 'litepubl\admin\Js',
 
 //posts
 'tpost' => 'litepubl\post\Post',

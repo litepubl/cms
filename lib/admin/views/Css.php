@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\admin;
+namespace litepubl\admin\views;
 
 class Css extends Js
 {
