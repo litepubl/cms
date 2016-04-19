@@ -6,28 +6,34 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\views;
+use litepubl\view\Schemes as SchemaItems;
+use litepubl\view\Schema;
+use litepubl\post\Posts;
+use litepubl\pages\Menus as StdMenus;
+use litepubl\pages\Menu as StdMenu;
 use litepubl\admin\GetSchema;
 
-class tadminviewsgroup extends tadminmenu {
+class Group extends \litepubl\admin\Menu
+{
 
     public function getcontent() {
-        $views = tviews::i();
+        $schemes = SchemaItems::i();
 $theme = $this->theme;
 $admin = $this->admin;
-        $lang = tlocal::i('views');
-        $args = new targs();
+        $lang = tlocal::i('schemes');
+        $args = $this->newArgs();
 
         $args->formtitle = $lang->viewposts;
-        $result = $admin->form(GetSchema::combo($views->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
+        $result = $admin->form(GetSchema::combo($schemes->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
 
         $args->formtitle = $lang->viewmenus;
-        $result.= $admin->form(GetSchema::combo($views->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
+        $result.= $admin->form(GetSchema::combo($schemes->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
 
         $args->formtitle = $lang->themeviews;
-        $view = tview::i();
+        $schema = Schema::i();
 
-        $dirlist = tfiler::getdir(litepubl::$paths->themes);
+        $dirlist = Filer::getdir(litepubl::$paths->themes);
         sort($dirlist);
         $list = array();
         foreach ($dirlist as $dir) {
@@ -37,7 +43,7 @@ $list[$dir] = $dir;
         }
 
         $result.= $admin->form(
-$theme->getinput('combo', 'themeview', $theme->comboItems($list, $view->themename) , $lang->themename) .
+$theme->getinput('combo', 'themeview', $theme->comboItems($list, $schema->themename) , $lang->themename) .
  '<input type="hidden" name="action" value="themes" />', $args);
 
 return $result;
@@ -46,7 +52,7 @@ return $result;
     public function processform() {
         switch ($_POST['action']) {
             case 'posts':
-                $posts = tposts::i();
+                $posts = Posts::i();
                 $idview = (int)$_POST['postview'];
                 $posts->db->update("idview = '$idview'", 'id > 0');
                 break;
@@ -54,9 +60,9 @@ return $result;
 
             case 'menus':
                 $idview = (int)$_POST['menuview'];
-                $menus = tmenus::i();
+                $menus = StdMenus::i();
                 foreach ($menus->items as $id => $item) {
-                    $menu = tmenu::i($id);
+                    $menu = StdMenu::i($id);
                     $menu->idview = $idview;
                     $menu->save();
                 }
@@ -65,16 +71,16 @@ return $result;
 
             case 'themes':
                 $themename = $_POST['themeview'];
-                $views = tviews::i();
-                $views->lock();
-                foreach ($views->items as $id => $item) {
-                    $view = tview::i($id);
-                    $view->themename = $themename;
-                    $view->save();
+                $schemes = SchemaItems::i();
+                $schemes->lock();
+                foreach ($schemes->items as $id => $item) {
+                    $schema = Schema::i($id);
+                    $schema->themename = $themename;
+                    $schema->save();
                 }
-                $views->unlock();
+                $schemes->unlock();
                 break;
         }
     }
 
-} //class
+}

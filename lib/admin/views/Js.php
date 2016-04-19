@@ -17,13 +17,13 @@ class Js extends \litepubl\admin\Menu
 
     public function getcontent() {
         $merger = $this->getmerger();
-        $tabs = new tabs($this->admintheme);
-        $html = $this->html;
+        $tabs = $this->newTabs();
+$admin = $this->admintheme;
         $lang = tlocal::i('views');
-        $args = targs::i();
+        $args = $this->newArgs();
         $args->formtitle = $this->title;
         foreach ($merger->items as $section => $items) {
-            $tab = new tabs($this->admintheme);
+            $tab = $this->newTabs();
             $tab->add($lang->files, $html->getinput('editor', $section . '_files', tadminhtml::specchars(implode("\n", $items['files'])) , $lang->files));
             foreach ($items['texts'] as $key => $text) {
                 $tab->add($key, $html->getinput('editor', $section . '_text_' . $key, tadminhtml::specchars($text) , $key));
@@ -32,7 +32,7 @@ class Js extends \litepubl\admin\Menu
             $tabs->add($section, $tab->get());
         }
 
-        return $html->adminform($tabs->get() , $args);
+        return $admin->form($tabs->get() , $args);
     }
 
     public function processform() {
@@ -50,4 +50,4 @@ class Js extends \litepubl\admin\Menu
         $merger->unlock();
     }
 
-} //class
+}

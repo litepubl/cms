@@ -8,7 +8,6 @@
 
 namespace litepubl\admin\widget;
 use litepubl\widget\Widgets as WidgetItems;
-use litepubl\widget\Widget;
 use litepubl\widget\Sidebars;
 use litepubl\admin\GetSchema;
 use litepubl\admin\Link;

@@ -45,6 +45,11 @@ return [
 'tjsmerger' => 'litepubl\view\Js',
 'tcssmerger' => 'litepubl\view\Css',
 'tadminjsmerger' => 'litepubl\admin\Js',
+'tadminviewsgroup' => 'litepubl\admin\views\Group',
+'tadminheaders' => 'litepubl\admin\views\Head',
+'tadminviewsspec' => 'litepubl\admin\views\Spec',
+
+
 
 //posts
 'tpost' => 'litepubl\post\Post',

@@ -6,29 +6,27 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\admin\views;
+use litepubl\view\Schemes as SchemaItems;
 use litepubl\admin\GetSchema;
 
-class tadminviewsspec extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Spec extends \litepubl\admin\Menu
+{
 
     public static function getspecclasses() {
         return array(
-            'thomepage',
-            'tarchives',
-            'tnotfound404',
-            'tsitemap'
+            'litepubl\pages\Home',
+            'litepubl\post\Archives',
+            'litepubl\pages\Notfound404',
+            'litepubl\pages\Sitemap'
         );
     }
 
     public function getcontent() {
         $result = '';
-        $views = tviews::i();
+        $schemes = SchemaItems::i();
         $theme = $this->theme;
-        $lang = tlocal::i('views');
+        $lang = tlocal::i('schemes');
         $args = new Args();
 
         $tabs = $this->newTabs();
@@ -61,10 +59,10 @@ $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data
     }
 
     public function processform() {
-
         foreach (static ::getspecclasses() as $classname) {
             $obj = getinstance($classname);
             $obj->lock();
+$classname = str_replace('\\', '-', $classname);
             $obj->setidview($_POST["idview-$classname"]);
             if (isset($obj->data['keywords'])) $obj->keywords = $_POST["keywords-$classname"];
             if (isset($obj->data['description '])) $obj->description = $_POST["description-$classname"];
@@ -73,4 +71,4 @@ $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data
         }
     }
 
-} //class
+}

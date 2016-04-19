@@ -12,7 +12,6 @@ use litepubl\admin\GetSchema;
 class Schemes extends \litepubl\admin\Menu
 {
 
-
     public static function replacemenu($src, $dst) {
         $views = tviews::i();
         foreach ($views->items as & $viewitem) {

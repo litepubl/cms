@@ -20,7 +20,7 @@ use \litepubl\admin\Params;
         $this->args->sidebar = $this->theme->comboItems(Widgets::getSidebarNames($schema) , $this->widget->sidebar);
         $this->args->order = $this->theme->comboItems(range(-1, 10) , $this->widget->order + 1);
         $this->args->ajax = $this->widget->ajax;
-        return parent::getForm() .
+        return parent::getForm()
  . '[combo=sidebar]
  [combo=order]
  [checkbox=ajax]';
