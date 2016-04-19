@@ -13,7 +13,7 @@ use litepubl\view\Args;
 use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\post\Post;
-use litepubl\utils\Mailer
+use litepubl\utils\Mailer;
 use litepubl\core\Array2prop;
 
 class tpingbacks extends \litepubl\core\Items

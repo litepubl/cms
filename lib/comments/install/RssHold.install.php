@@ -11,7 +11,7 @@ namespace litepubl\comments;
 function RssHoldInstall($self) {
     $self->idurl = litepubl::$urlmap->add($self->url, get_class($self) , null, 'usernormal');
 
-    $self->template = file_get_contents(dirname(dirname(__DIR__) . '/install/templates/RssHold.tml');
+    $self->template = file_get_contents(dirname(dirname(__DIR__)) . '/install/templates/RssHold.tml');
     $self->save();
 
     Comments::i()->changed = $self->commentschanged;

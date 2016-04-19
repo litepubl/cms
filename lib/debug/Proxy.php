@@ -29,7 +29,7 @@ $this->data = & $obj->data;
 $this->items = & $obj->items;
 }
 
-        if ($obj instanceof \litepubl\theme\Base) 
+        if ($obj instanceof \litepubl\view\Base) {
 $this->templates = & $obj->templates;
 }
     }

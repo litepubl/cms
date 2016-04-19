@@ -8,7 +8,7 @@
 
 namespace litepubl\core;
 
-class Poll extends Data
+class Pool extends Data
 {
     protected $perpool;
     protected $pool;

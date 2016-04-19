@@ -20,7 +20,7 @@ class Comments extends \litepubl\core\Items
 
     public static function i($pid = 0) {
         $result = getinstance(get_called_class());
-        if ($pid) 
+        if ($pid) {
 $result->pid = $pid;
 }
         return $result;

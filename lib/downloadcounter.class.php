@@ -8,7 +8,8 @@
 
 namespace litepubl;
 
-class tdownloadcounter extends titems {
+class tdownloadcounter extends \litepubl\core\Items
+{
 
     protected function create() {
         parent::create();

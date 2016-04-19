@@ -9,7 +9,9 @@ if ($name == '.' || $name == '..') continue;
 
 $filename = $dir .'/' . $name;
 if (is_dir($filename)) {
+if ($name != 'include') {
 includeDir($filename);
+}
 } elseif ('.php' == substr($name, -4)) {
 echo "$name<br>";
 include_once $filename;
