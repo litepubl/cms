@@ -11,7 +11,7 @@ use litepubl\view\LangMerger as LngMerger;
 use litepubl\utils\Filer;
 use litepubl\post\Archives;
 
-class Lang extends \litepubl\admin\Menu
+class LangMerger extends \litepubl\admin\Menu
 {
 
     public function getcontent() {

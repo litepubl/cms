@@ -41,11 +41,11 @@ $admin = $this->admintheme;
                     $form->submit = 'manualupdate';
                     $result.= $form->get();
                 }
-                break;
+
 return $result;
     }
 
-    private function doupdate($req) {
+    private function doUpdate($req) {
         $admin = $this->admintheme;
 $lang = Lang::i();
         $updater = Updater::i();

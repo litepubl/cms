@@ -81,7 +81,7 @@ class Subscribers extends Form
         $lang = tlocal::admin();
         $args = new targs();
         if ($this->newreg) {
-$result.= $admin->h(/$lang->newreg);
+$result.= $admin->h($lang->newreg);
 }
 
         $subscribers = SubscriberItems::i();

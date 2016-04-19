@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl\admin/pages;
+namespace litepubl\admin\pages;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;
@@ -38,11 +38,11 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     }
 
 public function gettheme() {
-return Schema::getSchema($this->theme;
+return Schema::getSchema($this)->theme;
 }
 
 public function getadmintheme() {
-return Schema::getSchema($this->admintheme;
+return Schema::getSchema($this)->admintheme;
 }
 
     public function request($arg) {

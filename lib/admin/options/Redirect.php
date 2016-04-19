@@ -14,10 +14,11 @@ use litepubl\admin\Link;
 
 class Redirector extends \litepubl\admin\Menu
 {
+
     public function getcontent() {
         $redir = Redir::i();
         $lang = $this->lang;
-        $args = new Args::i();
+        $args = new Args();
         $from = $this->getparam('from', '');
         if (isset($redir->items[$from])) {
             $args->from = $from;

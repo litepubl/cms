@@ -10,7 +10,6 @@ namespace litepubl\admin\options;
 use litepubl\view\Parser;
 use litepubl\view\AdminParser;
 use litepubl\view\Lang;
-use litepubl\view\Lang;
 use litepubl\view\Base;
 
 class ThemeParser extends \litepubl\admin\Menu

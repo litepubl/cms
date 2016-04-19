@@ -99,7 +99,7 @@ $lang = Lang::admin('options');
 
             $options->changepassword($newpassword);
             $options->logout();
-                return $admin->success($lang->passwordchanged;
+                return $admin->success($lang->passwordchanged);
         }
 
         $options->echoexception = isset($echoexception);
