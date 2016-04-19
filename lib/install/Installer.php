@@ -194,7 +194,7 @@ if (!$classname || ($classname[0] == ';')) {
 continue;
 }
 
-$obj = $classes->getInstance($classname);
+$obj = $classes->getInstance('litepubl\\' . $classname);
             if (method_exists($obj, 'install')) {
                 $obj->install();
             }

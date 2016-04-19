@@ -86,7 +86,7 @@ $app = litepubl::$app;
     $options->comments_invert_order = false;
     $options->commentspool = false;
 
-    $versions = strtoarray(file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'versions.txt'));
+    $versions = strtoarray(file_get_contents(dirname(dirname(__DIR__)) . '/install/versions.txt'));
     $options->version = $versions[0];
     $options->echoexception = true;
     $options->parsepost = true;
