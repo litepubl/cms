@@ -12,7 +12,6 @@ class Classes extends Items
 {
     public $namespaces;
     public $kernel;
-    public $classes;
     public $remap;
 public $classmap;
     public $aliases;
@@ -36,7 +35,6 @@ public $loaded;
         $this->addevents('onnewitem', 'onrename');
         $this->addmap('namespaces', ['litepubl' => 'lib']);
         $this->addmap('kernel', array());
-        $this->addmap('classes', array());
         $this->addmap('remap', array());
         $this->instances = array();
 $this->classmap = [];
@@ -84,20 +82,6 @@ $this->loaded = [];
             $id
         ));
         return new $class();
-    }
-
-    public function __get($name) {
-        if (isset($this->classes[$name])) {
-            $result = $this->getinstance($this->classes[$name]);
-        } else if (isset($this->items[$name])) {
-            $result = $this->getinstance($name);
-        } else if (isset($this->items['t' . $class])) {
-            $result = $this->getinstance('t' . $class);
-        } else {
-            $result = parent::__get($name);
-        }
-
-        return $result;
     }
 
     public function add($class, $filename, $deprecatedPath = false) {
@@ -438,8 +422,6 @@ $this->loaded[$ns] = $dir;
             $result = $this->getinstance($this->classes[$name]);
         } elseif (isset($this->items[$name])) {
             $result = $this->getinstance($name);
-        } elseif (isset($this->items['t' . $class])) {
-            $result = $this->getinstance('t' . $class);
         }
 
         return $result;

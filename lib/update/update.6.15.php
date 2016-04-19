@@ -4,6 +4,7 @@ namespace litepubl;<?php
 function update615() {
 $cl = litepubl::$classes;
 unset($cl->data['factories']);
+unset($cl->data['classes']);
 $cl->kernel = [];
 
 unset($cl->items['tini2array']);
