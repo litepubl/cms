@@ -6,15 +6,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\blackip;
 
-class tblackip extends tplugin {
+class BlackIP extends \litepubl\core\Plugin
+ {
     public $ip;
     public $words;
-
-    public static function i() {
-        return getinstance(__class__);
-    }
 
     protected function create() {
         parent::create();
@@ -33,4 +30,4 @@ class tblackip extends tplugin {
         }
     }
 
-} //class
+}

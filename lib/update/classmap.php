@@ -237,4 +237,9 @@ return [
 'tftpsocketfiler' => 'litepubl\updater\FtpSocket',
 'tlocalfiler' => 'litepubl\updater\Local',
 'tssh2filer' => 'litepubl\updater\Ssh2',
+
+//plugins
+'tblackip' => 'litepubl\plugins\blackip\BlackIP',
+'tadminblackip' => 'litepubl\plugins\blackip\AdminBlackIP',
+
 ];

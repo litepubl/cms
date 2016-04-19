@@ -6,34 +6,32 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\blackip;
+use litepubl\admin\Tabs;
 
-class tadminblackip {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class AdminBlackIP extends \litepubl\admin\Simple
+{
+use \litepubl\core\Singleton;
 
     public function getcontent() {
-        $plugin = tblackip::i();
-        $lang = tplugins::getlangabout('black-ip');
-        $args = new targs();
+        $plugin = BlackIP::i();
+        $lang = $this->getLangAbbout();
+        $args = $this->args;
         $args->ip = implode("\n", $plugin->ip);
         $args->words = implode("\n", $plugin->words);
         $args->ipstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
         $args->wordstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
 
-        $tabs = new tabs();
+        $tabs = new tabs($this->admin);
         $tabs->add($lang->wordtitle, '[combo=wordstatus] [editor=words]');
         $tabs->add('IP', '[combo=ipstatus] [editor=ip]');
 
         $args->formtitle = $lang->formtitle;
-        $html = tadminhtml::i();
-        return $html->adminform($tabs->get() , $args);
+        return $this->admin->form($tabs->get() , $args);
     }
 
     public function processform() {
-        $plugin = tblackip::i();
+        $plugin = BlackIP::i();
         $plugin->ipstatus = $_POST['ipstatus'];
         $plugin->wordstatus = $_POST['wordstatus'];
         $ip = str_replace(array(
@@ -51,4 +49,4 @@ class tadminblackip {
         $plugin->save();
     }
 
-} //class
+}

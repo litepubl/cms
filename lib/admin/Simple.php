@@ -4,6 +4,7 @@ namespace litepubl\admin;
 use litepubl\view\MainView;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class Simple implements AdminInterface
 {
@@ -18,6 +19,12 @@ $this->admin = $schema->admintheme;
 $this->theme = $schema->theme;
 $this->lang = Lang::admin();
 $this->args = new Args();
+}
+
+publicfunction getLangAbout() {
+        $reflector = new \ReflectionClass($this);
+        $filename = $reflector->getFileName();
+return Plugins::getlangabout(basename(dirname($filename)));
 }
 
     public function getcontent() {
