@@ -6,18 +6,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\install;
+use litepubl\core\litepubl;
 
-class tinstaller extends tdata {
+class Installer
+{
+public $app;
     public $language;
     public $mode;
     public $lite;
     public $resulttype;
     public $installed;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
+public function __construct() {
+$this->app = litepubl::$app;
+}
 
     public function DefineMode() {
         $this->mode = 'form';
@@ -37,41 +40,54 @@ class tinstaller extends tdata {
         }
 
         if (!empty($_GET['lang'])) {
-            if ($this->langexists($_GET['lang'])) $this->language = $_GET['lang'];
+            if ($this->langexists($_GET['lang'])) {
+$this->language = $_GET['lang'];
+}
         }
 
-        if (!empty($_GET['mode'])) $this->mode = $_GET['mode'];
-        if (!empty($_GET['lite'])) $this->lite = $_GET['lite'] == 1;
-        if (!empty($_GET['resulttype'])) $this->resulttype = $_GET['resulttype'];
+        if (!empty($_GET['mode'])) {
+$this->mode = $_GET['mode'];
+}
+
+        if (!empty($_GET['lite'])) {
+$this->lite = $_GET['lite'] == 1;
+}
+
+        if (!empty($_GET['resulttype'])) {
+$this->resulttype = $_GET['resulttype'];
+}
     }
 
-    public function AutoInstall() {
-        $this->CanInstall();
-        $password = $this->FirstStep();
+    public function autoInstall() {
+        $this->canInstall();
+        $password = $this->firstStep();
 
-        $this->ProcessForm($_GET['email'], $_GET['name'], $_GET['description'], isset($_GET['checkrewrite']));
+        $this->processForm($_GET['email'], $_GET['name'], $_GET['description'], isset($_GET['checkrewrite']));
 
-        $this->CreateDefaultItems($password);
+        $this->createDefaultItems($password);
         if ($this->mode == 'remote') {
-            $this->OutputResult($password);
+            $this->outputResult($password);
         }
     }
 
-    public function OutputResult($password) {
-        if ($this->mode != 'remote') return;
-        litepubl::$options->savemodified();
+    public function outputResult($password) {
+        if ($this->mode != 'remote') {
+return;
+}
+
+        $this->app->dataStorage->saveModified();
 
         $result = array(
-            'url' => litepubl::$site->url,
-            'email' => litepubl::$options->email,
+            'url' => $this->app->site->url,
+            'email' => $this->app->options->email,
             'password' => $password,
-            'name' => litepubl::$site->name,
-            'description' => litepubl::$site->description
+            'name' => $this->app->site->name,
+            'description' => $this->app->site->description
         );
 
         switch ($this->resulttype) {
             case 'json':
-                $s = json_encode($result);
+                $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                 header('Content-Type: text/javascript; charset=utf-8');
                 BREAK;
 
@@ -83,7 +99,8 @@ class tinstaller extends tdata {
 
 
             case 'xmlrpc':
-                $r = new IXR_Value($result);
+include ($this->app->paths->lib . 'xmlrpc/IXR.php');
+                $r = new \litepubl\xmlrpc\IXR_Value($result);
                 $s = '<?xml version="1.0" encoding="utf-8" ?>
       <methodResponse><params><param><value>' . $r->getXml() . '</value></param></params></methodResponse>';
 
@@ -104,85 +121,66 @@ class tinstaller extends tdata {
         exit();
     }
 
-    public function CreateDefaultItems($password) {
+    public function createDefaultItems($password) {
         if ($this->mode != 'remote') {
             $this->congratulation($password);
         }
 
-        if (!$this->lite) $this->CreateFirstPost();
+        if (!$this->lite) {
+$this->CreateFirstPost();
+}
 
-        $this->SendEmail($password);
+        $this->sendEmail($password);
         return $password;
     }
 
-    public function CanInstall() {
-        $this->CheckSystem();
-        $this->CheckFolders();
+    public function canInstall() {
+        $this->checkSystem();
+        $this->checkFolders();
     }
 
-    public function FirstStep() {
-        $this->CheckFolders();
-        if (!defined('dbversion')) {
-            if (isset($_REQUEST['dbversion'])) {
-                define('dbversion', $_REQUEST['dbversion'] == '1');
-            } else {
-                define('dbversion', true);
-            }
-        }
+    public function firstStep() {
+        $this->checkFolders();
 
-        require_once (litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'classes.install.php');
+        require_once ($this->app->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'classes.install.php');
         parse_classes_ini(isset($_REQUEST['classes']) ? $_REQUEST['classes'] : false);
         return install_engine($_REQUEST['email'], $this->language);
     }
 
-    public function install() {
-        if (get_magic_quotes_gpc()) {
-            if (isset($_POST) && (count($_POST) > 0)) {
-                foreach ($_POST as $name => $value) {
-                    $_POST[$name] = stripslashes($_POST[$name]);
-                }
-            }
-
-            if (isset($_GET) && (count($_GET) > 0)) {
-                foreach ($_GET as $name => $value) {
-                    $_GET[$name] = stripslashes($_GET[$name]);
-                }
-            }
-
-        }
-
-        $this->DefineMode();
-        if ($this->mode != 'form') return $this->AutoInstall();
+    public function run() {
+        $this->defineMode();
+        if ($this->mode != 'form') {
+return $this->autoInstall();
+}
 
         if (!isset($_POST) || (count($_POST) <= 1)) {
-            $this->CanInstall();
+            $this->canInstall();
             return $this->wizardform();
         }
 
-        $password = $this->FirstStep();
-        $this->processform($_POST['email'], $_POST['name'], $_POST['description'], isset($_POST['checkrewrite']));
-
-        return $this->CreateDefaultItems($password);
+        $password = $this->fFirstStep();
+        $this->processForm($_POST['email'], $_POST['name'], $_POST['description'], isset($_POST['checkrewrite']));
+        return $this->createDefaultItems($password);
     }
 
-    public function processform($email, $name, $description, $rewrite) {
-        litepubl::$options->lock();
-        litepubl::$options->email = $email;
-        litepubl::$site->name = $name;
-        litepubl::$site->description = $description;
-        litepubl::$options->fromemail = 'litepublisher@' . $_SERVER['SERVER_NAME'];
+    public function processForm($email, $name, $description, $rewrite) {
+        $this->app->options->lock();
+        $this->app->options->email = $email;
+        $this->app->site->name = $name;
+        $this->app->site->description = $description;
+        $this->app->options->fromemail = 'litepublisher@' . $_SERVER['SERVER_NAME'];
         $this->CheckApache($rewrite);
-        if (litepubl::$site->q == '&') litepubl::$site->data['url'].= '/index.php?url=';
-        litepubl::$options->unlock();
+        if ($this->app->site->q == '&') $this->app->site->data['url'].= '/index.php?url=';
+        $this->app->options->unlock();
     }
 
     public function CheckFolders() {
-        $this->checkFolder(litepubl::$paths->data);
-        $this->CheckFolder(litepubl::$paths->cache);
-        $this->CheckFolder(litepubl::$paths->files);
-        //$this->CheckFolder(litepubl::$paths->languages);
-        //$this->CheckFolder(litepubl::$paths->plugins);
-        //$this->CheckFolder(litepubl::$paths->themes);
+        $this->checkFolder($this->app->paths->data);
+        $this->CheckFolder($this->app->paths->cache);
+        $this->CheckFolder($this->app->paths->files);
+        //$this->CheckFolder($this->app->paths->languages);
+        //$this->CheckFolder($this->app->paths->plugins);
+        //$this->CheckFolder($this->app->paths->themes);
         
     }
 
@@ -229,9 +227,9 @@ class tinstaller extends tdata {
 
     public function CheckApache($rewrite) {
         if ($rewrite || (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()))) {
-            litepubl::$site->q = '?';
+            $this->app->site->q = '?';
         } else {
-            litepubl::$site->q = '&';
+            $this->app->site->q = '&';
         }
     }
 
@@ -244,19 +242,19 @@ class tinstaller extends tdata {
         if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
             $checkrewrite = '';
         } else {
-            $checkrewrite = file_get_contents(litepubl::$paths->lib . 'install/templates/modrewrite.tml');
+            $checkrewrite = file_get_contents($this->app->paths->lib . 'install/templates/modrewrite.tml');
             $checkrewrite = str_replace('$checkrewrite', $lang->checkrewrite, $checkrewrite);
         }
 
         $dbprefix = strtolower(str_replace(array(
             '.',
             '-'
-        ) , '', litepubl::$domain)) . '_';
+        ) , '', $this->app->domain)) . '_';
         $langcode = $this->language;
         $likeurl = urlencode($lang->homeurl);
         $liketitle = urlencode($lang->homename);
 
-        $form = file_get_contents(litepubl::$paths->lib . 'install/templates/installform.tml');
+        $form = file_get_contents($this->app->paths->lib . 'install/templates/installform.tml');
         $form = str_replace('"', '\"', $form);
         eval('$form = "' . $form . '\n";');
 
@@ -313,39 +311,39 @@ class tinstaller extends tdata {
 
     public static function sendmail() {
         $lang = tlocal::$self->ini['installation'];
-        $body = sprintf($lang['body'], litepubl::$site->url, litepubl::$options->email, mailpassword);
+        $body = sprintf($lang['body'], $this->app->site->url, $this->app->options->email, mailpassword);
 
-        tmailer::sendmail('', litepubl::$options->fromemail, '', litepubl::$options->email, $lang['subject'], $body);
+        tmailer::sendmail('', $this->app->options->fromemail, '', $this->app->options->email, $lang['subject'], $body);
     }
 
     public function congratulation($password) {
         global $lang;
-        $tml = file_get_contents(litepubl::$paths->lib . 'install/templates/install.congratulation.tml');
+        $tml = file_get_contents($this->app->paths->lib . 'install/templates/install.congratulation.tml');
         $theme = ttheme::getinstance('default');
         $template = ttemplate::i();
         $template->view = tview::i();
         $lang = tlocal::i('installation');
         $args = new targs();
-        $args->title = litepubl::$site->name;
-        $args->url = litepubl::$site->url . '/';
+        $args->title = $this->app->site->name;
+        $args->url = $this->app->site->url . '/';
         $args->password = $password;
-        $args->likeurl = litepubl::$options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
+        $args->likeurl = $this->app->options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
         $content = $theme->parsearg($tml, $args);
         $this->echohtml($content);
     }
 
     public function uninstall() {
-        tfiler::delete(litepubl::$paths->data, true);
-        tfiler::delete(litepubl::$paths->cache, true);
-        tfiler::delete(litepubl::$pathsfiles, true);
+        tfiler::delete($this->app->paths->data, true);
+        tfiler::delete($this->app->paths->cache, true);
+        tfiler::delete($this->app->pathsfiles, true);
     }
 
     private function loadlang() {
-        //litepubl::$options = $this;
-        //require_once(litepubl::$paths->lib . 'filer.class.php');
-        require_once (litepubl::$paths->lib . 'local.class.php');
-        require_once (litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
-        require_once (litepubl::$paths->lib . 'htmlresource.class.php');
+        //$this->app->options = $this;
+        //require_once($this->app->paths->lib . 'filer.class.php');
+        require_once ($this->app->paths->lib . 'local.class.php');
+        require_once ($this->app->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
+        require_once ($this->app->paths->lib . 'htmlresource.class.php');
         tlocalPreinstall($this->language);
     }
 
@@ -364,7 +362,7 @@ class tinstaller extends tdata {
     }
 
     public function langexists($language) {
-        return @file_exists(litepubl::$paths->languages . $language . DIRECTORY_SEPARATOR . 'default.ini');
+        return @file_exists($this->app->paths->languages . $language . DIRECTORY_SEPARATOR . 'default.ini');
     }
 
     public function echohtml($html) {

@@ -6,7 +6,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\install;
 
 litepubl::$classes = tclasses::i();
 litepubl::$options = toptions::i();
@@ -23,10 +23,9 @@ if (litepubl::$debug) {
 }
 */
 
-require_once (litepubl::$paths->lib . 'installer.class.php');
-
-$installer = new tinstaller();
-$installer->install();
+require_once (__DIR__ . '/Installer.php');
+$installer = new Installer();
+$installer->run();
 
 if (litepubl::$options instanceof toptions) {
     litepubl::$options->savemodified();
