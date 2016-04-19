@@ -155,13 +155,16 @@ return $this->logger;
 }
 
 public function log($level, $message, array $context = array()) {
-if (config::$debug || config::$logLevel) {
-$this->getLogger()->log($level, $message, $context);
+//ignore debug messages if 
+if (!config::$debug && ($level == 'debug') && (config::$logLevel != 'debug')) {
+return;
 }
+
+$this->getLogger()->log($level, $message, $context);
 }
 
 public function logException(\Exception $e) {
-$this->log('critical', \litepubl\debug\LogException::getString($e));
+$this->log('alert', \litepubl\debug\LogException::getString($e));
 }
 
     public function showErrors() {
