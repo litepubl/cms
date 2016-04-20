@@ -16,14 +16,6 @@ use SharedStorageTrait;
     public $mapoptions;
     private $users;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-    public static function instance() {
-        return getinstance(__class__);
-    }
-
     protected function create() {
         parent::create();
         $this->basename = 'site';

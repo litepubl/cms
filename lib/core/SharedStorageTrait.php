@@ -13,7 +13,7 @@ trait SharedStorageTrait
  {
 
     public function getStorage() {
-        return  $this->getApp()->Sharedstorage;
+        return  $this->getApp()->sharedStorage;
     }
 
 } //class

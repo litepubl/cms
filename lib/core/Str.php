@@ -37,7 +37,7 @@ public static function md5Rand() {
 }
 
 public static function md5Uniq() {
-    return baseMd5(mt_rand() . Config::$secret . microtime());
+    return static::baseMd5(mt_rand() . Config::$secret . microtime());
 }
 
 public static function baseMd5($s) {

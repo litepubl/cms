@@ -164,7 +164,7 @@ public function installEngine($email, $language) {
 
     $options = Options::i();
     $options->lock();
-    require_once (dirname(__file__) . DIRECTORY_SEPARATOR . 'options.class.install.php');
+    require_once (dirname(__DIR__) . '/core/install/Options.install.php');
     $password = core\installOptions($email, $language);
     $this->installClasses();
     $options->unlock();
