@@ -1,24 +1,25 @@
 <?php
 
 function libReplace($s) {
-$s = strtr([
+$s = strtr($s, [
 'litepubl::$secret' => 'Config::$secret',
 'litepubl::$debug' => 'Config::$debug',
 'config::$' => 'config::$',
 '$urlmap' => '$router',
-'idview' => 'idschema';
-'tviews::' =>'Schemas::';
+'idview' => 'idschema',
+'tviews::' =>'Schemas::',
 'tview::' => 'Schema::',
 '$views' => '$schemes',
 '$view' => '$schema',
 'litepubl::$app' => 'litepubl@app',
-'turlmap::unsub', 'litepubl::$router->unbind',
+'turlmap::unsub' => 'litepubl::$router->unbind',
 ]);
 
-$s = strtr([
+$s = strtr($s, [
+'turlmap::' => '\litepubl\core\Router::',
 'litepubl::$' => ' $this->getApp()->',
 'litepubl@app' => 'litepubl::$app',
-'tlocal', 'Lang',
+'tlocal' => 'Lang',
 'new targs' => 'new Args',
 'targs::i()' => 'new Args()',
 'tadminhtml::array2combo' => '$this->theme->comboItems',
@@ -106,7 +107,7 @@ $func = ' function ';
 foreach ($a as $i => $s) {
 if ($j = strpos($s, $func)) {
 $s2 = ltrim(substr($s, $j + strlen($func)));
-if (strbegin($s2, 'get') || strbegin($s2, 'set')) {
+if (str_begin($s2, 'get') || str_begin($s2, 'set')) {
 $s2[3] = strtoupper($s2[3]);
 $a[$i] = substr($s, 0, $j) . $func . $s2;
 }
@@ -125,3 +126,7 @@ $s = str_replace(
 $s);
 }
 */
+
+function str_begin($s, $begin) {
+    return strncmp($s, $begin, strlen($begin)) == 0;
+}

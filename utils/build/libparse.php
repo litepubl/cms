@@ -27,6 +27,13 @@ $s = replace_copyright($s);
     //$s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
+if (strend($filename, '.php')) {
+$s = libReplace($s);
+}
+
+if (strend($filename, '.install.php')) {
+$s = str_replace('$this', '$self', $s);
+}
 
 if (false && strend($filename, 'php')) {
         $oBeautify->setInputString($s);
@@ -96,6 +103,7 @@ function strend($s, $end) {
 }
 
 function BuildKernel($dir){
+return;
 $iniclasses = parse_ini_file($dir . 'install/ini/classes.ini', true);
 $items = $iniclasses['items'];
 $inikernel = parse_ini_file($dir . 'install/ini/kernel.ini', true);
@@ -162,12 +170,21 @@ $s = ltrim(substr($s, strpos($s, '*/') + 2));
 
 
 if ($php) {
-$s = libReplace($s);
+//$s = libReplace($s);
 }
 
 
 $s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
+}
+
+function parseLibDirs($dir) {
+$list = tfiler::getdir($dir);
+foreach ($list as $name) {
+if ($name == 'include' || $name == 'sape') continue;
+parsedir($dir . $name . DIRECTORY_SEPARATOR);
+parseLibDirs($dir . $name . DIRECTORY_SEPARATOR);
+}
 }
 
 $linescount = 0;
@@ -176,7 +193,7 @@ $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
 $rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
 require($rootdir . 'lib/utils/Filer.php');
-require (__DIR__ . 'libreplace.php');
+require (__DIR__ . '/libreplace.php');
 $m = microtime(true);
 require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
         $oBeautify = new PHP_Beautifier();
@@ -208,7 +225,6 @@ parsejs($dir . $subdir . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR);
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR;
 parsejs($dir . 'ru' . DIRECTORY_SEPARATOR);
 parsejs($dir . 'en' . DIRECTORY_SEPARATOR);
-
 parsejs($rootdir . 'themes' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . 'less' . DIRECTORY_SEPARATOR);
 break;
 
@@ -250,9 +266,8 @@ return;
 
 default:
 ParseFile($rootdir . 'index.php');
-parsedir($rootdir . 'lib' . DIRECTORY_SEPARATOR);
-parsedir($rootdir . 'lib' . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR);
-BuildKernel($rootdir . 'lib' . DIRECTORY_SEPARATOR);
+parseLibDirs($rootdir . 'lib' . DIRECTORY_SEPARATOR);
+//BuildKernel($rootdir . 'lib' . DIRECTORY_SEPARATOR);
 }
 
 echo "<pre>\n";
