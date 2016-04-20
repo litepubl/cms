@@ -57,8 +57,8 @@ function JsInstall($self) {
         $self->add($section, $filename);
     }
 
-    //tJs_switch($self, tJs_pretty_files(), array());
-    tJs_switch($self, tJs_bootstrap_files() , array());
+    //Js_switch($self, Js_pretty_files(), array());
+    Js_switch($self, Js_bootstrap_files() , array());
 
     $self->add($section, "/lib/languages/$language/default.min.js");
 
@@ -76,7 +76,7 @@ function JsInstall($self) {
     }
 
     $section = 'admin';
-    tJs_bootstrap_admin($self, true);
+    Js_bootstrap_admin($self, true);
     $self->add($section, '/js/litepubl/admin/admin.min.js');
     $self->add($section, 'js/litepubl/ui/datepicker.adapter.min.js');
     $self->add($section, '/js/litepubl/admin/calendar.min.js');

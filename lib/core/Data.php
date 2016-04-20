@@ -153,12 +153,12 @@ return litepubl::$app;
         }
     }
 
-    public function externalfunc($class, $func, $args) {
+    public function getExternalFuncName($class, $func) {
         $reflector = new \ReflectionClass($class);
         $filename = $reflector->getFileName();
 
         if (strpos($filename, '/kernel.')) {
-            $filename = dirname($filename) . '/' .  $this->getApp()->classes->items[$class];
+            $filename = dirname($filename) . DIRECTORY_SEPARATOR . basename(str_replace('\\', DIRECTORY_SEPARATOR, $class)) . '.php';
         }
 
         $externalname = basename($filename, '.php') . '.install.php';
@@ -167,7 +167,7 @@ return litepubl::$app;
         if (!file_exists($file)) {
             $file = $dir . $externalname;
             if (!file_exists($file)) {
-                return;
+                return false;
             }
         }
 
@@ -175,6 +175,14 @@ return litepubl::$app;
 
         $fnc = $class . $func;
         if (function_exists($fnc)) {
+return $fnc;
+}
+
+return false;
+}
+
+    public function externalfunc($class, $func, $args) {
+if ($fnc = $this->getExternalFuncName($class, $func)) {
             if (is_array($args)) {
                 array_unshift($args, $this);
             } else {
@@ -185,7 +193,7 @@ return litepubl::$app;
             }
 
             return \call_user_func_array($fnc, $args);
-        }
+}
     }
 
     public function getStorage() {

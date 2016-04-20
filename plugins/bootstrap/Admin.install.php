@@ -10,12 +10,13 @@
 namespace litepubl\plugins\bootstrap;
 use litepubl\core\Plugins;
 use litepubl\admin\Menus;
+use litepubl\view\LangMerger;
 
 function AdminInstall($self) {
     Langmerger::i()->add('admin', 'plugins/bootstrap/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $about = Plugins::getabout(Plugins::getname(__file__));
 
-    $admin = tadminmenus::i();
+    $admin = Menus::i();
     $admin->lock();
     $admin->additem(array(
         'parent' => $admin->url2id('/admin/views/') ,
@@ -26,15 +27,15 @@ function AdminInstall($self) {
         'group' => 'admin'
     ));
 
-     $self->getApp()->classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
+Header::i()->install();
     $admin->unlock();
 }
 
-function AdninUninstall($self) {
+function AdminUninstall($self) {
     Langmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
-    $admin = tadminmenus::i();
+    $admin = Menus::i();
     $admin->lock();
     $admin->deleteurl('/admin/views/bootstraptheme/');
-     $self->getApp()->classes->delete('admin_bootstrap_header');
+Header::i()->uninstall();
     $admin->unlock();
 }

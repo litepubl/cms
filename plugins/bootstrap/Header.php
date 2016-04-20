@@ -102,4 +102,4 @@ $admin = $this->admintheme;
     ?>" . $js;
     }
 
-} //class
+}

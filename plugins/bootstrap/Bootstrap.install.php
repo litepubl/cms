@@ -21,16 +21,15 @@ function BbootstrapInstall($self) {
         $js->externalfunc(get_class($js) , '_pretty_files', false)
     ));
 
-    tjsmerger_bootstrap_admin($js, true);
-    tjsmerger_ui_admin($js, false);
+        $js->externalfunc(get_class($js), '_bootstrap_admin', true);
+        $js->externalfunc(get_class($js), '_ui_admin', false);
 
+$js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    tjsmerger_switch($css, array() , $css->externalfunc(get_class($css) , '_pretty_files', false));
-
-    tjsmerger_switch($css, array() , $css->externalfunc(get_class($css) , '_deprecated_files', false));
-
-    tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_bootstrap_files', false) , array());
+$js_switch($css, array() , $css->externalfunc(get_class($css) , '_pretty_files', false));
+    $js_switch($css, array() , $css->externalfunc(get_class($css) , '_deprecated_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css) , '_bootstrap_files', false) , array());
 
     //default installed plugins
     $plugins = Plugins::i();
@@ -52,15 +51,20 @@ function BootstrapUninstall($self) {
         $js->externalfunc(get_class($js) , '_bootstrap_files', false) ,
     ));
 
-    tjsmerger_bootstrap_admin($js, false);
-    tjsmerger_ui_admin($js, true);
+
+    $js->externalfunc(get_class($js) , 
+    '_bootstrap_admin', false);
+
+    $js->externalfunc(get_class($js) , 
+    '_ui_admin', true);
     $js->unlock();
 
+$js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_pretty_files', false) , array());
-    tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_deprecated_files', false) , array());
-    tjsmerger_switch($css, array() , $css->externalfunc(get_class($css) , '_bootstrap_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css) , '_pretty_files', false) , array());
+    $js_switch($css, $css->externalfunc(get_class($css) , '_deprecated_files', false) , array());
+    $js_switch($css, array() , $css->externalfunc(get_class($css) , '_bootstrap_files', false));
     $css->unlock();
 
     Base::clearcache();
