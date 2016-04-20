@@ -7,12 +7,15 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
+use litepubl\view\Js;
+use litepubl\view\Css;
+use litepubl\view\Base;
+use litepubl\core\Plugins;
 
-function bootstrap_themeInstall($self) {
-    $js = tjsmerger::i();
+function BbootstrapInstall($self) {
+    $js = Js::i();
     $js->lock();
-
     $js->externalfunc(get_class($js) , '_switch', array(
         $js->externalfunc(get_class($js) , '_bootstrap_files', false) ,
         $js->externalfunc(get_class($js) , '_pretty_files', false)
@@ -21,7 +24,7 @@ function bootstrap_themeInstall($self) {
     tjsmerger_bootstrap_admin($js, true);
     tjsmerger_ui_admin($js, false);
 
-    $css = tcssmerger::i();
+    $css = Css::i();
     $css->lock();
     tjsmerger_switch($css, array() , $css->externalfunc(get_class($css) , '_pretty_files', false));
 
@@ -30,7 +33,7 @@ function bootstrap_themeInstall($self) {
     tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_bootstrap_files', false) , array());
 
     //default installed plugins
-    $plugins = tplugins::i();
+    $plugins = Plugins::i();
     $plugins->lock();
     $plugins->add('likebuttons');
     $plugins->add('photoswipe');
@@ -38,12 +41,11 @@ function bootstrap_themeInstall($self) {
 
     $css->unlock();
     $js->unlock();
-
-    ttheme::clearcache();
+    Base::clearcache();
 }
 
-function bootstrap_themeUninstall($self) {
-    $js = tjsmerger::i();
+function BootstrapUninstall($self) {
+    $js = Js::i();
     $js->lock();
     $js->externalfunc(get_class($js) , '_switch', array(
         $js->externalfunc(get_class($js) , '_pretty_files', false) ,
@@ -54,12 +56,12 @@ function bootstrap_themeUninstall($self) {
     tjsmerger_ui_admin($js, true);
     $js->unlock();
 
-    $css = tcssmerger::i();
+    $css = Css::i();
     $css->lock();
     tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_pretty_files', false) , array());
     tjsmerger_switch($css, $css->externalfunc(get_class($css) , '_deprecated_files', false) , array());
     tjsmerger_switch($css, array() , $css->externalfunc(get_class($css) , '_bootstrap_files', false));
     $css->unlock();
 
-    ttheme::clearcache();
+    Base::clearcache();
 }

@@ -7,14 +7,11 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
 use litepubl\core\Str;
 
-class admin_bootstrap_header extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Header extends \litepubl\admin\Menu
+{
 
     public function getHead() {
         $result = parent::gethead();
@@ -23,7 +20,7 @@ class admin_bootstrap_header extends tadminmenu {
             'header',
             'logo'
         ) as $name) {
-            $css = file_get_contents(dirname(__file__) . "/resource/css.$name.tml");
+            $css = file_get_contents(__DIR__ . "/resource/css.$name.tml");
             $css = strtr($css, array(
                 "\n" => '',
                 "\r" => '',
@@ -41,14 +38,14 @@ class admin_bootstrap_header extends tadminmenu {
 
     public function getContent() {
         $tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
+$admin = $this->admintheme;
+        $theme = $this->theme;
         $lang = Lang::admin('adminbootstraptheme');
         $lang->addsearch('themeheader', 'editor');
-        $html = tadminhtml::i();
         $args = new Args();
-        $theme = ttheme::i();
         $args->radio = $theme->getradio('radioplace', 'header', $lang->header, true) . $theme->getradio('radioplace', 'logo', $lang->logo, false);
 
-        return $html->parsearg($tml, $args);
+        return $admin->parsearg($tml, $args);
     }
 
     public function request($a) {

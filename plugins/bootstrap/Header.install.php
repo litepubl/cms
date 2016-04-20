@@ -7,9 +7,9 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
 
-function admin_bootstrap_headerInstall($self) {
+function HeaderInstall($self) {
     $about = tplugins::getabout(tplugins::getname(__file__));
 
     $admin = tadminmenus::i();
@@ -23,6 +23,6 @@ function admin_bootstrap_headerInstall($self) {
     ));
 }
 
-function admin_bootstrap_headerUninstall($self) {
+function HeaderUninstall($self) {
     tadminmenus::i()->deleteurl('/admin/views/bootstrapheader/');
 }

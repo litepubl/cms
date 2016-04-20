@@ -30,6 +30,7 @@ $s = strtr($s, [
 'processform' => 'processForm',
 'doprocessform' => 'doProcessForm',
 'DataStorage' => 'SharedStorage',
+'Schemas' => 'Schemes',
 ]);
 
 $s = insertUse($s, 'Config::', 'litepubl\Config');
@@ -130,4 +131,35 @@ $s);
 
 function str_begin($s, $begin) {
     return strncmp($s, $begin, strlen($begin)) == 0;
+}
+
+function afterFix($s) {
+$s = strtr($s, [
+'Schemas' => 'Schemes',
+'ttheme::clearcache' => 'Base::clearCache',
+'tjsmerger::' => 'Js::',
+'tcssmerger::' => 'Css::',
+'Langmerger' => 'LangMerger',
+'tplugins::' => 'Plugins::',
+' iadmin' => ' \litepubl\admin\AdminInterface',
+'extends tadminmenu' => "extends \\litepubl\\admin\\Menu\n",
+
+]);
+
+$s = insertUse($s, 'Lang::', 'litepubl\view\Lang');
+$s = insertUse($s, 'Args::', 'litepubl\view\Args');
+$s = insertUse($s, 'new Args', 'litepubl\view\Args');
+$s = insertUse($s, 'Base::', 'litepubl\view\Base');
+$s = insertUse($s, 'Js::', 'litepubl\view\Js');
+$s = insertUse($s, 'Css::', 'litepubl\view\Css');
+$s = insertUse($s, 'LangMerger::', 'litepubl\view\LangMerger');
+$s = insertUse($s, 'Plugins::', 'litepubl\core\Plugins');
+$s = insertUse($s, 'AdminInterface', 'litepubl\admin\AdminInterface');
+
+if (strpos($s, 'tadminmenus')) {
+$s = str_replace'tadminmenus', 'Menus', $s);
+$s = insertUse($s, 'AdminMenus::', 'litepubl\admin\Menus as AdminMenus');
+}
+
+return $s;
 }

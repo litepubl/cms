@@ -249,6 +249,9 @@ return [
 'tblackip' => 'litepubl\plugins\blackip\BlackIP',
 'tadminblackip' => 'litepubl\plugins\blackip\AdminBlackIP',
 'tbackup2email' => 'litepubl\plugins\backup2email\Backup2email',
+'bootstrap_theme' => 'Bootstrap',
+'admin_bootstrap_theme' => 'litepubl\plugins\bootstrap\Admin',
+'admin_bootstrap_header' => 'litepubl\plugins\bootstrap\Header',
 
 
 ];

@@ -7,13 +7,14 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Schemes;
+use litepubl\view\Base;
 
-class admin_bootstrap_theme extends tadminmenu {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Admin extends \litepubl\admin\Menu
+{
 
     public function getContent() {
         $result = '';
@@ -28,19 +29,15 @@ class admin_bootstrap_theme extends tadminmenu {
             'right' => $lang->right,
         );
 
-        $schemes = Schemas::i();
+        $schemes = Schemes::i();
         foreach ($schemes->items as $id => $item) {
             if (!isset($item['custom']['mainsidebar'])) {
  continue;
 }
 
-
-
             $result.= $admintheme->h($item['name']);
             $result.= $theme->getinput('combo', "mainsidebar-$id", $this->theme->comboItems($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
-
             $result.= $theme->getinput('combo', "cssfile-$id", $this->theme->comboItems($lang->ini['subthemes'], $item['custom']['cssfile']) , $lang->cssfile);
-
             $result.= '<hr>';
         }
 
@@ -56,8 +53,6 @@ class admin_bootstrap_theme extends tadminmenu {
  continue;
 }
 
-
-
             $sidebar = $_POST["mainsidebar-$id"];
             if (!in_array($sidebar, array(
                 'left',
@@ -71,7 +66,7 @@ class admin_bootstrap_theme extends tadminmenu {
         }
 
         $schemes->save();
-        ttheme::clearcache();
+        Base::clearcache();
     }
 
-} //class
+}

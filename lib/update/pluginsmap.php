@@ -9,5 +9,5 @@
 
 return [
 'black-ip' => 'blackip',
-
+'bootstrap-theme' => 'bootstrap',
 ];

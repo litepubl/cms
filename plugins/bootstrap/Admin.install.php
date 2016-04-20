@@ -7,11 +7,13 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
+use litepubl\core\Plugins;
+use litepubl\admin\Menus;
 
-function admin_bootstrap_themeInstall($self) {
-    Langmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
-    $about = tplugins::getabout(tplugins::getname(__file__));
+function AdminInstall($self) {
+    Langmerger::i()->add('admin', 'plugins/bootstrap/resource/' .  $self->getApp()->options->language . '.admin.ini');
+    $about = Plugins::getabout(Plugins::getname(__file__));
 
     $admin = tadminmenus::i();
     $admin->lock();
@@ -28,7 +30,7 @@ function admin_bootstrap_themeInstall($self) {
     $admin->unlock();
 }
 
-function admin_bootstrap_themeUninstall($self) {
+function AdninUninstall($self) {
     Langmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $admin = tadminmenus::i();
     $admin->lock();

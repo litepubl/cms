@@ -7,12 +7,8 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\bootstrap;
 
-class bootstrap_theme extends tplugin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
-
-} //class
+class Bootstrap extends \litepubl\core\Plugin
+{
+}
