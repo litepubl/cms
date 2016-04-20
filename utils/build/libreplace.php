@@ -2,6 +2,9 @@
 
 function libReplace($s) {
 $s = strtr([
+'litepubl::$secret' => 'Config::$secret',
+'litepubl::$debug' => 'Config::$debug',
+'config::$' => 'config::$',
 '$urlmap' => '$router',
 'idview' => 'idschema';
 'tviews::' =>'Schemas::';

@@ -8,7 +8,7 @@
 
 namespace litepubl;
 
-class config {
+class Config {
     //set to true to enable debug: logging, error message,
     public static $debug = false;
 
@@ -70,10 +70,10 @@ class config {
 
 if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
     if (defined('litepubl_mode') && (litepubl_mode == 'ignoreReqest')) {
-        config::$ignoreRequest = true;
+        Config::$ignoreRequest = true;
     }
 
-    if (config::$debug || !config::$useKernel) {
+    if (Config::$debug || !Config::$useKernel) {
         require (__DIR__ . '/lib/debug/kernel.php');
     } else {
         require (__DIR__ . '/lib/core/kernel.php');

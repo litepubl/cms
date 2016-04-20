@@ -7,6 +7,7 @@
  */
 
 namespace litepubl\core;
+use litepubl\Config;
 
 class Options extends Events
 {
