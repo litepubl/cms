@@ -75,12 +75,9 @@ require_once(__DIR__ . '/IXR.php');
                 ) , $args);
             }
             catch(\Exception $e) {
-                // $this->getApp()->options->handexception($e);
-                //echo ( $this->getApp()->options->errorlog);
                 return new IXR_Error($e->getCode() , $e->getMessage());
             }
         }
-    }
 
     public function add($method, $Function, $ClassName) {
         $this->items[$method] = array(

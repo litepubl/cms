@@ -10,7 +10,7 @@
 namespace litepubl\widget;
 use litepubl\view\Theme;
 
-class Cache extends litepubl\core\Items
+class Cache extends \litepubl\core\Items
 {
     private $modified;
 

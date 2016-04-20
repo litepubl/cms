@@ -273,15 +273,4 @@ return false;
         }
     }
 
-} //class
-class tjsmerger extends tfilemerger {
-
-    public function addlang($section, $key, array $lang) {
-        return $this->addtext($section, $key, 'window.lang = window.lang || {};' . sprintf('lang.%s = %s;', $section, json_encode($lang)));
-    }
-
-    public function onupdated() {
-        $this->save();
-    }
-
-} //class
+}

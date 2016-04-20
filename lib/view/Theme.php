@@ -13,7 +13,7 @@ use litepubl\post\Posts;
 use litepubl\pages\Users as UserPages;
 use litepubl\core\Str;
 
-class Theme extends BaseTheme
+class Theme extends Base
  {
 
     public static function context() {
@@ -109,7 +109,7 @@ return new emptyclass();
     public function render($model) {
 $vars = new Vars();
 $vars->context = $model;
-$vars-model = $model;
+$vars->model = $model;
 
         if (isset($model->index_tml) && ($tml = $model->index_tml)) {
             return $this->parse($tml);

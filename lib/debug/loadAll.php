@@ -42,3 +42,4 @@ require $filename;
 });
 include (__DIR__ . '/kernel.php');
 includeDir(dirname(__DIR__));
+includeDir(dirname(dirname(__DIR__)) . '/plugins');
