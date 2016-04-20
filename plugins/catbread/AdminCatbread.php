@@ -10,7 +10,7 @@
 namespace litepubl\plugins\catbread;
 use litepubl\view\Base;
 
-class Admincatbread extends \litepubl\admin\Simple
+class Admincatbread extends \litepubl\admin\Admin
 {
 use \litepubl\core\Singleton;
 

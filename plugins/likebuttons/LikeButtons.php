@@ -7,13 +7,11 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\likebuttons;
+use litepubl\view\Js;
 
-class likebuttons extends tplugin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class LikeButtons extends \litepubl\core\Plugin
+ {
 
     protected function create() {
         parent::create();
@@ -25,8 +23,8 @@ class likebuttons extends tplugin {
             $this->data['facebook_appid'] = $appid;
             $this->save();
 
-            tjsmerger::i()->addtext('default', 'facebook_appid', ";ltoptions.facebook_appid='$appid';");
+            Js::i()->addtext('default', 'facebook_appid', ";ltoptions.facebook_appid='$appid';");
         }
     }
 
-} //class
+}

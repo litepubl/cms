@@ -256,6 +256,9 @@ return [
 'admincatbread' => 'litepubl\plugins\catbread\AdminCatbread',
 'toldestposts' => 'litepubl\plugins\oldestposts\Oldestposts',
 'tadminoldestposts' => 'litepubl\plugins\oldestposts\AdminOldestposts',
+'likebuttons' => 'litepubl\plugins\likebuttons\LikeButtons',
+'photoswipe' => 'litepubl\plugins\photoswipe\PhotoSwipe',
+'photoswipethumbnail' => 'litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail',
 
 
 

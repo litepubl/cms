@@ -10,7 +10,7 @@
 namespace litepubl\plugins\blackip;
 use litepubl\admin\Tabs;
 
-class AdminBlackIP extends \litepubl\admin\Simple
+class AdminBlackIP extends \litepubl\admin\Admin
 {
 use \litepubl\core\Singleton;
 

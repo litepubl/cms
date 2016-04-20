@@ -12,7 +12,7 @@ use litepubl\core\PropException;
 use litepubl\widgets\Widgets;
 use litepubl\admin\Link;
 
-class Widget extends \litepubl\admin\Simple
+class Widget extends \litepubl\admin\Admin
  {
     public $widget;
 

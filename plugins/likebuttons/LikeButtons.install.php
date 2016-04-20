@@ -7,11 +7,12 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\likebuttons;
+use litepubl\view\Js;
 
-function likebuttonsInstall($self) {
+function LikeButtonsInstall($self) {
     $name = basename(dirname(__file__));
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->add('default', "plugins/$name/resource/likebuttons.min.js");
 
@@ -20,9 +21,9 @@ function likebuttonsInstall($self) {
     $js->unlock();
 }
 
-function likebuttonsUninstall($self) {
+function LikeButtonsUninstall($self) {
     $name = basename(dirname(__file__));
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->deletefile('default', "plugins/$name/resource/likebuttons.min.js");
 

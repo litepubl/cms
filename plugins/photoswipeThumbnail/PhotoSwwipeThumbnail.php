@@ -7,27 +7,28 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\photoswipeThumbnail;
+use litepubl\view\Js;
+use litepubl\view\Css;
+use litepubl\post\MediaParser;
+use litepubl\post\Files;
 
-class photoswipethumbnail extends tplugin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
+ {
 
     public function install() {
         $plugindir = basename(dirname(__file__));
-        $js = tjsmerger::i();
+        $js = Js::i();
         $js->lock();
         $js->add('default', "plugins/$plugindir/resource/thumbnails.min.js");
         $js->unlock();
 
-        $css = tcssmerger::i();
+        $css = Css::i();
         $css->lock();
         $css->add('default', "plugins/$plugindir/resource/thumbnails.min.css");
         $css->unlock();
 
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $parser->previewwidth = 120;
         $parser->previewheight = 120;
         $parser->previewmode = 'min';
@@ -38,17 +39,17 @@ class photoswipethumbnail extends tplugin {
 
     public function uninstall() {
         $plugindir = basename(dirname(__file__));
-        $js = tjsmerger::i();
+        $js = Js::i();
         $js->lock();
         $js->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.js");
         $js->unlock();
 
-        $css = tcssmerger::i();
+        $css = Css::i();
         $css->lock();
         $css->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.css");
         $css->unlock();
 
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $parser->previewwidth = 120;
         $parser->previewheight = 120;
         $parser->previewmode = 'fixed';
@@ -58,8 +59,8 @@ class photoswipethumbnail extends tplugin {
     }
 
     public function rescale() {
-        $parser = tmediaparser::i();
-        $files = tfiles::i();
+        $parser = MediaParser::i();
+        $files = Files::i();
         $db = $files->db;
         $t = $files->thistable;
 
@@ -72,8 +73,8 @@ class photoswipethumbnail extends tplugin {
         foreach ($items as $i => $item) {
             $srcfilename =  $this->getApp()->paths->files . $item['filename'];
             $destfilename =  $this->getApp()->paths->files . $item['filenamethumb'];
-            $image = tmediaparser::readimage($srcfilename);
-            if ($size = tmediaparser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
+            $image = MediaParser::readimage($srcfilename);
+            if ($size = MediaParser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
                 imagedestroy($image);
 
                 $db->updateassoc(array(

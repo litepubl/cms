@@ -207,8 +207,8 @@ $obj = $classes->getInstance('litepubl\\' . $classname);
     $plugins->add('likebuttons');
     $plugins->add('oldestposts');
     $plugins->add('photoswipe');
-    $plugins->add('photoswipe-thumbnail');
-    $plugins->add('bootstrap-theme');
+    $plugins->add('photoswipeThumbnail');
+    $plugins->add('bootstrap');
     $plugins->unlock();
 
     $xmlrpc->unlock();

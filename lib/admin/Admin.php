@@ -13,7 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\Plugins as PluginItems;
 
-class Simple implements AdminInterface
+class Admin implements AdminInterface
 {
 public $admin;
 public $theme;

@@ -31,7 +31,7 @@ class Header extends \litepubl\admin\Menu
         }
 
         $result.= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
-        $result.= '<script type="text/javascript" src="$site.files/plugins/bootstrap-theme/resource/header.min.js"></script>';
+        $result.= '<script type="text/javascript" src="$site.files/plugins/bootstrap/resource/header.min.js"></script>';
 
         return $result;
     }

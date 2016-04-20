@@ -12,7 +12,7 @@ ulogin\resource\ulogin.popup
 rss-chrome\resource\rss-chrome
 rss-chrome\resource\ru.rss-chrome
 rss-chrome\resource\en.rss-chrome
-bootstrap-theme\resource\header
+bootstrap\resource\header
 likebuttons\resource\likebuttons
 ;photoswipe\resource\photoswipe
 photoswipe\resource\photoswipe.plugin

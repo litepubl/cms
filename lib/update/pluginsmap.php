@@ -10,4 +10,5 @@
 return [
 'black-ip' => 'blackip',
 'bootstrap-theme' => 'bootstrap',
+'photoswipe-thumbnail' => 'photoswipeThumbnail',
 ];

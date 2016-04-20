@@ -7,19 +7,18 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\photoswipe;
+use litepubl\view\Js;
+use litepubl\view\Css;
 
-class photoswipe extends tplugin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class PhotoSwipe extends \litepubl\core\Plugin
+ {
 
     public function install() {
         $plugindir = basename(dirname(__file__));
         $lang =  $this->getApp()->options->language;
 
-        $js = tjsmerger::i();
+        $js = Js::i();
         $js->lock();
         //remove popimage
         $js->deletefile('default', '/js/litepubl/bootstrap/popover.image.min.js');
@@ -32,7 +31,7 @@ class photoswipe extends tplugin {
         $js->add('default', "plugins/$plugindir/resource/photoswipe.plugin.min.js");
         $js->unlock();
 
-        $css = tcssmerger::i();
+        $css = Css::i();
         $css->lock();
         $css->add('default', "plugins/$plugindir/resource/photoswipe.min.css");
         $css->add('default', "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
@@ -43,7 +42,7 @@ class photoswipe extends tplugin {
         $plugindir = basename(dirname(__file__));
         $lang =  $this->getApp()->options->language;
 
-        $js = tjsmerger::i();
+        $js = Js::i();
         $js->lock();
         $js->deletefile('default', "plugins/$plugindir/resource/photoswipe.min.js");
         $js->deletefile('default', "plugins/$plugindir/resource/photoswipe-ui-default.min.js");
@@ -52,7 +51,7 @@ class photoswipe extends tplugin {
         $js->deletefile('default', "plugins/$plugindir/resource/photoswipe.plugin.min.js");
         $js->unlock();
 
-        $css = tcssmerger::i();
+        $css = Css::i();
         $css->lock();
         $css->deletefile('default', "plugins/$plugindir/resource/photoswipe.min.css");
         $css->deletefile('default', "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
