@@ -38,27 +38,48 @@ return $s;
 
 function renameFunctions($s) {
 $s = strtr($s, [
-'sqldate' => 'sqlDate',
-'sqltime' => 'sqlTime',
-'dbquote' => 'dbQuote',
-'md5rand' => 'md5Rand',
-'md5uniq' => 'md5Uniq',
-'basemd5' => 'baseMd5',
-'strbegin' => 'strBegin',
-'strbegins' => 'strBegins',
-'strend' => 'strEnd',
-'strip_utf' => 'trimUtf',
-'array_delete' => 'arrayDelete',
-'array_delete_value' => 'arrayDeleteValue',
-'array_clean' => 'arrayClean',
-'array_insert' => 'arrayInsert',
-'array_move' => 'arrayMove',
-'strtoarray' => 'strToArray',
-'tojson' => 'toJson',
-'jsonattr' => 'jsonAttr',
-'toenum' => 'toEnum',
+'sqldate' => 'Str::sqlDate',
+'sqltime' => 'Str::sqlTime',
+'dbquote' => 'Str::uuote',
+'md5rand' => 'Str::md5Rand',
+'md5uniq' => 'Str::md5Uniq',
+'basemd5' => 'Str::baseMd5',
+'strbegin' => 'Str::begin',
+'strbegins' => 'Str::begins',
+'strend' => 'Str::end',
+'strip_utf' => 'Str::trimUtf',
+'array_delete' => 'Arr::delete',
+'array_delete_value' => 'Arr::deleteValue',
+'array_clean' => 'Arr::clean',
+'array_insert' => 'Arr::insert',
+'array_move' => 'Arr::move',
+'strtoarray' => 'Str::toArray',
+'tojson' => 'Str::toJson',
+'jsonattr' => 'Str::jsonAttr',
+'toenum' => 'Arr::toEnum',
+'tdatabase::str2array' => 'Str::toIntArray',
 ]);
 
+if (!strpos($s, 'namespace litepubl\core')) {
+$s = insertUse($s, 'Str::', 'litepubl\core\Str');
+$s = insertUse($s, 'Arr::', 'litepubl\core\Arr');
+}
+
+return $s;
+}
+
+function insertUse($s, $fnc, $ns) {
+if (!strpos($s, $fnc)) return $s;
+$uns = "use $ns;";
+if (strpos($s, $uns)) return;
+
+$i = strpos($s, "\n\n", strpos($s, 'namespace '));
+if (!$i) {
+echo "Cant insert $uns<br>";
+return$s;
+}
+
+$s = substr($s, 0, $i) . "\n" . $uns . substr($s, $i);
 return $s;
 }
 

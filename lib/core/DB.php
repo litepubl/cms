@@ -401,15 +401,4 @@ return DBManager::i();
         return is_object($res) ? $res->num_rows : 0;
     }
 
-    public static function str2array($s) {
-        $result = array();
-        foreach (explode(',', $s) as $value) {
-            if ($v = (int)trim($value)) {
-                $result[] = $v;
-            }
-        }
-
-        return $result;
-    }
-
-} //class
+}
