@@ -8,12 +8,15 @@
 
 namespace litepubl\view;
 use litepubl\utils\Filer;
+use litepubl\debug\LogException;
+use litepubl\post\Post;
 
 class Base extends \litepubl\core\Events
  {
     public static $instances = array();
     public static $vars = array();
     public static $defaultargs;
+
     public $name;
     public $parsing;
     public $templates;
@@ -128,7 +131,7 @@ class Base extends \litepubl\core\Events
 
             case 'post':
                 $model = isset(litepubl::$router->model) ? litepubl::$router->model : MainView::i()->model;
-                if ($model instanceof \litepubl\post\Post) {
+                if ($model instanceof Post) {
                     return $model;
                 }
                 break;
@@ -140,9 +143,10 @@ class Base extends \litepubl\core\Events
             case 'metapost':
                 return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
-        $var = litepubl::$classes->getThemeVar($name);
+
+        $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
-            litepubl::$options->trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+$this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1])));
             return false;
         }
 
