@@ -51,7 +51,7 @@ function installClasses() {
     $xmlrpc = TXMLRPC::i();
     $xmlrpc->lock();
     ttheme::$defaultargs = array();
-    $theme = ttheme::getinstance('default');
+    $theme = Theme::getTheme('default');
     foreach ( $self->getApp()->classes->items as $class => $item) {
         if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) {
  continue;

@@ -25,10 +25,10 @@ class Base extends \litepubl\core\Events
     public $extratml;
 
     public static function exists($name) {
-        return file_exists( $this->getApp()->paths->themes . $name . '/about.ini');
+        return file_exists( litepubl::$app->paths->themes . $name . '/about.ini');
     }
 
-    public static function getInstance($name) {
+    public static function getTheme($name) {
         return static ::getbyname(get_called_class() , $name);
     }
 
@@ -37,9 +37,9 @@ class Base extends \litepubl\core\Events
             return static ::$instances[$name];
         }
 
-        $result = getinstance($classname);
+        $result = static::getInstance($classname);
         if ($result->name) {
-            $result =  $this->getApp()->classes->newinstance($classname);
+            $result =  litepubl::$app->classes->newinstance($classname);
         }
 
         $result->name = $name;

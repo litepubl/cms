@@ -419,7 +419,7 @@ use \litepubl\core\SharedStorageTrait;
 
         $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
         if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = Schema::i(1)->themename;
-        $theme = Theme::getinstance($themename);
+        $theme = Theme::getTheme($themename);
 
         try {
             $result = $this->getwidgetcontent($id, $sidebar);

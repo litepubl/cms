@@ -186,7 +186,7 @@ $classes = $this->app->classes;
     $xmlrpc->lock();
 
     Theme::$defaultargs = array();
-    $theme = Theme::getinstance('default');
+    $theme = Theme::getTheme('default');
 
 $items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
 foreach ($items as $classname) {
@@ -390,9 +390,9 @@ return $this->autoInstall();
     public function congratulation($password) {
         global $lang;
         $tml = file_get_contents($this->app->paths->lib . 'install/templates/install.congratulation.tml');
-        $theme = ttheme::getinstance('default');
-        $template = ttemplate::i();
-        $template->view = Schema::i();
+        $theme = Theme::getTheme('default');
+        $template = MainView::i();
+        $template->schema = Schema::i();
         $lang = Lang::i('installation');
         $args = new Args();
         $args->title = $this->app->site->name;

@@ -19,7 +19,7 @@ class Theme extends Base
     public static function context() {
         $result = static ::i();
         if (!$result->name) {
-            if (($model =  $this->getApp()->router->model) && isset($model->IdSchema)) {
+            if (($model =  litepubl::$app->router->model) && isset($model->IdSchema)) {
                 $result = Schema::getSchema($model)->theme;
             } else {
                 $result = Schema::i()->theme;

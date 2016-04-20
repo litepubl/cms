@@ -21,12 +21,16 @@ class Data {
     public $table;
 
     public static function i() {
-        return  litepubl::$app->classes->getInstance(get_called_class());
+        return  static::getInstance(get_called_class());
     }
 
-    public static function instance() {
-        return static ::i();
+    public static function getInstance($class) {
+        return  static::getAppInstance()->classes->getInstance($class);
     }
+
+public static function getAppInstance() {
+return litepubl::$app;
+}
 
     public function __construct() {
         $this->lockcount = 0;
@@ -130,7 +134,7 @@ $this->createData();
     }
 
 public function getApp() {
-return litepubl::$app;
+return static::getAppInstance();
 }
 
     public function install() {

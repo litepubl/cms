@@ -31,7 +31,7 @@ use \litepubl\core\SharedStorageTrait;
     }
 
     public static function newitem($id) {
-        return  $this->getApp()->classes->newitem(static ::getinstancename() , get_called_class() , $id);
+return static::getAppInstance()->classes->newitem(static ::getinstancename() , get_called_class() , $id);
     }
 
     public static function getInstancename() {
@@ -99,11 +99,11 @@ return static ::$instances['schema'][$id];
     }
 
     protected function get_theme($name) {
-        return ttheme::getinstance($name);
+        return Theme::getTheme($name);
     }
 
     protected function get_admintheme($name) {
-        return admintheme::getinstance($name);
+        return admintheme::getTheme($name);
     }
 
     public function setThemename($name) {

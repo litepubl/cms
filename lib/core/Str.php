@@ -99,10 +99,6 @@ public static function jsonAttr($a) {
     return str_replace('"', '&quot;', Str::toJson($a));
 }
 
-public static function getInstance($class) {
-    return litepubl::$app->classes->getinstance($class);
-}
-
 public static function dump($s) {
     echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
 }
