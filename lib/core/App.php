@@ -14,7 +14,6 @@ class App
     public  $cache;
     public  $classes;
     public  $db;
-    public  $debug;
     public  $domain;
     public  $logger;
     public  $memcache;
@@ -22,7 +21,6 @@ class App
     public  $options;
     public  $paths;
     public  $router;
-    public  $secret;
     public  $sharedstorage;
     public  $site;
     public  $storage;
@@ -30,12 +28,6 @@ class App
     public  function __construct() {
          $this->microtime = microtime(true);
 
-        //functions in global namespace
-        require_once (__DIR__ . '/utils.functions.php');
-
-        //backward compability, in near future will be removed on config::$secret
-         $this->secret = config::$secret;
-         $this->debug = config::$debug || (defined('litepublisher_mode') && (litepublisher_mode == 'debug'));
          $this->domain =  $this->getHost();
 }
 

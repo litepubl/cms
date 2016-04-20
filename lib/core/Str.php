@@ -94,14 +94,14 @@ public static function jsonAttr($a) {
 }
 
 public static function getinstance($class) {
-    return \litepubl\core\litepubl::$app->classes->getinstance($class);
+    return litepubl::$app->classes->getinstance($class);
 }
 
-public static function dumpstr($s) {
+public static function dump($s) {
     echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
 }
 
-public static function dumpvar($v) {
+public static function log($v) {
     echo "<pre>\n";
     var_dump($v);
     echo "</pre>\n";

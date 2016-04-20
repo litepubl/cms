@@ -30,6 +30,7 @@ $s = strtr([
 'DataStorage' => 'SharedStorage',
 ]);
 
+$s = insertUse($s, 'Config::', 'litepubl\Config');
 $s = renameFunctions($s);
 $s = replaceIfReturn($s);
 $s = camelCase($s);
@@ -58,9 +59,11 @@ $s = strtr($s, [
 'jsonattr' => 'Str::jsonAttr',
 'toenum' => 'Arr::toEnum',
 'tdatabase::str2array' => 'Str::toIntArray',
+'dumpstr' => 'Str::dump',
+'dumpvar' => 'Str::log',
 ]);
 
-if (!strpos($s, 'namespace litepubl\core')) {
+if (false === strpos($s, 'namespace litepubl\core')) {
 $s = insertUse($s, 'Str::', 'litepubl\core\Str');
 $s = insertUse($s, 'Arr::', 'litepubl\core\Arr');
 }

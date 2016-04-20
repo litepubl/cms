@@ -30,6 +30,8 @@ foreach (array(
 'Router.php',
 'DB.php',
 'App.php',
+'Arr.php',
+'Str.php',
 'litepubl.php',
 ) as $filename) {
     require_once($dir . $filename);
