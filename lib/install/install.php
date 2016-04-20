@@ -10,10 +10,13 @@
 namespace litepubl\install;
 use litepubl\Config;
 use litepubl\core\Litepubl;
-return;
- litepubl::$app->classes = tclasses::i();
- litepubl::$app->options = toptions::i();
- litepubl::$app->site = tsite::i();
+use litepubl\core\Classes;
+use litepubl\core\Options;
+use litepubl\core\Site;
+echo "<pre>\n";
+ litepubl::$app->classes = Classes::i();
+ litepubl::$app->options = Options::i();
+ litepubl::$app->site = Site::i();
 
 if (!defined('litepublisher_mode')) {
     define('litepublisher_mode', 'install');

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\core;
+use litepubl\Config;
 
 class Classes extends Items
 {
@@ -23,7 +24,7 @@ public $loaded;
         if (!isset(litepubl::$app->classes)) {
             $classname = get_called_class();
             litepubl::$app->classes = new $classname();
-            litepubl::$app->classes->instances[$classname] =  $this->getApp()->classes;
+            litepubl::$app->classes->instances[$classname] =  litepubl::$app->classes;
         }
 
         return litepubl::$app->classes;
@@ -49,7 +50,7 @@ $this->loaded = [];
     }
 
     public function getStorage() {
-        return  $this->getApp()->datastorage;
+        return  $this->getApp()->sharedStorage;
     }
 
     public function getInstance($class) {

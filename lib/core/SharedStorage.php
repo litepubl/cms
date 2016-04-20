@@ -11,18 +11,18 @@ namespace litepubl\core;
 
 class SharedStorage
  {
-public $app;
+use AppTrait;
+
     public $data;
     private $modified;
 
     public function __construct() {
         $this->data = [];
-        $this->app = litepubl::$app;
          $this->loadData();
     }
 
     public function getStorage() {
-        return $this->app->storage;
+        return $this->getApp()->storage;
     }
 
     public function save(Data $obj) {

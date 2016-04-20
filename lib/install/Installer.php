@@ -87,7 +87,7 @@ $this->resulttype = $_GET['resulttype'];
 return;
 }
 
-        $this->app->dataStorage->saveModified();
+        $this->app->SharedStorage->saveModified();
 
         $result = array(
             'url' => $this->app->site->url,

@@ -24,8 +24,8 @@ class Paths
     public $files;
 
     public function __construct() {
-        $this->home = dirname(__DIR__) . DIRECTORY_SEPARATOR;
-        $this->lib = __DIR__ . DIRECTORY_SEPARATOR;
+        $this->home = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
+        $this->lib = dirname(__DIR__) . DIRECTORY_SEPARATOR;
         $this->libinclude = $this->lib . 'include' . DIRECTORY_SEPARATOR;
         $this->languages = $this->lib . 'languages' . DIRECTORY_SEPARATOR;
         $this->storage = $this->home . 'storage' . DIRECTORY_SEPARATOR;

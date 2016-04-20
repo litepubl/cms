@@ -30,7 +30,7 @@ class Items extends Events
 
     public function load() {
         if ($this->dbversion) {
-            return  $this->getApp()->datastorage->load($this);
+            return  $this->getApp()->sharedStorage->load($this);
         } else {
             return parent::load();
         }
@@ -42,7 +42,7 @@ class Items extends Events
         }
 
         if ($this->dbversion) {
-            return  $this->getApp()->datastorage->save($this);
+            return  $this->getApp()->sharedStorage->save($this);
         } else {
             return parent::save();
         }

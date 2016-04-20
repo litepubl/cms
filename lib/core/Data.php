@@ -21,7 +21,7 @@ class Data {
     public $table;
 
     public static function i() {
-        return  $this->getApp()->classes->getinstance(get_called_class());
+        return  litepubl::$app->classes->getInstance(get_called_class());
     }
 
     public static function instance() {
@@ -201,8 +201,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
     }
 
     public function load() {
-        if ($this->getstorage()->load($this)) {
-            $this->afterload();
+        if ($this->getStorage()->load($this)) {
+            $this->afterLoad();
             return true;
         }
 
@@ -214,7 +214,7 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
             return;
         }
 
-        return $this->getstorage()->save($this);
+        return $this->getStorage()->save($this);
     }
 
     public function afterload() {

@@ -22,7 +22,7 @@ class App
     public  $options;
     public  $paths;
     public  $router;
-    public  $sharedstorage;
+    public  $sharedStorage;
     public  $site;
     public  $storage;
 
@@ -73,8 +73,8 @@ $this->cache = new CacheMemcache();
 $this->cache = new CacheFile();
         }
 
-         $this->sharedstorage = new SharedStorage();
-        if (! $this->sharedstorage->isInstalled()) {
+         $this->sharedStorage = new SharedStorage();
+        if (! $this->sharedStorage->isInstalled()) {
             require ( $this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
                     }
