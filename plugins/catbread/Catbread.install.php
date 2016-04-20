@@ -7,32 +7,34 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\catbread;
+use litepubl\view\Parser;
+use litepubl\view\Base;
 
-function catbreadInstall($self) {
+function CatbreadInstall($self) {
     Langmerger::i()->addplugin(basename(dirname(__file__)));
     $self->cats->onbeforecontent = $self->beforecat;
 
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->lock();
     $parser->parsed = $self->themeparsed;
     $parser->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
-    basetheme::clearcache();
+    Base::clearcache();
 }
 
-function catbreadUninstall($self) {
+function CatbreadUninstall($self) {
     Langmerger::i()->deleteplugin(basename(dirname(__file__)));
     $self->cats->unbind($self);
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->lock();
     $parser->unbind($self);
     $parser->removetags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
-    basetheme::clearcache();
+    Base::clearcache();
 }
 
-function catbreadThemeparsed(catbread $self, basetheme $theme) {
+function CatbreadThemeparsed(Catbread $self, Base $theme) {
     $tag1 = '$catbread.post';
     $tag2 = '$catbread.sim';
 

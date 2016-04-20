@@ -252,6 +252,12 @@ return [
 'bootstrap_theme' => 'Bootstrap',
 'admin_bootstrap_theme' => 'litepubl\plugins\bootstrap\Admin',
 'admin_bootstrap_header' => 'litepubl\plugins\bootstrap\Header',
+'catbread' => 'litepubl\plugins\catbread\Catbread',
+'admincatbread' => 'litepubl\plugins\catbread\AdminCatbread',
+'toldestposts' => 'litepubl\plugins\oldestposts\Oldestposts',
+'tadminoldestposts' => 'litepubl\plugins\oldestposts\AdminOldestposts',
+
+
 
 
 ];

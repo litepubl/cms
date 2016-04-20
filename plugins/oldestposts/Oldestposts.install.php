@@ -7,9 +7,10 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\oldestposts;
+use litepubl\widget\Widgets;
 
-function toldestpostsInstall($self) {
-    $widgets = twidgets::i();
-    $widgets->addclass($self, 'tpost');
+function OldestpostsInstall($self) {
+    $widgets = Widgets::i();
+    $widgets->addclass($self, '\litepubl\post\Post');
 }

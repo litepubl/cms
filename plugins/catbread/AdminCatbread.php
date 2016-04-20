@@ -7,19 +7,17 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\catbread;
+use litepubl\view\Base;
 
-class admincatbread implements iadmin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Admincatbread extends \litepubl\admin\Simple
+{
+use \litepubl\core\Singleton;
 
     public function getContent() {
-        $plugin = catbread::i();
-        $lang = tplugins::getnamelang('catbread');
-        $admintheme = admintheme::i();
-        $args = new Args();
+        $plugin = Catbread::i();
+        $lang = $this->getLangAbout();
+$args = $this->args;
         $args->showhome = $plugin->showhome;
         $args->showchilds = $plugin->showchilds;
         $args->showsimilar = $plugin->showsimilar;
@@ -45,7 +43,7 @@ class admincatbread implements iadmin {
         $args->similarpos = $this->theme->comboItems($pos, $plugin->similarpos);
 
         $args->formtitle = $lang->formtitle;
-        return $admintheme->form('
+        return $this->admin->form('
     [checkbox=showhome]
     [combo=breadpos]
     [checkbox=showchilds]
@@ -57,7 +55,7 @@ class admincatbread implements iadmin {
 
     public function processForm() {
         extract($_POST, EXTR_SKIP);
-        $plugin = catbread::i();
+        $plugin = Catbread::i();
         $plugin->showhome = isset($showchilds);
         $plugin->showchilds = isset($showchilds);
         $plugin->showsimilar = isset($showsimilar);
@@ -65,7 +63,7 @@ class admincatbread implements iadmin {
         $plugin->breadpos = $breadpos;
         $plugin->similarpos = $similarpos;
         $plugin->save();
-        basetheme::clearcache();
+        Base::clearcache();
         return '';
     }
 

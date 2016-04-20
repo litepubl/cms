@@ -143,6 +143,8 @@ $s = strtr($s, [
 'tplugins::' => 'Plugins::',
 ' iadmin' => ' \litepubl\admin\AdminInterface',
 'extends tadminmenu' => "extends \\litepubl\\admin\\Menu\n",
+'extends tplugin' => "extends \\litepubl\\core\\Plugin\n",
+'ttheme::' => 'Theme::',
 
 ]);
 
@@ -155,6 +157,7 @@ $s = insertUse($s, 'Css::', 'litepubl\view\Css');
 $s = insertUse($s, 'LangMerger::', 'litepubl\view\LangMerger');
 $s = insertUse($s, 'Plugins::', 'litepubl\core\Plugins');
 $s = insertUse($s, 'AdminInterface', 'litepubl\admin\AdminInterface');
+$s = insertUse($s, 'Theme::', 'litepubl\view\Theme');
 
 if (strpos($s, 'tadminmenus')) {
 $s = str_replace'tadminmenus', 'Menus', $s);

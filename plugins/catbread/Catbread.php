@@ -7,14 +7,16 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\catbread;
 use litepubl\core\Arr;
+use litepubl\tag\Cats;
+use litepubl\post\Post;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class catbread extends tplugin {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class Catbread extends \litepubl\core\Plugin
+ {
 
     protected function create() {
         parent::create();
@@ -27,7 +29,7 @@ class catbread extends tplugin {
     }
 
     public function getCats() {
-        return tcategories::i();
+        return Cats::i();
     }
 
     public function beforecat(&$result) {
@@ -43,7 +45,7 @@ class catbread extends tplugin {
             $list = array();
             $idposts = $cats->getidposts($idcat);
             foreach ($idposts as $idpost) {
-                $list = array_merge($list, tpost::i($idpost)->categories);
+                $list = array_merge($list, Post::i($idpost)->categories);
             }
 
             Arr::clean($list);
@@ -56,7 +58,7 @@ class catbread extends tplugin {
 
     public function getPost() {
         $result = '';
-        $post = ttheme::$vars['post'];
+        $post = Theme::$vars['post'];
         if (count($post->categories)) {
             if ($this->breadpos == 'replace') {
                 foreach ($post->categories as $idcat) {
@@ -72,7 +74,7 @@ class catbread extends tplugin {
 
     public function getSim() {
         if ($this->showsimilar) {
-            $post = ttheme::$vars['post'];
+            $post = Theme::$vars['post'];
             if (count($post->categories)) {
                 return $this->getsimilar($post->categories);
             }
@@ -102,7 +104,7 @@ class catbread extends tplugin {
             }
         }
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->templates['catbread.items.item'];
         $lang = Lang::i('catbread');
         $args = new Args();
@@ -145,7 +147,7 @@ class catbread extends tplugin {
             return '';
         }
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->templates['catbread.items.childs.item'];
         $args = new Args();
         $args->parent = $parent;
@@ -193,7 +195,7 @@ class catbread extends tplugin {
 
 
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $args = new Args();
         $items = '';
         foreach ($similar as $id) {

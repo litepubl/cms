@@ -7,29 +7,25 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\oldestposts;
 
-class tadminoldestposts extends tadminorderwidget {
-
-    public static function i() {
-        return getinstance(__class__);
-    }
+class AdminOldestposts extends \litepubl\admin\widgets\Order
+{
 
     protected function create() {
         parent::create();
-        $this->widget = toldestposts::i();
+        $this->widget = Oldestposts::i();
     }
 
-    protected function dogetcontent(twidget $widget, targs $args) {
-        $args->maxcount = $widget->maxcount;
-        $result = $this->html->parsearg('[text=maxcount]', $args);
-        $result.= parent::dogetcontent($widget, $args);
-        return $result;
+    protected function getForm() {
+        $this->args->maxcount = $this->widget->maxcount;
+return parent::getForm()
+. '[text=maxcount]';
     }
 
-    protected function doProcessForm(twidget $widget) {
-        $widget->maxcount = (int)$_POST['maxcount'];
-        return parent::doProcessForm($widget);
+    protected function doProcessForm() {
+        $this->widget->maxcount = (int)$_POST['maxcount'];
+        return parent::doProcessForm();
     }
 
-} //class
+}
