@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -13,14 +14,14 @@ function tusernewsInstall($self) {
     $self->data['dir'] = $name;
     $self->save();
 
-    tlocalmerger::i()->addplugin($name);
+    Langmerger::i()->addplugin($name);
 
     $filter = tcontentfilter::i();
     $filter->phpcode = true;
     $filter->save();
 
-    litepubl::$options->parsepost = false;
-    litepubl::$options->reguser = true;
+     $self->getApp()->options->parsepost = false;
+     $self->getApp()->options->reguser = true;
     $adminoptions = tadminoptions::i();
     $adminoptions->usersenabled = true;
 
@@ -43,5 +44,5 @@ function tusernewsInstall($self) {
 
 function tusernewsUninstall($self) {
     tauthor_rights::i()->unbind($self);
-    tlocalmerger::i()->deleteplugin(basename(dirname(__file__)));
+    Langmerger::i()->deleteplugin(basename(dirname(__file__)));
 }

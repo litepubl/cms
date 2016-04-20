@@ -1,21 +1,23 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\pages\Redirector as Redir;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\admin\Link;
+use litepubl\core\Str;
 
 class Redirector extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $redir = Redir::i();
         $lang = $this->lang;
         $args = new Args();
@@ -77,7 +79,7 @@ class Redirector extends \litepubl\admin\Menu
 return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $redir = Redir::i();
         switch ($_POST['action']) {
             case 'edit':
@@ -87,7 +89,7 @@ return $result;
 
             case 'delete':
                 foreach ($_POST as $id => $value) {
-                    if (strbegin($id, 'checkbox_')) {
+                    if (Str::begin($id, 'checkbox_')) {
                         if (isset($redir->items[$value])) unset($redir->items[$value]);
                     }
                 }

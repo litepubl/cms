@@ -1,21 +1,22 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\comments\Comments;
 use litepubl\widget\Meta as MetaWidget;
 
 function RssInstall($self) {
-    litepubl::$router->add('/rss.xml', get_class($self) , 'posts');
-    $self->idcomments = litepubl::$router->add('/comments.xml', get_class($self) , 'comments');
-    $self->idpostcomments = litepubl::$router->add('/comments/', get_class($self) , null, 'begin');
-    litepubl::$router->add('/rss/categories/', get_class($self) , 'categories', 'begin');
-    litepubl::$router->add('/rss/tags/', get_class($self) , 'tags', 'begin');
+     $self->getApp()->router->add('/rss.xml', get_class($self) , 'posts');
+    $self->idcomments =  $self->getApp()->router->add('/comments.xml', get_class($self) , 'comments');
+    $self->idpostcomments =  $self->getApp()->router->add('/comments/', get_class($self) , null, 'begin');
+     $self->getApp()->router->add('/rss/categories/', get_class($self) , 'categories', 'begin');
+     $self->getApp()->router->add('/rss/tags/', get_class($self) , 'tags', 'begin');
 
     Comments::i()->changed = $self->commentschanged;
 
@@ -29,8 +30,8 @@ function RssInstall($self) {
 }
 
 function RssUninstall($self) {
-    litepubl::$router->unbind($self);
-    litepubl::$router->updatefilter();
+     $self->getApp()->router->unbind($self);
+     $self->getApp()->router->updatefilter();
     Comments::i()->unbind($self);
     $meta  = MetaWidget::i();
     $meta->lock();

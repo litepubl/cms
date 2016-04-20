@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -19,23 +20,23 @@ class tdownloaditemsmenu extends tmenu {
         $this->data['type'] = '';
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = '';
         $theme = ttheme::i();
-        if ((litepubl::$urlmap->page == 1) && ($this->content != '')) {
+        if (( $this->getApp()->router->page == 1) && ($this->content != '')) {
             $result.= $theme->simple($theme->parse($this->rawcontent));
         }
 
-        $perpage = litepubl::$options->perpage;
+        $perpage =  $this->getApp()->options->perpage;
         $downloaditems = tdownloaditems::i();
-        $d = litepubl::$db->prefix . $downloaditems->childtable;
-        $p = litepubl::$db->posts;
+        $d =  $this->getApp()->db->prefix . $downloaditems->childtable;
+        $p =  $this->getApp()->db->posts;
         $where = $this->type == '' ? '' : " and $d.type = '$this->type'";
         $count = $downloaditems->getchildscount($where);
-        $from = (litepubl::$urlmap->page - 1) * $perpage;
+        $from = ( $this->getApp()->router->page - 1) * $perpage;
         if ($from <= $count) {
             $items = $downloaditems->select("$p.status = 'published' $where", " order by $p.posted desc limit $from, $perpage");
-            ttheme::$vars['lang'] = tlocal::i('downloaditem');
+            ttheme::$vars['lang'] = Lang::i('downloaditem');
             $tml = $theme->templates['custom']['downloadexcerpt'];
             if (count($items) > 0) {
                 $result.= $theme->templates['custom']['siteform'];
@@ -45,7 +46,7 @@ class tdownloaditemsmenu extends tmenu {
                 }
             }
         }
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 

@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\perms;
 
@@ -12,7 +19,7 @@ class Groups extends Perm
         $this->data['groups'] = array();
     }
 
-    public function getheader($obj) {
+    public function getHeader($obj) {
         $g = $this->groups;
         if (!$this->author && !count($g)) {
 return '';
@@ -20,10 +27,14 @@ return '';
 
         $author = '';
         if ($this->author && isset($obj->author) && ($obj->author > 1)) {
-            $author = sprintf('  || (\litepubl::$options->user != %d)', $obj->author);
+            $author = sprintf('  || (\ $this->getApp()->options->user != %d)', $obj->author);
         }
 
-        return sprintf('<?php if (!\litepubl::$options->ingroups( array(%s)) %s) return \litepubl::$urlmap->forbidden(); ?>', implode(',', $g) , $author);
+        {
+ return sprintf('<?php if (!\ $this->getApp()->options->ingroups( array(%s)) %s) return \ $this->getApp()->router->forbidden(); ?>', implode(',', $g) , $author);
+}
+
+
     }
 
     public function hasperm($obj) {
@@ -32,10 +43,10 @@ return '';
 return true;
 }
 
-        if (litepubl::$options->ingroups($g)) {
+        if ( $this->getApp()->options->ingroups($g)) {
 return true;
 }
-        return $this->author && isset($obj->author) && ($obj->author > 1) && (litepubl::$options->user == $obj->author);
+        return $this->author && isset($obj->author) && ($obj->author > 1) && ( $this->getApp()->options->user == $obj->author);
     }
 
 }

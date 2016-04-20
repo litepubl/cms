@@ -1,14 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\core\Str;
 
 class Files extends \litepubl\core\Items
 {
@@ -23,7 +25,7 @@ class Files extends \litepubl\core\Items
         $this->cachetml = array();
     }
 
-public function getitemsposts() {
+public function getItemsposts() {
 return FileItems::i();
 }
 
@@ -34,32 +36,32 @@ return FileItems::i();
         }
     }
 
-    public function geturl($id) {
+    public function getUrl($id) {
         $item = $this->getitem($id);
-        return litepubl::$site->files . '/files/' . $item['filename'];
+        return  $this->getApp()->site->files . '/files/' . $item['filename'];
     }
 
-    public function getlink($id) {
+    public function getLink($id) {
         $item = $this->getitem($id);
         $icon = '';
         if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
             $icon = $this->geticon($item['icon']);
         }
-        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', litepubl::$site->files, $item['filename'], $item['title'], $icon . $item['description']);
+        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>',  $this->getApp()->site->files, $item['filename'], $item['title'], $icon . $item['description']);
     }
 
-    public function geticon($id) {
+    public function getIcon($id) {
         return sprintf('<img src="%s" alt="icon" />', $this->geturl($id));
     }
 
-    public function gethash($filename) {
+    public function getHash($filename) {
         return trim(base64_encode(md5_file($filename, true)) , '=');
     }
 
     public function additem(array $item) {
-        $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
-        $item['author'] = litepubl::$options->user;
-        $item['posted'] = sqldate();
+        $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+        $item['author'] =  $this->getApp()->options->user;
+        $item['posted'] = Str::sqlDate();
         $item['hash'] = $this->gethash($realfile);
         $item['size'] = filesize($realfile);
 
@@ -97,7 +99,11 @@ return FileItems::i();
 
     public function edit($id, $title, $description, $keywords) {
         $item = $this->getitem($id);
-        if (($item['title'] == $title) && ($item['description'] == $description) && ($item['keywords'] == $keywords)) return false;
+        if (($item['title'] == $title) && ($item['description'] == $description) && ($item['keywords'] == $keywords)) {
+ return false;
+}
+
+
 
         $item['title'] = $title;
         $item['description'] = $description;
@@ -111,17 +117,21 @@ return FileItems::i();
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $list = $this->itemsposts->getposts($id);
         $this->itemsposts->deleteitem($id);
         $this->itemsposts->updateposts($list, 'files');
 
         $item = $this->getitem($id);
         if ($item['idperm'] == 0) {
-            @unlink(litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
+            @unlink( $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
         } else {
-            @unlink(litepubl::$paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
-            litepubl::$urlmap->delete('/files/' . $item['filename']);
+            @unlink( $this->getApp()->paths->files . 'private' . DIRECTORY_SEPARATOR . basename($item['filename']));
+             $this->getApp()->router->delete('/files/' . $item['filename']);
         }
 
         parent::delete($id);
@@ -139,10 +149,14 @@ return FileItems::i();
         return true;
     }
 
-    public function setcontent($id, $content) {
-        if (!$this->itemexists($id)) return false;
+    public function setContent($id, $content) {
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
-        $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+        $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
         if (file_put_contents($realfile, $content)) {
             $item['hash'] = $this->gethash($realfile);
             $item['size'] = filesize($realfile);
@@ -160,15 +174,27 @@ return FileItems::i();
         return $this->indexof('filename', $filename);
     }
 
-    public function getfilelist(array $list, $excerpt) {
-        if ($result = $this->ongetfilelist($list, $excerpt)) return $result;
-        if (count($list) == 0) return '';
+    public function getFilelist(array $list, $excerpt) {
+        if ($result = $this->ongetfilelist($list, $excerpt)) {
+ return $result;
+}
+
+
+        if (count($list) == 0) {
+ return '';
+}
+
+
 
         return $this->getlist($list, $excerpt ? $this->gettml('content.excerpts.excerpt.filelist') : $this->gettml('content.post.filelist'));
     }
 
-    public function gettml($basekey) {
-        if (isset($this->cachetml[$basekey])) return $this->cachetml[$basekey];
+    public function getTml($basekey) {
+        if (isset($this->cachetml[$basekey])) {
+ return $this->cachetml[$basekey];
+}
+
+
 
         $theme = Theme::i();
         $result = array(
@@ -177,7 +203,7 @@ return FileItems::i();
 
         $key = $basekey . '.';
         foreach ($theme->templates as $k => $v) {
-            if (strbegin($k, $key)) {
+            if (Str::begin($k, $key)) {
                 $result[substr($k, strlen($key)) ] = $v;
             }
         }
@@ -186,7 +212,7 @@ return FileItems::i();
         return $result;
     }
 
-    public function getlist(array $list, array $tml) {
+    public function getList(array $list, array $tml) {
         if (!count($list)) {
             return '';
         }
@@ -198,7 +224,11 @@ return FileItems::i();
         //sort by media type
         $items = array();
         foreach ($list as $id) {
-            if (!isset($this->items[$id])) continue;
+            if (!isset($this->items[$id])) {
+ continue;
+}
+
+
 
             $item = $this->items[$id];
             $type = $item['media'];
@@ -213,7 +243,7 @@ return FileItems::i();
         $args = new Args();
         $args->count = count($list);
 
-        $url = litepubl::$site->files . '/files/';
+        $url =  $this->getApp()->site->files . '/files/';
 
         $preview = ttheme::$vars['preview'] = new tarray2prop();
         $midle = ttheme::$vars['midle'] = new tarray2prop();
@@ -276,11 +306,11 @@ return FileItems::i();
         $this->itemsposts->setitems($idpost, $post->files);
     }
 
-    public function getfirstimage(array $items) {
+    public function getFirstimage(array $items) {
         foreach ($items as $id) {
             $item = $this->getitem($id);
             if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
-                $baseurl = litepubl::$site->files . '/files/';
+                $baseurl =  $this->getApp()->site->files . '/files/';
                 $args = new Args();
                 $args->add($item);
                 $args->link = $baseurl . $item['filename'];
@@ -311,11 +341,11 @@ return FileItems::i();
         return '';
     }
 
-    public function getjson($id) {
+    public function getJson($id) {
         $item = $this->getitem($id);
-        return jsonattr(array(
+        return Str::jsonAttr(array(
             'id' => $id,
-            'link' => litepubl::$site->files . '/files/' . $item['filename'],
+            'link' =>  $this->getApp()->site->files . '/files/' . $item['filename'],
             'width' => $item['width'],
             'height' => $item['height'],
             'size' => $item['size'],

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -57,11 +58,11 @@ class ttickets extends tposts {
 
     private function notify(tticket $ticket) {
         ttheme::$vars['ticket'] = $ticket;
-        $args = new targs();
-        $args->adminurl = litepubl::$site->url . '/admin/tickets/editor/' . litepubl::$site->q . 'id=' . $ticket->id;
+        $args = new Args();
+        $args->adminurl =  $this->getApp()->site->url . '/admin/tickets/editor/' .  $this->getApp()->site->q . 'id=' . $ticket->id;
 
-        tlocal::usefile('mail');
-        $lang = tlocal::i('mailticket');
+        Lang::usefile('mail');
+        $lang = Lang::i('mailticket');
         $lang->addsearch('ticket');
         $theme = ttheme::i();
 
@@ -78,7 +79,7 @@ class ttickets extends tposts {
     }
 
     public function onexclude($id) {
-        if (litepubl::$options->group == 'ticket') {
+        if ( $this->getApp()->options->group == 'ticket') {
             $admin = tadminmenus::i();
             return $admin->items[$id]['url'] == '/admin/posts/';
         }

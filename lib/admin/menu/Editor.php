@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\menu;
 use litepubl\pages\Menus;
@@ -16,13 +17,13 @@ use litepubl\admin\Link;
 class Editor extends \litepubl\admin\Menu
 {
 
-    public function gethead() {
+    public function getHead() {
         $mainView = MainView::i();
         $mainView->ltoptions['idpost'] = $this->idget();
         return parent::gethead();
     }
 
-    public function gettitle() {
+    public function getTitle() {
 if ($this->idget()) {
             return $this->lang->edit;
         }
@@ -30,7 +31,7 @@ if ($this->idget()) {
         return parent::gettitle();
     }
 
-    public function getcontent() {
+    public function getContent() {
                 $id = $this->idparam();
                 $menus = Menus::i();
                 $parents = array(
@@ -42,8 +43,8 @@ if ($this->idget()) {
                 }
 
 $admin = $this->admintheme;
-                $lang = tlocal::i('menu');
-                $args = new targs();
+                $lang = Lang::i('menu');
+                $args = new Args();
                 $args->adminurl = $this->adminurl;
                 $args->ajax = Link::url("/admin/ajaxmenueditor.htm?id=$id&get");
                 $args->editurl = Link::url('/admin/menu/edit?id');
@@ -54,7 +55,11 @@ $admin = $this->admintheme;
                     $args->order = $this->theme->comboItems(range(0, 10) , 0);
                     $status = 'published';
                 } else {
-                    if (!$menus->itemexists($id)) return $this->notfound;
+                    if (!$menus->itemexists($id)) {
+ return $this->notfound;
+}
+
+
                     $menuitem = Menu::i($id);
                     $args->id = $id;
                     $args->title = $menuitem->getownerprop('title');
@@ -100,12 +105,20 @@ $admin = $this->admintheme;
                 return $admin->form($tml, $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
-        if (empty($title)) return '';
+        if (empty($title)) {
+ return '';
+}
+
+
         $id = $this->idget();
         $menus = Menus::i();
-        if (($id != 0) && !$menus->itemexists($id)) return $this->notfound;
+        if (($id != 0) && !$menus->itemexists($id)) {
+ return $this->notfound;
+}
+
+
         if (isset($type) && ($type == 'fake')) {
             $menuitem = FakeMenu::i($id);
         } else {
@@ -120,7 +133,7 @@ $admin = $this->admintheme;
             $menuitem->content = $raw;
         }
 
-        if (isset($idview)) $menuitem->idview = $idview;
+        if (isset($idschema)) $menuitem->idschema = $idschema;
         if (isset($url)) {
             $menuitem->url = $url;
             if (!isset($type) || ($type != 'fake')) {

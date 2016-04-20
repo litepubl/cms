@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -26,33 +27,45 @@ class tusernews extends tplugin {
         $this->data['editorfile'] = 'editor.htm';
     }
 
-    public function getnorights() {
-        $lang = tlocal::admin('usernews');
+    public function getNorights() {
+        $lang = Lang::admin('usernews');
         return sprintf('<h4>%s</h4>', $lang->norights);
     }
 
     public function changeposts($action) {
-        if (!$this->_changeposts) return $this->norights;
+        if (!$this->_changeposts) {
+ return $this->norights;
+}
+
+
     }
 
     public function canupload() {
-        if (!$this->_canupload) return $this->norights;
+        if (!$this->_canupload) {
+ return $this->norights;
+}
+
+
     }
 
     public function candeletefile() {
-        if (!$this->_candeletefile) return $this->norights;
+        if (!$this->_candeletefile) {
+ return $this->norights;
+}
+
+
     }
 
-    public function gethead() {
+    public function getHead() {
         return '';
     }
 
-    public function getposteditor($post, $args) {
-        $args->data['$lang.sourceurl'] = tlocal::admin()->get('usernews', 'sourceurl');
+    public function getPosteditor($post, $args) {
+        $args->data['$lang.sourceurl'] = Lang::admin()->get('usernews', 'sourceurl');
         if ($this->insertsource) $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
 
-        //$form = litepubl::$cache->getString(litepubl::$paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
-        $form = file_get_contents(litepubl::$paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
+        //$form =  $this->getApp()->cache->getString( $this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
+        $form = file_get_contents( $this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
         $args->raw = $post->rawcontent;
         $html = tadminhtml::i();
         $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;
@@ -68,10 +81,14 @@ class tusernews extends tplugin {
 
         if ($this->checkspam && ($id == 0)) {
             $post->status = 'published';
-            $hold = $posts->db->getcount('status = \'draft\' and author = ' . litepubl::$options->user);
-            $approved = $posts->db->getcount('status = \'published\' and author = ' . litepubl::$options->user);
+            $hold = $posts->db->getcount('status = \'draft\' and author = ' .  $this->getApp()->options->user);
+            $approved = $posts->db->getcount('status = \'published\' and author = ' .  $this->getApp()->options->user);
             if ($approved < 3) {
-                if ($hold - $approved >= 2) return $this->norights;
+                if ($hold - $approved >= 2) {
+ return $this->norights;
+}
+
+
                 $post->status = 'draft';
             }
         }
@@ -79,8 +96,8 @@ class tusernews extends tplugin {
         if ($this->insertsource) $post->meta->sourceurl = $sourceurl;
         $post->title = $title;
         $post->categories = admintheme::i()->processcategories();
-        if (litepubl::$options->user > 1) {
-            $post->author = litepubl::$options->user;
+        if ( $this->getApp()->options->user > 1) {
+            $post->author =  $this->getApp()->options->user;
         }
 
         if (isset($files)) {

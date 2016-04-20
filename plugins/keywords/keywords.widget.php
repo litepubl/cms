@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tkeywordswidget extends twidget {
     public $links;
@@ -26,28 +28,40 @@ class tkeywordswidget extends twidget {
         $this->addmap('links', array());
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         $about = tplugins::getabout(tplugins::getname(__file__));
         return $about['deftitle'];
     }
 
-    public function getwidget($id, $sidebar) {
+    public function getWidget($id, $sidebar) {
         $content = $this->getcontent($id, $sidebar);
-        if ($content == '') return '';
+        if ($content == '') {
+ return '';
+}
+
+
         $title = $this->gettitle($id);
         $theme = ttheme::i();
         return $theme->getwidget($title, $content, $this->template, $sidebar);
     }
 
-    public function getcontent($id, $sidebar) {
-        if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel || strbegin(litepubl::$urlmap->url, '/croncron.php') || strend(litepubl::$urlmap->url, '.xml')) return '';
+    public function getContent($id, $sidebar) {
+        if ( $this->getApp()->router->is404 ||  $this->getApp()->router->adminpanel || Str::begin( $this->getApp()->router->url, '/croncron.php') || Str::end( $this->getApp()->router->url, '.xml')) {
+ return '';
+}
 
-        $id = litepubl::$urlmap->item['id'];
-        $filename = litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . litepubl::$urlmap->page . '.php';
+
+
+        $id =  $this->getApp()->router->item['id'];
+        $filename =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' .  $this->getApp()->router->page . '.php';
         if (@file_exists($filename)) {
             $links = file_get_contents($filename);
         } else {
-            if (count($this->links) < $this->count) return '';
+            if (count($this->links) < $this->count) {
+ return '';
+}
+
+
             $arlinks = array_splice($this->links, 0, $this->count);
             $this->save();
 

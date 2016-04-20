@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -21,23 +22,31 @@ class Custom extends Widget
         $this->addevents('added', 'deleted');
     }
 
-    public function getwidget($id, $sidebar) {
-        if (!isset($this->items[$id])) return '';
+    public function getWidget($id, $sidebar) {
+        if (!isset($this->items[$id])) {
+ return '';
+}
+
+
         $item = $this->items[$id];
-        if ($item['template'] == '') return $item['content'];
+        if ($item['template'] == '') {
+ return $item['content'];
+}
+
+
         $theme = Theme::i();
         return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
-    public function gettitle($id) {
+    public function getTitle($id) {
         return $this->items[$id]['title'];
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         return $this->items[$id]['content'];
     }
 
-    public function add($idview, $title, $content, $template) {
+    public function add($idschema, $title, $content, $template) {
         $widgets = Widgets::i();
         $widgets->lock();
         $id = $widgets->addext($this, $title, $template);
@@ -47,7 +56,7 @@ class Custom extends Widget
             'template' => $template
         );
 
-        $sidebars = Sidebars::i($idview);
+        $sidebars = Sidebars::i($idschema);
         $sidebars->add($id);
         $widgets->unlock();
         $this->save();
@@ -67,7 +76,7 @@ class Custom extends Widget
         $widgets->items[$id]['title'] = $title;
         $widgets->save();
         $this->expired($id);
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function delete($id) {

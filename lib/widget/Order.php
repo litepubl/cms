@@ -1,13 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
+use litepubl\core\Arr;
 
 class Order extends Widget
  {
@@ -22,10 +24,14 @@ class Order extends Widget
     }
 
     public function onsidebar(array & $items, $sidebar) {
-        if ($sidebar != $this->sidebar) return;
+        if ($sidebar != $this->sidebar) {
+ return;
+}
+
+
         $order = $this->order;
         if (($order < 0) || ($order >= count($items))) $order = count($items);
-        array_insert($items, array(
+        Arr::insert($items, array(
             'id' => $this->id,
             'ajax' => $this->ajax
         ) , $order);

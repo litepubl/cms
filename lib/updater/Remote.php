@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
+use litepubl\core\Str;
 
 class Remote
 {
@@ -21,7 +23,7 @@ class Remote
     public $connected;
 
     public static function i() {
-        return litepubl::$classes->getinstance(get_called_class());
+        return  $this->getApp()->classes->getinstance(get_called_class());
     }
 
     public function __construct() {
@@ -37,16 +39,24 @@ class Remote
     }
 
     public function connect($host, $login, $password) {
-        if (empty($host) || empty($login) || empty($password)) return false;
+        if (empty($host) || empty($login) || empty($password)) {
+ return false;
+}
+
+
         $this->host = $host;
         $this->login = $login;
         $this->password = $password;
         return true;
     }
 
-    public function getmode($mode) {
+    public function getMode($mode) {
         static $modes;
-        if (!$mode) return $this->chmod_file;
+        if (!$mode) {
+ return $this->chmod_file;
+}
+
+
         if (!isset($modes)) {
             foreach (array(
                 0644,
@@ -70,7 +80,7 @@ class Remote
         return isset($modes[$mode]) ? $modes[$mode] : $this->chmod_file;
     }
 
-    public static function getownername($owner) {
+    public static function getOwnername($owner) {
         if ($owner && function_exists('posix_getpwuid')) {
             $a = posix_getpwuid($owner);
             return $a['name'];
@@ -78,7 +88,7 @@ class Remote
         return $owner;
     }
 
-    protected function getgroupname($group) {
+    protected function getGroupname($group) {
         if ($group && function_exists('posix_getgrgid')) {
             $a = posix_getgrgid($group);
             return $a['name'];
@@ -87,8 +97,16 @@ class Remote
     }
 
     public function copy($src, $dst, $overwrite = false) {
-        if (!$overwrite && $this->exists($dst)) return false;
-        if (false === ($s = $this->getfile($src))) return false;
+        if (!$overwrite && $this->exists($dst)) {
+ return false;
+}
+
+
+        if (false === ($s = $this->getfile($src))) {
+ return false;
+}
+
+
         return $this->putfile($dst, $s);
     }
 
@@ -115,7 +133,7 @@ class Remote
         }
     }
 
-    protected function getfileinfo($filename) {
+    protected function getFileinfo($filename) {
         $result = array();
         $result['mode'] = $this->getchmod($filename);
         $result['owner'] = $this->owner($filename);
@@ -146,8 +164,8 @@ class Remote
         }
     }
 
-    public function getroot($root) {
-        $temp = litepubl::$paths->data . md5rand();
+    public function getRoot($root) {
+        $temp =  $this->getApp()->paths->data . Str::md5Rand();
         file_put_contents($temp, ' ');
         @chmod($temp, 0666);
 
@@ -155,7 +173,7 @@ class Remote
         $filename = str_replace('\\', '/', $filename);
 
         $this->chdir('/');
-        if (!$root || !strbegin($filename, $root) || !$this->exists(substr($filename, strlen($root)))) {
+        if (!$root || !Str::begin($filename, $root) || !$this->exists(substr($filename, strlen($root)))) {
             $root = $this->findroot($temp);
         }
 

@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 
@@ -21,7 +28,7 @@ class Parser extends IXR_Server
     header('Date: " . date('r') . "');
     Header( 'Cache-Control: no-cache, must-revalidate');
     Header( 'Pragma: no-cache');
-    header('X-Pingback: " . litepubl::$site->url . "/rpc.xml');
+    header('X-Pingback: " .  $this->getApp()->site->url . "/rpc.xml');
     echo'$head';
     ?>" . $xml;
     }

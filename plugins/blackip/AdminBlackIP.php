@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\plugins\blackip;
 use litepubl\admin\Tabs;
@@ -13,14 +14,14 @@ class AdminBlackIP extends \litepubl\admin\Simple
 {
 use \litepubl\core\Singleton;
 
-    public function getcontent() {
+    public function getContent() {
         $plugin = BlackIP::i();
         $lang = $this->getLangAbbout();
         $args = $this->args;
         $args->ip = implode("\n", $plugin->ip);
         $args->words = implode("\n", $plugin->words);
-        $args->ipstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->ipstatus);
-        $args->wordstatus = $this->theme->comboItems(tlocal::i()->ini['commentstatus'], $plugin->wordstatus);
+        $args->ipstatus = $this->theme->comboItems(Lang::i()->ini['commentstatus'], $plugin->ipstatus);
+        $args->wordstatus = $this->theme->comboItems(Lang::i()->ini['commentstatus'], $plugin->wordstatus);
 
         $tabs = new tabs($this->admin);
         $tabs->add($lang->wordtitle, '[combo=wordstatus] [editor=words]');
@@ -30,7 +31,7 @@ use \litepubl\core\Singleton;
         return $this->admin->form($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $plugin = BlackIP::i();
         $plugin->ipstatus = $_POST['ipstatus'];
         $plugin->wordstatus = $_POST['wordstatus'];

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -18,8 +19,8 @@ class tmarkdownplugin extends tplugin {
     protected function create() {
         parent::create();
         $this->data['deletep'] = false;
-        litepubl::$classes->include_file(litepubl::$paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'MarkdownInterface.php');
-        litepubl::$classes->include_file(litepubl::$paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'Markdown.php');
+         $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'MarkdownInterface.php');
+         $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . 'markdown' . DIRECTORY_SEPARATOR . 'Markdown.php');
         $this->parser = new Michelf\Markdown();
     }
 

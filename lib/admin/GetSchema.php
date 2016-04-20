@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Schemes;
@@ -10,12 +17,12 @@ class GetSchema
  {
 
     public static function form($url) {
-        $lang = tlocal::admin();
+        $lang = Lang::admin();
         $args = new Args();
 $id = !empty($_GET['idschema']) ? (int) $_GET['idschema'] : (!empty($_POST['idschema']) ? (int) $_POST['idschema'] : 0);
         $args->idschema = static ::items($id);
         $form = new Form($args);
-        $form->action = litepubl::$site->url . $url;
+        $form->action =  $this->getApp()->site->url . $url;
         $form->inline = true;
         $form->method = 'get';
         $form->body = '[combo=idschema]';

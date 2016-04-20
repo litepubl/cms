@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
+use litepubl\Config;
 
 class Router extends Items
  {
@@ -36,7 +38,7 @@ class Router extends Items
         $this->is404 = false;
         $this->isredir = false;
         $this->adminpanel = false;
-        $this->cache_enabled = litepubl::$options->cache && !litepubl::$options->admincookie;
+        $this->cache_enabled =  $this->getApp()->options->cache && ! $this->getApp()->options->admincookie;
         $this->page = 1;
         $this->close_events = array();
     }
@@ -45,8 +47,8 @@ class Router extends Items
         $this->host = $host;
         $this->page = 1;
         $this->uripath = array();
-        if (litepubl::$site->q == '?') {
-            $this->url = substr($url, strlen(litepubl::$site->subdir));
+        if ( $this->getApp()->site->q == '?') {
+            $this->url = substr($url, strlen( $this->getApp()->site->subdir));
         } else {
             $this->url = $_GET['url'];
         }
@@ -54,16 +56,16 @@ class Router extends Items
 
     public function request($host, $url) {
         $this->prepareurl($host, $url);
-        $this->adminpanel = strbegin($this->url, '/admin/') || ($this->url == '/admin');
+        $this->adminpanel = Str::begin($this->url, '/admin/') || ($this->url == '/admin');
         if ($this->redirdom) {
-            $parsedurl = parse_url(litepubl::$site->url . '/');
+            $parsedurl = parse_url( $this->getApp()->site->url . '/');
             if ($host != strtolower($parsedurl['host'])) {
                 return $this->redir($url);
             }
         }
 
         $this->beforerequest();
-        if (!litepubl::$debug && litepubl::$options->ob_cache) {
+        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
             ob_start();
         }
 
@@ -71,13 +73,13 @@ class Router extends Items
             $this->dorequest($this->url);
         }
         catch(\Exception $e) {
-            litepubl::$options->handexception($e);
+             $this->getApp()->options->handexception($e);
         }
 
         // production mode: no debug and enabled buffer
-        if (!litepubl::$debug && litepubl::$options->ob_cache) {
-            litepubl::$options->showerrors();
-            litepubl::$options->errorlog = '';
+        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
+             $this->getApp()->options->showerrors();
+             $this->getApp()->options->errorlog = '';
 
             $afterclose = $this->isredir || count($this->close_events);
             if ($afterclose) {
@@ -122,7 +124,7 @@ class Router extends Items
         }
     }
 
-    public function getidurl($id) {
+    public function getIdurl($id) {
         if (!isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id);
         }
@@ -134,7 +136,7 @@ return \litepubl\view\MainView::i();
 }
 
     public function findurl($url) {
-        if ($result = $this->db->finditem('url = ' . dbquote($url))) {
+        if ($result = $this->db->finditem('url = ' . Str::uuote($url))) {
             return $result;
         }
 
@@ -142,14 +144,14 @@ return \litepubl\view\MainView::i();
     }
 
     public function urlexists($url) {
-        return $this->db->findid('url = ' . dbquote($url));
+        return $this->db->findid('url = ' . Str::uuote($url));
     }
 
     private function query($url) {
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
-        } else if ($item = $this->db->getassoc('url = ' . dbquote($url) . ' limit 1')) {
+        } else if ($item = $this->db->getassoc('url = ' . Str::uuote($url) . ' limit 1')) {
             $this->items[$item['id']] = $item;
             return $item;
         }
@@ -207,14 +209,14 @@ return \litepubl\view\MainView::i();
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
                 case 'begin':
-                    if (strbegin($url, $item['url'])) {
+                    if (Str::begin($url, $item['url'])) {
                         return $item;
                     }
                     break;
 
 
                 case 'end':
-                    if (strend($url, $item['url'])) {
+                    if (Str::end($url, $item['url'])) {
                         return $item;
                     }
                     break;
@@ -236,16 +238,16 @@ return \litepubl\view\MainView::i();
         $this->save();
     }
 
-    private function getcachefile(array $item) {
+    private function getCachefile(array $item) {
         switch ($item['type']) {
             case 'normal':
                 return sprintf('%s-%d.php', $item['id'], $this->page);
 
             case 'usernormal':
-                return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page, litepubl::$options->user);
+                return sprintf('%s-page-%d-user-%d.php', $item['id'], $this->page,  $this->getApp()->options->user);
 
             case 'userget':
-                return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page, litepubl::$options->user, md5($_SERVER['REQUEST_URI']));
+                return sprintf('%s-page-%d-user%d-get-%s.php', $item['id'], $this->page,  $this->getApp()->options->user, md5($_SERVER['REQUEST_URI']));
 
             default: //get
                 return sprintf('%s-%d-%s.php', $item['id'], $this->page, md5($_SERVER['REQUEST_URI']));
@@ -257,7 +259,7 @@ return \litepubl\view\MainView::i();
     }
 
     protected function include_file($fn) {
-        if (litepubl::$memcache) {
+        if ( $this->getApp()->memcache) {
             if ($s = $this->cache->getString($fn)) {
                 eval('?>' . $s);
                 return true;
@@ -265,8 +267,8 @@ return \litepubl\view\MainView::i();
             return false;
         }
 
-        $filename = litepubl::$paths->cache . $fn;
-        if (file_exists($filename) && ((filemtime($filename) + litepubl::$options->expiredcache - litepubl::$options->filetime_offset) >= time())) {
+        $filename =  $this->getApp()->paths->cache . $fn;
+        if (file_exists($filename) && ((filemtime($filename) +  $this->getApp()->options->expiredcache -  $this->getApp()->options->filetime_offset) >= time())) {
             include ($filename);
             return true;
         }
@@ -275,7 +277,7 @@ return \litepubl\view\MainView::i();
     }
 
     private function printcontent(array $item) {
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
         if ($this->cache_enabled && $this->include_file($this->getcachefile($item))) {
             return;
         }
@@ -287,12 +289,12 @@ return \litepubl\view\MainView::i();
         }
     }
 
-    public function getidmodel($id) {
+    public function getIdmodel($id) {
         $item = $this->getitem($id);
         return $this->getmodel($item);
     }
 
-    public function getmodel(array $item) {
+    public function getModel(array $item) {
         $classname = $item['class'];
         $parents = class_parents($classname);
         if (in_array('litepubl\titem', $parents)) {
@@ -303,7 +305,7 @@ return \litepubl\view\MainView::i();
                 $item['arg']
             ));
         } else {
-            return litepubl::$classes->getinstance($classname);
+            return  $this->getApp()->classes->getinstance($classname);
         }
     }
 
@@ -324,8 +326,8 @@ return \litepubl\view\MainView::i();
                 return;
             }
 
-            $view = $this->getView();
-            $s = $view->render($model);
+            $schema = $this->getView();
+            $s = $schema->render($model);
         }
 
         eval('?>' . $s);
@@ -350,9 +352,9 @@ return \litepubl\view\MainView::i();
             return;
         }
 
-        $obj = litepubl::$classes->getinstance($classname);
-        $view = $this->getView();
-        $s = $view->render($obj);
+        $obj =  $this->getApp()->classes->getinstance($classname);
+        $schema = $this->getView();
+        $s = $schema->render($obj);
         eval('?>' . $s);
 
         if ($this->cache_enabled && $obj->cache) {
@@ -384,7 +386,7 @@ return \litepubl\view\MainView::i();
             $this->error(sprintf('Invalid url type %s', $type));
         }
 
-        if ($item = $this->db->finditem('url = ' . dbquote($url))) {
+        if ($item = $this->db->finditem('url = ' . Str::uuote($url))) {
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 
@@ -411,7 +413,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function delete($url) {
-        $url = dbquote($url);
+        $url = Str::uuote($url);
         if ($id = $this->db->findid('url = ' . $url)) {
             $this->db->iddelete($id);
         } else {
@@ -432,7 +434,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function deleteclass($class) {
-        if ($items = $this->db->getitems('class = ' . dbquote($class))) {
+        if ($items = $this->db->getitems('class = ' . Str::uuote($class))) {
             foreach ($items as $item) {
                 $this->db->iddelete($item['id']);
                 $this->deleted($item['id']);
@@ -452,7 +454,7 @@ return \litepubl\view\MainView::i();
 
     //for Archives
     public function GetClassUrls($class) {
-        $res = $this->db->query("select url from $this->thistable where class = " . dbquote($class));
+        $res = $this->db->query("select url from $this->thistable where class = " . Str::uuote($class));
         return $this->db->res2id($res);
     }
 
@@ -461,7 +463,7 @@ return \litepubl\view\MainView::i();
         $this->onclearcache();
     }
 
-    public function setexpired($id) {
+    public function setExpired($id) {
         if ($item = $this->getitem($id)) {
             $cache = $this->cache;
             $page = $this->page;
@@ -473,12 +475,12 @@ return \litepubl\view\MainView::i();
         }
     }
 
-    public function setexpiredcurrent() {
+    public function setExpiredcurrent() {
         $this->cache->delete($this->getcachefile($this->item));
     }
 
     public function expiredclass($class) {
-        $items = $this->db->getitems('class = ' . dbquote($class));
+        $items = $this->db->getitems('class = ' . Str::uuote($class));
         if (!count($items)) {
             return;
         }
@@ -512,7 +514,7 @@ parent::unbind($obj);
         $this->unlock();
     }
 
-    public function setonclose(array $a) {
+    public function setOnclose(array $a) {
         if (count($a) == 0) {
             return;
         }
@@ -539,7 +541,7 @@ parent::unbind($obj);
                 call_user_func_array($c, $a);
             }
             catch(Exception $e) {
-                litepubl::$options->handexception($e);
+                 $this->getApp()->options->handexception($e);
             }
         }
 
@@ -564,7 +566,7 @@ parent::unbind($obj);
     }
 
     public function redir($url, $status = 301) {
-        litepubl::$options->savemodified();
+         $this->getApp()->options->savemodified();
         $this->isredir = true;
 
         switch ($status) {
@@ -583,37 +585,37 @@ parent::unbind($obj);
                 break;
         }
 
-        if (!strbegin($url, 'http://') && !strbegin($url, 'https://')) $url = litepubl::$site->url . $url;
+        if (!Str::begin($url, 'http://') && !Str::begin($url, 'https://')) $url =  $this->getApp()->site->url . $url;
         header('Location: ' . $url);
     }
 
-    public function seturlvalue($url, $name, $value) {
+    public function setUrlvalue($url, $name, $value) {
         if ($id = $this->urlexists($url)) {
             $this->setvalue($id, $name, $value);
         }
     }
 
-    public function setidurl($id, $url) {
+    public function setIdurl($id, $url) {
         $this->db->setvalue($id, 'url', $url);
         if (isset($this->items[$id])) $this->items[$id]['url'] = $url;
     }
 
-    public function getnextpage() {
+    public function getNextpage() {
         $url = $this->item['url'];
-        return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
+        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
     }
 
-    public function getprevpage() {
+    public function getPrevpage() {
         $url = $this->item['url'];
         if ($this->page <= 2) {
             return url;
         }
 
-        return litepubl::$site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
+        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
     }
 
     public static function htmlheader($cache) {
-        return sprintf('<?php litepubl\turlmap::sendheader(%s); ?>', $cache ? 'true' : 'false');
+        return sprintf('<?php litepubl\\litepubl\core\Router::sendheader(%s); ?>', $cache ? 'true' : 'false');
     }
 
     public static function nocache() {
@@ -628,13 +630,13 @@ parent::unbind($obj);
 
         header('Content-Type: text/html; charset=utf-8');
         header('Last-Modified: ' . date('r'));
-        header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
+        header('X-Pingback: ' .  $this->getApp()->site->url . '/rpc.xml');
     }
 
     public static function sendxml() {
         header('Content-Type: text/xml; charset=utf-8');
         header('Last-Modified: ' . date('r'));
-        header('X-Pingback: ' . litepubl::$site->url . '/rpc.xml');
+        header('X-Pingback: ' .  $this->getApp()->site->url . '/rpc.xml');
         echo '<?xml version="1.0" encoding="utf-8" ?>';
     }
 

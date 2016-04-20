@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\posts;
 use litepubl\post\Posts as PostItems;
@@ -18,6 +19,7 @@ use litepubl\view\Admin;
 use litepubl\view\MainView;
 use litepubl\admin\GetSchema;
 use litepubl\admin\GetPerm;
+use litepubl\core\Arr;
 
 class Ajax extends \litepubl\core\Events
  {
@@ -47,20 +49,28 @@ class Ajax extends \litepubl\core\Events
     public function delete_event($name) {
         if (isset($this->events[$name])) {
             unset($this->events[$name]);
-            array_delete_value($this->eventnames, $name);
+            Arr::deleteValue($this->eventnames, $name);
             $this->save();
         }
     }
 
     protected static function error403() {
-        return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . turlmap::htmlheader(false) . 'Forbidden';
+        return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . \litepubl\core\Router::htmlheader(false) . 'Forbidden';
     }
 
     public static function auth() {
-        $options = litepubl::$options;
-        if (!$options->user) return static ::error403();
+        $options =  $this->getApp()->options;
+        if (!$options->user) {
+ return static ::error403();
+}
+
+
         if (!$options->hasgroup('editor')) {
-            if (!$options->hasgroup('author')) return static ::error403();
+            if (!$options->hasgroup('author')) {
+ return static ::error403();
+}
+
+
         }
     }
 
@@ -70,19 +80,31 @@ class Ajax extends \litepubl\core\Events
 
     public function request($arg) {
         $this->cache = false;
-        turlmap::sendheader(false);
+        \litepubl\core\Router::sendheader(false);
 
-        if ($err = static ::auth()) return $err;
+        if ($err = static ::auth()) {
+ return $err;
+}
+
+
         $this->idpost = $this->idparam();
-        $this->isauthor = litepubl::$options->ingroup('author');
+        $this->isauthor =  $this->getApp()->options->ingroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
-            if (!$posts->itemexists($this->idpost)) return static ::error403();
-            if (!litepubl::$options->hasgroup('editor')) {
-                if (litepubl::$options->hasgroup('author')) {
+            if (!$posts->itemexists($this->idpost)) {
+ return static ::error403();
+}
+
+
+            if (! $this->getApp()->options->hasgroup('editor')) {
+                if ( $this->getApp()->options->hasgroup('author')) {
                     $this->isauthor = true;
                     $post = Post::i($this->idpost);
-                    if (litepubl::$options->user != $post->author) return static ::error403();
+                    if ( $this->getApp()->options->user != $post->author) {
+ return static ::error403();
+}
+
+
                 }
             }
         }
@@ -90,9 +112,9 @@ class Ajax extends \litepubl\core\Events
         return $this->getcontent();
     }
 
-    public function getcontent() {
+    public function getContent() {
         $theme = Schemes::i(Schemes::i()->defaults['admin'])->theme;
-        $lang = tlocal::i('editor');
+        $lang = Lang::i('editor');
         $post = Post::i($this->idpost);
         $vars = new Vars();
         $vars->post = $post;
@@ -114,7 +136,7 @@ class Ajax extends \litepubl\core\Events
 
             case 'status':
             case 'access':
-                $args = new targs();
+                $args = new Args();
                 $args->comstatus = $theme->comboItems(array(
                     'closed' => $lang->closed,
                     'reg' => $lang->reg,
@@ -156,15 +178,15 @@ class Ajax extends \litepubl\core\Events
                 }
         }
 
-        return turlmap::htmlheader(false) . $result;
+        return \litepubl\core\Router::htmlheader(false) . $result;
     }
 
-    public function gettext($text, $admintheme = null) {
+    public function getText($text, $admintheme = null) {
         if (!$admintheme) {
             $admintheme = Admin::admin();
         }
 
-        $args = new targs();
+        $args = new Args();
         if ($this->visual) {
             if ($this->ajaxvisual) {
                 $args->scripturl = $this->visual;

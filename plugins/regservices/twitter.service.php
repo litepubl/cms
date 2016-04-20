@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -22,7 +23,7 @@ class ttwitterregservice extends tregservice {
         $this->data['url'] = '/twitter-oauth1callback.php';
     }
 
-    public function getauthurl() {
+    public function getAuthurl() {
         $oauth = $this->getoauth();
         if ($tokens = $oauth->getrequesttoken()) {
             tsession::start(md5($tokens['oauth_token']));
@@ -33,9 +34,9 @@ class ttwitterregservice extends tregservice {
         return false;
     }
 
-    public function getoauth() {
+    public function getOauth() {
         $oauth = new toauth();
-        $oauth->urllist['callback'] = litepubl::$site->url . $this->url;
+        $oauth->urllist['callback'] =  $this->getApp()->site->url . $this->url;
         $oauth->key = $this->client_id;
         $oauth->secret = $this->client_secret;
         return $oauth;
@@ -44,9 +45,13 @@ class ttwitterregservice extends tregservice {
     //handle callback
     public function request($arg) {
         $this->cache = false;
-        turlmap::nocache();
+        \litepubl\core\Router::nocache();
 
-        if (empty($_GET['oauth_token'])) return 403;
+        if (empty($_GET['oauth_token'])) {
+ return 403;
+}
+
+
         tsession::start(md5($_GET['oauth_token']));
         if (!isset($_SESSION['tokens'])) {
             session_destroy();
@@ -72,7 +77,7 @@ class ttwitterregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getadmininfo($lang) {
+    protected function getAdmininfo($lang) {
         return array(
             'regurl' => 'https://dev.twitter.com/apps/new',
             'client_id' => 'Consumer key',

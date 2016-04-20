@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Str;
 
 class Css extends Js
  {
@@ -18,7 +20,11 @@ class Css extends Js
 
     public function replaceurl($m) {
         $url = $m[1];
-        if (strbegin($url, 'data:')) return " url(\"$url\")";
+        if (Str::begin($url, 'data:')) {
+ return " url(\"$url\")";
+}
+
+
 
         $args = '';
         if ($i = strpos($url, '?')) {
@@ -27,10 +33,10 @@ class Css extends Js
         }
 
         if ($realfile = realpath($url)) {
-            $url = substr($realfile, strlen(litepubl::$paths->home));
+            $url = substr($realfile, strlen( $this->getApp()->paths->home));
         } // else must be absolute url
         $url = str_replace(DIRECTORY_SEPARATOR, '/', $url);
-        $url = litepubl::$site->files . '/' . ltrim($url, '/');
+        $url =  $this->getApp()->site->files . '/' . ltrim($url, '/');
         $url = substr($url, strpos($url, '/', 9));
         return " url('$url$args')";
     }
@@ -48,12 +54,16 @@ class Css extends Js
         }
     }
 
-    public function getfilename($section, $revision) {
+    public function getFilename($section, $revision) {
         return sprintf('/files/js/%s.%s.css', $section, $revision);
     }
 
     public function addstyle($filename) {
-        if (!($filename = $this->normfilename($filename))) return false;
+        if (!($filename = $this->normfilename($filename))) {
+ return false;
+}
+
+
         $template = ttemplate::i();
         if (strpos($template->heads, $this->basename . '_default')) {
             $this->add('default', $filename);
@@ -63,7 +73,11 @@ class Css extends Js
     }
 
     public function deletestyle($filename) {
-        if (!($filename = $this->normfilename($filename))) return false;
+        if (!($filename = $this->normfilename($filename))) {
+ return false;
+}
+
+
         $template = ttemplate::i();
         if (strpos($template->heads, $this->basename . '_default')) {
             $this->deletefile('default', $filename);

@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class ulogin extends tplugin {
 
@@ -24,7 +26,11 @@ class ulogin extends tplugin {
     }
 
     public function add($id, $service, $uid) {
-        if (!$id || !$service || !$uid) return;
+        if (!$id || !$service || !$uid) {
+ return;
+}
+
+
 
         if (!in_array($service, $this->data['nets'])) {
             $this->data['nets'][] = $service;
@@ -43,7 +49,7 @@ class ulogin extends tplugin {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . dbquote($service) . ' and uid = ' . dbquote($uid));
+        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
     }
 
     public function userdeleted($id) {
@@ -59,15 +65,27 @@ class ulogin extends tplugin {
         if (!$token) {
             //try fix ulogin bug double symbol ?
             $uri = $_SERVER['REQUEST_URI'];
-            if (substr_count($uri, '?') <= 1) return 403;
+            if (substr_count($uri, '?') <= 1) {
+ return 403;
+}
+
+
             $q = substr($uri, strpos($uri, '?') + 1);
             $q = str_replace('?', '&', $q);
             parse_str($q, $_GET);
             $token = isset($_GET['token']) ? $_GET['token'] : '';
-            if (!$token) return 403;
+            if (!$token) {
+ return 403;
+}
+
+
         }
 
-        if (!($cookies = $this->auth($token))) return 403;
+        if (!($cookies = $this->auth($token))) {
+ return 403;
+}
+
+
 
         if (!empty($_GET['backurl'])) {
             $backurl = $_GET['backurl'];
@@ -80,25 +98,37 @@ class ulogin extends tplugin {
 
         if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
             if ($url = $this->onphone($backurl)) {
-                return litepubl::$urlmap->redir($url);
+                return  $this->getApp()->router->redir($url);
             }
         }
 
-        setcookie('backurl', '', 0, litepubl::$site->subdir, false);
-        return litepubl::$urlmap->redir($backurl);
+        setcookie('backurl', '', 0,  $this->getApp()->site->subdir, false);
+        return  $this->getApp()->router->redir($backurl);
     }
 
     public function auth($token) {
-        if (!($s = http::get('http://ulogin.ru/token.php?token=' . $token . '&host=' . $_SERVER['HTTP_HOST']))) return false;
-        if (!($info = json_decode($s, true))) return false;
-        if (isset($info['error']) || !isset($info['network'])) return false;
+        if (!($s = http::get('http://ulogin.ru/token.php?token=' . $token . '&host=' . $_SERVER['HTTP_HOST']))) {
+ return false;
+}
+
+
+        if (!($info = json_decode($s, true))) {
+ return false;
+}
+
+
+        if (isset($info['error']) || !isset($info['network'])) {
+ return false;
+}
+
+
 
         $name = !empty($info['first_name']) ? $info['first_name'] : '';
         $name.= !empty($info['last_name']) ? ' ' . $info['last_name'] : '';
         if (!$name && !empty($info['nickname'])) $name = $info['nickname'];
 
         $uid = !empty($info['uid']) ? $info['uid'] : (!empty($info['id']) ? $info['id'] : (!empty($info['identity']) ? $info['identity'] : (!empty($info['profile']) ? $info['profile'] : '')));
-        if (strlen($uid) >= 22) $uid = basemd5($uid);
+        if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
 
         $phone = !empty($info['phone']) ? static ::filterphone($info['phone']) : false;
 
@@ -114,7 +144,7 @@ class ulogin extends tplugin {
                 if ($phone && empty($user['phone'])) {
                     $users->setvalue($id, 'phone', $phone);
                 }
-            } elseif (litepubl::$options->reguser) {
+            } elseif ( $this->getApp()->options->reguser) {
                 $newreg = true;
                 $id = $users->add(array(
                     'email' => $info['email'],
@@ -137,7 +167,7 @@ class ulogin extends tplugin {
                 if ($id = $this->find($info['network'], $uid)) {
                     //nothing
                     
-                } elseif (litepubl::$options->reguser) {
+                } elseif ( $this->getApp()->options->reguser) {
                     $newreg = true;
                     $id = $users->add(array(
                         'email' => '',
@@ -158,13 +188,13 @@ class ulogin extends tplugin {
         }
 
         $expired = time() + 31536000;
-        $cookie = md5uniq();
-        litepubl::$options->user = $id;
-        litepubl::$options->updategroup();
-        litepubl::$options->setcookies($cookie, $expired);
-        if (litepubl::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepubl::$site->subdir . '/', false);
+        $cookie = Str::md5Uniq();
+         $this->getApp()->options->user = $id;
+         $this->getApp()->options->updategroup();
+         $this->getApp()->options->setcookies($cookie, $expired);
+        if ( $this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired,  $this->getApp()->site->subdir . '/', false);
 
-        setcookie('litepubl_regservice', $info['network'], $expired, litepubl::$site->subdir . '/', false);
+        setcookie('litepubl_regservice', $info['network'], $expired,  $this->getApp()->site->subdir . '/', false);
         $this->onadd($id, $info, $newreg);
 
         return array(
@@ -175,14 +205,18 @@ class ulogin extends tplugin {
     }
 
     public function ulogin_auth(array $args) {
-        if (!isset($args['token']) || (!($token = $args['token']))) return $this->error('Invalide token', 403);
+        if (!isset($args['token']) || (!($token = $args['token']))) {
+ return $this->error('Invalide token', 403);
+}
+
+
         $result = $this->auth($token);
         if (!$result) $this->error('Not authorized', 403);
         return $result;
     }
 
     public function check_logged(array $args) {
-        if (litepubl::$options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
+        if ( $this->getApp()->options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
             return array(
                 'logged' => true
             );

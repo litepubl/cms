@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\Lang;
@@ -8,8 +15,8 @@ use litepubl\view\Parser;
 
 class View extends \litepubl\admin\Menu
 {
-public function getcontent() {
-$options = litepubl::$options;
+public function getContent() {
+$options =  $this->getApp()->options;
 $args = new Args();
                 $args->perpage = $options->perpage;
 
@@ -39,9 +46,9 @@ $lang = Lang::admin('options');
       ', $args);
 }
 
-public function processform() {
+public function processForm() {
         extract($_POST, EXTR_SKIP);
-$options = litepubl::$options;
+$options =  $this->getApp()->options;
                 //$options->icondisabled = isset($icondisabled);
                 $options->hidefilesonpage = isset($hidefilesonpage);
                 if (!empty($perpage)) {

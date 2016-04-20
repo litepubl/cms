@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 
@@ -22,10 +23,10 @@ use \litepubl\view\ViewTrait;
         $this->table = 'posts';
     }
 
-    public function getheadlinks() {
+    public function getHeadlinks() {
         $result = '';
         foreach ($this->items as $date => $item) {
-            $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\"litepubl::$site->url{$item['url']}\" />\n";
+            $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\" $this->getApp()->site->url{$item['url']}\" />\n";
         }
 
         return $this->schema->theme->parse($result);
@@ -46,7 +47,7 @@ use \litepubl\view\ViewTrait;
             $this->items[$this->date] = array(
                 'idurl' => 0,
                 'url' => $linkgen->Createlink($this, 'archive', false) ,
-                'title' => tlocal::date($this->date, 'F Y') ,
+                'title' => Lang::date($this->date, 'F Y') ,
                 'year' => $r['year'],
                 'month' => $r['month'],
                 'count' => $r['count']
@@ -60,17 +61,17 @@ use \litepubl\view\ViewTrait;
     public function CreatePageLinks() {
         $this->lock();
         //Compare links
-        $old = litepubl::$urlmap->GetClassUrls(get_class($this));
+        $old =  $this->getApp()->router->GetClassUrls(get_class($this));
         foreach ($this->items as $date => $item) {
             $j = array_search($item['url'], $old);
             if (is_int($j)) {
                 array_splice($old, $j, 1);
             } else {
-                $this->items[$date]['idurl'] = litepubl::$urlmap->Add($item['url'], get_class($this) , $date);
+                $this->items[$date]['idurl'] =  $this->getApp()->router->Add($item['url'], get_class($this) , $date);
             }
         }
         foreach ($old as $url) {
-            litepubl::$urlmap->delete($url);
+             $this->getApp()->router->delete($url);
         }
 
         $this->unlock();
@@ -79,51 +80,63 @@ use \litepubl\view\ViewTrait;
     //ITemplate
     public function request($date) {
         $date = (int)$date;
-        if (!isset($this->items[$date])) return 404;
+        if (!isset($this->items[$date])) {
+ return 404;
+}
+
+
 
         $this->date = $date;
         $item = $this->items[$date];
 
-        $view = tview::getview($this);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+        $schema = Schema::getview($this);
+        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $pages = (int)ceil($item['count'] / $perpage);
-        if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
-            return "<?php litepubl::\$urlmap->redir('{$item['url']}'); ?>";
+        if (( $this->getApp()->router->page > 1) && ( $this->getApp()->router->page > $pages)) {
+            return "<?php litepubl::\$router->redir('{$item['url']}'); ?>";
         }
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
         $result.= Posts::i()->getanhead($this->getidposts());
         return $result;
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return $this->items[$this->date]['title'];
     }
 
-    public function getcont() {
+    public function getCont() {
         $items = $this->getidposts();
-        if (count($items) == 0) return '';
+        if (count($items) == 0) {
+ return '';
+}
 
-        $view = tview::getview($this);
-        $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
-        $list = array_slice($items, (litepubl::$urlmap->page - 1) * $perpage, $perpage);
-        $result = $view->theme->getposts($list, $view->postanounce);
-        $result.= $view->theme->getpages($this->items[$this->date]['url'], litepubl::$urlmap->page, ceil(count($items) / $perpage));
+
+
+        $schema = Schema::getview($this);
+        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+        $list = array_slice($items, ( $this->getApp()->router->page - 1) * $perpage, $perpage);
+        $result = $schema->theme->getposts($list, $schema->postanounce);
+        $result.= $schema->theme->getpages($this->items[$this->date]['url'],  $this->getApp()->router->page, ceil(count($items) / $perpage));
         return $result;
     }
 
-    public function getidposts() {
-        if (isset($this->_idposts)) return $this->_idposts;
+    public function getIdposts() {
+        if (isset($this->_idposts)) {
+ return $this->_idposts;
+}
+
+
         $item = $this->items[$this->date];
-        $order = tview::getview($this)->invertorder ? 'asc' : 'desc';
+        $order = Schema::getview($this)->invertorder ? 'asc' : 'desc';
         return $this->_idposts = $this->getdb('posts')->idselect("status = 'published' and
 year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
     ORDER BY posted $order");
     }
 
-    public function getsitemap($from, $count) {
+    public function getSitemap($from, $count) {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count

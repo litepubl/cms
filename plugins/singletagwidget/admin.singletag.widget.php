@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,11 +15,11 @@ class tadminsingletagwidget extends tadminwidget {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $widget = tsingletagwidget::i();
         $about = tplugins::getabout(tplugins::getname(__file__));
         $html = $this->html;
-        $args = new targs();
+        $args = new Args();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
@@ -37,14 +38,14 @@ class tadminsingletagwidget extends tadminwidget {
         return $html->adminform(admintheme::i()->getcats($tags) , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $widget = tsingletagwidget::i();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
             $widget->items[$id]['invertorder'] = isset($_POST['invertorder']);
             $widget->save();
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
             return '';
         }
 
@@ -55,7 +56,11 @@ class tadminsingletagwidget extends tadminwidget {
         $list = admintheme::i()->processcategories();
         $add = array_diff($list, $tags);
         $delete = array_diff($tags, $list);
-        if ((count($add) == 0) && (count($delete) == 0)) return '';
+        if ((count($add) == 0) && (count($delete) == 0)) {
+ return '';
+}
+
+
         $widget->lock();
         foreach ($delete as $idtag) {
             $widget->tagdeleted($idtag);
@@ -65,7 +70,7 @@ class tadminsingletagwidget extends tadminwidget {
             $widget->add($idtag);
         }
         $widget->unlock();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
 } //class

@@ -1,20 +1,21 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function tfriendswidgetInstall($self) {
-    litepubl::$urlmap->add($self->redirlink, get_class($self) , false, 'get');
-    litepubl::$classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));
+     $self->getApp()->router->add($self->redirlink, get_class($self) , false, 'get');
+     $self->getApp()->classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));
     $self->addtosidebar(0);
 }
 
 function tfriendswidgetUninstall($self) {
-    turlmap::unsub($self);
-    litepubl::$classes->delete('tadminfriendswidget');
+     $self->getApp()->router->unbind($self);
+     $self->getApp()->classes->delete('tadminfriendswidget');
 }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\widget;
 
@@ -18,7 +19,7 @@ $widget = $this->widget;
         $args->showcount = $widget->showcount;
         $args->showsubitems = $widget->showsubitems;
         $args->maxcount = $widget->maxcount;
-        $args->sort = $this->theme->comboItems(tlocal::i()->ini['sortnametags'], $widget->sortname);
+        $args->sort = $this->theme->comboItems(Lang::i()->ini['sortnametags'], $widget->sortname);
 
         return parent::getForm()
 . '[combo=sort]
@@ -27,7 +28,7 @@ $widget = $this->widget;
  [text=maxcount]';
     }
 
-    protected function doprocessform() {
+    protected function doProcessForm() {
         extract($_POST, EXTR_SKIP);
         $this->widget->maxcount = (int)$maxcount;
         $this->widget->showcount = isset($showcount);

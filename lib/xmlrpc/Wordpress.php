@@ -1,25 +1,31 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\pages\Menus;
 use litepubl\pages\Menu;
 use litepubl\tag\Cats;
 use litepubl\tag\Tags;
+use litepubl\core\Str;
 
 class Wordpress extends MetaWeblog
  {
 
     private function menutostruct($id) {
-        if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) return xerror(404, "Sorry, no such page.");
+        if (!$menus->itemexists($id)) {
+ return xerror(404, "Sorry, no such page.");
+}
+
+
         $menu = Menu::i($id);
 
         if ($menu->parent > 0) {
@@ -53,7 +59,7 @@ class Wordpress extends MetaWeblog
             "wp_page_order" => $menu->order,
             "wp_author_id" => $menu->author,
             "wp_author_display_name" => 'ADMIN',
-            "date_created_gmt" => new IXR_Date(time() - litepubl::$options->gmt)
+            "date_created_gmt" => new IXR_Date(time() -  $this->getApp()->options->gmt)
         );
 
         return $Result;
@@ -93,10 +99,14 @@ class Wordpress extends MetaWeblog
 
     public function wp_deletePage($blogid, $username, $password, $id) {
         $this->auth($username, $password, 'editor');
-        if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) return xerror(404, "Sorry, no such page.");
+        if (!$menus->itemexists($id)) {
+ return xerror(404, "Sorry, no such page.");
+}
+
+
         $menus->delete($id);
         return true;
     }
@@ -111,7 +121,11 @@ class Wordpress extends MetaWeblog
         $this->auth($username, $password, 'editor');
         $id = (int)$id;
         $categories = Cats::i();
-        if (!$categories->itemexists($id)) return xerror(404, "Sorry, no such page.");
+        if (!$categories->itemexists($id)) {
+ return xerror(404, "Sorry, no such page.");
+}
+
+
         $categories->delete($id);
         return true;
     }
@@ -127,8 +141,8 @@ class Wordpress extends MetaWeblog
                 'name' => $item['title'],
                 'count' => $item['itemscount'],
                 'slug' => '',
-                'html_url' => litepubl::$site->url . $item['url'],
-                'rss_url' => litepubl::$site->url . $item['url']
+                'html_url' =>  $this->getApp()->site->url . $item['url'],
+                'rss_url' =>  $this->getApp()->site->url . $item['url']
             );
         }
         return $result;

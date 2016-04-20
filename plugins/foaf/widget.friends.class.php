@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tfriendswidget extends twidget {
 
@@ -24,21 +26,25 @@ class tfriendswidget extends twidget {
         $this->data['redirlink'] = '/foaflink.htm';
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         $about = tplugins::getabout(tplugins::getname(__file__));
         return $about['name'];
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $foaf = tfoaf::i();
         $items = $foaf->getapproved($this->maxcount);
-        if (count($items) == 0) return '';
+        if (count($items) == 0) {
+ return '';
+}
+
+
         $result = '';
-        $url = litepubl::$site->url;
-        $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . 'id=';
+        $url =  $this->getApp()->site->url;
+        $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . 'id=';
         $theme = ttheme::i();
         $tml = $theme->getwidgetitem('friends', $sidebar);
-        $args = targs::i();
+        $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
         $args->$icon = '';
@@ -47,7 +53,7 @@ class tfriendswidget extends twidget {
             $item = $foaf->getitem($id);
             $args->add($item);
             $args->anchor = $item['title'];
-            if ($this->redir && !strbegin($item['url'], $url)) {
+            if ($this->redir && !Str::begin($item['url'], $url)) {
                 $args->url = $redirlink . $id;
             }
             $result.= $theme->parsearg($tml, $args);
@@ -59,10 +65,14 @@ class tfriendswidget extends twidget {
     public function request($arg) {
         $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
         $foaf = tfoaf::i();
-        if (!$foaf->itemexists($id)) return 404;
+        if (!$foaf->itemexists($id)) {
+ return 404;
+}
+
+
         $item = $foaf->getitem($id);
         $this->cache = false;
-        return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+        return sprintf('<?php  $this->getApp()->router->redir(\'%s\'); ?>', $item['url']);
     }
 
 } //class

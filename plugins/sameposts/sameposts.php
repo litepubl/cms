@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -29,8 +30,8 @@ class tsameposts extends tclasswidget {
         $this->data['maxcount'] = 10;
     }
 
-    public function getdeftitle() {
-        return tlocal::get('default', 'sameposts');
+    public function getDeftitle() {
+        return Lang::get('default', 'sameposts');
     }
 
     public function postschanged() {
@@ -45,16 +46,28 @@ class tsameposts extends tclasswidget {
     private function findsame($idpost) {
         $posts = tposts::i();
         $post = tpost::i($idpost);
-        if (count($post->categories) == 0) return array();
+        if (count($post->categories) == 0) {
+ return array();
+}
+
+
         $cats = tcategories::i();
         $cats->loadall();
         $same = array();
         foreach ($post->categories as $idcat) {
-            if (!isset($cats->items[$idcat])) continue;
+            if (!isset($cats->items[$idcat])) {
+ continue;
+}
+
+
             $itemsposts = $cats->itemsposts->getposts($idcat);
             $itemsposts = $posts->stripdrafts($itemsposts);
             foreach ($itemsposts as $id) {
-                if ($id == $idpost) continue;
+                if ($id == $idpost) {
+ continue;
+}
+
+
                 $same[$id] = isset($same[$id]) ? $same[$id] + 1 : 1;
             }
         }
@@ -63,7 +76,7 @@ class tsameposts extends tclasswidget {
         return array_slice(array_keys($same) , 0, $this->maxcount);
     }
 
-    public function getsame($id) {
+    public function getSame($id) {
         $items = $this->db->getvalue($id, 'items');
         if (is_string($items)) {
             return $items == '' ? array() : explode(',', $items);
@@ -77,10 +90,14 @@ class tsameposts extends tclasswidget {
         }
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $post = $this->getcontext('tpost');
         $list = $this->getsame($post->id);
-        if (count($list) == 0) return '';
+        if (count($list) == 0) {
+ return '';
+}
+
+
         $posts = tposts::i();
         $posts->loaditems($list);
         $theme = ttheme::i();

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\widget;
 use litepubl\view\Schema;
@@ -26,7 +27,7 @@ use \litepubl\admin\Params;
  [checkbox=ajax]';
     }
 
-    protected function doprocessform() {
+    protected function doProcessForm() {
         $this->widget->sidebar = (int)$_POST['sidebar'];
         $this->widget->order = ((int)$_POST['order'] - 1);
         $this->widget->ajax = isset($_POST['ajax']);

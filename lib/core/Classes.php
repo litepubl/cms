@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -22,7 +23,7 @@ public $loaded;
         if (!isset(litepubl::$app->classes)) {
             $classname = get_called_class();
             litepubl::$app->classes = new $classname();
-            litepubl::$app->classes->instances[$classname] = litepubl::$classes;
+            litepubl::$app->classes->instances[$classname] =  $this->getApp()->classes;
         }
 
         return litepubl::$app->classes;
@@ -47,11 +48,11 @@ $this->loaded = [];
         ));
     }
 
-    public function getstorage() {
-        return litepubl::$datastorage;
+    public function getStorage() {
+        return  $this->getApp()->datastorage;
     }
 
-    public function getinstance($class) {
+    public function getInstance($class) {
         if (isset($this->instances[$class])) {
             return $this->instances[$class];
         }
@@ -188,7 +189,7 @@ return $this->aliases[$classname];
 }
 
 if (!count($this->classmap)) {
-$this->classmap = include(litepubl::$paths->lib . 'update/classmap.php');
+$this->classmap = include( $this->getApp()->paths->lib . 'update/classmap.php');
 }
 $classname = $this->baseclass($classname);
 if (isset($this->classmap[$classname])) {
@@ -314,7 +315,7 @@ $vendor .= '\\' . array_shift($names);
 
             //last chanse
             $name = 'litepubl\plugins';
-            if (strbegin($ns, $name)) {
+            if (Str::begin($ns, $name)) {
                 $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
                 $filename = $dir . $baseclass . '.php';
                 if (file_exists($filename)) {
@@ -399,13 +400,13 @@ $this->loaded[$ns] = $dir;
                 unset($this->kernel[$oldclass]);
             }
 
-            litepubl::$urlmap->db->update('class =' . dbquote($newclass) , 'class = ' . dbquote($oldclass));
+             $this->getApp()->router->db->update('class =' . Str::uuote($newclass) , 'class = ' . Str::uuote($oldclass));
             $this->save();
             $this->onrename($oldclass, $newclass);
         }
     }
 
-    public function getresourcedir($c) {
+    public function getResourcedir($c) {
         $reflector = new \ReflectionClass($c);
         $filename = $reflector->getFileName();
         return dirname($filename) . '/resource/';

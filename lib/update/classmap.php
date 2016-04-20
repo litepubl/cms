@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 return [
 'tdata' => 'litepubl\core\Data',
@@ -29,8 +36,8 @@ return [
 'tarray2prop' => 'litepubl\core\Array2prop',
 
 //theme
-'tlocal' => 'litepubl\view\Lang',
-'tlocalmerger' => 'theme\LangMerger',
+'Lang' => 'litepubl\view\Lang',
+'Langmerger' => 'theme\LangMerger',
 'ttemplate' => 'litepubl\view\MainControler',
 'itemplate' => 'litepubl\view\ControlerInterface',
 'ttheme' => 'litepubl\view\Theme',
@@ -138,7 +145,7 @@ return [
 'tauthor_rights' => 'litepubl\admin\AuthorRights',
 'adminform' => 'litepubl\admin\Form',
 'tadminhtml' => 'litepubl\admin\Html',
-'tablebuilder' => 'litepubl\admin\Table',
+'Table' => 'litepubl\admin\Table',
 'tabs' => 'litepubl\admin\Tabs',
 'ulist' => 'litepubl\admin\UList',
 'thtmltag' => 'litepubl\admin\Tag',
@@ -235,7 +242,7 @@ return [
 'tftpfiler' => 'litepubl\updater\Ftp',
 'tremotefiler' => 'litepubl\updater\Remote',
 'tftpsocketfiler' => 'litepubl\updater\FtpSocket',
-'tlocalfiler' => 'litepubl\updater\Local',
+'Langfiler' => 'litepubl\updater\Local',
 'tssh2filer' => 'litepubl\updater\Ssh2',
 
 //plugins

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\install;
 use litepubl\core;
@@ -214,7 +215,7 @@ $obj = $classes->getInstance('litepubl\\' . $classname);
     $css->unlock();
     $js->unlock();
     $posts->unlock();
-    litepubl::$urlmap->unlock();
+     $this->getApp()->router->unlock();
 }
 
     public function run() {
@@ -307,7 +308,7 @@ return $this->autoInstall();
         $this->loadlang();
         $combobox = $this->getlangcombo();
 
-        $lang = tlocal::i('installation');
+        $lang = Lang::i('installation');
 
         if (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules())) {
             $checkrewrite = '';
@@ -331,7 +332,7 @@ return $this->autoInstall();
         $this->echohtml($form);
     }
 
-    private function getlangcombo() {
+    private function getLangcombo() {
         $langs = array(
             'en' => 'English',
             'ru' => 'Russian'
@@ -348,7 +349,7 @@ return $this->autoInstall();
     }
 
     public function CreateFirstPost() {
-        $lang = tlocal::usefile('install');
+        $lang = Lang::usefile('install');
         $theme = ttheme::i();
 
         $post = tpost::i(0);
@@ -363,7 +364,7 @@ return $this->autoInstall();
         $users = tusers::i();
         $cm->idguest = $users->add(array(
             'email' => '',
-            'name' => tlocal::get('default', 'guest') ,
+            'name' => Lang::get('default', 'guest') ,
             'status' => 'hold',
             'idgroups' => 'commentator'
         ));
@@ -380,7 +381,7 @@ return $this->autoInstall();
     }
 
     public static function sendmail() {
-        $lang = tlocal::$self->ini['installation'];
+        $lang = Lang::$self->ini['installation'];
         $body = sprintf($lang['body'], $this->app->site->url, $this->app->options->email, mailpassword);
 
         tmailer::sendmail('', $this->app->options->fromemail, '', $this->app->options->email, $lang['subject'], $body);
@@ -391,9 +392,9 @@ return $this->autoInstall();
         $tml = file_get_contents($this->app->paths->lib . 'install/templates/install.congratulation.tml');
         $theme = ttheme::getinstance('default');
         $template = ttemplate::i();
-        $template->view = tview::i();
-        $lang = tlocal::i('installation');
-        $args = new targs();
+        $template->view = Schema::i();
+        $lang = Lang::i('installation');
+        $args = new Args();
         $args->title = $this->app->site->name;
         $args->url = $this->app->site->url . '/';
         $args->password = $password;
@@ -414,17 +415,25 @@ return $this->autoInstall();
         require_once ($this->app->paths->lib . 'local.class.php');
         require_once ($this->app->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
         require_once ($this->app->paths->lib . 'htmlresource.class.php');
-        tlocalPreinstall($this->language);
+        LangPreinstall($this->language);
     }
 
     private function GetBrowserLang() {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $a = explode(',', str_replace(';', ',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
-            if (in_array('ru', $a) || in_array('ru_ru', $a)) return 'ru';
+            if (in_array('ru', $a) || in_array('ru_ru', $a)) {
+ return 'ru';
+}
+
+
 
             foreach ($a as $result) {
                 $result = substr($result, 0, 2);
-                if ($this->langexists($result)) return $result;
+                if ($this->langexists($result)) {
+ return $result;
+}
+
+
             }
         }
 

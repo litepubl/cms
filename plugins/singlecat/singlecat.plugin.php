@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -29,13 +30,25 @@ class tsinglecat extends tplugin {
         }
     }
 
-    public function getcontent() {
-        $post = litepubl::$urlmap->context;
-        if (!($post instanceof tpost)) return '';
-        if (count($post->categories) == 0) return '';
+    public function getContent() {
+        $post =  $this->getApp()->router->context;
+        if (!($post instanceof tpost)) {
+ return '';
+}
+
+
+        if (count($post->categories) == 0) {
+ return '';
+}
+
+
         $idcat = $post->categories[0];
-        if ($idcat == 0) return '';
-        $table = litepubl::$db->prefix . 'categoriesitems';
+        if ($idcat == 0) {
+ return '';
+}
+
+
+        $table =  $this->getApp()->db->prefix . 'categoriesitems';
         $order = $this->invertorder ? 'asc' : 'desc';
         $posts = tposts::i();
         $result = $posts->getlinks("$posts->thistable.id in

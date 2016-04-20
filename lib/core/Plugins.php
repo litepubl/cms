@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -23,10 +24,10 @@ class Plugins extends Items
         );
     }
 
-    public static function getabout($name) {
+    public static function getAbout($name) {
         if (!isset(static ::$abouts[$name])) {
             if (!isset(static ::$abouts)) static ::$abouts = array();
-            static ::$abouts[$name] = static ::localabout(litepubl::$paths->plugins . $name);
+            static ::$abouts[$name] = static ::localabout( $this->getApp()->paths->plugins . $name);
         }
         return static ::$abouts[$name];
     }
@@ -34,37 +35,37 @@ class Plugins extends Items
     public static function localabout($dir) {
         $filename = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'about.ini';
         $about = parse_ini_file($filename, true);
-        if (isset($about[litepubl::$options->language])) {
-            $about['about'] = $about[litepubl::$options->language] + $about['about'];
+        if (isset($about[ $this->getApp()->options->language])) {
+            $about['about'] = $about[ $this->getApp()->options->language] + $about['about'];
         }
 
         return $about['about'];
     }
 
-    public static function getname($filename) {
+    public static function getName($filename) {
         return basename(dirname($filename));
     }
 
-    public static function getlangabout($filename) {
+    public static function getLangabout($filename) {
         return static ::getnamelang(static ::getname($filename));
     }
 
-    public static function getnamelang($name) {
+    public static function getNamelang($name) {
         $about = static ::getabout($name);
-        $lang = tlocal::admin();
+        $lang = Lang::admin();
         $lang->ini[$name] = $about;
         $lang->section = $name;
         return $lang;
     }
 
     public function add($name) {
-        if (!@is_dir(litepubl::$paths->plugins . $name)) {
+        if (!@is_dir( $this->getApp()->paths->plugins . $name)) {
             return false;
         }
 
         $about = static ::getabout($name);
 
-        $dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;
+        $dir =  $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
         if (file_exists($dir . $about['filename'])) {
             require_once ($dir . $about['filename']);
         } else {
@@ -79,7 +80,7 @@ class Plugins extends Items
             }
         }
 
-        litepubl::$classes->lock();
+         $this->getApp()->classes->lock();
         $this->lock();
         $classname = trim($about['classname']);
         if ($i = strrpos($classname, '\\')) {
@@ -87,9 +88,9 @@ class Plugins extends Items
                 'namespace' => substr($classname, 0, $i) ,
             );
 
-            litepubl::$classes->installClass($classname);
+             $this->getApp()->classes->installClass($classname);
             if ($about['adminclassname']) {
-                litepubl::$classes->installClass($about['adminclassname']);
+                 $this->getApp()->classes->installClass($about['adminclassname']);
             }
         } else {
             $this->items[$name] = array(
@@ -100,19 +101,19 @@ class Plugins extends Items
                 $classname = 'litepubl\\' . $classname;
             }
 
-            litepubl::$classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
+             $this->getApp()->classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
 
             if ($adminclass = $about['adminclassname']) {
                 if (!class_exists($adminclass, false)) {
                     $adminclass = 'litepubl\\' . $adminclass;
                 }
 
-                litepubl::$classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
+                 $this->getApp()->classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
             }
         }
 
         $this->unlock();
-        litepubl::$classes->unlock();
+         $this->getApp()->classes->unlock();
         $this->added($name);
         return $name;
     }
@@ -133,31 +134,31 @@ class Plugins extends Items
         $about = static ::getabout($name);
         $datafile = false;
         if (class_exists($about['classname'])) {
-            $plugin = litepubl::$classes->getinstance($about['classname']);
+            $plugin =  $this->getApp()->classes->getinstance($about['classname']);
             if ($plugin instanceof tplugin) {
-                $datafile = litepubl::$paths->data . $plugin->getbasename();
+                $datafile =  $this->getApp()->paths->data . $plugin->getbasename();
             }
         }
 
-        litepubl::$classes->lock();
+         $this->getApp()->classes->lock();
         if ($namespace) {
             if ($about['adminclassname']) {
-                litepubl::$classes->uninstallClass($about['adminclassname']);
+                 $this->getApp()->classes->uninstallClass($about['adminclassname']);
             }
 
-            litepubl::$classes->uninstallClass($about['classname']);
+             $this->getApp()->classes->uninstallClass($about['classname']);
         } else {
             if (($about['adminclassname'])) {
-                litepubl::$classes->delete($about['adminclassname']);
+                 $this->getApp()->classes->delete($about['adminclassname']);
             }
 
-            litepubl::$classes->delete($about['classname']);
+             $this->getApp()->classes->delete($about['classname']);
         }
 
-        litepubl::$classes->unlock();
+         $this->getApp()->classes->unlock();
 
         if ($datafile) {
-            litepubl::$storage->remove($datafile);
+             $this->getApp()->storage->remove($datafile);
         }
 
         $this->deleted($name);
@@ -170,14 +171,14 @@ class Plugins extends Items
         }
     }
 
-    public function getplugins() {
+    public function getPlugins() {
         return array_keys($this->items);
     }
 
     public function update(array $list) {
         $add = array_diff($list, array_keys($this->items));
         $delete = array_diff(array_keys($this->items) , $list);
-        $delete = array_intersect($delete, tfiler::getdir(litepubl::$paths->plugins));
+        $delete = array_intersect($delete, tfiler::getdir( $this->getApp()->paths->plugins));
         $this->lock();
         foreach ($delete as $name) {
             $this->Delete($name);
@@ -190,7 +191,7 @@ class Plugins extends Items
         $this->unlock();
     }
 
-    public function setplugins(array $list) {
+    public function setPlugins(array $list) {
         $names = array_diff($list, array_keys($this->items));
         foreach ($names as $name) {
             $this->Add($name);
@@ -205,11 +206,15 @@ class Plugins extends Items
     }
 
     public function upload($name, $files) {
-        if (!@file_exists(litepubl::$paths->plugins . $name)) {
-            if (!@mkdir(litepubl::$paths->plugins . $name, 0777)) return $this->Error("Cantcreate $namefolderinplugins");
-            @chmod(litepubl::$paths->plugins . $name, 0777);
+        if (!@file_exists( $this->getApp()->paths->plugins . $name)) {
+            if (!@mkdir( $this->getApp()->paths->plugins . $name, 0777)) {
+ return $this->Error("Cantcreate $namefolderinplugins");
+}
+
+
+            @chmod( $this->getApp()->paths->plugins . $name, 0777);
         }
-        $dir = litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR;
+        $dir =  $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
         foreach ($files as $filename => $content) {
             file_put_contents($dir . $filename, base64_decode($content));
         }

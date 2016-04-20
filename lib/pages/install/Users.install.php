@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\utils\LinkGenerator;
@@ -18,8 +19,8 @@ function UsersInstall($self) {
     $v = $self->createpage;
     $self->lock();
     $self->createpage = false;
-    $self->add(1, 'Admin', litepubl::$options->email, litepubl::$site->url . '/');
-    $itemurl = litepubl::$urlmap->findurl('/');
+    $self->add(1, 'Admin',  $self->getApp()->options->email,  $self->getApp()->site->url . '/');
+    $itemurl =  $self->getApp()->router->findurl('/');
     $self->setvalue(1, 'idurl', $itemurl['id']);
     $self->createpage = $v;
     $self->unlock();
@@ -28,12 +29,12 @@ function UsersInstall($self) {
     $linkgen->data['user'] = '/user/[name].htm';
     $linkgen->save();
 
-    litepubl::$urlmap->add('/users.htm', get_class($self) , 'url', 'get');
+     $self->getApp()->router->add('/users.htm', get_class($self) , 'url', 'get');
 
     $robots = RobotsTxt::i();
     $robots->AddDisallow('/users.htm');
 }
 
 function UsersUninstall($self) {
-    litepubl::$router->unbind($self);
+     $self->getApp()->router->unbind($self);
 }

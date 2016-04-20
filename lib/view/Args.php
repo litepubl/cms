@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 
@@ -15,7 +16,7 @@ class Args
     public $callback_params;
 
     public static function i() {
-        return litepubl::$classes->newinstance(__class__);
+        return  $this->getApp()->classes->newinstance(__class__);
     }
 
     public function __construct($thisthis = null) {
@@ -32,15 +33,23 @@ class Args
 
     public function __get($name) {
         if (($name == 'link') && !isset($this->data['$link']) && isset($this->data['$url'])) {
-            return litepubl::$site->url . $this->data['$url'];
+            return  $this->getApp()->site->url . $this->data['$url'];
         }
 
         return $this->data['$' . $name];
     }
 
     public function __set($name, $value) {
-        if (!$name || !is_string($name)) return;
-        if (is_array($value)) return;
+        if (!$name || !is_string($name)) {
+ return;
+}
+
+
+        if (is_array($value)) {
+ return;
+}
+
+
 
         if (!is_string($value) && is_callable($value)) {
             $this->callbacks['$' . $name] = $value;
@@ -55,8 +64,8 @@ class Args
         $this->data["%%$name%%"] = $value;
 
         if (($name == 'url') && !isset($this->data['$link'])) {
-            $this->data['$link'] = litepubl::$site->url . $value;
-            $this->data['%%link%%'] = litepubl::$site->url . $value;
+            $this->data['$link'] =  $this->getApp()->site->url . $value;
+            $this->data['%%link%%'] =  $this->getApp()->site->url . $value;
         }
     }
 
@@ -64,8 +73,8 @@ class Args
         foreach ($a as $k => $v) {
             $this->__set($k, $v);
             if ($k == 'url') {
-                $this->data['$link'] = litepubl::$site->url . $v;
-                $this->data['%%link%%'] = litepubl::$site->url . $v;
+                $this->data['$link'] =  $this->getApp()->site->url . $v;
+                $this->data['%%link%%'] =  $this->getApp()->site->url . $v;
             }
         }
 
@@ -78,7 +87,11 @@ class Args
     }
 
     public function callback($s) {
-        if (!count($this->callbacks)) return $s;
+        if (!count($this->callbacks)) {
+ return $s;
+}
+
+
 
         $params = $this->callback_params;
         array_unshift($params, $this);

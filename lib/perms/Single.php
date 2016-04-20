@@ -1,22 +1,29 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\perms;
 use litepubl\view\MainView;
+use litepubl\Config;
+use litepubl\core\Str;
 
 class Single extends Perm
  {
     private $password;
     private $checked;
 
-    public function getheader($obj) {
+    public function getHeader($obj) {
         if (isset($obj->password) && ($p = $obj->password)) {
-            return sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static ::encryptpassword($p));
+            {
+ return sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static ::encryptpassword($p));
+}
+
+
         }
     }
 
@@ -29,15 +36,15 @@ class Single extends Perm
     }
 
     public static function encryptpassword($p) {
-        return md5(litepubl::$urlmap->item['id'] . litepubl::$secret . $p . litepubl::$options->solt);
+        return md5( $this->getApp()->router->item['id'] . Config::$secret . $p .  $this->getApp()->options->solt);
     }
 
 public static function hash($password, $solt) {
-return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
+return md5($solt . Config::$secret . $password .  $this->getApp()->options->solt);
 }
 
-    public static function getcookiename() {
-        return 'singlepwd_' . litepubl::$urlmap->item['id'];
+    public static function getCookiename() {
+        return 'singlepwd_' .  $this->getApp()->router->item['id'];
     }
 
     public function checkpassword($p) {
@@ -45,18 +52,18 @@ return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
 return false;
 }
 
-        $solt = md5rand();
+        $solt = Str::md5Rand();
         $hash = static::hash($this->password, $solt);
         $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-        setcookie(static ::getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
+        setcookie(static ::getcookiename() , $cookie, $expired,  $this->getApp()->site->subdir . '/', false);
         $this->checked = true;
         return true;
     }
 
     public static function authcookie($password) {
-        if (litepubl::$options->group == 'admin') {
+        if ( $this->getApp()->options->group == 'admin') {
 return true;
 }
 
@@ -78,7 +85,7 @@ return true;
 return static ::i($id)->getform($p);
     }
 
-    public function getform($p) {
+    public function getForm($p) {
         $this->password = $p;
         $page = Page::i();
         $page->perm = $this;
@@ -89,10 +96,10 @@ return true;
 
         switch ($result) {
             case 404:
-                return litepubl::$urlmap->notfound404();
+                return  $this->getApp()->router->notfound404();
 
             case 403:
-                return litepubl::$urlmap->forbidden();
+                return  $this->getApp()->router->forbidden();
 
 default:
         $html = MainView::i()->render($page);

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Lang;
@@ -21,26 +22,26 @@ class Menus extends \litepubl\pages\Menus
         $this->data['heads'] = '';
     }
 
-    public function settitle($id, $title) {
+    public function setTitle($id, $title) {
         if ($id && isset($this->items[$id])) {
             $this->items[$id]['title'] = $title;
             $this->save();
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
         }
     }
 
-    public function getdir() {
-        return litepubl::$paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
+    public function getDir() {
+        return  $this->getApp()->paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
     }
 
-    public function getadmintitle($name) {
-        $lang = tlocal::i();
+    public function getAdmintitle($name) {
+        $lang = Lang::i();
         $ini = & $lang->ini;
         if (isset($ini[$name]['title'])) {
             return $ini[$name]['title'];
         }
 
-        tlocal::usefile('install');
+        Lang::usefile('install');
         if (!in_array('adminmenus', $lang->searchsect)) {
             array_unshift($lang->searchsect, 'adminmenus');
         }
@@ -90,10 +91,10 @@ class Menus extends \litepubl\pages\Menus
         return $id;
     }
 
-    public function getchilds($id) {
+    public function getChilds($id) {
         if ($id == 0) {
             $result = array();
-            $options = litepubl::$options;
+            $options =  $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
                 if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
             }
@@ -122,7 +123,11 @@ class Menus extends \litepubl\pages\Menus
     }
 
     public function exclude($id) {
-        if (!litepubl::$options->hasgroup($this->items[$id]['group'])) return true;
+        if (! $this->getApp()->options->hasgroup($this->items[$id]['group'])) {
+ return true;
+}
+
+
         return $this->onexclude($id);
     }
 

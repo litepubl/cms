@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\users;
 use litepubl\perms\Perms as PermItems;
@@ -14,12 +15,12 @@ use litepubl\admin\Link;
 class Perms extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $perms = PermItems::i();
 $admin = $this->admintheme;
-        $lang = tlocal::i('perms');
-        $args = new targs();
+        $lang = Lang::i('perms');
+        $args = new Args();
         if (!($action = $this->action)) $action = 'perms';
         switch ($action) {
             case 'perms':
@@ -82,14 +83,18 @@ $class = str_replace('-', '\\', $class);
 
     }
 
-    public function processform() {
+    public function processForm() {
         $perms = PermItems::i();
         if (!($action = $this->action)) $action = 'perms';
         switch ($action) {
             case 'perms':
                 $perms->lock();
                 foreach ($_POST as $name => $val) {
-                    if (!is_numeric($value)) continue;
+                    if (!is_numeric($value)) {
+ continue;
+}
+
+
                     $id = (int)$val;
                     $perms->delete($id);
                 }
@@ -103,15 +108,15 @@ $class = str_replace('-', '\\', $class);
                 }
 
                 $perm = PerItem::i($id);
-                return $perm->admin->processform();
+                return $perm->admin->processForm();
 
             case 'add':
                 $class = $this->getparam('class', '');
                 if (isset($perms->classes[$class])) {
                     $perm = new $class();
                     $id = PermItems::i()->add($perm);
-                    $perm->admin->processform();
-                    return litepubl::$urlmap->redir(Link::url($this->url, 'action=edit&id=' . $id));
+                    $perm->admin->processForm();
+                    return  $this->getApp()->router->redir(Link::url($this->url, 'action=edit&id=' . $id));
                 }
             }
     }

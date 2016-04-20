@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 use litepubl\config;
@@ -34,24 +35,28 @@ class DB
         $this->setconfig($this->getconfig());
     }
 
-    public function getconfig() {
+    public function getConfig() {
         $this->debug = & config::$debug;
         if (config::$db) {
             return config::$db;
         }
 
-        if (isset(litepubl::$options->dbconfig)) {
-            $result = litepubl::$options->dbconfig;
+        if (isset( $this->getApp()->options->dbconfig)) {
+            $result =  $this->getApp()->options->dbconfig;
             //decrypt db password
-            $result['password'] = litepubl::$options->dbpassword;
+            $result['password'] =  $this->getApp()->options->dbpassword;
             return $result;
         }
 
         return false;
     }
 
-    public function setconfig($dbconfig) {
-        if (!$dbconfig) return false;
+    public function setConfig($dbconfig) {
+        if (!$dbconfig) {
+ return false;
+}
+
+
         $this->dbname = $dbconfig['dbname'];
         $this->prefix = $dbconfig['prefix'];
 
@@ -135,13 +140,17 @@ return DBManager::i();
     }
 
     protected function doerror($mesg) {
-        if (!$this->debug) return litepubl::$options->trace($this->sql . "\n" . $mesg);
+        if (!$this->debug) {
+ return  $this->getApp()->options->trace($this->sql . "\n" . $mesg);
+}
+
+
         $log = "exception:\n$mesg\n$this->sql\n";
         try {
             throw new \Exception();
         }
         catch(Exception $e) {
-            $log.= str_replace(litepubl::$paths->home, '', $e->getTraceAsString());
+            $log.= str_replace( $this->getApp()->paths->home, '', $e->getTraceAsString());
         }
 
         $log.= $this->performance();
@@ -174,7 +183,7 @@ return DBManager::i();
         return $this->mysqli->real_escape_string($s);
     }
 
-    public function settable($table) {
+    public function setTable($table) {
         $this->table = $table;
         return $this;
     }
@@ -192,7 +201,7 @@ return DBManager::i();
         return $this->query($sql)->fetch_assoc();
     }
 
-    public function getassoc($where) {
+    public function getAssoc($where) {
         return $this->select($where)->fetch_assoc();
     }
 
@@ -210,7 +219,11 @@ return DBManager::i();
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
                 $list[] = sprintf('%s = %s ', $name, $value);
-                continue;
+                {
+ continue;
+}
+
+
             }
 
             $list[] = sprintf('%s = %s', $name, $this->quote($value));
@@ -244,7 +257,11 @@ return DBManager::i();
 
     public function add(array $a) {
         $this->insertrow($this->assoctorow($a));
-        if ($id = $this->mysqli->insert_id) return $id;
+        if ($id = $this->mysqli->insert_id) {
+ return $id;
+}
+
+
         $r = $this->query('select last_insert_id() from ' . $this->prefix . $this->table)->fetch_row();
         return (int)$r[0];
     }
@@ -265,7 +282,7 @@ return DBManager::i();
         return sprintf('(%s) values (%s)', implode(', ', array_keys($a)) , implode(', ', $vals));
     }
 
-    public function getcount($where = '') {
+    public function getCount($where = '') {
         $sql = "SELECT COUNT(*) as count FROM $this->prefix$this->table";
         if ($where) $sql.= ' where ' . $where;
         if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
@@ -298,16 +315,20 @@ return DBManager::i();
         return $this->query("select *  from $this->prefix$this->table where $where limit 1")->num_rows;
     }
 
-    public function getlist(array $list) {
+    public function getList(array $list) {
         return $this->res2assoc($this->select(sprintf('id in (%s)', implode(',', $list))));
     }
 
-    public function getitems($where) {
+    public function getItems($where) {
         return $this->res2assoc($this->select($where));
     }
 
-    public function getitem($id, $propname = 'id') {
-        if ($r = $this->query("select * from $this->prefix$this->table where $propname = $id limit 1")) return $r->fetch_assoc();
+    public function getItem($id, $propname = 'id') {
+        if ($r = $this->query("select * from $this->prefix$this->table where $propname = $id limit 1")) {
+ return $r->fetch_assoc();
+}
+
+
         return false;
     }
 
@@ -320,25 +341,37 @@ return DBManager::i();
     }
 
     public function findprop($propname, $where) {
-        if ($r = $this->query("select $propname from $this->prefix$this->table where $where limit 1")->fetch_assoc()) return $r[$propname];
+        if ($r = $this->query("select $propname from $this->prefix$this->table where $where limit 1")->fetch_assoc()) {
+ return $r[$propname];
+}
+
+
         return false;
     }
 
-    public function getval($table, $id, $name) {
-        if ($r = $this->query("select $name from $this->prefix$table where id = $id limit 1")->fetch_assoc()) return $r[$name];
+    public function getVal($table, $id, $name) {
+        if ($r = $this->query("select $name from $this->prefix$table where id = $id limit 1")->fetch_assoc()) {
+ return $r[$name];
+}
+
+
         return false;
     }
 
-    public function getvalue($id, $name) {
-        if ($r = $this->query("select $name from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) return $r[$name];
+    public function getValue($id, $name) {
+        if ($r = $this->query("select $name from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) {
+ return $r[$name];
+}
+
+
         return false;
     }
 
-    public function setvalue($id, $name, $value) {
+    public function setValue($id, $name, $value) {
         return $this->update("$name = " . $this->quote($value) , "id = $id");
     }
 
-    public function getvalues($names, $where) {
+    public function getValues($names, $where) {
         $result = array();
         $res = $this->query("select $names from $this->prefix$this->table where $where");
         if (is_object($res)) {

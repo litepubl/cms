@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -24,7 +25,11 @@ class UserGroups extends Items
     }
 
     public function add($name, $title, $home) {
-        if ($id = $this->getidgroup($name)) return $id;
+        if ($id = $this->getidgroup($name)) {
+ return $id;
+}
+
+
         $this->items[++$this->autoid] = array(
             'name' => $name,
             'title' => $title,
@@ -36,7 +41,11 @@ class UserGroups extends Items
     }
 
     public function delete($id) {
-        if (!isset($this->items[$id])) return false;
+        if (!isset($this->items[$id])) {
+ return false;
+}
+
+
         unset($this->items[$id]);
         $this->save();
 
@@ -57,10 +66,10 @@ class UserGroups extends Items
     }
 
     public function update() {
-        litepubl::$options->data['groupnames'] = array();
-        $groupnames = & litepubl::$options->data['groupnames'];
-        litepubl::$options->data['parentgroups'] = array();
-        $parentgroups = & litepubl::$options->data['parentgroups'];
+         $this->getApp()->options->data['groupnames'] = array();
+        $groupnames = &  $this->getApp()->options->data['groupnames'];
+         $this->getApp()->options->data['parentgroups'] = array();
+        $parentgroups = &  $this->getApp()->options->data['parentgroups'];
 
         foreach ($this->items as $id => $group) {
             $names = explode(',', $group['name']);
@@ -69,18 +78,26 @@ class UserGroups extends Items
             }
             $parentgroups[$id] = $group['parents'];
         }
-        litepubl::$options->save();
+         $this->getApp()->options->save();
     }
 
-    public function getidgroup($name) {
+    public function getIdgroup($name) {
         $name = trim($name);
-        return isset(litepubl::$options->groupnames[$name]) ? litepubl::$options->groupnames[$name] : false;
+        return isset( $this->getApp()->options->groupnames[$name]) ?  $this->getApp()->options->groupnames[$name] : false;
     }
 
     public function addparent($id, $name) {
-        if (!isset($this->items[$id])) return false;
+        if (!isset($this->items[$id])) {
+ return false;
+}
+
+
         if ($idparent = $this->getidgroup($name)) {
-            if (in_array($idparent, $this->items[$id]['parents'])) return false;
+            if (in_array($idparent, $this->items[$id]['parents'])) {
+ return false;
+}
+
+
             $this->items[$id]['parents'][] = $idparent;
             $this->save();
             return $idparent;
@@ -88,16 +105,24 @@ class UserGroups extends Items
     }
 
     public function addchild($id, $name) {
-        if (!isset($this->items[$id])) return false;
+        if (!isset($this->items[$id])) {
+ return false;
+}
+
+
         if ($idchild = $this->getidgroup($name)) {
-            if (in_array($id, $this->items[$idchild]['parents'])) return false;
+            if (in_array($id, $this->items[$idchild]['parents'])) {
+ return false;
+}
+
+
             $this->items[$idchild]['parents'][] = $id;
             $this->save();
             return $idchild;
         }
     }
 
-    public function gethome($name) {
+    public function getHome($name) {
         if ($id = $this->getidgroup($name)) {
             return isset($this->items[$id]['home']) ? $this->items[$id]['home'] : $this->defaulthome;
         }

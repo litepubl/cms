@@ -1,12 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
+use litepubl\Config;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 use litepubl\utils\Filer;
 
@@ -25,7 +29,7 @@ class Json extends \litepubl\core\Events
         $this->debug = false;
     }
 
-    public function getpostbody() {
+    public function getPostbody() {
         global $HTTP_RAW_POST_DATA;
         if (!isset($HTTP_RAW_POST_DATA)) {
             $HTTP_RAW_POST_DATA = file_get_contents('php://input');
@@ -34,7 +38,7 @@ class Json extends \litepubl\core\Events
             $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
         }
 
-        if (litepubl::$debug) {
+        if (Config::$debug) {
             tfiler::log("request:\n" . $HTTP_RAW_POST_DATA, 'json.txt');
         }
 
@@ -48,8 +52,12 @@ class Json extends \litepubl\core\Events
         return false;
     }
 
-    public function getargs() {
-        if (isset($_GET['method'])) return $_GET;
+    public function getArgs() {
+        if (isset($_GET['method'])) {
+ return $_GET;
+}
+
+
 
         if (isset($_POST['method'])) {
             return $_POST;
@@ -57,12 +65,20 @@ class Json extends \litepubl\core\Events
 
         if (isset($_POST['json'])) {
             if (($s = trim($_POST['json'])) && ($args = json_decode($s, true))) {
-                if (isset($args['method'])) return $args;
+                if (isset($args['method'])) {
+ return $args;
+}
+
+
             }
         }
 
         if ($args = $this->get_json_args()) {
-            if (isset($args['method'])) return $args;
+            if (isset($args['method'])) {
+ return $args;
+}
+
+
         }
 
         return false;
@@ -99,9 +115,9 @@ class Json extends \litepubl\core\Events
             $result = $this->callevent($args['method'], $a);
         }
         catch(Exception $e) {
-            if (litepubl::$debug || $this->debug) {
-                litepubl::$options->handexception($e);
-                throw new Exception(litepubl::$options->errorlog);
+            if (Config::$debug || $this->debug) {
+                 $this->getApp()->options->handexception($e);
+                throw new Exception( $this->getApp()->options->errorlog);
             }
 
             return $this->json_error($id, $e->getCode() , $e->getMessage());
@@ -142,8 +158,8 @@ class Json extends \litepubl\core\Events
     }
 
     public function json($result) {
-        $js = tojson($result);
-        //if (litepubl::$debug) tfiler::log("response:\n".$js, 'json.txt');
+        $js = Str::toJson($result);
+        //if (Config::$debug) tfiler::log("response:\n".$js, 'json.txt');
         return "<?php
     header('Connection: close');
     header('Content-Length: " . strlen($js) . "');
@@ -178,7 +194,7 @@ class Json extends \litepubl\core\Events
     public function delete_event($name) {
         if (isset($this->events[$name])) {
             unset($this->events[$name]);
-            array_delete_value($this->eventnames, $name);
+            Arr::deleteValue($this->eventnames, $name);
             $this->save();
         }
     }

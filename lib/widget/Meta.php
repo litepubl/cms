@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -23,7 +24,7 @@ class Meta extends Widget
         $this->addmap('items', array());
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return Lang::get('default', 'subscribe');
     }
 
@@ -43,14 +44,18 @@ class Meta extends Widget
         }
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $result = '';
         $theme = Theme::i();
         $tml = $theme->getwidgetitem('meta', $sidebar);
         $metaclasses = $theme->getwidgettml($sidebar, 'meta', 'classes');
         $args = new Args();
         foreach ($this->items as $name => $item) {
-            if (!$item['enabled']) continue;
+            if (!$item['enabled']) {
+ continue;
+}
+
+
             $args->add($item);
             $args->icon = '';
             $args->subcount = '';
@@ -63,7 +68,11 @@ class Meta extends Widget
             $result.= $theme->parsearg($tml, $args);
         }
 
-        if ($result == '') return '';
+        if ($result == '') {
+ return '';
+}
+
+
         return $theme->getwidgetcontent($result, 'meta', $sidebar);
     }
 

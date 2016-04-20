@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\admin\GetPerm;
@@ -18,11 +19,23 @@ class JsonFiles extends \litepubl\core\Events
     }
 
     public function auth($idpost) {
-        if (!litepubl::$options->user) return false;
-        if (litepubl::$options->ingroup('editor')) return true;
-        if ($idpost == 0) return true;
+        if (! $this->getApp()->options->user) {
+ return false;
+}
+
+
+        if ( $this->getApp()->options->ingroup('editor')) {
+ return true;
+}
+
+
+        if ($idpost == 0) {
+ return true;
+}
+
+
         if ($idauthor = $this->getdb('posts')->getvalue($idpost, 'author')) {
-            return litepubl::$options->user == (int)$idauthor;
+            return  $this->getApp()->options->user == (int)$idauthor;
         }
         return false;
     }
@@ -33,9 +46,13 @@ class JsonFiles extends \litepubl\core\Events
 
     public function files_getpost(array $args) {
         $idpost = (int)$args['idpost'];
-        if (!$this->auth($idpost)) return $this->forbidden();
+        if (!$this->auth($idpost)) {
+ return $this->forbidden();
+}
 
-        $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
+
+
+        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
 
         $files = Files::i();
         $result = array(
@@ -51,7 +68,7 @@ class JsonFiles extends \litepubl\core\Events
             }
         }
 
-        if (litepubl::$options->show_file_perm) {
+        if ( $this->getApp()->options->show_file_perm) {
             $theme = ttheme::getinstance('default');
             $result['fileperm'] = GetPerm::combo(0, 'idperm_upload');
         }
@@ -60,12 +77,16 @@ class JsonFiles extends \litepubl\core\Events
     }
 
     public function files_getpage(array $args) {
-        if (!litepubl::$options->hasgroup('author')) return $this->forbidden();
+        if (! $this->getApp()->options->hasgroup('author')) {
+ return $this->forbidden();
+}
+
+
         $page = (int)$args['page'];
         $perpage = isset($args['perpage']) ? (int)$args['perpage'] : 10;
 
         $from = $page * $perpage;
-        $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
+        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
 
         $files = Files::i();
         $db = $files->db;
@@ -84,10 +105,18 @@ class JsonFiles extends \litepubl\core\Events
     }
 
     public function files_setprops(array $args) {
-        if (!litepubl::$options->hasgroup('author')) return $this->forbidden();
+        if (! $this->getApp()->options->hasgroup('author')) {
+ return $this->forbidden();
+}
+
+
         $id = (int)$args['idfile'];
         $files = Files::i();
-        if (!$files->itemexists($id)) return $this->forbidden();
+        if (!$files->itemexists($id)) {
+ return $this->forbidden();
+}
+
+
         $item = $files->getitem($id);
         $item['title'] = tcontentfilter::escape(tcontentfilter::unescape($args['title']));
         $item['description'] = tcontentfilter::escape(tcontentfilter::unescape($args['description']));
@@ -104,9 +133,13 @@ class JsonFiles extends \litepubl\core\Events
     }
 
     public function canupload() {
-        if (!litepubl::$options->hasgroup('author')) return false;
+        if (! $this->getApp()->options->hasgroup('author')) {
+ return false;
+}
 
-        if (in_array(litepubl::$options->groupnames['author'], litepubl::$options->idgroups) && ($err = tauthor_rights::i()->canupload())) {
+
+
+        if (in_array( $this->getApp()->options->groupnames['author'],  $this->getApp()->options->idgroups) && ($err = tauthor_rights::i()->canupload())) {
             return false;
         }
 
@@ -114,12 +147,24 @@ class JsonFiles extends \litepubl\core\Events
     }
 
     public function files_upload(array $args) {
-        if ('POST' != $_SERVER['REQUEST_METHOD']) return $this->forbidden();
-        if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES['Filedata']['tmp_name']) || $_FILES['Filedata']['error'] != 0) return $this->forbidden();
+        if ('POST' != $_SERVER['REQUEST_METHOD']) {
+ return $this->forbidden();
+}
+
+
+        if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES['Filedata']['tmp_name']) || $_FILES['Filedata']['error'] != 0) {
+ return $this->forbidden();
+}
+
+
 
         //psevdo logout
-        litepubl::$options->user = null;
-        if (!$this->canupload()) return $this->forbidden();
+         $this->getApp()->options->user = null;
+        if (!$this->canupload()) {
+ return $this->forbidden();
+}
+
+
 
         $parser = MediaParser::i();
         $id = $parser->uploadfile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);

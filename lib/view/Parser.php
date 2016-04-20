@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Str;
 
 class Parser extends BaseParser
  {
@@ -57,15 +59,23 @@ class Parser extends BaseParser
         }
     }
 
-    public function getparentname($name) {
-        if ($name == 'default') return false;
-        if ($name == 'default-old') return 'default';
+    public function getParentname($name) {
+        if ($name == 'default') {
+ return false;
+}
+
+
+        if ($name == 'default-old') {
+ return 'default';
+}
+
+
 
         $about = $this->getabout($name);
         return empty($about['parent']) ? 'default-old' : $about['parent'];
     }
 
-    public function getfile($filename) {
+    public function getFile($filename) {
         if ($s = parent::getfile($filename)) {
             //fix some old tags
             $s = strtr($s, array(
@@ -87,7 +97,7 @@ class Parser extends BaseParser
 
     protected function preparetag($name) {
         $name = parent::preparetag($name);
-        if (strbegin($name, 'sidebar')) {
+        if (Str::begin($name, 'sidebar')) {
             if (preg_match('/^sidebar(\d)\.?/', $name, $m)) {
                 $this->sidebar_index = (int)$m[1];
             } else {
@@ -102,14 +112,14 @@ class Parser extends BaseParser
         return $name;
     }
 
-    protected function setvalue($name, $s) {
-        if (strbegin($name, 'sidebar')) {
+    protected function setValue($name, $s) {
+        if (Str::begin($name, 'sidebar')) {
             $this->setwidgetvalue($name, $s);
         } elseif (isset($this->paths[$name])) {
             $this->set_value($name, $s);
         } elseif (($name == '') || ($name == '$template')) {
             $this->theme->templates['index'] = $s;
-        } elseif (strbegin($name, '$custom') || strbegin($name, 'custom')) {
+        } elseif (Str::begin($name, '$custom') || Str::begin($name, 'custom')) {
             $this->setcustom($name, $s);
         } else {
             $this->error("The '$name' tag not found. Content \n$s");
@@ -134,8 +144,8 @@ class Parser extends BaseParser
         $this->theme->templates[$name] = $value;
     }
 
-    public function getinfo($name, $child) {
-        if (strbegin($child, '$template.sidebar') && (substr_count($child, '.') == 1)) {
+    public function getInfo($name, $child) {
+        if (Str::begin($child, '$template.sidebar') && (substr_count($child, '.') == 1)) {
             return array(
                 'path' => substr($child, strlen('$template.')) ,
                 'tag' => $child,
@@ -143,12 +153,16 @@ class Parser extends BaseParser
             );
         }
 
-        if (($name == '') || ($child == '$template')) return 'index';
-        if (strbegin($name, '$template.')) $name = substr($name, strlen('$template.'));
+        if (($name == '') || ($child == '$template')) {
+ return 'index';
+}
+
+
+        if (Str::begin($name, '$template.')) $name = substr($name, strlen('$template.'));
         if ($name == '$template') $name = '';
 
         foreach ($this->paths as $path => $info) {
-            if (strbegin($path, $name)) {
+            if (Str::begin($path, $name)) {
                 if ($child == $info['tag']) {
                     $info['path'] = $path;
                     return $info;
@@ -157,7 +171,7 @@ class Parser extends BaseParser
         }
 
         $path = $name . '.' . substr($child, 1);
-        if (strbegin($name, 'sidebar')) {
+        if (Str::begin($name, 'sidebar')) {
             return array(
                 'path' => $path,
                 'tag' => $child,
@@ -165,7 +179,7 @@ class Parser extends BaseParser
             );
         }
 
-        if (strbegin($name, '$custom') || strbegin($name, 'custom')) {
+        if (Str::begin($name, '$custom') || Str::begin($name, 'custom')) {
             return array(
                 'path' => $path,
                 'tag' => $child,
@@ -176,12 +190,20 @@ class Parser extends BaseParser
         $this->error("The '$child' not found in path '$name'");
     }
 
-    private function setwidgetvalue($path, $value) {
-        if (!strpos($path, '.')) return;
+    private function setWidgetvalue($path, $value) {
+        if (!strpos($path, '.')) {
+ return;
+}
+
+
         if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
         $widgetname = $m[2];
         //backward compability deprecated submenu
-        if ($widgetname == 'submenu') return;
+        if ($widgetname == 'submenu') {
+ return;
+}
+
+
 
         if (($widgetname != 'widget') && (!in_array($widgetname, ttheme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
 
@@ -192,14 +214,18 @@ class Parser extends BaseParser
 
         if ($widgetname == 'widget') {
             foreach (ttheme::getwidgetnames() as $widgetname) {
-                if ((($widgetname == 'posts') || ($widgetname == 'comments')) && ($path == '.item')) continue;
+                if ((($widgetname == 'posts') || ($widgetname == 'comments')) && ($path == '.item')) {
+ continue;
+}
+
+
 
                 $this->setwidgetitem($widgetname, $path, $value);
             }
         }
     }
 
-    private function setwidgetitem($widgetname, $path, $value) {
+    private function setWidgetitem($widgetname, $path, $value) {
         $sidebar = & $this->theme->templates['sidebars'][$this->sidebar_index];
         if (!isset($sidebar[$widgetname])) {
             foreach (array(
@@ -217,9 +243,13 @@ class Parser extends BaseParser
         $sidebar[$widgetname . $path] = $value;
     }
 
-    public function setcustom($path, $value) {
+    public function setCustom($path, $value) {
         $names = explode('.', $path);
-        if (count($names) < 2) return;
+        if (count($names) < 2) {
+ return;
+}
+
+
         if (($names[0] != '$custom') && ($names[0] != 'custom')) $this->error("The '$path' path is not a custom path");
         $name = $names[1];
         switch (count($names)) {
@@ -385,7 +415,7 @@ class Parser extends BaseParser
         $this->reuse($templates);
     }
 
-    public static function getmetaclasses($s) {
+    public static function getMetaclasses($s) {
         $result = array(
             'rss' => '',
             'comments' => '',

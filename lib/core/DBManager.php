@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -19,15 +20,15 @@ class DBManager
 
     public function __get($name) {
         if ($name == 'db') {
-return litepubl::$db;
+return  $this->getApp()->db;
 }
 
-        return litepubl::$db->$name;
+        return  $this->getApp()->db->$name;
     }
 
     public function __call($name, $arg) {
         return call_user_func_array(array(
-            litepubl::$db,
+             $this->getApp()->db,
             $name
         ) , $arg);
     }
@@ -48,7 +49,7 @@ return litepubl::$db;
     }
 
     public function deletealltables() {
-        $list = $this->res2array($this->query("show tables from " . litepubl::$options->dbconfig['dbname']));
+        $list = $this->res2array($this->query("show tables from " .  $this->getApp()->options->dbconfig['dbname']));
         foreach ($list as $row) {
             $this->exec("DROP TABLE IF EXISTS " . $row[0]);
         }
@@ -62,16 +63,16 @@ return litepubl::$db;
         return $this->exec("alter table $this->prefix$table $arg");
     }
 
-    public function getautoincrement($table) {
+    public function getAutoincrement($table) {
         $a = $this->fetchassoc($this->query("SHOW TABLE STATUS like '$this->prefix$table'"));
         return $a['Auto_increment'];
     }
 
-    public function setautoincrement($table, $value) {
+    public function setAutoincrement($table, $value) {
         $this->exec("ALTER TABLE $this->prefix$table AUTO_INCREMENT = $value");
     }
 
-    public function getenum($table, $column) {
+    public function getEnum($table, $column) {
         if ($res = $this->query("describe $this->prefix$table $column")) {
             $r = $this->fetchassoc($res);
             $s = $r['Type'];
@@ -89,9 +90,9 @@ return litepubl::$db;
         return false;
     }
 
-    public function setenum($table, $column, array $enum) {
+    public function setEnum($table, $column, array $enum) {
         $items = $this->quoteArray($enum);
-        $default = dbquote($enum[0]);
+        $default = Str::uuote($enum[0]);
         $tmp = $column . '_tmp';
         $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
         $this->exec("update $this->prefix$table set $tmp = $column + 0");
@@ -112,7 +113,11 @@ return litepubl::$db;
         if ($values = $this->getenum($table, $column)) {
             $value = trim($value, ' \'"');
             $i = array_search($value, $values);
-            if (false === $i) return;
+            if (false === $i) {
+ return;
+}
+
+
 
             array_splice($values, $i, 1);
             $default = $values[0];
@@ -138,7 +143,7 @@ return litepubl::$db;
             if (false !== $i) {
                 $values[$i] = $newvalue;
                 $items = $this->quoteArray($values);
-                $default = dbquote($values[0]);
+                $default = Str::uuote($values[0]);
 
                 $tmp = $column . '_tmp';
                 $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
@@ -146,12 +151,12 @@ return litepubl::$db;
                 //exclude changed
                 unset($values[$i]);
                 foreach ($values as $value) {
-                    $value = dbquote($value);
+                    $value = Str::uuote($value);
                     $this->exec("update $this->prefix$table set $tmp = $value where $column  = $value");
                 }
 
-                $oldvalue = dbquote($oldvalue);
-                $newvalue = dbquote($newvalue);
+                $oldvalue = Str::uuote($oldvalue);
+                $newvalue = Str::uuote($newvalue);
                 $this->exec("update $this->prefix$table set $tmp = $newvalue where $column  = $oldvalue");
 
                 $this->exec("alter table $this->prefix$table drop $column");
@@ -162,7 +167,7 @@ return litepubl::$db;
 
     public function quoteArray(array $values) {
         foreach ($values as $i => $value) {
-            $values[$i] = dbquote(trim($value, ' \'"'));
+            $values[$i] = Str::uuote(trim($value, ' \'"'));
         }
 
         return implode(', ', $values);
@@ -180,7 +185,7 @@ return litepubl::$db;
         $this->alter($table, "drop $column");
     }
 
-    public function getdatabases() {
+    public function getDatabases() {
         if ($res = $this->query("show databases")) {
             return $this->res2id($res);
         }
@@ -194,8 +199,8 @@ return litepubl::$db;
         return FALSE;
     }
 
-    public function gettables() {
-        if ($res = $this->query(sprintf("show tables from %s like '%s%%'", litepubl::$options->dbconfig['dbname'], litepubl::$options->dbconfig['prefix']))) {
+    public function getTables() {
+        if ($res = $this->query(sprintf("show tables from %s like '%s%%'",  $this->getApp()->options->dbconfig['dbname'],  $this->getApp()->options->dbconfig['prefix']))) {
             return $this->res2id($res);
         }
         return false;
@@ -209,15 +214,19 @@ return litepubl::$db;
     }
 
     public function createdatabase($name) {
-        if ($this->dbexists($name)) return false;
+        if ($this->dbexists($name)) {
+ return false;
+}
+
+
         return $this->exec("CREATE DATABASE $name");
     }
 
     public function optimize() {
-        $prefix = strtolower(litepubl::$options->dbconfig['prefix']);
+        $prefix = strtolower( $this->getApp()->options->dbconfig['prefix']);
         $tables = $this->gettables();
         foreach ($tables as $table) {
-            if (strbegin(strtolower($table) , $prefix)) {
+            if (Str::begin(strtolower($table) , $prefix)) {
                 $this->exec("LOCK TABLES `$table` WRITE");
                 $this->exec("OPTIMIZE TABLE $table");
                 $this->exec("UNLOCK TABLES");
@@ -226,7 +235,7 @@ return litepubl::$db;
     }
 
     public function export() {
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
         $v = $this->fetchassoc($this->query("show variables like 'max_allowed_packet'"));
         $this->max_allowed_packet = floor($v['Value'] * 0.8);
 
@@ -280,20 +289,32 @@ return litepubl::$db;
         while ($j = strpos($dump, "\n", $i)) {
             $s = substr($dump, $i, $j - $i);
             $i = $j + 1;
-            if ($this->iscomment($s)) continue;
+            if ($this->iscomment($s)) {
+ continue;
+}
+
+
             $sql.= $s . "\n";
-            if ($s[strlen($s) - 1] != ';') continue;
-            litepubl::$db->exec($sql);
+            if ($s[strlen($s) - 1] != ';') {
+ continue;
+}
+
+
+             $this->getApp()->db->exec($sql);
             $sql = '';
         }
 
         $s = substr($dump, $i);
         if (!$this->iscomment($s)) $sql.= $s;
-        if ($sql != '') litepubl::$db->exec($sql);
+        if ($sql != '')  $this->getApp()->db->exec($sql);
     }
 
     private function iscomment(&$s) {
-        if (strlen($s) <= 2) return true;
+        if (strlen($s) <= 2) {
+ return true;
+}
+
+
         $c2 = $s{1};
         switch ($s{0}) {
             case '/':

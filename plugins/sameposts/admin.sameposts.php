@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -27,10 +28,10 @@ class tadminsameposts extends tadminorderwidget {
         return $result;
     }
 
-    protected function doprocessform(twidget $widget) {
+    protected function doProcessForm(twidget $widget) {
         $widget->maxcount = (int)$_POST['maxcount'];
         $widget->postschanged();
-        return parent::doprocessform($widget);
+        return parent::doProcessForm($widget);
     }
 
 } //class

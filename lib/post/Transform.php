@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
+use litepubl\core\Str;
 
 class Transform
 {
@@ -26,7 +28,7 @@ class Transform
         'commentscount',
         'pingbackscount',
         'pagescount',
-        'idview',
+        'idschema',
         'idperm'
     );
     public static $boolprops = array(
@@ -54,7 +56,7 @@ class Transform
         'tags',
         'files',
         'password',
-        'idview',
+        'idschema',
         'idperm',
         'icon',
         'status',
@@ -81,8 +83,8 @@ class Transform
         $id = $db->add($values);
         $post->rawdb->insert(array(
             'id' => $id,
-            'created' => sqldate() ,
-            'modified' => sqldate() ,
+            'created' => Str::sqlDate() ,
+            'modified' => Str::sqlDate() ,
             'rawcontent' => $post->data['rawcontent']
         ));
 
@@ -103,7 +105,11 @@ class Transform
         $db = $post->db;
         $list = array();
         foreach (static ::$props As $name) {
-            if ($name == 'id') continue;
+            if ($name == 'id') {
+ continue;
+}
+
+
             $list[] = "$name = " . $db->quote($this->__get($name));
         }
 
@@ -111,7 +117,7 @@ class Transform
 
         $raw = array(
             'id' => $post->id,
-            'modified' => sqldate()
+            'modified' => Str::sqlDate()
         );
         if (false !== $post->data['rawcontent']) {
             $raw['rawcontent'] = $post->data['rawcontent'];
@@ -121,7 +127,7 @@ class Transform
 
     }
 
-    public function setassoc(array $a) {
+    public function setAssoc(array $a) {
         foreach ($a as $k => $v) {
             $this->__set($k, $v);
         }
@@ -152,9 +158,13 @@ class Transform
     }
 
     public function __set($name, $value) {
-        if (method_exists($this, $set = "set$name")) return $this->$set($value);
+        if (method_exists($this, $set = "set$name")) {
+ return $this->$set($value);
+}
+
+
         if (in_array($name, static ::$arrayprops)) {
-            $this->post->data[$name] = tdatabase::str2array($value);
+            $this->post->data[$name] = Str::toIntArray($value);
         } elseif (in_array($name, static ::$intprops)) {
             $this->post->$name = (int)$value;
         } elseif (in_array($name, static ::$boolprops)) {
@@ -164,15 +174,15 @@ class Transform
         }
     }
 
-    protected function getposted() {
-        return sqldate($this->post->posted);
+    protected function getPosted() {
+        return Str::sqlDate($this->post->posted);
     }
 
-    protected function setposted($value) {
+    protected function setPosted($value) {
         $this->post->posted = strtotime($value);
     }
 
-    protected function setrevision($value) {
+    protected function setRevision($value) {
         $this->post->data['revision'] = $value;
     }
 

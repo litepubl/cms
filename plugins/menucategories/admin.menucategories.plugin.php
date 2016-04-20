@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,10 +15,10 @@ class tadmincategoriesmenu {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $plugin = tcategoriesmenu::i();
         $about = tplugins::getabout(tplugins::getname(__file__));
-        $args = new targs();
+        $args = new Args();
         $args->cats = admintheme::i()->getcats($plugin->exitems);
         $args->formtitle = $about['formtitle'];
         //    $args->data['$lang.before'] = $about['before'];
@@ -25,7 +26,7 @@ class tadmincategoriesmenu {
         return $html->adminform('$cats', $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $plugin = tcategoriesmenu::i();
         $plugin->exitems = tadminhtml::check2array('category-');
         $plugin->save();

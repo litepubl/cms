@@ -1,18 +1,19 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 
 function LoginInstall($self) {
-    litepubl::$urlmap->addget('/admin/login/', get_class($self));
-    litepubl::$urlmap->add('/admin/logout/', get_class($self) , 'out', 'get');
+     $self->getApp()->router->addget('/admin/login/', get_class($self));
+     $self->getApp()->router->add('/admin/logout/', get_class($self) , 'out', 'get');
 }
 
 function LoginUninstall($self) {
-    turlmap::unsub($self);
+     $self->getApp()->router->unbind($self);
 }

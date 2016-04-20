@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\Config;
 
 function tticketsInstall($self) {
     if (version_compare(PHP_VERSION, '5.3', '<')) {
@@ -14,14 +16,14 @@ function tticketsInstall($self) {
     }
 
     $dirname = basename(dirname(__file__));
-    tlocalmerger::i()->addplugin($dirname);
-    $lang = tlocal::admin('tickets');
+    Langmerger::i()->addplugin($dirname);
+    $lang = Lang::admin('tickets');
     $lang->addsearch('ticket', 'tickets');
 
     $self->data['cats'] = array();
     $self->data['idcomauthor'] = tusers::i()->add(array(
         'email' => '',
-        'name' => tlocal::get('ticket', 'comname') ,
+        'name' => Lang::get('ticket', 'comname') ,
         'status' => 'approved',
         'idgroups' => 'commentator'
     ));
@@ -32,7 +34,7 @@ function tticketsInstall($self) {
     $filter = tcontentfilter::i();
     $filter->phpcode = true;
     $filter->save();
-    litepubl::$options->parsepost = false;
+     $self->getApp()->options->parsepost = false;
 
     $manager = tdbmanager::i();
     $manager->CreateTable($self->childtable, file_get_contents($dir . 'ticket.sql'));
@@ -44,18 +46,18 @@ function tticketsInstall($self) {
     $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
     $optimizer->unlock();
 
-    litepubl::$classes->lock();
+     $self->getApp()->classes->lock();
     //install polls if its needed
     $plugins = tplugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
 
-    litepubl::$classes->Add('tticket', 'ticket.class.php', $dirname);
-    //litepubl::$classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
-    litepubl::$classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
-    litepubl::$classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
-    litepubl::$classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
+     $self->getApp()->classes->Add('tticket', 'ticket.class.php', $dirname);
+    // $self->getApp()->classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
+     $self->getApp()->classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
+     $self->getApp()->classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
+     $self->getApp()->classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
 
-    litepubl::$options->reguser = true;
+     $self->getApp()->options->reguser = true;
     $adminsecure = adminsecure::i();
     $adminsecure->usersenabled = true;
 
@@ -63,26 +65,26 @@ function tticketsInstall($self) {
     $adminmenus->lock();
 
     $parent = $adminmenus->createitem(0, 'tickets', 'ticket', 'tadmintickets');
-    $adminmenus->items[$parent]['title'] = tlocal::get('tickets', 'tickets');
+    $adminmenus->items[$parent]['title'] = Lang::get('tickets', 'tickets');
 
     $idmenu = $adminmenus->createitem($parent, 'editor', 'ticket', 'tticketeditor');
-    $adminmenus->items[$idmenu]['title'] = tlocal::get('tickets', 'editortitle');
+    $adminmenus->items[$idmenu]['title'] = Lang::get('tickets', 'editortitle');
 
     $idmenu = $adminmenus->createitem($parent, 'opened', 'ticket', 'tadmintickets');
-    $adminmenus->items[$idmenu]['title'] = tlocal::get('ticket', 'opened');
+    $adminmenus->items[$idmenu]['title'] = Lang::get('ticket', 'opened');
 
     $idmenu = $adminmenus->createitem($parent, 'fixed', 'ticket', 'tadmintickets');
-    $adminmenus->items[$idmenu]['title'] = tlocal::get('ticket', 'fixed');
+    $adminmenus->items[$idmenu]['title'] = Lang::get('ticket', 'fixed');
 
     $idmenu = $adminmenus->createitem($parent, 'options', 'admin', 'tadminticketoptions');
-    $adminmenus->items[$idmenu]['title'] = tlocal::i()->options;
+    $adminmenus->items[$idmenu]['title'] = Lang::i()->options;
 
     $adminmenus->onexclude = $self->onexclude;
     $adminmenus->unlock();
     /*
     $menus = tmenus::i();
     $menus->lock();
-    $ini = parse_ini_file($dir . litepubl::$options->language . '.install.ini', false);
+    $ini = parse_ini_file($dir .  $self->getApp()->options->language . '.install.ini', false);
     
     $menu = tticketsmenu::i();
     $menu->type = 'tickets';
@@ -102,7 +104,7 @@ function tticketsInstall($self) {
     }
     $menus->unlock();
     */
-    litepubl::$classes->unlock();
+     $self->getApp()->classes->unlock();
 
     $linkgen = tlinkgenerator::i();
     $linkgen->data['ticket'] = '/tickets/[title].htm';
@@ -115,21 +117,21 @@ function tticketsInstall($self) {
         $idticket,
         $groups->getidgroup('author')
     );
-    $groups->items[litepubl::$options->groupnames['author']]['parents'][] = $idticket;
-    $groups->items[litepubl::$options->groupnames['commentator']]['parents'][] = $idticket;
+    $groups->items[ $self->getApp()->options->groupnames['author']]['parents'][] = $idticket;
+    $groups->items[ $self->getApp()->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();
 }
 
 function tticketsUninstall($self) {
     //die("Warning! You can lost all tickets!");
-    litepubl::$classes->lock();
-    //if (litepubl::$debug) litepubl::$classes->delete('tpostclasses');
+     $self->getApp()->classes->lock();
+    //if (Config::$debug)  $self->getApp()->classes->delete('tpostclasses');
     tposts::unsub($self);
 
-    litepubl::$classes->delete('tticket');
-    litepubl::$classes->delete('tticketeditor');
-    litepubl::$classes->delete('tadmintickets');
-    litepubl::$classes->delete('tadminticketoptions');
+     $self->getApp()->classes->delete('tticket');
+     $self->getApp()->classes->delete('tticketeditor');
+     $self->getApp()->classes->delete('tadmintickets');
+     $self->getApp()->classes->delete('tadminticketoptions');
 
     $adminmenus = tadminmenus::i();
     $adminmenus->lock();
@@ -145,9 +147,9 @@ function tticketsUninstall($self) {
     $menus->deleteurl('/tickets/');
     $menus->unlock();
     
-    litepubl::$classes->delete('tticketsmenu');
+     $self->getApp()->classes->delete('tticketsmenu');
     */
-    litepubl::$classes->unlock();
+     $self->getApp()->classes->unlock();
 
     $manager = tdbmanager::i();
     $manager->deletetable($self->childtable);
@@ -161,5 +163,5 @@ function tticketsUninstall($self) {
     }
     $optimizer->unlock();
 
-    tlocalmerger::i()->deleteplugin(tplugins::getname(__file__));
+    Langmerger::i()->deleteplugin(tplugins::getname(__file__));
 }

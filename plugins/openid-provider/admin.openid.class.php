@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -13,9 +14,9 @@ class tadminopenid {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $openid = topenid::i();
-        $args = targs::i();
+        $args = new Args();
         $args->confirm = $openid->confirm;
         $args->usebigmath = $openid->usebigmath;
         $args->trusted = implode("\n", $openid->trusted);
@@ -33,7 +34,7 @@ class tadminopenid {
         return $html->adminform($tml, $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
         $openid = topenid::i();
         $openid->confirm = isset($confirm);

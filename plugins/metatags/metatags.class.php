@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -21,7 +22,7 @@ class tmetatags extends tplugin {
         ));
     }
 
-    public function getlist() {
+    public function getList() {
         $context = ttemplate::i()->context;
         if ($context instanceof tcommontags) {
             $list = $context->getidposts($context->id);
@@ -39,7 +40,7 @@ class tmetatags extends tplugin {
         return false;
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {
@@ -51,7 +52,7 @@ class tmetatags extends tplugin {
         return ttemplate::i()->getkeywords();
     }
 
-    public function getdescription() {
+    public function getDescription() {
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {

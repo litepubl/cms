@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tticket extends tpost {
 
@@ -14,7 +16,7 @@ class tticket extends tpost {
         return parent::iteminstance(__class__, $id);
     }
 
-    public static function getchildtable() {
+    public static function getChildtable() {
         return 'tickets';
     }
 
@@ -32,34 +34,34 @@ class tticket extends tpost {
             'prio' => 'major',
             'assignto' => 0,
             'closed' => '',
-            'version' => litepubl::$options->version,
+            'version' =>  $this->getApp()->options->version,
             'os' => '*',
             'reproduced' => false,
             'code' => ''
         );
     }
 
-    public function getfactory() {
+    public function getFactory() {
         return ticketfactory::i();
     }
 
     public function beforedb() {
-        if ($this->childdata['closed'] == '') $this->childdata['closed'] = sqldate();
+        if ($this->childdata['closed'] == '') $this->childdata['closed'] = Str::sqlDate();
     }
 
     public function afterdb() {
         $this->childdata['reproduced'] = $this->childdata['reproduced'] == '1';
     }
 
-    protected function getclosed() {
+    protected function getClosed() {
         return strtotime($this->childdata['closed']);
     }
 
-    protected function setclosed($value) {
-        $this->childdata['closed'] = is_int($value) ? sqldate($value) : $value;
+    protected function setClosed($value) {
+        $this->childdata['closed'] = is_int($value) ? Str::sqlDate($value) : $value;
     }
 
-    protected function getcontentpage($page) {
+    protected function getContentpage($page) {
         $result = parent::getcontentpage($page);
         $result.= polls::i()->getobjectpoll($this->id, 'post');
         return $result;
@@ -71,16 +73,16 @@ class tticket extends tpost {
         $filter->filterpost($this, $this->rawcontent);
         $result.= $this->filtered;
         if (!empty($this->childdata['code'])) {
-            $lang = tlocal::i('ticket');
+            $lang = Lang::i('ticket');
             $result.= sprintf('<h2>%s</h2>', $lang->code);
             $result.= highlight_string($this->code, true);
         }
         $this->filtered = $result;
     }
 
-    public function getticketcontent() {
-        $lang = tlocal::i('ticket');
-        $args = targs::i();
+    public function getTicketcontent() {
+        $lang = Lang::i('ticket');
+        $args = new Args();
         foreach (array(
             'state',
             'prio'
@@ -98,25 +100,33 @@ class tticket extends tpost {
         return $theme->parsearg($tml, $args);
     }
 
-    protected function getassigntoname() {
+    protected function getAssigntoname() {
         return $this->getusername($this->assignto, true);
     }
 
-    public static function getresource() {
-        return litepubl::$paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+    public static function getResource() {
+        return  $this->getApp()->paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     }
 
-    public function getschemalink() {
+    public function getSchemalink() {
         return 'ticket';
     }
 
     public function set_state($state) {
         $old = $this->state;
-        if ($state == $old) return;
-        $this->childdata['state'] = $state;
-        if ($this->id == 0) return;
+        if ($state == $old) {
+ return;
+}
 
-        $lang = tlocal::i('ticket');
+
+        $this->childdata['state'] = $state;
+        if ($this->id == 0) {
+ return;
+}
+
+
+
+        $lang = Lang::i('ticket');
         $content = sprintf($lang->statechanged, $lang->$old, $lang->$state);
 
         $this->comments->add($this->id, ttickets::i()->idcomauthor, $content, 'approved', '');
@@ -131,7 +141,7 @@ class ticketfactory extends tpostfactory {
         return getinstance(__class__);
     }
 
-    public function getposts() {
+    public function getPosts() {
         return ttickets::i();
     }
 

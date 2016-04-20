@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\tag;
 use litepubl\view\Filter;
@@ -14,7 +21,7 @@ class Content extends \litepubl\core\Data
         $this->items = array();
     }
 
-    public function getitem($id) {
+    public function getItem($id) {
         if (isset($this->items[$id])) {
 return $this->items[$id];
 }
@@ -35,7 +42,7 @@ $item = $r;
         return $item;
     }
 
-    public function setitem($id, $item) {
+    public function setItem($id, $item) {
         if (isset($this->items[$id]) && ($this->items[$id] == $item)) {
 return;
 }
@@ -62,22 +69,22 @@ return;
         $this->db->iddelete($id);
     }
 
-    public function getvalue($id, $name) {
+    public function getValue($id, $name) {
         $item = $this->getitem($id);
         return $item[$name];
     }
 
-    public function setvalue($id, $name, $value) {
+    public function setValue($id, $name, $value) {
         $item = $this->getitem($id);
         $item[$name] = $value;
         $this->setitem($id, $item);
     }
 
-    public function getcontent($id) {
+    public function getContent($id) {
         return $this->getvalue($id, 'content');
     }
 
-    public function setcontent($id, $content) {
+    public function setContent($id, $content) {
         $item = $this->getitem($id);
         $filter = Filter::i();
         $item['rawcontent'] = $content;
@@ -86,15 +93,15 @@ return;
         $this->setitem($id, $item);
     }
 
-    public function getdescription($id) {
+    public function getDescription($id) {
         return $this->getvalue($id, 'description');
     }
 
-    public function getkeywords($id) {
+    public function getKeywords($id) {
         return $this->getvalue($id, 'keywords');
     }
 
-    public function gethead($id) {
+    public function getHead($id) {
         return $this->getvalue($id, 'head');
     }
 

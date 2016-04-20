@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\core\UserGroups;
@@ -28,11 +29,11 @@ use Params;
         'group'
     );
 
-    public static function getinstancename() {
+    public static function getInstancename() {
         return 'adminmenu';
     }
 
-    public static function getowner() {
+    public static function getOwner() {
         return Menus::i();
     }
 
@@ -53,7 +54,7 @@ use Params;
         return true;
     }
 
-    public function gethead() {
+    public function getHead() {
         return Menus::i()->heads;
     }
 
@@ -66,15 +67,15 @@ use Params;
             return $err;
         }
 
-        if (!litepubl::$options->user) {
-            turlmap::nocache();
-            return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
+        if (! $this->getApp()->options->user) {
+            \litepubl\core\Router::nocache();
+            return  $this->getApp()->router->redir('/admin/login/' .  $this->getApp()->site->q . 'backurl=' . urlencode( $this->getApp()->router->url));
         }
 
-        if (!litepubl::$options->hasgroup($group)) {
-            $url = UserGroups::i()->gethome(litepubl::$options->group);
-            turlmap::nocache();
-            return litepubl::$urlmap->redir($url);
+        if (! $this->getApp()->options->hasgroup($group)) {
+            $url = UserGroups::i()->gethome( $this->getApp()->options->group);
+            \litepubl\core\Router::nocache();
+            return  $this->getApp()->router->redir($url);
         }
     }
 
@@ -95,48 +96,48 @@ use Params;
             return $s;
         }
 
-        tlocal::usefile('admin');
+        Lang::usefile('admin');
 
         if ($s = $this->canrequest()) {
             return $s;
         }
 
-        $this->doprocessform();
+        $this->doProcessForm();
     }
 
     public function canrequest() {
     }
 
-    protected function doprocessform() {
+    protected function doProcessForm() {
         if (isset($_POST) && count($_POST)) {
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
         }
 
-        return parent::doprocessform();
+        return parent::doProcessForm();
     }
 
-    public function getcont() {
-        if (litepubl::$options->admincache) {
+    public function getCont() {
+        if ( $this->getApp()->options->admincache) {
             $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-            $filename = 'adminmenu.' . litepubl::$options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-            if ($result = litepubl::$urlmap->cache->get($filename)) {
+            $filename = 'adminmenu.' .  $this->getApp()->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+            if ($result =  $this->getApp()->router->cache->get($filename)) {
                 return $result;
             }
 
             $result = parent::getcont();
-            litepubl::$urlmap->cache->set($filename, $result);
+             $this->getApp()->router->cache->set($filename, $result);
             return $result;
         } else {
             return parent::getcont();
         }
     }
 
-    public function getadminurl() {
-        return litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
+    public function getAdminurl() {
+        return  $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'id';
     }
 
-    public function getlang() {
-        return tlocal::i($this->name);
+    public function getLang() {
+        return Lang::i($this->name);
     }
 
 }

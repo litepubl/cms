@@ -1,15 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\pages\Users as UserPages;
+use litepubl\core\Str;
 
 class Theme extends BaseTheme
  {
@@ -17,7 +19,7 @@ class Theme extends BaseTheme
     public static function context() {
         $result = static ::i();
         if (!$result->name) {
-            if (($model = litepubl::$router->model) && isset($model->IdSchema)) {
+            if (($model =  $this->getApp()->router->model) && isset($model->IdSchema)) {
                 $result = Schema::getSchema($model)->theme;
             } else {
                 $result = Schema::i()->theme;
@@ -27,7 +29,7 @@ class Theme extends BaseTheme
         return $result;
     }
 
-    public static function getwidgetnames() {
+    public static function getWidgetnames() {
         return array(
             'categories',
             'tags',
@@ -57,15 +59,15 @@ class Theme extends BaseTheme
         return $this->templates['index'];
     }
 
-    public function getparser() {
+    public function getParser() {
         return ThemeParser::i();
     }
 
-    public function getsidebarscount() {
+    public function getSidebarscount() {
         return count($this->templates['sidebars']);
     }
     private function get_author() {
-        $model = isset(litepubl::$router->model) ? litepubl::$router->model : MainView::i()->model;
+        $model = isset( $this->getApp()->router->model) ?  $this->getApp()->router->model : MainView::i()->model;
         if (!is_object($model)) {
             if (!isset(static ::$vars['post'])) {
 return new EmptyClass();
@@ -116,24 +118,24 @@ $vars-model = $model;
         return $this->parse($this->templates['index']);
     }
 
-public function setvar($name, $obj) {
+public function setVar($name, $obj) {
 static::$vars[$name] = $obj;
 }
 
-    public function getnotfount() {
+    public function getNotfount() {
         return $this->parse($this->templates['content.notfound']);
     }
 
-    public function getpages($url, $page, $count, $params = '') {
+    public function getPages($url, $page, $count, $params = '') {
         if (!(($count > 1) && ($page >= 1) && ($page <= $count))) {
             return '';
         }
 
-        $args = new targs();
+        $args = new Args();
         $args->count = $count;
         $from = 1;
         $to = $count;
-        $perpage = litepubl::$options->perpage;
+        $perpage =  $this->getApp()->options->perpage;
         $args->perpage = $perpage;
         $items = array();
         if ($count > $perpage * 2) {
@@ -168,9 +170,9 @@ static::$vars[$name] = $obj;
 
         $currenttml = $this->templates['content.navi.current'];
         $tml = $this->templates['content.navi.link'];
-        if (!strbegin($url, 'http')) $url = litepubl::$site->url . $url;
+        if (!Str::begin($url, 'http')) $url =  $this->getApp()->site->url . $url;
         $pageurl = rtrim($url, '/') . '/page/';
-        if ($params) $params = litepubl::$site->q . $params;
+        if ($params) $params =  $this->getApp()->site->q . $params;
 
         $a = array();
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
@@ -218,7 +220,7 @@ static::$vars[$name] = $obj;
         return 'card';
     }
 
-    public function getposts(array $items, $postanounce) {
+    public function getPosts(array $items, $postanounce) {
         if (!count($items)) {
             return '';
         }
@@ -245,15 +247,19 @@ static::$vars[$name] = $obj;
         return $result;
     }
 
-    public function getpostsnavi(array $items, $url, $count, $postanounce, $perpage) {
+    public function getPostsnavi(array $items, $url, $count, $postanounce, $perpage) {
         $result = $this->getposts($items, $postanounce);
-        if (!$perpage) $perpage = litepubl::$options->perpage;
-        $result.= $this->getpages($url, litepubl::$urlmap->page, ceil($count / $perpage));
+        if (!$perpage) $perpage =  $this->getApp()->options->perpage;
+        $result.= $this->getpages($url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function getpostswidgetcontent(array $items, $sidebar, $tml) {
-        if (count($items) == 0) return '';
+    public function getPostswidgetcontent(array $items, $sidebar, $tml) {
+        if (count($items) == 0) {
+ return '';
+}
+
+
         $result = '';
         if ($tml == '') $tml = $this->getwidgetitem('posts', $sidebar);
         foreach ($items as $id) {
@@ -264,20 +270,20 @@ static::$vars[$name] = $obj;
         return str_replace('$item', $result, $this->getwidgetitems('posts', $sidebar));
     }
 
-    public function getwidgetcontent($items, $name, $sidebar) {
+    public function getWidgetcontent($items, $name, $sidebar) {
         return str_replace('$item', $items, $this->getwidgetitems($name, $sidebar));
     }
 
-    public function getwidget($title, $content, $template, $sidebar) {
-        $args = new targs();
+    public function getWidget($title, $content, $template, $sidebar) {
+        $args = new Args();
         $args->title = $title;
         $args->items = $content;
         $args->sidebar = $sidebar;
         return $this->parsearg($this->getwidgettml($sidebar, $template, '') , $args);
     }
 
-    public function getidwidget($id, $title, $content, $template, $sidebar) {
-        $args = new targs();
+    public function getIdwidget($id, $title, $content, $template, $sidebar) {
+        $args = new Args();
         $args->id = $id;
         $args->title = $title;
         $args->items = $content;
@@ -285,26 +291,34 @@ static::$vars[$name] = $obj;
         return $this->parsearg($this->getwidgettml($sidebar, $template, '') , $args);
     }
 
-    public function getwidgetitem($name, $index) {
+    public function getWidgetitem($name, $index) {
         return $this->getwidgettml($index, $name, 'item');
     }
 
-    public function getwidgetitems($name, $index) {
+    public function getWidgetitems($name, $index) {
         return $this->getwidgettml($index, $name, 'items');
     }
 
-    public function getwidgettml($index, $name, $tml) {
+    public function getWidgettml($index, $name, $tml) {
         $count = count($this->templates['sidebars']);
         if ($index >= $count) $index = $count - 1;
         $widgets = & $this->templates['sidebars'][$index];
         if (($tml != '') && ($tml[0] != '.')) $tml = '.' . $tml;
-        if (isset($widgets[$name . $tml])) return $widgets[$name . $tml];
-        if (isset($widgets['widget' . $tml])) return $widgets['widget' . $tml];
+        if (isset($widgets[$name . $tml])) {
+ return $widgets[$name . $tml];
+}
+
+
+        if (isset($widgets['widget' . $tml])) {
+ return $widgets['widget' . $tml];
+}
+
+
         $this->error("Unknown widget '$name' and template '$tml' in $index sidebar");
     }
 
-    public function getajaxtitle($id, $title, $sidebar, $tml) {
-        $args = new targs();
+    public function getAjaxtitle($id, $title, $sidebar, $tml) {
+        $args = new Args();
         $args->title = $title;
         $args->id = $id;
         $args->sidebar = $sidebar;
@@ -315,7 +329,7 @@ static::$vars[$name] = $obj;
         return str_replace('$content', $content, $this->templates['content.simple']);
     }
 
-    public function getbutton($title) {
+    public function getButton($title) {
         return strtr($this->templates['content.admin.button'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -323,7 +337,7 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getsubmit($title) {
+    public function getSubmit($title) {
         return strtr($this->templates['content.admin.submit'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -331,7 +345,7 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getinput($type, $name, $value, $title) {
+    public function getInput($type, $name, $value, $title) {
         return strtr($this->templates['content.admin.' . $type], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -339,7 +353,7 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getradio($name, $value, $title, $checked) {
+    public function getRadio($name, $value, $title, $checked) {
         return strtr($this->templates['content.admin.radioitem'], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -367,8 +381,12 @@ static::$vars[$name] = $obj;
         return $result;
     }
 
-    public static function getwidgetpath($path) {
-        if ($path === '') return '';
+    public static function getWidgetpath($path) {
+        if ($path === '') {
+ return '';
+}
+
+
         switch ($path) {
             case '.items':
                 return '.items';

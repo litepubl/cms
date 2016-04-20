@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepubl\admin\Form as AdminForm;
@@ -14,6 +15,7 @@ use litepubl\view\Theme;
 use litepubl\core\Session;
 use litepubl\core\Users;
 use litepubl\utils\Mailer;
+use litepubl\core\Str;
 
 class Password extends Form
 {
@@ -25,15 +27,15 @@ class Password extends Form
 
     public function createForm() {
         $form = new AdminForm();
-        $form->title = tlocal::admin('password')->enteremail;
+        $form->title = Lang::admin('password')->enteremail;
         $form->body = $this->theme->getinput('email', 'email', '', 'E-Mail');
         $form->submit = 'send';
         return $form->gettml();
     }
 
-    public function getcontent() {
+    public function getContent() {
         $theme = $this->theme;
-        $lang = tlocal::admin('password');
+        $lang = Lang::admin('password');
 
         if (empty($_GET['confirm'])) {
             return $this->getform();
@@ -41,7 +43,7 @@ class Password extends Form
 
         $email = $_GET['email'];
         $confirm = $_GET['confirm'];
-        Session::start('password-restore-' . md5(litepubl::$options->hash($email)));
+        Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
 
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
             if (!isset($_SESSION['email'])) {
@@ -56,7 +58,7 @@ class Password extends Form
 
         if ($id = $this->getiduser($email)) {
             if ($id == 1) {
-                litepubl::$options->changepassword($password);
+                 $this->getApp()->options->changepassword($password);
             } else {
                 Users::i()->changepassword($id, $password);
             }
@@ -73,13 +75,21 @@ class Password extends Form
         }
     }
 
-    public function getiduser($email) {
-        if (empty($email)) return false;
-        if ($email == strtolower(trim(litepubl::$options->email))) return 1;
+    public function getIduser($email) {
+        if (empty($email)) {
+ return false;
+}
+
+
+        if ($email == strtolower(trim( $this->getApp()->options->email))) {
+ return 1;
+}
+
+
         return Users::i()->emailexists($email);
     }
 
-    public function processform() {
+    public function processForm() {
         try {
             $this->restore($_POST['email']);
         }
@@ -91,31 +101,43 @@ class Password extends Form
     }
 
     public function restore($email) {
-        $lang = tlocal::admin('password');
+        $lang = Lang::admin('password');
         $email = strtolower(trim($email));
-        if (empty($email)) return $this->error($lang->error);
+        if (empty($email)) {
+ return $this->error($lang->error);
+}
+
+
         $id = $this->getiduser($email);
-        if (!$id) return $this->error($lang->error);
+        if (!$id) {
+ return $this->error($lang->error);
+}
 
-        $args = new targs();
 
-        Session::start('password-restore-' . md5(litepubl::$options->hash($email)));
+
+        $args = new Args();
+
+        Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
         if (!isset($_SESSION['count'])) {
             $_SESSION['count'] = 1;
         } else {
-            if ($_SESSION['count']++ > 3) return $this->error($lang->outofcount);
+            if ($_SESSION['count']++ > 3) {
+ return $this->error($lang->outofcount);
+}
+
+
         }
 
         $_SESSION['email'] = $email;
-        $password = md5uniq();
+        $password = Str::md5Uniq();
         $_SESSION['password'] = $password;
-        $_SESSION['confirm'] = md5rand();
+        $_SESSION['confirm'] = Str::md5Rand();
         $args->confirm = $_SESSION['confirm'];
         session_write_close();
 
         $args->email = urlencode($email);
         if ($id == 1) {
-            $name = litepubl::$site->author;
+            $name =  $this->getApp()->site->author;
         } else {
             $item = Users::i()->getitem($id);
             $args->add($item);
@@ -123,14 +145,14 @@ class Password extends Form
         }
 
         $args->password = $password;
-        tlocal::usefile('mail');
-        $lang = tlocal::i('mailpassword');
+        Lang::usefile('mail');
+        $lang = Lang::i('mailpassword');
         $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
 
-        Mailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
+        Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, $name, $email, $subject, $body);
         return true;
     }
 

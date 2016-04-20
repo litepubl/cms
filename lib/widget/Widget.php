@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -46,7 +47,7 @@ if (!$this->adminInstance) {
 return $this->adminInstance;
     }
 
-    public function getwidget($id, $sidebar) {
+    public function getWidget($id, $sidebar) {
 $vars = new Vars();
 $vars->widget = $this;
 
@@ -55,18 +56,18 @@ $vars->widget = $this;
             $content = $this->getcontent($id, $sidebar);
         }
         catch(\Exception $e) {
-            litepubl::$options->handexception($e);
+             $this->getApp()->options->handexception($e);
             return '';
         }
         $theme = Theme::i();
 return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return '';
     }
 
-    public function gettitle($id) {
+    public function getTitle($id) {
         if (!isset($id)) $this->error('no id');
         $widgets = Widgets::i();
         if (isset($widgets->items[$id])) {
@@ -75,7 +76,7 @@ return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
         return $this->getdeftitle();
     }
 
-    public function settitle($id, $title) {
+    public function setTitle($id, $title) {
         $widgets = Widgets::i();
         if (isset($widgets->items[$id]) && ($widgets->items[$id]['title'] != $title)) {
             $widgets->items[$id]['title'] = $title;
@@ -83,11 +84,11 @@ return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
         }
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         return '';
     }
 
-    public static function getcachefilename($id) {
+    public static function getCachefilename($id) {
         $theme = Theme::context();
         return sprintf('widget.%s.%d.php', $theme->name, $id);
     }
@@ -102,7 +103,7 @@ return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
             case 'include':
                 $sidebar = static ::findsidebar($id);
                 $filename = static ::getcachefilename($id, $sidebar);
-                litepubl::$urlmap->cache->set($filename, $this->getcontent($id, $sidebar));
+                 $this->getApp()->router->cache->set($filename, $this->getcontent($id, $sidebar));
                 break;
         }
     }
@@ -127,11 +128,15 @@ return $i;
         }
     }
 
-    public function getcontext($class) {
-        if (litepubl::$urlmap->context instanceof $class) return litepubl::$urlmap->context;
+    public function getContext($class) {
+        if ( $this->getApp()->router->context instanceof $class) {
+ return  $this->getApp()->router->context;
+}
+
+
         //ajax
         $widgets = Widgets::i();
-        return litepubl::$urlmap->getidcontext($widgets->idurlcontext);
+        return  $this->getApp()->router->getidcontext($widgets->idurlcontext);
     }
 
 }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\Lang;
@@ -20,9 +21,9 @@ use litepubl\admin\Menus;
 class Secure extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
-        $options = litepubl::$options;
-        $lang = tlocal::admin('options');
+    public function getContent() {
+        $options =  $this->getApp()->options;
+        $lang = Lang::admin('options');
         $args = new Args();
         $args->echoexception = $options->echoexception;
         $args->usersenabled = $options->usersenabled;
@@ -78,9 +79,9 @@ class Secure extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
 $admin = $this->admintheme;
 $lang = Lang::admin('options');
 
@@ -137,12 +138,12 @@ $lang = Lang::admin('options');
         }
     }
 
-    public function setusersenabled($value) {
-        if (litepubl::$options->usersenabled == $value) {
+    public function setUsersenabled($value) {
+        if ( $this->getApp()->options->usersenabled == $value) {
             return;
         }
 
-        litepubl::$options->usersenabled = $value;
+         $this->getApp()->options->usersenabled = $value;
         $menus = Menus::i();
         $menus->lock();
         if ($value) {

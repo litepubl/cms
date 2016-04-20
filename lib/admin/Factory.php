@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Lang;
@@ -7,7 +14,7 @@ use litepubl\view\Args;
 trait Factory
 {
 
-    public function getlang() {
+    public function getLang() {
         return Lang::admin();
     }
 
@@ -37,13 +44,17 @@ public function newArgs() {
 return new Args();
 }
 
-    public function getnotfound() {
-        return $this->admintheme->geterr(tlocal::i()->notfound);
+    public function getNotfound() {
+        return $this->admintheme->geterr(Lang::i()->notfound);
     }
 
-    public function getfrom($perpage, $count) {
-        if (litepubl::$urlmap->page <= 1) return 0;
-        return min($count, (litepubl::$urlmap->page - 1) * $perpage);
+    public function getFrom($perpage, $count) {
+        if ( $this->getApp()->router->page <= 1) {
+ return 0;
+}
+
+
+        return min($count, ( $this->getApp()->router->page - 1) * $perpage);
     }
 
     public function confirmDelete($id, $mesg = false) {

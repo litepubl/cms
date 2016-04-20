@@ -1,15 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function catbreadInstall($self) {
-    tlocalmerger::i()->addplugin(basename(dirname(__file__)));
+    Langmerger::i()->addplugin(basename(dirname(__file__)));
     $self->cats->onbeforecontent = $self->beforecat;
 
     $parser = tthemeparser::i();
@@ -21,7 +22,7 @@ function catbreadInstall($self) {
 }
 
 function catbreadUninstall($self) {
-    tlocalmerger::i()->deleteplugin(basename(dirname(__file__)));
+    Langmerger::i()->deleteplugin(basename(dirname(__file__)));
     $self->cats->unbind($self);
     $parser = tthemeparser::i();
     $parser->lock();
@@ -94,7 +95,7 @@ function catbreadThemeparsed(catbread $self, basetheme $theme) {
 }
 
 if (tthemeparser::i()->replacelang) {
-    $lang = tlocal::i('catbread');
+    $lang = Lang::i('catbread');
     foreach (array(
         'catbread.items.childs',
         'catbread.similar',

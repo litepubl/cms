@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\post\Post;
@@ -20,7 +21,7 @@ class MovableType extends Common
         $this->auth($username, $password, 'author');
         $count = (int)$count;
         $posts = Posts::i();
-        $list = $posts->getrecent(litepubl::$options->user, $count);
+        $list = $posts->getrecent( $this->getApp()->options->user, $count);
         $result = array();
         foreach ($list as $id) {
             $post = Post::i($id);
@@ -54,7 +55,11 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($id)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
         $post = Post::i($id);
         $categories = Cats::i();
         $categories->loaditems($post->categories);
@@ -77,7 +82,11 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($id)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
         $post = Post::i($id);
 
         $list = array();
@@ -96,9 +105,17 @@ class MovableType extends Common
     public function getTrackbackPings($id) {
         $id = (int)$id;
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($id)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
         $post = Post::i($id);
-        if ($post->status != 'published') return $this->xerror(403, 'Target post not published');
+        if ($post->status != 'published') {
+ return $this->xerror(403, 'Target post not published');
+}
+
+
         $result = array();
         $pingbacks = PingbacksItems::i($id);
             $items = $tpingbacks->db->getitems("post = $id and status = 'approved' order by posted");
@@ -116,7 +133,11 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($id)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
         $post = Post::i($id);
         $post->status = 'published';
         $posts->edit($post);

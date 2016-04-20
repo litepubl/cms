@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -19,13 +20,13 @@ class Cache extends litepubl\core\Items
         $this->modified = false;
     }
 
-    public function getbasename() {
+    public function getBasename() {
         $theme = Theme::i();
         return 'widgetscache.' . $theme->name;
     }
 
     public function load() {
-        if ($data = litepubl::$cache->get($this->getbasename())) {
+        if ($data =  $this->getApp()->cache->get($this->getbasename())) {
             $this->data = $data;
             $this->afterload();
             return true;
@@ -37,26 +38,30 @@ class Cache extends litepubl\core\Items
     public function savemodified() {
         if ($this->modified) {
         $this->modified = false;
-            litepubl::$cache->set($this->getbasename() , $this->data);
+             $this->getApp()->cache->set($this->getbasename() , $this->data);
         }
     }
 
     public function save() {
         if (!$this->modified) {
             $this->modified = true;
-            litepubl::$urlmap->onclose = array(
+             $this->getApp()->router->onclose = array(
                 $this,
                 'savemodified'
             );
         }
     }
 
-    public function getcontent($id, $sidebar, $onlybody = true) {
-        if (isset($this->items[$id][$sidebar])) return $this->items[$id][$sidebar];
+    public function getContent($id, $sidebar, $onlybody = true) {
+        if (isset($this->items[$id][$sidebar])) {
+ return $this->items[$id][$sidebar];
+}
+
+
         return $this->setcontent($id, $sidebar, $onlybody);
     }
 
-    public function setcontent($id, $sidebar, $onlybody = true) {
+    public function setContent($id, $sidebar, $onlybody = true) {
         $widget = Widgets::i()->getwidget($id);
 
         if ($onlybody) {

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\users;
 use litepubl\core\Users as UserItems;
@@ -16,41 +17,49 @@ use litepubl\view\Lang;
 class Pages extends \litepubl\admin\Menu
 {
 
-    public function getiduser() {
-        if (litepubl::$options->ingroup('admin')) {
+    public function getIduser() {
+        if ( $this->getApp()->options->ingroup('admin')) {
             $id = $this->idget();
         } else {
-            $id = litepubl::$options->user;
+            $id =  $this->getApp()->options->user;
         }
 
         $users = UserItems::i();
-        if ($users->itemexists($id) && ('approved' == $users->getvalue($id, 'status'))) return $id;
+        if ($users->itemexists($id) && ('approved' == $users->getvalue($id, 'status'))) {
+ return $id;
+}
+
+
         return false;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $users = UserItems::i();
 $admin = $this->admintheme;
-        $lang = tlocal::admin('users');
-        $args = new targs();
+        $lang = Lang::admin('users');
+        $args = new Args();
 
         if (!($id = $this->getiduser())) {
-            if (litepubl::$options->ingroup('admin')) return $this->getUserList();
+            if ( $this->getApp()->options->ingroup('admin')) {
+ return $this->getUserList();
+}
+
+
             return $this->notfound;
         }
 
         $pages = UserPages::i();
         $item = $users->getitem($id) + $pages->getitem($id);
         if (!isset($item['url'])) {
-            $item['url'] = $item['idurl'] ? litepubl::$urlmap->getidurl($item['idurl']) : '';
+            $item['url'] = $item['idurl'] ?  $this->getApp()->router->getidurl($item['idurl']) : '';
         }
         $args->add($item);
         $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
         $tabs = $this->newTabs();
         $tabs->add($lang->title, '[text=name] [text=website]');
-        if ('admin' == litepubl::$options->group) {
-            $tabs->add($lang->schema, GetSchema::combo($item['idview']));
+        if ('admin' ==  $this->getApp()->options->group) {
+            $tabs->add($lang->schema, GetSchema::combo($item['idschema']));
             $tabs->add('SEO', '[text=url] [text=keywords] [text=description] [editor=head]');
         }
         $tabs->add($lang->text, '[editor=rawcontent]');
@@ -66,16 +75,20 @@ $admin = $this->admintheme;
         return $admin->form($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
-        if (!($id = $this->getiduser())) return;
+        if (!($id = $this->getiduser())) {
+ return;
+}
+
+
         $item = array(
             'rawcontent' => trim($rawcontent) ,
             'content' => Filter::i()->filter($rawcontent)
         );
 
-        if ('admin' == litepubl::$options->group) {
-            $item['idview'] = (int)$idview;
+        if ('admin' ==  $this->getApp()->options->group) {
+            $item['idschema'] = (int)$idschema;
             $item['url'] = $url;
             $item['head'] = $head;
             $item['keywords'] = $keywords;
@@ -110,8 +123,8 @@ $admin = $this->admintheme;
     order by $u.id desc limit $from, $perpage"));
 
 $admin = $this->admintheme;
-        $lang = tlocal::admin('users');
-        $args = new targs();
+        $lang = Lang::admin('users');
+        $args = new Args();
         $args->adminurl = $this->adminurl;
         $result = $admin->h($lang->userstable);
 
@@ -126,7 +139,7 @@ $admin = $this->admintheme;
 
         $result.= $tb->build($items);
 
-        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 

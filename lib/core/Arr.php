@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -41,7 +48,11 @@ public static function insert(array & $a, $item, $index) {
 
 public static function move(array & $a, $oldindex, $newindex) {
     //delete and insert
-    if (($oldindex == $newindex) || !isset($a[$oldindex])) return false;
+    if (($oldindex == $newindex) || !isset($a[$oldindex])) {
+ return false;
+}
+
+
     $item = $a[$oldindex];
     array_splice($a, $oldindex, 1);
     array_splice($a, $newindex, 0, array(

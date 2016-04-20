@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,11 +15,11 @@ class admincatbread implements iadmin {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $plugin = catbread::i();
         $lang = tplugins::getnamelang('catbread');
         $admintheme = admintheme::i();
-        $args = new targs();
+        $args = new Args();
         $args->showhome = $plugin->showhome;
         $args->showchilds = $plugin->showchilds;
         $args->showsimilar = $plugin->showsimilar;
@@ -54,7 +55,7 @@ class admincatbread implements iadmin {
     ', $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
         $plugin = catbread::i();
         $plugin->showhome = isset($showchilds);

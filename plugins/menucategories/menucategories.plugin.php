@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -22,7 +23,7 @@ class tcategoriesmenu extends tplugin {
         $this->addmap('exitems', array());
     }
 
-    public function getmenu($hover, $current) {
+    public function getMenu($hover, $current) {
         $result = '';
         $categories = tcategories::i();
         $categories->loadall();
@@ -35,10 +36,14 @@ class tcategoriesmenu extends tplugin {
             } else {
                 $items = '';
                 $tml = $theme->templates['menu.item'];
-                $args = targs::i();
+                $args = new Args();
                 $args->submenu = '';
                 foreach ($this->tree as $id => $subitems) {
-                    if ($this->exclude($id)) continue;
+                    if ($this->exclude($id)) {
+ continue;
+}
+
+
                     $args->add($categories->items[$id]);
                     $items.= $current == $id ? $theme->parsearg($theme->templates['menu.current'], $args) : $theme->parsearg($tml, $args);
                 }
@@ -53,15 +58,19 @@ class tcategoriesmenu extends tplugin {
         return in_array($id, $this->exitems);
     }
 
-    private function getsubmenu(&$tree, $current) {
+    private function getSubmenu(&$tree, $current) {
         $result = '';
         $categories = tcategories::i();
         $theme = ttheme::i();
         $tml = $theme->templates['menu.item'];
         $tml_submenu = $theme->templates['menu.item.submenu'];
-        $args = targs::i();
+        $args = new Args();
         foreach ($tree as $id => $items) {
-            if ($this->exclude($id)) continue;
+            if ($this->exclude($id)) {
+ continue;
+}
+
+
             $submenu = '';
             if ((count($items) > 0) && ($s = $this->getsubmenu($items, $current))) {
                 $submenu = str_replace('$items', $s, $tml_submenu);
@@ -82,7 +91,7 @@ class tcategoriesmenu extends tplugin {
         $this->save();
     }
 
-    private function getsubtree($parent) {
+    private function getSubtree($parent) {
         $result = array();
         $categories = tcategories::i();
         // first step is a find all childs and sort them

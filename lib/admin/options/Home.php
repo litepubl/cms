@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\Lang;
@@ -12,11 +13,12 @@ use litepubl\view\Args;
 use litepubl\pages\Home as HomePage;
 use litepubl\pages\Menus;
 use litepubl\post\MediaParser;
+use litepubl\core\Str;
 
 class Home extends \litepubl\admin\Menu
 {
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
 
         $result.= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
@@ -25,9 +27,9 @@ class Home extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $args = new Args();
-        $lang = tlocal::admin('options');
+        $lang = Lang::admin('options');
         $home = HomePage::i();
         $tabs = $this->newTabs();
         $args->image = $home->image;
@@ -77,7 +79,7 @@ str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats
         return $admin->form('<h4><a href="$site.url/admin/menu/edit/{$site.q}id=$idhome">$lang.hometext</a></h4>' . $tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
         $home = HomePage::i();
         $home->lock();
@@ -107,7 +109,11 @@ $home->getSchema()->save();
         }
 
         $name = 'image';
-        if (!isset($_FILES[$name])) return;
+        if (!isset($_FILES[$name])) {
+ return;
+}
+
+
 
         $result = array(
             'result' => 'error'
@@ -115,18 +121,18 @@ $home->getSchema()->save();
 
         if (is_uploaded_file($_FILES[$name]['tmp_name']) &&
  !$_FILES[$name]['error'] &&
- strbegin($_FILES[$name]['type'], 'image/') &&
+ Str::begin($_FILES[$name]['type'], 'image/') &&
  ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
             $home = HomePage::i();
             $index = 1;
             if (preg_match('/^\/files\/home(\d*+)\.jpg$/', $home->image, $m)) {
                 $index = (int)$m[1];
-                $filename = litepubl::$paths->files . "home$index.jpg";
+                $filename =  $this->getApp()->paths->files . "home$index.jpg";
                 if (file_exists($filename)) {
                     @unlink($filename);
                 }
 
-                $filename = litepubl::$paths->files . "home$index.small.jpg";
+                $filename =  $this->getApp()->paths->files . "home$index.small.jpg";
                 if (file_exists($filename)) {
                     @unlink($filename);
                 }
@@ -137,7 +143,7 @@ $home->getSchema()->save();
             $home->image = "/files/home$index.jpg";
             $home->smallimage = "/files/home$index.small.jpg";
 
-            $filename = litepubl::$paths->files . "home$index.jpg";
+            $filename =  $this->getApp()->paths->files . "home$index.jpg";
             if (file_exists($filename)) {
                 @unlink($filename);
             }
@@ -159,7 +165,7 @@ $home->getSchema()->save();
                     }
 
                     //create small image
-                    $smallfile = litepubl::$paths->files . "home$index.small.jpg";
+                    $smallfile =  $this->getApp()->paths->files . "home$index.small.jpg";
                     if (file_exists($smallfile)) {
                         @unlink($smallfile);
                     }
@@ -179,7 +185,7 @@ $home->getSchema()->save();
             }
         }
 
-        $js = tojson($result);
+        $js = Str::toJson($result);
         return "<?php
     header('Connection: close');
     header('Content-Length: " . strlen($js) . "');

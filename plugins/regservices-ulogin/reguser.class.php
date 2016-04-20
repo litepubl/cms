@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class treguser extends titems {
 
@@ -23,7 +25,11 @@ class treguser extends titems {
     }
 
     public function add($id, $service, $uid) {
-        if (($id == 0) || ($service == '') || ($uid == '')) return;
+        if (($id == 0) || ($service == '') || ($uid == '')) {
+ return;
+}
+
+
         $this->db->insert(array(
             'id' => $id,
             'service' => $service,
@@ -34,7 +40,7 @@ class treguser extends titems {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . dbquote($service) . ' and uid = ' . dbquote($uid));
+        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
     }
 
 } //class

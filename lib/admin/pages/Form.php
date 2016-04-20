@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepubl\view\Lang;
@@ -17,17 +18,17 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     protected $title;
     protected $section;
 
-    public function gettitle() {
+    public function getTitle() {
         return Lang::get($this->section, 'title');
     }
 
-    public function gethead() {
+    public function getHead() {
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
     }
 
-    public function getdescription() {
+    public function getDescription() {
     }
 
     public function getIdSchema() {
@@ -37,42 +38,42 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function setIdSchema($id) {
     }
 
-public function gettheme() {
+public function getTheme() {
 return Schema::getSchema($this)->theme;
 }
 
-public function getadmintheme() {
+public function getAdmintheme() {
 return Schema::getSchema($this)->admintheme;
 }
 
     public function request($arg) {
         $this->cache = false;
-        tlocal::usefile('admin');
+        Lang::usefile('admin');
         $this->formresult = '';
         if (isset($_POST) && count($_POST)) {
-            $this->formresult = $this->processform();
+            $this->formresult = $this->processForm();
         }
     }
 
-    public function processform() {
+    public function processForm() {
         return '';
     }
 
-    public function getcont() {
-tlocal::admin($this->section);
+    public function getCont() {
+Lang::admin($this->section);
         $result = $this->formresult;
         $result.= $this->getcontent();
         $theme = $this->theme;
         return $theme->simple($result);
     }
 
-    public function getform() {
-        if ($result = litepubl::$cache->getString($this->getbasename())) {
+    public function getForm() {
+        if ($result =  $this->getApp()->cache->getString($this->getbasename())) {
 return $result;
 }
 
         $result = $this->createForm();
-litepubl::$cache->setString($this->getbasename(), $result);
+ $this->getApp()->cache->setString($this->getbasename(), $result);
         return $result;
     }
 

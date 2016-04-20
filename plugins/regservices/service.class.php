@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tregservice extends tplugin {
     public $sessdata;
@@ -29,7 +31,7 @@ class tregservice extends tplugin {
         $this->session_id = '';
     }
 
-    public function getbasename() {
+    public function getBasename() {
         return 'regservices' . DIRECTORY_SEPARATOR . $this->name;
     }
 
@@ -38,11 +40,11 @@ class tregservice extends tplugin {
     }
 
     public function install() {
-        if ($this->url) litepubl::$urlmap->addget($this->url, get_class($this));
+        if ($this->url)  $this->getApp()->router->addget($this->url, get_class($this));
     }
 
     public function uninstall() {
-        turlmap::unsub($this);
+         $this->getApp()->router->unbind($this);
     }
 
     public function start_session() {
@@ -57,7 +59,11 @@ class tregservice extends tplugin {
         Header('Cache-Control: no-cache, must-revalidate');
         Header('Pragma: no-cache');
 
-        if (empty($_REQUEST['code'])) return 403;
+        if (empty($_REQUEST['code'])) {
+ return 403;
+}
+
+
         $this->start_session();
 
         if (empty($_REQUEST['state']) || empty($_SESSION['state']) || ($_REQUEST['state'] != $_SESSION['state'])) {
@@ -70,22 +76,22 @@ class tregservice extends tplugin {
 
     public function newstate() {
         $this->start_session();
-        $state = md5rand();
+        $state = Str::md5Rand();
         $_SESSION['state'] = $state;
         $_SESSION['sessdata'] = $this->sessdata;
         session_write_close();
         return $state;
     }
 
-    public function getauthurl() {
+    public function getAuthurl() {
         $url = 'response_type=code';
-        $url.= '&redirect_uri=' . urlencode(litepubl::$site->url . $this->url);
+        $url.= '&redirect_uri=' . urlencode( $this->getApp()->site->url . $this->url);
         $url.= '&client_id=' . $this->client_id;
         $url.= '&state=' . $this->newstate();
         return $url;
     }
 
-    protected function getadmininfo($lang) {
+    protected function getAdmininfo($lang) {
         return array(
             'regurl' => '',
             'client_id' => $lang->client_id,
@@ -93,15 +99,15 @@ class tregservice extends tplugin {
         );
     }
 
-    public function gettab($html, $args, $lang) {
+    public function getTab($html, $args, $lang) {
         $a = $this->getadmininfo($lang);
-        $result = $html->p(sprintf($lang->reg, $a['regurl'], litepubl::$site->url . $this->url));
+        $result = $html->p(sprintf($lang->reg, $a['regurl'],  $this->getApp()->site->url . $this->url));
         $result.= $html->getinput('text', "client_id_$this->name", tadminhtml::specchars($this->client_id) , $a['client_id']);
         $result.= $html->getinput('text', "client_secret_$this->name", tadminhtml::specchars($this->client_secret) , $a['client_secret']);
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         if (isset($_POST["client_id_$this->name"])) $this->client_id = $_POST["client_id_$this->name"];
         if (isset($_POST["client_secret_$this->name"])) $this->client_secret = $_POST["client_secret_$this->name"];
         $this->save();
@@ -118,7 +124,7 @@ class tregservice extends tplugin {
             if ($id = $users->emailexists($item['email'])) {
                 $user = $users->getitem($id);
                 if ($user['status'] == 'comuser') $users->approve($id);
-            } elseif (litepubl::$options->reguser) {
+            } elseif ( $this->getApp()->options->reguser) {
                 $id = $users->add(array(
                     'email' => $item['email'],
                     'name' => $item['name'],
@@ -126,7 +132,7 @@ class tregservice extends tplugin {
                 ));
                 if (isset($item['uid'])) {
                     $uid = $item['uid'];
-                    if (strlen($uid) >= 22) $uid = basemd5($uid);
+                    if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
                     $reguser->add($id, $this->name, $uid);
                 }
             } else {
@@ -136,11 +142,11 @@ class tregservice extends tplugin {
         } else {
             $uid = !empty($item['uid']) ? $item['uid'] : (!empty($item['website']) ? $item['website'] : '');
             if ($uid) {
-                if (strlen($uid) >= 22) $uid = basemd5($uid);
+                if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
                 if ($id = $reguser->find($this->name, $uid)) {
                     //nothing
                     
-                } elseif (litepubl::$options->reguser) {
+                } elseif ( $this->getApp()->options->reguser) {
                     $id = $users->add(array(
                         'email' => '',
                         'name' => $item['name'],
@@ -159,18 +165,18 @@ class tregservice extends tplugin {
         }
 
         $expired = time() + 31536000;
-        $cookie = md5uniq();
-        litepubl::$options->user = $id;
-        litepubl::$options->updategroup();
-        litepubl::$options->setcookies($cookie, $expired);
-        if (litepubl::$options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, litepubl::$site->subdir . '/', false);
+        $cookie = Str::md5Uniq();
+         $this->getApp()->options->user = $id;
+         $this->getApp()->options->updategroup();
+         $this->getApp()->options->setcookies($cookie, $expired);
+        if ( $this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired,  $this->getApp()->site->subdir . '/', false);
 
-        setcookie('litepubl_regservice', $this->name, $expired, litepubl::$site->subdir . '/', false);
+        setcookie('litepubl_regservice', $this->name, $expired,  $this->getApp()->site->subdir . '/', false);
 
         $this->onadd($id, $rawdata);
 
         if (isset($this->sessdata['comuser'])) {
-            return tcommentform::i()->processform($this->sessdata['comuser'], true);
+            return tcommentform::i()->processForm($this->sessdata['comuser'], true);
         }
 
         if (!empty($_COOKIE['backurl'])) {
@@ -180,7 +186,7 @@ class tregservice extends tplugin {
             $backurl = tusergroups::i()->gethome($user['idgroups'][0]);
         }
 
-        return litepubl::$urlmap->redir($backurl);
+        return  $this->getApp()->router->redir($backurl);
     }
 
 } //class
@@ -198,7 +204,11 @@ class tregserviceuser extends titems {
     }
 
     public function add($id, $service, $uid) {
-        if (($id == 0) || ($service == '') || ($uid == '')) return;
+        if (($id == 0) || ($service == '') || ($uid == '')) {
+ return;
+}
+
+
         $this->db->insert(array(
             'id' => $id,
             'service' => $service,
@@ -209,7 +219,7 @@ class tregserviceuser extends titems {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . dbquote($service) . ' and uid = ' . dbquote($uid));
+        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
     }
 
 } //class

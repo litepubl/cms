@@ -1,17 +1,22 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 
 function MenusInstall($self) {
-    if ('\litepubl\admin\Menus' != get_class($self)) return;
+    if ('\litepubl\admin\Menus' != get_class($self)) {
+ return;
+}
 
-    litepubl::$classes->onrename = $self->classRenamed;
+
+
+     $self->getApp()->classes->onrename = $self->classRenamed;
 
     $self->lock();
     $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
@@ -21,7 +26,7 @@ function MenusInstall($self) {
     $posts = $self->createitem(0, 'posts', 'author', 'litepubl\post\Posts');
  {
         $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
-        $self->items[$id]['title'] = tlocal::i()->newpost;
+        $self->items[$id]['title'] = Lang::i()->newpost;
         $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
         $self->createitem($posts, 'categories', 'editor', 'tadmintags');
         $self->createitem($posts, 'addtag', 'editor', 'tadmintags');
@@ -46,25 +51,25 @@ function MenusInstall($self) {
         $self->createitem($files, 'bin', 'editor', 'tadminfiles');
     }
 
-    $views = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
-        $self->createitem($views, 'addview', 'admin', 'tadminviews');
-        //$self->createitem($views, 'themes', 'admin', 'tadminthemes');
-        $self->createitem($views, 'widgets', 'admin', 'tadminwidgets');
-        $self->createitem($views, 'addcustom', 'admin', 'addcustomwidget');
-        $self->createitem($views, 'group', 'admin', 'tadminviewsgroup');
-        $self->createitem($views, 'defaults', 'admin', 'tadminviews');
-        $self->createitem($views, 'spec', 'admin', 'tadminviewsspec');
-        $self->createitem($views, 'headers', 'admin', 'tadminheaders');
-        $self->createitem($views, 'jsmerger', 'admin', 'tadminjsmerger');
-        $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
+    $schemes = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
+        $self->createitem($schemes, 'addview', 'admin', 'tadminviews');
+        //$self->createitem($schemes, 'themes', 'admin', 'tadminthemes');
+        $self->createitem($schemes, 'widgets', 'admin', 'tadminwidgets');
+        $self->createitem($schemes, 'addcustom', 'admin', 'addcustomwidget');
+        $self->createitem($schemes, 'group', 'admin', 'tadminviewsgroup');
+        $self->createitem($schemes, 'defaults', 'admin', 'tadminviews');
+        $self->createitem($schemes, 'spec', 'admin', 'tadminviewsspec');
+        $self->createitem($schemes, 'headers', 'admin', 'tadminheaders');
+        $self->createitem($schemes, 'jsmerger', 'admin', 'tadminjsmerger');
+        $self->createitem($schemes, 'cssmerger', 'admin', '\litepubl\admin\Css');
     }
 
     $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager');
  {
         $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
-        $self->items[$id]['title'] = tlocal::get('menu', 'addmenu');
+        $self->items[$id]['title'] = Lang::get('menu', 'addmenu');
         $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');
-        $self->items[$id]['title'] = tlocal::get('menu', 'addfake');
+        $self->items[$id]['title'] = Lang::get('menu', 'addfake');
     }
 
     $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions'); {
@@ -92,13 +97,13 @@ function MenusInstall($self) {
         $self->createitem($service, 'run', 'admin', 'tadminservice');
     }
 
-    $id = $self->addfake('/admin/logout/', tlocal::i()->logout);
+    $id = $self->addfake('/admin/logout/', Lang::i()->logout);
     $self->items[$id]['order'] = 9999999;
     /*
     $board = $self->additem(array(
     'parent' => 0,
     'url' => '/admin/',
-    'title' => tlocal::get('adminmenus', 'board'),
+    'title' => Lang::get('adminmenus', 'board'),
     'name' => 'board',
     'class' => 'tadminboard',
     'group' => 'author'

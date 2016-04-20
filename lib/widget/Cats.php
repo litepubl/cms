@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\tag\Cats as Owner;
@@ -19,11 +20,11 @@ class Cats extends CommonTags
         $this->template = 'categories';
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return Lang::get('default', 'categories');
     }
 
-    public function getowner() {
+    public function getOwner() {
         return Owner::i();
     }
 

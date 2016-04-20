@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\core\Users;
@@ -16,6 +17,8 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\utils\Mailer;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 class Subscribers extends \litepubl\core\ItemsPosts
 {
@@ -31,19 +34,27 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $this->addmap('blacklist', array());
     }
 
-    public function getstorage() {
-        return litepubl::$storage;
+    public function getStorage() {
+        return  $this->getApp()->storage;
     }
 
     public function update($pid, $uid, $subscribed) {
-        if ($subscribed == $this->exists($pid, $uid)) return;
+        if ($subscribed == $this->exists($pid, $uid)) {
+ return;
+}
+
+
         $this->remove($pid, $uid);
         $user = Users::i()->getitem($uid);
-        if (in_array($user['email'], $this->blacklist)) return;
+        if (in_array($user['email'], $this->blacklist)) {
+ return;
+}
+
+
         if ($subscribed) $this->add($pid, $uid);
     }
 
-    public function setenabled($value) {
+    public function setEnabled($value) {
         if ($this->enabled != $value) {
             $this->data['enabled'] = $value;
             $this->save();
@@ -74,24 +85,28 @@ return;
         }
     }
 
-    public function getlocklist() {
+    public function getLocklist() {
         return implode("\n", $this->blacklist);
     }
 
-    public function setlocklist($s) {
+    public function setLocklist($s) {
         $this->setblacklist(explode("\n", strtolower(trim($s))));
     }
 
-    public function setblacklist(array $a) {
+    public function setBlacklist(array $a) {
         $a = array_unique($a);
-        array_delete_value($a, '');
+        Arr::deleteValue($a, '');
         $this->data['blacklist'] = $a;
         $this->save();
 
         $dblist = array();
         foreach ($a as $s) {
-            if ($s == '') continue;
-            $dblist[] = dbquote($s);
+            if ($s == '') {
+ continue;
+}
+
+
+            $dblist[] = Str::uuote($s);
         }
         if (count($dblist) > 0) {
             $db = $this->db;
@@ -100,13 +115,25 @@ return;
     }
 
     public function sendmail($id) {
-        if (!$this->enabled) return;
-        $comments = Comments::i();
-        if (!$comments->itemexists($id)) return;
-        $item = $comments->getitem($id);
-        if (($item['status'] != 'approved')) return;
+        if (!$this->enabled) {
+ return;
+}
 
-        if (litepubl::$options->mailer == 'smtp') {
+
+        $comments = Comments::i();
+        if (!$comments->itemexists($id)) {
+ return;
+}
+
+
+        $item = $comments->getitem($id);
+        if (($item['status'] != 'approved')) {
+ return;
+}
+
+
+
+        if ( $this->getApp()->options->mailer == 'smtp') {
             Cron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
         } else {
             $this->cronsendmail($id);
@@ -123,44 +150,64 @@ return;
         }
 
         $subscribers = $this->getitems($item['post']);
-        if (!$subscribers || (count($subscribers) == 0)) return;
+        if (!$subscribers || (count($subscribers) == 0)) {
+ return;
+}
+
+
         $comment = $comments->getcomment($id);
 $vars = new Vars();
         $vars->comment = $comment;
         Lang::usefile('mail');
         $lang = Lang::i('mailcomments');
         $theme = Theme::i();
-        $args = new targs();
+        $args = new Args();
 
         $subject = $theme->parsearg($lang->subscribesubj, $args);
         $body = $theme->parsearg($lang->subscribebody, $args);
 
         $body.= "\n";
-        $adminurl = litepubl::$site->url . '/admin/subscribers/';
+        $adminurl =  $this->getApp()->site->url . '/admin/subscribers/';
 
         $users = Users::i();
         $users->loaditems($subscribers);
         $list = array();
         foreach ($subscribers as $uid) {
             $user = $users->getitem($uid);
-            if ($user['status'] == 'hold') continue;
+            if ($user['status'] == 'hold') {
+ continue;
+}
+
+
             $email = $user['email'];
-            if (empty($email)) continue;
-            if ($email == $comment->email) continue;
-            if (in_array($email, $this->blacklist)) continue;
+            if (empty($email)) {
+ continue;
+}
+
+
+            if ($email == $comment->email) {
+ continue;
+}
+
+
+            if (in_array($email, $this->blacklist)) {
+ continue;
+}
+
+
 
             $admin = $adminurl;
             if ('comuser' == $user['status']) {
-                $admin.= litepubl::$site->q . 'auth=';
+                $admin.=  $this->getApp()->site->q . 'auth=';
                 if (empty($user['cookie'])) {
-                    $user['cookie'] = md5uniq();
+                    $user['cookie'] = Str::md5Uniq();
                     $users->setvalue($user['id'], 'cookie', $user['cookie']);
                 }
                 $admin.= rawurlencode($user['cookie']);
             }
 
             $list[] = array(
-                'fromname' => litepubl::$site->name,
+                'fromname' =>  $this->getApp()->site->name,
                 'fromemail' => $this->fromemail,
                 'toname' => $user['name'],
                 'toemail' => $email,

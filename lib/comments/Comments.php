@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\post\Post;
@@ -12,6 +13,7 @@ use litepubl\view\Filter;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
+use litepubl\core\Str;
 
 class Comments extends \litepubl\core\Items
  {
@@ -45,7 +47,7 @@ $result->pid = $pid;
             'post' => $idpost,
             'parent' => 0,
             'author' => (int)$idauthor,
-            'posted' => sqldate() ,
+            'posted' => Str::sqlDate() ,
             'content' => $filtered,
             'status' => $status
         );
@@ -57,11 +59,11 @@ $result->pid = $pid;
 
         $this->getdb($this->rawtable)->add(array(
             'id' => $id,
-            'created' => sqldate() ,
-            'modified' => sqldate() ,
+            'created' => Str::sqlDate() ,
+            'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
-            'hash' => basemd5($content)
+            'hash' => Str::baseMd5($content)
         ));
 
         $this->added($id);
@@ -70,14 +72,18 @@ $result->pid = $pid;
     }
 
     public function edit($id, $content) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
         $this->getdb($this->rawtable)->updateassoc(array(
             'id' => $id,
-            'modified' => sqldate() ,
+            'modified' => Str::sqlDate() ,
             'rawcontent' => $content,
-            'hash' => basemd5($content)
+            'hash' => Str::baseMd5($content)
         ));
 
         if (isset($this->items[$id])) {
@@ -91,20 +97,28 @@ $result->pid = $pid;
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $this->db->setvalue($id, 'status', 'deleted');
         $this->deleted($id);
         $this->changed($id);
         return true;
     }
 
-    public function setstatus($id, $status) {
+    public function setStatus($id, $status) {
         if (!in_array($status, array(
             'approved',
             'hold',
             'spam'
         ))) return false;
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $old = $this->getvalue($id, 'status');
         if ($old != $status) {
             $this->setvalue($id, 'status', $status);
@@ -120,29 +134,29 @@ $result->pid = $pid;
         $this->db->update("status = 'deleted'", "post = $idpost");
     }
 
-    public function getcomment($id) {
+    public function getComment($id) {
         return new tcomment($id);
     }
 
-    public function getcount($where = '') {
+    public function getCount($where = '') {
         return $this->db->getcount($where);
     }
 
     public function select($where, $limit) {
         if ($where != '') $where.= ' and ';
         $table = $this->thistable;
-        $authors = litepubl::$db->users;
-        $res = litepubl::$db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+        $authors =  $this->getApp()->db->users;
+        $res =  $this->getApp()->db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
     where $where $authors.id = $table.author $limit");
 
         return $this->res2items($res);
     }
 
-    public function getraw() {
+    public function getRaw() {
         return $this->getdb($this->rawtable);
     }
 
-    public function getapprovedcount() {
+    public function getApprovedcount() {
         return $this->db->getcount("post = $this->pid and status = 'approved'");
     }
 
@@ -153,7 +167,7 @@ $result->pid = $pid;
             'post' => $this->pid,
             'parent' => 0,
             'author' => $idauthor,
-            'posted' => sqldate($posted) ,
+            'posted' => Str::sqlDate($posted) ,
             'content' => $filtered,
             'status' => $status
         );
@@ -164,33 +178,33 @@ $result->pid = $pid;
 
         $this->getdb($this->rawtable)->add(array(
             'id' => $id,
-            'created' => sqldate($posted) ,
-            'modified' => sqldate() ,
+            'created' => Str::sqlDate($posted) ,
+            'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
-            'hash' => basemd5($content)
+            'hash' => Str::baseMd5($content)
         ));
 
         return $id;
     }
 
-    public function getcontent() {
+    public function getContent() {
         return $this->getcontentwhere('approved', '');
     }
 
-    public function getholdcontent($idauthor) {
+    public function getHoldcontent($idauthor) {
         return $this->getcontentwhere('hold', "and $this->thistable.author = $idauthor");
     }
 
-    public function getcontentwhere($status, $where) {
+    public function getContentwhere($status, $where) {
         $result = '';
         $post = Post::i($this->pid);
         $theme = $post->theme;
         if ($status == 'approved') {
-            if (litepubl::$options->commentpages) {
-                $page = litepubl::$urlmap->page;
-                if (litepubl::$options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
-                $count = litepubl::$options->commentsperpage;
+            if ( $this->getApp()->options->commentpages) {
+                $page =  $this->getApp()->router->page;
+                if ( $this->getApp()->options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
+                $count =  $this->getApp()->options->commentsperpage;
                 $from = ($page - 1) * $count;
             } else {
                 $from = 0;
@@ -198,7 +212,7 @@ $result->pid = $pid;
             }
         } else {
             $from = 0;
-            $count = litepubl::$options->commentsperpage;
+            $count =  $this->getApp()->options->commentsperpage;
         }
 
         $table = $this->thistable;

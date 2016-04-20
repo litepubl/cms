@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -20,14 +21,14 @@ class tsourcefiles extends tplugin implements itemplate {
         parent::create();
         $this->data['url'] = '/source/';
         $this->data['zipurl'] = '';
-        $this->data['idview'] = 1;
+        $this->data['idschema'] = 1;
     }
 
-    public function getdir() {
-        return litepubl::$paths->data . 'sourcecache';
+    public function getDir() {
+        return  $this->getApp()->paths->data . 'sourcecache';
     }
 
-    public function getfilename($url) {
+    public function getFilename($url) {
         return $this->dir . '/' . md5($url) . '.txt';
     }
 
@@ -36,9 +37,17 @@ class tsourcefiles extends tplugin implements itemplate {
     }
 
     public function loaditem($filename) {
-        if (!file_exists($filename)) return false;
+        if (!file_exists($filename)) {
+ return false;
+}
+
+
         $s = file_get_contents($filename);
-        if (!$s) return false;
+        if (!$s) {
+ return false;
+}
+
+
 
         return unserialize($s);
     }
@@ -49,7 +58,7 @@ class tsourcefiles extends tplugin implements itemplate {
     }
 
     public function request($arg) {
-        $url = substr(litepubl::$urlmap->url, strlen($this->url));
+        $url = substr( $this->getApp()->router->url, strlen($this->url));
         $url = trim($url, '/');
         if (!$url) $url = '.';
 
@@ -57,9 +66,9 @@ class tsourcefiles extends tplugin implements itemplate {
             while ($url && $url != '.') {
                 $url = dirname($url);
                 if ($url == '.') {
-                    return litepubl::$urlmap->redir($this->url);
+                    return  $this->getApp()->router->redir($this->url);
                 } else if (file_exists($this->getfilename($url))) {
-                    return litepubl::$urlmap->redir($this->url . $url . '/');
+                    return  $this->getApp()->router->redir($this->url . $url . '/');
                 }
             }
 
@@ -68,36 +77,36 @@ class tsourcefiles extends tplugin implements itemplate {
 
     }
 
-    public function getidview() {
-        return $this->data['idview'];
+    public function getIdschema() {
+        return $this->data['idschema'];
     }
 
-    public function setidview($id) {
-        if ($id != $this->idview) {
-            $this->data['idview'] = $id;
+    public function setIdschema($id) {
+        if ($id != $this->idschema) {
+            $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getview() {
-        return tview::getview($this);
+    public function getView() {
+        return Schema::getview($this);
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return $this->item['filename'];
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
     }
-    public function getdescription() {
+    public function getDescription() {
     }
-    public function gethead() {
+    public function getHead() {
         if ($this->item['style']) {
             return sprintf('<style type="text/css">%s</style>', $this->item['style']);
         }
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = sprintf('<h4>%s</h4>', $this->item['filename']);
         if ($this->item['type'] == 'file') {
             $dir = dirname($this->item['filename']);
@@ -175,7 +184,11 @@ class tsourcefiles extends tplugin implements itemplate {
         $root = false;
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
-            if (preg_match('/\.(min\.js|min\.css|jpg|jpeg|ico|png|gif|svg|swf|xap|otf|eot|ttf|woff|woff2)$/', $filename)) continue;
+            if (preg_match('/\.(min\.js|min\.css|jpg|jpeg|ico|png|gif|svg|swf|xap|otf|eot|ttf|woff|woff2)$/', $filename)) {
+ continue;
+}
+
+
 
             if (!$root) {
                 $list = explode('/', trim($filename, '/'));
@@ -185,7 +198,11 @@ class tsourcefiles extends tplugin implements itemplate {
             $filename = ltrim(substr(ltrim($filename, '/') , strlen($root)) , '/');
             $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
             $content = trim($zip->getFromIndex($i));
-            if (!$content) continue;
+            if (!$content) {
+ continue;
+}
+
+
 
             $path = dirname($filename);
             if (isset($dirlist[$path])) {
@@ -219,7 +236,7 @@ class tsourcefiles extends tplugin implements itemplate {
             }
         }
 
-        $tml = '<li><a href="' . litepubl::$site->url . $this->url . '%s">%s</a></li>';
+        $tml = '<li><a href="' .  $this->getApp()->site->url . $this->url . '%s">%s</a></li>';
         $tml_list = '<ul>%s</ul>';
         $dirnames = array_keys($dirlist);
         foreach ($dirlist as $dir => $filelist) {

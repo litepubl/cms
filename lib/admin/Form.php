@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Admin;
@@ -50,7 +51,7 @@ class Form {
         return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
     }
 
-    public function getadmintheme() {
+    public function getAdmintheme() {
         return Admin::i();
     }
 
@@ -76,7 +77,7 @@ class Form {
         return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
     }
 
-    public function getdelete($table) {
+    public function getDelete($table) {
         $this->body = $table;
         $this->body.= $this->hidden('delete', 'delete');
         $this->submit = 'delete';
@@ -88,7 +89,7 @@ class Form {
         return $this->get();
     }
 
-    public function gettml() {
+    public function getTml() {
         $admin = $this->getadmintheme();
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
 
@@ -104,7 +105,7 @@ class Form {
         }
 
         $theme = Theme::i();
-        $lang = tlocal::i();
+        $lang = Lang::i();
         $body = $this->body;
 
         if ($this->inline) {
@@ -134,7 +135,7 @@ class Form {
     public function getButtons() {
         $result = '';
         $theme = Theme::i();
-        $lang = tlocal::i();
+        $lang = Lang::i();
 
         $a = func_get_args();
         foreach ($a as $name) {

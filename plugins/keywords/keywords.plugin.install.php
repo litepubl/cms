@@ -1,19 +1,20 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function tkeywordspluginInstall($self) {
-    @mkdir(litepubl::$paths->data . 'keywords', 0777);
-    @chmod(litepubl::$paths->data . 'keywords', 0777);
+    @mkdir( $self->getApp()->paths->data . 'keywords', 0777);
+    @chmod( $self->getApp()->paths->data . 'keywords', 0777);
 
-    $item = litepubl::$classes->items[get_class($self) ];
-    litepubl::$classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
+    $item =  $self->getApp()->classes->items[get_class($self) ];
+     $self->getApp()->classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
 
     $widget = tkeywordswidget::i();
     $widgets = twidgets::i();
@@ -23,18 +24,18 @@ function tkeywordspluginInstall($self) {
     $sidebars->insert($id, false, 1, -1);
     $widgets->unlock();
 
-    $urlmap = turlmap::i();
-    $urlmap->lock();
-    $urlmap->afterrequest = $self->parseref;
-    $urlmap->deleted = $self->urldeleted;
-    $urlmap->unlock();
+    $router = \litepubl\core\Router::i();
+    $router->lock();
+    $router->afterrequest = $self->parseref;
+    $router->deleted = $self->urldeleted;
+    $router->unlock();
 }
 
 function tkeywordspluginUninstall($self) {
-    turlmap::unsub($self);
+     $self->getApp()->router->unbind($self);
     $widgets = twidgets::i();
     $widgets->deleteclass('tkeywordswidget');
-    litepubl::$classes->delete('tkeywordswidget');
-    //TFiler::DeleteFiles(litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
+     $self->getApp()->classes->delete('tkeywordswidget');
+    //TFiler::DeleteFiles( $self->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
     
 }

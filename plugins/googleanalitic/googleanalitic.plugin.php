@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -20,11 +21,11 @@ class tgoogleanalitic extends tplugin {
         $this->data['se'] = '';
     }
 
-    public function getcontent() {
+    public function getContent() {
         $tml = '[text:user]
     [editor:se]';
         $html = tadminhtml::i();
-        $args = targs::i();
+        $args = new Args();
         $about = tplugins::getabout(tplugins::getname(__file__));
         $args->formtitle = $about['formtitle'];
         $args->data['$lang.user'] = $about['user'];
@@ -34,7 +35,7 @@ class tgoogleanalitic extends tplugin {
         return $html->adminform($tml, $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $this->user = $_POST['user'];
         $this->se = $_POST['se'];
         $this->save();
@@ -50,7 +51,7 @@ class tgoogleanalitic extends tplugin {
     }
 
     public function install() {
-        $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . litepubl::$options->language . 'se.js');
+        $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR .  $this->getApp()->options->language . 'se.js');
         $this->save();
     }
 

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -21,11 +22,11 @@ class CommonTags extends Widget
         $this->data['maxcount'] = 0;
     }
 
-    public function getowner() {
+    public function getOwner() {
         return false;
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $theme = Theme::i();
         $items = $this->owner->getsortedcontent(array(
             'item' => $theme->getwidgetitem($this->template, $sidebar) ,

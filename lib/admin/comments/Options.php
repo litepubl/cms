@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\comments\Manager;
@@ -17,11 +18,11 @@ use litepubl\core\UserOptions;
 class Options extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $cm = Manager::i();
-        $options = litepubl::$options;
-        $lang = tlocal::admin('commentmanager');
+        $options =  $this->getApp()->options;
+        $lang = Lang::admin('commentmanager');
         $args = new Args();
         $tabs = new Tabs($this->admintheme);
         $args->comstatus = $this->theme->comboItems(array(
@@ -113,9 +114,9 @@ class Options extends \litepubl\admin\Menu
         return $this->admintheme->form($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
         $cm = Manager::i();
         $cm->lock();
 

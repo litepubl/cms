@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
+use litepubl\core\Str;
 
 class MediaParser extends \litepubl\core\Events
  {
@@ -33,7 +35,11 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public static function fixfilename($filename) {
-        if (preg_match('/\.(htm|html|js|php|phtml|php\d|htaccess)$/i', $filename)) return $filename . '.txt';
+        if (preg_match('/\.(htm|html|js|php|phtml|php\d|htaccess)$/i', $filename)) {
+ return $filename . '.txt';
+}
+
+
         return $filename;
     }
 
@@ -53,8 +59,8 @@ class MediaParser extends \litepubl\core\Events
         return $this->addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite);
     }
 
-    public function gettempname($parts) {
-        return 'tmp.' . md5rand() . '.' . $parts['filename'] . (empty($parts['extension']) ? '' : '.' . $parts['extension']);
+    public function getTempname($parts) {
+        return 'tmp.' . Str::md5Rand() . '.' . $parts['filename'] . (empty($parts['extension']) ? '' : '.' . $parts['extension']);
     }
 
     public function uploadfile($filename, $tempfilename, $title, $description, $keywords, $overwrite) {
@@ -63,7 +69,11 @@ class MediaParser extends \litepubl\core\Events
         $filename = static ::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $this->gettempname($parts);
-        if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $newtemp)) return $this->error('Error access to uploaded file');
+        if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $newtemp)) {
+ return $this->error('Error access to uploaded file');
+}
+
+
         //return $this->addfile($filename, $newtemp, $title, $description, $keywords, $overwrite);
         return $this->add(array(
             'filename' => $filename,
@@ -79,7 +89,11 @@ class MediaParser extends \litepubl\core\Events
         $filename = static ::linkgen($filename);
         $filename = static ::create_filename($filename, $subdir, false);
         $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-        if (!move_uploaded_file($tempfilename, litepubl::$paths->files . $sep . $filename)) return false;
+        if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $sep . $filename)) {
+ return false;
+}
+
+
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
@@ -123,8 +137,8 @@ class MediaParser extends \litepubl\core\Events
         $filename = static ::fixfilename($filename);
         $parts = pathinfo($filename);
         $filename = $this->gettempname($parts);
-        if (@file_put_contents(litepubl::$paths->files . $filename, $content)) {
-            @chmod(litepubl::$paths->files . $filename, 0666);
+        if (@file_put_contents( $this->getApp()->paths->files . $filename, $content)) {
+            @chmod( $this->getApp()->paths->files . $filename, 0666);
             return $filename;
         }
         return false;
@@ -144,22 +158,30 @@ class MediaParser extends \litepubl\core\Events
         return $dir . static ::getunique($dir, substr($filename, $i + 1));
     }
 
-    public static function getunique($dir, $filename) {
+    public static function getUnique($dir, $filename) {
         $files = Files::i();
         $subdir = basename(rtrim($dir, '/' . DIRECTORY_SEPARATOR)) . '/';
-        if (!$files->exists($subdir . $filename) && !@file_exists($dir . $filename)) return $filename;
+        if (!$files->exists($subdir . $filename) && !@file_exists($dir . $filename)) {
+ return $filename;
+}
+
+
         $parts = pathinfo($filename);
         $base = $parts['filename'];
         $ext = empty($parts['extension']) ? '' : ".$parts[extension]";
         for ($i = 2; $i < 10000; $i++) {
             $filename = "$base$i$ext";
-            if (!$files->exists($subdir . $filename) && !file_exists($dir . $filename)) return $filename;
+            if (!$files->exists($subdir . $filename) && !file_exists($dir . $filename)) {
+ return $filename;
+}
+
+
         }
         return $filename;
     }
 
     public static function create_filename($filename, $subdir, $overwrite) {
-        $dir = litepubl::$paths->files . $subdir;
+        $dir =  $this->getApp()->paths->files . $subdir;
         if (!is_dir($dir)) {
             mkdir($dir, 0777);
             @chmod($dir, 0777);
@@ -174,9 +196,13 @@ class MediaParser extends \litepubl\core\Events
         return $filename;
     }
 
-    public function getmediafolder($media) {
+    public function getMediafolder($media) {
         if (isset($this->data[$media])) {
-            if ($result = $this->data[$media]) return $result;
+            if ($result = $this->data[$media]) {
+ return $result;
+}
+
+
         }
         return $media;
     }
@@ -184,7 +210,11 @@ class MediaParser extends \litepubl\core\Events
     public function movetofolder($filename, $tempfilename, $subdir, $overwrite) {
         $filename = static ::create_filename($filename, $subdir, $overwrite);
         $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-        if (!rename(litepubl::$paths->files . $tempfilename, litepubl::$paths->files . $sep . $filename)) return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
+        if (!rename( $this->getApp()->paths->files . $tempfilename,  $this->getApp()->paths->files . $sep . $filename)) {
+ return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
+}
+
+
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
@@ -203,9 +233,9 @@ class MediaParser extends \litepubl\core\Events
         if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
 
         $files = Files::i();
-        $hash = $files->gethash(litepubl::$paths->files . $file['tempfilename']);
-        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . dbquote($hash)))) {
-            @unlink(litepubl::$paths->files . $file['tempfilename']);
+        $hash = $files->gethash( $this->getApp()->paths->files . $file['tempfilename']);
+        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::uuote($hash)))) {
+            @unlink( $this->getApp()->paths->files . $file['tempfilename']);
             return $id;
         }
 
@@ -220,7 +250,7 @@ class MediaParser extends \litepubl\core\Events
         $preview = false;
         $midle = false;
         if ($item['media'] == 'image') {
-            $srcfilename = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+            $srcfilename =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
             $this->callevent('onbefore', array(&$item,
                 $srcfilename
             ));
@@ -260,10 +290,10 @@ class MediaParser extends \litepubl\core\Events
                     $item['height'] = $sizes['height'];
 
                     // after resize only jpg format
-                    if (!strend($srcfilename, '.jpg')) {
+                    if (!Str::end($srcfilename, '.jpg')) {
                         $fixfilename = static ::replace_ext($srcfilename, '.jpg');
                         $fixfilename = static ::makeunique($fixfilename);
-                        $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen(litepubl::$paths->files)));
+                        $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen( $this->getApp()->paths->files)));
 
                         rename($srcfilename, $fixfilename);
                         @chmod($fixfilename, 0666);
@@ -302,7 +332,11 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public function uploadthumbnail($filename, $content) {
-        if (!preg_match('/\.(jpg|jpeg|gif|png|bmp)$/i', $filename)) return false;
+        if (!preg_match('/\.(jpg|jpeg|gif|png|bmp)$/i', $filename)) {
+ return false;
+}
+
+
         $linkgen = tlinkgenerator::i();
         $filename = $linkgen->filterfilename($filename);
         $tempfilename = $this->doupload($filename, $content);
@@ -318,16 +352,16 @@ class MediaParser extends \litepubl\core\Events
     public function uploadthumb($filename, &$content) {
         $hash = trim(base64_encode(md5($content, true)) , '=');
         $files = Files::i();
-        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . dbquote($hash)))) {
+        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::uuote($hash)))) {
             return $id;
         }
 
         if ($image = imagecreatefromstring($content)) {
-            if (!strbegin($filename, litepubl::$paths->files)) $filename = litepubl::$paths->files . ltrim($filename, '\/');
+            if (!Str::begin($filename,  $this->getApp()->paths->files)) $filename =  $this->getApp()->paths->files . ltrim($filename, '\/');
             $destfilename = static ::replace_ext($filename, '.jpg');
             $destfilename = static ::makeunique($destfilename);
             if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-                $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
+                $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
                 $item['media'] = 'image';
                 $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
                 $item['width'] = $size['width'];
@@ -348,7 +382,7 @@ class MediaParser extends \litepubl\core\Events
         return false;
     }
 
-    public function getdefaultvalues($filename) {
+    public function getDefaultvalues($filename) {
         return array(
             'parent' => 0,
             'midle' => 0,
@@ -368,8 +402,8 @@ class MediaParser extends \litepubl\core\Events
         );
     }
 
-    public function getinfo($filename) {
-        $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+    public function getInfo($filename) {
+        $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $result = $this->getdefaultvalues($filename);
         if (preg_match("/\\.($this->videoext)\$/", $filename, $m)) {
             $ext = $m[1];
@@ -414,19 +448,19 @@ class MediaParser extends \litepubl\core\Events
             return $result;
         }
 
-        if (strend($filename, '.txt')) {
+        if (Str::end($filename, '.txt')) {
             $result['mime'] = 'text/plain';
             $result['media'] = 'text';
             return $result;
         }
 
-        if (strend($filename, '.swf')) {
+        if (Str::end($filename, '.swf')) {
             $result['media'] = 'flash';
             $result['mime'] = 'application/x-shockwave-flash';
 
-            require_once (litepubl::$paths->libinclude . 'getid3.php');
-            require_once (litepubl::$paths->libinclude . 'getid3.lib.php');
-            require_once (litepubl::$paths->libinclude . 'module.audio-video.swf.php');
+            require_once ( $this->getApp()->paths->libinclude . 'getid3.php');
+            require_once ( $this->getApp()->paths->libinclude . 'getid3.lib.php');
+            require_once ( $this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
 
             $getID3 = new \getID3;
             $getID3->option_md5_data = true;
@@ -451,9 +485,21 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public static function readimage($srcfilename) {
-        if (!file_exists($srcfilename)) return false;
-        if (!($info = @getimagesize($srcfilename))) return false;
-        if (!$info[0] || !$info[1]) return false;
+        if (!file_exists($srcfilename)) {
+ return false;
+}
+
+
+        if (!($info = @getimagesize($srcfilename))) {
+ return false;
+}
+
+
+        if (!$info[0] || !$info[1]) {
+ return false;
+}
+
+
 
         switch ($info[2]) {
             case 1:
@@ -509,12 +555,20 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public static function scale($source, $x, $y, $mode) {
-        if (!$source) return false;
+        if (!$source) {
+ return false;
+}
+
+
         $sourcex = imagesx($source);
         $sourcey = imagesy($source);
         if (!$x) $x = $y;
         if (!$y) $y = $x;
-        if (($x >= $sourcex) && ($y >= $sourcey)) return false;
+        if (($x >= $sourcex) && ($y >= $sourcey)) {
+ return false;
+}
+
+
 
         switch ($mode) {
             case 'fixed':
@@ -553,11 +607,11 @@ class MediaParser extends \litepubl\core\Events
         );
     }
 
-    public function getsnapshot($srcfilename, $image) {
+    public function getSnapshot($srcfilename, $image) {
         $destfilename = static ::replace_ext($srcfilename, '.preview.jpg');
         $destfilename = static ::makeunique($destfilename);
         if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
+            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
             $result['media'] = 'image';
             $result['mime'] = 'image/jpeg';
             $result['width'] = $size['width'];
@@ -577,7 +631,7 @@ class MediaParser extends \litepubl\core\Events
         $destfilename = static ::makeunique($destfilename);
 
         if ($sizes = $this->resize($destfilename, $image, $this->midlewidth, $this->midleheight)) {
-            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen(litepubl::$paths->files))));
+            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
             $result['media'] = 'image';
             $result['mime'] = 'image/jpeg';
             $result['width'] = $sizes['width'];
@@ -621,11 +675,15 @@ class MediaParser extends \litepubl\core\Events
         );
     }
 
-    private function getaudioinfo($filename) {
+    private function getAudioinfo($filename) {
         return false;
         /*
-        if (!class_exists('getID3')) return false;
-        $realfile = litepubl::$paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+        if (!class_exists('getID3')) {
+ return false;
+}
+
+
+        $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
         
         // Initialize getID3 engine
         $getID3 = new \getID3;
@@ -634,7 +692,11 @@ class MediaParser extends \litepubl\core\Events
         $getID3->encoding               = 'UTF-8';
         
         $info = $getID3->analyze($realfile);
-        if (isset($info['error'])) return false;
+        if (isset($info['error'])) {
+ return false;
+}
+
+
         
         $result = array (
         'bitrate'  => @$info['audio']['bitrate'],
@@ -648,7 +710,7 @@ class MediaParser extends \litepubl\core\Events
         */
     }
 
-    public function getvideopreview($filename) {
+    public function getVideopreview($filename) {
         return 0;
     }
 

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,15 +15,15 @@ class tadminticketoptions extends tadminmenu {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getcontent() {
-        $lang = tlocal::admin('tickets');
-        $args = new targs();
+    public function getContent() {
+        $lang = Lang::admin('tickets');
+        $args = new Args();
         $args->formtitle = $lang->admincats;
         $tickets = ttickets::i();
         return $this->html->adminform($this->admintheme->getcats($tickets->cats) , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $tickets = ttickets::i();
         $tickets->cats = $this->admintheme->processcategories();
         $tickets->save();

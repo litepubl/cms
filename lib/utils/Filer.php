@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\utils;
 
@@ -14,7 +15,11 @@ class Filer {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
+ continue;
+}
+
+
                 $file = $path . $filename;
                 if (is_dir($file)) {
                     if ($subdir) static ::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
@@ -32,7 +37,11 @@ class Filer {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
+ continue;
+}
+
+
                 $file = $path . $filename;
                 if (is_dir($file)) {
                     if ($subdirs) static ::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
@@ -61,11 +70,15 @@ class Filer {
         }
     }
 
-    public static function getfiles($path) {
+    public static function getFiles($path) {
         $result = array();
         if ($h = opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
+ continue;
+}
+
+
                 if (!is_dir($path . $filename)) $result[] = $filename;
             }
             closedir($h);
@@ -73,7 +86,7 @@ class Filer {
         return $result;
     }
 
-    public static function getdir($dir) {
+    public static function getDir($dir) {
         $result = array();
         if ($fp = opendir($dir)) {
             while (FALSE !== ($file = readdir($fp))) {
@@ -87,7 +100,11 @@ class Filer {
 
     public static function forcedir($dir) {
         $dir = rtrim(str_replace('\\', '/', $dir) , '/');
-        if (is_dir($dir)) return true;
+        if (is_dir($dir)) {
+ return true;
+}
+
+
         $up = rtrim(dirname($dir) , '/');
         if (($up != '') || ($up != '.')) static ::forcedir($up);
         if (!is_dir($dir)) mkdir($dir, 0777);
@@ -98,7 +115,7 @@ class Filer {
     public static function log($s, $filename = '') {
         if (!is_string($s)) $s = var_export($s, true);
         if ($filename == '') $filename = 'log.txt';
-        static ::append(date('r') . "\n$s\n\n", litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+        static ::append(date('r') . "\n$s\n\n",  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
     }
 
     public static function append($s, $filename) {
@@ -117,7 +134,7 @@ class Filer {
     }
 
     public static function get_filetime_offset() {
-        $filename = litepubl::$paths->data . md5(microtime()) . '.tmp';
+        $filename =  $this->getApp()->paths->data . md5(microtime()) . '.tmp';
         $t = time();
         touch($filename, $t, $t);
         clearstatcache();
@@ -127,7 +144,7 @@ class Filer {
     }
 
     public static function _delete($filename) {
-        //litepubl::$storage->delete($filename);
+        // $this->getApp()->storage->delete($filename);
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
             \unlink($filename);

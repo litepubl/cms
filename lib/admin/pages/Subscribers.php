@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepubl\admin\Menus;
@@ -13,6 +14,7 @@ use litepubl\core\UserOptions;
 use litepubl\comments\Subscribers as SubscriberItems;
 use litepubl\post\Posts;
 use litepubl\view\Lang;
+use litepubl\core\Str;
 
 class Subscribers extends Form
 {
@@ -28,11 +30,11 @@ class Subscribers extends Form
 
     public function request($arg) {
         $this->cache = false;
-        if (!($this->iduser = litepubl::$options->user)) {
+        if (!($this->iduser =  $this->getApp()->options->user)) {
             //trick - hidden registration of comuser. Auth by get
             $users = Users::i();
             if (isset($_GET['auth']) && ($cookie = trim($_GET['auth']))) {
-                if (($this->iduser = $users->findcookie($cookie)) && litepubl::$options->reguser) {
+                if (($this->iduser = $users->findcookie($cookie)) &&  $this->getApp()->options->reguser) {
                     if ('comuser' == $users->getvalue($this->iduser, 'status')) {
                         // bingo!
                         $this->newreg = true;
@@ -41,18 +43,18 @@ class Subscribers extends Form
                         $item['password'] = '';
                         $item['idgroups'] = 'commentator';
 
-                        $cookie = md5uniq();
+                        $cookie = Str::md5Uniq();
                         $expired = time() + 31536000;
 
-                        $item['cookie'] = litepubl::$options->hash($cookie);
-                        $item['expired'] = sqldate($expired);
+                        $item['cookie'] =  $this->getApp()->options->hash($cookie);
+                        $item['expired'] = Str::sqlDate($expired);
                         $users->edit($this->iduser, $item);
 
-                        litepubl::$options->user = $this->iduser;
-                        litepubl::$options->updategroup();
+                         $this->getApp()->options->user = $this->iduser;
+                         $this->getApp()->options->updategroup();
 
-                        litepubl::$options->setcookie('litepubl_user_id', $this->iduser, $expired);
-                        litepubl::$options->setcookie('litepubl_user', $cookie, $expired);
+                         $this->getApp()->options->setcookie('litepubl_user_id', $this->iduser, $expired);
+                         $this->getApp()->options->setcookie('litepubl_user', $cookie, $expired);
                     } else {
                         $this->iduser = false;
                     }
@@ -61,25 +63,29 @@ class Subscribers extends Form
         }
 
         if (!$this->iduser) {
-            $url = litepubl::$site->url . '/admin/login/' . litepubl::$site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
-            return litepubl::$urlmap->redir($url);
+            $url =  $this->getApp()->site->url . '/admin/login/' .  $this->getApp()->site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
+            return  $this->getApp()->router->redir($url);
         }
 
-        if ('hold' == Users::i()->getvalue($this->iduser, 'status')) return 403;
+        if ('hold' == Users::i()->getvalue($this->iduser, 'status')) {
+ return 403;
+}
+
+
         return parent::request($arg);
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
         $result.= Menus::i()->heads;
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $admin = $this->admintheme;
-        $lang = tlocal::admin();
-        $args = new targs();
+        $lang = Lang::admin();
+        $args = new Args();
         if ($this->newreg) {
 $result.= $admin->h($lang->newreg);
 }
@@ -93,7 +99,7 @@ return $admin->h($lang->nosubscribtions);
         $args->default_subscribe = UserOptions::i()->getvalue($this->iduser, 'subscribe') == 'enabled';
         $args->formtitle = Users::i()->getvalue($this->iduser, 'email') . ' ' . $lang->formhead;
 
-        $tb = new tablebuilder();
+        $tb = new Table();
         $tb->setposts(array(
             array(
                 $lang->post,
@@ -104,12 +110,12 @@ return $admin->h($lang->nosubscribtions);
         return $admin->form('[checkbox=default_subscribe]' . $tb->build($items) , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         UserOptions::i()->setvalue($this->iduser, 'subscribe', isset($_POST['default_subscribe']) ? 'enabled' : 'disabled');
 
         $subscribers = SubscriberItems::i();
         foreach ($_POST as $name => $value) {
-            if (strbegin($name, 'checkbox-')) {
+            if (Str::begin($name, 'checkbox-')) {
                 $subscribers->remove((int)$value, $this->iduser);
             }
         }

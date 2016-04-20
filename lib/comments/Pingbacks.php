@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\view\Theme;
@@ -15,6 +16,7 @@ use litepubl\view\Lang;
 use litepubl\post\Post;
 use litepubl\utils\Mailer;
 use litepubl\core\Array2prop;
+use litepubl\core\Str;
 
 class tpingbacks extends \litepubl\core\Items
 {
@@ -58,7 +60,7 @@ class tpingbacks extends \litepubl\core\Items
         $args->id = $id;
         $status = dbversion ? $item['status'] : ($item['approved'] ? 'approved' : 'hold');
         $args->localstatus = Lang::get('commentstatus', $status);
-        $args->adminurl = litepubl::$site->url . '/admin/comments/pingback/' . litepubl::$site->q . "id=$id&post={$item['post']}&action";
+        $args->adminurl =  $this->getApp()->site->url . '/admin/comments/pingback/' .  $this->getApp()->site->q . "id=$id&post={$item['post']}&action";
         $post = Post::i($item['post']);
         $args->posttitle = $post->title;
         $args->postlink = $post->link;
@@ -70,7 +72,7 @@ class tpingbacks extends \litepubl\core\Items
         $subject = $theme->parsearg($lang->pingbacksubj, $args);
         $body = $theme->parsearg($lang->pingbackbody, $args);
 
-        Mailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
+        Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subject, $body);
 
     }
 
@@ -79,7 +81,7 @@ class tpingbacks extends \litepubl\core\Items
             'url' => $url,
             'title' => $title,
             'post' => $this->pid,
-            'posted' => sqldate() ,
+            'posted' => Str::sqlDate() ,
             'status' => 'hold',
             'ip' => preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'])
         );
@@ -100,13 +102,17 @@ class tpingbacks extends \litepubl\core\Items
     }
 
     public function exists($url) {
-        return $this->db->finditem('url =' . dbquote($url));
+        return $this->db->finditem('url =' . Str::uuote($url));
     }
 
-    public function setstatus($id, $approve) {
+    public function setStatus($id, $approve) {
         $status = $approve ? 'approved' : 'hold';
         $item = $this->getitem($id);
-        if ($item['status'] == $status) return false;
+        if ($item['status'] == $status) {
+ return false;
+}
+
+
         $db = $this->db;
         $db->setvalue($id, 'status', $status);
         $this->updatecount($item['post']);
@@ -121,7 +127,7 @@ class tpingbacks extends \litepubl\core\Items
             'url' => $url,
             'title' => $title,
             'post' => $this->pid,
-            'posted' => sqldate($posted) ,
+            'posted' => Str::sqlDate($posted) ,
             'status' => $status,
             'ip' => $ip
         );
@@ -131,7 +137,7 @@ class tpingbacks extends \litepubl\core\Items
         $this->updatecount($this->pid);
         return $id;
     }
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $items = $this->db->getitems("post = $this->pid and status = 'approved' order by posted");
         $pingback = new Array2prop();

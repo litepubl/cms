@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\post\Rss;
@@ -27,12 +28,12 @@ class RssHold extends \litepubl\core\Events
         $this->data['template'] = '';
     }
 
-    public function setkey($key) {
+    public function setKey($key) {
         if ($this->key != $key) {
             if ($key == '') {
-                litepubl::$classes->commentmanager->unbind($self);
+                 $this->getApp()->classes->commentmanager->unbind($self);
             } else {
-                litepubl::$classes->commentmanager->changed = $this->commentschanged;
+                 $this->getApp()->classes->commentmanager->changed = $this->commentschanged;
             }
             $this->data['key'] = $key;
             $this->save();
@@ -40,12 +41,16 @@ class RssHold extends \litepubl\core\Events
     }
 
     public function commentschanged($idpost) {
-        litepubl::$urlmap->setexpired($this->idurl);
+         $this->getApp()->router->setexpired($this->idurl);
     }
 
     public function request($arg) {
-        if (!litepubl::$options->user) return 403;
-        $result = '<?php litepubl::turlmap::sendxml(); ?>';
+        if (! $this->getApp()->options->user) {
+ return 403;
+}
+
+
+        $result = '<?php litepubl::\litepubl\core\Router::sendxml(); ?>';
         $rss = Rss::i();
         $rss->domrss = new DomRss;
         $this->dogetholdcomments($rss);
@@ -54,10 +59,10 @@ class RssHold extends \litepubl\core\Events
     }
 
     private function dogetholdcomments($rss) {
-        $rss->domrss->CreateRoot(litepubl::$site->url . $this->url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
+        $rss->domrss->CreateRoot( $this->getApp()->site->url . $this->url, Lang::get('comment', 'onrecent') . ' ' .  $this->getApp()->site->name);
 
-        $db = litepubl::$db;
-        $author = litepubl::$options->ingroup('moderator') ? '' : sprintf('%s.author = %d and ', $db->comments, litepubl::$options->user);
+        $db =  $this->getApp()->db;
+        $author =  $this->getApp()->options->ingroup('moderator') ? '' : sprintf('%s.author = %d and ', $db->comments,  $this->getApp()->options->user);
         $recent = $db->res2assoc($db->query("select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as website,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
@@ -75,8 +80,8 @@ class RssHold extends \litepubl\core\Events
 $vars = new Vars;
         $vars->comment = $comment;
         $theme = Theme::i();
-        $tml = str_replace('$adminurl', '/admin/comments/' . litepubl::$site->q . 'id=$comment.id&action', $this->template);
-        $lang = tlocal::admin('comments');
+        $tml = str_replace('$adminurl', '/admin/comments/' .  $this->getApp()->site->q . 'id=$comment.id&action', $this->template);
+        $lang = Lang::admin('comments');
 
         foreach ($recent as $item) {
             if ($item['website']) $item['website'] = sprintf('<a href="%1$s">%1$s</a>', $item['website']);

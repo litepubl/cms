@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\tag\Categories;
@@ -30,8 +31,8 @@ class Rss extends \litepubl\core\Events
     }
 
     public function commentschanged() {
-        litepubl::$router->setexpired($this->idcomments);
-        litepubl::$router->setexpired($this->idpostcomments);
+         $this->getApp()->router->setexpired($this->idcomments);
+         $this->getApp()->router->setexpired($this->idpostcomments);
     }
 
     public function request($arg) {
@@ -39,18 +40,18 @@ class Rss extends \litepubl\core\Events
         if (($arg == 'posts') && ($this->feedburner != '')) {
             $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$urlmap->redir('$this->feedburner', 307);
+        return litepubl::\$router->redir('$this->feedburner', 307);
       }
       ?>";
         } elseif (($arg == 'comments') && ($this->feedburnercomments != '')) {
             $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$urlmap->redir('$this->feedburnercomments', 307);
+        return litepubl::\$router->redir('$this->feedburnercomments', 307);
       }
       ?>";
         }
 
-        $result.= '<?php litepubl\turlmap::sendxml(); ?>';
+        $result.= '<?php litepubl\\litepubl\core\Router::sendxml(); ?>';
         $this->domrss = new DomRss();
 
         switch ($arg) {
@@ -66,7 +67,7 @@ class Rss extends \litepubl\core\Events
 
             case 'categories':
             case 'tags':
-                if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
+                if (!preg_match('/\/(\d*?)\.xml$/',  $this->getApp()->router->url, $match)) {
                     return 404;
                 }
 
@@ -89,7 +90,7 @@ class Rss extends \litepubl\core\Events
 
 
             default:
-                if (!preg_match('/\/(\d*?)\.xml$/', litepubl::$urlmap->url, $match)) {
+                if (!preg_match('/\/(\d*?)\.xml$/',  $this->getApp()->router->url, $match)) {
                     return 404;
                 }
 
@@ -118,49 +119,49 @@ class Rss extends \litepubl\core\Events
         return $result;
     }
 
-    public function getrecentposts() {
-        $this->domrss->CreateRoot(litepubl::$site->url . '/rss.xml', litepubl::$site->name);
+    public function getRecentposts() {
+        $this->domrss->CreateRoot( $this->getApp()->site->url . '/rss.xml',  $this->getApp()->site->name);
         $posts = Posts::i();
-        $this->getrssposts($posts->getpage(0, 1, litepubl::$options->perpage, false));
+        $this->getrssposts($posts->getpage(0, 1,  $this->getApp()->options->perpage, false));
     }
 
-    public function getrssposts(array $list) {
+    public function getRssposts(array $list) {
         foreach ($list as $id) {
             $this->addpost(Post::i($id));
         }
     }
 
-    public function gettagrss(tcommontags $tags, $id) {
-        $this->domrss->CreateRoot(litepubl::$site->url . litepubl::$urlmap->url, $tags->getvalue($id, 'title'));
+    public function getTagrss(tcommontags $tags, $id) {
+        $this->domrss->CreateRoot( $this->getApp()->site->url .  $this->getApp()->router->url, $tags->getvalue($id, 'title'));
 
         $items = $tags->getidposts($id);
-        $this->getrssposts(array_slice($items, 0, litepubl::$options->perpage));
+        $this->getrssposts(array_slice($items, 0,  $this->getApp()->options->perpage));
     }
 
     public function GetRecentComments() {
-        $this->domrss->CreateRoot(litepubl::$site->url . '/comments.xml', tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
+        $this->domrss->CreateRoot( $this->getApp()->site->url . '/comments.xml', Lang::get('comment', 'onrecent') . ' ' .  $this->getApp()->site->name);
 
-        $title = tlocal::get('comment', 'onpost') . ' ';
+        $title = Lang::get('comment', 'onpost') . ' ';
         $comment = new tarray2prop();
-        $recent = CommentWidget::i()->getrecent(litepubl::$options->perpage);
+        $recent = CommentWidget::i()->getrecent( $this->getApp()->options->perpage);
         foreach ($recent as $item) {
             $comment->array = $item;
             $this->AddRSSComment($comment, $title . $comment->title);
         }
     }
 
-    public function getholdcomments($url, $count) {
-        $result = '<?php litepubl\turlmap::sendxml(); ?>';
+    public function getHoldcomments($url, $count) {
+        $result = '<?php litepubl\\litepubl\core\Router::sendxml(); ?>';
         $this->dogetholdcomments($url, $count);
         $result.= $this->domrss->GetStripedXML();
         return $result;
     }
 
     private function dogetholdcomments($url, $count) {
-        $this->domrss->CreateRoot(litepubl::$site->url . $url, tlocal::get('comment', 'onrecent') . ' ' . litepubl::$site->name);
+        $this->domrss->CreateRoot( $this->getApp()->site->url . $url, Lang::get('comment', 'onrecent') . ' ' .  $this->getApp()->site->name);
         $manager = CommentManager::i();
         $recent = $manager->getrecent($count, 'hold');
-        $title = tlocal::get('comment', 'onpost') . ' ';
+        $title = Lang::get('comment', 'onpost') . ' ';
         $comment = new tarray2prop();
         foreach ($recent as $item) {
             $comment->array = $item;
@@ -177,7 +178,7 @@ class Rss extends \litepubl\core\Events
         $comtable = $comments->thistable;
         $comment = new tarray2prop();
 
-        $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " . litepubl::$options->perpage);
+        $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " .  $this->getApp()->options->perpage);
 
         foreach ($recent as $id) {
             $comment->array = $comments->getitem($id);
@@ -207,14 +208,22 @@ class Rss extends \litepubl\core\Events
         $categories = Categories::i();
         $names = $categories->getnames($post->categories);
         foreach ($names as $name) {
-            if (empty($name)) continue;
+            if (empty($name)) {
+ continue;
+}
+
+
             Node::addcdata($item, 'category', $name);
         }
 
         $tags = Tags::i();
         $names = $tags->getnames($post->tags);
         foreach ($names as $name) {
-            if (empty($name)) continue;
+            if (empty($name)) {
+ continue;
+}
+
+
             Node::addcdata($item, 'category', $name);
         }
 
@@ -240,7 +249,7 @@ class Rss extends \litepubl\core\Events
             foreach ($post->files as $idfile) {
                 $file = $files->getitem($idfile);
                 $enclosure = Node::add($item, 'enclosure');
-                Node::attr($enclosure, 'url', litepubl::$site->files . '/files/' . $file['filename']);
+                Node::attr($enclosure, 'url',  $this->getApp()->site->files . '/files/' . $file['filename']);
                 Node::attr($enclosure, 'length', $file['size']);
                 Node::attr($enclosure, 'type', $file['mime']);
             }
@@ -251,7 +260,7 @@ class Rss extends \litepubl\core\Events
     }
 
     public function AddRSSComment($comment, $title) {
-        $link = litepubl::$site->url . $comment->posturl . '#comment-' . $comment->id;
+        $link =  $this->getApp()->site->url . $comment->posturl . '#comment-' . $comment->id;
         $date = is_int($comment->posted) ? $comment->posted : strtotime($comment->posted);
         $item = $this->domrss->AddItem();
         Node::addvalue($item, 'title', $title);
@@ -268,7 +277,7 @@ class Rss extends \litepubl\core\Events
             $this->feedburner = $rss;
             $this->feedburnercomments = $comments;
             $this->save();
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
         }
     }
 

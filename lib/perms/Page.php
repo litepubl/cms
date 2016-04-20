@@ -1,13 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\perms;
 use litepubl\view\Lang;
+use litepubl\core\Str;
 
 class Page extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -31,7 +33,7 @@ return false;
 }
 
         $sign = 'megaspamer';
-        if (!strbegin($s, $sign)) {
+        if (!Str::begin($s, $sign)) {
 return false;
 }
 
@@ -68,18 +70,18 @@ return 403;
         $backurl = isset($_GET['backurl']) ? $_GET['backurl'] : '';
         if ($this->perm->checkpassword($password)) {
             if ($backurl) {
-litepubl::$urlmap->redir($backurl);
+ $this->getApp()->router->redir($backurl);
 }
         } else {
             $this->formresult = Lang::i()->errpassword;
         }
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return Lang::i('perms')->reqpassword;
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = $this->formresult == '' ? '' : sprintf('<h4>%s</h4>', $this->formresult);
 
         $args->antispam = base64_encode('megaspamer' . strtotime("+1 hour"));
@@ -88,11 +90,11 @@ litepubl::$urlmap->redir($backurl);
         return $result;
     }
 
-public function getform($antispam, $remember) {
-$form = litepubl::$cache->getString('perms-form');
+public function getForm($antispam, $remember) {
+$form =  $this->getApp()->cache->getString('perms-form');
 if (!$form) {
 $form = $this->createForm();
-litepubl::$cache->setString('perms-form', $form);
+ $this->getApp()->cache->setString('perms-form', $form);
 }
 
 return strtr($form, [

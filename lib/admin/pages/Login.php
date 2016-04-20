@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepubl\view\Guard;
@@ -12,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\core\Users;
 use litepubl\core\UserGroups;
 use litepubl\core\Ssession;
+use litepubl\core\Str;
 
 class Login extends Form
 {
@@ -24,34 +26,42 @@ class Login extends Form
     }
 
     public function auth() {
-        if ($s = Guard::checkattack()) return $s;
-        if (!litepubl::$options->authcookie()) return litepubl::$urlmap->redir('/admin/login/');
+        if ($s = Guard::checkattack()) {
+ return $s;
+}
+
+
+        if (! $this->getApp()->options->authcookie()) {
+ return  $this->getApp()->router->redir('/admin/login/');
+}
+
+
     }
 
     private function logout() {
-        litepubl::$options->logout();
-        setcookie('backurl', '', 0, litepubl::$site->subdir, false);
-        litepubl::$urlmap->nocache();
-        return litepubl::$urlmap->redir('/admin/login/');
+         $this->getApp()->options->logout();
+        setcookie('backurl', '', 0,  $this->getApp()->site->subdir, false);
+         $this->getApp()->router->nocache();
+        return  $this->getApp()->router->redir('/admin/login/');
     }
 
     //return error string message if not logged
     public static function autherror($email, $password) {
-        tlocal::admin();
+        Lang::admin();
         if (empty($email) || empty($password)) {
-return tlocal::get('login', 'empty');
+return Lang::get('login', 'empty');
 }
 
-        $iduser = litepubl::$options->emailexists($email);
+        $iduser =  $this->getApp()->options->emailexists($email);
         if (!$iduser) {
             if (static ::confirm_reg($email, $password)) {
 return;
 }
 
-            return tlocal::get('login', 'unknownemail');
+            return Lang::get('login', 'unknownemail');
         }
 
-        if (litepubl::$options->authpassword($iduser, $password)) {
+        if ( $this->getApp()->options->authpassword($iduser, $password)) {
 return;
 }
 
@@ -61,16 +71,16 @@ return;
 
         //check if password is empty and neet to restore password
         if ($iduser == 1) {
-            if (!litepubl::$options->password) {
-return tlocal::get('login', 'torestorepass');
+            if (! $this->getApp()->options->password) {
+return Lang::get('login', 'torestorepass');
 }
         } else {
             if (!Users::i()->getpassword($iduser)) {
-return tlocal::get('login', 'torestorepass');
+return Lang::get('login', 'torestorepass');
 }
         }
 
-        return tlocal::get('login', 'error');
+        return Lang::get('login', 'error');
     }
 
     public function request($arg) {
@@ -82,7 +92,7 @@ return $this->logout($arg);
         $this->section = 'login';
 
         if (!isset($_POST['email']) || !isset($_POST['password'])) {
-return turlmap::nocache();
+return \litepubl\core\Router::nocache();
 }
 
         $email = trim($_POST['email']);
@@ -90,39 +100,39 @@ return turlmap::nocache();
 
         if ($mesg = static ::autherror($email, $password)) {
             $this->formresult = $this->admintheme->geterr($mesg);
-            return turlmap::nocache();
+            return \litepubl\core\Router::nocache();
         }
 
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
-        $cookie = md5uniq();
-        litepubl::$options->setcookies($cookie, $expired);
-        litepubl::$options->setcookie('litepubl_regservice', 'email', $expired);
+        $cookie = Str::md5Uniq();
+         $this->getApp()->options->setcookies($cookie, $expired);
+         $this->getApp()->options->setcookie('litepubl_regservice', 'email', $expired);
 
         $url = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
 
-        if ($url && strbegin($url, litepubl::$site->url)) $url = substr($url, strlen(litepubl::$site->url));
-        if ($url && (strbegin($url, '/admin/login/') || strbegin($url, '/admin/password/'))) $url = false;
+        if ($url && Str::begin($url,  $this->getApp()->site->url)) $url = substr($url, strlen( $this->getApp()->site->url));
+        if ($url && (Str::begin($url, '/admin/login/') || Str::begin($url, '/admin/password/'))) $url = false;
 
         if (!$url) {
             $url = '/admin/';
-            if (litepubl::$options->group != 'admin') {
+            if ( $this->getApp()->options->group != 'admin') {
                 $groups = UserGroups::i();
-                $url = $groups->gethome(litepubl::$options->group);
+                $url = $groups->gethome( $this->getApp()->options->group);
             }
         }
 
-        litepubl::$options->setcookie('backurl', '', 0);
-        turlmap::nocache();
-        return litepubl::$urlmap->redir($url);
+         $this->getApp()->options->setcookie('backurl', '', 0);
+        \litepubl\core\Router::nocache();
+        return  $this->getApp()->router->redir($url);
     }
 
     public function createform() {
         $result = $this->widget;
         $theme = $this->theme;
-        $args = new targs();
+        $args = new Args();
 
-        if (litepubl::$options->usersenabled && litepubl::$options->reguser) {
-            $lang = tlocal::admin('users');
+        if ( $this->getApp()->options->usersenabled &&  $this->getApp()->options->reguser) {
+            $lang = Lang::admin('users');
             $form = new adminform($args);
             $form->title = $lang->regform;
             $form->action = '$site.url/admin/reguser/{$site.q}backurl=';
@@ -132,7 +142,7 @@ return turlmap::nocache();
             $result.= $form->get();
         }
 
-        $lang = tlocal::admin('login');
+        $lang = Lang::admin('login');
         $form = new adminform($args);
         $form->title = $lang->emailpass;
         $form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
@@ -153,10 +163,10 @@ return turlmap::nocache();
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = $this->getform();
 
-        $args = new targs();
+        $args = new Args();
         $args->email = isset($_POST['email']) ? trim(strip_tags($_POST['email'])) : '';
         $args->remember = isset($_POST['remember']);
         $result = $this->theme->parsearg($result, $args);
@@ -179,9 +189,13 @@ return turlmap::nocache();
     }
 
     public static function confirm_reg($email, $password) {
-        if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return false;
+        if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
+ return false;
+}
 
-        Ssession::start('reguser-' . md5(litepubl::$options->hash($email)));
+
+
+        Ssession::start('reguser-' . md5( $this->getApp()->options->hash($email)));
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
             if (isset($_SESSION['email'])) {
                 session_write_close();
@@ -201,15 +215,15 @@ return turlmap::nocache();
         session_destroy();
 
         if ($id) {
-            litepubl::$options->user = $id;
-            litepubl::$options->updategroup();
+             $this->getApp()->options->user = $id;
+             $this->getApp()->options->updategroup();
         }
 
         return $id;
     }
 
     public static function confirm_restore($email, $password) {
-        Session::start('password-restore-' . md5(litepubl::$options->hash($email)));
+        Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
             if (isset($_SESSION['email'])) {
                 session_write_close();
@@ -220,8 +234,8 @@ return turlmap::nocache();
         }
 
         session_destroy();
-        if ($email == strtolower(trim(litepubl::$options->email))) {
-            litepubl::$options->changepassword($password);
+        if ($email == strtolower(trim( $this->getApp()->options->email))) {
+             $this->getApp()->options->changepassword($password);
             return 1;
         } else {
             $users = Users::i();

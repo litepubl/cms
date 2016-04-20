@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\service;
 use litepubl\view\Lang;
@@ -6,7 +13,7 @@ use litepubl\view\Args;
 
 class Run extends \litepubl\admin\Menu
 {
-public function getcontent() {
+public function getContent() {
 $args = new Args();
 $lang = Lang::admin('service');
                 $args->formtitle = $lang->runhead;
@@ -16,12 +23,12 @@ return $this->admintheme->form('
 ', $args);
 }
 
-public function processform() {
+public function processForm() {
 try {
                 $result = eval($_POST['content']);
                 return sprintf('<pre>%s</pre>', $result);
 } catch (\Exception $e) {
-return sprintf('<pre>%s</pre>', litepubl::$options->handexception($e));
+return sprintf('<pre>%s</pre>',  $this->getApp()->options->handexception($e));
 }
 }
 

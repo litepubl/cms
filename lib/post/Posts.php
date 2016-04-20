@@ -1,13 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\utils\LinkGenerator;
+use litepubl\core\Str;
 
 class Posts extends \litepubl\core\Items
  {
@@ -35,8 +37,12 @@ class Posts extends \litepubl\core\Items
         $this->addmap('itemcoclasses', array());
     }
 
-    public function getitem($id) {
-        if ($result = tpost::i($id)) return $result;
+    public function getItem($id) {
+        if ($result = tpost::i($id)) {
+ return $result;
+}
+
+
         $this->error("Item $id not found in class " . get_class($this));
     }
 
@@ -55,13 +61,21 @@ class Posts extends \litepubl\core\Items
         if (!isset(titem::$instances['post'])) titem::$instances['post'] = array();
         $loaded = array_keys(titem::$instances['post']);
         $newitems = array_diff($items, $loaded);
-        if (!count($newitems)) return $items;
+        if (!count($newitems)) {
+ return $items;
+}
+
+
         $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , '');
         return array_merge($newitems, array_intersect($loaded, $items));
     }
 
-    public function setassoc(array $items) {
-        if (count($items) == 0) return array();
+    public function setAssoc(array $items) {
+        if (count($items) == 0) {
+ return array();
+}
+
+
         $result = array();
         $t = new tposttransform();
         $fileitems = array();
@@ -81,7 +95,7 @@ class Posts extends \litepubl\core\Items
     }
 
     public function select($where, $limit) {
-        $db = litepubl::$db;
+        $db =  $this->getApp()->db;
         if ($this->childtable) {
             $childtable = $db->prefix . $this->childtable;
             return $this->setassoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
@@ -121,31 +135,43 @@ class Posts extends \litepubl\core\Items
         return $this->setassoc($items);
     }
 
-    public function getcount() {
+    public function getCount() {
         return $this->db->getcount("status<> 'deleted'");
     }
 
-    public function getchildscount($where) {
-        if ($this->childtable == '') return 0;
-        $db = litepubl::$db;
+    public function getChildscount($where) {
+        if ($this->childtable == '') {
+ return 0;
+}
+
+
+        $db =  $this->getApp()->db;
         $childtable = $db->prefix . $this->childtable;
         if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childtable
     where $db->posts.status <> 'deleted' and $childtable.id = $db->posts.id $where")) {
-            if ($r = $db->fetchassoc($res)) return $r['count'];
+            if ($r = $db->fetchassoc($res)) {
+ return $r['count'];
+}
+
+
         }
         return 0;
     }
 
-    public function getlinks($where, $tml) {
+    public function getLinks($where, $tml) {
         $db = $this->db;
         $t = $this->thistable;
         $items = $db->res2assoc($db->query("select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
     where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"));
 
-        if (count($items) == 0) return '';
+        if (count($items) == 0) {
+ return '';
+}
+
+
 
         $result = '';
-        $args = new targs();
+        $args = new Args();
         $theme = ttheme::i();
         foreach ($items as $item) {
             $args->add($item);
@@ -176,14 +202,14 @@ class Posts extends \litepubl\core\Items
             if ($post->status == 'published') $post->status = 'future';
         }
 
-        if (($post->icon == 0) && !litepubl::$options->icondisabled) {
+        if (($post->icon == 0) && ! $this->getApp()->options->icondisabled) {
             $icons = ticons::i();
             $post->icon = $icons->getid('post');
         }
 
-        if ($post->idview == 1) {
-            $views = tviews::i();
-            if (isset($views->defaults['post'])) $post->id_view = $views->defaults['post'];
+        if ($post->idschema == 1) {
+            $schemes = Schemas::i();
+            if (isset($schemes->defaults['post'])) $post->id_view = $schemes->defaults['post'];
         }
 
         $post->url = LinkGenerator::i()->addurl($post, $post->schemalink);
@@ -193,7 +219,7 @@ class Posts extends \litepubl\core\Items
         $this->cointerface('add', $post);
         $this->added($post->id);
         $this->changed();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $post->id;
     }
 
@@ -214,12 +240,16 @@ class Posts extends \litepubl\core\Items
         $this->edited($post->id);
         $this->changed();
 
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) return false;
-        $urlmap = turlmap::i();
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
+        $router = \litepubl\core\Router::i();
         $idurl = $this->db->getvalue($id, 'idurl');
         $this->db->setvalue($id, 'status', 'deleted');
         if ($this->childtable) {
@@ -234,7 +264,7 @@ class Posts extends \litepubl\core\Items
         $this->unlock();
         $this->deleted($id);
         $this->changed();
-        $urlmap->clearcache();
+        $router->clearcache();
         return true;
     }
 
@@ -245,7 +275,7 @@ class Posts extends \litepubl\core\Items
     }
 
     public function UpdateArchives() {
-        $this->archivescount = $this->db->getcount("status = 'published' and posted <= '" . sqldate() . "'");
+        $this->archivescount = $this->db->getcount("status = 'published' and posted <= '" . Str::sqlDate() . "'");
     }
 
     public function dosinglecron($id) {
@@ -266,19 +296,19 @@ class Posts extends \litepubl\core\Items
     }
 
     public function PublishFuture() {
-        if ($list = $this->db->idselect(sprintf('status = \'future\' and posted <= \'%s\' order by posted asc', sqldate()))) {
+        if ($list = $this->db->idselect(sprintf('status = \'future\' and posted <= \'%s\' order by posted asc', Str::sqlDate()))) {
             foreach ($list as $id) $this->publish($id);
         }
     }
 
-    public function getrecent($author, $count) {
+    public function getRecent($author, $count) {
         $author = (int)$author;
         $where = "status != 'deleted'";
         if ($author > 1) $where.= " and author = $author";
         return $this->finditems($where, ' order by posted desc limit ' . (int)$count);
     }
 
-    public function getpage($author, $page, $perpage, $invertorder) {
+    public function getPage($author, $page, $perpage, $invertorder) {
         $author = (int)$author;
         $from = ($page - 1) * $perpage;
         $t = $this->thistable;
@@ -289,7 +319,11 @@ class Posts extends \litepubl\core\Items
     }
 
     public function stripdrafts(array $items) {
-        if (count($items) == 0) return array();
+        if (count($items) == 0) {
+ return array();
+}
+
+
         $list = implode(', ', $items);
         $t = $this->thistable;
         return $this->db->idselect("$t.status = 'published' and $t.id in ($list)");
@@ -305,11 +339,15 @@ class Posts extends \litepubl\core\Items
     public function addrevision() {
         $this->data['revision']++;
         $this->save();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
-    public function getanhead(array $items) {
-        if (count($items) == 0) return '';
+    public function getAnhead(array $items) {
+        if (count($items) == 0) {
+ return '';
+}
+
+
         $this->loaditems($items);
 
         $result = '';
@@ -344,7 +382,7 @@ class Posts extends \litepubl\core\Items
         ));
     }
 
-    public function getsitemap($from, $count) {
+    public function getSitemap($from, $count) {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count

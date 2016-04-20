@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class emailauth extends tplugin {
 
@@ -15,7 +17,11 @@ class emailauth extends tplugin {
     }
 
     public function email_login(array $args) {
-        if (!isset($args['email']) || !isset($args['password'])) return $this->error('Invalid data', 403);
+        if (!isset($args['email']) || !isset($args['password'])) {
+ return $this->error('Invalid data', 403);
+}
+
+
         $email = strtolower(trim($args['email']));
         $password = trim($args['password']);
 
@@ -29,21 +35,25 @@ class emailauth extends tplugin {
         }
 
         $expired = time() + 31536000;
-        $cookie = md5uniq();
-        litepubl::$options->setcookies($cookie, $expired);
+        $cookie = Str::md5Uniq();
+         $this->getApp()->options->setcookies($cookie, $expired);
 
         return array(
-            'id' => litepubl::$options->user,
+            'id' =>  $this->getApp()->options->user,
             'pass' => $cookie,
             'regservice' => 'email',
-            'adminflag' => litepubl::$options->ingroup('admin') ? 'true' : '',
+            'adminflag' =>  $this->getApp()->options->ingroup('admin') ? 'true' : '',
         );
     }
 
     public function email_reg(array $args) {
-        if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return array(
+        if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
+ return array(
+}
+
+
             'error' => array(
-                'message' => tlocal::admin('users')->regdisabled,
+                'message' => Lang::admin('users')->regdisabled,
                 'code' => 403,
             )
         );

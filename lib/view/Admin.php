@@ -1,15 +1,18 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 use litepubl\tag\Cats;
 use litepubl\post\Files;
 use litepubl\admin\GetPerm;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 class Admin extends Base
 {
@@ -17,8 +20,8 @@ class Admin extends Base
 
     public static function i() {
         $result = getinstance(get_called_class());
-        if (!$result->name && ($context = litepubl::$urlmap->context) && isset($context->idview)) {
-            $result->name = tview::getview($context)->adminname;
+        if (!$result->name && ($context =  $this->getApp()->router->context) && isset($context->idschema)) {
+            $result->name = Schema::getview($context)->adminname;
             $result->load();
         }
 
@@ -29,7 +32,7 @@ class Admin extends Base
         return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
-    public function getparser() {
+    public function getParser() {
         return AdminParser::i();
     }
 
@@ -131,7 +134,7 @@ class Admin extends Base
         return $this->parsearg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
-    public function gettable($head, $body, $footer = '') {
+    public function getTable($head, $body, $footer = '') {
         return strtr($this->templates['table'], array(
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
@@ -144,22 +147,22 @@ class Admin extends Base
         return str_replace('$text', $text, $this->templates['success']);
     }
 
-    public function getcount($from, $to, $count) {
+    public function getCount($from, $to, $count) {
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
-    public function geticon($name, $screenreader = false) {
+    public function getIcon($name, $screenreader = false) {
         return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
-    public function getsection($title, $content) {
+    public function getSection($title, $content) {
         return strtr($this->templates['section'], array(
             '$title' => $title,
             '$content' => $content
         ));
     }
 
-    public function geterr($content) {
+    public function getErr($content) {
         return strtr($this->templates['error'], array(
             '$title' => Lang::i()->error,
             '$content' => $content
@@ -170,10 +173,10 @@ class Admin extends Base
         return str_replace('$content', $content, $this->templates['help']);
     }
 
-    public function getcalendar($name, $date) {
+    public function getCalendar($name, $date) {
         $date = datefilter::timestamp($date);
 
-        $args = new targs();
+        $args = new Args();
         $args->name = $name;
         $args->title = Lang::i()->__get($name);
         $args->format = DateFilter::$format;
@@ -189,11 +192,11 @@ class Admin extends Base
         return $this->parsearg($this->templates['calendar'], $args);
     }
 
-    public function getdaterange($from, $to) {
+    public function getDaterange($from, $to) {
         $from = datefilter::timestamp($from);
         $to = datefilter::timestamp($to);
 
-        $args = new targs();
+        $args = new Args();
         $args->from = $from ? date(datefilter::$format, $from) : '';
         $args->to = $to ? date(datefilter::$format, $to) : '';
         $args->format = datefilter::$format;
@@ -201,7 +204,7 @@ class Admin extends Base
         return $this->parsearg($this->templates['daterange'], $args);
     }
 
-    public function getcats(array $items) {
+    public function getCats(array $items) {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
         Cats::i()->loadall();
@@ -209,9 +212,9 @@ class Admin extends Base
         return $result;
     }
 
-    protected function getsubcats($parent, array $items, $exclude = false) {
+    protected function getSubcats($parent, array $items, $exclude = false) {
         $result = '';
-        $args = new targs();
+        $args = new Args();
         $tml = $this->templates['posteditor.categories.item'];
         $categories = Cats::i();
         foreach ($categories->items as $id => $item) {
@@ -233,12 +236,12 @@ class Admin extends Base
 
     public function processcategories() {
         $result = tadminhtml::check2array('category-');
-        array_clean($result);
-        array_delete_value($result, 0);
+        Arr::clean($result);
+        Arr::deleteValue($result, 0);
         return $result;
     }
 
-    public function getfilelist(array $list) {
+    public function getFilelist(array $list) {
         $args = new Args();
         $args->fileperm = '';
 
@@ -246,12 +249,12 @@ class Admin extends Base
             call_user_func_array($this->onfileperm, array(
                 $args
             ));
-        } else if (litepubl::$options->show_file_perm) {
+        } else if ( $this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
         $files = Files::i();
-        $where = litepubl::$options->ingroup('editor') ? '' : ' and author = ' . litepubl::$options->user;
+        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
 
         $db = $files->db;
         //total count files
@@ -264,7 +267,7 @@ class Admin extends Base
         if (count($list)) {
             $items = implode(',', $list);
             $args->files = $items;
-            $args->items = tojson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
+            $args->items = Str::toJson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
         }
 
         return $this->parsearg($this->templates['posteditor.filelist'], $args);
@@ -273,7 +276,7 @@ class Admin extends Base
     public function check2array($prefix) {
         $result = array();
         foreach ($_POST as $key => $value) {
-            if (strbegin($key, $prefix)) {
+            if (Str::begin($key, $prefix)) {
                 $result[] = is_numeric($value) ? (int)$value : $value;
             }
         }

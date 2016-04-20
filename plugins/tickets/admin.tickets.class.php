@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 use litepubl\admin\Link;
@@ -15,11 +16,11 @@ class tadmintickets extends tadminmenu {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $tickets = ttickets::i();
         $perpage = 20;
-        $where = litepubl::$options->group == 'ticket' ? ' and author = ' . litepubl::$options->user : '';
+        $where =  $this->getApp()->options->group == 'ticket' ? ' and author = ' .  $this->getApp()->options->user : '';
 
         switch ($this->name) {
             case 'opened':
@@ -43,7 +44,7 @@ class tadmintickets extends tadminmenu {
         }
 
         $admintheme = $this->admintheme;
-        $lang = tlocal::admin('tickets');
+        $lang = Lang::admin('tickets');
         $lang->addsearch('ticket', 'tickets');
         $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
         $result.= $admintheme->getcount($from, $from + count($items) , $count);
@@ -78,8 +79,8 @@ class tadmintickets extends tadminmenu {
 
             array(
                 $lang->state,
-                function (tablebuilder $t) {
-                    return tlocal::i()->__get(basetheme::$vars['post']->state);
+                function (Table $t) {
+                    return Lang::i()->__get(basetheme::$vars['post']->state);
                 }
             ) ,
 
@@ -93,8 +94,8 @@ class tadmintickets extends tadminmenu {
         $table = $tb->build($items);
 
         //wrap form
-        if (litepubl::$options->group != 'ticket') {
-            $args = new targs();
+        if ( $this->getApp()->options->group != 'ticket') {
+            $args = new Args();
             $form = new adminform($args);
             $form->body = $table;
             $form->body.= $form->centergroup($this->html->getsubmit('delete', 'setdraft', 'publish', 'setfixed'));
@@ -105,16 +106,24 @@ class tadmintickets extends tadminmenu {
         }
 
         $theme = $this->theme;
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processform() {
-        if (litepubl::$options->group == 'ticket') return '';
+    public function processForm() {
+        if ( $this->getApp()->options->group == 'ticket') {
+ return '';
+}
+
+
         $tickets = ttickets::i();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : (isset($_POST['setfixed']) ? 'fixed' : 'delete'));
         foreach ($_POST as $key => $id) {
-            if (!is_numeric($id)) continue;
+            if (!is_numeric($id)) {
+ continue;
+}
+
+
             $id = (int)$id;
             if ($status == 'delete') {
                 $tickets->delete($id);

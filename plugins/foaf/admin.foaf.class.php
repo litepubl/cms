@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -15,7 +16,7 @@ class tadminfoaf extends tadminmenu {
         return parent::iteminstance(__class__, $id);
     }
 
-    private function getlist() {
+    private function getList() {
         $foaf = tfoaf::i();
         $perpage = 20;
         $total = $foaf->getcount();
@@ -24,7 +25,7 @@ class tadminfoaf extends tadminmenu {
         $items = $foaf->select('', " order by status asc, added desc limit $from, $perpage");
         if (!$items) $items = array();
 
-        $tb = new tablebuilder();
+        $tb = new Table();
         $tb->admintheme = $this->admintheme;
         $tb->setowner($foaf);
         $tb->setstruct(array(
@@ -41,8 +42,8 @@ class tadminfoaf extends tadminmenu {
 
             array(
                 $lang->status,
-                function (tablebuilder $b) {
-                    return tlocal::i()->__get($b->item['status']);
+                function (Table $b) {
+                    return Lang::i()->__get($b->item['status']);
                 }
             ) ,
 
@@ -59,17 +60,17 @@ class tadminfoaf extends tadminmenu {
         $form->submit = false;
         $result = $form->get();
 
-        $result.= $this->theme->getpages('/admin/foaf/', litepubl::$urlmap->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages('/admin/foaf/',  $this->getApp()->router->page, ceil($total / $perpage));
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $foaf = tfoaf::i();
         $admintheme = $this->admintheme;
-        $lang = tlocal::i('foaf');
+        $lang = Lang::i('foaf');
         $html = $this->html;
-        $args = new targs();
+        $args = new Args();
 
         switch ($this->name) {
             case 'foaf':
@@ -135,7 +136,7 @@ class tadminfoaf extends tadminmenu {
                 $profile = tprofile::i();
                 $vars = new themevars();
                 $vars->profile = $profile;
-                $args = targs::i();
+                $args = new Args();
                 $form = '';
                 foreach (array(
                     'nick',
@@ -180,7 +181,7 @@ class tadminfoaf extends tadminmenu {
             return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $foaf = tfoaf::i();
         switch ($this->name) {
             case 'foaf':
@@ -210,7 +211,11 @@ class tadminfoaf extends tadminmenu {
                     $status = isset($_POST['approve']) ? 'approved' : (isset($_POST['hold']) ? 'hold' : 'delete');
                     $foaf->lock();
                     foreach ($_POST as $key => $id) {
-                        if (!is_numeric($id)) continue;
+                        if (!is_numeric($id)) {
+ continue;
+}
+
+
                         $id = (int)$id;
                         if ($status == 'delete') {
                             $foaf->delete($id);

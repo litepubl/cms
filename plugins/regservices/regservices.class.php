@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -34,7 +35,7 @@ class tregservices extends titems {
 
     public function update_widget() {
         $widget = '';
-        $url = litepubl::$site->url . $this->url . litepubl::$site->q . 'id';
+        $url =  $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'id';
         foreach ($this->items as $name => $classname) {
             $service = getinstance($classname);
             if ($service->valid()) {
@@ -69,27 +70,47 @@ class tregservices extends titems {
         // hook for clien disabled cookies
         if (!isset($_GET['cookietest'])) {
             $backurl = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
-            if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, litepubl::$site->subdir . '/', false);
-            setcookie('litepubl_cookie_test', 'test', time() + 8000, litepubl::$site->subdir . '/', false);
-            return litepubl::$urlmap->redir(litepubl::$urlmap->url . '&cookietest=true');
+            if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600,  $this->getApp()->site->subdir . '/', false);
+            setcookie('litepubl_cookie_test', 'test', time() + 8000,  $this->getApp()->site->subdir . '/', false);
+            return  $this->getApp()->router->redir( $this->getApp()->router->url . '&cookietest=true');
         }
 
-        if (!isset($_COOKIE['litepubl_cookie_test'])) return 403;
-        setcookie('litepubl_cookie_test', '', 0, litepubl::$site->subdir . '/', false);
+        if (!isset($_COOKIE['litepubl_cookie_test'])) {
+ return 403;
+}
+
+
+        setcookie('litepubl_cookie_test', '', 0,  $this->getApp()->site->subdir . '/', false);
 
         $id = empty($_GET['id']) ? 0 : $_GET['id'];
-        if (!isset($this->items[$id])) return 404;
+        if (!isset($this->items[$id])) {
+ return 404;
+}
+
+
         $service = getinstance($this->items[$id]);
-        if (!$service->valid()) return 403;
+        if (!$service->valid()) {
+ return 403;
+}
+
+
         $url = $service->getauthurl();
-        if (!$url) return 403;
-        return litepubl::$urlmap->redir($url);
+        if (!$url) {
+ return 403;
+}
+
+
+        return  $this->getApp()->router->redir($url);
     }
 
     public function oncomuser(array $values, $comfirmed) {
         //ignore $comfirmed, always return redirect
         $form = tcommentform::i();
-        if ($err = $form->processcomuser($values)) return $err;
+        if ($err = $form->processcomuser($values)) {
+ return $err;
+}
+
+
         $email = strtolower(trim($values['email']));
         $host = substr($email, strpos($email, '@') + 1);
         switch ($host) {
@@ -115,12 +136,24 @@ class tregservices extends titems {
                 return false;
         }
 
-        if (!isset($this->items[$name])) return false;
+        if (!isset($this->items[$name])) {
+ return false;
+}
+
+
         $service = getinstance($this->items[$name]);
-        if (!$service->valid) return false;
+        if (!$service->valid) {
+ return false;
+}
+
+
         $service->sessdata['comuser'] = $values;
         $url = $service->getauthurl();
-        if (!$url) return false;
+        if (!$url) {
+ return false;
+}
+
+
 
         return $form->sendresult($url, array(
             ini_get('session.name') => $service->session_id

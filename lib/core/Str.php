@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
+use litepubl\Config;
 
 Class Str
 {
@@ -27,15 +29,15 @@ public static function sqlTime($date = 0) {
 }
 
 public static function quote($s) {
-    return litepubl::$db->quote($s);
+    return  $this->getApp()->db->quote($s);
 }
 
 public static function md5Rand() {
-    return md5(mt_rand() . litepubl::$secret . microtime());
+    return md5(mt_rand() . Config::$secret . microtime());
 }
 
 public static function md5Uniq() {
-    return baseMd5(mt_rand() . litepubl::$secret . microtime());
+    return baseMd5(mt_rand() . Config::$secret . microtime());
 }
 
 public static function baseMd5($s) {
@@ -50,7 +52,11 @@ public static function begins() {
     $a = func_get_args();
     $s = array_shift($a);
     while ($begin = array_shift($a)) {
-        if (strncmp($s, $begin, strlen($begin)) == 0) return true;
+        if (strncmp($s, $begin, strlen($begin)) == 0) {
+ return true;
+}
+
+
     }
     return false;
 }
@@ -90,10 +96,10 @@ public static function toJson($a) {
 }
 
 public static function jsonAttr($a) {
-    return str_replace('"', '&quot;', tojson($a));
+    return str_replace('"', '&quot;', Str::toJson($a));
 }
 
-public static function getinstance($class) {
+public static function getInstance($class) {
     return litepubl::$app->classes->getinstance($class);
 }
 

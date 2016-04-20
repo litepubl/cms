@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\core\Users;
@@ -14,10 +15,12 @@ use litepubl\view\Filter;
 use litepubl\view\Vars;
 use litepubl\view\Args;
 use litepubl\utils\Mailer;
+use litepubl\Config;
+use litepubl\core\Str;
 
 class Manager extends \litepubl\core\Events
 {
-use \litepubl\core\DataStorageTrait;
+use \litepubl\core\SharedStorageTrait;
 
     protected function create() {
         parent::create();
@@ -25,9 +28,9 @@ use \litepubl\core\DataStorageTrait;
         $this->addevents('onchanged', 'approved', 'comuseradded', 'is_spamer', 'oncreatestatus');
     }
 
-    public function getcount() {
-        litepubl::$db->table = 'comments';
-        return litepubl::$db->getcount();
+    public function getCount() {
+         $this->getApp()->db->table = 'comments';
+        return  $this->getApp()->db->getcount();
     }
 
     public function addcomuser($name, $email, $website, $ip) {
@@ -48,7 +51,11 @@ use \litepubl\core\DataStorageTrait;
 
     public function add($idpost, $idauthor, $content, $ip) {
         $status = $this->createstatus($idpost, $idauthor, $content, $ip);
-        if (!$status) return false;
+        if (!$status) {
+ return false;
+}
+
+
         $comments = Comments::i();
         return $comments->add($idpost, $idauthor, $content, $status, $ip);
     }
@@ -67,7 +74,7 @@ use \litepubl\core\DataStorageTrait;
         $idpost = $comments->getvalue($id, 'post');
         $count = $comments->db->getcount("post = $idpost and status = 'approved'");
         $comments->getdb('posts')->setvalue($idpost, 'commentscount', $count);
-        if (litepubl::$options->commentspool) {
+        if ( $this->getApp()->options->commentspool) {
             Pool::i()->set($idpost, $count);
         }
 
@@ -88,7 +95,7 @@ use \litepubl\core\DataStorageTrait;
 
     public function sendmail($id) {
         if ($this->sendnotification) {
-            litepubl::$urlmap->onclose($this, 'send_mail', $id);
+             $this->getApp()->router->onclose($this, 'send_mail', $id);
         }
     }
 
@@ -102,8 +109,8 @@ return;
 $vars = new Vars();
         $vars->comment = $comment;
         $args = new Args();
-        $adminurl = litepubl::$site->url . '/admin/comments/' . litepubl::$site->q . "id=$id";
-        $ref = md5(litepubl::$secret . $adminurl . litepubl::$options->solt);
+        $adminurl =  $this->getApp()->site->url . '/admin/comments/' .  $this->getApp()->site->q . "id=$id";
+        $ref = md5(Config::$secret . $adminurl .  $this->getApp()->options->solt);
         $adminurl.= "&ref=$ref&action";
         $args->adminurl = $adminurl;
 
@@ -118,11 +125,31 @@ $vars = new Vars();
 
     public function createstatus($idpost, $idauthor, $content, $ip) {
         $status = $this->oncreatestatus($idpost, $idauthor, $content, $ip);
-        if (false === $status) return false;
-        if ($status == 'spam') return false;
-        if (($status == 'hold') || ($status == 'approved')) return $status;
-        if (!$this->filterstatus) return $this->defstatus;
-        if ($this->defstatus == 'approved') return 'approved';
+        if (false === $status) {
+ return false;
+}
+
+
+        if ($status == 'spam') {
+ return false;
+}
+
+
+        if (($status == 'hold') || ($status == 'approved')) {
+ return $status;
+}
+
+
+        if (!$this->filterstatus) {
+ return $this->defstatus;
+}
+
+
+        if ($this->defstatus == 'approved') {
+ return 'approved';
+}
+
+
 
         return 'hold';
     }
@@ -134,7 +161,7 @@ $vars = new Vars();
     public function is_duplicate($idpost, $content) {
         $comments = Comments::i($idpost);
         $content = trim($content);
-        $hash = basemd5($content);
+        $hash = Str::baseMd5($content);
         return $comments->raw->findid("hash = '$hash'");
     }
 
@@ -142,20 +169,20 @@ $vars = new Vars();
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
         $users = Users::i();
         if (!$users->itemexists($id)) {
-return "<?php litepubl::$urlmap->redir('/');";
+return "<?php  $this->getApp()->router->redir('/');";
 }
 
         $item = $users->getitem($id);
         $url = $item['website'];
         if (!strpos($url, '.')) {
-$url = litepubl::$site->url . '/';
+$url =  $this->getApp()->site->url . '/';
 }
 
-        if (!strbegin($url, 'http://')) {
+        if (!Str::begin($url, 'http://')) {
 $url = 'http://' . $url;
 }
 
-        return "<?php litepubl::$urlmap->redir('$url');";
+        return "<?php  $this->getApp()->router->redir('$url');";
     }
 
 }

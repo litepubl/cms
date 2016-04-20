@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -37,7 +38,7 @@ return '.php';
         return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
     }
 
-    public function getfilename(Data $obj) {
+    public function getFilename(Data $obj) {
         return $this->getApp()->paths->data . $obj->getbasename();
     }
 
@@ -117,7 +118,7 @@ return '.php';
     }
 
     public function error($mesg) {
-        litepubl::$options->trace($mesg);
+         $this->getApp()->options->trace($mesg);
     }
 
 }

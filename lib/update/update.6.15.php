@@ -1,8 +1,16 @@
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;<?php
+use litepubl\core\Str;
 
 function update615() {
-$cl = litepubl::$classes;
+$cl =  $this->getApp()->classes;
 unset($cl->data['factories']);
 unset($cl->data['classes']);
 $cl->kernel = [];
@@ -27,7 +35,7 @@ foreach ([
 'tadminservice' => 'litepubl\admin\Service',
 
 ] as $oldclass => $newclass) {
-            litepubl::$urlmap->db->update('class =' . dbquote($newclass) , 'class = ' . dbquote($oldclass));
+             $this->getApp()->router->db->update('class =' . Str::uuote($newclass) , 'class = ' . Str::uuote($oldclass));
 $m->renameClass($oldclass, $newclass);
 $admin->renameClass($oldclass, $newclass);
 }

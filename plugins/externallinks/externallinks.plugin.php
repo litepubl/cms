@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class texternallinks extends titems {
     public $exclude;
@@ -24,7 +26,11 @@ class texternallinks extends titems {
     }
 
     public function add($url) {
-        if ($id = $this->indexof('url', $url)) return $id;
+        if ($id = $this->indexof('url', $url)) {
+ return $id;
+}
+
+
         $item = array(
             'url' => $url,
             'clicked' => 0
@@ -42,14 +48,18 @@ class texternallinks extends titems {
     }
 
     public function updatestat() {
-        $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
+        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
             @unlink($filename);
             $stat = array();
             $a = explode("\n", $s);
             foreach ($a as $id) {
                 $id = (int)$id;
-                if ($id == 0) continue;
+                if ($id == 0) {
+ continue;
+}
+
+
                 if (isset($stat[$id])) {
                     $stat[$id]++;
                 } else {
@@ -57,7 +67,11 @@ class texternallinks extends titems {
                 }
             }
 
-            if (count($stat) == 0) return;
+            if (count($stat) == 0) {
+ return;
+}
+
+
             $this->loaditems(array_keys($stat));
             foreach ($stat as $id => $clicked) {
                 if ($this->dbversion) {
@@ -73,23 +87,47 @@ class texternallinks extends titems {
     public function request($arg) {
         //$this->cache = false;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        if (!$this->itemexists($id)) return 404;
+        if (!$this->itemexists($id)) {
+ return 404;
+}
+
+
         $item = $this->getitem($id);
         $url = $item['url'];
-        $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
+        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
         return "<?php tfiler::append('$id\n', '$filename');
-    litepubl::\$urlmap->redir('$url');";
+    litepubl::\$router->redir('$url');";
     }
 
     public function filter(&$content) {
-        if (!preg_match_all('/<a\s*.*?href\s*=\s*[\'"]([^"\'>]*).*?>(.*?)<\/a>/i', $content, $links)) return;
-        $redir = litepubl::$site->url . '/externallink.htm' . litepubl::$site->q . 'id=';
+        if (!preg_match_all('/<a\s*.*?href\s*=\s*[\'"]([^"\'>]*).*?>(.*?)<\/a>/i', $content, $links)) {
+ return;
+}
+
+
+        $redir =  $this->getApp()->site->url . '/externallink.htm' .  $this->getApp()->site->q . 'id=';
         $external = array();
         foreach ($links[1] as $num => $link) {
-            if (isset($external[$link])) continue;
-            if (!strbegin($link, 'http', 'ftp')) continue;
-            if (strbegin($link, litepubl::$site->url)) continue;
-            if ($this->inexclude($link)) continue;
+            if (isset($external[$link])) {
+ continue;
+}
+
+
+            if (!Str::begin($link, 'http', 'ftp')) {
+ continue;
+}
+
+
+            if (Str::begin($link,  $this->getApp()->site->url)) {
+ continue;
+}
+
+
+            if ($this->inexclude($link)) {
+ continue;
+}
+
+
             $id = $this->add($link);
             $external[$link] = $redir . $id;
         }
@@ -102,7 +140,11 @@ class texternallinks extends titems {
 
     public function inexclude($link) {
         foreach ($this->exclude as $ex) {
-            if (false !== strpos($link, $ex)) return true;
+            if (false !== strpos($link, $ex)) {
+ return true;
+}
+
+
         }
         return false;
     }

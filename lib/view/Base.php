@@ -1,15 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 use litepubl\utils\Filer;
 use litepubl\debug\LogException;
 use litepubl\post\Post;
+use litepubl\core\Str;
 
 class Base extends \litepubl\core\Events
  {
@@ -23,21 +25,21 @@ class Base extends \litepubl\core\Events
     public $extratml;
 
     public static function exists($name) {
-        return file_exists(litepubl::$paths->themes . $name . '/about.ini');
+        return file_exists( $this->getApp()->paths->themes . $name . '/about.ini');
     }
 
-    public static function getinstance($name) {
+    public static function getInstance($name) {
         return static ::getbyname(get_called_class() , $name);
     }
 
-    public static function getbyname($classname, $name) {
+    public static function getByname($classname, $name) {
         if (isset(static ::$instances[$name])) {
             return static ::$instances[$name];
         }
 
         $result = getinstance($classname);
         if ($result->name) {
-            $result = litepubl::$classes->newinstance($classname);
+            $result =  $this->getApp()->classes->newinstance($classname);
         }
 
         $result->name = $name;
@@ -60,10 +62,10 @@ class Base extends \litepubl\core\Events
 
     public static function set_defaultargs() {
         static ::$defaultargs = array(
-            '$site.url' => litepubl::$site->url,
-            '$site.files' => litepubl::$site->files,
-            '{$site.q}' => litepubl::$site->q,
-            '$site.q' => litepubl::$site->q
+            '$site.url' =>  $this->getApp()->site->url,
+            '$site.files' =>  $this->getApp()->site->files,
+            '{$site.q}' =>  $this->getApp()->site->q,
+            '$site.q' =>  $this->getApp()->site->q
         );
     }
 
@@ -72,16 +74,20 @@ class Base extends \litepubl\core\Events
         parent::__destruct();
     }
 
-    public function getbasename() {
+    public function getBasename() {
         return 'themes/' . $this->name;
     }
 
-    public function getparser() {
+    public function getParser() {
         return BaseParser::i();
     }
 
     public function load() {
-        if (!$this->name) return false;
+        if (!$this->name) {
+ return false;
+}
+
+
 
         if (parent::load()) {
             static ::$instances[$this->name] = $this;
@@ -121,16 +127,16 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    protected function getvar($name) {
+    protected function getVar($name) {
         switch ($name) {
             case 'site':
-                return litepubl::$site;
+                return  $this->getApp()->site;
 
             case 'lang':
                 return lang::i();
 
             case 'post':
-                $model = isset(litepubl::$router->model) ? litepubl::$router->model : MainView::i()->model;
+                $model = isset( $this->getApp()->router->model) ?  $this->getApp()->router->model : MainView::i()->model;
                 if ($model instanceof Post) {
                     return $model;
                 }
@@ -174,13 +180,17 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
             return $var->{$prop};
         }
         catch(Exception $e) {
-            litepubl::$options->handexception($e);
+             $this->getApp()->options->handexception($e);
         }
         return '';
     }
 
     public function parse($s) {
-        if (!$s) return '';
+        if (!$s) {
+ return '';
+}
+
+
         $s = strtr((string)$s, static ::$defaultargs);
         if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
         array_push($this->parsing, $s);
@@ -193,7 +203,7 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
         }
         catch(Exception $e) {
             $result = '';
-            litepubl::$options->handexception($e);
+             $this->getApp()->options->handexception($e);
         }
         array_pop($this->parsing);
         return $result;
@@ -226,8 +236,8 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
     }
 
     public static function clearcache() {
-        Filer::delete(litepubl::$paths->data . 'themes', false, false);
-        litepubl::$urlmap->clearcache();
+        Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
+         $this->getApp()->router->clearcache();
     }
 
     public function h($s) {
@@ -235,7 +245,7 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
     }
 
     public function link($url, $title) {
-        return sprintf('<a href="%s%s">%s</a>', strbegin($url, 'http') ? '' : litepubl::$site->url, $url, $title);
+        return sprintf('<a href="%s%s">%s</a>', Str::begin($url, 'http') ? '' :  $this->getApp()->site->url, $url, $title);
     }
 
     public static function quote($s) {

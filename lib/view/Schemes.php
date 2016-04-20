@@ -1,16 +1,18 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Arr;
 
 class Schemes extends \litepubl\core\Items
 {
-use \litepubl\core\DataStorageTrait;
+use \litepubl\core\SharedStorageTrait;
 
     public $defaults;
 
@@ -82,12 +84,12 @@ $schema->name = 'schema_' . $id;
 
     public function widgetdeleted($idwidget) {
         $deleted = false;
-        foreach ($this->items as & $viewitem) {
+        foreach ($this->items as & $schemaitem) {
             unset($sidebar);
-            foreach ($viewitem['sidebars'] as & $sidebar) {
+            foreach ($schemaitem['sidebars'] as & $sidebar) {
                 for ($i = count($sidebar) - 1; $i >= 0; $i--) {
                     if ($idwidget == $sidebar[$i]['id']) {
-                        array_delete($sidebar, $i);
+                        Arr::delete($sidebar, $i);
                         $deleted = true;
                     }
                 }

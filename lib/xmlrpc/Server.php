@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
+use litepubl\Config;
 
 class Server extends \litepubl\core\Items
 {
@@ -29,9 +31,9 @@ class Server extends \litepubl\core\Items
             $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
         }
 
-        if (litepubl::$debug) {
+        if (Config::$debug) {
             \litepubl\utils\Filer::log("request:\n" . $HTTP_RAW_POST_DATA, 'xmlrpc.txt');
-            $reqname = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'request.xml';
+            $reqname =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'request.xml';
             file_put_contents($reqname, $HTTP_RAW_POST_DATA);
             @chmod($reqname, 0666);
                     }
@@ -46,7 +48,7 @@ require_once(__DIR__ . '/IXR.php');
         $Result = $this->parser->XMLResult;
 
         $this->aftercall();
-        if (litepubl::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
+        if (Config::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
         return $Result;
     }
 
@@ -73,8 +75,8 @@ require_once(__DIR__ . '/IXR.php');
                 ) , $args);
             }
             catch(\Exception $e) {
-                //litepubl::$options->handexception($e);
-                //echo (litepubl::$options->errorlog);
+                // $this->getApp()->options->handexception($e);
+                //echo ( $this->getApp()->options->errorlog);
                 return new IXR_Error($e->getCode() , $e->getMessage());
             }
         }

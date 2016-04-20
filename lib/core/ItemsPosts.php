@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -55,8 +56,8 @@ class ItemsPosts extends Items
         $this->deleted();
     }
 
-    public function setitems($idpost, array $items) {
-        array_clean($items);
+    public function setItems($idpost, array $items) {
+        Arr::clean($items);
         $db = $this->db;
         $old = $this->getitems($idpost);
         $add = array_diff($items, $old);
@@ -74,15 +75,15 @@ class ItemsPosts extends Items
         return array_merge($old, $add);
     }
 
-    public function getitems($idpost) {
-        return litepubl::$db->res2id(litepubl::$db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+    public function getItems($idpost) {
+        return  $this->getApp()->db->res2id( $this->getApp()->db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
     }
 
-    public function getposts($iditem) {
-        return litepubl::$db->res2id(litepubl::$db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+    public function getPosts($iditem) {
+        return  $this->getApp()->db->res2id( $this->getApp()->db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
     }
 
-    public function getpostscount($ititem) {
+    public function getPostscount($ititem) {
         $db = $this->getdb($this->tablepost);
         return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
     }

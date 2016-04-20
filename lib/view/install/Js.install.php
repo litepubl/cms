@@ -1,22 +1,25 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 function JsInstall($self) {
-    $dir = litepubl::$paths->files . 'js';
+    $dir =  $self->getApp()->paths->files . 'js';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $file = $dir . DIRECTORY_SEPARATOR . 'index.htm';
     file_put_contents($file, ' ');
     @chmod($file, 0666);
 
-    $language = litepubl::$options->language;
+    $language =  $self->getApp()->options->language;
     $self->lock();
     $self->items = array();
     $section = 'default';
@@ -25,7 +28,7 @@ function JsInstall($self) {
         '/js/jquery/jquery-$site.jquery_version.min.js',
         '/js/plugins/class-extend.min.js',
         '/js/plugins/jquery.cookie.min.js',
-        '/js/plugins/tojson.min.js',
+        '/js/plugins/Str::toJson.min.js',
         '/js/plugins/fontfaceobserver.js',
 
         // litepubl/system
@@ -216,6 +219,6 @@ function Js_ui_admin($js, $add = true) {
     }
 
     if ($add) {
-        array_move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']) , 0);
+        Arr::move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']) , 0);
     }
 }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\LangMerger as LngMerger;
@@ -14,7 +15,7 @@ use litepubl\post\Archives;
 class LangMerger extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $merger = LngMerger::i();
         $tabs = $this->newTabs();
         $lang = Lang::admin('options');
@@ -32,24 +33,24 @@ $theme = $this->theme;
         }
 
         $args->formtitle = $lang->optionslocal;
-        $args->dateformat = litepubl::$options->dateformat;
-        $dirs = Filer::getdir(litepubl::$paths->languages);
-        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) , litepubl::$options->language);
+        $args->dateformat =  $this->getApp()->options->dateformat;
+        $dirs = Filer::getdir( $this->getApp()->paths->languages);
+        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) ,  $this->getApp()->options->language);
         $zones = timezone_identifiers_list();
-        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) , litepubl::$options->timezone);
+        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) ,  $this->getApp()->options->timezone);
 
         return $admin->form('[text=dateformat]
     [combo=language]
     [combo=timezone]' . $tabs->get() , $args);
     }
 
-    public function processform() {
-        litepubl::$options->dateformat = $_POST['dateformat'];
-        litepubl::$options->language = $_POST['language'];
-        if (litepubl::$options->timezone != $_POST['timezone']) {
-            litepubl::$options->timezone = $_POST['timezone'];
+    public function processForm() {
+         $this->getApp()->options->dateformat = $_POST['dateformat'];
+         $this->getApp()->options->language = $_POST['language'];
+        if ( $this->getApp()->options->timezone != $_POST['timezone']) {
+             $this->getApp()->options->timezone = $_POST['timezone'];
             $archives = Archives::i();
-            turlmap::unsub($archives);
+             $this->getApp()->router->unbind($archives);
             $archives->PostsChanged();
         }
 

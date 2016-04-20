@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\posts;
 use litepubl\pages\StaticPages as Pages;
@@ -21,15 +22,15 @@ class StaticPages extends \litepubl\admin\Menu
         return $this->admintheme->form('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $pages = Pages::i();
         $this->basename = 'staticpages';
 $admin = $this->admintheme;
-        $lang = tlocal::i('staticpages');
+        $lang = Lang::i('staticpages');
         $id = $this->idget();
         if (!$pages->itemexists($id)) $id = 0;
-        $args = targs::i();
+        $args = new Args();
         $args->id = $id;
         $args->adminurl = $this->adminurl;
 
@@ -74,8 +75,12 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processform() {
-        if (empty($_POST['title'])) return '';
+    public function processForm() {
+        if (empty($_POST['title'])) {
+ return '';
+}
+
+
         extract($_POST);
         $pages = Pages::i();
         $id = $this->idget();

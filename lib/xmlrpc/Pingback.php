@@ -1,14 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\post\Post;
 use litepubl\utils\http;
+use litepubl\core\Str;
 
 class Pingback extends Common
 {
@@ -18,16 +20,16 @@ class Pingback extends Common
     }
 
     public function ping($from, $to) {
-        if (!strbegin($to, litepubl::$site->url)) {
+        if (!Str::begin($to,  $this->getApp()->site->url)) {
             return new IXR_Error(0, 'Is there no link to us?');
         }
 
-        $url = substr($to, strlen(litepubl::$site->url));
-        if (!($item = litepubl::$urlmap->find_item($url))) {
+        $url = substr($to, strlen( $this->getApp()->site->url));
+        if (!($item =  $this->getApp()->router->find_item($url))) {
             return $this->xerror(0, 'Is there no link to us?');
         }
 
-        if ($item['class'] != litepubl::$classes->classes['post']) {
+        if ($item['class'] !=  $this->getApp()->classes->classes['post']) {
             return $this->xerror(33, 'The specified target URL cannot be used as a target. It either doesn\'t exist, or it is not a pingback-enabled resource.');
         }
 

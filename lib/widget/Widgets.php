@@ -1,18 +1,20 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
+use litepubl\core\Arr;
 
 class Widgets extends \litepubl\core\Items
 {
-use litepubl\core\DataStorageTrait;
+use litepubl\core\SharedStorageTrait;
 
     public $classes;
     public $currentsidebar;
@@ -85,7 +87,7 @@ use litepubl\core\DataStorageTrait;
         foreach ($this->classes as $class => $items) {
             foreach ($items as $i => $item) {
                 if ($id == $item['id']) {
-                    array_delete($this->classes[$class], $i);
+                    Arr::delete($this->classes[$class], $i);
                 }
             }
         }
@@ -110,7 +112,7 @@ use litepubl\core\DataStorageTrait;
             foreach ($this->classes as $name => $items) {
                 foreach ($items as $i => $item) {
                     if (in_array($item['id'], $deleted)) {
-                        array_delete($this->classes[$name], $i);
+                        Arr::delete($this->classes[$name], $i);
                     }
                 }
 
@@ -141,7 +143,7 @@ use litepubl\core\DataStorageTrait;
         return false;
     }
 
-    public function getwidget($id) {
+    public function getWidget($id) {
         if (!isset($this->items[$id])) {
             return $this->error("The requested $id widget not found");
         }
@@ -157,24 +159,24 @@ use litepubl\core\DataStorageTrait;
         return $result;
     }
 
-    public function getsidebar($context, tview $view) {
-        return $this->getsidebarindex($context, $view, $this->currentsidebar++);
+    public function getSidebar($context, tview $schema) {
+        return $this->getsidebarindex($context, $schema, $this->currentsidebar++);
     }
 
-    public function getsidebarindex($context, tview $view, $sidebar) {
-        $items = $this->getwidgets($context, $view, $sidebar);
+    public function getSidebarindex($context, tview $schema, $sidebar) {
+        $items = $this->getwidgets($context, $schema, $sidebar);
         if ($context instanceof iwidgets) {
             $context->getwidgets($items, $sidebar);
 
         }
 
-        if (litepubl::$options->admincookie) {
+        if ( $this->getApp()->options->admincookie) {
             $this->callevent('onadminlogged', array(&$items,
                 $sidebar
             ));
         }
 
-        if (litepubl::$urlmap->adminpanel) {
+        if ( $this->getApp()->router->adminpanel) {
             $this->callevent('onadminpanel', array(&$items,
                 $sidebar
             ));
@@ -184,7 +186,7 @@ use litepubl\core\DataStorageTrait;
             $sidebar
         ));
 
-        $result = $this->getsidebarcontent($items, $sidebar, !$view->customsidebar && $view->disableajax);
+        $result = $this->getsidebarcontent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
 
         if ($context instanceof iwidgets) {
             $context->getsidebar($result, $sidebar);
@@ -196,7 +198,7 @@ use litepubl\core\DataStorageTrait;
         return $result;
     }
 
-    private function getwidgets($context, Schema $schema, $sidebar) {
+    private function getWidgets($context, Schema $schema, $sidebar) {
         $theme = $schema->theme;
         if (($schema->id > 1) && !$schema->customsidebar) {
             $schema = Schema::i(1);
@@ -207,14 +209,14 @@ use litepubl\core\DataStorageTrait;
         $subitems = $this->getsubitems($context, $sidebar);
         $items = $this->joinitems($items, $subitems);
         if ($sidebar + 1 == $theme->sidebarscount) {
-            for ($i = $sidebar + 1; $i < count($view->sidebars); $i++) {
-                $subitems = $this->joinitems($view->sidebars[$i], $this->getsubitems($context, $i));
+            for ($i = $sidebar + 1; $i < count($schema->sidebars); $i++) {
+                $subitems = $this->joinitems($schema->sidebars[$i], $this->getsubitems($context, $i));
 
                 //delete copies
                 foreach ($subitems as $index => $subitem) {
                     $id = $subitem['id'];
                     foreach ($items as $item) {
-                        if ($id == $item['id']) array_delete($subitems, $index);
+                        if ($id == $item['id']) Arr::delete($subitems, $index);
                     }
                 }
 
@@ -225,7 +227,7 @@ use litepubl\core\DataStorageTrait;
         return $items;
     }
 
-    private function getsubitems($context, $sidebar) {
+    private function getSubitems($context, $sidebar) {
         $result = array();
         foreach ($this->classes as $class => $items) {
             if ($context instanceof $class) {
@@ -239,13 +241,17 @@ use litepubl\core\DataStorageTrait;
     }
 
     private function joinitems(array $items, array $subitems) {
-        if (count($subitems) == 0) return $items;
+        if (count($subitems) == 0) {
+ return $items;
+}
+
+
         if (count($items) > 0) {
             //delete copies
             for ($i = count($items) - 1; $i >= 0; $i--) {
                 $id = $items[$i]['id'];
                 foreach ($subitems as $subitem) {
-                    if ($id == $subitem['id']) array_delete($items, $i);
+                    if ($id == $subitem['id']) Arr::delete($items, $i);
                 }
             }
         }
@@ -256,18 +262,22 @@ use litepubl\core\DataStorageTrait;
             if (($order < 0) || ($order >= $count)) {
                 $items[] = $item;
             } else {
-                array_insert($items, $item, $order);
+                Arr::insert($items, $item, $order);
             }
         }
 
         return $items;
     }
 
-    protected function getsidebarcontent(array $items, $sidebar, $disableajax) {
+    protected function getSidebarcontent(array $items, $sidebar, $disableajax) {
         $result = '';
         foreach ($items as $item) {
             $id = $item['id'];
-            if (!isset($this->items[$id])) continue;
+            if (!isset($this->items[$id])) {
+ continue;
+}
+
+
             $cachetype = $this->items[$id]['cache'];
             if ($disableajax) $item['ajax'] = false;
             if ($item['ajax'] === 'inline') {
@@ -318,14 +328,14 @@ use litepubl\core\DataStorageTrait;
         return $result;
     }
 
-    public function getajax($id, $sidebar) {
+    public function getAjax($id, $sidebar) {
         $theme = Theme::i();
         $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
         $content = "<!--widgetcontent-$id-->";
         return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
-    public function getinline($id, $sidebar) {
+    public function getInline($id, $sidebar) {
         $theme = Theme::i();
         $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
         if ('cache' == $this->items[$id]['cache']) {
@@ -342,17 +352,17 @@ use litepubl\core\DataStorageTrait;
 
     private function includewidget($id, $sidebar) {
         $filename = twidget::getcachefilename($id, $sidebar);
-        if (!litepubl::$urlmap->cache->exists($filename)) {
+        if (! $this->getApp()->router->cache->exists($filename)) {
             $widget = $this->getwidget($id);
             $content = $widget->getcontent($id, $sidebar);
-            litepubl::$urlmap->cache->set($filename, $content);
+             $this->getApp()->router->cache->set($filename, $content);
         }
 
         $theme = Theme::i();
-        return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$urlmap->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
+        return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$router->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
     }
 
-    private function getcode($id, $sidebar) {
+    private function getCode($id, $sidebar) {
         $class = $this->items[$id]['class'];
         return "\n<?php
     \$widget = $class::i();
@@ -364,25 +374,37 @@ use litepubl\core\DataStorageTrait;
     public function find(twidget $widget) {
         $class = get_class($widget);
         foreach ($this->items as $id => $item) {
-            if ($class == $item['class']) return $id;
+            if ($class == $item['class']) {
+ return $id;
+}
+
+
         }
         return false;
     }
 
     public function xmlrpcgetwidget($id, $sidebar, $idurl) {
-        if (!isset($this->items[$id])) return $this->error("Widget $id not found");
+        if (!isset($this->items[$id])) {
+ return $this->error("Widget $id not found");
+}
+
+
         $this->idurlcontext = $idurl;
         $result = $this->getwidgetcontent($id, $sidebar);
         //fix bug for javascript client library
-        if ($result == '') return 'false';
+        if ($result == '') {
+ return 'false';
+}
+
+
     }
 
-    private static function getget($name) {
+    private static function getGet($name) {
         return isset($_GET[$name]) ? (int)$_GET[$name] : false;
     }
 
     private static function error_request($s) {
-        return '<?php header(\'HTTP/1.1 400 Bad Request\', true, 400); ?>' . turlmap::htmlheader(false) . $s;
+        return '<?php header(\'HTTP/1.1 400 Bad Request\', true, 400); ?>' . \litepubl\core\Router::htmlheader(false) . $s;
     }
 
     public function request($arg) {
@@ -390,21 +412,25 @@ use litepubl\core\DataStorageTrait;
         $id = static ::getget('id');
         $sidebar = static ::getget('sidebar');
         $this->idurlcontext = static ::getget('idurl');
-        if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) return $this->error_request('Invalid params');
+        if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) {
+ return $this->error_request('Invalid params');
+}
+
+
         $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
         if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !ttheme::exists($themename)) $themename = Schema::i(1)->themename;
         $theme = Theme::getinstance($themename);
 
         try {
             $result = $this->getwidgetcontent($id, $sidebar);
-            return turlmap::htmlheader(false) . $result;
+            return \litepubl\core\Router::htmlheader(false) . $result;
         }
         catch(Exception $e) {
             return $this->error_request('Cant get widget content');
         }
     }
 
-    public function getwidgetcontent($id, $sidebar) {
+    public function getWidgetcontent($id, $sidebar) {
         if (!isset($this->items[$id])) {
             return false;
 
@@ -419,11 +445,11 @@ use litepubl\core\DataStorageTrait;
 
             case 'include':
                 $filename = twidget::getcachefilename($id, $sidebar);
-                $result = litepubl::$urlmap->cache->get($filename);
+                $result =  $this->getApp()->router->cache->get($filename);
                 if (!$result) {
                     $widget = $this->getwidget($id);
                     $result = $widget->getcontent($id, $sidebar);
-                    litepubl::$urlmap->cache->set($filename, $result);
+                     $this->getApp()->router->cache->set($filename, $result);
                 }
                 break;
 
@@ -439,14 +465,18 @@ use litepubl\core\DataStorageTrait;
         return $result;
     }
 
-    public function getpos($id) {
+    public function getPos($id) {
         return tsidebars::getpos($this->sidebars, $id);
     }
 
     public function &finditem($id) {
         foreach ($this->classes as $class => $items) {
             foreach ($items as $i => $item) {
-                if ($id == $item['id']) return $this->classes[$class][$i];
+                if ($id == $item['id']) {
+ return $this->classes[$class][$i];
+}
+
+
             }
         }
         $item = null;

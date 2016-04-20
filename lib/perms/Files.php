@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\perms;
 use litepubl\post\Files as PostFiles;
@@ -27,19 +28,19 @@ return $this->item[$name];
         return parent::__get($name);
     }
 
-    public function setperm($id, $idperm) {
+    public function setPerm($id, $idperm) {
         $files = PostFiles::i();
         $item = $files->getitem($id);
         if ($idperm != $item['idperm']) {
         $files->setvalue($id, 'idperm', $idperm);
         if (($idperm == 0) || ($item['idperm'] == 0)) {
             $filename = basename($item['filename']);
-            $path = litepubl::$paths->files;
+            $path =  $this->getApp()->paths->files;
             if ($idperm) {
                 rename($path . $item['filename'], $path . 'private/' . $filename);
-                litepubl::$urlmap->add('/files/' . $item['filename'], get_class($this) , $id);
+                 $this->getApp()->router->add('/files/' . $item['filename'], get_class($this) , $id);
             } else {
-                litepubl::$urlmap->delete('/files/' . $item['filename']);
+                 $this->getApp()->router->delete('/files/' . $item['filename']);
                 rename($path . 'private/' . $filename, $path . $item['filename']);
             }
         }
@@ -57,12 +58,12 @@ return 404;
         $item = $files->getitem($id);
         $filename = '/files/' . $item['filename'];
         if ((int)$item['idperm'] == 0) {
-            if ($filename == litepubl::$urlmap->url) {
+            if ($filename ==  $this->getApp()->router->url) {
                 header('HTTP/1.1 500 Internal Server Error', true, 500);
                 exit();
             }
 
-            return litepubl::$router->redir($filename);
+            return  $this->getApp()->router->redir($filename);
         }
 
         $this->id = $id;
@@ -110,7 +111,7 @@ ob_end_clean();
 
     private static function send(array $item, $from, $end) {
         $filename = basename($item['filename']);
-        $realfile = litepubl::$paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
+        $realfile =  $this->getApp()->paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
 
         header('Cache-Control: private');
         header('Content-type: ' . $item['mime']);

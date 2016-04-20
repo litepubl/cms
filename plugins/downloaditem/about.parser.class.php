@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class taboutparser {
 
@@ -22,7 +24,7 @@ class taboutparser {
                 list($filename, $content) = each($files);
                 if ($about = static ::getabout($files)) {
                     $item = new tdownloaditem();
-                    $item->type = strbegin($filename, 'plugins/') ? 'plugin' : 'theme';
+                    $item->type = Str::begin($filename, 'plugins/') ? 'plugin' : 'theme';
                     $item->title = $about['name'];
                     $item->downloadurl = $url;
                     $item->authorurl = $about['url'];
@@ -45,21 +47,25 @@ class taboutparser {
         return false;
     }
 
-    public static function getfile(array & $files, $name) {
+    public static function getFile(array & $files, $name) {
         foreach ($files as $filename => & $content) {
-            if ($name == basename($filename)) return $content;
+            if ($name == basename($filename)) {
+ return $content;
+}
+
+
         }
         return false;
     }
 
-    public static function getabout(array & $files) {
+    public static function getAbout(array & $files) {
         if ($about_ini = static ::getfile($files, 'about.ini')) {
             $about_ini = trim($about_ini);
             //trim unicode sign
             $about_ini = substr($about_ini, strpos($about_ini, '['));
             $about = parse_ini_string($about_ini, true);
-            if (isset($about[litepubl::$options->language])) {
-                $about['about'] = $about[litepubl::$options->language] + $about['about'];
+            if (isset($about[ $this->getApp()->options->language])) {
+                $about['about'] = $about[ $this->getApp()->options->language] + $about['about'];
             }
             return $about['about'];
         }

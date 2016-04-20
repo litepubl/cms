@@ -1,19 +1,21 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\comments;
 use litepubl\comments\Pingbacks as PingItems;
 use litepubl\admin\Table;
+use litepubl\core\Str;
 
 class Pingbacks extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $pingbacks = PingItems::i();
         $lang = $this->lang;
@@ -21,7 +23,11 @@ $admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
-            if (!$pingbacks->itemexists($id)) return $this->notfound;
+            if (!$pingbacks->itemexists($id)) {
+ return $this->notfound;
+}
+
+
             switch ($action) {
                 case 'delete':
 $result .= $this->confirmDeleteItem($pingbacks);
@@ -62,10 +68,10 @@ break;
     order by $t.posted desc limit $from, $perpage"));
 
         $admin = $this->admintheme;
-        $lang = tlocal::i();
-        $args = new targs();
+        $lang = Lang::i();
+        $args = new Args();
         $form = $this->newForm($args);
-        $form->items = $admin->getcount($from, $from + count($items) , $total);
+        $form->body = $admin->getcount($from, $from + count($items) , $total);
         $tb = $this->newTable();
         $tb->setstruct(array(
             $tb->checkbox('id') ,
@@ -77,7 +83,7 @@ return $t->date($t->item['posted']);
             array(
                 $lang->status,
 function(Table $t) {
-                return tlocal::get('commentstatus', $t->item['status']);
+                return Lang::get('commentstatus', $t->item['status']);
 }) ,
             array(
                 $lang->title,
@@ -109,22 +115,22 @@ function(Table $t) {
         $result = $form->get();
 
         $theme = ttheme::i();
-        $result.= $theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage));
         return $result;
     }
 
     private function editPingback($id) {
         $pingbacks = PingItems::i();
-        $args = targs::i();
+        $args = new Args();
         $args->add($pingbacks->getitem($id));
-        $args->formtitle = tlocal::i()->edit;
+        $args->formtitle = Lang::i()->edit;
         return $this->admintheme->form('
     [text=title]
     [text=url]
     ', $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $pingbacks = PingItems::i();
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') {
             extract($_POST, EXTR_SKIP);
@@ -132,7 +138,11 @@ function(Table $t) {
         } else {
             $status = isset($_POST['approve']) ? 'approve' : (isset($_POST['hold']) ? 'hold' : 'delete');
             foreach ($_POST as $k => $id) {
-                if (!strbegin($k, 'id-') || !is_numeric($id)) continue;
+                if (!Str::begin($k, 'id-') || !is_numeric($id)) {
+ continue;
+}
+
+
                 $id = (int)$id;
                 if ($status == 'delete') {
                     $pingbacks->delete($id);

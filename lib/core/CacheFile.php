@@ -1,17 +1,18 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
 class CacheFile
 {
-    public function getdir() {
-        return litepubl::$paths->cache;
+    public function getDir() {
+        return  $this->getApp()->paths->cache;
     }
 
     public function set($filename, $data) {
@@ -56,7 +57,11 @@ class CacheFile
         $path = $this->getdir();
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = @readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) continue;
+                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
+ continue;
+}
+
+
                 $file = $path . $filename;
                 if (is_dir($file)) {
                     tfiler::delete($file . DIRECTORY_SEPARATOR, true, true);

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\menu;
 use litepubl\pages\Menus;
@@ -19,21 +20,37 @@ class Ajax extends \litepubl\admin\posts\Ajax
 
 //to prevent call parent method
     public function install() {
-        litepubl::$urlmap->addget('/admin/ajaxmenueditor.htm', get_class($this));
+         $this->getApp()->router->addget('/admin/ajaxmenueditor.htm', get_class($this));
     }
 
     public function request($arg) {
-        if ($err = static ::auth()) return $err;
+        if ($err = static ::auth()) {
+ return $err;
+}
+
+
         return $this->getcontent();
     }
 
-    public function getcontent() {
+    public function getContent() {
         $id = $this->idparam();
         $menus = Menus::i();
-        if (($id != 0) && !$menus->itemexists($id)) return static ::error403();
+        if (($id != 0) && !$menus->itemexists($id)) {
+ return static ::error403();
+}
+
+
         $menu = Menu::i($id);
-        if ((litepubl::$options->group == 'author') && (litepubl::$options->user != $menu->author)) return static ::error403();
-        if (($id > 0) && !$menus->itemexists($id)) return static ::error403();
+        if (( $this->getApp()->options->group == 'author') && ( $this->getApp()->options->user != $menu->author)) {
+ return static ::error403();
+}
+
+
+        if (($id > 0) && !$menus->itemexists($id)) {
+ return static ::error403();
+}
+
+
 
         $schemes = Schemes::i();
 $schema = Schema::i($schemes->defaults['admin']);
@@ -47,7 +64,7 @@ $admin = $schema->admintheme;
 
 
             case 'seo':
-                $args = targs::i();
+                $args = new Args();
                 $args->url = $menu->url;
                 $args->keywords = $menu->keywords;
                 $args->description = $menu->description;
@@ -59,7 +76,7 @@ $admin = $schema->admintheme;
             default:
                 $result = var_export($_GET, true);
         }
-        return turlmap::htmlheader(false) . $result;
+        return \litepubl\core\Router::htmlheader(false) . $result;
     }
 
 }

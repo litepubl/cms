@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
 
@@ -26,8 +27,12 @@ class FtpSocket extends Remote
     }
 
     public function connect($host, $login, $password) {
-        if (!parent::connect($host, $login, $password)) return false;
-        require_once (litepubl::$paths->libinclude . 'class-ftp.php');
+        if (!parent::connect($host, $login, $password)) {
+ return false;
+}
+
+
+        require_once ( $this->getApp()->paths->libinclude . 'class-ftp.php');
         $this->ftp = new \ftp();
 
         $this->ftp->setTimeout($this->timeout);
@@ -41,8 +46,12 @@ class FtpSocket extends Remote
         return false;
     }
 
-    public function getfile($filename) {
-        if (!$this->exists($file)) return false;
+    public function getFile($filename) {
+        if (!$this->exists($file)) {
+ return false;
+}
+
+
         if ($temp = tmpfile()) {
             $result = '';
             $this->ftp->SetType(FTP_BINARY);
@@ -57,7 +66,11 @@ class FtpSocket extends Remote
     }
 
     public function putcontent($filename, $content) {
-        if (!($temp = tmpfile())) return false;
+        if (!($temp = tmpfile())) {
+ return false;
+}
+
+
         fwrite($temp, $content);
         fseek($temp, 0); //Skip back to the start of the file being written to
         $this->ftp->SetType(FTP_BINARY);
@@ -72,7 +85,11 @@ class FtpSocket extends Remote
     }
 
     public function pwd() {
-        if ($result = $this->ftp->pwd()) return rtrim($result, '/') . '/';
+        if ($result = $this->ftp->pwd()) {
+ return rtrim($result, '/') . '/';
+}
+
+
         return false;
     }
 
@@ -90,7 +107,7 @@ class FtpSocket extends Remote
         return $dir[$file]['owner'];
     }
 
-    public function getchmod($file) {
+    public function getChmod($file) {
         $dir = $this->getdir($file);
         return $dir[$file]['mode'];
     }
@@ -105,8 +122,16 @@ class FtpSocket extends Remote
     }
 
     public function delete($file, $recursive = false) {
-        if (empty($file)) return false;
-        if ($this->is_file($file)) return $this->ftp->delete($file);
+        if (empty($file)) {
+ return false;
+}
+
+
+        if ($this->is_file($file)) {
+ return $this->ftp->delete($file);
+}
+
+
         return $this->ftp->rmdir($file);
 
         //return $this->ftp->mdel($file);
@@ -139,7 +164,11 @@ class FtpSocket extends Remote
     }
 
     public function mkdir($path, $chmod) {
-        if (!$this->ftp->mkdir($path)) return false;
+        if (!$this->ftp->mkdir($path)) {
+ return false;
+}
+
+
         return parent::mkdir($path, $chmod);
     }
 
@@ -149,13 +178,21 @@ class FtpSocket extends Remote
         
     }
 
-    public function getdir($path) {
+    public function getDir($path) {
         if ($this->is_file($path)) $path = dirname($path) . '/';
-        if (($list = $this->ftp->dirlist($path)) === false) return false;
+        if (($list = $this->ftp->dirlist($path)) === false) {
+ return false;
+}
+
+
         $result = array();
         foreach ($list as $a) {
             $name = $a['name'];
-            if (($name == '.') || ($name == '..') || ($name == '.svn')) continue;
+            if (($name == '.') || ($name == '..') || ($name == '.svn')) {
+ continue;
+}
+
+
             $a['mode'] = octdec($this->perm2mode($a['perms']));
             if (!isset($a['isdir'])) $a['isdir'] = $a['type'] == 'd';
             $result[$name] = $a;

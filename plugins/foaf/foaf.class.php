@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tfoaf extends titems {
     public $title;
@@ -22,11 +24,15 @@ class tfoaf extends titems {
         $this->table = 'foaf';
     }
 
-    public function getapproved($count) {
+    public function getApproved($count) {
         $count = (int)$count;
         if ($this->dbversion) {
             $limit = $count == 0 ? '' : " limit 0, $count";
-            if ($result = $this->select("status = 'approved'", "order by added desc" . $limit)) return $result;
+            if ($result = $this->select("status = 'approved'", "order by added desc" . $limit)) {
+ return $result;
+}
+
+
             return array();
         } else {
             $result = array_keys($this->items);
@@ -38,7 +44,7 @@ class tfoaf extends titems {
     }
 
     public function request($arg) {
-        return '<?php turlmap::sendxml(); ?>' . $this->getfoafxml();
+        return '<?php \litepubl\core\Router::sendxml(); ?>' . $this->getfoafxml();
     }
 
     public function add($nick, $url, $foafurl, $status) {
@@ -46,7 +52,7 @@ class tfoaf extends titems {
             'nick' => $nick,
             'url' => $url,
             'foafurl' => $foafurl,
-            'added' => sqldate() ,
+            'added' => Str::sqlDate() ,
             'errors' => 0,
             'status' => $status
         );
@@ -59,8 +65,8 @@ class tfoaf extends titems {
         $this->items[$id] = $item;
         if (!$this->dbversion) $this->save();
         $this->added($id);
-        $urlmap = turlmap::i();
-        $urlmap->clearcache();
+        $router = \litepubl\core\Router::i();
+        $router->clearcache();
         return $id;
     }
 
@@ -78,15 +84,15 @@ class tfoaf extends titems {
         $this->items[$id] = $item;
         if (!$this->dbversion) $this->save();
         $this->edited($id);
-        $urlmap = turlmap::i();
-        $urlmap->clearcache();
+        $router = \litepubl\core\Router::i();
+        $router->clearcache();
         return true;
     }
 
     public function delete($id) {
         if (parent::delete($id)) {
-            $urlmap = turlmap::i();
-            $urlmap->clearcache();
+            $router = \litepubl\core\Router::i();
+            $router->clearcache();
             return true;
         }
         return false;
@@ -94,15 +100,19 @@ class tfoaf extends titems {
 
     public function deleteurl($url) {
         if ($this->dbversion) {
-            $this->db->delete('url = ' . dbquote($url));
+            $this->db->delete('url = ' . Str::uuote($url));
         } else {
             foreach ($this->items as $id => $item) {
-                if ($url == $item['url']) return $this->Delete($id);
+                if ($url == $item['url']) {
+ return $this->Delete($id);
+}
+
+
             }
         }
     }
 
-    private function getfoafxml() {
+    private function getFoafxml() {
         $result = '<rdf:RDF ' . 'xml:lang="en" ' . 'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" ' . 'xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" ' . 'xmlns:foaf="http://xmlns.com/foaf/0.1/" ' . 'xmlns:ya="http://blogs.yandex.ru/schema/foaf/" ' . 'xmlns:lj="http://www.livejournal.org/rss/lj/1.0/" ' . 'xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" ' . 'xmlns:dc="http://purl.org/dc/elements/1.1/">' . '<foaf:Person>';
 
         $profile = tprofile::i();
@@ -113,7 +123,7 @@ class tfoaf extends titems {
         return $result;
     }
 
-    private function getknows() {
+    private function getKnows() {
         $result = '';
         foreach ($this->items as $id => $item) {
             $result.= '<foaf:knows>' . '<foaf:Person>' . '<foaf:nick>' . static ::escape($item['nick']) . '</foaf:nick>' . '<rdfs:seeAlso rdf:resource="' . static ::escape($item['foafurl']) . '"/>' . '<foaf:weblog rdf:resource="' . static ::escape($item['url']) . '"/>' . '</foaf:Person>' . '</foaf:knows>';
@@ -124,24 +134,36 @@ class tfoaf extends titems {
 
     public function hasfriend($url) {
         if ($this->dbversion) {
-            return $this->select('url = ' . dbquote($url) , 'limit 1');
+            return $this->select('url = ' . Str::uuote($url) , 'limit 1');
         } else {
             foreach ($this->items as $id => $item) {
-                if ($url == $item['url']) return $id;
+                if ($url == $item['url']) {
+ return $id;
+}
+
+
             }
             return false;
         }
     }
 
-    public function setstatus($id, $value) {
+    public function setStatus($id, $value) {
         if ($this->itemexists($id)) $this->setvalue($id, 'status', $value);
         if (!$this->dbversion) $this->save();
     }
 
     public function changestatus($id, $value) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
-        if ($item['status'] == $value) return false;
+        if ($item['status'] == $value) {
+ return false;
+}
+
+
         $this->setvalue($id, 'status', $value);
         if ($item['status'] == 'hold') {
             if ($value == 'approved') {
@@ -152,7 +174,7 @@ class tfoaf extends titems {
         }
     }
 
-    private function getdomain($url) {
+    private function getDomain($url) {
         $url = strtolower(trim($url));
         if (preg_match('/(http:\/\/|https:\/\/|)(www\.|)([-\.\w]+)\/?/', $url, $found)) {
             return isset($found[3]) && !empty($found[3]) ? $found[3] : false;
@@ -162,34 +184,62 @@ class tfoaf extends titems {
 
     private function validateurl($url, $foafurl) {
         if (($url = $this->getdomain($url)) && ($foafurl = $this->getdomain($foafurl))) {
-            $self = $this->getdomain(litepubl::$site->url);
+            $self = $this->getdomain( $this->getApp()->site->url);
             return ($url == $foafurl) && ($url != $self);
         }
         return false;
     }
     /* begin remote calls */
     public function invate($nick, $url, $foafurl) {
-        if (!$this->validateurl($url, $foafurl)) return false;
-        if ($this->hasfriend($url)) return false;
+        if (!$this->validateurl($url, $foafurl)) {
+ return false;
+}
+
+
+        if ($this->hasfriend($url)) {
+ return false;
+}
+
+
         $id = $this->add($nick, $url, $foafurl, 'hold');
         $this->sendmail($id, 'invated');
         return true;
     }
 
     public function accept($nick, $url, $foafurl) {
-        if (!$this->validateurl($url, $foafurl)) return false;
+        if (!$this->validateurl($url, $foafurl)) {
+ return false;
+}
+
+
         $id = $this->hasfriend($url);
-        if (!$id) return false;
+        if (!$id) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
-        if ($item['status'] == 'approved') return true;
-        if (!(($item['status'] == 'invated') || ($item['status'] == 'hold'))) return false;
+        if ($item['status'] == 'approved') {
+ return true;
+}
+
+
+        if (!(($item['status'] == 'invated') || ($item['status'] == 'hold'))) {
+ return false;
+}
+
+
         $this->setstatus($id, 'approved');
         $this->sendmail($id, 'accepted');
         return true;
     }
 
     public function reject($nick, $url, $foafurl) {
-        if (!$this->validateurl($url, $foafurl)) return false;
+        if (!$this->validateurl($url, $foafurl)) {
+ return false;
+}
+
+
         if ($id = $this->hasfriend($url)) {
             $this->sendmail($id, 'rejected');
             //$this->delete($id);
@@ -201,14 +251,14 @@ class tfoaf extends titems {
     /* end remote calls */
     private function sendmail($id, $event) {
         $item = $this->getitem($id);
-        $args = targs::i();
+        $args = new Args();
         $args->add($item);
-        $lang = tlocal::i('foaf');
+        $lang = Lang::i('foaf');
         $event = 'mail' . $event;
         $args->event = $lang->$event;
 
-        tlocal::usefile('mail');
-        $lang = tlocal::i('mailfoaf');
+        Lang::usefile('mail');
+        $lang = Lang::i('mailfoaf');
         $theme = ttheme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
@@ -217,12 +267,12 @@ class tfoaf extends titems {
         tmailer::sendtoadmin($subject, $body);
     }
 
-    protected function getprofile() {
+    protected function getProfile() {
         $profile = tprofile::i();
         return array(
             'nick' => $profile->nick,
-            'url' => litepubl::$site->url . litepubl::$site->home,
-            'foafurl' => litepubl::$site->url . '/foaf.xml'
+            'url' =>  $this->getApp()->site->url .  $this->getApp()->site->home,
+            'foafurl' =>  $this->getApp()->site->url . '/foaf.xml'
         );
     }
 
@@ -240,7 +290,11 @@ class tfoaf extends titems {
     }
 
     public function acceptinvate($id) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
         if ($ping = tpinger::Discover($item['url'])) {
             $actions = TXMLRPCAction::i();
@@ -253,7 +307,11 @@ class tfoaf extends titems {
     }
 
     public function rejectinvate($id) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
         $this->setstatus($id, 'rejected');
         if ($ping = tpinger::Discover($item['url'])) {
@@ -273,7 +331,7 @@ class tfoaf extends titems {
         ));
     }
 
-    public static function getparam($name, $value) {
+    public static function getParam($name, $value) {
         return sprintf('<foaf:%1$s>%2$s</foaf:%1$s>', $name, static ::escape($value));
     }
 

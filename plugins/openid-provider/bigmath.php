@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -19,7 +20,11 @@ function long($b) {
 }
 
 function random($max) {
-    if (strlen($max) < 4) return mt_rand(1, $max - 1);
+    if (strlen($max) < 4) {
+ return mt_rand(1, $max - 1);
+}
+
+
     $r = '';
     for ($i = 1; $i < strlen($max) - 1; $i++) $r.= mt_rand(0, 9);
     $r.= mt_rand(1, 9);
@@ -27,10 +32,18 @@ function random($max) {
 }
 
 function str_diff_at($a, $b) {
-    if ($a == $b) return -1;
+    if ($a == $b) {
+ return -1;
+}
+
+
     $n = min(strlen($a) , strlen($b));
     for ($i = 0; $i < $n; $i++) {
-        if ($a[$i] != $b[$i]) return $i;
+        if ($a[$i] != $b[$i]) {
+ return $i;
+}
+
+
     }
     return $n;
 }
@@ -42,8 +55,16 @@ function x_or($a, $b) {
 }
 
 function bmadd($l, $r) {
-    if (function_exists('bcadd')) return bcadd($l, $r);
-    if (function_exists('gmp_strval')) return gmp_strval(gmp_add($l, $r));
+    if (function_exists('bcadd')) {
+ return bcadd($l, $r);
+}
+
+
+    if (function_exists('gmp_strval')) {
+ return gmp_strval(gmp_add($l, $r));
+}
+
+
 
     $l = strval($l);
     $r = strval($r);
@@ -77,20 +98,40 @@ function bmadd($l, $r) {
 }
 
 function bmcomp($l, $r) {
-    if (function_exists('bccomp')) return bccomp($l, $r);
-    if (function_exists('gmp_strval')) return gmp_strval(gmp_cmp($l, $r));
+    if (function_exists('bccomp')) {
+ return bccomp($l, $r);
+}
+
+
+    if (function_exists('gmp_strval')) {
+ return gmp_strval(gmp_cmp($l, $r));
+}
+
+
 
     $l = strval($l);
     $r = strval($r);
     $ll = strlen($l);
     $lr = strlen($r);
-    if ($ll != $lr) return ($ll > $lr) ? 1 : -1;
+    if ($ll != $lr) {
+ return ($ll > $lr) ? 1 : -1;
+}
+
+
     return strcmp($l, $r);
 }
 
 function bmdiv($l, $r, $z = 0) {
-    if (function_exists('bcdiv')) return ($z == 0) ? bcdiv($l, $r) : bcmod($l, $r);
-    if (function_exists('gmp_div_q')) return gmp_strval(($z == 0) ? gmp_div_q($l, $r) : gmp_mod($l, $r));
+    if (function_exists('bcdiv')) {
+ return ($z == 0) ? bcdiv($l, $r) : bcmod($l, $r);
+}
+
+
+    if (function_exists('gmp_div_q')) {
+ return gmp_strval(($z == 0) ? gmp_div_q($l, $r) : gmp_mod($l, $r));
+}
+
+
 
     $l = strval($l);
     $r = strval($r);
@@ -124,8 +165,16 @@ function bmdiv($l, $r, $z = 0) {
 }
 
 function bmmul($l, $r) {
-    if (function_exists('bcmul')) return bcmul($l, $r);
-    if (function_exists('gmp_mul')) return gmp_strval(gmp_mul($l, $r));
+    if (function_exists('bcmul')) {
+ return bcmul($l, $r);
+}
+
+
+    if (function_exists('gmp_mul')) {
+ return gmp_strval(gmp_mul($l, $r));
+}
+
+
 
     $l = strval($l);
     $r = strval($r);
@@ -158,14 +207,30 @@ function bmmul($l, $r) {
 }
 
 function bmmod($value, $mod) {
-    if (function_exists('bcmod')) return bcmod($value, $mod);
-    if (function_exists('gmp_mod')) return gmp_strval(gmp_mod($value, $mod));
+    if (function_exists('bcmod')) {
+ return bcmod($value, $mod);
+}
+
+
+    if (function_exists('gmp_mod')) {
+ return gmp_strval(gmp_mod($value, $mod));
+}
+
+
     return bmdiv($value, $mod, 1);
 }
 
 function bmpow($value, $exponent) {
-    if (function_exists('bcpow')) return bcpow($value, $exponent);
-    if (function_exists('gmp_pow')) return gmp_strval(gmp_pow($value, $exponent));
+    if (function_exists('bcpow')) {
+ return bcpow($value, $exponent);
+}
+
+
+    if (function_exists('gmp_pow')) {
+ return gmp_strval(gmp_pow($value, $exponent));
+}
+
+
 
     $r = '1';
     while ($exponent) {
@@ -176,8 +241,16 @@ function bmpow($value, $exponent) {
 }
 
 function bmpowmod($value, $exponent, $mod) {
-    if (function_exists('bcpowmod')) return bcpowmod($value, $exponent, $mod);
-    if (function_exists('gmp_powm')) return gmp_strval(gmp_powm($value, $exponent, $mod));
+    if (function_exists('bcpowmod')) {
+ return bcpowmod($value, $exponent, $mod);
+}
+
+
+    if (function_exists('gmp_powm')) {
+ return gmp_strval(gmp_powm($value, $exponent, $mod));
+}
+
+
 
     $r = '';
     while ($exponent != '0') {
@@ -208,8 +281,16 @@ function bmpowmod($value, $exponent, $mod) {
 }
 
 function bmsub($l, $r) {
-    if (function_exists('bcsub')) return bcsub($l, $r);
-    if (function_exists('gmp_sub')) return gmp_strval(gmp_sub($l, $r));
+    if (function_exists('bcsub')) {
+ return bcsub($l, $r);
+}
+
+
+    if (function_exists('gmp_sub')) {
+ return gmp_strval(gmp_sub($l, $r));
+}
+
+
 
     $l = strval($l);
     $r = strval($r);

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -24,9 +25,13 @@ class tsingletagwidget extends twidget {
         $this->tags = tcategories::i();
     }
 
-    public function getidwidget($idtag) {
+    public function getIdwidget($idtag) {
         foreach ($this->items as $id => $item) {
-            if ($idtag == $item['idtag']) return $id;
+            if ($idtag == $item['idtag']) {
+ return $id;
+}
+
+
         }
         return false;
     }
@@ -68,10 +73,14 @@ class tsingletagwidget extends twidget {
     }
 
     public function tagdeleted($idtag) {
-        if ($idwidget = $this->getidwidget($idtag)) return $this->delete($idwidget);
+        if ($idwidget = $this->getidwidget($idtag)) {
+ return $this->delete($idwidget);
+}
+
+
     }
 
-    public function gettitle($id) {
+    public function getTitle($id) {
         if (isset($this->items[$id])) {
             if ($tag = $this->tags->getitem($this->items[$id]['idtag'])) {
                 return $tag['title'];
@@ -80,11 +89,19 @@ class tsingletagwidget extends twidget {
         return '';
     }
 
-    public function getcontent($id, $sidebar) {
-        if (!isset($this->items[$id])) return '';
+    public function getContent($id, $sidebar) {
+        if (!isset($this->items[$id])) {
+ return '';
+}
+
+
         $item = $this->items[$id];
         $items = $this->tags->get_sorted_posts($item['idtag'], $item['maxcount'], $item['invertorder']);
-        if (count($items) == 0) return '';
+        if (count($items) == 0) {
+ return '';
+}
+
+
 
         $theme = ttheme::i();
         return $theme->getpostswidgetcontent($items, $sidebar, '');

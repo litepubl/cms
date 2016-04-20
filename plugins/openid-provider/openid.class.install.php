@@ -1,30 +1,31 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function topenidInstall($self) {
-    litepubl::$urlmap->add($self->url, get_class($self) , null, 'get');
+     $self->getApp()->router->add($self->url, get_class($self) , null, 'get');
 
     $template = ttemplate::i();
     $template->addtohead($self->get_head());
 
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->addplugin(tplugins::getname(__file__));
 }
 
 function topenidUninstall($self) {
-    turlmap::unsub($self);
+     $self->getApp()->router->unbind($self);
     $template = ttemplate::i();
     $template->deletefromhead($self->get_head());
 
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->deleteplugin(tplugins::getname(__file__));
 
-    litepubl::$urlmap->clearcache();
+     $self->getApp()->router->clearcache();
 }

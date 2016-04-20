@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,7 +15,7 @@ class tdownloaditem extends tpost {
         return parent::iteminstance(__class__, $id);
     }
 
-    public static function getchildtable() {
+    public static function getChildtable() {
         return 'downloaditems';
     }
 
@@ -38,19 +39,19 @@ class tdownloaditem extends tpost {
         );
     }
 
-    public function getfactory() {
+    public function getFactory() {
         return dlitemfactory::i();
     }
 
-    protected function getauthorname() {
+    protected function getAuthorname() {
         return $this->childdata['authorname'];
     }
 
-    public function getparenttag() {
-        return $this->type == 'theme' ? litepubl::$options->downloaditem_themetag : litepubl::$options->downloaditem_plugintag;
+    public function getParenttag() {
+        return $this->type == 'theme' ?  $this->getApp()->options->downloaditem_themetag :  $this->getApp()->options->downloaditem_plugintag;
     }
 
-    public function settagnames($names) {
+    public function setTagnames($names) {
         $names = trim($names);
         if ($names == '') {
             $this->tags = array();
@@ -62,7 +63,11 @@ class tdownloaditem extends tpost {
         $list = explode(',', trim($names));
         foreach ($list as $title) {
             $title = tcontentfilter::escape($title);
-            if ($title == '') continue;
+            if ($title == '') {
+ continue;
+}
+
+
             $items[] = $tags->add($parent, $title);
         }
 
@@ -73,7 +78,7 @@ class tdownloaditem extends tpost {
         return $this->getdownloadcontent() . $this->data['excerpt'];
     }
 
-    protected function getcontentpage($page) {
+    protected function getContentpage($page) {
         $result = $this->theme->templates['custom']['siteform'];
         $result.= $this->getdownloadcontent();
         if ($this->poll > 0) {
@@ -85,15 +90,15 @@ class tdownloaditem extends tpost {
         return $result;
     }
 
-    public function getdownloadcontent() {
-        ttheme::$vars['lang'] = tlocal::i('downloaditem');
+    public function getDownloadcontent() {
+        ttheme::$vars['lang'] = Lang::i('downloaditem');
         ttheme::$vars['post'] = $this;
         $theme = $this->theme;
         return $theme->parse($theme->templates['custom']['downloaditem']);
     }
 
-    public function getdownloadcount() {
-        return sprintf(tlocal::get('downloaditem', 'downloaded') , $this->downloads);
+    public function getDownloadcount() {
+        return sprintf(Lang::get('downloaditem', 'downloaded') , $this->downloads);
     }
 
     public function closepoll() {
@@ -108,7 +113,7 @@ class dlitemfactory extends tpostfactory {
         return getinstance(__class__);
     }
 
-    public function getposts() {
+    public function getPosts() {
         return tdownloaditems::i();
     }
 

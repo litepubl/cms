@@ -1,13 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\MainView;
+use litepubl\core\Str;
 
 class Redirector extends \litepubl\core\Items
  {
@@ -26,24 +28,52 @@ class Redirector extends \litepubl\core\Items
     }
 
     public function get($url) {
-        if (isset($this->items[$url])) return $this->items[$url];
-        if (strbegin($url, litepubl::$site->url)) return substr($url, strlen(litepubl::$site->url));
+        if (isset($this->items[$url])) {
+ return $this->items[$url];
+}
+
+
+        if (Str::begin($url,  $this->getApp()->site->url)) {
+ return substr($url, strlen( $this->getApp()->site->url));
+}
+
+
 
         //redir jquery scripts
-        if (strbegin($url, '/js/jquery/jquery')) return '/js/jquery/jquery-' . litepubl::$site->jquery_version . '.min.js';
+        if (Str::begin($url, '/js/jquery/jquery')) {
+ return '/js/jquery/jquery-' .  $this->getApp()->site->jquery_version . '.min.js';
+}
+
+
 
         //fix for 2.xx versions
-        if (preg_match('/^\/comments\/(\d*?)\/?$/', $url, $m)) return sprintf('/comments/%d.xml', $m[1]);
-        if (preg_match('/^\/authors\/(\d*?)\/?$/', $url, $m)) return '/comusers.htm?id=' . $m[1];
+        if (preg_match('/^\/comments\/(\d*?)\/?$/', $url, $m)) {
+ return sprintf('/comments/%d.xml', $m[1]);
+}
+
+
+        if (preg_match('/^\/authors\/(\d*?)\/?$/', $url, $m)) {
+ return '/comusers.htm?id=' . $m[1];
+}
+
+
 
         if (strpos($url, '%')) {
             $url = rawurldecode($url);
-            if (strbegin($url, litepubl::$site->url)) return substr($url, strlen(litepubl::$site->url));
-            if (litepubl::$urlmap->urlexists($url)) return $url;
+            if (Str::begin($url,  $this->getApp()->site->url)) {
+ return substr($url, strlen( $this->getApp()->site->url));
+}
+
+
+            if ( $this->getApp()->router->urlexists($url)) {
+ return $url;
+}
+
+
         }
 
         //fix php warnings e.g. function.preg-split
-        if (($i = strrpos($url, '/')) && strbegin(substr($url, $i) , '/function.')) {
+        if (($i = strrpos($url, '/')) && Str::begin(substr($url, $i) , '/function.')) {
             return substr($url, 0, $i + 1);
         }
 
@@ -51,21 +81,25 @@ class Redirector extends \litepubl\core\Items
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.js$/', $url, $m)) {
             $name = $m[1] == 'moderator' ? 'comments' : $m[1];
             $prop = 'jsmerger_' . $name;
-            $view = MainView::i();
-            if (isset($view->$prop)) {
-return $view->$prop;
+            $schema = MainView::i();
+            if (isset($schema->$prop)) {
+return $schema->$prop;
 }
         }
 
         if (preg_match('/^\/files\/js\/(\w*+)\.(\d*+)\.css$/', $url, $m)) {
             $name = 'cssmerger_' . $m[1];
-            $view = MainView::i();
-            if (isset($view->$name)) {
-return $view->$name;
+            $schema = MainView::i();
+            if (isset($schema->$name)) {
+return $schema->$name;
 }
         }
 
-        if ($url = $this->onget($url)) return $url;
+        if ($url = $this->onget($url)) {
+ return $url;
+}
+
+
         return false;
     }
 

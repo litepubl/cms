@@ -1,17 +1,19 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 use litepubl\widget\Widgets;
+use litepubl\core\Str;
 
 class MainView extends \litepubl\core\Events
 {
-use \litepubl\core\DataStorageTrait;
+use \litepubl\core\SharedStorageTrait;
 
     public $custom;
     public $extrahead;
@@ -22,25 +24,25 @@ use \litepubl\core\DataStorageTrait;
     public $path;
     public $result;
     public $schema;
-public $viewImplemented;
+public $schemaImplemented;
     public $url;
 
     protected function create() {
         //prevent recursion
-        litepubl::$classes->instances[get_class($this) ] = $this;
+         $this->getApp()->classes->instances[get_class($this) ] = $this;
         parent::create();
         $this->basename = 'template';
         $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-        $this->path = litepubl::$paths->themes . 'default' . DIRECTORY_SEPARATOR;
-        $this->url = litepubl::$site->files . '/themes/default';
+        $this->path =  $this->getApp()->paths->themes . 'default' . DIRECTORY_SEPARATOR;
+        $this->url =  $this->getApp()->site->files . '/themes/default';
         $this->viewImplemented = false;
         $this->ltoptions = array(
-            'url' => litepubl::$site->url,
-            'files' => litepubl::$site->files,
-            'idurl' => litepubl::$urlmap->item['id'],
-            'lang' => litepubl::$site->language,
-            'video_width' => litepubl::$site->video_width,
-            'video_height' => litepubl::$site->video_height,
+            'url' =>  $this->getApp()->site->url,
+            'files' =>  $this->getApp()->site->files,
+            'idurl' =>  $this->getApp()->router->item['id'],
+            'lang' =>  $this->getApp()->site->language,
+            'video_width' =>  $this->getApp()->site->video_width,
+            'video_height' =>  $this->getApp()->site->video_height,
             'theme' => array() ,
             'custom' => array() ,
         );
@@ -100,9 +102,9 @@ $vars->mainview = $this;
         $this->schema = $this->getModellSchema($model);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
-        litepubl::$classes->instances[get_class($theme) ] = $theme;
-        $this->path = litepubl::$paths->themes . $theme->name . DIRECTORY_SEPARATOR;
-        $this->url = litepubl::$site->files . '/themes/' . $theme->name;
+         $this->getApp()->classes->instances[get_class($theme) ] = $theme;
+        $this->path =  $this->getApp()->paths->themes . $theme->name . DIRECTORY_SEPARATOR;
+        $this->url =  $this->getApp()->site->files . '/themes/' . $theme->name;
         if ($this->schema->hovermenu) {
             $this->hover = $theme->templates['menu.hover'];
             if ($this->hover != 'bootstrap') $this->hover = ($this->hover == 'true');
@@ -134,19 +136,19 @@ return $result;
         if (isset($ctx->idperm) && ($idperm = $ctx->idperm)) {
             $perm = tperm::i($idperm);
             if ($result = $perm->getheader($ctx)) {
-                return $result . litepubl::$router->htmlheader($ctx->cache);
+                return $result .  $this->getApp()->router->htmlheader($ctx->cache);
             }
         }
 
-        return litepubl::$router->htmlheader($ctx->cache);
+        return  $this->getApp()->router->htmlheader($ctx->cache);
     }
 
     //html tags
-    public function getsidebar() {
+    public function getSidebar() {
         return Widgets::i()->getsidebar($this->model, $this->schema);
     }
 
-    public function gettitle() {
+    public function getTitle() {
         $title = $this->viewImplemented ? $this->model->gettitle() : '';
         if ($this->callevent('ontitle', array(&$title
         ))) {
@@ -162,13 +164,13 @@ return $result;
         $result = $this->schema->theme->parsearg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
-return litepubl::$site->name;
+return  $this->getApp()->site->name;
 }
 
         return $result;
     }
 
-    public function geticon() {
+    public function getIcon() {
         $result = '';
         if (isset($this->model) && isset($this->model->icon)) {
             $icon = $this->model->icon;
@@ -177,54 +179,66 @@ return litepubl::$site->name;
                 if ($files->itemexists($icon)) $result = $files->geturl($icon);
             }
         }
-        if ($result == '') return litepubl::$site->files . '/favicon.ico';
+        if ($result == '') {
+ return  $this->getApp()->site->files . '/favicon.ico';
+}
+
+
         return $result;
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         $result = $this->viewImplemented ? $this->model->getkeywords() : '';
-        if ($result == '') return litepubl::$site->keywords;
+        if ($result == '') {
+ return  $this->getApp()->site->keywords;
+}
+
+
         return $result;
     }
 
-    public function getdescription() {
+    public function getDescription() {
         $result = $this->viewImplemented ? $this->model->getdescription() : '';
-        if ($result == '') return litepubl::$site->description;
+        if ($result == '') {
+ return  $this->getApp()->site->description;
+}
+
+
         return $result;
     }
 
-    public function getmenu() {
+    public function getMenu() {
         if ($r = $this->ongetmenu()) {
             return $r;
         }
 
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , litepubl::$options->group ? litepubl::$options->group : 'nobody');
+        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $this->getApp()->options->group ?  $this->getApp()->options->group : 'nobody');
 
-        if ($result = litepubl::$urlmap->cache->get($filename)) {
+        if ($result =  $this->getApp()->router->cache->get($filename)) {
             return $result;
         }
 
         $menus = getinstance($menuclass);
         $result = $menus->getmenu($this->hover, 0);
-        litepubl::$urlmap->cache->set($filename, $result);
+         $this->getApp()->router->cache->set($filename, $result);
         return $result;
     }
 
-    private function getltoptions() {
-        return sprintf('<script type="text/javascript">window.ltoptions = %s;</script>', tojson($this->ltoptions));
+    private function getLtoptions() {
+        return sprintf('<script type="text/javascript">window.ltoptions = %s;</script>', Str::toJson($this->ltoptions));
     }
 
-    public function getjavascript($filename) {
-        return sprintf($this->js, litepubl::$site->files . $filename);
+    public function getJavascript($filename) {
+        return sprintf($this->js,  $this->getApp()->site->files . $filename);
     }
 
-    public function getready($s) {
+    public function getReady($s) {
         return sprintf($this->jsready, $s);
     }
 
-    public function getloadjavascript($s) {
+    public function getLoadjavascript($s) {
         return sprintf($this->jsload, $s);
     }
 
@@ -246,7 +260,7 @@ return litepubl::$site->name;
         }
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = $this->heads;
         if ($this->viewImplemented) $result.= $this->model->gethead();
         $result = $this->getltoptions() . $result;
@@ -257,7 +271,7 @@ return litepubl::$site->name;
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $this->callevent('beforecontent', array(&$result
         ));
@@ -267,24 +281,32 @@ return litepubl::$site->name;
         return $result;
     }
 
-    protected function setfooter($s) {
+    protected function setFooter($s) {
         if ($s != $this->data['footer']) {
             $this->data['footer'] = $s;
             $this->Save();
         }
     }
 
-    public function getpage() {
-        $page = litepubl::$urlmap->page;
-        if ($page <= 1) return '';
-        return sprintf(tlocal::get('default', 'pagetitle') , $page);
+    public function getPage() {
+        $page =  $this->getApp()->router->page;
+        if ($page <= 1) {
+ return '';
+}
+
+
+        return sprintf(Lang::get('default', 'pagetitle') , $page);
     }
 
     public function trimwords($s, array $words) {
-        if ($s == '') return '';
+        if ($s == '') {
+ return '';
+}
+
+
         foreach ($words as $word) {
-            if (strbegin($s, $word)) $s = substr($s, strlen($word));
-            if (strend($s, $word)) $s = substr($s, 0, strlen($s) - strlen * ($word));
+            if (Str::begin($s, $word)) $s = substr($s, strlen($word));
+            if (Str::end($s, $word)) $s = substr($s, 0, strlen($s) - strlen * ($word));
         }
         return $s;
     }

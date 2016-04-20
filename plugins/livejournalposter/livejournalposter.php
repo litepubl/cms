@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\Config;
 
 class tlivejournalposter extends tplugin {
 
@@ -25,20 +27,28 @@ class tlivejournalposter extends tplugin {
     }
 
     public function sendpost($id) {
-        if ($this->host == '' || $this->login == '') return false;
+        if ($this->host == '' || $this->login == '') {
+ return false;
+}
+
+
         $post = tpost::i($id);
         ttheme::$vars['post'] = $post;
         $theme = ttheme::i();
         $content = $theme->parse($this->template);
         $date = getdate($post->posted);
 
-        if ($post->status != 'published') return;
+        if ($post->status != 'published') {
+ return;
+}
+
+
         $meta = $post->meta;
 
         $client = new IXR_Client($this->host, '/interface/xmlrpc');
         //$client = new IXR_Client($this->host, '/rpc.xml');
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
-            if (litepubl::$debug) tfiler::log('live journal: error challenge');
+            if (Config::$debug) tfiler::log('live journal: error challenge');
             return false;
         }
         $response = $client->getResponse();
@@ -90,7 +100,7 @@ class tlivejournalposter extends tplugin {
         }
 
         if (!$client->query($method, $args)) {
-            if (litepubl::$debug) tfiler::log('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+            if (Config::$debug) tfiler::log('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
             return false;
         }
 

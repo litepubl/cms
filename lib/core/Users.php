@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -22,12 +23,16 @@ class Users extends Items
     }
 
     public function res2items($res) {
-        if (!$res) return array();
+        if (!$res) {
+ return array();
+}
+
+
         $result = array();
-        $db = litepubl::$db;
+        $db =  $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = (int)$item['id'];
-            $item['idgroups'] = tdatabase::str2array($item['idgroups']);
+            $item['idgroups'] = Str::toIntArray($item['idgroups']);
             $result[] = $id;
             $this->items[$id] = $item;
         }
@@ -42,11 +47,11 @@ class Users extends Items
         return Usersman::i()->edit($id, $values);
     }
 
-    public function setgroups($id, array $idgroups) {
+    public function setGroups($id, array $idgroups) {
         $idgroups = array_unique($idgroups);
-        array_delete_value($idgroups, '');
-        array_delete_value($idgroups, false);
-        array_delete_value($idgroups, null);
+        Arr::deleteValue($idgroups, '');
+        Arr::deleteValue($idgroups, false);
+        Arr::deleteValue($idgroups, null);
 
         $this->items[$id]['idgroups'] = $idgroups;
         $db = $this->getdb($this->grouptable);
@@ -60,7 +65,11 @@ class Users extends Items
     }
 
     public function delete($id) {
-        if ($id == 1) return;
+        if ($id == 1) {
+ return;
+}
+
+
         $this->beforedelete($id);
         $this->getdb($this->grouptable)->delete('iduser = ' . (int)$id);
         $this->pages->delete($id);
@@ -68,19 +77,31 @@ class Users extends Items
         return parent::delete($id);
     }
 
-public function getpages() {
+public function getPages() {
 return \litepubl\pages\Users::i();
 }
 
     public function emailexists($email) {
-        if ($email == '') return false;
-        if ($email == litepubl::$options->email) return 1;
+        if ($email == '') {
+ return false;
+}
+
+
+        if ($email ==  $this->getApp()->options->email) {
+ return 1;
+}
+
+
 
         foreach ($this->items as $id => $item) {
-            if ($email == $item['email']) return $id;
+            if ($email == $item['email']) {
+ return $id;
+}
+
+
         }
 
-        if ($item = $this->db->finditem('email = ' . dbquote($email))) {
+        if ($item = $this->db->finditem('email = ' . Str::uuote($email))) {
             $id = (int)$item['id'];
             $this->items[$id] = $item;
             return $id;
@@ -89,13 +110,13 @@ return \litepubl\pages\Users::i();
         return false;
     }
 
-    public function getpassword($id) {
-        return $id == 1 ? litepubl::$options->password : $this->getvalue($id, 'password');
+    public function getPassword($id) {
+        return $id == 1 ?  $this->getApp()->options->password : $this->getvalue($id, 'password');
     }
 
     public function changepassword($id, $password) {
         $item = $this->getitem($id);
-        $this->setvalue($id, 'password', litepubl::$options->hash($item['email'] . $password));
+        $this->setvalue($id, 'password',  $this->getApp()->options->hash($item['email'] . $password));
     }
 
     public function approve($id) {
@@ -111,9 +132,13 @@ $pages->addpage($id);
     }
 
     public function authpassword($id, $password) {
-        if (!$id || !$password) return false;
+        if (!$id || !$password) {
+ return false;
+}
+
+
         $item = $this->getitem($id);
-        if ($item['password'] == litepubl::$options->hash($item['email'] . $password)) {
+        if ($item['password'] ==  $this->getApp()->options->hash($item['email'] . $password)) {
             if ($item['status'] == 'wait') $this->approve($id);
             return $id;
         }
@@ -122,25 +147,37 @@ $pages->addpage($id);
 
     public function authcookie($cookie) {
         $cookie = (string)$cookie;
-        if (empty($cookie)) return false;
-        $cookie = litepubl::$options->hash($cookie);
-        if ($cookie == litepubl::$options->hash('')) return false;
+        if (empty($cookie)) {
+ return false;
+}
+
+
+        $cookie =  $this->getApp()->options->hash($cookie);
+        if ($cookie ==  $this->getApp()->options->hash('')) {
+ return false;
+}
+
+
         if ($id = $this->findcookie($cookie)) {
             $item = $this->getitem($id);
-            if (strtotime($item['expired']) > time()) return $id;
+            if (strtotime($item['expired']) > time()) {
+ return $id;
+}
+
+
         }
         return false;
     }
 
     public function findcookie($cookie) {
-        $cookie = dbquote($cookie);
+        $cookie = Str::uuote($cookie);
         if (($a = $this->select('cookie = ' . $cookie, 'limit 1')) && (count($a) > 0)) {
             return (int)$a[0];
         }
         return false;
     }
 
-    public function getgroupname($id) {
+    public function getGroupname($id) {
         $item = $this->getitem($id);
         $groups = UserGroups::i();
         return $groups->items[$item['idgroups'][0]]['name'];
@@ -150,9 +187,9 @@ $pages->addpage($id);
         $this->setcookie($id, '', 0);
     }
 
-    public function setcookie($id, $cookie, $expired) {
-        if ($cookie) $cookie = litepubl::$options->hash($cookie);
-        $expired = sqldate($expired);
+    public function setCookie($id, $cookie, $expired) {
+        if ($cookie) $cookie =  $this->getApp()->options->hash($cookie);
+        $expired = Str::sqlDate($expired);
         if (isset($this->items[$id])) {
             $this->items[$id]['cookie'] = $cookie;
             $this->items[$id]['expired'] = $expired;

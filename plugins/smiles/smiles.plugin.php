@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -18,7 +19,7 @@ class tsmiles extends tplugin {
         $content = str_replace(array(
             ':)',
             ';)'
-        ) , sprintf('<img src="%s/plugins/%s/1.gif" alt="smile" title="smile" />', litepubl::$site->files, basename(dirname(__file__))) , $content);
+        ) , sprintf('<img src="%s/plugins/%s/1.gif" alt="smile" title="smile" />',  $this->getApp()->site->files, basename(dirname(__file__))) , $content);
     }
 
 }

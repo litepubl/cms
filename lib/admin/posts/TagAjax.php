@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\posts;
 use litepubl\tag\Tags as TagItems;
@@ -20,18 +21,22 @@ class TagAjax extends Ajax
 {
 
     public function install() {
-        litepubl::$urlmap->addget('/admin/ajaxtageditor.htm', get_class($this));
+         $this->getApp()->router->addget('/admin/ajaxtageditor.htm', get_class($this));
     }
 
     public function request($arg) {
         $this->cache = false;
-        turlmap::sendheader(false);
+        \litepubl\core\Router::sendheader(false);
 
-        if ($err = static ::auth()) return $err;
+        if ($err = static ::auth()) {
+ return $err;
+}
+
+
         return $this->getcontent();
     }
 
-    public function getcontent() {
+    public function getContent() {
         $type = !empty($_GET['type']) ? $_GET['type'] : (!empty($_POST['type']) ? $_POST['type'] : 'tags');
 if ($type != 'tags') {
 $type = 'categories';
@@ -49,14 +54,14 @@ $type = 'categories';
 
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $admin = Admin::admin();
-        $lang = tlocal::i('tags');
+        $lang = Lang::i('tags');
 
         if ($id == 0) {
             $schemes = Schemes::i();
             $name = $type == 'tags' ? 'tag' : 'category';
             $item = array(
                 'title' => '',
-                'idview' => isset($views->defaults[$name]) ? $views->defaults[$name] : 1,
+                'idschema' => isset($schemes->defaults[$name]) ? $schemes->defaults[$name] : 1,
                 'idperm' => 0,
                 'icon' => 0,
                 'includechilds' => $tags->includechilds,
@@ -81,16 +86,16 @@ $type = 'categories';
                     }
                 }
 
-                $args = new targs();
+                $args = new Args();
                 $args->add($item);
-                $result = GetSchema::combo($item['idview']);
+                $result = GetSchema::combo($item['idschema']);
                 $result.= $admin->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
                 $result.= GetPerm::combo($item['idperm']);
                 break;
 
 
             case 'seo':
-                $args = targs::i();
+                $args = new Args();
                 if ($id == 0) {
                     $args->url = '';
                     $args->keywords = '';
@@ -112,7 +117,7 @@ $type = 'categories';
             default:
                 $result = var_export($_GET, true);
         }
-        return turlmap::htmlheader(false) . $result;
+        return \litepubl\core\Router::htmlheader(false) . $result;
     }
 
 } //class

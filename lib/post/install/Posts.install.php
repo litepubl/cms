@@ -1,17 +1,23 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\core\Cron;
 use litepubl\widget\Widgets;
+use litepubl\core\Str;
 
 function PostsInstall($self) {
-    if ('litepubl\post\Posts' != get_class($self)) return;
+    if ('litepubl\post\Posts' != get_class($self)) {
+ return;
+}
+
+
 
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
@@ -24,7 +30,11 @@ function PostsInstall($self) {
 }
 
 function PostsUninstall($self) {
-    if ('litepubl\post\Posts' != get_class($self)) return;
+    if ('litepubl\post\Posts' != get_class($self)) {
+ return;
+}
+
+
 
     $Cron = Cron::i();
     $Cron->deleteclass(get_class($self));
@@ -35,11 +45,11 @@ function PostsUninstall($self) {
 
 function PostsGetsitemap($self, $from, $count) {
     $result = array();
-    $commentpages = litepubl::$options->commentpages;
-    $commentsperpage = litepubl::$options->commentsperpage;
+    $commentpages =  $self->getApp()->options->commentpages;
+    $commentsperpage =  $self->getApp()->options->commentsperpage;
 
     $db = $self->db;
-    $now = sqldate();
+    $now = Str::sqlDate();
     $res = $db->query("select $db->posts.title, $db->posts.pagescount, $db->posts.commentscount, $db->urlmap.url
   from $db->posts, $db->urlmap
   where $db->posts.status = 'published' and $db->posts.posted < '$now' and $db->urlmap.id = $db->posts.idurl

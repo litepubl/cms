@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Arr;
 
 class tpostcatwidget extends tclasswidget {
     public $items;
@@ -62,28 +64,48 @@ class tpostcatwidget extends tclasswidget {
 
     public function tagdeleted($idtag) {
         foreach ($this->items as & $item) {
-            array_delete_value($item['cats'], $idtag);
+            Arr::deleteValue($item['cats'], $idtag);
         }
         $this->save();
     }
 
-    public function getwidget($id, $sidebar) {
-        if (!isset($this->items[$id])) return '';
+    public function getWidget($id, $sidebar) {
+        if (!isset($this->items[$id])) {
+ return '';
+}
+
+
         $item = $this->items[$id];
         $post = $this->getcontext('tpost');
-        if (0 == count(array_intersect($item['cats'], $post->categories))) return '';
-        if ($item['template'] == '') return $item['content'];
+        if (0 == count(array_intersect($item['cats'], $post->categories))) {
+ return '';
+}
+
+
+        if ($item['template'] == '') {
+ return $item['content'];
+}
+
+
         $theme = ttheme::i();
         return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
-    public function gettitle($id) {
-        if (isset($this->items[$id])) return $this->items[$id]['title'];
+    public function getTitle($id) {
+        if (isset($this->items[$id])) {
+ return $this->items[$id]['title'];
+}
+
+
         return '';
     }
 
-    public function getcontent($id, $sidebar) {
-        if (isset($this->items[$id])) return $this->items[$id]['content'];
+    public function getContent($id, $sidebar) {
+        if (isset($this->items[$id])) {
+ return $this->items[$id]['content'];
+}
+
+
         return '';
     }
 

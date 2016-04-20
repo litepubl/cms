@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -33,7 +34,7 @@ class tprofile extends tevents_itemplate implements itemplate {
             'yahooChatID' => '',
             'mbox' => '',
 
-            'country' => litepubl::$options->language,
+            'country' =>  $this->getApp()->options->language,
             'region' => '',
             'city' => '',
             'geourl' => 'http://beta-maps.yandex.ru/?text=',
@@ -44,11 +45,11 @@ class tprofile extends tevents_itemplate implements itemplate {
         );
     }
 
-    public function getfoaf() {
-        $options = litepubl::$options;
+    public function getFoaf() {
+        $options =  $this->getApp()->options;
         $posts = tposts::i();
         $postscount = $posts->archivescount;
-        $manager = litepubl::$classes->commentmanager;
+        $manager =  $this->getApp()->classes->commentmanager;
 
         $result = tfoaf::getparam('name', $this->nick);
         foreach (array(
@@ -66,17 +67,17 @@ class tprofile extends tevents_itemplate implements itemplate {
         }
 
         $result.= '<foaf:img rdf:resource="' . tfoaf::escape($this->img) . '" />';
-        $result.= tfoaf::getparam('homepage', litepubl::$site->url . '/');
+        $result.= tfoaf::getparam('homepage',  $this->getApp()->site->url . '/');
 
-        $result.= '<foaf:weblog ' . 'dc:title="' . tfoaf::escape(litepubl::$site->name) . '" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/" />' .
+        $result.= '<foaf:weblog ' . 'dc:title="' . tfoaf::escape( $this->getApp()->site->name) . '" ' . 'rdf:resource="' . tfoaf::escape( $this->getApp()->site->url) . '/" />' .
 
-        '<foaf:page>' . '<foaf:Document rdf:about="' . tfoaf::escape(litepubl::$site->url . $this->url) . '">' . '<dc:title>' . tfoaf::escape(litepubl::$site->name) . ' Profile</dc:title>' . '<dc:description>Full profile, including information such as interests and bio.</dc:description>' . '</foaf:Document>' . '</foaf:page>' .
+        '<foaf:page>' . '<foaf:Document rdf:about="' . tfoaf::escape( $this->getApp()->site->url . $this->url) . '">' . '<dc:title>' . tfoaf::escape( $this->getApp()->site->name) . ' Profile</dc:title>' . '<dc:description>Full profile, including information such as interests and bio.</dc:description>' . '</foaf:Document>' . '</foaf:page>' .
 
-        '<lj:journaltitle>' . tfoaf::escape(litepubl::$site->name) . '</lj:journaltitle>' . '<lj:journalsubtitle>' . tfoaf::escape(litepubl::$site->description) . '</lj:journalsubtitle>' .
+        '<lj:journaltitle>' . tfoaf::escape( $this->getApp()->site->name) . '</lj:journaltitle>' . '<lj:journalsubtitle>' . tfoaf::escape( $this->getApp()->site->description) . '</lj:journalsubtitle>' .
 
-        '<ya:blogActivity>' . '<ya:Posts>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/rss.xml" />' . "<ya:posted>$postscount</ya:posted>" . '</ya:Posts>' . '</ya:blogActivity>' .
+        '<ya:blogActivity>' . '<ya:Posts>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape( $this->getApp()->site->url) . '/rss.xml" />' . "<ya:posted>$postscount</ya:posted>" . '</ya:Posts>' . '</ya:blogActivity>' .
 
-        '<ya:blogActivity>' . '<ya:Comments>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/comments.xml"/>' . "<ya:posted>$postscount</ya:posted>" . "<ya:received>$manager->count</ya:received>" . '</ya:Comments>' . '</ya:blogActivity>';
+        '<ya:blogActivity>' . '<ya:Comments>' . '<ya:feed ' . 'dc:type="application/rss+xml" ' . 'rdf:resource="' . tfoaf::escape( $this->getApp()->site->url) . '/comments.xml"/>' . "<ya:posted>$postscount</ya:posted>" . "<ya:received>$manager->count</ya:received>" . '</ya:Comments>' . '</ya:blogActivity>';
 
         if ($this->bio != '') $result.= '<ya:bio>' . tfoaf::escape($this->bio) . '</ya:bio>';
 
@@ -91,14 +92,18 @@ class tprofile extends tevents_itemplate implements itemplate {
         $list = explode(',', $this->interests);
         foreach ($list as $name) {
             $name = trim($name);
-            if (empty($name)) continue;
+            if (empty($name)) {
+ continue;
+}
+
+
             $result.= '<foaf:interest dc:title="' . tfoaf::escape($name) . '" rdf:resource="' . tfoaf::escape($this->interesturl) . urlencode($name) . '" />';
         }
         return $result;
     }
 
     public function GetFoafOpenid() {
-        return '<foaf:openid rdf:resource="' . tfoaf::escape(litepubl::$site->url) . '/" />';
+        return '<foaf:openid rdf:resource="' . tfoaf::escape( $this->getApp()->site->url) . '/" />';
     }
 
     public function GetFoafCountry() {
@@ -113,44 +118,44 @@ class tprofile extends tevents_itemplate implements itemplate {
     }
 
     public function request($arg) {
-        $lang = tlocal::i('foaf');
+        $lang = Lang::i('foaf');
     }
 
-    public function gettitle() {
-        return tlocal::get('foaf', 'profile');
+    public function getTitle() {
+        return Lang::get('foaf', 'profile');
     }
 
-    public function gethead() {
+    public function getHead() {
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         return $this->interests;
     }
 
-    public function getdescription() {
+    public function getDescription() {
         return tcontentfilter::getexcerpt($this->bio, 128);
     }
 
-    public function getcont() {
+    public function getCont() {
         ttheme::$vars['profile'] = $this;
         $theme = ttheme::i();
         $tml = $this->template;
         if (!$tml) {
-            $tml = file_get_contents(litepubl::$paths->plugins . 'foaf/resource/profile.tml');
+            $tml = file_get_contents( $this->getApp()->paths->plugins . 'foaf/resource/profile.tml');
         }
 
         return $theme->parse($tml);
     }
 
-    protected function getstat() {
+    protected function getStat() {
         $posts = tposts::i();
         $manager = tcommentmanager::i();
-        $lang = tlocal::i('foaf');
+        $lang = Lang::i('foaf');
         return sprintf($lang->statistic, $posts->archivescount, $manager->count);
     }
 
-    protected function getmyself() {
-        $lang = tlocal::i('foaf');
+    protected function getMyself() {
+        $lang = Lang::i('foaf');
         $result = array();
         if ($this->img != '') {
             $i = strrpos($this->img, '.');
@@ -160,7 +165,7 @@ class tprofile extends tevents_itemplate implements itemplate {
         if ($this->nick != '') $result[] = "$lang->nick $this->nick";
         if (($this->dateOfBirth != '') && @sscanf($this->dateOfBirth, '%d-%d-%d', $y, $m, $d)) {
             $date = mktime(0, 0, 0, $m, $d, $y);
-            $ldate = tlocal::date($date);
+            $ldate = Lang::date($date);
             $result[] = sprintf($lang->birthday, $ldate);
         }
 
@@ -173,7 +178,7 @@ class tprofile extends tevents_itemplate implements itemplate {
         return implode("</li>\n<li>", $result);
     }
 
-    protected function getcontacts() {
+    protected function getContacts() {
         $contacts = array(
             'skype' => 'Skype',
             'icqChatID' => 'ICQ',
@@ -183,7 +188,7 @@ class tprofile extends tevents_itemplate implements itemplate {
             'yahooChatID' => 'Yahoo',
             'mbox' => 'E-Mail'
         );
-        $lang = tlocal::i('foaf');
+        $lang = Lang::i('foaf');
         $theme = ttheme::i();
         $result = "<div class=\"table-responsive\">
     <table class=\"' . $theme->templates['content.admin.tableclass'] . '\">
@@ -197,7 +202,11 @@ class tprofile extends tevents_itemplate implements itemplate {
 
         foreach ($contacts as $contact => $name) {
             $value = $this->data[$contact];
-            if ($value == '') continue;
+            if ($value == '') {
+ continue;
+}
+
+
             $result.= "<tr>
       <td align=\"left\">$name</td>
       <td align=\"left\">$value</td>
@@ -210,25 +219,29 @@ class tprofile extends tevents_itemplate implements itemplate {
         return $result;
     }
 
-    protected function getmyinterests() {
+    protected function getMyinterests() {
         $result = "<p>\n";
         $list = explode(',', $this->interests);
         foreach ($list as $name) {
             $name = trim($name);
-            if (empty($name)) continue;
+            if (empty($name)) {
+ continue;
+}
+
+
             $result.= "<a href=\"$this->interesturl" . urlencode($name) . "\">$name</a>,\n";
         }
         $result.= "</p>\n";
         return $result;
     }
 
-    protected function getfriendslist() {
+    protected function getFriendslist() {
         $result = "<p>\n";
         $foaf = tfoaf::i();
         $widget = tfriendswidget::i();
         $foaf->loadall();
         foreach ($foaf->items As $id => $item) {
-            $url = $widget->redir ? "litepubl::$site->url$widget->redirlink{litepubl::$site->q}friend=$id" : $item['url'];
+            $url = $widget->redir ? " $this->getApp()->site->url$widget->redirlink{ $this->getApp()->site->q}friend=$id" : $item['url'];
             $result.= "<a href=\"$url\" rel=\"friend\">{$item['nick']}</a>,\n";
         }
         $result.= "</p>\n";

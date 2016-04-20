@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Str;
 
 class Filter extends \litepubl\core\Events
 {
@@ -43,8 +45,8 @@ class Filter extends \litepubl\core\Events
         $result = $this->replacecode($result);
         $result = static ::auto_p($result);
         if ((strlen($result) > 4) && !strpos($result, '<p>', 4)) {
-            if (strbegin($result, '<p>')) $result = substr($result, 3);
-            if (strend($result, '</p>')) $result = substr($result, 0, strlen($result) - 4);
+            if (Str::begin($result, '<p>')) $result = substr($result, 3);
+            if (Str::end($result, '</p>')) $result = substr($result, 0, strlen($result) - 4);
             $result = trim($result);
         }
         $this->callevent('onaftercomment', array(&$result
@@ -57,7 +59,11 @@ class Filter extends \litepubl\core\Events
         $this->callevent('beforecontent', array(
             $post, &$s, &$cancel
         ));
-        if ($cancel) return $this->aftercontent($post);
+        if ($cancel) {
+ return $this->aftercontent($post);
+}
+
+
 
         $moretag = ' <!--more-->';
         if (preg_match('/<!--more(.*?)?-->/', $s, $matches) || preg_match('/\[more(.*?)?\]/', $s, $matches) || preg_match('/\[cut(.*?)?\]/', $s, $matches)) {
@@ -65,11 +71,11 @@ class Filter extends \litepubl\core\Events
             $excerpt = $this->filter(trim($parts[0]) . $moretag);
             $post->filtered = $excerpt . $this->extract_pages($post, trim($parts[1]));
             $this->setexcerpt($post, $excerpt, static ::gettitle($matches[1]));
-            if ($post->moretitle == '') $post->moretitle = tlocal::get('default', 'more');
+            if ($post->moretitle == '') $post->moretitle = Lang::get('default', 'more');
         } else {
             if ($this->automore) {
                 $post->filtered = $this->extract_pages($post, $s);
-                $this->setexcerpt($post, $this->filter(trim(static ::GetExcerpt($post->pagescount == 1 ? $s : $post->filtered, $this->automorelength)) . $moretag) , tlocal::get('default', 'more'));
+                $this->setexcerpt($post, $this->filter(trim(static ::GetExcerpt($post->pagescount == 1 ? $s : $post->filtered, $this->automorelength)) . $moretag) , Lang::get('default', 'more'));
             } else {
                 $post->filtered = $this->extract_pages($post, $s);
                 $this->setexcerpt($post, $post->filtered, '');
@@ -80,15 +86,15 @@ class Filter extends \litepubl\core\Events
         $this->aftercontent($post);
     }
 
-    public function setexcerpt(tpost $post, $excerpt, $more) {
+    public function setExcerpt(tpost $post, $excerpt, $more) {
         $post->excerpt = $excerpt;
         $post->rss = $excerpt;
         $post->description = static ::getpostdescription($excerpt);
         $post->moretitle = $more;
     }
 
-    public static function getpostdescription($description) {
-        if (litepubl::$options->parsepost) {
+    public static function getPostdescription($description) {
+        if ( $this->getApp()->options->parsepost) {
             $theme = Theme::i();
             $description = $theme->parse($description);
         }
@@ -123,7 +129,7 @@ class Filter extends \litepubl\core\Events
         return $firstpage;
     }
 
-    public static function gettitle($s) {
+    public static function getTitle($s) {
         $s = trim($s);
         $s = preg_replace('/\0+/', '', $s);
         $s = preg_replace('/(\\\\0)+/', '', $s);
@@ -168,7 +174,11 @@ class Filter extends \litepubl\core\Events
 
     public function simplefilter($s) {
         $s = trim($s);
-        if ($s == '') return '';
+        if ($s == '') {
+ return '';
+}
+
+
         $this->callevent('onsimplefilter', array(&$s
         ));
         if ($this->autolinks) $s = static ::createlinks($s);
@@ -240,9 +250,13 @@ class Filter extends \litepubl\core\Events
         return str_replace("\n", ' ', $m[0]);
     }
 
-    public static function getexcerpt($content, $len) {
+    public static function getExcerpt($content, $len) {
         $result = strip_tags($content);
-        if (strlen($result) <= $len) return $result;
+        if (strlen($result) <= $len) {
+ return $result;
+}
+
+
         $chars = "\n ,.;!?:(";
         $p = strlen($result);
         for ($i = strlen($chars) - 1; $i >= 0; $i--) {
@@ -312,7 +326,7 @@ class Filter extends \litepubl\core\Events
     }
 
     // uset in tthemeparser
-    public static function getidtag($tag, $s) {
+    public static function getIdtag($tag, $s) {
         if (preg_match("/<$tag\\s*.*?id\\s*=\\s*['\"]([^\"'>]*)/i", $s, $m)) {
             return $m[1];
         }
@@ -347,7 +361,11 @@ class Filter extends \litepubl\core\Events
 
     public static function auto_p($str) {
         // Trim whitespace
-        if (($str = trim($str)) === '') return '';
+        if (($str = trim($str)) === '') {
+ return '';
+}
+
+
         // Standardize newlines
         $str = str_replace(array(
             "\r\n",
@@ -402,11 +420,23 @@ class Filter extends \litepubl\core\Events
 
     public static function clean_website($url) {
         $url = trim(strip_tags($url));
-        if (strlen($url) <= 3) return '';
-        if (!strbegin($url, 'http')) $url = 'http://' . $url;
+        if (strlen($url) <= 3) {
+ return '';
+}
+
+
+        if (!Str::begin($url, 'http')) $url = 'http://' . $url;
         if ($parts = @parse_url($url)) {
-            if (empty($parts['host'])) return '';
-            if (!strpos($parts['host'], '.')) return '';
+            if (empty($parts['host'])) {
+ return '';
+}
+
+
+            if (!strpos($parts['host'], '.')) {
+ return '';
+}
+
+
             $url = isset($parts['scheme']) ? $parts['scheme'] : 'http';
             $url.= '://';
             $url.= trim($parts['host']);
@@ -443,7 +473,11 @@ class Filter extends \litepubl\core\Events
 
     public static function _make_url_clickable_cb($matches) {
         $url = $matches[2];
-        if (empty($url)) return $matches[0];
+        if (empty($url)) {
+ return $matches[0];
+}
+
+
         return $matches[1] . "<a href=\"$url\">$url</a>";
     }
 
@@ -451,7 +485,11 @@ class Filter extends \litepubl\core\Events
         $ret = '';
         $dest = $matches[2];
         $dest = 'http://' . $dest;
-        if (empty($dest)) return $matches[0];
+        if (empty($dest)) {
+ return $matches[0];
+}
+
+
         if (in_array(substr($dest, -1) , array(
             '.',
             ',',

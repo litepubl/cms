@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\posts;
 use litepubl\post\Posts as PostItems;
@@ -20,12 +21,12 @@ class Posts extends \litepubl\admin\Menu
 
     public function canrequest() {
         $this->isauthor = false;
-        if (!litepubl::$options->hasgroup('editor')) {
-            $this->isauthor = litepubl::$options->hasgroup('author');
+        if (! $this->getApp()->options->hasgroup('editor')) {
+            $this->isauthor =  $this->getApp()->options->hasgroup('author');
         }
     }
 
-    public function getcontent() {
+    public function getContent() {
         if (isset($_GET['action']) && in_array($_GET['action'], array(
             'delete',
             'setdraft',
@@ -39,13 +40,17 @@ class Posts extends \litepubl\admin\Menu
 
     public function doaction($posts, $action) {
         $id = $this->idget();
-        if (!$posts->itemexists($id)) return $this->notfound;
+        if (!$posts->itemexists($id)) {
+ return $this->notfound;
+}
+
+
         $post = Post::i($id);
         if ($this->isauthor && ($r = AuthorRights::i()->changeposts($action))) {
 return $r;
 }
 
-        if ($this->isauthor && (litepubl::$options->user != $post->author)) {
+        if ($this->isauthor && ( $this->getApp()->options->user != $post->author)) {
 return $this->notfound;
 }
 
@@ -83,16 +88,16 @@ return $this->notfound;
         return $result;
     }
 
-    public function gettable($posts, $where) {
+    public function getTable($posts, $where) {
         $perpage = 20;
-        if ($this->isauthor) $where.= ' and author = ' . litepubl::$options->user;
+        if ($this->isauthor) $where.= ' and author = ' .  $this->getApp()->options->user;
         $count = $posts->db->getcount($where);
         $from = $this->getfrom($perpage, $count);
         $items = $posts->select($where, " order by posted desc limit $from, $perpage");
         if (!$items) $items = array();
 
         $admintheme = $this->admintheme;
-        $lang = tlocal::admin();
+        $lang = Lang::admin();
         $form = $this->newForm();
         $form->body = $admintheme->getcount($from, $from + count($items) , $count);
 
@@ -132,27 +137,39 @@ return $this->notfound;
 
         $form->submit = false;
         $result = $form->get();
-        $result.= $this->theme->getpages('/admin/posts/', litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages('/admin/posts/',  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $posts = PostItems::i();
         $posts->lock();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
         if ($this->isauthor && ($r = AuthorRights::i()->changeposts($status))) {
 return $r;
 }
-        $iduser = litepubl::$options->user;
+        $iduser =  $this->getApp()->options->user;
         foreach ($_POST as $key => $id) {
-            if (!is_numeric($id)) continue;
+            if (!is_numeric($id)) {
+ continue;
+}
+
+
             $id = (int)$id;
             if ($status == 'delete') {
-                if ($this->isauthor && ($iduser != $posts->db->getvalue('author'))) continue;
+                if ($this->isauthor && ($iduser != $posts->db->getvalue('author'))) {
+ continue;
+}
+
+
                 $posts->delete($id);
             } else {
                 $post = tpost::i($id);
-                if ($this->isauthor && ($iduser != $post->author)) continue;
+                if ($this->isauthor && ($iduser != $post->author)) {
+ continue;
+}
+
+
                 $post->status = $status;
                 $posts->edit($post);
             }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\Filter;
@@ -47,17 +48,25 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     public static function singleinstance($class) {
         $single = getinstance($class);
         if ($id = $single->get_owner()->class2id($class)) {
-            if ($single->id == $id) return $single;
-            if (($single->id == 0) && ($id > 0)) return $single->loaddata($id);
+            if ($single->id == $id) {
+ return $single;
+}
+
+
+            if (($single->id == 0) && ($id > 0)) {
+ return $single->loaddata($id);
+}
+
+
         }
         return $single;
     }
 
-    public static function getinstancename() {
+    public static function getInstancename() {
         return 'menu';
     }
 
-    public static function getowner() {
+    public static function getOwner() {
         return Menus::i();
     }
 
@@ -77,7 +86,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             'description' => '',
             'head' => '',
             'password' => '',
-            'idview' => 1,
+            'idschema' => 1,
             //owner props
             'title' => '',
             'url' => '',
@@ -88,16 +97,32 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         );
     }
 
-    public function getbasename() {
+    public function getBasename() {
         return 'menus' . DIRECTORY_SEPARATOR . $this->id;
     }
 
     public function __get($name) {
-        if ($name == 'content') return $this->formresult . $this->getcontent();
-        if ($name == 'id') return $this->data['id'];
-        if (method_exists($this, $get = 'get' . $name)) return $this->$get();
+        if ($name == 'content') {
+ return $this->formresult . $this->getcontent();
+}
 
-        if ($this->is_owner_prop($name)) return $this->getownerprop($name);
+
+        if ($name == 'id') {
+ return $this->data['id'];
+}
+
+
+        if (method_exists($this, $get = 'get' . $name)) {
+ return $this->$get();
+}
+
+
+
+        if ($this->is_owner_prop($name)) {
+ return $this->getownerprop($name);
+}
+
+
         return parent::__get($name);
     }
 
@@ -109,7 +134,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return in_array($name, $this->get_owner_props());
     }
 
-    public function getownerprop($name) {
+    public function getOwnerprop($name) {
         $id = $this->data['id'];
         if ($id == 0) {
             return $this->data[$name];
@@ -133,75 +158,83 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public function __isset($name) {
-        if ($this->is_owner_prop($name)) return true;
+        if ($this->is_owner_prop($name)) {
+ return true;
+}
+
+
         return parent::__isset($name);
     }
 
-    public function getschema() {
+    public function getSchema() {
         return Schema::getSchema($this);
     }
 
-    public function gettheme() {
+    public function getTheme() {
         return $this->schema->theme;
     }
 
-    public function getadmintheme() {
+    public function getAdmintheme() {
         return $this->schema->admintheme;
     }
 
     //ViewInterface
     public function request($id) {
         parent::request($id);
-        if ($this->status == 'draft') return 404;
-        $this->doprocessform();
+        if ($this->status == 'draft') {
+ return 404;
+}
+
+
+        $this->doProcessForm();
     }
 
-    protected function doprocessform() {
+    protected function doProcessForm() {
         if (isset($_POST) && count($_POST)) {
-            $this->formresult.= $this->processform();
+            $this->formresult.= $this->processForm();
         }
     }
 
-    public function processform() {
-        return $this->owner->onprocessform($this->id);
+    public function processForm() {
+        return $this->owner->onprocessForm($this->id);
     }
 
-    public function gethead() {
+    public function getHead() {
         return $this->data['head'];
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return $this->getownerprop('title');
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         return $this->data['keywords'];
     }
 
-    public function getdescription() {
+    public function getDescription() {
         return $this->data['description'];
     }
 
     public function getIdSchema() {
-        return $this->data['idview'];
+        return $this->data['idschema'];
     }
 
     public function setIdSchema($id) {
-        if ($id != $this->idview) {
-            $this->data['idview'] = $id;
+        if ($id != $this->idschema) {
+            $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getcont() {
+    public function getCont() {
         return $this->theme->parsevar('menu', $this, $this->theme->templates['content.menu']);
     }
 
-    public function getlink() {
-        return litepubl::$site->url . $this->url;
+    public function getLink() {
+        return  $this->getApp()->site->url . $this->url;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = $this->data['content'];
         $this->owner->callevent('oncontent', array(
             $this, &$result
@@ -209,7 +242,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function setcontent($s) {
+    public function setContent($s) {
         if (!is_string($s)) {
             $this->error('Error! Page content must be string');
         }

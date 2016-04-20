@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 
@@ -12,7 +13,7 @@ class Manifest extends \litepubl\core\Events
  {
 
     public function request($arg) {
-        $site = litepubl::$site;
+        $site =  $this->getApp()->site;
         $s = '<?php \litepubl\core\Router::sendxml(); ?>';
         switch ($arg) {
             case 'manifest':
@@ -55,31 +56,31 @@ class Manifest extends \litepubl\core\Events
                 $service = tnode::add($rsd, 'service');
                 tnode::addvalue($service, 'engineName', 'LitePublisher');
                 tnode::addvalue($service, 'engineLink', 'http://litepublisher.com/');
-                tnode::addvalue($service, 'homePageLink', litepubl::$site->url . '/');
+                tnode::addvalue($service, 'homePageLink',  $this->getApp()->site->url . '/');
                 $apis = tnode::add($service, 'apis');
                 $api = tnode::add($apis, 'api');
                 tnode::attr($api, 'name', 'WordPress');
                 tnode::attr($api, 'blogID', '1');
                 tnode::attr($api, 'preferred', 'true');
-                tnode::attr($api, 'apiLink', litepubl::$site->url . '/rpc.xml');
+                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
                 $api = tnode::add($apis, 'api');
                 tnode::attr($api, 'name', 'Movable Type');
                 tnode::attr($api, 'blogID', '1');
                 tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink', litepubl::$site->url . '/rpc.xml');
+                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
                 $api = tnode::add($apis, 'api');
                 tnode::attr($api, 'name', 'MetaWeblog');
                 tnode::attr($api, 'blogID', '1');
                 tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink', litepubl::$site->url . '/rpc.xml');
+                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
                 $api = tnode::add($apis, 'api');
                 tnode::attr($api, 'name', 'Blogger');
                 tnode::attr($api, 'blogID', '1');
                 tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink', litepubl::$site->url . '/rpc.xml');
+                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
                 $xml = $dom->saveXML();
                 $s.= substr($xml, strpos($xml, '?>') + 2);

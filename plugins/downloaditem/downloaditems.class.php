@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -20,7 +21,7 @@ class tdownloaditems extends tposts {
     }
 
     public function createpoll() {
-        $lang = tlocal::admin('downloaditems');
+        $lang = Lang::admin('downloaditems');
         $items = explode(',', $lang->pollitems);
         $polls = tpolls::i();
         return $polls->add('', 'opened', 'button', $items);
@@ -48,7 +49,7 @@ class tdownloaditems extends tposts {
     }
 
     public function themeparsed($theme) {
-        include_once (litepubl::$paths->plugins . 'downloaditem' . DIRECTORY_SEPARATOR . 'downloaditems.class.install.php');
+        include_once ( $this->getApp()->paths->plugins . 'downloaditem' . DIRECTORY_SEPARATOR . 'downloaditems.class.install.php');
         add_downloaditems_to_theme($theme);
     }
 

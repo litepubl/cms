@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Arr;
 
 class catbread extends tplugin {
 
@@ -24,7 +26,7 @@ class catbread extends tplugin {
         $this->data['similarpos'] = 'after';
     }
 
-    public function getcats() {
+    public function getCats() {
         return tcategories::i();
     }
 
@@ -44,15 +46,15 @@ class catbread extends tplugin {
                 $list = array_merge($list, tpost::i($idpost)->categories);
             }
 
-            array_clean($list);
-            array_delete_value($list, $idcat);
+            Arr::clean($list);
+            Arr::deleteValue($list, $idcat);
             $result.= $this->getsimilar($list);
         }
 
         return $result;
     }
 
-    public function getpost() {
+    public function getPost() {
         $result = '';
         $post = ttheme::$vars['post'];
         if (count($post->categories)) {
@@ -68,7 +70,7 @@ class catbread extends tplugin {
         return $result;
     }
 
-    public function getsim() {
+    public function getSim() {
         if ($this->showsimilar) {
             $post = ttheme::$vars['post'];
             if (count($post->categories)) {
@@ -79,7 +81,7 @@ class catbread extends tplugin {
         return '';
     }
 
-    public function getbread($idcat) {
+    public function getBread($idcat) {
         if (!$idcat) {
             return '';
         }
@@ -102,8 +104,8 @@ class catbread extends tplugin {
 
         $theme = ttheme::i();
         $tml = $theme->templates['catbread.items.item'];
-        $lang = tlocal::i('catbread');
-        $args = new targs();
+        $lang = Lang::i('catbread');
+        $args = new Args();
         $items = '';
         $index = 1;
 
@@ -136,7 +138,7 @@ class catbread extends tplugin {
         return $theme->parsearg($theme->templates['catbread'], $args);
     }
 
-    public function getchilds($parent) {
+    public function getChilds($parent) {
         $cats = $this->cats;
         $sorted = $cats->getsorted($parent, $this->childsortname, 0);
         if (!count($sorted)) {
@@ -145,7 +147,7 @@ class catbread extends tplugin {
 
         $theme = ttheme::i();
         $tml = $theme->templates['catbread.items.childs.item'];
-        $args = new targs();
+        $args = new Args();
         $args->parent = $parent;
 
         $items = '';
@@ -158,7 +160,7 @@ class catbread extends tplugin {
         return $theme->parsearg($theme->templates['catbread.items.childs'], $args);
     }
 
-    public function getsimilar($list) {
+    public function getSimilar($list) {
         if (!$this->showsimilar || !count($list)) {
             return '';
         }
@@ -170,7 +172,7 @@ class catbread extends tplugin {
             $parents[] = $cats->getvalue($id, 'parent');
         }
 
-        array_clean($parents);
+        Arr::clean($parents);
         if (!count($parents)) {
             return '';
         }
@@ -184,11 +186,15 @@ class catbread extends tplugin {
         $parents = implode(',', $parents);
         $list = implode(',', $list);
         $similar = $cats->db->idselect("parent in ($parents) and id not in ($list) order by $this->childsortname asc");
-        array_clean($similar);
-        if (!count($similar)) return '';
+        Arr::clean($similar);
+        if (!count($similar)) {
+ return '';
+}
+
+
 
         $theme = ttheme::i();
-        $args = new targs();
+        $args = new Args();
         $items = '';
         foreach ($similar as $id) {
             $args->add($cats->getitem($id));

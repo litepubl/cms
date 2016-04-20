@@ -1,6 +1,7 @@
 <?php
 
 function libReplace($s) {
+$s = str_replace("\r\n", "\n", $s);
 $s = strtr($s, [
 'litepubl::$secret' => 'Config::$secret',
 'litepubl::$debug' => 'Config::$debug',

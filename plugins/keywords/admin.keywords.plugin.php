@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tadminkeywords extends tadminwidget {
 
@@ -14,17 +16,21 @@ class tadminkeywords extends tadminwidget {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
-        $datadir = litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR;
+    public function getContent() {
+        $datadir =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         $selfdir = dirname(__file__) . DIRECTORY_SEPARATOR;
         $tml = parse_ini_file($selfdir . 'keywords.templates.ini', false);
         $about = tplugins::getabout(tplugins::getname(__file__));
         $html = $this->html;
         $lang = $this->lang;
-        $args = targs::i();
+        $args = new Args();
         if (isset($_GET['filename'])) {
             $filename = $_GET['filename'];
-            if (!@file_exists($datadir . $filename)) return $html->h3->notfound;
+            if (!@file_exists($datadir . $filename)) {
+ return $html->h3->notfound;
+}
+
+
             $args->filename = $filename;
             $args->content = file_get_contents($datadir . $filename);
             $args->formtitle = $about['edithead'];
@@ -61,9 +67,13 @@ class tadminkeywords extends tadminwidget {
         $result.= $links;
         $filelist = array_slice($filelist, $from, 100, true);
         $list = '';
-        $args->url = litepubl::$site->url . '/admin/plugins/' . litepubl::$site->q . 'plugin=' . basename(dirname(__file__));
+        $args->url =  $this->getApp()->site->url . '/admin/plugins/' .  $this->getApp()->site->q . 'plugin=' . basename(dirname(__file__));
         foreach ($filelist as $filename) {
-            if (!preg_match('/^\d+?\.\d+?\.php$/', $filename)) continue;
+            if (!preg_match('/^\d+?\.\d+?\.php$/', $filename)) {
+ continue;
+}
+
+
             $args->filename = $filename;
             $args->content = file_get_contents($datadir . $filename);
             $list.= $html->parsearg($tml['item'], $args);
@@ -75,8 +85,8 @@ class tadminkeywords extends tadminwidget {
         return $result;
     }
 
-    private function getlinkpages($page, $count) {
-        $url = litepubl::$site->url . '/admin/plugins/' . litepubl::$site->q . 'plugin=' . basename(dirname(__file__));
+    private function getLinkpages($page, $count) {
+        $url =  $this->getApp()->site->url . '/admin/plugins/' .  $this->getApp()->site->q . 'plugin=' . basename(dirname(__file__));
         $result = "<a href='$url'>1</a>\n";
         for ($i = 2; $i <= $count; $i++) {
             $result.= "<a href='$url&page=$i'>$i</a>|\n";
@@ -84,8 +94,8 @@ class tadminkeywords extends tadminwidget {
         return sprintf("<p>\n%s</p>\n", $result);
     }
 
-    public function processform() {
-        $datadir = litepubl::$paths->data . 'keywords' . DIRECTORY_SEPARATOR;
+    public function processForm() {
+        $datadir =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         if (isset($_POST['optionsform'])) {
             extract($_POST, EXTR_SKIP);
             $plugin = tkeywordsplugin::i();
@@ -99,9 +109,9 @@ class tadminkeywords extends tadminwidget {
             $trace = isset($trace);
             if ($widget->trace != $trace) {
                 if ($trace) {
-                    litepubl::$urlmap->afterrequest = $plugin->parseref;
+                     $this->getApp()->router->afterrequest = $plugin->parseref;
                 } else {
-                    litepubl::$urlmap->delete_event_class('afterrequest', get_class($plugin));
+                     $this->getApp()->router->delete_event_class('afterrequest', get_class($plugin));
                 }
             }
 
@@ -109,13 +119,17 @@ class tadminkeywords extends tadminwidget {
             $widget->unlock();
 
             $plugin->blackwords = array();
-            $words = strtoarray($blackwords);
-            if (litepubl::$options->language != 'en') {
-                tlocal::usefile('translit');
+            $words = Str::toArray($blackwords);
+            if ( $this->getApp()->options->language != 'en') {
+                Lang::usefile('translit');
                 foreach ($words as $word) {
-                    $word = strtr($word, tlocal::$self->ini['translit']);
+                    $word = strtr($word, Lang::$self->ini['translit']);
                     $word = trim($word);
-                    if (empty($word)) continue;
+                    if (empty($word)) {
+ continue;
+}
+
+
                     $plugin->blackwords[] = strtolower($word);
                 }
             }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\view\Lang;
@@ -17,6 +18,7 @@ use litepubl\core\Users;
 use litepubl\core\UserOptions;
 use litepubl\core\Session;
 use litepubl\pages\Simple;
+use litepubl\core\Str;
 
 class Form extends \litepubl\core\Events
  {
@@ -30,7 +32,11 @@ class Form extends \litepubl\core\Events
     }
 
     public function request($arg) {
-        if (litepubl::$options->commentsdisabled) return 404;
+        if ( $this->getApp()->options->commentsdisabled) {
+ return 404;
+}
+
+
         if ('POST' != $_SERVER['REQUEST_METHOD']) {
             return "<?php
       header('HTTP/1.1 405 Method Not Allowed', true, 405);
@@ -43,14 +49,22 @@ class Form extends \litepubl\core\Events
     }
 
     public function dorequest(array $args) {
-        if (isset($args['confirmid'])) return $this->confirm_recevied($args['confirmid']);
-        return $this->processform($args, false);
+        if (isset($args['confirmid'])) {
+ return $this->confirm_recevied($args['confirmid']);
+}
+
+
+        return $this->processForm($args, false);
     }
 
-    public function getshortpost($id) {
+    public function getShortpost($id) {
         $id = (int)$id;
-        if ($id == 0) return false;
-        $db = litepubl::$db;
+        if ($id == 0) {
+ return false;
+}
+
+
+        $db =  $this->getApp()->db;
         return $db->selectassoc("select id, idurl, idperm, status, comstatus, commentscount from $db->posts where id = $id");
     }
 
@@ -71,15 +85,23 @@ class Form extends \litepubl\core\Events
         return false;
     }
 
-    public function processform(array $values, $confirmed) {
+    public function processForm(array $values, $confirmed) {
         $lang = Lang::i('comment');
-        if (trim($values['content']) == '') return $this->geterrorcontent($lang->emptycontent);
+        if (trim($values['content']) == '') {
+ return $this->geterrorcontent($lang->emptycontent);
+}
+
+
         if (!$this->checkspam(isset($values['antispam']) ? $values['antispam'] : '')) {
             return $this->geterrorcontent($lang->spamdetected);
         }
 
         $shortpost = $this->getshortpost(isset($values['postid']) ? (int)$values['postid'] : 0);
-        if ($err = $this->invalidate($shortpost)) return $err;
+        if ($err = $this->invalidate($shortpost)) {
+ return $err;
+}
+
+
         if ((int)$shortpost['idperm']) {
             $post = Post::i((int)$shortpost['id']);
             $perm = Perm::i($post->idperm);
@@ -96,9 +118,13 @@ return 403;
         unset($values['submitbutton']);
 
         if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
-        if (litepubl::$options->ingroups($cm->idgroups)) {
-            if (!$confirmed && $cm->confirmlogged) return $this->request_confirm($values, $shortpost);
-            $iduser = litepubl::$options->user;
+        if ( $this->getApp()->options->ingroups($cm->idgroups)) {
+            if (!$confirmed && $cm->confirmlogged) {
+ return $this->request_confirm($values, $shortpost);
+}
+
+
+            $iduser =  $this->getApp()->options->user;
         } else {
             switch ($shortpost['comstatus']) {
                 case 'reg':
@@ -184,17 +210,17 @@ return 403;
 
         //$post->lastcommenturl;
         $shortpost['commentscount']++;
-        if (!litepubl::$options->commentpages || ($shortpost['commentscount'] <= litepubl::$options->commentsperpage)) {
+        if (! $this->getApp()->options->commentpages || ($shortpost['commentscount'] <=  $this->getApp()->options->commentsperpage)) {
             $c = 1;
         } else {
-            $c = ceil($shortpost['commentscount'] / litepubl::$options->commentsperpage);
+            $c = ceil($shortpost['commentscount'] /  $this->getApp()->options->commentsperpage);
         }
 
-        $url = litepubl::$urlmap->getvalue($shortpost['idurl'], 'url');
-        if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+        $url =  $this->getApp()->router->getvalue($shortpost['idurl'], 'url');
+        if (($c > 1) && ! $this->getApp()->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
 
-        litepubl::$urlmap->setexpired($shortpost['idurl']);
-        return $this->sendresult(litepubl::$site->url . $url, isset($cookies) ? $cookies : array());
+         $this->getApp()->router->setexpired($shortpost['idurl']);
+        return $this->sendresult( $this->getApp()->site->url . $url, isset($cookies) ? $cookies : array());
     }
 
     public function confirm_recevied($confirmid) {
@@ -207,14 +233,14 @@ return 403;
 
         $values = $_SESSION['values'];
         session_destroy();
-        return $this->processform($values, true);
+        return $this->processForm($values, true);
     }
 
     public function request_confirm(array $values, array $shortpost) {
         $values['date'] = time();
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
 
-        $confirmid = md5uniq();
+        $confirmid = Str::md5Uniq();
         if ($sess = Session::start(md5($confirmid))) $sess->lifetime = 900;
         $_SESSION['confirmid'] = $confirmid;
         $_SESSION['values'] = $values;
@@ -228,19 +254,19 @@ return 403;
         return $this->confirm($confirmid);
     }
 
-    public function getpermheader(array $shortpost) {
-        $urlmap = litepubl::$urlmap;
-        $url = $urlmap->url;
-        $saveitem = $urlmap->item;
-        $urlmap->item = $urlmap->getitem($shortpost['idurl']);
-        $urlmap->url = $urlmap->itemrequested['url'];
+    public function getPermheader(array $shortpost) {
+        $router =  $this->getApp()->router;
+        $url = $router->url;
+        $saveitem = $router->item;
+        $router->item = $router->getitem($shortpost['idurl']);
+        $router->url = $router->itemrequested['url'];
         $post = Post::i((int)$shortpost['id']);
         $perm = Perm::i($post->idperm);
         // not restore values because perm will be used this values
         return $perm->getheader($post);
     }
 
-    private function getconfirmform($confirmid) {
+    private function getConfirmform($confirmid) {
 $vars = new Vars();
         $vars->lang = Lang::i('comment');
         $args = new Args();
@@ -258,7 +284,7 @@ return $this->helper->confirm($confirmid);
         return Simple::html($this->getconfirmform($confirmid));
     }
 
-    public function geterrorcontent($s) {
+    public function getErrorcontent($s) {
         if (isset($this->helper) && ($this != $this->helper)) {
 return $this->helper->geterrorcontent($s);
 }
@@ -267,16 +293,28 @@ return $this->helper->geterrorcontent($s);
     }
 
     private function checkspam($s) {
-        if (!($s = @base64_decode($s))) return false;
+        if (!($s = @base64_decode($s))) {
+ return false;
+}
+
+
         $sign = 'superspamer';
-        if (!strbegin($s, $sign)) return false;
+        if (!Str::begin($s, $sign)) {
+ return false;
+}
+
+
         $TimeKey = (int)substr($s, strlen($sign));
         return time() < $TimeKey;
     }
 
     public function processcomuser(array & $values) {
         $lang = Lang::i('comment');
-        if (empty($values['name'])) return $this->geterrorcontent($lang->emptyname);
+        if (empty($values['name'])) {
+ return $this->geterrorcontent($lang->emptyname);
+}
+
+
         $values['name'] = Filter::escape($values['name']);
         $values['email'] = isset($values['email']) ? strtolower(trim($values['email'])) : '';
         if (!Filter::ValidateEmail($values['email'])) {
@@ -288,12 +326,16 @@ return $this->helper->geterrorcontent($s);
     }
 
     public function sendresult($link, $cookies) {
-        if (isset($this->helper) && ($this != $this->helper)) return $this->helper->sendresult($link, $cookies);
+        if (isset($this->helper) && ($this != $this->helper)) {
+ return $this->helper->sendresult($link, $cookies);
+}
+
+
         foreach ($cookies as $name => $value) {
             setcookie($name, $value, time() + 30000000, '/', false);
         }
 
-        return litepubl::$urlmap->redir($link);
+        return  $this->getApp()->router->redir($link);
     }
 
 } //class

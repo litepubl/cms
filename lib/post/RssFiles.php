@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 
@@ -20,7 +21,7 @@ class RssFiles extends \litepubl\core\Events
     }
 
     public function fileschanged() {
-        litepubl::$router->expiredclass(get_class($this));
+         $this->getApp()->router->expiredclass(get_class($this));
     }
 
     public function request($arg) {
@@ -28,18 +29,18 @@ class RssFiles extends \litepubl\core\Events
         if (($arg == null) && ($this->feedburner != '')) {
             $result.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$urlmap->redir('$this->feedburner', 307);
+        return litepubl::\$router->redir('$this->feedburner', 307);
       }
       ?>";
         }
 
-        $result.= '<?php litepubl::turlmap::sendxml(); ?>';
+        $result.= '<?php litepubl::\litepubl\core\Router::sendxml(); ?>';
 
         $this->domrss = new DomRss();
-        $this->domrss->CreateRootMultimedia(litepubl::$site->url . litepubl::$urlmap->url, 'media');
+        $this->domrss->CreateRootMultimedia( $this->getApp()->site->url .  $this->getApp()->router->url, 'media');
         $this->onroot($this->domrss);
 
-        $list = $this->getrecent($arg, litepubl::$options->perpage);
+        $list = $this->getrecent($arg,  $this->getApp()->options->perpage);
         foreach ($list as $id) {
             $this->addfile($id);
         }
@@ -48,7 +49,7 @@ class RssFiles extends \litepubl\core\Events
         return $result;
     }
 
-    private function getrecent($type, $count) {
+    private function getRecent($type, $count) {
         $files = Files::i();
         $sql = $type == '' ? '' : "media = '$type' and ";
         return $files->select($sql . 'parent = 0 and idperm = 0', " order by posted desc limit $count");
@@ -60,7 +61,7 @@ class RssFiles extends \litepubl\core\Events
         $posts = $files->itemsposts->getposts($id);
 
         if (count($posts) == 0) {
-            $postlink = litepubl::$site->url . '/';
+            $postlink =  $this->getApp()->site->url . '/';
         } else {
             $post = Post::i($posts[0]);
             $postlink = $post->link;
@@ -123,11 +124,11 @@ class RssFiles extends \litepubl\core\Events
         return $r;
     }
 
-    public function setfeedburner($url) {
+    public function setFeedburner($url) {
         if (($this->feedburner != $url)) {
             $this->data['feedburner'] = $url;
             $this->save();
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
         }
     }
 

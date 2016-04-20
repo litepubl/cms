@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -21,15 +22,15 @@ function tdownloaditemsInstall($self) {
     $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
     $optimizer->unlock();
 
-    tlocalmerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" . litepubl::$options->language . ".ini");
+    Langmerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" .  $self->getApp()->options->language . ".ini");
 
-    $ini = parse_ini_file($dir . litepubl::$options->language . '.install.ini', false);
+    $ini = parse_ini_file($dir .  $self->getApp()->options->language . '.install.ini', false);
 
     $tags = ttags::i();
-    litepubl::$options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
-    litepubl::$options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
+     $self->getApp()->options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
+     $self->getApp()->options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
     $base = basename(dirname(__file__));
-    $classes = litepubl::$classes;
+    $classes =  $self->getApp()->classes;
     $classes->lock();
     /*
     //install polls if its needed
@@ -48,7 +49,7 @@ function tdownloaditemsInstall($self) {
     $classes->unlock();
 
     tadminhtml::i()->inidir(dirname(__file__) . '/resource/');
-    $lang = tlocal::i('downloaditems');
+    $lang = Lang::i('downloaditems');
     $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
 
     $adminmenus = tadminmenus::i();
@@ -78,7 +79,7 @@ function tdownloaditemsInstall($self) {
     $menu->title = $ini['downloads'];
     $menu->content = '';
     $id = $menus->add($menu);
-    litepubl::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
+     $self->getApp()->router->db->setvalue($menu->idurl, 'type', 'get');
 
     foreach (array(
         'theme',
@@ -91,7 +92,7 @@ function tdownloaditemsInstall($self) {
         $menu->title = $lang->__get($type . 's');
         $menu->content = '';
         $menus->add($menu);
-        litepubl::$urlmap->db->setvalue($menu->idurl, 'type', 'get');
+         $self->getApp()->router->db->setvalue($menu->idurl, 'type', 'get');
     }
     $menus->unlock();
 
@@ -104,7 +105,7 @@ function tdownloaditemsInstall($self) {
     $linkgen = tlinkgenerator::i();
     $linkgen->data['downloaditem'] = '/[type]/[title].htm';
     $linkgen->save();
-    litepubl::$options->savemodified();
+     $self->getApp()->options->savemodified();
 }
 
 function tdownloaditemsUninstall($self) {
@@ -121,7 +122,7 @@ function tdownloaditemsUninstall($self) {
     $parser->unbind($self);
     ttheme::clearcache();
 
-    $classes = litepubl::$classes;
+    $classes =  $self->getApp()->classes;
     $classes->lock();
     $classes->delete('tdownloaditem');
     $classes->delete('tdownloaditemsmenu');
@@ -131,7 +132,7 @@ function tdownloaditemsUninstall($self) {
     $classes->delete('taboutparser');
     $classes->unlock();
 
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->deleteplugin(tplugins::getname(__file__));
 
     $manager = tdbmanager::i();
@@ -148,9 +149,9 @@ function tdownloaditemsUninstall($self) {
 
     tjsmerger::i()->deletefile('default', '/plugins/downloaditem/downloaditem.min.js');
 
-    litepubl::$options->delete('downloaditem_themetag');
-    litepubl::$options->delete('downloaditem_plugintag');
-    litepubl::$options->savemodified();
+     $self->getApp()->options->delete('downloaditem_themetag');
+     $self->getApp()->options->delete('downloaditem_plugintag');
+     $self->getApp()->options->savemodified();
 }
 
 function getd_download_js() {
@@ -167,10 +168,10 @@ function getd_download_js() {
 function add_downloaditems_to_theme($theme) {
     if (empty($theme->templates['custom']['downloadexcerpt'])) {
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-        ttheme::$vars['lang'] = tlocal::admin('downloaditems');
+        ttheme::$vars['lang'] = Lang::admin('downloaditems');
         $custom = & $theme->templates['custom'];
-        $custom['downloaditem'] = $theme->replacelang(file_get_contents($dir . 'downloaditem.tml') , tlocal::i('downloaditem'));
-        $lang = tlocal::i('downloaditems');
+        $custom['downloaditem'] = $theme->replacelang(file_get_contents($dir . 'downloaditem.tml') , Lang::i('downloaditem'));
+        $lang = Lang::i('downloaditems');
         $custom['downloadexcerpt'] = $theme->replacelang(file_get_contents($dir . 'downloadexcerpt.tml') , $lang);
         $custom['siteform'] = $theme->parse(file_get_contents($dir . 'siteform.tml'));
 

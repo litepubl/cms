@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
+use litepubl\Config;
 
 class Cron extends Events
  {
@@ -26,26 +28,34 @@ class Cron extends Events
         $this->table = 'cron';
     }
 
-    protected function geturl() {
-        return sprintf('/croncron.htm%scronpass=%s', litepubl::$site->q, urlencode($this->password));
+    protected function getUrl() {
+        return sprintf('/croncron.htm%scronpass=%s',  $this->getApp()->site->q, urlencode($this->password));
     }
 
-    public function getlockpath() {
+    public function getLockpath() {
         if ($result = $this->path) {
-            if (is_dir($result)) return $result;
+            if (is_dir($result)) {
+ return $result;
+}
+
+
         }
-        return litepubl::$paths->data;
+        return  $this->getApp()->paths->data;
     }
 
     public function request($arg) {
-        if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) return 403;
+        if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
+ return 403;
+}
+
+
         if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
             try {
                 set_time_limit(300);
-                if (litepubl::$debug) {
+                if (Config::$debug) {
                     ignore_user_abort(true);
                 } else {
-                    litepubl::$urlmap->close_connection();
+                     $this->getApp()->router->close_connection();
                 }
 
                 if (ob_get_level()) ob_end_flush();
@@ -56,7 +66,7 @@ class Cron extends Events
                 $this->execute();
             }
             catch(Exception $e) {
-                litepubl::$options->handexception($e);
+                 $this->getApp()->options->handexception($e);
             }
             flock($fh, LOCK_UN);
             fclose($fh);
@@ -78,7 +88,7 @@ class Cron extends Events
                 $this->execute();
             }
             catch(Exception $e) {
-                litepubl::$options->handexception($e);
+                 $this->getApp()->options->handexception($e);
             }
 
             flock($fh, LOCK_UN);
@@ -91,7 +101,7 @@ class Cron extends Events
     }
 
     public function execute() {
-        while ($item = $this->db->getassoc(sprintf("date <= '%s' order by date asc limit 1", sqldate()))) {
+        while ($item = $this->db->getassoc(sprintf("date <= '%s' order by date asc limit 1", Str::sqlDate()))) {
             extract($item);
             $this->log("task started:\n{$class}->{$func}($arg)");
             $arg = unserialize($arg);
@@ -101,11 +111,15 @@ class Cron extends Events
                         $func($arg);
                     }
                     catch(Exception $e) {
-                        litepubl::$options->handexception($e);
+                         $this->getApp()->options->handexception($e);
                     }
                 } else {
                     $this->db->iddelete($id);
-                    continue;
+                    {
+ continue;
+}
+
+
                 }
             } elseif (class_exists($class)) {
                 try {
@@ -113,27 +127,35 @@ class Cron extends Events
                     $obj->$func($arg);
                 }
                 catch(Exception $e) {
-                    litepubl::$options->handexception($e);
+                     $this->getApp()->options->handexception($e);
                 }
             } else {
                 $this->db->iddelete($id);
-                continue;
+                {
+ continue;
+}
+
+
             }
             if ($type == 'single') {
                 $this->db->iddelete($id);
             } else {
-                $this->db->setvalue($id, 'date', sqldate(strtotime("+1 $type")));
+                $this->db->setvalue($id, 'date', Str::sqlDate(strtotime("+1 $type")));
             }
         }
     }
 
     public function add($type, $class, $func, $arg = null) {
         if (!preg_match('/^single|hour|day|week$/', $type)) $this->error("Unknown cron type $type");
-        if ($this->disableadd) return false;
+        if ($this->disableadd) {
+ return false;
+}
+
+
         $id = $this->doadd($type, $class, $func, $arg);
 
         if (($type == 'single') && !$this->disableping && !static ::$pinged) {
-            if (litepubl::$debug) tfiler::log("cron added $id");
+            if (Config::$debug) tfiler::log("cron added $id");
 
             $memvars = Memvars::i();
             if (!$memvars->singlecron) {
@@ -146,7 +168,7 @@ class Cron extends Events
 
     protected function doadd($type, $class, $func, $arg) {
         $id = $this->db->add(array(
-            'date' => sqldate() ,
+            'date' => Str::sqlDate() ,
             'type' => $type,
             'class' => $class,
             'func' => $func,
@@ -193,7 +215,11 @@ class Cron extends Events
     }
 
     public static function pingonshutdown() {
-        if (static ::$pinged) return;
+        if (static ::$pinged) {
+ return;
+}
+
+
         static ::$pinged = true;
 
         register_shutdown_function(array(
@@ -203,7 +229,7 @@ class Cron extends Events
     }
 
     public function ping() {
-        $p = parse_url(litepubl::$site->url . $this->url);
+        $p = parse_url( $this->getApp()->site->url . $this->url);
         $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
     }
 
@@ -217,21 +243,29 @@ class Cron extends Events
     }
 
     public function sendexceptions() {
-        $filename = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
-        if (!file_exists($filename)) return;
+        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
+        if (!file_exists($filename)) {
+ return;
+}
+
+
 
         $time = @filectime($filename);
-        if (($time === false) || ($time + 3600 > time())) return;
+        if (($time === false) || ($time + 3600 > time())) {
+ return;
+}
+
+
         $s = file_get_contents($filename);
-        litepubl::$storage->delete($filename);
-        tmailer::SendAttachmentToAdmin('[error] ' . litepubl::$site->name, 'See attachment', 'errors.txt', $s);
+         $this->getApp()->storage->delete($filename);
+        tmailer::SendAttachmentToAdmin('[error] ' .  $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
         sleep(2);
     }
 
     public function log($s) {
         echo date('r') . "\n$s\n\n";
         flush();
-        if (litepubl::$debug) tfiler::log($s, 'cron.log');
+        if (Config::$debug) tfiler::log($s, 'cron.log');
     }
 
 } //class

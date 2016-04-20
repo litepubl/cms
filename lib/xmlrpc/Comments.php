@@ -1,15 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\comments\Manager;
 use litepubl\comments\Comments as CommentItems;
 use litepubl\post\Post;
+use litepubl\core\Str;
 
 class Comments extends Common
 {
@@ -17,14 +19,22 @@ class Comments extends Common
     public function delete($login, $password, $id, $idpost) {
         $this->auth($login, $password, 'moderator');
         $manager = Manager::i();
-        if (!$manager->delete((int)$id, (int)$idpost)) return $this->xerror(404, "Comment not deleted");
+        if (!$manager->delete((int)$id, (int)$idpost)) {
+ return $this->xerror(404, "Comment not deleted");
+}
+
+
         return true;
     }
 
-    public function setstatus($login, $password, $id, $idpost, $status) {
+    public function setStatus($login, $password, $id, $idpost, $status) {
         $this->auth($login, $password, 'moderator');
         $manager = Manager::i();
-        if (!$manager->setstatus((int)$id, (int)$idpost, $status)) return $this->xerror(404, "Comment status not changed");
+        if (!$manager->setstatus((int)$id, (int)$idpost, $status)) {
+ return $this->xerror(404, "Comment status not changed");
+}
+
+
         return true;
     }
 
@@ -49,7 +59,7 @@ class Comments extends Common
         return $manager->reply((int)$id, (int)$idpost, $content);
     }
 
-    public function getcomment($login, $password, $id, $idpost) {
+    public function getComment($login, $password, $id, $idpost) {
         $this->auth($login, $password, 'moderator');
         $comments = CommentItems::i((int)$idpost);
         $comment = $comments->getcomment((int)$id);
@@ -65,7 +75,7 @@ class Comments extends Common
         return $result;
     }
 
-    public function getrecent($login, $password, $count) {
+    public function getRecent($login, $password, $count) {
         $this->auth($login, $password, 'moderator');
         $manager = Manager::i();
         return $manager->getrecent($count);
@@ -120,7 +130,11 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if ($comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
+        if ($comments->itemexists($id)) {
+ return $this->xerror(404, 'Invalid comment ID.');
+}
+
+
         $comment = $comments->getcomment($id);
         return $this->_wpgetcomment($comment);
     }
@@ -129,7 +143,7 @@ class Comments extends Common
         $data = $comment->data;
 
         return array(
-            "date_created_gmt" => new IXR_Date($comment->posted - litepubl::$options->gmt) ,
+            "date_created_gmt" => new IXR_Date($comment->posted -  $this->getApp()->options->gmt) ,
             "user_id" => $data['author'],
             "comment_id" => $id,
             "parent" => $data['parent'],
@@ -149,7 +163,7 @@ class Comments extends Common
     public function wpgeCommentItems($blog_id, $login, $password, $struct) {
         $this->auth($login, $password, 'moderator');
         $where = '';
-        $where.= isset($struct['status']) ? ' status = ' . dbquote($struct['status']) : '';
+        $where.= isset($struct['status']) ? ' status = ' . Str::uuote($struct['status']) : '';
         $where.= isset($struct['post_id']) ? ' post = ' . (int)$struct['post_id'] : '';
         $offset = isset($struct['offset']) ? (int)$struct['offset'] : 0;
         $count = isset($struct['number']) ? (int)$struct['number'] : 10;
@@ -170,7 +184,11 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if (!$comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
+        if (!$comments->itemexists($id)) {
+ return $this->xerror(404, 'Invalid comment ID.');
+}
+
+
         $manager = Manager::i();
         return $manager->delete($id);
     }
@@ -179,11 +197,19 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if (!$comments->itemexists($id)) return $this->xerror(404, 'Invalid comment ID.');
+        if (!$comments->itemexists($id)) {
+ return $this->xerror(404, 'Invalid comment ID.');
+}
+
+
         $comment = $comment->getcomment($id);
 
         if (isset($struct['status'])) {
-            if (!preg_match('/^hold|approve|spam$/', $struct['status'])) return $this->xerror(401, 'Invalid comment status.');
+            if (!preg_match('/^hold|approve|spam$/', $struct['status'])) {
+ return $this->xerror(401, 'Invalid comment status.');
+}
+
+
             $comment->status = $struct['status'] == 'approve' ? 'approved' : $struct['status'];
         }
 
@@ -208,11 +234,11 @@ class Comments extends Common
         if (is_numeric($idpost)) {
             $idpost = absint($idpost);
         } else {
-            if (!($item = litepubl::$urlmap->find_item($url))) {
+            if (!($item =  $this->getApp()->router->find_item($url))) {
                 return $this->xerror(404, 'Invalid post ID.');
             }
 
-            if ($item['class'] != litepubl::$classes->classes['post']) {
+            if ($item['class'] !=  $this->getApp()->classes->classes['post']) {
                 return $this->xerror(404, 'Invalid post ID.');
             }
             $idpost = $item['arg'];

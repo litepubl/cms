@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\widget;
 use litepubl\core\PropException;
@@ -28,7 +29,7 @@ return $this->$get();
             throw new PropException(get_class($this), $name);
 }
 
-    protected function getadminurl() {
+    protected function getAdminurl() {
 return Link::url('/admin/views/widgets/?idwidget=');
     }
 
@@ -39,19 +40,19 @@ $title = $this->widget->gettitle($this->widget->id);
 return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle);
     }
 
-    public function getcontent() {
+    public function getContent() {
 $form = $this->getForm();
         return $this->admin->form($form, $this->args);
     }
 
-    public function processform() {
+    public function processForm() {
         $widget = $this->widget;
         $widget->lock();
         if (isset($_POST['title'])) {
 $widget->settitle($widget->id, $_POST['title']);
 }
 
-        $this->doprocessform();
+        $this->doProcessForm();
         $widget->unlock();
         return $this->admin->success($this->lang->updated);
     }

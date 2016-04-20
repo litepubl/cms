@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Lang;
@@ -22,11 +23,11 @@ class Comments extends Widget
         $this->data['maxcount'] = 7;
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return Lang::get('default', 'recentcomments');
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $recent = $this->getrecent($this->maxcount);
         if (!count($recent)) {
 return '';
@@ -35,7 +36,7 @@ return '';
         $result = '';
         $theme = Theme::i();
         $tml = $theme->getwidgetitem('comments', $sidebar);
-        $url = litepubl::$site->url;
+        $url =  $this->getApp()->site->url;
         $args = new Args();
         $args->onrecent = Lang::get('comment', 'onrecent');
         foreach ($recent as $item) {
@@ -51,8 +52,8 @@ return '';
         $this->expire();
     }
 
-    public function getrecent($count, $status = 'approved') {
-        $db = litepubl::$db;
+    public function getRecent($count, $status = 'approved') {
+        $db =  $this->getApp()->db;
         $result = $db->res2assoc($db->query("select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as url,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
@@ -66,9 +67,9 @@ return '';
     $db->posts.idperm = 0
     order by $db->comments.posted desc limit $count"));
 
-        if (litepubl::$options->commentpages && !litepubl::$options->comments_invert_order) {
+        if ( $this->getApp()->options->commentpages && ! $this->getApp()->options->comments_invert_order) {
             foreach ($result as $i => $item) {
-                $page = ceil($item['commentscount'] / litepubl::$options->commentsperpage);
+                $page = ceil($item['commentscount'] /  $this->getApp()->options->commentsperpage);
                 if ($page > 1) $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
             }
         }

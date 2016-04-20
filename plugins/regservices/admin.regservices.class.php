@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,11 +15,11 @@ class tadminregservices implements iadmin {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $plugin = tregservices::i();
         $html = tadminhtml::i();
         $tabs = new tabs();
-        $args = targs::i();
+        $args = new Args();
         $lang = tplugins::getnamelang($plugin->dirname);
         $args->formtitle = $lang->options;
         foreach ($plugin->items as $id => $classname) {
@@ -29,12 +30,12 @@ class tadminregservices implements iadmin {
         return $html->adminform($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $plugin = tregservices::i();
         $plugin->lock();
         foreach ($plugin->items as $name => $classname) {
             $service = getinstance($classname);
-            $service->processform();
+            $service->processForm();
         }
 
         $plugin->update_widget();

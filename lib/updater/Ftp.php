@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
 
@@ -37,7 +38,11 @@ class Ftp extends Remote
     }
 
     public function connect($host, $login, $password) {
-        if (!parent::connect($host, $login, $password)) return false;
+        if (!parent::connect($host, $login, $password)) {
+ return false;
+}
+
+
         if (empty($this->port)) $this->port = 21;
 
         $this->handle = $this->ssl && function_exists('ftp_ssl_connect') ? @ftp_ssl_connect($this->host, $this->port, $this->timeout) : @ftp_connect($this->host, $this->port, $this->timeout);
@@ -53,14 +58,14 @@ class Ftp extends Remote
         return false;
     }
 
-    private function gettempfilehandle() {
+    private function getTempfilehandle() {
         if (!$this->tempfilehandle) {
             $this->tempfilehandle = tmpfile();
         }
         return $this->tempfilehandle;
     }
 
-    public function getfile($filename) {
+    public function getFile($filename) {
         if ($temp = $this->gettempfilehandle()) {
             fseek($temp, 0);
             ftruncate($temp, 0);
@@ -75,7 +80,11 @@ class Ftp extends Remote
     }
 
     public function putcontent($filename, $content) {
-        if (!($temp = $this->gettempfilehandle())) return false;
+        if (!($temp = $this->gettempfilehandle())) {
+ return false;
+}
+
+
         fseek($temp, 0);
         fwrite($temp, $content);
         ftruncate($temp, strlen($content));
@@ -89,7 +98,11 @@ class Ftp extends Remote
     }
 
     public function pwd() {
-        if ($result = @ftp_pwd($this->handle)) return rtrim($result, '/') . '/';
+        if ($result = @ftp_pwd($this->handle)) {
+ return rtrim($result, '/') . '/';
+}
+
+
         return false;
     }
 
@@ -99,7 +112,11 @@ class Ftp extends Remote
 
     public function chmod($file, $mode) {
         $mode = $this->getmode($mode);
-        if (!$this->exists($file) && !$this->is_dir($file)) return false;
+        if (!$this->exists($file) && !$this->is_dir($file)) {
+ return false;
+}
+
+
         return @ftp_chmod($this->handle, $mode, $file);
     }
 
@@ -108,7 +125,7 @@ class Ftp extends Remote
         return $dir[$file]['owner'];
     }
 
-    public function getchmod($file) {
+    public function getChmod($file) {
         if ($this->is_file($file)) {
             $dir = $this->getdir($file);
             return $dir[$file]['mode'];
@@ -157,7 +174,11 @@ class Ftp extends Remote
     }
 
     public function is_dir($path) {
-        if ($path == '.') return true;
+        if ($path == '.') {
+ return true;
+}
+
+
         $old = $this->pwd();
         $result = @ftp_chdir($this->handle, rtrim($path, '/') . '/');
         $cur = $this->pwd();
@@ -177,7 +198,11 @@ class Ftp extends Remote
     }
 
     public function mkdir($path, $chmod) {
-        if (!ftp_mkdir($this->handle, $path)) return false;
+        if (!ftp_mkdir($this->handle, $path)) {
+ return false;
+}
+
+
         return parent::mkdir($path, $chmod);
     }
 
@@ -239,7 +264,11 @@ class Ftp extends Remote
         } else if (!$is_windows && $lucifer = preg_split("/[ ]/", $line, 9, PREG_SPLIT_NO_EMPTY)) {
 
             $lcount = count($lucifer);
-            if ($lcount < 8) return '';
+            if ($lcount < 8) {
+ return '';
+}
+
+
             $b = array();
             $b['isdir'] = $lucifer[0] {
                 0
@@ -280,21 +309,37 @@ class Ftp extends Remote
         return $b;
     }
 
-    public function getdir($path) {
+    public function getDir($path) {
         if ($this->is_file($path)) $path = dirname($path) . '/';
-        if (false == ($list = ftp_rawlist($this->handle, '-a ' . $path, false))) return false;
+        if (false == ($list = ftp_rawlist($this->handle, '-a ' . $path, false))) {
+ return false;
+}
+
+
         $result = array();
         foreach ($list as $k => $v) {
             $a = $this->parselisting($v);
-            if (empty($a)) continue;
+            if (empty($a)) {
+ continue;
+}
+
+
             $name = $a['name'];
-            if (($name == '.') || ($name == '..') || ($name == '.svn')) continue;
+            if (($name == '.') || ($name == '..') || ($name == '.svn')) {
+ continue;
+}
+
+
             $a['mode'] = octdec($this->perm2mode($a['perms']));
             if (!isset($a['isdir'])) $a['isdir'] = $a['type'] == 'd';
             $result[$name] = $a;
         }
         unset($list);
-        if (count($result) == 0) return false;
+        if (count($result) == 0) {
+ return false;
+}
+
+
         return $result;
     }
 

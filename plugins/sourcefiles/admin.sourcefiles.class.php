@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,17 +15,17 @@ class tadminsourcefiles {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $plugin = tsourcefiles::i();
         $lang = tplugins::getnamelang(basename(dirname(__file__)));
         $html = tadminhtml::i();
-        $args = new targs();
+        $args = new Args();
         $args->zipurl = $plugin->zipurl;
         $args->formtitle = $lang->title;
         return $html->adminform('[text=zipurl]', $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $plugin = tsourcefiles::i();
         $m = microtime(true);
         $url = trim($_POST['zipurl']);
@@ -32,7 +33,7 @@ class tadminsourcefiles {
             $plugin->data['zipurl'] = $url;
             $plugin->save();
             set_time_limit(120);
-            $filename = litepubl::$paths->data . 'sourcefile.temp.zip';
+            $filename =  $this->getApp()->paths->data . 'sourcefile.temp.zip';
             file_put_contents($filename, $s);
             @chmod($filename, 0666);
             $plugin->clear();

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,10 +15,10 @@ class tstatfooter extends tplugin {
         return getinstance(__class__);
     }
 
-    public function getfooter() {
+    public function getFooter() {
         return ' | <?php echo round(memory_get_usage()/1024/1024, 2), \'MB | \';' .
         //' echo round(memory_get_peak_usage(true)/1024/1024, 2), \'MB | \';' .
-        ' echo round(microtime(true) - litepubl::$microtime, 2), \'Sec \'; ?>';
+        ' echo round(microtime(true) -  $this->getApp()->microtime, 2), \'Sec \'; ?>';
     }
 
     public function install() {

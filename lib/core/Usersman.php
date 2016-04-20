@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -28,15 +29,15 @@ class Usersman extends Data
             $idgroups = $groups->defaults;
         }
 
-        $password = empty($values['password']) ? md5uniq() : $values['password'];
+        $password = empty($values['password']) ? Str::md5Uniq() : $values['password'];
 
         $item = array(
             'email' => $email,
             'name' => isset($values['name']) ? trim($values['name']) : '',
             'website' => isset($values['website']) ? trim($values['website']) : '',
-            'password' => litepubl::$options->hash($email . $password) ,
-            'cookie' => md5uniq() ,
-            'expired' => sqldate() ,
+            'password' =>  $this->getApp()->options->hash($email . $password) ,
+            'cookie' => Str::md5Uniq() ,
+            'expired' => Str::sqlDate() ,
             'idgroups' => implode(',', $idgroups) ,
             'trust' => 0,
             'status' => isset($values['status']) ? $values['status'] : 'approved',
@@ -56,14 +57,22 @@ class Usersman extends Data
 
     public function edit($id, array $values) {
         $users = Users::i();
-        if (!$users->itemexists($id)) return false;
+        if (!$users->itemexists($id)) {
+ return false;
+}
+
+
         $item = $users->getitem($id);
         foreach ($item as $k => $v) {
-            if (!isset($values[$k])) continue;
+            if (!isset($values[$k])) {
+ continue;
+}
+
+
             switch ($k) {
                 case 'password':
                     if ($values['password'] != '') {
-                        $item['password'] = litepubl::$options->hash($values['email'] . $values['password']);
+                        $item['password'] =  $this->getApp()->options->hash($values['email'] . $values['password']);
                     }
                     break;
 
@@ -100,15 +109,24 @@ class Usersman extends Data
     }
 
     public function cleangroups($v) {
-        if (is_array($v)) return $this->checkgroups(array_unique($v));
+        if (is_array($v)) {
+ return $this->checkgroups(array_unique($v));
+}
+
+
 
         if (is_string($v)) {
             $v = trim($v);
-            if (strpos($v, ',')) return $this->checkgroups(explode(',', $v));
+            if (strpos($v, ',')) {
+ return $this->checkgroups(explode(',', $v));
+}
         }
-        if ($id = $this->cleangroup($v)) return array(
+
+        if ($id = $this->cleangroup($v)) {
+ return array(
             $id
         );
+}
     }
 
     public function checkgroups(array $a) {

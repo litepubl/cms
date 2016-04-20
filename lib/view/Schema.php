@@ -1,16 +1,18 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
+use litepubl\core\Str;
 
 class Schema extends \litepubl\core\Item
 {
-use \litepubl\core\DataStorageTrait;
+use \litepubl\core\SharedStorageTrait;
 
     public $sidebars;
     protected $themeInstance;
@@ -29,10 +31,10 @@ use \litepubl\core\DataStorageTrait;
     }
 
     public static function newitem($id) {
-        return litepubl::$classes->newitem(static ::getinstancename() , get_called_class() , $id);
+        return  $this->getApp()->classes->newitem(static ::getinstancename() , get_called_class() , $id);
     }
 
-    public static function getinstancename() {
+    public static function getInstancename() {
         return 'schema';
     }
 
@@ -84,7 +86,7 @@ return static ::$instances['schema'][$id];
         parent::__destruct();
     }
 
-    public function getowner() {
+    public function getOwner() {
         return Schemes::i();
     }
 
@@ -104,10 +106,18 @@ return static ::$instances['schema'][$id];
         return admintheme::getinstance($name);
     }
 
-    public function setthemename($name) {
-        if ($name == $this->themename) return false;
-        if (strbegin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
-        if (!basetheme::exists($name)) return $this->error(sprintf('Theme %s not exists', $name));
+    public function setThemename($name) {
+        if ($name == $this->themename) {
+ return false;
+}
+
+
+        if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
+        if (!basetheme::exists($name)) {
+ return $this->error(sprintf('Theme %s not exists', $name));
+}
+
+
 
         $this->data['themename'] = $name;
         $this->themeInstance = $this->get_theme($name);
@@ -118,17 +128,21 @@ return static ::$instances['schema'][$id];
         static ::getowner()->themechanged($this);
     }
 
-    public function setadminname($name) {
+    public function setAdminname($name) {
         if ($name != $this->adminname) {
-            if (!strbegin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
-            if (!admintheme::exists($name)) return $this->error(sprintf('Admin theme %s not exists', $name));
+            if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+            if (!admintheme::exists($name)) {
+ return $this->error(sprintf('Admin theme %s not exists', $name));
+}
+
+
             $this->data['adminname'] = $name;
             $this->adminInstance = $this->get_admintheme($name);
             $this->save();
         }
     }
 
-    public function gettheme() {
+    public function getTheme() {
         if ($this->themeInstance) {
             return $this->themeInstance;
         }
@@ -150,7 +164,7 @@ return static ::$instances['schema'][$id];
         return $this->themeInstance;
     }
 
-    public function getadmintheme() {
+    public function getAdmintheme() {
         if ($this->adminInstance) {
             return $this->adminInstance;
         }
@@ -166,7 +180,7 @@ return static ::$instances['schema'][$id];
         $this->data['custom'] = $this->originalCustom;
     }
 
-    public function setcustomsidebar($value) {
+    public function setCustomsidebar($value) {
         if ($value != $this->customsidebar) {
             if ($this->id == 1) {
 return false;

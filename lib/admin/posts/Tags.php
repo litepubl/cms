@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\tags;
 use litepubl\tag\Tags as TagItems;
@@ -18,7 +19,7 @@ use litepubl\admin\Link;
 class Tags extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
         $tags = $istags ? TagItems::i() : CatItems::i();
@@ -32,9 +33,9 @@ $tags->loadAll();
 
         $this->basename = 'tags';
 $admin = $this->admintheme;
-        $lang = tlocal::i('tags');
+        $lang = Lang::i('tags');
         $id = $this->idget();
-        $args = new targs();
+        $args = new Args();
         $args->id = $id;
         $args->adminurl = $this->adminurl;
         $ajax = Link::url('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
@@ -126,13 +127,13 @@ $result .= $this->confirmDeleteItem($tags);
             )
         ));
 
-        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
     private function set_view(array $item) {
         extract($_POST, EXTR_SKIP);
-        $item['idview'] = (int)$idview;
+        $item['idschema'] = (int)$idschema;
         $item['includechilds'] = isset($includechilds);
         $item['includeparents'] = isset($includeparents);
         if (isset($idperm)) $item['idperm'] = (int)$idperm;
@@ -140,8 +141,12 @@ $result .= $this->confirmDeleteItem($tags);
         return $item;
     }
 
-    public function processform() {
-        if (empty($_POST['title'])) return '';
+    public function processForm() {
+        if (empty($_POST['title'])) {
+ return '';
+}
+
+
         extract($_POST, EXTR_SKIP);
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
         $tags = $istags ? TagItems::i() : CatItems::i();
@@ -151,7 +156,7 @@ $result .= $this->confirmDeleteItem($tags);
             $id = $tags->add((int)$parent, $title);
             if (isset($order)) $tags->setvalue($id, 'customorder', (int)$order);
             if (isset($url)) $tags->edit($id, $title, $url);
-            if (isset($idview)) {
+            if (isset($idschema)) {
                 $item = $tags->getitem($id);
                 $item = $this->set_view($item);
                 $tags->items[$id] = $item;
@@ -164,7 +169,7 @@ $result .= $this->confirmDeleteItem($tags);
             $item['title'] = $title;
             if (isset($parent)) $item['parent'] = (int)$parent;
             if (isset($order)) $item['customorder'] = (int)$order;
-            if (isset($idview)) $item = $this->set_view($item);
+            if (isset($idschema)) $item = $this->set_view($item);
             $tags->items[$id] = $item;
             if (!empty($url) && ($url != $item['url'])) $tags->edit($id, $title, $url);
             $tags->items[$id] = $item;

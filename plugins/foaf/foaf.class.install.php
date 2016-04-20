@@ -1,19 +1,20 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function tfoafInstall($self) {
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->addplugin(tplugins::getname(__file__));
 
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-    $lang = tlocal::i('foaf');
+    $lang = Lang::i('foaf');
 
     if ($self->dbversion) {
         $manager = tdbmanager::i();
@@ -27,12 +28,12 @@ function tfoafInstall($self) {
     $actions->add('acceptfriend', get_class($self) , 'Accept');
     $actions->unlock();
 
-    $urlmap = litepubl::$urlmap;
-    turlmap::unsub($self);
-    $urlmap->add('/foaf.xml', get_class($self) , null);
+    $router =  $self->getApp()->router;
+     $self->getApp()->router->unbind($self);
+    $router->add('/foaf.xml', get_class($self) , null);
 
     $name = tplugins::getname(__file__);
-    $classes = litepubl::$classes;
+    $classes =  $self->getApp()->classes;
     $classes->lock();
     $classes->add('tadminfoaf', 'admin.foaf.class.php', $name);
     $classes->add('tfoafutil', 'foaf.util.class.php', $name);
@@ -60,16 +61,16 @@ function tfoafInstall($self) {
 }
 
 function tfoafUninstall($self) {
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->deleteplugin(tplugins::getname(__file__));
 
     $actions = TXMLRPCAction::i();
     $actions->deleteclass(get_class($self));
 
-    $urlmap = litepubl::$urlmap;
-    turlmap::unsub($self);
+    $router =  $self->getApp()->router;
+     $self->getApp()->router->unbind($self);
 
-    $classes = litepubl::$classes;
+    $classes =  $self->getApp()->classes;
     $classes->lock();
     $classes->delete('tfoafutil');
     $classes->delete('tprofile');

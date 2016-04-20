@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tfaqmenu extends tmenu {
 
@@ -14,7 +16,7 @@ class tfaqmenu extends tmenu {
         return static ::iteminstance(__class__, $id);
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
         $result.= '<style type="text/css">
   .faqlist  p { display:none;}
@@ -30,7 +32,7 @@ class tfaqmenu extends tmenu {
         return $result;
     }
 
-    public function setcontent($s) {
+    public function setContent($s) {
         $this->rawcontent = $s;
         $this->data['content'] = $this->convert($s);
     }
@@ -47,9 +49,9 @@ class tfaqmenu extends tmenu {
         $filter = tcontentfilter::i();
         foreach ($lines as $s) {
             $s = trim($s);
-            if (strbegin($s, 'q:') || strbegin($s, 'Q:')) {
+            if (Str::begin($s, 'q:') || Str::begin($s, 'Q:')) {
                 $q[] = trim(substr($s, 2));
-            } elseif (strbegin($s, 'a:') || strbegin($s, 'A:')) {
+            } elseif (Str::begin($s, 'a:') || Str::begin($s, 'A:')) {
                 $a[] = trim(substr($s, 2));
             } elseif ($s != '') {
                 $result.= $this->createlist($q, $a);
@@ -64,7 +66,11 @@ class tfaqmenu extends tmenu {
     }
 
     private function createlist(array $questions, array $answers) {
-        if (count($questions) == 0) return '';
+        if (count($questions) == 0) {
+ return '';
+}
+
+
         $result = '';
         foreach ($questions as $i => $q) {
             $result.= sprintf('<li><a href="#" rel="faqitem">%s</a><p>%s</p></li>', $q, $answers[$i]);

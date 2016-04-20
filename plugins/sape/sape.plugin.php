@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -27,14 +28,14 @@ class tsapeplugin extends twidget {
         $this->addmap('counts', array());
     }
 
-    public function getdeftitle() {
-        return tlocal::get('default', 'links');
+    public function getDeftitle() {
+        return Lang::get('default', 'links');
     }
 
     private function createsape() {
         if (!defined('_SAPE_USER')) {
             define('_SAPE_USER', $this->user);
-            litepubl::$classes->include_file(litepubl::$paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
+             $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
             $o['charset'] = 'UTF-8';
             $o['multi_site'] = true;
             if ($this->force) $o['force_show_code'] = $this->force;
@@ -42,29 +43,49 @@ class tsapeplugin extends twidget {
         }
     }
 
-    public function getwidget($id, $sidebar) {
-        if ($this->user == '') return '';
-        if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel) return '';
+    public function getWidget($id, $sidebar) {
+        if ($this->user == '') {
+ return '';
+}
+
+
+        if ( $this->getApp()->router->is404 ||  $this->getApp()->router->adminpanel) {
+ return '';
+}
+
+
         return parent::getwidget($id, $sidebar);
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $links = $this->getlinks();
-        if (empty($links)) return '';
+        if (empty($links)) {
+ return '';
+}
+
+
         return sprintf('<ul><li>%s</li></ul>', $links);
     }
 
-    public function getcont() {
+    public function getCont() {
         return $this->getcontent(0, 0);
     }
-    public function getlinks() {
-        if ($this->user == '') return '';
-        if (litepubl::$urlmap->is404 || litepubl::$urlmap->adminpanel) return '';
+    public function getLinks() {
+        if ($this->user == '') {
+ return '';
+}
+
+
+        if ( $this->getApp()->router->is404 ||  $this->getApp()->router->adminpanel) {
+ return '';
+}
+
+
         if (!isset($this->sape)) $this->createsape();
         return $this->sape->return_links($this->counts[$id]);
     }
 
-    public function setcount($id, $count) {
+    public function setCount($id, $count) {
         $this->counts[$id] = $count;
         $widgets = twidgets::i();
         foreach ($this->counts as $id => $count) {

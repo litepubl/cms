@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\utils;
 
@@ -13,7 +14,11 @@ class Http {
 
     public static function get($url, $headers = false) {
         $parsed = @parse_url($url);
-        if (!$parsed || !is_array($parsed)) return false;
+        if (!$parsed || !is_array($parsed)) {
+ return false;
+}
+
+
         if (!isset($parsed['scheme']) || !in_array($parsed['scheme'], array(
             'http',
             'https'
@@ -43,7 +48,7 @@ class Http {
             if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             /*
             curl_setopt($ch, CURLOPT_VERBOSE , true);
-            curl_setopt($ch, CURLOPT_STDERR, fopen(litepubl::$paths->data . 'logs/curl.txt', 'w+'));
+            curl_setopt($ch, CURLOPT_STDERR, fopen( $this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
             */
 
             if (!ini_get('open_basedir') && !ini_get('safe_mode')) {
@@ -51,7 +56,11 @@ class Http {
                 $result = curl_exec($ch);
                 $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
-                if (($code == 200) || ($code == 201)) return $result;
+                if (($code == 200) || ($code == 201)) {
+ return $result;
+}
+
+
                 return false;
             } else {
                 return static ::curl_follow($ch);
@@ -74,7 +83,7 @@ class Http {
         curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
 
         curl_setopt($ch, CURLOPT_VERBOSE, true);
-        curl_setopt($ch, CURLOPT_STDERR, fopen(litepubl::$paths->data . 'logs/curl.txt', 'w+'));
+        curl_setopt($ch, CURLOPT_STDERR, fopen( $this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
 
         return $ch;
     }
@@ -103,7 +112,11 @@ class Http {
             $headers = curl_getinfo($ch);
             //$code = $headers['http_code'];
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if ($code == 404) return false;
+            if ($code == 404) {
+ return false;
+}
+
+
             if ($code == 301 || $code == 302 || $code == 307) {
                 if (isset($headers['redirect_url'])) {
                     curl_setopt($ch, CURLOPT_URL, $headers['redirect_url']);

@@ -1,15 +1,23 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
+use litepubl\core\Str;
 
 class Link
 {
 
     public static function url($path, $params = false) {
 if ($params) {
-        return litepubl::$site->url . $path . litepubl::$site->q . $params;
+        return  $this->getApp()->site->url . $path .  $this->getApp()->site->q . $params;
 } else {
-        return litepubl::$site->url . str_replace('?', litepubl::$site->q, $path);
+        return  $this->getApp()->site->url . str_replace('?',  $this->getApp()->site->q, $path);
     }
 }
 
@@ -24,9 +32,9 @@ if ($params) {
             }
         }
 
-        $a['href'] = str_replace('?', litepubl::$site->q, $a['href']);
-        if (!strbegin($a['href'], 'http')) {
-            $a['href'] = litepubl::$site->url . $a['href'];
+        $a['href'] = str_replace('?',  $this->getApp()->site->q, $a['href']);
+        if (!Str::begin($a['href'], 'http')) {
+            $a['href'] =  $this->getApp()->site->url . $a['href'];
         }
 
         if (isset($a['icon'])) {

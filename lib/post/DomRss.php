@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 
@@ -20,7 +21,7 @@ class DomRss extends \domDocument {
 
     public function CreateRoot($url, $title) {
         $this->encoding = 'utf-8';
-        $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$options->version . ' version"'));
+        $this->appendChild($this->createComment('generator="Lite Publisher/' .  $this->getApp()->options->version . ' version"'));
         $this->rss = $this->createElement('rss');
         $this->appendChild($this->rss);
 
@@ -39,15 +40,15 @@ class DomRss extends \domDocument {
 
         Node::addvalue($this->channel, 'title', $title);
         Node::addvalue($this->channel, 'link', $url);
-        Node::addvalue($this->channel, 'description', litepubl::$site->description);
+        Node::addvalue($this->channel, 'description',  $this->getApp()->site->description);
         Node::addvalue($this->channel, 'pubDate', date('r'));
-        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$options->version);
+        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' .  $this->getApp()->options->version);
         Node::addvalue($this->channel, 'language', 'en');
     }
 
     public function CreateRootMultimedia($url, $title) {
         $this->encoding = 'utf-8';
-        $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$options->version . ' version"'));
+        $this->appendChild($this->createComment('generator="Lite Publisher/' .  $this->getApp()->options->version . ' version"'));
         $this->rss = $this->createElement('rss');
         $this->appendChild($this->rss);
 
@@ -64,9 +65,9 @@ class DomRss extends \domDocument {
 
         Node::addvalue($this->channel, 'title', $title);
         Node::addvalue($this->channel, 'link', $url);
-        Node::addvalue($this->channel, 'description', litepubl::$site->description);
+        Node::addvalue($this->channel, 'description',  $this->getApp()->site->description);
         Node::addvalue($this->channel, 'pubDate', date('r'));
-        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$options->version);
+        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' .  $this->getApp()->options->version);
         Node::addvalue($this->channel, 'language', 'en');
     }
 

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\views;
 use litepubl\view\Schemes as SchemaItems;
@@ -13,7 +14,7 @@ use litepubl\admin\GetSchema;
 class Spec extends \litepubl\admin\Menu
 {
 
-    public static function getspecclasses() {
+    public static function getSpecclasses() {
         return array(
             'litepubl\pages\Home',
             'litepubl\post\Archives',
@@ -22,11 +23,11 @@ class Spec extends \litepubl\admin\Menu
         );
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $schemes = SchemaItems::i();
         $theme = $this->theme;
-        $lang = tlocal::i('schemes');
+        $lang = Lang::i('schemes');
         $args = new Args();
 
         $tabs = $this->newTabs();
@@ -37,7 +38,7 @@ $name =
 $classname = str_replace('\\', '-', $classname);
             $args->classname = $classname;
             $args->title = $lang->{$name};
-            $inputs = GetSchema::combo($obj->idview, "idview-$classname");
+            $inputs = GetSchema::combo($obj->idschema, "idschema-$classname");
             if (isset($obj->data['keywords'])) {
 $inputs.= $theme->getinput('text', "keywords-$classname", $obj->data['keywords'], $lang->keywords);
 }
@@ -58,12 +59,12 @@ $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         foreach (static ::getspecclasses() as $classname) {
             $obj = getinstance($classname);
             $obj->lock();
 $classname = str_replace('\\', '-', $classname);
-            $obj->setidview($_POST["idview-$classname"]);
+            $obj->setidschema($_POST["idschema-$classname"]);
             if (isset($obj->data['keywords'])) $obj->keywords = $_POST["keywords-$classname"];
             if (isset($obj->data['description '])) $obj->description = $_POST["description-$classname"];
             if (isset($obj->data['head'])) $obj->head = $_POST["head-$classname"];

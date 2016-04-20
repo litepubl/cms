@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -16,12 +17,12 @@ function UsersInstall($self) {
     $manager->CreateTable($self->grouptable, file_get_contents($dir . 'users.groups.sql'));
 
     $id = $self->db->add(array(
-        'email' => litepubl::$options->email,
-        'name' => litepubl::$site->author,
-        'website' => litepubl::$site->url . '/',
+        'email' =>  $self->getApp()->options->email,
+        'name' =>  $self->getApp()->site->author,
+        'website' =>  $self->getApp()->site->url . '/',
         'password' => '',
         'cookie' => '',
-        'expired' => sqldate() ,
+        'expired' => Str::sqlDate() ,
         'status' => 'approved',
         'idgroups' => '1',
     ));

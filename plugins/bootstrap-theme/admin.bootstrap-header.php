@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class admin_bootstrap_header extends tadminmenu {
 
@@ -14,7 +16,7 @@ class admin_bootstrap_header extends tadminmenu {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
 
         foreach (array(
@@ -37,12 +39,12 @@ class admin_bootstrap_header extends tadminmenu {
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
-        $lang = tlocal::admin('adminbootstraptheme');
+        $lang = Lang::admin('adminbootstraptheme');
         $lang->addsearch('themeheader', 'editor');
         $html = tadminhtml::i();
-        $args = new targs();
+        $args = new Args();
         $theme = ttheme::i();
         $args->radio = $theme->getradio('radioplace', 'header', $lang->header, true) . $theme->getradio('radioplace', 'logo', $lang->logo, false);
 
@@ -62,7 +64,7 @@ class admin_bootstrap_header extends tadminmenu {
             return;
         }
 
-        if (is_uploaded_file($_FILES[$name]['tmp_name']) && !$_FILES[$name]['error'] && strbegin($_FILES[$name]['type'], 'image/') && ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
+        if (is_uploaded_file($_FILES[$name]['tmp_name']) && !$_FILES[$name]['error'] && Str::begin($_FILES[$name]['type'], 'image/') && ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
             $css = file_get_contents(dirname(__file__) . "/resource/css.$name.tml");
             if ($name == 'logo') {
                 $info = @getimagesize($_FILES[$name]['tmp_name']);
@@ -72,7 +74,7 @@ class admin_bootstrap_header extends tadminmenu {
             $css = str_replace('%%file%%', 'data:%s;base64,%s', $css);
             $css = sprintf($css, $_FILES[$name]['type'], base64_encode($data));
 
-            $filename = litepubl::$paths->files . "js/$name.css";
+            $filename =  $this->getApp()->paths->files . "js/$name.css";
             file_put_contents($filename, $css);
             @chmod($filename, 0666);
 
@@ -92,7 +94,7 @@ class admin_bootstrap_header extends tadminmenu {
             );
         }
 
-        $js = tojson($result);
+        $js = Str::toJson($result);
         return "<?php
     header('Connection: close');
     header('Content-Length: " . strlen($js) . "');

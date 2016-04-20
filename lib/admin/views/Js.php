@@ -1,25 +1,26 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\views;
 
 class Js extends \litepubl\admin\Menu
 {
 
-    public function getmerger() {
+    public function getMerger() {
         return \litepubl\view\Js::i();
     }
 
-    public function getcontent() {
+    public function getContent() {
         $merger = $this->getmerger();
         $tabs = $this->newTabs();
 $admin = $this->admintheme;
-        $lang = tlocal::i('views');
+        $lang = Lang::i('views');
         $args = $this->newArgs();
         $args->formtitle = $this->title;
         foreach ($merger->items as $section => $items) {
@@ -35,7 +36,7 @@ $admin = $this->admintheme;
         return $admin->form($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $merger = $this->getmerger();
         $merger->lock();
         //$merger->items = array();

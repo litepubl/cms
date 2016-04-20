@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -22,7 +23,7 @@ class tyandexregservice extends tregservice {
         $this->data['url'] = '/yandex-oauth2callback.php';
     }
 
-    public function getauthurl() {
+    public function getAuthurl() {
         $url = 'https://oauth.yandex.ru/authorize?response_type=code' . $url.= '&client_id=' . $this->client_id;
         $url.= '&state=' . $this->newstate();
         return $url;
@@ -30,7 +31,11 @@ class tyandexregservice extends tregservice {
 
     //handle callback
     public function request($arg) {
-        if ($err = parent::request($arg)) return $err;
+        if ($err = parent::request($arg)) {
+ return $err;
+}
+
+
         $code = $_REQUEST['code'];
         $resp = http::post('https://oauth.yandex.ru/token', array(
             'code' => $code,
@@ -55,7 +60,7 @@ class tyandexregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getadmininfo($lang) {
+    protected function getAdmininfo($lang) {
         return array(
             'regurl' => 'https://oauth.yandex.ru/client/new',
             'client_id' => $lang->yandex_id,

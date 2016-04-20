@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\files;
 use litepubl\post\Files as FileItems;
@@ -21,12 +22,12 @@ use litepubl\admin\Link;
 class Files extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $files = FileItems::i();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
-        $args = new targs();
+        $args = new Args();
         if (!isset($_GET['action'])) {
             $args->add(array(
                 'uploadmode' => 'file',
@@ -47,17 +48,25 @@ class Files extends \litepubl\admin\Menu
       [text=keywords]
       [checkbox=overwrite]';
 
-            if (litepubl::$options->show_file_perm) {
+            if ( $this->getApp()->options->show_file_perm) {
 $form->items.= GetPerm::combo(0, 'idperm');
 }
             $result.= $form->get();
         } else {
             $id = $this->idget();
-            if (!$files->itemexists($id)) return $this->notfound;
+            if (!$files->itemexists($id)) {
+ return $this->notfound;
+}
+
+
             switch ($_GET['action']) {
                 case 'delete':
                     if ($this->confirmed) {
-                        if (('author' == litepubl::$options->group) && ($r = tauthor_rights::i()->candeletefile($id))) return $r;
+                        if (('author' ==  $this->getApp()->options->group) && ($r = tauthor_rights::i()->candeletefile($id))) {
+ return $r;
+}
+
+
                         $files->delete($id);
                         $result.= $admintheme->success($lang->deleted);
                     } else {
@@ -74,7 +83,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
                     $args->description = Filter::unescape($item['description']);
                     $args->keywords = Filter::unescape($item['keywords']);
                     $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . (litepubl::$options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ( $this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
                     break;
                 }
         }
@@ -82,7 +91,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
         $perpage = 20;
         $type = $this->name == 'files' ? '' : $this->name;
         $sql = 'parent =0';
-        $sql.= litepubl::$options->user <= 1 ? '' : ' and author = ' . litepubl::$options->user;
+        $sql.=  $this->getApp()->options->user <= 1 ? '' : ' and author = ' .  $this->getApp()->options->user;
         $sql.= $type == '' ? " and media<> 'icon'" : " and media = '$type'";
         $count = $files->db->getcount($sql);
         $from = $this->getfrom($perpage, $count);
@@ -91,7 +100,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
         $result.= $admintheme->getcount($count, $from, $from + count($list));
 
         $args->adminurl = $this->adminurl;
-        $result.= tablebuilder::fromitems($files->items, array(
+        $result.= Table::fromitems($files->items, array(
             array(
                 'right',
                 'ID',
@@ -120,20 +129,20 @@ $form->items.= GetPerm::combo(0, 'idperm');
             )
         ));
 
-        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $files = FileItems::i();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
 
         if (empty($_GET['action'])) {
-            $isauthor = 'author' == litepubl::$options->group;
+            $isauthor = 'author' ==  $this->getApp()->options->group;
             if ($_POST['uploadmode'] == 'file') {
                 if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
-                    return $admintheme->geterr(tlocal::get('uploaderrors', $_FILES['filename']['error']));
+                    return $admintheme->geterr(Lang::get('uploaderrors', $_FILES['filename']['error']));
                 }
                 if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
                     return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
@@ -168,7 +177,11 @@ return $r;
             return $admintheme->success($lang->success);
         } elseif ($_GET['action'] == 'edit') {
             $id = $this->idget();
-            if (!$files->itemexists($id)) return $this->notfound;
+            if (!$files->itemexists($id)) {
+ return $this->notfound;
+}
+
+
             $files->edit($id, $_POST['title'], $_POST['description'], $_POST['keywords']);
             if (isset($_POST['idperm'])) {
 PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);

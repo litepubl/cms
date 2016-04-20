@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\post\Posts;
@@ -16,6 +17,7 @@ use litepubl\pages\Menu;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
 use litepubl\tag\Cats;
+use litepubl\core\Str;
 
 class MetaWeblog extends Common
 {
@@ -36,7 +38,7 @@ class MetaWeblog extends Common
 
 
                     default:
-                        $post->comstatus = litepubl::$options->comstatus;
+                        $post->comstatus =  $this->getApp()->options->comstatus;
                         break;
                 }
             } else {
@@ -52,12 +54,12 @@ class MetaWeblog extends Common
 
 
                     default:
-                        $post->comstatus = litepubl::$options->comstatus;
+                        $post->comstatus =  $this->getApp()->options->comstatus;
                         break;
                 }
             }
         } else {
-            $post->comstatus = litepubl::$options->comstatus;
+            $post->comstatus =  $this->getApp()->options->comstatus;
         }
 
         if (isset($struct["mt_allow_pings"])) {
@@ -74,7 +76,7 @@ class MetaWeblog extends Common
 
 
                     default:
-                        $post->pingenabled = litepubl::$options->pingenabled;
+                        $post->pingenabled =  $this->getApp()->options->pingenabled;
                         break;
                 }
             } else {
@@ -90,12 +92,12 @@ class MetaWeblog extends Common
 
 
                     default:
-                        $post->pingenabled = litepubl::$options->pingenabled;
+                        $post->pingenabled =  $this->getApp()->options->pingenabled;
                         break;
                 }
             }
         } else {
-            $post->pingenabled = litepubl::$options->pingenabled;
+            $post->pingenabled =  $this->getApp()->options->pingenabled;
         }
     }
 
@@ -145,7 +147,7 @@ class MetaWeblog extends Common
 
         if (isset($struct["wp_page_parent_id"])) {
             $parent = $struct["wp_page_parent_id"];
-            if (strbegin($parent, 'menu_')) $parent = substr($parent, strlen('menu_'));
+            if (Str::begin($parent, 'menu_')) $parent = substr($parent, strlen('menu_'));
             $menu->parent = (int)$parent;
         }
 
@@ -156,7 +158,7 @@ class MetaWeblog extends Common
     }
     /* <item> in RSS 2.0, providing a rich variety of item-level metadata, with well-understood applications.
      The three basic elements are title, link and description.  */
-    public function setpost(array & $struct, tpost $post) {
+    public function setPost(array & $struct, tpost $post) {
         $post->title = $struct['title'];
         $more = isset($struct['mt_text_more']) ? trim($struct['mt_text_more']) : '';
         if ($more == '') {
@@ -217,10 +219,14 @@ class MetaWeblog extends Common
 
     public function wp_editPage($blogid, $id, $username, $password, $struct, $publish) {
         $this->auth($username, $password, 'editor');
-        if (strbegin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) return $this->xerror(404, "Sorry, no such page.");
+        if (!$menus->itemexists($id)) {
+ return $this->xerror(404, "Sorry, no such page.");
+}
+
+
         $menu = Menu::i($id);
         $menu->status = $publish ? 'published' : 'draft';
         $this->WPAssignPage($struct, $menu);
@@ -242,8 +248,8 @@ class MetaWeblog extends Common
                 'description' => $categories->contents->getdescription($item['id']) ,
                 'categoryName' => $item['title'],
                 'title' => $item['title'],
-                'htmlUrl' => litepubl::$site->url . $item['url'],
-                'rssUrl' => litepubl::$site->url . "/rss/categories/$id.xml"
+                'htmlUrl' =>  $this->getApp()->site->url . $item['url'],
+                'rssUrl' =>  $this->getApp()->site->url . "/rss/categories/$id.xml"
             );
         }
 
@@ -286,7 +292,11 @@ class MetaWeblog extends Common
         $postid = (int)$postid;
         $this->canedit($username, $password, $postid);
         $posts = Posts::i();
-        if (!$posts->itemexists($postid)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($postid)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
 
         $post = Post::i($postid);
         switch ($publish) {
@@ -312,7 +322,11 @@ class MetaWeblog extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) return $this->xerror(404, "Invalid post id.");
+        if (!$posts->itemexists($id)) {
+ return $this->xerror(404, "Invalid post id.");
+}
+
+
 
         $post = Post::i($id);
         return $this->GetStruct($post);
@@ -338,7 +352,7 @@ class MetaWeblog extends Common
             'wp_password' => $post->password,
             'wp_author_id' => $post->author,
             'wp_author_display_name' => 'admin',
-            'date_created_gmt' => new IXR_Date($post->posted - litepubl::$options->gmt) ,
+            'date_created_gmt' => new IXR_Date($post->posted -  $this->getApp()->options->gmt) ,
             'publish' => $post->status == 'published' ? 1 : 0
         );
     }
@@ -348,7 +362,7 @@ class MetaWeblog extends Common
         $this->auth($username, $password, 'author');
         $count = (int)$numberOfPosts;
         $posts = Posts::i();
-        $list = $posts->getrecent(litepubl::$options->user, $count);
+        $list = $posts->getrecent( $this->getApp()->options->user, $count);
         $result = array();
         foreach ($list as $id) {
             $post = Post::i($id);
@@ -367,12 +381,20 @@ class MetaWeblog extends Common
         //$mimetype =$struct['type'];
         $overwrite = isset($struct["overwrite"]) && $struct["overwrite"];
 
-        if (empty($filename)) return $this->xerror(500, "Empty filename");
+        if (empty($filename)) {
+ return $this->xerror(500, "Empty filename");
+}
+
+
 
         $parser = MediaParser::i();
         $id = $parser->upload($filename, $struct['bits'], '', '', '', $overwrite);
 
-        if (!$id) return $this->xerror(500, "Could not write file $name");
+        if (!$id) {
+ return $this->xerror(500, "Could not write file $name");
+}
+
+
         $files = Files::i();
         $item = $files->getitem($id);
 

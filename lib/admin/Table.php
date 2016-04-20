@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Admin;
@@ -40,16 +41,20 @@ class Table
         $this->body = '';
         $this->footer = '';
         $this->callbacks = array();
-        $this->args = new targs();
+        $this->args = new Args();
         $this->data = array();
     }
 
-    public function setstruct(array $struct) {
+    public function setStruct(array $struct) {
         $this->head = '';
         $this->body = '<tr>';
 
         foreach ($struct as $index => $item) {
-            if (!$item || !count($item)) continue;
+            if (!$item || !count($item)) {
+ continue;
+}
+
+
 
             if (count($item) == 2) {
                 $colclass = 'text-left';
@@ -97,7 +102,7 @@ class Table
         return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass) , $content);
     }
 
-    public function getadmintheme() {
+    public function getAdmintheme() {
         if (!$this->admintheme) {
             $this->admintheme = Admin::i();
         }
@@ -138,25 +143,25 @@ class Table
     }
 
     //predefined callbacks
-    public function titems_callback(tablebuilder $self, titems $owner) {
+    public function titems_callback(Table $self, titems $owner) {
         $self->item = $owner->getitem($self->id);
         $self->args->add($self->item);
     }
 
-    public function setowner(titems $owner) {
+    public function setOwner(titems $owner) {
         $this->addcallback('$tempcallback' . count($this->callbacks) , array(
             $this,
             'titems_callback'
         ) , $owner);
     }
 
-    public function posts_callback(tablebuilder $self) {
+    public function posts_callback(Table $self) {
         $post = Post::i($self->id);
         Base::$vars['post'] = $post;
-        $self->args->poststatus = tlocal::i()->__get($post->status);
+        $self->args->poststatus = Lang::i()->__get($post->status);
     }
 
-    public function setposts(array $struct) {
+    public function setPosts(array $struct) {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setstruct($struct);
         $this->addcallback('$tempcallback' . count($this->callbacks) , array(
@@ -166,7 +171,7 @@ class Table
     }
 
     public function props(array $props) {
-        $lang = tlocal::i();
+        $lang = Lang::i();
         $this->setstruct(array(
             array(
                 $lang->name,
@@ -184,7 +189,11 @@ class Table
         $admintheme = $this->getadmintheme();
 
         foreach ($props as $k => $v) {
-            if (($k === false) || ($v === false)) continue;
+            if (($k === false) || ($v === false)) {
+ continue;
+}
+
+
 
             if (is_array($v)) {
                 foreach ($v as $kv => $vv) {
@@ -208,7 +217,7 @@ class Table
     }
 
     public function inputs(array $inputs) {
-        $lang = tlocal::i();
+        $lang = Lang::i();
         $this->setstruct(array(
             array(
                 $lang->name,
@@ -227,7 +236,11 @@ class Table
 
         foreach ($inputs as $name => $type) {
             if (($name === false) || ($type === false)) {
-                continue;
+                {
+ continue;
+}
+
+
             }
 
             switch ($type) {
@@ -256,7 +269,7 @@ class Table
     }
 
     public function action($action, $adminurl) {
-        $title = tlocal::i()->__get($action);
+        $title = Lang::i()->__get($action);
 
         return array(
             $title,
@@ -284,7 +297,7 @@ class Table
         );
     }
 
-    public static function getcolclass($s) {
+    public static function getColclass($s) {
         //most case
         if (!$s || $s == 'left') {
             return 'text-left';
@@ -308,17 +321,17 @@ class Table
 
     public function date($date) {
         if ($date == Lang::ZERODATE) {
-            return tlocal::i()->noword;
+            return Lang::i()->noword;
         } else {
-            return tlocal::date(strtotime($date) , 'd F Y');
+            return Lang::date(strtotime($date) , 'd F Y');
         }
     }
 
     public function datetime($date) {
         if ($date == Lang::ZERODATE) {
-            return tlocal::i()->noword;
+            return Lang::i()->noword;
         } else {
-            return tlocal::date(strtotime($date) , 'd F Y H:i');
+            return Lang::date(strtotime($date) , 'd F Y H:i');
         }
     }
 

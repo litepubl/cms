@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -29,7 +30,7 @@ class Items extends Events
 
     public function load() {
         if ($this->dbversion) {
-            return litepubl::$datastorage->load($this);
+            return  $this->getApp()->datastorage->load($this);
         } else {
             return parent::load();
         }
@@ -41,7 +42,7 @@ class Items extends Events
         }
 
         if ($this->dbversion) {
-            return litepubl::$datastorage->save($this);
+            return  $this->getApp()->datastorage->save($this);
         } else {
             return parent::save();
         }
@@ -86,7 +87,7 @@ class Items extends Events
         }
 
         $result = array();
-        $db = litepubl::$db;
+        $db =  $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = $item[$this->idprop];
             $result[] = $id;
@@ -101,7 +102,7 @@ class Items extends Events
         return count($a) ? $a[0] : false;
     }
 
-    public function getcount() {
+    public function getCount() {
         if ($this->dbversion) {
             return $this->db->getcount();
         } else {
@@ -109,7 +110,7 @@ class Items extends Events
         }
     }
 
-    public function getitem($id) {
+    public function getItem($id) {
         if (isset($this->items[$id])) {
             return $this->items[$id];
         }
@@ -121,7 +122,7 @@ class Items extends Events
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
-    public function getvalue($id, $name) {
+    public function getValue($id, $name) {
         if ($this->dbversion && !isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id, $this->idprop);
         }
@@ -129,10 +130,10 @@ class Items extends Events
         return $this->items[$id][$name];
     }
 
-    public function setvalue($id, $name, $value) {
+    public function setValue($id, $name, $value) {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
-            $this->db->update("$name = " . dbquote($value) , "$this->idprop = $id");
+            $this->db->update("$name = " . Str::uuote($value) , "$this->idprop = $id");
         }
     }
 
@@ -154,7 +155,7 @@ class Items extends Events
 
     public function indexof($name, $value) {
         if ($this->dbversion) {
-            return $this->db->findprop($this->idprop, "$name = " . dbquote($value));
+            return $this->db->findprop($this->idprop, "$name = " . Str::uuote($value));
         }
 
         foreach ($this->items as $id => $item) {

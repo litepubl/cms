@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -61,7 +62,7 @@ parent::create();
     }
 
     public function free() {
-        unset(litepubl::$classes->instances[get_class($this) ]);
+        unset( $this->getApp()->classes->instances[get_class($this) ]);
         foreach ($this->coinstances as $coinstance) {
             $coinstance->free();
         }
@@ -170,7 +171,7 @@ parent::create();
         throw new CancelEvent($result);
     }
 
-    public function setevent($name, $params) {
+    public function setEvent($name, $params) {
         return $this->addevent($name, $params['class'], $params['func']);
     }
 
@@ -267,7 +268,7 @@ parent::create();
         $this->save();
     }
 
-    public function seteventorder($eventname, $c, $order) {
+    public function setEventorder($eventname, $c, $order) {
         if (!isset($this->events[$eventname])) {
             return false;
         }

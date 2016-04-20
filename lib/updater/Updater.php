@@ -1,15 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
 use litepubl\utils\Filer;
 use litepubl\widget\Sidebars;
 use litepubl\utils\http;
+use litepubl\core\Str;
 
 class Updater extends \litepubl\core\Events
  {
@@ -27,22 +29,26 @@ class Updater extends \litepubl\core\Events
         $this->log = false;
     }
 
-    public static function getversions() {
-        return strtoarray(file_get_contents(litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
+    public static function getVersions() {
+        return Str::toArray(file_get_contents( $this->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
     }
 
-    public function getversion() {
+    public function getVersion() {
         return $this->versions[0];
     }
 
-    public function getnextversion() {
+    public function getNextversion() {
         return $this->getnext($this->versions);
     }
 
-    public function getnext(array $versions) {
-        $cur = litepubl::$options->version;
+    public function getNext(array $versions) {
+        $cur =  $this->getApp()->options->version;
         for ($i = count($versions) - 1; $i >= 0; $i--) {
-            if (version_compare($cur, $versions[$i]) < 0) return $versions[$i];
+            if (version_compare($cur, $versions[$i]) < 0) {
+ return $versions[$i];
+}
+
+
         }
         return $versions[0];
     }
@@ -51,7 +57,7 @@ class Updater extends \litepubl\core\Events
         $ver = (string)$ver;
         if (strlen($ver) == 3) $ver.= '0';
         if (strlen($ver) == 1) $ver.= '.00';
-        $filename = litepubl::$paths->lib . "update/update.$ver.php";
+        $filename =  $this->getApp()->paths->lib . "update/update.$ver.php";
 
         if (file_exists($filename)) {
             require_once ($filename);
@@ -63,14 +69,14 @@ class Updater extends \litepubl\core\Events
                 if ($this->log) {
 Filer::log("$func is called", 'update');
 }
-                litepubl::$options->savemodified();
+                 $this->getApp()->options->savemodified();
             } else if (function_exists('litepubl\\' . $func)) {
                 call_user_func_array('litepubl\\' . $func, array());
                 if ($this->log) {
 Filer::log("$func is called", 'update');
 }
 
-                litepubl::$options->savemodified();
+                 $this->getApp()->options->savemodified();
             }
         }
     }
@@ -81,14 +87,14 @@ Filer::log("$func is called", 'update');
         if ($log) {
 Filer::log("begin update", 'update');
 }
-        tlocal::clearcache();
+        Lang::clearcache();
         $this->versions = static ::getversions();
         $nextver = $this->nextversion;
         if ($log) {
-Filer::log("update started from litepubl::$options->version to $this->version", 'update');
+Filer::log("update started from  $this->getApp()->options->version to $this->version", 'update');
 }
 
-        $v = litepubl::$options->version + 0.01;
+        $v =  $this->getApp()->options->version + 0.01;
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
             if (strlen($ver) == 3) $ver.= '0';
@@ -98,14 +104,14 @@ Filer::log("$v selected to update", 'update');
 }
 
             $this->run($v);
-            litepubl::$options->version = $ver;
-            litepubl::$options->savemodified();
+             $this->getApp()->options->version = $ver;
+             $this->getApp()->options->savemodified();
             $v = $v + 0.01;
         }
 
-        Filer::delete(litepubl::$paths->data . 'themes', false, false);
-        litepubl::$urlmap->clearcache();
-        tlocal::clearcache();
+        Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
+         $this->getApp()->router->clearcache();
+        Lang::clearcache();
         Sidebars::fix();
 
         if (function_exists('apc_clear_cache')) {
@@ -126,7 +132,7 @@ Filer::log("$v selected to update", 'update');
             flush();
         }
 
-        $lang = tlocal::i('service');
+        $lang = Lang::i('service');
         $backuper = Backuper::i();
         if ($this->useshell) {
             $backuper->createshellbackup();
@@ -146,9 +152,13 @@ Filer::log("$v selected to update", 'update');
     }
 
     public function auto2($ver) {
-        $lang = tlocal::i('service');
+        $lang = Lang::i('service');
         $latest = $this->latest;
-        if ($latest == litepubl::$options->version) return 'Already updated';
+        if ($latest ==  $this->getApp()->options->version) {
+ return 'Already updated';
+}
+
+
         if (($ver == 0) || ($ver > $latest)) $ver = $latest;
         if ($this->download($ver)) {
             $this->result = $lang->successdownload;
@@ -161,12 +171,12 @@ Filer::log("$v selected to update", 'update');
 
     public function islatest() {
         if ($latest = $this->getlatest()) {
-            return version_compare($latest, litepubl::$options->version);
+            return version_compare($latest,  $this->getApp()->options->version);
         }
         return false;
     }
 
-    public function getlatest() {
+    public function getLatest() {
         if ($releases = $this->downloadreleases()) {
             return $releases[0];
         }
@@ -179,10 +189,10 @@ Filer::log("$v selected to update", 'update');
             return $this->releases;
         }
 
-        if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . litepubl::$db->mysqli->server_info . '&litepubl=' . litepubl::$options->version)) ||
+        if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' .  $this->getApp()->db->mysqli->server_info . '&litepubl=' .  $this->getApp()->options->version)) ||
 
         ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))) {
-            $this->releases = strtoarray($s);
+            $this->releases = Str::toArray($s);
             return $this->releases;
         }
 
@@ -191,7 +201,7 @@ Filer::log("$v selected to update", 'update');
 
     public function download($version) {
         //if ($this->useshell) return $this->downloadshell($version);
-        $lang = tlocal::i('service');
+        $lang = Lang::i('service');
         $backuper = Backuper::i();
         if (!$backuper->test()) {
             $this->result = $lang->errorwrite;
@@ -215,14 +225,18 @@ Filer::log("$v selected to update", 'update');
     public function downloadshell($version) {
         $filename = "litepublisher.$version.tar.gz";
         $cmd = array();
-        $cmd[] = 'cd ' . litepubl::$paths->backup;
+        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
         $cmd[] = 'wget http://litepublisher.googlecode.com/files/' . $filename;
-        $cmd[] = 'cd ' . litepubl::$paths->home;
-        $cmd[] = sprintf('tar -xf %s%s -p --overwrite', litepubl::$paths->backup, $filename);
-        $cmd[] = 'rm ' . litepubl::$paths->backup . $filename;
-        //dumpstr(implode("\n", $cmd));
+        $cmd[] = 'cd ' .  $this->getApp()->paths->home;
+        $cmd[] = sprintf('tar -xf %s%s -p --overwrite',  $this->getApp()->paths->backup, $filename);
+        $cmd[] = 'rm ' .  $this->getApp()->paths->backup . $filename;
+        //Str::dump(implode("\n", $cmd));
         exec(implode("\n", $cmd) , $r);
-        if ($s = implode("\n", $r)) return $s;
+        if ($s = implode("\n", $r)) {
+ return $s;
+}
+
+
         $this->onupdated();
         return true;
     }

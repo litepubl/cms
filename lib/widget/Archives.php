@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\posts\Archives as Arch;
@@ -17,20 +24,24 @@ class Archives extends Widget
         $this->data['showcount'] = false;
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return Lang::get('default', 'archives');
     }
 
-    protected function setshowcount($value) {
+    protected function setShowcount($value) {
         if ($value != $this->showcount) {
             $this->data['showcount'] = $value;
             $this->Save();
         }
     }
 
-    public function getcontent($id, $sidebar) {
+    public function getContent($id, $sidebar) {
         $arch = Arch::i();
-        if (count($arch->items) == 0) return '';
+        if (count($arch->items) == 0) {
+ return '';
+}
+
+
         $result = '';
         $theme = Theme::i();
         $tml = $theme->getwidgetitem('archives', $sidebar);

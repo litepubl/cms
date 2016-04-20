@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -23,7 +24,7 @@ class Pool extends Data
         $this->modified = array();
     }
 
-    public function getitem($id) {
+    public function getItem($id) {
         if (isset($this->ongetitem)) {
             return call_user_func_array($this->ongetitem, array(
                 $id
@@ -33,12 +34,12 @@ class Pool extends Data
         $this->error('Call abstract method getitem in class' . get_class($this));
     }
 
-    public function getfilename($idpool) {
+    public function getFilename($idpool) {
         return $this->basename . '.pool.' . $idpool;
     }
 
     public function loadpool($idpool) {
-        if ($data = litepubl::$router->cache->get($this->getfilename($idpool))) {
+        if ($data =  $this->getApp()->router->cache->get($this->getfilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
             $this->pool[$idpool] = array();
@@ -47,7 +48,7 @@ class Pool extends Data
 
     public function savepool($idpool) {
         if (!isset($this->modified[$idpool])) {
-            litepubl::$router->onclose = array(
+             $this->getApp()->router->onclose = array(
                 $this,
                 'savemodified',
                 $idpool
@@ -57,10 +58,10 @@ class Pool extends Data
     }
 
     public function savemodified($idpool) {
-        litepubl::$router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+         $this->getApp()->router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
     }
 
-    public function getidpool($id) {
+    public function getIdpool($id) {
         $idpool = (int)floor($id / $this->perpool);
         if (!isset($this->pool[$idpool])) {
 $this->loadpool($idpool);

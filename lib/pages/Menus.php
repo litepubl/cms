@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\Theme;
@@ -11,7 +18,7 @@ class Menus extends \litepubl\core\Items
 
     protected function create() {
         parent::create();
-        $this->addevents('edited', 'onprocessform', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
+        $this->addevents('edited', 'onprocessForm', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
 
         $this->dbversion = false;
         $this->basename = 'menus' . DIRECTORY_SEPARATOR . 'index';
@@ -20,16 +27,20 @@ class Menus extends \litepubl\core\Items
         $this->data['home'] = false;
     }
 
-    public function getlink($id) {
-        return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>', litepubl::$site->url, $this->items[$id]['url'], $this->items[$id]['title']);
+    public function getLink($id) {
+        return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>',  $this->getApp()->site->url, $this->items[$id]['url'], $this->items[$id]['title']);
     }
 
-    public function getdir() {
-        return litepubl::$paths->data . 'menus' . DIRECTORY_SEPARATOR;
+    public function getDir() {
+        return  $this->getApp()->paths->data . 'menus' . DIRECTORY_SEPARATOR;
     }
 
     public function add(Menu $item) {
-        if ($item instanceof tfakemenu) return $this->addfakemenu($item);
+        if ($item instanceof tfakemenu) {
+ return $this->addfakemenu($item);
+}
+
+
         //fix null fields
         foreach ($item->get_owner_props() as $prop) {
             if (!isset($item->data[$prop])) $item->data[$prop] = '';
@@ -42,10 +53,10 @@ class Menus extends \litepubl\core\Items
             $item->url = $linkgen->addurl($item, 'menu');
         }
 
-        if ($item->idview == 1) {
+        if ($item->idschema == 1) {
             $schemes = Schemes::i();
             if (isset($schemes->defaults['menu'])) {
-$item->data['idview'] = $schemes->defaults['menu'];
+$item->data['idschema'] = $schemes->defaults['menu'];
 }
         }
 
@@ -65,19 +76,23 @@ $item->data['idview'] = $schemes->defaults['menu'];
         }
 
         $item->id = $id;
-        $item->idurl = litepubl::$urlmap->Add($item->url, get_class($item) , $item->id);
+        $item->idurl =  $this->getApp()->router->Add($item->url, get_class($item) , $item->id);
         if ($item->status != 'draft') $item->status = 'published';
         $this->lock();
         $this->sort();
         $item->save();
         $this->unlock();
         $this->added($id);
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $id;
     }
 
     public function addfake($url, $title) {
-        if ($id = $this->url2id($url)) return $id;
+        if ($id = $this->url2id($url)) {
+ return $id;
+}
+
+
 
         $fake = new tfakemenu();
         $fake->title = $title;
@@ -106,7 +121,7 @@ $item->data['idview'] = $schemes->defaults['menu'];
         $this->sort();
         $this->added($this->autoid);
         $this->unlock();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $this->autoid;
     }
 
@@ -115,16 +130,16 @@ $item->data['idview'] = $schemes->defaults['menu'];
         $item['order'] = $this->autoid;
         $item['status'] = 'published';
 
-        if ($idurl = litepubl::$urlmap->urlexists($item['url'])) {
+        if ($idurl =  $this->getApp()->router->urlexists($item['url'])) {
             $item['idurl'] = $idurl;
         } else {
-            $item['idurl'] = litepubl::$urlmap->add($item['url'], $item['class'], $this->autoid, 'get');
+            $item['idurl'] =  $this->getApp()->router->add($item['url'], $item['class'], $this->autoid, 'get');
         }
 
         $this->items[$this->autoid] = $item;
         $this->sort();
         $this->save();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $this->autoid;
     }
 
@@ -139,33 +154,57 @@ $item->data['idview'] = $schemes->defaults['menu'];
         $item->save();
         $this->unlock();
         $this->edited($item->id);
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) return false;
-        if ($id == $this->idhome) return false;
-        if ($this->haschilds($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
+        if ($id == $this->idhome) {
+ return false;
+}
+
+
+        if ($this->haschilds($id)) {
+ return false;
+}
+
+
         if ($this->items[$id]['idurl'] > 0) {
-            litepubl::$urlmap->delete($this->items[$id]['url']);
+             $this->getApp()->router->delete($this->items[$id]['url']);
         }
         $this->lock();
         unset($this->items[$id]);
         $this->sort();
         $this->unlock();
         $this->deleted($id);
-        litepubl::$storage->remove($this->dir . $id);
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->storage->remove($this->dir . $id);
+         $this->getApp()->router->clearcache();
         return true;
     }
 
     public function deleteurl($url) {
-        if ($id = $this->url2id($url)) return $this->delete($id);
+        if ($id = $this->url2id($url)) {
+ return $this->delete($id);
+}
+
+
     }
 
     public function deletetree($id) {
-        if (!$this->itemexists($id)) return false;
-        if ($id == $this->idhome) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
+        if ($id == $this->idhome) {
+ return false;
+}
+
+
         $this->lock();
         $childs = $this->getchilds($id);
         foreach ($childs as $child) {
@@ -177,7 +216,11 @@ $item->data['idview'] = $schemes->defaults['menu'];
 
     public function url2id($url) {
         foreach ($this->items as $id => $item) {
-            if ($url == $item['url']) return $id;
+            if ($url == $item['url']) {
+ return $id;
+}
+
+
         }
         return false;
     }
@@ -192,13 +235,17 @@ return false;
         $this->sort();
         $this->unlock();
         $this->deleted($id);
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return true;
     }
 
     public function haschilds($idparent) {
         foreach ($this->items as $id => $item) {
-            if ($item['parent'] == $idparent) return $id;
+            if ($item['parent'] == $idparent) {
+ return $id;
+}
+
+
         }
         return false;
     }
@@ -215,7 +262,7 @@ $this->items[$id]['class'] = $newclass;
         $this->tree = $this->getsubtree(0);
     }
 
-    private function getsubtree($parent) {
+    private function getSubtree($parent) {
         $result = array();
         // first step is a find all childs and sort them
         $sort = array();
@@ -233,12 +280,12 @@ $this->items[$id]['class'] = $newclass;
         return $result;
     }
 
-    public function getparent($id) {
+    public function getParent($id) {
         return $this->items[$id]['parent'];
     }
 
     //return array of id
-    public function getparents($id) {
+    public function getParents($id) {
         $result = array();
         $id = $this->items[$id]['parent'];
         while ($id != 0) {
@@ -250,7 +297,7 @@ $this->items[$id]['class'] = $newclass;
     }
 
     //ищет в дереве список детей, так как они уже отсортированы
-    public function getchilds($id) {
+    public function getChilds($id) {
         if ($id == 0) {
             $result = array();
             foreach ($this->tree as $iditem => $items) {
@@ -285,7 +332,7 @@ $this->items[$id]['class'] = $newclass;
         return !$this->home && ($id == $this->idhome);
     }
 
-    public function getmenu($hover, $current) {
+    public function getMenu($hover, $current) {
         $result = '';
         $this->callevent('onbeforemenu', array(&$result, &$hover,
             $current
@@ -300,7 +347,11 @@ $this->items[$id]['class'] = $newclass;
                 $tml = $theme->templates['menu.item'];
                 $args->submenu = '';
                 foreach ($this->tree as $id => $subitems) {
-                    if ($this->exclude($id)) continue;
+                    if ($this->exclude($id)) {
+ continue;
+}
+
+
                     $args->add($this->items[$id]);
                     $items.= $current == $id ? $theme->parsearg($theme->templates['menu.current'], $args) : $theme->parsearg($tml, $args);
                 }
@@ -316,7 +367,7 @@ $this->items[$id]['class'] = $newclass;
         return $result;
     }
 
-    private function getsubmenu(&$tree, $current, $bootstrap) {
+    private function getSubmenu(&$tree, $current, $bootstrap) {
         $result = '';
         $theme = Theme::i();
         $tml_item = $theme->templates['menu.item'];
@@ -324,9 +375,13 @@ $this->items[$id]['class'] = $newclass;
         $tml_single = $theme->templates['menu.single'];
         $tml_current = $theme->templates['menu.current'];
 
-        $args = new targs();
+        $args = new Args();
         foreach ($tree as $id => $items) {
-            if ($this->exclude($id)) continue;
+            if ($this->exclude($id)) {
+ continue;
+}
+
+
             $args->add($this->items[$id]);
             $submenu = '';
             if (count($items)) {
@@ -351,12 +406,16 @@ $this->items[$id]['class'] = $newclass;
 
     public function class2id($class) {
         foreach ($this->items as $id => $item) {
-            if ($class == $item['class']) return $id;
+            if ($class == $item['class']) {
+ return $id;
+}
+
+
         }
         return false;
     }
 
-    public function getsitemap($from, $count) {
+    public function getSitemap($from, $count) {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count

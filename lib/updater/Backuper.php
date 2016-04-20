@@ -1,14 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
+use litepubl\core\Str;
 
 class Backuper extends \litepubl\core\Events
 {
@@ -40,7 +42,7 @@ class Backuper extends \litepubl\core\Events
     }
 
     public function newTar() {
-require_once(litepubl::$paths->lib . 'include/tar.class.php');
+require_once( $this->getApp()->paths->lib . 'include/tar.class.php');
 return new \tar;
     }
 
@@ -57,8 +59,8 @@ $this->filertype = static ::getprefered();
         return $result;
     }
 
-    public static function getprefered() {
-        $datafile = litepubl::$paths->data . 'storage' . litepubl::$storage->ext;
+    public static function getPrefered() {
+        $datafile =  $this->getApp()->paths->data . 'storage' .  $this->getApp()->storage->ext;
         if (file_exists($datafile)) {
             $dataowner = fileowner($datafile);
             $libowner = fileowner(__DIR__);
@@ -68,12 +70,20 @@ $this->filertype = static ::getprefered();
             }
         }
         //if (extension_loaded('ssh2') && function_exists('stream_get_contents') ) return 'ssh2';
-        if (extension_loaded('ftp')) return 'ftp';
-        if (extension_loaded('sockets') || function_exists('fsockopen')) return 'socket';
+        if (extension_loaded('ftp')) {
+ return 'ftp';
+}
+
+
+        if (extension_loaded('sockets') || function_exists('fsockopen')) {
+ return 'socket';
+}
+
+
         return false;
     }
 
-    public function getfiler() {
+    public function getFiler() {
         if ($this->__filer) {
 return $this->__filer;
 }
@@ -209,7 +219,11 @@ $result = file_get_contents($filename);
                 if ($item['isdir']) {
                     $this->readdir($filename);
                 } else {
-                    if (preg_match('/(\.bak\.php$)|(\.lok$)/', $name)) continue;
+                    if (preg_match('/(\.bak\.php$)|(\.lok$)/', $name)) {
+ continue;
+}
+
+
                     $this->addfile($filename, $filer->getfile($filename) , $item['mode']);
                     if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
                 }
@@ -220,9 +234,9 @@ $result = file_get_contents($filename);
 
     private function readdata($path) {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
-        $filer = tlocalfiler::i();
+        $filer = Langfiler::i();
         if ($list = $filer->getdir($path)) {
-            $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen(litepubl::$paths->data)));
+            $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen( $this->getApp()->paths->data)));
             $this->adddir($dir, $filer->getchmod($path));
             $dir = rtrim($dir, '/') . '/';
             $hasindex = false;
@@ -242,7 +256,11 @@ $result = file_get_contents($filename);
                         $this->readdata($filename);
                     }
                 } else {
-                    if (preg_match('/(\.bak\.php$)|(\.lok$)|(\.log$)/', $name)) continue;
+                    if (preg_match('/(\.bak\.php$)|(\.lok$)|(\.log$)/', $name)) {
+ continue;
+}
+
+
                     $this->addfile($dir . $name, file_get_contents($filename) , $item['mode']);
                     if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
                 }
@@ -253,44 +271,52 @@ $result = file_get_contents($filename);
 
     private function readhome() {
         $filer = $this->filer;
-        $this->chdir(rtrim(litepubl::$paths->home, DIRECTORY_SEPARATOR));
+        $this->chdir(rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR));
         if ($list = $filer->getdir('.')) {
             foreach ($list as $name => $item) {
-                if ($item['isdir']) continue;
+                if ($item['isdir']) {
+ continue;
+}
+
+
                 $this->addfile($name, $filer->getfile($name) , $item['mode']);
             }
         }
     }
 
     public function chdir($dir) {
-        if ($dir === $this->lastdir) return;
+        if ($dir === $this->lastdir) {
+ return;
+}
+
+
         $this->lastdir = $dir;
         //if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
-        if (!($this->__filer instanceof tlocalfiler)) {
+        if (!($this->__filer instanceof Langfiler)) {
             $dir = str_replace('\\', '/', $dir);
             if ('/' != DIRECTORY_SEPARATOR) $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
             $dir = rtrim($dir, '/');
             $root = rtrim($this->ftproot, '/');
-            if (strbegin($dir, $root)) $dir = substr($dir, strlen($root));
+            if (Str::begin($dir, $root)) $dir = substr($dir, strlen($root));
             $this->filer->chdir($dir);
         } else {
             $this->filer->chdir($dir);
         }
     }
 
-    public function setdir($dir) {
+    public function setDir($dir) {
         $dir = trim($dir, '/');
         if ($i = strpos($dir, '/')) $dir = substr($dir, 0, $i);
-        if (!isset(litepubl::$paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
-        $this->chdir(dirname(rtrim(litepubl::$paths->$dir, DIRECTORY_SEPARATOR)));
+        if (!isset( $this->getApp()->paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
+        $this->chdir(dirname(rtrim( $this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
     }
 
-    public function getpartial($plugins, $theme, $lib) {
+    public function getPartial($plugins, $theme, $lib) {
         set_time_limit(300);
         $this->createarchive();
 $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
-        //$this->readdata(litepubl::$paths->data);
+        //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
         $this->readdir('storage/data');
 
@@ -305,10 +331,14 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         if ($theme) {
             $this->setdir('themes');
-            $views = tviews::i();
+            $schemes = Schemas::i();
             $names = array();
-            foreach ($views->items as $id => $item) {
-                if (in_array($item['themename'], $names)) continue;
+            foreach ($schemes->items as $id => $item) {
+                if (in_array($item['themename'], $names)) {
+ continue;
+}
+
+
                 $names[] = $item['themename'];
                 $this->readdir('themes/' . $item['themename']);
             }
@@ -318,7 +348,7 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
             $this->setdir('plugins');
             $plugins = tplugins::i();
             foreach ($plugins->items as $name => $item) {
-                if (@is_dir(litepubl::$paths->plugins . $name)) {
+                if (@is_dir( $this->getApp()->paths->plugins . $name)) {
                     $this->readdir('plugins/' . $name);
                 }
             }
@@ -327,12 +357,12 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
         return $this->savearchive();
     }
 
-    public function getfull() {
+    public function getFull() {
         set_time_limit(300);
         $this->createarchive();
         if (dbversion) $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
-        //$this->readdata(litepubl::$paths->data);
+        //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
         $this->readdir('storage/data');
 
@@ -351,20 +381,20 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
         return $this->savearchive();
     }
 
-    public function getdump() {
-return litepubl::$db->man->export();
+    public function getDump() {
+return  $this->getApp()->db->man->export();
     }
 
-    public function setdump(&$dump) {
-        return litepubl::$db->man->import($dump);
+    public function setDump(&$dump) {
+        return  $this->getApp()->db->man->import($dump);
     }
 
 public function getTempName() {
-return litepubl::$paths->backup . md5rand() . '.zip';
+return  $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
 }
 
     public function uploaddump($s, $filename) {
-        if (strend($filename, '.zip')) {
+        if (Str::end($filename, '.zip')) {
 
 $tempfile = $this->getTempName();
 file_put_contents($tempfile, $s);
@@ -374,7 +404,7 @@ $zip = new \ZipArchive();
             if ($zip->open($tempfile) === true) {
             for ($i = 0; $i < $zip->numFiles; $i++) {
                     $filename = $zip->getNameIndex($i);
-                if (strend($filename, '.sql')) {
+                if (Str::end($filename, '.sql')) {
                     $s = $zip->getFromIndex($i);
                     break;
                 }
@@ -385,11 +415,11 @@ $zip->close();
 }
 
 unlink($tempfile);
-        } elseif (strend($filename, '.tar.gz') || strend($filename, '.tar')) {
+        } elseif (Str::end($filename, '.tar.gz') || Str::end($filename, '.tar')) {
             $tar = $this->newTar();
             $tar->loadfromstring($s);
             foreach ($tar->files as $item) {
-                if (!strend($item['name'], '.sql')) {
+                if (!Str::end($item['name'], '.sql')) {
                     $s = $item['file'];
                     break;
                 }
@@ -405,14 +435,26 @@ unlink($tempfile);
     }
 
     private function writedata($filename, $content, $mode) {
-        if (strend($filename, '/.htaccess')) return true;
-        if (strend($filename, '/index.htm')) return true;
+        if (Str::end($filename, '/.htaccess')) {
+ return true;
+}
+
+
+        if (Str::end($filename, '/index.htm')) {
+ return true;
+}
+
+
         $this->hasdata = true;
         $filename = substr($filename, strlen('storage/data/'));
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
-        $filename = litepubl::$paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
+        $filename =  $this->getApp()->paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
         tfiler::forcedir(dirname($filename));
-        if (file_put_contents($filename, $content) === false) return false;
+        if (file_put_contents($filename, $content) === false) {
+ return false;
+}
+
+
         @chmod($filename, $mode);
         return true;
     }
@@ -427,10 +469,18 @@ unlink($tempfile);
         $mode = $this->filer->getmode($mode);
 
         //ignore home files
-        if (!strpos($filename, '/')) return true;
+        if (!strpos($filename, '/')) {
+ return true;
+}
+
+
         //spec rule for storage folder
-        if (strbegin($filename, 'storage/')) {
-            if (strbegin($filename, 'storage/data/')) return $this->writedata($filename, $content, $mode);
+        if (Str::begin($filename, 'storage/')) {
+            if (Str::begin($filename, 'storage/data/')) {
+ return $this->writedata($filename, $content, $mode);
+}
+
+
             return true;
         }
 
@@ -441,7 +491,11 @@ unlink($tempfile);
             $this->existingfolders[$dir] = true;
         }
 
-        if ($this->filer->putcontent($filename, $content) === false) return false;
+        if ($this->filer->putcontent($filename, $content) === false) {
+ return false;
+}
+
+
         $this->filer->chmod($filename, $mode);
         return true;
     }
@@ -563,7 +617,11 @@ return false;
     }
 
     public function uploadzip($filename) {
-        if (!file_exists($filename)) return false;
+        if (!file_exists($filename)) {
+ return false;
+}
+
+
 
         set_time_limit(300);
         $this->archtype = 'unzip';
@@ -607,25 +665,25 @@ return false;
     }
 
     private function renamedata() {
-        if (!is_dir(litepubl::$paths->backup)) {
-            mkdir(litepubl::$paths->backup, 0777);
-            @chmod(litepubl::$paths->backup, 0777);
+        if (!is_dir( $this->getApp()->paths->backup)) {
+            mkdir( $this->getApp()->paths->backup, 0777);
+            @chmod( $this->getApp()->paths->backup, 0777);
         }
-        $backup = litepubl::$paths->backup . 'data-' . time();
-        $data = rtrim(litepubl::$paths->data, DIRECTORY_SEPARATOR);
+        $backup =  $this->getApp()->paths->backup . 'data-' . time();
+        $data = rtrim( $this->getApp()->paths->data, DIRECTORY_SEPARATOR);
         rename($data, $backup);
-        rename(litepubl::$paths->storage . 'newdata', $data);
+        rename( $this->getApp()->paths->storage . 'newdata', $data);
         Filer::delete($backup, true, true);
     }
 
     private function errorwrite($filename) {
-        $lang = tlocal::admin('service');
+        $lang = Lang::admin('service');
         $this->result = sprintf($lang->errorwritefile, $filename);
         return false;
     }
 
     private function errorarch() {
-        $lang = tlocal::admin('service');
+        $lang = Lang::admin('service');
         $this->result = $lang->errorarchive;
         return false;
     }
@@ -650,7 +708,7 @@ return false;
 
             case 'unzip':
             case 'zip':
-                    $filename = litepubl::$paths->backup . md5rand() . '.zip';
+                    $filename =  $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
                     file_put_contents($filename, $content);
                     @chmod($filename, 0666);
                     $content = '';
@@ -683,8 +741,8 @@ break;
     public function createbackup() {
         /*
         $filer = $this->__filer;
-        if (!$filer || ! ($filer instanceof tlocalfiler)) {
-        $this->__filer = tlocalfiler::i();
+        if (!$filer || ! ($filer instanceof Langfiler)) {
+        $this->__filer = Langfiler::i();
         }
         */
         $result = $this->_savebackup($this->getpartial(false, false, false));
@@ -692,8 +750,8 @@ break;
         return $result;
     }
 
-    public function getfilename($ext) {
-        $filename = litepubl::$paths->backup . litepubl::$domain . date('-Y-m-d');
+    public function getFilename($ext) {
+        $filename =  $this->getApp()->paths->backup .  $this->getApp()->domain . date('-Y-m-d');
         $result = $filename . $ext;
         $i = 2;
         while (file_exists($result) && ($i < 100)) {
@@ -709,15 +767,15 @@ break;
         return $filename;
     }
 
-    public function getshellfilename() {
+    public function getShellfilename() {
         $filename = $this->getfilename('.tar.gz');
         return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')) , strrpos($filename, DIRECTORY_SEPARATOR) + 1);
     }
 
     public function createshellbackup() {
-        $dbconfig = litepubl::$options->dbconfig;
+        $dbconfig =  $this->getApp()->options->dbconfig;
         $cmd = array();
-        $cmd[] = 'cd ' . litepubl::$paths->backup;
+        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
@@ -727,13 +785,13 @@ break;
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return litepubl::$paths->backup . $filename . '.tar.gz';
+        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
     public function createshellfullbackup() {
-        $dbconfig = litepubl::$options->dbconfig;
+        $dbconfig =  $this->getApp()->options->dbconfig;
         $cmd = array();
-        $cmd[] = 'cd ' . litepubl::$paths->backup;
+        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
@@ -743,38 +801,62 @@ break;
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return litepubl::$paths->backup . $filename . '.tar.gz';
+        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
     public function createshellfilesbackup() {
         $cmd = array();
-        $cmd[] = 'cd ' . litepubl::$paths->backup;
-        $filename = 'files_' . litepubl::$domain . date('-Y-m-d');
+        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
+        $filename = 'files_' .  $this->getApp()->domain . date('-Y-m-d');
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return litepubl::$paths->backup . $filename . '.tar.gz';
+        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
     public function test() {
-        if (!@file_put_contents(litepubl::$paths->data . 'index.htm', ' ')) return false;
-        if (!$this->filer->connected) return false;
+        if (!@file_put_contents( $this->getApp()->paths->data . 'index.htm', ' ')) {
+ return false;
+}
+
+
+        if (!$this->filer->connected) {
+ return false;
+}
+
+
         $this->setdir('lib');
         return $this->uploadfile('lib/index.htm', ' ', $this->filer->chmod_file);
     }
 
-    public function getfiletype() {
-        if ($this->archtype == 'zip') return '.zip';
-        if ($this->archtype == 'tar') return '.tar.gz';
+    public function getFiletype() {
+        if ($this->archtype == 'zip') {
+ return '.zip';
+}
+
+
+        if ($this->archtype == 'tar') {
+ return '.tar.gz';
+}
+
+
         return false;
     }
 
-    public function getarchtype($filename) {
-        if (strend($filename, '.zip')) return 'zip';
-        if (strend($filename, '.tar.gz') || strend($filename, '.tar')) return 'tar';
+    public function getArchtype($filename) {
+        if (Str::end($filename, '.zip')) {
+ return 'zip';
+}
+
+
+        if (Str::end($filename, '.tar.gz') || Str::end($filename, '.tar')) {
+ return 'tar';
+}
+
+
         return false;
     }
 

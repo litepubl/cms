@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 use litepubl\config;
@@ -14,7 +15,7 @@ function installOptions($email, $language) {
 $app = litepubl::$app;
     $options = Options::i();
     $options->lock();
-    $options->solt = md5uniq();
+    $options->solt = Str::md5Uniq();
         if (config::$db) {
 //set empty dbconfig to options
     $options->data['dbconfig'] = array(
@@ -53,7 +54,7 @@ $app = litepubl::$app;
         $list = $db->res2array($db->query("show tables from " . $options->dbconfig['dbname']));
         foreach ($list as $row) {
             $table = $row[0];
-            if (strbegin($table, $db->prefix)) {
+            if (Str::begin($table, $db->prefix)) {
                 $db->exec('DROP TABLE IF EXISTS ' . $table);
             }
         }
@@ -63,7 +64,7 @@ $app = litepubl::$app;
     $options->email = $email;
     $options->dateformat = '';
     $options->password = '';
-    $password = md5uniq();
+    $password = Str::md5Uniq();
     $options->changepassword($password);
     $options->authenabled = true;
     $options->cookiehash = '';
@@ -86,7 +87,7 @@ $app = litepubl::$app;
     $options->comments_invert_order = false;
     $options->commentspool = false;
 
-    $versions = strtoarray(file_get_contents(dirname(dirname(__DIR__)) . '/install/versions.txt'));
+    $versions = Str::toArray(file_get_contents(dirname(dirname(__DIR__)) . '/install/versions.txt'));
     $options->version = $versions[0];
     $options->echoexception = true;
     $options->parsepost = true;

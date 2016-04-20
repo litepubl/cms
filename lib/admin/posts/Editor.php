@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\posts;
 use litepubl\post\Posts as PostItems;
@@ -25,7 +26,7 @@ class Editor extends \litepubl\admin\Menu
     public $idpost;
     protected $isauthor;
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
 
         $mainView = MainView::i();
@@ -39,7 +40,7 @@ class Editor extends \litepubl\admin\Menu
         return $result;
     }
 
-    public static function getcombocategories(array $items, $idselected) {
+    public static function getCombocategories(array $items, $idselected) {
         $result = '';
         $categories = Cats::i();
         $categories->loadall();
@@ -56,7 +57,7 @@ class Editor extends \litepubl\admin\Menu
         return $result;
     }
 
-    protected function getcategories(tpost $post) {
+    protected function getCategories(tpost $post) {
         $postitems = $post->categories;
         $categories = Cats::i();
         if (!count($postitems)) {
@@ -68,7 +69,7 @@ class Editor extends \litepubl\admin\Menu
         return $this->admintheme->getcats($postitems);
     }
 
-    public function getvarpost($post) {
+    public function getVarpost($post) {
         if (!$post) {
             return Base::$vars['post'];
         }
@@ -76,18 +77,18 @@ class Editor extends \litepubl\admin\Menu
         return $post;
     }
 
-    public function getajaxlink($idpost) {
-        return litepubl::$site->url . '/admin/ajaxposteditor.htm' . litepubl::$site->q . "id=$idpost&get";
+    public function getAjaxlink($idpost) {
+        return  $this->getApp()->site->url . '/admin/ajaxposteditor.htm' .  $this->getApp()->site->q . "id=$idpost&get";
     }
 
-    public function gettabs($post = null) {
+    public function getTabs($post = null) {
         $post = $this->getvarpost($post);
-        $args = new targs();
+        $args = new Args();
         $this->getargstab($post, $args);
         return $this->admintheme->parsearg($this->gettabstemplate() , $args);
     }
 
-    public function gettabstemplate() {
+    public function getTabstemplate() {
         $admintheme = $this->admintheme;
         return strtr($admintheme->templates['tabs'], array(
             '$id' => 'tabs',
@@ -96,7 +97,7 @@ class Editor extends \litepubl\admin\Menu
         ));
     }
 
-    public function getargstab(tpost $post, targs $args) {
+    public function getArgstab(tpost $post, targs $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         //categories tab
@@ -114,19 +115,19 @@ class Editor extends \litepubl\admin\Menu
     }
 
     // $posteditor.files in template editor
-    public function getfilelist($post = null) {
+    public function getFilelist($post = null) {
         $post = $this->getvarpost($post);
         return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
     }
 
-    public function gettext($post = null) {
+    public function getText($post = null) {
         $post = $this->getvarpost($post);
         $Ajax= Ajax::i();
         return $ajax->gettext($post->rawcontent, $this->admintheme);
     }
 
     public function canrequest() {
-        tlocal::admin()->searchsect[] = 'editor';
+        Lang::admin()->searchsect[] = 'editor';
         $this->isauthor = false;
         $this->basename = 'editor';
         $this->idpost = $this->idget();
@@ -138,42 +139,46 @@ class Editor extends \litepubl\admin\Menu
         }
 
         $post = Post::i($this->idpost);
-        if (!litepubl::$options->hasgroup('editor')) {
-            if (litepubl::$options->hasgroup('author')) {
+        if (! $this->getApp()->options->hasgroup('editor')) {
+            if ( $this->getApp()->options->hasgroup('author')) {
                 $this->isauthor = true;
-                if (($post->id != 0) && (litepubl::$options->user != $post->author)) {
+                if (($post->id != 0) && ( $this->getApp()->options->user != $post->author)) {
                     return 403;
                 }
             }
         }
     }
 
-    public function gettitle() {
+    public function getTitle() {
         if ($this->idpost == 0) {
             return parent::gettitle();
         } else {
-            if (isset(tlocal::admin()->ini[$this->name]['editor'])) return tlocal::get($this->name, 'editor');
-            return tlocal::get('editor', 'editor');
+            if (isset(Lang::admin()->ini[$this->name]['editor'])) {
+ return Lang::get($this->name, 'editor');
+}
+
+
+            return Lang::get('editor', 'editor');
         }
     }
 
-    public function getexternal() {
+    public function getExternal() {
         $this->basename = 'editor';
         $this->idpost = 0;
         return $this->getcontent();
     }
 
-    public function getpostargs(tpost $post, targs $args) {
+    public function getPostargs(tpost $post, targs $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         $args->title = Filter::unescape($post->title);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $admintheme = $this->admintheme;
-        $lang = tlocal::admin('editor');
-        $args = new targs();
+        $lang = Lang::admin('editor');
+        $args = new Args();
 
         $post = $this->idpost ? Post::i($this->idpost) : $this->newpost();
         $vars = new Vars();
@@ -201,8 +206,8 @@ class Editor extends \litepubl\admin\Menu
         $post->title = $title;
         $post->categories = $this->admintheme->processcategories();
 
-        if (($post->id == 0) && (litepubl::$options->user > 1)) {
-            $post->author = litepubl::$options->user;
+        if (($post->id == 0) && ( $this->getApp()->options->user > 1)) {
+            $post->author =  $this->getApp()->options->user;
         }
 
         if (isset($tags)) {
@@ -213,8 +218,8 @@ class Editor extends \litepubl\admin\Menu
             $post->icon = (int)$icon;
         }
 
-        if (isset($idview)) {
-            $post->idview = (int)$idview;
+        if (isset($idschema)) {
+            $post->idschema = (int)$idschema;
         }
 
         if (isset($posted) && $posted) {
@@ -255,7 +260,7 @@ class Editor extends \litepubl\admin\Menu
 
     public function canprocess() {
         if (empty($_POST['title'])) {
-            $lang = tlocal::admin('editor');
+            $lang = Lang::admin('editor');
             return $lang->emptytitle;
         }
     }
@@ -263,8 +268,8 @@ class Editor extends \litepubl\admin\Menu
     public function afterprocess(tpost $post) {
     }
 
-    public function processform() {
-        $lang = tlocal::admin('editor');
+    public function processForm() {
+        $lang = Lang::admin('editor');
         $admintheme = $this->admintheme;
 
         if ($error = $this->canprocess()) {

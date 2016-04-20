@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\users;
 use litepubl\core\UserGroups;
@@ -14,11 +15,11 @@ use litepubl\admin\Link;
 class Groups extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $groups = UserGroups::i();
 $admin = $this->admintheme;
-        $lang = tlocal::admin('users');
-        $args = targs::i();
+        $lang = Lang::admin('users');
+        $args = new Args();
         $adminurl = $this->adminurl;
         $result = "<h4><a href='$adminurl=0&action=add'>$lang->addgroup</a></h4>";
 
@@ -80,7 +81,7 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $groups = UserGroups::i();
         switch ($this->action) {
             case 'add':

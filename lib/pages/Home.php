@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\core\CoEvents;
@@ -38,7 +39,7 @@ class Home extends SingleMenu
         $this->midleposts = false;
     }
 
-    public function getindex_tml() {
+    public function getIndex_tml() {
         $theme = $this->theme;
         if (!empty($theme->templates['index.home'])) {
 return $theme->templates['index.home'];
@@ -48,14 +49,18 @@ return $theme->templates['index.home'];
     }
 
     public function request($id) {
-        if (!$this->showpagenator && (litepubl::$urlmap->page > 1)) return 404;
+        if (!$this->showpagenator && ( $this->getApp()->router->page > 1)) {
+ return 404;
+}
+
+
         return parent::request($id);
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
 
-        $theme = tview::getview($this)->theme;
+        $theme = Schema::getview($this)->theme;
         $result.= $theme->templates['head.home'];
 
         if ($this->showposts) {
@@ -67,14 +72,14 @@ return $theme->templates['index.home'];
         return $theme->parse($result);
     }
 
-    public function gettitle() {
+    public function getTitle() {
     }
 
-    public function getbefore() {
+    public function getBefore() {
         if ($result = $this->content) {
             $theme = $this->theme;
             $result = $theme->simple($result);
-            if ($this->parsetags || litepubl::$options->parsepost) {
+            if ($this->parsetags ||  $this->getApp()->options->parsepost) {
                 $result = $theme->parse($result);
             }
 
@@ -84,9 +89,9 @@ return $theme->templates['index.home'];
         return '';
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = '';
-        if (litepubl::$urlmap->page == 1) {
+        if ( $this->getApp()->router->page == 1) {
             $result.= $this->getbefore();
             if ($this->showmidle && $this->midlecat) {
                 $result.= $this->getmidle();
@@ -100,28 +105,36 @@ return $theme->templates['index.home'];
         return $result;
     }
 
-    public function getpostnavi() {
+    public function getPostnavi() {
         $items = $this->getidposts();
-        $view = tview::getview($this);
-        $result = $view->theme->getposts($items, $view->postanounce);
+        $schema = Schema::getview($this);
+        $result = $schema->theme->getposts($items, $schema->postanounce);
         if ($this->showpagenator) {
-            $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
-            $result.= $view->theme->getpages($this->url, litepubl::$urlmap->page, ceil($this->data['archcount'] / $perpage));
+            $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+            $result.= $schema->theme->getpages($this->url,  $this->getApp()->router->page, ceil($this->data['archcount'] / $perpage));
         }
         return $result;
     }
 
-    public function getidposts() {
-        if (is_array($this->cacheposts)) return $this->cacheposts;
-        if ($result = $this->onbeforegetitems()) return $result;
+    public function getIdposts() {
+        if (is_array($this->cacheposts)) {
+ return $this->cacheposts;
+}
+
+
+        if ($result = $this->onbeforegetitems()) {
+ return $result;
+}
+
+
         $posts = Posts::i();
         $schema = Schema::getSchema($this);
-        $perpage = $schema->perpage ? $schema->perpage : litepubl::$options->perpage;
-        $from = (litepubl::$urlmap->page - 1) * $perpage;
+        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+        $from = ( $this->getApp()->router->page - 1) * $perpage;
         $order = $schema->invertorder ? 'asc' : 'desc';
 
-        $p = litepubl::$db->prefix . 'posts';
-        $ci = litepubl::$db->prefix . 'categoriesitems';
+        $p =  $this->getApp()->db->prefix . 'posts';
+        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
 
         if ($where = $this->getwhere()) {
             $result = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.item as item from $p, $ci
@@ -132,7 +145,7 @@ return $theme->templates['index.home'];
             $posts->loaditems($result);
         } else {
             $this->data['archcount'] = $posts->archivescount;
-            $result = $posts->getpage(0, litepubl::$urlmap->page, $perpage, $schema->invertorder);
+            $result = $posts->getpage(0,  $this->getApp()->router->page, $perpage, $schema->invertorder);
         }
 
         $this->callevent('ongetitems', array(&$result
@@ -141,10 +154,10 @@ return $theme->templates['index.home'];
         return $result;
     }
 
-    public function getwhere() {
+    public function getWhere() {
         $result = '';
-        $p = litepubl::$db->prefix . 'posts';
-        $ci = litepubl::$db->prefix . 'categoriesitems';
+        $p =  $this->getApp()->db->prefix . 'posts';
+        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
         if ($this->showmidle && $this->midlecat) {
             $ex = $this->getmidleposts();
             if (count($ex)) $result.= sprintf('%s.id not in (%s) ', $p, implode(',', $ex));
@@ -167,12 +180,16 @@ return $theme->templates['index.home'];
     }
 
     public function postschanged() {
-        if (!$this->showposts || !$this->showpagenator) return;
+        if (!$this->showposts || !$this->showpagenator) {
+ return;
+}
+
+
 
         if ($where = $this->getwhere()) {
             $db = $this->db;
-            $p = litepubl::$db->prefix . 'posts';
-            $ci = litepubl::$db->prefix . 'categoriesitems';
+            $p =  $this->getApp()->db->prefix . 'posts';
+            $ci =  $this->getApp()->db->prefix . 'categoriesitems';
 
             $res = $db->query("select count(DISTINCT $p.id) as count from $p, $ci
       where    $where and $p.id = $ci.post and $p.status = 'published'");
@@ -185,7 +202,7 @@ return $theme->templates['index.home'];
         $this->save();
     }
 
-    public function getmidletitle() {
+    public function getMidletitle() {
         if ($idcat = $this->midlecat) {
             return $this->getdb('categories')->getvalue($idcat, 'title');
         }
@@ -193,20 +210,24 @@ return $theme->templates['index.home'];
         return '';
     }
 
-    public function getmidleposts() {
-        if (is_array($this->midleposts)) return $this->midleposts;
+    public function getMidleposts() {
+        if (is_array($this->midleposts)) {
+ return $this->midleposts;
+}
+
+
         $posts = tposts::i();
         $p = $posts->thistable;
-        $ci = litepubl::$db->prefix . 'categoriesitems';
+        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
         $this->midleposts = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.post as post from $p, $ci
     where    $ci.item = $this->midlecat and $p.id = $ci.post and $p.status = 'published'
-    order by  $p.posted desc limit " . litepubl::$options->perpage));
+    order by  $p.posted desc limit " .  $this->getApp()->options->perpage));
 
         if (count($this->midleposts)) $posts->loaditems($this->midleposts);
         return $this->midleposts;
     }
 
-    public function getmidle() {
+    public function getMidle() {
         $result = '';
         $items = $this->getmidleposts();
         if (!count($items)) {

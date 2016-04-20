@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\Lang;
@@ -8,8 +15,8 @@ use litepubl\comments\Subscribers;
 
 class Mail extends \litepubl\admin\Menu
 {
-public function getcontent() {
-$options = litepubl::$options;
+public function getContent() {
+$options =  $this->getApp()->options;
 $lang = Lang::admin('options');
 $args = new Args();
                 $args->adminemail = $options->email;
@@ -38,23 +45,23 @@ $args = new Args();
       ', $args);
 }
 
-public function processform() {
+public function processForm() {
         extract($_POST, EXTR_SKIP);
                 if (!empty($adminemail)) {
-                    litepubl::$options->email = $adminemail;
+                     $this->getApp()->options->email = $adminemail;
                     $this->getdb('users')->setvalue(1, 'email', $adminemail);
                 }
 
                 if (!empty($fromemail)) {
-litepubl::$options->fromemail = $fromemail;
+ $this->getApp()->options->fromemail = $fromemail;
 }
 
-                litepubl::$options->smtp = empty($smtp) ? '' : 'smtp';
+                 $this->getApp()->options->smtp = empty($smtp) ? '' : 'smtp';
                 if (!empty($subscribeemail)) {
                     $subscribe = Subscribers::i();
                     $subscribe->fromemail = $subscribeemail;
                     $subscribe->save();
-                    litepubl::$options->fromemail = $subscribeemail;
+                     $this->getApp()->options->fromemail = $subscribeemail;
                 }
 
                 $smtp = Smtp::i();

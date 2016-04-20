@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\Lang;
@@ -41,18 +42,18 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
         $this->createfiles();
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return Lang::get('default', 'sitemap');
     }
 
-    public function getcont() {
-        $result = '<h4>' . tlocal::get('default', 'sitemap') . '</h4><ul>';
+    public function getCont() {
+        $result = '<h4>' . Lang::get('default', 'sitemap') . '</h4><ul>';
         $theme = $this->getSchema()->theme;
         $perpage = 1000;
         $count = 0;
-        $from = (litepubl::$urlmap->page - 1) * $perpage;
-        $siteurl = litepubl::$site->url;
-        $classes = litepubl::$urlmap->page == 1 ? $this->classes : 'tposts';
+        $from = ( $this->getApp()->router->page - 1) * $perpage;
+        $siteurl =  $this->getApp()->site->url;
+        $classes =  $this->getApp()->router->page == 1 ? $this->classes : 'tposts';
         foreach ($classes as $class) {
             $instance = getinstance($class);
             $links = $instance->getsitemap($from, $perpage - $count);
@@ -72,24 +73,24 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
             if ($count > $perpage) break;
         }
         $result.= '</ul>';
-        //    $result .=$theme->getpages('/sitemap.htm', litepubl::$urlmap->page, ceil($posts->archivescount / $perpage));
+        //    $result .=$theme->getpages('/sitemap.htm',  $this->getApp()->router->page, ceil($posts->archivescount / $perpage));
         return $result;
     }
 
     public function request($arg) {
         if ($arg == 'xml') {
-            return '<?php turlmap::sendxml(); ?>' . $this->GetIndex();
+            return '<?php \litepubl\core\Router::sendxml(); ?>' . $this->GetIndex();
         }
     }
 
     public function getIndex() {
         $lastmod = date('Y-m-d', $this->date);
         $result = '<sitemapindex xmlns="http://www.google.com/schemas/sitemap/0.84">';
-        $url = litepubl::$site->files . '/files/' . litepubl::$domain;
+        $url =  $this->getApp()->site->files . '/files/' .  $this->getApp()->domain;
         $exists = true;
         for ($i = 1; $i <= $this->countfiles; $i++) {
             $result.= "<sitemap><loc>$url.$i.xml.gz</loc>      <lastmod>$lastmod</lastmod></sitemap>";
-            if ($exists) $exists = file_exists(litepubl::$paths->files . "$i.xml.gz");
+            if ($exists) $exists = file_exists( $this->getApp()->paths->files . "$i.xml.gz");
         }
         $this->callevent('onindex', array(&$result
         ));
@@ -107,7 +108,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
 
         $home = Home::i();
         $this->prio = 9;
-        $this->write('/', $home->showposts && $home->showpagenator ? ceil($home->archcount / litepubl::$options->perpage) : 1);
+        $this->write('/', $home->showposts && $home->showpagenator ? ceil($home->archcount /  $this->getApp()->options->perpage) : 1);
 
         $perpage = 1000;
         foreach ($this->classes as $prio => $class) {
@@ -141,7 +142,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
     }
 
     private function writeitem($url, $prio) {
-        $url = litepubl::$site->url . $url;
+        $url =  $this->getApp()->site->url . $url;
         gzwrite($this->fd, "<url><loc>$url</loc><lastmod>$this->lastmod</lastmod>" . "<changefreq>daily</changefreq><priority>0.$prio</priority></url>");
 
         if (++$this->count >= 30000) {
@@ -153,10 +154,10 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
     private function openfile() {
         $this->count = 0;
         $this->countfiles++;
-        if ($this->fd = gzopen(litepubl::$paths->files . litepubl::$domain . ".$this->countfiles.xml.gz", 'w')) {
+        if ($this->fd = gzopen( $this->getApp()->paths->files .  $this->getApp()->domain . ".$this->countfiles.xml.gz", 'w')) {
             $this->WriteHeader();
         } else {
-            tfiler::log("error write file to folder " . litepubl::$paths->files);
+            tfiler::log("error write file to folder " .  $this->getApp()->paths->files);
             exit();
         }
     }
@@ -164,7 +165,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerI
     private function closefile() {
         $this->WriteFooter();
         gzclose($this->fd);
-        @chmod(litepubl::$paths->files . litepubl::$domain . ".$this->countfiles.xml.gz", 0666);
+        @chmod( $this->getApp()->paths->files .  $this->getApp()->domain . ".$this->countfiles.xml.gz", 0666);
         $this->fd = false;
     }
 

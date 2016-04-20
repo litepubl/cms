@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\service;
 use litepubl\updater\Backuper;
@@ -8,7 +15,7 @@ use litepubl\view\Args;
 class Login extends \litepubl\admin\Menu
 {
 
-    public function getloginform() {
+    public function getLoginform() {
         $backuper = Backuper::i();
         //$backuper->filertype = 'ftp';
         if ($backuper->filertype == 'file') {

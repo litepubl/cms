@@ -1,30 +1,35 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 
 function LangInstall($self) {
     lang::$self = $self;
     //check double install
-    if (count($self->ini) > 0) return;
-    preloadlanguage($self, litepubl::$options->language);
-    litepubl::$options->timezone = lang::get('installation', 'timezone');
+    if (count($self->ini) > 0) {
+ return;
+}
+
+
+    preloadlanguage($self,  $self->getApp()->options->language);
+     $self->getApp()->options->timezone = lang::get('installation', 'timezone');
 }
 
 function LangPreinstall($language) {
     $lang = new lang();
     lang::$self = $lang;
-    litepubl::$classes->instances[get_class($lang)] = $lang;
+     $self->getApp()->classes->instances[get_class($lang)] = $lang;
     preloadlanguage($lang, $language);
 }
 
 function preloadlanguage($lang, $language) {
-    $dir = litepubl::$paths->languages . $language . DIRECTORY_SEPARATOR;
+    $dir =  $self->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
     foreach (array(
         'default',
         'admin',

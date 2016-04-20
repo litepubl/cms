@@ -1,30 +1,31 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\widget\Meta as MetaWidget;
 
 function RssFilesInstall($self) {
-    litepubl::$router->add('/rss/multimedia.xml', get_class($self) , '');
-    litepubl::$router->add('/rss/images.xml', get_class($self) , 'image');
-    litepubl::$router->add('/rss/audio.xml', get_class($self) , 'audio');
-    litepubl::$router->add('/rss/video.xml', get_class($self) , 'video');
+     $self->getApp()->router->add('/rss/multimedia.xml', get_class($self) , '');
+     $self->getApp()->router->add('/rss/images.xml', get_class($self) , 'image');
+     $self->getApp()->router->add('/rss/audio.xml', get_class($self) , 'audio');
+     $self->getApp()->router->add('/rss/video.xml', get_class($self) , 'video');
 
     $files = Files::i();
     $files->changed = $self->fileschanged;
     $self->save();
 
     $meta = MetaWidget::i();
-    $meta->add('media', '/rss/multimedia.xml', tlocal::get('default', 'rssmedia'));
+    $meta->add('media', '/rss/multimedia.xml', Lang::get('default', 'rssmedia'));
 }
 
 function RssFilesUninstall($self) {
-    litepubl::$router->unbind($self);
+     $self->getApp()->router->unbind($self);
     $files = Files::i();
     $files->unbind($self);
 

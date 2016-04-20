@@ -1,14 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 use litepubl\post\Posts;
 use litepubl\post\Post;
+use litepubl\Config;
+use litepubl\core\Str;
 
 class Livejournal extends Common
 {
@@ -20,18 +23,30 @@ class Livejournal extends Common
     }
 
     private function lj_auth(array $struct) {
-        if ($this->_auth($struct)) return true;
+        if ($this->_auth($struct)) {
+ return true;
+}
+
+
         return $this->error('Bad login/pass combination.', 403);
     }
 
     private function _auth(array $struct) {
         extract($struct, EXTR_SKIP);
-        $options = litepubl::$options;
-        if ($username != $options->email) return false;
+        $options =  $this->getApp()->options;
+        if ($username != $options->email) {
+ return false;
+}
+
+
 
         switch ($auth_method) {
             case 'challenge':
-                if (litepubl::$debug) return ($this->_challenge == $auth_challenge);
+                if (Config::$debug) {
+ return ($this->_challenge == $auth_challenge);
+}
+
+
                 return ($this->_challenge == $auth_challenge) && ($auth_response == md5($this->challenge . $options->password));
 
             case 'clear':
@@ -55,9 +70,9 @@ class Livejournal extends Common
         return $result;
     }
 
-    public function getchallenge() {
+    public function getChallenge() {
         if (time() >= $this->expired) {
-            $this->_challenge = md5uniq();
+            $this->_challenge = Str::md5Uniq();
             $this->expired = time() + 3600;
             $this->save();
         }
@@ -77,7 +92,11 @@ class Livejournal extends Common
     private function EditPost($id, $struct) {
         $posts = Posts::i();
         if ($id > 0) {
-            if ($posts->itemexists($id)) return $this->xerror(403, 'Post not found');
+            if ($posts->itemexists($id)) {
+ return $this->xerror(403, 'Post not found');
+}
+
+
         }
         $post = Post::i($id);
         $post->content = $struct['event'];
@@ -104,7 +123,7 @@ class Livejournal extends Common
 
         if (isset($struct['props'])) {
             $props = & $struct['props'];
-            $post->comstatus = $props['opt_nocomments'] ? 'closed' : litepubl::$options->comstatus;
+            $post->comstatus = $props['opt_nocomments'] ? 'closed' :  $this->getApp()->options->comstatus;
             if ($props['opt_preformatted']) {
                 $post->filtered = $struct['event'];
             }
@@ -142,7 +161,11 @@ class Livejournal extends Common
         $id = (int)$struct['itemid'];
         if (empty($struct['event'])) {
             $posts = Posts::i();
-            if (!$posts->itemexists($id)) return $this->xerror(404, 'Post not found');
+            if (!$posts->itemexists($id)) {
+ return $this->xerror(404, 'Post not found');
+}
+
+
             $post = Post::i($id);
             $url = $post->url;
             $posts->delete($id);

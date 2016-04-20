@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -15,7 +16,7 @@ function twikiwordsInstall($self) {
     `word` text NOT NULL,
     PRIMARY KEY  (`id`)");
 
-        $manager->createtable($self->itemsposts->table, file_get_contents(litepubl::$paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
+        $manager->createtable($self->itemsposts->table, file_get_contents( $self->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
     }
 
     $filter = tcontentfilter::i();
@@ -24,13 +25,13 @@ function twikiwordsInstall($self) {
     $posts = tposts::i();
     $posts->deleted = $self->postdeleted;
 
-    litepubl::$classes->classes['wikiwords'] = get_class($self);
-    litepubl::$classes->save();
+     $self->getApp()->classes->classes['wikiwords'] = get_class($self);
+     $self->getApp()->classes->save();
 }
 
 function twikiwordsUninstall($self) {
-    unset(litepubl::$classes->classes['wikiword']);
-    litepubl::$classes->save();
+    unset( $self->getApp()->classes->classes['wikiword']);
+     $self->getApp()->classes->save();
 
     $filter = tcontentfilter::i();
     $filter->unbind($self);

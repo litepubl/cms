@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\updater;
 
@@ -16,7 +17,7 @@ class Local extends Remote
         $this->connected = true;
     }
 
-    public function getfile($file) {
+    public function getFile($file) {
         return file_get_contents($file);
     }
 
@@ -38,8 +39,16 @@ class Local extends Remote
     }
 
     public function chgrp($file, $group, $recursive = false) {
-        if (!$this->exists($file)) return false;
-        if (!$recursive || !$this->is_dir($file)) return @chgrp($file, $group);
+        if (!$this->exists($file)) {
+ return false;
+}
+
+
+        if (!$recursive || !$this->is_dir($file)) {
+ return @chgrp($file, $group);
+}
+
+
 
         $file = rtrim($file, '/') . '/';
         $filelist = $this->getdir($file);
@@ -54,8 +63,16 @@ class Local extends Remote
     }
 
     public function chown($file, $owner, $recursive = false) {
-        if (!$this->exists($file)) return false;
-        if (!$recursive || !$this->is_dir($file)) return @chown($file, $owner);
+        if (!$this->exists($file)) {
+ return false;
+}
+
+
+        if (!$recursive || !$this->is_dir($file)) {
+ return @chown($file, $owner);
+}
+
+
 
         $filelist = $this->getdir($file);
         foreach ($filelist as $filename) {
@@ -68,7 +85,7 @@ class Local extends Remote
         return static ::getownername(@fileowner($file));
     }
 
-    public function getchmod($file) {
+    public function getChmod($file) {
         return substr(decoct(@fileperms($file)) , 3);
     }
 
@@ -81,10 +98,22 @@ class Local extends Remote
     }
 
     public function delete($file, $recursive = false) {
-        if (empty($file)) return false;
+        if (empty($file)) {
+ return false;
+}
+
+
         $file = str_replace('\\', '/', $file); //for win32, occasional problems deleteing files otherwise
-        if ($this->is_file($file)) return unlink($file);
-        if (!$recursive && $this->is_dir($file)) return rmdir($file);
+        if ($this->is_file($file)) {
+ return unlink($file);
+}
+
+
+        if (!$recursive && $this->is_dir($file)) {
+ return rmdir($file);
+}
+
+
 
         $result = true;
         if ($filelist = $this->getdir(rtrim($file, '/') . '/', true)) {
@@ -92,7 +121,11 @@ class Local extends Remote
                 $result = $this->delete($file . $filename, true) && $result;
             }
         }
-        if (file_exists($file) && !@rmdir($file)) return false;
+        if (file_exists($file) && !@rmdir($file)) {
+ return false;
+}
+
+
         return $result;
     }
 
@@ -131,19 +164,27 @@ class Local extends Remote
     public function mkdir($path, $chmod) {
         if (!$chmod) $chmod = $this->chmod_dir;
         $chmod = $this->getmode($chmod);
-        if (!@mkdir($path, $chmod)) return false;
+        if (!@mkdir($path, $chmod)) {
+ return false;
+}
+
+
         @chmod($path, $chmod);
         return true;
     }
 
-    public function getdir($path) {
+    public function getDir($path) {
         if ($this->is_file($path)) $path = dirname($path);
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         $path = rtrim($path, DIRECTORY_SEPARATOR);
         if ($dir = @dir($path)) {
             $result = array();
             while (false !== ($name = $dir->read())) {
-                if (($name == '.') || ($name == '..') || ($name == '.svn')) continue;
+                if (($name == '.') || ($name == '..') || ($name == '.svn')) {
+ continue;
+}
+
+
                 $fullname = $path . DIRECTORY_SEPARATOR . $name;
                 $a = $this->getfileinfo($fullname);
                 $a['name'] = $name;

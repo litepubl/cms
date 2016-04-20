@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,7 +15,7 @@ class ttidyfilter extends tplugin {
         return getinstance(__class__);
     }
 
-    public function gethtml($s) {
+    public function getHtml($s) {
         return sprintf('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . '<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -23,7 +24,7 @@ class ttidyfilter extends tplugin {
     <body><div>%s</div></body></html>', $s);
     }
 
-    public function getbody($s) {
+    public function getBody($s) {
         $tag = '<div>';
         $i = strpos($s, $tag) + strlen($tag);
         $j = strrpos($s, '</div>');

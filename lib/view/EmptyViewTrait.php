@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 
@@ -13,33 +14,33 @@ trait EmptyViewTrait
 
     protected function createData() {
         parent::createData();
-        $this->data['idview'] = 1;
+        $this->data['idschema'] = 1;
     }
 
     public function request($arg) {
 }
 
-    public function gethead() {
+    public function getHead() {
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
     }
 
-    public function getdescription() {
+    public function getDescription() {
     }
 
     public function getIdSchema() {
-        return $this->data['idview'];
+        return $this->data['idschema'];
     }
 
     public function setIdSchema($id) {
         if ($id != $this->IdSchema) {
-            $this->data['idview'] = $id;
+            $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getschema() {
+    public function getSchema() {
         return Schema::getSchema($this);
     }
 

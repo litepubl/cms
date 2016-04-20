@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\perms\Perms;
@@ -27,7 +34,7 @@ class GetPerm
     }
 
     public static function items($idperm) {
-        $result = sprintf('<option value="0" %s>%s</option>', $idperm == 0 ? 'selected="selected"' : '', tlocal::get('perms', 'nolimits'));
+        $result = sprintf('<option value="0" %s>%s</option>', $idperm == 0 ? 'selected="selected"' : '', Lang::get('perms', 'nolimits'));
         $perms = Perms::i();
         foreach ($perms->items as $id => $item) {
             $result.= sprintf('<option value="%d" %s>%s</option>', $id, $idperm == $id ? 'selected="selected"' : '', $item['name']);
@@ -43,7 +50,7 @@ $tml =$admin->templates['checkbox.label'];
 $ulist = new UList($admin);
 $ulist->value = $ulist->link;
 
-        $args = new targs();
+        $args = new Args();
         foreach ($groups->items as $id => $item) {
 $args->add($item);
 $args->id = $id;

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -20,7 +21,7 @@ class Data {
     public $table;
 
     public static function i() {
-        return litepubl::$classes->getinstance(get_called_class());
+        return  $this->getApp()->classes->getinstance(get_called_class());
     }
 
     public static function instance() {
@@ -124,7 +125,7 @@ $this->createData();
         throw new \Exception($Msg, $code);
     }
 
-    public function getbasename() {
+    public function getBasename() {
         return $this->basename;
     }
 
@@ -157,7 +158,7 @@ return litepubl::$app;
         $filename = $reflector->getFileName();
 
         if (strpos($filename, '/kernel.')) {
-            $filename = dirname($filename) . '/' . litepubl::$classes->items[$class];
+            $filename = dirname($filename) . '/' .  $this->getApp()->classes->items[$class];
         }
 
         $externalname = basename($filename, '.php') . '.install.php';
@@ -187,8 +188,8 @@ return litepubl::$app;
         }
     }
 
-    public function getstorage() {
-        return litepubl::$storage;
+    public function getStorage() {
+        return  $this->getApp()->storage;
     }
 
     public function load() {
@@ -226,7 +227,7 @@ return litepubl::$app;
         }
     }
 
-    public function getlocked() {
+    public function getLocked() {
         return $this->lockcount > 0;
     }
 
@@ -234,22 +235,22 @@ return litepubl::$app;
         return get_class($this);
     }
 
-    public function getdbversion() {
+    public function getDbversion() {
         return false;
 
     }
 
-    public function getdb($table = '') {
+    public function getDb($table = '') {
         $table = $table ? $table : $this->table;
         if ($table) {
-            litepubl::$db->table = $table;
+             $this->getApp()->db->table = $table;
         }
 
-        return litepubl::$db;
+        return  $this->getApp()->db;
     }
 
-    protected function getthistable() {
-        return litepubl::$db->prefix . $this->table;
+    protected function getThistable() {
+        return  $this->getApp()->db->prefix . $this->table;
     }
 
     public static function get_class_name($c) {

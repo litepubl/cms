@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -22,28 +23,32 @@ class tbookmarkswidget extends tlinkswidget {
         $this->redirlink = '/addtobookmarks.htm';
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         $about = tplugins::getabout(tplugins::getname(__file__));
         return $about['name'];
     }
 
-    public function getwidget($id, $sidebar) {
+    public function getWidget($id, $sidebar) {
         $widgets = twidgets::i();
         return $widgets->getinline($id, $sidebar);
     }
 
-    public function getcontent($id, $sidebar) {
-        if (litepubl::$urlmap->is404) return '';
+    public function getContent($id, $sidebar) {
+        if ( $this->getApp()->router->is404) {
+ return '';
+}
+
+
         $result = '';
         $a = array(
-            '$url' => urlencode(litepubl::$site->url . litepubl::$urlmap->url) ,
+            '$url' => urlencode( $this->getApp()->site->url .  $this->getApp()->router->url) ,
             '$title' => urlencode(ttemplate::i()->title)
         );
-        $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . strtr('url=$url&title=$title&id=', $a);
-        $iconurl = litepubl::$site->files . '/plugins/bookmarks/icons/';
+        $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . strtr('url=$url&title=$title&id=', $a);
+        $iconurl =  $this->getApp()->site->files . '/plugins/bookmarks/icons/';
         $theme = ttheme::i();
         $tml = $theme->getwidgetitem('links', $sidebar);
-        $args = targs::i();
+        $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
         $args->rel = 'link bookmark';
@@ -67,14 +72,18 @@ class tbookmarkswidget extends tlinkswidget {
     public function request($arg) {
         $this->cache = false;
         $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
-        if (!isset($this->items[$id])) return 404;
+        if (!isset($this->items[$id])) {
+ return 404;
+}
+
+
         $url = $this->items[$id]['url'];
         $a = array(
             '$url' => urlencode($_GET['url']) ,
             '$title' => urlencode($_GET['title'])
         );
         $url = strtr($url, $a);
-        return litepubl::$urlmap->redir($url);
+        return  $this->getApp()->router->redir($url);
     }
 
 } //class

@@ -1,14 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
-class DataStorage
+class SharedStorage
  {
 public $app;
     public $data;
@@ -55,7 +56,7 @@ public $app;
     }
 
     public function loadData() {
-        if ($data = $this->getStorage()->loaddata(litepubl::$paths->data . 'storage')) {
+        if ($data = $this->getStorage()->loaddata( $this->getApp()->paths->data . 'storage')) {
             $this->data = $data;
             return true;
         }
@@ -68,9 +69,9 @@ public $app;
             return false;
         }
 
-        $lockfile = litepubl::$paths->data . 'storage.lok';
+        $lockfile =  $this->getApp()->paths->data . 'storage.lok';
         if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-            $this->getStorage()->savedata(litepubl::$paths->data . 'storage', $this->data);
+            $this->getStorage()->savedata( $this->getApp()->paths->data . 'storage', $this->data);
             $this->modified = false;
             \flock($fh, LOCK_UN);
             \fclose($fh);

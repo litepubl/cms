@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\service;
 use litepubl\core\Data;
@@ -15,7 +16,7 @@ use litepubl\updater\Updater;
 class Service extends Login
 {
 
-    public function getcontent() {
+    public function getContent() {
 $admin = $this->admintheme;
         $args = new Args();
                 $lang = Lang::admin('service');
@@ -23,9 +24,9 @@ $admin = $this->admintheme;
                 $result.= $this->doupdate($_GET);
                 $tb = $this->newTable();
                 $result.= $tb->props(array(
-                    'postscount' => litepubl::$classes->posts->count,
-                    'commentscount' => litepubl::$classes->commentmanager->count,
-                    'version' => litepubl::$site->version
+                    'postscount' =>  $this->getApp()->classes->posts->count,
+                    'commentscount' =>  $this->getApp()->classes->commentmanager->count,
+                    'version' =>  $this->getApp()->site->version
                 ));
 
                 $updater = Updater::i();
@@ -66,9 +67,8 @@ $lang = Lang::i();
         return '';
     }
 
-    public function processform() {
+    public function processForm() {
                 return $this->doupdate($_POST);
 }
 
 }
-

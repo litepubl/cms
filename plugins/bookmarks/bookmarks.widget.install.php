@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -20,7 +21,7 @@ function tbookmarkswidgetInstall($self) {
 
     $self->add('http://twitter.com/home/?status=$url?p=801+$title', 'Twitter', 'twitter.png');
 
-    if (litepubl::$options->language == 'ru') {
+    if ( $self->getApp()->options->language == 'ru') {
         $self->add('http://zakladki.yandex.ru/addlink.xml?name=$title&url=$url', 'Закладки Yandex', 'ya.png');
 
         $self->add('http://vkontakte.ru/share.php?url=$url', 'Vkontakte', 'vkontakte.png');

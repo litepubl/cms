@@ -1,11 +1,22 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\debug;
 
 function includeDir($dir) {
 $list = dir($dir );
 while ($name = $list->read()) {
-if ($name == '.' || $name == '..') continue;
+if ($name == '.' || $name == '..') {
+ continue;
+}
+
+
 
 $filename = $dir .'/' . $name;
 if (is_dir($filename)) {

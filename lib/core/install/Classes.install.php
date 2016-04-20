@@ -1,32 +1,33 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
 function parse_classes_ini($inifile) {
-    $install_dir = litepubl::$paths->lib . 'install/ini/';
+    $install_dir =  $self->getApp()->paths->lib . 'install/ini/';
     if (!$inifile) {
         $inifile = $install_dir . 'classes.ini';
     } elseif (file_exists($install_dir . $inifile)) {
         $inifile = $install_dir . $inifile;
-    } elseif (file_exists(litepubl::$paths->home . $inifile)) {
-        $inifile = litepubl::$paths->home . $inifile;
+    } elseif (file_exists( $self->getApp()->paths->home . $inifile)) {
+        $inifile =  $self->getApp()->paths->home . $inifile;
     } elseif (!file_exists($inifile)) {
         $inifile = $install_dir . 'classes.ini';
     }
 
     $ini = parse_ini_file($inifile, true);
-    $classes = litepubl::$classes;
+    $classes =  $self->getApp()->classes;
     foreach ($ini['items'] as $class => $filename) {
         $classes->items[$class] = "lib/$filename";
     }
 
-    $kernel = parse_ini_file(litepubl::$paths->lib . 'install/ini/kernel.ini', false);
+    $kernel = parse_ini_file( $self->getApp()->paths->lib . 'install/ini/kernel.ini', false);
     foreach ($kernel as $class => $filename) {
         $classes->kernel[$class] = "lib/$filename";
     }
@@ -37,8 +38,8 @@ function parse_classes_ini($inifile) {
 }
 
 function installClasses() {
-    litepubl::$urlmap = turlmap::i();
-    litepubl::$urlmap->lock();
+     $self->getApp()->router = \litepubl\core\Router::i();
+     $self->getApp()->router->lock();
     $posts = tposts::i();
     $posts->lock();
     $js = tjsmerger::i();
@@ -51,8 +52,12 @@ function installClasses() {
     $xmlrpc->lock();
     ttheme::$defaultargs = array();
     $theme = ttheme::getinstance('default');
-    foreach (litepubl::$classes->items as $class => $item) {
-        if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) continue;
+    foreach ( $self->getApp()->classes->items as $class => $item) {
+        if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) {
+ continue;
+}
+
+
 
         //ignore interfaces and traits
         if (class_exists('litepubl\\' . $class)) {
@@ -78,5 +83,5 @@ function installClasses() {
     $css->unlock();
     $js->unlock();
     $posts->unlock();
-    litepubl::$urlmap->unlock();
+     $self->getApp()->router->unlock();
 }

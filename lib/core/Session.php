@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
@@ -15,7 +16,7 @@ class Session
     public $lifetime;
 
     public function __construct() {
-        $this->prefix = 'ses-' . litepubl::$domain . '-';
+        $this->prefix = 'ses-' .  $this->getApp()->domain . '-';
         $this->lifetime = 3600;
         $truefunc = array(
             $this,
@@ -38,15 +39,15 @@ class Session
     }
 
     public function read($id) {
-        return litepubl::$memcache->get($this->prefix . $id);
+        return  $this->getApp()->memcache->get($this->prefix . $id);
     }
 
     public function write($id, $data) {
-        return litepubl::$memcache->set($this->prefix . $id, $data, false, $this->lifetime);
+        return  $this->getApp()->memcache->set($this->prefix . $id, $data, false, $this->lifetime);
     }
 
     public function destroy($id) {
-        return litepubl::$memcache->delete($this->prefix . $id);
+        return  $this->getApp()->memcache->delete($this->prefix . $id);
     }
 
     public static function init($usecookie = false) {
@@ -63,7 +64,7 @@ class Session
             }
         }
 
-        if (litepubl::$memcache) {
+        if ( $this->getApp()->memcache) {
             return getinstance(__class__);
         } else {
             //ini_set('session.gc_probability', 1);

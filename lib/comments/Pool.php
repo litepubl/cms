@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\view\Lang;
@@ -18,11 +19,11 @@ class Pool extends \litepubl\core\Pool
         $this->perpool = 50;
     }
 
-    public function getitem($id) {
+    public function getItem($id) {
         return $this->getdb('posts')->getvalue($id, 'commentscount');
     }
 
-    public function getlangcount($count) {
+    public function getLangcount($count) {
         $l = Lang::i()->ini['comment'];
         switch ($count) {
             case 0:
@@ -36,7 +37,7 @@ class Pool extends \litepubl\core\Pool
         }
     }
 
-    public function getlink($idpost, $tml) {
+    public function getLink($idpost, $tml) {
         return sprintf($tml, $this->getlangcount($this->get($idpost)));
     }
 

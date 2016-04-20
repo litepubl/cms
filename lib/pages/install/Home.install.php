@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\Lang;
@@ -13,7 +14,7 @@ use litepubl\view\Schema;
 use litepubl\post\Posts;
 
 function HomeInstall($self) {
-    litepubl::$site->home = '/';
+     $self->getApp()->site->home = '/';
     $menus = Menus::i();
     $menus->lock();
     $self->lock();
@@ -32,7 +33,7 @@ function HomeInstall($self) {
 }
 
 function HomeUninstall($self) {
-    litepubl::$router->unbind($self);
+     $self->getApp()->router->unbind($self);
     Posts::unsub($self);
 
     $menus = Menus::i();

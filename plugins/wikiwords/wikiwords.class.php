@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class twikiwords extends titems {
     public $itemsposts;
@@ -31,7 +33,7 @@ class twikiwords extends titems {
     }
 
     public function __get($name) {
-        if (strbegin($name, 'word_')) {
+        if (Str::begin($name, 'word_')) {
             $id = (int)substr($name, strlen('word_'));
             if (($id > 0) && $this->itemexists($id)) {
                 return $this->getlink($id);
@@ -42,18 +44,26 @@ class twikiwords extends titems {
         return parent::__get($name);
     }
 
-    public function getpost($word) {
+    public function getPost($word) {
         if ($id = $this->add($word, 0)) {
             $items = $this->itemsposts->getposts($id);
-            if (count($items) > 0) return $items[0];
+            if (count($items) > 0) {
+ return $items[0];
+}
+
+
         }
         return false;
     }
 
-    public function getlink($id) {
+    public function getLink($id) {
         $item = $this->getitem($id);
         $word = $item['word'];
-        if (isset($this->links[$word])) return $this->links[$word];
+        if (isset($this->links[$word])) {
+ return $this->links[$word];
+}
+
+
         $items = $this->itemsposts->getposts($id);
         $c = count($items);
         if ($c == 0) {
@@ -78,7 +88,11 @@ class twikiwords extends titems {
 
     public function add($word, $idpost) {
         $word = trim(strip_tags($word));
-        if ($word == '') return false;
+        if ($word == '') {
+ return false;
+}
+
+
         if (isset($this->words[$word])) {
             $id = $this->words[$word];
         } else {
@@ -103,25 +117,37 @@ class twikiwords extends titems {
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $this->itemsposts->deleteitem($id);
         return parent::delete($id);
     }
 
     public function deleteword($word) {
-        if ($id = $this->indexof('word', $word)) return $this->delete($id);
+        if ($id = $this->indexof('word', $word)) {
+ return $this->delete($id);
+}
+
+
     }
 
-    public function getword($word) {
+    public function getWord($word) {
         if ($id = $this->add($word, 0)) {
             return '$wikiwords.word_' . $id;
         }
         return '';
     }
 
-    public function getwordlink($word) {
+    public function getWordlink($word) {
         $word = trim($word);
-        if (isset($this->links[$word])) return $this->links[$word];
+        if (isset($this->links[$word])) {
+ return $this->links[$word];
+}
+
+
         if ($id = $this->add($word, 0)) {
             return $this->getlink($id);
         }
@@ -129,7 +155,11 @@ class twikiwords extends titems {
     }
 
     public function fixpost(tpost $post) {
-        if (count($this->fix) == 0) return;
+        if (count($this->fix) == 0) {
+ return;
+}
+
+
         foreach ($this->fix as $id => $wikipost) {
             if ($post == $wikipost) {
                 $this->itemsposts->add($post->id, $id);

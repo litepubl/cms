@@ -1,10 +1,17 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\MainView;
 use litepubl\view\Lang;
 use litepubl\view\Args;
-use litepubl\core\Plugins;
+use litepubl\core\Plugins as PluginItems;
 
 class Simple implements AdminInterface
 {
@@ -21,16 +28,16 @@ $this->lang = Lang::admin();
 $this->args = new Args();
 }
 
-publicfunction getLangAbout() {
+public function getLangAbout() {
         $reflector = new \ReflectionClass($this);
         $filename = $reflector->getFileName();
-return Plugins::getlangabout(basename(dirname($filename)));
+return PluginItems::getlangabout(basename(dirname($filename)));
 }
 
-    public function getcontent() {
+    public function getContent() {
 }
 
-    public function processform() {
+    public function processForm() {
 }
 
 }

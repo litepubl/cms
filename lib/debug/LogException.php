@@ -1,6 +1,14 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\debug;
+use litepubl\Config;
 
 class LogException
 {
@@ -10,11 +18,11 @@ public static function toString(\Exception $e) {
         $result .= static::getLog($e->getTrace());
 return $result;
 
-        $log = str_replace(litepubl::$paths->home, '', $log);
+        $log = str_replace( $this->getApp()->paths->home, '', $log);
         $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
         tfiler::log($log, 'exceptions.log');
 
-        if (!(litepubl::$debug || $this->echoexception || $this->admincookie || litepubl::$urlmap->adminpanel)) {
+        if (!(Config::$debug || $this->echoexception || $this->admincookie ||  $this->getApp()->router->adminpanel)) {
             tfiler::log($log, 'exceptionsmail.log');
         }
     }

@@ -1,15 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function admin_bootstrap_themeInstall($self) {
-    tlocalmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' . litepubl::$options->language . '.admin.ini');
+    Langmerger::i()->add('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $about = tplugins::getabout(tplugins::getname(__file__));
 
     $admin = tadminmenus::i();
@@ -23,15 +24,15 @@ function admin_bootstrap_themeInstall($self) {
         'group' => 'admin'
     ));
 
-    litepubl::$classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
+     $self->getApp()->classes->add('admin_bootstrap_header', 'admin.bootstrap-header.php', basename(dirname(__file__)));
     $admin->unlock();
 }
 
 function admin_bootstrap_themeUninstall($self) {
-    tlocalmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' . litepubl::$options->language . '.admin.ini');
+    Langmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $admin = tadminmenus::i();
     $admin->lock();
     $admin->deleteurl('/admin/views/bootstraptheme/');
-    litepubl::$classes->delete('admin_bootstrap_header');
+     $self->getApp()->classes->delete('admin_bootstrap_header');
     $admin->unlock();
 }

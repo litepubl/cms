@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
+use litepubl\core\Str;
 
 class Actionv extends \litepubl\core\Items
  {
@@ -19,7 +21,11 @@ class Actionv extends \litepubl\core\Items
     }
 
     public function send($id, $from, $name, $args) {
-        if (!isset($this->items[$name])) return new IXR_Error(404, "The $name action not registered");
+        if (!isset($this->items[$name])) {
+ return new IXR_Error(404, "The $name action not registered");
+}
+
+
         // confirm callback
         $Client = new IXR_Client($from);
         if ($Client->query('litepublisher.action.confirm', $id, $from, $name, $args)) {
@@ -27,14 +33,26 @@ class Actionv extends \litepubl\core\Items
         } else {
             $confirmed = false;
         }
-        if (!$confirmed) return new IXR_Error(403, 'Action not confirmed');
+        if (!$confirmed) {
+ return new IXR_Error(403, 'Action not confirmed');
+}
+
+
         return $this->doaction($name, $args);
     }
 
     public function confirm($id, $to, $name, $args) {
         $this->DeleteExpired();
-        if (!isset($this->actions[$id])) return new IXR_Error(403, 'Action not found');
-        if ($to != litepubl::$site->url . '/rpc.xml') return new IXR_Error(403, 'Bad xmlrpc server');
+        if (!isset($this->actions[$id])) {
+ return new IXR_Error(403, 'Action not found');
+}
+
+
+        if ($to !=  $this->getApp()->site->url . '/rpc.xml') {
+ return new IXR_Error(403, 'Bad xmlrpc server');
+}
+
+
         return true;
     }
 
@@ -88,7 +106,7 @@ class Actionv extends \litepubl\core\Items
     public function callaction($name, $to, $args) {
         $this->lock();
         $this->DeleteExpired();
-        $id = md5uniq();
+        $id = Str::md5Uniq();
         $this->actions[$id] = array(
             'date' => time() ,
             'to' => $to,
@@ -98,7 +116,7 @@ class Actionv extends \litepubl\core\Items
         $this->unlock();
 
         $Client = new IXR_Client($to);
-        if ($Client->query('litepublisher.action.send', $id, litepubl::$site->url . '/rpc.xml', $name, $args)) {
+        if ($Client->query('litepublisher.action.send', $id,  $this->getApp()->site->url . '/rpc.xml', $name, $args)) {
             return $Client->getResponse();
         }
         return false;
@@ -106,7 +124,7 @@ class Actionv extends \litepubl\core\Items
 
     private function DeleteExpired() {
         $this->lock();
-        $expired = time() - litepubl::$options->expiredcache;
+        $expired = time() -  $this->getApp()->options->expiredcache;
         foreach ($this->actions as $id => $item) {
             if ($item['date'] < $expired) unset($this->actions[$id]);
         }

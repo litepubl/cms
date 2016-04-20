@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\core\Plugins;
@@ -17,11 +18,11 @@ class Plugins extends Menu
 
     protected function create() {
         parent::create();
-        $this->names = Filer::getdir(litepubl::$paths->plugins);
+        $this->names = Filer::getdir( $this->getApp()->paths->plugins);
         sort($this->names);
     }
 
-    public function getpluginsmenu() {
+    public function getPluginsmenu() {
         $result = '';
         $link = Link::url($this->url, 'plugin=');
         $plugins = Plugins::i();
@@ -35,7 +36,7 @@ class Plugins extends Menu
         return sprintf('<ul>%s</ul>', $result);
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = parent::gethead();
         if (!empty($_GET['plugin'])) {
             $name = $_GET['plugin'];
@@ -48,7 +49,7 @@ class Plugins extends Menu
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = $this->gePluginsmenu();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
@@ -57,7 +58,7 @@ class Plugins extends Menu
         if (empty($_GET['plugin'])) {
             $result.= $admintheme->parse($admintheme->templates['help.plugins']);
 
-            $tb = new tablebuilder();
+            $tb = new Table();
             $tb->setstruct(array(
                 $tb->namecheck() ,
 
@@ -81,7 +82,11 @@ class Plugins extends Menu
             $body = '';
             $args = $tb->args;
             foreach ($this->names as $name) {
-                if (in_array($name, $plugins->deprecated)) continue;
+                if (in_array($name, $plugins->deprecated)) {
+ continue;
+}
+
+
 
                 $about = Plugins::getabout($name);
                 $args->add($about);
@@ -100,7 +105,11 @@ class Plugins extends Menu
             $result.= $form->gettml();
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $this->names)) return $this->notfound;
+            if (!in_array($name, $this->names)) {
+ return $this->notfound;
+}
+
+
             if ($admin = $this->getadminplugin($name)) {
                 $result.= $admin->getcontent();
             }
@@ -109,7 +118,7 @@ class Plugins extends Menu
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
             array_pop($list);
@@ -118,27 +127,35 @@ class Plugins extends Menu
                 $plugins->update($list);
             }
             catch(Exception $e) {
-                litepubl::$options->handexception($e);
+                 $this->getApp()->options->handexception($e);
             }
-            $result = $this->theme->h(tlocal::i()->updated);
+            $result = $this->theme->h(Lang::i()->updated);
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $this->names)) return $this->notfound;
+            if (!in_array($name, $this->names)) {
+ return $this->notfound;
+}
+
+
             if ($admin = $this->getadminplugin($name)) {
-                $result = $admin->processform();
+                $result = $admin->processForm();
             }
         }
 
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $result;
     }
 
-    private function getadminplugin($name) {
+    private function getAdminplugin($name) {
         $about = Plugins::getabout($name);
-        if (empty($about['adminclassname'])) return false;
+        if (empty($about['adminclassname'])) {
+ return false;
+}
+
+
         $class = $about['adminclassname'];
         if (!class_exists($class)) {
-litepubl::$classes->include_file(litepubl::$paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
+ $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
 }
 
         return getinstance($class);

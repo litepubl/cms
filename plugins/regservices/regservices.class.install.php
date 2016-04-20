@@ -1,15 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function tregservicesInstall($self) {
-    $dir = litepubl::$paths->data . 'regservices';
+    $dir =  $self->getApp()->paths->data . 'regservices';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $name = basename(dirname(__file__));
@@ -21,17 +22,17 @@ function tregservicesInstall($self) {
 
     $self->dirname = $name;
     $self->widget_title = sprintf('<h4>%s</h4>', $about['widget_title']);
-    litepubl::$classes->add('tregservice', 'service.class.php', $name);
-    litepubl::$classes->add('tregserviceuser', 'service.class.php', $name);
-    litepubl::$classes->add('tgoogleregservice', 'google.service.php', $name);
-    litepubl::$classes->add('tfacebookregservice', 'facebook.service.php', $name);
-    litepubl::$classes->add('ttwitterregservice', 'twitter.service.php', $name);
-    litepubl::$classes->add('tmailruregservice', 'mailru.service.php', $name);
-    litepubl::$classes->add('tyandexregservice', 'yandex.service.php', $name);
-    litepubl::$classes->add('tvkontakteregservice', 'vkontakte.service.php', $name);
-    litepubl::$classes->add('todnoklassnikiservice', 'odnoklassniki.service.php', $name);
+     $self->getApp()->classes->add('tregservice', 'service.class.php', $name);
+     $self->getApp()->classes->add('tregserviceuser', 'service.class.php', $name);
+     $self->getApp()->classes->add('tgoogleregservice', 'google.service.php', $name);
+     $self->getApp()->classes->add('tfacebookregservice', 'facebook.service.php', $name);
+     $self->getApp()->classes->add('ttwitterregservice', 'twitter.service.php', $name);
+     $self->getApp()->classes->add('tmailruregservice', 'mailru.service.php', $name);
+     $self->getApp()->classes->add('tyandexregservice', 'yandex.service.php', $name);
+     $self->getApp()->classes->add('tvkontakteregservice', 'vkontakte.service.php', $name);
+     $self->getApp()->classes->add('todnoklassnikiservice', 'odnoklassniki.service.php', $name);
 
-    litepubl::$classes->add('toauth', 'oauth.class.php', $name);
+     $self->getApp()->classes->add('toauth', 'oauth.class.php', $name);
 
     $self->add(tgoogleregservice::i());
     $self->add(tfacebookregservice::i());
@@ -55,23 +56,23 @@ function tregservicesInstall($self) {
     ");
     }
 
-    litepubl::$urlmap->addget($self->url, get_class($self));
+     $self->getApp()->router->addget($self->url, get_class($self));
     tcommentform::i()->oncomuser = $self->oncomuser;
-    litepubl::$urlmap->clearcache();
+     $self->getApp()->router->clearcache();
 }
 
 function tregservicesUninstall($self) {
     $name = basename(dirname(__file__));
     tcommentform::i()->unbind($self);
-    turlmap::unsub($self);
+     $self->getApp()->router->unbind($self);
     foreach ($self->items as $id => $classname) {
-        litepubl::$classes->delete($classname);
+         $self->getApp()->classes->delete($classname);
     }
 
-    litepubl::$classes->delete('tregserviceuser');
-    litepubl::$classes->delete('toauth');
+     $self->getApp()->classes->delete('tregserviceuser');
+     $self->getApp()->classes->delete('toauth');
 
-    tfiler::delete(litepubl::$paths->data . 'regservices', true, true);
+    tfiler::delete( $self->getApp()->paths->data . 'regservices', true, true);
 
     tusers::i()->unbind('tregserviceuser');
     tdbmanager::i()->deletetable('regservices');

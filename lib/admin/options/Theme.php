@@ -1,22 +1,24 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 use litepubl\view\Parser;
 use litepubl\view\AdminParser;
 use litepubl\view\Lang;
 use litepubl\view\Base;
+use litepubl\core\Str;
 
 class ThemeParser extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
-        $lang = tlocal::admin('options');
+    public function getContent() {
+        $lang = Lang::admin('options');
         $args = new Args();
         $tabs = $this->newTabs();
 
@@ -34,15 +36,15 @@ class ThemeParser extends \litepubl\admin\Menu
         return $this->admintheme->form($tabs->get() , $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $themeparser = Parser::i();
-        $themeparser->tagfiles = strtoarray($_POST['tagfiles']);
-        $themeparser->themefiles = strtoarray($_POST['themefiles']);
+        $themeparser->tagfiles = Str::toArray($_POST['tagfiles']);
+        $themeparser->themefiles = Str::toArray($_POST['themefiles']);
         $themeparser->save();
 
         $admin = AdminParser::i();
-        $admin->tagfiles = strtoarray($_POST['admintagfiles']);
-        $admin->themefiles = strtoarray($_POST['adminthemefiles']);
+        $admin->tagfiles = Str::toArray($_POST['admintagfiles']);
+        $admin->themefiles = Str::toArray($_POST['adminthemefiles']);
         $admin->save();
 
         Base::clearcache();

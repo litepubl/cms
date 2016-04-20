@@ -1,19 +1,20 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 
 function LangMergerInstall($self) {
-    $dir = litepubl::$paths->data . 'languages';
+    $dir =  $self->getApp()->paths->data . 'languages';
     if (!is_dir($dir)) @mkdir($dir, 0777);
     @chmod($dir, 0777);
 
-    $lang = litepubl::$options->language;
+    $lang =  $self->getApp()->options->language;
     $self->lock();
     $self->add('default', "lib/languages/$lang/default.ini");
 
@@ -21,7 +22,7 @@ function LangMergerInstall($self) {
 
     $self->add('mail', "lib/languages/$lang/mail.ini");
 
-    if (litepubl::$options->language != 'en') {
+    if ( $self->getApp()->options->language != 'en') {
         $self->add('translit', "lib/languages/$lang/translit.ini");
     } else {
         $self->items['translit'] = array(
@@ -34,6 +35,6 @@ function LangMergerInstall($self) {
     $self->unlock();
 
     //after install
-    litepubl::$options->timezone = lang::get('installation', 'timezone');
+     $self->getApp()->options->timezone = lang::get('installation', 'timezone');
     date_default_timezone_set(lang::get('installation', 'timezone'));
 }

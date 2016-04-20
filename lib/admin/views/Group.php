@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\views;
 use litepubl\view\Schemes as SchemaItems;
@@ -13,15 +14,16 @@ use litepubl\post\Posts;
 use litepubl\pages\Menus as StdMenus;
 use litepubl\pages\Menu as StdMenu;
 use litepubl\admin\GetSchema;
+use litepubl\core\Str;
 
 class Group extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $schemes = SchemaItems::i();
 $theme = $this->theme;
 $admin = $this->admin;
-        $lang = tlocal::i('schemes');
+        $lang = Lang::i('schemes');
         $args = $this->newArgs();
 
         $args->formtitle = $lang->viewposts;
@@ -33,11 +35,11 @@ $admin = $this->admin;
         $args->formtitle = $lang->themeviews;
         $schema = Schema::i();
 
-        $dirlist = Filer::getdir(litepubl::$paths->themes);
+        $dirlist = Filer::getdir( $this->getApp()->paths->themes);
         sort($dirlist);
         $list = array();
         foreach ($dirlist as $dir) {
-            if (!strbegin($dir, 'admin')) {
+            if (!Str::begin($dir, 'admin')) {
 $list[$dir] = $dir;
 }
         }
@@ -49,21 +51,21 @@ $theme->getinput('combo', 'themeview', $theme->comboItems($list, $schema->themen
 return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         switch ($_POST['action']) {
             case 'posts':
                 $posts = Posts::i();
-                $idview = (int)$_POST['postview'];
-                $posts->db->update("idview = '$idview'", 'id > 0');
+                $idschema = (int)$_POST['postview'];
+                $posts->db->update("idschema = '$idschema'", 'id > 0');
                 break;
 
 
             case 'menus':
-                $idview = (int)$_POST['menuview'];
+                $idschema = (int)$_POST['menuview'];
                 $menus = StdMenus::i();
                 foreach ($menus->items as $id => $item) {
                     $menu = StdMenu::i($id);
-                    $menu->idview = $idview;
+                    $menu->idschema = $idschema;
                     $menu->save();
                 }
                 break;

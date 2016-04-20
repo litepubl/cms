@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,10 +15,10 @@ class textracontact extends tplugin {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $contact = tcontactform::singleinstance('tcontactform');
         $about = tplugins::getabout(tplugins::getname(__file__));
-        $args = targs::i();
+        $args = new Args();
         $items = '';
         foreach ($contact->data['extra'] as $name => $title) {
             $items.= "$name =$title\n";
@@ -30,7 +31,7 @@ class textracontact extends tplugin {
         return $html->adminform('[editor=items]', $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $contact = tcontactform::singleinstance('tcontactform');
         $contact->data['extra'] = parse_ini_string(trim($_POST['items']), false);
         $contact->save();

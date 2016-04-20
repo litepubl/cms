@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\Schema;
@@ -24,22 +25,22 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
         $this->id = (int)$arg;
     }
 
-    public function getval($name) {
+    public function getVal($name) {
         return $this->items[$this->id][$name];
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return $this->getval('title');
     }
 
-    public function gethead() {
+    public function getHead() {
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         return $this->getval('keywords');
     }
 
-    public function getdescription() {
+    public function getDescription() {
         return $this->getval('description');
     }
 
@@ -54,11 +55,11 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
         }
     }
 
-    public function getschema() {
+    public function getSchema() {
         return Schema::getSchema($this);
     }
 
-    public function getcont() {
+    public function getCont() {
         $theme = $this->getSchema()->theme;
         return $theme->simple($this->getval('filtered'));
     }
@@ -69,7 +70,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
         $linkgen = LinkGenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
         $this->items[++$this->autoid] = array(
-            'idurl' => litepubl::$router->add($url, get_class($this) , $this->autoid) ,
+            'idurl' =>  $this->getApp()->router->add($url, get_class($this) , $this->autoid) ,
             'url' => $url,
             'title' => $title,
             'filtered' => $filter->filter($content) ,
@@ -83,7 +84,11 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
     }
 
     public function edit($id, $title, $description, $keywords, $content) {
-        if (!$this->itemexists($id)) return false;
+        if (!$this->itemexists($id)) {
+ return false;
+}
+
+
         $filter = Filter::i();
         $item = $this->items[$id];
         $this->items[$id] = array(
@@ -97,11 +102,11 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\theme\Contro
             'idschema' => $item['idschema']
         );
         $this->save();
-        litepubl::$router->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function delete($id) {
-        litepubl::$router->deleteitem($this->items[$id]['idurl']);
+         $this->getApp()->router->deleteitem($this->items[$id]['idurl']);
         parent::delete($id);
     }
 

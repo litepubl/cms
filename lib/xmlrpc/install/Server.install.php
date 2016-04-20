@@ -1,18 +1,19 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\xmlrpc;
 
 function ServerInstall($self) {
-    litepubl::$urlmap->add('/rpc.xml', get_class($self) , null);
-    litepubl::$urlmap->add('/xmlrpc.php', get_class($self) , null);
+     $self->getApp()->router->add('/rpc.xml', get_class($self) , null);
+     $self->getApp()->router->add('/xmlrpc.php', get_class($self) , null);
 }
 
 function ServerUninstall($self) {
-    turlmap::unsub($self);
+     $self->getApp()->router->unbind($self);
 }

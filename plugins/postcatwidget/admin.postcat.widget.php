@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,10 +15,10 @@ class tadminpostcatwidget extends tadmincustomwidget {
         return getinstance(__class__);
     }
 
-    public function getcontent() {
+    public function getContent() {
         $widget = tpostcatwidget::i();
         $about = tplugins::getabout(tplugins::getname(__file__));
-        $args = targs::i();
+        $args = new Args();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
@@ -51,7 +52,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $widget = tpostcatwidget::i();
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);

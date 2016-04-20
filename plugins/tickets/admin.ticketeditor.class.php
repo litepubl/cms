@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -15,25 +16,33 @@ class tticketeditor extends tposteditor {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function gettitle() {
-        tlocal::admin()->addsearch('tickets', 'ticket', 'editor');
+    public function getTitle() {
+        Lang::admin()->addsearch('tickets', 'ticket', 'editor');
         if ($this->idpost == 0) {
             return parent::gettitle();
         } else {
-            return tlocal::admin('tickets')->editor;
+            return Lang::admin('tickets')->editor;
         }
     }
 
     public function canrequest() {
-        if ($s = parent::canrequest()) return $s;
+        if ($s = parent::canrequest()) {
+ return $s;
+}
+
+
         $this->basename = 'tickets';
         if ($this->idpost > 0) {
             $ticket = tticket::i($this->idpost);
-            if ((litepubl::$options->group == 'ticket') && (litepubl::$options->user != $ticket->author)) return 403;
+            if (( $this->getApp()->options->group == 'ticket') && ( $this->getApp()->options->user != $ticket->author)) {
+ return 403;
+}
+
+
         }
     }
 
-    public function gettabstemplate() {
+    public function getTabstemplate() {
         return strtr($this->admintheme->templates['tabs'], array(
             '$id' => 'tabs',
             '$tab' => '[tab=ticket] [ajaxtab=tags]',
@@ -41,11 +50,11 @@ class tticketeditor extends tposteditor {
         ));
     }
 
-    public function getargstab(tpost $ticket, targs $args) {
+    public function getArgstab(tpost $ticket, targs $args) {
         $args->ajax = $this->getajaxlink($ticket->id);
         $args->fixed = $ticket->state == 'fixed';
 
-        $lang = tlocal::admin('tickets');
+        $lang = Lang::admin('tickets');
         $tickets = ttickets::i();
         $args->category = static ::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : (count($tickets->cats) ? $tickets->cats[0] : 0));
 
@@ -79,7 +88,7 @@ class tticketeditor extends tposteditor {
 
         $args->prio = $this->theme->comboItems($prio, $ticket->prio);
 
-        $tb = new tablebuilder($this->admintheme);
+        $tb = new Table($this->admintheme);
         $tb->args = $args;
         $args->ticket = $tb->inputs(array(
             'category' => 'combo',
@@ -90,15 +99,15 @@ class tticketeditor extends tposteditor {
         ));
     }
 
-    public function gettext($post = null) {
+    public function getText($post = null) {
         $post = $this->getvarpost($post);
         $admintheme = $this->admintheme;
-        $lang = tlocal::admin('tickets');
+        $lang = Lang::admin('tickets');
         $tabs = new tabs($admintheme);
         $tabs->add($lang->text, '[editor=raw]');
         $tabs->add($lang->codetext, '[editor=code]');
 
-        $args = new targs();
+        $args = new Args();
         $args->raw = $post->rawcontent;
         $args->code = $post->code;
 
@@ -119,12 +128,12 @@ class tticketeditor extends tposteditor {
         $id = (int)$_POST['id'];
         if ($id == 0) {
             $this->newstatus = 'published';
-            if (litepubl::$options->group == 'ticket') {
-                $hold = $tickets->db->getcount('status = \'draft\' and author = ' . litepubl::$options->user);
-                $approved = $tickets->db->getcount('status = \'published\' and author = ' . litepubl::$options->user);
+            if ( $this->getApp()->options->group == 'ticket') {
+                $hold = $tickets->db->getcount('status = \'draft\' and author = ' .  $this->getApp()->options->user);
+                $approved = $tickets->db->getcount('status = \'published\' and author = ' .  $this->getApp()->options->user);
                 if ($approved < 3) {
                     if ($hold - $approved >= 2) {
-                        return tlocal::admin('tickets')->noapproved;
+                        return Lang::admin('tickets')->noapproved;
                     }
 
                     $this->newstatus = 'draft';
@@ -150,7 +159,7 @@ class tticketeditor extends tposteditor {
         }
 
         if ($ticket->author == 0) {
-            $ticket->author = litepubl::$options->user;
+            $ticket->author =  $this->getApp()->options->user;
         }
 
         if ($ticket->id == 0) {

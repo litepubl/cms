@@ -1,14 +1,16 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Schema;
 use litepubl\view\Schemes;
+use litepubl\core\Arr;
 
 class Sidebars extends \litepubl\core\Data
  {
@@ -42,7 +44,11 @@ class Sidebars extends \litepubl\core\Data
     }
 
     public function insert($id, $ajax, $index, $order) {
-        if (!isset($this->items[$index])) return $this->error("Unknown sidebar $index");
+        if (!isset($this->items[$index])) {
+ return $this->error("Unknown sidebar $index");
+}
+
+
         $item = array(
             'id' => $id,
             'ajax' => $ajax
@@ -50,14 +56,14 @@ class Sidebars extends \litepubl\core\Data
         if (($order < 0) || ($order > count($this->items[$index]))) {
             $this->items[$index][] = $item;
         } else {
-            array_insert($this->items[$index], $item, $order);
+            Arr::insert($this->items[$index], $item, $order);
         }
         $this->save();
     }
 
     public function remove($id) {
         if ($pos = static ::getpos($this->items, $id)) {
-            array_delete($this->items[$pos[0]], $pos[1]);
+            Arr::delete($this->items[$pos[0]], $pos[1]);
             $this->save();
             return $pos[0];
         }
@@ -65,7 +71,7 @@ class Sidebars extends \litepubl\core\Data
 
     public function delete($id, $index) {
         if ($i = $this->indexof($id, $index)) {
-            array_delete($this->items[$index], $i);
+            Arr::delete($this->items[$index], $i);
             $this->save();
             return $i;
         }
@@ -80,12 +86,16 @@ class Sidebars extends \litepubl\core\Data
 
     public function indexof($id, $index) {
         foreach ($this->items[$index] as $i => $item) {
-            if ($id == $item['id']) return $i;
+            if ($id == $item['id']) {
+ return $i;
+}
+
+
         }
         return false;
     }
 
-    public function setajax($id, $ajax) {
+    public function setAjax($id, $ajax) {
         foreach ($this->items as $index => $items) {
             if ($pos = $this->indexof($id, $index)) {
                 $this->items[$index][$pos]['ajax'] = $ajax;
@@ -96,13 +106,13 @@ class Sidebars extends \litepubl\core\Data
     public function move($id, $index, $neworder) {
         if ($old = $this->indexof($id, $index)) {
             if ($old != $newindex) {
-                array_move($this->items[$index], $old, $neworder);
+                Arr::move($this->items[$index], $old, $neworder);
                 $this->save();
             }
         }
     }
 
-    public static function getpos(array & $sidebars, $id) {
+    public static function getPos(array & $sidebars, $id) {
         foreach ($sidebars as $i => $sidebar) {
             foreach ($sidebar as $j => $item) {
                 if ($id == $item['id']) {
@@ -116,14 +126,14 @@ class Sidebars extends \litepubl\core\Data
         return false;
     }
 
-    public static function setpos(array & $items, $id, $newsidebar, $neworder) {
+    public static function setPos(array & $items, $id, $newsidebar, $neworder) {
         if ($pos = static ::getpos($items, $id)) {
             list($oldsidebar, $oldorder) = $pos;
             if (($oldsidebar != $newsidebar) || ($oldorder != $neworder)) {
                 $item = $items[$oldsidebar][$oldorder];
-                array_delete($items[$oldsidebar], $oldorder);
+                Arr::delete($items[$oldsidebar], $oldorder);
                 if (($neworder < 0) || ($neworder > count($items[$newsidebar]))) $neworder = count($items[$newsidebar]);
-                array_insert($items[$newsidebar], $item, $neworder);
+                Arr::insert($items[$newsidebar], $item, $neworder);
             }
         }
     }
@@ -138,12 +148,16 @@ class Sidebars extends \litepubl\core\Data
 
         $schemes = Schemes::i();
         foreach ($schemes->items as & $schemaItem) {
-            if (($schemaItem['id'] != 1) && !$schemaItem['customsidebar']) continue;
+            if (($schemaItem['id'] != 1) && !$schemaItem['customsidebar']) {
+ continue;
+}
+
+
             unset($sidebar);
             foreach ($schemaItem['sidebars'] as & $sidebar) {
                 for ($i = count($sidebar) - 1; $i >= 0; $i--) {
                     if (!isset($widgets->items[$sidebar[$i]['id']])) {
-                        array_delete($sidebar, $i);
+                        Arr::delete($sidebar, $i);
                     }
                 }
             }

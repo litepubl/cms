@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\comments;
 use litepubl\post\Post;
@@ -20,7 +21,7 @@ class Templates extends \litepubl\core\Events
         $this->basename = 'comments.templates';
     }
 
-    public function getcomments($idpost) {
+    public function getComments($idpost) {
         $result = '';
         $idpost = (int)$idpost;
         $post = Post::i($idpost);
@@ -34,12 +35,12 @@ class Templates extends \litepubl\core\Events
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.comments.count'], $args);
         $result.= $list;
 
-        if ((litepubl::$urlmap->page == 1) && ($post->pingbackscount > 0)) {
+        if (( $this->getApp()->router->page == 1) && ($post->pingbackscount > 0)) {
             $pingbacks = Pingbacks::i($post->id);
             $result.= $pingbacks->getcontent();
         }
 
-        if (litepubl::$options->commentsdisabled || ($post->comstatus == 'closed')) {
+        if ( $this->getApp()->options->commentsdisabled || ($post->comstatus == 'closed')) {
             $result.= $theme->parse($theme->templates['content.post.templatecomments.closed']);
             return $result;
         }
@@ -52,7 +53,7 @@ class Templates extends \litepubl\core\Events
         // if user can see hold comments
         $result.= sprintf('<?php if (\litepubl:$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
 
-        $holdmesg = '<?php if ($ismoder = \litepubl::$options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+        $holdmesg = '<?php if ($ismoder = \ $this->getApp()->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
         //hide template hold comments in html comment
         '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -68,20 +69,20 @@ class Templates extends \litepubl\core\Events
 
         switch ($post->comstatus) {
             case 'reg':
-                $args->mesg = $this->getmesg('reqlogin', litepubl::$options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('reqlogin',  $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
                 break;
 
 
             case 'guest':
-                $args->mesg = $this->getmesg('guest', litepubl::$options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('guest',  $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
                 $result.= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
                 break;
 
 
             case 'comuser':
-                $args->mesg = $this->getmesg('comuser', litepubl::$options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('comuser',  $this->getApp()->options->reguser ? 'regaccount' : false);
 
                 foreach (array(
                     'name',
@@ -104,7 +105,7 @@ class Templates extends \litepubl\core\Events
         return $result;
     }
 
-    public function getmesg($k1, $k2) {
+    public function getMesg($k1, $k2) {
         $theme = Theme::i();
         $result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
         if ($k2) {
@@ -115,12 +116,12 @@ class Templates extends \litepubl\core\Events
         $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
         //insert back url
-        $result = str_replace('backurl=', 'backurl=' . urlencode(litepubl::$urlmap->url) , $result);
+        $result = str_replace('backurl=', 'backurl=' . urlencode( $this->getApp()->router->url) , $result);
 
         return $theme->parse($result);
     }
 
-    public function getjs($confirmcomment, $authstatus) {
+    public function getJs($confirmcomment, $authstatus) {
         $cm = Manager::i();
         $params = array(
             'confirmcomment' => $confirmcomment,

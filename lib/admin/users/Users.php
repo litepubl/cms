@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\users;
 use litepubl\core\Users as UserItems;
@@ -18,14 +19,14 @@ use litepubl\admin\Form;
 class Users extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $users = UserItems::i();
         $groups = UserGroups::i();
 
 $admin = $this->admintheme;
-        $lang = tlocal::i('users');
-        $args = targs::i();
+        $lang = Lang::i('users');
+        $args = new Args();
 
         $id = $this->idget();
         switch ($this->action) {
@@ -86,14 +87,14 @@ $admin = $this->admintheme;
         if (!empty($_GET['idgroup'])) {
             $idgroup = (int)$this->getparam('idgroup', 0);
             if ($groups->itemexists($idgroup)) {
-                $grouptable = litepubl::$db->prefix . $users->grouptable;
+                $grouptable =  $this->getApp()->db->prefix . $users->grouptable;
                 $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
                 $params = "idgroup=$idgroup";
             }
         } elseif ($search = trim($this->getparam('search', ''))) {
             $params = 'search=' . urlencode($search);
             $args->search = $search;
-            $search = litepubl::$db->escape($search);
+            $search =  $this->getApp()->db->escape($search);
             $search = strtr($search, array(
                 '%' => '\%',
                 '_' => '\_'
@@ -137,24 +138,28 @@ $admin = $this->admintheme;
         $form->title = $lang->userstable;
         $result.= $form->getdelete($tb->build($items));
 
-        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($count / $perpage) , $params);
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage) , $params);
 
         $form = new Form($args);
         $form->method = 'get';
         $form->inline = true;
-        $form->items = '[text=search]';
+        $form->body = '[text=search]';
         $form->submit = 'find';
         $result.= $form->get();
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $users = UserItems::i();
         $groups = UserGroups::i();
 
         if (isset($_POST['delete'])) {
             foreach ($_POST as $key => $value) {
-                if (!is_numeric($value)) continue;
+                if (!is_numeric($value)) {
+ continue;
+}
+
+
                 $id = (int)$value;
                 $users->delete($id);
             }
@@ -166,7 +171,7 @@ $admin = $this->admintheme;
             case 'add':
                 $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if ($id = $users->add($_POST)) {
-                    litepubl::$urlmap->redir("$this->adminurl=$id&action=edit");
+                     $this->getApp()->router->redir("$this->adminurl=$id&action=edit");
                 } else {
                     return $this->admintheme->geterr($this->lang->invalidregdata);
                 }
@@ -175,11 +180,19 @@ $admin = $this->admintheme;
 
             case 'edit':
                 $id = $this->idget();
-                if (!$users->itemexists($id)) return;
+                if (!$users->itemexists($id)) {
+ return;
+}
+
+
                 $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
-                if (!$users->edit($id, $_POST)) return $this->notfound;
+                if (!$users->edit($id, $_POST)) {
+ return $this->notfound;
+}
+
+
                 if ($id == 1) {
-                    litepubl::$site->author = $_POST['name'];
+                     $this->getApp()->site->author = $_POST['name'];
                 }
                 break;
             }

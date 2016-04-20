@@ -1,23 +1,25 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\utils;
+use litepubl\Config;
 
 class Mailer
  {
     private static $hold;
 
     protected static function send($from, $to, $subj, $body) {
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
         $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
         $date = date('r');
-        if (litepubl::$debug) {
-            $dir = litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR;
+        if (Config::$debug) {
+            $dir =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR;
             if (!is_dir($dir)) {
                 mkdir($dir, 0777);
                 @chmod($dir, 0777);
@@ -26,11 +28,11 @@ class Mailer
             return file_put_contents($dir . date('H-i-s.d.m.Y.') . microtime(true) . '.eml.mhtml', $eml);
         }
 
-        return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
+        return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  $this->getApp()->options->version);
     }
 
     public static function sendmail($fromname, $fromemail, $toname, $toemail, $subj, $body) {
-        if (litepubl::$options->mailer == 'smtp') {
+        if ( $this->getApp()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
         }
@@ -39,7 +41,11 @@ class Mailer
     }
 
     public static function CreateEmail($name, $email) {
-        if (empty($name)) return $email;
+        if (empty($name)) {
+ return $email;
+}
+
+
         return '=?utf-8?B?' . @base64_encode($name) . '?=' . " <$email>";
     }
 
@@ -59,16 +65,16 @@ class Mailer
             return;
         }
 
-        return static ::sendmail(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subject, $body);
+        return static ::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subject, $body);
     }
 
     public static function onshutdown() {
-        if (litepubl::$options->mailer == 'smtp') {
+        if ( $this->getApp()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             if ($mailer->auth()) {
-                $fromname = litepubl::$site->name;
-                $fromemail = litepubl::$options->fromemail;
-                $toemail = litepubl::$options->email;
+                $fromname =  $this->getApp()->site->name;
+                $fromemail =  $this->getApp()->options->fromemail;
+                $toemail =  $this->getApp()->options->email;
 
                 foreach (static ::$hold as $i => $item) {
                     $mailer->send($fromname, $fromemail, 'admin', $toemail, $item['subject'], $item['body'], false);
@@ -85,8 +91,12 @@ class Mailer
     }
 
     public static function sendlist(array $list) {
-        if (!count($list)) return;
-        if (litepubl::$options->mailer == 'smtp') {
+        if (!count($list)) {
+ return;
+}
+
+
+        if ( $this->getApp()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             if ($mailer->auth()) {
                 foreach ($list as $item) {
@@ -104,7 +114,7 @@ class Mailer
     }
 
     public static function SendAttachmentToAdmin($subj, $body, $filename, $attachment) {
-        return static ::sendattachment(litepubl::$site->name, litepubl::$options->fromemail, 'admin', litepubl::$options->email, $subj, $body, $filename, $attachment);
+        return static ::sendattachment( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subj, $body, $filename, $attachment);
     }
 
     public static function sendattachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment) {
@@ -121,12 +131,12 @@ class Mailer
         $attachpart.= base64_encode($attachment);
 
         $body = $textpart . "\n\n" . $attachpart . "\n\n";
-        $options = litepubl::$options;
-        if (litepubl::$debug) {
-return file_put_contents(litepubl::$paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+        $options =  $this->getApp()->options;
+        if (Config::$debug) {
+return file_put_contents( $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
 }
 
-        return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . litepubl::$options->version);
+        return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  $this->getApp()->options->version);
     }
 
 }

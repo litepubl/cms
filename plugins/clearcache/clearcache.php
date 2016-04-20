@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -15,19 +16,19 @@ class tclearcache extends tplugin {
     }
 
     public function clearcache() {
-        tfiler::delete(litepubl::$paths->data . 'themes', false, false);
-        litepubl::$urlmap->clearcache();
+        tfiler::delete( $this->getApp()->paths->data . 'themes', false, false);
+         $this->getApp()->router->clearcache();
     }
 
     public function themeparsed(ttheme $theme) {
         $name = $theme->name;
-        $views = tviews::i();
-        foreach ($views->items as & $itemview) {
+        $schemes = Schemas::i();
+        foreach ($schemes->items as & $itemview) {
             if ($name == $itemview['themename']) {
                 $itemview['custom'] = $theme->templates['custom'];
             }
         }
-        $views->save();
+        $schemes->save();
     }
 
 } //class

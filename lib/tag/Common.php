@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\tag;
 use litepubl\core\ItemsPosts;
@@ -14,6 +15,7 @@ use litepubl\view\Schemes;
 use litepubl\view\Schema;
 use litepubl\view\Lang;
 use litepubl\utils\LinkGenerator;
+use litepubl\core\Arr;
 
 class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterface
  {
@@ -48,14 +50,18 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
 
     public function loadAll() {
         //prevent double request
-        if ($this->all_loaded) return;
+        if ($this->all_loaded) {
+ return;
+}
+
+
         $this->all_loaded = true;
         return parent::loadall();
     }
 
     public function select($where, $limit) {
         if ($where != '') $where.= ' and ';
-        $db = litepubl::$db;
+        $db =  $this->getApp()->db;
         $t = $this->thistable;
         $u = $db->urlmap;
         $res = $db->query("select $t.*, $u.url from $t, $u
@@ -69,9 +75,13 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
     }
 
-    public function getsortedcontent(array $tml, $parent, $sortname, $count, $showcount) {
+    public function getSortedcontent(array $tml, $parent, $sortname, $count, $showcount) {
         $sorted = $this->getsorted($parent, $sortname, $count);
-        if (count($sorted) == 0) return '';
+        if (count($sorted) == 0) {
+ return '';
+}
+
+
         $result = '';
         $theme = Theme::i();
         $args = new Args();
@@ -85,13 +95,17 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
             $args->subitems = $tml['subitems'] ? $this->getsortedcontent($tml, $id, $sortname, $count, $showcount) : '';
             $result.= $theme->parsearg($tml['item'], $args);
         }
-        if ($parent == 0) return $result;
+        if ($parent == 0) {
+ return $result;
+}
+
+
         $args->parent = $parent;
         $args->item = $result;
         return $theme->parsearg($tml['subitems'], $args);
     }
 
-    public function geturl($id) {
+    public function getUrl($id) {
         $item = $this->getitem($id);
         return $item['url'];
     }
@@ -99,7 +113,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
     public function postedited($idpost) {
         $post = $this->factory->getpost((int)$idpost);
         $items = $post->{$this->postpropname};
-        array_clean($items);
+        Arr::clean($items);
         if (count($items)) $items = $this->db->idselect(sprintf('id in (%s)', implode(',', $items)));
         $changed = $this->itemsposts->setitems($idpost, $items);
         $this->updatecount($changed);
@@ -111,8 +125,12 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
     }
 
     protected function updatecount(array $items) {
-        if (count($items) == 0) return;
-        $db = litepubl::$db;
+        if (count($items) == 0) {
+ return;
+}
+
+
+        $db =  $this->getApp()->db;
         //next queries update values
         $items = implode(',', $items);
         $thistable = $this->thistable;
@@ -130,14 +148,22 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
     }
 
-    public function geturltype() {
+    public function getUrltype() {
         return 'normal';
     }
 
     public function add($parent, $title) {
         $title = trim($title);
-        if (empty($title)) return false;
-        if ($id = $this->indexof('title', $title)) return $id;
+        if (empty($title)) {
+ return false;
+}
+
+
+        if ($id = $this->indexof('title', $title)) {
+ return $id;
+}
+
+
         $parent = (int)$parent;
         if (($parent != 0) && !$this->itemexists($parent)) $parent = 0;
 
@@ -150,7 +176,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
             'customorder' => 0,
             'parent' => $parent,
             'title' => $title,
-            'idview' => $idschema,
+            'idschema' => $idschema,
             'idperm' => 0,
             'icon' => 0,
             'itemscount' => 0,
@@ -160,18 +186,22 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
-        $idurl = litepubl::$urlmap->add($url, get_class($this) , $id, $this->urltype);
+        $idurl =  $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
         $this->setvalue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
         $this->changed();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
         return $id;
     }
 
     public function edit($id, $title, $url) {
         $item = $this->getitem($id);
-        if (($item['title'] == $title) && ($item['url'] == $url)) return;
+        if (($item['title'] == $title) && ($item['url'] == $url)) {
+ return;
+}
+
+
         $item['title'] = $title;
         if ($this->dbversion) {
             $this->db->updateassoc(array(
@@ -188,30 +218,30 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
 
         if ($item['url'] != $url) {
-            if (($urlitem = litepubl::$urlmap->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
+            if (($urlitem =  $this->getApp()->router->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
                 $url = $linkgen->MakeUnique($url);
             }
-            litepubl::$urlmap->setidurl($item['idurl'], $url);
-            litepubl::$urlmap->addredir($item['url'], $url);
+             $this->getApp()->router->setidurl($item['idurl'], $url);
+             $this->getApp()->router->addredir($item['url'], $url);
             $item['url'] = $url;
         }
 
         $this->items[$id] = $item;
         $this->save();
         $this->changed();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function delete($id) {
         $item = $this->getitem($id);
-        litepubl::$urlmap->deleteitem($item['idurl']);
+         $this->getApp()->router->deleteitem($item['idurl']);
         $this->contents->delete($id);
         $list = $this->itemsposts->getposts($id);
         $this->itemsposts->deleteitem($id);
         parent::delete($id);
         if ($this->postpropname) $this->itemsposts->updateposts($list, $this->postpropname);
         $this->changed();
-        litepubl::$urlmap->clearcache();
+         $this->getApp()->router->clearcache();
     }
 
     public function createnames($list) {
@@ -220,36 +250,52 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $this->lock();
         foreach ($list as $title) {
             $title = tcontentfilter::escape($title);
-            if ($title == '') continue;
+            if ($title == '') {
+ continue;
+}
+
+
             $result[] = $this->add(0, $title);
         }
         $this->unlock();
         return $result;
     }
 
-    public function getnames(array $list) {
+    public function getNames(array $list) {
         $this->loaditems($list);
         $result = array();
         foreach ($list as $id) {
-            if (!isset($this->items[$id])) continue;
+            if (!isset($this->items[$id])) {
+ continue;
+}
+
+
             $result[] = $this->items[$id]['title'];
         }
         return $result;
     }
 
-    public function getlinks(array $list) {
-        if (count($list) == 0) return array();
+    public function getLinks(array $list) {
+        if (count($list) == 0) {
+ return array();
+}
+
+
         $this->loaditems($list);
         $result = array();
         foreach ($list as $id) {
-            if (!isset($this->items[$id])) continue;
+            if (!isset($this->items[$id])) {
+ continue;
+}
+
+
             $item = $this->items[$id];
-            $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', litepubl::$site->url . $item['url'], $item['title']);
+            $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url . $item['url'], $item['title']);
         }
         return $result;
     }
 
-    public function getsorted($parent, $sortname, $count) {
+    public function getSorted($parent, $sortname, $count) {
         $count = (int)$count;
         if ($sortname == 'count') $sortname = 'itemscount';
         if (!in_array($sortname, array(
@@ -267,7 +313,11 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
 
         $list = array();
         foreach ($this->items as $id => $item) {
-            if (($parent != - 1) & ($parent != $item['parent'])) continue;
+            if (($parent != - 1) & ($parent != $item['parent'])) {
+ continue;
+}
+
+
             $list[$id] = $item[$sortname];
         }
         if (($sortname == 'itemscount')) {
@@ -293,21 +343,21 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
                 return 404;
             }
 
-            $view = tview::getview($this);
-            $perpage = $view->perpage ? $view->perpage : litepubl::$options->perpage;
+            $schema = Schema::getview($this);
+            $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
             $pages = (int)ceil($item['itemscount'] / $perpage);
-            if ((litepubl::$urlmap->page > 1) && (litepubl::$urlmap->page > $pages)) {
-                return sprintf('<?php litepubl::$urlmap->redir(\'%s\'); ?>', $item['url']);
+            if (( $this->getApp()->router->page > 1) && ( $this->getApp()->router->page > $pages)) {
+                return sprintf('<?php  $this->getApp()->router->redir(\'%s\'); ?>', $item['url']);
             }
         }
     }
 
-    public function getname($id) {
+    public function getName($id) {
         $item = $this->getitem($id);
         return $item['title'];
     }
 
-    public function gettitle() {
+    public function getTitle() {
         if ($this->id) {
             return $this->getvalue($this->id, 'title');
         }
@@ -315,10 +365,10 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return Lang::i()->categories;
     }
 
-    public function gethead() {
+    public function getHead() {
         if ($this->id) {
             $result = $this->contents->getvalue($this->id, 'head');
-            $theme = tview::getview($this)->theme;
+            $theme = Schema::getview($this)->theme;
             $result.= $theme->templates['head.tags'];
 
             $list = $this->getidposts($this->id);
@@ -328,7 +378,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         if ($this->id) {
             $result = $this->contents->getvalue($this->id, 'keywords');
             if ($result == '') $result = $this->title;
@@ -336,7 +386,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
     }
 
-    public function getdescription() {
+    public function getDescription() {
         if ($this->id) {
             $result = $this->contents->getvalue($this->id, 'description');
             if ($result == '') $result = $this->title;
@@ -344,21 +394,21 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         }
     }
 
-    public function getidview() {
+    public function getIdschema() {
         if ($this->id) {
-            return $this->getvalue($this->id, 'idview');
+            return $this->getvalue($this->id, 'idschema');
         }
 
         return 1;
     }
 
-    public function setidview($id) {
-        if ($id != $this->idview) {
-            $this->setvalue($this->id, 'idview', $id);
+    public function setIdschema($id) {
+        if ($id != $this->idschema) {
+            $this->setvalue($this->id, 'idschema', $id);
         }
     }
 
-    public function getidperm() {
+    public function getIdperm() {
         if ($this->id) {
             $item = $this->getitem($this->id);
             return isset($item['idperm']) ? (int)$item['idperm'] : 0;
@@ -367,23 +417,31 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return 0;
     }
 
-    public function getindex_tml() {
+    public function getIndex_tml() {
         $theme = Theme::i();
-        if (!empty($theme->templates['index.tag'])) return $theme->templates['index.tag'];
+        if (!empty($theme->templates['index.tag'])) {
+ return $theme->templates['index.tag'];
+}
+
+
         return false;
     }
 
-    public function getcontent() {
+    public function getContent() {
         if ($s = $this->contents->getcontent($this->id)) {
             $pages = explode('<!--nextpage-->', $s);
-            $page = litepubl::$urlmap->page - 1;
-            if (isset($pages[$page])) return $pages[$page];
+            $page =  $this->getApp()->router->page - 1;
+            if (isset($pages[$page])) {
+ return $pages[$page];
+}
+
+
         }
 
         return '';
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = '';
         $this->callevent('onbeforecontent', array(&$result
         ));
@@ -391,16 +449,16 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         if (!$this->id) {
             $result.= $this->getcont_all();
         } else {
-            $view = tview::getview($this);
+            $schema = Schema::getview($this);
 
             if ($this->getcontent()) {
                 ttheme::$vars['menu'] = $this;
-                $result.= $view->theme->parse($view->theme->templates['content.menu']);
+                $result.= $schema->theme->parse($schema->theme->templates['content.menu']);
             }
 
             $list = $this->getidposts($this->id);
             $item = $this->getitem($this->id);
-            $result.= $view->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $view->postanounce, $view->perpage);
+            $result.= $schema->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
         }
 
         $this->callevent('oncontent', array(&$result
@@ -408,7 +466,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return $result;
     }
 
-    public function getcont_all() {
+    public function getCont_all() {
         return sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
@@ -429,7 +487,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return $result;
     }
 
-    public function getidposts($id) {
+    public function getIdposts($id) {
         if (isset($this->_idposts[$id])) {
             return $this->_idposts[$id];
         }
@@ -438,10 +496,10 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $includeparents = (int)$item['includeparents'];
         $includechilds = (int)$item['includechilds'];
 
-        $schema = Schema::i($item['idview']);
-        $perpage = $schema->perpage ? $schema->perpage : litepubl::$options->perpage;
+        $schema = Schema::i($item['idschema']);
+        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $order = $schema->invertorder ? 'asc' : 'desc';
-        $from = (litepubl::$urlmap->page - 1) * $perpage;
+        $from = ( $this->getApp()->router->page - 1) * $perpage;
 
         $posts = $this->factory->getposts();
         $p = $posts->thistable;
@@ -479,7 +537,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return $result;
     }
 
-    public function getparents($id) {
+    public function getParents($id) {
         $result = array();
         while ($id = (int)$this->items[$id]['parent']) {
             //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
@@ -489,7 +547,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return $result;
     }
 
-    public function getchilds($parent) {
+    public function getChilds($parent) {
         $result = array();
         foreach ($this->items as $id => $item) {
             if ($parent == $item['parent']) {
@@ -500,7 +558,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         return $result;
     }
 
-    public function getsitemap($from, $count) {
+    public function getSitemap($from, $count) {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count

@@ -1,12 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\Config;
+use litepubl\core\Str;
 
 class polls extends titems {
     const votes = 'pollvotes';
@@ -31,13 +34,13 @@ class polls extends titems {
             'votes' => 0,
             'rate' => 0.0,
             'best' => $best,
-            'created' => sqldate() ,
+            'created' => Str::sqlDate() ,
             'status' => 'opened',
             'template' => $template,
         ));
     }
 
-    public function setstatus($id, $status) {
+    public function setStatus($id, $status) {
         $this->setvalue($id, 'status', $status);
         if ($status == 'closed') {
             $this->getdb(static ::votes)->delete("idpoll = $id");
@@ -53,20 +56,20 @@ class polls extends titems {
         return parent::delete($id);
     }
 
-    public function getobjectpoll($idobject, $typeobject) {
+    public function getObjectpoll($idobject, $typeobject) {
         return $this->getpoll($this->finditem("idobject = $idobject and typeobject = '$typeobject'"));
     }
 
-    public function getpoll($id) {
+    public function getPoll($id) {
         if (!$id) {
             return '';
         }
 
-        if (litepubl::$debug) $this->getdb(static ::votes)->delete('iduser = ' . litepubl::$options->user);
+        if (Config::$debug) $this->getdb(static ::votes)->delete('iduser = ' .  $this->getApp()->options->user);
         $item = $this->getitem($id);
 
-        $lang = tlocal::i('poll');
-        $args = new targs();
+        $lang = Lang::i('poll');
+        $args = new Args();
         $args->add($item);
 
         $theme = ttheme::context();
@@ -91,7 +94,7 @@ class polls extends titems {
     }
 
     public function err($mesg) {
-        $lang = tlocal::i('poll');
+        $lang = Lang::i('poll');
 
         return array(
             'error' => array(
@@ -112,7 +115,7 @@ class polls extends titems {
             $this->error('Invalid data', 403);
         }
 
-        $iduser = litepubl::$options->user;
+        $iduser =  $this->getApp()->options->user;
         if (!$iduser) {
             $result = $this->err('notauth');
         } else if (!$this->itemexists($idpoll)) {
@@ -193,7 +196,7 @@ where idpoll = $id group by vote order by vote asc"));
     }
 
     public function optimize() {
-        $date = sqldate(strtotime('-1 month'));
+        $date = Str::sqlDate(strtotime('-1 month'));
         $list = $this->db->idselect("created <= '$date' and status = 'opened'");
         if (count($list)) {
             $ids = implode(',', $list);

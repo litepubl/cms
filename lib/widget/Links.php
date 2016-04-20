@@ -1,15 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\core\Str;
 
 class Links extends Widget
  {
@@ -29,17 +31,21 @@ class Links extends Widget
         $this->data['redir'] = false;
     }
 
-    public function getdeftitle() {
+    public function getDeftitle() {
         return Lang::get('default', 'links');
     }
 
-    public function getcontent($id, $sidebar) {
-        if (count($this->items) == 0) return '';
+    public function getContent($id, $sidebar) {
+        if (count($this->items) == 0) {
+ return '';
+}
+
+
         $result = '';
         $theme = Theme::i();
         $tml = $theme->getwidgetitem('links', $sidebar);
-        $redirlink = litepubl::$site->url . $this->redirlink . litepubl::$site->q . 'id=';
-        $url = litepubl::$site->url;
+        $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . 'id=';
+        $url =  $this->getApp()->site->url;
         $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
@@ -48,7 +54,7 @@ class Links extends Widget
         foreach ($this->items as $id => $item) {
             $args->add($item);
             $args->id = $id;
-            if ($this->redir && !strbegin($item['url'], $url)) {
+            if ($this->redir && !Str::begin($item['url'], $url)) {
                 $args->link = $redirlink . $id;
             } else {
                 $args->link = $item['url'];
@@ -73,7 +79,11 @@ class Links extends Widget
 
     public function edit($id, $url, $title, $text) {
         $id = (int)$id;
-        if (!isset($this->items[$id])) return false;
+        if (!isset($this->items[$id])) {
+ return false;
+}
+
+
         $this->items[$id] = array(
             'url' => $url,
             'title' => $title,
@@ -86,15 +96,19 @@ class Links extends Widget
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
-            litepubl::$urlmap->clearcache();
+             $this->getApp()->router->clearcache();
         }
     }
 
     public function request($arg) {
         $this->cache = false;
         $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
-        if (!isset($this->items[$id])) return 404;
-        return '<?php litepubl::$urlmap->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
+        if (!isset($this->items[$id])) {
+ return 404;
+}
+
+
+        return '<?php  $this->getApp()->router->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
     }
 
 }

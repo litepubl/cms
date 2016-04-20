@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -26,13 +27,13 @@ class tsimpleimporter extends timporter {
         ));
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = parent::getcontent();
         $tagsmap = '';
         foreach ($this->tagsmap as $key => $val) {
             $tagsmap.= "$key = $val\n";
         }
-        $args = targs::i();
+        $args = new Args();
         $args->tagsmap = $tagsmap;
         $args->script = $this->script;
         $about = tplugins::getabout(tplugins::getname(__file__));
@@ -44,8 +45,12 @@ class tsimpleimporter extends timporter {
         return $result;
     }
 
-    public function processform() {
-        if ($_POST['form'] != 'options') return parent::ProcessForm();
+    public function processForm() {
+        if ($_POST['form'] != 'options') {
+ return parent::ProcessForm();
+}
+
+
         $this->parsemap($_POST['tagsmap']);
         $this->script = $_POST['script'];
         $this->save();
@@ -64,11 +69,11 @@ class tsimpleimporter extends timporter {
     }
 
     public function import($s) {
-        require_once (litepubl::$paths->lib . 'domrss.class.php');
+        require_once ( $this->getApp()->paths->lib . 'domrss.class.php');
         $a = xml2array($s);
 
-        $urlmap = turlmap::i();
-        $urlmap->lock();
+        $router = \litepubl\core\Router::i();
+        $router->lock();
         $cats = tcategories::i();
         $cats->lock();
         $tags = ttags::i();
@@ -83,7 +88,7 @@ class tsimpleimporter extends timporter {
         $posts->unlock();
         $tags->unlock();
         $cats->unlock();
-        $urlmap->unlock();
+        $router->unlock();
     }
 
     public function add(array $item) {

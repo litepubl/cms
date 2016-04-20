@@ -1,20 +1,21 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
 function tcodedocpluginInstall($self) {
     if (!dbversion) die("Ticket  system only for database version");
     $name = basename(dirname(__file__));
-    $language = litepubl::$options->language;
+    $language =  $self->getApp()->options->language;
     $about = tplugins::getabout($name);
-    litepubl::$classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
-    litepubl::$classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
+     $self->getApp()->classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
+     $self->getApp()->classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
     $menu = tcodedocmenu::i();
     $menu->url = '/doc/';
     $menu->title = $about['menutitle'];
@@ -22,7 +23,7 @@ function tcodedocpluginInstall($self) {
     $menus = tmenus::i();
     $menus->add($menu);
 
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->lock();
     $merger->add('codedoc', "plugins/$name/resource/$language.ini");
     $merger->add('codedoc', "plugins/$name/resource/html.ini");
@@ -66,13 +67,13 @@ function tcodedocpluginUninstall($self) {
     $menus = tmenus::i();
     $menus->deleteurl('/doc/');
 
-    litepubl::$classes->delete('tcodedocmenu');
-    litepubl::$classes->delete('tcodedocfilter');
+     $self->getApp()->classes->delete('tcodedocmenu');
+     $self->getApp()->classes->delete('tcodedocfilter');
 
     $filter = tcontentfilter::i();
     $filter->unbind($self);
 
-    $merger = tlocalmerger::i();
+    $merger = Langmerger::i();
     $merger->delete('codedoc');
 
     $manager = tdbmanager::i();

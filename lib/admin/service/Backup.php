@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\service;
 use litepubl\view\Lang;
@@ -6,10 +13,11 @@ use litepubl\view\Args;
 use litepubl\updater\Backuper;
 use litepubl\utils\Filer;
 use litepubl\admin\Form;
+use litepubl\core\Str;
 
 class Backup extends Login
 {
-public function getcontent() {
+public function getContent() {
 $admin = $this->admintheme;
 $lang = Lang::admin('service');
 $args = new Args();
@@ -47,13 +55,13 @@ $args = new Args();
                         return $this->notfound;
                     }
 
-                    if (!file_exists(litepubl::$paths->backup . $filename)) {
+                    if (!file_exists( $this->getApp()->paths->backup . $filename)) {
                         return $this->notfound;
                     }
 
                     switch ($_GET['action']) {
                         case 'download':
-                            if ($s = @file_get_contents(litepubl::$paths->backup . $filename)) {
+                            if ($s = @file_get_contents( $this->getApp()->paths->backup . $filename)) {
                                 $this->sendfile($s, $filename);
                             } else {
                                 return $this->notfound;
@@ -63,7 +71,7 @@ $args = new Args();
 
                         case 'delete':
                             if ($this->confirmed) {
-                                @unlink(litepubl::$paths->backup . $filename);
+                                @unlink( $this->getApp()->paths->backup . $filename);
                                 return $admin->succes($lang->backupdeleted);
                             } else {
                                 $result.= $this->confirmDelete($id, sprintf('%s %s?', $lang->confirmdelete, $_GET['id']));
@@ -72,7 +80,7 @@ $args = new Args();
                 }
 }
 
-public function processform() {
+public function processForm() {
 $admin = $this->admintheme;
                 if (!isset($_POST['sqlbackup'])) {
                     if (!$this->checkbackuper()) {
@@ -90,35 +98,35 @@ $admin = $this->admintheme;
                     if (strpos($_FILES['filename']['name'], '.sql')) {
                         $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]) , $_FILES["filename"]["name"]);
                     } else {
-                        $url = litepubl::$site->url;
-                        $dbconfig = litepubl::$options->dbconfig;
+                        $url =  $this->getApp()->site->url;
+                        $dbconfig =  $this->getApp()->options->dbconfig;
                         $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
                         if (isset($saveurl)) {
                             $data = new Data();
                             $data->basename = 'storage';
                             $data->load();
-                            $data->data['site'] = litepubl::$site->data;
+                            $data->data['site'] =  $this->getApp()->site->data;
                             $data->data['options']['dbconfig'] = $dbconfig;
                             $data->save();
                         }
                     }
 
                     $admin->clearcache();
-                    turlmap::nocache();
+                    \litepubl\core\Router::nocache();
                     @header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
                     exit();
                 } elseif (isset($downloadpartial)) {
-                    $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
+                    $filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . $backuper->getfiletype();
                     $content = $backuper->getpartial(isset($plugins) , isset($theme) , isset($lib));
                     $this->sendfile($content, $filename);
                 } elseif (isset($fullbackup)) {
-                    $filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . $backuper->getfiletype();
+                    $filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . $backuper->getfiletype();
                     $content = $backuper->getfull();
                     $this->sendfile($content, '');
                 } elseif (isset($sqlbackup)) {
                     $content = $backuper->getdump();
-                    $filename = litepubl::$domain . date('-Y-m-d') . '.sql';
+                    $filename =  $this->getApp()->domain . date('-Y-m-d') . '.sql';
 
                     switch ($backuper->archtype) {
                         case 'tar':
@@ -131,7 +139,7 @@ $admin = $this->admintheme;
 
 
                         case 'zip':
-$tempfile = litepubl::$paths->backup . md5rand() . '.zip';
+$tempfile =  $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
                             $zip = new \ZipArchive();
 if ($zip->open($tempfile, \ZipArchive::CREATE) === true) {
                             $zip->addFromString($filename, $content);
@@ -156,9 +164,9 @@ $zip->close();
 }
 
     private function sendfile(&$content, $filename) {
-        //@file_put_contents(litepubl::$domain . ".zip", $content);
+        //@file_put_contents( $this->getApp()->domain . ".zip", $content);
         if (!$filename) {
-$filename = str_replace('.', '-', litepubl::$domain) . date('-Y-m-d') . '.zip';
+$filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . '.zip';
 }
 
         if (ob_get_level()) {
@@ -177,8 +185,8 @@ ob_end_clean();
         exit();
     }
 
-    private function getbackupfilelist() {
-        $list = tfiler::getfiles(litepubl::$paths->backup);
+    private function getBackupfilelist() {
+        $list = tfiler::getfiles( $this->getApp()->paths->backup);
         if (!count($list)) {
             return '';
         }
@@ -186,7 +194,7 @@ ob_end_clean();
         $items = array();
         $admin = $this->admintheme;
         foreach ($list as $filename) {
-            if (strend($filename, '.gz') || strend($filename, '.zip')) {
+            if (Str::end($filename, '.gz') || Str::end($filename, '.zip')) {
                 $items[]['filename'] = $filename;
             }
         }

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin;
 use litepubl\view\Admin;
@@ -23,7 +24,7 @@ class Tabs
         $this->panels = array();
     }
 
-    public function getadmintheme() {
+    public function getAdmintheme() {
         if (!$this->_admintheme) {
             $this->_admintheme = Admin::i();
         }
@@ -53,7 +54,7 @@ class Tabs
         $this->panels[] = $this->getpanel($id, $content);
     }
 
-    public function gettab($id, $url, $title) {
+    public function getTab($id, $url, $title) {
         return strtr($this->getadmintheme()->templates['tabs.tab'], array(
             '$id' => $id,
             '$title' => $title,
@@ -61,7 +62,7 @@ class Tabs
         ));
     }
 
-    public function getpanel($id, $content) {
+    public function getPanel($id, $content) {
         return strtr($this->getadmintheme()->templates['tabs.panel'], array(
             '$id' => $id,
             '$content' => $content,

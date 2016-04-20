@@ -1,14 +1,17 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\view\Lang;
 use litepubl\view\Filter;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
@@ -39,11 +42,11 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public static function getinstancename() {
+    public static function getInstancename() {
         return 'post';
     }
 
-    public static function getchildtable() {
+    public static function getChildtable() {
         return '';
     }
 
@@ -56,7 +59,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             return array();
         }
 
-        $db = litepubl::$db;
+        $db =  $this->getApp()->db;
         $childtable = $db->prefix . $table;
         $list = implode(',', $items);
         return $db->res2items($db->query("select $childtable.*
@@ -75,7 +78,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
         $this->data = array(
             'id' => 0,
-            'idview' => 1,
+            'idschema' => 1,
             'idurl' => 0,
             'parent' => 0,
             'author' => 0,
@@ -100,8 +103,8 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             'tags' => array() ,
             'files' => array() ,
             'status' => 'published',
-            'comstatus' => litepubl::$options->comstatus,
-            'pingenabled' => litepubl::$options->pingenabled,
+            'comstatus' =>  $this->getApp()->options->comstatus,
+            'pingenabled' =>  $this->getApp()->options->pingenabled,
             'password' => '',
             'commentscount' => 0,
             'pingbackscount' => 0,
@@ -113,13 +116,13 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         $this->factory = $this->getfactory();
         $posts = $this->factory->posts;
         foreach ($posts->itemcoclasses as $class) {
-            $coinstance = litepubl::$classes->newinstance($class);
+            $coinstance =  $this->getApp()->classes->newinstance($class);
             $coinstance->post = $this;
             $this->coinstances[] = $coinstance;
         }
     }
 
-    public function getfactory() {
+    public function getFactory() {
         return Factory::i();
     }
 
@@ -211,13 +214,13 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return false;
     }
 
-    public static function getassoc($id) {
-        $db = litepubl::$db;
+    public static function getAssoc($id) {
+        $db =  $this->getApp()->db;
         return $db->selectassoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
     }
 
-    public function setassoc(array $a) {
+    public function setAssoc(array $a) {
         $trans = $this->factory->gettransform($this);
         $trans->setassoc($a);
         if ($this->childtable) {
@@ -265,7 +268,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public function create_url() {
-        return litepubl::$urlmap->add($this->url, get_class($this) , (int)$this->id);
+        return  $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
     }
 
     public function onid() {
@@ -275,7 +278,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
                     call_user_func($call, $this);
                 }
                 catch(Exception $e) {
-                    litepubl::$options->handexception($e);
+                     $this->getApp()->options->handexception($e);
                 }
             }
             unset($this->_onid);
@@ -287,7 +290,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
     }
 
-    public function setonid($call) {
+    public function setOnid($call) {
         if (!is_callable($call)) $this->error('Event onid not callable');
         if (isset($this->_onid)) {
             $this->_onid[] = $call;
@@ -305,45 +308,45 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         parent::free();
     }
 
-    public function getcomments() {
+    public function getComments() {
         return $this->factory->getcomments($this->id);
     }
 
-    public function getpingbacks() {
+    public function getPingbacks() {
         return $this->factory->getpingbacks($this->id);
     }
 
-    public function getprev() {
+    public function getPrev() {
         if (!is_null($this->aprev)) {
             return $this->aprev;
         }
 
         $this->aprev = false;
-        if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
+        if ($id = $this->db->findid("status = 'published' and posted < '$this->Str::sqlDate' order by posted desc")) {
             $this->aprev = static ::i($id);
         }
         return $this->aprev;
     }
 
-    public function getnext() {
+    public function getNext() {
         if (!is_null($this->anext)) {
             return $this->anext;
         }
 
         $this->anext = false;
-        if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
+        if ($id = $this->db->findid("status = 'published' and posted > '$this->Str::sqlDate' order by posted asc")) {
             $this->anext = static ::i($id);
         }
         return $this->anext;
     }
 
-    public function getmeta() {
+    public function getMeta() {
         if (!isset($this->metaInstance)) $this->metaInstance = $this->factory->getmeta($this->id);
         return $this->metaInstance;
     }
 
     public function Getlink() {
-        return litepubl::$site->url . $this->url;
+        return  $this->getApp()->site->url . $this->url;
     }
 
     public function Setlink($link) {
@@ -356,11 +359,11 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
     }
 
-    public function settitle($title) {
+    public function setTitle($title) {
         $this->data['title'] = tcontentfilter::escape(tcontentfilter::unescape($title));
     }
 
-    public function gettheme() {
+    public function getTheme() {
         if ($this->themeInstance) {
 $this->themeInstance->setvar('post, $this);
             return $this->themeInstance;
@@ -377,17 +380,17 @@ $this->themeInstance->setvar('post, $this);
         return $theme->parse($theme->templates[$path]);
     }
 
-    public function getextra() {
+    public function getExtra() {
         $theme = $this->theme;
         return $theme->parse($theme->extratml);
     }
 
-    public function getbookmark() {
+    public function getBookmark() {
         return $this->theme->parse('<a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.iconlink$post.title</a>');
     }
 
-    public function getrsscomments() {
-        return litepubl::$site->url . "/comments/$this->id.xml";
+    public function getRsscomments() {
+        return  $this->getApp()->site->url . "/comments/$this->id.xml";
     }
 
     public function Getisodate() {
@@ -402,11 +405,11 @@ $this->themeInstance->setvar('post, $this);
         $this->data['posted'] = strtotime($date);
     }
 
-    public function getsqldate() {
-        return sqldate($this->posted);
+    public function getStr::sqlDate() {
+        return Str::sqlDate($this->posted);
     }
 
-    public function getidimage() {
+    public function getIdimage() {
         if (!count($this->files)) {
             return false;
         }
@@ -422,7 +425,7 @@ $this->themeInstance->setvar('post, $this);
         return false;
     }
 
-    public function getimage() {
+    public function getImage() {
         if ($id = $this->getidimage()) {
             return $this->factory->files->geturl($id);
         }
@@ -430,7 +433,7 @@ $this->themeInstance->setvar('post, $this);
         return false;
     }
 
-    public function getthumb() {
+    public function getThumb() {
         if (count($this->files) == 0) {
             return false;
         }
@@ -446,7 +449,7 @@ $this->themeInstance->setvar('post, $this);
         return false;
     }
 
-    public function getfirstimage() {
+    public function getFirstimage() {
         if (count($this->files)) {
             return $this->factory->files->getfirstimage($this->files);
         }
@@ -466,16 +469,16 @@ $this->themeInstance->setvar('post, $this);
         $tmlpath.= $name == 'tags' ? '.taglinks' : '.catlinks';
         $tmlitem = $theme->templates[$tmlpath . '.item'];
 
-        $tags = strbegin($name, 'tag') ? $this->factory->tags : $this->factory->categories;
+        $tags = Str::begin($name, 'tag') ? $this->factory->tags : $this->factory->categories;
         $tags->loaditems($items);
 
-        $args = new targs();
+        $args = new Args();
         $list = array();
 
         foreach ($items as $id) {
             $item = $tags->getitem($id);
             $args->add($item);
-            if (($item['icon'] == 0) || litepubl::$options->icondisabled) {
+            if (($item['icon'] == 0) ||  $this->getApp()->options->icondisabled) {
                 $args->icon = '';
             } else {
                 $files = $this->factory->files;
@@ -497,27 +500,27 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function getdate() {
-        return tlocal::date($this->posted, $this->theme->templates['content.post.date']);
+    public function getDate() {
+        return Lang::date($this->posted, $this->theme->templates['content.post.date']);
     }
 
-    public function getexcerptdate() {
-        return tlocal::date($this->posted, $this->theme->templates['content.excerpts.excerpt.date']);
+    public function getExcerptdate() {
+        return Lang::date($this->posted, $this->theme->templates['content.excerpts.excerpt.date']);
     }
 
-    public function getday() {
+    public function getDay() {
         return date($this->posted, 'D');
     }
 
-    public function getmonth() {
-        return tlocal::date($this->posted, 'M');
+    public function getMonth() {
+        return Lang::date($this->posted, 'M');
     }
 
-    public function getyear() {
+    public function getYear() {
         return date($this->posted, 'Y');
     }
 
-    public function getmorelink() {
+    public function getMorelink() {
         if ($this->moretitle) {
             return $this->parsetml('content.excerpts.excerpt.morelink');
         }
@@ -525,7 +528,7 @@ $this->themeInstance->setvar('post, $this);
         return '';
     }
 
-    public function gettagnames() {
+    public function getTagnames() {
         if (count($this->tags)) {
             $tags = $this->factory->tags;
             return implode(', ', $tags->getnames($this->tags));
@@ -534,12 +537,12 @@ $this->themeInstance->setvar('post, $this);
         return '';
     }
 
-    public function settagnames($names) {
+    public function setTagnames($names) {
         $tags = $this->factory->tags;
         $this->tags = $tags->createnames($names);
     }
 
-    public function getcatnames() {
+    public function getCatnames() {
         if (count($this->categories)) {
             $categories = $this->factory->categories;
             return implode(', ', $categories->getnames($this->categories));
@@ -548,7 +551,7 @@ $this->themeInstance->setvar('post, $this);
         return '';
     }
 
-    public function setcatnames($names) {
+    public function setCatnames($names) {
         $categories = $this->factory->categories;
         $this->categories = $categories->createnames($names);
         if (count($this->categories) == 0) {
@@ -557,7 +560,7 @@ $this->themeInstance->setvar('post, $this);
         }
     }
 
-    public function getcategory() {
+    public function getCategory() {
         if ($idcat = $this->getidcat()) {
             return $this->factory->categories->getname($idcat);
         }
@@ -565,7 +568,7 @@ $this->themeInstance->setvar('post, $this);
         return '';
     }
 
-    public function getidcat() {
+    public function getIdcat() {
         if (($cats = $this->categories) && count($cats)) {
             return $cats[0];
         }
@@ -577,16 +580,16 @@ $this->themeInstance->setvar('post, $this);
     public function request($id) {
         parent::request((int)$id);
         if ($this->status != 'published') {
-            if (!litepubl::$options->show_draft_post) {
+            if (! $this->getApp()->options->show_draft_post) {
                 return 404;
             }
 
-            $groupname = litepubl::$options->group;
+            $groupname =  $this->getApp()->options->group;
             if (($groupname == 'admin') || ($groupname == 'editor')) {
                 return;
             }
 
-            if ($this->author == litepubl::$options->user) {
+            if ($this->author ==  $this->getApp()->options->user) {
                 return;
             }
 
@@ -594,11 +597,11 @@ $this->themeInstance->setvar('post, $this);
         }
     }
 
-    public function gettitle() {
+    public function getTitle() {
         return $this->data['title'];
     }
 
-    public function gethead() {
+    public function getHead() {
         $result = $this->rawhead;
         $this->factory->mainview->ltoptions['idpost'] = $this->id;
         $theme = $this->theme;
@@ -626,7 +629,7 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function getanhead() {
+    public function getAnhead() {
         $result = '';
         $this->factory->posts->callevent('onanhead', array(
             $this, &$result
@@ -634,58 +637,74 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         return empty($this->data['keywords']) ? $this->Gettagnames() : $this->data['keywords'];
     }
     //fix for file version. For db must be deleted
-    public function setkeywords($s) {
+    public function setKeywords($s) {
         $this->data['keywords'] = $s;
     }
 
-    public function getdescription() {
+    public function getDescription() {
         return $this->data['description'];
     }
 
-    public function getidview() {
-        return $this->data['idview'];
+    public function getIdschema() {
+        return $this->data['idschema'];
     }
 
-    public function setidview($id) {
-        if ($id != $this->idview) {
-            $this->data['idview'] = $id;
-            if ($this->id) $this->db->setvalue($this->id, 'idview', $id);
+    public function setIdschema($id) {
+        if ($id != $this->idschema) {
+            $this->data['idschema'] = $id;
+            if ($this->id) $this->db->setvalue($this->id, 'idschema', $id);
         }
     }
 
-    public function setid_view($id_view) {
-        $this->data['idview'] = $id_view;
+    public function setId_view($id_view) {
+        $this->data['idschema'] = $id_view;
     }
 
-    public function geticonurl() {
-        if ($this->icon == 0) return '';
+    public function getIconurl() {
+        if ($this->icon == 0) {
+ return '';
+}
+
+
         $files = $this->factory->files;
-        if ($files->itemexists($this->icon)) return $files->geturl($this->icon);
+        if ($files->itemexists($this->icon)) {
+ return $files->geturl($this->icon);
+}
+
+
         $this->icon = 0;
         $this->save();
         return '';
     }
 
-    public function geticonlink() {
-        if (($this->icon == 0) || litepubl::$options->icondisabled) return '';
+    public function getIconlink() {
+        if (($this->icon == 0) ||  $this->getApp()->options->icondisabled) {
+ return '';
+}
+
+
         $files = $this->factory->files;
-        if ($files->itemexists($this->icon)) return $files->geticon($this->icon);
+        if ($files->itemexists($this->icon)) {
+ return $files->geticon($this->icon);
+}
+
+
         $this->icon = 0;
         $this->save();
         return '';
     }
 
-    public function setfiles(array $list) {
-        array_clean($list);
+    public function setFiles(array $list) {
+        Arr::clean($list);
         $this->data['files'] = $list;
     }
 
-    public function getfilelist() {
-        if ((count($this->files) == 0) || ((litepubl::$urlmap->page > 1) && litepubl::$options->hidefilesonpage)) {
+    public function getFilelist() {
+        if ((count($this->files) == 0) || (( $this->getApp()->router->page > 1) &&  $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
 
@@ -693,23 +712,31 @@ $this->themeInstance->setvar('post, $this);
         return $files->getfilelist($this->files, false);
     }
 
-    public function getexcerptfilelist() {
-        if (count($this->files) == 0) return '';
+    public function getExcerptfilelist() {
+        if (count($this->files) == 0) {
+ return '';
+}
+
+
         $files = $this->factory->files;
         return $files->getfilelist($this->files, true);
     }
 
-    public function getindex_tml() {
+    public function getIndex_tml() {
         $theme = $this->theme;
-        if (!empty($theme->templates['index.post'])) return $theme->templates['index.post'];
+        if (!empty($theme->templates['index.post'])) {
+ return $theme->templates['index.post'];
+}
+
+
         return false;
     }
 
-    public function getcont() {
+    public function getCont() {
         return $this->parsetml('content.post');
     }
 
-    public function getcontexcerpt($tml_name) {
+    public function getContexcerpt($tml_name) {
         ttheme::$vars['post'] = $this;
         //no use self theme because post in other context
         $theme = $this->factory->theme;
@@ -717,7 +744,7 @@ $this->themeInstance->setvar('post, $this);
         return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
     }
 
-    public function getrsslink() {
+    public function getRsslink() {
         if ($this->hascomm) {
             return $this->parsetml('content.post.rsslink');
         }
@@ -727,7 +754,7 @@ $this->themeInstance->setvar('post, $this);
     public function onrssitem($item) {
     }
 
-    public function getprevnext() {
+    public function getPrevnext() {
         $prev = '';
         $next = '';
         $theme = $this->theme;
@@ -740,7 +767,11 @@ $this->themeInstance->setvar('post, $this);
             $next = $theme->parse($theme->templates['content.post.prevnext.next']);
         }
 
-        if (($prev == '') && ($next == '')) return '';
+        if (($prev == '') && ($next == '')) {
+ return '';
+}
+
+
         $result = strtr($theme->parse($theme->templates['content.post.prevnext']) , array(
             '$prev' => $prev,
             '$next' => $next
@@ -749,9 +780,9 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function getcommentslink() {
-        $tml = sprintf('<a href="%s%s#comments">%%s</a>', litepubl::$site->url, $this->getlastcommenturl());
-        if (($this->comstatus == 'closed') || !litepubl::$options->commentspool) {
+    public function getCommentslink() {
+        $tml = sprintf('<a href="%s%s#comments">%%s</a>',  $this->getApp()->site->url, $this->getlastcommenturl());
+        if (($this->comstatus == 'closed') || ! $this->getApp()->options->commentspool) {
             if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
                 return '';
             }
@@ -763,7 +794,7 @@ $this->themeInstance->setvar('post, $this);
         return sprintf('<?php echo litepubl\tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
     }
 
-    public function getcmtcount() {
+    public function getCmtcount() {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
             case 0:
@@ -777,9 +808,9 @@ $this->themeInstance->setvar('post, $this);
         }
     }
 
-    public function gettemplatecomments() {
+    public function getTemplatecomments() {
         $result = '';
-        $page = litepubl::$urlmap->page;
+        $page =  $this->getApp()->router->page;
         $countpages = $this->countpages;
         if ($countpages > 1) $result.= $this->theme->getpages($this->url, $page, $countpages);
 
@@ -794,17 +825,17 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function gethascomm() {
+    public function getHascomm() {
         return ($this->data['comstatus'] != 'closed') && ((int)$this->data['commentscount'] > 0);
     }
 
-    public function getexcerptcontent() {
+    public function getExcerptcontent() {
         $posts = $this->factory->posts;
         if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
         $result = $this->excerpt;
         $posts->beforeexcerpt($this, $result);
         $result = $this->replacemore($result, true);
-        if (litepubl::$options->parsepost) {
+        if ( $this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
         $posts->afterexcerpt($this, $result);
@@ -821,18 +852,18 @@ $this->themeInstance->setvar('post, $this);
         }
     }
 
-    protected function getteaser() {
+    protected function getTeaser() {
         $content = $this->filtered;
         $tag = '<!--more-->';
         if ($i = strpos($content, $tag)) {
             $content = substr($content, $i + strlen($tag));
-            if (!strbegin($content, '<p>')) $content = '<p>' . $content;
+            if (!Str::begin($content, '<p>')) $content = '<p>' . $content;
             return $content;
         }
         return '';
     }
 
-    protected function getcontentpage($page) {
+    protected function getContentpage($page) {
         $result = '';
         if ($page == 1) {
             $result.= $this->filtered;
@@ -847,20 +878,20 @@ $this->themeInstance->setvar('post, $this);
         return $result;
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $posts = $this->factory->posts;
         $posts->beforecontent($this, $result);
         if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
-        $result.= $this->getcontentpage(litepubl::$urlmap->page);
-        if (litepubl::$options->parsepost) {
+        $result.= $this->getcontentpage( $this->getApp()->router->page);
+        if ( $this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
         $posts->aftercontent($this, $result);
         return $result;
     }
 
-    public function setcontent($s) {
+    public function setContent($s) {
         if (!is_string($s)) {
             $this->error('Error! Post content must be string');
         }
@@ -882,7 +913,7 @@ $this->themeInstance->setvar('post, $this);
         Filter::i()->filterpost($this, $this->rawcontent);
     }
 
-    public function getrawcontent() {
+    public function getRawcontent() {
         if (($this->id > 0) && ($this->data['rawcontent'] === false)) {
             $this->data['rawcontent'] = $this->rawdb->getvalue($this->id, 'rawcontent');
         }
@@ -890,12 +921,16 @@ $this->themeInstance->setvar('post, $this);
         return $this->data['rawcontent'];
     }
 
-    protected function getrawdb() {
+    protected function getRawdb() {
         return $this->getdb('rawposts');
     }
 
-    public function getpage($i) {
-        if (isset($this->data['pages'][$i])) return $this->data['pages'][$i];
+    public function getPage($i) {
+        if (isset($this->data['pages'][$i])) {
+ return $this->data['pages'][$i];
+}
+
+
         if ($this->id > 0) {
             if ($r = $this->getdb('pages')->getassoc("(id = $this->id) and (page = $i) limit 1")) {
                 $s = $r['content'];
@@ -926,73 +961,93 @@ $this->themeInstance->setvar('post, $this);
         if ($this->id > 0) $this->getdb('pages')->iddelete($this->id);
     }
 
-    public function gethaspages() {
+    public function getHaspages() {
         return ($this->pagescount > 1) || ($this->commentpages > 1);
     }
 
-    public function getpagescount() {
+    public function getPagescount() {
         return $this->data['pagescount'] + 1;
     }
 
-    public function getcountpages() {
+    public function getCountpages() {
         return max($this->pagescount, $this->commentpages);
     }
 
-    public function getcommentpages() {
-        if (!litepubl::$options->commentpages || ($this->commentscount <= litepubl::$options->commentsperpage)) return 1;
-        return ceil($this->commentscount / litepubl::$options->commentsperpage);
+    public function getCommentpages() {
+        if (! $this->getApp()->options->commentpages || ($this->commentscount <=  $this->getApp()->options->commentsperpage)) {
+ return 1;
+}
+
+
+        return ceil($this->commentscount /  $this->getApp()->options->commentsperpage);
     }
 
-    public function getlastcommenturl() {
+    public function getLastcommenturl() {
         $c = $this->commentpages;
         $url = $this->url;
-        if (($c > 1) && !litepubl::$options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+        if (($c > 1) && ! $this->getApp()->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
         return $url;
     }
 
     public function clearcache() {
-        litepubl::$urlmap->setexpired($this->idurl);
+         $this->getApp()->router->setexpired($this->idurl);
     }
 
-    public function getschemalink() {
+    public function getSchemalink() {
         return 'post';
     }
 
     //author
-    protected function getauthorname() {
+    protected function getAuthorname() {
         return $this->getusername($this->author, false);
     }
 
-    protected function getauthorlink() {
+    protected function getAuthorlink() {
         return $this->getusername($this->author, true);
     }
 
-    protected function getusername($id, $link) {
+    protected function getUsername($id, $link) {
         if ($id <= 1) {
             if ($link) {
-                return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
+                return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>',  $this->getApp()->site->url,  $this->getApp()->site->author);
             } else {
-                return litepubl::$site->author;
+                return  $this->getApp()->site->author;
             }
         } else {
             $users = $this->factory->users;
-            if (!$users->itemexists($id)) return '';
+            if (!$users->itemexists($id)) {
+ return '';
+}
+
+
             $item = $users->getitem($id);
-            if (!$link || ($item['website'] == '')) return $item['name'];
-            return sprintf('<a href="%s/users.htm%sid=%s">%s</a>', litepubl::$site->url, litepubl::$site->q, $id, $item['name']);
+            if (!$link || ($item['website'] == '')) {
+ return $item['name'];
+}
+
+
+            return sprintf('<a href="%s/users.htm%sid=%s">%s</a>',  $this->getApp()->site->url,  $this->getApp()->site->q, $id, $item['name']);
         }
     }
 
-    public function getauthorpage() {
+    public function getAuthorpage() {
         $id = $this->author;
         if ($id <= 1) {
-            return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>', litepubl::$site->url, litepubl::$site->author);
+            return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>',  $this->getApp()->site->url,  $this->getApp()->site->author);
         } else {
             $pages = $this->factory->userpages;
-            if (!$pages->itemexists($id)) return '';
+            if (!$pages->itemexists($id)) {
+ return '';
+}
+
+
             $pages->id = $id;
-            if ($pages->url == '') return '';
-            return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', litepubl::$site->url, $pages->url, $pages->name);
+            if ($pages->url == '') {
+ return '';
+}
+
+
+            return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>',  $this->getApp()->site->url, $pages->url, $pages->name);
         }
     }
 

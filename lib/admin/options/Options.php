@@ -1,29 +1,30 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\options;
 
 class Options extends \litepubl\admin\Menu
 {
-    public function getcontent() {
-        $options = litepubl::$options;
+    public function getContent() {
+        $options =  $this->getApp()->options;
         $template = ttemplate::i();
         ttheme::$vars['template'] = $template;
         $result = '';
-        $args = new targs();
-        $lang = tlocal::admin('options');
+        $args = new Args();
+        $lang = Lang::admin('options');
         $admin = $this->admintheme;
 
         switch ($this->name) {
             case 'options':
-                $site = litepubl::$site;
+                $site =  $this->getApp()->site;
                 $args->fixedurl = $site->fixedurl;
-                $args->redirdom = litepubl::$urlmap->redirdom;
+                $args->redirdom =  $this->getApp()->router->redirdom;
                 $args->url = $site->url;
                 $args->name = $site->name;
                 $args->description = $site->description;
@@ -71,8 +72,8 @@ class Options extends \litepubl\admin\Menu
                 $args->audioext = $parser->audioext;
                 $args->videoext = $parser->videoext;
 
-                $args->video_width = litepubl::$site->video_width;
-                $args->video_height = litepubl::$site->video_height;
+                $args->video_width =  $this->getApp()->site->video_width;
+                $args->video_height =  $this->getApp()->site->video_height;
 
                 $args->formtitle = $lang->files;
                 return $admin->form('
@@ -146,14 +147,14 @@ class Options extends \litepubl\admin\Menu
 
             case 'catstags':
             case 'lite': //old version suports
-                $cats = litepubl::$classes->categories;
+                $cats =  $this->getApp()->classes->categories;
                 $args->parentcats = $cats->includeparents;
                 $args->childcats = $cats->includechilds;
 
-                $tags = litepubl::$classes->tags;
+                $tags =  $this->getApp()->classes->tags;
                 $args->parenttags = $tags->includeparents;
                 $args->childtags = $tags->includechilds;
-                $lang = tlocal::admin('options');
+                $lang = Lang::admin('options');
                 $args->formtitle = $lang->catstags;
                 $admin = $this->admintheme;
                 return $admin>form('
@@ -174,14 +175,14 @@ class Options extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         extract($_POST, EXTR_SKIP);
-        $options = litepubl::$options;
+        $options =  $this->getApp()->options;
 
         switch ($this->name) {
             case 'options':
-                litepubl::$urlmap->redirdom = isset($redirdom);
-                $site = litepubl::$site;
+                 $this->getApp()->router->redirdom = isset($redirdom);
+                $site =  $this->getApp()->site;
                 $site->fixedurl = isset($fixedurl);
                 $site->url = $url;
                 $site->name = $name;
@@ -215,8 +216,8 @@ class Options extends \litepubl\admin\Menu
 
                 $parser->save();
 
-                litepubl::$site->video_width = $video_width;
-                litepubl::$site->video_height = $video_height;
+                 $this->getApp()->site->video_width = $video_width;
+                 $this->getApp()->site->video_height = $video_height;
                 break;
 
 
@@ -269,12 +270,12 @@ class Options extends \litepubl\admin\Menu
 
             case 'lite':
             case 'catstags':
-                $cats = litepubl::$classes->categories;
+                $cats =  $this->getApp()->classes->categories;
                 $cats->includeparents = isset($parentcats);
                 $cats->includechilds = isset($childcats);
                 $cats->save();
 
-                $tags = litepubl::$classes->tags;
+                $tags =  $this->getApp()->classes->tags;
                 $tags->includeparents = isset($parenttags);
                 $tags->includechilds = isset($childtags);
                 $tags->save();

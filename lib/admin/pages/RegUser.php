@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepubl\core\Session;
@@ -14,6 +15,7 @@ use litepubl\view\Lang;
 use litepubl\view\Filter;
 use litepubl\view\Theme;
 use litepubl\utils\Mailer;
+use litepubl\core\Str;
 
 class RegUser extends Form
 {
@@ -29,22 +31,26 @@ class RegUser extends Form
         $this->regstatus = false;
     }
 
-    public function gettitle() {
-        return tlocal::get('users', 'adduser');
+    public function getTitle() {
+        return Lang::get('users', 'adduser');
     }
 
-    public function getlogged() {
-        return litepubl::$options->authcookie();
+    public function getLogged() {
+        return  $this->getApp()->options->authcookie();
     }
 
     public function request($arg) {
-        if (!litepubl::$options->usersenabled || !litepubl::$options->reguser) return 403;
+        if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
+ return 403;
+}
+
+
         parent::request($arg);
 
         if (!empty($_GET['confirm'])) {
             $confirm = $_GET['confirm'];
             $email = $_GET['email'];
-            Session::start('reguser-' . md5(litepubl::$options->hash($email)));
+            Session::start('reguser-' . md5( $this->getApp()->options->hash($email)));
             if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
                 if (!isset($_SESSION['email'])) session_destroy();
                 $this->regstatus = 'error';
@@ -64,31 +70,31 @@ class RegUser extends Form
             if ($id) {
                 $this->regstatus = 'ok';
                 $expired = time() + 31536000;
-                $cookie = md5uniq();
-                litepubl::$options->user = $id;
-                litepubl::$options->updategroup();
-                litepubl::$options->setcookies($cookie, $expired);
+                $cookie = Str::md5Uniq();
+                 $this->getApp()->options->user = $id;
+                 $this->getApp()->options->updategroup();
+                 $this->getApp()->options->setcookies($cookie, $expired);
             } else {
                 $this->regstatus = 'error';
             }
         }
     }
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $theme = $this->theme;
-        $lang = tlocal::admin('users');
+        $lang = Lang::admin('users');
 
         if ($this->logged) {
-            return $view->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $lang->adminpanel));
+            return $schema->admintheme->geterr($lang->logged . ' ' . $theme->link('/admin/', $lang->adminpanel));
         }
 
         if ($this->regstatus) {
             switch ($this->regstatus) {
                 case 'ok':
                     $backurl = $this->backurl;
-                    if (!$backurl) $backurl = UserGroups::i()->gethome(litepubl::$options->group);
-                    if (!strbegin($backurl, 'http')) $backurl = litepubl::$site->url . $backurl;
+                    if (!$backurl) $backurl = UserGroups::i()->gethome( $this->getApp()->options->group);
+                    if (!Str::begin($backurl, 'http')) $backurl =  $this->getApp()->site->url . $backurl;
                     return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
                 case 'mail':
@@ -99,10 +105,10 @@ class RegUser extends Form
                 }
             }
 
-            $args = new targs();
+            $args = new Args();
             $args->email = isset($_POST['email']) ? $_POST['email'] : '';
             $args->name = isset($_POST['name']) ? $_POST['name'] : '';
-            $args->action = litepubl::$site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
+            $args->action =  $this->getApp()->site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
             $result.= $theme->parsearg($this->getform() , $args);
 
             if (!empty($_GET['backurl'])) {
@@ -118,7 +124,7 @@ class RegUser extends Form
     }
 
     public function createform() {
-        $lang = tlocal::i('users');
+        $lang = Lang::i('users');
         $theme = $this->theme;
 
         $form = new adminform();
@@ -133,7 +139,7 @@ class RegUser extends Form
         return $result;
     }
 
-    public function processform() {
+    public function processForm() {
         $this->regstatus = 'error';
         try {
             if ($this->reguser($_POST['email'], $_POST['name'])) $this->regstatus = 'mail';
@@ -145,40 +151,52 @@ class RegUser extends Form
 
     public function reguser($email, $name) {
         $email = strtolower(trim($email));
-        if (!Filter::ValidateEmail($email)) return $this->error(tlocal::get('comment', 'invalidemail'));
+        if (!Filter::ValidateEmail($email)) {
+ return $this->error(Lang::get('comment', 'invalidemail'));
+}
 
-        if (substr_count($email, '.', 0, strpos($email, '@')) > 2) return $this->error(tlocal::get('comment', 'invalidemail'));
+
+
+        if (substr_count($email, '.', 0, strpos($email, '@')) > 2) {
+ return $this->error(Lang::get('comment', 'invalidemail'));
+}
+
+
 
         $users = Users::i();
         if ($id = $users->emailexists($email)) {
-            if ('comuser' != $users->getvalue($id, 'status')) return $this->error(tlocal::i()->invalidregdata);
+            if ('comuser' != $users->getvalue($id, 'status')) {
+ return $this->error(Lang::i()->invalidregdata);
+}
+
+
         }
 
-        Session::start('reguser-' . md5(litepubl::$options->hash($email)));
+        Session::start('reguser-' . md5( $this->getApp()->options->hash($email)));
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $name;
-        $confirm = md5rand();
+        $confirm = Str::md5Rand();
         $_SESSION['confirm'] = $confirm;
-        $password = md5uniq();
+        $password = Str::md5Uniq();
         $_SESSION['password'] = $password;
         $_SESSION['backurl'] = isset($_GET['backurl']) ? $_GET['backurl'] : '';
         session_write_close();
 
-        $args = new targs();
+        $args = new Args();
         $args->name = $name;
         $args->email = $email;
         $args->confirm = $confirm;
         $args->password = $password;
-        $args->confirmurl = litepubl::$site->url . '/admin/reguser/' . litepubl::$site->q . 'email=' . urlencode($email);
+        $args->confirmurl =  $this->getApp()->site->url . '/admin/reguser/' .  $this->getApp()->site->q . 'email=' . urlencode($email);
 
-        tlocal::usefile('mail');
-        $lang = tlocal::i('mailusers');
+        Lang::usefile('mail');
+        $lang = Lang::i('mailusers');
         $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
 
-        Mailer::sendmail(litepubl::$site->name, litepubl::$options->fromemail, $name, $email, $subject, $body);
+        Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, $name, $email, $subject, $body);
 
         return true;
     }

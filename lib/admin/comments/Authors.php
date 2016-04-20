@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\comments;
 use litepubl\core\Users;
@@ -16,7 +17,7 @@ use litepubl\admin\Link;
 class Authors extends \litepubl\admin\Menu 
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
         $this->basename = 'authors';
         $users = Users::i();
@@ -25,16 +26,24 @@ $admin = $this->admintheme;
 
         if ('delete' == $this->action) {
             $id = $this->idget();
-            if (!$users->itemexists($id)) return $this->notfound();
+            if (!$users->itemexists($id)) {
+ return $this->notfound();
+}
+
+
             if (!$this->confirmed) {
 return $this->confirmDelete($id, $lang->confirmdelete);
 }
 
-            if (!$this->deleteAuthor($id)) return $this->notfount;
+            if (!$this->deleteAuthor($id)) {
+ return $this->notfount;
+}
+
+
             $result.= $admin->success($lang->deleted);
         }
 
-        $args = new targs();
+        $args = new Args();
         $perpage = 20;
         $total = $users->db->getcount("status = 'comuser'");
         $from = $this->getfrom($perpage, $total);
@@ -74,14 +83,22 @@ $db = $users->db;
         ));
 
         $result.= $tb->build($items);
-        $result.= $this->theme->getpages($this->url, litepubl::$urlmap->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage));
         return $result;
     }
 
     private function deleteAuthor($uid) {
         $users = Users::i();
-        if (!$users->itemexists($uid)) return false;
-        if ('comuser' != $users->getvalue($uid, 'status')) return false;
+        if (!$users->itemexists($uid)) {
+ return false;
+}
+
+
+        if ('comuser' != $users->getvalue($uid, 'status')) {
+ return false;
+}
+
+
         $comments = CommentItems::i();
         $comments->db->delete("author = $uid");
         $users->setvalue($uid, 'status', 'hold');

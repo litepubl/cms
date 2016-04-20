@@ -1,12 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\perms;
+use litepubl\Config;
+use litepubl\core\Str;
 
 class Password extends Perm
  {
@@ -18,7 +21,7 @@ class Password extends Perm
         $this->data['solt'] = '';
     }
 
-    public function getheader($obj) {
+    public function getHeader($obj) {
         if ($this->password) {
         return sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this) , $this->id);
 }return '';
@@ -30,21 +33,21 @@ return '';
         return $this->authcookie();
     }
 
-    public function getcookiename() {
+    public function getCookiename() {
         return 'permpassword_' . $this->id;
     }
 
-    public function setpassword($p) {
+    public function setPassword($p) {
         $p = trim($p);
         if ($p) {
-        $this->data['solt'] = md5uniq();
+        $this->data['solt'] = Str::md5Uniq();
         $this->data['password'] = $this->hash($p, $this->solt);
         $this->save();
 }
     }
 
 public function hash($password, $solt) {
-return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
+return md5($solt . Config::$secret . $password .  $this->getApp()->options->solt);
 }
 
     public function checkpassword($p) {
@@ -52,17 +55,17 @@ return md5($solt . litepubl::$secret . $password . litepubl::$options->solt);
 return false;
 }
 
-        $solt = md5rand();
+        $solt = Str::md5Rand();
         $hash = $this->hash($this->password, $solt);
         $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-        setcookie($this->getcookiename() , $cookie, $expired, litepubl::$site->subdir . '/', false);
+        setcookie($this->getcookiename() , $cookie, $expired,  $this->getApp()->site->subdir . '/', false);
         return true;
     }
 
     public function authcookie() {
-        if (litepubl::$options->group == 'admin') {
+        if ( $this->getApp()->options->group == 'admin') {
 return true;
 }
 
@@ -85,9 +88,9 @@ return true;
     }
 
     public function redir() {
-        $url = litepubl::$site->url . '/check-password.php' . litepubl::$site->q;
-        $url.= "idperm=$this->id&backurl=" . urlencode(litepubl::$urlmap->url);
-        litepubl::$urlmap->redir($url, 307);
+        $url =  $this->getApp()->site->url . '/check-password.php' .  $this->getApp()->site->q;
+        $url.= "idperm=$this->id&backurl=" . urlencode( $this->getApp()->router->url);
+         $this->getApp()->router->redir($url, 307);
     }
 
 }

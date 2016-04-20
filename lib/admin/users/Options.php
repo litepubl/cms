@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\users;
 use litepubl\pages\Users as UserPages;
@@ -16,11 +17,11 @@ use litepubl\view\Args;
 class Options extends \litepubl\admin\Menu
 {
 
-    public function getcontent() {
+    public function getContent() {
         $result = '';
 $admin = $this->admintheme;
-        $lang = tlocal::i('users');
-        $args = new targs();
+        $lang = Lang::i('users');
+        $args = new Args();
         $args->formtitle = $lang->useroptions;
 
         $pages = UserPages::i();
@@ -40,7 +41,7 @@ $admin = $this->admintheme;
  $args);
     }
 
-    public function processform() {
+    public function processForm() {
         $pages = UserPages::i();
         $pages->createpage = isset($_POST['createpage']);
         $pages->save();

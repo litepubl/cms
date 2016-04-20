@@ -1,14 +1,15 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\core;
 
 function PluginsInstall($self) {
-    @mkdir(litepubl::$paths->data . 'plugins', 0777);
-    @chmod(litepubl::$paths->data . 'plugins', 0777);
+    @mkdir( $self->getApp()->paths->data . 'plugins', 0777);
+    @chmod( $self->getApp()->paths->data . 'plugins', 0777);
 }

@@ -1,12 +1,14 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
+use litepubl\core\Str;
 
 class tcodedocfilter extends titems {
     private $fix;
@@ -25,8 +27,8 @@ class tcodedocfilter extends titems {
     }
 
     public function filter(tpost $post, $s, $type) {
-        tlocal::usefile('codedoc');
-        $lang = tlocal::i('codedoc');
+        Lang::usefile('codedoc');
+        $lang = Lang::i('codedoc');
 
         //prepare content
         $s = str_replace(array(
@@ -67,7 +69,11 @@ class tcodedocfilter extends titems {
     }
 
     public function fixpost(tpost $post) {
-        if (count($this->fix) == 0) return;
+        if (count($this->fix) == 0) {
+ return;
+}
+
+
         foreach ($this->fix as $i => $item) {
             if ($post == $item['post']) {
                 unset($item['post']);
@@ -80,7 +86,7 @@ class tcodedocfilter extends titems {
 
     public function html($key, targs $args) {
         $theme = ttheme::instance();
-        $s = strtr(tlocal::get('htmlcodedoc', $key) , array(
+        $s = strtr(Lang::get('htmlcodedoc', $key) , array(
             '$tableclass' => $theme->templates['content.admin.tableclass'],
             "'" => '"',
         ));
@@ -89,7 +95,7 @@ class tcodedocfilter extends titems {
 
     }
 
-    public function getheaders(array & $a) {
+    public function getHeaders(array & $a) {
         $result = array();
         while ((count($a) > 0) && preg_match('/^\s*(\w*+)\s*[=:]\s*(.*+)/', $a[0], $m)) {
             $result[$m[1]] = trim($m[2]);
@@ -98,7 +104,7 @@ class tcodedocfilter extends titems {
         return $result;
     }
 
-    public function getbody(array & $a) {
+    public function getBody(array & $a) {
         $result = '';
         while ((count($a) > 0) && !preg_match('/^\s*(\w*+)\s*[=:]\s*(.*+)/', $a[0], $m)) {
             $result.= array_shift($a) . "\n";
@@ -130,15 +136,19 @@ class tcodedocfilter extends titems {
 
     public function find_class($class) {
         //check cache array
-        if (isset($this->classes[$class])) return $this->classes[$class];
+        if (isset($this->classes[$class])) {
+ return $this->classes[$class];
+}
+
+
         $result = $this->indexof('class', $class);
         $this->classes[$class] = $result;
         return $result;
     }
 
     public function parsedoc(tpost $post, array & $a, $typedoc) {
-        $lang = tlocal::i('codedoc');
-        $args = new targs();
+        $lang = Lang::i('codedoc');
+        $args = new Args();
         $contentfilter = tcontentfilter::i();
         $headers = $this->getheaders($a);
         $body = $this->getbody($a);
@@ -148,7 +158,7 @@ class tcodedocfilter extends titems {
             $class = $headers['interface'];
             $parentclass = '';
             $args->class = $class;
-            $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepubl::$site->url, $headers['source']);
+            $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url, $headers['source']);
             $args->body = $body;
             $result = $this->html('interface', $args);
         } else {
@@ -257,24 +267,28 @@ class tcodedocfilter extends titems {
         return $toc . $result;
     }
 
-    public function getaboutclass(array $headers, $body) {
+    public function getAboutclass(array $headers, $body) {
         $class = $headers['classname'];
-        $lang = tlocal::i('codedoc');
-        $args = new targs();
+        $lang = Lang::i('codedoc');
+        $args = new Args();
         $args->class = $class;
         $args->parent = isset($headers['parent']) ? sprintf('[[%s]]', $headers['parent']) : $lang->noparent;
         $args->childs = $this->getchilds($class);
-        $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', litepubl::$site->url, $headers['source']);
+        $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url, $headers['source']);
         $args->interfaces = $this->getclasses($headers, 'interface');
         $args->dependent = $this->getclasses($headers, 'dependent');
         $args->body = $body;
         return $this->html('class', $args);
     }
 
-    public function getchilds($parent) {
+    public function getChilds($parent) {
         IF ($parent == '') return '';
-        $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, dbquote($parent))));
-        if (count($items) == 0) return '';
+        $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, Str::uuote($parent))));
+        if (count($items) == 0) {
+ return '';
+}
+
+
 
         $links = array();
         tposts::i()->loaditems(array_keys($items));
@@ -285,8 +299,12 @@ class tcodedocfilter extends titems {
         return implode(', ', $links);
     }
 
-    private function getclasses(array $doc, $name) {
-        if (empty($doc[$name])) return '';
+    private function getClasses(array $doc, $name) {
+        if (empty($doc[$name])) {
+ return '';
+}
+
+
         return preg_replace('/\w\w*+/', '[[$0]]', $doc[$name]);
     }
 

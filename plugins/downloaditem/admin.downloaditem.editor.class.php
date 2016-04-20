@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl;
 
@@ -14,18 +15,18 @@ class tdownloaditemeditor extends tposteditor {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function gettitle() {
-        $lang = tlocal::admin('downloaditems');
+    public function getTitle() {
+        $lang = Lang::admin('downloaditems');
         $lang->addsearch('downloaditems', 'downloaditem', 'editor');
 
         if ($this->idpost == 0) {
             return parent::gettitle();
         } else {
-            return tlocal::admin('downloaditems')->editor;
+            return Lang::admin('downloaditems')->editor;
         }
     }
 
-    public function gettabstemplate() {
+    public function getTabstemplate() {
         $admintheme = $this->admintheme;
         return strtr($admintheme->templates['tabs'], array(
             '$id' => 'tabs',
@@ -40,7 +41,7 @@ class tdownloaditemeditor extends tposteditor {
         ));
     }
 
-    public function getargstab(tpost $post, targs $args) {
+    public function getArgstab(tpost $post, targs $args) {
         parent::getargstab($post, $args);
 
         $args->downloadurl = $post->downloadurl;
@@ -49,8 +50,8 @@ class tdownloaditemeditor extends tposteditor {
         $args->version = $post->version;
 
         $types = array(
-            'theme' => tlocal::get('downloaditem', 'theme') ,
-            'plugin' => tlocal::get('downloaditem', 'plugin')
+            'theme' => Lang::get('downloaditem', 'theme') ,
+            'plugin' => Lang::get('downloaditem', 'plugin')
         );
 
         $args->type = $this->theme->comboItems($types, $post->type);

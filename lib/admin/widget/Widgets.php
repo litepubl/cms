@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\widget;
 use litepubl\widget\Widgets as WidgetItems;
@@ -15,15 +16,17 @@ use litepubl\admin\Form;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Parser;
+use litepubl\core\Str;
+use litepubl\core\Arr;
 
 class Widgets extends \litepubl\admin\Menu
 {
 
-    public static function getSidebarNames(tview $view) {
-        $count = $view->theme->sidebarscount;
+    public static function getSidebarNames(tview $schema) {
+        $count = $schema->theme->sidebarscount;
         $result = range(1, $count);
         $parser = Parser::i();
-        $about = $parser->getabout($view->theme->name);
+        $about = $parser->getabout($schema->theme->name);
         foreach ($result as $key => $value) {
             if (isset($about["sidebar$key"])) $result[$key] = $about["sidebar$key"];
         }
@@ -37,44 +40,44 @@ class Widgets extends \litepubl\admin\Menu
     }
 
    public function getTableForm() {
-        $idview = (int)$this->getparam('idview', 1);
-        $view = tview::i($idview);
+        $idschema = (int)$this->getparam('idschema', 1);
+        $schema = Schema::i($idschema);
 
         $widgets = WidgetItems::i();
         $theme = $this->theme;
         $admintheme = $this->admintheme;
 
-        $lang = tlocal::i('widgets');
+        $lang = Lang::i('widgets');
         $lang->addsearch('views');
-        $args = new targs();
+        $args = new Args();
         $form = new Form($args);
         $form->title = $lang->formhead;
-        $form->items = $form->hidden('action', 'edit');
-        $form->items.= $form->hidden('idview', $idview);
+        $form->body = $form->hidden('action', 'edit');
+        $form->items.= $form->hidden('idschema', $idschema);
 
-        if ($idview != 1) {
+        if ($idschema != 1) {
             $form->body .= $theme->getinput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
         }
         //all widgets
         $checkboxes = '';
         foreach ($widgets->items as $id => $item) {
-            if (!Sidebars::getpos($view->sidebars, $id)) {
+            if (!Sidebars::getpos($schema->sidebars, $id)) {
                 $checkboxes.= $theme->getinput('checkbox', "addwidget-$id", "value=\"$id\"", $item['title']);
             }
         }
 
         $args->checkboxes = $checkboxes;
-        $args->idview = $idview;
+        $args->idschema = $idschema;
         $form->before = $admintheme->parsearg($admintheme->templates['addwidgets'], $args);
-        $count = count($view->sidebars);
-        $sidebarnames = static ::getsidebarnames($view);
+        $count = count($schema->sidebars);
+        $sidebarnames = static ::getsidebarnames($schema);
 
         //items for table builder
         $items = array();
         $tml_btn = $admintheme->templates['radiogroup.button'];
         $tml_active = $admintheme->templates['radiogroup.active'];
 
-        foreach ($view->sidebars as $i => $sidebar) {
+        foreach ($schema->sidebars as $i => $sidebar) {
             $orders = range(1, count($sidebar));
             foreach ($sidebar as $j => $sb_item) {
                 $id = $sb_item['id'];
@@ -141,7 +144,7 @@ class Widgets extends \litepubl\admin\Menu
         return $form->get();
     }
 
-    public function getcontent() {
+    public function getContent() {
         if (!(isset($_GET['action']) && $_GET['action'] == 'delete')) {
             $idwidget = $this->getparam('idwidget', 0);
             $widgets = WidgetItems::i();
@@ -151,70 +154,74 @@ class Widgets extends \litepubl\admin\Menu
             }
         }
 
-        $idview = (int)tadminhtml::getparam('idview', 1);
-        $view = tview::i($idview);
+        $idschema = (int)tadminhtml::getparam('idschema', 1);
+        $schema = Schema::i($idschema);
         $result = GetSchema::form('/admin/views/widgets/');
 
-        if (($idview == 1) || $view->customsidebar) {
+        if (($idschema == 1) || $schema->customsidebar) {
             $result.= $this->getTableForm();
         } else {
-            $lang = tlocal::i('widgets');
-            $args = new targs();
-            $args->customsidebar = $view->customsidebar;
-            $args->disableajax = $view->disableajax;
-            $args->idview = $idview;
+            $lang = Lang::i('widgets');
+            $args = new Args();
+            $args->customsidebar = $schema->customsidebar;
+            $args->disableajax = $schema->disableajax;
+            $args->idschema = $idschema;
             $args->action = 'options';
             $args->formtitle = $lang->viewsidebar;
             $result.= $this->admintheme->form('
       [checkbox=customsidebar]
       [checkbox=disableajax]
-      [hidden=idview]
+      [hidden=idschema]
       [hidden=action]', $args);
         }
 
         return $result;
     }
 
-    public function processform() {
-        litepubl::$urlmap->clearcache();
+    public function processForm() {
+         $this->getApp()->router->clearcache();
 
         $idwidget = (int)tadminhtml::getparam('idwidget', 0);
         $widgets = WidgetItems::i();
 
         if ($widgets->itemexists($idwidget)) {
             if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
-                $idview = (int)tadminhtml::getparam('idview', 1);
-                $sidebars = Sidebars::i($idview);
+                $idschema = (int)tadminhtml::getparam('idschema', 1);
+                $sidebars = Sidebars::i($idschema);
                 $sidebars->remove($idwidget);
                 $result = $this->admintheme->success($this->lang->deleted);
             } else {
                 $widget = $widgets->getwidget($idwidget);
-                $result = $widget->admin->processform();
+                $result = $widget->admin->processForm();
             }
 
             return $result;
         }
 
-        $idview = (int)tadminhtml::getparam('idview', 1);
-        $view = tview::i($idview);
+        $idschema = (int)tadminhtml::getparam('idschema', 1);
+        $schema = Schema::i($idschema);
 
         switch ($_POST['action']) {
             case 'options':
-                $view->disableajax = isset($_POST['disableajax']);
-                $view->customsidebar = isset($_POST['customsidebar']);
-                $view->save();
+                $schema->disableajax = isset($_POST['disableajax']);
+                $schema->customsidebar = isset($_POST['customsidebar']);
+                $schema->save();
                 break;
 
 
             case 'edit':
-                if (($view->id > 1) && !isset($_POST['customsidebar'])) {
-                    $view->customsidebar = false;
+                if (($schema->id > 1) && !isset($_POST['customsidebar'])) {
+                    $schema->customsidebar = false;
                 } else {
-                    $sidebars = Sidebars::i($idview);
+                    $sidebars = Sidebars::i($idschema);
                     foreach ($sidebars->items as $i => $items) {
                         foreach ($items as $j => $item) {
                             $id = $item['id'];
-                            if (!isset($_POST["sidebar-$id"])) continue;
+                            if (!isset($_POST["sidebar-$id"])) {
+ continue;
+}
+
+
 
                             $i2 = (int)$_POST["sidebar-$id"];
                             if ($i2 >= count($sidebars->items)) {
@@ -227,10 +234,10 @@ class Widgets extends \litepubl\admin\Menu
                             }
 
                             if ($i == $i2) {
-                                array_move($sidebars->items[$i2], $j, $j2);
+                                Arr::move($sidebars->items[$i2], $j, $j2);
                             } else {
-                                array_delete($sidebars->items[$i], $j);
-                                array_insert($sidebars->items[$i2], $item, $j2);
+                                Arr::delete($sidebars->items[$i], $j);
+                                Arr::insert($sidebars->items[$i2], $item, $j2);
                             }
 
                             $sidebars->items[$i2][$j2]['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
@@ -243,17 +250,21 @@ class Widgets extends \litepubl\admin\Menu
 
 
             case 'add':
-                $idview = (int)tadminhtml::getparam('id_view', 1);
-                $_GET['idview'] = $idview;
-                $view = tview::i($idview);
+                $idschema = (int)tadminhtml::getparam('id_view', 1);
+                $_GET['idschema'] = $idschema;
+                $schema = Schema::i($idschema);
                 $widgets = WidgetItems::i();
 
                 foreach ($_POST as $key => $value) {
-                    if (strbegin($key, 'addwidget-')) {
+                    if (Str::begin($key, 'addwidget-')) {
                         $id = (int)$value;
-                        if (!$widgets->itemexists($id) || $widgets->subclass($id)) continue;
+                        if (!$widgets->itemexists($id) || $widgets->subclass($id)) {
+ continue;
+}
 
-                        $view->sidebars[0][] = array(
+
+
+                        $schema->sidebars[0][] = array(
                             'id' => $id,
                             'ajax' => false
                         );
@@ -262,7 +273,7 @@ class Widgets extends \litepubl\admin\Menu
                 break;
             }
 
-            $view->save();
+            $schema->save();
         }
 
 } //class

@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\view;
 
@@ -27,8 +28,8 @@ class Lang
         return static ::$self;
     }
 
-    public static function getinstance() {
-        return litepubl::$classes->getinstance(get_called_class());
+    public static function getInstance() {
+        return  $this->getApp()->classes->getinstance(get_called_class());
     }
 
     public static function admin($section = '') {
@@ -51,17 +52,33 @@ class Lang
     }
 
     public function __get($name) {
-        if (isset($this->ini[$this->section][$name])) return $this->ini[$this->section][$name];
+        if (isset($this->ini[$this->section][$name])) {
+ return $this->ini[$this->section][$name];
+}
+
+
         foreach ($this->searchsect as $section) {
-            if (isset($this->ini[$section][$name])) return $this->ini[$section][$name];
+            if (isset($this->ini[$section][$name])) {
+ return $this->ini[$section][$name];
+}
+
+
         }
         return '';
     }
 
     public function __isset($name) {
-        if (isset($this->ini[$this->section][$name])) return true;
+        if (isset($this->ini[$this->section][$name])) {
+ return true;
+}
+
+
         foreach ($this->searchsect as $section) {
-            if (isset($this->ini[$section][$name])) return true;
+            if (isset($this->ini[$section][$name])) {
+ return true;
+}
+
+
         }
 
         return false;
@@ -96,8 +113,8 @@ class Lang
         return static ::i()->translate(date($format, $date) , 'datetime');
     }
 
-    public function getdateformat() {
-        $format = litepubl::$options->dateformat;
+    public function getDateformat() {
+        $format =  $this->getApp()->options->dateformat;
         return $format != '' ? $format : $this->ini['datetime']['dateformat'];
     }
 
@@ -113,13 +130,13 @@ class Lang
     public function loadfile($name) {
         $this->loaded[] = $name;
         $filename = static ::getcachedir() . $name;
-        if (($data = litepubl::$storage->loaddata($filename)) && is_array($data)) {
+        if (($data =  $this->getApp()->storage->loaddata($filename)) && is_array($data)) {
             $this->ini = $data + $this->ini;
             if (isset($data['searchsect'])) {
                 $this->joinsearch($data['searchsect']);
             }
         } else {
-            $merger = tlocalmerger::i();
+            $merger = Langmerger::i();
             $merger->parse($name);
         }
     }
@@ -129,8 +146,8 @@ class Lang
         return static ::$self;
     }
 
-    public static function getcachedir() {
-        return litepubl::$paths->data . 'languages' . DIRECTORY_SEPARATOR;
+    public static function getCachedir() {
+        return  $this->getApp()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
     }
 
     public static function clearcache() {

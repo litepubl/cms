@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\pages;
 use litepubl\view\MainView;
@@ -22,10 +23,10 @@ use \litepubl\view\EmptyViewTrait;
     }
 
     public function httpheader() {
-        return turlmap::htmlheader(false);
+        return \litepubl\core\Router::htmlheader(false);
     }
 
-    public function getcont() {
+    public function getCont() {
         $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
         return $this->getSchema()->theme->simple($result);
     }

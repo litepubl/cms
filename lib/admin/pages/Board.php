@@ -1,10 +1,11 @@
 <?php
 /**
- * Lite Publisher
- * Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * Licensed under the MIT (LICENSE.txt) license.
- *
- */
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\pages;
 use litepul\view\Guard;
@@ -31,36 +32,36 @@ class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterfac
         if ($s = Guard::checkattack()) {
 return $s;
 }
-        if (!litepubl::$options->user) {
-            return litepubl::$urlmap->redir('/admin/login/' . litepubl::$site->q . 'backurl=' . urlencode(litepubl::$urlmap->url));
+        if (! $this->getApp()->options->user) {
+            return  $this->getApp()->router->redir('/admin/login/' .  $this->getApp()->site->q . 'backurl=' . urlencode( $this->getApp()->router->url));
         }
 
-        if (!litepubl::$options->hasgroup('editor')) {
-            $url = UserGroups::i()->gethome(litepubl::$options->group);
+        if (! $this->getApp()->options->hasgroup('editor')) {
+            $url = UserGroups::i()->gethome( $this->getApp()->options->group);
             if ($url == '/admin/') {
                 return 403;
             }
 
-            return litepubl::$urlmap->redir($url);
+            return  $this->getApp()->router->redir($url);
         }
 
         Lang::usefile('admin');
     }
 
-    public function gethead() {
+    public function getHead() {
         $editor = PostEditor::i();
         return $editor->gethead();
     }
 
-    public function gettitle() {
-        return tlocal::get('common', 'board');
+    public function getTitle() {
+        return Lang::get('common', 'board');
     }
 
-    public function getkeywords() {
+    public function getKeywords() {
         return '';
     }
 
-    public function getdescription() {
+    public function getDescription() {
         return '';
     }
 
@@ -71,7 +72,7 @@ return $s;
     public function setIdSchema($id) {
     }
 
-    public function getcont() {
+    public function getCont() {
         $editor = PostEditor::i();
         return $editor->getexternal();
     }

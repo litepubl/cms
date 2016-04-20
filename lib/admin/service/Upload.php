@@ -1,19 +1,27 @@
 <?php
-
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\admin\service;
 use litepubl\view\Lang;
+use litepubl\core\Str;
+
 class Upload extends Login
 {
 
-public function getcontent() {
+public function getContent() {
 $admin = $this->admintheme;
 $lang = Lang::admin('service');
 $args = $this->newArgs();
 
 
-                $args->url = str_replace('$mysite', rawurlencode(litepubl::$site->url) , $this->getparam('url', ''));
-                $lang = tlocal::admin();
+                $args->url = str_replace('$mysite', rawurlencode( $this->getApp()->site->url) , $this->getparam('url', ''));
+                $lang = Lang::admin();
                 $form = new adminform($args);
                 $form->title = $lang->uploaditem;
                 $form->upload = true;
@@ -25,7 +33,7 @@ $form->body .=  $admin->help($lang->uploaditems);
 return $form->get();
 }
 
-public function processform() {
+public function processForm() {
 $admin = $this->admintheme;
 $lang = Lang::admin('service');
                 $backuper = Backuper::i();
@@ -48,7 +56,7 @@ $lang = Lang::admin('service');
                     $archtype = $backuper->getarchtype($url);
                     if (!$archtype) {
                         //         local file header signature     4 bytes  (0x04034b50)
-                        $archtype = strbegin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
+                        $archtype = Str::begin($s, "\x50\x4b\x03\x04") ? 'zip' : 'tar';
                     }
 
                         $result = $backuper->upload($s, $archtype);
