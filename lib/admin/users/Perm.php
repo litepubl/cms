@@ -9,7 +9,7 @@
 
 namespace litepubl\admin\users;
 
-class Perm extends \litepubl\admin\Admin
+class Perm extends \litepubl\admin\Panel
 {
     public $perm;
 

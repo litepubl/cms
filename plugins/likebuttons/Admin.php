@@ -9,7 +9,7 @@
 
 namespace litepubl\plugins\likebuttons;
 
-class Admin extends \litepubl\admin\Admin
+class Admin extends \litepubl\admin\Panel
 {
 
     public function getContent() {
