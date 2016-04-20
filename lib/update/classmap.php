@@ -248,5 +248,7 @@ return [
 //plugins
 'tblackip' => 'litepubl\plugins\blackip\BlackIP',
 'tadminblackip' => 'litepubl\plugins\blackip\AdminBlackIP',
+'tbackup2email' => 'litepubl\plugins\backup2email\Backup2email',
+
 
 ];

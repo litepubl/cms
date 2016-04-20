@@ -7,14 +7,15 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\backup2email;
+use litepubl\core\Cron;
 
-function tbackup2emailInstall($self) {
-    $cron = tcron::i();
+function Backup2emailInstall($self) {
+    $cron = Cron::i();
     $self->idcron = $cron->add('week', get_class($self) , 'send', null);
     $self->save();
 }
 
-function tbackup2emailUninstall($self) {
-    tcron::i()->deleteclass($self);
+function Backup2emailUninstall($self) {
+    Cron::i()->deleteclass($self);
 }
