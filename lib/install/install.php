@@ -10,7 +10,7 @@
 namespace litepubl\install;
 use litepubl\Config;
 use litepubl\core\Litepubl;
-
+return;
  litepubl::$app->classes = tclasses::i();
  litepubl::$app->options = toptions::i();
  litepubl::$app->site = tsite::i();

@@ -10,9 +10,9 @@
 namespace litepubl\pages;
 
 function JsonInstall($self) {
-    \ $self->getApp()->router->addget($self->url, get_class($self));
+    $self->getApp()->router->addget($self->url, get_class($self));
 }
 
 function JsonUninstall($self) {
-    \ $self->getApp()->router->unbind($self);
+    $self->getApp()->router->unbind($self);
 }

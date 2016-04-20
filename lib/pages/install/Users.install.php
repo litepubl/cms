@@ -14,7 +14,6 @@ function UsersInstall($self) {
         $manager = $self->db->man;
         $dir = dirname(__file__) . '/sql/';
         $manager->CreateTable($self->table, file_get_contents($dir . 'users.sql'));
-    }
 
     $v = $self->createpage;
     $self->lock();

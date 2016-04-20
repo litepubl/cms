@@ -12,7 +12,7 @@ use litepubl\view\Schema;
 use litepubl\view\Filter;
 use litepubl\utils\LinkGenerator;
 
-class StaticPages extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
     private $id;
 

@@ -11,9 +11,9 @@ namespace litepubl\view;
 
 class AutoVars extends \litepubl\core\Items
 {
-use \litepubl\core\SharedStorage;
+use \litepubl\core\SharedStorageTrait;
 
-public defaults;
+public $defaults;
 
 public function create() {
 parent::create();
@@ -29,7 +29,7 @@ $this->defaults = [
 'template' => '\litepubl\view\MainView',
 'comments' => '\litepubl\comments\Comments',
 'menu' => '\litepubl\pages\Menu',
-]
+];
 }
 
 public function get($name) {

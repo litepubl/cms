@@ -27,6 +27,10 @@ use \litepubl\view\EmptyViewTrait;
         return "<?php Header( 'HTTP/1.0 404 Not Found'); ?>" . \litepubl\core\Router::htmlheader(false);
     }
 
+public function gettitle() {
+return Lang::i()->notfound;
+}
+
     public function getCont() {
         if ($this->notify) {
 $this->sendmail();

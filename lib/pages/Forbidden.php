@@ -24,6 +24,10 @@ use \litepubl\view\EmptyViewTrait;
         return '<?php Header(\'HTTP/1.0 403 Forbidden\', true, 403); ?>' . \litepubl\core\Router::htmlheader(false);
     }
 
+public function gettitle() {
+return Lang::i()->forbidden;
+}
+
     public function getCont() {
         $this->cache = false;
         $schema = $this->getSchema();
@@ -33,7 +37,7 @@ return $theme->simple($this->text);
 }
 
         $lang = Lang::i('default');
-            return $theme->simple($theme->h($lang->forbidden)));
+            return $theme->simple($theme->h($lang->forbidden));
     }
 
 }

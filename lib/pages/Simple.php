@@ -26,6 +26,9 @@ use \litepubl\view\EmptyViewTrait;
         return \litepubl\core\Router::htmlheader(false);
     }
 
+public function gettitle() {
+}
+
     public function getCont() {
         $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
         return $this->getSchema()->theme->simple($result);

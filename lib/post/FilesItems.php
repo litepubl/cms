@@ -9,7 +9,7 @@
 
 namespace litepubl\post;
 
-class FileItems extend \litepubl\core\ItemsPosts
+class FileItems extends \litepubl\core\ItemsPosts
 {
     protected function create() {
         $this->dbversion = true;

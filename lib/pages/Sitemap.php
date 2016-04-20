@@ -10,8 +10,10 @@
 namespace litepubl\pages;
 use litepubl\view\Lang;
 
-class Sitemap extends \litepubl\core\Items implements \litepubl\theme\ControlerInterface
+class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
+use \litepubl\view\EmptyViewTrait;
+
     public $classes;
     private $lastmod;
     private $count;

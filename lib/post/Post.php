@@ -365,13 +365,13 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public function getTheme() {
         if ($this->themeInstance) {
-$this->themeInstance->setvar('post, $this);
+$this->themeInstance->setvar('post', $this);
             return $this->themeInstance;
         }
 
 $mainview = $this->factory->mainview;
         $this->themeInstance = $mainview->schema ? $mainview->schema->theme : Schema::getSchema($this)->theme;
-$this->themeInstance->setvar('post, $this);
+$this->themeInstance->setvar('post', $this);
         return $this->themeInstance;
     }
 
@@ -405,7 +405,7 @@ $this->themeInstance->setvar('post, $this);
         $this->data['posted'] = strtotime($date);
     }
 
-    public function getStr::sqlDate() {
+    public function getSqlDate() {
         return Str::sqlDate($this->posted);
     }
 

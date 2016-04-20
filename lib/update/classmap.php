@@ -31,7 +31,7 @@ return [
 'tusersman' => 'litepubl\core\Usersman',
 'cachestorage_file' => 'litepubl\core\CacheFile',
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
-'tdbmanager' => 'litepubl\core\DBManager
+'tdbmanager' => 'litepubl\core\DBManager',
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
 'tarray2prop' => 'litepubl\core\Array2prop',
 
@@ -73,9 +73,9 @@ return [
 'trssMultimedia' => 'litepubl\post\RssFiles',
 'tmediaparser' => 'litepubl\post\MediaParser',
 'tarchives' => 'litepubl\post\Archives',
-'tpinger' => 'litepubl\post\Pinger",
+'tpinger' => 'litepubl\post\Pinger',
 
-/cats
+//cats
 'tcategories' => 'litepubl\tag\Cats',
 'tcommontags' => 'litepubl\tag\Common',
 'ttags' => 'litepubl\tag\Tags',
@@ -89,7 +89,7 @@ return [
 'tstaticpages' => 'litepubl\pages\StaticPages',
 'tredirector' => 'litepubl\pages\Redirector',
 'tsitemap' => 'litepubl\pages\Sitemap',
-'tmenus' => 'litepubl\pages\Menus';
+'tmenus' => 'litepubl\pages\Menus',
 'tmenu' => 'litepubl\pages\Menu',
 'tfakemenu' => 'litepubl\pages\FakeMenu',
 'tsinglemenu' => 'litepubl\pages\SingleMenu',
@@ -220,7 +220,7 @@ return [
 'tcommentspool' => 'litepubl\comments\Pool',
 'trssholdcomments' => 'litepubl\comments\RssHold',
 'tpingbacks' => 'litepubl\comments\Pingbacks',
-'ttemplatecomments' => 'litepubl\comments\Templates,
+'ttemplatecomments' => 'litepubl\comments\Templates',
 
 //xmlrpc
 'TXMLRPCParser' => 'litepubl\xmlrpc\Parser',
@@ -229,7 +229,7 @@ return [
 'TXMLRPCAction' => 'litepubl\xmlrpc\Action',
 'TXMLRPCBlogger' => 'lib\xmlrpc\Blogger',
 'TXMLRPCComments' => 'lib\xmlrpc\Comments.php',
-'TXMLRPCLivejournal' => litepubl\xmlrpc\Livejournal',
+'TXMLRPCLivejournal' => 'litepubl\xmlrpc\Livejournal',
 'TXMLRPCMetaWeblog' => 'litepubl\xmlrpc\MetaWeblog',
 'TXMLRPCMovableType' => 'litepubl\xmlrpc\MovableType',
 'TXMLRPCPingback' => 'litepubl\xmlrpc\Pingback',

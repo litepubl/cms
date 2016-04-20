@@ -39,7 +39,7 @@ return '';
 
     public function hasperm($obj) {
         $g = $this->groups;
-        if (!$this->author && !count($g))) {
+        if (!$this->author && !count($g)) {
 return true;
 }
 
