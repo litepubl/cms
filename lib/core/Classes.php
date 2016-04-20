@@ -12,6 +12,8 @@ use litepubl\Config;
 
 class Classes extends Items
 {
+use SharedStorageTrait;
+
     public $namespaces;
     public $kernel;
     public $remap;
@@ -47,10 +49,6 @@ $this->loaded = [];
             $this,
             'autoload'
         ));
-    }
-
-    public function getStorage() {
-        return  $this->getApp()->sharedStorage;
     }
 
     public function getInstance($class) {

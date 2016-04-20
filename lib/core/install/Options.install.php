@@ -9,6 +9,7 @@
 
 namespace litepubl\core;
 use litepubl\config;
+use litepubl\utils\Filer;
 
 /* to prevent recurse call */
 function installOptions($email, $language) {
@@ -77,7 +78,7 @@ $app = litepubl::$app;
     $options->admincache = false;
     $options->ob_cache = true;
     $options->compress = false;
-    $options->filetime_offset = tfiler::get_filetime_offset();
+    $options->filetime_offset = Filer::get_filetime_offset();
     $options->data['perpage'] = 10;
     $options->commentsdisabled = false;
     $options->comstatus = 'guest';

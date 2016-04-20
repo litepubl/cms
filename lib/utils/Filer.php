@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\utils;
+use litepubl\core\litepubl;
 
 class Filer {
 
@@ -115,7 +116,7 @@ class Filer {
     public static function log($s, $filename = '') {
         if (!is_string($s)) $s = var_export($s, true);
         if ($filename == '') $filename = 'log.txt';
-        static ::append(date('r') . "\n$s\n\n",  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+        static ::append(date('r') . "\n$s\n\n",  litepubl::$app->paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
     }
 
     public static function append($s, $filename) {
@@ -134,7 +135,7 @@ class Filer {
     }
 
     public static function get_filetime_offset() {
-        $filename =  $this->getApp()->paths->data . md5(microtime()) . '.tmp';
+        $filename =  litepubl::$app->paths->data . md5(microtime()) . '.tmp';
         $t = time();
         touch($filename, $t, $t);
         clearstatcache();
@@ -144,7 +145,6 @@ class Filer {
     }
 
     public static function _delete($filename) {
-        // $this->getApp()->storage->delete($filename);
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
             \unlink($filename);

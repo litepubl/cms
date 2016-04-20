@@ -8,10 +8,13 @@
 **/
 
 namespace litepubl\core;
-use litepubl\config;
+use litepubl\Config;
+use litepubl\debug\LogException;
 
 class DB
 {
+use AppTrait;
+
     public $mysqli;
     public $result;
     public $sql;
@@ -41,10 +44,11 @@ class DB
             return config::$db;
         }
 
-        if (isset( $this->getApp()->options->dbconfig)) {
-            $result =  $this->getApp()->options->dbconfig;
+$options = $this->getApp()->options;
+        if (isset( $options->dbconfig)) {
+            $result =  $options->dbconfig;
             //decrypt db password
-            $result['password'] =  $this->getApp()->options->dbpassword;
+            $result['password'] =  $options->dbpassword;
             return $result;
         }
 
@@ -141,18 +145,12 @@ return DBManager::i();
 
     protected function doerror($mesg) {
         if (!$this->debug) {
- return  $this->getApp()->options->trace($this->sql . "\n" . $mesg);
+return LogException::trace($this->sql . "\n" . $mesg);
 }
 
 
         $log = "exception:\n$mesg\n$this->sql\n";
-        try {
-            throw new \Exception();
-        }
-        catch(Exception $e) {
-            $log.= str_replace( $this->getApp()->paths->home, '', $e->getTraceAsString());
-        }
-
+$log .= LogException::trace();
         $log.= $this->performance();
         $log = str_replace("\n", "<br />\n", htmlspecialchars($log));
         die($log);

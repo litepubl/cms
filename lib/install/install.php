@@ -1,4 +1,4 @@
-<?php
+f<?php
 /**
 * Lite Publisher CMS
 * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -22,12 +22,14 @@ if (!defined('litepublisher_mode')) {
     define('litepublisher_mode', 'install');
 }
 
-/*
+
 if (Config::$debug) {
   require_once( litepubl::$app->paths->lib . 'filer.class.php');
-  if (is_dir( litepubl::$app->paths->data)) tfiler::delete( litepubl::$app->paths->data, true, true);
+  if (is_dir( litepubl::$app->paths->data)) {
+Filer::delete( litepubl::$app->paths->data, true, true);
 }
-*/
+}
+
 
 require_once (__DIR__ . '/Installer.php');
 $installer = new Installer();
