@@ -136,7 +136,7 @@ return \litepubl\view\MainView::i();
 }
 
     public function findurl($url) {
-        if ($result = $this->db->finditem('url = ' . Str::uuote($url))) {
+        if ($result = $this->db->finditem('url = ' . Str::quote($url))) {
             return $result;
         }
 
@@ -144,7 +144,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function urlexists($url) {
-        return $this->db->findid('url = ' . Str::uuote($url));
+        return $this->db->findid('url = ' . Str::quote($url));
     }
 
     private function query($url) {

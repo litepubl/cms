@@ -44,7 +44,8 @@ function renameFunctions($s) {
 $s = strtr($s, [
 'sqldate' => 'Str::sqlDate',
 'sqltime' => 'Str::sqlTime',
-'dbquote' => 'Str::uuote',
+'dbquote' => 'Str::quote',
+'Str::uuote' => 'Str::quote',
 'md5rand' => 'Str::md5Rand',
 'md5uniq' => 'Str::md5Uniq',
 'basemd5' => 'Str::baseMd5',
@@ -147,6 +148,7 @@ $s = strtr($s, [
 'ttheme::' => 'Theme::',
 'tthemeparser' => 'Parser',
 'tdbmanager' => 'DBManager',
+'Str::uuote' => 'Str::quote',
 ]);
 
 $s = insertUse($s, 'Lang::', 'litepubl\view\Lang');

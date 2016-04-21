@@ -24,7 +24,7 @@ use \litepubl\core\SharedStorageTrait;
     public $path;
     public $result;
     public $schema;
-public $schemaImplemented;
+public $viewImplemented;
     public $url;
 
     protected function create() {

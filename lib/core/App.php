@@ -143,14 +143,14 @@ $this->sharedStorage->saveModified();
 
 public function getLogger() {
 if (!$this->logger) {
-$this->logger = LoggerFactory::createInstance($this->paths);
+$this->logger = LoggerFactory::create($this->paths);
 }
 
 return $this->logger;
 }
 
 public function log($level, $message, array $context = array()) {
-echo str_replace($this->paths->lib, '', $message);
+//echo str_replace($this->paths->lib, '', $message);
 //ignore debug messages
 if (!config::$debug && ($level == 'debug') && (config::$logLevel != 'debug')) {
 return;

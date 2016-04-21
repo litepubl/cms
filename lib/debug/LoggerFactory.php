@@ -4,6 +4,7 @@ namespace litepubl\debug;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FirePHPHandler;
+use Monolog\Handler\BrowserConsoleHandler;
 use Monolog\Formatter\HtmlFormatter;
 
 class LoggerFactory
@@ -19,6 +20,7 @@ $handler->setFormatter(new HtmlFormatter());
 
 $logger = new logger('general');
 $logger->pushHandler($handler);
+$logger->pushHandler(new BrowserConsoleHandler());
 $logger->pushHandler(new FirePHPHandler());
 return $logger;
 }
