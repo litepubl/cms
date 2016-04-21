@@ -11,6 +11,8 @@ namespace litepubl\view;
 
 class Lang
 {
+use \litepubl\core\AppTrait;
+
     const ZERODATE = '0000-00-00 00:00:00';
     public static $self;
     public $loaded;
@@ -20,7 +22,7 @@ class Lang
 
     public static function i($section = '') {
         if (!isset(static ::$self)) {
-            static ::$self = static ::getinstance();
+            static ::$self = static ::getInstance();
             static ::$self->loadfile('default');
         }
 
@@ -29,7 +31,7 @@ class Lang
     }
 
     public static function getInstance() {
-        return  $this->getApp()->classes->getinstance(get_called_class());
+        return  static::getAppInstance()->classes->getInstance(get_called_class());
     }
 
     public static function admin($section = '') {
@@ -146,8 +148,8 @@ class Lang
         return static ::$self;
     }
 
-    public static function getCachedir() {
-        return  $this->getApp()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
+    public static function getCacheDir() {
+return static::getAppInstance()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
     }
 
     public static function clearcache() {
@@ -155,4 +157,4 @@ class Lang
         static ::i()->loaded = array();
     }
 
-} //class
+}

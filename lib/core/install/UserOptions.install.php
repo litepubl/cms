@@ -18,10 +18,10 @@ $self->defvalues['subscribe'] =  $self->getApp()->options->defaultsubscribe ? 'e
     $self->defvalues['authorpost_subscribe'] = 'enabled';
     $self->save();
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->CreateTable($self->table, file_get_contents(dirname(__file__) . '/sql/user.options.sql'));
 }
 
-function tuseroptionsUninstall($self) {
-    tdbmanager::i()->deletetable($self->table);
+function UserOptionsUninstall($self) {
+    DBManager::i()->deletetable($self->table);
 }

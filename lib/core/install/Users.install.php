@@ -10,7 +10,7 @@
 namespace litepubl\core;
 
 function UsersInstall($self) {
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $dir = dirname(__file__) . '/sql/';
     $manager->CreateTable($self->table, file_get_contents($dir . 'users.sql'));
     //$manager->setautoincrement($self->table, 2);

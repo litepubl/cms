@@ -190,7 +190,7 @@ $classes = $this->app->classes;
 
 $items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
 foreach ($items as $classname) {
-$classname = trim($clssname);
+$classname = trim($classname);
 if (!$classname || ($classname[0] == ';')) {
 continue;
 }

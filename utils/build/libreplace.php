@@ -146,6 +146,7 @@ $s = strtr($s, [
 'extends tplugin' => "extends \\litepubl\\core\\Plugin\n",
 'ttheme::' => 'Theme::',
 'tthemeparser' => 'Parser',
+'tdbmanager' => 'DBManager',
 ]);
 
 $s = insertUse($s, 'Lang::', 'litepubl\view\Lang');
@@ -158,7 +159,8 @@ $s = insertUse($s, 'LangMerger::', 'litepubl\view\LangMerger');
 $s = insertUse($s, 'Plugins::', 'litepubl\core\Plugins');
 $s = insertUse($s, 'AdminInterface', 'litepubl\admin\AdminInterface');
 $s = insertUse($s, 'Theme::', 'litepubl\view\Theme');
-$s = insertUse($s, 'Theme Parser:', 'litepubl\view\Parser');
+$s = insertUse($s, 'Parser:', 'litepubl\view\Parser');
+$s = insertUse($s, 'DBManager:', 'litepubl\core\DBManager');
 
 if (strpos($s, 'tadminmenus')) {
 $s = str_replace'tadminmenus', 'Menus', $s);

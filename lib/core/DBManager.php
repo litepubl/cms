@@ -11,12 +11,11 @@ namespace litepubl\core;
 
 class DBManager 
 {
+use AppTrait;
+use Singleton;
+
     public $engine;
     private $max_allowed_packet;
-
-    public static function i() {
-        return getinstance(get_called_class());
-    }
 
     public function __get($name) {
         if ($name == 'db') {

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\core;
+use litepubl\view\Lang;
 
 function UserGroupsInstall($self) {
     lang::usefile('install');

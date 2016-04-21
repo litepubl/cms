@@ -52,7 +52,7 @@ $this->addsection($name, $section, parse_ini_string($s, false));
     }
 
     public function merge() {
-        $lang = Lang::getinstance();
+        $lang = Lang::getInstance();
         $lang->ini = array();
         foreach ($this->items as $name => $items) {
             $this->parse($name);

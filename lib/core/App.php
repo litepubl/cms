@@ -9,6 +9,10 @@
 
 namespace litepubl\core;
 use litepubl\config;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Handler\FirePHPHandler;
+
 
 class App
  {
@@ -135,19 +139,23 @@ $this->cache = new CacheFile();
              $this->logException($e);
         }
 
-$this->sharedStorage->saveMmodified();
+$this->sharedStorage->saveModified();
          $this->showErrors();
     }
 
 public function getLogger() {
 if (!$this->logger) {
-$this->logger = new logger();
+$this->includeComposerAutoload();
+$this->logger = new logger('general');
+$this->logger->pushHandler(new StreamHandler($this->paths->data . 'logs/logs.txt', Logger::DEBUG));
+$this->logger->pushHandler(new FirePHPHandler());
 }
 
 return $this->logger;
 }
 
 public function log($level, $message, array $context = array()) {
+echo str_replace($this->paths->lib, '', $message);
 //ignore debug messages if 
 if (!config::$debug && ($level == 'debug') && (config::$logLevel != 'debug')) {
 return;
@@ -166,13 +174,7 @@ $this->log('alert', \litepubl\debug\LogException::toString($e));
         }
     }
 
-    public function trace($msg) {
-        try {
-            throw new \Exception($msg);
-        }
-        catch(\Exception $e) {
-            $this->logException($e);
-        }
-    }
-
+public function includeComposerAutoload() {
+require_once($this->paths->home . 'vendor/autoload.php');
+}
 }
