@@ -10,8 +10,7 @@
 namespace litepubl\debug;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
-use Monolog\Handler\BrowserConsoleHandler;
+use Monolog\Handler\BufferHandler;
 use Monolog\Formatter\HtmlFormatter;
 
 class LoggerFactory
@@ -22,13 +21,13 @@ public static function create() {
 $app = static::getAppInstance();
 $app->includeComposerAutoload();
 
-$handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG);
-$handler->setFormatter(new HtmlFormatter());
-
 $logger = new logger('general');
+$handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
 $logger->pushHandler($handler);
-$logger->pushHandler(new BrowserConsoleHandler());
-$logger->pushHandler(new FirePHPHandler());
+
+$handler = new BufferHandler();
+$handler->setFormatter(new HtmlFormatter());
+$logger->pushHandler($handler);
 return $logger;
 }
 
