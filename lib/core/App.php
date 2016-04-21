@@ -160,7 +160,7 @@ $this->getLogger()->log($level, $message, $context);
 }
 
 public function logException(\Exception $e) {
-$this->log('alert', LogFactory::getException($e));
+$this->log('alert', LoggerFactory::getException($e));
 }
 
     public function showErrors() {

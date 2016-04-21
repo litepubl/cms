@@ -5,6 +5,7 @@ namespace litepubl\debug;
 $dir = dirname(__DIR__) . '/core/';
 foreach (array(
 'Paths.php',
+'Singleton.php',
 //'debugproxy.class.php');
 'Data.php',
 'Array2prop.php',

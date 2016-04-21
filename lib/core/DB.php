@@ -14,6 +14,7 @@ use litepubl\debug\LogException;
 class DB
 {
 use AppTrait;
+use Singleton;
 
     public $mysqli;
     public $result;
@@ -24,10 +25,6 @@ use AppTrait;
     public $prefix;
     public $history;
     public $debug;
-
-    public static function i() {
-        return getinstance(get_called_class());
-    }
 
     public function __construct() {
         $this->sql = '';

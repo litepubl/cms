@@ -14,11 +14,8 @@ class LogException
 {
 
 public static function getLog(\Exception $e) {
-        $result = "Caught exception:\n" . $e->getMessage() . "\n";
-        $result .= static::getTraceLog($e->getTrace());
-return $result;
+return static::getTraceLog($e->getTrace());
 
-        $log = str_replace( $this->getApp()->paths->home, '', $log);
         $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
         tfiler::log($log, 'exceptions.log');
 
