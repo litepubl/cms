@@ -28,7 +28,8 @@ $s = replace_copyright($s);
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 if (strend($filename, '.php')) {
-$s = libReplace($s);
+//$s = libReplace($s);
+$s = afterFix($s);
 }
 
 if (strend($filename, '.install.php')) {

@@ -165,7 +165,7 @@ $s = insertUse($s, 'Parser:', 'litepubl\view\Parser');
 $s = insertUse($s, 'DBManager:', 'litepubl\core\DBManager');
 
 if (strpos($s, 'tadminmenus')) {
-$s = str_replace'tadminmenus', 'Menus', $s);
+$s = str_replace('tadminmenus', 'Menus', $s);
 $s = insertUse($s, 'AdminMenus::', 'litepubl\admin\Menus as AdminMenus');
 }
 
