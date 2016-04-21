@@ -10,6 +10,7 @@
 namespace litepubl\pages;
 use litepubl\utils\Mailer;
 use litepubl\view\Filter;
+use litepubl\view\Lang;
 
 class Contacts extends SingleMenu
 {

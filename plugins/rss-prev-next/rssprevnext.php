@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class TRSSPrevNext extends tplugin {
+class TRSSPrevNext extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

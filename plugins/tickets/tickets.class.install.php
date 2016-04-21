@@ -9,6 +9,10 @@
 
 namespace litepubl;
 use litepubl\Config;
+use litepubl\view\Lang;
+use litepubl\view\LangMerger;
+use litepubl\core\Plugins;
+use litepubl\core\DBManager;
 
 function tticketsInstall($self) {
     if (version_compare(PHP_VERSION, '5.3', '<')) {
@@ -16,7 +20,7 @@ function tticketsInstall($self) {
     }
 
     $dirname = basename(dirname(__file__));
-    Langmerger::i()->addplugin($dirname);
+    LangMerger::i()->addplugin($dirname);
     $lang = Lang::admin('tickets');
     $lang->addsearch('ticket', 'tickets');
 
@@ -36,7 +40,7 @@ function tticketsInstall($self) {
     $filter->save();
      $self->getApp()->options->parsepost = false;
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->CreateTable($self->childtable, file_get_contents($dir . 'ticket.sql'));
     $manager->addenum('posts', 'class', 'litepubl-tticket');
 
@@ -48,7 +52,7 @@ function tticketsInstall($self) {
 
      $self->getApp()->classes->lock();
     //install polls if its needed
-    $plugins = tplugins::i();
+    $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
 
      $self->getApp()->classes->Add('tticket', 'ticket.class.php', $dirname);
@@ -61,7 +65,7 @@ function tticketsInstall($self) {
     $adminsecure = adminsecure::i();
     $adminsecure->usersenabled = true;
 
-    $adminmenus = tadminmenus::i();
+    $adminmenus = Menus::i();
     $adminmenus->lock();
 
     $parent = $adminmenus->createitem(0, 'tickets', 'ticket', 'tadmintickets');
@@ -133,7 +137,7 @@ function tticketsUninstall($self) {
      $self->getApp()->classes->delete('tadmintickets');
      $self->getApp()->classes->delete('tadminticketoptions');
 
-    $adminmenus = tadminmenus::i();
+    $adminmenus = Menus::i();
     $adminmenus->lock();
     $adminmenus->deletetree($adminmenus->url2id('/admin/tickets/'));
     $adminmenus->unbind($self);
@@ -151,7 +155,7 @@ function tticketsUninstall($self) {
     */
      $self->getApp()->classes->unlock();
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->deletetable($self->childtable);
     $manager->delete_enum('posts', 'class', 'tticket');
 
@@ -163,5 +167,5 @@ function tticketsUninstall($self) {
     }
     $optimizer->unlock();
 
-    Langmerger::i()->deleteplugin(tplugins::getname(__file__));
+    LangMerger::i()->deleteplugin(Plugins::getname(__file__));
 }

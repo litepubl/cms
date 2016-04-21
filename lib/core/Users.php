@@ -101,7 +101,7 @@ return \litepubl\pages\Users::i();
 
         }
 
-        if ($item = $this->db->finditem('email = ' . Str::uuote($email))) {
+        if ($item = $this->db->finditem('email = ' . Str::quote($email))) {
             $id = (int)$item['id'];
             $this->items[$id] = $item;
             return $id;
@@ -170,7 +170,7 @@ $pages->addpage($id);
     }
 
     public function findcookie($cookie) {
-        $cookie = Str::uuote($cookie);
+        $cookie = Str::quote($cookie);
         if (($a = $this->select('cookie = ' . $cookie, 'limit 1')) && (count($a) > 0)) {
             return (int)$a[0];
         }

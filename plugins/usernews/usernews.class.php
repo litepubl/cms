@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
-class tusernews extends tplugin {
+class tusernews extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -70,7 +73,7 @@ class tusernews extends tplugin {
         $html = tadminhtml::i();
         $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;
         $result.= $html->parsearg($form, $args);
-        unset(ttheme::$vars['post']);
+        unset(Theme::$vars['post']);
         return $html->fixquote($result);
     }
 

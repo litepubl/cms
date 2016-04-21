@@ -11,6 +11,7 @@ namespace litepubl\updater;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
 use litepubl\core\Str;
+use litepubl\core\Plugins;
 
 class Backuper extends \litepubl\core\Events
 {
@@ -331,7 +332,7 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         if ($theme) {
             $this->setdir('themes');
-            $schemes = Schemas::i();
+            $schemes = Schemes::i();
             $names = array();
             foreach ($schemes->items as $id => $item) {
                 if (in_array($item['themename'], $names)) {
@@ -346,7 +347,7 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         if ($plugins) {
             $this->setdir('plugins');
-            $plugins = tplugins::i();
+            $plugins = Plugins::i();
             foreach ($plugins->items as $name => $item) {
                 if (@is_dir( $this->getApp()->paths->plugins . $name)) {
                     $this->readdir('plugins/' . $name);

@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class trssfilelist extends tplugin {
+class trssfilelist extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

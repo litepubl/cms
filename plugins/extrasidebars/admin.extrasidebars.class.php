@@ -8,8 +8,12 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\view\Base;
+use litepubl\core\Plugins;
+use litepubl\admin\AdminInterface;
 
-class tadminextrasidebars implements iadmin {
+class tadminextrasidebars implements \litepubl\admin\AdminInterface {
 
     public static function i() {
         return getinstance(__class__);
@@ -23,7 +27,7 @@ class tadminextrasidebars implements iadmin {
     $lang.version:$version $lang.author: <a href="$url">$author</a> $lang.description:  $description</li>', $plugin->themes);
 
         $args = new Args();
-        $lang = tplugins::getlangabout(__file__);
+        $lang = Plugins::getlangabout(__file__);
         $args->formtitle = $lang->name;
         $args->beforepost = $plugin->beforepost;
         $args->afterpost = $plugin->afterpost;
@@ -38,7 +42,7 @@ class tadminextrasidebars implements iadmin {
         $plugin->themes = tadminhtml::check2array('theme-');
         $plugin->save();
 
-        ttheme::clearcache();
+        Base::clearCache();
     }
 
 } //class

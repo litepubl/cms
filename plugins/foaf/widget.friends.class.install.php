@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\core\Plugins;
 
 function tfriendswidgetInstall($self) {
      $self->getApp()->router->add($self->redirlink, get_class($self) , false, 'get');
-     $self->getApp()->classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', tplugins::getname(__file__));
+     $self->getApp()->classes->add('tadminfriendswidget', 'admin.widget.friends.class.php', Plugins::getname(__file__));
     $self->addtosidebar(0);
 }
 

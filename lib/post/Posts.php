@@ -10,6 +10,8 @@
 namespace litepubl\post;
 use litepubl\utils\LinkGenerator;
 use litepubl\core\Str;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class Posts extends \litepubl\core\Items
  {
@@ -172,7 +174,7 @@ class Posts extends \litepubl\core\Items
 
         $result = '';
         $args = new Args();
-        $theme = ttheme::i();
+        $theme = Theme::i();
         foreach ($items as $item) {
             $args->add($item);
             $result.= $theme->parsearg($tml, $args);
@@ -208,7 +210,7 @@ class Posts extends \litepubl\core\Items
         }
 
         if ($post->idschema == 1) {
-            $schemes = Schemas::i();
+            $schemes = Schemes::i();
             if (isset($schemes->defaults['post'])) $post->id_view = $schemes->defaults['post'];
         }
 
@@ -280,9 +282,9 @@ class Posts extends \litepubl\core\Items
 
     public function dosinglecron($id) {
         $this->PublishFuture();
-        ttheme::$vars['post'] = tpost::i($id);
+        Theme::$vars['post'] = tpost::i($id);
         $this->singlecron($id);
-        unset(ttheme::$vars['post']);
+        unset(Theme::$vars['post']);
     }
 
     public function hourcron() {

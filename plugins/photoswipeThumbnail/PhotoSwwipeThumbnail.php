@@ -12,6 +12,7 @@ use litepubl\view\Js;
 use litepubl\view\Css;
 use litepubl\post\MediaParser;
 use litepubl\post\Files;
+use litepubl\view\Parser;
 
 class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
  {

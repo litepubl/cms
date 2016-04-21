@@ -6,6 +6,7 @@
 * @link https://github.com/litepubl\cms
 * @version 6.15
 **/
+use litepubl\admin\AdminInterface;
 
 return [
 'tdata' => 'litepubl\core\Data',
@@ -31,13 +32,13 @@ return [
 'tusersman' => 'litepubl\core\Usersman',
 'cachestorage_file' => 'litepubl\core\CacheFile',
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
-'tdbmanager' => 'litepubl\core\DBManager',
+'DBManager' => 'litepubl\core\DBManager',
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
 'tarray2prop' => 'litepubl\core\Array2prop',
 
 //theme
 'Lang' => 'litepubl\view\Lang',
-'Langmerger' => 'theme\LangMerger',
+'LangMerger' => 'theme\LangMerger',
 'ttemplate' => 'litepubl\view\MainControler',
 'itemplate' => 'litepubl\view\ControlerInterface',
 'ttheme' => 'litepubl\view\Theme',
@@ -150,7 +151,7 @@ return [
 'ulist' => 'litepubl\admin\UList',
 'thtmltag' => 'litepubl\admin\Tag',
 'tadminmenu'=> 'litepubl\admin\Menu',
-'tadminmenus'=> 'litepubl\admin\Menus',
+'Menus'=> 'litepubl\admin\Menus',
 'tadminplugins' => 'litepubl\admin\Plugins',
 
 'tadminboard' => 'litepubl\admin\pages\Board',

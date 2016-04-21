@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class ttickets extends tposts {
     public $cats;
@@ -57,14 +60,14 @@ class ttickets extends tposts {
     }
 
     private function notify(tticket $ticket) {
-        ttheme::$vars['ticket'] = $ticket;
+        Theme::$vars['ticket'] = $ticket;
         $args = new Args();
         $args->adminurl =  $this->getApp()->site->url . '/admin/tickets/editor/' .  $this->getApp()->site->q . 'id=' . $ticket->id;
 
         Lang::usefile('mail');
         $lang = Lang::i('mailticket');
         $lang->addsearch('ticket');
-        $theme = ttheme::i();
+        $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);
@@ -80,7 +83,7 @@ class ttickets extends tposts {
 
     public function onexclude($id) {
         if ( $this->getApp()->options->group == 'ticket') {
-            $admin = tadminmenus::i();
+            $admin = Menus::i();
             return $admin->items[$id]['url'] == '/admin/posts/';
         }
         return false;

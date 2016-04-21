@@ -102,7 +102,7 @@ class tpingbacks extends \litepubl\core\Items
     }
 
     public function exists($url) {
-        return $this->db->finditem('url =' . Str::uuote($url));
+        return $this->db->finditem('url =' . Str::quote($url));
     }
 
     public function setStatus($id, $approve) {

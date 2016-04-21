@@ -8,8 +8,12 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
+use litepubl\view\Css;
+use litepubl\core\Plugins;
 
-class lowvision extends tplugin {
+class lowvision extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -17,10 +21,10 @@ class lowvision extends tplugin {
 
     public function install() {
         $plugindir = basename(dirname(__file__));
-        tjsmerger::i()->add('default', "plugins/$plugindir/resource/lowvision.min.js");
-        tcssmerger::i()->add('default', "plugins/$plugindir/resource/lowvision.min.css");
+        Js::i()->add('default', "plugins/$plugindir/resource/lowvision.min.js");
+        Css::i()->add('default', "plugins/$plugindir/resource/lowvision.min.css");
 
-        $about = tplugins::getabout(basename(dirname(__file__)));
+        $about = Plugins::getabout(basename(dirname(__file__)));
         $this->data['idwidget'] = tcustomwidget::i()->add(1, $about['title'], file_get_contents(dirname(__file__) . '/resource/widget.html') , 'widget');
         $this->save();
     }
@@ -29,8 +33,8 @@ class lowvision extends tplugin {
         tcustomwidget::i()->delete($this->idwidget);
 
         $plugindir = basename(dirname(__file__));
-        tjsmerger::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.js");
-        tcssmerger::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.css");
+        Js::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.js");
+        Css::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.css");
     }
 
 }

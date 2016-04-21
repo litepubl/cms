@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
 
 class tadminsapeplugin extends tadminwidget {
 

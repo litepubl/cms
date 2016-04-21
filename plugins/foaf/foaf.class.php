@@ -9,6 +9,9 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class tfoaf extends titems {
     public $title;
@@ -100,7 +103,7 @@ class tfoaf extends titems {
 
     public function deleteurl($url) {
         if ($this->dbversion) {
-            $this->db->delete('url = ' . Str::uuote($url));
+            $this->db->delete('url = ' . Str::quote($url));
         } else {
             foreach ($this->items as $id => $item) {
                 if ($url == $item['url']) {
@@ -134,7 +137,7 @@ class tfoaf extends titems {
 
     public function hasfriend($url) {
         if ($this->dbversion) {
-            return $this->select('url = ' . Str::uuote($url) , 'limit 1');
+            return $this->select('url = ' . Str::quote($url) , 'limit 1');
         } else {
             foreach ($this->items as $id => $item) {
                 if ($url == $item['url']) {
@@ -259,7 +262,7 @@ class tfoaf extends titems {
 
         Lang::usefile('mail');
         $lang = Lang::i('mailfoaf');
-        $theme = ttheme::i();
+        $theme = Theme::i();
 
         $subject = $theme->parsearg($lang->subject, $args);
         $body = $theme->parsearg($lang->body, $args);

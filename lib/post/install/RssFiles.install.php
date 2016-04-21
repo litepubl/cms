@@ -9,6 +9,7 @@
 
 namespace litepubl\post;
 use litepubl\widget\Meta as MetaWidget;
+use litepubl\view\Lang;
 
 function RssFilesInstall($self) {
      $self->getApp()->router->add('/rss/multimedia.xml', get_class($self) , '');

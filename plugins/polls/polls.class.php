@@ -10,6 +10,9 @@
 namespace litepubl;
 use litepubl\Config;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class polls extends titems {
     const votes = 'pollvotes';
@@ -72,7 +75,7 @@ class polls extends titems {
         $args = new Args();
         $args->add($item);
 
-        $theme = ttheme::context();
+        $theme = Theme::context();
         if ($item['status'] == 'closed') {
             $tml = $theme->templates['polls.closed'];
         } else {

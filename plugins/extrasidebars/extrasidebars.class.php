@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class textrasidebars extends tplugin {
+class textrasidebars extends \litepubl\core\Plugin
+ {
     public $themes;
 
     public static function i() {

@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tsmiles extends tplugin {
+class tsmiles extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

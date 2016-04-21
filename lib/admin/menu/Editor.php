@@ -13,6 +13,8 @@ use litepubl\pages\Menu;
 use litepubl\pages\FakeMenu;
 use litepubl\view\MainView;
 use litepubl\admin\Link;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Editor extends \litepubl\admin\Menu
 {

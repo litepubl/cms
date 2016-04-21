@@ -10,6 +10,7 @@
 namespace litepubl\pages;
 use litepubl\core\Cron;
 use litepubl\widget\Meta;
+use litepubl\view\Lang;
 
 function SitemapInstall($self) {
     Cron::i()->addnightly(get_class($self) , 'Cron', null);

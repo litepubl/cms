@@ -9,6 +9,9 @@
 
 namespace litepubl\plugins\bootstrap;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Css;
 
 class Header extends \litepubl\admin\Menu
 {
@@ -75,7 +78,7 @@ $admin = $this->admintheme;
             file_put_contents($filename, $css);
             @chmod($filename, 0666);
 
-            $merger = tcssmerger::i();
+            $merger = Css::i();
             $merger->lock();
             if ($name == 'logo') $merger->deletefile('default', '/themes/default/css/logo.min.css');
             $merger->add('default', "/files/js/$name.css");

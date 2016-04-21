@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminshortcodeplugin {
 
@@ -17,7 +19,7 @@ class tadminshortcodeplugin {
 
     public function getContent() {
         $plugin = tshortcode::i();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args = new Args();
 
         $s = '';

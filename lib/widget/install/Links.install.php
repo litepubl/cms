@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
 
 function tlinkswidgetInstall($self) {
     if (get_class($self) != 'tlinkswidget') {

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
 
 class tdownloaditemeditor extends tposteditor {
 

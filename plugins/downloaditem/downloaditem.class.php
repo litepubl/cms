@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class tdownloaditem extends tpost {
 
@@ -91,8 +93,8 @@ class tdownloaditem extends tpost {
     }
 
     public function getDownloadcontent() {
-        ttheme::$vars['lang'] = Lang::i('downloaditem');
-        ttheme::$vars['post'] = $this;
+        Theme::$vars['lang'] = Lang::i('downloaditem');
+        Theme::$vars['post'] = $this;
         $theme = $this->theme;
         return $theme->parse($theme->templates['custom']['downloaditem']);
     }

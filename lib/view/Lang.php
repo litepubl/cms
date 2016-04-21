@@ -138,7 +138,7 @@ use \litepubl\core\AppTrait;
                 $this->joinsearch($data['searchsect']);
             }
         } else {
-            $merger = Langmerger::i();
+            $merger = LangMerger::i();
             $merger->parse($name);
         }
     }

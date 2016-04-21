@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tsinglecat extends tplugin {
+class tsinglecat extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

@@ -12,6 +12,8 @@ use litepubl\view\Schemes as SchemaItems;
 use litepubl\view\MainView;
 use litepubl\admin\Menus;
 use litepubl\admin\posts\Ajax;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Head extends \litepubl\admin\Menu
 {

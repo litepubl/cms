@@ -16,6 +16,7 @@ use litepubl\core\Session;
 use litepubl\core\Users;
 use litepubl\utils\Mailer;
 use litepubl\core\Str;
+use litepubl\view\Args;
 
 class Password extends Form
 {

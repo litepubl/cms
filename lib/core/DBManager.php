@@ -91,7 +91,7 @@ return  $this->getApp()->db;
 
     public function setEnum($table, $column, array $enum) {
         $items = $this->quoteArray($enum);
-        $default = Str::uuote($enum[0]);
+        $default = Str::quote($enum[0]);
         $tmp = $column . '_tmp';
         $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
         $this->exec("update $this->prefix$table set $tmp = $column + 0");
@@ -142,7 +142,7 @@ return  $this->getApp()->db;
             if (false !== $i) {
                 $values[$i] = $newvalue;
                 $items = $this->quoteArray($values);
-                $default = Str::uuote($values[0]);
+                $default = Str::quote($values[0]);
 
                 $tmp = $column . '_tmp';
                 $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
@@ -150,12 +150,12 @@ return  $this->getApp()->db;
                 //exclude changed
                 unset($values[$i]);
                 foreach ($values as $value) {
-                    $value = Str::uuote($value);
+                    $value = Str::quote($value);
                     $this->exec("update $this->prefix$table set $tmp = $value where $column  = $value");
                 }
 
-                $oldvalue = Str::uuote($oldvalue);
-                $newvalue = Str::uuote($newvalue);
+                $oldvalue = Str::quote($oldvalue);
+                $newvalue = Str::quote($newvalue);
                 $this->exec("update $this->prefix$table set $tmp = $newvalue where $column  = $oldvalue");
 
                 $this->exec("alter table $this->prefix$table drop $column");
@@ -166,7 +166,7 @@ return  $this->getApp()->db;
 
     public function quoteArray(array $values) {
         foreach ($values as $i => $value) {
-            $values[$i] = Str::uuote(trim($value, ' \'"'));
+            $values[$i] = Str::quote(trim($value, ' \'"'));
         }
 
         return implode(', ', $values);

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\view\Theme;
 
 class Factory
 {

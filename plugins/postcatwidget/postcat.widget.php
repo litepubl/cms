@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\Arr;
+use litepubl\view\Theme;
 
 class tpostcatwidget extends tclasswidget {
     public $items;
@@ -87,7 +88,7 @@ class tpostcatwidget extends tclasswidget {
 }
 
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 

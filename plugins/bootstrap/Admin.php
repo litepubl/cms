@@ -47,7 +47,7 @@ class Admin extends \litepubl\admin\Menu
 
     public function processForm() {
         $lang = Lang::admin('adminbootstraptheme');
-        $schemes = Schemas::i();
+        $schemes = Schemes::i();
         foreach ($schemes->items as $id => $item) {
             if (!isset($item['custom']['mainsidebar'])) {
  continue;

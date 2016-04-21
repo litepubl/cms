@@ -8,16 +8,19 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Css;
+use litepubl\core\Plugins;
+use litepubl\core\DBManager;
 
 function tregservicesInstall($self) {
     $dir =  $self->getApp()->paths->data . 'regservices';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $name = basename(dirname(__file__));
-    $about = tplugins::getabout($name);
+    $about = Plugins::getabout($name);
     $self->lock();
 
-    $css = tcssmerger::i();
+    $css = Css::i();
     $css->addstyle("/plugins/$name/regservices.min.css");
 
     $self->dirname = $name;
@@ -47,7 +50,7 @@ function tregservicesInstall($self) {
     tusers::i()->deleted = tregserviceuser::i()->delete;
     if (dbversion) {
         $names = implode("', '", array_keys($self->items));
-        tdbmanager::i()->createtable('regservices', "id int unsigned NOT NULL default 0,
+        DBManager::i()->createtable('regservices', "id int unsigned NOT NULL default 0,
     service enum('$names') default 'google',
     uid varchar(22) NOT NULL default '',
     
@@ -75,8 +78,8 @@ function tregservicesUninstall($self) {
     tfiler::delete( $self->getApp()->paths->data . 'regservices', true, true);
 
     tusers::i()->unbind('tregserviceuser');
-    tdbmanager::i()->deletetable('regservices');
+    DBManager::i()->deletetable('regservices');
 
-    $css = tcssmerger::i();
+    $css = Css::i();
     $css->deletestyle("/plugins/$name/regservices.min.css");
 }

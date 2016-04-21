@@ -15,6 +15,7 @@ use litepubl\view\Schema;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class Home extends SingleMenu
 {
@@ -68,7 +69,7 @@ return $theme->templates['index.home'];
             $result.= Posts::i()->getanhead($items);
         }
 
-        ttheme::$vars['home'] = $this;
+        Theme::$vars['home'] = $this;
         return $theme->parse($result);
     }
 

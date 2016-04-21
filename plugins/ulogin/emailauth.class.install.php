@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
 
 function emailauthInstall($self) {
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/email.auth.min.js');
     $js->unlock();
@@ -24,7 +25,7 @@ function emailauthInstall($self) {
 }
 
 function emailauthUninstall($self) {
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->deletefile('default', '/plugins/ulogin/resource/email.auth.min.js');
     $js->unlock();

@@ -12,6 +12,7 @@ use litepubl\utils\Filer;
 use litepubl\widget\Sidebars;
 use litepubl\utils\http;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
 class Updater extends \litepubl\core\Events
  {

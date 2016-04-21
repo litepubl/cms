@@ -13,7 +13,7 @@ use litepubl\admin\Menus;
 use litepubl\view\LangMerger;
 
 function AdminInstall($self) {
-    Langmerger::i()->add('admin', 'plugins/bootstrap/resource/' .  $self->getApp()->options->language . '.admin.ini');
+    LangMerger::i()->add('admin', 'plugins/bootstrap/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $about = Plugins::getabout(Plugins::getname(__file__));
 
     $admin = Menus::i();
@@ -32,7 +32,7 @@ Header::i()->install();
 }
 
 function AdminUninstall($self) {
-    Langmerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
+    LangMerger::i()->deletefile('admin', 'plugins/bootstrap-theme/resource/' .  $self->getApp()->options->language . '.admin.ini');
     $admin = Menus::i();
     $admin->lock();
     $admin->deleteurl('/admin/views/bootstraptheme/');

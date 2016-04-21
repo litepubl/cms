@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tmarkdownplugin extends tplugin {
+class tmarkdownplugin extends \litepubl\core\Plugin
+ {
     public $parser;
 
     public static function i() {

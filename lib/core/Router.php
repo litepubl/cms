@@ -151,7 +151,7 @@ return \litepubl\view\MainView::i();
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
-        } else if ($item = $this->db->getassoc('url = ' . Str::uuote($url) . ' limit 1')) {
+        } else if ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
             $this->items[$item['id']] = $item;
             return $item;
         }
@@ -386,7 +386,7 @@ return \litepubl\view\MainView::i();
             $this->error(sprintf('Invalid url type %s', $type));
         }
 
-        if ($item = $this->db->finditem('url = ' . Str::uuote($url))) {
+        if ($item = $this->db->finditem('url = ' . Str::quote($url))) {
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 
@@ -413,7 +413,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function delete($url) {
-        $url = Str::uuote($url);
+        $url = Str::quote($url);
         if ($id = $this->db->findid('url = ' . $url)) {
             $this->db->iddelete($id);
         } else {
@@ -434,7 +434,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function deleteclass($class) {
-        if ($items = $this->db->getitems('class = ' . Str::uuote($class))) {
+        if ($items = $this->db->getitems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
                 $this->db->iddelete($item['id']);
                 $this->deleted($item['id']);
@@ -454,7 +454,7 @@ return \litepubl\view\MainView::i();
 
     //for Archives
     public function GetClassUrls($class) {
-        $res = $this->db->query("select url from $this->thistable where class = " . Str::uuote($class));
+        $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
         return $this->db->res2id($res);
     }
 
@@ -480,7 +480,7 @@ return \litepubl\view\MainView::i();
     }
 
     public function expiredclass($class) {
-        $items = $this->db->getitems('class = ' . Str::uuote($class));
+        $items = $this->db->getitems('class = ' . Str::quote($class));
         if (!count($items)) {
             return;
         }

@@ -11,6 +11,7 @@ namespace litepubl\admin\options;
 use litepubl\view\LangMerger as LngMerger;
 use litepubl\utils\Filer;
 use litepubl\post\Archives;
+use litepubl\view\Lang;
 
 class LangMerger extends \litepubl\admin\Menu
 {

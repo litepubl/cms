@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class tprofile extends tevents_itemplate implements itemplate {
 
@@ -137,8 +139,8 @@ class tprofile extends tevents_itemplate implements itemplate {
     }
 
     public function getCont() {
-        ttheme::$vars['profile'] = $this;
-        $theme = ttheme::i();
+        Theme::$vars['profile'] = $this;
+        $theme = Theme::i();
         $tml = $this->template;
         if (!$tml) {
             $tml = file_get_contents( $this->getApp()->paths->plugins . 'foaf/resource/profile.tml');
@@ -189,7 +191,7 @@ class tprofile extends tevents_itemplate implements itemplate {
             'mbox' => 'E-Mail'
         );
         $lang = Lang::i('foaf');
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $result = "<div class=\"table-responsive\">
     <table class=\"' . $theme->templates['content.admin.tableclass'] . '\">
     <thead>

@@ -10,9 +10,11 @@
 namespace litepubl\plugins\catbread;
 use litepubl\view\Parser;
 use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\view\LangMerger;
 
 function CatbreadInstall($self) {
-    Langmerger::i()->addplugin(basename(dirname(__file__)));
+    LangMerger::i()->addplugin(basename(dirname(__file__)));
     $self->cats->onbeforecontent = $self->beforecat;
 
     $parser = Parser::i();
@@ -24,7 +26,7 @@ function CatbreadInstall($self) {
 }
 
 function CatbreadUninstall($self) {
-    Langmerger::i()->deleteplugin(basename(dirname(__file__)));
+    LangMerger::i()->deleteplugin(basename(dirname(__file__)));
     $self->cats->unbind($self);
     $parser = Parser::i();
     $parser->lock();
@@ -96,7 +98,7 @@ function CatbreadThemeparsed(Catbread $self, Base $theme) {
     }
 }
 
-if (tthemeparser::i()->replacelang) {
+if (Parser::i()->replacelang) {
     $lang = Lang::i('catbread');
     foreach (array(
         'catbread.items.childs',

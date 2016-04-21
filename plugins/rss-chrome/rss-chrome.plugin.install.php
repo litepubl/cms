@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
 
 function rsschromeInstall($self) {
     $name = basename(dirname(__file__));
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $section = 'default';
     $js->add($section, "/plugins/$name/resource/" .  $self->getApp()->options->language . ".rss-chrome.min.js");
@@ -21,7 +22,7 @@ function rsschromeInstall($self) {
 
 function rsschromeUninstall($self) {
     $name = basename(dirname(__file__));
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $section = 'default';
     $js->deletefile($section, "/plugins/$name/resource/" .  $self->getApp()->options->language . ".rss-chrome.min.js");

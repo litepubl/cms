@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
+use litepubl\view\Css;
 
-class nautilus_font extends tplugin {
+class nautilus_font extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -17,14 +20,14 @@ class nautilus_font extends tplugin {
 
     public function install() {
         $plugindir = basename(dirname(__file__));
-        tjsmerger::i()->add('default', "plugins/$plugindir/resource/nautilus.min.js");
-        tcssmerger::i()->add('default', "plugins/$plugindir/resource/nautilus.min.css");
+        Js::i()->add('default', "plugins/$plugindir/resource/nautilus.min.js");
+        Css::i()->add('default', "plugins/$plugindir/resource/nautilus.min.css");
     }
 
     public function uninstall() {
         $plugindir = basename(dirname(__file__));
-        tjsmerger::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.js");
-        tcssmerger::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.css");
+        Js::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.js");
+        Css::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.css");
     }
 
 }

@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Base;
+use litepubl\view\Parser;
 
 function tmetatagsInstall($self) {
      $self->getApp()->classes->classes['metatags'] = get_class($self);
@@ -20,8 +22,8 @@ function tmetatagsInstall($self) {
     ));
     $t->save();
 
-    tthemeparser::i()->parsed = $self->themeparsed;
-    ttheme::clearcache();
+    Parser::i()->parsed = $self->themeparsed;
+    Base::clearCache();
 }
 
 function tmetatagsUninstall($self) {
@@ -32,8 +34,8 @@ function tmetatagsUninstall($self) {
     ));
     $t->save();
 
-    tthemeparser::i()->unbind($self);
-    ttheme::clearcache();
+    Parser::i()->unbind($self);
+    Base::clearCache();
 
     unset( $self->getApp()->classes->classes['metatags']);
      $self->getApp()->classes->save();

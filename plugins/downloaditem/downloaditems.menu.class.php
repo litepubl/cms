@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class tdownloaditemsmenu extends tmenu {
 
@@ -22,7 +24,7 @@ class tdownloaditemsmenu extends tmenu {
 
     public function getCont() {
         $result = '';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         if (( $this->getApp()->router->page == 1) && ($this->content != '')) {
             $result.= $theme->simple($theme->parse($this->rawcontent));
         }
@@ -36,12 +38,12 @@ class tdownloaditemsmenu extends tmenu {
         $from = ( $this->getApp()->router->page - 1) * $perpage;
         if ($from <= $count) {
             $items = $downloaditems->select("$p.status = 'published' $where", " order by $p.posted desc limit $from, $perpage");
-            ttheme::$vars['lang'] = Lang::i('downloaditem');
+            Theme::$vars['lang'] = Lang::i('downloaditem');
             $tml = $theme->templates['custom']['downloadexcerpt'];
             if (count($items) > 0) {
                 $result.= $theme->templates['custom']['siteform'];
                 foreach ($items as $id) {
-                    ttheme::$vars['post'] = tdownloaditem::i($id);
+                    Theme::$vars['post'] = tdownloaditem::i($id);
                     $result.= $theme->parse($tml);
                 }
             }

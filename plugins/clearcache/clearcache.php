@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tclearcache extends tplugin {
+class tclearcache extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -22,7 +23,7 @@ class tclearcache extends tplugin {
 
     public function themeparsed(ttheme $theme) {
         $name = $theme->name;
-        $schemes = Schemas::i();
+        $schemes = Schemes::i();
         foreach ($schemes->items as & $itemview) {
             if ($name == $itemview['themename']) {
                 $itemview['custom'] = $theme->templates['custom'];

@@ -8,15 +8,16 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Parser;
 
 function tclearcacheInstall($self) {
      $self->getApp()->router->beforerequest = $self->clearcache;
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->parsed = $self->themeparsed;
 }
 
 function tclearcacheUninstall($self) {
      $self->getApp()->router->unbind($self);
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->unbind($self);
 }

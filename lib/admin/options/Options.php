@@ -8,13 +8,17 @@
 **/
 
 namespace litepubl\admin\options;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Base;
+use litepubl\view\Theme;
 
 class Options extends \litepubl\admin\Menu
 {
     public function getContent() {
         $options =  $this->getApp()->options;
         $template = ttemplate::i();
-        ttheme::$vars['template'] = $template;
+        Theme::$vars['template'] = $template;
         $result = '';
         $args = new Args();
         $lang = Lang::admin('options');
@@ -251,7 +255,7 @@ class Options extends \litepubl\admin\Menu
 
             case 'cache':
                 if (isset($clearcache)) {
-                    ttheme::clearcache();
+                    Base::clearCache();
                 } else {
                     $options->lock();
                     $options->cache = isset($enabledcache);

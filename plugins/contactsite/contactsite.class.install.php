@@ -8,11 +8,14 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
+use litepubl\view\Theme;
 
 function tcontactsiteInstall($self) {
-    $theme = ttheme::i();
+    $theme = Theme::i();
     $args = new Args();
-    $about = tplugins::getabout(tplugins::getname(__file__));
+    $about = Plugins::getabout(Plugins::getname(__file__));
     $args->add($about);
     $self->title = $about['title'];
     $self->subject = $about['subject'];

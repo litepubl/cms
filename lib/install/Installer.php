@@ -20,6 +20,7 @@ use litepubl\view\Js;
 use litepubl\view\Css;
 use litepubl\xmlrpc;
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
 class Installer
 {
@@ -350,7 +351,7 @@ return $this->autoInstall();
 
     public function CreateFirstPost() {
         $lang = Lang::usefile('install');
-        $theme = ttheme::i();
+        $theme = Theme::i();
 
         $post = tpost::i(0);
         $post->title = $lang->posttitle;

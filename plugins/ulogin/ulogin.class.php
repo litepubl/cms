@@ -9,8 +9,10 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\core\DBManager;
 
-class ulogin extends tplugin {
+class ulogin extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -35,7 +37,7 @@ class ulogin extends tplugin {
         if (!in_array($service, $this->data['nets'])) {
             $this->data['nets'][] = $service;
             $this->save();
-            tdbmanager::i()->add_enum($this->table, 'service', $service);
+            DBManager::i()->add_enum($this->table, 'service', $service);
         }
 
         $this->db->insert(array(
@@ -49,7 +51,7 @@ class ulogin extends tplugin {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
+        return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
     public function userdeleted($id) {

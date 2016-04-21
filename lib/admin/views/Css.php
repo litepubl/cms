@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\views;
+use litepubl\view\Css;
 
 class Css extends Js
 {

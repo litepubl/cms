@@ -10,6 +10,7 @@
 namespace litepubl\post;
 use litepubl\comments\Comments;
 use litepubl\widget\Meta as MetaWidget;
+use litepubl\view\Lang;
 
 function RssInstall($self) {
      $self->getApp()->router->add('/rss.xml', get_class($self) , 'posts');

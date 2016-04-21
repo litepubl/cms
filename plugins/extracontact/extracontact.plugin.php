@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
-class textracontact extends tplugin {
+class textracontact extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -17,7 +20,7 @@ class textracontact extends tplugin {
 
     public function getContent() {
         $contact = tcontactform::singleinstance('tcontactform');
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args = new Args();
         $items = '';
         foreach ($contact->data['extra'] as $name => $title) {

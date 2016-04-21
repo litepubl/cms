@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class tsameposts extends tclasswidget {
 
@@ -100,7 +102,7 @@ class tsameposts extends tclasswidget {
 
         $posts = tposts::i();
         $posts->loaditems($list);
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getpostswidgetcontent($list, $sidebar, '');
     }
 

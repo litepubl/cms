@@ -9,8 +9,10 @@
 
 namespace litepubl;
 use litepubl\Config;
+use litepubl\view\Theme;
 
-class tlivejournalposter extends tplugin {
+class tlivejournalposter extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -33,8 +35,8 @@ class tlivejournalposter extends tplugin {
 
 
         $post = tpost::i($id);
-        ttheme::$vars['post'] = $post;
-        $theme = ttheme::i();
+        Theme::$vars['post'] = $post;
+        $theme = Theme::i();
         $content = $theme->parse($this->template);
         $date = getdate($post->posted);
 

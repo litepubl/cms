@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminsubcatwidget extends tadminwidget {
 
@@ -17,7 +20,7 @@ class tadminsubcatwidget extends tadminwidget {
 
     public function getContent() {
         $widget = tsubcatwidget::i();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $html = $this->html;
         $args = new Args();
         $id = (int)$this->getparam('idwidget', 0);

@@ -8,18 +8,20 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Base;
+use litepubl\view\Parser;
 
 function textrasidebarsInstall($self) {
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->lock();
     $parser->onfix = $self->fix;
     $parser->parsed = $self->themeparsed;
     $parser->unlock();
 
-    ttheme::clearcache();
+    Base::clearCache();
 }
 
 function textrasidebarsUninstall($self) {
-    tthemeparser::i()->unbind($self);
-    ttheme::clearcache();
+    Parser::i()->unbind($self);
+    Base::clearCache();
 }

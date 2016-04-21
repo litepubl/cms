@@ -399,7 +399,7 @@ $this->loaded[$ns] = $dir;
                 unset($this->kernel[$oldclass]);
             }
 
-             $this->getApp()->router->db->update('class =' . Str::uuote($newclass) , 'class = ' . Str::uuote($oldclass));
+             $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
             $this->save();
             $this->onrename($oldclass, $newclass);
         }

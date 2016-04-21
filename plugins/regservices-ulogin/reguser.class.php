@@ -40,7 +40,7 @@ class treguser extends titems {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
+        return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
 } //class

@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class tcodedocmenu extends tmenu {
 
@@ -47,7 +49,7 @@ class tcodedocmenu extends tmenu {
         $tml = '<li id="doc-class-$id"><a href="#">$class</a> $post.excerptcontent</li>';
         foreach ($items as $id => $item) {
             $args->add($item);
-            ttheme::$vars['post'] = tpost::i($id);
+            Theme::$vars['post'] = tpost::i($id);
             $result.= $theme->parsearg($tml, $args);
         }
 

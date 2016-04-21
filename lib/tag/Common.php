@@ -452,7 +452,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
             $schema = Schema::getview($this);
 
             if ($this->getcontent()) {
-                ttheme::$vars['menu'] = $this;
+                Theme::$vars['menu'] = $this;
                 $result.= $schema->theme->parse($schema->theme->templates['content.menu']);
             }
 

@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tsourcefiles extends tplugin implements itemplate {
+class tsourcefiles extends \litepubl\core\Plugin
+ implements itemplate {
     public $item;
     public $geshi;
 

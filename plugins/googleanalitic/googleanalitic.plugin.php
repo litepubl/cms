@@ -8,8 +8,12 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\view\Js;
+use litepubl\core\Plugins;
 
-class tgoogleanalitic extends tplugin {
+class tgoogleanalitic extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
@@ -26,7 +30,7 @@ class tgoogleanalitic extends tplugin {
     [editor:se]';
         $html = tadminhtml::i();
         $args = new Args();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args->formtitle = $about['formtitle'];
         $args->data['$lang.user'] = $about['user'];
         $args->data['$lang.se'] = $about['se'];
@@ -40,7 +44,7 @@ class tgoogleanalitic extends tplugin {
         $this->se = $_POST['se'];
         $this->save();
 
-        $jsmerger = tjsmerger::i();
+        $jsmerger = Js::i();
         if ($this->user == '') {
             $jsmerger->deletetext('default', 'googleanalitic');
         } else {
@@ -56,7 +60,7 @@ class tgoogleanalitic extends tplugin {
     }
 
     public function uninstall() {
-        $jsmerger = tjsmerger::i();
+        $jsmerger = Js::i();
         $jsmerger->deletetext('default', 'googleanalitic');
     }
 

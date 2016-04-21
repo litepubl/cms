@@ -8,13 +8,14 @@
 **/
 
 namespace litepubl;
+use litepubl\view\LangMerger;
 
 function tusernewsInstall($self) {
     $name = basename(dirname(__file__));
     $self->data['dir'] = $name;
     $self->save();
 
-    Langmerger::i()->addplugin($name);
+    LangMerger::i()->addplugin($name);
 
     $filter = tcontentfilter::i();
     $filter->phpcode = true;
@@ -44,5 +45,5 @@ function tusernewsInstall($self) {
 
 function tusernewsUninstall($self) {
     tauthor_rights::i()->unbind($self);
-    Langmerger::i()->deleteplugin(basename(dirname(__file__)));
+    LangMerger::i()->deleteplugin(basename(dirname(__file__)));
 }

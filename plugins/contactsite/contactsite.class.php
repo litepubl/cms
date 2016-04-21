@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
 class tcontactsite extends tmenu {
 

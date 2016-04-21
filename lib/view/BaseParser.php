@@ -232,7 +232,7 @@ class BaseParser extends \litepubl\core\Events
         $theme = Theme::i();
         $theme->lock();
         $this->parse($theme);
-        ttheme::clearcache();
+        Base::clearCache();
         $theme->unlock();
     }
 

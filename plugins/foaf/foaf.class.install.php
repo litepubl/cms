@@ -8,16 +8,21 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Base;
+use litepubl\view\LangMerger;
+use litepubl\core\Plugins;
+use litepubl\core\DBManager;
 
 function tfoafInstall($self) {
-    $merger = Langmerger::i();
-    $merger->addplugin(tplugins::getname(__file__));
+    $merger = LangMerger::i();
+    $merger->addplugin(Plugins::getname(__file__));
 
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     $lang = Lang::i('foaf');
 
     if ($self->dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->createtable($self->table, file_get_contents($dir . 'foaf.sql'));
     }
 
@@ -32,7 +37,7 @@ function tfoafInstall($self) {
      $self->getApp()->router->unbind($self);
     $router->add('/foaf.xml', get_class($self) , null);
 
-    $name = tplugins::getname(__file__);
+    $name = Plugins::getname(__file__);
     $classes =  $self->getApp()->classes;
     $classes->lock();
     $classes->add('tadminfoaf', 'admin.foaf.class.php', $name);
@@ -41,7 +46,7 @@ function tfoafInstall($self) {
     $classes->add('tfriendswidget', 'widget.friends.class.php', $name);
     $classes->unlock();
 
-    $admin = tadminmenus::i();
+    $admin = Menus::i();
     $admin->lock();
     $id = $admin->createitem(0, 'foaf', 'admin', 'tadminfoaf'); {
         $admin->createitem($id, 'profile', 'admin', 'tadminfoaf');
@@ -51,18 +56,18 @@ function tfoafInstall($self) {
 
     $template = ttemplate::i();
     $template->addtohead('	<link rel="meta" type="application/rdf+xml" title="FOAF" href="$site.url/foaf.xml" />');
-    $about = tplugins::getabout($name);
+    $about = Plugins::getabout($name);
     $meta = tmetawidget::i();
     $meta->lock();
     $meta->add('foaf', '/foaf.xml', $about['name']);
     $meta->add('profile', '/profile.htm', $lang->profile);
     $meta->unlock();
-    ttheme::clearcache();
+    Base::clearCache();
 }
 
 function tfoafUninstall($self) {
-    $merger = Langmerger::i();
-    $merger->deleteplugin(tplugins::getname(__file__));
+    $merger = LangMerger::i();
+    $merger->deleteplugin(Plugins::getname(__file__));
 
     $actions = TXMLRPCAction::i();
     $actions->deleteclass(get_class($self));
@@ -78,7 +83,7 @@ function tfoafUninstall($self) {
     $classes->delete('tadminfoaf');
     $classes->unlock();
 
-    $admin = tadminmenus::i();
+    $admin = Menus::i();
     $admin->lock();
     $admin->deleteurl('/admin/foaf/profiletemplate/');
     $admin->deleteurl('/admin/foaf/profile/');
@@ -86,7 +91,7 @@ function tfoafUninstall($self) {
     $admin->unlock();
 
     if ($self->dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->deletetable($self->table);
     }
 
@@ -99,5 +104,5 @@ function tfoafUninstall($self) {
     $meta->delete('profile');
     $meta->unlock();
 
-    ttheme::clearcache();
+    Base::clearCache();
 }

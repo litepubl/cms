@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminopenid {
     public static function i() {
@@ -24,7 +26,7 @@ class tadminopenid {
         $tml = '[checkbox:confirm]
     [checkbox:usebigmath]
     [editor:trusted]';
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args->formtitle = $about['formtitle'];
         $args->data['$lang.confirm'] = $about['confirm'];
         $args->data['$lang.usebigmath'] = $about['usebigmath'];

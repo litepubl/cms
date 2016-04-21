@@ -18,6 +18,7 @@ use litepubl\admin\GetPerm;
 use litepubl\utils\http;
 use litepubl\admin\Form;
 use litepubl\admin\Link;
+use litepubl\view\Parser;
 
 class Files extends \litepubl\admin\Menu
 {

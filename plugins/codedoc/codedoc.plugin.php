@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tcodedocplugin extends tplugin {
+class tcodedocplugin extends \litepubl\core\Plugin
+ {
     private $post;
 
     public static function i() {

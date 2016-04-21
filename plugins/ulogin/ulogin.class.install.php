@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
+use litepubl\core\DBManager;
 
 function uloginInstall($self) {
     $self->data['nets'] = array(
@@ -34,7 +36,7 @@ function uloginInstall($self) {
         'googleplus'
     );
 
-    $man = tdbmanager::i();
+    $man = DBManager::i();
     $man->createtable($self->table, str_replace('$names', implode("', '", $self->data['nets']) , file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
     if (!$man->column_exists('users', 'phone')) $man->alter('users', "add phone bigint not null default '0' after status");
     tusers::i()->deleted = $self->userdeleted;
@@ -49,7 +51,7 @@ function uloginInstall($self) {
 
      $self->getApp()->router->addget($self->url, get_class($self));
 
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
      $self->getApp()->classes->add('emailauth', 'emailauth.class.php', 'ulogin');
@@ -68,7 +70,7 @@ function uloginInstall($self) {
 function uloginUninstall($self) {
     tusers::i()->unbind('tregserviceuser');
      $self->getApp()->router->unbind($self);
-    $man = tdbmanager::i();
+    $man = DBManager::i();
     $man->deletetable($self->table);
     if ($man->column_exists('users', 'phone')) $man->alter('users', "drop phone");
 
@@ -80,7 +82,7 @@ function uloginUninstall($self) {
     $areg->widget = str_replace($self->panel, '', $areg->widget);
     $areg->save();
 
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
     $js->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
     $js->deletefile('default', '/plugins/ulogin/resource/' .  $self->getApp()->options->language . '.authdialog.min.js');

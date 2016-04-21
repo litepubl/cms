@@ -9,8 +9,10 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
-class tkeywordsplugin extends tplugin {
+class tkeywordsplugin extends \litepubl\core\Plugin
+ {
     public $blackwords;
 
     public static function i() {

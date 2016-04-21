@@ -12,6 +12,7 @@ use litepubl\post\Files as FileItems;
 use litepubl\post\MediaParser;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Parser;
 
 class Thumbnails extends \litepubl\admin\Menu
 {

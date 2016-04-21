@@ -12,6 +12,7 @@ use litepubl\view\Admin;
 use litepubl\view\Base;
 use litepubl\view\Lang;
 use litepubl\post\Post;
+use litepubl\view\Args;
 
 class Table
 {

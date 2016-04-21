@@ -18,6 +18,7 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
 use litepubl\tag\Cats;
 use litepubl\core\Str;
+use litepubl\view\Parser;
 
 class MetaWeblog extends Common
 {

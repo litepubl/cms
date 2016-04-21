@@ -38,8 +38,8 @@ class Meta extends \litepubl\core\Item
 
 
         $this->data[$name] = $value;
-        $name = Str::uuote($name);
-        $value = Str::uuote($value);
+        $name = Str::quote($name);
+        $value = Str::quote($value);
         if ($exists) {
             $this->db->update("value = $value", "id = $this->id and name = $name");
         } else {
@@ -77,8 +77,8 @@ class Meta extends \litepubl\core\Item
 }
 
 
-            $name = Str::uuote($name);
-            $value = Str::uuote($value);
+            $name = Str::quote($name);
+            $value = Str::quote($value);
             $this->db->insertrow("(id, name, value) values ($this->id, $name, $value)");
         }
     }

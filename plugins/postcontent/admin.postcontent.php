@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminpostcontentplugin {
 
@@ -19,7 +21,7 @@ class tadminpostcontentplugin {
         $plugin = tpostcontentplugin::i();
         $html = tadminhtml::i();
         $args = new Args();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args->formtitle = $about['formtitle'];
         $args->data['$lang.before'] = $about['before'];
         $args->data['$lang.after'] = $about['after'];

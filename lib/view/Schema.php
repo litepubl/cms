@@ -147,7 +147,7 @@ return static ::$instances['schema'][$id];
             return $this->themeInstance;
         }
 
-        if (ttheme::exists($this->themename)) {
+        if (Theme::exists($this->themename)) {
             $this->themeInstance = $this->get_theme($this->themename);
             $this->originalCustom = $this->themeInstance->templates['custom'];
 

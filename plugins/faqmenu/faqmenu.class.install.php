@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl;
+use litepubl\core\Plugins;
 
 function tfaqmenuInstall($self) {
-    $about = tplugins::getabout(tplugins::getname(__file__));
+    $about = Plugins::getabout(Plugins::getname(__file__));
     $self->title = $about['title'];
     $self->content = $about['content'];
     $menus = tmenus::i();

@@ -10,7 +10,8 @@
 namespace litepubl;
 use litepubl\core\Str;
 
-class tsmushitplugin extends tplugin {
+class tsmushitplugin extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

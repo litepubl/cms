@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminsinglecat {
 
@@ -18,7 +20,7 @@ class tadminsinglecat {
     public function getContent() {
         $plugin = tsinglecat::i();
         $html = tadminhtml::i();
-        $lang = tplugins::getlangabout(__file__);
+        $lang = Plugins::getlangabout(__file__);
         $args = new Args();
         $args->maxcount = $plugin->maxcount;
         $args->invertorder = $plugin->invertorder;

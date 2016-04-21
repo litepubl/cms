@@ -133,7 +133,7 @@ class Items extends Events
     public function setValue($id, $name, $value) {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
-            $this->db->update("$name = " . Str::uuote($value) , "$this->idprop = $id");
+            $this->db->update("$name = " . Str::quote($value) , "$this->idprop = $id");
         }
     }
 
@@ -155,7 +155,7 @@ class Items extends Events
 
     public function indexof($name, $value) {
         if ($this->dbversion) {
-            return $this->db->findprop($this->idprop, "$name = " . Str::uuote($value));
+            return $this->db->findprop($this->idprop, "$name = " . Str::quote($value));
         }
 
         foreach ($this->items as $id => $item) {

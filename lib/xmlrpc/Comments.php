@@ -163,7 +163,7 @@ class Comments extends Common
     public function wpgeCommentItems($blog_id, $login, $password, $struct) {
         $this->auth($login, $password, 'moderator');
         $where = '';
-        $where.= isset($struct['status']) ? ' status = ' . Str::uuote($struct['status']) : '';
+        $where.= isset($struct['status']) ? ' status = ' . Str::quote($struct['status']) : '';
         $where.= isset($struct['post_id']) ? ' post = ' . (int)$struct['post_id'] : '';
         $offset = isset($struct['offset']) ? (int)$struct['offset'] : 0;
         $count = isset($struct['number']) ? (int)$struct['number'] : 10;

@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
-class tcategoriesmenu extends tplugin {
+class tcategoriesmenu extends \litepubl\core\Plugin
+ {
     public $tree;
     public $exitems;
 
@@ -30,7 +33,7 @@ class tcategoriesmenu extends tplugin {
         //$this->buildtree();
         //var_dump($this->tree);
         if (count($this->tree) > 0) {
-            $theme = ttheme::i();
+            $theme = Theme::i();
             if ($hover) {
                 $items = $this->getsubmenu($this->tree, $current);
             } else {
@@ -61,7 +64,7 @@ class tcategoriesmenu extends tplugin {
     private function getSubmenu(&$tree, $current) {
         $result = '';
         $categories = tcategories::i();
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->templates['menu.item'];
         $tml_submenu = $theme->templates['menu.item.submenu'];
         $args = new Args();

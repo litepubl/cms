@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminsingletagwidget extends tadminwidget {
 
@@ -17,7 +19,7 @@ class tadminsingletagwidget extends tadminwidget {
 
     public function getContent() {
         $widget = tsingletagwidget::i();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $html = $this->html;
         $args = new Args();
         $id = (int)$this->getparam('idwidget', 0);

@@ -16,6 +16,7 @@ use litepubl\view\Schemes;
 use litepubl\view\Schema;
 use litepubl\admin\GetSchema;
 use litepubl\admin\GetPerm;
+use litepubl\view\Args;
 
 class TagAjax extends Ajax
 {

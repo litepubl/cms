@@ -9,6 +9,9 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class tticket extends tpost {
 
@@ -94,7 +97,7 @@ class tticket extends tpost {
         $args->assignto = $this->assigntoname;
         $args->author = $this->authorlink;
 
-        ttheme::$vars['ticket'] = $this;
+        Theme::$vars['ticket'] = $this;
         $theme = $this->theme;
         $tml = file_get_contents($this->resource . 'ticket.tml');
         return $theme->parsearg($tml, $args);

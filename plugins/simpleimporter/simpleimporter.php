@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tsimpleimporter extends timporter {
     public $tagsmap;
@@ -36,7 +38,7 @@ class tsimpleimporter extends timporter {
         $args = new Args();
         $args->tagsmap = $tagsmap;
         $args->script = $this->script;
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args->maplabel = $about['maplabel'];
         $args->scriptlabel = $about['scriptlabel'];
         $tml = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'form.tml');

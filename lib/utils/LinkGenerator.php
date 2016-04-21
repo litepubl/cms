@@ -9,6 +9,7 @@
 
 namespace litepubl\utils;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
 class LinkGenerator extends \litepubl\core\Events
  {

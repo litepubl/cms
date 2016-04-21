@@ -12,6 +12,8 @@ use litepubl\view\Lang;
 use litepubl\view\Filter;
 use litepubl\core\Str;
 use litepubl\core\Arr;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
@@ -607,12 +609,12 @@ $this->themeInstance->setvar('post', $this);
         $theme = $this->theme;
         $result.= $theme->templates['head.post'];
         if ($prev = $this->prev) {
-            ttheme::$vars['prev'] = $prev;
+            Theme::$vars['prev'] = $prev;
             $result.= $theme->templates['head.post.prev'];
         }
 
         if ($next = $this->next) {
-            ttheme::$vars['next'] = $next;
+            Theme::$vars['next'] = $next;
             $result.= $theme->templates['head.post.next'];
         }
 
@@ -737,7 +739,7 @@ $this->themeInstance->setvar('post', $this);
     }
 
     public function getContexcerpt($tml_name) {
-        ttheme::$vars['post'] = $this;
+        Theme::$vars['post'] = $this;
         //no use self theme because post in other context
         $theme = $this->factory->theme;
         $tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name . '.excerpt';
@@ -759,11 +761,11 @@ $this->themeInstance->setvar('post', $this);
         $next = '';
         $theme = $this->theme;
         if ($prevpost = $this->prev) {
-            ttheme::$vars['prevpost'] = $prevpost;
+            Theme::$vars['prevpost'] = $prevpost;
             $prev = $theme->parse($theme->templates['content.post.prevnext.prev']);
         }
         if ($nextpost = $this->next) {
-            ttheme::$vars['nextpost'] = $nextpost;
+            Theme::$vars['nextpost'] = $nextpost;
             $next = $theme->parse($theme->templates['content.post.prevnext.next']);
         }
 
@@ -776,7 +778,7 @@ $this->themeInstance->setvar('post', $this);
             '$prev' => $prev,
             '$next' => $next
         ));
-        unset(ttheme::$vars['prevpost'], ttheme::$vars['nextpost']);
+        unset(Theme::$vars['prevpost'], Theme::$vars['nextpost']);
         return $result;
     }
 

@@ -9,6 +9,9 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class tcodedocfilter extends titems {
     private $fix;
@@ -85,7 +88,7 @@ class tcodedocfilter extends titems {
     }
 
     public function html($key, targs $args) {
-        $theme = ttheme::instance();
+        $theme = Theme::instance();
         $s = strtr(Lang::get('htmlcodedoc', $key) , array(
             '$tableclass' => $theme->templates['content.admin.tableclass'],
             "'" => '"',
@@ -283,7 +286,7 @@ class tcodedocfilter extends titems {
 
     public function getChilds($parent) {
         IF ($parent == '') return '';
-        $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, Str::uuote($parent))));
+        $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, Str::quote($parent))));
         if (count($items) == 0) {
  return '';
 }

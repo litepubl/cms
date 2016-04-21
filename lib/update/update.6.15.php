@@ -30,12 +30,12 @@ unset($cl->kernel[$oldclass]);
 $cl->save();
 
 $m = tmenus::i();
-$admin = tadminmenus::i();
+$admin = Menus::i();
 foreach ([
 'tadminservice' => 'litepubl\admin\Service',
 
 ] as $oldclass => $newclass) {
-             $this->getApp()->router->db->update('class =' . Str::uuote($newclass) , 'class = ' . Str::uuote($oldclass));
+             $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
 $m->renameClass($oldclass, $newclass);
 $admin->renameClass($oldclass, $newclass);
 }

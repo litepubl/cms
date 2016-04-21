@@ -11,6 +11,8 @@ namespace litepubl\admin\users;
 use litepubl\perms\Perms as PermItems;
 use litepubl\perms\Perm as PerItem;
 use litepubl\admin\Link;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Perms extends \litepubl\admin\Menu
 {

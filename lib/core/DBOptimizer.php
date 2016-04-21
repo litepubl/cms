@@ -99,7 +99,7 @@ class DbOptimizer extends Events
     public function optimize() {
         $this->deletedeleted();
         sleep(2);
-        $man = tdbmanager::i();
+        $man = DBManager::i();
         $man->optimize();
     }
 

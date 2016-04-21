@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
+use litepubl\admin\AdminInterface;
 
-class tadminregservices implements iadmin {
+class tadminregservices implements \litepubl\admin\AdminInterface {
 
     public static function i() {
         return getinstance(__class__);
@@ -20,7 +23,7 @@ class tadminregservices implements iadmin {
         $html = tadminhtml::i();
         $tabs = new tabs();
         $args = new Args();
-        $lang = tplugins::getnamelang($plugin->dirname);
+        $lang = Plugins::getnamelang($plugin->dirname);
         $args->formtitle = $lang->options;
         foreach ($plugin->items as $id => $classname) {
             $service = getinstance($classname);

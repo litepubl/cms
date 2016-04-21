@@ -9,8 +9,10 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
-class emailauth extends tplugin {
+class emailauth extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

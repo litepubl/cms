@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Theme;
 
 class tsingletagwidget extends twidget {
     public $items;
@@ -103,7 +104,7 @@ class tsingletagwidget extends twidget {
 
 
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getpostswidgetcontent($items, $sidebar, '');
     }
 

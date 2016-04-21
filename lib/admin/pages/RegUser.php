@@ -16,6 +16,7 @@ use litepubl\view\Filter;
 use litepubl\view\Theme;
 use litepubl\utils\Mailer;
 use litepubl\core\Str;
+use litepubl\view\Args;
 
 class RegUser extends Form
 {

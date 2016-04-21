@@ -234,7 +234,7 @@ class MediaParser extends \litepubl\core\Events
 
         $files = Files::i();
         $hash = $files->gethash( $this->getApp()->paths->files . $file['tempfilename']);
-        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::uuote($hash)))) {
+        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::quote($hash)))) {
             @unlink( $this->getApp()->paths->files . $file['tempfilename']);
             return $id;
         }
@@ -352,7 +352,7 @@ class MediaParser extends \litepubl\core\Events
     public function uploadthumb($filename, &$content) {
         $hash = trim(base64_encode(md5($content, true)) , '=');
         $files = Files::i();
-        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::uuote($hash)))) {
+        if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::quote($hash)))) {
             return $id;
         }
 

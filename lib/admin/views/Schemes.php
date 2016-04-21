@@ -10,12 +10,16 @@
 namespace litepubl\admin\views;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Base;
+use litepubl\view\Theme;
 
 class Schemes extends \litepubl\admin\Menu
 {
 
     public static function replacemenu($src, $dst) {
-        $schemes = Schemas::i();
+        $schemes = Schemes::i();
         foreach ($schemes->items as & $schemaitem) {
             if ($schemaitem['menuclass'] == $src) $schemaitem['menuclass'] = $dst;
         }
@@ -96,7 +100,7 @@ class Schemes extends \litepubl\admin\Menu
 
     public function getContent() {
         $result = '';
-        $schemes = Schemas::i();
+        $schemes = Schemes::i();
         $html = $this->html;
         $lang = Lang::i('views');
         $args = new Args();
@@ -137,7 +141,7 @@ class Schemes extends \litepubl\admin\Menu
                 $menuitems = array();
                 foreach ($schemes->items as $itemview) {
                     $class = $itemview['menuclass'];
-                    $menuitems[$class] = $class == 'tmenus' ? $lang->stdmenu : ($class == 'tadminmenus' ? $lang->adminmenu : $class);
+                    $menuitems[$class] = $class == 'tmenus' ? $lang->stdmenu : ($class == 'Menus' ? $lang->adminmenu : $class);
                 }
 
                 $itemview = $schemes->items[$id];
@@ -194,7 +198,7 @@ class Schemes extends \litepubl\admin\Menu
 
             case 'defaults':
                 $items = '';
-                $theme = ttheme::i();
+                $theme = Theme::i();
                 $tml = $theme->templates['content.admin.combo'];
                 foreach ($schemes->defaults as $name => $id) {
                     $args->name = $name;
@@ -215,7 +219,7 @@ class Schemes extends \litepubl\admin\Menu
             $result = '';
             switch ($this->name) {
                 case 'views':
-                    $schemes = Schemas::i();
+                    $schemes = Schemes::i();
                     $idschema = (int)$this->getparam('idschema', 0);
                     if (!$idschema || !$schemes->itemexists($idschema)) {
                         return '';
@@ -252,14 +256,14 @@ class Schemes extends \litepubl\admin\Menu
                 case 'addview':
                     $name = trim($_POST['name']);
                     if ($name != '') {
-                        $schemes = Schemas::i();
+                        $schemes = Schemes::i();
                         $id = $schemes->add($name);
                     }
                     break;
 
 
                 case 'defaults':
-                    $schemes = Schemas::i();
+                    $schemes = Schemes::i();
                     foreach ($schemes->defaults as $name => $id) {
                         $schemes->defaults[$name] = (int)$_POST[$name];
                     }
@@ -267,7 +271,7 @@ class Schemes extends \litepubl\admin\Menu
                     break;
             }
 
-            ttheme::clearcache();
+            Base::clearCache();
         }
 
 } //class

@@ -9,8 +9,11 @@
 
 namespace litepubl;
 use litepubl\admin\Link;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class tadmintickets extends tadminmenu {
+class tadmintickets extends \litepubl\admin\Menu
+ {
 
     public static function i($id = 0) {
         return parent::iteminstance(__class__, $id);

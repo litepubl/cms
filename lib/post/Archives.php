@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\view\Lang;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {

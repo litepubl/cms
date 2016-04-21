@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\core\DBManager;
 
 function twikiwordsInstall($self) {
     if ($self->dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->createtable($self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
     `word` text NOT NULL,
     PRIMARY KEY  (`id`)");
@@ -38,7 +39,7 @@ function twikiwordsUninstall($self) {
 
     tposts::unsub($self);
     if ($self->dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->deletetable($self->table);
         $manager->deletetable($self->itemsposts->table);
     }

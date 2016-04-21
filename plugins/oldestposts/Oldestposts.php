@@ -11,6 +11,7 @@ namespace litepubl\plugins\oldestposts;
 use litepubl\core\Str;
 use litepubl\post\Posts;
 use litepubl\view\Theme;
+use litepubl\view\Lang;
 
 class Oldestposts extends \litepubl\widget\Depnded
 {

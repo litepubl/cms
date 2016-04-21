@@ -14,6 +14,8 @@ use litepubl\comments\Comments;
 use litepubl\coments\Manager as CommentManager;
 use litepubl\widget\Comments as CommentWidget;
 use litepubl\perm\Perm;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class Rss extends \litepubl\core\Events
  {
@@ -234,7 +236,7 @@ class Rss extends \litepubl\core\Events
         if ($this->template == '') {
             $content.= $post->replacemore($post->rss, true);
         } else {
-            $content.= ttheme::parsevar('post', $post, $this->template);
+            $content.= Theme::parsevar('post', $post, $this->template);
         }
         $this->callevent('afterpost', array(
             $post->id, &$content

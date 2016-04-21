@@ -10,6 +10,7 @@
 namespace litepubl\post;
 use litepubl\admin\GetPerm;
 use litepubl\view\Theme;
+use litepubl\view\Parser;
 
 class JsonFiles extends \litepubl\core\Events
  {

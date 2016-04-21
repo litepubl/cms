@@ -12,6 +12,8 @@ use litepubl\pages\Menus;
 use litepubl\pages\Menu;
 use litepubl\admin\Link;
 use litepubl\admin\Table;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Manager extends \litepubl\admin\Menu
 {

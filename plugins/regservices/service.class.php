@@ -10,7 +10,8 @@
 namespace litepubl;
 use litepubl\core\Str;
 
-class tregservice extends tplugin {
+class tregservice extends \litepubl\core\Plugin
+ {
     public $sessdata;
     public $session_id;
 
@@ -219,7 +220,7 @@ class tregserviceuser extends titems {
     }
 
     public function find($service, $uid) {
-        return $this->db->findid('service = ' . Str::uuote($service) . ' and uid = ' . Str::uuote($uid));
+        return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
 } //class

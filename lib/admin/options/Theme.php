@@ -13,6 +13,7 @@ use litepubl\view\AdminParser;
 use litepubl\view\Lang;
 use litepubl\view\Base;
 use litepubl\core\Str;
+use litepubl\view\Args;
 
 class ThemeParser extends \litepubl\admin\Menu
 {

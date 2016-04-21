@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class ttidyfilter extends tplugin {
+class ttidyfilter extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

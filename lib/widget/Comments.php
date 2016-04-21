@@ -10,6 +10,7 @@
 namespace litepubl\widget;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Args;
 
 class Comments extends Widget
  {

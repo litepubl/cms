@@ -9,6 +9,7 @@
 
 namespace litepubl\plugins\blackip;
 use litepubl\admin\Tabs;
+use litepubl\view\Lang;
 
 class AdminBlackIP extends \litepubl\admin\Panel
 {

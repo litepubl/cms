@@ -10,6 +10,8 @@
 namespace litepubl\admin\views;
 use litepubl\view\Schemes as SchemaItems;
 use litepubl\admin\GetSchema;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Spec extends \litepubl\admin\Menu
 {

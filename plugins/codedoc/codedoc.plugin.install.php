@@ -8,12 +8,15 @@
 **/
 
 namespace litepubl;
+use litepubl\view\LangMerger;
+use litepubl\core\Plugins;
+use litepubl\core\DBManager;
 
 function tcodedocpluginInstall($self) {
     if (!dbversion) die("Ticket  system only for database version");
     $name = basename(dirname(__file__));
     $language =  $self->getApp()->options->language;
-    $about = tplugins::getabout($name);
+    $about = Plugins::getabout($name);
      $self->getApp()->classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
      $self->getApp()->classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
     $menu = tcodedocmenu::i();
@@ -23,13 +26,13 @@ function tcodedocpluginInstall($self) {
     $menus = tmenus::i();
     $menus->add($menu);
 
-    $merger = Langmerger::i();
+    $merger = LangMerger::i();
     $merger->lock();
     $merger->add('codedoc', "plugins/$name/resource/$language.ini");
     $merger->add('codedoc', "plugins/$name/resource/html.ini");
     $merger->unlock();
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->CreateTable('codedoc', '
   id int unsigned NOT NULL default 0,
   class varchar(32) NOT NULL,
@@ -47,7 +50,7 @@ function tcodedocpluginInstall($self) {
     $filter->beforecontent = $self->filterpost;
     $filter->seteventorder('beforecontent', $self, 0);
 
-    $plugins = tplugins::i();
+    $plugins = Plugins::i();
     if (!isset($plugins->items['wikiwords'])) $plugins->add('wikiwords');
 
     $filter->beforecontent = $self->afterfilter;
@@ -73,9 +76,9 @@ function tcodedocpluginUninstall($self) {
     $filter = tcontentfilter::i();
     $filter->unbind($self);
 
-    $merger = Langmerger::i();
+    $merger = LangMerger::i();
     $merger->delete('codedoc');
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->deletetable('codedoc');
 }

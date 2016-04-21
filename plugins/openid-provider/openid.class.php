@@ -10,6 +10,9 @@
 namespace litepubl;
 use litepubl\Config;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class topenid extends tevents {
     public $keys;
@@ -425,7 +428,7 @@ class topenid extends tevents {
                      $this->getApp()->router->cache->set('openid.txt', $result);
                 }
 
-                return tsimplecontent::html(ttheme::i()->parsearg($result, $args));
+                return tsimplecontent::html(Theme::i()->parsearg($result, $args));
             } else {
                 switch ($_POST['accept']) {
                     case 'yes':

@@ -8,11 +8,12 @@
 **/
 
 namespace litepubl\plugins\bootstrap;
+use litepubl\core\Plugins;
 
 function HeaderInstall($self) {
-    $about = tplugins::getabout(tplugins::getname(__file__));
+    $about = Plugins::getabout(Plugins::getname(__file__));
 
-    $admin = tadminmenus::i();
+    $admin = Menus::i();
     $admin->additem(array(
         'parent' => $admin->url2id('/admin/views/') ,
         'url' => '/admin/views/bootstrapheader/',
@@ -24,5 +25,5 @@ function HeaderInstall($self) {
 }
 
 function HeaderUninstall($self) {
-    tadminmenus::i()->deleteurl('/admin/views/bootstrapheader/');
+    Menus::i()->deleteurl('/admin/views/bootstrapheader/');
 }

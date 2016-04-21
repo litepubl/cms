@@ -245,8 +245,8 @@ return FileItems::i();
 
         $url =  $this->getApp()->site->files . '/files/';
 
-        $preview = ttheme::$vars['preview'] = new tarray2prop();
-        $midle = ttheme::$vars['midle'] = new tarray2prop();
+        $preview = Theme::$vars['preview'] = new tarray2prop();
+        $midle = Theme::$vars['midle'] = new tarray2prop();
 
         $index = 0;
 
@@ -296,7 +296,7 @@ return FileItems::i();
             $result.= $theme->parsearg($tml[$type . 's'], $args);
         }
 
-        unset(ttheme::$vars['preview'], $preview, ttheme::$vars['midle'], $midle);
+        unset(Theme::$vars['preview'], $preview, Theme::$vars['midle'], $midle);
         $args->files = $result;
         return $theme->parsearg($tml['container'], $args);
     }

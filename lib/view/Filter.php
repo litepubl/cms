@@ -325,7 +325,7 @@ class Filter extends \litepubl\core\Events
         return $s;
     }
 
-    // uset in tthemeparser
+    // uset in Parser
     public static function getIdtag($tag, $s) {
         if (preg_match("/<$tag\\s*.*?id\\s*=\\s*['\"]([^\"'>]*)/i", $s, $m)) {
             return $m[1];

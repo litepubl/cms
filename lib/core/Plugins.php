@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\core;
+use litepubl\view\Lang;
 
 class Plugins extends Items
  {

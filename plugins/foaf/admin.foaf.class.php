@@ -8,8 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
-class tadminfoaf extends tadminmenu {
+class tadminfoaf extends \litepubl\admin\Menu
+ {
     private $user;
 
     public static function i($id = 0) {

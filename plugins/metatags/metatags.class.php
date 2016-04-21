@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tmetatags extends tplugin {
+class tmetatags extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

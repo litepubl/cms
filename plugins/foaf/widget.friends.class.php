@@ -9,6 +9,9 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
+use litepubl\view\Theme;
 
 class tfriendswidget extends twidget {
 
@@ -27,7 +30,7 @@ class tfriendswidget extends twidget {
     }
 
     public function getDeftitle() {
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         return $about['name'];
     }
 
@@ -42,7 +45,7 @@ class tfriendswidget extends twidget {
         $result = '';
         $url =  $this->getApp()->site->url;
         $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . 'id=';
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $tml = $theme->getwidgetitem('friends', $sidebar);
         $args = new Args();
         $args->subcount = '';

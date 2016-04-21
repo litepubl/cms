@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class ttoptext extends tplugin {
+class ttoptext extends \litepubl\core\Plugin
+ {
     public $text;
 
     public static function i() {

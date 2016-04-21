@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminsourcefiles {
 
@@ -17,7 +19,7 @@ class tadminsourcefiles {
 
     public function getContent() {
         $plugin = tsourcefiles::i();
-        $lang = tplugins::getnamelang(basename(dirname(__file__)));
+        $lang = Plugins::getnamelang(basename(dirname(__file__)));
         $html = tadminhtml::i();
         $args = new Args();
         $args->zipurl = $plugin->zipurl;

@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class tadminusernews {
 

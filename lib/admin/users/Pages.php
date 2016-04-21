@@ -13,6 +13,7 @@ use litepubl\core\UserOptions;
 use litepubl\pages\Users as UserPages;
 use litepubl\admin\GetSchema;
 use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Pages extends \litepubl\admin\Menu
 {

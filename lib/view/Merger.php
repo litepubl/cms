@@ -240,7 +240,7 @@ return false;
 
     public function merge() {
         $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $template = ttemplate::i();
         $template->data[$this->basename] = $this->revision;
 

@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\core\DBManager;
 
 function texternallinksInstall($self) {
     if (dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->createtable($self->table, 'id int UNSIGNED NOT NULL auto_increment,
     clicked int UNSIGNED NOT NULL default 0,
     url varchar(255)not null,
@@ -47,7 +48,7 @@ function texternallinksUninstall($self) {
      $self->getApp()->router->unbind($self);
 
     if (dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->deletetable($self->table);
     }
     tposts::i()->addrevision();

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\widget;
+use litepubl\view\Lang;
 
 class Tags extends Widget
 {

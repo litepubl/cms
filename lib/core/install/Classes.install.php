@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl\core;
+use litepubl\view\Js;
+use litepubl\view\Css;
+use litepubl\view\Theme;
 
 function parse_classes_ini($inifile) {
     $install_dir =  $self->getApp()->paths->lib . 'install/ini/';
@@ -42,15 +45,15 @@ function installClasses() {
      $self->getApp()->router->lock();
     $posts = tposts::i();
     $posts->lock();
-    $js = tjsmerger::i();
+    $js = Js::i();
     $js->lock();
 
-    $css = tcssmerger::i();
+    $css = Css::i();
     $css->lock();
 
     $xmlrpc = TXMLRPC::i();
     $xmlrpc->lock();
-    ttheme::$defaultargs = array();
+    Theme::$defaultargs = array();
     $theme = Theme::getTheme('default');
     foreach ( $self->getApp()->classes->items as $class => $item) {
         if (preg_match('/^(titem|titem_storage|titemspostsowner|tcomment|IXR_Client|IXR_Server|tautoform|tchildpost|tchildposts|cachestorage_memcache|thtmltag|ECancelEvent)$/', $class)) {
@@ -70,7 +73,7 @@ function installClasses() {
     }
 
     //default installed plugins
-    $plugins = tplugins::i();
+    $plugins = Plugins::i();
     $plugins->lock();
     $plugins->add('likebuttons');
     $plugins->add('oldestposts');

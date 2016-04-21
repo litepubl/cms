@@ -8,19 +8,21 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Js;
 
-class ttogglecode extends tplugin {
+class ttogglecode extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);
     }
 
     public function install() {
-        tjsmerger::i()->add('default', $this->jsfile);
+        Js::i()->add('default', $this->jsfile);
     }
 
     public function uninstall() {
-        tjsmerger::i()->deletefile('default', $this->jsfile);
+        Js::i()->deletefile('default', $this->jsfile);
     }
 
     public function getJsfile() {

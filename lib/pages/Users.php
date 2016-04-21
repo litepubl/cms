@@ -11,6 +11,7 @@ namespace litepubl\pages;
 use litepubl\core\Users as CoreUsers;
 use litepubl\view\Filter;
 use litepubl\core\Str;
+use litepubl\view\Theme;
 
 class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
@@ -150,7 +151,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
     public function getCont() {
         $item = $this->getitem($this->id);
-        ttheme::$vars['author'] = $this;
+        Theme::$vars['author'] = $this;
 
         $schema = Schema::getview($this);
         $theme = $schema->theme;

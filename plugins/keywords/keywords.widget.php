@@ -9,6 +9,8 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\core\Plugins;
+use litepubl\view\Theme;
 
 class tkeywordswidget extends twidget {
     public $links;
@@ -29,7 +31,7 @@ class tkeywordswidget extends twidget {
     }
 
     public function getDeftitle() {
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         return $about['deftitle'];
     }
 
@@ -41,7 +43,7 @@ class tkeywordswidget extends twidget {
 
 
         $title = $this->gettitle($id);
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getwidget($title, $content, $this->template, $sidebar);
     }
 
@@ -79,7 +81,7 @@ class tkeywordswidget extends twidget {
             }
         }
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         return $theme->getwidgetcontent($links, $this->template, $sidebar);
     }
 

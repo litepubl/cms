@@ -8,14 +8,16 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Base;
+use litepubl\view\Parser;
 
 function tsinglecatInstall($self) {
     if (!dbversion) die('Required database version');
-    tthemeparser::i()->parsed = $self->themeparsed;
-    ttheme::clearcache();
+    Parser::i()->parsed = $self->themeparsed;
+    Base::clearCache();
 }
 
 function tsinglecatUninstall($self) {
-    tthemeparser::i()->unbind($self);
-    ttheme::clearcache();
+    Parser::i()->unbind($self);
+    Base::clearCache();
 }

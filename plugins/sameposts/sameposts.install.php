@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl;
+use litepubl\core\DBManager;
 
 function tsamepostsInstall($self) {
     if (dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->createtable($self->table, 'id int UNSIGNED NOT NULL default 0,
     items text NOT NULL,
     PRIMARY KEY(id) ');
@@ -29,7 +30,7 @@ function tsamepostsUninstall($self) {
     twidgets::i()->deleteclass(get_class($self));
 
     if (dbversion) {
-        $manager = tdbmanager::i();
+        $manager = DBManager::i();
         $manager->deletetable($self->table);
     } else {
         $posts = tposts::i();

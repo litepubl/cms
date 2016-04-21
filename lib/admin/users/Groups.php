@@ -11,6 +11,8 @@ namespace litepubl\admin\users;
 use litepubl\core\UserGroups;
 use litepubl\admin\GetPerm;
 use litepubl\admin\Link;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Groups extends \litepubl\admin\Menu
 {

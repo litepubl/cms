@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tpostcontentplugin extends tplugin {
+class tpostcontentplugin extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

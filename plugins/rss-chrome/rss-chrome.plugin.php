@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class rsschrome extends tplugin {
+class rsschrome extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

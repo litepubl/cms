@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminpostcatwidget extends tadmincustomwidget {
 
@@ -17,7 +19,7 @@ class tadminpostcatwidget extends tadmincustomwidget {
 
     public function getContent() {
         $widget = tpostcatwidget::i();
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $args = new Args();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {

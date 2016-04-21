@@ -9,7 +9,8 @@
 
 namespace litepubl;
 
-class tyoutubeplayer extends tplugin {
+class tyoutubeplayer extends \litepubl\core\Plugin
+ {
 
     public static function i() {
         return getinstance(__class__);

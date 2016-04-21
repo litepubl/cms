@@ -8,6 +8,8 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminlivejournalposter {
 
@@ -19,8 +21,8 @@ class tadminlivejournalposter {
         $plugin = tlivejournalposter::i();
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
         if ($plugin->template == '') $plugin->template = file_get_contents($dir . 'livejournalposter.tml');
-        $about = tplugins::getabout(tplugins::getname(__file__));
-        $lang = tplugins::getlangabout(__file__);
+        $about = Plugins::getabout(Plugins::getname(__file__));
+        $lang = Plugins::getlangabout(__file__);
         $html = tadminhtml::i();
         $html->section = $lang->section;
         $args = new Args();

@@ -8,11 +8,19 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Base;
+use litepubl\view\Js;
+use litepubl\view\LangMerger;
+use litepubl\core\Plugins;
+use litepubl\view\Theme;
+use litepubl\view\Parser;
+use litepubl\core\DBManager;
 
 function tdownloaditemsInstall($self) {
     if (!dbversion) die("Downloads require database");
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->CreateTable($self->childtable, file_get_contents($dir . 'downloaditem.sql'));
     $manager->addenum('posts', 'class', 'litepubl-tdownloaditem');
 
@@ -22,7 +30,7 @@ function tdownloaditemsInstall($self) {
     $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
     $optimizer->unlock();
 
-    Langmerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" .  $self->getApp()->options->language . ".ini");
+    LangMerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" .  $self->getApp()->options->language . ".ini");
 
     $ini = parse_ini_file($dir .  $self->getApp()->options->language . '.install.ini', false);
 
@@ -34,7 +42,7 @@ function tdownloaditemsInstall($self) {
     $classes->lock();
     /*
     //install polls if its needed
-    $plugins = tplugins::i();
+    $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
     $polls = tpolls::i();
     $polls->garbage = false;
@@ -52,7 +60,7 @@ function tdownloaditemsInstall($self) {
     $lang = Lang::i('downloaditems');
     $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
 
-    $adminmenus = tadminmenus::i();
+    $adminmenus = Menus::i();
     $adminmenus->lock();
     $parent = $adminmenus->createitem(0, 'downloaditems', 'editor', 'tadmindownloaditems');
     $adminmenus->items[$parent]['title'] = $lang->downloaditems;
@@ -96,11 +104,11 @@ function tdownloaditemsInstall($self) {
     }
     $menus->unlock();
 
-    tjsmerger::i()->add('default', '/plugins/downloaditem/downloaditem.min.js');
+    Js::i()->add('default', '/plugins/downloaditem/downloaditem.min.js');
 
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->parsed = $self->themeparsed;
-    ttheme::clearcache();
+    Base::clearCache();
 
     $linkgen = tlinkgenerator::i();
     $linkgen->data['downloaditem'] = '/[type]/[title].htm';
@@ -112,15 +120,15 @@ function tdownloaditemsUninstall($self) {
     //die("Warning! You can lost all downloaditems!");
     tposts::unsub($self);
 
-    $adminmenus = tadminmenus::i();
+    $adminmenus = Menus::i();
     $adminmenus->deletetree($adminmenus->url2id('/admin/downloaditems/'));
 
     $menus = tmenus::i();
     $menus->deletetree($menus->class2id('tdownloaditemsmenu'));
 
-    $parser = tthemeparser::i();
+    $parser = Parser::i();
     $parser->unbind($self);
-    ttheme::clearcache();
+    Base::clearCache();
 
     $classes =  $self->getApp()->classes;
     $classes->lock();
@@ -132,10 +140,10 @@ function tdownloaditemsUninstall($self) {
     $classes->delete('taboutparser');
     $classes->unlock();
 
-    $merger = Langmerger::i();
-    $merger->deleteplugin(tplugins::getname(__file__));
+    $merger = LangMerger::i();
+    $merger->deleteplugin(Plugins::getname(__file__));
 
-    $manager = tdbmanager::i();
+    $manager = DBManager::i();
     $manager->deletetable($self->childtable);
     $manager->delete_enum('posts', 'class', 'tdownloaditem');
 
@@ -147,7 +155,7 @@ function tdownloaditemsUninstall($self) {
     }
     $optimizer->unlock();
 
-    tjsmerger::i()->deletefile('default', '/plugins/downloaditem/downloaditem.min.js');
+    Js::i()->deletefile('default', '/plugins/downloaditem/downloaditem.min.js');
 
      $self->getApp()->options->delete('downloaditem_themetag');
      $self->getApp()->options->delete('downloaditem_plugintag');
@@ -168,7 +176,7 @@ function getd_download_js() {
 function add_downloaditems_to_theme($theme) {
     if (empty($theme->templates['custom']['downloadexcerpt'])) {
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-        ttheme::$vars['lang'] = Lang::admin('downloaditems');
+        Theme::$vars['lang'] = Lang::admin('downloaditems');
         $custom = & $theme->templates['custom'];
         $custom['downloaditem'] = $theme->replacelang(file_get_contents($dir . 'downloaditem.tml') , Lang::i('downloaditem'));
         $lang = Lang::i('downloaditems');

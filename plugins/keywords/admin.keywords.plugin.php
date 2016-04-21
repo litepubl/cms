@@ -9,6 +9,9 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\core\Plugins;
 
 class tadminkeywords extends tadminwidget {
 
@@ -20,7 +23,7 @@ class tadminkeywords extends tadminwidget {
         $datadir =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         $selfdir = dirname(__file__) . DIRECTORY_SEPARATOR;
         $tml = parse_ini_file($selfdir . 'keywords.templates.ini', false);
-        $about = tplugins::getabout(tplugins::getname(__file__));
+        $about = Plugins::getabout(Plugins::getname(__file__));
         $html = $this->html;
         $lang = $this->lang;
         $args = new Args();
@@ -49,7 +52,7 @@ class tadminkeywords extends tadminwidget {
             $args->optionsform = 1;
             $args->title = $widget->gettitle($idwidget);
             $args->blackwords = tadminhtml::specchars(implode("\n", tkeywordsplugin::i()->blackwords));
-            $lang = tplugins::getlangabout(__file__);
+            $lang = Plugins::getlangabout(__file__);
             $args->formtitle = $about['name'];
             $result.= $html->adminform('[text=title]
       [text=count]

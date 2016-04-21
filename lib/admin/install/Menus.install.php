@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin;
+use litepubl\view\Lang;
 
 function MenusInstall($self) {
     if ('\litepubl\admin\Menus' != get_class($self)) {
@@ -115,7 +116,7 @@ function MenusInstall($self) {
     $redir->add('/admin/', '/admin/posts/editor/');
 }
 
-function tadminmenusUninstall($self) {
+function MenusUninstall($self) {
     //rmdir(. 'menus');
     
 }

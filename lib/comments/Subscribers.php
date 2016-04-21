@@ -19,6 +19,7 @@ use litepubl\view\Lang;
 use litepubl\utils\Mailer;
 use litepubl\core\Str;
 use litepubl\core\Arr;
+use litepubl\view\Args;
 
 class Subscribers extends \litepubl\core\ItemsPosts
 {
@@ -106,7 +107,7 @@ return;
 }
 
 
-            $dblist[] = Str::uuote($s);
+            $dblist[] = Str::quote($s);
         }
         if (count($dblist) > 0) {
             $db = $this->db;

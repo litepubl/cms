@@ -11,6 +11,9 @@ namespace litepubl\admin\comments;
 use litepubl\comments\Pingbacks as PingItems;
 use litepubl\admin\Table;
 use litepubl\core\Str;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class Pingbacks extends \litepubl\admin\Menu
 {
@@ -114,7 +117,7 @@ function(Table $t) {
         $form->submit = false;
         $result = $form->get();
 
-        $theme = ttheme::i();
+        $theme = Theme::i();
         $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage));
         return $result;
     }

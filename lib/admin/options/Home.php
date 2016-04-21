@@ -14,6 +14,7 @@ use litepubl\pages\Home as HomePage;
 use litepubl\pages\Menus;
 use litepubl\post\MediaParser;
 use litepubl\core\Str;
+use litepubl\view\Parser;
 
 class Home extends \litepubl\admin\Menu
 {

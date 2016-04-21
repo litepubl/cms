@@ -15,6 +15,7 @@ use litepubl\pages\Menus as StdMenus;
 use litepubl\pages\Menu as StdMenu;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
+use litepubl\view\Lang;
 
 class Group extends \litepubl\admin\Menu
 {

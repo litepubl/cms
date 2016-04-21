@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Theme;
 
 class tfoafutil extends tevents {
 
@@ -130,7 +133,7 @@ class tfoafutil extends tevents {
 
             Lang::usefile('mail');
             $lang = Lang::i('mailfoaf');
-            $theme = ttheme::i();
+            $theme = Theme::i();
 
             $subject = $theme->parsearg($lang->errorsubj, $args);
             $body = $theme->parsearg($lang->errorbody, $args);
