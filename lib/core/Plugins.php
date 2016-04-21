@@ -26,17 +26,21 @@ class Plugins extends Items
 
     public static function getAbout($name) {
         if (!isset(static ::$abouts[$name])) {
-            if (!isset(static ::$abouts)) static ::$abouts = array();
-            static ::$abouts[$name] = static ::localabout( $this->getApp()->paths->plugins . $name);
+            if (!isset(static ::$abouts)) {
+static ::$abouts = array();
+}
+
+            static ::$abouts[$name] = static ::localabout(static::getAppInstance()->paths->plugins . $name);
         }
+
         return static ::$abouts[$name];
     }
 
     public static function localabout($dir) {
         $filename = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'about.ini';
         $about = parse_ini_file($filename, true);
-        if (isset($about[ $this->getApp()->options->language])) {
-            $about['about'] = $about[ $this->getApp()->options->language] + $about['about'];
+        if (isset($about[ static::getAppInstance()->options->language])) {
+            $about['about'] = $about[static::getAppInstance()->options->language] + $about['about'];
         }
 
         return $about['about'];

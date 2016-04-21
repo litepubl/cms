@@ -60,7 +60,7 @@ class Theme extends Base
     }
 
     public function getParser() {
-        return ThemeParser::i();
+        return Parser::i();
     }
 
     public function getSidebarscount() {

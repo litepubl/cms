@@ -9,7 +9,7 @@
 
 namespace litepubl\core;
 
-class PropNotfound extends \UnexpectedValueException
+class PropException extends \UnexpectedValueException
 {
     public $propName;
 public $className;

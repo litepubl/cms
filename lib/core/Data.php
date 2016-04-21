@@ -21,10 +21,10 @@ class Data {
     public $table;
 
     public static function i() {
-        return  static::getInstance(get_called_class());
+        return  static::iGet(get_called_class());
     }
 
-    public static function getInstance($class) {
+    public static function iGet($class) {
         return  static::getAppInstance()->classes->getInstance($class);
     }
 

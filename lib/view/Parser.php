@@ -14,10 +14,6 @@ class Parser extends BaseParser
  {
     private $sidebar_index;
 
-    public static function i() {
-        return getinstance(__class__);
-    }
-
     protected function create() {
         parent::create();
         $this->basename = 'themeparser';
@@ -33,7 +29,7 @@ class Parser extends BaseParser
         return parent::loadpaths();
     }
 
-    public function doreplacelang(basetheme $theme) {
+    public function doreplacelang(Base $theme) {
         parent::doreplacelang($theme);
 
         $sidebars = & $theme->templates['sidebars'];
@@ -205,15 +201,15 @@ class Parser extends BaseParser
 
 
 
-        if (($widgetname != 'widget') && (!in_array($widgetname, ttheme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
+        if (($widgetname != 'widget') && (!in_array($widgetname, Theme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
 
-        $path = ttheme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
+        $path = Theme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
         if ($path === false) $this->error("Unknown '$path' widget path");
 
         $this->setwidgetitem($widgetname, $path, $value);
 
         if ($widgetname == 'widget') {
-            foreach (ttheme::getwidgetnames() as $widgetname) {
+            foreach (Theme::getwidgetnames() as $widgetname) {
                 if ((($widgetname == 'posts') || ($widgetname == 'comments')) && ($path == '.item')) {
  continue;
 }
@@ -347,7 +343,7 @@ class Parser extends BaseParser
         $sidebars = & $templates['sidebars'];
         for ($i = 0; $i < count($sidebars); $i++) {
             $sidebar = & $sidebars[$i];
-            foreach (ttheme::getwidgetnames() as $widgetname) {
+            foreach (Theme::getwidgetnames() as $widgetname) {
                 foreach (array(
                     '',
                     '.items',

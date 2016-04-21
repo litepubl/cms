@@ -1,4 +1,4 @@
-f<?php
+<?php
 /**
 * Lite Publisher CMS
 * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -13,6 +13,8 @@ use litepubl\core\Litepubl;
 use litepubl\core\Classes;
 use litepubl\core\Options;
 use litepubl\core\Site;
+use litepubl\utils\Filer;
+
 echo "<pre>\n";
  litepubl::$app->classes = Classes::i();
  litepubl::$app->options = Options::i();
@@ -22,9 +24,8 @@ if (!defined('litepublisher_mode')) {
     define('litepublisher_mode', 'install');
 }
 
-
 if (Config::$debug) {
-  require_once( litepubl::$app->paths->lib . 'filer.class.php');
+  require_once(dirname(__DIR__) . '/utils/Filer.php');
   if (is_dir( litepubl::$app->paths->data)) {
 Filer::delete( litepubl::$app->paths->data, true, true);
 }

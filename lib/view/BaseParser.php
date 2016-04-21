@@ -71,7 +71,7 @@ class BaseParser extends \litepubl\core\Events
         return $result;
     }
 
-    public function parse(basetheme $theme) {
+    public function parse(Base $theme) {
         $this->checkparent($theme->name);
         if (!$this->checkabout($theme->name)) {
  return false;
@@ -108,7 +108,7 @@ class BaseParser extends \litepubl\core\Events
         return true;
     }
 
-    public function doreplacelang(basetheme $theme) {
+    public function doreplacelang(Base $theme) {
         $lang = Lang::i('comment');
         foreach ($theme->templates as $name => $value) {
             if (is_string($value)) {
@@ -262,7 +262,7 @@ class BaseParser extends \litepubl\core\Events
         return $i;
     }
 
-    public function parsetags(basetheme $theme, $s) {
+    public function parsetags(Base $theme, $s) {
         $this->theme = $theme;
         if (!$this->paths || !count($this->paths)) {
             $this->paths = $this->loadpaths();
@@ -473,7 +473,7 @@ class BaseParser extends \litepubl\core\Events
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
-        basetheme::clearcache();
+        Base::clearcache();
     }
 
     public function removetags($filetheme, $filetags) {
@@ -482,7 +482,7 @@ class BaseParser extends \litepubl\core\Events
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
-        basetheme::clearcache();
+        Base::clearcache();
     }
 
 } //class

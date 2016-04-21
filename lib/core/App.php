@@ -157,7 +157,7 @@ $this->getLogger()->log($level, $message, $context);
 }
 
 public function logException(\Exception $e) {
-$this->log('alert', \litepubl\debug\LogException::getString($e));
+$this->log('alert', \litepubl\debug\LogException::toString($e));
 }
 
     public function showErrors() {
