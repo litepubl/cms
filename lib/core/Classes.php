@@ -21,15 +21,17 @@ public $classmap;
     public $aliases;
     public $instances;
 public $loaded;
+private $composerLoaded;
 
     public static function i() {
-        if (!isset(litepubl::$app->classes)) {
+$app = static::getAppInstance();
+        if (!isset($app->classes)) {
             $classname = get_called_class();
-            litepubl::$app->classes = new $classname();
-            litepubl::$app->classes->instances[$classname] =  litepubl::$app->classes;
+            $app->classes = new $classname();
+            $app->classes->instances[$classname] =  $app->classes;
         }
 
-        return litepubl::$app->classes;
+        return $app->classes;
     }
 
     protected function create() {
@@ -44,6 +46,7 @@ public $loaded;
 $this->classmap = [];
         $this->aliases = [];
 $this->loaded = [];
+$this->composerLoaded = false;
 
         spl_autoload_register(array(
             $this,
@@ -228,6 +231,12 @@ $filename = $this->findFile($classname);
 $this->loaded[$classname] = $filename;
 if ($filename) {
 include $filename;
+} elseif (!$this->composerLoaded) {
+$this->composerLoaded = true;
+if (!class_exists('\Composer\Autoload\ClassLoader', false)) {
+$this->loadComposer();
+$this->callComposerAutoload($classname);
+}
 }
 }
 
@@ -410,21 +419,17 @@ $this->loaded[$ns] = $dir;
         $filename = $reflector->getFileName();
         return dirname($filename) . '/resource/';
     }
-
-    public function getThemeVar($name) {
-        $result = false;
-        if (isset($this->instances[$name])) {
-            $result = $this->instances[$name];
-        } elseif ($filename = $this->findPSR4($name)) {
-            $this->include($filename);
-            $result = $this->getinstance($name);
-        } elseif (isset($this->classes[$name])) {
-            $result = $this->getinstance($this->classes[$name]);
-        } elseif (isset($this->items[$name])) {
-            $result = $this->getinstance($name);
-        }
-
-        return $result;
-    }
+public function callComposerAutoload($classname) {
+$compclass = '\Composer\Autoload\ClassLoader';
+if ($a = spl_autoload_functions()) {
+foreach ($a as $item) {
+if (is_array($item)) {
+if (is_a($item[0], $compclass)) {
+return call_user_func_array($item, [$classname]);
+}
+}
+}
+}
+}
 
 }
