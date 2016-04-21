@@ -13,9 +13,9 @@ use litepubl\Config;
 class LogException
 {
 
-public static function toString(\Exception $e) {
+public static function getLog(\Exception $e) {
         $result = "Caught exception:\n" . $e->getMessage() . "\n";
-        $result .= static::getLog($e->getTrace());
+        $result .= static::getTraceLog($e->getTrace());
 return $result;
 
         $log = str_replace( $this->getApp()->paths->home, '', $log);
@@ -28,10 +28,10 @@ return $result;
     }
 
 public static function trace() {
-return static::getLog(debug_backtrace());
+return static::getTraceLog(debug_backtrace());
 }
 
-public static function getLog(array $trace) {
+public static function getTraceLog(array $trace) {
 $result = '';
         foreach ($trace as $i => $item) {
             if (isset($item['line'])) {

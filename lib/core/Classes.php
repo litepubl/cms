@@ -48,7 +48,7 @@ $this->loaded = [];
         spl_autoload_register(array(
             $this,
             'autoload'
-        ));
+        ), true, true);
     }
 
     public function getInstance($class) {

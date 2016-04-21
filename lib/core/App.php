@@ -9,9 +9,7 @@
 
 namespace litepubl\core;
 use litepubl\config;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Handler\FirePHPHandler;
+use litepubl\debug\LoggerFactory;
 
 
 class App
@@ -145,10 +143,7 @@ $this->sharedStorage->saveModified();
 
 public function getLogger() {
 if (!$this->logger) {
-$this->includeComposerAutoload();
-$this->logger = new logger('general');
-$this->logger->pushHandler(new StreamHandler($this->paths->data . 'logs/logs.txt', Logger::DEBUG));
-$this->logger->pushHandler(new FirePHPHandler());
+$this->logger = LoggerFactory::createInstance($this->paths);
 }
 
 return $this->logger;
@@ -156,7 +151,7 @@ return $this->logger;
 
 public function log($level, $message, array $context = array()) {
 echo str_replace($this->paths->lib, '', $message);
-//ignore debug messages if 
+//ignore debug messages
 if (!config::$debug && ($level == 'debug') && (config::$logLevel != 'debug')) {
 return;
 }
@@ -165,7 +160,7 @@ $this->getLogger()->log($level, $message, $context);
 }
 
 public function logException(\Exception $e) {
-$this->log('alert', \litepubl\debug\LogException::toString($e));
+$this->log('alert', LogFactory::getException($e));
 }
 
     public function showErrors() {
