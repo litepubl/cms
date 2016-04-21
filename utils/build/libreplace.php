@@ -77,8 +77,13 @@ return $s;
 
 function insertUse($s, $fnc, $ns) {
 if (!strpos($s, $fnc)) return $s;
+$s = removeUse($s, $fnc, $ns);
+
 $uns = "use $ns;";
-if (strpos($s, $uns)) return;
+if (strpos($s, $uns)) return $s;
+
+$root = substr($ns, 0, strrpos($ns, '\\'));
+if (strpos($s, "namespace $root;")) return $s;
 
 $i = strpos($s, "\n\n", strpos($s, 'namespace '));
 if (!$i) {
@@ -87,6 +92,18 @@ return$s;
 }
 
 $s = substr($s, 0, $i) . "\n" . $uns . substr($s, $i);
+return $s;
+}
+
+function removeUse($s, $fnc, $ns) {
+if (!strpos($s, $fnc)) return $s;
+$uns = "use $ns;";
+if (false === ($i = strpos($s, $uns))) return $s;
+
+$root = substr($ns, 0, strrpos($ns, '\\'));
+if (!strpos($s, "namespace $root;")) return $s;
+
+$s = rtrim(substr($s, 0, $i)) . substr($s, $i + strlen($uns));
 return $s;
 }
 
