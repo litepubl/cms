@@ -23,8 +23,10 @@ class App
     public  $microtime;
     public  $options;
     public  $paths;
-    public  $router;
     public  $poolStorage;
+public $request;
+public $response;
+    public  $router;
     public  $site;
     public  $storage;
 
@@ -111,8 +113,12 @@ $this->cache = new CacheFile($this->paths->dir);
         }
     }
 
-    public  function request() {
-        if ( $this->debug) {
+public function runRequest() {
+$this->request = new Request();
+$this->response = new Response();
+
+        if (Config::$debug) {
+$this->response->setNocache();
             error_reporting(-1);
             ini_set('display_errors', 1);
             Header('Cache-Control: no-cache, must-revalidate');
@@ -123,15 +129,14 @@ $this->cache = new CacheFile($this->paths->dir);
             call_user_func_array(config::$beforeRequest, []);
         }
 
-        return  $this->router->request( $this->domain, $_SERVER['REQUEST_URI']);
-    }
+        $this->router->request( $this->domain, $_SERVER['REQUEST_URI']);
+}
 
     public  function run() {
         try {
              $this->init();
             if (!config::$ignoreRequest) {
-                 $this->request();
-            }
+$this->runRequest();
         }
         catch(\Exception $e) {
              $this->logException($e);
@@ -164,7 +169,7 @@ $this->log('alert', LoggerFactory::getException($e));
 }
 
     public function showErrors() {
-        if ($this->errorlog && ($this->debug || $this->options->echoexception || $this->options->admincookie || $this->router->adminpanel)) {
+        if (Config::$debug && $this->errorlog && ($this->options->echoexception || $this->options->admincookie || $this->router->adminpanel)) {
             echo $this->errorlog;
         }
     }
