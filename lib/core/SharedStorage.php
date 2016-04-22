@@ -95,4 +95,4 @@ use AppTrait;
         return count($this->data);
     }
 
-} //class
+}

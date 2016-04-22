@@ -9,28 +9,22 @@
 
 namespace litepubl\core;
 
-class CacheFile
+class CacheFile extends BaseCache
 {
-    public function getDir() {
-        return  $this->getApp()->paths->cache;
-    }
+public $dir;
 
-    public function set($filename, $data) {
-        $this->setString($filename, $this->serialize($data));
+public function __construct($dir) {
+$this->dir = $dir;
+}
+
+    public function getDir() {
+        return  $this->dir;
     }
 
     public function setString($filename, $str) {
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
-    }
-
-    public function get($filename) {
-        if ($s = $this->getString($filename)) {
-            return $this->unserialize($s);
-        }
-
-        return false;
     }
 
     public function getString($filename) {
@@ -72,13 +66,5 @@ class CacheFile
             closedir($h);
         }
     }
-
-public function serialize($data) {
-return serialize($data);
-}
-
-public function unserialize($str) {
-return unserialize($str);
-}
 
 }

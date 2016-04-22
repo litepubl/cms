@@ -9,7 +9,7 @@
 
 namespace litepubl\core;
 
-class CacheMemcache
+class CacheMemcache extends BaseCache
 {
     public $memcache;
     public $lifetime;
@@ -41,23 +41,12 @@ class CacheMemcache
         $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
     }
 
-    public function serialize($data) {
-        return serialize($data);
-    }
-
-    public function unserialize(&$data) {
-        return unserialize($data);
-    }
-
     public function setString($filename, $str) {
         $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
     }
 
-    public function set($filename, $data) {
-        $this->setString($filename, $this->serialize($data));
-    }
 
-    public function getString($filename) {
+   public function getString($filename) {
         return $this->memcache->get($this->getPrefix() . $filename);
     }
 

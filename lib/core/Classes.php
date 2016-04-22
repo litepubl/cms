@@ -233,10 +233,7 @@ if ($filename) {
 include $filename;
 } elseif (!$this->composerLoaded) {
 $this->composerLoaded = true;
-if (!class_exists('\Composer\Autoload\ClassLoader', false)) {
-$this->loadComposer();
-$this->callComposerAutoload($classname);
-}
+$this->loadComposer($classname);
 }
 }
 
@@ -419,14 +416,13 @@ $this->loaded[$ns] = $dir;
         $filename = $reflector->getFileName();
         return dirname($filename) . '/resource/';
     }
-public function callComposerAutoload($classname) {
+public function loadComposer($classToAutoLoad) {
+require_once($this->getApp()->paths->home . 'vendor/autoload.php');
+if ($classToAutoLoad && ($a = spl_autoload_functions())) {
 $compclass = '\Composer\Autoload\ClassLoader';
-if ($a = spl_autoload_functions()) {
 foreach ($a as $item) {
-if (is_array($item)) {
-if (is_a($item[0], $compclass)) {
-return call_user_func_array($item, [$classname]);
-}
+if (is_array($item)) && is_a($item[0], $compclass)) {
+return call_user_func_array($item, [$classToAutoLoad]);
 }
 }
 }

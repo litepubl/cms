@@ -66,13 +66,13 @@ $this->router->cache = $this->cache;
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
              $this->storage = new $classname();
-$this->cache = new CacheFile();
+$this->cache = new CacheFile($this->paths->cache);
         } else if ( $this->memcache) {
              $this->storage = new StorageMemcache();
 $this->cache = new CacheMemcache();
         } else {
              $this->storage = new Storage();
-$this->cache = new CacheFile();
+$this->cache = new CacheFile($this->paths->dir);
         }
 
          $this->sharedStorage = new SharedStorage();
@@ -169,7 +169,4 @@ $this->log('alert', LoggerFactory::getException($e));
         }
     }
 
-public function includeComposerAutoload() {
-require_once($this->paths->home . 'vendor/autoload.php');
-}
 }

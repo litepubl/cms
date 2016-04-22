@@ -9,11 +9,11 @@
 
 namespace litepubl\core;
 
-trait SharedStorageTrait
+trait CacheStorageTrait
  {
 
     public function getStorage() {
-        return  $this->getApp()->sharedStorage;
+        return  $this->getApp()->cache;
     }
 
 }

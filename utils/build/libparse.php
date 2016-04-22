@@ -23,11 +23,15 @@ $s = str_replace("\r", "\n", $s);
 $s = str_replace('2014', '2015', $s);
 $s = replace_copyright($s);
 
-
     //$s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
+
 if (strend($filename, '.php')) {
+if (strend($s, '//class')) {
+$s = substr($s, 0, strlen($s) - strlen('//class'));
+}
+
 //$s = libReplace($s);
 $s = afterFix($s);
 }
