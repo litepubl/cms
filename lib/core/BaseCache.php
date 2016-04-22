@@ -11,6 +11,7 @@ namespace litepubl\core;
 
 class BaseCache
 {
+protected $items;
 
     abstract public function getString($filename);
     abstract public function setString($filename, $str);
@@ -34,5 +35,19 @@ class BaseCache
     public function unserialize(&$data) {
         return unserialize($data);
     }
+
+public function savePhp($filename, $str) {
+$this->setString($filename, $str);
+}
+
+public function includePhp($filename) {
+if ($str = $this->getString($filename)) {
+eval('?>'. $str);
+}
+}
+
+    public function exists($filename) {
+return array_key_exists($this->items);
+}
 
 }

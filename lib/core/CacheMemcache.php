@@ -16,6 +16,7 @@ class CacheMemcache extends BaseCache
     public $prefix;
     public $revision;
     public $revisionKey;
+public $items;
 
     public function __construct() {
         $this->memcache =  $this->getApp()->memcache;
@@ -23,6 +24,8 @@ class CacheMemcache extends BaseCache
         $this->prefix =  $this->getApp()->domain . ':cache:';
         $this->revision = 0;
         $this->revisionKey = 'cache_revision';
+$this->items = [];
+
         if ($this->memcache) {
             $this->getRevision();
         }
@@ -39,31 +42,33 @@ class CacheMemcache extends BaseCache
     public function clear() {
         $this->revision++;
         $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
+$this->items = [];
     }
 
     public function setString($filename, $str) {
+$this->items[$filename] = $str;[
         $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
     }
 
-
    public function getString($filename) {
+if (array_key_exists($filename, $this->items)) {
+return $this->items[$filename];
+}
+
         return $this->memcache->get($this->getPrefix() . $filename);
     }
 
-    public function get($filename) {
-        if ($s = $this->getString($filename)) {
-            return $this->unserialize($s);
-        }
-
-        return false;
-    }
-
     public function delete($filename) {
+unset($this->items[$filename]);
         $this->memcache->delete($this->getPrefix() . $filename);
     }
 
     public function exists($filename) {
-        return !!$this->memcache->get($this->prefix . $filename);
+if (parent::exists($filename)) {
+return $this->items[$filename] !== false;
+}
+
+return $this->items[$filename] = $this->getString($filename);
     }
 
 }

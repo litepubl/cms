@@ -15,6 +15,7 @@ public $dir;
 
 public function __construct($dir) {
 $this->dir = $dir;
+$this->items = [];
 }
 
     public function getDir() {
@@ -22,21 +23,27 @@ $this->dir = $dir;
     }
 
     public function setString($filename, $str) {
+$this->items[$name] = $str;
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
     }
 
     public function getString($filename) {
+if (array_key_exists($filename, $this->items)) {
+return $this->items[$filename];
+}
+
         $fn = $this->getdir() . $filename;
         if (file_exists($fn)) {
-            return file_get_contents($fn);
+            return $this->items[$filename] = file_get_contents($fn);
         }
 
         return false;
     }
 
     public function delete($filename) {
+unset($this->items[$filename]);
         $fn = $this->getdir() . $filename;
         if (file_exists($fn)) {
             unlink($fn);
@@ -44,10 +51,11 @@ $this->dir = $dir;
     }
 
     public function exists($filename) {
-        return file_exists($this->getdir() . $filename);
+        return array_key_exists($filename, $this->items) || file_exists($this->getdir() . $filename);
     }
 
     public function clear() {
+$this->items = [];
         $path = $this->getdir();
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = @readdir($h))) {
@@ -66,5 +74,11 @@ $this->dir = $dir;
             closedir($h);
         }
     }
+
+public function includePhp($filename) {
+if (file_exists($this->getDir() . $filename)) {
+include ($this->getDir() . $filename);
+}
+}
 
 }
