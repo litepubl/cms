@@ -153,4 +153,4 @@ $vars->pingback = $pingback;
         return str_replace('$pingback', $result, $theme->parse($theme->templates['content.post.templatecomments.pingbacks']));
     }
 
-} //class
+} 

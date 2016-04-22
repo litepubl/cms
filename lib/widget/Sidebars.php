@@ -165,4 +165,4 @@ class Sidebars extends \litepubl\core\Data
         $schemes->save();
     }
 
-} //class
+} 

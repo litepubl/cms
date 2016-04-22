@@ -49,4 +49,4 @@ class RobotsTxt extends \litepubl\core\Items
         return $s;
     }
 
-} //class
+} 

@@ -58,7 +58,7 @@ return '.php';
             }
         }
         catch(\Exception $e) {
-            echo 'Caught exception: ' . $e->getMessage();
+            $this->getApp()->logException($e);
         }
 
         return false;

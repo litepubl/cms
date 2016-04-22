@@ -157,4 +157,4 @@ class Password extends Form
         return true;
     }
 
-} //class
+} 

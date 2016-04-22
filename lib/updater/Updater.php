@@ -242,4 +242,4 @@ Filer::log("$v selected to update", 'update');
         return true;
     }
 
-} //class
+} 

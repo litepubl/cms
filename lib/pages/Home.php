@@ -260,4 +260,4 @@ unset($vars->author);
         return $result;
     }
 
-} //class
+} 

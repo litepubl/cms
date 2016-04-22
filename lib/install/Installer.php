@@ -88,7 +88,7 @@ $this->resulttype = $_GET['resulttype'];
 return;
 }
 
-        $this->app->SharedStorage->saveModified();
+        $this->app->PoolStorage->saveModified();
 
         $result = array(
             'url' => $this->app->site->url,
@@ -453,4 +453,4 @@ return $this->autoInstall();
         if (ob_get_level()) ob_end_flush();
     }
 
-} //class
+} 

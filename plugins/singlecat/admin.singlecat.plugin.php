@@ -42,4 +42,4 @@ class tadminsinglecat {
         $plugin->save();
     }
 
-} //class
+} 

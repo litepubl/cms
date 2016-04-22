@@ -138,4 +138,4 @@ return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
         }
     }
 
-} //class
+} 

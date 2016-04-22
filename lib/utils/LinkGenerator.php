@@ -263,4 +263,4 @@ return $Result;
          $this->getApp()->router->addredir($oldurl, $obj->url);
     }
 
-} //class
+} 

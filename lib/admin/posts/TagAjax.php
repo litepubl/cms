@@ -121,4 +121,4 @@ $type = 'categories';
         return \litepubl\core\Router::htmlheader(false) . $result;
     }
 
-} //class
+} 

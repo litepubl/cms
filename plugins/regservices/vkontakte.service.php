@@ -71,4 +71,4 @@ class tvkontakteregservice extends tregservice {
         );
     }
 
-} //class
+} 

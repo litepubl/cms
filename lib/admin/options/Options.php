@@ -300,4 +300,4 @@ class Options extends \litepubl\admin\Menu
             return '';
         }
 
-} //class
+} 

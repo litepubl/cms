@@ -311,4 +311,4 @@ class tcodedocfilter extends titems {
         return preg_replace('/\w\w*+/', '[[$0]]', $doc[$name]);
     }
 
-} //class
+} 

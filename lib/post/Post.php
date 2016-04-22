@@ -1053,4 +1053,4 @@ $this->themeInstance->setvar('post', $this);
         }
     }
 
-} //class
+} 

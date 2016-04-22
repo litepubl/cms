@@ -75,4 +75,4 @@ class tadminsingletagwidget extends tadminwidget {
          $this->getApp()->router->clearcache();
     }
 
-} //class
+} 

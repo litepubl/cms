@@ -82,4 +82,4 @@ class DomRss extends \domDocument {
         return substr($s, strpos($s, '?>') + 2);
     }
 
-} //class
+} 

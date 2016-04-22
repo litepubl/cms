@@ -261,4 +261,4 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
         ));
     }
 
-} //class
+} 

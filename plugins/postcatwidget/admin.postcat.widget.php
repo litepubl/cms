@@ -85,4 +85,4 @@ class tadminpostcatwidget extends tadmincustomwidget {
         }
     }
 
-} //class
+} 

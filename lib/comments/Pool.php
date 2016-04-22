@@ -41,4 +41,4 @@ class Pool extends \litepubl\core\Pool
         return sprintf($tml, $this->getlangcount($this->get($idpost)));
     }
 
-} //class
+} 

@@ -485,4 +485,4 @@ class BaseParser extends \litepubl\core\Events
         Base::clearcache();
     }
 
-} //class
+} 

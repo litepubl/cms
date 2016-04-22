@@ -12,7 +12,7 @@ use litepubl\core\Arr;
 
 class Schemes extends \litepubl\core\Items
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
     public $defaults;
 
@@ -100,4 +100,4 @@ $this->save();
 }
     }
 
-} //class
+} 

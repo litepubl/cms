@@ -349,4 +349,4 @@ $admin = $this->admintheme;
         }
     }
 
-} //class
+} 

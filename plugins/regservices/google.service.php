@@ -71,4 +71,4 @@ class tgoogleregservice extends tregservice {
         );
     }
 
-} //class
+} 

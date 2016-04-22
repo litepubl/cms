@@ -34,4 +34,4 @@ class Posts extends Widget
         return $theme->getpostswidgetcontent($list, $sidebar, '');
     }
 
-} //class
+} 

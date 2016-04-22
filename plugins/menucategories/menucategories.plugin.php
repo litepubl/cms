@@ -113,4 +113,4 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         return $result;
     }
 
-} //class
+} 

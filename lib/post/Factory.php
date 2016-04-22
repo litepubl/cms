@@ -78,4 +78,4 @@ return \litepubl\pages\Users::i();
         return Transform::add($post);
     }
 
-} //class
+} 

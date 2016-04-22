@@ -76,4 +76,4 @@ class Meta extends Widget
         return $theme->getwidgetcontent($result, 'meta', $sidebar);
     }
 
-} //class
+} 

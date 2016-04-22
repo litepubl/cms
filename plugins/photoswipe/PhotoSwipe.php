@@ -58,4 +58,4 @@ class PhotoSwipe extends \litepubl\core\Plugin
         $css->unlock();
     }
 
-} //class
+} 

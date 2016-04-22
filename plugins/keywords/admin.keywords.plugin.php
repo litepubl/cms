@@ -157,4 +157,4 @@ class tadminkeywords extends tadminwidget {
         }
     }
 
-} //class
+} 

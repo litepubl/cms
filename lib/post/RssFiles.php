@@ -132,4 +132,4 @@ class RssFiles extends \litepubl\core\Events
         }
     }
 
-} //class
+} 

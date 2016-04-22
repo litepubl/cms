@@ -212,4 +212,4 @@ class Catbread extends \litepubl\core\Plugin
         $this->externalfunc(get_class($this) , 'Themeparsed', $theme);
     }
 
-} //class
+} 

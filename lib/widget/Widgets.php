@@ -14,7 +14,7 @@ use litepubl\core\Arr;
 
 class Widgets extends \litepubl\core\Items
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
     public $classes;
     public $currentsidebar;
@@ -483,4 +483,4 @@ use \litepubl\core\SharedStorageTrait;
         return $item;
     }
 
-} //class
+} 

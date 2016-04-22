@@ -54,4 +54,4 @@ class ttidyfilter extends \litepubl\core\Plugin
         $content = $this->getbody((string)$tidy);
     }
 
-} //class
+} 

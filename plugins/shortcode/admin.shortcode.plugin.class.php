@@ -42,4 +42,4 @@ class tadminshortcodeplugin {
         $plugin->save();
     }
 
-} //class
+} 

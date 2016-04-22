@@ -26,4 +26,4 @@ class AdminParser extends BaseParser
         return parent::loadpaths();
     }
 
-} //class
+} 

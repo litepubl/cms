@@ -202,4 +202,4 @@ class Ajax extends \litepubl\core\Events
         return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
     }
 
-} //class
+} 

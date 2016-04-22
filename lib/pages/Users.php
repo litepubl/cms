@@ -268,4 +268,4 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $this->db->updateassoc($item);
     }
 
-} //class
+} 

@@ -12,7 +12,7 @@ use litepubl\Config;
 
 class Options extends Events
 {
-use SharedStorageTrait;
+use PoolStorageTrait;
 
     public $groupnames;
     public $parentgroups;

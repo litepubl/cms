@@ -202,4 +202,4 @@ $pages->addpage($id);
         ));
     }
 
-} //class
+} 

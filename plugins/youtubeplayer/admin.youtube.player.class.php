@@ -30,4 +30,4 @@ class tadminyoutubeplayer {
         $plugin->save();
     }
 
-} //class
+} 

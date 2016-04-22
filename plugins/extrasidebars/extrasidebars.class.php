@@ -52,4 +52,4 @@ class textrasidebars extends \litepubl\core\Plugin
         }
     }
 
-} //class
+} 

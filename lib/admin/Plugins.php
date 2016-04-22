@@ -161,4 +161,4 @@ class Plugins extends Menu
         return getinstance($class);
     }
 
-} //class
+} 

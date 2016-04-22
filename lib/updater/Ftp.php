@@ -343,4 +343,4 @@ class Ftp extends Remote
         return $result;
     }
 
-} //class
+} 

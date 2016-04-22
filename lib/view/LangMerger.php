@@ -112,4 +112,4 @@ $this->addsection($name, $section, parse_ini_string($s, false));
         $this->unlock();
     }
 
-} //class
+} 

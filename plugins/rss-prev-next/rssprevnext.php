@@ -21,4 +21,4 @@ class TRSSPrevNext extends \litepubl\core\Plugin
         $content.= $post->prevnext;
     }
 
-} //class
+} 

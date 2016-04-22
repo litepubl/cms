@@ -73,4 +73,4 @@ class tdownloaditemeditor extends tposteditor {
         $post->authorurl = $authorurl;
     }
 
-} //class
+} 

@@ -71,4 +71,4 @@ class tcontactsite extends tmenu {
         return $this->success;
     }
 
-} //class
+} 

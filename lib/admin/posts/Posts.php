@@ -177,4 +177,4 @@ return $r;
         $posts->unlock();
     }
 
-} //class
+} 

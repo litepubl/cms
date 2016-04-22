@@ -199,4 +199,4 @@ PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
         return $result;
     }
 
-} //class
+} 

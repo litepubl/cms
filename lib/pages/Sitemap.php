@@ -179,4 +179,4 @@ use \litepubl\view\EmptyViewTrait;
         gzwrite($this->fd, '</urlset>');
     }
 
-} //class
+} 

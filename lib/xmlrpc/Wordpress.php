@@ -148,4 +148,4 @@ class Wordpress extends MetaWeblog
         return $result;
     }
 
-} //class
+} 

@@ -97,4 +97,4 @@ class Custom extends Widget
         }
     }
 
-} //class
+} 

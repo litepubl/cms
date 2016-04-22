@@ -293,4 +293,4 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return substr($s, 0, $len - $pad);
     }
 
-} //class
+} 

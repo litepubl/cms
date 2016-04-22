@@ -11,7 +11,7 @@ namespace litepubl\core;
 
 class Site extends Events
 {
-use SharedStorageTrait;
+use PoolStorageTrait;
 
     public $mapoptions;
     private $users;
@@ -124,4 +124,4 @@ use SharedStorageTrait;
         return '<?php echo  $this->getApp()->site->getuserlink(); ?>';
     }
 
-} //class
+} 

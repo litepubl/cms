@@ -268,4 +268,4 @@ class Cron extends Events
         if (Config::$debug) tfiler::log($s, 'cron.log');
     }
 
-} //class
+} 

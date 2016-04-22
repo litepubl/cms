@@ -69,4 +69,4 @@ class tadminusernews {
         $plugin->save();
     }
 
-} //class
+} 

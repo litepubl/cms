@@ -110,4 +110,4 @@ class tpostcatwidget extends tclasswidget {
         return '';
     }
 
-} //class
+} 

@@ -283,4 +283,4 @@ class Rss extends \litepubl\core\Events
         }
     }
 
-} //class
+} 

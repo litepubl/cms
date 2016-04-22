@@ -67,4 +67,4 @@ class tmetatags extends \litepubl\core\Plugin
         return ttemplate::i()->getdescription();
     }
 
-} //class
+} 

@@ -338,4 +338,4 @@ class tfoaf extends titems {
         return sprintf('<foaf:%1$s>%2$s</foaf:%1$s>', $name, static ::escape($value));
     }
 
-} //class
+} 

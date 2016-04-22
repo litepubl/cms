@@ -121,4 +121,4 @@ class tusernews extends \litepubl\core\Plugin
         return $html->h4->successedit;
     }
 
-} //class
+} 

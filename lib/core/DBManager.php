@@ -326,4 +326,4 @@ return  $this->getApp()->db;
         return false;
     }
 
-} //class
+} 

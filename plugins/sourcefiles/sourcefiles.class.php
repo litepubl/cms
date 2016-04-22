@@ -276,4 +276,4 @@ class tsourcefiles extends \litepubl\core\Plugin
         }
     }
 
-} //class
+} 

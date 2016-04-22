@@ -12,7 +12,7 @@ use litepubl\Config;
 
 class Classes extends Items
 {
-use SharedStorageTrait;
+use PoolStorageTrait;
 
     public $namespaces;
     public $kernel;

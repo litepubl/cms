@@ -29,4 +29,4 @@ class ttogglecode extends \litepubl\core\Plugin
         return '/plugins/' . basename(dirname(__file__)) . '/togglecode.min.js';
     }
 
-} //class
+} 

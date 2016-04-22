@@ -199,4 +199,4 @@ class Json extends \litepubl\core\Events
         }
     }
 
-} //class
+} 

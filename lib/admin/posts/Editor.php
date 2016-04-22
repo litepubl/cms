@@ -300,4 +300,4 @@ class Editor extends \litepubl\admin\Menu
         return $admintheme->success($lang->success);
     }
 
-} //class
+} 

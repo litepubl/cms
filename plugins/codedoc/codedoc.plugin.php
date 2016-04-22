@@ -37,4 +37,4 @@ class tcodedocplugin extends \litepubl\core\Plugin
          $this->getApp()->db->table = 'codedoc';
          $this->getApp()->db->delete("id = $id");
     }
-} //class
+} 

@@ -202,4 +202,4 @@ class RegUser extends Form
         return true;
     }
 
-} //class
+} 

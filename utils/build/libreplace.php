@@ -153,6 +153,8 @@ function str_begin($s, $begin) {
 
 function afterFix($s) {
 $s = strtr($s, [
+'SharedStorage' => 'PoolStorage',
+'sharedStorage' => 'poolStorage',
 'Schemas' => 'Schemes',
 'ttheme::clearcache' => 'Base::clearCache',
 'tjsmerger::' => 'Js::',

@@ -508,4 +508,4 @@ class Filter extends \litepubl\core\Events
         return $matches[1] . "<a href=\"mailto:$email\">$email</a>";
     }
 
-} //class
+} 

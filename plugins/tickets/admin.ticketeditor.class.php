@@ -173,4 +173,4 @@ class tticketeditor extends tposteditor {
         $ticket->code = $code;
     }
 
-} //class
+} 

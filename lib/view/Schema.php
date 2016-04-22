@@ -12,7 +12,7 @@ use litepubl\core\Str;
 
 class Schema extends \litepubl\core\Item
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
     public $sidebars;
     protected $themeInstance;
@@ -197,4 +197,4 @@ return false;
         }
     }
 
-} //class
+} 

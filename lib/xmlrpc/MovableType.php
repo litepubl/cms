@@ -144,4 +144,4 @@ class MovableType extends Common
         return true;
     }
 
-} //class
+} 

@@ -11,7 +11,7 @@ namespace litepubl\view;
 
 class AutoVars extends \litepubl\core\Items
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
 public $defaults;
 

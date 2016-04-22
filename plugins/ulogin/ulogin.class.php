@@ -247,4 +247,4 @@ class ulogin extends \litepubl\core\Plugin
         return (float)$phone;
     }
 
-} //class
+} 

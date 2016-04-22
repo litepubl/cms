@@ -6,6 +6,7 @@
 * @link https://github.com/litepubl\cms
 * @version 6.15
 **/
+
 use litepubl\admin\AdminInterface;
 
 return [

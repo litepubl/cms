@@ -58,4 +58,4 @@ class tsmushitplugin extends \litepubl\core\Plugin
         }
     }
 
-} //class
+} 

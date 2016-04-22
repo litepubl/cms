@@ -565,4 +565,4 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         ));
     }
 
-} //class
+} 

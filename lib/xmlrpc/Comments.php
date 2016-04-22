@@ -262,4 +262,4 @@ class Comments extends Common
         );
     }
 
-} //class
+} 

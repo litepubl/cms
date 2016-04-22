@@ -24,7 +24,7 @@ class App
     public  $options;
     public  $paths;
     public  $router;
-    public  $sharedStorage;
+    public  $poolStorage;
     public  $site;
     public  $storage;
 
@@ -75,8 +75,8 @@ $this->cache = new CacheMemcache();
 $this->cache = new CacheFile($this->paths->dir);
         }
 
-         $this->sharedStorage = new SharedStorage();
-        if (! $this->sharedStorage->isInstalled()) {
+         $this->poolStorage = new PoolStorage();
+        if (! $this->poolStorage->isInstalled()) {
             require ( $this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
                     }
@@ -137,7 +137,7 @@ $this->cache = new CacheFile($this->paths->dir);
              $this->logException($e);
         }
 
-$this->sharedStorage->saveModified();
+$this->poolStorage->commit();
          $this->showErrors();
     }
 

@@ -9,7 +9,7 @@
 
 namespace litepubl\core;
 
-class SharedStorage
+class PoolStorage
  {
 use AppTrait;
 
@@ -64,14 +64,14 @@ use AppTrait;
         return false;
     }
 
-    public function saveModified() {
+    public function commit() {
         if (!$this->modified) {
             return false;
         }
 
         $lockfile =  $this->getApp()->paths->data . 'storage.lok';
         if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-            $this->getStorage()->savedata( $this->getApp()->paths->data . 'storage', $this->data);
+            $this->getStorage()->saveData( $this->getApp()->paths->data . 'storage', $this->data);
             $this->modified = false;
             \flock($fh, LOCK_UN);
             \fclose($fh);
@@ -88,7 +88,7 @@ use AppTrait;
     }
 
     public function error($mesg) {
-        tfiler::log($mesg);
+        $this->getApp()->getLogger()->error($mesg);
     }
 
     public function isInstalled() {

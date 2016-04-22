@@ -45,4 +45,4 @@ class tadminextrasidebars implements \litepubl\admin\AdminInterface {
         Base::clearCache();
     }
 
-} //class
+} 

@@ -103,4 +103,4 @@ class DbOptimizer extends Events
         $man->optimize();
     }
 
-} //class
+} 

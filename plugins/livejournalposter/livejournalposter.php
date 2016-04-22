@@ -113,4 +113,4 @@ class tlivejournalposter extends \litepubl\core\Plugin
         return $meta->ljid;
     }
 
-} //class
+} 

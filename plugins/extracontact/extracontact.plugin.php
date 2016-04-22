@@ -40,4 +40,4 @@ class textracontact extends \litepubl\core\Plugin
         $contact->save();
     }
 
-} //class
+} 

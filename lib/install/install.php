@@ -35,7 +35,7 @@ Filer::delete( litepubl::$app->paths->data, true, true);
 require_once (__DIR__ . '/Installer.php');
 $installer = new Installer();
 $installer->run();
-     litepubl::$app->SharedStorage->saveModified();
+     litepubl::$app->PoolStorage->saveModified();
 
     if (!empty( litepubl::$app->options->errorlog)) {
         echo  litepubl::$app->options->errorlog;

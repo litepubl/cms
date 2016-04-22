@@ -391,4 +391,4 @@ class Posts extends \litepubl\core\Items
         ));
     }
 
-} //class
+} 

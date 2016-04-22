@@ -48,4 +48,4 @@ class tmarkdownplugin extends \litepubl\core\Plugin
         $filter->unbind($this);
     }
 
-} //class
+} 

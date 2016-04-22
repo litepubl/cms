@@ -29,4 +29,4 @@ class ttoptext extends \litepubl\core\Plugin
         if ($this->text) $post->filtered = $this->text . $post->filtered;
     }
 
-} //class
+} 

@@ -131,4 +131,4 @@ class Menus extends \litepubl\pages\Menus
         return $this->onexclude($id);
     }
 
-} //class
+} 

@@ -223,4 +223,4 @@ class tregserviceuser extends titems {
         return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
-} //class
+} 

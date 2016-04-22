@@ -13,7 +13,7 @@ use litepubl\core\Str;
 
 class MainView extends \litepubl\core\Events
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
     public $custom;
     public $extrahead;
@@ -311,4 +311,4 @@ return  $this->getApp()->site->name;
         return $s;
     }
 
-} //class
+} 

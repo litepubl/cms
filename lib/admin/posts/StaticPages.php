@@ -93,4 +93,4 @@ $admin = $this->admintheme;
         return $this->admintheme->success(Lang::admin('staticpages')->success);
     }
 
-} //class
+} 

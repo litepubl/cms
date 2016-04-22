@@ -32,4 +32,4 @@ class tclearcache extends \litepubl\core\Plugin
         $schemes->save();
     }
 
-} //class
+} 

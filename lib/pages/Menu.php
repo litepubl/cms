@@ -254,4 +254,4 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
     }
 
-} //class
+} 

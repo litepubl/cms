@@ -253,4 +253,4 @@ class Pinger extends \litepubl\core\Events
         }
     }
 
-} //class
+} 

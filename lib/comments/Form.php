@@ -338,4 +338,4 @@ return $this->helper->geterrorcontent($s);
         return  $this->getApp()->router->redir($link);
     }
 
-} //class
+} 

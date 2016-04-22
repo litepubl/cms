@@ -276,4 +276,4 @@ class Widgets extends \litepubl\admin\Menu
             $schema->save();
         }
 
-} //class
+} 

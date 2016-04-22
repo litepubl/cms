@@ -20,7 +20,7 @@ use litepubl\core\Str;
 
 class Manager extends \litepubl\core\Events
 {
-use \litepubl\core\SharedStorageTrait;
+use \litepubl\core\PoolStorageTrait;
 
     protected function create() {
         parent::create();

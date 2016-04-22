@@ -30,4 +30,4 @@ class tpostcontentplugin extends \litepubl\core\Plugin
         $content.= $this->after;
     }
 
-} //class
+} 

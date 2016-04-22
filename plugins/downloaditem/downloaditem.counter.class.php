@@ -68,4 +68,4 @@ class tdownloaditemcounter extends titems {
     return litepubl::\$router->redir('$url');";
     }
 
-} //class
+} 

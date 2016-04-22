@@ -68,4 +68,4 @@ class tyandexregservice extends tregservice {
         );
     }
 
-} //class
+} 

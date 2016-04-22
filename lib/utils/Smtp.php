@@ -67,4 +67,4 @@ class Smtp extends \litepubl\core\Events
         }
     }
 
-} //class
+} 

@@ -87,4 +87,4 @@ class emailauth extends \litepubl\core\Plugin
         }
     }
 
-} //class
+} 

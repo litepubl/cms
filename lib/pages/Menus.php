@@ -432,4 +432,4 @@ $this->items[$id]['class'] = $newclass;
         $this->save();
     }
 
-} //class
+} 

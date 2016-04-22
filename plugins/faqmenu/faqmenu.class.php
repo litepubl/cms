@@ -78,4 +78,4 @@ class tfaqmenu extends tmenu {
         return sprintf('<ul class="faqlist">%s</ul>', $result);
     }
 
-} //class
+} 
