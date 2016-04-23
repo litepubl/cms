@@ -12,16 +12,9 @@ use litepubl\Config;
 
 class Router extends Items
  {
-    public $adminpanel;
     public $cache_enabled;
-    public $host;
-    public $is404;
-    public $isredir;
     public $item;
     public $model;
-    public $page;
-    public $url;
-    public $uripath;
     public $prefilter;
     protected $close_events;
 
@@ -35,31 +28,15 @@ class Router extends Items
         $this->data['redirdom'] = false;
         $this->addmap('prefilter', array());
 
-        $this->is404 = false;
-        $this->isredir = false;
-        $this->adminpanel = false;
         $this->cache_enabled =  $this->getApp()->options->cache && ! $this->getApp()->options->admincookie;
-        $this->page = 1;
         $this->close_events = array();
     }
 
-    protected function prepareurl($host, $url) {
-        $this->host = $host;
-        $this->page = 1;
-        $this->uripath = array();
-        if ( $this->getApp()->site->q == '?') {
-            $this->url = substr($url, strlen( $this->getApp()->site->subdir));
-        } else {
-            $this->url = $_GET['url'];
-        }
-    }
-
-    public function request($host, $url) {
-        $this->prepareurl($host, $url);
-        $this->adminpanel = Str::begin($this->url, '/admin/') || ($this->url == '/admin');
+    public function request(Request $request)
+ {
         if ($this->redirdom) {
             $parsedurl = parse_url( $this->getApp()->site->url . '/');
-            if ($host != strtolower($parsedurl['host'])) {
+            if ($request->host != strtolower($parsedurl['host'])) {
                 return $this->redir($url);
             }
         }
@@ -73,7 +50,7 @@ class Router extends Items
             $this->dorequest($this->url);
         }
         catch(\Exception $e) {
-             $this->getApp()->options->handexception($e);
+             $this->getApp()->options->logException($e);
         }
 
         // production mode: no debug and enabled buffer

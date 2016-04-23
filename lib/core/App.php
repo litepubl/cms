@@ -11,13 +11,11 @@ namespace litepubl\core;
 use litepubl\config;
 use litepubl\debug\LoggerFactory;
 
-
 class App
  {
     public  $cache;
     public  $classes;
     public  $db;
-    public  $domain;
     public  $logger;
     public  $memcache;
     public  $microtime;
@@ -25,15 +23,12 @@ class App
     public  $paths;
     public  $poolStorage;
 public $request;
-public $response;
     public  $router;
     public  $site;
     public  $storage;
 
     public  function __construct() {
          $this->microtime = microtime(true);
-
-         $this->domain =  $this->getHost();
 }
 
 public function init() {
@@ -98,38 +93,20 @@ $this->cache = new CacheFile($this->paths->dir);
         return $s;
     }
 
-    public  function getHost() {
-        if (config::$host) {
-            return config::$host;
-        }
-
-        $host = isset($_SERVER['HTTP_HOST']) ? \strtolower(\trim($_SERVER['HTTP_HOST'])) : false;
-        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
-            return $m[2];
-        }
-
-        if (config::$dieOnInvalidHost) {
-            die('cant resolve domain name');
-        }
-    }
-
 public function runRequest() {
-$this->request = new Request();
-$this->response = new Response();
-
         if (Config::$debug) {
-$this->response->setNocache();
             error_reporting(-1);
             ini_set('display_errors', 1);
             Header('Cache-Control: no-cache, must-revalidate');
             Header('Pragma: no-cache');
         }
 
-        if (config::$beforeRequest && is_callable(config::$beforeRequest)) {
-            call_user_func_array(config::$beforeRequest, []);
+$this->request = new Request(_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+        if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
+            call_user_func_array(Config::$beforeRequest, []);
         }
 
-        $this->router->request( $this->domain, $_SERVER['REQUEST_URI']);
+        $this->router->request($this->request);
 }
 
     public  function run() {

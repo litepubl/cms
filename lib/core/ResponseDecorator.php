@@ -1,28 +1,36 @@
 <?php
 
 namespace litepubl\core;
-
-//bridge from Litepublisher to PSR7 interfaces
+use Zend\Diactoros\Stream;
 
 class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
 {
 protected $litepublResponse;
-protected $stream;
 
     public function __construct(Response $response)
 {
 $this->litepublResponse = $response;
 }
 
-public function __call($name)
-{
-return $this->litepublResponse->$name();
-}
-
 public function __clone()
 {
 $this->litepublResponse = clone $this->litepublResponse;
 }
+
+    public function getReasonPhrase()
+{
+return $this->litepublResponse->getReasonPhrase();
+}
+
+    public function getStatusCode()
+    {
+        return $this->litepublResponse->status;
+    }
+
+    public function getProtocolVersion()
+    {
+        return $this->litepublResponse->protocol;
+    }
 
     public function withStatus($code, $reasonPhrase = '')
     {

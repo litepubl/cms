@@ -88,24 +88,18 @@ return $result;
 public function redir($url, $status = 301)
  {
 $this->status = $status;
-$this->headers['Location'] = $url;
 
+//check if relative path
+if (!strpos($url, '://')) {
+$url = $this->getApp()->site->url . $url;
 }
 
-//some psr7
+$this->headers['Location'] = $url;
+}
+
     public function getReasonPhrase()
 {
 return $this->phrases[$this->status];
 }
-
-    public function getStatusCode()
-    {
-        return $this->status;
-    }
-
-    public function getProtocolVersion()
-    {
-        return $this->protocol;
-    }
 
 }

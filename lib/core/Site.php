@@ -67,7 +67,6 @@ use PoolStorageTrait;
  return $this->data['url'];
 }
 
-
         return 'http://' .  $this->getApp()->domain;
     }
 
@@ -75,7 +74,6 @@ use PoolStorageTrait;
         if ($this->fixedurl) {
  return $this->data['files'];
 }
-
 
         return 'http://' .  $this->getApp()->domain;
     }
