@@ -67,7 +67,7 @@ use PoolStorageTrait;
  return $this->data['url'];
 }
 
-        return 'http://' .  $this->getApp()->domain;
+        return 'http://' .  $this->getApp()->context->request->host;
     }
 
     public function getFiles() {
@@ -75,7 +75,7 @@ use PoolStorageTrait;
  return $this->data['files'];
 }
 
-        return 'http://' .  $this->getApp()->domain;
+        return 'http://' .  $this->getApp()->context->request->host;
     }
 
     public function setUrl($url) {
@@ -87,10 +87,6 @@ use PoolStorageTrait;
             $this->subdir = substr($url, $i);
         }
         $this->save();
-    }
-
-    public function getDomain() {
-        return  $this->getApp()->domain;
     }
 
     public function getUserlink() {

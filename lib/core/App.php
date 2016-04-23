@@ -113,7 +113,7 @@ new Response()
 
         if ($this->router->request($this->context)) {
 $this->controller = new Controller();
-$this->controller->render($this->context);
+$this->controller->request($this->context);
 }
 }
 

@@ -34,7 +34,7 @@ class Router extends Items
 {
 $app = $this->getApp();
 
-        if ($this->redirdom) {
+        if ($this->redirdom && $app->site->fixedurl) {
             $parsedUrl = parse_url( $app->site->url . '/');
             if ($context->request->host != strtolower($parsedUrl['host'])) {
 $context->response->redir($app->site->url . $context->request->url);
@@ -42,16 +42,14 @@ return true;
             }
         }
 
-        $this->beforerequest();
-        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
-            ob_start();
+        $this->beforerequest($context);
+        $context->itemRoute = $this->find_item($context->request->url, $context->response);
+        if ($this->isredir) {
+            return;
         }
 
-        try {
-            $this->dorequest($this->url);
-        }
-        catch(\Exception $e) {
-             $this->getApp()->options->logException($e);
+        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
+            ob_start();
         }
 
         // production mode: no debug and enabled buffer
@@ -86,20 +84,6 @@ return true;
         header('Connection: close');
         header('Content-Length: ' . $len);
         header('Content-Encoding: none');
-    }
-
-    protected function dorequest($url) {
-        $this->item = $this->find_item($url);
-
-        if ($this->isredir) {
-            return;
-        }
-
-        if ($this->item) {
-            return $this->printcontent($this->item);
-        } else {
-            $this->notfound404();
-        }
     }
 
     public function getIdurl($id) {
