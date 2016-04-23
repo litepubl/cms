@@ -108,16 +108,19 @@ $value = array_merge(explode(',', $old), explode(',', $value));
     }
 
 protected function validateValue($value) {
-        if (!is_string($value) || !is_array($value) || ! $this->arrayContainsOnlyStrings($value)) {
-            throw new InvalidArgumentException(
+        if (!is_array($value) ||
+!array_reduce($value, function($result, $v) {
+        if (! is_string($v)) {
+            return false;
+        }
+return $result;
+}, true)) {
+            throw new \InvalidArgumentException(
 'Invalid header value; must be a string or array of strings'
             );
         }
 
-        HeaderSecurity::assertValidName($header);
-        self::assertValidHeaderValue($value);
-
-return implode(',', $value);
+return is_string($value) ? $value: implode(',', $value);
 }
 
     public function withoutHeader($name)
