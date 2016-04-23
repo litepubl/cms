@@ -102,18 +102,39 @@ public function process() {
             Header('Pragma: no-cache');
         }
 
-$this->context = new Context(
+try {
+$context = new Context(
 new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']),
 new Response()
 );
+
+$this->context = $context;
+$controller = new Controller();
+$this->controller = $controller;
+
+if ($controller->ob_cacheEnabled) {
+            ob_start();
+}
 
         if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
             call_user_func_array(Config::$beforeRequest, [$this]);
         }
 
-        if ($this->router->request($this->context)) {
-$this->controller = new Controller();
-$this->controller->request($this->context);
+if (!$controller->cached($context) &&
+$this->router->request($context)) {
+$controller->request($context);
+}
+
+        // production mode: no debug and enabled buffer
+if ($controller->ob_cacheEnabled) {
+$this->flushLogg();
+            while (@ob_end_flush());
+            flush();
+}
+
+$this->router->close();
+} catch (\Exception $e) {
+$this->logException($e);
 }
 }
 

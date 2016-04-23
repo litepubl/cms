@@ -43,7 +43,10 @@ $this->setString($filename, $str);
 public function includePhp($filename) {
 if ($str = $this->getString($filename)) {
 eval('?>'. $str);
+return true;
 }
+
+return false;
 }
 
     public function exists($filename) {

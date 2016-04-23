@@ -4,6 +4,17 @@ namespace litepubl\core;
 
 class Controller
 {
+use AppTrait;
+
+public $cacheEnabled;
+public $ob_cacheEnabled;
+
+public function __construct()
+{
+$options = $this->getApp()->options;
+$this->cacheEnabled = $options->cache && ! $options->admincookie;
+        $this->ob_cacheEnabled = !Config::$debug &&  $options->ob_cache;
+}
 
 public function request(Context $context)
 {
@@ -16,7 +27,24 @@ $response->send();
 $response->status = 404;
 }
 
+}
 
+public function cached(Context $context)
+{
+if (!$this->cacheEnabled) {
+return false;
+}
+
+$filename = $this->getCacheFileName($context);
+return $this->getApp()->cache->includePhp($filename);
+}
+
+public function getCacheFileName(Context $context)
+{
+if (!$context->itemRoute) {
+return md5($context->reqest->url);
+} else {
+}
 }
 
 }

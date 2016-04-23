@@ -6,6 +6,11 @@ class Response
 {
 use AppTrait;
 
+public $body;
+public $cache;
+public $headers;
+public $protocol;
+public $status;
     protected $phrases = [
         200 => 'OK',
         206 => 'Partial Content',
@@ -21,12 +26,6 @@ use AppTrait;
         500 => 'Internal Server Error',
         503 => 'Service Unavailable',
 ];
-
-public $body;
-public $cache;
-public $headers;
-public $protocol;
-public $status;
 
 public function __construct()
 {
@@ -98,6 +97,19 @@ $url = $this->getApp()->site->url . $url;
 
 $this->headers['Location'] = $url;
 }
+
+    public function closeConnection()
+ {
+        ignore_user_abort(true);
+        $len = ob_get_length();
+        $this->headers['Connection'] = 'close';
+        $this->headers['Content-Length'] = $len;
+        $this->headers['Content-Encoding'] = 'none';
+
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
+    }
 
     public function getReasonPhrase()
 {

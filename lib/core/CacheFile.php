@@ -83,7 +83,10 @@ eval(str_replace('<?php', '', file_get_contents($this->getDir() . $filename)));
         } else {
 include ($this->getDir() . $filename);
 }
+return true;
 }
+
+return false;
 }
 
 }

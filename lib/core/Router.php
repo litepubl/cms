@@ -12,7 +12,6 @@ use litepubl\Config;
 
 class Router extends Items
  {
-    public $cache_enabled;
     public $prefilter;
     protected $close_events;
 
@@ -26,7 +25,6 @@ class Router extends Items
         $this->data['redirdom'] = false;
         $this->addmap('prefilter', array());
 
-        $this->cache_enabled =  $this->getApp()->options->cache && ! $this->getApp()->options->admincookie;
         $this->close_events = array();
     }
 
@@ -44,31 +42,13 @@ return true;
 
         $this->beforerequest($context);
         $context->itemRoute = $this->find_item($context->request->url, $context->response);
-        if ($this->isredir) {
-            return;
-        }
-
-        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
-            ob_start();
-        }
-
-        // production mode: no debug and enabled buffer
-        if (!Config::$debug &&  $this->getApp()->options->ob_cache) {
-             $this->getApp()->options->showerrors();
-             $this->getApp()->options->errorlog = '';
 
             $afterclose = $this->isredir || count($this->close_events);
             if ($afterclose) {
                 $this->close_connection();
             }
 
-            while (@ob_end_flush());
-            flush();
-
             if ($afterclose) {
-                if (function_exists('fastcgi_finish_request')) {
-                    fastcgi_finish_request();
-                }
 
                 ob_start();
             }
@@ -76,14 +56,6 @@ return true;
 
         $this->afterrequest($this->url);
         $this->close();
-    }
-
-    public function close_connection() {
-        ignore_user_abort(true);
-        $len = ob_get_length();
-        header('Connection: close');
-        header('Content-Length: ' . $len);
-        header('Content-Encoding: none');
     }
 
     public function getIdurl($id) {
