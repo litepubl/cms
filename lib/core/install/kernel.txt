@@ -2,6 +2,7 @@
 !DBOptimizer.php
 !Plugins.php
 !Pool.php
+!ResponseDecorator.php
 !Session.php
 !SingleItems.php
 !StorageJson.php

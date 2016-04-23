@@ -60,8 +60,11 @@ class Ftp extends Remote
 
     private function getTempfilehandle() {
         if (!$this->tempfilehandle) {
-            $this->tempfilehandle = tmpfile();
+            //$this->tempfilehandle = tmpfile();
+$max = 6 * 1024 * 1024;
+$this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         }
+
         return $this->tempfilehandle;
     }
 

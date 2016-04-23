@@ -4,9 +4,13 @@ namespace litepubl\core;
 
 class Response
 {
-    private $phrases = [
+use AppTrait;
+
+    protected $phrases = [
         200 => 'OK',
-        301 => 'Moved Permanently',        206 => 'Partial Content',
+        206 => 'Partial Content',
+        301 => 'Moved Permanently',
+        302 => 'Found',
         304 => 'Not Modified',
         307 => 'Temporary Redirect',
         400 => 'Bad Request',
@@ -37,7 +41,7 @@ $this->headers = [
 ];
 }
 
-public function setCache($mode)
+public function setCacheHeaders($mode)
 {
 if ($mode) {
 unset($this->headers['Cache-Control']);
@@ -48,20 +52,60 @@ $this->headers['Pragma'] = 'no-cache';
 }
 }
 
-
-
 public function send() {
+if (!isset($this->phrases]$this->status])) {
+$this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
+}
+
 header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
 
+$this->setCacheHeaders($this->cache);
 foreach ($this->headers as $k => $v) {
 header(sprintf('%s: %s', $k, $v));
 }
 
+if ($this->body) {
 echo $this->body;
 }
+}
 
-public function redir($url)
+public function __tostring()
  {
+$headers =sprintf('header(\'HTTP/%s %s %s\', true, %s);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status));
+
+foreach ($this->headers as $k => $v) {
+$headers .= sprintf('header(\'%s: %s\');', $k, $v);
+}
+
+$result = sprintf('<?php %s ?>', $headers);
+if ($this->body) {
+$result .= $body;
+}
+
+return $result;
+}
+
+public function redir($url, $status = 301)
+ {
+$this->status = $status;
 $this->headers['Location'] = $url;
-$this->status = 301;
+
+}
+
+//some psr7
+    public function getReasonPhrase()
+{
+return $this->phrases[$this->status];
+}
+
+    public function getStatusCode()
+    {
+        return $this->status;
+    }
+
+    public function getProtocolVersion()
+    {
+        return $this->protocol;
+    }
+
 }
