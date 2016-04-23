@@ -41,8 +41,11 @@ $host = \strtolower(\trim($host));
             die('cant resolve domain name');
         }
 
-//default by options
-return $this->getApp()->site->domain;
+return false;
     }
+
+public function getInput() {
+return file_get_contents('php://input');
+}
 
 }

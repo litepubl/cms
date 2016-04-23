@@ -13,8 +13,6 @@ use litepubl\Config;
 class Router extends Items
  {
     public $cache_enabled;
-    public $item;
-    public $model;
     public $prefilter;
     protected $close_events;
 
@@ -32,12 +30,15 @@ class Router extends Items
         $this->close_events = array();
     }
 
-    public function request(Request $request)
- {
+    public function request(Context $context)
+{
+$app = $this->getApp();
+
         if ($this->redirdom) {
-            $parsedurl = parse_url( $this->getApp()->site->url . '/');
-            if ($request->host != strtolower($parsedurl['host'])) {
-                return $this->redir($url);
+            $parsedUrl = parse_url( $app->site->url . '/');
+            if ($context->request->host != strtolower($parsedUrl['host'])) {
+$context->response->redir($app->site->url . $context->request->url);
+return true;
             }
         }
 

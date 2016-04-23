@@ -64,8 +64,10 @@ foreach ($this->headers as $k => $v) {
 header(sprintf('%s: %s', $k, $v));
 }
 
-if ($this->body) {
+if (is_string($this->body)) {
 echo $this->body;
+} elseif (is_callable($this->body)) {
+call_user_func_array($this->body, [$this]);
 }
 }
 

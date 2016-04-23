@@ -15,6 +15,8 @@ class App
  {
     public  $cache;
     public  $classes;
+public $controller;
+public $context;
     public  $db;
     public  $logger;
     public  $memcache;
@@ -22,7 +24,6 @@ class App
     public  $options;
     public  $paths;
     public  $poolStorage;
-public $request;
     public  $router;
     public  $site;
     public  $storage;
@@ -93,7 +94,7 @@ $this->cache = new CacheFile($this->paths->dir);
         return $s;
     }
 
-public function runRequest() {
+public function process() {
         if (Config::$debug) {
             error_reporting(-1);
             ini_set('display_errors', 1);
@@ -101,19 +102,26 @@ public function runRequest() {
             Header('Pragma: no-cache');
         }
 
-$this->request = new Request(_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
+$this->context = new Context(
+new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']),
+new Response()
+);
+
         if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
-            call_user_func_array(Config::$beforeRequest, []);
+            call_user_func_array(Config::$beforeRequest, [$this]);
         }
 
-        $this->router->request($this->request);
+        if ($this->router->request($this->context)) {
+$this->controller = new Controller();
+$this->controller->render($this->context);
+}
 }
 
     public  function run() {
         try {
              $this->init();
             if (!config::$ignoreRequest) {
-$this->runRequest();
+$this->process();
         }
         catch(\Exception $e) {
              $this->logException($e);

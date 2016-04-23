@@ -9,9 +9,8 @@
 
 namespace litepubl\view;
 
-interface ViewInterface
+interface ViewInterface extends \litepubl\core\ResponsiveInterface
  {
-    public function request($arg);
     public function getTitle();
     public function getKeywords();
     public function getDescription();
