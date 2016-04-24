@@ -2,6 +2,8 @@
 
 namespace litepubl\core;
 use litepubl\pages\Redirector;
+use litepubl\pages\Notfound404;
+use litepubl\pages\Forbidden;
 
 class Controller
 {
@@ -17,15 +19,16 @@ $this->cacheEnabled = $options->cache && ! $options->admincookie;
 
 public function request(Context $context)
 {
-if ($context->itemRoute) {
 if ($this->cached($context)) {
 return;
 }
 
+if ($context->itemRoute) {
 if (class_exists($context->itemRoute['class'])) {
 $context->model = $this->getModel($context->itemRoute['class'], $context->itemRoute['arg']);
 $this->render($context);
 } else {
+$this->getApp()->getLogger()->warning('Class for requested item not found', $context->itemRoute);
 $this->notfound($context);
 }
 } elseif ($context->model) {
@@ -33,11 +36,7 @@ $this->render($context);
 } elseif ($context->response->body) {
 $context->response->send();
 } else {
-} elseif($context->response->status == 200) {
-$context->response->status = 404;
-}
-
-$this->renderStatus($context);
+$this->nodfound($context);
 }
 }
 
@@ -54,8 +53,16 @@ return $this->getApp()->cache->includePhp($filename);
 public function getCacheFileName(Context $context)
 {
 if (!$context->itemRoute) {
-return md5($context->reqest->url);
+return md5($context->reqest->url) .'.php';
 } else {
+        switch ($context->itemRoute['type']) {
+            case 'usernormal':
+            case 'userget':
+                return sprintf('%s-%d.php', md5($context->request->url), $this->getApp()->options->user);
+
+            default:
+                return md5($context->request->url) . '.php';
+        }
 }
 }
 
@@ -66,7 +73,7 @@ return $class::i($arg);
 }else {
 return $this->getApp()->classes->getInstance($class);
 }
-} else {
+}
 
 public function notfound(Context $context)
 {
@@ -82,6 +89,11 @@ if ($response->status == 200) {
 $response->status = 404;
 }
 
+switch ($response->status) {
+case 404:
 
+case 403:
 
+default:
+}
 }

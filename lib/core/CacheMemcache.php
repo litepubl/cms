@@ -11,24 +11,20 @@ namespace litepubl\core;
 
 class CacheMemcache extends BaseCache
 {
-    public $memcache;
-    public $lifetime;
-    public $prefix;
-    public $revision;
-    public $revisionKey;
-public $items;
+    protected$memcache;
+   protected$prefix;
+    protected $revision;
+    protected $revisionKey;
 
-    public function __construct() {
-        $this->memcache =  $this->getApp()->memcache;
-        $this->lifetime = 3600;
-        $this->prefix =  $this->getApp()->domain . ':cache:';
+    public function __construct($memcache, $lifetime, $prefix)
+ {
+        $this->memcache =  $memcache;
+        $this->lifetime = $lifetime;
+        $this->prefix =  $prefix . ':cache:';
         $this->revision = 0;
         $this->revisionKey = 'cache_revision';
 $this->items = [];
-
-        if ($this->memcache) {
             $this->getRevision();
-        }
     }
 
     public function getPrefix() {

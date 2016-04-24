@@ -54,6 +54,7 @@ public function init() {
          $this->db = DB::i();
          $this->router = Router::i();
 $this->onClose = new Callback();
+$this->createCache();
     }
 
     public  function createStorage() {
@@ -65,13 +66,10 @@ $this->onClose = new Callback();
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
              $this->storage = new $classname();
-$this->cache = new CacheFile($this->paths->cache);
         } else if ( $this->memcache) {
              $this->storage = new StorageMemcache();
-$this->cache = new CacheMemcache();
         } else {
              $this->storage = new Storage();
-$this->cache = new CacheFile($this->paths->dir);
         }
 
          $this->poolStorage = new PoolStorage();
@@ -80,6 +78,15 @@ $this->cache = new CacheFile($this->paths->dir);
             //exit() in lib/install/install.php
                     }
     }
+
+public function createCache()
+{
+if ($this->memcache) {
+$this->cache = new CacheMemcache($this->memcache, $this->options->expiredcache, $this->paths->home);
+} else {
+$this->cache = new CacheFile($this->paths->cache, $this->options->expiredcache, $this->options->filetime_offset);
+}
+}
 
     public  function cachefile($filename) {
         if (! $this->memcache) {

@@ -11,7 +11,8 @@ namespace litepubl\core;
 
 class BaseCache
 {
-protected $items;
+protected $items = [];
+protected $lifetime = 3600;
 
     abstract public function getString($filename);
     abstract public function setString($filename, $str);
@@ -51,6 +52,11 @@ return false;
 
     public function exists($filename) {
 return array_key_exists($this->items);
+}
+
+public function setLifetime($value)
+{
+$this->lifetime = $value;
 }
 
 }

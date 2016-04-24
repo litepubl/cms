@@ -11,10 +11,14 @@ namespace litepubl\core;
 
 class CacheFile extends BaseCache
 {
-public $dir;
+protected $dir;
+protected $timeOffset;
 
-public function __construct($dir) {
+public function __construct($dir, $lifetime, $timeOffset)
+ {
 $this->dir = $dir;
+$this->timeOffset = $timeOffset;
+$this->lifetime = $lifetime - $timeOffset;
 $this->items = [];
 }
 
@@ -35,7 +39,7 @@ return $this->items[$filename];
 }
 
         $fn = $this->getdir() . $filename;
-        if (file_exists($fn)) {
+        if (file_exists($fn) && (filemtime + $this->lifetime >= time())) {
             return $this->items[$filename] = file_get_contents($fn);
         }
 
@@ -51,8 +55,14 @@ unset($this->items[$filename]);
     }
 
     public function exists($filename) {
-        return array_key_exists($filename, $this->items) || file_exists($this->getdir() . $filename);
+        return array_key_exists($filename, $this->items) ||
+( file_exists($this->getdir() . $filename) && (filetime($this->getDir() . $filename) + $this->lifetime >= time()));
     }
+
+public function setLifetime($value)
+{
+$this->lifetime = $value - $this->timeOffset;
+}
 
     public function clear() {
 $this->items = [];
