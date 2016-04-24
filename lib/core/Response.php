@@ -16,6 +16,7 @@ public $status;
         206 => 'Partial Content',
         301 => 'Moved Permanently',
         302 => 'Found',
+        303 => 'See Other',
         304 => 'Not Modified',
         307 => 'Temporary Redirect',
         400 => 'Bad Request',
@@ -98,13 +99,18 @@ $url = $this->getApp()->site->url . $url;
 $this->headers['Location'] = $url;
 }
 
+public function isRedir()
+{
+return in_array($this->status, [301, 302, 303, 307]);
+}
+
     public function closeConnection()
  {
         ignore_user_abort(true);
         $len = ob_get_length();
-header(['Connection'] = 'close';
-        $this->headers['Content-Length'] = $len;
-        $this->headers['Content-Encoding'] = 'none';
+        header('Connection: close');
+        header('Content-Length: ' . $len);
+        header('Content-Encoding: none');
 
                 if (function_exists('fastcgi_finish_request')) {
                     fastcgi_finish_request();
