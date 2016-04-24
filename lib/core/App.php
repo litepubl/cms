@@ -21,6 +21,7 @@ public $context;
     public  $logger;
     public  $memcache;
     public  $microtime;
+public $onClose;
     public  $options;
     public  $paths;
     public  $poolStorage;
@@ -52,7 +53,7 @@ public function init() {
          $this->site = Site::i();
          $this->db = DB::i();
          $this->router = Router::i();
-$this->router->cache = $this->cache;
+$this->onClose = new Callback();
     }
 
     public  function createStorage() {
@@ -112,7 +113,7 @@ $this->context = $context;
 $controller = new Controller();
 $this->controller = $controller;
 
-if ($controller->ob_cacheEnabled) {
+if ($controller->obEnabled) {
             ob_start();
 }
 
@@ -126,12 +127,13 @@ $controller->request($context);
 }
 
         // production mode: no debug and enabled buffer
-if ($controller->ob_cacheEnabled) {
+if ($controller->obEnabled) {
 $this->flushLogg();
             while (@ob_end_flush());
             flush();
 }
 
+$this->onclose->fire();
 $this->router->close();
 } catch (\Exception $e) {
 $this->logException($e);

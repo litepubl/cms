@@ -7,13 +7,13 @@ class Controller
 use AppTrait;
 
 public $cacheEnabled;
-public $ob_cacheEnabled;
+public $obEnabled;
 
 public function __construct()
 {
 $options = $this->getApp()->options;
 $this->cacheEnabled = $options->cache && ! $options->admincookie;
-        $this->ob_cacheEnabled = !Config::$debug &&  $options->ob_cache;
+        $this->obEnabled = !Config::$debug &&  $options->ob_cache;
 }
 
 public function request(Context $context)

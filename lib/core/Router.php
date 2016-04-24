@@ -49,7 +49,6 @@ return true;
             }
 
             if ($afterclose) {
-
                 ob_start();
             }
         }

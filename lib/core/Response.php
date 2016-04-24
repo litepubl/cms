@@ -102,7 +102,7 @@ $this->headers['Location'] = $url;
  {
         ignore_user_abort(true);
         $len = ob_get_length();
-        $this->headers['Connection'] = 'close';
+header(['Connection'] = 'close';
         $this->headers['Content-Length'] = $len;
         $this->headers['Content-Encoding'] = 'none';
 
