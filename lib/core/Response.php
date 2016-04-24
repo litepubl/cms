@@ -87,6 +87,17 @@ $result .= $body;
 return $result;
 }
 
+public function setXml()
+{
+        $this->headers['Content-Type'] = 'text/xml; charset=utf-8';
+        //echo '<?xml version="1.0" encoding="utf-8" ?>';
+}
+
+public function setJson()
+{
+        $this->headers['Content-Type'] = 'application/json';
+}
+
 public function redir($url, $status = 301)
  {
 $this->status = $status;
@@ -106,15 +117,10 @@ return in_array($this->status, [301, 302, 303, 307]);
 
     public function closeConnection()
  {
-        ignore_user_abort(true);
         $len = ob_get_length();
         header('Connection: close');
         header('Content-Length: ' . $len);
         header('Content-Encoding: none');
-
-                if (function_exists('fastcgi_finish_request')) {
-                    fastcgi_finish_request();
-                }
     }
 
     public function getReasonPhrase()

@@ -16,4 +16,18 @@ $this->request = $request;
 $this->response = $response;
 }
 
+    public function getNextpage() {
+        $url = $this->itemRoute['url'];
+        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
+    }
+
+    public function getPrevpage() {
+        $url = $this->itemRoute['url'];
+        if ($this->page <= 2) {
+            return url;
+        }
+
+        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
+    }
+
 }

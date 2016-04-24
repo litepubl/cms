@@ -1,32 +1,44 @@
 <?php
 
 namespace litepubl\core;
+use litepubl\pages\Redirector;
 
 class Controller
 {
 use AppTrait;
 
 public $cacheEnabled;
-public $obEnabled;
 
 public function __construct()
 {
 $options = $this->getApp()->options;
 $this->cacheEnabled = $options->cache && ! $options->admincookie;
-        $this->obEnabled = !Config::$debug &&  $options->ob_cache;
 }
 
 public function request(Context $context)
 {
-$response = $context->response;
-if ($response->status != 200) {
-$response->send();
-        } elseif ($context->itemRoute) {
-            return $this->render($context);
-        } else {
-$response->status = 404;
+if ($context->itemRoute) {
+if ($this->cached($context)) {
+return;
 }
 
+if (class_exists($context->itemRoute['class'])) {
+$context->model = $this->getModel($context->itemRoute['class'], $context->itemRoute['arg']);
+$this->render($context);
+} else {
+$this->notfound($context);
+}
+} elseif ($context->model) {
+$this->render($context);
+} elseif ($context->response->body) {
+$context->response->send();
+} else {
+} elseif($context->response->status == 200) {
+$context->response->status = 404;
+}
+
+$this->renderStatus($context);
+}
 }
 
 public function cached(Context $context)
@@ -46,5 +58,30 @@ return md5($context->reqest->url);
 } else {
 }
 }
+
+public function getModel($class, $arg)
+{
+if (is_a($class, '\litepubl\core\Item')) {
+return $class::i($arg);
+}else {
+return $this->getApp()->classes->getInstance($class);
+}
+} else {
+
+public function notfound(Context $context)
+{
+$response = $context->response;
+if (!$response->isRedir()) {
+        $redir = Redirector::i();
+        if ($url = $redir->get($context->request->url)) {
+$response->redir($url);
+}
+}
+
+if ($response->status == 200) {
+$response->status = 404;
+}
+
+
 
 }

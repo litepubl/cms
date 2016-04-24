@@ -113,7 +113,8 @@ $this->context = $context;
 $controller = new Controller();
 $this->controller = $controller;
 
-if ($controller->obEnabled) {
+        $obEnabled = !Config::$debug &&  $this->options->ob_cache;
+if ($obEnabled) {
             ob_start();
 }
 
@@ -121,20 +122,36 @@ if ($controller->obEnabled) {
             call_user_func_array(Config::$beforeRequest, [$this]);
         }
 
-if (!$controller->cached($context) &&
-$this->router->request($context)) {
+if (!$controller->cached($context)) }
+$this->router->request($context);
 $controller->request($context);
+$this->router->afterrequest($context);
 }
 
-        // production mode: no debug and enabled buffer
-if ($controller->obEnabled) {
-$this->flushLogg();
+if ($this->logToEcho) {
+echo $this->logToEcho;
+$this->logToEcho = '';
+}
+
+if ($obEnabled) {	
+if ($this->onClose->getCount()) {
+        ignore_user_abort(true);
+$context->response->closeConnection();
             while (@ob_end_flush());
             flush();
+
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
+
+//prevent any output
+ob_start();
+} else {
+            while (@ob_end_flush());
+}
 }
 
 $this->onclose->fire();
-$this->router->close();
 } catch (\Exception $e) {
 $this->logException($e);
 }
