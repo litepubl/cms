@@ -86,12 +86,13 @@ $this->items = [];
     }
 
 public function includePhp($filename) {
-if (file_exists($this->getDir() . $filename)) {
+$fn = $this->getDir() . $filename;
+if (file_exists($fn) && (filetime($fn) + $this->lifetime >= time())) {
         if (defined('HHVM_VERSION')) {
             // XXX: workaround for https://github.com/facebook/hhvm/issues/1447
-eval(str_replace('<?php', '', file_get_contents($this->getDir() . $filename)));
+eval('?>' . file_get_contents($fn));
         } else {
-include ($this->getDir() . $filename);
+include $fn;
 }
 return true;
 }

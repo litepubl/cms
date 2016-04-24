@@ -134,13 +134,13 @@ class Filer {
         }
     }
 
-    public static function get_filetime_offset() {
+    public static function getFiletimeOffset() {
         $filename =  litepubl::$app->paths->data . md5(microtime()) . '.tmp';
         $t = time();
         touch($filename, $t, $t);
         clearstatcache();
         $t2 = filemtime($filename);
-        @unlink($filename);
+        unlink($filename);
         return $t2 - $t;
     }
 

@@ -71,6 +71,11 @@ call_user_func_array($this->body, [$this]);
 }
 }
 
+public function getString()
+{
+return $this->__tostring(0;
+}
+
 public function __tostring()
  {
 $headers =sprintf('header(\'HTTP/%s %s %s\', true, %s);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status));

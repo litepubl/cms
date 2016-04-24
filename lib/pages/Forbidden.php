@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 
 class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInterface
@@ -20,8 +21,9 @@ use \litepubl\view\EmptyViewTrait;
         $this->data['text'] = '';
     }
 
-    public function httpheader() {
-        return '<?php Header(\'HTTP/1.0 403 Forbidden\', true, 403); ?>' . \litepubl\core\Router::htmlheader(false);
+    public function request(Context $context)
+{
+        $context->response->status = 403;
     }
 
 public function gettitle() {

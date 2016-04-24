@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
 use litepubl\view\Filter;
 use litepubl\view\Schema;
 
@@ -179,14 +180,13 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     //ViewInterface
-    public function request($id) {
-        parent::request($id);
+    public function request(Context $context) {
+        parent::request($context);
         if ($this->status == 'draft') {
- return 404;
-}
-
-
+$context->response->status = 404;
+} else {
         $this->doProcessForm();
+}
     }
 
     protected function doProcessForm() {

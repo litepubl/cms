@@ -12,6 +12,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Theme;
+use litepubl\utils\Filer;
 
 class Options extends \litepubl\admin\Menu
 {
@@ -262,10 +263,10 @@ class Options extends \litepubl\admin\Menu
                     $options->admincache = isset($admincache);
                     if (!empty($expiredcache)) {
                         $options->expiredcache = (int)$expiredcache;
+$options->filetime_offset = Filer::getFiletimeOffset();
                     }
 
                     $options->ob_cache = isset($ob_cache);
-                    $options->compress = isset($compress);
                     $options->commentspool = isset($commentspool);
                     $options->unlock();
                 }

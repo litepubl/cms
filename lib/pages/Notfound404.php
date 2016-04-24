@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\utils\Mailer;
@@ -23,8 +24,9 @@ use \litepubl\view\EmptyViewTrait;
         $this->data['notify'] = false;
     }
 
-    public function httpheader() {
-        return "<?php Header( 'HTTP/1.0 404 Not Found'); ?>" . \litepubl\core\Router::htmlheader(false);
+    public function request(Context $context)
+{
+$context->response->status = 404;
     }
 
 public function gettitle() {

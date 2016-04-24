@@ -8,8 +8,9 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
 
-class RobotsTxt extends \litepubl\core\Items
+class RobotsTxt extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
  {
 
     public function create() {
@@ -41,12 +42,11 @@ class RobotsTxt extends \litepubl\core\Items
         $this->save();
     }
 
-    public function request($arg) {
-        $s = "<?php
-    @header('Content-Type: text/plain');
-    ?>";
-        $s.= $this->text;
-        return $s;
+    public function request(Context $context)
+{
+$response = $context->response;
+$response->headers['Content-Type'] = 'text/plain';
+$response->body = $this->text;
     }
 
 } 

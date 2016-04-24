@@ -93,8 +93,6 @@ class Item extends Data
             if (!$this->load()) {
  return 404;
 }
-
-
         }
     }
 

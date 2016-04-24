@@ -1,6 +1,7 @@
 <?php
 
 namespace litepubl\core;
+use litepubl\view\MainView;
 use litepubl\pages\Redirector;
 use litepubl\pages\Notfound404;
 use litepubl\pages\Forbidden;
@@ -9,12 +10,12 @@ class Controller
 {
 use AppTrait;
 
-public $cacheEnabled;
+public $cache;
 
 public function __construct()
 {
 $options = $this->getApp()->options;
-$this->cacheEnabled = $options->cache && ! $options->admincookie;
+$this->cache = $options->cache && ! $options->admincookie;
 }
 
 public function request(Context $context)
@@ -42,7 +43,7 @@ $this->nodfound($context);
 
 public function cached(Context $context)
 {
-if (!$this->cacheEnabled) {
+if (!$this->cache) {
 return false;
 }
 
@@ -89,11 +90,64 @@ if ($response->status == 200) {
 $response->status = 404;
 }
 
+$cache = $this->getApp()->cache;
 switch ($response->status) {
 case 404:
-
 case 403:
+if ($this->cache) {
+//double cache
+$filename = $response->status . '.php';
+if ($content = $cache->getString($filename)) {
+eval('?>' . $content);
+if ($response->cache) {
+$cache->savePhp($this->getCacheFileName($context), $content);
+}
+
+return;
+
+}
+}
+
+$instance  = $response->code == 404 ? Notfound::i() : Forbidden::i();
+$newContext = new Context($context->request, $context->response);
+$newContext->model = $instance;
+$instance->request($newContext);
+MainView::i()->render($newContext);
+$newContext->response->send();
+
+if ($this->cache) {
+$content = $newContext->response->getString();
+$cache->savePhp($filename, $content);
+if ($response->cache) {
+$cache->savePhp($this->getCacheFileName($context), $content);
+}
+}
+break;
 
 default:
+$response->send();
+if ($this->cache && $response->cache) {
+$cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
+}
+}
+
+public function render(Context $context)
+{
+if (!($context->model instanceof ResponsiveInterface)) {
+trow new \RuntimeException('Model not implemented ResponsiveInterface');
+}
+
+$context->model->request($context);
+$response = $context->response;
+if (!$response->body && $response->status == 200) {
+MainView::i()->render($context);
+}
+
+$response->send();
+if ($this->cache && $response->cache) {
+$this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
+}
+}
+
 }
