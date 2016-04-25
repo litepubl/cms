@@ -49,8 +49,19 @@ $host = \strtolower(\trim($host));
 return false;
     }
 
-public function getInput() {
+public function getInput()
+ {
 return file_get_contents('php://input');
+}
+
+public function getGet()
+{
+return $_GET;
+}
+
+public function getPost()
+{
+return $_POST;
 }
 
 }

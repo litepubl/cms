@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl\perms;
+    use litepubl\core\Context;
 use litepubl\post\Files as PostFiles;
 
-class Files extends \litepubl\core\Events
+class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $id;
     public $item;
@@ -49,35 +50,35 @@ return $this->item[$name];
 }
     }
 
-    public function request($id) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
+$response->cache = false;
+$id = (int) $context->itemRoute['arg'];
         $files = PostFiles::i();
         if (!$files->itemexists($id)) {
-return 404;
+$response->status = 404;
+return;
 }
 
         $item = $files->getitem($id);
         $filename = '/files/' . $item['filename'];
         if ((int)$item['idperm'] == 0) {
             if ($filename ==  $this->getApp()->router->url) {
-                header('HTTP/1.1 500 Internal Server Error', true, 500);
-                exit();
-            }
+$response->status = 500;
+            } else {
+$response->redir($filename);
+}
 
-            return  $this->getApp()->router->redir($filename);
+return;
         }
 
         $this->id = $id;
         $this->item = $item;
 
-        $result = '<?php
-    Header(\'Cache-Control: no-cache, must-revalidate\');
-    Header(\'Pragma: no-cache\');
-    ?>';
-
         $perm = Perm::i($item['idperm']);
-        $result.= $perm->getheader($this);
-        $result.= sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
-        return $result;
+$perm->getResponse($response, $this);
+        $response->body = sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
     }
 
     public static function sendfile(array $item) {

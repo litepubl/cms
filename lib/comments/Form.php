@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\comments;
+    use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 use litepubl\view\Args;
@@ -20,7 +21,7 @@ use litepubl\core\Session;
 use litepubl\pages\Simple;
 use litepubl\core\Str;
 
-class Form extends \litepubl\core\Events
+class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
     public $helper;
 
@@ -31,28 +32,29 @@ class Form extends \litepubl\core\Events
         $this->addevents('oncomuser');
     }
 
-    public function request($arg) {
-        if ( $this->getApp()->options->commentsdisabled) {
- return 404;
-}
+    public function request(Context $context)
+    {
+    $response = $context->response;
 
+        if ( $this->getApp()->options->commentsdisabled) {
+$response->status = 404;
+ return;
+}
 
         if ('POST' != $_SERVER['REQUEST_METHOD']) {
-            return "<?php
-      header('HTTP/1.1 405 Method Not Allowed', true, 405);
-      header('Allow: POST');
-      header('Content-Type: text/plain');
-      ?>";
+$response->status = 405;
+      $response->headers['Allow'] = 'POST';
+      $response->headers['Content-Type'] = 'text/plain';
+return;
         }
 
-        return $this->dorequest($_POST);
+        $response->body = $this->doRequest($_POST);
     }
 
-    public function dorequest(array $args) {
+    public function doRequest(array $args) {
         if (isset($args['confirmid'])) {
- return $this->confirm_recevied($args['confirmid']);
+ return $this->confirmRecevied($args['confirmid']);
 }
-
 
         return $this->processForm($args, false);
     }
@@ -71,15 +73,15 @@ class Form extends \litepubl\core\Events
     public function invalidate(array $shortpost) {
         $lang = Lang::i('comment');
         if (!$shortpost) {
-            return $this->geterrorcontent($lang->postnotfound);
+            return $this->getErrorContent($lang->postnotfound);
         }
 
         if ($shortpost['status'] != 'published') {
-            return $this->geterrorcontent($lang->commentondraft);
+            return $this->getErrorContent($lang->commentondraft);
         }
 
         if ($shortpost['comstatus'] == 'closed') {
-            return $this->geterrorcontent($lang->commentsdisabled);
+            return $this->getErrorContent($lang->commentsdisabled);
         }
 
         return false;
@@ -88,12 +90,12 @@ class Form extends \litepubl\core\Events
     public function processForm(array $values, $confirmed) {
         $lang = Lang::i('comment');
         if (trim($values['content']) == '') {
- return $this->geterrorcontent($lang->emptycontent);
+ return $this->getErrorContent($lang->emptycontent);
 }
 
 
         if (!$this->checkspam(isset($values['antispam']) ? $values['antispam'] : '')) {
-            return $this->geterrorcontent($lang->spamdetected);
+            return $this->getErrorContent($lang->spamdetected);
         }
 
         $shortpost = $this->getshortpost(isset($values['postid']) ? (int)$values['postid'] : 0);
@@ -112,7 +114,7 @@ return 403;
 
         $cm = Manager::i();
         if ($cm->checkduplicate && $cm->is_duplicate($shortpost['id'], $values['content'])) {
-            return $this->geterrorcontent($lang->duplicate);
+            return $this->getErrorContent($lang->duplicate);
         }
 
         unset($values['submitbutton']);
@@ -128,7 +130,7 @@ return 403;
         } else {
             switch ($shortpost['comstatus']) {
                 case 'reg':
-                    return $this->geterrorcontent($lang->reg);
+                    return $this->getErrorContent($lang->reg);
 
                 case 'guest':
                     if (!$confirmed && $cm->confirmguest) {
@@ -156,7 +158,7 @@ return 403;
                     $users = Users::i();
                     if ($iduser = $users->emailexists($values['email'])) {
                         if ('comuser' != $users->getvalue($iduser, 'status')) {
-                            return $this->geterrorcontent($lang->emailregistered);
+                            return $this->getErrorContent($lang->emailregistered);
                         }
                     } else {
                         $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
@@ -176,15 +178,15 @@ return 403;
 
         $user = Users::i()->getitem($iduser);
         if ('hold' == $user['status']) {
-            return $this->geterrorcontent($lang->holduser);
+            return $this->getErrorContent($lang->holduser);
         }
 
         if (!$cm->canadd($iduser)) {
-            return $this->geterrorcontent($lang->toomany);
+            return $this->getErrorContent($lang->toomany);
         }
 
         if (!$cm->add($shortpost['id'], $iduser, $values['content'], $values['ip'])) {
-            return $this->geterrorcontent($lang->spamdetected);
+            return $this->getErrorContent($lang->spamdetected);
         }
 
         //subscribe by email
@@ -223,12 +225,12 @@ return 403;
         return $this->sendresult( $this->getApp()->site->url . $url, isset($cookies) ? $cookies : array());
     }
 
-    public function confirm_recevied($confirmid) {
+    public function confirmRecevied($confirmid) {
         $lang = Lang::i('comment');
         Session::start(md5($confirmid));
         if (!isset($_SESSION['confirmid']) || ($confirmid != $_SESSION['confirmid'])) {
             session_destroy();
-            return $this->geterrorcontent($lang->notfound);
+            return $this->getErrorContent($lang->notfound);
         }
 
         $values = $_SESSION['values'];
@@ -284,9 +286,9 @@ return $this->helper->confirm($confirmid);
         return Simple::html($this->getconfirmform($confirmid));
     }
 
-    public function getErrorcontent($s) {
+    public function getErrorContent($s) {
         if (isset($this->helper) && ($this != $this->helper)) {
-return $this->helper->geterrorcontent($s);
+return $this->helper->getErrorContent($s);
 }
 
         return Simple::content($s);
@@ -311,14 +313,14 @@ return $this->helper->geterrorcontent($s);
     public function processcomuser(array & $values) {
         $lang = Lang::i('comment');
         if (empty($values['name'])) {
- return $this->geterrorcontent($lang->emptyname);
+ return $this->getErrorContent($lang->emptyname);
 }
 
 
         $values['name'] = Filter::escape($values['name']);
         $values['email'] = isset($values['email']) ? strtolower(trim($values['email'])) : '';
         if (!Filter::ValidateEmail($values['email'])) {
-            return $this->geterrorcontent($lang->invalidemail);
+            return $this->getErrorContent($lang->invalidemail);
         }
 
         $values['url'] = isset($values['url']) ? Filter::escape(Filter::clean_website($values['url'])) : '';

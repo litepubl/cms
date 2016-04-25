@@ -65,7 +65,7 @@ header(sprintf('%s: %s', $k, $v));
 }
 
 if (is_string($this->body)) {
-echo $this->body;
+eval('?>' . $this->body);
 } elseif (is_callable($this->body)) {
 call_user_func_array($this->body, [$this]);
 }
@@ -86,7 +86,7 @@ $headers .= sprintf('header(\'%s: %s\');', $k, $v);
 
 $result = sprintf('<?php %s ?>', $headers);
 if ($this->body) {
-$result .= $body;
+$result .= $this->body;
 }
 
 return $result;

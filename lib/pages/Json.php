@@ -9,93 +9,71 @@
 
 namespace litepubl\pages;
 use litepubl\Config;
+use litepubl\core\Context;
+use litepubl\core\Request;
+use litepubl\core\Response;
 use litepubl\core\Str;
 use litepubl\core\Arr;
 
-use litepubl\utils\Filer;
-
-class Json extends \litepubl\core\Events
+class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
-    public $debug;
 
     protected function create() {
         parent::create();
         $this->basename = 'jsonserver';
-        $this->cache = false;
         $this->addevents('beforerequest', 'beforecall', 'aftercall');
         $this->data['eventnames'] = & $this->eventnames;
         $this->map['eventnames'] = 'eventnames';
         $this->data['url'] = '/admin/jsonserver.php';
-        $this->debug = false;
     }
 
-    public function getPostbody() {
-        global $HTTP_RAW_POST_DATA;
-        if (!isset($HTTP_RAW_POST_DATA)) {
-            $HTTP_RAW_POST_DATA = file_get_contents('php://input');
-        }
-        if (isset($HTTP_RAW_POST_DATA)) {
-            $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
-        }
-
-        if (Config::$debug) {
-            tfiler::log("request:\n" . $HTTP_RAW_POST_DATA, 'json.txt');
-        }
-
-        return $HTTP_RAW_POST_DATA;
-    }
-
-    public function get_json_args() {
-        if ($s = trim($this->getpostbody())) {
-            return json_decode($s, true);
-        }
-        return false;
-    }
-
-    public function getArgs() {
-        if (isset($_GET['method'])) {
- return $_GET;
+    public function getArgs(Request $request)
+ {
+$get = $request->getGet();
+        if (isset($get['method'])) {
+ return $get;
 }
 
-
-
-        if (isset($_POST['method'])) {
-            return $_POST;
+$post = $request->getPost();
+        if (isset($post['method'])) {
+            return $post;
         }
 
-        if (isset($_POST['json'])) {
-            if (($s = trim($_POST['json'])) && ($args = json_decode($s, true))) {
-                if (isset($args['method'])) {
+        if (isset($post['json'])
+&& ($s = trim($post['json']))
+ && ($args = json_decode($s, true))
+&& isset($args['method'])) {
  return $args;
 }
 
-
-            }
+$args = false;
+        if ($s = trim($request->getInput()) {
+            $args = json_decode($s, true);
         }
 
-        if ($args = $this->get_json_args()) {
-            if (isset($args['method'])) {
+        if ($args && isset($args['method'])) {
  return $args;
 }
-
-
-        }
 
         return false;
     }
 
-    public function request($idurl) {
-        $this->beforerequest();
-        $args = $this->getargs();
+    public function request(Context $context)
+    {
+    $response = $context->response;
+$response->cache = false;
+
+        $this->beforerequest($context);
+        $args = $this->getArgs($context->request);
         if (!$args || !isset($args['method'])) {
-            return $this->json_error(false, 403, 'Method not found in arguments');
+            return $this->jsonError($response, false, 403, 'Method not found in arguments');
         }
 
         $rpc = isset($args['jsonrpc']) ? ($args['jsonrpc'] == '2.0') : false;
         $id = $rpc && isset($args['id']) ? $args['id'] : false;
 
         if (!isset($this->events[$args['method']])) {
-            return $this->json_error($id, 404, sprintf('Method "%s" not found', $args['method']));
+            return $this->jsonError($response, $id, 404, sprintf('Method "%s" not found', $args['method']));
         }
 
         if ($rpc) {
@@ -104,23 +82,26 @@ class Json extends \litepubl\core\Events
             $params = $args;
         }
 
-        if (isset($params['litepubl_user'])) $_COOKIE['litepubl_user'] = $params['litepubl_user'];
-        if (isset($params['litepubl_user_id'])) $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
+        if (isset($params['litepubl_user'])) {
+$_COOKIE['litepubl_user'] = $params['litepubl_user'];
+}
 
-        $a = array(&$params
-        );
+        if (isset($params['litepubl_user_id'])) {
+$_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
+}
 
+        $a = [&$params];
         $this->callevent('beforecall', $a);
+
         try {
             $result = $this->callevent($args['method'], $a);
         }
-        catch(Exception $e) {
-            if (Config::$debug || $this->debug) {
-                 $this->getApp()->options->handexception($e);
-                throw new Exception( $this->getApp()->options->errorlog);
-            }
+        catch(\Exception $e) {
+if (Config::$debug) {
+                 $this->getApp()->logException($e);
+}
 
-            return $this->json_error($id, $e->getCode() , $e->getMessage());
+            return $this->jsonError($response, $id, $e->getCode() , $e->getMessage());
         }
 
         $this->callevent('aftercall', array(&$result,
@@ -130,6 +111,7 @@ class Json extends \litepubl\core\Events
         $resp = array(
             'jsonrpc' => '2.0'
         );
+
         if (is_array($result) && isset($result['error'])) {
             $resp['error'] = $result['error'];
         } else {
@@ -140,7 +122,7 @@ class Json extends \litepubl\core\Events
                         $params['slave']['params']
                     ));
                 }
-                catch(Exception $e) {
+                catch(\Exception $e) {
                     $slave_result = array(
                         'error' => array(
                             'message' => $e->getMessage() ,
@@ -153,24 +135,23 @@ class Json extends \litepubl\core\Events
             }
         }
 
-        if ($id) $resp['id'] = $id;
-        return $this->json($resp);
+        if ($id) {
+$resp['id'] = $id;
+}
+
+        return $this->json($response, $resp);
     }
 
-    public function json($result) {
-        $js = Str::toJson($result);
-        //if (Config::$debug) tfiler::log("response:\n".$js, 'json.txt');
-        return "<?php
-    header('Connection: close');
-    header('Content-Length: " . strlen($js) . "');
-    header('Content-Type: application/json; charset=utf-8');
-    header('Date: " . date('r') . "');
-    Header( 'Cache-Control: no-cache, must-revalidate');
-    Header( 'Pragma: no-cache');
-    ?>" . $js;
+    public function json(Response $response, $result)
+ {
+$response->body = Str::toJson($result);
+$response->headers['Connection'] = 'close';
+    $response->headers['Content-Length'] = strlen($response->body);
+    $response->headers['Content-Type'] = 'application/json';
+    $response->headers['Date'] date('r');
     }
 
-    public function json_error($id, $code, $message) {
+    public function jsonError(Response $response, $id, $code, $message) {
         $result = array(
             'jsonrpc' => '2.0',
             'error' => array(
@@ -180,7 +161,7 @@ class Json extends \litepubl\core\Events
         );
 
         if ($id) $result['id'] = $id;
-        return $this->json($result);
+        return $this->json($response, $result);
     }
 
     public function addevent($name, $class, $func, $once = false) {

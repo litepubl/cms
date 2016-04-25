@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\perms;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\core\Str;
 
@@ -41,36 +42,43 @@ return false;
         return time() < $timekey;
     }
 
-    public function request($arg) {
-        $this->cache = false;
-        if (!isset($_POST) || !count($_POST)) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        $response->cache = false;
+
+$post = $context->request->getPost();
+        if (empty($post) || !count($post)) {
 return;
 }
 
-        $antispam = isset($_POST['antispam']) ? $_POST['antispam'] : '';
+        $antispam = isset($post['antispam']) ? $post['antispam'] : '';
         if (!$this->checkspam($antispam)) {
-return 403;
+$response->status = 403;
+return;
 }
 
-        $password = isset($_POST['password']) ? trim($_POST['password']) : '';
+        $password = isset($post['password']) ? trim($post['password']) : '';
         if (!$password) {
 return;
 }
 
         if (!isset($this->perm)) {
-            $idperm = isset($_GET['idperm']) ? (int)$_GET['idperm'] : 0;
+            $idperm = isset($get['idperm']) ? (int)$get['idperm'] : 0;
             $perms = Perms::i();
             if (!$perms->itemexists($idperm)) {
-return 403;
+$response->status = 403;
+return;
 }
 
-            $this->perm = tperm::i($idperm);
+            $this->perm = Perm::i($idperm);
         }
 
-        $backurl = isset($_GET['backurl']) ? $_GET['backurl'] : '';
+        $backurl = isset($get['backurl']) ? $get['backurl'] : '';
         if ($this->perm->checkpassword($password)) {
             if ($backurl) {
- $this->getApp()->router->redir($backurl);
+$response->redir($backurl);
+return;
 }
         } else {
             $this->formresult = Lang::i()->errpassword;

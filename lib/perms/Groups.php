@@ -19,10 +19,10 @@ class Groups extends Perm
         $this->data['groups'] = array();
     }
 
-    public function getHeader($obj) {
+    public function getResponse(Response $response, $obj) {
         $g = $this->groups;
         if (!$this->author && !count($g)) {
-return '';
+return;
 }
 
         $author = '';

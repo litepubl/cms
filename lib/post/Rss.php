@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\core\Context;
 use litepubl\tag\Categories;
 use litepubl\tag\Tags;
 use litepubl\comments\Comments;
@@ -17,7 +18,7 @@ use litepubl\perm\Perm;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class Rss extends \litepubl\core\Events
+class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
     public $domrss;
 
@@ -37,46 +38,52 @@ class Rss extends \litepubl\core\Events
          $this->getApp()->router->setexpired($this->idpostcomments);
     }
 
-    public function request($arg) {
-        $result = '';
-        if (($arg == 'posts') && ($this->feedburner != '')) {
-            $result.= "<?php
-      if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$router->redir('$this->feedburner', 307);
-      }
-      ?>";
-        } elseif (($arg == 'comments') && ($this->feedburnercomments != '')) {
-            $result.= "<?php
-      if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$router->redir('$this->feedburnercomments', 307);
-      }
-      ?>";
-        }
-
-        $result.= '<?php litepubl\\litepubl\core\Router::sendxml(); ?>';
+    public function request(Context $context)
+    {
+    $response = $context->response;
         $this->domrss = new DomRss();
-
+$before = '';
+$arg = $context->itemRoute['arg'];
         switch ($arg) {
             case 'posts':
                 $this->getrecentposts();
+if ($this->feedburner) {
+$before = "<?php
+      if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
+header('HTTP/1.1 307 Temporary Redirect', true, 307);
+header('Location: $this->feedburner');
+return;
+      }
+      ?>";
+}
                 break;
 
 
             case 'comments':
                 $this->GetRecentComments();
+if ($this->feedburnercomments) {
+$before = "<?php
+      if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
+header('HTTP/1.1 307 Temporary Redirect', true, 307);
+header('Location: $this->feedburnercomments');
+      }
+      ?>";
+        }
                 break;
 
 
             case 'categories':
             case 'tags':
                 if (!preg_match('/\/(\d*?)\.xml$/',  $this->getApp()->router->url, $match)) {
-                    return 404;
+$response->status = 404;
+                    return;
                 }
 
                 $id = (int)$match[1];
                 $tags = $arg == 'categories' ? Categories::i() : Tags::i();
                 if (!$tags->itemexists($id)) {
-                    return 404;
+$response->status = 404;
+                    return;
                 }
 
                 $tags->id = $id;
@@ -93,18 +100,21 @@ class Rss extends \litepubl\core\Events
 
             default:
                 if (!preg_match('/\/(\d*?)\.xml$/',  $this->getApp()->router->url, $match)) {
-                    return 404;
+$response->status = 404;
+                    return;
                 }
 
                 $idpost = (int)$match[1];
                 $posts = Posts::i();
                 if (!$posts->itemexists($idpost)) {
-                    return 404;
+$response->status = 404;
+                    return;
                 }
 
                 $post = Post::i($idpost);
                 if ($post->status != 'published') {
-                    return 404;
+$response->status = 404;
+                    return;
                 }
 
                 if (isset($post->idperm) && ($post->idperm > 0)) {
@@ -117,8 +127,12 @@ class Rss extends \litepubl\core\Events
                 $this->GetRSSPostComments($idpost);
         }
 
-        $result.= $this->domrss->GetStripedXML();
-        return $result;
+$response->setXml();
+if ($before) {
+$response->body = $before . $response->body;
+}
+
+        $response->body .= $this->domrss->GetStripedXML();
     }
 
     public function getRecentposts() {
