@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\pages;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 use litepubl\view\Schema;
@@ -46,8 +47,8 @@ public function getAdmintheme() {
 return Schema::getSchema($this)->admintheme;
 }
 
-    public function request($arg) {
-        $this->cache = false;
+    public function request(Context $context) {
+        $context->response->cache = false;
         Lang::usefile('admin');
         $this->formresult = '';
         if (isset($_POST) && count($_POST)) {

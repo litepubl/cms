@@ -9,6 +9,7 @@
 
 namespace litepubl\tag;
 use litepubl\core\ItemsPosts;
+use litepubl\core\Context;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\view\Schemes;
@@ -334,20 +335,22 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
     }
 
     //Itemplate
-    public function request($id) {
-        if ($this->id = (int)$id) {
+    public function request(Context $context) {
+        if ($this->id = $context->id) {
             try {
                 $item = $this->getitem((int)$id);
             }
-            catch(Exception $e) {
-                return 404;
+            catch(\Exception $e) {
+$context->response->status = 404;
+                return;
             }
 
             $schema = Schema::getview($this);
             $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
             $pages = (int)ceil($item['itemscount'] / $perpage);
-            if (( $this->getApp()->router->page > 1) && ( $this->getApp()->router->page > $pages)) {
-                return sprintf('<?php  $this->getApp()->router->redir(\'%s\'); ?>', $item['url']);
+            if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
+$context->response->redir($item['url']);
+return;
             }
         }
     }

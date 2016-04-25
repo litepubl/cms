@@ -10,7 +10,7 @@
 namespace litepubl\core;
 use litepubl\Config;
 
-class Cron extends Events
+class Cron extends Events implements ResponsiveInterface
  {
     public static $pinged = false;
     public $disableadd;
@@ -43,13 +43,13 @@ class Cron extends Events
         return  $this->getApp()->paths->data;
     }
 
-    public function request($arg) {
+    public function request(Context $context) {
         if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
- return 403;
+$context->response->status = 403;
+ return;
 }
 
-
-        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
+       if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
             try {
                 set_time_limit(300);
                 if (Config::$debug) {

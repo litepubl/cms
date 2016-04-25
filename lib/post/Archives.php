@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
@@ -79,13 +80,12 @@ use \litepubl\view\ViewTrait;
     }
 
     //ITemplate
-    public function request($date) {
-        $date = (int)$date;
+    public function request(Context $context) {
+        $date = $context->id;
         if (!isset($this->items[$date])) {
- return 404;
+$context->response->status = 404;
+ return;
 }
-
-
 
         $this->date = $date;
         $item = $this->items[$date];
@@ -93,8 +93,9 @@ use \litepubl\view\ViewTrait;
         $schema = Schema::getview($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $pages = (int)ceil($item['count'] / $perpage);
-        if (( $this->getApp()->router->page > 1) && ( $this->getApp()->router->page > $pages)) {
-            return "<?php litepubl::\$router->redir('{$item['url']}'); ?>";
+        if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
+$context->response->redir($item['url']);
+return;
         }
     }
 

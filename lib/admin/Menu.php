@@ -62,27 +62,31 @@ use Params;
         return Schemes::i()->defaults['admin'];
     }
 
-    public static function auth($group) {
+    public function auth(Context $context, $group) {
         if ($err = Guard::checkattack()) {
             return $err;
         }
 
-        if (! $this->getApp()->options->user) {
-            \litepubl\core\Router::nocache();
-            return  $this->getApp()->router->redir('/admin/login/' .  $this->getApp()->site->q . 'backurl=' . urlencode( $this->getApp()->router->url));
+$response = $context->response;
+$options = $this->getApp()->options;
+        if (! $options->user) {
+$response->cache = false;
+$response->redir('/admin/login/' .  $this->getApp()->site->q . 'backurl=' . urlencode($context->request->url));
+return;
         }
 
-        if (! $this->getApp()->options->hasgroup($group)) {
-            $url = UserGroups::i()->gethome( $this->getApp()->options->group);
-            \litepubl\core\Router::nocache();
-            return  $this->getApp()->router->redir($url);
+        if (! $options->hasGroup($group)) {
+            $url = UserGroups::i()->gethome( $options->group);
+$response->cache = false;
+$response->redir($url);
+return;
         }
     }
 
-    public function request($id) {
+    public function request(Context $context) {
         error_reporting(E_ALL | E_NOTICE | E_STRICT | E_WARNING);
         ini_set('display_errors', 1);
-
+$id = $context->id;
         if (is_null($id)) {
             $id = $this->owner->class2id(get_class($this));
         }
@@ -92,20 +96,21 @@ use Params;
             $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
         }
 
-        if ($s = static ::auth($this->group)) {
-            return $s;
-        }
+$this->auth($context, $this->group)) {
+if ($context->response->status != 200) {
+return;
+}
 
         Lang::usefile('admin');
-
-        if ($s = $this->canrequest()) {
-            return $s;
-        }
+if (!$this->canRequest()) {
+return;
+}
 
         $this->doProcessForm();
     }
 
-    public function canrequest() {
+    public function canRequest() {
+return true;
     }
 
     protected function doProcessForm() {

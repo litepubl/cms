@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Filter;
 use litepubl\core\Str;
@@ -579,23 +580,26 @@ $this->themeInstance->setvar('post', $this);
     }
 
     //ITemplate
-    public function request($id) {
-        parent::request((int)$id);
+    public function request(Context $context) {
+        $this->loadItem($context->id);
+$app = $this->getApp();
         if ($this->status != 'published') {
-            if (! $this->getApp()->options->show_draft_post) {
-                return 404;
+            if (! $app->options->show_draft_post) {
+$context->response->status = 404;
+                return;
             }
 
-            $groupname =  $this->getApp()->options->group;
+            $groupname =  $app->options->group;
             if (($groupname == 'admin') || ($groupname == 'editor')) {
                 return;
             }
 
-            if ($this->author ==  $this->getApp()->options->user) {
+            if ($this->author ==  $app->options->user) {
                 return;
             }
 
-            return 404;
+$context->response->status = 404;
+            return;
         }
     }
 

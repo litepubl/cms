@@ -84,16 +84,16 @@ return Lang::get('login', 'torestorepass');
         return Lang::get('login', 'error');
     }
 
-    public function request($arg) {
-        if ($arg == 'out') {
+    public function request(Context $context) {
+        if ($context->itemRoute['arg'] == 'out') {
 return $this->logout($arg);
 }
 
-        parent::request($arg);
+        parent::request($context);
         $this->section = 'login';
 
         if (!isset($_POST['email']) || !isset($_POST['password'])) {
-return \litepubl\core\Router::nocache();
+return;
 }
 
         $email = trim($_POST['email']);
@@ -101,7 +101,7 @@ return \litepubl\core\Router::nocache();
 
         if ($mesg = static ::autherror($email, $password)) {
             $this->formresult = $this->admintheme->geterr($mesg);
-            return \litepubl\core\Router::nocache();
+            return;
         }
 
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;

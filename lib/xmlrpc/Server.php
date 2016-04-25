@@ -9,8 +9,9 @@
 
 namespace litepubl\xmlrpc;
 use litepubl\Config;
+use litepubl\core\Context;
 
-class Server extends \litepubl\core\Items
+class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
     public $parser;
 
@@ -22,34 +23,19 @@ class Server extends \litepubl\core\Items
         $this->addevents('beforecall', 'aftercall', 'getmethods');
     }
 
-    public function request($param) {
-        global $HTTP_RAW_POST_DATA;
-        if (!isset($HTTP_RAW_POST_DATA)) {
-            $HTTP_RAW_POST_DATA = file_get_contents('php://input');
-        }
-        if (isset($HTTP_RAW_POST_DATA)) {
-            $HTTP_RAW_POST_DATA = trim($HTTP_RAW_POST_DATA);
-        }
-
-        if (Config::$debug) {
-            \litepubl\utils\Filer::log("request:\n" . $HTTP_RAW_POST_DATA, 'xmlrpc.txt');
-            $reqname =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'request.xml';
-            file_put_contents($reqname, $HTTP_RAW_POST_DATA);
-            @chmod($reqname, 0666);
-                    }
-
-
-
+    public function request(Context $context) {
         $this->getmethods();
 require_once(__DIR__ . '/IXR.php');
         $this->parser = new Parser();
         $this->parser->owner = $this;
         $this->parser->IXR_Server($this->items);
-        $Result = $this->parser->XMLResult;
+
+$response = $context->response;
+$response->cache = false;
+$response->setXml();
+$response->body .= $this->parser->XMLResult;
 
         $this->aftercall();
-        if (Config::$debug) tfiler::log("responnse:\n" . $Result, 'xmlrpc.txt');
-        return $Result;
     }
 
     public function call($method, $args) {
@@ -67,7 +53,7 @@ require_once(__DIR__ . '/IXR.php');
                 return new IXR_Error(-32601, "server error. requested class \"$class\" does not exist.");
             }
 
-            $obj = getinstance($class);
+            $obj = static::iGet($class);
             try {
                 return call_user_func_array(array(
                     $obj,
