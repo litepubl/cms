@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\view;
+    use litepubl\core\Context;
 
 trait EmptyViewTrait 
 {
@@ -17,7 +18,8 @@ trait EmptyViewTrait
         $this->data['idschema'] = 1;
     }
 
-    public function request($arg) {
+    public function request(Context $context)
+{
 }
 
     public function getHead() {

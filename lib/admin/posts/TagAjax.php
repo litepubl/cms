@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\posts;
+use litepubl\core\Context;
 use litepubl\tag\Tags as TagItems;
 use litepubl\tag\Cats as TatItems;
 use litepubl\view\Admin;
@@ -25,16 +26,15 @@ class TagAjax extends Ajax
          $this->getApp()->router->addget('/admin/ajaxtageditor.htm', get_class($this));
     }
 
-    public function request($arg) {
-        $this->cache = false;
-        \litepubl\core\Router::sendheader(false);
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        $response->cache = false;
 
-        if ($err = static ::auth()) {
- return $err;
+$this->auth($context);
+if ($response->status == 200) {
+        $response->body = $this->getcontent();
 }
-
-
-        return $this->getcontent();
     }
 
     public function getContent() {

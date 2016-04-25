@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\comments;
+    use litepubl\core\Context;
 use litepubl\core\Users;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
@@ -18,7 +19,7 @@ use litepubl\utils\Mailer;
 use litepubl\Config;
 use litepubl\core\Str;
 
-class Manager extends \litepubl\core\Events
+class Manager extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
 use \litepubl\core\PoolStorageTrait;
 
@@ -165,11 +166,13 @@ $vars = new Vars();
         return $comments->raw->findid("hash = '$hash'");
     }
 
-    public function request($arg) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
         $users = Users::i();
         if (!$users->itemexists($id)) {
-return "<?php  $this->getApp()->router->redir('/');";
+return $response->redir('/');
 }
 
         $item = $users->getitem($id);
@@ -182,7 +185,7 @@ $url =  $this->getApp()->site->url . '/';
 $url = 'http://' . $url;
 }
 
-        return "<?php  $this->getApp()->router->redir('$url');";
+        return $response->redir($url);
     }
 
 }

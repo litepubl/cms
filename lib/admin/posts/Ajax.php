@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\posts;
+    use litepubl\core\Context;
 use litepubl\post\Posts as PostItems;
 use litepubl\post\Post;
 use litepubl\view\Schemes;
@@ -21,7 +22,7 @@ use litepubl\admin\GetSchema;
 use litepubl\admin\GetPerm;
 use litepubl\core\Arr;
 
-class Ajax extends \litepubl\core\Events
+class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
     public $idpost;
     private $isauthor;
@@ -54,23 +55,18 @@ class Ajax extends \litepubl\core\Events
         }
     }
 
-    protected static function error403() {
-        return '<?php header(\'HTTP/1.1 403 Forbidden\', true, 403); ?>' . \litepubl\core\Router::htmlheader(false) . 'Forbidden';
-    }
 
-    public static function auth() {
+    public function auth(Context $context) {
+$response = $context->response;
         $options =  $this->getApp()->options;
         if (!$options->user) {
- return static ::error403();
+return $response->forbidden();
 }
-
 
         if (!$options->hasgroup('editor')) {
             if (!$options->hasgroup('author')) {
- return static ::error403();
+return $response->forbidden();
 }
-
-
         }
     }
 
@@ -78,38 +74,35 @@ class Ajax extends \litepubl\core\Events
         return !empty($_GET['id']) ? (int) $_GET['id'] : (!empty($_POST['id']) ? (int) $_POST['id'] : 0);
     }
 
-    public function request($arg) {
-        $this->cache = false;
-        \litepubl\core\Router::sendheader(false);
-
-        if ($err = static ::auth()) {
- return $err;
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        $response->cache = false;
+$this->auth($context);
+if ($response->status != 200) {
+return;
 }
-
 
         $this->idpost = $this->idparam();
         $this->isauthor =  $this->getApp()->options->ingroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemexists($this->idpost)) {
- return static ::error403();
+ return $response-.frobidden();
 }
-
 
             if (! $this->getApp()->options->hasgroup('editor')) {
                 if ( $this->getApp()->options->hasgroup('author')) {
                     $this->isauthor = true;
                     $post = Post::i($this->idpost);
                     if ( $this->getApp()->options->user != $post->author) {
- return static ::error403();
+ return $response->forbidden();
 }
-
-
                 }
             }
         }
 
-        return $this->getcontent();
+        $response->body = $this->getcontent();
     }
 
     public function getContent() {

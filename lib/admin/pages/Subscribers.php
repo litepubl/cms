@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\pages;
+    use litepubl\core\Context;
 use litepubl\admin\Menus;
 use litepubl\core\Users;
 use litepubl\core\UserOptions;
@@ -29,13 +30,15 @@ class Subscribers extends Form
         $this->newreg = false;
     }
 
-    public function request($arg) {
-        $this->cache = false;
-        if (!($this->iduser =  $this->getApp()->options->user)) {
+    public function request(Context $context)
+{
+        $context->response->cache = false;
+$app = $this->getApp();
+        if (!($this->iduser =  $app->options->user)) {
             //trick - hidden registration of comuser. Auth by get
             $users = Users::i();
             if (isset($_GET['auth']) && ($cookie = trim($_GET['auth']))) {
-                if (($this->iduser = $users->findcookie($cookie)) &&  $this->getApp()->options->reguser) {
+                if (($this->iduser = $users->findcookie($cookie)) &&  $app->options->reguser) {
                     if ('comuser' == $users->getvalue($this->iduser, 'status')) {
                         // bingo!
                         $this->newreg = true;
@@ -51,11 +54,11 @@ class Subscribers extends Form
                         $item['expired'] = Str::sqlDate($expired);
                         $users->edit($this->iduser, $item);
 
-                         $this->getApp()->options->user = $this->iduser;
-                         $this->getApp()->options->updategroup();
+                         $app->options->user = $this->iduser;
+                         $app->options->updategroup();
 
-                         $this->getApp()->options->setcookie('litepubl_user_id', $this->iduser, $expired);
-                         $this->getApp()->options->setcookie('litepubl_user', $cookie, $expired);
+                         $app->options->setcookie('litepubl_user_id', $this->iduser, $expired);
+                         $app->options->setcookie('litepubl_user', $cookie, $expired);
                     } else {
                         $this->iduser = false;
                     }
@@ -64,16 +67,15 @@ class Subscribers extends Form
         }
 
         if (!$this->iduser) {
-            $url =  $this->getApp()->site->url . '/admin/login/' .  $this->getApp()->site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
-            return  $this->getApp()->router->redir($url);
+            $url =  $app->site->url . '/admin/login/' .  $app->site->q . 'backurl=' . rawurlencode('/admin/subscribers/');
+            return  $response->redir($url);
         }
 
         if ('hold' == Users::i()->getvalue($this->iduser, 'status')) {
- return 403;
+ return $response->forbidden();
 }
 
-
-        return parent::request($arg);
+        return parent::request($context);
     }
 
     public function getHead() {

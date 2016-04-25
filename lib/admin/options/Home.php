@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\options;
+    use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\pages\Home as HomePage;
@@ -104,16 +105,18 @@ $home->getSchema()->save();
         $menus->save();
     }
 
-    public function request($a) {
-        if ($response = parent::request($a)) {
-            return $response;
-        }
+    public function request(Context $context)
+    {
+    $response = $context->response;
+parent::request($context);
+if ($response->status != 200) {
+return;
+}
 
         $name = 'image';
         if (!isset($_FILES[$name])) {
  return;
 }
-
 
 
         $result = array(
@@ -187,14 +190,10 @@ $home->getSchema()->save();
         }
 
         $js = Str::toJson($result);
-        return "<?php
-    header('Connection: close');
-    header('Content-Length: " . strlen($js) . "');
-    header('Content-Type: application/json; charset=utf-8');
-    header('Date: " . date('r') . "');
-    Header( 'Cache-Control: no-cache, must-revalidate');
-    Header( 'Pragma: no-cache');
-    ?>" . $js;
+$response->cache = false;
+    $response->headers['Connection'] = 'close);
+    $response->header['Content-Length'] = strlen($js);
+    $response->headers['Content-Type'] = 'application/json; charset=utf-8';
+    $response->header['Date'] = date('r');
     }
-
 }

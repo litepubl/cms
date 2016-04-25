@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\menu;
+use litepubl\core\Context;
 use litepubl\pages\Menus;
 use litepubl\pages\Menu;
 use litepubl\view\Schema;
@@ -23,13 +24,13 @@ class Ajax extends \litepubl\admin\posts\Ajax
          $this->getApp()->router->addget('/admin/ajaxmenueditor.htm', get_class($this));
     }
 
-    public function request($arg) {
-        if ($err = static ::auth()) {
- return $err;
+    public function request(Context $context)
+    {
+    $response = $context->response;
+$this->auth($context);
+if ($response->status == 200) {
+        $response->body = $this->getContent();
 }
-
-
-        return $this->getcontent();
     }
 
     public function getContent() {

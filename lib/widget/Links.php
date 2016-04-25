@@ -8,12 +8,13 @@
 **/
 
 namespace litepubl\widget;
+    use litepubl\core\Context;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\Str;
 
-class Links extends Widget
+class Links extends Widget implements \litepubl\core\ResponsiveInterface
  {
     public $items;
     public $autoid;
@@ -100,15 +101,17 @@ class Links extends Widget
         }
     }
 
-    public function request($arg) {
-        $this->cache = false;
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        $response->cache = false;
         $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
         if (!isset($this->items[$id])) {
- return 404;
+$response->status = 404;
+ return;
 }
 
-
-        return '<?php  $this->getApp()->router->redir(\'' . $this->items[$id]['url'] . '\'); ?>';
+$response->redir($this->items[$id]['url']);
     }
 
 }

@@ -60,6 +60,10 @@ $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists',
 header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
 
 $this->setCacheHeaders($this->cache);
+if (isset($this->headers['Date'])) {
+unset($this-.headers['Last-Modified']);
+}
+
 foreach ($this->headers as $k => $v) {
 header(sprintf('%s: %s', $k, $v));
 }

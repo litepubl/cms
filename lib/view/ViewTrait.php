@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\view;
+    use litepubl\core\Context;
 
 trait ViewTrait
 {
@@ -20,7 +21,8 @@ trait ViewTrait
         $this->data['head'] = '';
     }
 
-    public function request($arg) {
+    public function request(Context $context)
+{
 }
 
     public function getHead() {

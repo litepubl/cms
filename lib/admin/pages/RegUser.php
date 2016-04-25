@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin\pages;
+    use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\core\Users;
 use litepubl\core\UserGroups;
@@ -40,26 +41,29 @@ class RegUser extends Form
         return  $this->getApp()->options->authcookie();
     }
 
-    public function request($arg) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
         if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
- return 403;
+ return $response->forbidden();
 }
 
-
-        parent::request($arg);
+        parent::request($context);
 
         if (!empty($_GET['confirm'])) {
             $confirm = $_GET['confirm'];
             $email = $_GET['email'];
             Session::start('reguser-' . md5( $this->getApp()->options->hash($email)));
             if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
-                if (!isset($_SESSION['email'])) session_destroy();
+                if (!isset($_SESSION['email'])) {
+session_destroy();
+}
+
                 $this->regstatus = 'error';
                 return;
             }
 
             $this->backurl = $_SESSION['backurl'];
-
             $users = Users::i();
             $id = $users->add(array(
                 'password' => $_SESSION['password'],
