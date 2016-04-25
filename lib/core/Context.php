@@ -16,6 +16,15 @@ $this->request = $request;
 $this->response = $response;
 }
 
+public function __get($name)
+{
+if (strtolower($name) == 'id') {
+return (int) $this->itemRoute['arg'];
+}
+
+throw new PropException(get_class($this), $name);
+}
+
     public function getNextpage() {
         $url = $this->itemRoute['url'];
         return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';

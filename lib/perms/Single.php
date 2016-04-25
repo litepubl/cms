@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl\perms;
+use litepubl\core\Context;
+use litepubl\core\Request;
+use litepubl\core\Response;
 use litepubl\view\MainView;
 use litepubl\Config;
 use litepubl\core\Str;
@@ -17,17 +20,13 @@ class Single extends Perm
     private $password;
     private $checked;
 
-    public function getHeader($obj) {
+    public function setResponse(Response $response, $obj) {
         if (isset($obj->password) && ($p = $obj->password)) {
-            {
- return sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static ::encryptpassword($p));
+ $response->body .= sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static ::encryptpassword($p));
 }
-
-
-        }
     }
 
-    public function hasperm($obj) {
+    public function hasPerm($obj) {
         if (isset($obj->password) && ($p = $obj->password)) {
             return static ::authcookie(static ::encryptpassword($p));
         }
@@ -47,7 +46,7 @@ return md5($solt . Config::$secret . $password .  $this->getApp()->options->solt
         return 'singlepwd_' .  $this->getApp()->router->item['id'];
     }
 
-    public function checkpassword($p) {
+    public function checkPassword($p) {
         if ($this->password != static ::encryptpassword($p)) {
 return false;
 }
@@ -89,7 +88,8 @@ return static ::i($id)->getform($p);
         $this->password = $p;
         $page = Page::i();
         $page->perm = $this;
-        $result = $page->request(null);
+$context = new Context(new Request(), new Response());
+$page->request($context);
         if ($this->checked) {
 return true;
 }

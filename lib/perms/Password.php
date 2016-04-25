@@ -9,6 +9,7 @@
 
 namespace litepubl\perms;
 use litepubl\Config;
+use litepubl\core\Response;
 use litepubl\core\Str;
 
 class Password extends Perm
@@ -21,15 +22,13 @@ class Password extends Perm
         $this->data['solt'] = '';
     }
 
-    public function getHeader($obj) {
+    public function setResponse(Response $response, $obj) {
         if ($this->password) {
-        return sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this) , $this->id);
+$response->body .= sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this) , $this->id);
 }return '';
-
-return '';
     }
 
-    public function hasperm($obj) {
+    public function hasPerm($obj) {
         return $this->authcookie();
     }
 
@@ -90,7 +89,7 @@ return true;
     public function redir() {
         $url =  $this->getApp()->site->url . '/check-password.php' .  $this->getApp()->site->q;
         $url.= "idperm=$this->id&backurl=" . urlencode( $this->getApp()->router->url);
-         $this->getApp()->router->redir($url, 307);
+         $this->getApp()->redirExit($url);
     }
 
 }

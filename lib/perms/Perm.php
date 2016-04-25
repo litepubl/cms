@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\perms;
+use litepubl\core\Response;
 
 class Perm extends \litepubl\core\Item
 {
@@ -48,8 +49,8 @@ use \litepubl\core\ItemOwnerTrait;
         return $this->adminInstance;
     }
 
-    public function getHeader($obj) {
-        return '';
+    public function setResponse(Response $response, $obj) 
+{
     }
 
     public function hasperm($obj) {

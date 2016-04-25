@@ -30,14 +30,14 @@ $context->model = $this->getModel($context->itemRoute['class'], $context->itemRo
 $this->render($context);
 } else {
 $this->getApp()->getLogger()->warning('Class for requested item not found', $context->itemRoute);
-$this->notfound($context);
+$this->renderStatus($context);
 }
 } elseif ($context->model) {
 $this->render($context);
 } elseif ($context->response->body) {
 $context->response->send();
 } else {
-$this->nodfound($context);
+$this->renderStatus($context);
 }
 }
 
@@ -94,7 +94,7 @@ return $this->getApp()->classes->getInstance($class);
 }
 }
 
-public function notfound(Context $context)
+public function renderStatus(Context $context)
 {
 $response = $context->response;
 if (!$response->isRedir()) {
@@ -111,34 +111,16 @@ $response->status = 404;
 $cache = $this->getApp()->cache;
 switch ($response->status) {
 case 404:
+$content = $this->getNotfound();
+if ($this->cache && $response->cache) {
+$cache->savePhp($this->getCacheFileName($context), $content);
+}
+break;
+
 case 403:
-if ($this->cache) {
-//double cache
-$filename = $response->status . '.php';
-if ($content = $cache->getString($filename)) {
-eval('?>' . $content);
-if ($response->cache) {
+$content = $this->getForbidden();
+if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $content);
-}
-
-return;
-
-}
-}
-
-$instance  = $response->code == 404 ? Notfound::i() : Forbidden::i();
-$newContext = new Context($context->request, $context->response);
-$newContext->model = $instance;
-$instance->request($newContext);
-MainView::i()->render($newContext);
-$newContext->response->send();
-
-if ($this->cache) {
-$content = $newContext->response->getString();
-$cache->savePhp($filename, $content);
-if ($response->cache) {
-$cache->savePhp($this->getCacheFileName($context), $content);
-}
 }
 break;
 
@@ -147,6 +129,49 @@ $response->send();
 if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
+}
+}
+
+public function getNotfound()
+{
+$filename = '404.php';
+if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
+eval('?>' . $result;
+return $result;
+}
+
+$instance  = Notfound404::i();
+$context = new Context(new Reqest(), new Response());
+$context->model = $instance;
+$instance->request($context);
+MainView::i()->render($context);
+$context->response->send();
+
+if ($this->cache) {
+$result = $context->response->getString();
+$this->getApp()->cache->savePhp($filename, $result);
+return $result;
+}
+}
+
+public function getForbidden()
+$filename = '403.php';
+if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
+eval('?>' . $result;
+return $result;
+}
+
+$instance  = Forbidden::i();
+$context = new Context(new Reqest(), new Response());
+$context->model = $instance;
+$instance->request($context);
+MainView::i()->render($context);
+$context->response->send();
+
+if ($this->cache) {
+$result = $context->response->getString();
+$this->getApp()->cache->savePhp($filename, $result);
+return $result;
 }
 }
 

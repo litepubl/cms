@@ -42,13 +42,12 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
     {
     $response = $context->response;
         $this->domrss = new DomRss();
-$before = '';
 $arg = $context->itemRoute['arg'];
         switch ($arg) {
             case 'posts':
                 $this->getrecentposts();
 if ($this->feedburner) {
-$before = "<?php
+$response->body .= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
 header('HTTP/1.1 307 Temporary Redirect', true, 307);
 header('Location: $this->feedburner');
@@ -62,7 +61,7 @@ return;
             case 'comments':
                 $this->GetRecentComments();
 if ($this->feedburnercomments) {
-$before = "<?php
+$response->body .= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
 header('HTTP/1.1 307 Temporary Redirect', true, 307);
 header('Location: $this->feedburnercomments');
@@ -89,9 +88,7 @@ $response->status = 404;
                 $tags->id = $id;
                 if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
                     $perm = Perm::i($idperm);
-                    if ($header = $perm->getheader($tags)) {
-                        $result = $header . $result;
-                    }
+$perm->setResponse($response, $tags);
                 }
 
                 $this->gettagrss($tags, $id);
@@ -119,9 +116,7 @@ $response->status = 404;
 
                 if (isset($post->idperm) && ($post->idperm > 0)) {
                     $perm = Perm::i($post->idperm);
-                    if ($header = $perm->getheader($post)) {
-                        $result = $header . $result;
-                    }
+$perm->setResponse($response, $post);
                 }
 
                 $this->GetRSSPostComments($idpost);

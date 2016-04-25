@@ -95,7 +95,7 @@ return $result;
 public function setXml()
 {
         $this->headers['Content-Type'] = 'text/xml; charset=utf-8';
-        $this->body = '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
+        $this->body .= '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
 }
 
 public function setJson()

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\perms;
+use litepubl\core\Response;
 
 class Groups extends Perm
 {
@@ -19,7 +20,7 @@ class Groups extends Perm
         $this->data['groups'] = array();
     }
 
-    public function getResponse(Response $response, $obj) {
+    public function setResponse(Response $response, $obj) {
         $g = $this->groups;
         if (!$this->author && !count($g)) {
 return;
@@ -30,14 +31,15 @@ return;
             $author = sprintf('  || (\ $this->getApp()->options->user != %d)', $obj->author);
         }
 
-        {
- return sprintf('<?php if (!\ $this->getApp()->options->ingroups( array(%s)) %s) return \ $this->getApp()->router->forbidden(); ?>', implode(',', $g) , $author);
+$idgroups = implode(',', $g);
+$response->body .= "<?php
+ if (!\\litepubl\\core\\litepubl::\$app->options->ingroups([$idgroups]) $author) {
+return ->forbidden();
+}
+ ?>";
 }
 
-
-    }
-
-    public function hasperm($obj) {
+    public function hasPerm($obj) {
         $g = $this->groups;
         if (!$this->author && !count($g)) {
 return true;

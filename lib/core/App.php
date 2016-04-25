@@ -206,4 +206,16 @@ $this->log('alert', LoggerFactory::getException($e));
         }
     }
 
+public function redirExit($url)
+{
+$this->poolStorage->commit();
+if (Str::begin($url, 'http')) {
+$url = $this->site->url . $url);
+}
+
+header('HTTP/1.1 307 Temporary Redirect', true, 307);
+header('Location: '. $url);
+exit();
+}
+
 }
