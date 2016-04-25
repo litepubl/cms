@@ -181,8 +181,8 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     //ViewInterface
     public function request(Context $context) {
-        parent::request($context);
-        if ($this->status == 'draft') {
+if (!$this->loadItem($context->itemRoute['arg']) ||
+($this->status == 'draft')) {
 $context->response->status = 404;
 } else {
         $this->doProcessForm();

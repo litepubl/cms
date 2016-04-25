@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+    use litepubl\core\Context;
 use litepubl\view\Lang;
 
 class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterface
@@ -79,9 +80,12 @@ use \litepubl\view\EmptyViewTrait;
         return $result;
     }
 
-    public function request($arg) {
-        if ($arg == 'xml') {
-            return '<?php \litepubl\core\Router::sendxml(); ?>' . $this->GetIndex();
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        if ($context->itemRoute['arg'] == 'xml') {
+$response->setXml();
+$response->body .= $this->GetIndex();
         }
     }
 

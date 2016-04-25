@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+    use litepubl\core\Context;
 use litepubl\core\Users as CoreUsers;
 use litepubl\view\Filter;
 use litepubl\core\Str;
@@ -91,38 +92,43 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         return $item;
     }
 
-    public function request($id) {
-        if ($id == 'url') {
+    public function request(Context $context)
+    {
+$response = $context->response;
+        if ($context->itemRoute['arg'] == 'url') {
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
             $users = CoreUsers::i();
             if (!$users->itemexists($id)) {
- return 404;
+$response->status = 404;
+ return;
 }
-
 
             $item = $users->getitem($id);
             $website = $item['website'];
             if (!strpos($website, '.')) $website =  $this->getApp()->site->url .  $this->getApp()->site->home;
-            if (!Str::begin($website, 'http://')) $website = 'http://' . $website;
-            return "<?php litepubl::\$router->redir('$website');";
+            if (!Str::begin($website, 'http')) {
+$website = 'http://' . $website;
+}
+
+$response->redir($website);
+return;
         }
 
-        $this->id = (int)$id;
+        $this->id = (int)$context->itemRoute['arg'];
         if (!$this->itemexists($id)) {
- return 404;
+$response->status = 404;
+ return;
 }
 
 
         $item = $this->getitem($id);
-
-        $schema = Schema::getview($this);
+        $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $pages = (int)ceil( $this->getApp()->classes->posts->archivescount / $perpage);
-        if (( $this->getApp()->router->page > 1) && ( $this->getApp()->router->page > $pages)) {
+        if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
             $url =  $this->getApp()->router->getvalue($item['idurl'], 'url');
-            return "<?php litepubl::\$router->redir('$url'); ?>";
+$response->redir($url);
         }
-
     }
 
     public function getTitle() {

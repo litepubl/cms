@@ -41,6 +41,24 @@ $this->nodfound($context);
 }
 }
 
+public function render(Context $context)
+{
+if (!($context->model instanceof ResponsiveInterface)) {
+trow new \RuntimeException('Model not implemented ResponsiveInterface');
+}
+
+$context->model->request($context);
+$response = $context->response;
+if (!$response->body && $response->status == 200) {
+MainView::i()->render($context);
+}
+
+$response->send();
+if ($this->cache && $response->cache) {
+$this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
+}
+}
+
 public function cached(Context $context)
 {
 if (!$this->cache) {
@@ -129,24 +147,6 @@ $response->send();
 if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
-}
-}
-
-public function render(Context $context)
-{
-if (!($context->model instanceof ResponsiveInterface)) {
-trow new \RuntimeException('Model not implemented ResponsiveInterface');
-}
-
-$context->model->request($context);
-$response = $context->response;
-if (!$response->body && $response->status == 200) {
-MainView::i()->render($context);
-}
-
-$response->send();
-if ($this->cache && $response->cache) {
-$this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
 }
 

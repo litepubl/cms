@@ -23,11 +23,7 @@ class Item extends Data
             $class = 'litepubl\\' . $class;
         }
 
-        $name = call_user_func_array(array(
-            $class,
-            'getinstancename'
-        ) , array());
-
+        $name = $class::getinstancename();
         if (!isset(static ::$instances)) {
             static ::$instances = array();
         }
@@ -36,13 +32,13 @@ class Item extends Data
             return static ::$instances[$name][$id];
         }
 
-        $self =  $this->getApp()->classes->newitem($name, $class, $id);
-        return $self->loaddata($id);
+        $self =  static::getAppInstance()->classes->newitem($name, $class, $id);
+        return $self->loadData($id);
     }
 
-    public function loaddata($id) {
+    public function loadData($id) {
         $this->data['id'] = $id;
-        if ($id != 0) {
+        if ($id) {
             if (!$this->load()) {
                 $this->free();
                 return false;
@@ -87,13 +83,17 @@ class Item extends Data
         }
     }
 
-    public function request($id) {
-        if ($id != $this->id) {
-            $this->setid($id);
-            if (!$this->load()) {
- return 404;
+    public function loadItem($id) {
+        if ($id == $this->id) 
+return true;
 }
+
+            $this->setid($id);
+            if ($this->load()) {
+ return true;
         }
+
+return false;
     }
 
     public static function deletedir($dir) {

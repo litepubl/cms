@@ -36,7 +36,7 @@ $this->protocol = '1.1';
 $this->status = 200;
 $this->headers = [
 'Content-type' => 'text/html;charset=utf-8',
-//'Last-Modified' => date('r'),
+'Last-Modified' => date('r'),
 //'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
 ];
 }
@@ -95,7 +95,7 @@ return $result;
 public function setXml()
 {
         $this->headers['Content-Type'] = 'text/xml; charset=utf-8';
-        //echo '<?xml version="1.0" encoding="utf-8" ?>';
+        $this->body = '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
 }
 
 public function setJson()

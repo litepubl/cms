@@ -8,22 +8,36 @@
 **/
 
 namespace litepubl\pages;
+    use litepubl\core\Context;
+use litepubl\post\Node;
 
-class Manifest extends \litepubl\core\Events
+class Manifest extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
 
-    public function request($arg) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
+$response->setXml();
         $site =  $this->getApp()->site;
-        $s = '<?php \litepubl\core\Router::sendxml(); ?>';
-        switch ($arg) {
+
+        switch ($context->itemRoute['arg']) {
             case 'manifest':
-                $s.= '<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">' . '<options>' . '<clientType>WordPress</clientType>' . '<supportsKeywords>Yes</supportsKeywords>' . '<supportsGetTags>Yes</supportsGetTags>' . '<supportsNewCategories>Yes</supportsNewCategories>' . '</options>' .
-
-                '<weblog>' . '<serviceName>Lite Publisher</serviceName>' .
-
-                "<homepageLinkText>$site->name</homepageLinkText>" . "<adminLinkText>$site->name</adminLinkText>" . "<adminUrl>$site->url/admin/</adminUrl>" . '<postEditingUrl>' . "<![CDATA[$site->url/admin/posts/editor/{$site->q}id={post-id}]]>" . '</postEditingUrl>' . '</weblog>' .
-
-                '<buttons>' . '<button>' . '<id>0</id>' . '<text>Manage Comments</text>' .
+                $response->body .= '<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">' . '<options>' . '<clientType>WordPress</clientType>'
+ . '<supportsKeywords>Yes</supportsKeywords>'
+ . '<supportsGetTags>Yes</supportsGetTags>'
+ . '<supportsNewCategories>Yes</supportsNewCategories>'
+ . '</options>'
+ .'<weblog>'
+ . '<serviceName>Lite Publisher</serviceName>'
+ . "<homepageLinkText>$site->name</homepageLinkText>"
+ . "<adminLinkText>$site->name</adminLinkText>"
+ . "<adminUrl>$site->url/admin/</adminUrl>"
+ . '<postEditingUrl>' . "<![CDATA[$site->url/admin/posts/editor/{$site->q}id={post-id}]]>"
+ . '</postEditingUrl>'
+ . '</weblog>'
+ . '<buttons>'
+ . '<button>'
+ . '<id>0</id>' . '<text>Manage Comments</text>' .
                 //'<imageUrl>images/wlw/wp-comments.png</imageUrl>' .
                 '<imageUrl>/favicon.ico</imageUrl>' . '<clickUrl>' . "<![CDATA[$site->url/admin/comments/]]>" . '</clickUrl>' . '</button>' .
 
@@ -47,43 +61,44 @@ class Manifest extends \litepubl\core\Events
                 '</service>' .
                 '</rsd>';
                 */
-                $dom = new domDocument();
+
+                $dom = new \domDocument();
                 $dom->encoding = 'utf-8';
                 $rsd = $dom->createElement('rsd');
                 $dom->appendChild($rsd);
-                tnode::attr($rsd, 'version', '1.0');
-                tnode::attr($rsd, 'xmlns', 'http://archipelago.phrasewise.com/rsd');
-                $service = tnode::add($rsd, 'service');
-                tnode::addvalue($service, 'engineName', 'LitePublisher');
-                tnode::addvalue($service, 'engineLink', 'http://litepublisher.com/');
-                tnode::addvalue($service, 'homePageLink',  $this->getApp()->site->url . '/');
-                $apis = tnode::add($service, 'apis');
-                $api = tnode::add($apis, 'api');
-                tnode::attr($api, 'name', 'WordPress');
-                tnode::attr($api, 'blogID', '1');
-                tnode::attr($api, 'preferred', 'true');
-                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                Node::attr($rsd, 'version', '1.0');
+                Node::attr($rsd, 'xmlns', 'http://archipelago.phrasewise.com/rsd');
+                $service = Node::add($rsd, 'service');
+                Node::addvalue($service, 'engineName', 'LitePublisher');
+                Node::addvalue($service, 'engineLink', 'http://litepublisher.com/');
+                Node::addvalue($service, 'homePageLink',  $site->url . '/');
+                $apis = Node::add($service, 'apis');
+                $api = Node::add($apis, 'api');
+                Node::attr($api, 'name', 'WordPress');
+                Node::attr($api, 'blogID', '1');
+                Node::attr($api, 'preferred', 'true');
+                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
-                $api = tnode::add($apis, 'api');
-                tnode::attr($api, 'name', 'Movable Type');
-                tnode::attr($api, 'blogID', '1');
-                tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                $api = Node::add($apis, 'api');
+                Node::attr($api, 'name', 'Movable Type');
+                Node::attr($api, 'blogID', '1');
+                Node::attr($api, 'preferred', 'false');
+                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
-                $api = tnode::add($apis, 'api');
-                tnode::attr($api, 'name', 'MetaWeblog');
-                tnode::attr($api, 'blogID', '1');
-                tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                $api = Node::add($apis, 'api');
+                Node::attr($api, 'name', 'MetaWeblog');
+                Node::attr($api, 'blogID', '1');
+                Node::attr($api, 'preferred', 'false');
+                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
-                $api = tnode::add($apis, 'api');
-                tnode::attr($api, 'name', 'Blogger');
-                tnode::attr($api, 'blogID', '1');
-                tnode::attr($api, 'preferred', 'false');
-                tnode::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                $api = Node::add($apis, 'api');
+                Node::attr($api, 'name', 'Blogger');
+                Node::attr($api, 'blogID', '1');
+                Node::attr($api, 'preferred', 'false');
+                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
 
                 $xml = $dom->saveXML();
-                $s.= substr($xml, strpos($xml, '?>') + 2);
+                $response->body .= substr($xml, strpos($xml, '?>') + 2);
                 break;
         }
 

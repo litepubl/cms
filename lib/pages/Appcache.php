@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
 use litepubl\view\Theme;
 
 class Appcache extends \litepubl\core\Items
@@ -42,15 +43,12 @@ class Appcache extends \litepubl\core\Items
         $this->save();
     }
 
-    public function request($arg) {
-        $s = '<?php
-    header(\'Content-Type: text/cache-manifest\');
-    header(\'Last-Modified: ' . date('r') . '\');
-    ?>';
-
-        $s.= "CACHE MANIFEST\r\n";
-        $s.= Theme::i()->parse($this->text);
-        return $s;
+    public function request(Context $context)
+{
+$response = $context->response;
+$response->headers['Content-Type'] = 'text/cache-manifest';
+        $response->body = "CACHE MANIFEST\r\n";
+        $response->body .= Theme::i()->parse($this->text);
     }
 
 }

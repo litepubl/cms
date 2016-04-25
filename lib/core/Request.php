@@ -18,11 +18,16 @@ public function __construct($host, $url)
         $this->host = $this->getHost($host);
         $this->page = 1;
         $this->uripath = [];
+
+iif ($url) {
         if ( $this->getApp()->site->q == '?') {
             $this->url = substr($url, strlen( $this->getApp()->site->subdir));
         } else {
             $this->url = $_GET['url'];
         }
+} else {
+$this->url = '';
+}
 
         $this->isAdminPanel = Str::begin($this->url, '/admin/') || ($this->url == '/admin');
 }

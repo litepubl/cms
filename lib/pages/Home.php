@@ -9,6 +9,7 @@
 
 namespace litepubl\pages;
 use litepubl\core\CoEvents;
+    use litepubl\core\Context;
 use litepubl\post\Posts;
 use litepubl\post\Post;
 use litepubl\view\Schema;
@@ -49,13 +50,14 @@ return $theme->templates['index.home'];
         return false;
     }
 
-    public function request($id) {
-        if (!$this->showpagenator && ( $this->getApp()->router->page > 1)) {
- return 404;
+    public function request(Context $context)
+{
+        if (!$this->showpagenator && ($context->request->page > 1)) {
+$context->response->status = 404;
+ return;
 }
 
-
-        return parent::request($id);
+        return parent::request($context);
     }
 
     public function getHead() {

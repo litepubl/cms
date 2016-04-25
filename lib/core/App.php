@@ -11,7 +11,7 @@ namespace litepubl\core;
 use litepubl\config;
 use litepubl\debug\LoggerFactory;
 
-class App
+class App implements \litepubl\core\ResponsiveInterface
  {
     public  $cache;
     public  $classes;

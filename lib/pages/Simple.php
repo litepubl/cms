@@ -8,6 +8,9 @@
 **/
 
 namespace litepubl\pages;
+use litepubl\core\Context;
+use litepubl\core\Request;
+use litepubl\core\Response;
 use litepubl\view\MainView;
 
 class Simple extends \litepubl\core\Events implements \litepubl\view\ViewInterface
@@ -22,8 +25,9 @@ use \litepubl\view\EmptyViewTrait;
         $this->basename = 'simplecontent';
     }
 
-    public function httpheader() {
-        return \litepubl\core\Router::htmlheader(false);
+    public function request(Context $context)
+    {
+$context->response->cache = false;
     }
 
 public function gettitle() {
@@ -37,13 +41,25 @@ public function gettitle() {
     public static function html($content) {
         $self = static ::i();
         $self->html = $content;
-return MainControler::i()->request($self);
+return $self->render();
     }
 
     public static function content($content) {
         $self = static ::i();
         $self->text = $content;
-return MainControler::i()->request($self);
+return $self->render();
+}
+
+public function render()
+{
+$context = new Context(
+new Request('', ''),
+new Response()
+);
+
+$context->model = $this;
+MainView::i()->render($context);
+return $context->response->body;
     }
 
 }

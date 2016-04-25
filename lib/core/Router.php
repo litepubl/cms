@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\core;
-use litepubl\Config;
 
 class Router extends Items
  {

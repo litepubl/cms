@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\pages;
+    use litepubl\core\Context;
 use litepubl\view\Schema;
 use litepubl\view\Filter;
 use litepubl\utils\LinkGenerator;
@@ -21,8 +22,9 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         $this->basename = 'staticpages';
     }
 
-    public function request($arg) {
-        $this->id = (int)$arg;
+    public function request(Context $context)
+    {
+        $this->id = (int)$context->itemRoute['arg'];
     }
 
     public function getVal($name) {
