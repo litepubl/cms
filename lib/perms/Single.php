@@ -11,6 +11,7 @@ namespace litepubl\perms;
 use litepubl\core\Context;
 use litepubl\core\Request;
 use litepubl\core\Response;
+use litepubl\core\ErrorPages;
 use litepubl\view\MainView;
 use litepubl\Config;
 use litepubl\core\Str;
@@ -96,16 +97,21 @@ return true;
 
         switch ($result) {
             case 404:
-                return  $this->getApp()->router->notfound404();
+$errorPages = new ErrorPages();
+$errorPages->notfound();
+break;
 
             case 403:
-                return  $this->getApp()->router->forbidden();
+$errorPages = new ErrorPages();
+$errorPages->forbidden();
+break;
 
 default:
-        $html = MainView::i()->render($page);
-        eval('?>' . $html);
-        return false;
+MainView::i()->render($context);
+$context->response->send();
 }
+
+        return false;
     }
 
 }

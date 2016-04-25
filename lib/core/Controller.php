@@ -3,8 +3,6 @@
 namespace litepubl\core;
 use litepubl\view\MainView;
 use litepubl\pages\Redirector;
-use litepubl\pages\Notfound404;
-use litepubl\pages\Forbidden;
 
 class Controller
 {
@@ -111,14 +109,16 @@ $response->status = 404;
 $cache = $this->getApp()->cache;
 switch ($response->status) {
 case 404:
-$content = $this->getNotfound();
+$errorPages = new ErrorPages();
+$content = $errorPages->notfound();
 if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $content);
 }
 break;
 
 case 403:
-$content = $this->getForbidden();
+$errorPages = new ErrorPages();
+$content = $errorPages->forbidden();
 if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $content);
 }
@@ -132,47 +132,3 @@ $cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
 }
 
-public function getNotfound()
-{
-$filename = '404.php';
-if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result;
-return $result;
-}
-
-$instance  = Notfound404::i();
-$context = new Context(new Reqest(), new Response());
-$context->model = $instance;
-$instance->request($context);
-MainView::i()->render($context);
-$context->response->send();
-
-if ($this->cache) {
-$result = $context->response->getString();
-$this->getApp()->cache->savePhp($filename, $result);
-return $result;
-}
-}
-
-public function getForbidden()
-$filename = '403.php';
-if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result;
-return $result;
-}
-
-$instance  = Forbidden::i();
-$context = new Context(new Reqest(), new Response());
-$context->model = $instance;
-$instance->request($context);
-MainView::i()->render($context);
-$context->response->send();
-
-if ($this->cache) {
-$result = $context->response->getString();
-$this->getApp()->cache->savePhp($filename, $result);
-return $result;
-}
-}
-
-}

@@ -15,17 +15,17 @@ function PermsInstall($self) {
     $lang = Lang::i('initgroups');
 
     $self->lock();
-    $single = new tsinglepassword();
+    $single = new Single();
     $single->name = $lang->single;
     $self->add($single);
     $self->addclass($single);
 
-    $pwd = new tpermpassword();
+    $pwd = new Password();
     $pwd->name = $lang->pwd;
     $self->add($pwd);
     $self->addclass($pwd);
 
-    $groups = new tpermgroups();
+    $groups = new Groups();
     $groups->name = $lang->groups;
     $self->add($groups);
     $self->addclass($groups);

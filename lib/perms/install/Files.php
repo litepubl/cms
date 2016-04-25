@@ -7,10 +7,10 @@
 * @version 6.15
 **/
 
-namespace litepubl\prems;
+namespace litepubl\perms;
 
 function FilesInstall($self) {
-    $dir =  $this->getApp()->paths->files . 'private';
+    $dir =  $self->getApp()->paths->files . 'private';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $dir.= DIRECTORY_SEPARATOR;
