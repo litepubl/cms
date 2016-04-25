@@ -120,6 +120,12 @@ public function isRedir()
 return in_array($this->status, [301, 302, 303, 307]);
 }
 
+public function forbidden()
+{
+$this->status = 403;
+$this->cache = false;
+}
+
     public function closeConnection()
  {
         $len = ob_get_length();

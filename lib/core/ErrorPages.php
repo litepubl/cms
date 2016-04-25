@@ -4,10 +4,12 @@ namespace litepubl\core;
 use litepubl\pages\Notfound404;
 use litepubl\pages\Forbidden;
 use litepubl\view\MainView;
+use litepubl\view\Lang;
 
 class ErrorPages
 {
 use AppTrait;
+
 public $cache;
 
 public function __construct()
@@ -58,5 +60,15 @@ $this->getApp()->cache->savePhp($filename, $result);
 return $result;
 }
 }
+
+public function attack($url) {
+Lang::usefile('admin');
+            if ($_POST) {
+                return Lang::get('login', 'xxxattack');
+            }
+
+                return Lang::get('login', 'confirmxxxattack')
+ . sprintf(' <a href="%1$s">%1$s</a>', $url);
+        }
 
 }

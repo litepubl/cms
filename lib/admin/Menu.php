@@ -9,7 +9,6 @@
 
 namespace litepubl\admin;
 use litepubl\core\UserGroups;
-use litepubl\view\Guard;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
 
@@ -63,8 +62,8 @@ use Params;
     }
 
     public function auth(Context $context, $group) {
-        if ($err = Guard::checkattack()) {
-            return $err;
+        if ($context->checkAttack()) {
+            return;
         }
 
 $response = $context->response;
@@ -96,13 +95,14 @@ $id = $context->id;
             $this->basename = $this->parent == 0 ? $this->name : $this->owner->items[$this->parent]['name'];
         }
 
-$this->auth($context, $this->group)) {
+$this->auth($context, $this->group);
 if ($context->response->status != 200) {
 return;
 }
 
         Lang::usefile('admin');
-if (!$this->canRequest()) {
+if ($status = $this->canRequest()) {
+$context->response->status = $status;
 return;
 }
 
@@ -110,7 +110,7 @@ return;
     }
 
     public function canRequest() {
-return true;
+return false;
     }
 
     protected function doProcessForm() {

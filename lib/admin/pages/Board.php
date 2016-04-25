@@ -8,7 +8,7 @@
 **/
 
 namespace litepubl\admin\pages;
-use litepul\view\Guard;
+    use litepubl\core\Context;
 use litepul\view\Lang;
 use litepul\view\Schemes;
 use litepul\core\UserGroups;
@@ -29,21 +29,26 @@ class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterfac
         return true;
     }
 
-    public function request($id) {
-        if ($s = Guard::checkattack()) {
-return $s;
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        if ($context->checkAttack()) {
+return;
 }
-        if (! $this->getApp()->options->user) {
-            return  $this->getApp()->router->redir('/admin/login/' .  $this->getApp()->site->q . 'backurl=' . urlencode( $this->getApp()->router->url));
+
+$app = $this->getApp();
+        if (! $app->options->user) {
+return $response->redir('/admin/login/' .  $app->site->q . 'backurl=' . urlencode( $context->request->url));
         }
 
-        if (! $this->getApp()->options->hasgroup('editor')) {
-            $url = UserGroups::i()->gethome( $this->getApp()->options->group);
+        if (! $app->options->hasgroup('editor')) {
+            $url = UserGroups::i()->gethome( $app->options->group);
             if ($url == '/admin/') {
-                return 403;
+$response->status = 403;
+return;
             }
 
-            return  $this->getApp()->router->redir($url);
+            return  $response->redir($url);
         }
 
         Lang::usefile('admin');

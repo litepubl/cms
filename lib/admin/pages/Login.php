@@ -8,13 +8,14 @@
 **/
 
 namespace litepubl\admin\pages;
-use litepubl\view\Guard;
-use litepubl\view\Lang;
+use litepubl\core\Context;
+use litepubl\core\Request;
 use litepubl\core\Users;
 use litepubl\core\UserGroups;
-use litepubl\core\Ssession;
+use litepubl\core\Session;
 use litepubl\core\Str;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Login extends Form
 {
@@ -26,24 +27,22 @@ class Login extends Form
         $this->data['widget'] = '';
     }
 
-    public function auth() {
-        if ($s = Guard::checkattack()) {
- return $s;
+    public function auth(Context $context) {
+        if ($context->checkAttack()) {
+ return;
 }
-
 
         if (! $this->getApp()->options->authcookie()) {
- return  $this->getApp()->router->redir('/admin/login/');
+$context->response->redir('/admin/login/');
 }
-
-
     }
 
-    private function logout() {
-         $this->getApp()->options->logout();
-        setcookie('backurl', '', 0,  $this->getApp()->site->subdir, false);
-         $this->getApp()->router->nocache();
-        return  $this->getApp()->router->redir('/admin/login/');
+    private function logout(Context $context) {
+$app = $this->getApp();
+         $app>options->logout();
+        setcookie('backurl', '', 0,  $app->site->subdir, false);
+$context->response->cache = false;
+$context->response->redir('/admin/login/');
     }
 
     //return error string message if not logged
@@ -86,7 +85,7 @@ return Lang::get('login', 'torestorepass');
 
     public function request(Context $context) {
         if ($context->itemRoute['arg'] == 'out') {
-return $this->logout($arg);
+return $this->logout($context);
 }
 
         parent::request($context);
@@ -106,25 +105,30 @@ return;
 
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
         $cookie = Str::md5Uniq();
-         $this->getApp()->options->setcookies($cookie, $expired);
-         $this->getApp()->options->setcookie('litepubl_regservice', 'email', $expired);
+$app = $this->getApp();
+$app->options->setcookies($cookie, $expired);
+         $app->options->setcookie('litepubl_regservice', 'email', $expired);
 
         $url = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
 
-        if ($url && Str::begin($url,  $this->getApp()->site->url)) $url = substr($url, strlen( $this->getApp()->site->url));
-        if ($url && (Str::begin($url, '/admin/login/') || Str::begin($url, '/admin/password/'))) $url = false;
+        if ($url && Str::begin($url,  $app->site->url)) {
+$url = substr($url, strlen( $app->site->url));
+}
+
+        if ($url && (Str::begin($url, '/admin/login/') || Str::begin($url, '/admin/password/'))) {
+$url = false;
+}
 
         if (!$url) {
             $url = '/admin/';
-            if ( $this->getApp()->options->group != 'admin') {
+            if ( $app->options->group != 'admin') {
                 $groups = UserGroups::i();
                 $url = $groups->gethome( $this->getApp()->options->group);
             }
         }
 
-         $this->getApp()->options->setcookie('backurl', '', 0);
-        \litepubl\core\Router::nocache();
-        return  $this->getApp()->router->redir($url);
+         $app->options->setcookie('backurl', '', 0);
+$context->response->redir($url);
     }
 
     public function createform() {
