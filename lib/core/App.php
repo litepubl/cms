@@ -9,7 +9,7 @@
 
 namespace litepubl\core;
 use litepubl\config;
-use litepubl\debug\LoggerFactory;
+use litepubl\debug\LogManager;
 
 class App
  {
@@ -18,8 +18,7 @@ class App
 public $controller;
 public $context;
     public  $db;
-    public  $logger;
-public $runtimeLog;
+    public  $logManager;
     public  $memcache;
     public  $microtime;
 public $onClose;
@@ -179,26 +178,27 @@ $this->poolStorage->commit();
          $this->showErrors();
     }
 
-public function getLogger() {
-if (!$this->logger) {
-$this->logger = LoggerFactory::create($this->paths);
+public function getLogManager()
+ {
+if (!$this->logManager) {
+if (isset(Config::$classes['logmanager'])) {
+$class = Config::$classes['logmanager'];
+$this->logManager = new $class($this);
+} else {
+$this->logManager = new LogManager($this);
+}
 }
 
-return $this->logger;
+return $this->logManager;
 }
 
-public function log($level, $message, array $context = array()) {
-//echo str_replace($this->paths->lib, '', $message);
-//ignore debug messages
-if (!config::$debug && ($level == 'debug') && (config::$logLevel != 'debug')) {
-return;
-}
-
-$this->getLogger()->log($level, $message, $context);
+public function getLogger() 
+{
+return $this->getLogManager()->logger;
 }
 
 public function logException(\Exception $e) {
-$this->log('alert', LoggerFactory::getException($e));
+$this->getLogManager()->logException($e);
 }
 
     public function showErrors() {

@@ -61,6 +61,7 @@ class Config {
     //'app' => '\litepubl\core\App',
     //'storage' => '\litepubl\core\Storage',
     //'cache' => '\litepubl\core\CacheFile,
+//'logmanager' => '\litepubl\debug\LogManager',
     ];
 
 //key = value for ini_set

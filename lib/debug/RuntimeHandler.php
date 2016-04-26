@@ -13,7 +13,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 class RuntimeHandler extends AbstractProcessingHandler
 {
 
-    protected $log;
+    public $log;
 
     /**
      * @param integer $level  The minimum logging level at which this handler will be triggered
@@ -22,14 +22,6 @@ class RuntimeHandler extends AbstractProcessingHandler
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
         parent::__construct($level, $bubble);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
-    {
-        return $this->log;
     }
 
     /**

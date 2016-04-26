@@ -8,21 +8,13 @@
 **/
 
 namespace litepubl\debug;
-use litepubl\Config;
 
 class LogException
 {
 
 public static function getLog(\Exception $e) {
 return static::getTraceLog($e->getTrace());
-
-        $this->errorlog.= str_replace("\n", "<br />\n", htmlspecialchars($log));
-        tfiler::log($log, 'exceptions.log');
-
-        if (!(Config::$debug || $this->echoexception || $this->admincookie ||  $this->getApp()->router->adminpanel)) {
-            tfiler::log($log, 'exceptionsmail.log');
-        }
-    }
+}
 
 public static function trace() {
 return static::getTraceLog(debug_backtrace());
