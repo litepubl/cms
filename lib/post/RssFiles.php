@@ -8,8 +8,9 @@
 **/
 
 namespace litepubl\post;
+    use litepubl\core\Context;
 
-class RssFiles extends \litepubl\core\Events
+class RssFiles extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $domrss;
 
@@ -24,18 +25,19 @@ class RssFiles extends \litepubl\core\Events
          $this->getApp()->router->expiredclass(get_class($this));
     }
 
-    public function request($arg) {
-        $result = '';
-        if (($arg == null) && ($this->feedburner != '')) {
-            $result.= "<?php
+    public function request(Context $context)
+    {
+    $response = $context->response;
+
+        if (($context->itemRoute['arg'] == null) && $this->feedburner)) {
+            $response->body .= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
-        return litepubl::\$router->redir('$this->feedburner', 307);
+        \\litepubl\\core\\litepubl::\$app->redirExit('$this->feedburner');
       }
       ?>";
         }
 
-        $result.= '<?php litepubl::\litepubl\core\Router::sendxml(); ?>';
-
+$response->setXml();
         $this->domrss = new DomRss();
         $this->domrss->CreateRootMultimedia( $this->getApp()->site->url .  $this->getApp()->router->url, 'media');
         $this->onroot($this->domrss);
@@ -45,8 +47,7 @@ class RssFiles extends \litepubl\core\Events
             $this->addfile($id);
         }
 
-        $result.= $this->domrss->GetStripedXML();
-        return $result;
+        $response->body .= $this->domrss->GetStripedXML();
     }
 
     private function getRecent($type, $count) {

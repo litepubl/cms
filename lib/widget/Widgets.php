@@ -8,11 +8,13 @@
 **/
 
 namespace litepubl\widget;
+    use litepubl\core\Context;
+    use litepubl\core\Response;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\core\Arr;
 
-class Widgets extends \litepubl\core\Items
+class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
 use \litepubl\core\PoolStorageTrait;
 
@@ -403,30 +405,31 @@ use \litepubl\core\PoolStorageTrait;
         return isset($_GET[$name]) ? (int)$_GET[$name] : false;
     }
 
-    private static function error_request($s) {
-        return '<?php header(\'HTTP/1.1 400 Bad Request\', true, 400); ?>' . \litepubl\core\Router::htmlheader(false) . $s;
+    private function errorRequest(Response $response, $mesg) {
+$response->status = 400;
+$response->body = $mesg;
     }
 
-    public function request($arg) {
-        $this->cache = false;
+    public function request(Context $context)
+    {
+    $response = $context->response;
+        $response->cache = false;
         $id = static ::getget('id');
         $sidebar = static ::getget('sidebar');
         $this->idurlcontext = static ::getget('idurl');
         if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) {
- return $this->error_request('Invalid params');
+ return $this->errorRequest('Invalid params');
 }
-
 
         $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
         if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !Theme::exists($themename)) $themename = Schema::i(1)->themename;
         $theme = Theme::getTheme($themename);
 
         try {
-            $result = $this->getwidgetcontent($id, $sidebar);
-            return \litepubl\core\Router::htmlheader(false) . $result;
+            $response->body= $this->getwidgetcontent($id, $sidebar);
         }
-        catch(Exception $e) {
-            return $this->error_request('Cant get widget content');
+        catch(\Exception $e) {
+            return $this->errorRequest('Cant get widget content');
         }
     }
 

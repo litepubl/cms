@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\plugins\bootstrap;
+use litepubl\core\Context;
 use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\view\Args;
@@ -51,9 +52,12 @@ $admin = $this->admintheme;
         return $admin->parsearg($tml, $args);
     }
 
-    public function request($a) {
-        if ($response = parent::request($a)) {
-            return $response;
+    public function request(Context $context)
+    {
+parent::request($context);
+    $response = $context->response;
+if ($response->status != 200) {
+return;
         }
 
         if (isset($_FILES['header'])) {
@@ -95,14 +99,12 @@ $admin = $this->admintheme;
         }
 
         $js = Str::toJson($result);
-        return "<?php
-    header('Connection: close');
-    header('Content-Length: " . strlen($js) . "');
-    header('Content-Type: text/javascript; charset=utf-8');
-    header('Date: " . date('r') . "');
-    Header( 'Cache-Control: no-cache, must-revalidate');
-    Header( 'Pragma: no-cache');
-    ?>" . $js;
+$response->body = $js;
+$response->setJson();
+$response->cache = false;
+    $response->headers['Connection'] = 'close';
+    $response->headers['Content-Length'] = strlen($js);
+    $response->headers['Date'] = date('r');
     }
 
 }

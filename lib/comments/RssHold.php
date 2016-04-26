@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\comments;
+    use litepubl\core\Context;
 use litepubl\post\Rss;
 use litepubl\post\DomRss;
 use litepubl\core\Array2prop;
@@ -15,7 +16,7 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 use litepubl\view\Theme;
 
-class RssHold extends \litepubl\core\Events
+class RssHold extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
     public $url;
 
@@ -44,18 +45,20 @@ class RssHold extends \litepubl\core\Events
          $this->getApp()->router->setexpired($this->idurl);
     }
 
-    public function request($arg) {
+    public function request(Context $context)
+    {
+    $response = $context->response;
+$response->cache = false;
+
         if (! $this->getApp()->options->user) {
- return 403;
+ return $response->forbidden();
 }
 
-
-        $result = '<?php litepubl::\litepubl\core\Router::sendxml(); ?>';
+$response->setXml();
         $rss = Rss::i();
         $rss->domrss = new DomRss;
         $this->dogetholdcomments($rss);
-        $result.= $rss->domrss->GetStripedXML();
-        return $result;
+$response->body .= $rss->domrss->GetStripedXML();
     }
 
     private function dogetholdcomments($rss) {

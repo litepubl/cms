@@ -102,9 +102,16 @@ public function setXml()
         $this->body .= '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
 }
 
-public function setJson()
+public function setJson($js = '')
 {
         $this->headers['Content-Type'] = 'application/json';
+if ($js) {
+$this->cache = false;
+$this->body = $js;
+    $this->headers['Connection'] = 'close';
+    $this->headers['Content-Length'] = strlen($js);
+    $this->headers['Date'] = date('r');
+}
 }
 
 public function redir($url, $status = 301)
