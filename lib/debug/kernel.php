@@ -17,6 +17,7 @@ foreach (array(
 
 //old storages
 'PoolStorage.php',
+'BaseCache.php',
 'CacheFile.php',
 'CacheMemcache.php',
    

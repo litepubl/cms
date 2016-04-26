@@ -102,7 +102,7 @@ $url = '/';
     }
 
     public function findurl($url) {
-        if ($result = $this->db->queryItem('url = ' . Str::quote($url))) {
+        if ($result = $this->db->findItem('url = ' . Str::quote($url))) {
             return $result;
         }
 
@@ -178,7 +178,7 @@ $url = '/';
             $this->error(sprintf('Invalid url type %s', $type));
         }
 
-        if ($item = $this->db->queryItem('url = ' . Str::quote($url))) {
+        if ($item = $this->db->findItem('url = ' . Str::quote($url))) {
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 
