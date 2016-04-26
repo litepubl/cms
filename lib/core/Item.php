@@ -14,25 +14,20 @@ class Item extends Data
     public static $instances;
 
     public static function i($id = 0) {
-        return static ::iteminstance(get_called_class() , (int)$id);
+        return static ::itemInstance(get_called_class() , (int)$id);
     }
 
-    public static function iteminstance($class, $id = 0) {
-        //fix namespace
-        if (!strpos($class, '\\') && !class_exists($class)) {
-            $class = 'litepubl\\' . $class;
-        }
-
-        $name = $class::getinstancename();
+    public static function itemInstance($class, $id = 0) {
+        $name = $class::getInstanceName();
         if (!isset(static ::$instances)) {
-            static ::$instances = array();
+            static ::$instances = [];
         }
 
         if (isset(static ::$instances[$name][$id])) {
             return static ::$instances[$name][$id];
         }
 
-        $self =  static::getAppInstance()->classes->newitem($name, $class, $id);
+        $self =  static::getAppInstance()->classes->newItem($name, $class, $id);
         return $self->loadData($id);
     }
 
@@ -72,12 +67,24 @@ class Item extends Data
 
     public function setId($id) {
         if ($id != $this->id) {
-            $name = $this->instancename;
-            if (!isset(static ::$instances)) static ::$instances = array();
-            if (!isset(static ::$instances[$name])) static ::$instances[$name] = array();
-            $a = & static ::$instances[$this->instancename];
-            if (isset($a[$this->id])) unset($a[$this->id]);
-            if (isset($a[$id])) $a[$id] = 0;
+            $name = $this->instanceName;
+            if (!isset(static ::$instances)) {
+static ::$instances = array();
+}
+
+            if (!isset(static ::$instances[$name])) {
+static ::$instances[$name] = array();
+}
+
+            $a = & static ::$instances[$this->instanceName];
+            if (isset($a[$this->id])) {
+unset($a[$this->id]);
+}
+
+            if (isset($a[$id])) {
+$a[$id] = 0;
+}
+
             $a[$id] = $this;
             $this->data['id'] = $id;
         }

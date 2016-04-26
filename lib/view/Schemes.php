@@ -27,7 +27,7 @@ use \litepubl\core\PoolStorageTrait;
     public function add($name) {
         $this->lock();
         $id = ++$this->autoid;
-        $schema = Schema::newitem($id);
+        $schema = Schema::newItem($id);
         $schema->id = $id;
         $schema->name = $name;
         $schema->data['class'] = get_class($schema);

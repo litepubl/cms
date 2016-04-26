@@ -32,7 +32,7 @@ return  $this->getApp()->db;
         ) , $arg);
     }
 
-    public function createtable($name, $struct) {
+    public function createTable($name, $struct) {
         if (!$this->engine) $this->engine = 'MyISAM'; //InnoDB
         $this->deletetable($name);
         return $this->exec("create table $this->prefix$name
@@ -42,12 +42,12 @@ return  $this->getApp()->db;
     COLLATE = utf8_general_ci");
     }
 
-    public function deletetable($name) {
+    public function deleteTable($name) {
         //$this->exec("DROP TABLE IF EXISTS $this->prefix$name");
         if ($this->table_exists($name)) $this->exec("DROP TABLE $this->prefix$name");
     }
 
-    public function deletealltables() {
+    public function deleteAllTables() {
         $list = $this->res2array($this->query("show tables from " .  $this->getApp()->options->dbconfig['dbname']));
         foreach ($list as $row) {
             $this->exec("DROP TABLE IF EXISTS " . $row[0]);
@@ -62,12 +62,12 @@ return  $this->getApp()->db;
         return $this->exec("alter table $this->prefix$table $arg");
     }
 
-    public function getAutoincrement($table) {
+    public function getAutoIncrement($table) {
         $a = $this->fetchassoc($this->query("SHOW TABLE STATUS like '$this->prefix$table'"));
         return $a['Auto_increment'];
     }
 
-    public function setAutoincrement($table, $value) {
+    public function setAutoIncrement($table, $value) {
         $this->exec("ALTER TABLE $this->prefix$table AUTO_INCREMENT = $value");
     }
 
@@ -99,7 +99,7 @@ return  $this->getApp()->db;
         $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
     }
 
-    public function addenum($table, $column, $value) {
+    public function addEnum($table, $column, $value) {
         if ($values = $this->getenum($table, $column)) {
             if (!in_array($value, $values)) {
                 $values[] = $value;
@@ -171,6 +171,17 @@ return  $this->getApp()->db;
 
         return implode(', ', $values);
     }
+
+public function getVar($name)
+{
+        $v = $this->fetchassoc($this->query("show variables like '$name'"));
+return $v['Value'];
+}
+
+public function setVar($name,$value)
+{
+$this->query("set $name = $value");
+}
 
     public function column_exists($table, $column) {
         return $this->query("SHOW COLUMNS FROM $this->prefix$table LIKE '$column'")->num_rows;

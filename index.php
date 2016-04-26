@@ -53,6 +53,9 @@ class Config {
     ];
     */
 
+//after connect to database remove from sql_mode values NO_ZERO_IN_DATE, NO_ZERO_DATE
+public static $enableZeroDatetime = false;
+
     // false | true | ['host' => '127.0.0.1', 'port' => 11211];
     public static $memcache = false;
 

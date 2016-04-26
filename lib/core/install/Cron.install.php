@@ -7,8 +7,7 @@
 * @version 6.15
 **/
 
-namespace litepubl\cron;
-use litepubl\core\Str;
+namespace litepubl\core;
 
 function CronInstall($self) {
     $manager = $self->db->man;

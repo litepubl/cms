@@ -30,8 +30,8 @@ use \litepubl\core\PoolStorageTrait;
         return parent::iteminstance($class, $id);
     }
 
-    public static function newitem($id) {
-return static::getAppInstance()->classes->newitem(static ::getinstancename() , get_called_class() , $id);
+    public static function newItem($id) {
+return static::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
     }
 
     public static function getInstancename() {

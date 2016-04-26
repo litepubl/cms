@@ -9,7 +9,7 @@
 
 namespace litepubl\core;
 
-function UrlmapInstall($self) {
+function RouterInstall($self) {
     $manager = DBManager::i();
     $manager->CreateTable('urlmap', file_get_contents(dirname(__file__) . '/sql/router.sql'));
 }

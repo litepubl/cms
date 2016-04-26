@@ -13,7 +13,7 @@
   commentscount int unsigned NOT NULL default '0',
   pingbackscount int unsigned NOT NULL default '0',
   pagescount int unsigned NOT NULL default '0',
-  posted datetime NOT NULL default '00-00-00 00:00:00',
+  posted datetime NOT NULL default '0000-00-00 00:00:00',
   rawhead text NOT NULL,
   title text NOT NULL,
   title2 text NOT NULL,

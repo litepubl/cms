@@ -9,6 +9,7 @@
 
 namespace litepubl\core;
 use litepubl\view\Lang;
+use litepubl\utils\Filer;
 
 class Plugins extends Items
  {
@@ -183,7 +184,8 @@ static ::$abouts = array();
     public function update(array $list) {
         $add = array_diff($list, array_keys($this->items));
         $delete = array_diff(array_keys($this->items) , $list);
-        $delete = array_intersect($delete, tfiler::getdir( $this->getApp()->paths->plugins));
+        $delete = array_intersect($delete, Filer::getdir( $this->getApp()->paths->plugins));
+
         $this->lock();
         foreach ($delete as $name) {
             $this->Delete($name);

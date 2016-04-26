@@ -79,12 +79,14 @@ $this->createData();
         foreach ($this->coinstances as $coinstance) {
             if (isset($coinstance->$name)) {
                 $coinstance->$name = $value;
-                return;
+                return true;
             }
         }
 
         return false;
     }
+
+return true;
 }
 
     public function __call($name, $params) {

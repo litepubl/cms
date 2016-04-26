@@ -29,7 +29,7 @@ public static function sqlTime($date = 0) {
 }
 
 public static function quote($s) {
-    return  $this->getApp()->db->quote($s);
+    return  litepubl::$app->db->quote($s);
 }
 
 public static function md5Rand() {

@@ -66,6 +66,11 @@ $options = $this->getApp()->options;
 
         $this->mysqli->set_charset('utf8');
         //$this->query('SET NAMES utf8');
+
+if (Config::$enableZeroDatetime ) {
+$this->enableZeroDatetime();
+}
+
         /* lost performance
         $timezone = date('Z') / 3600;
         if ($timezone > 0) $timezone = "+$timezone";
@@ -81,7 +86,7 @@ $options = $this->getApp()->options;
     }
     */
     public function __get($name) {
-if ($name == 'main') {
+if ($name == 'man') {
 return DBManager::i();
 }
 
@@ -140,10 +145,13 @@ $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
 
     protected function logError($mesg) {
         $log = "exception:\n$mesg\n$this->sql\n";
-$log .= $this->getApp()->getLogManager()->trace();
+$app = $this->getApp();
+$log .= $app->getLogManager()->trace();
         $log.= $this->performance();
-$this->getApp()->alert($log);
-    }
+die($log);
+//$app->getLogger()->alert($log);
+throw new \Exception($log);
+}
 
     public function performance() {
         $result = '';
@@ -421,4 +429,13 @@ $this->getApp()->alert($log);
         return is_object($res) ? $res->num_rows : 0;
     }
 
+public function enableZeroDatetime()
+{
+        $v = $this->fetchassoc($this->query("show variables like 'sql_mode'"));
+$a = explode(',', $v['Value']);
+$ex = ['NO_ZERO_IN_DATE', 'NO_ZERO_DATE'];
+$a = array_diff($a, $ex);
+$v = implode(',', $a);
+$this->query("set sql_mode = '$v'");
+}
 }

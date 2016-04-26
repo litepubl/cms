@@ -17,7 +17,7 @@ function SchemesInstall($self) {
     $self->lock();
     $lang = Lang::admin('names');
     $default = $self->add($lang->default);
-    $def = Scheme::i($default);
+    $def = Schema::i($default);
     $def->sidebars = array(
         array() ,
         array() ,
@@ -25,7 +25,7 @@ function SchemesInstall($self) {
     );
 
     $idadmin = $self->add($lang->adminpanel);
-    $admin = Scheme::i($idadmin);
+    $admin = Schema::i($idadmin);
     $admin->menuclass = 'litepubl\admin\menus';
 
     $self->defaults = array(
