@@ -9,7 +9,6 @@
 
 namespace litepubl\core;
 use litepubl\Config;
-use litepubl\debug\LogException;
 
 class DB
 {
@@ -24,7 +23,6 @@ use Singleton;
     public $table;
     public $prefix;
     public $history;
-    public $debug;
 
     public function __construct() {
         $this->sql = '';
@@ -36,7 +34,6 @@ use Singleton;
     }
 
     public function getConfig() {
-        $this->debug = & config::$debug;
         if (config::$db) {
             return config::$db;
         }
@@ -97,7 +94,7 @@ return DBManager::i();
 
     public function query($sql) {
         $this->sql = $sql;
-        if ($this->debug) {
+        if (Config::$debug) {
             $this->history[] = array(
                 'sql' => $sql,
                 'time' => 0
@@ -113,7 +110,10 @@ return DBManager::i();
             $sql_select = ($select == strtolower(substr($sql, 0, strlen($select)))) && !strpos($sql, 'last_insert_id');
             if ($sql_select) {
                 if ($this->result = $this->cache->get($sql)) {
-                    if ($this->debug) $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+                    if (Config::$debug) {
+$this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+}
+
                     return $this->result;
                 }
             } else {
@@ -122,17 +122,15 @@ return DBManager::i();
         }
 
         $this->result = $this->mysqli->query($sql);
-        if ($this->debug) {
+        if (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
-                echo "<pre>\n$sql\n";
-                var_dump($r->fetch_assoc());
-                echo "</pre>\n";
+$this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
         }
 
         if ($this->result == false) {
-            $this->doerror($this->mysqli->error);
+            $this->logError($this->mysqli->error);
         } elseif ($this->cache && $sql_select) {
             $this->cache->set($sql, $this->result);
         }
@@ -140,17 +138,11 @@ return DBManager::i();
         return $this->result;
     }
 
-    protected function doerror($mesg) {
-        if (!$this->debug) {
-return LogException::trace($this->sql . "\n" . $mesg);
-}
-
+    protected function logError($mesg) {
         $log = "exception:\n$mesg\n$this->sql\n";
-$log .= LogException::trace();
+$log .= $this->getApp()->getLogManager()->trace();
         $log.= $this->performance();
-        $log = str_replace("\n", "<br />\n", htmlspecialchars($log));
-$log = str_replace(dirname(dirname(__dir__)), '', $log);
-        die($log);
+$this->getApp()->alert($log);
     }
 
     public function performance() {

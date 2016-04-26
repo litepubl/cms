@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\debug;
+use litepubl\Config;
 use litepubl\core\App;
 use Monolog\Logger;
 use Monolog\ErrorHandler;
@@ -23,12 +24,14 @@ public $runtime;
 public function __construct(App $app)
  {
 $logger = new logger('general');
-$this->logger = logger;
+$this->logger = $logger;
 
+if (!Config::$debug) {
 $handler = new ErrorHandler($logger);
 $handler->registerErrorHandler([], false);
 //$handler->registerExceptionHandler();
 $handler->registerFatalHandler();
+}
 
 $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
 $handler->setFormatter(new LineFormatter(null,  null,true, false));
@@ -46,6 +49,13 @@ public function logException(\Exception $e) {
 $log .= LogException::getLog($e);
 $log = str_replace(dirname(dirname(__DIR__)), '', $log);
 $this->logger->alert($log);
+}
+
+public function trace()
+{
+$log = LogException::trace();
+$log = str_replace(dirname(dirname(__DIR__)), '', $log);
+$this->logger->info($log);
 }
 
 public function getHtml()

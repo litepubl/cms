@@ -135,10 +135,7 @@ $controller->request($context);
 $this->router->afterrequest($context);
 }
 
-if ($this->logToEcho) {
-echo $this->logToEcho;
-$this->logToEcho = '';
-}
+$this->showErrors();
 
 if ($obEnabled) {	
 if ($this->onClose->getCount()) {
@@ -175,7 +172,7 @@ $this->process();
         }
 
 $this->poolStorage->commit();
-         $this->showErrors();
+$this->showErrors();
     }
 
 public function getLogManager()
@@ -202,9 +199,8 @@ $this->getLogManager()->logException($e);
 }
 
     public function showErrors() {
-Str::log($this->runtimeLog->close());
-        if (Config::$debug && $this->errorlog && ($this->options->echoexception || $this->options->admincookie || $this->router->adminpanel)) {
-            echo $this->errorlog;
+        if (Config::$debug && $this->logManager && ($this->options->echoexception || $this->options->admincookie)) {
+            echo $this->logManager->getHtml();
         }
     }
 
