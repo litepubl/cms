@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\admin;
+use litepubl\core\Context;
 use litepubl\core\UserGroups;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;

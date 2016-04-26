@@ -84,7 +84,7 @@ class Item extends Data
     }
 
     public function loadItem($id) {
-        if ($id == $this->id) 
+        if ($id == $this->id) {
 return true;
 }
 

@@ -190,10 +190,6 @@ return;
         }
 
         $js = Str::toJson($result);
-$response->cache = false;
-    $response->headers['Connection'] = 'close);
-    $response->header['Content-Length'] = strlen($js);
-    $response->headers['Content-Type'] = 'application/json; charset=utf-8';
-    $response->header['Date'] = date('r');
+$response->setJson($js);
     }
 }

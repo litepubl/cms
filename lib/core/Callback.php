@@ -28,7 +28,7 @@ return $indexes[count($indexes) - 1];
 public function delete($index)
 {
 if (isset($this->events[$index])) {
-unset($this->events[$index];
+unset($this->events[$index]);
 }
 }
 

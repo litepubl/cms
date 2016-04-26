@@ -36,10 +36,10 @@ return;
         }
 
         $this->beforerequest($context);
-        $context->itemRoute = $this->findItem($context);
+        $context->itemRoute = $this->queryItem($context);
     }
 
-    public function findItem(Context $context)
+    public function queryItem(Context $context)
  {
 $url = $context->request->url;
         if ($result = $this->query($url)) {
@@ -102,7 +102,7 @@ $url = '/';
     }
 
     public function findurl($url) {
-        if ($result = $this->db->finditem('url = ' . Str::quote($url))) {
+        if ($result = $this->db->queryItem('url = ' . Str::quote($url))) {
             return $result;
         }
 
@@ -178,7 +178,7 @@ $url = '/';
             $this->error(sprintf('Invalid url type %s', $type));
         }
 
-        if ($item = $this->db->finditem('url = ' . Str::quote($url))) {
+        if ($item = $this->db->queryItem('url = ' . Str::quote($url))) {
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 

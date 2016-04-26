@@ -29,7 +29,7 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
     {
     $response = $context->response;
 
-        if (($context->itemRoute['arg'] == null) && $this->feedburner)) {
+        if (($context->itemRoute['arg'] == null) && $this->feedburner) {
             $response->body .= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
         \\litepubl\\core\\litepubl::\$app->redirExit('$this->feedburner');

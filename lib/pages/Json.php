@@ -47,7 +47,7 @@ $post = $request->getPost();
 }
 
 $args = false;
-        if ($s = trim($request->getInput()) {
+        if ($s = trim($request->getInput)()) {
             $args = json_decode($s, true);
         }
 
@@ -144,11 +144,7 @@ $resp['id'] = $id;
 
     public function json(Response $response, $result)
  {
-$response->body = Str::toJson($result);
-$response->headers['Connection'] = 'close';
-    $response->headers['Content-Length'] = strlen($response->body);
-    $response->headers['Content-Type'] = 'application/json';
-    $response->headers['Date'] date('r');
+$response->setJson(Str::toJson($result));
     }
 
     public function jsonError(Response $response, $id, $code, $message) {

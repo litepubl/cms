@@ -16,6 +16,7 @@ use litepubl\core\Site;
 use litepubl\utils\Filer;
 
 echo "<pre>\n";
+//return;
  litepubl::$app->classes = Classes::i();
  litepubl::$app->options = Options::i();
  litepubl::$app->site = Site::i();

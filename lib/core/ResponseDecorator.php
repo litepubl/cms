@@ -1,6 +1,7 @@
 <?php
 
 namespace litepubl\core;
+use Psr\Http\Message\StreamInterface;
 use Zend\Diactoros\Stream;
 
 class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
@@ -68,7 +69,8 @@ return false;
     }
 
     public function getHeader($name)
-if ($v = $this->getHeaderLine($name) {
+{
+if ($v = $this->getHeaderLine($name)) {
 return [$v];
 }
 
@@ -141,7 +143,7 @@ return is_string($value) ? $value: implode(',', $value);
         $new = clone $this;
 foreach ($new->litepublResponse->headers as $k => $v) {
 if ($name == strtolower($k)) {
-        unset($new->litepublResponse->headers[$k);
+        unset($new->litepublResponse->headers[$k]);
 }
 }
 

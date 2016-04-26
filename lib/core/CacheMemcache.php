@@ -42,7 +42,7 @@ $this->items = [];
     }
 
     public function setString($filename, $str) {
-$this->items[$filename] = $str;[
+$this->items[$filename] = $str;
         $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
     }
 

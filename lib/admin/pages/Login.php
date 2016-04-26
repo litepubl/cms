@@ -39,7 +39,7 @@ $context->response->redir('/admin/login/');
 
     private function logout(Context $context) {
 $app = $this->getApp();
-         $app>options->logout();
+         $app->options->logout();
         setcookie('backurl', '', 0,  $app->site->subdir, false);
 $context->response->cache = false;
 $context->response->redir('/admin/login/');

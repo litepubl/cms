@@ -88,7 +88,7 @@ return;
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemexists($this->idpost)) {
- return $response-.frobidden();
+ return $response->forbidden();
 }
 
             if (! $this->getApp()->options->hasgroup('editor')) {

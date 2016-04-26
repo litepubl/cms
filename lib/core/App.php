@@ -11,7 +11,7 @@ namespace litepubl\core;
 use litepubl\config;
 use litepubl\debug\LoggerFactory;
 
-class App implements \litepubl\core\ResponsiveInterface
+class App
  {
     public  $cache;
     public  $classes;
@@ -129,7 +129,7 @@ if ($obEnabled) {
             call_user_func_array(Config::$beforeRequest, [$this]);
         }
 
-if (!$controller->cached($context)) }
+if (!$controller->cached($context)) {
 $this->router->request($context);
 $controller->request($context);
 $this->router->afterrequest($context);
@@ -170,7 +170,7 @@ $this->logException($e);
             if (!config::$ignoreRequest) {
 $this->process();
         }
-        catch(\Exception $e) {
+        } catch(\Exception $e) {
              $this->logException($e);
         }
 
@@ -209,8 +209,8 @@ $this->log('alert', LoggerFactory::getException($e));
 public function redirExit($url)
 {
 $this->poolStorage->commit();
-if (Str::begin($url, 'http')) {
-$url = $this->site->url . $url);
+if (!Str::begin($url, 'http')) {
+$url = $this->site->url . $url;
 }
 
 header('HTTP/1.1 307 Temporary Redirect', true, 307);

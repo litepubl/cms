@@ -22,7 +22,7 @@ public function notfound()
 {
 $filename = '404.php';
 if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result;
+eval('?>' . $result);
 return $result;
 }
 
@@ -41,9 +41,10 @@ return $result;
 }
 
 public function forbidden()
+{
 $filename = '403.php';
 if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result;
+eval('?>' . $result);
 return $result;
 }
 

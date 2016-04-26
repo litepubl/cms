@@ -14,8 +14,13 @@ class BaseCache
 protected $items = [];
 protected $lifetime = 3600;
 
-    abstract public function getString($filename);
-    abstract public function setString($filename, $str);
+    public function getString($filename)
+{
+}
+
+    public function setString($filename, $str)
+{
+}
 
     public function set($filename, $data) {
         $this->setString($filename, $this->serialize($data));

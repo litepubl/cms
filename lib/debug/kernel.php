@@ -16,14 +16,14 @@ foreach (array(
 'StorageMemcache.php',
 
 //old storages
-'SharedStorage.php',
+'PoolStorage.php',
 'CacheFile.php',
 'CacheMemcache.php',
    
 'Events.php',
 
 'Items.php',
-'SharedStorageTrait.php',
+'PoolStorageTrait.php',
 'Item.php',
 'Classes.php',
 'Options.php',

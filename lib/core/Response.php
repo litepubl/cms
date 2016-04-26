@@ -53,7 +53,7 @@ $this->headers['Pragma'] = 'no-cache';
 }
 
 public function send() {
-if (!isset($this->phrases]$this->status])) {
+if (!isset($this->phrases[$this->status])) {
 $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
 }
 
@@ -61,7 +61,7 @@ header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$
 
 $this->setCacheHeaders($this->cache);
 if (isset($this->headers['Date'])) {
-unset($this-.headers['Last-Modified']);
+unset($this->headers['Last-Modified']);
 }
 
 foreach ($this->headers as $k => $v) {
@@ -77,12 +77,13 @@ call_user_func_array($this->body, [$this]);
 
 public function getString()
 {
-return $this->__tostring(0;
+return $this->__tostring();
 }
 
 public function __tostring()
  {
-$headers =sprintf('header(\'HTTP/%s %s %s\', true, %s);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status));
+$headers =sprintf('header(\'HTTP/%s %d %s\', true, %d);',
+ $this->protocol, $this->status, $this->phrases[$this->status], $this->status);
 
 foreach ($this->headers as $k => $v) {
 $headers .= sprintf('header(\'%s: %s\');', $k, $v);

@@ -42,7 +42,7 @@ $this->renderStatus($context);
 public function render(Context $context)
 {
 if (!($context->model instanceof ResponsiveInterface)) {
-trow new \RuntimeException('Model not implemented ResponsiveInterface');
+throw new \RuntimeException('Model not implemented ResponsiveInterface');
 }
 
 $context->model->request($context);
@@ -130,5 +130,8 @@ if ($this->cache && $response->cache) {
 $cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
 }
+}
+
+
 }
 

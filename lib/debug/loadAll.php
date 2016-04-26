@@ -12,7 +12,7 @@ namespace litepubl\debug;
 function includeDir($dir) {
 $list = dir($dir );
 while ($name = $list->read()) {
-if ($name == '.' || $name == '..') {
+if ($name == '.' || $name == '..' || $name == 'kernel.php') {
  continue;
 }
 
@@ -38,8 +38,12 @@ $class = trim($class, '\\');
 $class = substr($class, strpos($class, '\\') + 1);
 $filename = dirname(__DIR__) . '/' . $class . '.php';
 echo "$class<br>";
+//echo "$filename\n";
 require $filename;
 });
+
+//include (dirname(dirname(__DIR__ )). '/index.debug.php');
+include (__DIR__ . '/Config.php');
 include (__DIR__ . '/kernel.php');
-includeDir(dirname(__DIR__));
-includeDir(dirname(dirname(__DIR__)) . '/plugins');
+
+includeDir(dirname(__DIR__));includeDir(dirname(dirname(__DIR__)) . '/plugins');

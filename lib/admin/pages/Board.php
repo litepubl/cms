@@ -12,7 +12,6 @@ namespace litepubl\admin\pages;
 use litepul\view\Lang;
 use litepul\view\Schemes;
 use litepul\core\UserGroups;
-use litepubl\view\Lang;
 
 class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {

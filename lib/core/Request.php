@@ -19,9 +19,10 @@ public function __construct($host, $url)
         $this->page = 1;
         $this->uripath = [];
 
-iif ($url) {
-        if ( $this->getApp()->site->q == '?') {
-            $this->url = substr($url, strlen( $this->getApp()->site->subdir));
+if ($url) {
+$app = $this->getApp();
+        if ( $app->site->q == '?') {
+            $this->url = substr($url, strlen( $app->site->subdir));
         } else {
             $this->url = $_GET['url'];
         }
