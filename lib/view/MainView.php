@@ -33,19 +33,19 @@ public $viewImplemented;
         parent::create();
         $this->basename = 'template';
         $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-        $this->path =  $this->getApp()->paths->themes . 'default' . DIRECTORY_SEPARATOR;
-        $this->url =  $this->getApp()->site->files . '/themes/default';
+$app = $this->getApp();
+        $this->path =  $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
+        $this->url =  $app->site->files . '/themes/default';
         $this->viewImplemented = false;
         $this->ltoptions = array(
-            'url' =>  $this->getApp()->site->url,
-            'files' =>  $this->getApp()->site->files,
-            'idurl' =>  $this->getApp()->router->item['id'],
-            'lang' =>  $this->getApp()->site->language,
-            'video_width' =>  $this->getApp()->site->video_width,
-            'video_height' =>  $this->getApp()->site->video_height,
-            'theme' => array() ,
-            'custom' => array() ,
+            'url' =>  $app->site->url,
+            'files' =>  $app->site->files,
+            'idurl' =>  0,
+            'lang' =>  $app->site->language,
+            'theme' => [],
+            'custom' => [],
         );
+
         $this->hover = true;
         $this->data['heads'] = '';
         $this->data['js'] = '<script type="text/javascript" src="%s"></script>';

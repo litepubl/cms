@@ -19,14 +19,13 @@ use \litepubl\core\AppTrait;
 
 public static function create() {
 $app = static::getAppInstance();
-$app->includeComposerAutoload();
-
 $logger = new logger('general');
 $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
 $logger->pushHandler($handler);
+return $logger;
 
-$handler = new BufferHandler();
 $handler->setFormatter(new HtmlFormatter());
+$handler = new BufferHandler();
 $logger->pushHandler($handler);
 return $logger;
 }

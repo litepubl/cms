@@ -145,11 +145,11 @@ return DBManager::i();
 return LogException::trace($this->sql . "\n" . $mesg);
 }
 
-
         $log = "exception:\n$mesg\n$this->sql\n";
 $log .= LogException::trace();
         $log.= $this->performance();
         $log = str_replace("\n", "<br />\n", htmlspecialchars($log));
+$log = str_replace(dirname(dirname(__dir__)), '', $log);
         die($log);
     }
 
