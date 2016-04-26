@@ -19,6 +19,7 @@ public $controller;
 public $context;
     public  $db;
     public  $logger;
+public $runtimeLog;
     public  $memcache;
     public  $microtime;
 public $onClose;
@@ -201,6 +202,7 @@ $this->log('alert', LoggerFactory::getException($e));
 }
 
     public function showErrors() {
+Str::log($this->runtimeLog->close());
         if (Config::$debug && $this->errorlog && ($this->options->echoexception || $this->options->admincookie || $this->router->adminpanel)) {
             echo $this->errorlog;
         }

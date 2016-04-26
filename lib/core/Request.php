@@ -44,6 +44,7 @@ $host = \strtolower(\trim($host));
         }
 
         if (config::$dieOnInvalidHost) {
+throw new \Exception('cant resolve domain name');
             die('cant resolve domain name');
         }
 

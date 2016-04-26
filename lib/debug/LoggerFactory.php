@@ -22,11 +22,11 @@ $app = static::getAppInstance();
 $logger = new logger('general');
 $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
 $logger->pushHandler($handler);
-return $logger;
 
+            $handler = new RuntimeHandler();
 $handler->setFormatter(new HtmlFormatter());
-$handler = new BufferHandler();
 $logger->pushHandler($handler);
+$app->runtimeLog = $handler;
 return $logger;
 }
 
