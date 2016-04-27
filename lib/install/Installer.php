@@ -18,6 +18,7 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Js;
 use litepubl\view\Css;
+use litepubl\view\Schema;
 use litepubl\xmlrpc;
 use litepubl\core\Plugins;
 use litepubl\view\Args;
@@ -89,7 +90,7 @@ $this->resulttype = $_GET['resulttype'];
 return;
 }
 
-        $this->app->PoolStorage->saveModified();
+        $this->app->poolStorage->commit();
 
         $result = array(
             'url' => $this->app->site->url,
@@ -217,7 +218,6 @@ $obj = $classes->getInstance('litepubl\\' . $classname);
     $css->unlock();
     $js->unlock();
     $posts->unlock();
-     $this->getApp()->router->unlock();
 }
 
     public function run() {

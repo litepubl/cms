@@ -10,33 +10,33 @@
 namespace litepubl\view;
 use litepubl\widget\Widgets;
 use litepubl\core\Str;
+use litepubl\perms\Perm;
 
 class MainView extends \litepubl\core\Events
 {
 use \litepubl\core\PoolStorageTrait;
 
+public $context;
     public $custom;
     public $extrahead;
     public $extrabody;
     public $hover;
     public $ltoptions;
-    public $model;
+    public $view;
     public $path;
     public $result;
     public $schema;
-public $viewImplemented;
     public $url;
 
     protected function create() {
+$app = $this->getApp();
         //prevent recursion
-         $this->getApp()->classes->instances[get_class($this) ] = $this;
+$app->classes->instances[get_class($this) ] = $this;
         parent::create();
         $this->basename = 'template';
         $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-$app = $this->getApp();
         $this->path =  $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url =  $app->site->files . '/themes/default';
-        $this->viewImplemented = false;
         $this->ltoptions = array(
             'url' =>  $app->site->url,
             'files' =>  $app->site->files,
@@ -52,15 +52,14 @@ $app = $this->getApp();
         $this->data['jsready'] = '<script type="text/javascript">$(document).ready(function() {%s});</script>';
         $this->data['jsload'] = '<script type="text/javascript">$.load_script(%s);</script>';
         $this->data['footer'] = '<a href="http://litepublisher.com/">Powered by Lite Publisher</a>';
-        $this->data['tags'] = array();
         $this->addmap('custom', array());
         $this->extrahead = '';
         $this->extrabody = '';
         $this->result = '';
     }
 
-    public function assignmap() {
-        parent::assignmap();
+    public function assignMap() {
+        parent::assignMap();
         $this->ltoptions['custom'] = & $this->custom;
         $this->ltoptions['jsmerger'] = & $this->data['jsmerger'];
         $this->ltoptions['cssmerger'] = & $this->data['cssmerger'];
@@ -69,87 +68,75 @@ $app = $this->getApp();
     public function __get($name) {
         if (method_exists($this, $get = 'get' . $name)) {
 return $this->$get();
-}
-
-        if (array_key_exists($name, $this->data)) {
+} elseif (array_key_exists($name, $this->data)) {
 return $this->data[$name];
-}
-
-        if (preg_match('/^sidebar(\d)$/', $name, $m)) {
+} elseif (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
-            return $widgets->getsidebarindex($this->model, $this->schema, (int)$m[1]);
-        }
-
-        if (isset($this->model) && isset($this->model->$name)) {
-return $this->model->$name;
+            return $widgets->getSidebarIndex($this->view, $this->schema, (int)$m[1]);
+        } elseif (isset($this->view) && isset($this->view->$name)) {
+return $this->view->$name;
 }
 
         return parent::__get($name);
     }
 
-    protected function getModellSchema($model) {
-        return $this->viewImplemented ? Schema::getSchema($model) : Schema::i();
-    }
+    public function render(Context $context) {
+$this->context = $context;
+        $this->view = $context->view;
 
-    public function render($model) {
-        $this->model = $model;
 $vars = new Vars();
-$vars->model = $model;
+$vars->view = $view;
 $vars->template = $this;
 $vars->mainview = $this;
 
-        $this->viewImplemented = $model instanceof ViewInterface;
-        $this->schema = $this->getModellSchema($model);
+        $this->schema = Schema::getSchema($context->model);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
-         $this->getApp()->classes->instances[get_class($theme) ] = $theme;
-        $this->path =  $this->getApp()->paths->themes . $theme->name . DIRECTORY_SEPARATOR;
-        $this->url =  $this->getApp()->site->files . '/themes/' . $theme->name;
-        if ($this->schema->hovermenu) {
-            $this->hover = $theme->templates['menu.hover'];
-            if ($this->hover != 'bootstrap') $this->hover = ($this->hover == 'true');
-        } else {
-            $this->hover = false;
+
+$app = $this->getApp();
+         $app->classes->instances[get_class($theme) ] = $theme;
+        $this->path =  $app->paths->themes . $theme->name . DIRECTORY_SEPARATOR;
+        $this->url =  $app->site->files . '/themes/' . $theme->name;
+$this->hover = $this->getHover($this->schema);
+
+        if (isset($context->model->idperm) && ($idperm = $context->model->idperm)) {
+            $perm = Perm::i($idperm);
+$perm->setResponse($context->response, $context->model);
         }
 
-        $this->result = $this->httpheader();
-        $this->result.= $theme->render($model);
-
+        $context->response->body .= $theme->render($view);
         $this->onbody($this);
         if ($this->extrabody) {
-$this->result = str_replace('</body>', $this->extrabody . '</body>', $this->result);
+$context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
 }
 
         $this->onrequest($this);
-        return $this->result;
+
+$this->context = null;
+$this->view = null;
+$this->schema = null;
     }
 
-    protected function httpheader() {
-        $ctx = $this->model;
-        if (method_exists($ctx, 'httpheader')) {
-            $result = $ctx->httpheader();
-            if (!empty($result)) {
-return $result;
+protected function getHover(Schema $schema)
+{
+$result = false;
+        if ($schema->hovermenu) {
+$result = $schema->theme->templates['menu.hover'];
+            if ($result != 'bootstrap') {
+$result = ($result == 'true');
 }
         }
 
-        if (isset($ctx->idperm) && ($idperm = $ctx->idperm)) {
-            $perm = tperm::i($idperm);
-            if ($result = $perm->getheader($ctx)) {
-                return $result .  $this->getApp()->router->htmlheader($ctx->cache);
-            }
-        }
-
-        return  $this->getApp()->router->htmlheader($ctx->cache);
-    }
+return $result;
+}
 
     //html tags
     public function getSidebar() {
-        return Widgets::i()->getsidebar($this->model, $this->schema);
+        return Widgets::i()->getSidebar($this->view, $this->schema);
     }
 
     public function getTitle() {
-        $title = $this->viewImplemented ? $this->model->gettitle() : '';
+        $title = $this->view->gettitle();
         if ($this->callevent('ontitle', array(&$title
         ))) {
             return $title;
@@ -170,39 +157,20 @@ return  $this->getApp()->site->name;
         return $result;
     }
 
-    public function getIcon() {
-        $result = '';
-        if (isset($this->model) && isset($this->model->icon)) {
-            $icon = $this->model->icon;
-            if ($icon > 0) {
-                $files = Files::i();
-                if ($files->itemexists($icon)) $result = $files->geturl($icon);
-            }
-        }
-        if ($result == '') {
- return  $this->getApp()->site->files . '/favicon.ico';
-}
-
-
-        return $result;
-    }
-
     public function getKeywords() {
-        $result = $this->viewImplemented ? $this->model->getkeywords() : '';
+        $result = $this->view->getkeywords();
         if ($result == '') {
  return  $this->getApp()->site->keywords;
 }
-
 
         return $result;
     }
 
     public function getDescription() {
-        $result = $this->viewImplemented ? $this->model->getdescription() : '';
+        $result = $this->view->getdescription();
         if ($result == '') {
  return  $this->getApp()->site->description;
 }
-
 
         return $result;
     }
@@ -220,7 +188,7 @@ return  $this->getApp()->site->name;
             return $result;
         }
 
-        $menus = getinstance($menuclass);
+        $menus = static::iGet($menuclass);
         $result = $menus->getmenu($this->hover, 0);
          $this->getApp()->router->cache->set($filename, $result);
         return $result;
@@ -242,7 +210,7 @@ return  $this->getApp()->site->name;
         return sprintf($this->jsload, $s);
     }
 
-    public function addtohead($s) {
+    public function addToHead($s) {
         $s = trim($s);
         if (false === strpos($this->heads, $s)) {
             $this->heads = trim($this->heads) . "\n" . $s;
@@ -250,7 +218,7 @@ return  $this->getApp()->site->name;
         }
     }
 
-    public function deletefromhead($s) {
+    public function deleteFromHead($s) {
         $s = trim($s);
         $i = strpos($this->heads, $s);
         if (false !== $i) {
@@ -262,7 +230,7 @@ return  $this->getApp()->site->name;
 
     public function getHead() {
         $result = $this->heads;
-        if ($this->viewImplemented) $result.= $this->model->gethead();
+$result.= $this->view->gethead();
         $result = $this->getltoptions() . $result;
         $result.= $this->extrahead;
         $result = $this->schema->theme->parse($result);
@@ -275,7 +243,7 @@ return  $this->getApp()->site->name;
         $result = '';
         $this->callevent('beforecontent', array(&$result
         ));
-        $result.= $this->viewImplemented ? $this->model->getcont() : '';
+        $result.= $this->view->getcont();
         $this->callevent('aftercontent', array(&$result
         ));
         return $result;

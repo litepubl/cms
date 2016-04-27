@@ -8,10 +8,11 @@
 **/
 
 namespace litepubl\post;
-use litepubl\utils\LinkGenerator;
+use litepubl\core\Cron;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\utils\LinkGenerator;
 
 class Posts extends \litepubl\core\Items
  {
@@ -186,7 +187,7 @@ class Posts extends \litepubl\core\Items
         $post->title = trim($post->title);
         $post->modified = time();
         $post->revision = $this->revision;
-        $post->class = str_replace('\\', '-', get_class($post));
+        $post->class = str_replace('\\', '-', ltrim(get_class($post), '\\'));
         if (($post->status == 'published') && ($post->posted > time())) {
             $post->status = 'future';
         } elseif (($post->status == 'future') && ($post->posted <= time())) {
@@ -273,7 +274,7 @@ class Posts extends \litepubl\core\Items
     public function updated(tpost $post) {
         $this->PublishFuture();
         $this->UpdateArchives();
-        tcron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
+        Cron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
     }
 
     public function UpdateArchives() {

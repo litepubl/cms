@@ -47,12 +47,12 @@ $this->renderStatus($context);
 }
 
 public function render(Context $context)
-{
-if (!($context->model instanceof ResponsiveInterface)) {
-throw new \RuntimeException('Model not implemented ResponsiveInterface');
+
+if (!$context->view && !($context->view  = $this->findView($context))) {
+throw new \RuntimeException('View not found form model');
 }
 
-$context->model->request($context);
+$context->view->request($context);
 $response = $context->response;
 if (!$response->body && $response->status == 200) {
 MainView::i()->render($context);
@@ -62,6 +62,18 @@ $response->send();
 if ($this->cache && $response->cache) {
 $this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
 }
+}
+
+public function findView(Context$context)
+{
+$model = $context->model;
+if ($model instanceof ResponsiveInterface) {
+return $model;
+} elseif (isset($model->view) && ($view = $model->view) && ($view instanceof ResponsiveInterface)) {
+return $view;
+}
+
+return false;
 }
 
 public function cached(Context $context)

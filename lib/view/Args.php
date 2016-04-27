@@ -11,12 +11,14 @@ namespace litepubl\view;
 
 class Args
  {
+use \litepubl\core\AppTrait;
+
     public $data;
     public $callbacks;
     public $callback_params;
 
     public static function i() {
-        return  $this->getApp()->classes->newinstance(__class__);
+        return  $this->getApp()->classes->neIinstance(get_called_class());
     }
 
     public function __construct($thisthis = null) {

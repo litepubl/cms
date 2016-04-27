@@ -22,8 +22,8 @@ class Admin extends Base
         $result = static::iGet(get_called_class());
         if (!$result->name) {
 $app = static::getAppInstance();
-if ($app->context && $app->context->model && isset($app->context->model->idschema)) {
-            $result->name = Schema::getSchema($app->context->model)->adminname;
+if ($app->context && $app->context->view && isset($app->context->view->idschema)) {
+            $result->name = Schema::getSchema($app->context->view)->adminname;
             $result->load();
         }
 }

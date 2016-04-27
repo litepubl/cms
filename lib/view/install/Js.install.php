@@ -28,7 +28,7 @@ function JsInstall($self) {
         '/js/jquery/jquery-$site.jquery_version.min.js',
         '/js/plugins/class-extend.min.js',
         '/js/plugins/jquery.cookie.min.js',
-        '/js/plugins/Str::toJson.min.js',
+        '/js/plugins/tojson.min.js',
         '/js/plugins/fontfaceobserver.js',
 
         // litepubl/system
