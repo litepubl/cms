@@ -156,7 +156,7 @@ use \litepubl\core\PoolStorageTrait;
             return $this->error("The $class class not found");
         }
 
-        $result = getinstance($class);
+        $result = static::iGet($class);
         $result->id = $id;
         return $result;
     }

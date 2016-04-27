@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Filter;
 
 class tfaqmenu extends tmenu {
 
@@ -46,7 +47,7 @@ class tfaqmenu extends tmenu {
         $lines = explode("\n", $content);
         $q = array();
         $a = array();
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         foreach ($lines as $s) {
             $s = trim($s);
             if (Str::begin($s, 'q:') || Str::begin($s, 'Q:')) {

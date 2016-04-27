@@ -68,7 +68,7 @@ class Transform
     );
 
     public static function i(tpost $post) {
-        $self = getinstance(__class__);
+        $self = static::iGet(__class__);
         $self->post = $post;
         return $self;
     }

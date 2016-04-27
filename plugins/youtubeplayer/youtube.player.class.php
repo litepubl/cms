@@ -8,12 +8,13 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Filter;
 
 class tyoutubeplayer extends \litepubl\core\Plugin
  {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -44,11 +45,11 @@ class tyoutubeplayer extends \litepubl\core\Plugin
     }
 
     public function install() {
-        tcontentfilter::i()->afterfilter = $this->filter;
+        Filter::i()->afterfilter = $this->filter;
     }
 
     public function uninstall() {
-        tcontentfilter::i()->unbind($this);
+        Filter::i()->unbind($this);
     }
 
 }

@@ -12,7 +12,7 @@ namespace litepubl;
 class tregservices extends titems {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -37,7 +37,7 @@ class tregservices extends titems {
         $widget = '';
         $url =  $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'id';
         foreach ($this->items as $name => $classname) {
-            $service = getinstance($classname);
+            $service = static::iGet($classname);
             if ($service->valid()) {
                 $widget.= "<a href=\"$url=$name&backurl=\" class=\"$name-regservice\" title=\"$service->title\"></a>";
             }
@@ -88,7 +88,7 @@ class tregservices extends titems {
 }
 
 
-        $service = getinstance($this->items[$id]);
+        $service = static::iGet($this->items[$id]);
         if (!$service->valid()) {
  return 403;
 }
@@ -141,7 +141,7 @@ class tregservices extends titems {
 }
 
 
-        $service = getinstance($this->items[$name]);
+        $service = static::iGet($this->items[$name]);
         if (!$service->valid) {
  return false;
 }

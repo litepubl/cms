@@ -82,7 +82,7 @@ class Action extends \litepubl\core\Items
                 $this->save();
                 return new IXR_Error(404, 'The requested class not found');
             }
-            $obj = getinstance($class);
+            $obj = static::iGet($class);
             //return $obj->$func($arg);
             try {
                 return call_user_func_array(array(

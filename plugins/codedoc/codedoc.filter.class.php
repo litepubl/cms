@@ -12,13 +12,14 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\view\Filter;
 
 class tcodedocfilter extends titems {
     private $fix;
     private $classes;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -152,7 +153,7 @@ class tcodedocfilter extends titems {
     public function parsedoc(tpost $post, array & $a, $typedoc) {
         $lang = Lang::i('codedoc');
         $args = new Args();
-        $contentfilter = tcontentfilter::i();
+        $contentfilter = Filter::i();
         $headers = $this->getheaders($a);
         $body = $this->getbody($a);
         $body = $contentfilter->filter($body . ' <!--more-->');

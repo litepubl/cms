@@ -199,8 +199,13 @@ $s = strtr($s, [
 'BaseTheme' => 'Base',
 ' targs ' => ' Args ',
 'ttemplate:' => 'MainView:',
+'tcontentfilter:' => 'Filter:',
+' getinstance(' => ' static::iGet(',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
+
+$s = insertUse($s, 'Filter:', 'litepubl\view\Filter');
+
 return $s;
 }

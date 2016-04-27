@@ -16,7 +16,7 @@ class tkeywordsplugin extends \litepubl\core\Plugin
     public $blackwords;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function create() {

@@ -23,7 +23,7 @@ class Pingbacks extends \litepubl\core\Items
     public $pid;
 
     public static function i($pid = 0) {
-        $result = getinstance(__class__);
+        $result = static::iGet(__class__);
         $result->pid = $pid;
         return $result;
     }

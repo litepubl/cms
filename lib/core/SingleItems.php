@@ -48,7 +48,7 @@ class SingleItems extends Items
     public function get($id) {
         $id = (int)$id;
         $classname = $this->items[$id]['classname'];
-        $result = getinstance($classname);
+        $result = static::iGet($classname);
         if ($id != $result->id) {
             if (!isset(static ::$instances[$classname])) {
                 static ::$instances[$classname] = array();

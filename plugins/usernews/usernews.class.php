@@ -10,12 +10,13 @@
 namespace litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Filter;
 
 class tusernews extends \litepubl\core\Plugin
  {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function create() {
@@ -108,7 +109,7 @@ class tusernews extends \litepubl\core\Plugin
             $post->files = $files == '' ? array() : explode(',', $files);
         }
 
-        $post->content = tcontentfilter::remove_scripts($raw);
+        $post->content = Filter::remove_scripts($raw);
         if ($this->insertsource) $post->filtered = sprintf($this->sourcetml, $post->meta->sourceurl) . $post->filtered;
         if ($id == 0) {
             $id = $posts->add($post);

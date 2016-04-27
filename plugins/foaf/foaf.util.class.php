@@ -15,7 +15,7 @@ use litepubl\view\Theme;
 class tfoafutil extends tevents {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getFoafdom(&$foafurl) {

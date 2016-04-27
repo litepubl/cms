@@ -31,7 +31,7 @@ use PoolStorageTrait;
             if (is_array($prop)) {
                 list($classname, $method) = $prop;
                 return call_user_func_array(array(
-                    getinstance($classname) ,
+                    static::iGet($classname) ,
                     $method
                 ) , array(
                     $name

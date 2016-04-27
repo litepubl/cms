@@ -9,6 +9,7 @@
 
 namespace litepubl\view;
 use litepubl\core\Str;
+use litepubl\post\Post;
 
 class Filter extends \litepubl\core\Events
 {
@@ -54,7 +55,7 @@ class Filter extends \litepubl\core\Events
         return $result;
     }
 
-    public function filterpost(tpost $post, $s) {
+    public function filterpost(Post $post, $s) {
         $cancel = false;
         $this->callevent('beforecontent', array(
             $post, &$s, &$cancel
@@ -86,7 +87,7 @@ class Filter extends \litepubl\core\Events
         $this->aftercontent($post);
     }
 
-    public function setExcerpt(tpost $post, $excerpt, $more) {
+    public function setExcerpt(Post $post, $excerpt, $more) {
         $post->excerpt = $excerpt;
         $post->rss = $excerpt;
         $post->description = static ::getpostdescription($excerpt);
@@ -118,7 +119,7 @@ class Filter extends \litepubl\core\Events
         return $description;
     }
 
-    public function extract_pages(tpost $post, $s) {
+    public function extract_pages(Post $post, $s) {
         $post->deletepages();
         $pages = explode('<!--nextpage-->', $s);
         $firstpage = $this->filter(array_shift($pages));

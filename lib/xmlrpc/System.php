@@ -26,7 +26,7 @@ class System extends Common
 
         $item = $caller->getitem($name);
         if ($item['class'] != __class__) {
-            $obj = getinstance($item['class']);
+            $obj = static::iGet($item['class']);
             if (method_exists($obj, 'getsignature')) {
                 return $obj->getsignature($name);
             } else {

@@ -15,7 +15,7 @@ use litepubl\admin\AdminInterface;
 class tadminregservices implements \litepubl\admin\AdminInterface {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getContent() {
@@ -26,7 +26,7 @@ class tadminregservices implements \litepubl\admin\AdminInterface {
         $lang = Plugins::getnamelang($plugin->dirname);
         $args->formtitle = $lang->options;
         foreach ($plugin->items as $id => $classname) {
-            $service = getinstance($classname);
+            $service = static::iGet($classname);
             $tabs->add($service->title, $service->gettab($html, $args, $lang));
         }
 
@@ -37,7 +37,7 @@ class tadminregservices implements \litepubl\admin\AdminInterface {
         $plugin = tregservices::i();
         $plugin->lock();
         foreach ($plugin->items as $name => $classname) {
-            $service = getinstance($classname);
+            $service = static::iGet($classname);
             $service->processForm();
         }
 

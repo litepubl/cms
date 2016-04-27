@@ -11,6 +11,7 @@ namespace litepubl\post;
 use litepubl\admin\GetPerm;
 use litepubl\view\Theme;
 use litepubl\view\Parser;
+use litepubl\view\Filter;
 
 class JsonFiles extends \litepubl\core\Events
  {
@@ -120,9 +121,9 @@ class JsonFiles extends \litepubl\core\Events
 
 
         $item = $files->getitem($id);
-        $item['title'] = tcontentfilter::escape(tcontentfilter::unescape($args['title']));
-        $item['description'] = tcontentfilter::escape(tcontentfilter::unescape($args['description']));
-        $item['keywords'] = tcontentfilter::escape(tcontentfilter::unescape($args['keywords']));
+        $item['title'] = Filter::escape(Filter::unescape($args['title']));
+        $item['description'] = Filter::escape(Filter::unescape($args['description']));
+        $item['keywords'] = Filter::escape(Filter::unescape($args['keywords']));
 
         $this->callevent('onprops', array(&$item
         ));

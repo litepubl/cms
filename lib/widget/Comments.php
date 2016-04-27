@@ -11,6 +11,7 @@ namespace litepubl\widget;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\view\Filter;
 
 class Comments extends Widget
  {
@@ -43,7 +44,7 @@ return '';
         foreach ($recent as $item) {
             $args->add($item);
             $args->link = $url . $item['posturl'];
-            $args->content = tcontentfilter::getexcerpt($item['content'], 120);
+            $args->content = Filter::getexcerpt($item['content'], 120);
             $result.= $theme->parsearg($tml, $args);
         }
         return $theme->getwidgetcontent($result, 'comments', $sidebar);

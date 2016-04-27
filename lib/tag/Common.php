@@ -17,6 +17,7 @@ use litepubl\view\Schema;
 use litepubl\view\Lang;
 use litepubl\utils\LinkGenerator;
 use litepubl\core\Arr;
+use litepubl\view\Filter;
 
 class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterface
  {
@@ -250,7 +251,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $result = array();
         $this->lock();
         foreach ($list as $title) {
-            $title = tcontentfilter::escape($title);
+            $title = Filter::escape($title);
             if ($title == '') {
  continue;
 }

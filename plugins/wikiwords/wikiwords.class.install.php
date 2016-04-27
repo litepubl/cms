@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\DBManager;
+use litepubl\view\Filter;
 
 function twikiwordsInstall($self) {
     if ($self->dbversion) {
@@ -20,7 +21,7 @@ function twikiwordsInstall($self) {
         $manager->createtable($self->itemsposts->table, file_get_contents( $self->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
     }
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->beforecontent = $self->beforefilter;
 
     $posts = tposts::i();
@@ -34,7 +35,7 @@ function twikiwordsUninstall($self) {
     unset( $self->getApp()->classes->classes['wikiword']);
      $self->getApp()->classes->save();
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->unbind($self);
 
     tposts::unsub($self);

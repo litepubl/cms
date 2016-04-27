@@ -49,7 +49,7 @@ parent::create();
         $this->assignmap();
 
         foreach ($this->coclasses as $coclass) {
-            $this->coinstances[] = getinstance($coclass);
+            $this->coinstances[] = static::iGet($coclass);
         }
 
         parent::afterload();
@@ -128,7 +128,7 @@ parent::create();
 
             if (is_string($class) && class_exists($class)) {
                 $call = array(
-                    getinstance($class) ,
+                    static::iGet($class) ,
                     isset($item[1]) ? $item[1] : $item['func']
                 );
             } elseif (is_object($class)) {
@@ -305,7 +305,7 @@ parent::create();
         if ($this->indexofcoclass($class) === false) {
             $this->coclasses[] = $class;
             $this->save();
-            $this->coinstances = getinstance($class);
+            $this->coinstances = static::iGet($class);
         }
     }
 

@@ -35,7 +35,7 @@ class Spec extends \litepubl\admin\Menu
         $tabs = $this->newTabs();
         $inputs = '';
         foreach (static ::getspecclasses() as $classname) {
-            $obj = getinstance($classname);
+            $obj = static::iGet($classname);
 $name = 
 $classname = str_replace('\\', '-', $classname);
             $args->classname = $classname;
@@ -63,7 +63,7 @@ $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data
 
     public function processForm() {
         foreach (static ::getspecclasses() as $classname) {
-            $obj = getinstance($classname);
+            $obj = static::iGet($classname);
             $obj->lock();
 $classname = str_replace('\\', '-', $classname);
             $obj->setidschema($_POST["idschema-$classname"]);

@@ -30,7 +30,7 @@ class Html
     );
 
     public static function i() {
-        return getinstance(get_called_class());
+        return static::iGet(get_called_class());
     }
 
     public static function getInstance($section) {

@@ -14,7 +14,7 @@ class ttoptext extends \litepubl\core\Plugin
     public $text;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function beforecontent(tpost $post, &$content, &$cancel) {

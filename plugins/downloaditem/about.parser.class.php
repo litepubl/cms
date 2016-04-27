@@ -13,7 +13,7 @@ use litepubl\core\Str;
 class taboutparser {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public static function parse($url) {

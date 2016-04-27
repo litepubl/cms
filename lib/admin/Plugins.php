@@ -158,7 +158,7 @@ class Plugins extends Menu
  $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
 }
 
-        return getinstance($class);
+        return static::iGet($class);
     }
 
 }

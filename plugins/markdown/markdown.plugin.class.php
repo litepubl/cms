@@ -8,13 +8,14 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Filter;
 
 class tmarkdownplugin extends \litepubl\core\Plugin
  {
     public $parser;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -36,7 +37,7 @@ class tmarkdownplugin extends \litepubl\core\Plugin
     }
 
     public function install() {
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $filter->lock();
         $filter->onsimplefilter = $this->filter;
         $filter->oncomment = $this->filter;
@@ -44,7 +45,7 @@ class tmarkdownplugin extends \litepubl\core\Plugin
     }
 
     public function uninstall() {
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $filter->unbind($this);
     }
 

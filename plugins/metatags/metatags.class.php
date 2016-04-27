@@ -9,12 +9,13 @@
 
 namespace litepubl;
 use litepubl\view\MainView;
+use litepubl\view\Filter;
 
 class tmetatags extends \litepubl\core\Plugin
  {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function themeparsed(ttheme $theme) {
@@ -62,7 +63,7 @@ class tmetatags extends \litepubl\core\Plugin
                 $result.= $post->title . ' ';
                 if (strlen($result) > 250) break;
             }
-            //return tcontentfilter::getexcerpt($result, 300);
+            //return Filter::getexcerpt($result, 300);
             return $result;
         }
         return MainView::i()->getdescription();

@@ -89,7 +89,7 @@ return;
         $filter = Filter::i();
         $item['rawcontent'] = $content;
         $item['content'] = $filter->filterpages($content);
-        $item['description'] = tcontentfilter::getexcerpt($content, 80);
+        $item['description'] = Filter::getexcerpt($content, 80);
         $this->setitem($id, $item);
     }
 

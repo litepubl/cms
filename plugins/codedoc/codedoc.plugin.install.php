@@ -11,6 +11,7 @@ namespace litepubl;
 use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
 use litepubl\core\DBManager;
+use litepubl\view\Filter;
 
 function tcodedocpluginInstall($self) {
     if (!dbversion) die("Ticket  system only for database version");
@@ -45,7 +46,7 @@ function tcodedocpluginInstall($self) {
   KEY parentclass (parentclass)
   ');
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->lock();
     $filter->beforecontent = $self->filterpost;
     $filter->seteventorder('beforecontent', $self, 0);
@@ -73,7 +74,7 @@ function tcodedocpluginUninstall($self) {
      $self->getApp()->classes->delete('tcodedocmenu');
      $self->getApp()->classes->delete('tcodedocfilter');
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->unbind($self);
 
     $merger = LangMerger::i();

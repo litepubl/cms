@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\view\LangMerger;
+use litepubl\view\Filter;
 
 function tusernewsInstall($self) {
     $name = basename(dirname(__file__));
@@ -17,7 +18,7 @@ function tusernewsInstall($self) {
 
     LangMerger::i()->addplugin($name);
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->phpcode = true;
     $filter->save();
 

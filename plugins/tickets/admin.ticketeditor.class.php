@@ -10,6 +10,7 @@
 namespace litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Filter;
 
 class tticketeditor extends tposteditor {
     private $newstatus;
@@ -169,7 +170,7 @@ class tticketeditor extends tposteditor {
             $ticket->closed = time();
         }
 
-        $ticket->content = tcontentfilter::quote(htmlspecialchars($raw));
+        $ticket->content = Filter::quote(htmlspecialchars($raw));
         $ticket->code = $code;
     }
 

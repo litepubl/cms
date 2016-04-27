@@ -10,12 +10,13 @@
 namespace litepubl;
 use litepubl\core\Str;
 use litepubl\core\DBManager;
+use litepubl\view\Filter;
 
 class ulogin extends \litepubl\core\Plugin
  {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -151,7 +152,7 @@ class ulogin extends \litepubl\core\Plugin
                 $id = $users->add(array(
                     'email' => $info['email'],
                     'name' => $name,
-                    'website' => empty($info['profile']) ? '' : tcontentfilter::clean_website($info['profile']) ,
+                    'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
                 ));
 
                 if ($phone) {
@@ -174,7 +175,7 @@ class ulogin extends \litepubl\core\Plugin
                     $id = $users->add(array(
                         'email' => '',
                         'name' => $name,
-                        'website' => empty($info['profile']) ? '' : tcontentfilter::clean_website($info['profile']) ,
+                        'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
                     ));
                     $users->approve($id);
                     if ($phone) $users->db->setvalue($id, 'phone', $phone);

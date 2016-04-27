@@ -10,11 +10,12 @@
 namespace litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Filter;
 
 class tprofile extends tevents_itemplate implements itemplate {
 
     public static function i($id = 0) {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -135,7 +136,7 @@ class tprofile extends tevents_itemplate implements itemplate {
     }
 
     public function getDescription() {
-        return tcontentfilter::getexcerpt($this->bio, 128);
+        return Filter::getexcerpt($this->bio, 128);
     }
 
     public function getCont() {

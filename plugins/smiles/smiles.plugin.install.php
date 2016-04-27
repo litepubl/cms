@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Filter;
 
 function tsmilesInstall($self) {
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->lock();
     $filter->onsimplefilter = $self->filter;
     $filter->oncomment = $self->filter;
@@ -20,6 +21,6 @@ function tsmilesInstall($self) {
 }
 
 function tsmilesUninstall($self) {
-    tcontentfilter::i()->unbind($self);
+    Filter::i()->unbind($self);
     tposts::i()->addrevision();
 }

@@ -12,7 +12,7 @@ namespace litepubl;
 class tyandexregservice extends tregservice {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

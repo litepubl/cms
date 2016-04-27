@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Filter;
 
 function tshortcodeInstall($self) {
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->lock();
     $filter->beforefilter = $self->filter;
     $filter->oncomment = $self->filter;
@@ -18,5 +19,5 @@ function tshortcodeInstall($self) {
 }
 
 function tshortcodeUninstall($self) {
-    tcontentfilter::i()->unbind($self);
+    Filter::i()->unbind($self);
 }

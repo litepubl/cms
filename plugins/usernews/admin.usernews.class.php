@@ -14,7 +14,7 @@ use litepubl\view\Args;
 class tadminusernews {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getContent() {

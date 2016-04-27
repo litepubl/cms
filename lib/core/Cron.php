@@ -123,7 +123,7 @@ $context->response->status = 403;
                 }
             } elseif (class_exists($class)) {
                 try {
-                    $obj = getinstance($class);
+                    $obj = static::iGet($class);
                     $obj->$func($arg);
                 }
                 catch(Exception $e) {

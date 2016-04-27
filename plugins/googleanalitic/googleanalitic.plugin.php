@@ -16,7 +16,7 @@ class tgoogleanalitic extends \litepubl\core\Plugin
  {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

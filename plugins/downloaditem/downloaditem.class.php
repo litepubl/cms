@@ -10,6 +10,7 @@
 namespace litepubl;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Filter;
 
 class tdownloaditem extends tpost {
 
@@ -64,7 +65,7 @@ class tdownloaditem extends tpost {
         $items = array();
         $list = explode(',', trim($names));
         foreach ($list as $title) {
-            $title = tcontentfilter::escape($title);
+            $title = Filter::escape($title);
             if ($title == '') {
  continue;
 }
@@ -112,7 +113,7 @@ class tdownloaditem extends tpost {
 class dlitemfactory extends tpostfactory {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getPosts() {

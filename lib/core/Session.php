@@ -65,7 +65,7 @@ class Session
         }
 
         if ( $this->getApp()->memcache) {
-            return getinstance(__class__);
+            return static::iGet(__class__);
         } else {
             //ini_set('session.gc_probability', 1);
             

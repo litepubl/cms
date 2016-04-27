@@ -12,6 +12,7 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\view\Filter;
 
 class tticket extends tpost {
 
@@ -72,7 +73,7 @@ class tticket extends tpost {
 
     public function updatefiltered() {
         $result = $this->getticketcontent();
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $filter->filterpost($this, $this->rawcontent);
         $result.= $this->filtered;
         if (!empty($this->childdata['code'])) {
@@ -141,7 +142,7 @@ class tticket extends tpost {
 class ticketfactory extends tpostfactory {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getPosts() {

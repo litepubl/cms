@@ -10,6 +10,7 @@
 namespace litepubl;
 use litepubl\core\Str;
 use litepubl\view\Lang;
+use litepubl\view\Filter;
 
 class tcontactsite extends tmenu {
 
@@ -39,7 +40,7 @@ class tcontactsite extends tmenu {
 
         $email = trim($_POST['email']);
 
-        if (!tcontentfilter::ValidateEmail($email)) {
+        if (!Filter::ValidateEmail($email)) {
  return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'invalidemail'));
 }
 

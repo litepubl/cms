@@ -363,7 +363,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public function setTitle($title) {
-        $this->data['title'] = tcontentfilter::escape(tcontentfilter::unescape($title));
+        $this->data['title'] = Filter::escape(Filter::unescape($title));
     }
 
     public function getTheme() {

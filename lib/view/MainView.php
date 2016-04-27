@@ -24,7 +24,6 @@ public $context;
     public $ltoptions;
     public $view;
     public $path;
-    public $result;
     public $schema;
     public $url;
 
@@ -55,7 +54,6 @@ $app->classes->instances[get_class($this) ] = $this;
         $this->addmap('custom', array());
         $this->extrahead = '';
         $this->extrabody = '';
-        $this->result = '';
     }
 
     public function assignMap() {
@@ -92,6 +90,7 @@ $vars->mainview = $this;
         $this->schema = Schema::getSchema($context->model);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
+        $this->ltoptions['idurl'] = $context->itemRoute['id'];
 
 $app = $this->getApp();
          $app->classes->instances[get_class($theme) ] = $theme;
@@ -231,13 +230,18 @@ $app = $this->getApp();
 
     public function getHead() {
         $result = $this->heads;
-$result.= $this->view->gethead();
+
+if ($this->view) {
+$result .= $this->view->gethead();
+}
+
         $result = $this->getltoptions() . $result;
-        $result.= $this->extrahead;
+        $result .= $this->extrahead;
         $result = $this->schema->theme->parse($result);
-        $this->callevent('onhead', array(&$result
-        ));
-        return $result;
+
+$s = new Str($result);
+        $this->onhead($s);
+        return $s->value;
     }
 
     public function getContent() {

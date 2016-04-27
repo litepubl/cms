@@ -14,7 +14,7 @@ class tcodedocplugin extends \litepubl\core\Plugin
     private $post;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function filterpost($post, &$content, &$cancel) {

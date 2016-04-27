@@ -13,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
 use litepubl\core\DBManager;
+use litepubl\view\Filter;
 
 function tticketsInstall($self) {
     if (version_compare(PHP_VERSION, '5.3', '<')) {
@@ -35,7 +36,7 @@ function tticketsInstall($self) {
     $self->save();
 
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->phpcode = true;
     $filter->save();
      $self->getApp()->options->parsepost = false;

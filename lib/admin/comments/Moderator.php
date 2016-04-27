@@ -336,7 +336,7 @@ $admin = $this->admintheme;
 
     public static function refilter() {
         $db =  $this->getApp()->db;
-        $filter = tcontentfilter::i();
+        $filter = Filter::i();
         $from = 0;
         while ($a = $db->res2assoc($db->query("select id, rawcontent from $db->rawcomments where id > $from limit 500"))) {
             $db->table = 'comments';

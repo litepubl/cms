@@ -15,7 +15,7 @@ class tsapeplugin extends twidget {
     public $counts;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

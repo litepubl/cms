@@ -14,6 +14,7 @@ use litepubl\pages\Users as UserPages;
 use litepubl\admin\GetSchema;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Filter;
 
 class Pages extends \litepubl\admin\Menu
 {
@@ -101,7 +102,7 @@ $admin = $this->admintheme;
 
         UserItems::i()->edit($id, array(
             'name' => $name,
-            'website' => tcontentfilter::clean_website($website) ,
+            'website' => Filter::clean_website($website) ,
         ));
 
         $useroptions = UserOptions::i();

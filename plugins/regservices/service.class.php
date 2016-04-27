@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\Str;
+use litepubl\view\Filter;
 
 class tregservice extends \litepubl\core\Plugin
  {
@@ -16,7 +17,7 @@ class tregservice extends \litepubl\core\Plugin
     public $session_id;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {
@@ -129,7 +130,7 @@ class tregservice extends \litepubl\core\Plugin
                 $id = $users->add(array(
                     'email' => $item['email'],
                     'name' => $item['name'],
-                    'website' => isset($item['website']) ? tcontentfilter::clean_website($item['website']) : ''
+                    'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
                 ));
                 if (isset($item['uid'])) {
                     $uid = $item['uid'];
@@ -151,7 +152,7 @@ class tregservice extends \litepubl\core\Plugin
                     $id = $users->add(array(
                         'email' => '',
                         'name' => $item['name'],
-                        'website' => isset($item['website']) ? tcontentfilter::clean_website($item['website']) : ''
+                        'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
                     ));
                     $users->approve($id);
                     $reguser->add($id, $this->name, $uid);
@@ -194,7 +195,7 @@ class tregservice extends \litepubl\core\Plugin
 class tregserviceuser extends titems {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

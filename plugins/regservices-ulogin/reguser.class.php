@@ -13,7 +13,7 @@ use litepubl\core\Str;
 class treguser extends titems {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

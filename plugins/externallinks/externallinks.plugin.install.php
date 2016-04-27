@@ -9,6 +9,7 @@
 
 namespace litepubl;
 use litepubl\core\DBManager;
+use litepubl\view\Filter;
 
 function texternallinksInstall($self) {
     if (dbversion) {
@@ -22,7 +23,7 @@ function texternallinksInstall($self) {
     } else {
     }
 
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->lock();
     $filter->afterfilter = $self->filter;
     $filter->onaftercomment = $self->filter;
@@ -39,7 +40,7 @@ function texternallinksInstall($self) {
 }
 
 function texternallinksUninstall($self) {
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->unbind($self);
 
     $cron = tcron::i();

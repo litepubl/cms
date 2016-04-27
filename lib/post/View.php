@@ -13,4 +13,3 @@ namespace litepubl\post;
 class View implements \litepubl\view\ViewInterface
 {
 public $post;
-

@@ -8,9 +8,10 @@
 **/
 
 namespace litepubl;
+use litepubl\view\Filter;
 
 function ttoptextinstall($self) {
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->lock();
     $filter->beforecontent = $self->beforecontent;
     $filter->aftercontent = $self->aftercontent;
@@ -18,6 +19,6 @@ function ttoptextinstall($self) {
 }
 
 function ttoptextuninstall($self) {
-    $filter = tcontentfilter::i();
+    $filter = Filter::i();
     $filter->unbind($self);
 }

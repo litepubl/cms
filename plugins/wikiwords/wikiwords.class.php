@@ -17,7 +17,7 @@ class twikiwords extends titems {
     private $links;
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     protected function create() {

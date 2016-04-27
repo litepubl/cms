@@ -11,6 +11,7 @@ namespace litepubl\post;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\core\Str;
+use litepubl\view\Filter;
 
 class Files extends \litepubl\core\Items
 {
@@ -92,7 +93,7 @@ return FileItems::i();
             'description',
             'keywords'
         ) as $name) {
-            $item[$name] = tcontentfilter::escape(tcontentfilter::unescape($item[$name]));
+            $item[$name] = Filter::escape(Filter::unescape($item[$name]));
         }
         return $item;
     }

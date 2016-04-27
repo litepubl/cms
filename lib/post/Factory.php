@@ -32,7 +32,7 @@ return $this->{'get' . $name}();
     }
 
     public function getCats() {
-        return \litepubl\tag\Categories::i();
+        return \litepubl\tag\Cats::i();
     }
 
     public function getCategories() {

@@ -16,6 +16,7 @@ use litepubl\post\Posts;
 use litepubl\post\Post;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Vars;
 use litepubl\view\Js;
 use litepubl\view\Css;
 use litepubl\view\Schema;
@@ -23,6 +24,9 @@ use litepubl\xmlrpc;
 use litepubl\core\Plugins;
 use litepubl\view\Args;
 use litepubl\view\MainView;
+use litepubl\core\Users;
+use litepubl\comments\Manager;
+use litepubl\comments\Comments;
 
 class Installer
 {
@@ -354,16 +358,16 @@ return $this->autoInstall();
         $lang = Lang::usefile('install');
         $theme = Theme::i();
 
-        $post = tpost::i(0);
+        $post = Post::i(0);
         $post->title = $lang->posttitle;
         $post->catnames = $lang->postcategories;
         $post->tagnames = $lang->posttags;
         $post->content = $theme->parse($lang->postcontent);
-        $posts = tposts::i();
+        $posts = Posts::i();
         $posts->add($post);
 
-        $cm = tcommentmanager::i();
-        $users = tusers::i();
+        $cm = Manager::i();
+        $users = Users::i();
         $cm->idguest = $users->add(array(
             'email' => '',
             'name' => Lang::get('default', 'guest') ,
@@ -374,7 +378,7 @@ return $this->autoInstall();
         $cm->save();
         $users->setvalue($cm->idguest, 'status', 'approved');
 
-        tcomments::i()->add($post->id, $cm->idguest, $lang->postcomment, 'approved', '127.0.0.1');
+        Comments::i()->add($post->id, $cm->idguest, $lang->postcomment, 'approved', '127.0.0.1');
     }
 
     public function SendEmail($password) {
@@ -393,8 +397,10 @@ return $this->autoInstall();
         global $lang;
         $tml = file_get_contents($this->app->paths->lib . 'install/templates/install.congratulation.tml');
         $theme = Theme::getTheme('default');
-        $template = MainView::i();
-        $template->schema = Schema::i();
+$vars = new Vars;
+        $vars->template = MainView::i();
+        $vars->template->schema = Schema::i(1);
+
         $lang = Lang::i('installation');
         $args = new Args();
         $args->title = $this->app->site->name;

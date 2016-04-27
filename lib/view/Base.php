@@ -152,7 +152,7 @@ class Base extends \litepubl\core\Events
 
         $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
-$this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1])));
+$this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
             return false;
         }
 

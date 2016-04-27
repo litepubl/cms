@@ -16,7 +16,7 @@ use litepubl\core\Plugins;
 class tadminkeywords extends tadminwidget {
 
     public static function i() {
-        return getinstance(__class__);
+        return static::iGet(__class__);
     }
 
     public function getContent() {
