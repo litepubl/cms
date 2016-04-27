@@ -12,6 +12,19 @@ use litepubl\Config;
 
 Class Str
 {
+public $value;
+
+public function __construct($s)
+{
+$this->value = (string) $s;
+}
+
+public function __tostring()
+{
+return $this->value;
+}
+
+//static methods
 public static function sqlDate($date = 0) {
     if (!$date) {
         $date = time();

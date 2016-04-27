@@ -136,22 +136,21 @@ return $result;
     }
 
     public function getTitle() {
-        $title = $this->view->gettitle();
-        if ($this->callevent('ontitle', array(&$title
-        ))) {
-            return $title;
+        $title = new str($this->view->gettitle());
+        if ($this->ontitle($title)) {
+            return $title->value;
         } else {
-            return $this->parsetitle($this->schema->theme->templates['title'], $title);
+            return $this->parsetitle($title, $this->schema->theme->templates['title']);
         }
     }
 
-    public function parsetitle($tml, $title) {
+    public function parsetitle(Str $title, $tml) {
         $args = new Args();
-        $args->title = $title;
+        $args->title = $title->value;
         $result = $this->schema->theme->parsearg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
-return  $this->getApp()->site->name;
+$result = $this->getApp()->site->name;
 }
 
         return $result;
@@ -159,8 +158,8 @@ return  $this->getApp()->site->name;
 
     public function getKeywords() {
         $result = $this->view->getkeywords();
-        if ($result == '') {
- return  $this->getApp()->site->keywords;
+        if (!$result) {
+ $result = $this->getApp()->site->keywords;
 }
 
         return $result;
@@ -168,8 +167,8 @@ return  $this->getApp()->site->name;
 
     public function getDescription() {
         $result = $this->view->getdescription();
-        if ($result == '') {
- return  $this->getApp()->site->description;
+        if (!$result) {
+ $result = $this->getApp()->site->description;
 }
 
         return $result;
@@ -180,17 +179,19 @@ return  $this->getApp()->site->name;
             return $r;
         }
 
+$app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $this->getApp()->options->group ?  $this->getApp()->options->group : 'nobody');
+        $filename = $schema->theme->name
+ . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $app->options->group ?  $app->options->group : 'nobody');
 
-        if ($result =  $this->getApp()->router->cache->get($filename)) {
+        if ($result =  $app->cache->getString($filename)) {
             return $result;
         }
 
         $menus = static::iGet($menuclass);
         $result = $menus->getmenu($this->hover, 0);
-         $this->getApp()->router->cache->set($filename, $result);
+         $app->cache->setString($filename, $result);
         return $result;
     }
 
@@ -240,13 +241,11 @@ $result.= $this->view->gethead();
     }
 
     public function getContent() {
-        $result = '';
-        $this->callevent('beforecontent', array(&$result
-        ));
-        $result.= $this->view->getcont();
-        $this->callevent('aftercontent', array(&$result
-        ));
-        return $result;
+        $result = new Str('');
+        $this->beforecontent($result);
+        $result->value .= $this->view->getCont();
+        $this->aftercontent($result);
+        return $result->value;
     }
 
     protected function setFooter($s) {
@@ -257,26 +256,12 @@ $result.= $this->view->gethead();
     }
 
     public function getPage() {
-        $page =  $this->getApp()->router->page;
+        $page =  $this->context->request->page;
         if ($page <= 1) {
  return '';
 }
 
-
         return sprintf(Lang::get('default', 'pagetitle') , $page);
-    }
-
-    public function trimwords($s, array $words) {
-        if ($s == '') {
- return '';
-}
-
-
-        foreach ($words as $word) {
-            if (Str::begin($s, $word)) $s = substr($s, strlen($word));
-            if (Str::end($s, $word)) $s = substr($s, 0, strlen($s) - strlen * ($word));
-        }
-        return $s;
     }
 
 }
