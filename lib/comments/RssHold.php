@@ -42,7 +42,7 @@ class RssHold extends \litepubl\core\Events implements \litepubl\core\Responsive
     }
 
     public function commentschanged($idpost) {
-         $this->getApp()->router->setexpired($this->idurl);
+         $this->getApp()->cache->clearUrl($this->url);
     }
 
     public function request(Context $context)

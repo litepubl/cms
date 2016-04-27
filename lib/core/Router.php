@@ -109,7 +109,7 @@ $url = '/';
         return false;
     }
 
-    public function urlexists($url) {
+    public function urlExists($url) {
         return $this->db->findid('url = ' . Str::quote($url));
     }
 
@@ -126,7 +126,7 @@ $url = '/';
     }
 
 
-    public function findfilter($url) {
+    public function findFilter($url) {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
                 case 'begin':
@@ -154,12 +154,12 @@ $url = '/';
         return false;
     }
 
-    public function updatefilter() {
+    public function updateFilter() {
         $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
         $this->save();
     }
 
-    public function addget($url, $class) {
+    public function addGet($url, $class) {
         return $this->add($url, $class, null, 'get');
     }
 
@@ -225,7 +225,7 @@ $url = '/';
         return true;
     }
 
-    public function deleteclass($class) {
+    public function deleteClass($class) {
         if ($items = $this->db->getitems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
                 $this->db->iddelete($item['id']);
@@ -236,7 +236,7 @@ $url = '/';
         $this->clearcache();
     }
 
-    public function deleteitem($id) {
+    public function deleteItem($id) {
         if ($item = $this->db->getitem($id)) {
             $this->db->iddelete($id);
             $this->deleted($id);
@@ -249,7 +249,7 @@ $url = '/';
         $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
         return $this->db->res2id($res);
     }
-    public function addredir($from, $to) {
+    public function addRedir($from, $to) {
         if ($from == $to) {
             return;
         }
@@ -265,9 +265,11 @@ static ::i()->unbind($obj);
 public function unbind($obj) {
         $this->lock();
 parent::unbind($obj);
-        $this->deleteclass(get_class($obj));
+        $this->deleteClass(get_class($obj));
+$this->updateFilter();
         $this->unlock();
     }
+
     public function setUrlvalue($url, $name, $value) {
         if ($id = $this->urlexists($url)) {
             $this->setvalue($id, $name, $value);
@@ -280,7 +282,7 @@ parent::unbind($obj);
     }
 
 //backward compabilty
-public function clearcache()
+public function clearCache()
 {
 $this->getApp()->cache->clear();
 }

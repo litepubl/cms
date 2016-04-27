@@ -88,6 +88,7 @@ return;
     }
 
     public function processForm(array $values, $confirmed) {
+$app = $this->getApp();
         $lang = Lang::i('comment');
         if (trim($values['content']) == '') {
  return $this->getErrorContent($lang->emptycontent);
@@ -120,13 +121,13 @@ return 403;
         unset($values['submitbutton']);
 
         if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
-        if ( $this->getApp()->options->ingroups($cm->idgroups)) {
+        if ( $app->options->ingroups($cm->idgroups)) {
             if (!$confirmed && $cm->confirmlogged) {
  return $this->request_confirm($values, $shortpost);
 }
 
 
-            $iduser =  $this->getApp()->options->user;
+            $iduser =  $app->options->user;
         } else {
             switch ($shortpost['comstatus']) {
                 case 'reg':
@@ -212,17 +213,17 @@ return 403;
 
         //$post->lastcommenturl;
         $shortpost['commentscount']++;
-        if (! $this->getApp()->options->commentpages || ($shortpost['commentscount'] <=  $this->getApp()->options->commentsperpage)) {
+        if (! $app->options->commentpages || ($shortpost['commentscount'] <=  $app->options->commentsperpage)) {
             $c = 1;
         } else {
-            $c = ceil($shortpost['commentscount'] /  $this->getApp()->options->commentsperpage);
+            $c = ceil($shortpost['commentscount'] /  $app->options->commentsperpage);
         }
 
-        $url =  $this->getApp()->router->getvalue($shortpost['idurl'], 'url');
-        if (($c > 1) && ! $this->getApp()->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+        $url =  $app->router->getvalue($shortpost['idurl'], 'url');
+        if (($c > 1) && ! $app->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
 
-         $this->getApp()->router->setexpired($shortpost['idurl']);
-        return $this->sendresult( $this->getApp()->site->url . $url, isset($cookies) ? $cookies : array());
+         $app->cache->clearUrl($url);
+        return $this->sendResult( $app->site->url . $url, isset($cookies) ? $cookies : array());
     }
 
     public function confirmRecevied($confirmid) {

@@ -23,6 +23,7 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
     public $domrss;
 public $url;
 public $commentsUrl;
+public $postCommentsUrl;
 
     protected function create() {
         parent::create();
@@ -35,11 +36,13 @@ public $commentsUrl;
 
 $this->url = '/rss.xml';
 $this->commentsUrl = '/comments.xml';
+$this->postCommentsUrl = '/comments/';
     }
 
     public function commentschanged() {
-         $this->getApp()->cache->clearUrl($this->commentsUrl);
-         $this->getApp()->router->setexpired($this->idpostcomments);
+         $cache = $this->getApp()->cache;
+$cache->clearUrl($this->commentsUrl);
+$cache->clearUrl($this->postCommentsUrl);
     }
 
     public function request(Context $context)

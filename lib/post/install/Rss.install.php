@@ -13,11 +13,12 @@ use litepubl\widget\Meta as MetaWidget;
 use litepubl\view\Lang;
 
 function RssInstall($self) {
-     $self->getApp()->router->add($self->url, get_class($self) , 'posts');
-$self->getApp()->router->add($self->commentsUrl, get_class($self) , 'comments');
-    $self->idpostcomments =  $self->getApp()->router->add('/comments/', get_class($self) , null, 'begin');
-     $self->getApp()->router->add('/rss/categories/', get_class($self) , 'categories', 'begin');
-     $self->getApp()->router->add('/rss/tags/', get_class($self) , 'tags', 'begin');
+     $router = $self->getApp()->router;
+$router->add($self->url, get_class($self) , 'posts');
+$router->add($self->commentsUrl, get_class($self) , 'comments');
+$router->add($self->postCommentsUrl, get_class($self) , null, 'begin');
+$router->add('/rss/categories/', get_class($self) , 'categories', 'begin');
+$router->add('/rss/tags/', get_class($self) , 'tags', 'begin');
 
     Comments::i()->changed = $self->commentschanged;
 
@@ -32,7 +33,6 @@ $self->getApp()->router->add($self->commentsUrl, get_class($self) , 'comments');
 
 function RssUninstall($self) {
      $self->getApp()->router->unbind($self);
-     $self->getApp()->router->updatefilter();
     Comments::i()->unbind($self);
     $meta  = MetaWidget::i();
     $meta->lock();

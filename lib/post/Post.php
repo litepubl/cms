@@ -995,8 +995,8 @@ $context->response->status = 404;
         return $url;
     }
 
-    public function clearcache() {
-         $this->getApp()->router->setexpired($this->idurl);
+    public function clearCache() {
+         $this->getApp()->cache->clearUrl($this->url);
     }
 
     public function getSchemalink() {
