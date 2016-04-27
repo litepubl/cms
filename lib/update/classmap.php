@@ -43,7 +43,7 @@ return [
 'ttemplate' => 'litepubl\view\MainControler',
 'itemplate' => 'litepubl\view\ControlerInterface',
 'ttheme' => 'litepubl\view\Theme',
-'basetheme' => 'litepubl\view\BaseTheme',
+'basetheme' => 'litepubl\view\Base',
 'admintheme' => 'litepubl\view\Admin',
 'targs' => 'litepubl\view\Args',
 'themevars' => 'litepubl\view\Vars',

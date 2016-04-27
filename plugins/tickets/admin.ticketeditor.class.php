@@ -52,7 +52,7 @@ class tticketeditor extends tposteditor {
         ));
     }
 
-    public function getArgstab(tpost $ticket, targs $args) {
+    public function getArgstab(tpost $ticket, Args $args) {
         $args->ajax = $this->getajaxlink($ticket->id);
         $args->fixed = $ticket->state == 'fixed';
 

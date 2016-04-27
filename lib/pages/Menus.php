@@ -9,6 +9,7 @@
 
 namespace litepubl\pages;
 use litepubl\view\Theme;
+use litepubl\view\Schemes;
 use litepubl\view\Args;
 use litepubl\utils\LinkGenerator;
 

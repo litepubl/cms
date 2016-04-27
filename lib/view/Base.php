@@ -209,7 +209,7 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
         return $result;
     }
 
-    public function parsearg($s, targs $args) {
+    public function parsearg($s, Args $args) {
         $s = $this->parse($s);
         $s = $args->callback($s);
         return strtr($s, $args->data);

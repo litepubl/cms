@@ -103,7 +103,7 @@ return static ::$instances['schema'][$id];
     }
 
     protected function get_admintheme($name) {
-        return admintheme::getTheme($name);
+        return Admin::getTheme($name);
     }
 
     public function setThemename($name) {
@@ -131,7 +131,7 @@ return static ::$instances['schema'][$id];
     public function setAdminname($name) {
         if ($name != $this->adminname) {
             if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
-            if (!admintheme::exists($name)) {
+            if (!Admin::exists($name)) {
  return $this->error(sprintf('Admin theme %s not exists', $name));
 }
 
@@ -169,8 +169,8 @@ return static ::$instances['schema'][$id];
             return $this->adminInstance;
         }
 
-        if (!admintheme::exists($this->adminname)) {
-            $this->setadminname('admin');
+        if (!Admin::exists($this->adminname)) {
+            $this->setAdminName('admin');
         }
 
         return $this->adminInstance = $this->get_admintheme($this->adminname);

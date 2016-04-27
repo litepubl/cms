@@ -15,18 +15,18 @@ class Vars
 
     public function __destruct() {
         foreach ($this->keys as $name) {
-            if (isset(BaseTheme::$vars[$name])) {
-                unset(BaseTheme::$vars[$name]);
+            if (isset(Base::$vars[$name])) {
+                unset(Base::$vars[$name]);
             }
         }
     }
 
     public function __get($name) {
-        return BaseTheme::$vars[$name];
+        return Base::$vars[$name];
     }
 
     public function __set($name, $value) {
-        BaseTheme::$vars[$name] = $value;
+        Base::$vars[$name] = $value;
 
         if (!in_array($name, $this->keys)) {
             $this->keys[] = $name;
@@ -34,11 +34,11 @@ class Vars
     }
 
     public function __isset($name) {
-        return isset(BaseTheme::$vars[$name]);
+        return isset(Base::$vars[$name]);
     }
 
     public function __unset($name) {
-        unset(BaseTheme::$vars[$name]);
+        unset(Base::$vars[$name]);
     }
 
 }

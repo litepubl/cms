@@ -61,4 +61,9 @@ return $this->errmesg;
         return $this->success;
     }
 
+public function update()
+{
+$this->externalFunc(get_class($self), 'Update', null);
+}
+
 }

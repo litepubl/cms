@@ -74,11 +74,11 @@ return call_user_func_array(array(
 
 
 
-        $args = isset($params[0]) && $params[0] instanceof targs ? $params[0] : new Args();
+        $args = isset($params[0]) && $params[0] instanceof Args ? $params[0] : new Args();
         return $this->parsearg($s, $args);
     }
 
-    public function parsearg($s, targs $args) {
+    public function parsearg($s, Args $args) {
         return Admin::i()->parsearg($s, $args);
     }
 
@@ -113,7 +113,7 @@ return call_user_func_array(array(
         }
     }
 
-    public function adminform($tml, targs $args) {
+    public function adminform($tml, Args $args) {
         return Admin::i()->form($tml, $args);
     }
 

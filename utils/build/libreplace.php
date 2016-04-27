@@ -194,6 +194,8 @@ return $s;
 function afterFix2($s) {
 $s = strtr($s, [
 '->getApp()->router->clearcache()' => '->getApp()->cache->clear()',
+'BaseTheme' => 'Base',
+' targs ' => ' Args ',
 ]);
 
 return $s;

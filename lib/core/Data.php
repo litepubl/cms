@@ -151,11 +151,11 @@ return static::getAppInstance();
         $this->externalchain('Validate', $repair);
     }
 
-    protected function externalchain($func, $arg = null) {
+    protected function externalChain($func, $arg = null) {
         $parents = class_parents($this);
         array_splice($parents, 0, 0, get_class($this));
         foreach ($parents as $class) {
-            $this->externalfunc($class, $func, $arg);
+            $this->externalFunc($class, $func, $arg);
         }
     }
 
@@ -187,7 +187,7 @@ return $fnc;
 return false;
 }
 
-    public function externalfunc($class, $func, $args) {
+    public function externalFunc($class, $func, $args) {
 if ($fnc = $this->getExternalFuncName($class, $func)) {
             if (is_array($args)) {
                 array_unshift($args, $this);

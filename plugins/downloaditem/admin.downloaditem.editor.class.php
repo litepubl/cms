@@ -42,7 +42,7 @@ class tdownloaditemeditor extends tposteditor {
         ));
     }
 
-    public function getArgstab(tpost $post, targs $args) {
+    public function getArgstab(tpost $post, Args $args) {
         parent::getargstab($post, $args);
 
         $args->downloadurl = $post->downloadurl;

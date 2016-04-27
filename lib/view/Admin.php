@@ -19,11 +19,14 @@ class Admin extends Base
     public $onfileperm;
 
     public static function i() {
-        $result = getinstance(get_called_class());
-        if (!$result->name && ($context =  $this->getApp()->router->context) && isset($context->idschema)) {
-            $result->name = Schema::getview($context)->adminname;
+        $result = static::iGet(get_called_class());
+        if (!$result->name) {
+$app = static::getAppInstance();
+if ($app->context && $app->context->model && isset($app->context->model->idschema)) {
+            $result->name = Schema::getSchema($app->context->model)->adminname;
             $result->load();
         }
+}
 
         return $result;
     }
@@ -36,7 +39,7 @@ class Admin extends Base
         return AdminParser::i();
     }
 
-    public function shortcode($s, targs $args) {
+    public function shortcode($s, Args $args) {
         $result = trim($s);
         //replace [tabpanel=name{content}]
         if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
@@ -123,14 +126,14 @@ class Admin extends Base
         return $result;
     }
 
-    public function parsearg($s, targs $args) {
+    public function parsearg($s, Args $args) {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
         $result = $args->callback($result);
         return $this->parse($result);
     }
 
-    public function form($tml, targs $args) {
+    public function form($tml, Args $args) {
         return $this->parsearg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 

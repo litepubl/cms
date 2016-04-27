@@ -23,12 +23,14 @@ class Args
         $this->callbacks = array();
         $this->callback_params = array();
 
-        if (!isset(basetheme::$defaultargs)) {
-            basetheme::set_defaultargs();
+        if (!isset(Base::$defaultargs)) {
+            Base::set_defaultargs();
         }
 
-        $this->data = basetheme::$defaultargs;
-        if (isset($thisthis)) $this->data['$this'] = $thisthis;
+        $this->data = Base::$defaultargs;
+        if (isset($thisthis)) {
+$this->data['$this'] = $thisthis;
+}
     }
 
     public function __get($name) {
@@ -83,7 +85,7 @@ class Args
     }
 
     public function parse($s) {
-        return BaseTheme::i()->parsearg($s, $this);
+        return Theme::i()->parsearg($s, $this);
     }
 
     public function callback($s) {

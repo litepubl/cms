@@ -97,7 +97,7 @@ class Editor extends \litepubl\admin\Menu
         ));
     }
 
-    public function getArgstab(tpost $post, targs $args) {
+    public function getArgstab(tpost $post, Args $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         //categories tab
@@ -168,7 +168,7 @@ class Editor extends \litepubl\admin\Menu
         return $this->getcontent();
     }
 
-    public function getPostargs(tpost $post, targs $args) {
+    public function getPostargs(tpost $post, Args $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         $args->title = Filter::unescape($post->title);
