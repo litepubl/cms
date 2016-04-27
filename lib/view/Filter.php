@@ -95,7 +95,7 @@ class Filter extends \litepubl\core\Events
     }
 
     public static function getPostdescription($description) {
-        if ( $this->getApp()->options->parsepost) {
+        if ( static::getAppInstance()->options->parsepost) {
             $theme = Theme::i();
             $description = $theme->parse($description);
         }

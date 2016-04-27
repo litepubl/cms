@@ -71,11 +71,11 @@ public function getUserpages() {
 return \litepubl\pages\Users::i();
 }
 
-    public function getTransform(tpost $post) {
+    public function getTransform(Post $post) {
         return Transform::i($post);
     }
 
-    public function add(tpost $post) {
+    public function add(Post $post) {
         return Transform::add($post);
     }
 

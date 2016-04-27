@@ -9,8 +9,10 @@
 
 namespace litepubl\core;
 
-class MemvarMemMysql
+class MemvarMysql
 {
+use appTrait;
+
     public $lifetime;
     public $table;
     public $data;

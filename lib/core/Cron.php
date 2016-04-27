@@ -155,7 +155,9 @@ $context->response->status = 403;
         $id = $this->doadd($type, $class, $func, $arg);
 
         if (($type == 'single') && !$this->disableping && !static ::$pinged) {
-            if (Config::$debug) tfiler::log("cron added $id");
+            if (Config::$debug) {
+$this->getApp()->getLogger()->info("cron added $id");
+}
 
             $memvars = Memvars::i();
             if (!$memvars->singlecron) {
@@ -265,7 +267,12 @@ $context->response->status = 403;
     public function log($s) {
         echo date('r') . "\n$s\n\n";
         flush();
-        if (Config::$debug) tfiler::log($s, 'cron.log');
+        if (Config::$debug) {
+            if (Config::$debug) {
+$this->getApp()->getLogger()->info($s);
+}
+
+}
     }
 
 }

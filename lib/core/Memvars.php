@@ -11,11 +11,13 @@ namespace litepubl\core;
 
 class Memvars
 {
+use AppTrait;
+
 public static $vars;
 
 public static function i() {
 if (!static::$vars) {
-if ( $this->getApp()->memcache) {
+if (static::getAppInstance()->memcache) {
 static::$vars = new MemvarMemcache();
 } else {
 static::$vars = new MemvarMysql();

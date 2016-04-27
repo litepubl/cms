@@ -27,7 +27,7 @@ class Files extends \litepubl\core\Items
     }
 
 public function getItemsposts() {
-return FileItems::i();
+return FilesItems::i();
 }
 
     public function preload(array $items) {

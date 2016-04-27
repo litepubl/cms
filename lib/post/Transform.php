@@ -12,6 +12,8 @@ use litepubl\core\Str;
 
 class Transform
 {
+use \litepubl\core\AppTrait;
+
     public $post;
     public static $arrayprops = array(
         'categories',
@@ -67,13 +69,13 @@ class Transform
         'pagescount',
     );
 
-    public static function i(tpost $post) {
-        $self = static::iGet(__class__);
+    public static function i(Post $post) {
+        $self = static::getAppInstance()->classes->getInstance(get_called_class());
         $self->post = $post;
         return $self;
     }
 
-    public static function add(tpost $post) {
+    public static function add(Post $post) {
         $self = static ::i($post);
         $values = array();
         foreach (static ::$props as $name) {

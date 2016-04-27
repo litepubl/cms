@@ -12,6 +12,7 @@ use litepubl\core\Cron;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\view\Schemes;
 use litepubl\utils\LinkGenerator;
 
 class Posts extends \litepubl\core\Items
@@ -41,7 +42,7 @@ class Posts extends \litepubl\core\Items
     }
 
     public function getItem($id) {
-        if ($result = tpost::i($id)) {
+        if ($result = Post::i($id)) {
  return $result;
 }
 
@@ -83,7 +84,7 @@ class Posts extends \litepubl\core\Items
         $t = new tposttransform();
         $fileitems = array();
         foreach ($items as $a) {
-            $t->post = tpost::newpost($a['class']);
+            $t->post = Post::newpost($a['class']);
             $t->setassoc($a);
             $result[] = $t->post->id;
             $f = $t->post->files;
@@ -195,7 +196,7 @@ class Posts extends \litepubl\core\Items
         }
     }
 
-    public function add(tpost $post) {
+    public function add(Post $post) {
         if ($post->posted == 0) $post->posted = time();
         $this->beforechange($post);
         if ($post->posted == 0) $post->posted = time();
@@ -203,11 +204,6 @@ class Posts extends \litepubl\core\Items
             if ($post->status == 'future') $post->status = 'published';
         } else {
             if ($post->status == 'published') $post->status = 'future';
-        }
-
-        if (($post->icon == 0) && ! $this->getApp()->options->icondisabled) {
-            $icons = ticons::i();
-            $post->icon = $icons->getid('post');
         }
 
         if ($post->idschema == 1) {
@@ -226,7 +222,7 @@ class Posts extends \litepubl\core\Items
         return $post->id;
     }
 
-    public function edit(tpost $post) {
+    public function edit(Post $post) {
         $this->beforechange($post);
         $linkgen = LinkGenerator::i();
         $linkgen->editurl($post, $post->schemalink);
@@ -271,7 +267,7 @@ class Posts extends \litepubl\core\Items
         return true;
     }
 
-    public function updated(tpost $post) {
+    public function updated(Post $post) {
         $this->PublishFuture();
         $this->UpdateArchives();
         Cron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
@@ -283,7 +279,7 @@ class Posts extends \litepubl\core\Items
 
     public function dosinglecron($id) {
         $this->PublishFuture();
-        Theme::$vars['post'] = tpost::i($id);
+        Theme::$vars['post'] = Post::i($id);
         $this->singlecron($id);
         unset(Theme::$vars['post']);
     }
@@ -293,7 +289,7 @@ class Posts extends \litepubl\core\Items
     }
 
     private function publish($id) {
-        $post = tpost::i($id);
+        $post = Post::i($id);
         $post->status = 'published';
         $this->edit($post);
     }
@@ -355,7 +351,7 @@ class Posts extends \litepubl\core\Items
 
         $result = '';
         foreach ($items as $id) {
-            $result.= tpost::i($id)->anhead;
+            $result.= Post::i($id)->anhead;
         }
         return $result;
     }
