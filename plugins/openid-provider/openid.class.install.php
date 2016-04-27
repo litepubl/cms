@@ -10,11 +10,12 @@
 namespace litepubl;
 use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
+use litepubl\view\MainView;
 
 function topenidInstall($self) {
      $self->getApp()->router->add($self->url, get_class($self) , null, 'get');
 
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->addtohead($self->get_head());
 
     $merger = LangMerger::i();
@@ -23,7 +24,7 @@ function topenidInstall($self) {
 
 function topenidUninstall($self) {
      $self->getApp()->router->unbind($self);
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->deletefromhead($self->get_head());
 
     $merger = LangMerger::i();

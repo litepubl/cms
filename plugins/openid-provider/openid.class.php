@@ -13,6 +13,7 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\view\MainView;
 
 class topenid extends tevents {
     public $keys;
@@ -115,7 +116,7 @@ class topenid extends tevents {
 
     private function nomode() {
         $result = tsimplecontent::html(Lang::get('openidserver', 'nomode'));
-        $js = ttemplate::i()->getready('var s = window.location.toString();
+        $js = MainView::i()->getready('var s = window.location.toString();
     if (-1 == s.indexof("?")) {
       window.location = ltoptions.url + "/";
     }');

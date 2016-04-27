@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\MainView;
 
 class tmetatags extends \litepubl\core\Plugin
  {
@@ -24,7 +25,7 @@ class tmetatags extends \litepubl\core\Plugin
     }
 
     public function getList() {
-        $context = ttemplate::i()->context;
+        $context = MainView::i()->context;
         if ($context instanceof tcommontags) {
             $list = $context->getidposts($context->id);
         } elseif (isset($context) && isset($context->idposts)) {
@@ -50,7 +51,7 @@ class tmetatags extends \litepubl\core\Plugin
             }
             return trim($result, ', ');
         }
-        return ttemplate::i()->getkeywords();
+        return MainView::i()->getkeywords();
     }
 
     public function getDescription() {
@@ -64,7 +65,7 @@ class tmetatags extends \litepubl\core\Plugin
             //return tcontentfilter::getexcerpt($result, 300);
             return $result;
         }
-        return ttemplate::i()->getdescription();
+        return MainView::i()->getdescription();
     }
 
 }

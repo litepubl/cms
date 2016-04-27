@@ -9,6 +9,7 @@
 
 namespace litepubl\post;
 use litepubl\view\Theme;
+use litepubl\view\MainView;
 
 class Factory
 {

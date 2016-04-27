@@ -13,12 +13,13 @@ use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Theme;
 use litepubl\utils\Filer;
+use litepubl\view\MainView;
 
 class Options extends \litepubl\admin\Menu
 {
     public function getContent() {
         $options =  $this->getApp()->options;
-        $template = ttemplate::i();
+        $template = MainView::i();
         Theme::$vars['template'] = $template;
         $result = '';
         $args = new Args();
@@ -195,7 +196,7 @@ class Options extends \litepubl\admin\Menu
                 $site->keywords = $keywords;
                 $site->author = $author;
                 $this->getdb('users')->setvalue(1, 'name', $author);
-                ttemplate::i()->footer = $footer;
+                MainView::i()->footer = $footer;
                 break;
 
 

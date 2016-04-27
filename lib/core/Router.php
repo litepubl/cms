@@ -101,12 +101,8 @@ $url = '/';
         return $this->items[$id]['url'];
     }
 
-    public function findurl($url) {
-        if ($result = $this->db->findItem('url = ' . Str::quote($url))) {
-            return $result;
-        }
-
-        return false;
+    public function findUrl($url) {
+return $this->db->findItem('url = ' . Str::quote($url));
     }
 
     public function urlExists($url) {

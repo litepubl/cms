@@ -9,7 +9,7 @@
 
 namespace litepubl\plugins\oldestposts;
 
-class AdminOldestposts extends \litepubl\admin\widgets\Order
+class Admin extends \litepubl\admin\widget\Order
 {
 
     protected function create() {

@@ -21,7 +21,7 @@ function ArchivesUninstall($self) {
     $widgets->deleteclass(get_class($self));
 }
 
-function tarchivesGetsitemap($self, $from, $count) {
+function ArchivesGetSitemap($self, $from, $count) {
     $result = array();
     foreach ($self->items as $date => $item) {
         $result[] = array(

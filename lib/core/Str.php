@@ -99,11 +99,11 @@ public static function jsonAttr($a) {
     return str_replace('"', '&quot;', Str::toJson($a));
 }
 
-public static function dump($s) {
+public static function log($s) {
     echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
 }
 
-public static function log($v) {
+public static function dump($v) {
     echo "<pre>\n";
     var_dump($v);
     echo "</pre>\n";

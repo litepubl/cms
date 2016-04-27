@@ -30,7 +30,7 @@ use \litepubl\view\EmptyViewTrait;
         $this->addmap('classes', array(
             'litepubl\pages\Menus',
             'litepubl\post\Posts',
-            'litepubl\tag\Categories',
+            'litepubl\tag\Cats',
             'litepubl\tag\Tags',
             'litepubl\post\Archives'
         ));
@@ -58,7 +58,7 @@ use \litepubl\view\EmptyViewTrait;
         $siteurl =  $this->getApp()->site->url;
         $classes =  $this->getApp()->router->page == 1 ? $this->classes : 'tposts';
         foreach ($classes as $class) {
-            $instance = getinstance($class);
+            $instance = static::iGet($class);
             $links = $instance->getsitemap($from, $perpage - $count);
             $count+= count($links);
             foreach ($links as $item) {
@@ -119,10 +119,10 @@ $response->body .= $this->GetIndex();
         $perpage = 1000;
         foreach ($this->classes as $prio => $class) {
             $this->prio = max(9 - $prio, 1);
-            $instance = getinstance($class);
+            $instance = static::iGet($class);
             $from = 0;
             do {
-                $links = $instance->getsitemap($from, $perpage);
+                $links = $instance->getSitemap($from, $perpage);
                 $from+= count($links);
                 foreach ($links as $item) {
                     $this->write($item['url'], $item['pages']);

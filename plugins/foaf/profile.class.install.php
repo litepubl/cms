@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\MainView;
 
 function tprofileInstall($self) {
      $self->getApp()->router->add($self->url, get_class($self) , null);
@@ -15,7 +16,7 @@ function tprofileInstall($self) {
     $sitemap = tsitemap::i();
     $sitemap->add($self->url, 7);
 
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->addtohead('	<link rel="author profile" title="Profile" href="$site.url/profile.htm" />');
 }
 
@@ -25,6 +26,6 @@ function tprofileUninstall($self) {
     $sitemap = tsitemap::i();
     $sitemap->delete('/profile.htm');
 
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->deletefromhead('	<link rel="author profile" title="Profile" href="$site.url/profile.htm" />');
 }

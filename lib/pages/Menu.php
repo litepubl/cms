@@ -30,7 +30,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public static function iteminstance($class, $id = 0) {
-        $single = getinstance($class);
+        $single = static::iGet($class);
         if ($single->id == $id) {
             return $single;
         }
@@ -47,7 +47,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public static function singleinstance($class) {
-        $single = getinstance($class);
+        $single = static::iGet($class);
         if ($id = $single->get_owner()->class2id($class)) {
             if ($single->id == $id) {
  return $single;

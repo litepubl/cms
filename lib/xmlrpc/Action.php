@@ -10,7 +10,7 @@
 namespace litepubl\xmlrpc;
 use litepubl\core\Str;
 
-class Actionv extends \litepubl\core\Items
+class Action extends \litepubl\core\Items
  {
     public $actions;
 

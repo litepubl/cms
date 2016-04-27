@@ -9,6 +9,7 @@
 
 namespace litepubl\plugins\bootstrap;
 use litepubl\core\Plugins;
+use litepubl\admin\Menus;
 
 function HeaderInstall($self) {
     $about = Plugins::getabout(Plugins::getname(__file__));

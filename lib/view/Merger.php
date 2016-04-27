@@ -229,7 +229,7 @@ return false;
         $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         @unlink($home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision)));
 
-        $template = ttemplate::i();
+        $template = MainView::i();
         unset($template->data[$this->basename . '_' . $section]);
         $template->save();
 
@@ -241,7 +241,7 @@ return false;
     public function merge() {
         $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         $theme = Theme::i();
-        $template = ttemplate::i();
+        $template = MainView::i();
         $template->data[$this->basename] = $this->revision;
 
         foreach ($this->items as $section => $items) {

@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl;
+use litepubl\view\MainView;
 
 class tstatfooter extends \litepubl\core\Plugin
  {
@@ -24,7 +25,7 @@ class tstatfooter extends \litepubl\core\Plugin
 
     public function install() {
         $footer = $this->getfooter();
-        $template = ttemplate::i();
+        $template = MainView::i();
         if (!strpos($template->footer, $footer)) {
             $template->footer.= $footer;
             $template->save();
@@ -33,7 +34,7 @@ class tstatfooter extends \litepubl\core\Plugin
 
     public function uninstall() {
         $footer = $this->getfooter();
-        $template = ttemplate::i();
+        $template = MainView::i();
         $template->footer = str_replace($footer, '', $template->footer);
         $template->save();
     }

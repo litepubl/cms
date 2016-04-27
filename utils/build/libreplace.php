@@ -167,6 +167,7 @@ $s = strtr($s, [
 'ttheme::' => 'Theme::',
 'tthemeparser' => 'Parser',
 'tdbmanager' => 'DBManager',
+'ttemplate:' => 'MainView:',
 'Str::uuote' => 'Str::quote',
 ]);
 
@@ -182,6 +183,7 @@ $s = insertUse($s, 'AdminInterface', 'litepubl\admin\AdminInterface');
 $s = insertUse($s, 'Theme::', 'litepubl\view\Theme');
 $s = insertUse($s, 'Parser:', 'litepubl\view\Parser');
 $s = insertUse($s, 'DBManager:', 'litepubl\core\DBManager');
+$s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
 
 if (strpos($s, 'tadminmenus')) {
 $s = str_replace('tadminmenus', 'Menus', $s);
@@ -196,7 +198,9 @@ $s = strtr($s, [
 '->getApp()->router->clearcache()' => '->getApp()->cache->clear()',
 'BaseTheme' => 'Base',
 ' targs ' => ' Args ',
+'ttemplate:' => 'MainView:',
 ]);
 
+$s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
 return $s;
 }

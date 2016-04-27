@@ -21,6 +21,7 @@ use litepubl\view\Css;
 use litepubl\xmlrpc;
 use litepubl\core\Plugins;
 use litepubl\view\Args;
+use litepubl\view\MainView;
 
 class Installer
 {

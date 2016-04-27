@@ -139,7 +139,7 @@ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
     }
 
     public function getSitemap($from, $count) {
-        return $this->externalfunc(__class__, 'Getsitemap', array(
+        return $this->externalfunc(get_class($this), 'GetSitemap', array(
             $from,
             $count
         ));

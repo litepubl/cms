@@ -51,11 +51,16 @@ $log = str_replace(dirname(dirname(__DIR__)), '', $log);
 $this->logger->alert($log);
 }
 
-public function trace()
+public function getTrace()
 {
 $log = LogException::trace();
 $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-$this->logger->info($log);
+return $log;
+}
+
+public function trace()
+{
+$this->logger->info($this->getTrace());
 }
 
 public function getHtml()

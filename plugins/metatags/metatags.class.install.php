@@ -10,12 +10,13 @@
 namespace litepubl;
 use litepubl\view\Base;
 use litepubl\view\Parser;
+use litepubl\view\MainView;
 
 function tmetatagsInstall($self) {
      $self->getApp()->classes->classes['metatags'] = get_class($self);
      $self->getApp()->classes->save();
 
-    $t = ttemplate::i();
+    $t = MainView::i();
     $t->heads = strtr($t->heads, array(
         '$template.keywords' => '$metatags.keywords',
         '$template.description' => '$metatags.description',
@@ -27,7 +28,7 @@ function tmetatagsInstall($self) {
 }
 
 function tmetatagsUninstall($self) {
-    $t = ttemplate::i();
+    $t = MainView::i();
     $t->heads = strtr($t->heads, array(
         '$metatags.keywords' => '$template.keywords',
         '$metatags.description' => '$template.description'

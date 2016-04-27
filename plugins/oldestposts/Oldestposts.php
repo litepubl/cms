@@ -13,7 +13,7 @@ use litepubl\post\Posts;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 
-class Oldestposts extends \litepubl\widget\Depnded
+class Oldestposts extends \litepubl\widget\Depended
 {
 
     protected function create() {

@@ -18,7 +18,6 @@ use Singleton;
     public $mysqli;
     public $result;
     public $sql;
-    public $cache;
     public $dbname;
     public $table;
     public $prefix;
@@ -26,7 +25,6 @@ use Singleton;
 
     public function __construct() {
         $this->sql = '';
-        $this->cache = false;
         $this->table = '';
         $this->history = array();
 
@@ -107,38 +105,19 @@ return DBManager::i();
             $microtime = microtime(true);
         }
 
-        if (is_object($this->result)) $this->result->close();
-
-        if ($this->cache) {
-            $sql = trim($sql);
-            $select = 'select ';
-            $sql_select = ($select == strtolower(substr($sql, 0, strlen($select)))) && !strpos($sql, 'last_insert_id');
-            if ($sql_select) {
-                if ($this->result = $this->cache->get($sql)) {
-                    if (Config::$debug) {
-$this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+        if (is_object($this->result)) {
+$this->result->close();
 }
 
-                    return $this->result;
-                }
-            } else {
-                $this->cache->clear();
-            }
-        }
-
         $this->result = $this->mysqli->query($sql);
-        if (Config::$debug) {
+        if ($this->result == false) {
+            $this->logError($this->mysqli->error);
+        } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
 $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
-        }
-
-        if ($this->result == false) {
-            $this->logError($this->mysqli->error);
-        } elseif ($this->cache && $sql_select) {
-            $this->cache->set($sql, $this->result);
-        }
+}
 
         return $this->result;
     }
@@ -146,7 +125,7 @@ $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
     protected function logError($mesg) {
         $log = "exception:\n$mesg\n$this->sql\n";
 $app = $this->getApp();
-$log .= $app->getLogManager()->trace();
+$log .= $app->getLogManager()->getTrace();
         $log.= $this->performance();
 die($log);
 //$app->getLogger()->alert($log);

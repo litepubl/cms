@@ -63,8 +63,7 @@ class Css extends Js
  return false;
 }
 
-
-        $template = ttemplate::i();
+        $template = MainView::i();
         if (strpos($template->heads, $this->basename . '_default')) {
             $this->add('default', $filename);
         } else {
@@ -78,7 +77,7 @@ class Css extends Js
 }
 
 
-        $template = ttemplate::i();
+        $template = MainView::i();
         if (strpos($template->heads, $this->basename . '_default')) {
             $this->deletefile('default', $filename);
         } else {

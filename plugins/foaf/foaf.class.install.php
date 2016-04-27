@@ -13,6 +13,7 @@ use litepubl\view\Base;
 use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
 use litepubl\core\DBManager;
+use litepubl\view\MainView;
 
 function tfoafInstall($self) {
     $merger = LangMerger::i();
@@ -54,7 +55,7 @@ function tfoafInstall($self) {
     }
     $admin->unlock();
 
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->addtohead('	<link rel="meta" type="application/rdf+xml" title="FOAF" href="$site.url/foaf.xml" />');
     $about = Plugins::getabout($name);
     $meta = tmetawidget::i();
@@ -95,7 +96,7 @@ function tfoafUninstall($self) {
         $manager->deletetable($self->table);
     }
 
-    $template = ttemplate::i();
+    $template = MainView::i();
     $template->deletefromhead('	<link rel="meta" type="application/rdf+xml" title="FOAF" href="$site.url/foaf.xml" />');
 
     $meta = tmetawidget::i();

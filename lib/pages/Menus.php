@@ -47,7 +47,7 @@ class Menus extends \litepubl\core\Items
             if (!isset($item->data[$prop])) $item->data[$prop] = '';
         }
 
-        if ($item instanceof thomepage) {
+        if ($item instanceof Home) {
             $item->url = '/';
         } else {
             $linkgen = LinkGenerator::i();
