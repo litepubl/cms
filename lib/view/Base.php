@@ -56,16 +56,20 @@ class Base extends \litepubl\core\Events
         $this->addmap('templates', array());
         $this->templates = array();
 
-        if (!isset(static ::$defaultargs)) static ::set_defaultargs();
+        if (!isset(static ::$defaultargs)) {
+static ::set_defaultargs();
+}
+
         $this->extratml = '';
     }
 
     public static function set_defaultargs() {
+$site = static::getAppInstance()->site;
         static ::$defaultargs = array(
-            '$site.url' =>  $this->getApp()->site->url,
-            '$site.files' =>  $this->getApp()->site->files,
-            '{$site.q}' =>  $this->getApp()->site->q,
-            '$site.q' =>  $this->getApp()->site->q
+            '$site.url' =>  $site->url,
+            '$site.files' =>  $site->files,
+            '{$site.q}' =>  $site->q,
+            '$site.q' =>  $site->q
         );
     }
 

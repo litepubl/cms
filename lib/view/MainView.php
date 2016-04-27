@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\view;
+use litepubl\core\Context;
 use litepubl\widget\Widgets;
 use litepubl\core\Str;
 use litepubl\perms\Perm;
@@ -83,7 +84,7 @@ $this->context = $context;
         $this->view = $context->view;
 
 $vars = new Vars();
-$vars->view = $view;
+$vars->view = $context->view;
 $vars->template = $this;
 $vars->mainview = $this;
 
@@ -103,7 +104,7 @@ $this->hover = $this->getHover($this->schema);
 $perm->setResponse($context->response, $context->model);
         }
 
-        $context->response->body .= $theme->render($view);
+        $context->response->body .= $theme->render($context->view);
         $this->onbody($this);
         if ($this->extrabody) {
 $context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
@@ -181,6 +182,7 @@ $result = $this->getApp()->site->name;
 $app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
+$menuclass = 'litepubl\pages\Menus';
         $filename = $schema->theme->name
  . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $app->options->group ?  $app->options->group : 'nobody');
 

@@ -236,7 +236,7 @@ return $this->autoInstall();
             return $this->wizardform();
         }
 
-        $password = $this->fFirstStep();
+        $password = $this->firstStep();
         $this->processForm($_POST['email'], $_POST['name'], $_POST['description'], isset($_POST['checkrewrite']));
         return $this->createDefaultItems($password);
     }
@@ -418,13 +418,9 @@ $vars = new Vars;
         tfiler::delete($this->app->pathsfiles, true);
     }
 
-    private function loadlang() {
-        //$this->app->options = $this;
-        //require_once($this->app->paths->lib . 'filer.class.php');
-        require_once ($this->app->paths->lib . 'local.class.php');
-        require_once ($this->app->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'local.class.install.php');
-        require_once ($this->app->paths->lib . 'htmlresource.class.php');
-        LangPreinstall($this->language);
+    private function loadLang() {
+include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
+        \litepubl\view\LangPreinstall($this->language);
     }
 
     private function GetBrowserLang() {

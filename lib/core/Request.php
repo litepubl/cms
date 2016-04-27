@@ -40,7 +40,7 @@ $this->url = '';
         $this->isAdminPanel = Str::begin($this->url, '/admin/') || ($this->url == '/admin');
 }
 
-    public  function getHost() {
+    public  function getHost($host) {
         if (Config::$host) {
             return config::$host;
         }

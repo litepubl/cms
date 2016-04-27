@@ -47,7 +47,7 @@ $this->renderStatus($context);
 }
 
 public function render(Context $context)
-
+{
 if (!$context->view && !($context->view  = $this->findView($context))) {
 throw new \RuntimeException('View not found form model');
 }

@@ -24,12 +24,12 @@ function LangInstall($self) {
 function LangPreinstall($language) {
     $lang = new lang();
     lang::$self = $lang;
-     $self->getApp()->classes->instances[get_class($lang)] = $lang;
+     lang::$self->getApp()->classes->instances[get_class($lang)] = $lang;
     preloadlanguage($lang, $language);
 }
 
 function preloadlanguage($lang, $language) {
-    $dir =  $self->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
+    $dir =  $lang->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
     foreach (array(
         'default',
         'admin',

@@ -176,7 +176,7 @@ $this->process();
         }
 
 $this->poolStorage->commit();
-//$this->showErrors();
+$this->showErrors();
     }
 
 public function getLogManager()

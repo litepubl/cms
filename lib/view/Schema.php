@@ -62,7 +62,7 @@ return static ::$instances['schema'][$id];
             'name' => 'default',
             'themename' => 'default',
             'adminname' => 'admin',
-            'menuclass' => 'tmenus',
+            'menuclass' => 'Menus',
             'hovermenu' => true,
             'customsidebar' => false,
             'disableajax' => false,

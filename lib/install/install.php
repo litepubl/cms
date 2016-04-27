@@ -20,7 +20,7 @@ if (!defined('litepublisher_mode')) {
     define('litepublisher_mode', 'install');
 }
 
-if (Config::$debug) {
+if (false && Config::$debug) {
   require_once(dirname(__DIR__) . '/utils/Filer.php');
   if (is_dir( litepubl::$app->paths->data)) {
 Filer::delete( litepubl::$app->paths->data, true, true);

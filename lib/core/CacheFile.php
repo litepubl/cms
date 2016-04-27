@@ -27,7 +27,7 @@ $this->items = [];
     }
 
     public function setString($filename, $str) {
-$this->items[$name] = $str;
+$this->items[$filename] = $str;
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
@@ -39,7 +39,7 @@ return $this->items[$filename];
 }
 
         $fn = $this->getdir() . $filename;
-        if (file_exists($fn) && (filemtime + $this->lifetime >= time())) {
+        if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {
             return $this->items[$filename] = file_get_contents($fn);
         }
 
