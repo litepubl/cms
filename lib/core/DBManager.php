@@ -183,7 +183,7 @@ public function setVar($name,$value)
 $this->query("set $name = $value");
 }
 
-    public function column_exists($table, $column) {
+    public function columnExists($table, $column) {
         return $this->query("SHOW COLUMNS FROM $this->prefix$table LIKE '$column'")->num_rows;
     }
 

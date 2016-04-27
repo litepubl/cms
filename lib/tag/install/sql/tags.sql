@@ -4,7 +4,7 @@
   customorder int unsigned NOT NULL default '0',
   itemscount int unsigned NOT NULL default '0',
   icon int unsigned NOT NULL default '0',
-  idview int unsigned NOT NULL default '1',
+  idschema int unsigned NOT NULL default '1',
   idperm int unsigned NOT NULL default '0',
   includeparents boolean default false,
   includechilds boolean default false,

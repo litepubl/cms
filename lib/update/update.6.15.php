@@ -45,4 +45,16 @@ $admin->save();
 
     $xmlrpc = TXMLRPC::i();
     $xmlrpc->deleteclass('twidgets');
+
+$man = dbmanager::i();
+foreach ([
+'posts',
+'userpage',
+'categories',
+'tags',
+] as $table) {
+if ($man->columnExists($table, 'idview')) {
+$man->alter($table, "change idview idschema int unsigned NOT NULL default '1'");
+}
+}
 }
