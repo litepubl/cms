@@ -9,6 +9,7 @@
 
 namespace litepubl\post;
 use litepubl\core\Str;
+use litepubl\utils\LinkGenerator;
 
 class MediaParser extends \litepubl\core\Events
  {
@@ -44,7 +45,7 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public static function linkgen($filename) {
-        $filename = tlinkgenerator::i()->filterfilename($filename);
+        $filename = LinkGenerator::i()->filterfilename($filename);
         return static ::fixfilename($filename);
     }
 
@@ -337,7 +338,7 @@ class MediaParser extends \litepubl\core\Events
 }
 
 
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $filename = $linkgen->filterfilename($filename);
         $tempfilename = $this->doupload($filename, $content);
 

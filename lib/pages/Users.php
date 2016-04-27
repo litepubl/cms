@@ -13,6 +13,7 @@ use litepubl\core\Users as CoreUsers;
 use litepubl\view\Filter;
 use litepubl\core\Str;
 use litepubl\view\Theme;
+use litepubl\utils\LinkGenerator;
 
 class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
@@ -199,7 +200,7 @@ $response->redir($url);
 
         $item['url'] = '';
         $linkitem = CoreUsers::i()->getitem($item['id']) + $item;
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $item['url'] = $linkgen->addurl(new tarray2prop($linkitem) , 'user');
         $item['idurl'] =  $this->getApp()->router->add($item['url'], get_class($this) , $item['id']);
         return $item;

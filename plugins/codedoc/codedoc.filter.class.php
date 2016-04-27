@@ -13,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Theme;
 use litepubl\view\Filter;
+use litepubl\utils\LinkGenerator;
 
 class tcodedocfilter extends titems {
     private $fix;
@@ -185,7 +186,7 @@ class tcodedocfilter extends titems {
         if ($post->id == 0) {
             $post->title = sprintf($typedoc == 'interface' ? $lang->interfacetitle : $lang->classtitle, $class);
             $post->url = "/doc/$class";
-            //tlinkgenerator::i()->addurl($post, 'codedoc');
+            //LinkGenerator::i()->addurl($post, 'codedoc');
             
         }
 

@@ -47,14 +47,22 @@ public function init() {
 
     public  function createInstances() {
          $this->paths = new paths();
-$this->createCache();
          $this->createStorage();
+//check before create any instances
+$installed = $this->poolStorage->isInstalled();
+$this->createCache();
          $this->classes = Classes::i();
          $this->options = Options::i();
          $this->site = Site::i();
-         $this->db = DB::i();
          $this->router = Router::i();
 $this->onClose = new Callback();
+
+        if ($installed) {
+         $this->db = DB::i();
+} else {
+            require ( $this->paths->lib . 'install/install.php');
+            //exit() in lib/install/install.php
+                    }
     }
 
     public  function createStorage() {
@@ -73,10 +81,6 @@ $this->onClose = new Callback();
         }
 
          $this->poolStorage = new PoolStorage();
-        if (! $this->poolStorage->isInstalled()) {
-            require ( $this->paths->lib . 'install/install.php');
-            //exit() in lib/install/install.php
-                    }
     }
 
 public function createCache()
@@ -172,7 +176,7 @@ $this->process();
         }
 
 $this->poolStorage->commit();
-$this->showErrors();
+//$this->showErrors();
     }
 
 public function getLogManager()

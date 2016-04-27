@@ -201,11 +201,13 @@ $s = strtr($s, [
 'ttemplate:' => 'MainView:',
 'tcontentfilter:' => 'Filter:',
 ' getinstance(' => ' static::iGet(',
+'tlinkgenerator::' => 'LinkGenerator::',
+'$this->getApp()->router->onclose' => '$this->getApp()->onClose->on(',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
-
 $s = insertUse($s, 'Filter:', 'litepubl\view\Filter');
+$s = insertUse($s, 'LinkGenerator:', 'litepubl\utils\LinkGenerator');
 
 return $s;
 }

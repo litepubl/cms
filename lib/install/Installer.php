@@ -27,6 +27,7 @@ use litepubl\view\MainView;
 use litepubl\core\Users;
 use litepubl\comments\Manager;
 use litepubl\comments\Comments;
+use litepubl\utils\Mailer;
 
 class Installer
 {
@@ -383,14 +384,14 @@ return $this->autoInstall();
 
     public function SendEmail($password) {
         define('mailpassword', $password);
-        register_shutdown_function(__class__ . '::sendmail');
+        register_shutdown_function([$this, 'sendMail']);
     }
 
-    public static function sendmail() {
+    public function sendMail() {
         $lang = Lang::$self->ini['installation'];
         $body = sprintf($lang['body'], $this->app->site->url, $this->app->options->email, mailpassword);
 
-        tmailer::sendmail('', $this->app->options->fromemail, '', $this->app->options->email, $lang['subject'], $body);
+        Mailer::sendmail('', $this->app->options->fromemail, '', $this->app->options->email, $lang['subject'], $body);
     }
 
     public function congratulation($password) {

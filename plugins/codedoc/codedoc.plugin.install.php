@@ -12,6 +12,7 @@ use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
 use litepubl\core\DBManager;
 use litepubl\view\Filter;
+use litepubl\utils\LinkGenerator;
 
 function tcodedocpluginInstall($self) {
     if (!dbversion) die("Ticket  system only for database version");
@@ -57,7 +58,7 @@ function tcodedocpluginInstall($self) {
     $filter->beforecontent = $self->afterfilter;
     $filter->unlock();
 
-    $linkgen = tlinkgenerator::i();
+    $linkgen = LinkGenerator::i();
     $linkgen->data['codedoc'] = '/doc/[title].htm';
     $linkgen->save();
 

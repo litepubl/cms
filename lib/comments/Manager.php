@@ -96,7 +96,7 @@ use \litepubl\core\PoolStorageTrait;
 
     public function sendmail($id) {
         if ($this->sendnotification) {
-             $this->getApp()->router->onclose($this, 'send_mail', $id);
+             $this->getApp()->onClose->on($this, 'send_mail', $id);
         }
     }
 

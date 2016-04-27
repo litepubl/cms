@@ -14,6 +14,7 @@ use litepubl\view\LangMerger;
 use litepubl\core\Plugins;
 use litepubl\core\DBManager;
 use litepubl\view\Filter;
+use litepubl\utils\LinkGenerator;
 
 function tticketsInstall($self) {
     if (version_compare(PHP_VERSION, '5.3', '<')) {
@@ -111,7 +112,7 @@ function tticketsInstall($self) {
     */
      $self->getApp()->classes->unlock();
 
-    $linkgen = tlinkgenerator::i();
+    $linkgen = LinkGenerator::i();
     $linkgen->data['ticket'] = '/tickets/[title].htm';
     $linkgen->save();
 

@@ -14,6 +14,7 @@ use litepubl\view\Base;
 use litepubl\view\Theme;
 use litepubl\utils\Filer;
 use litepubl\view\MainView;
+use litepubl\utils\LinkGenerator;
 
 class Options extends \litepubl\admin\Menu
 {
@@ -110,7 +111,7 @@ class Options extends \litepubl\admin\Menu
 
 
             case 'links':
-                $linkgen = tlinkgenerator::i();
+                $linkgen = LinkGenerator::i();
                 $args->urlencode = $linkgen->urlencode;
                 $args->post = $linkgen->post;
                 $args->menu = $linkgen->menu;
@@ -228,7 +229,7 @@ class Options extends \litepubl\admin\Menu
 
 
             case 'links':
-                $linkgen = tlinkgenerator::i();
+                $linkgen = LinkGenerator::i();
                 $linkgen->urlencode = isset($urlencode);
                 if (!empty($post)) {
                     $linkgen->post = $post;

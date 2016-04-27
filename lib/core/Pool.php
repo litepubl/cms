@@ -48,11 +48,7 @@ class Pool extends Data
 
     public function savepool($idpool) {
         if (!isset($this->modified[$idpool])) {
-             $this->getApp()->router->onclose = array(
-                $this,
-                'savemodified',
-                $idpool
-            );
+             $this->getApp()->onClose->on($this, 'saveModified', $idpool);
             $this->modified[$idpool] = true;
         }
     }

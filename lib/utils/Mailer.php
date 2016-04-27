@@ -12,14 +12,16 @@ use litepubl\Config;
 
 class Mailer
  {
+use \litepubl\core\AppTrait;
+
     private static $hold;
 
     protected static function send($from, $to, $subj, $body) {
-        $options =  $this->getApp()->options;
+        $options =  static::getAppInstance()->options;
         $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
         $date = date('r');
         if (Config::$debug) {
-            $dir =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR;
+            $dir =  static::getAppInstance()->paths->data . 'logs' . DIRECTORY_SEPARATOR;
             if (!is_dir($dir)) {
                 mkdir($dir, 0777);
                 @chmod($dir, 0777);
@@ -28,11 +30,11 @@ class Mailer
             return file_put_contents($dir . date('H-i-s.d.m.Y.') . microtime(true) . '.eml.mhtml', $eml);
         }
 
-        return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  $this->getApp()->options->version);
+        return mail($to, $subj, $body, "To: $to\nFrom: $from\nReply-To: $from\nContent-Type: text/plain; charset=\"utf-8\"\nContent-Transfer-Encoding: 8bit\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  static::getAppInstance()->options->version);
     }
 
     public static function sendmail($fromname, $fromemail, $toname, $toemail, $subj, $body) {
-        if ( $this->getApp()->options->mailer == 'smtp') {
+        if ( static::getAppInstance()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
         }
@@ -65,16 +67,16 @@ class Mailer
             return;
         }
 
-        return static ::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subject, $body);
+        return static ::sendmail( static::getAppInstance()->site->name,  static::getAppInstance()->options->fromemail, 'admin',  static::getAppInstance()->options->email, $subject, $body);
     }
 
     public static function onshutdown() {
-        if ( $this->getApp()->options->mailer == 'smtp') {
+        if ( static::getAppInstance()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             if ($mailer->auth()) {
-                $fromname =  $this->getApp()->site->name;
-                $fromemail =  $this->getApp()->options->fromemail;
-                $toemail =  $this->getApp()->options->email;
+                $fromname =  static::getAppInstance()->site->name;
+                $fromemail =  static::getAppInstance()->options->fromemail;
+                $toemail =  static::getAppInstance()->options->email;
 
                 foreach (static ::$hold as $i => $item) {
                     $mailer->send($fromname, $fromemail, 'admin', $toemail, $item['subject'], $item['body'], false);
@@ -96,7 +98,7 @@ class Mailer
 }
 
 
-        if ( $this->getApp()->options->mailer == 'smtp') {
+        if ( static::getAppInstance()->options->mailer == 'smtp') {
             $mailer = Smtp::i();
             if ($mailer->auth()) {
                 foreach ($list as $item) {
@@ -114,7 +116,7 @@ class Mailer
     }
 
     public static function SendAttachmentToAdmin($subj, $body, $filename, $attachment) {
-        return static ::sendattachment( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subj, $body, $filename, $attachment);
+        return static ::sendattachment( static::getAppInstance()->site->name,  static::getAppInstance()->options->fromemail, 'admin',  static::getAppInstance()->options->email, $subj, $body, $filename, $attachment);
     }
 
     public static function sendattachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment) {
@@ -131,12 +133,12 @@ class Mailer
         $attachpart.= base64_encode($attachment);
 
         $body = $textpart . "\n\n" . $attachpart . "\n\n";
-        $options =  $this->getApp()->options;
+        $options =  static::getAppInstance()->options;
         if (Config::$debug) {
-return file_put_contents( $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+return file_put_contents( static::getAppInstance()->paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
 }
 
-        return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  $this->getApp()->options->version);
+        return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " .  static::getAppInstance()->options->version);
     }
 
 }

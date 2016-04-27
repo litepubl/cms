@@ -10,6 +10,7 @@
 namespace litepubl\post;
 use litepubl\core\Context;
 use litepubl\view\Lang;
+use litepubl\utils\LinkGenerator;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
@@ -39,7 +40,7 @@ use \litepubl\view\ViewTrait;
         $this->lock();
         $this->items = array();
         //sort archive by months
-        $linkgen = tlinkgenerator::i();
+        $linkgen = LinkGenerator::i();
         $db = $this->db;
         $res = $db->query("SELECT YEAR(posted) AS 'year', MONTH(posted) AS 'month', count(id) as 'count' FROM  $db->posts
     where status = 'published' GROUP BY YEAR(posted), MONTH(posted) ORDER BY posted DESC ");

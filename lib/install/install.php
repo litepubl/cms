@@ -15,12 +15,7 @@ use litepubl\core\Options;
 use litepubl\core\Site;
 use litepubl\utils\Filer;
 
-echo "<pre>\n";
-//return;
- litepubl::$app->classes = Classes::i();
- litepubl::$app->options = Options::i();
- litepubl::$app->site = Site::i();
-
+//echo "<pre>\n";
 if (!defined('litepublisher_mode')) {
     define('litepublisher_mode', 'install');
 }
@@ -36,7 +31,7 @@ Filer::delete( litepubl::$app->paths->data, true, true);
 require_once (__DIR__ . '/Installer.php');
 $installer = new Installer();
 $installer->run();
-     litepubl::$app->PoolStorage->saveModified();
+     litepubl::$app->poolStorage->commit();
 
     if (!empty( litepubl::$app->options->errorlog)) {
         echo  litepubl::$app->options->errorlog;

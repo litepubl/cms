@@ -45,10 +45,7 @@ class Cache extends \litepubl\core\Items
     public function save() {
         if (!$this->modified) {
             $this->modified = true;
-             $this->getApp()->router->onclose = array(
-                $this,
-                'savemodified'
-            );
+             $this->getApp()->onClose->on($this, 'saveModified');
         }
     }
 

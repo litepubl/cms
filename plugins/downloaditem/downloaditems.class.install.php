@@ -16,6 +16,7 @@ use litepubl\core\Plugins;
 use litepubl\view\Theme;
 use litepubl\view\Parser;
 use litepubl\core\DBManager;
+use litepubl\utils\LinkGenerator;
 
 function tdownloaditemsInstall($self) {
     if (!dbversion) die("Downloads require database");
@@ -110,7 +111,7 @@ function tdownloaditemsInstall($self) {
     $parser->parsed = $self->themeparsed;
     Base::clearCache();
 
-    $linkgen = tlinkgenerator::i();
+    $linkgen = LinkGenerator::i();
     $linkgen->data['downloaditem'] = '/[type]/[title].htm';
     $linkgen->save();
      $self->getApp()->options->savemodified();
