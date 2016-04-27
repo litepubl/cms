@@ -714,4 +714,4 @@ class MediaParser extends \litepubl\core\Events
         return 0;
     }
 
-} 
+}

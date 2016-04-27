@@ -83,7 +83,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $item->save();
         $this->unlock();
         $this->added($id);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $id;
     }
 
@@ -121,7 +121,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $this->sort();
         $this->added($this->autoid);
         $this->unlock();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $this->autoid;
     }
 
@@ -139,7 +139,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $this->items[$this->autoid] = $item;
         $this->sort();
         $this->save();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $this->autoid;
     }
 
@@ -154,7 +154,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $item->save();
         $this->unlock();
         $this->edited($item->id);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function delete($id) {
@@ -182,7 +182,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $this->unlock();
         $this->deleted($id);
          $this->getApp()->storage->remove($this->dir . $id);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return true;
     }
 
@@ -235,7 +235,7 @@ return false;
         $this->sort();
         $this->unlock();
         $this->deleted($id);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return true;
     }
 
@@ -432,4 +432,4 @@ $this->items[$id]['class'] = $newclass;
         $this->save();
     }
 
-} 
+}

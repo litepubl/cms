@@ -199,4 +199,4 @@ $result .= $this->confirmDeleteItem($tags);
         return $this->admintheme->success(sprintf($this->lang->success, $title));
     }
 
-} 
+}

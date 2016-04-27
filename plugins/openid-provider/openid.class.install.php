@@ -29,5 +29,5 @@ function topenidUninstall($self) {
     $merger = LangMerger::i();
     $merger->deleteplugin(Plugins::getname(__file__));
 
-     $self->getApp()->router->clearcache();
+     $self->getApp()->cache->clear();
 }

@@ -13,12 +13,12 @@ function trssfilelistInstall($self) {
     $rss = trss::i();
     $rss->beforepost = $self->beforepost;
 
-     $self->getApp()->router->clearcache();
+     $self->getApp()->cache->clear();
 }
 
 function trssfilelistUninstall($self) {
     $rss = trss::i();
     $rss->unbind($self);
 
-     $self->getApp()->router->clearcache();
+     $self->getApp()->cache->clear();
 }

@@ -13,7 +13,7 @@ $s = strtr($s, [
 '$views' => '$schemes',
 '$view' => '$schema',
 'litepubl::$app' => 'litepubl@app',
-'turlmap::unsub' => $this->getApp()->router->unbind',
+'turlmap::unsub' => '$this->getApp()->router->unbind',
 ]);
 
 $s = strtr($s, [
@@ -193,8 +193,8 @@ return $s;
 
 function afterFix2($s) {
 $s = strtr($s, [
-'->getApp()->router->clearcache()' => '->getApp()->cache->clear()'
-]
+'->getApp()->router->clearcache()' => '->getApp()->cache->clear()',
+]);
 
 return $s;
 }

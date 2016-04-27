@@ -85,4 +85,4 @@ class tkeywordswidget extends twidget {
         return $theme->getwidgetcontent($links, $this->template, $sidebar);
     }
 
-} 
+}

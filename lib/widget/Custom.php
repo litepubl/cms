@@ -76,7 +76,7 @@ class Custom extends Widget
         $widgets->items[$id]['title'] = $title;
         $widgets->save();
         $this->expired($id);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function delete($id) {
@@ -97,4 +97,4 @@ class Custom extends Widget
         }
     }
 
-} 
+}

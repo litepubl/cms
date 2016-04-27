@@ -195,4 +195,4 @@ return;
         return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
     }
 
-} 
+}

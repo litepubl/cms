@@ -79,4 +79,4 @@ class Session
         return $r;
     }
 
-} 
+}

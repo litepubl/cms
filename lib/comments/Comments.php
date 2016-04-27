@@ -255,4 +255,4 @@ $vars = new Vars();
         return $theme->parsearg($tml, $args);
     }
 
-} 
+}

@@ -27,4 +27,4 @@ class trssfilelist extends \litepubl\core\Plugin
         }
     }
 
-} 
+}

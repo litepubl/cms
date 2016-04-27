@@ -11,7 +11,7 @@ namespace litepubl\comments;
 use litepubl\post\Posts;
 
 function PingbacksInstall($self) {
-    $manager = $self->bb->man;
+    $manager = $self->db->man;
     $manager->CreateTable($self->table, file_get_contents(__DIR__ . '/sql/pingbacks.sql'));
 
     $posts = Posts::i();

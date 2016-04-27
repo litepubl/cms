@@ -78,4 +78,4 @@ class tfriendswidget extends twidget {
         return sprintf('<?php  $this->getApp()->router->redir(\'%s\'); ?>', $item['url']);
     }
 
-} 
+}

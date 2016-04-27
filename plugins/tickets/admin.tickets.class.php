@@ -142,4 +142,4 @@ class tadmintickets extends \litepubl\admin\Menu
         }
     }
 
-} 
+}

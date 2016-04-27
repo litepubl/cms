@@ -49,4 +49,4 @@ $response->headers['Content-Type'] = 'text/plain';
 $response->body = $this->text;
     }
 
-} 
+}

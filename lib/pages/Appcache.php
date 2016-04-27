@@ -26,7 +26,7 @@ class Appcache extends \litepubl\core\Items
         if (!in_array($value, $this->items)) {
             $this->items[] = $value;
             $this->save();
-            $this->getApp()->router->setexpired($this->idurl);
+            $this->getApp()->cache->clearUrl($this->url);
             $this->added($value);
         }
     }

@@ -21,6 +21,8 @@ use litepubl\view\Theme;
 class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
     public $domrss;
+public $url;
+public $commentsUrl;
 
     protected function create() {
         parent::create();
@@ -29,12 +31,14 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
         $this->data['feedburner'] = '';
         $this->data['feedburnercomments'] = '';
         $this->data['template'] = '';
-        $this->data['idcomments'] = 0;
         $this->data['idpostcomments'] = 0;
+
+$this->url = '/rss.xml';
+$this->commentsUrl = '/comments.xml';
     }
 
     public function commentschanged() {
-         $this->getApp()->router->setexpired($this->idcomments);
+         $this->getApp()->cache->clearUrl($this->commentsUrl);
          $this->getApp()->router->setexpired($this->idpostcomments);
     }
 
@@ -288,8 +292,8 @@ $response->body = $before . $response->body;
             $this->feedburner = $rss;
             $this->feedburnercomments = $comments;
             $this->save();
-             $this->getApp()->router->clearcache();
+             $this->getApp()->cache->clear();
         }
     }
 
-} 
+}

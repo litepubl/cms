@@ -157,4 +157,4 @@ class Options extends \litepubl\admin\Menu
         $rss->save();
     }
 
-} 
+}

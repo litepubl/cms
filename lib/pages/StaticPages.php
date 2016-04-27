@@ -104,7 +104,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
             'idschema' => $item['idschema']
         );
         $this->save();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function delete($id) {

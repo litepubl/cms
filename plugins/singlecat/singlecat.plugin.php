@@ -60,4 +60,4 @@ class tsinglecat extends \litepubl\core\Plugin
         return str_replace('$items', $result, $this->tmlitems);
     }
 
-} 
+}

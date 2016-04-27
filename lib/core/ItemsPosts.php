@@ -97,4 +97,4 @@ class ItemsPosts extends Items
         }
     }
 
-} 
+}

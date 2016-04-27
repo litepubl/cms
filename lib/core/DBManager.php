@@ -337,4 +337,4 @@ $this->query("set $name = $value");
         return false;
     }
 
-} 
+}

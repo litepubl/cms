@@ -237,7 +237,7 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
 
     public static function clearcache() {
         Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function h($s) {
@@ -261,4 +261,4 @@ $this->app->log('error', LogException::trace(sprintf('Object "%s" not found in %
         ));
     }
 
-} 
+}

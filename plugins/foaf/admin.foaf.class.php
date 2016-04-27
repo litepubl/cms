@@ -249,4 +249,4 @@ class tadminfoaf extends \litepubl\admin\Menu
             return '';
         }
 
-} 
+}

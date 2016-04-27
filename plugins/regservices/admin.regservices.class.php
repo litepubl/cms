@@ -46,4 +46,4 @@ class tadminregservices implements \litepubl\admin\AdminInterface {
         return '';
     }
 
-} 
+}

@@ -47,7 +47,7 @@ class tadminsingletagwidget extends tadminwidget {
             $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
             $widget->items[$id]['invertorder'] = isset($_POST['invertorder']);
             $widget->save();
-             $this->getApp()->router->clearcache();
+             $this->getApp()->cache->clear();
             return '';
         }
 
@@ -72,7 +72,7 @@ class tadminsingletagwidget extends tadminwidget {
             $widget->add($idtag);
         }
         $widget->unlock();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
-} 
+}

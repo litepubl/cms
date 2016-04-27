@@ -250,4 +250,4 @@ class tprofile extends tevents_itemplate implements itemplate {
         return $result;
     }
 
-} 
+}

@@ -73,4 +73,4 @@ class tfacebookregservice extends tregservice {
         );
     }
 
-} 
+}

@@ -116,7 +116,7 @@ return false;
 
     protected function doProcessForm() {
         if (isset($_POST) && count($_POST)) {
-             $this->getApp()->router->clearcache();
+             $this->getApp()->cache->clear();
         }
 
         return parent::doProcessForm();

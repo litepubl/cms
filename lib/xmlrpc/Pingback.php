@@ -67,4 +67,4 @@ class Pingback extends Common
         return "Pingback from $from to $to registered. Keep the web talking! :-)";
     }
 
-} 
+}

@@ -118,4 +118,4 @@ use PoolStorageTrait;
         return '<?php echo  $this->getApp()->site->getuserlink(); ?>';
     }
 
-} 
+}

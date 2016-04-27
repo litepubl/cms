@@ -235,4 +235,4 @@ where idpoll = $id group by vote order by vote asc"));
         }
     }
 
-} 
+}

@@ -346,4 +346,4 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return $result;
     }
 
-} 
+}

@@ -126,4 +126,4 @@ return $admin->h($lang->nosubscribtions);
         return $this->admin->h(Lang::admin()->unsubscribed);
     }
 
-} 
+}

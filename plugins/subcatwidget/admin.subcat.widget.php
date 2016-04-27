@@ -83,4 +83,4 @@ class tadminsubcatwidget extends tadminwidget {
         $widget->unlock();
     }
 
-} 
+}

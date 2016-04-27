@@ -18,7 +18,7 @@ use litepubl\utils\Mailer;
 use litepubl\core\Array2prop;
 use litepubl\core\Str;
 
-class tpingbacks extends \litepubl\core\Items
+class Pingbacks extends \litepubl\core\Items
 {
     public $pid;
 
@@ -153,4 +153,4 @@ $vars->pingback = $pingback;
         return str_replace('$pingback', $result, $theme->parse($theme->templates['content.post.templatecomments.pingbacks']));
     }
 
-} 
+}

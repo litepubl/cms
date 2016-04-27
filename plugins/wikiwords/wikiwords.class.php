@@ -217,4 +217,4 @@ class twikiwords extends titems {
         return $result;
     }
 
-} 
+}

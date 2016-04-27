@@ -89,4 +89,4 @@ class ttickets extends tposts {
         return false;
     }
 
-} 
+}

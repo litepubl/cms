@@ -266,7 +266,7 @@ return false;
             $template->data[$this->basename . '_' . $section] = $savefile;
         }
         $template->save();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         foreach (array_keys($this->items) as $section) {
             $old = $home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision - 1));
             @unlink($old);

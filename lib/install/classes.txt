@@ -35,7 +35,7 @@ post\FilesItems
 post\Archives
 pages\AppCache
 perms\Perm
-perms\Group
+perms\Groups
 perms\Password
 perms\Single
 perms\Files

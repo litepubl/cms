@@ -111,7 +111,7 @@ Filer::log("$v selected to update", 'update');
         }
 
         Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         Lang::clearcache();
         Sidebars::fix();
 
@@ -242,4 +242,4 @@ Filer::log("$v selected to update", 'update');
         return true;
     }
 
-} 
+}

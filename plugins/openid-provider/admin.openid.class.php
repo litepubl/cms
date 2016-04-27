@@ -45,4 +45,4 @@ class tadminopenid {
         $openid->save();
     }
 
-} 
+}

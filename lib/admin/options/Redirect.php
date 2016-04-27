@@ -100,4 +100,4 @@ return $result;
             return '';
     }
 
-} 
+}

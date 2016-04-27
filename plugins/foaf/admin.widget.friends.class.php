@@ -26,4 +26,4 @@ class tadminfriendswidget extends tadminwidget {
         $widget->redir = isset($_POST['redir']);
     }
 
-} 
+}

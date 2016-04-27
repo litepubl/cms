@@ -108,4 +108,4 @@ class tsubcatwidget extends twidget {
         ) , $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']);
     }
 
-} 
+}

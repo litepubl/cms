@@ -62,4 +62,4 @@ return $theme->simple($this->text);
         Mailer::sendtoadmin($subject, $body, true);
     }
 
-} 
+}

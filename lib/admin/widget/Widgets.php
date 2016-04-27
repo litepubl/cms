@@ -179,7 +179,7 @@ class Widgets extends \litepubl\admin\Menu
     }
 
     public function processForm() {
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
 
         $idwidget = (int)tadminhtml::getparam('idwidget', 0);
         $widgets = WidgetItems::i();
@@ -276,4 +276,4 @@ class Widgets extends \litepubl\admin\Menu
             $schema->save();
         }
 
-} 
+}

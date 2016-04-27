@@ -311,4 +311,4 @@ return  $this->getApp()->site->name;
         return $s;
     }
 
-} 
+}

@@ -192,7 +192,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $this->items[$id]['url'] = $url;
         $this->added($id);
         $this->changed();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $id;
     }
 
@@ -230,7 +230,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         $this->items[$id] = $item;
         $this->save();
         $this->changed();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function delete($id) {
@@ -242,7 +242,7 @@ class Common extends \litepubl\core\Items implements \litepubl\view\ViewInterfac
         parent::delete($id);
         if ($this->postpropname) $this->itemsposts->updateposts($list, $this->postpropname);
         $this->changed();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function createnames($list) {
@@ -568,4 +568,4 @@ return;
         ));
     }
 
-} 
+}

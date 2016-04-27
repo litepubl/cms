@@ -34,4 +34,4 @@ class tadminsameposts extends tadminorderwidget {
         return parent::doProcessForm($widget);
     }
 
-} 
+}

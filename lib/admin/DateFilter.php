@@ -73,4 +73,4 @@ class DateFilter {
         return $result;
     }
 
-} 
+}

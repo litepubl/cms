@@ -138,4 +138,4 @@ class Templates extends \litepubl\core\Events
         return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
 
-} 
+}

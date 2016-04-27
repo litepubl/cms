@@ -33,4 +33,4 @@ use \litepubl\admin\Params;
         $this->widget->ajax = isset($_POST['ajax']);
     }
 
-} 
+}

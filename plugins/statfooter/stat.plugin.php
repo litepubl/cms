@@ -38,4 +38,4 @@ class tstatfooter extends \litepubl\core\Plugin
         $template->save();
     }
 
-} 
+}

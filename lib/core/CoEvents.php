@@ -102,4 +102,4 @@ class CoEvents extends Events
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
 
-} 
+}

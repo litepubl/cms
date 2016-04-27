@@ -138,4 +138,4 @@ class Http {
         return substr($result, strpos($result, "\r\n\r\n") + 4);
     }
 
-} 
+}

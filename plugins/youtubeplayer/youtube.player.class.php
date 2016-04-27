@@ -51,4 +51,4 @@ class tyoutubeplayer extends \litepubl\core\Plugin
         tcontentfilter::i()->unbind($this);
     }
 
-} 
+}

@@ -221,7 +221,7 @@ class Posts extends \litepubl\core\Items
         $this->cointerface('add', $post);
         $this->added($post->id);
         $this->changed();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $post->id;
     }
 
@@ -242,7 +242,7 @@ class Posts extends \litepubl\core\Items
         $this->edited($post->id);
         $this->changed();
 
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function delete($id) {
@@ -341,7 +341,7 @@ class Posts extends \litepubl\core\Items
     public function addrevision() {
         $this->data['revision']++;
         $this->save();
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function getAnhead(array $items) {
@@ -391,4 +391,4 @@ class Posts extends \litepubl\core\Items
         ));
     }
 
-} 
+}

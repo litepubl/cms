@@ -142,7 +142,7 @@ class Plugins extends Menu
             }
         }
 
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
         return $result;
     }
 
@@ -161,4 +161,4 @@ class Plugins extends Menu
         return getinstance($class);
     }
 
-} 
+}

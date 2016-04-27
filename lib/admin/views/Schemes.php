@@ -274,4 +274,4 @@ class Schemes extends \litepubl\admin\Menu
             Base::clearCache();
         }
 
-} 
+}

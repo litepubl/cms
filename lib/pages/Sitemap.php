@@ -183,4 +183,4 @@ $response->body .= $this->GetIndex();
         gzwrite($this->fd, '</urlset>');
     }
 
-} 
+}

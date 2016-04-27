@@ -32,4 +32,4 @@ class tadminticketoptions extends \litepubl\admin\Menu
         $tickets->save();
     }
 
-} 
+}

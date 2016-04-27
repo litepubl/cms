@@ -64,4 +64,4 @@ class tgoogleanalitic extends \litepubl\core\Plugin
         $jsmerger->deletetext('default', 'googleanalitic');
     }
 
-} 
+}

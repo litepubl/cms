@@ -108,4 +108,4 @@ class tsingletagwidget extends twidget {
         return $theme->getpostswidgetcontent($items, $sidebar, '');
     }
 
-} 
+}

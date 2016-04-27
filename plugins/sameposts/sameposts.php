@@ -106,4 +106,4 @@ class tsameposts extends tclasswidget {
         return $theme->getpostswidgetcontent($list, $sidebar, '');
     }
 
-} 
+}

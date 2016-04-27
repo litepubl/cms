@@ -13,8 +13,8 @@ use litepubl\widget\Meta as MetaWidget;
 use litepubl\view\Lang;
 
 function RssInstall($self) {
-     $self->getApp()->router->add('/rss.xml', get_class($self) , 'posts');
-    $self->idcomments =  $self->getApp()->router->add('/comments.xml', get_class($self) , 'comments');
+     $self->getApp()->router->add($self->url, get_class($self) , 'posts');
+$self->getApp()->router->add($self->commentsUrl, get_class($self) , 'comments');
     $self->idpostcomments =  $self->getApp()->router->add('/comments/', get_class($self) , null, 'begin');
      $self->getApp()->router->add('/rss/categories/', get_class($self) , 'categories', 'begin');
      $self->getApp()->router->add('/rss/tags/', get_class($self) , 'tags', 'begin');

@@ -18,7 +18,7 @@ class tclearcache extends \litepubl\core\Plugin
 
     public function clearcache() {
         tfiler::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->router->clearcache();
+         $this->getApp()->cache->clear();
     }
 
     public function themeparsed(ttheme $theme) {
@@ -32,4 +32,4 @@ class tclearcache extends \litepubl\core\Plugin
         $schemes->save();
     }
 
-} 
+}

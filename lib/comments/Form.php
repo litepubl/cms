@@ -340,4 +340,4 @@ return $this->helper->getErrorContent($s);
         return  $this->getApp()->router->redir($link);
     }
 
-} 
+}

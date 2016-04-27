@@ -16,4 +16,4 @@ class rsschrome extends \litepubl\core\Plugin
         return getinstance(__class__);
     }
 
-} 
+}

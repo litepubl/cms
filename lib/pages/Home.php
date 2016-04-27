@@ -262,4 +262,4 @@ unset($vars->author);
         return $result;
     }
 
-} 
+}

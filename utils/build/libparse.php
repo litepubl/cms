@@ -34,7 +34,7 @@ $s = substr($s, 0, strlen($s) - strlen('//class'));
 
 //$s = libReplace($s);
 //$s = afterFix($s);
-/$s = afterFix2($s);
+$s = afterFix2($s);
 }
 
 if (strend($filename, '.install.php')) {

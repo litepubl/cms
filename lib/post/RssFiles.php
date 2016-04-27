@@ -129,8 +129,8 @@ $response->setXml();
         if (($this->feedburner != $url)) {
             $this->data['feedburner'] = $url;
             $this->save();
-             $this->getApp()->router->clearcache();
+             $this->getApp()->cache->clear();
         }
     }
 
-} 
+}

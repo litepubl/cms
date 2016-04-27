@@ -128,4 +128,4 @@ class Meta extends \litepubl\core\Item
         return $items;
     }
 
-} 
+}

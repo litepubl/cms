@@ -160,4 +160,4 @@ class tkeywordsplugin extends \litepubl\core\Plugin
         return false;
     }
 
-} 
+}

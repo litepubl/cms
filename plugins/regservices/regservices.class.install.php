@@ -61,7 +61,7 @@ function tregservicesInstall($self) {
 
      $self->getApp()->router->addget($self->url, get_class($self));
     tcommentform::i()->oncomuser = $self->oncomuser;
-     $self->getApp()->router->clearcache();
+     $self->getApp()->cache->clear();
 }
 
 function tregservicesUninstall($self) {

@@ -26,7 +26,7 @@ class Menus extends \litepubl\pages\Menus
         if ($id && isset($this->items[$id])) {
             $this->items[$id]['title'] = $title;
             $this->save();
-             $this->getApp()->router->clearcache();
+             $this->getApp()->cache->clear();
         }
     }
 
@@ -131,4 +131,4 @@ class Menus extends \litepubl\pages\Menus
         return $this->onexclude($id);
     }
 
-} 
+}

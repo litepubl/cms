@@ -80,4 +80,4 @@ class UserOptions extends Items
         }
     }
 
-} 
+}
