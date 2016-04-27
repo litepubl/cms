@@ -9,9 +9,9 @@
 
 namespace litepubl\widget;
 use litepubl\posts\Archives as Arch;
-use litepubl\theme\Theme;
-use litepubl\theme\Lang;
-use litepubl\theme\Args;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class Archives extends Widget 
 {

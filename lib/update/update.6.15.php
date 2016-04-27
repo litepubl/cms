@@ -42,4 +42,7 @@ $admin->renameClass($oldclass, $newclass);
 
 $m->save();
 $admin->save();
+
+    $xmlrpc = TXMLRPC::i();
+    $xmlrpc->deleteclass('twidgets');
 }

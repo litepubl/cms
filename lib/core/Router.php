@@ -279,4 +279,10 @@ parent::unbind($obj);
         if (isset($this->items[$id])) $this->items[$id]['url'] = $url;
     }
 
+//backward compabilty
+public function clearcache()
+{
+$this->getApp()->cache->clear();
+}
+
 }

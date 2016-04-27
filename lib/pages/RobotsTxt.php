@@ -28,7 +28,7 @@ class RobotsTxt extends \litepubl\core\Items implements \litepubl\core\Responsiv
         if (!in_array($value, $this->items)) {
             $this->items[] = $value;
             $this->save();
-             $this->getApp()->router->setexpired($this->idurl);
+             $this->getApp()->cache->clearUrl('/robots.txt');
             $this->added($value);
         }
     }

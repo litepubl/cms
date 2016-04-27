@@ -17,7 +17,7 @@ class Sidebars extends \litepubl\core\Data
     public $items;
 
     public static function i($id = 0) {
-        $result = getinstance(get_called_class());
+        $result = static::iGet(get_called_class());
         if ($id) {
             $schema = Schema::i((int)$id);
             $result->items = & $schema->sidebars;

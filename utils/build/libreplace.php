@@ -13,7 +13,7 @@ $s = strtr($s, [
 '$views' => '$schemes',
 '$view' => '$schema',
 'litepubl::$app' => 'litepubl@app',
-'turlmap::unsub' => 'litepubl::$router->unbind',
+'turlmap::unsub' => $this->getApp()->router->unbind',
 ]);
 
 $s = strtr($s, [
@@ -29,7 +29,7 @@ $s = strtr($s, [
 ' Ulist' => ' UList',
 'processform' => 'processForm',
 'doprocessform' => 'doProcessForm',
-'DataStorage' => 'SharedStorage',
+'DataStorage' => 'PoolStorage',
 'Schemas' => 'Schemes',
 ]);
 
@@ -187,6 +187,14 @@ if (strpos($s, 'tadminmenus')) {
 $s = str_replace('tadminmenus', 'Menus', $s);
 $s = insertUse($s, 'AdminMenus::', 'litepubl\admin\Menus as AdminMenus');
 }
+
+return $s;
+}
+
+function afterFix2($s) {
+$s = strtr($s, [
+'->getApp()->router->clearcache()' => '->getApp()->cache->clear()'
+]
 
 return $s;
 }

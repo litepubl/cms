@@ -47,6 +47,7 @@ public function init() {
 
     public  function createInstances() {
          $this->paths = new paths();
+$this->createCache();
          $this->createStorage();
          $this->classes = Classes::i();
          $this->options = Options::i();
@@ -54,7 +55,6 @@ public function init() {
          $this->db = DB::i();
          $this->router = Router::i();
 $this->onClose = new Callback();
-$this->createCache();
     }
 
     public  function createStorage() {

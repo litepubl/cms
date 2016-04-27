@@ -32,12 +32,9 @@ if (strend($s, '//class')) {
 $s = substr($s, 0, strlen($s) - strlen('//class'));
 }
 
-$s = strtr($s, [
-'SharedStorage' => 'PoolStorage',
-'sharedStorage' => 'poolStorage',
-]);
 //$s = libReplace($s);
 //$s = afterFix($s);
+/$s = afterFix2($s);
 }
 
 if (strend($filename, '.install.php')) {

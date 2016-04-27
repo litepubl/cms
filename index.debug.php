@@ -1,10 +1,9 @@
 <?php
 namespace litepubl;
-
 define('litepubl_mode', 'config');
 require (__DIR__ . '/index.php');
 Config::$debug = true;
-Config::$enableZeroDatetime  = true;
+//Config::$enableZeroDatetime  = true;
 //Config::$classes['storage'] = 'litepubl\storageinc';
 Config::$beforeRequest  = function() {
 include (__DIR__ . '/temp/zdebug.php');

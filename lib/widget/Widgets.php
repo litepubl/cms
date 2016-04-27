@@ -33,7 +33,7 @@ use \litepubl\core\PoolStorageTrait;
         $this->addmap('classes', array());
     }
 
-    public function add(twidget $widget) {
+    public function add(Widget $widget) {
         return $this->additem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
@@ -42,7 +42,7 @@ use \litepubl\core\PoolStorageTrait;
         ));
     }
 
-    public function addext(twidget $widget, $title, $template) {
+    public function addext(Widget $widget, $title, $template) {
         return $this->additem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
@@ -51,7 +51,7 @@ use \litepubl\core\PoolStorageTrait;
         ));
     }
 
-    public function addclass(twidget $widget, $class) {
+    public function addclass(Widget $widget, $class) {
         $this->lock();
         $id = $this->add($widget);
         if (!isset($this->classes[$class])) {
@@ -353,7 +353,7 @@ use \litepubl\core\PoolStorageTrait;
     }
 
     private function includewidget($id, $sidebar) {
-        $filename = twidget::getcachefilename($id, $sidebar);
+        $filename = Widget::getcachefilename($id, $sidebar);
         if (! $this->getApp()->router->cache->exists($filename)) {
             $widget = $this->getwidget($id);
             $content = $widget->getcontent($id, $sidebar);
@@ -373,7 +373,7 @@ use \litepubl\core\PoolStorageTrait;
     ?>\n";
     }
 
-    public function find(twidget $widget) {
+    public function find(Widget $widget) {
         $class = get_class($widget);
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
@@ -383,22 +383,6 @@ use \litepubl\core\PoolStorageTrait;
 
         }
         return false;
-    }
-
-    public function xmlrpcgetwidget($id, $sidebar, $idurl) {
-        if (!isset($this->items[$id])) {
- return $this->error("Widget $id not found");
-}
-
-
-        $this->idurlcontext = $idurl;
-        $result = $this->getwidgetcontent($id, $sidebar);
-        //fix bug for javascript client library
-        if ($result == '') {
- return 'false';
-}
-
-
     }
 
     private static function getGet($name) {
@@ -447,7 +431,7 @@ $response->body = $mesg;
 
 
             case 'include':
-                $filename = twidget::getcachefilename($id, $sidebar);
+                $filename = Widget::getcachefilename($id, $sidebar);
                 $result =  $this->getApp()->router->cache->get($filename);
                 if (!$result) {
                     $widget = $this->getwidget($id);

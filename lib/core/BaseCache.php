@@ -64,4 +64,9 @@ public function setLifetime($value)
 $this->lifetime = $value;
 }
 
+public function clearUrl($url)
+{
+$this->delete(md5($url) . '.php');
+}
+
 }

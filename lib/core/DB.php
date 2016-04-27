@@ -431,11 +431,12 @@ throw new \Exception($log);
 
 public function enableZeroDatetime()
 {
-        $v = $this->fetchassoc($this->query("show variables like 'sql_mode'"));
+//use mysqli to prevent strange warnings
+        $v = $this->fetchassoc($this->mysqli->query('show variables like \'sql_mode\''));
 $a = explode(',', $v['Value']);
 $ex = ['NO_ZERO_IN_DATE', 'NO_ZERO_DATE'];
 $a = array_diff($a, $ex);
 $v = implode(',', $a);
-$this->query("set sql_mode = '$v'");
+$this->mysqli->query("set sql_mode = '$v'");
 }
 }

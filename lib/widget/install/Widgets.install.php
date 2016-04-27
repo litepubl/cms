@@ -15,16 +15,11 @@ function WidgetsInstall($self) {
     $robot  = RobotsTxt::i();
     $robot->AddDisallow('/getwidget.htm');
 
-    $xmlrpc = TXMLRPC::i();
-    $xmlrpc->add('litepublisher.getwidget', 'xmlrpcgetwidget', get_class($self));
-
     install_std_widgets($self);
 }
 
 function WidgetsUninstall($self) {
      $self->getApp()->router->unbind($self);
-    $xmlrpc = TXMLRPC::i();
-    $xmlrpc->deleteclass(get_class($self));
 }
 
 function install_std_widgets($widgets) {
