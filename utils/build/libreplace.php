@@ -204,6 +204,9 @@ $s = strtr($s, [
 'tlinkgenerator::' => 'LinkGenerator::',
 '$this->getApp()->router->onclose' => '$this->getApp()->onClose->on(',
 'Schema::getView' => 'Schema::getSchema',
+'childdata' => 'childData',
+'childtable' => 'childTable',
+
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
