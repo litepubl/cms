@@ -9,7 +9,7 @@
 
 namespace litepubl\admin;
 use litepubl\comments\Manager;
-use litepubl\comments\RssHold;;
+use litepubl\comments\RssHold;
 use litepubl\comments\Subscribers;
 use litepubl\view\Lang;
 use litepubl\view\Args;

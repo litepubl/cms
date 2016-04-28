@@ -15,8 +15,6 @@ function MenusInstall($self) {
  return;
 }
 
-
-
      $self->getApp()->classes->onrename = $self->classRenamed;
 
     $self->lock();
@@ -24,32 +22,32 @@ function MenusInstall($self) {
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>';
 
     //posts
-    $posts = $self->createitem(0, 'posts', 'author', 'litepubl\post\Posts');
+    $posts = $self->createitem(0, 'posts', 'author', 'litepubl\admin\posts\Posts');
  {
-        $id = $self->createitem($posts, 'editor', 'author', 'tposteditor');
+        $id = $self->createitem($posts, 'editor', 'author', 'litepubl\admin\posts\Editor');
         $self->items[$id]['title'] = Lang::i()->newpost;
-        $self->createitem($posts, 'addcat', 'editor', 'tadmintags');
-        $self->createitem($posts, 'categories', 'editor', 'tadmintags');
-        $self->createitem($posts, 'addtag', 'editor', 'tadmintags');
-        $self->createitem($posts, 'tags', 'editor', 'tadmintags');
-        $self->createitem($posts, 'staticpages', 'editor', 'tadminstaticpages');
+        $self->createitem($posts, 'addcat', 'editor', 'litepubl\admin\posts\Tags');
+        $self->createitem($posts, 'categories', 'editor', 'litepubl\admin\posts\Tags');
+        $self->createitem($posts, 'addtag', 'editor', 'litepubl\admin\posts\Tags');
+        $self->createitem($posts, 'tags', 'editor', 'litepubl\admin\posts\Tags');
+        $self->createitem($posts, 'staticpages', 'editor', 'litepubl\admin\posts\StaticPages');
     }
 
-    $moder = $self->createitem(0, 'comments', 'commentator', '\litepubl\admin\Moderator');
+    $moder = $self->createitem(0, 'comments', 'commentator', 'litepubl\admin\comments\Moderator');
  {
-        $self->createitem($moder, 'hold', 'commentator', 'tadminmoderator');
-        $self->createitem($moder, 'authors', 'moderator', 'Commentators');
-        $self->createitem($moder, 'pingback', 'moderator', 'tadminpingbacks');
+        $self->createitem($moder, 'hold', 'commentator', 'litepubl\admin\comments\Moderator');
+        $self->createitem($moder, 'authors', 'moderator', 'litepubl\admin\comments\Authors');
+        $self->createitem($moder, 'pingback', 'moderator', 'litepubl\admin\comments\Pingbacks');
     }
 
-    $plugins = $self->createitem(0, 'plugins', 'admin', '\litepubl\admin\Plugins');
-    $files = $self->createitem(0, 'files', 'author', '\litepubl\admin\Files');
+    $plugins = $self->createitem(0, 'plugins', 'admin', 'litepubl\admin\Plugins');
+    $files = $self->createitem(0, 'files', 'author', 'litepubl\admin\files\Files');
  {
-        $self->createitem($files, 'thumbnail', 'editor', 'tadminfilethumbnails');
-        $self->createitem($files, 'image', 'editor', 'tadminfiles');
-        $self->createitem($files, 'video', 'editor', 'tadminfiles');
-        $self->createitem($files, 'audio', 'editor', 'tadminfiles');
-        $self->createitem($files, 'bin', 'editor', 'tadminfiles');
+        $self->createitem($files, 'thumbnail', 'editor', 'litepubl\admin\files\Thumbnails');
+        $self->createitem($files, 'image', 'editor', 'litepubl\admin\files\Files');
+        $self->createitem($files, 'video', 'editor', 'litepubl\admin\files\Files');
+        $self->createitem($files, 'audio', 'editor', 'litepubl\admin\files\Files');
+        $self->createitem($files, 'bin', 'editor', 'litepubl\admin\files\Files');
     }
 
     $schemes = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
