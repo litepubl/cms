@@ -12,6 +12,7 @@ namespace litepubl\widget;
     use litepubl\core\Response;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
+use litepubl\view\ViewInterface;
 use litepubl\core\Arr;
 
 class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
@@ -19,7 +20,7 @@ class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveI
 use \litepubl\core\PoolStorageTrait;
 
     public $classes;
-    public $currentsidebar;
+    public $currentSidebar;
     public $idwidget;
     public $idurlcontext;
 
@@ -28,22 +29,22 @@ use \litepubl\core\PoolStorageTrait;
         parent::create();
         $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
         $this->basename = 'widgets';
-        $this->currentsidebar = 0;
+        $this->currentSidebar = 0;
         $this->idurlcontext = 0;
-        $this->addmap('classes', array());
+        $this->addMap('classes', array());
     }
 
     public function add(Widget $widget) {
-        return $this->additem(array(
+        return $this->addItem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
-            'title' => $widget->gettitle(0) ,
+            'title' => $widget->getTitle(0) ,
             'template' => $widget->template
         ));
     }
 
-    public function addext(Widget $widget, $title, $template) {
-        return $this->additem(array(
+    public function addExt(Widget $widget, $title, $template) {
+        return $this->addItem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
             'title' => $title,
@@ -51,7 +52,7 @@ use \litepubl\core\PoolStorageTrait;
         ));
     }
 
-    public function addclass(Widget $widget, $class) {
+    public function addClass(Widget $widget, $class) {
         $this->lock();
         $id = $this->add($widget);
         if (!isset($this->classes[$class])) {
@@ -69,7 +70,7 @@ use \litepubl\core\PoolStorageTrait;
         return $id;
     }
 
-    public function subclass($id) {
+    public function subClass($id) {
         foreach ($this->classes as $class => $items) {
             foreach ($items as $item) {
                 if ($id == $item['id']) {
@@ -100,7 +101,7 @@ use \litepubl\core\PoolStorageTrait;
         return true;
     }
 
-    public function deleteclass($class) {
+    public function deleteClass($class) {
         $this->unbind($class);
         $deleted = array();
         foreach ($this->items as $id => $item) {
@@ -161,15 +162,14 @@ use \litepubl\core\PoolStorageTrait;
         return $result;
     }
 
-    public function getSidebar($context, tview $schema) {
-        return $this->getsidebarindex($context, $schema, $this->currentsidebar++);
+    public function getSidebar(Context $context) {
+        return $this->getSidebarIndex($context, $this->currentSidebar++);
     }
 
-    public function getSidebarindex($context, tview $schema, $sidebar) {
-        $items = $this->getwidgets($context, $schema, $sidebar);
-        if ($context instanceof iwidgets) {
-            $context->getwidgets($items, $sidebar);
-
+    public function getSidebarIndex(Context $context, $sidebar) {
+        $items = $this->getWidgets($context, $schema, $sidebar);
+        if ($context instanceof WidgetsInterface) {
+            $context->getWidgets($items, $sidebar);
         }
 
         if ( $this->getApp()->options->admincookie) {
@@ -208,28 +208,32 @@ use \litepubl\core\PoolStorageTrait;
 
         $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : array();
 
-        $subitems = $this->getsubitems($context, $sidebar);
-        $items = $this->joinitems($items, $subitems);
+        $subItems = $this->getSubItems($context, $sidebar);
+        $items = $this->joinItems($items, $subItems);
         if ($sidebar + 1 == $theme->sidebarscount) {
             for ($i = $sidebar + 1; $i < count($schema->sidebars); $i++) {
-                $subitems = $this->joinitems($schema->sidebars[$i], $this->getsubitems($context, $i));
+                $subItems = $this->joinItems($schema->sidebars[$i], $this->getSubItems($context, $i));
 
                 //delete copies
-                foreach ($subitems as $index => $subitem) {
-                    $id = $subitem['id'];
+                foreach ($subItems as $index => $subItem) {
+                    $id = $subItem['id'];
                     foreach ($items as $item) {
-                        if ($id == $item['id']) Arr::delete($subitems, $index);
+                        if ($id == $item['id']) {
+Arr::delete($subItems, $index);
+}
                     }
                 }
 
-                foreach ($subitems as $item) $items[] = $item;
+                foreach ($subItems as $item) {
+$items[] = $item;
+}
             }
         }
 
         return $items;
     }
 
-    private function getSubitems($context, $sidebar) {
+    private function getSubItems($context, $sidebar) {
         $result = array();
         foreach ($this->classes as $class => $items) {
             if ($context instanceof $class) {

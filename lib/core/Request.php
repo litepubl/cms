@@ -50,12 +50,7 @@ $host = \strtolower(\trim($host));
             return $m[2];
         }
 
-        if (config::$dieOnInvalidHost) {
-throw new \Exception('cant resolve domain name');
-            die('cant resolve domain name');
-        }
-
-return false;
+return 'localhost';
     }
 
 public function getInput()

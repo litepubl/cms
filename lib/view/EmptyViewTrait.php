@@ -46,4 +46,9 @@ trait EmptyViewTrait
         return Schema::getSchema($this);
     }
 
+public function getView()
+{
+return $this;
+}
+
 }

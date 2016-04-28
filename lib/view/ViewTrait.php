@@ -52,4 +52,9 @@ trait ViewTrait
         return Schema::getSchema($this);
     }
 
+public function getView()
+{
+return $this;
+}
+
 }

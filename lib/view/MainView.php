@@ -71,7 +71,7 @@ return $this->$get();
 return $this->data[$name];
 } elseif (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
-            return $widgets->getSidebarIndex($this->view, $this->schema, (int)$m[1]);
+            return $widgets->getSidebarIndex($this->context, (int)$m[1]);
         } elseif (isset($this->view) && isset($this->view->$name)) {
 return $this->view->$name;
 }
@@ -88,7 +88,7 @@ $vars->view = $context->view;
 $vars->template = $this;
 $vars->mainview = $this;
 
-        $this->schema = Schema::getSchema($context->model);
+        $this->schema = Schema::getSchema($context->view);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
         $this->ltoptions['idurl'] = $context->itemRoute['id'];
@@ -132,7 +132,7 @@ return $result;
 
     //html tags
     public function getSidebar() {
-        return Widgets::i()->getSidebar($this->view, $this->schema);
+        return Widgets::i()->getSidebar($this->context);
     }
 
     public function getTitle() {
@@ -182,7 +182,6 @@ $result = $this->getApp()->site->name;
 $app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-$menuclass = 'litepubl\pages\Menus';
         $filename = $schema->theme->name
  . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $app->options->group ?  $app->options->group : 'nobody');
 
@@ -232,11 +231,7 @@ $menuclass = 'litepubl\pages\Menus';
 
     public function getHead() {
         $result = $this->heads;
-
-if ($this->view) {
 $result .= $this->view->gethead();
-}
-
         $result = $this->getltoptions() . $result;
         $result .= $this->extrahead;
         $result = $this->schema->theme->parse($result);

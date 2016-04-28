@@ -23,10 +23,7 @@ class Config {
     // host name or false
     public static $host = false;
 
-    //die if invalid host name in current request. Set to false if use in command line mode
-    public static $dieOnInvalidHost = true;
-
-    //set to true to ignore request, cms will be initilized
+    //set to true to ignore request, engine will be initilized
     public static $ignoreRequest = false;
 
     //callback function before make request, if it enabled

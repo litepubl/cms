@@ -57,4 +57,5 @@ if ($man->columnExists($table, 'idview')) {
 $man->alter($table, "change idview idschema int unsigned NOT NULL default '1'");
 }
 }
+
 }

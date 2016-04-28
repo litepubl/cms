@@ -16,6 +16,7 @@ use litepubl\core\Session;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\admin\Form as AdminForm;
 
 class Login extends Form
 {

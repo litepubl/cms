@@ -29,7 +29,7 @@ $template.head
 
    <dl>
    <dt>E-Mail</dt>
-   <dd><code>$options.email</code></dd>
+   <dd><code>$email</code></dd>
    <dt>$lang.password</dt>
    <dd><code>$password</code></dd>
    </dl>

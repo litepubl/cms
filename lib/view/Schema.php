@@ -62,7 +62,7 @@ return static ::$instances['schema'][$id];
             'name' => 'default',
             'themename' => 'default',
             'adminname' => 'admin',
-            'menuclass' => 'Menus',
+            'menuclass' => 'litepubl\pages\Menus',
             'hovermenu' => true,
             'customsidebar' => false,
             'disableajax' => false,

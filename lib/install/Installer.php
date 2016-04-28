@@ -401,11 +401,13 @@ return $this->autoInstall();
 $vars = new Vars;
         $vars->template = MainView::i();
         $vars->template->schema = Schema::i(1);
+        $vars->template->view = new EmptyView();
 
         $lang = Lang::i('installation');
         $args = new Args();
         $args->title = $this->app->site->name;
         $args->url = $this->app->site->url . '/';
+$args->email = $this->app->options->email;
         $args->password = $password;
         $args->likeurl = $this->app->options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
         $content = $theme->parsearg($tml, $args);
