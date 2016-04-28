@@ -14,6 +14,7 @@ use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\ViewInterface;
 use litepubl\core\Arr;
+use litepubl\core\Str;
 
 class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
@@ -167,37 +168,29 @@ use \litepubl\core\PoolStorageTrait;
     }
 
     public function getSidebarIndex(Context $context, $sidebar) {
-        $items = $this->getWidgets($context, $schema, $sidebar);
+        $items = new \ArrayObject($this->getWidgets($context, $schema, $sidebar), ArrayObject::ARRAY_AS_PROPS);
         if ($context instanceof WidgetsInterface) {
             $context->getWidgets($items, $sidebar);
         }
 
         if ( $this->getApp()->options->admincookie) {
-            $this->callevent('onadminlogged', array(&$items,
-                $sidebar
-            ));
+            $this->onadminlogged($items,                $sidebar           );
         }
 
         if ( $this->getApp()->router->adminpanel) {
-            $this->callevent('onadminpanel', array(&$items,
-                $sidebar
-            ));
+            $this->onadminpanel($items, $sidebar);
         }
 
-        $this->callevent('ongetwidgets', array(&$items,
-            $sidebar
-        ));
+        $this->ongetwidgets($items, $sidebar);
+        $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
 
-        $result = $this->getsidebarcontent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
-
-        if ($context instanceof iwidgets) {
-            $context->getsidebar($result, $sidebar);
+$str = new Str($result);
+        if ($context instanceof WidgetsInterface) {
+            $context->getSidebar($str, $sidebar);
         }
 
-        $this->callevent('onsidebar', array(&$result,
-            $sidebar
-        ));
-        return $result;
+        $this->onsidebar($str, $sidebar);
+        return $str->value;
     }
 
     private function getWidgets($context, Schema $schema, $sidebar) {
