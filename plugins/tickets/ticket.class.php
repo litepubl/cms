@@ -24,8 +24,8 @@ class tticket extends tpost {
         return 'tickets';
     }
 
-    public static function selectitems(array $items) {
-        return static ::select_child_items('tickets', $items);
+    public static function selectItems(array $items) {
+        return static ::selectChildItems('tickets', $items);
     }
 
     protected function create() {

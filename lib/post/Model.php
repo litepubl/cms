@@ -7,7 +7,9 @@ class Post extends \litepubl\core\Item
     protected $childData;
     protected $childTable;
 protected $cacheData;
-    public $factory;
+protected $rawData;
+protected $rawTable;
+    protected $factory;
     private $metaInstance;
     private $_onid;
 
@@ -28,7 +30,7 @@ protected $cacheData;
         return $result;
     }
 
-    public static function getInstancename() {
+    public static function getInstanceName() {
         return 'post';
     }
 
@@ -37,19 +39,24 @@ protected $cacheData;
     }
 
     public static function selectItems(array $items) {
-        return array();
+if ($table = static::getChildTable()) {
+return static::selectChildItems($table, $items);
+} else {
+        return [];
+}
     }
 
-    public static function select_child_items($table, array $items) {
+    protected static function selectChildItems($table, array $items) {
         if (!$table || !count($items)) {
             return array();
         }
 
-        $db =  $this->getApp()->db;
+        $db =  static::getAppInstance()->db;
         $childtable = $db->prefix . $table;
         $list = implode(',', $items);
-        return $db->res2items($db->query("select $childtable.*
-    from $childtable where id in ($list)"));
+        return $db->res2items($db->query(
+"select $childtable.* from $childtable where id in ($list)"
+));
     }
 
     public static function newPost($classname) {
@@ -61,6 +68,7 @@ protected $cacheData;
         $this->table = 'posts';
         $this->childTable = static ::getChildTable();
 
+$options = $this->getApp()->options;
         $this->data = array(
             'id' => 0,
             'idschema' => 1,
@@ -72,7 +80,6 @@ protected $cacheData;
             'idperm' => 0,
             'class' => str_replace('\\', '-', get_class($this)) ,
             'posted' => static::ZERODATE,
-            'modified' => 0,
             'title' => '',
             'title2' => '',
             'filtered' => '',
@@ -86,8 +93,8 @@ protected $cacheData;
             'tags' => '',
             'files' => '',
             'status' => 'published',
-            'comstatus' =>  $this->getApp()->options->comstatus,
-            'pingenabled' =>  $this->getApp()->options->pingenabled,
+            'comstatus' =>  $options->comstatus,
+            'pingenabled' =>  $options->pingenabled,
             'password' => '',
             'commentscount' => 0,
             'pingbackscount' => 0,
@@ -95,12 +102,20 @@ protected $cacheData;
         );
 
 $this->childData = [];
+$this->rawData = [
+            'created' => static::ZERODATE,
+            'modified' => static::ZERODATE,
+                        'rawcontent' => false,
+];
+
 $this->cacheData = [
 'posted' => 0,
 'categories' => [],
 'tags' => [],
 'files' => [],
             'url' => '',
+'created' => 0,
+            'modified' => 0,
                         'rawcontent' => false,
                                     'pages' => [],
 ];
@@ -127,10 +142,14 @@ $this->cacheData = [
                 $result = $this->$get();
 }            elseif (array_key_exists($name, $this->cacheData)) {
 $result = $this->cacheData[$name];
+            } elseif (method_exists($this, $get = 'getCache' . $name)) {
+                $result = $this->$get();
             } elseif (array_key_exists($name, $this->data)) {
 $result = $this->data[$name;
             } elseif (array_key_exists($name, $this->childData)) {
                 $result = $this->childData[$name];
+}            elseif (array_key_exists($name, $this->rawData)) {
+$result = $this->rawData[$name];
 } else {
                 $result = parent::__get($name);
 }
@@ -149,6 +168,8 @@ $this->cacheData[$name] = $value;
 $this->data[$name] = $value;
             }elseif (array_key_exists($name, $this->childData)) {
                 $this->childData[$name] = $value;
+            }elseif (array_key_exists($name, $this->rawData)) {
+$this->rawData[$name] = $value;
         } else {
         return parent::__set($name, $value);
 }
@@ -159,11 +180,50 @@ return true;
     public function __isset($name) {
         return parent::__isset($name)
  || array_key_exists($name, $this->cacheData)
- || array_key_exists($name, $this->childData);
+ || array_key_exists($name, $this->childData)
+ || array_key_exists($name, $this->rawData);
     }
 
-    //db
-    public function afterDB() {
+protected function getDataProp($name, $sql)
+{
+$this->cacheData[$name] = $value;
+if (array_key_exists($name, $this->data)) {
+$this->data[$name] = $sql;
+} elseif (array_key_exists($name, $this->childData)) {
+$this->childData[$name] = $sql;
+} elseif (array_key_exists($name, $this->rawData)) {
+$this->rawData[$name] = $sql;
+}
+}
+
+protected function setDataProp($name, $value, $sql)
+{
+$this->cacheData[$name] = $value;
+if (array_key_exists($name, $this->data)) {
+$this->data[$name] = $sql;
+} elseif (array_key_exists($name, $this->childData)) {
+$this->childData[$name] = $sql;
+} elseif (array_key_exists($name, $this->rawData)) {
+$this->rawData[$name] = $sql;
+}
+}
+
+protected function setDateProp($name, $value)
+{
+$this->setDataProp($name, $value, Str::sqlDate($value));
+}
+
+    protected function setArrProp($name, array $list) {
+        Arr::clean($list);
+$this->setDataProp($name, $list, implode(',', $list));
+    }
+
+protected function setBoolProp($name, $value)
+{
+$this->setDataProp($name, $value, $value ? '1' : '0');
+}
+
+    //db    public function afterDB() {
     }
 
     public function beforeDB() {
@@ -200,12 +260,23 @@ return true;
     }
 
     public function setAssoc(array $a) {
-        $trans = $this->factory->gettransform($this);
-        $trans->setassoc($a);
+$this->cacheData = [];
+foreach ($a as $k =>$v) {
+if (array_key_exists($k, $this->data)) {
+$this->data[$k] = $v;
+} elseif (array_key_exists($k, $this->childData)) {
+$this->childData[$k] = $v;
+} elseif (array_key_exists($k, $this->rawData)) {
+$this->rawData[$k] = $v;
+} else {
+$this->cacheData[$k] = $v;
+}
+}
+
         if ($this->childtable) {
             if ($a = $this->getdb($this->childtable)->getitem($this->id)) {
                 $this->childdata = $a;
-                $this->afterdb();
+                $this->afterDB();
             }
         }
     }
@@ -319,20 +390,22 @@ return true;
         $this->data['title'] = Filter::escape(Filter::unescape($title));
     }
 
-    public function Getisodate() {
+    public function getIsoDate() {
         return date('c', $this->posted);
     }
 
-    public function Getpubdate() {
+    public function getPubDate() {
         return date('r', $this->posted);
     }
 
-    public function Setpubdate($date) {
-        $this->data['posted'] = strtotime($date);
+    public function setPubDate($date) {
+$timestamp = strtotime($date);
+        $this->cacheData['posted'] = $timestamp;
+$this->data['posted'] = Str::sqlDate($timespamp);
     }
 
     public function getSqlDate() {
-        return Str::sqlDate($this->posted);
+        return $this->data['posted'];
     }
 
     public function getTagnames() {
@@ -385,7 +458,8 @@ return true;
 
     public function setFiles(array $list) {
         Arr::clean($list);
-        $this->data['files'] = $list;
+        $this->cacheData['files'] = $list;
+        $this->data['files'] = implode(',', $list);
     }
 
     public function update_revision($value) {

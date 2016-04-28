@@ -12,18 +12,11 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Filter;
 
-class tdownloaditem extends tpost {
+class tdownloaditem extends \litepubl\post\Post
+{
 
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
-
-    public static function getChildtable() {
+    public static function getChildTable() {
         return 'downloaditems';
-    }
-
-    public static function selectitems(array $items) {
-        return static ::select_child_items('tickets', $items);
     }
 
     protected function create() {
