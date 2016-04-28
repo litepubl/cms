@@ -12,6 +12,7 @@ use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\core\Str;
 use litepubl\view\Filter;
+use litepubl\view\Vars;
 
 class Files extends \litepubl\core\Items
 {
@@ -246,8 +247,10 @@ return FilesItems::i();
 
         $url =  $this->getApp()->site->files . '/files/';
 
-        $preview = Theme::$vars['preview'] = new tarray2prop();
-        $midle = Theme::$vars['midle'] = new tarray2prop();
+        $preview = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+Theme::$vars['preview'] =$preview; 
+        $midle = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+Theme::$vars['midle'] = $midle;
 
         $index = 0;
 
@@ -262,29 +265,29 @@ return FilesItems::i();
                 $args->typeindex = $typeindex;
                 $args->index = $index++;
                 $args->preview = '';
-                $preview->array = array();
+                $preview->exchangeArray ([]);
 
                 if ($idmidle = (int)$item['midle']) {
-                    $midle->array = $this->getitem($idmidle);
+                    $midle->exchangeArray ($this->getitem($idmidle));
                     $midle->link = $url . $midle->filename;
                     $midle->json = $this->getjson($idmidle);
                 } else {
-                    $midle->array = array();
+                    $midle->exchangeArray ([]);
                     $midle->link = '';
                     $midle->json = '';
                 }
 
                 if ((int)$item['preview']) {
-                    $preview->array = $this->getitem($item['preview']);
+                    $preview->exchangeArray ($this->getitem($item['preview']));
                 } elseif ($type == 'image') {
-                    $preview->array = $item;
+                    $preview->exchangeArray ($item);
                     $preview->id = $id;
                 } elseif ($type == 'video') {
                     $args->preview = $theme->parsearg($tml['videos.fallback'], $args);
-                    $preview->array = array();
+                    $preview->exchangeArray ([]);
                 }
 
-                if (count($preview->array)) {
+                if ($preview->count()) {
                     $preview->link = $url . $preview->filename;
                     $args->preview = $theme->parsearg($tml['preview'], $args);
                 }
@@ -317,21 +320,19 @@ return FilesItems::i();
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getjson($id);
 
-                $preview = new tarray2prop();
-                $preview->array = $this->getitem($idpreview);
+                $preview = new \ArrayObject($this->getitem($idpreview), ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
-                $midle = new tarray2prop();
+                $midle = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
                 if ($idmidle = (int)$item['midle']) {
-                    $midle->array = $this->getitem($idmidle);
+                    $midle->exchangeArray ($this->getitem($idmidle));
                     $midle->link = $baseurl . $midle->filename;
                     $midle->json = $this->getjson($idmidle);
                 } else {
-                    $midle->array = array();
                     $midle->json = '';
                 }
 
-                $vars = new themevars();
+                $vars = new Vars();
                 $vars->preview = $preview;
                 $vars->midle = $midle;
                 $theme = Theme::i();

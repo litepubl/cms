@@ -35,8 +35,6 @@ return [
 'cachestorage_memcache ' => 'litepubl\core\CacheMemcache',
 'DBManager' => 'litepubl\core\DBManager',
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
-'tarray2prop' => 'litepubl\core\Array2prop',
-
 //theme
 'Lang' => 'litepubl\view\Lang',
 'LangMerger' => 'theme\LangMerger',

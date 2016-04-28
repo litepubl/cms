@@ -8,7 +8,6 @@ foreach (array(
 'Singleton.php',
 //'debugproxy.class.php');
 'Data.php',
-'Array2prop.php',
 'AppTrait.php',
 'Storage.php',
 'StorageInc.php',

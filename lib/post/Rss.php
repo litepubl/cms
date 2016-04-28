@@ -160,10 +160,10 @@ $response->body = $before . $response->body;
         $this->domrss->CreateRoot( $this->getApp()->site->url . '/comments.xml', Lang::get('comment', 'onrecent') . ' ' .  $this->getApp()->site->name);
 
         $title = Lang::get('comment', 'onpost') . ' ';
-        $comment = new tarray2prop();
+        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
         $recent = CommentWidget::i()->getrecent( $this->getApp()->options->perpage);
         foreach ($recent as $item) {
-            $comment->array = $item;
+            $comment->exchangeArray($item);
             $this->AddRSSComment($comment, $title . $comment->title);
         }
     }
@@ -180,9 +180,9 @@ $response->body = $before . $response->body;
         $manager = CommentManager::i();
         $recent = $manager->getrecent($count, 'hold');
         $title = Lang::get('comment', 'onpost') . ' ';
-        $comment = new tarray2prop();
+        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
         foreach ($recent as $item) {
-            $comment->array = $item;
+            $comment->exchangeArray($item);
             $this->AddRSSComment($comment, $title . $comment->title);
         }
     }
@@ -194,12 +194,12 @@ $response->body = $before . $response->body;
         $this->domrss->CreateRoot($post->rsscomments, "$lang->onpost $post->title");
         $comments = Comments::i($idpost);
         $comtable = $comments->thistable;
-        $comment = new tarray2prop();
+        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 
         $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " .  $this->getApp()->options->perpage);
 
         foreach ($recent as $id) {
-            $comment->array = $comments->getitem($id);
+            $comment->exchangeArray ($comments->getitem($id));
             $comment->posturl = $post->url;
             $comment->title = $post->title;
             $this->AddRSSComment($comment, $title . $comment->name);

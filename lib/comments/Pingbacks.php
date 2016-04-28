@@ -15,7 +15,6 @@ use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\post\Post;
 use litepubl\utils\Mailer;
-use litepubl\core\Array2prop;
 use litepubl\core\Str;
 
 class Pingbacks extends \litepubl\core\Items
@@ -140,14 +139,14 @@ class Pingbacks extends \litepubl\core\Items
     public function getContent() {
         $result = '';
         $items = $this->db->getitems("post = $this->pid and status = 'approved' order by posted");
-        $pingback = new Array2prop();
+        $pingback = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 $vars = new Vars();
 $vars->pingback = $pingback;
         $lang = Lang::i('comment');
         $theme = Theme::i();
         $tml = $theme->templates['content.post.templatecomments.pingbacks.pingback'];
         foreach ($items as $item) {
-            $pingback->array = $item;
+            $pingback->exchangeArray ($item);
             $result.= $theme->parse($tml);
         }
         return str_replace('$pingback', $result, $theme->parse($theme->templates['content.post.templatecomments.pingbacks']));

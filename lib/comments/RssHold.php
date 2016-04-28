@@ -11,7 +11,6 @@ namespace litepubl\comments;
     use litepubl\core\Context;
 use litepubl\post\Rss;
 use litepubl\post\DomRss;
-use litepubl\core\Array2prop;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 use litepubl\view\Theme;
@@ -79,7 +78,7 @@ $response->body .= $rss->domrss->GetStripedXML();
     order by $db->comments.posted desc limit $this->count"));
 
         $title = Lang::get('comment', 'onpost') . ' ';
-        $comment = new Array2prop();
+        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
 $vars = new Vars;
         $vars->comment = $comment;
         $theme = Theme::i();
@@ -88,7 +87,7 @@ $vars = new Vars;
 
         foreach ($recent as $item) {
             if ($item['website']) $item['website'] = sprintf('<a href="%1$s">%1$s</a>', $item['website']);
-            $comment->array = $item;
+            $comment->exchangeArray ($item);
             $comment->content = $theme->parse($tml);
             $rss->AddRSSComment($comment, $title . $comment->title);
         }

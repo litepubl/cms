@@ -201,7 +201,7 @@ $response->redir($url);
         $item['url'] = '';
         $linkitem = CoreUsers::i()->getitem($item['id']) + $item;
         $linkgen = LinkGenerator::i();
-        $item['url'] = $linkgen->addurl(new tarray2prop($linkitem) , 'user');
+        $item['url'] = $linkgen->addurl(new \ArrayObject($linkitem, ArrayObject::ARRAY_AS_PROPS), 'user');
         $item['idurl'] =  $this->getApp()->router->add($item['url'], get_class($this) , $item['id']);
         return $item;
     }
