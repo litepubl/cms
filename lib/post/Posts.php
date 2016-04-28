@@ -51,7 +51,7 @@ class Posts extends \litepubl\core\Items
     }
 
     public function finditems($where, $limit) {
-        if (isset(titem::$instances['post']) && (count(titem::$instances['post']) > 0)) {
+        if (isset(Post::$instances['post']) && (count(Post::$instances['post']) > 0)) {
             $result = $this->db->idselect($where . ' ' . $limit);
             $this->loaditems($result);
             return $result;
@@ -62,8 +62,11 @@ class Posts extends \litepubl\core\Items
 
     public function loaditems(array $items) {
         //exclude already loaded items
-        if (!isset(titem::$instances['post'])) titem::$instances['post'] = array();
-        $loaded = array_keys(titem::$instances['post']);
+        if (!isset(Post::$instances['post'])) {
+Post::$instances['post'] = array();
+}
+
+        $loaded = array_keys(Post::$instances['post']);
         $newitems = array_diff($items, $loaded);
         if (!count($newitems)) {
  return $items;
@@ -81,7 +84,7 @@ class Posts extends \litepubl\core\Items
 
 
         $result = array();
-        $t = new tposttransform();
+        $t = new Transform();
         $fileitems = array();
         foreach ($items as $a) {
             $t->post = Post::newpost($a['class']);

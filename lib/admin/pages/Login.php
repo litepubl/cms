@@ -47,13 +47,14 @@ $context->response->redir('/admin/login/');
     }
 
     //return error string message if not logged
-    public static function autherror($email, $password) {
+    public static function authError($email, $password) {
         Lang::admin();
         if (empty($email) || empty($password)) {
 return Lang::get('login', 'empty');
 }
 
-        $iduser =  $this->getApp()->options->emailexists($email);
+$options = static::getAppInstance()->options;
+        $iduser =  $options->emailexists($email);
         if (!$iduser) {
             if (static ::confirm_reg($email, $password)) {
 return;
@@ -62,7 +63,7 @@ return;
             return Lang::get('login', 'unknownemail');
         }
 
-        if ( $this->getApp()->options->authpassword($iduser, $password)) {
+        if ( $options->authpassword($iduser, $password)) {
 return;
 }
 

@@ -28,7 +28,7 @@ class Posts extends Widget
     }
 
     public function getContent($id, $sidebar) {
-        $posts = PostsItems::i();
+        $posts = PostItems::i();
         $list = $posts->getpage(0, 1, $this->maxcount, false);
         $theme = Theme::i();
         return $theme->getpostswidgetcontent($list, $sidebar, '');

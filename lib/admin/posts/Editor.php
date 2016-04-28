@@ -31,7 +31,7 @@ class Editor extends \litepubl\admin\Menu
 
         $mainView = MainView::i();
         $mainView->ltoptions['idpost'] = $this->idget();
-        $result.= $mainView->getjavascript($template->jsmerger_posteditor);
+        $result.= $mainView->getjavascript($mainView->jsmerger_posteditor);
 
         if ($this->isauthor && ($h = AuthorRights::i()->gethead())) {
             $result.= $h;
@@ -57,7 +57,7 @@ class Editor extends \litepubl\admin\Menu
         return $result;
     }
 
-    protected function getCategories(tpost $post) {
+    protected function getCategories(Post $post) {
         $postitems = $post->categories;
         $categories = Cats::i();
         if (!count($postitems)) {
@@ -97,7 +97,7 @@ class Editor extends \litepubl\admin\Menu
         ));
     }
 
-    public function getArgstab(tpost $post, Args $args) {
+    public function getArgstab(Post $post, Args $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         //categories tab
@@ -122,7 +122,7 @@ class Editor extends \litepubl\admin\Menu
 
     public function getText($post = null) {
         $post = $this->getvarpost($post);
-        $Ajax= Ajax::i();
+        $ajax= Ajax::i();
         return $ajax->gettext($post->rawcontent, $this->admintheme);
     }
 
@@ -168,7 +168,7 @@ class Editor extends \litepubl\admin\Menu
         return $this->getcontent();
     }
 
-    public function getPostargs(tpost $post, Args $args) {
+    public function getPostargs(Post $post, Args $args) {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         $args->title = Filter::unescape($post->title);
@@ -200,7 +200,7 @@ class Editor extends \litepubl\admin\Menu
         return $result;
     }
 
-    protected function processtab(tpost $post) {
+    protected function processtab(Post $post) {
         extract($_POST, EXTR_SKIP);
 
         $post->title = $title;
@@ -248,14 +248,14 @@ class Editor extends \litepubl\admin\Menu
         $post->content = $raw;
     }
 
-    protected function processfiles(tpost $post) {
+    protected function processfiles(Post $post) {
         if (isset($_POST['files'])) {
             $post->files = DB::str2array(trim($_POST['files'], ', '));
         }
     }
 
     public function newpost() {
-        return new tpost();
+        return new Post();
     }
 
     public function canprocess() {
@@ -265,7 +265,7 @@ class Editor extends \litepubl\admin\Menu
         }
     }
 
-    public function afterprocess(tpost $post) {
+    public function afterprocess(Post $post) {
     }
 
     public function processForm() {

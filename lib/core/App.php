@@ -159,7 +159,7 @@ ob_start();
 }
 }
 
-$this->onclose->fire();
+$this->onClose->fire();
 } catch (\Exception $e) {
 $this->logException($e);
 }

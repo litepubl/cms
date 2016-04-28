@@ -71,7 +71,7 @@ return $this->$get();
 return $this->data[$name];
 } elseif (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
-            return $widgets->getSidebarIndex($this->context, (int)$m[1]);
+            return $widgets->getSidebarIndex($this->view, (int)$m[1]);
         } elseif (isset($this->view) && isset($this->view->$name)) {
 return $this->view->$name;
 }
@@ -132,7 +132,7 @@ return $result;
 
     //html tags
     public function getSidebar() {
-        return Widgets::i()->getSidebar($this->context);
+        return Widgets::i()->getSidebar($this->view);
     }
 
     public function getTitle() {

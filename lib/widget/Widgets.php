@@ -15,6 +15,7 @@ use litepubl\view\Theme;
 use litepubl\view\ViewInterface;
 use litepubl\core\Arr;
 use litepubl\core\Str;
+use ArrayObject;
 
 class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
@@ -23,7 +24,7 @@ use \litepubl\core\PoolStorageTrait;
     public $classes;
     public $currentSidebar;
     public $idwidget;
-    public $idurlcontext;
+    public $idUrlContext;
 
     protected function create() {
         $this->dbversion = false;
@@ -31,7 +32,7 @@ use \litepubl\core\PoolStorageTrait;
         $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
-        $this->idurlcontext = 0;
+        $this->idUrlContext = 0;
         $this->addMap('classes', array());
     }
 
@@ -163,37 +164,41 @@ use \litepubl\core\PoolStorageTrait;
         return $result;
     }
 
-    public function getSidebar(Context $context) {
-        return $this->getSidebarIndex($context, $this->currentSidebar++);
+    public function getSidebar(ViewInterface $view) {
+        return $this->getSidebarIndex($view, $this->currentSidebar++);
     }
 
-    public function getSidebarIndex(Context $context, $sidebar) {
-        $items = new \ArrayObject($this->getWidgets($context, $schema, $sidebar), ArrayObject::ARRAY_AS_PROPS);
-        if ($context instanceof WidgetsInterface) {
-            $context->getWidgets($items, $sidebar);
+    public function getSidebarIndex(ViewInterface $view, $sidebar) {
+        $items = new ArrayObject($this->getWidgets($view, $sidebar), ArrayObject::ARRAY_AS_PROPS);
+        if ($view instanceof WidgetsInterface) {
+            $view->getWidgets($items, $sidebar);
         }
 
-        if ( $this->getApp()->options->admincookie) {
+$options = $this->getApp()->options;
+        if ($options->admincookie) {
             $this->onadminlogged($items,                $sidebar           );
         }
-
-        if ( $this->getApp()->router->adminpanel) {
+/*
+        if ( $router->adminpanel) {
             $this->onadminpanel($items, $sidebar);
         }
-
+*/
         $this->ongetwidgets($items, $sidebar);
+
+$schema = Schema::getSchema($view);
         $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
 
 $str = new Str($result);
-        if ($context instanceof WidgetsInterface) {
-            $context->getSidebar($str, $sidebar);
+        if ($view instanceof WidgetsInterface) {
+            $view->getSidebar($str, $sidebar);
         }
 
         $this->onsidebar($str, $sidebar);
         return $str->value;
     }
 
-    private function getWidgets($context, Schema $schema, $sidebar) {
+    private function getWidgets(ViewInterface $view, $sidebar) {
+$schema = Schema::getSchema($view);
         $theme = $schema->theme;
         if (($schema->id > 1) && !$schema->customsidebar) {
             $schema = Schema::i(1);
@@ -201,11 +206,11 @@ $str = new Str($result);
 
         $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : array();
 
-        $subItems = $this->getSubItems($context, $sidebar);
+        $subItems = $this->getSubItems($view, $sidebar);
         $items = $this->joinItems($items, $subItems);
-        if ($sidebar + 1 == $theme->sidebarscount) {
+        if ($sidebar + 1 == $theme->sidebarsCount) {
             for ($i = $sidebar + 1; $i < count($schema->sidebars); $i++) {
-                $subItems = $this->joinItems($schema->sidebars[$i], $this->getSubItems($context, $i));
+                $subItems = $this->joinItems($schema->sidebars[$i], $this->getSubItems($view, $i));
 
                 //delete copies
                 foreach ($subItems as $index => $subItem) {
@@ -226,10 +231,10 @@ $items[] = $item;
         return $items;
     }
 
-    private function getSubItems($context, $sidebar) {
+    private function getSubItems(ViewInterface $view, $sidebar) {
         $result = array();
         foreach ($this->classes as $class => $items) {
-            if ($context instanceof $class) {
+            if ($view instanceof $class) {
                 foreach ($items as $item) {
                     if ($sidebar == $item['sidebar']) $result[] = $item;
                 }
@@ -239,13 +244,12 @@ $items[] = $item;
         return $result;
     }
 
-    private function joinitems(array $items, array $subitems) {
+    private function joinItems(array $items, array $subitems) {
         if (count($subitems) == 0) {
  return $items;
 }
 
-
-        if (count($items) > 0) {
+        if (count($items)) {
             //delete copies
             for ($i = count($items) - 1; $i >= 0; $i--) {
                 $id = $items[$i]['id'];
@@ -268,60 +272,65 @@ $items[] = $item;
         return $items;
     }
 
-    protected function getSidebarcontent(array $items, $sidebar, $disableajax) {
+    protected function getSidebarContent(ArrayObject $items, $sidebar, $disableajax) {
         $result = '';
+//for call event  getwidget
+$str = new Str();
+
         foreach ($items as $item) {
             $id = $item['id'];
             if (!isset($this->items[$id])) {
  continue;
 }
 
-
             $cachetype = $this->items[$id]['cache'];
-            if ($disableajax) $item['ajax'] = false;
+            if ($disableajax) {
+$item['ajax'] = false;
+}
+
             if ($item['ajax'] === 'inline') {
                 switch ($cachetype) {
                     case 'cache':
                     case 'nocache':
                     case false:
-                        $content = $this->getinline($id, $sidebar);
+                        $content = $this->getInline($id, $sidebar);
                         break;
 
 
                     default:
-                        $content = $this->getajax($id, $sidebar);
+                        $content = $this->getAjax($id, $sidebar);
                         break;
                 }
             } elseif ($item['ajax']) {
-                $content = $this->getajax($id, $sidebar);
+                $content = $this->getAjax($id, $sidebar);
             } else {
                 switch ($cachetype) {
                     case 'cache':
-                        $content = Cache::i()->getcontent($id, $sidebar, false);
+                        $content = Cache::i()->getContent($id, $sidebar, false);
                         break;
 
 
                     case 'include':
-                        $content = $this->includewidget($id, $sidebar);
+                        $content = $this->includeWidget($id, $sidebar);
                         break;
 
 
                     case 'nocache':
                     case false:
-                        $widget = $this->getwidget($id);
-                        $content = $widget->getwidget($id, $sidebar);
+                        $widget = $this->getWidget($id);
+                        $content = $widget->getWidget($id, $sidebar);
                         break;
 
 
                     case 'code':
-                        $content = $this->getcode($id, $sidebar);
+                        $content = $this->getCode($id, $sidebar);
                         break;
                 }
             }
-            $this->callevent('onwidget', array(
-                $id, &$content
-            ));
-            $result.= $content;
+
+$str->value = $content;
+            $this->onwidget($id,$str);
+            $result.= $str->value;
         }
 
         return $result;
@@ -397,7 +406,7 @@ $response->body = $mesg;
         $response->cache = false;
         $id = static ::getget('id');
         $sidebar = static ::getget('sidebar');
-        $this->idurlcontext = static ::getget('idurl');
+        $this->idUrlContext = static ::getget('idurl');
         if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) {
  return $this->errorRequest('Invalid params');
 }

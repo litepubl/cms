@@ -8,7 +8,7 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\posts\Archives as Arch;
+use litepubl\post\Archives as Arch;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;

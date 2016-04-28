@@ -219,7 +219,7 @@ use PoolStorageTrait;
     }
 
     public function setcookie($name, $value, $expired) {
-        setcookie($name, $value, $expired, litepubl::$site->subdir . '/', false, '', $this->securecookie);
+        setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
 
     public function setcookies($cookie, $expired) {

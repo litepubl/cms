@@ -9,9 +9,10 @@
 
 namespace litepubl\admin\pages;
     use litepubl\core\Context;
-use litepul\view\Lang;
-use litepul\view\Schemes;
-use litepul\core\UserGroups;
+use litepubl\admin\posts\Editor;
+use litepubl\view\Lang;
+use litepubl\view\Schemes;
+use litepubl\core\UserGroups;
 
 class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -54,7 +55,7 @@ return;
     }
 
     public function getHead() {
-        $editor = PostEditor::i();
+        $editor = Editor::i();
         return $editor->gethead();
     }
 
@@ -78,7 +79,7 @@ return;
     }
 
     public function getCont() {
-        $editor = PostEditor::i();
+        $editor = Editor::i();
         return $editor->getexternal();
     }
 

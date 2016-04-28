@@ -14,7 +14,7 @@ Class Str
 {
 public $value;
 
-public function __construct($s)
+public function __construct($s = '')
 {
 $this->value = (string) $s;
 }
