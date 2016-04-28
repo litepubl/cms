@@ -218,7 +218,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     }
 
     public static function getAssoc($id) {
-        $db =  $this->getApp()->db;
+        $db =  static::getAppInstance()->db;
         return $db->selectassoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
     }
@@ -325,7 +325,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
 
         $this->aprev = false;
-        if ($id = $this->db->findid("status = 'published' and posted < '$this->Str::sqlDate' order by posted desc")) {
+        if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
             $this->aprev = static ::i($id);
         }
         return $this->aprev;
@@ -337,7 +337,7 @@ class Post extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
 
         $this->anext = false;
-        if ($id = $this->db->findid("status = 'published' and posted > '$this->Str::sqlDate' order by posted asc")) {
+        if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
             $this->anext = static ::i($id);
         }
         return $this->anext;
