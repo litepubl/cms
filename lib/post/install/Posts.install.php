@@ -13,7 +13,7 @@ use litepubl\widget\Widgets;
 use litepubl\core\Str;
 
 function PostsInstall($self) {
-    if ('litepubl\post\Posts' != get_class($self)) {
+    if (__NAMESPACE__  . '\Posts' != get_class($self)) {
  return;
 }
 

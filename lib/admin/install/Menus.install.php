@@ -11,7 +11,7 @@ namespace litepubl\admin;
 use litepubl\view\Lang;
 
 function MenusInstall($self) {
-    if ('\litepubl\admin\Menus' != get_class($self)) {
+    if (__NAMESPACE__ . '\Menus' != get_class($self)) {
  return;
 }
 

@@ -22,6 +22,7 @@ class Home extends SingleMenu
 {
     public $cacheposts;
     public $midleposts;
+public $page;
 
     protected function create() {
         parent::create();
@@ -57,13 +58,14 @@ $context->response->status = 404;
  return;
 }
 
+$this->page = $context->request->page;
         return parent::request($context);
     }
 
     public function getHead() {
         $result = parent::gethead();
 
-        $theme = Schema::getview($this)->theme;
+        $theme = Schema::getSchema($this)->theme;
         $result.= $theme->templates['head.home'];
 
         if ($this->showposts) {
@@ -94,7 +96,7 @@ $context->response->status = 404;
 
     public function getCont() {
         $result = '';
-        if ( $this->getApp()->router->page == 1) {
+        if ( $this->page == 1) {
             $result.= $this->getbefore();
             if ($this->showmidle && $this->midlecat) {
                 $result.= $this->getmidle();
@@ -110,11 +112,11 @@ $context->response->status = 404;
 
     public function getPostnavi() {
         $items = $this->getidposts();
-        $schema = Schema::getview($this);
+        $schema = Schema::getSchema($this);
         $result = $schema->theme->getposts($items, $schema->postanounce);
         if ($this->showpagenator) {
             $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-            $result.= $schema->theme->getpages($this->url,  $this->getApp()->router->page, ceil($this->data['archcount'] / $perpage));
+            $result.= $schema->theme->getpages($this->url,  $this->page, ceil($this->data['archcount'] / $perpage));
         }
         return $result;
     }
@@ -133,7 +135,7 @@ $context->response->status = 404;
         $posts = Posts::i();
         $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $from = ( $this->getApp()->router->page - 1) * $perpage;
+        $from = ( $this->page - 1) * $perpage;
         $order = $schema->invertorder ? 'asc' : 'desc';
 
         $p =  $this->getApp()->db->prefix . 'posts';
@@ -148,7 +150,7 @@ $context->response->status = 404;
             $posts->loaditems($result);
         } else {
             $this->data['archcount'] = $posts->archivescount;
-            $result = $posts->getpage(0,  $this->getApp()->router->page, $perpage, $schema->invertorder);
+            $result = $posts->getpage(0,  $this->page, $perpage, $schema->invertorder);
         }
 
         $this->callevent('ongetitems', array(&$result
