@@ -419,7 +419,7 @@ $this->loaded[$ns] = $dir;
 public function loadComposer($classToAutoLoad) {
 require_once($this->getApp()->paths->home . 'vendor/autoload.php');
 if ($classToAutoLoad && ($a = spl_autoload_functions())) {
-$compclass = '\Composer\Autoload\ClassLoader';
+$compclass = 'Composer\Autoload\ClassLoader';
 foreach ($a as $item) {
 if (is_array($item) && is_a($item[0], $compclass)) {
 return call_user_func_array($item, [$classToAutoLoad]);

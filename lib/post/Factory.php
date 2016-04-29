@@ -10,6 +10,7 @@
 namespace litepubl\post;
 use litepubl\view\Theme;
 use litepubl\view\MainView;
+use litepubl\comments\Templates;
 
 class Factory
 {
@@ -40,7 +41,7 @@ return $this->{'get' . $name}();
     }
 
     public function getTemplatecomments() {
-        return ttemplatecomments::i();
+        return Templates::i();
     }
 
     public function getComments($id) {

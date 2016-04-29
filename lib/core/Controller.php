@@ -104,7 +104,7 @@ return md5($context->reqest->url) .'.php';
 
 public function getModel($class, $arg)
 {
-if (is_a($class, '\litepubl\core\Item')) {
+if (is_a($class, __NAMESPACE__ . '\Item', true)) {
 return $class::i($arg);
 }else {
 return $this->getApp()->classes->getInstance($class);

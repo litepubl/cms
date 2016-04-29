@@ -9,6 +9,10 @@
 
 namespace litepubl\post;
     use litepubl\core\Context;
+use litepubl\core\Str;
+use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Args;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -16,6 +20,13 @@ public $post;
     private $prevPost;
     private $nextPost;
     private $themeInstance;
+private $page;
+
+protected function create()
+{
+parent::create();
+$this->table = 'posts';
+}
 
 public function setPost(Post $post)
 {
@@ -26,7 +37,7 @@ public function __get($name)
 {
 if (method_exists($this, $get = 'get'. $name)) {
 $result = $this->$get();
-} else {{
+} else {
         switch ($name) {
             case 'catlinks':
                 $result = $this->get_taglinks('categories', false);
@@ -69,28 +80,37 @@ return true;
 return false;
 }
 
+public function __call($name, $args)
+{
+if (method_exists($this->post, $name)) {
+return call_user_func_array([$this->post, $name], $args);
+} else {
+return parent::__call($name, $args);
+}
+}
+
     public function getPrev() {
-        if (!is_null($this->aprev)) {
-            return $this->aprev;
+        if (!is_null($this->prevPost)) {
+            return $this->prevPost;
         }
 
-        $this->aprev = false;
+        $this->prevPost = false;
         if ($id = $this->db->findid("status = 'published' and posted < '$this->sqldate' order by posted desc")) {
-            $this->aprev = static ::i($id);
+            $this->prevPost = Post::i($id);
         }
-        return $this->aprev;
+        return $this->prevPost;
     }
 
     public function getNext() {
-        if (!is_null($this->anext)) {
-            return $this->anext;
+        if (!is_null($this->nextPost)) {
+            return $this->nextPost;
         }
 
-        $this->anext = false;
+        $this->nextPost = false;
         if ($id = $this->db->findid("status = 'published' and posted > '$this->sqldate' order by posted asc")) {
-            $this->anext = static ::i($id);
+            $this->nextPost = Post::i($id);
         }
-        return $this->anext;
+        return $this->nextPost;
     }
 
     public function getTheme() {
@@ -263,6 +283,8 @@ $context->response->status = 404;
 $context->response->status = 404;
             return;
         }
+
+$this->page = $context->request->page;
     }
 
     public function getTitle() {
@@ -331,12 +353,12 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
     }
 
     public function getFileList() {
-        if ((count($this->files) == 0) || (( $this->getApp()->router->page > 1) &&  $this->getApp()->options->hidefilesonpage)) {
+        if (!count($this->files) || (( $this->page > 1) &&  $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
 
         $files = $this->factory->files;
-        return $files->getfilelist($this->files, false);
+        return $files->getFileList($this->files, false);
     }
 
     public function getExcerptFileList() {
@@ -436,13 +458,14 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
 
     public function getTemplateComments() {
         $result = '';
-        $page =  $this->getApp()->router->page;
         $countpages = $this->countpages;
-        if ($countpages > 1) $result.= $this->theme->getpages($this->url, $page, $countpages);
+        if ($countpages > 1) {
+$result.= $this->theme->getpages($this->url, $this->page, $countpages);
+}
 
         if (($this->commentscount > 0) || ($this->comstatus != 'closed') || ($this->pingbackscount > 0)) {
-            if (($countpages > 1) && ($this->commentpages < $page)) {
-                $result.= $this->getcommentslink();
+            if (($countpages > 1) && ($this->commentpages < $this->page)) {
+                $result.= $this->getCommentsLink();
             } else {
                 $result.= $this->factory->templatecomments->getcomments($this->id);
             }
@@ -452,7 +475,7 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
     }
 
     public function getHascomm() {
-        return ($this->data['comstatus'] != 'closed') && ((int)$this->data['commentscount'] > 0);
+        return ($this->comstatus != 'closed') && ((int)$this->commentscount > 0);
     }
 
     public function getExcerptContent() {
@@ -510,8 +533,11 @@ $this->updateRevision($posts->revision);
         $result = '';
         $posts = $this->factory->posts;
         $posts->beforecontent($this, $result);
-        if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
-        $result.= $this->getcontentpage( $this->getApp()->router->page);
+        if ($this->revision < $posts->revision) {
+$this->updateRevision($posts->revision);
+}
+
+        $result .= $this->getContentPage( $this->page);
         if ( $this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
@@ -583,3 +609,5 @@ $this->updateRevision($posts->revision);
 
 }
 {
+
+}
