@@ -131,7 +131,6 @@ $this->cacheData = [
             'url' => '',
 'created' => 0,
             'modified' => 0,
-                        'rawcontent' => false,
                                     'pages' => [],
 ];
 
@@ -206,13 +205,6 @@ return true;
  || array_key_exists($name, $this->rawData);
     }
 
-    //db
-    public function afterDB() {
-    }
-
-    public function beforeDB() {
-    }
-
     public function load() {
         if ($result = $this->LoadFromDB()) {
             foreach ($this->coinstances as $coinstance) $coinstance->load();
@@ -267,8 +259,7 @@ $this->cacheData[$k] = $v;
 if ($this->id) {
 $this->db->updateAssoc($this->data);
 
-$this->cacheData['modified'] = time();
-$this->rawData['modified'] = Str::sqlDate($this->cacheData['modified']);
+$this->modified = time();
 $this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
 } else {
 }
@@ -278,21 +269,42 @@ $this->getDB($this->childTable)->setValues($this->id, $this->childData);
         }
     }
 
-    public function createId() {
-        $id = $this->factory->add($this);
-        $this->setid($id);
-        if ($this->childtable) {
-            $this->beforeDB();
-            $this->childData['id'] = $id;
-            $this->getdb($this->childtable)->insert($this->childdata);
+    public function add() {
+$a = $this->data;
+unset($a['id']);
+$id = $this->db->add($a);
+
+$this->prepareRawData();
+$this->getDB($this->rawTable)->insert($this->rawData);
+
+        $this->setId($id);
+
+$this->savePages();
+        if ($this->childTable) {
+            $this->getDB($this->childTable)->insert($this->childData);
         }
 
         $this->idurl = $this->createUrl();
-        $this->db->setvalue($id, 'idurl', $this->idurl);
-        $this->onid();
+        $this->db->setValue($id, 'idurl', $this->idurl);
 
+        $this->onId();
         return $id;
     }
+
+protected function prepareRawData()
+{
+if (!$this->created) {
+$this->created = time();
+}
+
+if (!$this->modfied) {
+$this->modified = time();
+}
+
+if (!isset($this->rawData['rawcontent'])) {
+$this->rawData['rawcontent'] = '';
+}
+}
 
     public function createUrl() {
         return  $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
@@ -352,11 +364,6 @@ $this->rawData[$name] = $sql;
 }
 }
 
-protected function setDateProp($name, $value)
-{
-$this->setDataProp($name, $value, Str::sqlDate($value));
-}
-
     protected function setArrProp($name, array $list)
  {
         Arr::clean($list);
@@ -402,7 +409,26 @@ return $this->data['posted'] == static::ZERODATE ? 0 : strtotime($this->data['po
     }
 
     public function setPosted($timestamp) {
-$this->setDateProp('posted', $timestamp);
+$this->data['posted'] = Str::sqlDate($timestamp);
+$this->cacheData['posted'] = $timestamp;
+    }
+
+    protected function getCacheModified() {
+return !isset($this->rawData['modified']) || $this->rawData['modified'] == static::ZERODATE ? 0 : strtotime($this->rawData['modified']);
+    }
+
+    public function setModified($timestamp) {
+$this->rawData['modified'] = Str::sqlDate($timestamp);
+$this->cacheData['modified'] = $timestamp;
+    }
+
+    protected function getCacheCreated() {
+return !isset($this->rawData['created']) || $this->rawData['created'] == static::ZERODATE ? 0 : strtotime($this->rawData['created']);
+    }
+
+    public function setCreated($timestamp) {
+$this->rawData['created'] = Str::sqlDate($timestamp);
+$this->cacheData['created'] = $timestamp;
     }
 
     public function Getlink() {
@@ -554,6 +580,19 @@ unset($this->rawData['id']);
         $this->data['pagescount'] = 0;
         if ($this->id > 0) {
 $this->getdb($this->pagesTable)->iddelete($this->id);
+}
+    }
+
+    public function savePages() {
+if (isset($this->childData['pages'][])) {
+            $db =  $this->getDB($this->pagesTable);
+        foreach ($this->childData['pages'] as $index => $content) {
+$db->insert(array(
+                'id' => $this->id,
+                'page' => $index,
+                'content' => $content,
+            ));
+        }
 }
     }
 

@@ -89,7 +89,7 @@ $post = Post::newPost($a['class']);
 $post->setAssoc($a);
             $result[] = $post->id;
 
-            $f = $t->post->files;
+            $f = $post->files;
             if (count($f)) {
 $fileitems = array_merge($fileitems, array_diff($f, $fileitems));
 }
@@ -111,12 +111,14 @@ Files::i()->preload($fileitems);
         $db =  $this->getApp()->db;
         if ($this->childtable) {
             $childtable = $db->prefix . $this->childtable;
-            return $this->setAssoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
-      from $db->posts, $db->urlmap, $childtable
+            return $this->setAssoc($db->res2items($db->query(
+"select $db->posts.*, $childtable.*, $db->urlmap.url as url
+      from $db->posts, $childtable, $db->urlmap
       where $where and  $db->posts.id = $childtable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
         }
 
-        $items = $db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+        $items = $db->res2items($db->query(
+"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $where and  $db->urlmap.id  = $db->posts.idurl $limit"));
 
         if (!count($items)) {
@@ -140,7 +142,7 @@ $class = str_replace('-', '\\', $class) ;
             }
         }
 
-        return $this->setassoc($items);
+        return $this->setAssoc($items);
     }
 
     public function getCount() {
@@ -148,10 +150,9 @@ $class = str_replace('-', '\\', $class) ;
     }
 
     public function getChildscount($where) {
-        if ($this->childtable == '') {
+        if (!$this->childtable) {
  return 0;
 }
-
 
         $db =  $this->getApp()->db;
         $childtable = $db->prefix . $this->childtable;
@@ -160,9 +161,8 @@ $class = str_replace('-', '\\', $class) ;
             if ($r = $db->fetchassoc($res)) {
  return $r['count'];
 }
-
-
         }
+
         return 0;
     }
 
@@ -176,8 +176,6 @@ $class = str_replace('-', '\\', $class) ;
  return '';
 }
 
-
-
         $result = '';
         $args = new Args();
         $theme = Theme::i();
@@ -188,7 +186,7 @@ $class = str_replace('-', '\\', $class) ;
         return $result;
     }
 
-    private function beforechange($post) {
+    private function beforeChange($post) {
         $post->title = trim($post->title);
         $post->modified = time();
         $post->revision = $this->revision;
@@ -201,40 +199,51 @@ $class = str_replace('-', '\\', $class) ;
     }
 
     public function add(Post $post) {
-        if ($post->posted == 0) $post->posted = time();
-        $this->beforechange($post);
-        if ($post->posted == 0) $post->posted = time();
+        $this->beforeChange($post);
+        if (!$post->posted) {
+$post->posted = time();
+}
+
         if ($post->posted <= time()) {
-            if ($post->status == 'future') $post->status = 'published';
+            if ($post->status == 'future') {
+$post->status = 'published';
+}
         } else {
-            if ($post->status == 'published') $post->status = 'future';
+            if ($post->status == 'published') {
+$post->status = 'future';
+}
         }
 
         if ($post->idschema == 1) {
             $schemes = Schemes::i();
-            if (isset($schemes->defaults['post'])) $post->id_view = $schemes->defaults['post'];
+            if (isset($schemes->defaults['post'])) {
+$post->data['idschema'] = $schemes->defaults['post'];
+}
         }
 
-        $post->url = LinkGenerator::i()->addurl($post, $post->schemalink);
-        $id = $post->create_id();
+        $post->url = LinkGenerator::i()->addUrl($post, $post->schemaLink);
+        $id = $post->add();
 
         $this->updated($post);
         $this->cointerface('add', $post);
-        $this->added($post->id);
+        $this->added($id);
         $this->changed();
          $this->getApp()->cache->clear();
-        return $post->id;
+        return $id;
     }
 
     public function edit(Post $post) {
-        $this->beforechange($post);
+        $this->beforeChange($post);
         $linkgen = LinkGenerator::i();
-        $linkgen->editurl($post, $post->schemalink);
+        $linkgen->editurl($post, $post->schemaLink);
         if ($post->posted <= time()) {
-            if ($post->status == 'future') $post->status = 'published';
+            if ($post->status == 'future') {
+$post->status = 'published';
+}
         } else {
             if ($post->status == 'published') $post->status = 'future';
         }
+
         $this->lock();
         $post->save();
         $this->updated($post);
@@ -251,8 +260,7 @@ $class = str_replace('-', '\\', $class) ;
  return false;
 }
 
-
-        $router = \litepubl\core\Router::i();
+        $router = $this->getApp()->router;
         $idurl = $this->db->getvalue($id, 'idurl');
         $this->db->setvalue($id, 'status', 'deleted');
         if ($this->childtable) {
@@ -267,7 +275,7 @@ $class = str_replace('-', '\\', $class) ;
         $this->unlock();
         $this->deleted($id);
         $this->changed();
-        $router->clearcache();
+        $this->getApp()->cache->clear();
         return true;
     }
 
@@ -308,7 +316,7 @@ $class = str_replace('-', '\\', $class) ;
         $author = (int)$author;
         $where = "status != 'deleted'";
         if ($author > 1) $where.= " and author = $author";
-        return $this->finditems($where, ' order by posted desc limit ' . (int)$count);
+        return $this->findItems($where, ' order by posted desc limit ' . (int)$count);
     }
 
     public function getPage($author, $page, $perpage, $invertorder) {
@@ -321,25 +329,24 @@ $class = str_replace('-', '\\', $class) ;
         return $this->finditems($where, " order by $t.posted $order limit $from, $perpage");
     }
 
-    public function stripdrafts(array $items) {
+    public function stripDrafts(array $items) {
         if (count($items) == 0) {
  return array();
 }
 
-
         $list = implode(', ', $items);
         $t = $this->thistable;
-        return $this->db->idselect("$t.status = 'published' and $t.id in ($list)");
+        return $this->db->idSelect("$t.status = 'published' and $t.id in ($list)");
     }
 
     //coclasses
-    private function cointerface($method, $arg) {
+    private function coInterface($method, $arg) {
         foreach ($this->coinstances as $coinstance) {
             if ($coinstance instanceof ipost) $coinstance->$method($arg);
         }
     }
 
-    public function addrevision() {
+    public function addRevision() {
         $this->data['revision']++;
         $this->save();
          $this->getApp()->cache->clear();
@@ -350,13 +357,13 @@ $class = str_replace('-', '\\', $class) ;
  return '';
 }
 
-
-        $this->loaditems($items);
+        $this->loadItems($items);
 
         $result = '';
         foreach ($items as $id) {
             $result.= Post::i($id)->anhead;
         }
+
         return $result;
     }
 

@@ -233,18 +233,17 @@ public function setValues($id, array $values)
     }
 
     public function add(array $a) {
-        $this->insertrow($this->assoctorow($a));
+        $this->insertRow($this->assocToRow($a));
         if ($id = $this->mysqli->insert_id) {
  return $id;
 }
-
 
         $r = $this->query('select last_insert_id() from ' . $this->prefix . $this->table)->fetch_row();
         return (int)$r[0];
     }
 
     public function insert(array $a) {
-        $this->insertrow($this->assoctorow($a));
+        $this->insertRow($this->assocToRow($a));
     }
 
     public function assocToRow(array $a) {
@@ -256,6 +255,7 @@ public function setValues($id, array $values)
                 $vals[] = $this->quote($val);
             }
         }
+
         return sprintf('(%s) values (%s)', implode(', ', array_keys($a)) , implode(', ', $vals));
     }
 

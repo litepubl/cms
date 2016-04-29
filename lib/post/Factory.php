@@ -76,8 +76,4 @@ public function getView()
 return View::i();
 }
 
-    public function add(Post $post) {
-        return Transform::add($post);
-    }
-
 }
