@@ -7,63 +7,48 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\tickets;
 use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Theme;
 use litepubl\view\Filter;
 
-class tticket extends tpost {
-
-    public static function i($id = 0) {
-        return parent::iteminstance(__class__, $id);
-    }
+class Ticket extends \litepubl\post\Post
+{
 
     public static function getChildtable() {
         return 'tickets';
     }
 
-    public static function selectItems(array $items) {
-        return static ::selectChildItems('tickets', $items);
-    }
-
     protected function create() {
         parent::create();
-        $this->data['childdata'] = & $this->childdata;
-        $this->childdata = array(
-            'id' => 0,
-            //'type' => 'bug',
+        $this->childData = [
+            'type' => 'bug',
             'state' => 'opened',
             'prio' => 'major',
             'assignto' => 0,
-            'closed' => '',
+            'closed' => static::ZERODATE,
             'version' =>  $this->getApp()->options->version,
             'os' => '*',
             'reproduced' => false,
             'code' => ''
-        );
+        ];
     }
 
     public function getFactory() {
-        return ticketfactory::i();
+        return Factory::i();
     }
 
-    public function beforedb() {
-        if ($this->childdata['closed'] == '') $this->childdata['closed'] = Str::sqlDate();
-    }
+protected function getCacheClosed() {
+return $this->childData['closed'] == static::ZERODATA ? 0 : strtotime($this->childData['closed']);
+}
 
-    public function afterdb() {
-        $this->childdata['reproduced'] = $this->childdata['reproduced'] == '1';
-    }
-
-    protected function getClosed() {
-        return strtotime($this->childdata['closed']);
-    }
-
-    protected function setClosed($value) {
-        $this->childdata['closed'] = is_int($value) ? Str::sqlDate($value) : $value;
-    }
+public function setClosed($timestamp)
+{
+$this->childData['closed'] = Str::sqldate($timestamp);
+$this->cacheData['closed'] = $timestamp;
+}
 
     protected function getContentpage($page) {
         $result = parent::getcontentpage($page);
@@ -104,15 +89,15 @@ class tticket extends tpost {
         return $theme->parsearg($tml, $args);
     }
 
-    protected function getAssigntoname() {
-        return $this->getusername($this->assignto, true);
+    protected function getAssignToName() {
+        return $this->getUserName($this->assignto, true);
     }
 
     public static function getResource() {
         return  $this->getApp()->paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     }
 
-    public function getSchemalink() {
+    public function getSchemaLink() {
         return 'ticket';
     }
 
@@ -122,31 +107,15 @@ class tticket extends tpost {
  return;
 }
 
-
         $this->childdata['state'] = $state;
         if ($this->id == 0) {
  return;
 }
 
-
-
         $lang = Lang::i('ticket');
         $content = sprintf($lang->statechanged, $lang->$old, $lang->$state);
 
-        $this->comments->add($this->id, ttickets::i()->idcomauthor, $content, 'approved', '');
-        //$this->commentscount = $this->comments->db->getcount("post = $this->id and status = 'approved'");
-        
-    }
-
-} //class
-class ticketfactory extends tpostfactory {
-
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
-    public function getPosts() {
-        return ttickets::i();
+        $this->comments->add($this->id, Tickets::i()->idcomauthor, $content, 'approved', '');
     }
 
 }

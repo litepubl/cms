@@ -10,7 +10,6 @@ protected $pagesTable;
     protected $childData;
 protected $cacheData;
 protected $rawData;
-
     protected $factory;
     private $metaInstance;
     private $onIdCallback;
@@ -35,22 +34,36 @@ protected $rawData;
         if ($a = static ::loadAssoc($id)) {
             $self = static ::newPost($a['class']);
             $self->setAssoc($a);
+
+if (get_class($self) != get_called_class()) {
+$items =static::selectChildItems($self->getChildTable(), [$id]);
+            $self->setAssoc($items[0]);
+}
+
             return $self;
         }
+
         return false;
     }
 
     public static function loadAssoc($id) {
         $db =  static::getAppInstance()->db;
+$table = static::getChildTable();
+if ($table) {
+        return $db->selectAssoc(
+"select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+ from $db->posts, $table, $db->urlmap
+    where $db->posts.id = $id and $table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
+} else {
         return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
+}
     }
 
     public static function newPost($classname) {
         $classname = $classname ? str_replace('-', '\\', $classname) : get_called_class();
         return new $classname();
     }
-
 
     public static function getInstanceName() {
         return 'post';
@@ -76,8 +89,9 @@ return static::selectChildItems($table, $items);
         $db =  static::getAppInstance()->db;
         $childtable = $db->prefix . $table;
         $list = implode(',', $items);
+$count = count($items);
         return $db->res2items($db->query(
-"select $childtable.* from $childtable where id in ($list)"
+"select $childtable.* from $childtable where id in ($list) limit $count"
 ));
     }
 
@@ -234,13 +248,6 @@ $this->rawData[$k] = $v;
 $this->cacheData[$k] = $v;
 }
 }
-
-        if ($this->childtable) {
-            if ($a = $this->getdb($this->childtable)->getItem($this->id)) {
-                $this->childdata = $a;
-                $this->afterDB();
-            }
-        }
     }
 
     public function save() {
@@ -512,6 +519,11 @@ $this->setDateProp('posted', strtotime($date));
 
         return 0;
     }
+
+public function checkRevision()
+{
+$this->updateRevision((int)$this->factory->posts->revision);
+}
 
     public function updateRevision($value) {
         if ($value != $this->revision) {

@@ -17,29 +17,58 @@ public $post;
     private $nextPost;
     private $themeInstance;
 
+public function setPost(Post $post)
+{
+$this->post = $post;
+}
+
 public function __get($name)
 {
-
+if (method_exists($this, $get = 'get'. $name)) {
+$result = $this->$get();
+} else {{
         switch ($name) {
             case 'catlinks':
-                return $this->get_taglinks('categories', false);
+                $result = $this->get_taglinks('categories', false);
+break;
 
             case 'taglinks':
-                return $this->get_taglinks('tags', false);
+                $result = $this->get_taglinks('tags', false);
+break;
 
             case 'excerptcatlinks':
-                return $this->get_taglinks('categories', true);
+                $result = $this->get_taglinks('categories', true);
+break;
 
             case 'excerpttaglinks':
-                return $this->get_taglinks('tags', true);
+                $result = $this->get_taglinks('tags', true);
+break;
 
             default:
-                return parent::__get($name);
+if (isset($this->post->$name)) {
+$result = $this->post->$name;
+} else {
+                $result = parent::__get($name);
+}
+}
         }
+
+return $result;
 }
 
     public function __set($name, $value) {
+if (parent::__set($name, $value)) {
+return true;
 }
+
+if(isset($this->post->$name)) {
+$this->post->$name = $value;
+return true;
+}
+
+return false;
+}
+
     public function getPrev() {
         if (!is_null($this->aprev)) {
             return $this->aprev;
@@ -76,7 +105,7 @@ $this->themeInstance->setvar('post', $this);
         return $this->themeInstance;
     }
 
-    public function parsetml($path) {
+    public function parseTml($path) {
         $theme = $this->theme;
         return $theme->parse($theme->templates[$path]);
     }
@@ -134,7 +163,7 @@ $this->themeInstance->setvar('post', $this);
         return false;
     }
 
-    public function getFirstimage() {
+    public function getFirstImage() {
         if (count($this->files)) {
             return $this->factory->files->getfirstimage($this->files);
         }
@@ -189,7 +218,7 @@ $this->themeInstance->setvar('post', $this);
         return Lang::date($this->posted, $this->theme->templates['content.post.date']);
     }
 
-    public function getExcerptdate() {
+    public function getExcerptDate() {
         return Lang::date($this->posted, $this->theme->templates['content.excerpts.excerpt.date']);
     }
 
@@ -205,7 +234,7 @@ $this->themeInstance->setvar('post', $this);
         return date($this->posted, 'Y');
     }
 
-    public function getMorelink() {
+    public function getMoreLink() {
         if ($this->moretitle) {
             return $this->parsetml('content.excerpts.excerpt.morelink');
         }
@@ -215,7 +244,6 @@ $this->themeInstance->setvar('post', $this);
 
 
     public function request(Context $context) {
-        $this->loadItem($context->id);
 $app = $this->getApp();
         if ($this->status != 'published') {
             if (! $app->options->show_draft_post) {
@@ -238,7 +266,7 @@ $context->response->status = 404;
     }
 
     public function getTitle() {
-        return $this->data['title'];
+        return $this->post->title;
     }
 
     public function getHead() {
@@ -278,30 +306,31 @@ $context->response->status = 404;
     }
 
     public function getKeywords() {
-        return empty($this->data['keywords']) ? $this->Gettagnames() : $this->data['keywords'];
-    }
-    //fix for file version. For db must be deleted
-    public function setKeywords($s) {
-        $this->data['keywords'] = $s;
+if ($result = $this->post->keywords) {
+return $result;
+} else {
+return $this->Gettagnames();
+}
     }
 
     public function getDescription() {
-        return $this->data['description'];
+        return $this->post->description;
     }
 
-    public function getIdschema() {
-        return $this->data['idschema'];
+    public function getIdSchema() {
+        return $this->post->idschema;
     }
 
-    public function setIdschema($id) {
+    public function setIdSchema($id) {
         if ($id != $this->idschema) {
-            $this->data['idschema'] = $id;
-            if ($this->id) $this->db->setvalue($this->id, 'idschema', $id);
+            $this->post->idschema = $id;
+            if ($this->id) {
+$this->post->db->setvalue($this->id, 'idschema', $id);
+}
         }
     }
 
-
-    public function getFilelist() {
+    public function getFileList() {
         if ((count($this->files) == 0) || (( $this->getApp()->router->page > 1) &&  $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
@@ -310,7 +339,7 @@ $context->response->status = 404;
         return $files->getfilelist($this->files, false);
     }
 
-    public function getExcerptfilelist() {
+    public function getExcerptFileList() {
         if (count($this->files) == 0) {
  return '';
 }
@@ -320,12 +349,11 @@ $context->response->status = 404;
         return $files->getfilelist($this->files, true);
     }
 
-    public function getIndex_tml() {
+    public function getIndexTml() {
         $theme = $this->theme;
         if (!empty($theme->templates['index.post'])) {
  return $theme->templates['index.post'];
 }
-
 
         return false;
     }
@@ -334,7 +362,7 @@ $context->response->status = 404;
         return $this->parsetml('content.post');
     }
 
-    public function getContexcerpt($tml_name) {
+    public function getContExcerpt($tml_name) {
         Theme::$vars['post'] = $this;
         //no use self theme because post in other context
         $theme = $this->factory->theme;
@@ -342,7 +370,7 @@ $context->response->status = 404;
         return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
     }
 
-    public function getRsslink() {
+    public function getRssLink() {
         if ($this->hascomm) {
             return $this->parsetml('content.post.rsslink');
         }
@@ -352,7 +380,7 @@ $context->response->status = 404;
     public function onrssitem($item) {
     }
 
-    public function getPrevnext() {
+    public function getPrevNext() {
         $prev = '';
         $next = '';
         $theme = $this->theme;
@@ -378,7 +406,7 @@ $context->response->status = 404;
         return $result;
     }
 
-    public function getCommentslink() {
+    public function getCommentsLink() {
         $tml = sprintf('<a href="%s%s#comments">%%s</a>',  $this->getApp()->site->url, $this->getlastcommenturl());
         if (($this->comstatus == 'closed') || ! $this->getApp()->options->commentspool) {
             if (($this->commentscount == 0) && (($this->comstatus == 'closed'))) {
@@ -392,7 +420,7 @@ $context->response->status = 404;
         return sprintf('<?php echo litepubl\tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
     }
 
-    public function getCmtcount() {
+    public function getCmtCount() {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
             case 0:
@@ -406,7 +434,7 @@ $context->response->status = 404;
         }
     }
 
-    public function getTemplatecomments() {
+    public function getTemplateComments() {
         $result = '';
         $page =  $this->getApp()->router->page;
         $countpages = $this->countpages;
@@ -427,7 +455,7 @@ $context->response->status = 404;
         return ($this->data['comstatus'] != 'closed') && ((int)$this->data['commentscount'] > 0);
     }
 
-    public function getExcerptcontent() {
+    public function getExcerptContent() {
         $posts = $this->factory->posts;
         if ($this->revision < $posts->revision) {
 $this->updateRevision($posts->revision);
@@ -442,7 +470,7 @@ $this->updateRevision($posts->revision);
         return $result;
     }
 
-    public function replacemore($content, $excerpt) {
+    public function replaceMore($content, $excerpt) {
         $more = $this->parsetml($excerpt ? 'content.excerpts.excerpt.morelink' : 'content.post.more');
         $tag = '<!--more-->';
         if ($i = strpos($content, $tag)) {
@@ -463,7 +491,7 @@ $this->updateRevision($posts->revision);
         return '';
     }
 
-    protected function getContentpage($page) {
+    protected function getContentPage($page) {
         $result = '';
         if ($page == 1) {
             $result.= $this->filtered;
@@ -504,11 +532,11 @@ $this->updateRevision($posts->revision);
         return $this->getusername($this->author, false);
     }
 
-    protected function getAuthorlink() {
+    protected function getAuthorLink() {
         return $this->getusername($this->author, true);
     }
 
-    protected function getUsername($id, $link) {
+    protected function getUserName($id, $link) {
         if ($id <= 1) {
             if ($link) {
                 return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>',  $this->getApp()->site->url,  $this->getApp()->site->author);
@@ -532,7 +560,7 @@ $this->updateRevision($posts->revision);
         }
     }
 
-    public function getAuthorpage() {
+    public function getAuthorPage() {
         $id = $this->author;
         if ($id <= 1) {
             return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>',  $this->getApp()->site->url,  $this->getApp()->site->author);

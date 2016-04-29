@@ -260,7 +260,7 @@ return [
 'photoswipe' => 'litepubl\plugins\photoswipe\PhotoSwipe',
 'photoswipethumbnail' => 'litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail',
 
-
-
+'tticket' => 'litepubl\plugins\tickets\Ticket',
+'ttickets' => 'litepubl\plugins\tickets\Tickets',
 
 ];
