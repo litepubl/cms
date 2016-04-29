@@ -46,7 +46,8 @@ $this->events = [];
 
 public function getCount()
 {
-return count($this->events);}
+return count($this->events);
+}
 
 public function fire()
 {

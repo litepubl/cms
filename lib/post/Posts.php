@@ -50,17 +50,17 @@ class Posts extends \litepubl\core\Items
         $this->error("Item $id not found in class " . get_class($this));
     }
 
-    public function finditems($where, $limit) {
+    public function findItems($where, $limit) {
         if (isset(Post::$instances['post']) && (count(Post::$instances['post']) > 0)) {
             $result = $this->db->idselect($where . ' ' . $limit);
-            $this->loaditems($result);
+            $this->loadItems($result);
             return $result;
         } else {
             return $this->select($where, $limit);
         }
     }
 
-    public function loaditems(array $items) {
+    public function loadItems(array $items) {
         //exclude already loaded items
         if (!isset(Post::$instances['post'])) {
 Post::$instances['post'] = array();
@@ -78,25 +78,31 @@ Post::$instances['post'] = array();
     }
 
     public function setAssoc(array $items) {
-        if (count($items) == 0) {
+        if (!count($items)) {
  return array();
 }
 
-
         $result = array();
-        $t = new Transform();
         $fileitems = array();
         foreach ($items as $a) {
-            $t->post = Post::newpost($a['class']);
-            $t->setassoc($a);
-            $result[] = $t->post->id;
+$post = Post::newPost($a['class']);
+$post->setAssoc($a);
+            $result[] = $post->id;
+
             $f = $t->post->files;
-            if (count($f)) $fileitems = array_merge($fileitems, array_diff($f, $fileitems));
+            if (count($f)) {
+$fileitems = array_merge($fileitems, array_diff($f, $fileitems));
+}
         }
 
-        unset($t);
-        if ($this->syncmeta) tmetapost::loaditems($result);
-        if (count($fileitems)) tfiles::i()->preload($fileitems);
+        if ($this->syncmeta) {
+Meta::loadItems($result);
+}
+
+        if (count($fileitems)) {
+Files::i()->preload($fileitems);
+}
+
         $this->onselect($result);
         return $result;
     }
@@ -105,7 +111,7 @@ Post::$instances['post'] = array();
         $db =  $this->getApp()->db;
         if ($this->childtable) {
             $childtable = $db->prefix . $this->childtable;
-            return $this->setassoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
+            return $this->setAssoc($db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url, $childtable.*
       from $db->posts, $db->urlmap, $childtable
       where $where and  $db->posts.id = $childtable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
         }
@@ -127,13 +133,8 @@ Post::$instances['post'] = array();
         }
 
         foreach ($subclasses as $class => $list) {
-            $subitems = call_user_func_array(array(
-                str_replace('-', '\\', $class) ,
-                'selectitems'
-            ) , array(
-                $list
-            ));
-
+$class = str_replace('-', '\\', $class) ;
+            $subitems = $class::loadChildData($list);
             foreach ($subitems as $id => $subitem) {
                 $items[$id] = array_merge($items[$id], $subitem);
             }

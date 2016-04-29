@@ -167,11 +167,11 @@ throw new \Exception($log);
         return $this->query("SELECT * FROM $this->prefix$this->table $where");
     }
 
-    public function idselect($where) {
+    public function idSelect($where) {
         return $this->res2id($this->query("select id from $this->prefix$this->table where $where"));
     }
 
-    public function selectassoc($sql) {
+    public function selectAssoc($sql) {
         return $this->query($sql)->fetch_assoc();
     }
 
@@ -183,7 +183,7 @@ throw new \Exception($log);
         return $this->query("update $this->prefix$this->table set $values   where $where");
     }
 
-    public function idupdate($id, $values) {
+    public function idUpdate($id, $values) {
         return $this->update($values, "id = $id");
     }
 
@@ -196,8 +196,6 @@ throw new \Exception($log);
                 {
  continue;
 }
-
-
             }
 
             $list[] = sprintf('%s = %s', $name, $this->quote($value));
@@ -206,24 +204,29 @@ throw new \Exception($log);
         return implode(', ', $list);
     }
 
-    public function updateassoc(array $a, $index = 'id') {
+    public function updateAssoc(array $a, $index = 'id') {
         $id = $a[$index];
         unset($a[$index]);
         return $this->update($this->assoc2update($a) , "$index = '$id' limit 1");
     }
 
-    public function insertrow($row) {
+public function setValues($id, array $values)
+{
+        return $this->update($this->assoc2update($values) , "id = '$id' limit 1");
+}
+
+    public function insertRow($row) {
         return $this->query(sprintf('INSERT INTO %s%s %s', $this->prefix, $this->table, $row));
     }
 
-    public function insertassoc(array $a) {
+    public function insertAssoc(array $a) {
         unset($a['id']);
         return $this->add($a);
     }
 
-    public function addupdate(array $a) {
+    public function addUpdate(array $a) {
         if ($this->idexists($a['id'])) {
-            $this->updateassoc($a);
+            $this->updateAssoc($a);
         } else {
             return $this->add($a);
         }
@@ -244,7 +247,7 @@ throw new \Exception($log);
         $this->insertrow($this->assoctorow($a));
     }
 
-    public function assoctorow(array $a) {
+    public function assocToRow(array $a) {
         $vals = array();
         foreach ($a as $val) {
             if (is_bool($val)) {
@@ -269,15 +272,15 @@ throw new \Exception($log);
         return $this->query("delete from $this->prefix$this->table where $where");
     }
 
-    public function iddelete($id) {
+    public function idDelete($id) {
         return $this->query("delete from $this->prefix$this->table where id = $id");
     }
 
-    public function deleteitems(array $items) {
+    public function deleteItems(array $items) {
         return $this->delete('id in (' . implode(', ', $items) . ')');
     }
 
-    public function idexists($id) {
+    public function idExists($id) {
         if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
             return $r && $r->fetch_assoc();
         }
@@ -302,19 +305,18 @@ throw new \Exception($log);
  return $r->fetch_assoc();
 }
 
-
         return false;
     }
 
-    public function finditem($where) {
+    public function findItem($where) {
         return $this->query("select * from $this->prefix$this->table where $where limit 1")->fetch_assoc();
     }
 
-    public function findid($where) {
+    public function findId($where) {
         return $this->findprop('id', $where);
     }
 
-    public function findprop($propname, $where) {
+    public function findProp($propname, $where) {
         if ($r = $this->query("select $propname from $this->prefix$this->table where $where limit 1")->fetch_assoc()) {
  return $r[$propname];
 }

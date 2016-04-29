@@ -429,7 +429,9 @@ $context->response->status = 404;
 
     public function getExcerptcontent() {
         $posts = $this->factory->posts;
-        if ($this->revision < $posts->revision) $this->update_revision($posts->revision);
+        if ($this->revision < $posts->revision) {
+$this->updateRevision($posts->revision);
+}
         $result = $this->excerpt;
         $posts->beforeexcerpt($this, $result);
         $result = $this->replacemore($result, true);
