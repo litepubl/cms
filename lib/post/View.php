@@ -13,15 +13,17 @@ use litepubl\core\Str;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
-use litepubl\comments\View as CommentsView;
+use litepubl\view\MainView;
+use litepubl\comments\Templates;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
 public $post;
+public $page;
     private $prevPost;
     private $nextPost;
     private $themeInstance;
-private $page;
+
 
 protected function create()
 {
@@ -120,7 +122,7 @@ $this->themeInstance->setvar('post', $this);
             return $this->themeInstance;
         }
 
-$mainview = $this->factory->mainview;
+$mainview = MainView::i();
         $this->themeInstance = $mainview->schema ? $mainview->schema->theme : Schema::getSchema($this)->theme;
 $this->themeInstance->setvar('post', $this);
         return $this->themeInstance;
@@ -294,7 +296,7 @@ $this->page = $context->request->page;
 
     public function getHead() {
         $result = $this->rawhead;
-        $this->factory->mainview->ltoptions['idpost'] = $this->id;
+MainView::i()->ltoptions['idpost'] = $this->id;
         $theme = $this->theme;
         $result.= $theme->templates['head.post'];
         if ($prev = $this->prev) {
@@ -468,7 +470,7 @@ $result.= $this->theme->getpages($this->url, $this->page, $countpages);
             if (($countpages > 1) && ($this->commentpages < $this->page)) {
                 $result.= $this->getCommentsLink();
             } else {
-                $result.= CommentsView::i()->getcomments($this);
+                $result.= Templates::i()->getcomments($this);
             }
         }
 

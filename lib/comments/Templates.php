@@ -12,6 +12,7 @@ use litepubl\post\Post;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\post\View as PostView;
 
 class Templates extends \litepubl\core\Events
  {
@@ -21,39 +22,37 @@ class Templates extends \litepubl\core\Events
         $this->basename = 'comments.templates';
     }
 
-    public function getComments($idpost) {
+    public function getComments(PostView $view) {
         $result = '';
-        $idpost = (int)$idpost;
-        $post = Post::i($idpost);
-        $comments = Comments::i($idpost);
+        $idpost = (int)$view->id;
         $lang = Lang::i('comment');
-        $list = $comments->getContent();
-
-        $theme = $post->theme;
+        $comments = Comments::i();
+        $list = $comments->getContent($view);
+        $theme = $view->theme;
         $args = new Args();
-        $args->count = $post->cmtcount;
-        $result.= $theme->parsearg($theme->templates['content.post.templatecomments.comments.count'], $args);
+        $args->count = $view->cmtcount;
+        $result.= $theme->parseArg($theme->templates['content.post.templatecomments.comments.count'], $args);
         $result.= $list;
 
-        if (( $this->getApp()->router->page == 1) && ($post->pingbackscount > 0)) {
-            $pingbacks = Pingbacks::i($post->id);
+        if (( $view->page == 1) && ($view->pingbackscount > 0)) {
+            $pingbacks = Pingbacks::i($view->id);
             $result.= $pingbacks->getcontent();
         }
 
-        if ( $this->getApp()->options->commentsdisabled || ($post->comstatus == 'closed')) {
+        if ( $this->getApp()->options->commentsdisabled || ($view->comstatus == 'closed')) {
             $result.= $theme->parse($theme->templates['content.post.templatecomments.closed']);
             return $result;
         }
 
-        $args->postid = $post->id;
+        $args->postid = $view->id;
         $args->antispam = base64_encode('superspamer' . strtotime("+1 hour"));
 
         $cm = Manager::i();
 
         // if user can see hold comments
-        $result.= sprintf('<?php if (\litepubl:$options->ingroups(array(%s))) { ?>', implode(',', $cm->idgroups));
+        $result.= sprintf('<?php if (litepubl:$app->options->ingroups([%s])) { ?>', implode(',', $cm->idgroups));
 
-        $holdmesg = '<?php if ($ismoder = \ $this->getApp()->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+        $holdmesg = '<?php if ($ismoder = \ litepubl::$app->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
         //hide template hold comments in html comment
         '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -63,11 +62,11 @@ class Templates extends \litepubl\core\Events
         $args->mesg = $mesg;
 
         $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
-        $result.= $this->getjs(($post->idperm == 0) && $cm->confirmlogged, 'logged');
+        $result.= $this->getjs(($view->idperm == 0) && $cm->confirmlogged, 'logged');
 
         $result.= '<?php } else { ?>';
 
-        switch ($post->comstatus) {
+        switch ($view->comstatus) {
             case 'reg':
                 $args->mesg = $this->getmesg('reqlogin',  $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
@@ -77,7 +76,7 @@ class Templates extends \litepubl\core\Events
             case 'guest':
                 $args->mesg = $this->getmesg('guest',  $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
-                $result.= $this->getjs(($post->idperm == 0) && $cm->confirmguest, 'guest');
+                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmguest, 'guest');
                 break;
 
 
@@ -96,7 +95,7 @@ class Templates extends \litepubl\core\Events
                 $args->content = '';
 
                 $result.= $theme->parsearg($theme->templates['content.post.templatecomments.form'], $args);
-                $result.= $this->getjs(($post->idperm == 0) && $cm->confirmcomuser, 'comuser');
+                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
                 break;
         }
 

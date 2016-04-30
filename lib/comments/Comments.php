@@ -14,6 +14,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 use litepubl\core\Str;
+use litepubl\post\View as PostView;
 
 class Comments extends \litepubl\core\Items
  {
@@ -187,31 +188,30 @@ $result->pid = $pid;
         return $id;
     }
 
-    public function getContent() {
-        return $this->getcontentWhere('approved', '');
+    public function getContent(PostView $view) {
+        return $this->getcontentWhere($view, 'approved', '');
     }
 
     public function getHoldContent($idauthor) {
         return $this->getcontentWhere('hold', "and $this->thistable.author = $idauthor");
     }
 
-    public function getContentWhere($status, $where) {
+    public function getContentWhere(PostView $view, $status, $where) {
         $result = '';
-        $post = Post::i($this->pid);
-        $theme = $post->theme;
+        $theme = $view->theme;
 $options = $this->getApp()->options;
         if ($status == 'approved') {
             if ( $options->commentpages) {
-                $page =  $this->getApp()->router->page;
+                $page =  $view->page;
                 if ( $options->comments_invert_order) {
-$page = max(0, $post->commentpages - $page) + 1;
+$page = max(0, $view->commentpages - $page) + 1;
 }
 
                 $count =  $options->commentsperpage;
                 $from = ($page - 1) * $count;
             } else {
                 $from = 0;
-                $count = $post->commentscount;
+                $count = $vew->commentscount;
             }
         } else {
             $from = 0;
@@ -229,7 +229,7 @@ $vars = new Vars();
         $lang = Lang::i('comment');
 
         $tml = strtr($theme->templates['content.post.templatecomments.comments.comment'], array(
-            '$quotebuttons' => $post->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
+            '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
         ));
 
         $index = $from;

@@ -207,6 +207,8 @@ $s = strtr($s, [
 'childdata' => 'childData',
 'childtable' => 'childTable',
 'itemexists' => 'itemExists',
+'parsearg' => 'parseArg',
+
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
