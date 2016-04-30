@@ -115,7 +115,7 @@ class Templates extends \litepubl\core\Events
         $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
         //insert back url
-        $result = str_replace('backurl=', 'backurl=' . urlencode( $this->getApp()->router->url) , $result);
+        $result = str_replace('backurl=', 'backurl=' . urlencode( $view->context->request->url) , $result);
 
         return $theme->parse($result);
     }

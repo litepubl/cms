@@ -19,7 +19,7 @@ use litepubl\comments\Templates;
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
 public $post;
-public $page;
+public $context;
     private $prevPost;
     private $nextPost;
     private $themeInstance;
@@ -287,8 +287,13 @@ $context->response->status = 404;
             return;
         }
 
-$this->page = $context->request->page;
+$this->context = $context;
     }
+
+public function getPage()
+{
+return $this->context->request->page;
+}
 
     public function getTitle() {
         return $this->post->title;
