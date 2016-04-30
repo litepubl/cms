@@ -13,6 +13,7 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\post\View as PostView;
+use litepubl\core\TempProps;
 
 class Templates extends \litepubl\core\Events
  {
@@ -25,6 +26,8 @@ class Templates extends \litepubl\core\Events
     public function getComments(PostView $view) {
         $result = '';
         $idpost = (int)$view->id;
+$props = new TempProps($this);
+$props->view = $view;
         $lang = Lang::i('comment');
         $comments = Comments::i();
         $list = $comments->getContent($view);
@@ -50,9 +53,9 @@ class Templates extends \litepubl\core\Events
         $cm = Manager::i();
 
         // if user can see hold comments
-        $result.= sprintf('<?php if (litepubl:$app->options->ingroups([%s])) { ?>', implode(',', $cm->idgroups));
+        $result.= sprintf('<?php if (litepubl::$app->options->ingroups([%s])) { ?>', implode(',', $cm->idgroups));
 
-        $holdmesg = '<?php if ($ismoder = \ litepubl::$app->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
+        $holdmesg = '<?php if ($ismoder = litepubl::$app->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
         //hide template hold comments in html comment
         '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
@@ -115,7 +118,7 @@ class Templates extends \litepubl\core\Events
         $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
         //insert back url
-        $result = str_replace('backurl=', 'backurl=' . urlencode( $view->context->request->url) , $result);
+        $result = str_replace('backurl=', 'backurl=' . urlencode($this->view->context->request->url) , $result);
 
         return $theme->parse($result);
     }

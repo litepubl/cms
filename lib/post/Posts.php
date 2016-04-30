@@ -17,7 +17,7 @@ use litepubl\utils\LinkGenerator;
 
 class Posts extends \litepubl\core\Items
  {
-    const POSTCLASS = 'litepubl\post\Post';
+    const POSTCLASS = __NAMESPACE__ . '/Post';
     public $itemcoclasses;
     public $archives;
     public $rawtable;

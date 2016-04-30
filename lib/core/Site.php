@@ -97,7 +97,7 @@ use PoolStorageTrait;
 }
 
 
-            $item = tusers::i()->getitem($id);
+            $item = Users::i()->getitem($id);
             if ($item['website']) {
                 $result = sprintf('<a href="%s">%s</a>', $item['website'], $item['name']);
             } else {
@@ -115,7 +115,7 @@ use PoolStorageTrait;
     }
 
     public function getLiveuser() {
-        return '<?php echo  $this->getApp()->site->getuserlink(); ?>';
+        return '<?php echo  litepubl::$app->site->getuserlink(); ?>';
     }
 
 }

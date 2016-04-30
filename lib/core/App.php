@@ -39,10 +39,11 @@ public function init() {
     }
 
     public function createAliases() {
-        class_alias(get_called_class() , 'litepublisher');
-        class_alias(get_called_class() , 'litepubl\litepublisher');
-        class_alias(get_called_class() , 'litepubl');
-        class_alias(get_called_class() , 'litepubl\litepubl');
+$litepubl = __NAMESPACE__ . '\litepubl';
+        class_alias($litepubl, 'litepublisher');
+        class_alias($litepubl, 'litepubl\litepublisher');
+        class_alias($litepubl, 'litepubl');
+        class_alias($litepubl, 'litepubl\litepubl');
     }
 
     public  function createInstances() {
