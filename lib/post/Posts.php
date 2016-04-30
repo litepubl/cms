@@ -10,8 +10,6 @@
 namespace litepubl\post;
 use litepubl\core\Cron;
 use litepubl\core\Str;
-use litepubl\view\Args;
-use litepubl\view\Theme;
 use litepubl\view\Schemes;
 use litepubl\utils\LinkGenerator;
 
@@ -166,25 +164,6 @@ $class = str_replace('-', '\\', $class) ;
         return 0;
     }
 
-    public function getLinks($where, $tml) {
-        $db = $this->db;
-        $t = $this->thistable;
-        $items = $db->res2assoc($db->query("select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
-    where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"));
-
-        if (count($items) == 0) {
- return '';
-}
-
-        $result = '';
-        $args = new Args();
-        $theme = Theme::i();
-        foreach ($items as $item) {
-            $args->add($item);
-            $result.= $theme->parsearg($tml, $args);
-        }
-        return $result;
-    }
 
     private function beforeChange($post) {
         $post->title = trim($post->title);
@@ -350,21 +329,6 @@ $post->status = 'published';
         $this->data['revision']++;
         $this->save();
          $this->getApp()->cache->clear();
-    }
-
-    public function getAnhead(array $items) {
-        if (count($items) == 0) {
- return '';
-}
-
-        $this->loadItems($items);
-
-        $result = '';
-        foreach ($items as $id) {
-            $result.= Post::i($id)->anhead;
-        }
-
-        return $result;
     }
 
     //fix call reference
