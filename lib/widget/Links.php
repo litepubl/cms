@@ -9,7 +9,6 @@
 
 namespace litepubl\widget;
     use litepubl\core\Context;
-use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\Str;
@@ -43,8 +42,8 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
 
 
         $result = '';
-        $theme = Theme::i();
-        $tml = $theme->getwidgetitem('links', $sidebar);
+$view = new View();
+        $tml = $view->getItem('links', $sidebar);
         $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . 'id=';
         $url =  $this->getApp()->site->url;
         $args = new Args();
@@ -60,10 +59,10 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
             } else {
                 $args->link = $item['url'];
             }
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $view->theme->parsearg($tml, $args);
         }
 
-        return $theme->getwidgetcontent($result, 'links', $sidebar);
+        return $view->getContent($result, 'links', $sidebar);
     }
 
     public function add($url, $title, $text) {

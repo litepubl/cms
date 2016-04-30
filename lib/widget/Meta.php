@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 
@@ -46,9 +45,9 @@ class Meta extends Widget
 
     public function getContent($id, $sidebar) {
         $result = '';
-        $theme = Theme::i();
-        $tml = $theme->getwidgetitem('meta', $sidebar);
-        $metaclasses = $theme->getwidgettml($sidebar, 'meta', 'classes');
+$view = new View();
+        $tml = $view->getItem('meta', $sidebar);
+        $metaclasses = $view->getTml($sidebar, 'meta', 'classes');
         $args = new Args();
         foreach ($this->items as $name => $item) {
             if (!$item['enabled']) {
@@ -65,7 +64,7 @@ class Meta extends Widget
                 $args->rel = 'author profile';
             }
             $args->class = isset($metaclasses[$name]) ? $metaclasses[$name] : '';
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $view->theme->parsearg($tml, $args);
         }
 
         if ($result == '') {
@@ -73,7 +72,7 @@ class Meta extends Widget
 }
 
 
-        return $theme->getwidgetcontent($result, 'meta', $sidebar);
+        return $view->getContent($result, 'meta', $sidebar);
     }
 
 }

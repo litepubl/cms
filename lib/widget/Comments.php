@@ -9,7 +9,6 @@
 
 namespace litepubl\widget;
 use litepubl\view\Lang;
-use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 
@@ -36,8 +35,8 @@ return '';
 }
 
         $result = '';
-        $theme = Theme::i();
-        $tml = $theme->getwidgetitem('comments', $sidebar);
+$view = new View();
+        $tml = $view->getItem('comments', $sidebar);
         $url =  $this->getApp()->site->url;
         $args = new Args();
         $args->onrecent = Lang::get('comment', 'onrecent');
@@ -45,9 +44,9 @@ return '';
             $args->add($item);
             $args->link = $url . $item['posturl'];
             $args->content = Filter::getexcerpt($item['content'], 120);
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $view->theme->parsearg($tml, $args);
         }
-        return $theme->getwidgetcontent($result, 'comments', $sidebar);
+        return $view->getContent($result, 'comments', $sidebar);
     }
 
     public function changed() {

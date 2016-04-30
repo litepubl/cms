@@ -59,8 +59,8 @@ $vars->widget = $this;
              $this->getApp()->options->handexception($e);
             return '';
         }
-        $theme = Theme::i();
-return $theme->getidwidget($id, $title, $content, $this->template, $sidebar);
+$view = new View();
+return $view->getidwidget($id, $title, $content, $this->template, $sidebar);
     }
 
     public function getDeftitle() {

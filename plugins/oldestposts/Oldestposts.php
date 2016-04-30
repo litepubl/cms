@@ -10,7 +10,7 @@
 namespace litepubl\plugins\oldestposts;
 use litepubl\core\Str;
 use litepubl\post\Posts;
-use litepubl\view\Theme;
+use litepubl\widget\View;
 use litepubl\view\Lang;
 
 class Oldestposts extends \litepubl\widget\Depended
@@ -37,8 +37,8 @@ class Oldestposts extends \litepubl\widget\Depended
  return '';
 }
 
-        $theme = Theme::i();
-        return $theme->getpostswidgetcontent($items, $sidebar, '');
+        $view = new View();
+        return $view->getPosts($items, $sidebar, '');
     }
 
 }

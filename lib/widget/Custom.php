@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\view\Theme;
 
 class Custom extends Widget
  {
@@ -33,9 +32,8 @@ class Custom extends Widget
  return $item['content'];
 }
 
-
-        $theme = Theme::i();
-        return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
+$view = new View();
+        return $view->getWidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
     public function getTitle($id) {

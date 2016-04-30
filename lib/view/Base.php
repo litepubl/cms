@@ -29,10 +29,10 @@ class Base extends \litepubl\core\Events
     }
 
     public static function getTheme($name) {
-        return static ::getbyname(get_called_class() , $name);
+        return static ::getByName(get_called_class() , $name);
     }
 
-    public static function getByname($classname, $name) {
+    public static function getByName($classname, $name) {
         if (isset(static ::$instances[$name])) {
             return static ::$instances[$name];
         }

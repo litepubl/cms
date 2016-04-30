@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\post\Posts as PostItems;
 
@@ -30,8 +29,8 @@ class Posts extends Widget
     public function getContent($id, $sidebar) {
         $posts = PostItems::i();
         $list = $posts->getpage(0, 1, $this->maxcount, false);
-        $theme = Theme::i();
-        return $theme->getpostswidgetcontent($list, $sidebar, '');
+        $view = new View();
+        return $view->getPosts($list, $sidebar, '');
     }
 
 }

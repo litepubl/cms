@@ -9,7 +9,6 @@
 
 namespace litepubl\widget;
 use litepubl\post\Archives as Arch;
-use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 
@@ -37,15 +36,17 @@ class Archives extends Widget
 
     public function getContent($id, $sidebar) {
         $arch = Arch::i();
-        if (count($arch->items) == 0) {
+        if (!count($arch->items)) {
  return '';
 }
 
-
         $result = '';
-        $theme = Theme::i();
-        $tml = $theme->getwidgetitem('archives', $sidebar);
-        if ($this->showcount) $counttml = $theme->getwidgettml($sidebar, 'archives', 'subcount');
+$view = new View();
+        $tml = $view->getItem('archives', $sidebar);
+        if ($this->showcount) {
+$counttml = $view->getTml($sidebar, 'archives', 'subcount');
+}
+
         $args = new Args();
         $args->icon = '';
         $args->subcount = '';
@@ -54,11 +55,14 @@ class Archives extends Widget
         foreach ($arch->items as $date => $item) {
             $args->add($item);
             $args->text = $item['title'];
-            if ($this->showcount) $args->subcount = str_replace($counttml, '$itemscount', $item['count']);
-            $result.= $theme->parsearg($tml, $args);
+            if ($this->showcount) {
+$args->subcount = str_replace('$itemscount', $item['count'], $counttml);
+}
+
+            $result.= $view->theme->parsearg($tml, $args);
         }
 
-        return $theme->getwidgetcontent($result, 'archives', $sidebar);
+        return $view->getContent($result, 'archives', $sidebar);
     }
 
 }

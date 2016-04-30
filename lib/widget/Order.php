@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\view\Theme;
 use litepubl\core\Arr;
 
 class Order extends Widget
