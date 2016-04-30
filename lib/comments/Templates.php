@@ -27,7 +27,7 @@ class Templates extends \litepubl\core\Events
         $post = Post::i($idpost);
         $comments = Comments::i($idpost);
         $lang = Lang::i('comment');
-        $list = $comments->getcontent();
+        $list = $comments->getContent();
 
         $theme = $post->theme;
         $args = new Args();

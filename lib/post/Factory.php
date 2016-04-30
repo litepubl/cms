@@ -8,9 +8,12 @@
 **/
 
 namespace litepubl\post;
-use litepubl\view\Theme;
-use litepubl\view\MainView;
-use litepubl\comments\Templates;
+use litepubl\tag\Cats;
+use litepubl\tag\Tags;
+        use litepubl\comments\Comments;
+        use litepubl\comments\Pingbacks;
+use litepubl\core\Users;
+use litepubl\pages\Users as UserPages;
 
 class Factory
 {
@@ -29,11 +32,11 @@ return $this->{'get' . $name}();
     }
 
     public function getTags() {
-        return \litepubl\tag\Tags::i();
+return Tags::i();
     }
 
     public function getCats() {
-        return \litepubl\tag\Cats::i();
+        return Cats::i();
     }
 
     public function getCategories() {
@@ -45,31 +48,23 @@ return $this->{'get' . $name}();
     }
 
     public function getComments($id) {
-        return \litepubl\comments\Comments::i($id);
+        return Comments::i($id);
     }
 
     public function getPingbacks($id) {
-        return \litepubl\comments\Pingbacks::i($id);
+        return Pingbacks::i($id);
     }
 
     public function getMeta($id) {
         return Meta::i($id);
     }
 
-public function getMainView() {
-return \litepubl\view\MainView::i();
-}
-
-public function getTheme() {
-return \litepubl\view\Theme::i();
-}
-
 public function getUsers() {
-return \litepubl\core\Users::i();
+return Users::i();
 }
 
 public function getUserpages() {
-return \litepubl\pages\Users::i();
+return UserPages::i();
 }
 
 public function getView()

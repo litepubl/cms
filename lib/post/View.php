@@ -13,6 +13,7 @@ use litepubl\core\Str;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\comments\View as CommentsView;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -467,7 +468,7 @@ $result.= $this->theme->getpages($this->url, $this->page, $countpages);
             if (($countpages > 1) && ($this->commentpages < $this->page)) {
                 $result.= $this->getCommentsLink();
             } else {
-                $result.= $this->factory->templatecomments->getcomments($this->id);
+                $result.= CommentsView::i()->getcomments($this);
             }
         }
 

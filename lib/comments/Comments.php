@@ -114,10 +114,9 @@ $result->pid = $pid;
             'hold',
             'spam'
         ))) return false;
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
-
 
         $old = $this->getvalue($id, 'status');
         if ($old != $status) {
@@ -130,12 +129,12 @@ $result->pid = $pid;
         return false;
     }
 
-    public function postdeleted($idpost) {
+    public function postDeleted($idpost) {
         $this->db->update("status = 'deleted'", "post = $idpost");
     }
 
     public function getComment($id) {
-        return new tcomment($id);
+        return new Comment($id);
     }
 
     public function getCount($where = '') {
@@ -156,7 +155,7 @@ $result->pid = $pid;
         return $this->getdb($this->rawtable);
     }
 
-    public function getApprovedcount() {
+    public function getApprovedCount() {
         return $this->db->getcount("post = $this->pid and status = 'approved'");
     }
 
@@ -189,22 +188,26 @@ $result->pid = $pid;
     }
 
     public function getContent() {
-        return $this->getcontentwhere('approved', '');
+        return $this->getcontentWhere('approved', '');
     }
 
-    public function getHoldcontent($idauthor) {
-        return $this->getcontentwhere('hold', "and $this->thistable.author = $idauthor");
+    public function getHoldContent($idauthor) {
+        return $this->getcontentWhere('hold', "and $this->thistable.author = $idauthor");
     }
 
-    public function getContentwhere($status, $where) {
+    public function getContentWhere($status, $where) {
         $result = '';
         $post = Post::i($this->pid);
         $theme = $post->theme;
+$options = $this->getApp()->options;
         if ($status == 'approved') {
-            if ( $this->getApp()->options->commentpages) {
+            if ( $options->commentpages) {
                 $page =  $this->getApp()->router->page;
-                if ( $this->getApp()->options->comments_invert_order) $page = max(0, $post->commentpages - $page) + 1;
-                $count =  $this->getApp()->options->commentsperpage;
+                if ( $options->comments_invert_order) {
+$page = max(0, $post->commentpages - $page) + 1;
+}
+
+                $count =  $options->commentsperpage;
                 $from = ($page - 1) * $count;
             } else {
                 $from = 0;
@@ -212,7 +215,7 @@ $result->pid = $pid;
             }
         } else {
             $from = 0;
-            $count =  $this->getApp()->options->commentsperpage;
+            $count =  $options->commentsperpage;
         }
 
         $table = $this->thistable;
@@ -232,12 +235,13 @@ $vars = new Vars();
         $index = $from;
         $class1 = $theme->templates['content.post.templatecomments.comments.comment.class1'];
         $class2 = $theme->templates['content.post.templatecomments.comments.comment.class2'];
+
         foreach ($items as $id) {
             $comment->id = $id;
             $args->index = ++$index;
             $args->indexplus = $index + 1;
             $args->class = ($index % 2) == 0 ? $class1 : $class2;
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $theme->parseArg($tml, $args);
         }
 
         if (!$result){
@@ -252,7 +256,7 @@ $vars = new Vars();
 
         $args->from = $from + 1;
         $args->comment = $result;
-        return $theme->parsearg($tml, $args);
+        return $theme->parseArg($tml, $args);
     }
 
 }

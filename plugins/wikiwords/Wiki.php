@@ -7,27 +7,27 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\wikiwords;
 use litepubl\core\Str;
+use litepubl\post\Post;
+use litepubl\post\Posts;
 
-class twikiwords extends titems {
+class Wiki extends \litepubl\core\Items
+{
     public $itemsposts;
     private $fix;
     private $words;
     private $links;
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
-        $this->fix = array();
         $this->addevents('edited');
         $this->table = 'wikiwords';
-        if (!$this->dbversion) $this->data['itemsposts'] = array();
-        $this->itemsposts = new titemspostsowner($this);
+        $this->itemsposts = new ItemsPosts();
+        $this->itemsposts->table = $this->table . 'items';
+
+        $this->fix = array();
         $this->words = array();
         $this->links = array();
     }
@@ -36,8 +36,9 @@ class twikiwords extends titems {
         if (Str::begin($name, 'word_')) {
             $id = (int)substr($name, strlen('word_'));
             if (($id > 0) && $this->itemexists($id)) {
-                return $this->getlink($id);
+                return $this->getLink($id);
             }
+
             return '';
         }
 
@@ -47,39 +48,53 @@ class twikiwords extends titems {
     public function getPost($word) {
         if ($id = $this->add($word, 0)) {
             $items = $this->itemsposts->getposts($id);
-            if (count($items) > 0) {
+            if (count($items)) {
  return $items[0];
 }
-
-
         }
+
         return false;
     }
 
     public function getLink($id) {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         $word = $item['word'];
         if (isset($this->links[$word])) {
  return $this->links[$word];
 }
 
-
         $items = $this->itemsposts->getposts($id);
+$theme = $this->getTheme();
+
         $c = count($items);
         if ($c == 0) {
-            $result = sprintf('<span class="wikiword">%s</span>', $word);
+            $result = str_replace('$word', $word, $theme->templates['wiki.word']);
         } elseif ($c == 1) {
-            $post = tpost::i($items[0]);
-            $result = sprintf('<a href="%1$s#wikiword-%3$d" title="%2$s">%2$s</a>', $post->link, $word, $id);
+            $post = Post::i($items[0]);
+            $result = strtr($theme->templates['wiki.link'], [
+'$id' => $id,
+'$word' => $word,
+'$post.link' => $post->link,
+]);
         } else {
-            $links = array();
-            $posts = tposts::i();
-            $posts->loaditems($items);
+            $links = '';
+            $posts = Posts::i();
+            $posts->loadItems($items);
             foreach ($items as $idpost) {
-                $post = tpost::i($idpost);
-                $links[] = sprintf('<a href="%1$s#wikiword-%3$d" title="%2$s">%2$s</a>', $post->link, $post->title, $id);
+                $post = Post::i($idpost);
+            $links .= strtr($theme->templates['wiki.links.item'], [
+'$id' => $id,
+'$word' => $word,
+'$post.link' => $post->link,
+'$post.title' => $post->title,
+]);
             }
-            $result = sprintf('<span class="wikiword">%s</span> (%s)', $word, implode(', ', $links));
+
+            $result = strtr($theme->templates['wiki.links'], [
+'$id' => $id,
+'$word' => $word,
+'$item' => $links,
+]);
         }
 
         $this->links[$word] = $result;
@@ -88,77 +103,79 @@ class twikiwords extends titems {
 
     public function add($word, $idpost) {
         $word = trim(strip_tags($word));
-        if ($word == '') {
+        if ($!word) {
  return false;
 }
-
 
         if (isset($this->words[$word])) {
             $id = $this->words[$word];
         } else {
-            $id = $this->indexof('word', $word);
-            if (!$id) $id = $this->additem(array(
+            $id = $this->indexOf('word', $word);
+            if (!$id) {
+$id = $this->addItem(array(
                 'word' => $word
             ));
+
             $this->words[$word] = $id;
+}
         }
 
         if (($idpost > 0) && !$this->itemsposts->exists($idpost, $id)) {
             $this->itemsposts->add($idpost, $id);
-            if (isset($this->links[$word])) unset($this->links[$word]);
-            tposts::i()->addrevision();
+            if (isset($this->links[$word])) {
+unset($this->links[$word]);
+}
+
+            Posts::i()->addRevision();
         }
 
         return $id;
     }
 
     public function edit($id, $word) {
-        return $this->setvalue($id, 'word', $word);
+        return $this->setValue($id, 'word', $word);
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
-
-        $this->itemsposts->deleteitem($id);
+        $this->itemsposts->deleteItem($id);
         return parent::delete($id);
     }
 
-    public function deleteword($word) {
+    public function deleteWord($word) {
         if ($id = $this->indexof('word', $word)) {
  return $this->delete($id);
 }
-
-
     }
 
     public function getWord($word) {
         if ($id = $this->add($word, 0)) {
             return '$wikiwords.word_' . $id;
         }
+
         return '';
     }
 
-    public function getWordlink($word) {
+    public function getWordLink($word) {
         $word = trim($word);
         if (isset($this->links[$word])) {
  return $this->links[$word];
 }
 
-
         if ($id = $this->add($word, 0)) {
-            return $this->getlink($id);
+            return $this->getLink($id);
         }
+
         return $word;
     }
 
-    public function fixpost(tpost $post) {
-        if (count($this->fix) == 0) {
+    public function fixPost(Post $post) {
+        if (!count($this->fix)) {
  return;
 }
-
 
         foreach ($this->fix as $id => $wikipost) {
             if ($post == $wikipost) {
@@ -167,21 +184,21 @@ class twikiwords extends titems {
             }
         }
 
-        tposts::i()->addrevision();
+        Posts::i()->addrevision();
     }
 
     public function postdeleted($idpost) {
         if (count($this->itemsposts->deletepost($idpost)) > 0) {
-            tposts::i()->addrevision();
+            Posts::i()->addRevision();
         }
     }
 
-    public function beforefilter($post, &$content, &$cancel) {
-        $this->createwords($post, $content);
-        $this->replacewords($content);
+    public function beforeFilter($post, &$content, &$cancel) {
+        $this->createWords($post, $content);
+        $this->replaceWords($content);
     }
 
-    public function createwords($post, &$content) {
+    public function createWords($post, &$content) {
         $result = array();
         if (preg_match_all('/\[wiki\:(.*?)\]/im', $content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
@@ -190,7 +207,7 @@ class twikiwords extends titems {
                     $result[] = $id;
                     if ($post->id == 0) {
                         $this->fix[$id] = $post;
-                        $post->onid = array(
+                        $post->onId = array(
                             $this,
                             'fixpost'
                         );
@@ -199,10 +216,11 @@ class twikiwords extends titems {
                 }
             }
         }
+
         return $result;
     }
 
-    public function replacewords(&$content) {
+    public function replaceWords(&$content) {
         $result = array();
         if (preg_match_all('/\[\[(.*?)\]\]/i', $content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
@@ -214,6 +232,7 @@ class twikiwords extends titems {
                 }
             }
         }
+
         return $result;
     }
 

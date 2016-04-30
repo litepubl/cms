@@ -7,41 +7,47 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\wikiwords;
 use litepubl\core\DBManager;
 use litepubl\view\Filter;
+use litepubl\view\AutoVars;
+use litepubl\post\Posts;
+use litepubl\view\Parser;
 
-function twikiwordsInstall($self) {
-    if ($self->dbversion) {
+function WikiInstall($self) {
         $manager = DBManager::i();
         $manager->createtable($self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
     `word` text NOT NULL,
     PRIMARY KEY  (`id`)");
 
-        $manager->createtable($self->itemsposts->table, file_get_contents( $self->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'items.posts.sql'));
-    }
+        $manager->createtable($self->itemsposts->table, file_get_contents( $self->getApp()->paths->lib
+ .  'core/install/sql/ItemsPosts.sql');
 
     $filter = Filter::i();
     $filter->beforecontent = $self->beforefilter;
 
-    $posts = tposts::i();
+    $posts = Posts::i();
     $posts->deleted = $self->postdeleted;
 
-     $self->getApp()->classes->classes['wikiwords'] = get_class($self);
-     $self->getApp()->classes->save();
+$vars = AutoVars::i();
+$vars->items['wiki'] = get_class($self);
+$vars->save();
+
+Parser::i()->addtags('plugins/wikiwords/resource/theme.txt', 'plugins/wikiwords/resource/theme.ini');
 }
 
-function twikiwordsUninstall($self) {
-    unset( $self->getApp()->classes->classes['wikiword']);
-     $self->getApp()->classes->save();
+function WikiUninstall($self) {
+$vars = AutoVars::i();
+unset($vars->items['wiki']);
+$vars->save();
 
     $filter = Filter::i();
     $filter->unbind($self);
 
-    tposts::unsub($self);
-    if ($self->dbversion) {
+    Posts::unsub($self);
         $manager = DBManager::i();
         $manager->deletetable($self->table);
         $manager->deletetable($self->itemsposts->table);
-    }
+
+Parser::i()->removeTags('plugins/wikiwords/resource/theme.txt', 'plugins/wikiwords/resource/theme.ini');
 }

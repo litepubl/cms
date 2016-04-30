@@ -263,4 +263,5 @@ return [
 'tticket' => 'litepubl\plugins\tickets\Ticket',
 'ttickets' => 'litepubl\plugins\tickets\Tickets',
 
+'twikiwords' => 'litepubl\plugins\wikiwords\Wiki',
 ];

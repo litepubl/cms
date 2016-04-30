@@ -15,15 +15,15 @@ use \litepubl\core\AppTrait;
 
     public $data;
     public $callbacks;
-    public $callback_params;
+    public $callbackParams;
 
     public static function i() {
-        return  $this->getApp()->classes->neIinstance(get_called_class());
+        return  $this->getApp()->classes->newInstance(get_called_class());
     }
 
     public function __construct($thisthis = null) {
         $this->callbacks = array();
-        $this->callback_params = array();
+        $this->callbackParams = array();
 
         if (!isset(Base::$defaultargs)) {
             Base::set_defaultargs();
@@ -48,12 +48,9 @@ $this->data['$this'] = $thisthis;
  return;
 }
 
-
         if (is_array($value)) {
  return;
 }
-
-
 
         if (!is_string($value) && is_callable($value)) {
             $this->callbacks['$' . $name] = $value;
@@ -82,12 +79,17 @@ $this->data['$this'] = $thisthis;
             }
         }
 
-        if (isset($a['title']) && !isset($a['text'])) $this->__set('text', $a['title']);
-        if (isset($a['text']) && !isset($a['title'])) $this->__set('title', $a['text']);
+        if (isset($a['title']) && !isset($a['text'])) {
+$this->__set('text', $a['title']);
+}
+
+        if (isset($a['text']) && !isset($a['title'])) {
+$this->__set('title', $a['text']);
+}
     }
 
     public function parse($s) {
-        return Theme::i()->parsearg($s, $this);
+        return Theme::i()->parseArg($s, $this);
     }
 
     public function callback($s) {
@@ -95,9 +97,7 @@ $this->data['$this'] = $thisthis;
  return $s;
 }
 
-
-
-        $params = $this->callback_params;
+        $params = $this->callbackParams;
         array_unshift($params, $this);
 
         foreach ($this->callbacks as $tag => $callback) {

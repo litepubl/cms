@@ -206,7 +206,7 @@ $s = strtr($s, [
 'Schema::getView' => 'Schema::getSchema',
 'childdata' => 'childData',
 'childtable' => 'childTable',
-
+'itemexists' => 'itemExists',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');

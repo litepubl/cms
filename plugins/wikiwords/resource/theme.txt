@@ -1,0 +1,18 @@
+﻿wiki.word = [
+<span class="wikiword">$word</span>
+]
+
+wiki.link = [
+<a href="$post.link#wikiword-$id">$word</a>
+]
+wiki.links = [
+<span class="dropdown wikiwords">
+  <a href="#wikiword-links-$id" class="dropdown-toggle" id="wikiword-$id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    $word
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" id="wikiword-links-$id" aria-labelledby="wikiword-$id">
+$item = [<li><a href="$post.link#wikiword-$id">$post.title</a></li>]
+</ul>
+</span>
+]
