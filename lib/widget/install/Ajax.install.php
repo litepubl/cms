@@ -9,13 +9,14 @@
 
 namespace litepubl\widget;
 use litepubl\pages\RobotsTxt;
+uuse litepubl;
 
 function AjaxInstall($self) {
-     $self->getApp()->router->addget('/getwidget.htm', get_class($self));
+litepubl::$app->router->addget($self->url, get_class($self));
     $robot  = RobotsTxt::i();
-    $robot->AddDisallow('/getwidget.htm');
+    $robot->AddDisallow($self->url);
 }
 
 function AjaxUninstall($self) {
-     $self->getApp()->router->unbind($self);
+litepubl::$app->router->unbind($self);
 }

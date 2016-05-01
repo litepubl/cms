@@ -105,35 +105,4 @@ $tml = '.' . $tml;
         return $this->theme->parsearg($this->theme->templates[$tml], $args);
     }
 
-    public static function getWidgetpath($path) {
-        if ($path === '') {
- return '';
-}
-
-        switch ($path) {
-            case '.items':
-                return '.items';
-
-            case '.items.item':
-            case '.item':
-                return '.item';
-
-            case '.items.item.subcount':
-            case '.item.subcount':
-            case '.subcount':
-                return '.subcount';
-
-            case '.items.item.subitems':
-            case '.item.subitems':
-            case '.subitems':
-                return '.subitems';
-
-            case '.classes':
-            case '.items.classes':
-                return '.classes';
-        }
-
-        return false;
-    }
-
 }

@@ -128,18 +128,4 @@ return $i;
         }
     }
 
-    public function getContext($class) {
-$app = $this->getApp();
-        if ( $app->context->view instanceof $class) {
- return  $app->context->view;
-        } elseif ( $app->context->model instanceof $class) {
- return  $app->context->model;
-
-}
-
-        //ajax
-        $widgets = Widgets::i();
-        return  $app->router->getidcontext($widgets->idUrlContext);
-    }
-
 }

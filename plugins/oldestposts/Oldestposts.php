@@ -10,6 +10,7 @@
 namespace litepubl\plugins\oldestposts;
 use litepubl\core\Str;
 use litepubl\post\Posts;
+use litepubl\widget\Widgets;
 use litepubl\widget\View;
 use litepubl\view\Lang;
 
@@ -30,10 +31,15 @@ class Oldestposts extends \litepubl\widget\Depended
     }
 
     public function getContent($id, $sidebar) {
-        $post = $this->getcontext('\litepubl\post\Post');
+        $post = Widgets::i()->findcontext('litepubl\post\Post');
+if (!$post) {
+return '';
+}
+
         $posts = Posts::i();
-            $items = $posts->finditems("status = 'published' and posted < '$post->Str::sqlDate' ", ' order by posted desc limit ' . $this->maxcount);
-        if (count($items) == 0) {
+            $items = $posts->finditems("status = 'published' and posted < '$post->sqlDate' ", ' order by posted desc limit ' . $this->maxcount);
+
+        if (!count($items)) {
  return '';
 }
 

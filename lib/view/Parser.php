@@ -186,7 +186,7 @@ class Parser extends BaseParser
         $this->error("The '$child' not found in path '$name'");
     }
 
-    private function setWidgetvalue($path, $value) {
+    private function setWidgetValue($path, $value) {
         if (!strpos($path, '.')) {
  return;
 }
@@ -203,10 +203,12 @@ class Parser extends BaseParser
 
         if (($widgetname != 'widget') && (!in_array($widgetname, Theme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
 
-        $path = Theme::getwidgetpath(empty($m[3]) ? '' : $m[3]);
-        if ($path === false) $this->error("Unknown '$path' widget path");
+        $path = $this->getWidgetPath(empty($m[3]) ? '' : $m[3]);
+        if ($path === false) {
+$this->error("Unknown '$path' widget path");
+}
 
-        $this->setwidgetitem($widgetname, $path, $value);
+        $this->setWidgetItem($widgetname, $path, $value);
 
         if ($widgetname == 'widget') {
             foreach (Theme::getwidgetnames() as $widgetname) {
@@ -428,6 +430,37 @@ class Parser extends BaseParser
             }
         }
         return $result;
+    }
+
+    public function getWidgetPath($path) {
+        if ($path === '') {
+ return '';
+}
+
+        switch ($path) {
+            case '.items':
+                return '.items';
+
+            case '.items.item':
+            case '.item':
+                return '.item';
+
+            case '.items.item.subcount':
+            case '.item.subcount':
+            case '.subcount':
+                return '.subcount';
+
+            case '.items.item.subitems':
+            case '.item.subitems':
+            case '.subitems':
+                return '.subitems';
+
+            case '.classes':
+            case '.items.classes':
+                return '.classes';
+        }
+
+        return false;
     }
 
 }

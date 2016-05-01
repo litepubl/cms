@@ -16,7 +16,7 @@ public function request(Context $context)
         $response->cache = false;
         $id = (int) $context->request->getArg('id');
         $sidebar = (int) $context->request->getArg('sidebar');
-        $this->idUrlContext = (int) $context->request->getArg('idurl');
+        $idurl = (int) $context->request->getArg('idurl');
 
 $widgets = Widgets::i();
         if (!$id || !$widgets->itemExists($id)) {
@@ -28,9 +28,20 @@ $widgets = Widgets::i();
 $themename = Schema::i(1)->themename;
 }
 
+        try {
         $theme = Theme::getTheme($themename);
 
-        try {
+$widgets->onFindContextCallback = function($class) (use $idurl) {
+if ($item = litepubl::$app->router->getItem($idurl))
+&& (is_a($class, $item['class'], true)) {
+if (is_a($item['class'], 'litepubl\core\Item', true)) {
+return ($item['class'])::i($item['arg']);
+}else {
+return litepubl::$app->classes->getInstance($item['class']);
+}
+}
+});
+
             $response->body= $widgets->getWidgetContent($id, $sidebar);
         }
         catch(\Exception $e) {

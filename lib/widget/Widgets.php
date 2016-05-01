@@ -22,7 +22,7 @@ use \litepubl\core\PoolStorageTrait;
     public $classes;
     public $currentSidebar;
     public $idwidget;
-    public $idUrlContext;
+    public $onFindContextCallback;
 
     protected function create() {
         $this->dbversion = false;
@@ -30,7 +30,6 @@ use \litepubl\core\PoolStorageTrait;
         $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
-        $this->idUrlContext = 0;
         $this->addMap('classes', array());
     }
 
@@ -400,7 +399,6 @@ $id,
     public function getWidgetContent($id, $sidebar) {
         if (!isset($this->items[$id])) {
             return false;
-
         }
 
         switch ($this->items[$id]['cache']) {
@@ -442,12 +440,26 @@ $id,
                 if ($id == $item['id']) {
  return $this->classes[$class][$i];
 }
-
-
             }
         }
         $item = null;
         return $item;
     }
+
+public function findContext($class)
+{
+$app = $this->getApp();
+        if ( $app->context->view instanceof $class) {
+ return  $app->context->view;
+        } elseif ( $app->context->model instanceof $class) {
+ return  $app->context->model;
+}
+
+if (is_callable($this->onFindContextCallback)) {
+return call_user_func_array($this->onFindContextCallback, [$class]);
+    }
+
+return false;
+}
 
 }
