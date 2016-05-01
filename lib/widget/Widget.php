@@ -102,8 +102,8 @@ return $view->getidwidget($id, $title, $content, $this->template, $sidebar);
 
             case 'include':
                 $sidebar = static ::findsidebar($id);
-                $filename = static ::getcachefilename($id, $sidebar);
-                 $this->getApp()->router->cache->set($filename, $this->getcontent($id, $sidebar));
+                $filename = static ::getCacheFilename($id, $sidebar);
+                 $this->getApp()->cache->setString($filename, $this->getContent($id, $sidebar));
                 break;
         }
     }
@@ -129,14 +129,17 @@ return $i;
     }
 
     public function getContext($class) {
-        if ( $this->getApp()->router->context instanceof $class) {
- return  $this->getApp()->router->context;
-}
+$app = $this->getApp();
+        if ( $app->context->view instanceof $class) {
+ return  $app->context->view;
+        } elseif ( $app->context->model instanceof $class) {
+ return  $app->context->model;
 
+}
 
         //ajax
         $widgets = Widgets::i();
-        return  $this->getApp()->router->getidcontext($widgets->idurlcontext);
+        return  $app->router->getidcontext($widgets->idUrlContext);
     }
 
 }

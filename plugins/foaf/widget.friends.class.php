@@ -11,7 +11,7 @@ namespace litepubl;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\core\Plugins;
-use litepubl\view\Theme;
+use litepubl\widget\View;
 
 class tfriendswidget extends twidget {
 
@@ -41,12 +41,11 @@ class tfriendswidget extends twidget {
  return '';
 }
 
-
         $result = '';
         $url =  $this->getApp()->site->url;
         $redirlink =  $this->getApp()->site->url . $this->redirlink .  $this->getApp()->site->q . 'id=';
-        $theme = Theme::i();
-        $tml = $theme->getwidgetitem('friends', $sidebar);
+$view = new View();
+        $tml = $view->getItem('friends', $sidebar);
         $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
@@ -59,10 +58,10 @@ class tfriendswidget extends twidget {
             if ($this->redir && !Str::begin($item['url'], $url)) {
                 $args->url = $redirlink . $id;
             }
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $view->theme->parsearg($tml, $args);
         }
 
-        return $theme->getwidgetcontent($result, 'friends', $sidebar);
+        return $view->getContent($result, 'friends', $sidebar);
     }
 
     public function request($arg) {

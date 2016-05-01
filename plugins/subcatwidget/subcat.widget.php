@@ -8,7 +8,7 @@
 **/
 
 namespace litepubl;
-use litepubl\view\Theme;
+use litepubl\widget\View;
 
 class tsubcatwidget extends twidget {
     public $items;
@@ -100,11 +100,11 @@ class tsubcatwidget extends twidget {
 
 
         $item = $this->items[$id];
-        $theme = Theme::i();
+$view = new View();
         return $this->tags->getsortedcontent(array(
-            'item' => $theme->getwidgetitem($item['template'], $sidebar) ,
-            'subcount' => $theme->getwidgettml($sidebar, $item['template'], 'subcount') ,
-            'subitems' => $item['showsubitems'] ? $theme->getwidgettml($sidebar, $item['template'], 'subitems') : '',
+            'item' => $view->getItem($item['template'], $sidebar) ,
+            'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
+            'subitems' => $item['showsubitems'] ? $view->getTml($sidebar, $item['template'], 'subitems') : '',
         ) , $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']);
     }
 

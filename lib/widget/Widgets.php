@@ -178,6 +178,7 @@ $options = $this->getApp()->options;
         if ($options->admincookie) {
             $this->onadminlogged($items,                $sidebar           );
         }
+
 /*
         if ( $router->adminpanel) {
             $this->onadminpanel($items, $sidebar);
@@ -337,37 +338,44 @@ $str->value = $content;
     }
 
     public function getAjax($id, $sidebar) {
-        $theme = Theme::i();
-        $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
+        $view = new View();
+        $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
         $content = "<!--widgetcontent-$id-->";
-        return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
+        return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
     public function getInline($id, $sidebar) {
-        $theme = Theme::i();
-        $title = $theme->getajaxtitle($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
+$view = new View();
+        $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
         if ('cache' == $this->items[$id]['cache']) {
             $cache = Cache::i();
-            $content = $cache->getcontent($id, $sidebar);
+            $content = $cache->getContent($id, $sidebar);
         } else {
-            $widget = $this->getwidget($id);
-            $content = $widget->getcontent($id, $sidebar);
+            $widget = $this->getWidget($id);
+            $content = $widget->getContent($id, $sidebar);
         }
 
         $content = sprintf('<!--%s-->', $content);
-        return $theme->getidwidget($id, $title, $content, $this->items[$id]['template'], $sidebar);
+        return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
-    private function includewidget($id, $sidebar) {
-        $filename = Widget::getcachefilename($id, $sidebar);
-        if (! $this->getApp()->router->cache->exists($filename)) {
-            $widget = $this->getwidget($id);
-            $content = $widget->getcontent($id, $sidebar);
-             $this->getApp()->router->cache->set($filename, $content);
+    private function includeWidget($id, $sidebar) {
+        $filename = Widget::getCacheFilename($id, $sidebar);
+$cache = $this->getApp()->cache;
+        if (! $cache->exists($filename)) {
+            $widget = $this->getWidget($id);
+            $content = $widget->getContent($id, $sidebar);
+             $cache->setString($filename, $content);
         }
 
-        $theme = Theme::i();
-        return $theme->getidwidget($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$router->cache->get('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
+$view = new View();
+        return $view->getWidgetId(
+$id,
+ $this->items[$id]['title'],
+ "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n",
+ $this->items[$id]['template'],
+ $sidebar
+);
     }
 
     private function getCode($id, $sidebar) {
@@ -412,7 +420,10 @@ $response->body = $mesg;
 }
 
         $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
-        if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !Theme::exists($themename)) $themename = Schema::i(1)->themename;
+        if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !Theme::exists($themename)) {
+$themename = Schema::i(1)->themename;
+}
+
         $theme = Theme::getTheme($themename);
 
         try {
@@ -423,7 +434,7 @@ $response->body = $mesg;
         }
     }
 
-    public function getWidgetcontent($id, $sidebar) {
+    public function getWidgetContent($id, $sidebar) {
         if (!isset($this->items[$id])) {
             return false;
 
@@ -437,12 +448,12 @@ $response->body = $mesg;
 
 
             case 'include':
-                $filename = Widget::getcachefilename($id, $sidebar);
-                $result =  $this->getApp()->router->cache->get($filename);
+                $filename = Widget::getCacheFilename($id, $sidebar);
+                $result =  $this->getApp()->cache->getString($filename);
                 if (!$result) {
-                    $widget = $this->getwidget($id);
-                    $result = $widget->getcontent($id, $sidebar);
-                     $this->getApp()->router->cache->set($filename, $result);
+                    $widget = $this->getWidget($id);
+                    $result = $widget->getContent($id, $sidebar);
+                     $this->getApp()->cache->setString($filename, $result);
                 }
                 break;
 

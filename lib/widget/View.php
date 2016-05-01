@@ -58,7 +58,7 @@ $vars->post = Post::i($id);
         return $this->theme->parsearg($this->getTml($sidebar, $template, '') , $args);
     }
 
-    public function getIdwidget($id, $title, $content, $template, $sidebar) {
+    public function getWidgetId($id, $title, $content, $template, $sidebar) {
         $args = new Args();
         $args->id = $id;
         $args->title = $title;
@@ -97,12 +97,12 @@ $tml = '.' . $tml;
         $this->error("Unknown widget '$name' and template '$tml' in $index sidebar");
     }
 
-    public function getAjaxtitle($id, $title, $sidebar, $tml) {
+    public function getAjax($id, $title, $sidebar, $tml) {
         $args = new Args();
         $args->title = $title;
         $args->id = $id;
         $args->sidebar = $sidebar;
-        return $this->parsearg($this->templates[$tml], $args);
+        return $this->theme->parsearg($this->theme->templates[$tml], $args);
     }
 
     public static function getWidgetpath($path) {
