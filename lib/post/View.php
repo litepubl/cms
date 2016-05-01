@@ -24,7 +24,6 @@ public $context;
     private $nextPost;
     private $themeInstance;
 
-
 protected function create()
 {
 parent::create();
@@ -395,7 +394,7 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
     public function getContExcerpt($tml_name) {
         Theme::$vars['post'] = $this;
         //no use self theme because post in other context
-        $theme = $this->factory->theme;
+        $theme = Theme::i();
         $tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name . '.excerpt';
         return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
     }
@@ -407,7 +406,7 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
         return '';
     }
 
-    public function onrssitem($item) {
+    public function onRssItem($item) {
     }
 
     public function getPrevNext() {

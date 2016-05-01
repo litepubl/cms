@@ -3,6 +3,8 @@
 namespace litepubl\post;
 use litepubl\view\Theme;
 use litepubl\view\Args;
+use litepubl\view\Vars;
+use litepubl\view\Lang;
 
 class Announce extends \litepubl\core\Events
 {
@@ -27,29 +29,35 @@ class Announce extends \litepubl\core\Events
         $result = '';
         $tml_key = $this->keyanounce($postanounce);
         Posts::i()->loaditems($items);
+$vars = new Vars();
+$vars->lang = Lang::i('default');
+$view = new View();
+$vars->post = $view;
 
-        static ::$vars['lang'] = Lang::i('default');
         foreach ($items as $id) {
             $post = Post::i($id);
-            $result.= $post->getcontexcerpt($tml_key);
+$view->setPost($post);
+            $result.= $view->getContExcerpt($tml_key);
             // has $author.* tags in tml
-            if (isset(static ::$vars['author'])) {
-                unset(static ::$vars['author']);
+            if (isset($vars->author)) {
+                unset($vars->author);
             }
         }
 
-        if ($tml = $this->templates['content.excerpts' . ($tml_key == 'excerpt' ? '' : '.' . $tml_key) ]) {
-            $result = str_replace('$excerpt', $result, $this->parse($tml));
+        if ($tml = $this->theme->templates['content.excerpts' . ($tml_key == 'excerpt' ? '' : '.' . $tml_key) ]) {
+            $result = str_replace('$excerpt', $result, $this->theme->parse($tml));
         }
 
-        unset(static ::$vars['post']);
         return $result;
     }
 
-    public function getPostsnavi(array $items, $url, $count, $postanounce, $perpage) {
-        $result = $this->getposts($items, $postanounce);
-        if (!$perpage) $perpage =  $this->getApp()->options->perpage;
-        $result.= $this->getpages($url,  $this->getApp()->router->page, ceil($count / $perpage));
+    public function getPostsNavi(array $items, $url, $count, $postanounce, $perpage) {
+        $result = $this->getPosts($items, $postanounce);
+        if (!$perpage) {
+$perpage =  $this->getApp()->options->perpage;
+}
+
+        $result.= $this->theme->getPages($url,  $this->getApp()->router->page, ceil($count / $perpage));
         return $result;
     }
 
