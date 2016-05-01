@@ -11,6 +11,7 @@ namespace litepubl\view;
 use litepubl\utils\Filer;
 use litepubl\debug\LogException;
 use litepubl\post\Post;
+use litepubl\post\View as PostView;
 use litepubl\core\Str;
 
 class Base extends \litepubl\core\Events
@@ -140,9 +141,12 @@ $site = static::getAppInstance()->site;
                 return lang::i();
 
             case 'post':
-                $model = isset( $this->getApp()->router->model) ?  $this->getApp()->router->model : MainView::i()->model;
-                if ($model instanceof Post) {
-                    return $model;
+if ($context = $this->getApp()->context) {
+if (isset($context->view and $context->view instanceof PostView) {
+return $context->view;
+} elseif (isset($context->model) && $context->model instanceof Post) {
+return $context->model->getView();
+}
                 }
                 break;
 

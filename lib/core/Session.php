@@ -12,10 +12,12 @@ namespace litepubl\core;
 class Session
  {
     public static $initialized = false;
+public $memcache;
     public $prefix;
     public $lifetime;
 
-    public function __construct() {
+    public function __construct($memcache) {
+$this->memcache = $memcache;
         $this->prefix = 'ses-' .  $this->getApp()->domain . '-';
         $this->lifetime = 3600;
         $truefunc = array(
@@ -39,15 +41,15 @@ class Session
     }
 
     public function read($id) {
-        return  $this->getApp()->memcache->get($this->prefix . $id);
+        return  $this->memcache->get($this->prefix . $id);
     }
 
     public function write($id, $data) {
-        return  $this->getApp()->memcache->set($this->prefix . $id, $data, false, $this->lifetime);
+        return  $this->memcache->set($this->prefix . $id, $data, false, $this->lifetime);
     }
 
     public function destroy($id) {
-        return  $this->getApp()->memcache->delete($this->prefix . $id);
+        return  $this->memcache->delete($this->prefix . $id);
     }
 
     public static function init($usecookie = false) {
@@ -65,11 +67,10 @@ class Session
         }
 
         if ( $this->getApp()->memcache) {
-            return static::iGet(__class__);
+            return static::iGet(get_called_class());
         } else {
             //ini_set('session.gc_probability', 1);
-            
-        }
+                 }
     }
 
     public static function start($id) {
