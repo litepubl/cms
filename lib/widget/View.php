@@ -14,19 +14,6 @@ public function __construct(Theme $theme = null)
 $this->theme = $theme ? $theme :: Theme::context();
 }
 
-    public static function getWidgetnames() {
-        return array(
-            'categories',
-            'tags',
-            'archives',
-            'links',
-            'posts',
-            'comments',
-            'friends',
-            'meta'
-        );
-    }
-
     public function getPosts(array $items, $sidebar, $tml) {
         if (!count($items)) {
  return '';

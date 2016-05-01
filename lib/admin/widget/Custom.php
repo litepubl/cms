@@ -9,7 +9,7 @@
 
 namespace litepubl\admin\widget;
 use litepubl\widget\Widgets as WidgetItems;
-use litepubl\view\Theme;
+use litepubl\view\Parser;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
 
@@ -27,7 +27,7 @@ return $this->admin;
         $lang = $this->lang;
 $lang->section = 'widgets';
         $result['widget'] = $lang->defaulttemplate;
-        foreach (Theme::getwidgetnames() as $name) {
+        foreach (Parser::getWidgetNames() as $name) {
             $result[$name] = $lang->$name;
         }
 

@@ -201,7 +201,9 @@ class Parser extends BaseParser
 
 
 
-        if (($widgetname != 'widget') && (!in_array($widgetname, Theme::getwidgetnames()))) $this->error("Unknown widget '$widgetname' name");
+        if (($widgetname != 'widget') && (!in_array($widgetname, static::getWidgetNames()))) {
+$this->error("Unknown widget '$widgetname' name");
+}
 
         $path = $this->getWidgetPath(empty($m[3]) ? '' : $m[3]);
         if ($path === false) {
@@ -211,7 +213,7 @@ $this->error("Unknown '$path' widget path");
         $this->setWidgetItem($widgetname, $path, $value);
 
         if ($widgetname == 'widget') {
-            foreach (Theme::getwidgetnames() as $widgetname) {
+            foreach (static::getWidgetNames() as $widgetname) {
                 if ((($widgetname == 'posts') || ($widgetname == 'comments')) && ($path == '.item')) {
  continue;
 }
@@ -345,7 +347,7 @@ $this->error("Unknown '$path' widget path");
         $sidebars = & $templates['sidebars'];
         for ($i = 0; $i < count($sidebars); $i++) {
             $sidebar = & $sidebars[$i];
-            foreach (Theme::getwidgetnames() as $widgetname) {
+            foreach (static::getWidgetNames() as $widgetname) {
                 foreach (array(
                     '',
                     '.items',
@@ -461,6 +463,19 @@ $this->error("Unknown '$path' widget path");
         }
 
         return false;
+    }
+
+    public static function getWidgetNames() {
+        return array(
+            'categories',
+            'tags',
+            'archives',
+            'links',
+            'posts',
+            'comments',
+            'friends',
+            'meta'
+        );
     }
 
 }
