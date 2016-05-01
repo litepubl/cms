@@ -58,4 +58,5 @@ $man->alter($table, "change idview idschema int unsigned NOT NULL default '1'");
 }
 }
 
+//router: replace url '/getwidget.htm to litepubl\widget\Ajax
 }

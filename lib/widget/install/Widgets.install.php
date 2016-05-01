@@ -8,18 +8,12 @@
 **/
 
 namespace litepubl\widget;
-use litepubl\pages\RobotsTxt;
 
 function WidgetsInstall($self) {
-     $self->getApp()->router->addget('/getwidget.htm', get_class($self));
-    $robot  = RobotsTxt::i();
-    $robot->AddDisallow('/getwidget.htm');
-
     install_std_widgets($self);
 }
 
 function WidgetsUninstall($self) {
-     $self->getApp()->router->unbind($self);
 }
 
 function install_std_widgets($widgets) {

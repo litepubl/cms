@@ -9,15 +9,13 @@
 
 namespace litepubl\widget;
     use litepubl\core\Context;
-    use litepubl\core\Response;
 use litepubl\view\Schema;
-use litepubl\view\Theme;
 use litepubl\view\ViewInterface;
 use litepubl\core\Arr;
 use litepubl\core\Str;
 use ArrayObject;
 
-class Widgets extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
+class Widgets extends \litepubl\core\Items
 {
 use \litepubl\core\PoolStorageTrait;
 
@@ -397,41 +395,6 @@ $id,
 
         }
         return false;
-    }
-
-    private static function getGet($name) {
-        return isset($_GET[$name]) ? (int)$_GET[$name] : false;
-    }
-
-    private function errorRequest(Response $response, $mesg) {
-$response->status = 400;
-$response->body = $mesg;
-    }
-
-    public function request(Context $context)
-    {
-    $response = $context->response;
-        $response->cache = false;
-        $id = static ::getget('id');
-        $sidebar = static ::getget('sidebar');
-        $this->idUrlContext = static ::getget('idurl');
-        if (($id === false) || ($sidebar === false) || !$this->itemexists($id)) {
- return $this->errorRequest('Invalid params');
-}
-
-        $themename = isset($_GET['themename']) ? trim($_GET['themename']) : Schema::i(1)->themename;
-        if (!preg_match('/^\w[\w\.\-_]*+$/', $themename) || !Theme::exists($themename)) {
-$themename = Schema::i(1)->themename;
-}
-
-        $theme = Theme::getTheme($themename);
-
-        try {
-            $response->body= $this->getwidgetcontent($id, $sidebar);
-        }
-        catch(\Exception $e) {
-            return $this->errorRequest('Cant get widget content');
-        }
     }
 
     public function getWidgetContent($id, $sidebar) {

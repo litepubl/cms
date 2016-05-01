@@ -68,6 +68,11 @@ public function getPost()
 return $_POST;
 }
 
+public function getArg($name, $default = false)
+{
+return isset($_GET[$name]) ? $_GET[$name] : $default;
+}
+
     public function getNextPage() {
         $url = $this->itemRoute['url'];
         return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
