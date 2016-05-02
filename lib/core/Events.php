@@ -39,13 +39,13 @@ parent::create();
         $this->addmap('coclasses', array());
     }
 
-    public function assignmap() {
+    public function assignMap() {
         foreach ($this->map as $propname => $key) {
             $this->$propname = & $this->data[$key];
         }
     }
 
-    public function afterload() {
+    public function afterLoad() {
         $this->assignmap();
 
         foreach ($this->coclasses as $coclass) {
@@ -55,7 +55,7 @@ parent::create();
         parent::afterload();
     }
 
-    protected function addmap($name, $value) {
+    protected function addMap($name, $value) {
         $this->map[$name] = $name;
         $this->data[$name] = $value;
         $this->$name = & $this->data[$name];
@@ -68,7 +68,7 @@ parent::create();
         }
     }
 
-    public function eventexists($name) {
+    public function eventExists($name) {
         return in_array($name, $this->eventnames);
     }
 
@@ -111,12 +111,12 @@ parent::create();
         return parent::__isset($name) || in_array($name, $this->eventnames);
     }
 
-    protected function addevents() {
+    protected function addEvents() {
         $a = func_get_args();
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
 
-    public function callevent($name, $params) {
+    public function callEvent($name, $params) {
         if (!isset($this->events[$name])) {
             return '';
         }
@@ -167,7 +167,7 @@ parent::create();
         return $result;
     }
 
-    public static function cancelevent($result) {
+    public static function cancelEvent($result) {
         throw new CancelEvent($result);
     }
 
@@ -175,7 +175,7 @@ parent::create();
         return $this->addevent($name, $params['class'], $params['func']);
     }
 
-    public function addevent($name, $class, $func, $once = false) {
+    public function addEvent($name, $class, $func, $once = false) {
         if (!in_array($name, $this->eventnames)) {
             return $this->error(sprintf('No such %s event', $name));
         }

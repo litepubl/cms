@@ -1,28 +1,41 @@
 <?php
 
 namespace litepubl\tag;
+use litepubl\core\Context;
+use litepubl\view\Theme;
+use litepubl\view\Args;
+use litepubl\view\Schemes;
+use litepubl\view\Lang;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-    public $id;
+    private $id;
+private $tags;
     private $_idposts;
+private $context;
+
     protected function create() {
         parent::create();
         $this->_idposts = array();
 }
 
-    public function getSortedcontent(array $tml, $parent, $sortname, $count, $showcount) {
-        $sorted = $this->getsorted($parent, $sortname, $count);
-        if (count($sorted) == 0) {
- return '';
+public function setTags(Common $tags)
+{
+$this->tags = $tags;
 }
 
+    public function getSortedContent(array $tml, $parent, $sortname, $count, $showcount) {
+        $sorted = $this->getSorted($parent, $sortname, $count);
+        if (!count($sorted)) {
+ return '';
+}
 
         $result = '';
         $theme = Theme::i();
         $args = new Args();
         $args->rel = $this->PermalinkIndex;
         $args->parent = $parent;
+
         foreach ($sorted as $id) {
             $item = $this->getitem($id);
             $args->add($item);
@@ -31,10 +44,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $args->subitems = $tml['subitems'] ? $this->getsortedcontent($tml, $id, $sortname, $count, $showcount) : '';
             $result.= $theme->parsearg($tml['item'], $args);
         }
+
         if ($parent == 0) {
  return $result;
 }
-
 
         $args->parent = $parent;
         $args->item = $result;

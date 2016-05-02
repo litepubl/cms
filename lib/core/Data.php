@@ -40,7 +40,8 @@ return litepubl::$app;
         $this->coclasses = array();
 
         if (!$this->basename) {
-            $this->basename = ltrim(basename(get_class($this)) , 'tT');
+$class = get_class($this);
+            $this->basename = substr($class, strrpos($class, '\\') + 1);
         }
 
         $this->create();
@@ -131,7 +132,7 @@ return true;
         throw new \Exception($Msg, $code);
     }
 
-    public function getBasename() {
+    public function getBaseName() {
         return $this->basename;
     }
 

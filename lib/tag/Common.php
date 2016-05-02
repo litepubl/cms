@@ -9,12 +9,7 @@
 
 namespace litepubl\tag;
 use litepubl\core\ItemsPosts;
-use litepubl\core\Context;
-use litepubl\view\Theme;
-use litepubl\view\Args;
-use litepubl\view\Schemes;
 use litepubl\view\Schema;
-use litepubl\view\Lang;
 use litepubl\utils\LinkGenerator;
 use litepubl\core\Arr;
 use litepubl\view\Filter;
@@ -47,60 +42,67 @@ class Common extends \litepubl\core\Items
         $this->itemsposts = new ItemsPosts();
     }
 
+public function getView()
+{
+$view = View::i();
+$view->setTags($this);
+return $view;
+}
+
     public function loadAll() {
         //prevent double request
         if ($this->all_loaded) {
  return;
 }
 
-
         $this->all_loaded = true;
-        return parent::loadall();
+        return parent::loadAll();
     }
 
     public function select($where, $limit) {
-        if ($where != '') $where.= ' and ';
-        $db =  $this->getApp()->db;
+        if ($where) {
+$where.= ' and ';
+}
+
+        $db =  $this->db;
         $t = $this->thistable;
         $u = $db->urlmap;
-        $res = $db->query("select $t.*, $u.url from $t, $u
-    where $where $u.id = $t.idurl $limit");
+        $res = $db->query(
+"select $t.*, $u.url from $t, $u
+    where $where $u.id = $t.idurl $limit"
+);
+
         return $this->res2items($res);
     }
 
-    public function load() {
-        if (parent::load() && !$this->dbversion) {
-            $this->itemsposts->items = & $this->data['itemsposts'];
-        }
-    }
-
-
     public function getUrl($id) {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return $item['url'];
     }
 
-    public function postedited($idpost) {
-        $post = $this->factory->getpost((int)$idpost);
+    public function postEdited($idpost) {
+        $post = $this->factory->getPost((int)$idpost);
         $items = $post->{$this->postpropname};
         Arr::clean($items);
-        if (count($items)) $items = $this->db->idselect(sprintf('id in (%s)', implode(',', $items)));
-        $changed = $this->itemsposts->setitems($idpost, $items);
-        $this->updatecount($changed);
+        if (count($items)) {
+$items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
+}
+
+        $changed = $this->itemsposts->setItems($idpost, $items);
+        $this->updateCount($changed);
     }
 
-    public function postdeleted($idpost) {
-        $changed = $this->itemsposts->deletepost($idpost);
-        $this->updatecount($changed);
+    public function postDeleted($idpost) {
+        $changed = $this->itemsposts->deletePost($idpost);
+        $this->updateCount($changed);
     }
 
-    protected function updatecount(array $items) {
-        if (count($items) == 0) {
+    protected function updateCount(array $items) {
+        if (!count($items)) {
  return;
 }
 
-
-        $db =  $this->getApp()->db;
+        $db =  $this->db;
         //next queries update values
         $items = implode(',', $items);
         $thistable = $this->thistable;
@@ -108,17 +110,18 @@ class Common extends \litepubl\core\Items
         $itemprop = $this->itemsposts->itemprop;
         $postprop = $this->itemsposts->postprop;
         $poststable = $db->posts;
-        $list = $db->res2assoc($db->query("select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
-    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published'
-    group by $itemstable.$itemprop"));
+        $list = $db->res2assoc($db->query(
+"select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
+    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"
+));
 
         $db->table = $this->table;
         foreach ($list as $item) {
-            $db->setvalue($item['id'], 'itemscount', $item['itemscount']);
+            $db->setValue($item['id'], 'itemscount', $item['itemscount']);
         }
     }
 
-    public function getUrltype() {
+    public function getUrlType() {
         return 'normal';
     }
 
@@ -128,14 +131,14 @@ class Common extends \litepubl\core\Items
  return false;
 }
 
-
-        if ($id = $this->indexof('title', $title)) {
+        if ($id = $this->indexOf('title', $title)) {
  return $id;
 }
 
-
         $parent = (int)$parent;
-        if (($parent != 0) && !$this->itemexists($parent)) $parent = 0;
+        if ($parent && !$this->itemExists($parent)) {
+$parent = 0;
+}
 
         $url = LinkGenerator::i()->createurl($title, $this->PermalinkIndex, true);
         $schemes = Schemes::i();
@@ -157,7 +160,7 @@ class Common extends \litepubl\core\Items
         $id = $this->db->add($item);
         $this->items[$id] = $item;
         $idurl =  $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
-        $this->setvalue($id, 'idurl', $idurl);
+        $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
         $this->changed();
@@ -166,20 +169,18 @@ class Common extends \litepubl\core\Items
     }
 
     public function edit($id, $title, $url) {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['url'] == $url)) {
  return;
 }
 
-
         $item['title'] = $title;
-        if ($this->dbversion) {
-            $this->db->updateassoc(array(
+            $this->db->updateAssoc(array(
                 'id' => $id,
                 'title' => $title
             ));
-        }
 
+$app = $this->getApp();
         $linkgen = LinkGenerator::i();
         $url = trim($url);
         // try rebuild url
@@ -188,128 +189,116 @@ class Common extends \litepubl\core\Items
         }
 
         if ($item['url'] != $url) {
-            if (($urlitem =  $this->getApp()->router->find_item($url)) && ($urlitem['id'] != $item['idurl'])) {
+            if (($urlitem =  $app->router->queryItem($url)) && ($urlitem['id'] != $item['idurl'])) {
                 $url = $linkgen->MakeUnique($url);
             }
-             $this->getApp()->router->setidurl($item['idurl'], $url);
-             $this->getApp()->router->addredir($item['url'], $url);
+             $app->router->setIdUrl($item['idurl'], $url);
+             $app->router->addRedir($item['url'], $url);
             $item['url'] = $url;
         }
 
         $this->items[$id] = $item;
         $this->save();
         $this->changed();
-         $this->getApp()->cache->clear();
+         $app->cache->clear();
     }
 
     public function delete($id) {
         $item = $this->getitem($id);
          $this->getApp()->router->deleteitem($item['idurl']);
         $this->contents->delete($id);
-        $list = $this->itemsposts->getposts($id);
-        $this->itemsposts->deleteitem($id);
+        $list = $this->itemsposts->getPosts($id);
+        $this->itemsposts->deleteItem($id);
         parent::delete($id);
-        if ($this->postpropname) $this->itemsposts->updateposts($list, $this->postpropname);
+        if ($this->postpropname) {
+$this->itemsposts->updatePosts($list, $this->postpropname);
+}
+
         $this->changed();
          $this->getApp()->cache->clear();
     }
 
-    public function createnames($list) {
-        if (is_string($list)) $list = explode(',', trim($list));
+    public function createNames($list) {
+        if (is_string($list)) {
+$list = explode(',', trim($list));
+}
+
         $result = array();
-        $this->lock();
         foreach ($list as $title) {
             $title = Filter::escape($title);
             if ($title == '') {
  continue;
 }
 
-
             $result[] = $this->add(0, $title);
         }
-        $this->unlock();
+
         return $result;
     }
 
     public function getNames(array $list) {
-        $this->loaditems($list);
+        $this->loadItems($list);
         $result = array();
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
  continue;
 }
 
-
             $result[] = $this->items[$id]['title'];
         }
+
         return $result;
     }
 
     public function getLinks(array $list) {
-        if (count($list) == 0) {
+        if (!count($list)) {
  return array();
 }
 
-
-        $this->loaditems($list);
+        $this->loadItems($list);
         $result = array();
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
  continue;
 }
 
-
             $item = $this->items[$id];
             $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url . $item['url'], $item['title']);
         }
+
         return $result;
     }
 
     public function getSorted($parent, $sortname, $count) {
         $count = (int)$count;
-        if ($sortname == 'count') $sortname = 'itemscount';
+        if ($sortname == 'count') {
+$sortname = 'itemscount';
+}
+
         if (!in_array($sortname, array(
             'title',
             'itemscount',
             'customorder',
             'id'
-        ))) $sortname = 'title';
-
-        if ($this->dbversion) {
-            $limit = $sortname == 'itemscount' ? "order by $this->thistable.$sortname desc" : "order by $this->thistable.$sortname asc";
-            if ($count > 0) $limit.= " limit $count";
-            return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
-        }
-
-        $list = array();
-        foreach ($this->items as $id => $item) {
-            if (($parent != - 1) & ($parent != $item['parent'])) {
- continue;
+        ))) {
+$sortname = 'title';
 }
 
+            $limit = $sortname == 'itemscount' ? "order by $this->thistable.$sortname desc" : "order by $this->thistable.$sortname asc";
 
-            $list[$id] = $item[$sortname];
-        }
-        if (($sortname == 'itemscount')) {
-            arsort($list);
-        } else {
-            asort($list);
-        }
+            if ($count) {
+$limit.= " limit $count";
+}
 
-        if (($count > 0) && ($count < count($list))) {
-            $list = array_slice($list, 0, $count, true);
-        }
+            return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
+}
 
-        return array_keys($list);
-    }
-
-
-    public function getIdposts($id) {
+    public function getIdPosts($id) {
         if (isset($this->_idposts[$id])) {
             return $this->_idposts[$id];
         }
 
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         $includeparents = (int)$item['includeparents'];
         $includechilds = (int)$item['includechilds'];
 
@@ -326,17 +315,17 @@ class Common extends \litepubl\core\Items
         $itemprop = $this->itemsposts->itemprop;
 
         if ($includeparents || $includechilds) {
-            $this->loadall();
+            $this->loadAll();
             $all = array(
                 $id
             );
 
             if ($includeparents) {
-                $all = array_merge($all, $this->getparents($id));
+                $all = array_merge($all, $this->getParents($id));
             }
 
             if ($includechilds) {
-                $all = array_merge($all, $this->getchilds($id));
+                $all = array_merge($all, $this->getChilds($id));
             }
 
             $tags = sprintf('in (%s)', implode(',', $all));
@@ -344,12 +333,14 @@ class Common extends \litepubl\core\Items
             $tags = " = $id";
         }
 
-        $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
+        $result = $this->db->res2id($this->db->query(
+"select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'
-    order by $p.posted $order limit $from, $perpage"));
+    order by $p.posted $order limit $from, $perpage"
+));
 
         $result = array_unique($result);
-        $posts->loaditems($result);
+        $posts->loadItems($result);
         $this->_idposts[$id] = $result;
         return $result;
     }
