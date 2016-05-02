@@ -7,20 +7,16 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\statfooter;
 use litepubl\view\MainView;
 
-class tstatfooter extends \litepubl\core\Plugin
+class Stat extends \litepubl\core\Plugin
  {
-
-    public static function i() {
-        return static::iGet(__class__);
-    }
 
     public function getFooter() {
         return ' | <?php echo round(memory_get_usage()/1024/1024, 2), \'MB | \';' .
         //' echo round(memory_get_peak_usage(true)/1024/1024, 2), \'MB | \';' .
-        ' echo round(microtime(true) -  $this->getApp()->microtime, 2), \'Sec \'; ?>';
+        ' echo round(microtime(true) -  \litepubl::$app->microtime, 2), \'Sec \'; ?>';
     }
 
     public function install() {

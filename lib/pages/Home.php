@@ -12,6 +12,7 @@ use litepubl\core\CoEvents;
     use litepubl\core\Context;
 use litepubl\post\Posts;
 use litepubl\post\Post;
+use litepubl\post\Announce;
 use litepubl\view\Schema;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
@@ -69,8 +70,9 @@ $this->page = $context->request->page;
         $result.= $theme->templates['head.home'];
 
         if ($this->showposts) {
-            $items = $this->getidposts();
-            $result.= Posts::i()->getanhead($items);
+            $items = $this->getIdPosts();
+$announce = new Announce($theme);
+            $result.= $announce->getanHead($items);
         }
 
         Theme::$vars['home'] = $this;
@@ -111,13 +113,15 @@ $this->page = $context->request->page;
     }
 
     public function getPostnavi() {
-        $items = $this->getidposts();
+        $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
-        $result = $schema->theme->getposts($items, $schema->postanounce);
+$announce = new Announce($schema->theme);
+        $result = $announce->getPosts($items, $schema->postanounce);
         if ($this->showpagenator) {
             $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
             $result.= $schema->theme->getpages($this->url,  $this->page, ceil($this->data['archcount'] / $perpage));
         }
+
         return $result;
     }
 
@@ -126,11 +130,9 @@ $this->page = $context->request->page;
  return $this->cacheposts;
 }
 
-
         if ($result = $this->onbeforegetitems()) {
  return $result;
 }
-
 
         $posts = Posts::i();
         $schema = Schema::getSchema($this);
