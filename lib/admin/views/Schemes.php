@@ -10,23 +10,26 @@
 namespace litepubl\admin\views;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
+use litepubl\view\Schema;
+use litepubl\view\Schemes as SchemaItems;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Theme;
+use litepubl\utils\Filer;
 
 class Schemes extends \litepubl\admin\Menu
 {
 
     public static function replacemenu($src, $dst) {
-        $schemes = Schemes::i();
+        $schemes = SchemaItems::i();
         foreach ($schemes->items as & $schemaitem) {
             if ($schemaitem['menuclass'] == $src) $schemaitem['menuclass'] = $dst;
         }
         $schemes->save();
     }
 
-    private function get_custom(tview $schema) {
+    private function get_custom(Schema $schema) {
         $result = '';
         $theme = $this->theme;
         $customadmin = $schema->theme->templates['customadmin'];
@@ -35,7 +38,6 @@ class Schemes extends \litepubl\admin\Menu
             if (!isset($customadmin[$name])) {
  continue;
 }
-
 
             switch ($customadmin[$name]['type']) {
                 case 'text':
@@ -71,7 +73,6 @@ class Schemes extends \litepubl\admin\Menu
  return;
 }
 
-
         $customadmin = $schema->theme->templates['customadmin'];
         foreach ($schema->data['custom'] as $name => $value) {
             if (!isset($customadmin[$name])) {
@@ -100,8 +101,8 @@ class Schemes extends \litepubl\admin\Menu
 
     public function getContent() {
         $result = '';
-        $schemes = Schemes::i();
-        $html = $this->html;
+        $schemes = SchemaItems::i();
+$admin = $this->adminTheme;
         $lang = Lang::i('views');
         $args = new Args();
 
@@ -112,10 +113,10 @@ class Schemes extends \litepubl\admin\Menu
                 $id = $this->getparam('idschema', 0);
                 if (!$id || !$schemes->itemexists($id)) {
                     $adminurl = $this->adminurl . 'view';
-                    $result = $html->h4($html->getlink($this->url . '/addview/', $lang->add));
+                    $result = $admin->h($admin->link($this->url . '/addschema/', $lang->add));
 
-                    $tb = new Table();
-                    $tb->setstruct(array(
+                    $tb = $this->newTable();
+                    $tb->setStruct(array(
                         array(
                             $lang->name,
                             "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
@@ -147,18 +148,22 @@ class Schemes extends \litepubl\admin\Menu
                 $itemview = $schemes->items[$id];
                 $args->add($itemview);
 
-                $dirlist = tfiler::getdir( $this->getApp()->paths->themes);
+                $dirlist = Filer::getDir( $this->getApp()->paths->themes);
                 sort($dirlist);
                 $list = array();
                 foreach ($dirlist as $dir) {
-                    if (!Str::begin($dir, 'admin')) $list[$dir] = $dir;
+                    if (!Str::begin($dir, 'admin')) {
+$list[$dir] = $dir;
+}
                 }
 
                 $args->themename = $this->theme->comboItems($list, $itemview['themename']);
 
                 $list = array();
                 foreach ($dirlist as $dir) {
-                    if (Str::begin($dir, 'admin')) $list[$dir] = $dir;
+                    if (Str::begin($dir, 'admin')) {
+$list[$dir] = $dir;
+}
                 }
 
                 $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
@@ -183,44 +188,44 @@ class Schemes extends \litepubl\admin\Menu
                     $tabs->add($lang->custom, $this->get_custom($schema));
                 }
 
-                $result.= $html->h4->help;
+                $result.= $admin->help($lang->help);
 
                 $args->formtitle = $lang->edit;
-                $result.= $html->adminform($tabs->get() , $args);
+                $result.= $admin->form($tabs->get() , $args);
                 break;
 
 
             case 'addview':
 case 'addschema':
                 $args->formtitle = $lang->addschema;
-                $result.= $html->adminform('[text=name]', $args);
+                $result.= $admin->form('[text=name]', $args);
                 break;
 
 
             case 'defaults':
                 $items = '';
-                $theme = Theme::i();
+                $theme = $this->theme;
                 $tml = $theme->templates['content.admin.combo'];
                 foreach ($schemes->defaults as $name => $id) {
                     $args->name = $name;
-                    $args->value = static ::getcombo($id);
+                    $args->value = GetSchema::combo($id);
                     $args->data['$lang.$name'] = $lang->$name;
                     $items.= $theme->parsearg($tml, $args);
                 }
                 $args->items = $items;
                 $args->formtitle = $lang->defaultsform;
-                $result.= $theme->parsearg($theme->content->admin->form, $args);
+                $result.= $theme->parsearg($theme->templates['content.admin.form'], $args);
                 break;
             }
 
-            return $html->fixquote($result);
+            return $result;
         }
 
         public function processForm() {
             $result = '';
             switch ($this->name) {
                 case 'views':
-                    $schemes = Schemes::i();
+                    $schemes = SchemaItems::i();
                     $idschema = (int)$this->getparam('idschema', 0);
                     if (!$idschema || !$schemes->itemexists($idschema)) {
                         return '';
@@ -258,14 +263,14 @@ case 'addschema':
 case 'addschema':
                     $name = trim($_POST['name']);
                     if ($name) {
-                        $schemes = Schemes::i();
+                        $schemes = SchemaItems::i();
                         $id = $schemes->add($name);
                     }
                     break;
 
 
                 case 'defaults':
-                    $schemes = Schemes::i();
+                    $schemes = SchemaItems::i();
                     foreach ($schemes->defaults as $name => $id) {
                         $schemes->defaults[$name] = (int)$_POST[$name];
                     }

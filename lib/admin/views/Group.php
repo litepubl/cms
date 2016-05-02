@@ -27,13 +27,15 @@ $admin = $this->admin;
         $lang = Lang::i('schemes');
         $args = $this->newArgs();
 
-        $args->formtitle = $lang->viewposts;
-        $result = $admin->form(GetSchema::combo($schemes->defaults['post'], 'postview') . '<input type="hidden" name="action" value="posts" />', $args);
+        $args->formtitle = $lang->schemaposts;
+        $result = $admin->form(GetSchema::combo($schemes->defaults['post'], 'postschema')
+ . '<input type="hidden" name="action" value="posts" />', $args);
 
-        $args->formtitle = $lang->viewmenus;
-        $result.= $admin->form(GetSchema::combo($schemes->defaults['menu'], 'menuview') . '<input type="hidden" name="action" value="menus" />', $args);
+        $args->formtitle = $lang->schemamenus;
+        $result.= $admin->form(GetSchema::combo($schemes->defaults['menu'], 'menuschema')
+ . '<input type="hidden" name="action" value="menus" />', $args);
 
-        $args->formtitle = $lang->themeviews;
+        $args->formtitle = $lang->themeschemes;
         $schema = Schema::i();
 
         $dirlist = Filer::getdir( $this->getApp()->paths->themes);
@@ -46,8 +48,8 @@ $list[$dir] = $dir;
         }
 
         $result.= $admin->form(
-$theme->getinput('combo', 'themeview', $theme->comboItems($list, $schema->themename) , $lang->themename) .
- '<input type="hidden" name="action" value="themes" />', $args);
+$theme->getinput('combo', 'themeschema', $theme->comboItems($list, $schema->themename) , $lang->themename)
+ . '<input type="hidden" name="action" value="themes" />', $args);
 
 return $result;
     }

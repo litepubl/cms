@@ -208,6 +208,7 @@ $s = strtr($s, [
 'childtable' => 'childTable',
 'itemexists' => 'itemExists',
 'parsearg' => 'parseArg',
+'setstruct' => 'setStruct',
 
 ]);
 

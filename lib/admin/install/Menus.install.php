@@ -64,51 +64,41 @@ function MenusInstall($self) {
         $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
     }
 
-    $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager');
+    $menu = $self->createitem(0, 'menu', 'editor', 'litepubl\admin\menu\Manager');
  {
-        $id = $self->createitem($menu, 'edit', 'editor', 'tadminmenumanager');
+        $id = $self->createitem($menu, 'edit', 'editor', 'litepubl\admin\menu\Editor');
         $self->items[$id]['title'] = Lang::get('menu', 'addmenu');
-        $id = $self->createitem($menu, 'editfake', 'editor', 'tadminmenumanager');
+        $id = $self->createitem($menu, 'editfake', 'editor', 'litepubl\admin\menu\Editor');
         $self->items[$id]['title'] = Lang::get('menu', 'addfake');
     }
 
-    $opt = $self->createitem(0, 'options', 'admin', 'tadminoptions'); {
-        $self->createitem($opt, 'home', 'admin', 'adminhomeoptions');
-        $self->createitem($opt, 'mail', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'rss', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'view', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'files', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'comments', 'admin', 'tadmincommentmanager');
-        $self->createitem($opt, 'ping', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'links', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'cache', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'catstags', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'secure', 'admin', 'adminsecure');
-        $self->createitem($opt, 'robots', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'local', 'admin', 'tadminlocalmerger');
-        $self->createitem($opt, 'parser', 'admin', 'adminthemeparser');
-        $self->createitem($opt, 'notfound404', 'admin', 'tadminoptions');
-        $self->createitem($opt, 'redir', 'admin', 'tadminredirector');
+    $opt = $self->createitem(0, 'options', 'admin', 'litepubl\admin\options\Options'); {
+        $self->createitem($opt, 'home', 'admin', 'litepubl\admin\options\Home');
+        $self->createitem($opt, 'mail', 'admin', 'litepubl\admin\options\Mail');
+        $self->createitem($opt, 'rss', 'admin', 'litepubl\admin\options\Rss');
+        $self->createitem($opt, 'view', 'admin', 'litepubl\admin\options\View');
+        $self->createitem($opt, 'files', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'comments', 'admin', 'litepubl\admin\comments\Options');
+        $self->createitem($opt, 'ping', 'admin', 'litepubl\admin\options\Pinger');
+        $self->createitem($opt, 'links', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'cache', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'catstags', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'secure', 'admin', 'litepubl\admin\options\Secury');
+        $self->createitem($opt, 'robots', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'local', 'admin', 'litepubl\admin\options\LangMerger');
+        $self->createitem($opt, 'parser', 'admin', 'litepubl\admin\options\Theme');
+        $self->createitem($opt, 'notfound404', 'admin', 'litepubl\admin\options\Notfound404');
+        $self->createitem($opt, 'redir', 'admin', 'litepubl\admin\options\Redirect');
     }
 
-    $service = $self->createitem(0, 'service', 'admin', 'tadminservice'); {
-        $self->createitem($service, 'backup', 'admin', 'tadminservice');
-        $self->createitem($service, 'upload', 'admin', 'tadminservice');
-        $self->createitem($service, 'run', 'admin', 'tadminservice');
+    $service = $self->createitem(0, 'service', 'admin', 'litepubl\admin\service\Service'); {
+        $self->createitem($service, 'backup', 'admin', 'litepubl\admin\service\Backup');
+        $self->createitem($service, 'upload', 'admin', 'litepubl\admin\service\Upload');
+        $self->createitem($service, 'run', 'admin', 'litepubl\admin\service\Run');
     }
 
     $id = $self->addfake('/admin/logout/', Lang::i()->logout);
     $self->items[$id]['order'] = 9999999;
-    /*
-    $board = $self->additem(array(
-    'parent' => 0,
-    'url' => '/admin/',
-    'title' => Lang::get('adminmenus', 'board'),
-    'name' => 'board',
-    'class' => 'tadminboard',
-    'group' => 'author'
-    ));
-    */
     $self->unlock();
 
     $redir = tredirector::i();
