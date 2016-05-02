@@ -17,8 +17,6 @@ function PostsInstall($self) {
  return;
 }
 
-
-
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->CreateTable($self->table, file_get_contents($dir . 'posts.sql'));

@@ -50,7 +50,7 @@ class Plugins extends Menu
     }
 
     public function getContent() {
-        $result = $this->gePluginsmenu();
+        $result = $this->getPluginsmenu();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
         $plugins = Plugins::i();
@@ -96,7 +96,7 @@ class Plugins extends Menu
                 $body.= $admintheme->parsearg($tb->body, $args);
             }
 
-            $form = new adminform();
+            $form = new Form();
             $form->title = $lang->formhead;
             $form->body = $admintheme->gettable($tb->head, $body);
             $form->submit = 'update';

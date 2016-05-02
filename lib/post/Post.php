@@ -100,7 +100,7 @@ $count = count($items);
 
     protected function create() {
         $this->table = 'posts';
-        $this->rawTable = 'rawcontent';
+        $this->rawTable = 'rawposts';
         $this->pagesTable = 'pages';
         $this->childTable = static ::getChildTable();
 
@@ -284,14 +284,17 @@ $a = $this->data;
 unset($a['id']);
 $id = $this->db->add($a);
 
-$this->prepareRawData();
-$this->getDB($this->rawTable)->insert($this->rawData);
+$rawData = $this->prepareRawData();
+$rawData['id'] = $id;
+$this->getDB($this->rawTable)->insert($rawData);
 
         $this->setId($id);
 
 $this->savePages();
         if ($this->childTable) {
-            $this->getDB($this->childTable)->insert($this->childData);
+$$childData = $this->childData;
+$childData['id'] = $id;
+            $this->getDB($this->childTable)->insert($childData);
         }
 
         $this->idurl = $this->createUrl();
@@ -314,6 +317,8 @@ $this->modified = time();
 if (!isset($this->rawData['rawcontent'])) {
 $this->rawData['rawcontent'] = '';
 }
+
+return $this->rawData;
 }
 
     public function createUrl() {
