@@ -245,7 +245,7 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
 
     public static function clearcache() {
         Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->cache->clear();
+         static::getAppInstance()->cache->clear();
     }
 
     public function h($s) {

@@ -265,4 +265,5 @@ return [
 
 'twikiwords' => 'litepubl\plugins\wikiwords\Wiki',
 'tstatfooter' => 'litepubl\plugins\statfooter\Stat',
+'tclearcache' => 'litepubl\plugins\clearcache\ClearCache',
 ];

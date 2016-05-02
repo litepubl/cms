@@ -7,16 +7,16 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\clearcache;
 use litepubl\view\Parser;
 
-function tclearcacheInstall($self) {
-     $self->getApp()->router->beforerequest = $self->clearcache;
+function ClearCacheInstall($self) {
+     $self->getApp()->router->beforerequest = $self->clearCache;
     $parser = Parser::i();
-    $parser->parsed = $self->themeparsed;
+    $parser->parsed = $self->parsed;
 }
 
-function tclearcacheUninstall($self) {
+function ClearCacheUninstall($self) {
      $self->getApp()->router->unbind($self);
     $parser = Parser::i();
     $parser->unbind($self);

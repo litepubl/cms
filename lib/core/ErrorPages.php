@@ -34,8 +34,9 @@ return $result;
 }
 
 $instance  = Notfound404::i();
-$context = new Context(new Request(), new Response());
+$context = new Context(new Request('', ''), new Response());
 $context->model = $instance;
+$context->view = $instance;
 $instance->request($context);
 MainView::i()->render($context);
 $context->response->send();

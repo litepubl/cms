@@ -7,21 +7,18 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\clearcache;
+use litepubl\view\Theme;
+use litepubl\view\Schemes;
 
-class tclearcache extends \litepubl\core\Plugin
+class ClearCache extends \litepubl\core\Plugin
  {
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
     public function clearcache() {
-        tfiler::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->cache->clear();
+Theme::clearCache();
     }
 
-    public function themeparsed(ttheme $theme) {
+    public function parsed(Theme $theme) {
         $name = $theme->name;
         $schemes = Schemes::i();
         foreach ($schemes->items as & $itemview) {

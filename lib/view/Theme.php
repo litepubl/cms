@@ -109,7 +109,7 @@ public function setVar($name, $obj) {
 static::$vars[$name] = $obj;
 }
 
-    public function getNotfount() {
+    public function getNotfound() {
         return $this->parse($this->templates['content.notfound']);
     }
 
