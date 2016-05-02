@@ -5,18 +5,20 @@ use litepubl\core\Context;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\view\Schemes;
+use litepubl\view\Vars;
 use litepubl\view\Lang;
+use litepubl\post\Anounce;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
     private $id;
 private $tags;
-    private $_idposts;
+    private $cachedIdPosts;
 private $context;
 
     protected function create() {
         parent::create();
-        $this->_idposts = array();
+        $this->cachedIdPosts = array();
 }
 
 public function setTags(Common $tags)
@@ -25,27 +27,29 @@ $this->tags = $tags;
 }
 
     public function getSortedContent(array $tml, $parent, $sortname, $count, $showcount) {
-        $sorted = $this->getSorted($parent, $sortname, $count);
+        $sorted = $this->tags->getSorted($parent, $sortname, $count);
         if (!count($sorted)) {
  return '';
 }
 
         $result = '';
         $theme = Theme::i();
+$tags = $this->tags;
         $args = new Args();
-        $args->rel = $this->PermalinkIndex;
+        $args->rel = $tags->PermalinkIndex;
         $args->parent = $parent;
 
         foreach ($sorted as $id) {
-            $item = $this->getitem($id);
+            $item = $tags->getItem($id);
             $args->add($item);
             $args->icon = '';
             $args->subcount = $showcount ? $theme->parsearg($tml['subcount'], $args) : '';
-            $args->subitems = $tml['subitems'] ? $this->getsortedcontent($tml, $id, $sortname, $count, $showcount) : '';
+            $args->subitems = $tml['subitems'] ? $this->getSortedContent($tml, $id, $sortname, $count, $showcount) : '';
+
             $result.= $theme->parsearg($tml['item'], $args);
         }
 
-        if ($parent == 0) {
+        if (!$parent) {
  return $result;
 }
 
@@ -54,17 +58,22 @@ $this->tags = $tags;
         return $theme->parsearg($tml['subitems'], $args);
     }
 
+public function getValue($name)
+{
+return $this->tags->getValue($this->id, $name)
+};
+
     public function request(Context $context) {
-        if ($this->id = $context->id) {
+        if ($this->id = (int) $context->itemRoute['arg']) {
             try {
-                $item = $this->getitem((int)$id);
+                $item = $this->tags->getItem((int)$id);
             }
             catch(\Exception $e) {
 $context->response->status = 404;
                 return;
             }
 
-            $schema = Schema::getview($this);
+            $schema = Schema::getSchema($this);
             $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
             $pages = (int)ceil($item['itemscount'] / $perpage);
             if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
@@ -72,16 +81,13 @@ $context->response->redir($item['url']);
 return;
             }
         }
-    }
 
-    public function getName($id) {
-        $item = $this->getitem($id);
-        return $item['title'];
+$this->context = $context;
     }
 
     public function getTitle() {
         if ($this->id) {
-            return $this->getvalue($this->id, 'title');
+            return $this->getValue('title');
         }
 
         return Lang::i()->categories;
@@ -89,12 +95,14 @@ return;
 
     public function getHead() {
         if ($this->id) {
-            $result = $this->contents->getvalue($this->id, 'head');
+            $result = $this->tags->contents->getValue($this->id, 'head');
+
             $theme = Schema::getview($this)->theme;
             $result.= $theme->templates['head.tags'];
 
-            $list = $this->getidposts($this->id);
-            $result.= $this->factory->posts->getanhead($list);
+            $list = $this->getIdPosts($this->id);
+$anounce = new Anounce($theme);
+            $result.= $anounce->getAnHead($list);
 
             return $theme->parse($result);
         }
@@ -102,37 +110,43 @@ return;
 
     public function getKeywords() {
         if ($this->id) {
-            $result = $this->contents->getvalue($this->id, 'keywords');
-            if ($result == '') $result = $this->title;
+            $result = $this->tags->contents->getValue($this->id, 'keywords');
+            if (!$result) {
+$result = $this->title;
+}
+
             return $result;
         }
     }
 
     public function getDescription() {
         if ($this->id) {
-            $result = $this->contents->getvalue($this->id, 'description');
-            if ($result == '') $result = $this->title;
+            $result = $this->tags->contents->getvalue($this->id, 'description');
+            if (!$result) {
+$result = $this->title;
+}
+
             return $result;
         }
     }
 
     public function getIdschema() {
         if ($this->id) {
-            return $this->getvalue($this->id, 'idschema');
+            return $this->getValue('idschema');
         }
 
         return 1;
     }
 
-    public function setIdschema($id) {
+    public function setIdSchema($id) {
         if ($id != $this->idschema) {
-            $this->setvalue($this->id, 'idschema', $id);
+            $this->tags->setValue($this->id, 'idschema', $id);
         }
     }
 
-    public function getIdperm() {
+    public function getIdPerm() {
         if ($this->id) {
-            $item = $this->getitem($this->id);
+            $item = $this->tags->getItem($this->id);
             return isset($item['idperm']) ? (int)$item['idperm'] : 0;
         }
 
@@ -145,51 +159,49 @@ return;
  return $theme->templates['index.tag'];
 }
 
-
         return false;
     }
 
     public function getContent() {
-        if ($s = $this->contents->getcontent($this->id)) {
+        if ($s = $this->tags->contents->getcontent($this->id)) {
             $pages = explode('<!--nextpage-->', $s);
-            $page =  $this->getApp()->router->page - 1;
+            $page =  $this->context->request->page - 1;
             if (isset($pages[$page])) {
  return $pages[$page];
 }
-
-
         }
 
         return '';
     }
 
     public function getCont() {
-        $result = '';
-        $this->callevent('onbeforecontent', array(&$result
-        ));
+$result = new Str('');
+        $this->onbeforecontent($result);
 
         if (!$this->id) {
-            $result.= $this->getcont_all();
+            $result->value .= $this->getcont_all();
         } else {
-            $schema = Schema::getview($this);
+            $schema = Schema::getSchema($this);
+$theme = $schema->theme;
 
-            if ($this->getcontent()) {
-                Theme::$vars['menu'] = $this;
-                $result.= $schema->theme->parse($schema->theme->templates['content.menu']);
+            if ($this->getContent()) {
+$vars = new Vars();
+$vars->menu = $this;
+                $result->value .= $theme->parse($theme->templates['content.menu']);
             }
 
-            $list = $this->getidposts($this->id);
-            $item = $this->getitem($this->id);
-            $result.= $schema->theme->getpostsnavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $list = $this->getIdPosts($this->id);
+            $item = $this->tags->getItem($this->id);
+            $anounce = new Anounce($theme);
+            $result->value .= $anounce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
         }
 
-        $this->callevent('oncontent', array(&$result
-        ));
-        return $result;
+        $this->oncontent($result);
+        return $result->value;
     }
 
     public function getCont_all() {
-        return sprintf('<ul>%s</ul>', $this->getsortedcontent(array(
+        return sprintf('<ul>%s</ul>', $this->getSortedContent(array(
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
             'subitems' => '<ul>$item</ul>'
@@ -198,13 +210,29 @@ return;
 
     public function get_sorted_posts($id, $count, $invert) {
         $ti = $this->itemsposts->thistable;
-        $posts = $this->factory->posts;
+        $posts = $this->tags->factory->posts;
         $p = $posts->thistable;
         $order = $invert ? 'asc' : 'desc';
         $result = $this->db->res2id($this->db->query("select $p.id as id, $ti.post as post from $p, $ti
     where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
     order by $p.posted $order limit 0, $count"));
 
-        $posts->loaditems($result);
+        $posts->loadItems($result);
         return $result;
     }
+
+    public function getIdPosts($id) {
+        if (isset($this->cachedIdPosts[$id])) {
+            return $this->cachedIdPosts[$id];
+        }
+
+        $schema = Schema::i(($this->tags->getValue($id, 'idschema'));
+        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+        $from = ( $this->context->request->page - 1) * $perpage;
+
+$result = $this->tags->getIdPosts($id, $from, $perpage, $schema->invertorder);
+        $this->cachedIdPosts[$id] = $result;
+return $result;
+}
+
+}

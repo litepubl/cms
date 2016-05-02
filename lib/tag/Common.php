@@ -10,9 +10,9 @@
 namespace litepubl\tag;
 use litepubl\core\ItemsPosts;
 use litepubl\view\Schema;
+use litepubl\view\Filter;
 use litepubl\utils\LinkGenerator;
 use litepubl\core\Arr;
-use litepubl\view\Filter;
 
 class Common extends \litepubl\core\Items
  {
@@ -78,6 +78,11 @@ $where.= ' and ';
     public function getUrl($id) {
         $item = $this->getItem($id);
         return $item['url'];
+    }
+
+    public function getName($id) {
+        $item = $this->getItem($id);
+        return $item['title'];
     }
 
     public function postEdited($idpost) {
@@ -293,21 +298,13 @@ $limit.= " limit $count";
             return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
 }
 
-    public function getIdPosts($id) {
-        if (isset($this->_idposts[$id])) {
-            return $this->_idposts[$id];
-        }
-
+    public function getIdPosts($id, $from, $perpage, $invertOrder) {
         $item = $this->getItem($id);
         $includeparents = (int)$item['includeparents'];
         $includechilds = (int)$item['includechilds'];
-
-        $schema = Schema::i($item['idschema']);
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $order = $schema->invertorder ? 'asc' : 'desc';
-        $from = ( $this->getApp()->router->page - 1) * $perpage;
-
+        $order = $invertOrder ? 'asc' : 'desc';
         $posts = $this->factory->getposts();
+
         $p = $posts->thistable;
         $t = $this->thistable;
         $ti = $this->itemsposts->thistable;
@@ -341,7 +338,6 @@ $limit.= " limit $count";
 
         $result = array_unique($result);
         $posts->loadItems($result);
-        $this->_idposts[$id] = $result;
         return $result;
     }
 
