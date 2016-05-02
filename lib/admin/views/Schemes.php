@@ -191,7 +191,8 @@ class Schemes extends \litepubl\admin\Menu
 
 
             case 'addview':
-                $args->formtitle = $lang->addview;
+case 'addschema':
+                $args->formtitle = $lang->addschema;
                 $result.= $html->adminform('[text=name]', $args);
                 break;
 
@@ -254,8 +255,9 @@ class Schemes extends \litepubl\admin\Menu
 
 
                 case 'addview':
+case 'addschema':
                     $name = trim($_POST['name']);
-                    if ($name != '') {
+                    if ($name) {
                         $schemes = Schemes::i();
                         $id = $schemes->add($name);
                     }

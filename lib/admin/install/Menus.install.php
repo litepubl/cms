@@ -50,17 +50,18 @@ function MenusInstall($self) {
         $self->createitem($files, 'bin', 'editor', 'litepubl\admin\files\Files');
     }
 
-    $schemes = $self->createitem(0, 'views', 'admin', 'tadminviews'); {
-        $self->createitem($schemes, 'addview', 'admin', 'tadminviews');
+    $views = $self->createitem(0, 'views', 'admin', 'litepubl\admin\views\Schemes');
+ {
+        $self->createitem($views, 'addschema', 'admin', 'litepubl\admin\views\Schemes');
         //$self->createitem($schemes, 'themes', 'admin', 'tadminthemes');
-        $self->createitem($schemes, 'widgets', 'admin', 'tadminwidgets');
-        $self->createitem($schemes, 'addcustom', 'admin', 'addcustomwidget');
-        $self->createitem($schemes, 'group', 'admin', 'tadminviewsgroup');
-        $self->createitem($schemes, 'defaults', 'admin', 'tadminviews');
-        $self->createitem($schemes, 'spec', 'admin', 'tadminviewsspec');
-        $self->createitem($schemes, 'headers', 'admin', 'tadminheaders');
-        $self->createitem($schemes, 'jsmerger', 'admin', 'tadminjsmerger');
-        $self->createitem($schemes, 'cssmerger', 'admin', '\litepubl\admin\Css');
+        $self->createitem($views, 'widgets', 'admin', 'litepubl\admin\widget\Widgets');
+        $self->createitem($views, 'addcustom', 'admin', 'litepubl\admin\widget\AddCustom');
+        $self->createitem($views, 'group', 'admin', 'litepubl\admin\views\Group');
+        $self->createitem($views, 'defaults', 'admin', 'litepubl\admin\views\Schemes');
+        $self->createitem($views, 'spec', 'admin', 'litepubl\admin\views\Spec');
+        $self->createitem($views, 'headers', 'admin', 'litepubl\admin\views\Head');
+        $self->createitem($views, 'jsmerger', 'admin', 'litepubl\admin\views\Js');
+        $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
     }
 
     $menu = $self->createitem(0, 'menu', 'editor', 'tadminmenumanager');
