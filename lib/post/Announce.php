@@ -6,10 +6,16 @@ use litepubl\view\Args;
 use litepubl\view\Vars;
 use litepubl\view\Lang;
 
-class Announce extends \litepubl\core\Events
+class Announce
 {
+public function theme;
 
-    public function keyanounce($postanounce) {
+public function __construct(Theme $theme = null)
+{
+$this->theme = $theme ? $theme : Theme:context();
+}
+
+    private function getKey($postanounce) {
         if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
             return 'excerpt';
         }
@@ -27,24 +33,24 @@ class Announce extends \litepubl\core\Events
         }
 
         $result = '';
-        $tml_key = $this->keyanounce($postanounce);
+        $keyTemplate = $this->getKey($postanounce);
         Posts::i()->loaditems($items);
+$this->theme->setVar('lang', Lang::i('default'));
 $vars = new Vars();
-$vars->lang = Lang::i('default');
 $view = new View();
 $vars->post = $view;
 
         foreach ($items as $id) {
             $post = Post::i($id);
 $view->setPost($post);
-            $result.= $view->getContExcerpt($tml_key);
+            $result.= $view->getContExcerpt($keyTemplate);
             // has $author.* tags in tml
             if (isset($vars->author)) {
                 unset($vars->author);
             }
         }
 
-        if ($tml = $this->theme->templates['content.excerpts' . ($tml_key == 'excerpt' ? '' : '.' . $tml_key) ]) {
+        if ($tml = $this->theme->templates['content.excerpts' . ($keyTemplate == 'excerpt' ? '' : '.' . $keyTemplate) ]) {
             $result = str_replace('$excerpt', $result, $this->theme->parse($tml));
         }
 
@@ -53,17 +59,19 @@ $view->setPost($post);
 
     public function getPostsNavi(array $items, $url, $count, $postanounce, $perpage) {
         $result = $this->getPosts($items, $postanounce);
+
+$app = $this->theme->getApp();
         if (!$perpage) {
-$perpage =  $this->getApp()->options->perpage;
+$perpage =  $app->options->perpage;
 }
 
-        $result.= $this->theme->getPages($url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $this->theme->getPages($url,  $app->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
     public function getLinks($where, $tml) {
-        $db = $this->db;
-        $t = $db->posts;
+        $theme = $this->theme;
+        $db = $theme->getApp()->db;
         $items = $db->res2assoc($db->query(
 "select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
     where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"
@@ -75,7 +83,6 @@ $perpage =  $this->getApp()->options->perpage;
 
         $result = '';
         $args = new Args();
-        $theme = Theme::i();
         foreach ($items as $item) {
             $args->add($item);
             $result.= $theme->parsearg($tml, $args);
