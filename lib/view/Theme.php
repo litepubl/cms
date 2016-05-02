@@ -251,3 +251,5 @@ static::$vars[$name] = $obj;
 
         return $result;
     }
+
+}

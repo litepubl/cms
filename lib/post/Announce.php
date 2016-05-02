@@ -8,11 +8,11 @@ use litepubl\view\Lang;
 
 class Announce
 {
-public function theme;
+public $theme;
 
 public function __construct(Theme $theme = null)
 {
-$this->theme = $theme ? $theme : Theme:context();
+$this->theme = $theme ? $theme : Theme::context();
 }
 
     private function getKey($postanounce) {

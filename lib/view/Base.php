@@ -142,7 +142,7 @@ $site = static::getAppInstance()->site;
 
             case 'post':
 if ($context = $this->getApp()->context) {
-if (isset($context->view and $context->view instanceof PostView) {
+if (isset($context->view) and $context->view instanceof PostView) {
 return $context->view;
 } elseif (isset($context->model) && $context->model instanceof Post) {
 return $context->model->getView();

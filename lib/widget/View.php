@@ -4,6 +4,7 @@ namespace litepubl\widget;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\view\Vars;
+use litepubl\post\Post;
 
 class View
 {
@@ -11,7 +12,7 @@ public $theme;
 
 public function __construct(Theme $theme = null)
 {
-$this->theme = $theme ? $theme :: Theme::context();
+$this->theme = $theme ? $theme : Theme::context();
 }
 
     public function getPosts(array $items, $sidebar, $tml) {
@@ -26,7 +27,7 @@ $tml = $this->getItem('posts', $sidebar);
 
 $vars = new Vars();
         foreach ($items as $id) {
-$vars->post = Post::i($id);
+$vars->post = Post::i($id)->getView();
             $result.= $this->theme->parse($tml);
         }
 

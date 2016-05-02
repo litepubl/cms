@@ -27,7 +27,7 @@ class CommonTags extends Widget
 
     public function getContent($id, $sidebar) {
 $view = new View();
-        $items = $this->owner->getsortedcontent(array(
+        $items = $this->owner->getView()->getSorted(array(
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
             'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''

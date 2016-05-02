@@ -101,7 +101,7 @@ class tsubcatwidget extends twidget {
 
         $item = $this->items[$id];
 $view = new View();
-        return $this->tags->getsortedcontent(array(
+        return $this->tags->getView()->getSorted(array(
             'item' => $view->getItem($item['template'], $sidebar) ,
             'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
             'subitems' => $item['showsubitems'] ? $view->getTml($sidebar, $item['template'], 'subitems') : '',

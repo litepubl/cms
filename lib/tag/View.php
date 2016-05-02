@@ -5,19 +5,22 @@ use litepubl\core\Context;
 use litepubl\view\Theme;
 use litepubl\view\Args;
 use litepubl\view\Schemes;
+use litepubl\view\Schema;
 use litepubl\view\Vars;
 use litepubl\view\Lang;
-use litepubl\post\Anounce;
+use litepubl\post\Announce;
+use litepubl\core\Str;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-    private $id;
+    public $id;
 private $tags;
     private $cachedIdPosts;
 private $context;
 
     protected function create() {
         parent::create();
+        $this->addEvents('onbeforecontent', 'oncontent');
         $this->cachedIdPosts = array();
 }
 
@@ -26,7 +29,7 @@ public function setTags(Common $tags)
 $this->tags = $tags;
 }
 
-    public function getSortedContent(array $tml, $parent, $sortname, $count, $showcount) {
+    public function getSorted(array $tml, $parent, $sortname, $count, $showcount) {
         $sorted = $this->tags->getSorted($parent, $sortname, $count);
         if (!count($sorted)) {
  return '';
@@ -44,7 +47,7 @@ $tags = $this->tags;
             $args->add($item);
             $args->icon = '';
             $args->subcount = $showcount ? $theme->parsearg($tml['subcount'], $args) : '';
-            $args->subitems = $tml['subitems'] ? $this->getSortedContent($tml, $id, $sortname, $count, $showcount) : '';
+            $args->subitems = $tml['subitems'] ? $this->getSorted($tml, $id, $sortname, $count, $showcount) : '';
 
             $result.= $theme->parsearg($tml['item'], $args);
         }
@@ -60,13 +63,18 @@ $tags = $this->tags;
 
 public function getValue($name)
 {
-return $this->tags->getValue($this->id, $name)
-};
+return $this->tags->getValue($this->id, $name);
+}
+
+public function getPostPropName()
+{
+return $this->tags->postpropname;
+}
 
     public function request(Context $context) {
         if ($this->id = (int) $context->itemRoute['arg']) {
             try {
-                $item = $this->tags->getItem((int)$id);
+                $item = $this->tags->getItem($this->id);
             }
             catch(\Exception $e) {
 $context->response->status = 404;
@@ -97,12 +105,12 @@ $this->context = $context;
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'head');
 
-            $theme = Schema::getview($this)->theme;
+            $theme = Schema::getSchema($this)->theme;
             $result.= $theme->templates['head.tags'];
 
             $list = $this->getIdPosts($this->id);
-$anounce = new Anounce($theme);
-            $result.= $anounce->getAnHead($list);
+$announce = new Announce($theme);
+            $result.= $announce->getAnHead($list);
 
             return $theme->parse($result);
         }
@@ -192,8 +200,8 @@ $vars->menu = $this;
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
-            $anounce = new Anounce($theme);
-            $result->value .= $anounce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $announce = new Announce($theme);
+            $result->value .= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
         }
 
         $this->oncontent($result);
@@ -201,7 +209,7 @@ $vars->menu = $this;
     }
 
     public function getCont_all() {
-        return sprintf('<ul>%s</ul>', $this->getSortedContent(array(
+        return sprintf('<ul>%s</ul>', $this->getSorted(array(
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
             'subitems' => '<ul>$item</ul>'
@@ -226,7 +234,7 @@ $vars->menu = $this;
             return $this->cachedIdPosts[$id];
         }
 
-        $schema = Schema::i(($this->tags->getValue($id, 'idschema'));
+        $schema = Schema::i($this->tags->getValue($id, 'idschema'));
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $from = ( $this->context->request->page - 1) * $perpage;
 
