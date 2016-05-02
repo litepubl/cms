@@ -10,6 +10,7 @@
 namespace litepubl\tag;
 use litepubl\core\ItemsPosts;
 use litepubl\view\Schema;
+use litepubl\view\Schemes;
 use litepubl\view\Filter;
 use litepubl\utils\LinkGenerator;
 use litepubl\core\Arr;

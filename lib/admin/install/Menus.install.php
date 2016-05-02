@@ -9,6 +9,7 @@
 
 namespace litepubl\admin;
 use litepubl\view\Lang;
+use litepubl\pages\Redirector;
 
 function MenusInstall($self) {
     if (__NAMESPACE__ . '\Menus' != get_class($self)) {
@@ -101,7 +102,7 @@ function MenusInstall($self) {
     $self->items[$id]['order'] = 9999999;
     $self->unlock();
 
-    $redir = tredirector::i();
+    $redir = Redirector::i();
     $redir->add('/admin/', '/admin/posts/editor/');
 }
 

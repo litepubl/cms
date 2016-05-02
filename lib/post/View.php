@@ -552,14 +552,6 @@ $this->updateRevision($posts->revision);
         return $result;
     }
 
-    public function setContent($s) {
-        if (!is_string($s)) {
-            $this->error('Error! Post content must be string');
-        }
-
-        $this->rawcontent = $s;
-        Filter::i()->filterpost($this, $s);
-    }
     //author
     protected function getAuthorname() {
         return $this->getusername($this->author, false);

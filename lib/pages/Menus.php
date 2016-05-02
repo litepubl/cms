@@ -37,8 +37,8 @@ class Menus extends \litepubl\core\Items
     }
 
     public function add(Menu $item) {
-        if ($item instanceof tfakemenu) {
- return $this->addfakemenu($item);
+        if ($item instanceof FakeMenu) {
+ return $this->addFakeMenu($item);
 }
 
 
@@ -88,21 +88,19 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         return $id;
     }
 
-    public function addfake($url, $title) {
+    public function addFake($url, $title) {
         if ($id = $this->url2id($url)) {
  return $id;
 }
 
-
-
-        $fake = new tfakemenu();
+        $fake = new FakeMenu();
         $fake->title = $title;
         $fake->url = $url;
         $fake->order = $this->autoid;
-        return $this->addfakemenu($fake);
+        return $this->addFakeMenu($fake);
     }
 
-    public function addfakemenu(Menu $menu) {
+    public function addFakeMenu(Menu $menu) {
         $item = array(
             'id' => ++$this->autoid,
             'idurl' => 0,
@@ -145,7 +143,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
     }
 
     public function edit(Menu $item) {
-        if (!(($item instanceof thomepage) || ($item instanceof tfakemenu))) {
+        if (!(($item instanceof Home) || ($item instanceof FakeMenu))) {
             $linkgen = LinkGenerator::i();
             $linkgen->editurl($item, 'menu');
         }

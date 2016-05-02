@@ -1,6 +1,9 @@
 <?php
 
 namespace litepubl\post;
+use litepubl\view\Filter;
+use litepubl\core\Arr;
+use litepubl\core\Str;
 
 class Post extends \litepubl\core\Item
 {
@@ -304,7 +307,7 @@ if (!$this->created) {
 $this->created = time();
 }
 
-if (!$this->modfied) {
+if (!$this->modified) {
 $this->modified = time();
 }
 
@@ -655,4 +658,12 @@ $url = rtrim($url, '/') . "/page/$c/";
         return 'post';
     }
 
+    public function setContent($s) {
+        if (!is_string($s)) {
+            $this->error('Error! Post content must be string');
+        }
+
+        $this->rawcontent = $s;
+        Filter::i()->filterpost($this, $s);
+}
 }
