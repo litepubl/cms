@@ -7,14 +7,15 @@
 * @version 6.15
 **/
 
-namespace litepubl\admin\tags;
+namespace litepubl\admin\posts;
 use litepubl\tag\Tags as TagItems;
-use litepubl\tag\Cats as TatItems;
+use litepubl\tag\Cats as CatItems;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\admin\Table;
 use litepubl\admin\Link;
+use litepubl\admin\Form;
 
 class Tags extends \litepubl\admin\Menu
 {
@@ -24,6 +25,7 @@ class Tags extends \litepubl\admin\Menu
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
         $tags = $istags ? TagItems::i() : CatItems::i();
 $tags->loadAll();
+
         $parents = array(
             0 => '-----'
         );
@@ -66,7 +68,7 @@ $result .= $this->confirmDeleteItem($tags);
             $args->parent = $this->theme->comboItems($parents, $item['parent']);
             $args->order = $this->theme->comboItems(array_combine(range(0, 9) , range(1, 10)) , $item['customorder']);
 
-            $tabs = new tabs($this->admintheme);
+            $tabs = $this->newTabs();
             $tabs->add($lang->title, '
       [text=title]
       [combo=parent]
@@ -78,7 +80,7 @@ $result .= $this->confirmDeleteItem($tags);
             $tabs->ajax($lang->view, "$ajax=view");
             $tabs->ajax('SEO', "$ajax=seo");
 
-            $form = new adminform($args);
+            $form = new Form($args);
             $result.= $admin->form($tabs->get() , $args);
         }
 

@@ -107,6 +107,25 @@ $s = rtrim(substr($s, 0, $i)) . substr($s, $i + strlen($uns));
 return $s;
 }
 
+function sortUse($s) {
+$i = strpos($s, 'namespace ');
+if (!$i) return $s;
+
+$j = strpos($s, "\n", $i);
+if ($s[$j + 1] != "\n") {
+$s = substr($s, 0, $j) . "\n" . substr($s, $j);
+}
+
+$i = strpos($s, 'use ');
+if (!$i) return $s;
+$j = strpos($s, "\n\n", $i);
+if (!$j) return $s;
+
+$sort = explode("\n", substr($s, $i, $j - $i));
+sort($sort);
+return substr($s, 0, $i) . implode("\n", $sort) . substr($s, $j);
+}
+
 function replaceIfReturn($str) {
 $a = explode("\n", $str);
 foreach ($a as $i => $s) {
@@ -217,5 +236,6 @@ $s = insertUse($s, 'Filter:', 'litepubl\view\Filter');
 $s = insertUse($s, 'LinkGenerator:', 'litepubl\utils\LinkGenerator');
 //$s = insertUse($s, 'ArrayObject', 'ArrayObject');
 
+$s = sortUse($s);
 return $s;
 }
