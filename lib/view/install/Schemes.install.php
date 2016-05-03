@@ -26,7 +26,7 @@ function SchemesInstall($self) {
 
     $idadmin = $self->add($lang->adminpanel);
     $admin = Schema::i($idadmin);
-    $admin->menuclass = 'litepubl\admin\menus';
+    $admin->menuclass = 'litepubl\admin\Menus';
 
     $self->defaults = array(
         'post' => $default,

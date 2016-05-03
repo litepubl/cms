@@ -237,7 +237,7 @@ static::$vars[$name] = $obj;
     public function getRadioItems($name, array $items, $selected) {
         $result = '';
         foreach ($items as $index => $title) {
-            $result.= $this->getradio($name, $index, static ::specchars($title) , $index == $selected);
+            $result.= $this->getradio($name, $index, static ::quote($title) , $index == $selected);
         }
         return $result;
     }
@@ -246,7 +246,7 @@ static::$vars[$name] = $obj;
     public function comboItems(array $items, $selected) {
         $result = '';
         foreach ($items as $i => $title) {
-            $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::specchars($title));
+            $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::quote($title));
         }
 
         return $result;

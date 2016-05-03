@@ -24,8 +24,11 @@ class Schemes extends \litepubl\admin\Menu
     public static function replacemenu($src, $dst) {
         $schemes = SchemaItems::i();
         foreach ($schemes->items as & $schemaitem) {
-            if ($schemaitem['menuclass'] == $src) $schemaitem['menuclass'] = $dst;
+            if ($schemaitem['menuclass'] == $src) {
+$schemaitem['menuclass'] = $dst;
+}
         }
+
         $schemes->save();
     }
 
@@ -61,7 +64,7 @@ class Schemes extends \litepubl\admin\Menu
                     break;
             }
 
-            $result.= $theme->getinput($customadmin[$name]['type'], "custom-$name", $value, tadminhtml::specchars($customadmin[$name]['title']));
+            $result.= $theme->getinput($customadmin[$name]['type'], "custom-$name", $value, $theme->quote($customadmin[$name]['title']));
         }
 
         return $result;
@@ -112,7 +115,7 @@ $admin = $this->adminTheme;
 
                 $id = $this->getparam('idschema', 0);
                 if (!$id || !$schemes->itemexists($id)) {
-                    $adminurl = $this->adminurl . 'view';
+                    $adminurl = $this->adminurl . 'schema';
                     $result = $admin->h($admin->link($this->url . '/addschema/', $lang->add));
 
                     $tb = $this->newTable();
@@ -139,11 +142,10 @@ $admin = $this->adminTheme;
 
                 $result = GetSchema::form($this->url);
                 $tabs = $this->newTabs();
-                $menuitems = array();
-                foreach ($schemes->items as $itemview) {
-                    $class = $itemview['menuclass'];
-                    $menuitems[$class] = $class == 'tmenus' ? $lang->stdmenu : ($class == 'Menus' ? $lang->adminmenu : $class);
-                }
+                $menuitems = [
+'menu' => $lang->stdmenu,
+'admin' => $lang->adminmenu,
+];
 
                 $itemview = $schemes->items[$id];
                 $args->add($itemview);
@@ -167,14 +169,16 @@ $list[$dir] = $dir;
                 }
 
                 $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
-                $args->menu = $this->theme->comboItems($menuitems, $itemview['menuclass']);
                 $args->postanounce = $this->theme->comboItems(array(
                     'excerpt' => $lang->postexcerpt,
                     'card' => $lang->postcard,
                     'lite' => $lang->postlite
                 ) , $itemview['postanounce']);
 
-                $tabs->add($lang->name, '[text=name]
+                $args->menu = $this->theme->comboItems($menuitems,
+ strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
+
+$tabs->add($lang->name, '[text=name]
       [combo=themename]
       [combo=adminname]' . ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) . '[checkbox=hovermenu]
       [combo=menu]
@@ -248,7 +252,7 @@ case 'addschema':
                     $schema->name = trim($_POST['name']);
                     $schema->themename = trim($_POST['themename']);
                     $schema->adminname = trim($_POST['adminname']);
-                    $schema->menuclass = $_POST['menu'];
+                    $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
                     $schema->hovermenu = isset($_POST['hovermenu']);
                     $schema->postanounce = $_POST['postanounce'];
                     $schema->perpage = (int)$_POST['perpage'];

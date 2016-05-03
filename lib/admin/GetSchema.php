@@ -15,6 +15,7 @@ use litepubl\view\Theme;
 
 class GetSchema
  {
+use \litepubl\core\AppTrait;
 
     public static function form($url) {
         $lang = Lang::admin();
@@ -22,7 +23,7 @@ class GetSchema
 $id = !empty($_GET['idschema']) ? (int) $_GET['idschema'] : (!empty($_POST['idschema']) ? (int) $_POST['idschema'] : 0);
         $args->idschema = static ::items($id);
         $form = new Form($args);
-        $form->action =  $this->getApp()->site->url . $url;
+        $form->action =  static::getAppInstance()->site->url . $url;
         $form->inline = true;
         $form->method = 'get';
         $form->body = '[combo=idschema]';

@@ -209,7 +209,7 @@ $s = strtr($s, [
 'itemexists' => 'itemExists',
 'parsearg' => 'parseArg',
 'setstruct' => 'setStruct',
-
+'router->page' => 'context->request->page',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
