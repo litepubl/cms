@@ -22,14 +22,15 @@ class Js extends \litepubl\admin\Menu
         $merger = $this->getmerger();
         $tabs = $this->newTabs();
 $admin = $this->admintheme;
+$theme = $this->theme;
         $lang = Lang::i('views');
         $args = $this->newArgs();
         $args->formtitle = $this->title;
         foreach ($merger->items as $section => $items) {
             $tab = $this->newTabs();
-            $tab->add($lang->files, $html->getinput('editor', $section . '_files', tadminhtml::specchars(implode("\n", $items['files'])) , $lang->files));
+            $tab->add($lang->files, $theme->getInput('editor', $section . '_files', $admin->quote(implode("\n", $items['files'])) , $lang->files));
             foreach ($items['texts'] as $key => $text) {
-                $tab->add($key, $html->getinput('editor', $section . '_text_' . $key, tadminhtml::specchars($text) , $key));
+                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $admin->quote($text) , $key));
             }
 
             $tabs->add($section, $tab->get());

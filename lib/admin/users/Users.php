@@ -184,8 +184,7 @@ $admin = $this->admintheme;
  return;
 }
 
-
-                $_POST['idgroups'] = tadminhtml::check2array('idgroup-');
+                $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if (!$users->edit($id, $_POST)) {
  return $this->notfound;
 }

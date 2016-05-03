@@ -33,7 +33,7 @@ $admin = $this->admintheme;
         $groups = UserGroups::i();
         $args->defaulthome = $groups->defaulthome;
 
-        return $htmladmin>form('[checkbox=createpage]
+        return $admin->form('[checkbox=createpage]
     [text=linkschema]
     [text=defaulthome]
 ' . $admin->h($lang->defaults) .

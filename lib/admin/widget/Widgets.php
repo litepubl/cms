@@ -154,7 +154,7 @@ class Widgets extends \litepubl\admin\Menu
             }
         }
 
-        $idschema = (int)tadminhtml::getparam('idschema', 1);
+        $idschema = (int)$this->getParam('idschema', 1);
         $schema = Schema::i($idschema);
         $result = GetSchema::form('/admin/views/widgets/');
 
@@ -181,12 +181,12 @@ class Widgets extends \litepubl\admin\Menu
     public function processForm() {
          $this->getApp()->cache->clear();
 
-        $idwidget = (int)tadminhtml::getparam('idwidget', 0);
+        $idwidget = (int)$this->getParam('idwidget', 0);
         $widgets = WidgetItems::i();
 
         if ($widgets->itemExists($idwidget)) {
             if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
-                $idschema = (int)tadminhtml::getparam('idschema', 1);
+                $idschema = (int)$this->getParam('idschema', 1);
                 $sidebars = Sidebars::i($idschema);
                 $sidebars->remove($idwidget);
                 $result = $this->admintheme->success($this->lang->deleted);
@@ -198,7 +198,7 @@ class Widgets extends \litepubl\admin\Menu
             return $result;
         }
 
-        $idschema = (int)tadminhtml::getparam('idschema', 1);
+        $idschema = (int)$this->getParam('idschema', 1);
         $schema = Schema::i($idschema);
 
         switch ($_POST['action']) {
@@ -250,7 +250,7 @@ class Widgets extends \litepubl\admin\Menu
 
 
             case 'add':
-                $idschema = (int)tadminhtml::getparam('id_view', 1);
+                $idschema = (int)$this->getParam('id_view', 1);
                 $_GET['idschema'] = $idschema;
                 $schema = Schema::i($idschema);
                 $widgets = WidgetItems::i();

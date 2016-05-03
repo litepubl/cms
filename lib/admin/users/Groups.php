@@ -85,11 +85,12 @@ $admin = $this->admintheme;
 
     public function processForm() {
         $groups = UserGroups::i();
+$admin = $this->admintheme;
         switch ($this->action) {
             case 'add':
                 $groups->lock();
                 $id = $groups->add($_POST['name'], $_POST['title'], $_POST['home']);
-                $groups->items[$id]['parents'] = tadminhtml::check2array('idgroup-');
+                $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
                 $groups->unlock();
                 $_POST['id'] = $id;
                 $_GET['id'] = $id;
@@ -107,7 +108,7 @@ $admin = $this->admintheme;
                     ) as $name) {
                         $groups->items[$id][$name] = $_POST[$name];
                     }
-                    $groups->items[$id]['parents'] = tadminhtml::check2array('idgroup-');
+                    $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
                     $groups->save();
                 }
                 break;
