@@ -9,7 +9,6 @@
 
 namespace litepubl\debug;
 use litepubl\Config;
-use litepubl\core\App;
 use Monolog\Logger;
 use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
@@ -18,14 +17,25 @@ use Monolog\Formatter\HtmlFormatter;
 
 class LogManager
 {
-public $logger;
+use \litepubl\core\AppTrait;
+
+public $loggers;
 public $runtime;
 
-public function __construct(App $app)
+public function __construct()
  {
-$logger = new logger('general');
-$this->logger = $logger;
+$this->loggers = [];
+}
 
+public function getLogger($channel = 'general')
+{
+if (!isset($this->loggers[$channel])) {
+$logger = new logger($channel);
+$this->loggers[$channel] = $logger;
+
+$app = $this->getApp();
+switch ($channel) {
+case 'general':
 if (!Config::$debug) {
 $handler = new ErrorHandler($logger);
 $handler->registerErrorHandler([], false);
@@ -42,6 +52,14 @@ $handler->setFormatter(new EmptyFormatter());
 $logger->pushHandler($handler);
 
 $this->runtime = $handler;
+break;
+
+default:
+
+}
+}
+
+return $this->loggers[$channel];
 }
 
 public function logException(\Exception $e) {
