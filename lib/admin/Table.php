@@ -85,7 +85,7 @@ class Table
         $this->body.= '</tr>';
     }
 
-    public function addcallback($varname, $callback, $param = null) {
+    public function addCallback($varname, $callback, $param = null) {
         $this->callbacks[$varname] = array(
             'callback' => $callback,
             'params' => array(
@@ -150,7 +150,7 @@ class Table
     }
 
     public function setOwner(titems $owner) {
-        $this->addcallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
             $this,
             'titems_callback'
         ) , $owner);
@@ -158,14 +158,14 @@ class Table
 
     public function posts_callback(Table $self) {
         $post = Post::i($self->id);
-        Base::$vars['post'] = $post;
+        Base::$vars['post'] = $post->getView();
         $self->args->poststatus = Lang::i()->__get($post->status);
     }
 
     public function setPosts(array $struct) {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
-        $this->addcallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
             $this,
             'posts_callback'
         ) , false);

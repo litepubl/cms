@@ -20,6 +20,7 @@ use litepubl\admin\AuthorRights;
 use litepubl\admin\DateFilter;
 use litepubl\core\DB;
 use litepubl\tag\Cats;
+use litepubl\core\Str;
 
 class Editor extends \litepubl\admin\Menu
 {
@@ -69,9 +70,9 @@ class Editor extends \litepubl\admin\Menu
         return $this->admintheme->getcats($postitems);
     }
 
-    public function getVarpost($post) {
+    public function getVarPost($post) {
         if (!$post) {
-            return Base::$vars['post'];
+            return Base::$vars['post']->post;
         }
 
         return $post;
@@ -82,7 +83,7 @@ class Editor extends \litepubl\admin\Menu
     }
 
     public function getTabs($post = null) {
-        $post = $this->getvarpost($post);
+        $post = $this->getVarPost($post);
         $args = new Args();
         $this->getargstab($post, $args);
         return $this->admintheme->parseArg($this->gettabstemplate() , $args);
@@ -116,12 +117,12 @@ class Editor extends \litepubl\admin\Menu
 
     // $posteditor.files in template editor
     public function getFilelist($post = null) {
-        $post = $this->getvarpost($post);
+        $post = $this->getVarPost($post);
         return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
     }
 
     public function getText($post = null) {
-        $post = $this->getvarpost($post);
+        $post = $this->getVarPost($post);
         $ajax= Ajax::i();
         return $ajax->gettext($post->rawcontent, $this->admintheme);
     }
@@ -186,7 +187,7 @@ class Editor extends \litepubl\admin\Menu
         $vars->posteditor = $this;
 
         if ($post->id != 0) {
-            $result.= $admintheme->h($lang->formhead . $post->bookmark);
+            $result.= $admintheme->h($lang->formhead . $post->view->bookmark);
         }
 
         if ($this->isauthor && ($r = AuthorRights::i()->getposteditor($post, $args))) {
@@ -250,7 +251,7 @@ class Editor extends \litepubl\admin\Menu
 
     protected function processfiles(Post $post) {
         if (isset($_POST['files'])) {
-            $post->files = DB::str2array(trim($_POST['files'], ', '));
+            $post->files = Str::toIntArray(trim($_POST['files'], ', '));
         }
     }
 

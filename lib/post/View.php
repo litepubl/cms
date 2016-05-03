@@ -138,7 +138,7 @@ $this->themeInstance->setvar('post', $this);
     }
 
     public function getBookmark() {
-        return $this->theme->parse('<a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.iconlink$post.title</a>');
+        return $this->theme->parse('<a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a>');
     }
 
     public function getRsscomments() {

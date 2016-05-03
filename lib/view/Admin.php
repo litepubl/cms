@@ -239,7 +239,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
     }
 
     public function processcategories() {
-        $result = tadminhtml::check2array('category-');
+        $result = static::check2array('category-');
         Arr::clean($result);
         Arr::deleteValue($result, 0);
         return $result;

@@ -52,7 +52,7 @@ return $result;
     public static function dump(&$v) {
         switch (gettype($v)) {
             case 'string':
-if ((strlen($v) > 60) && ($i = strpos($v, ' ', 40))) {
+if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
 $v = substr($v, 0, $i);
 }
 

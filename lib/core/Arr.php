@@ -52,7 +52,6 @@ public static function move(array & $a, $oldindex, $newindex) {
  return false;
 }
 
-
     $item = $a[$oldindex];
     array_splice($a, $oldindex, 1);
     array_splice($a, $newindex, 0, array(
