@@ -89,7 +89,7 @@ return $this->getApp()->cache->includePhp($filename);
 public function getCacheFileName(Context $context)
 {
 if (!$context->itemRoute) {
-return md5($context->reqest->url) .'.php';
+return md5($context->request->url) .'.php';
 } else {
         switch ($context->itemRoute['type']) {
             case 'usernormal':
