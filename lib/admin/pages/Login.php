@@ -73,7 +73,7 @@ return;
 
         //check if password is empty and neet to restore password
         if ($iduser == 1) {
-            if (! $this->getApp()->options->password) {
+            if (! static::getAppInstance()->options->password) {
 return Lang::get('login', 'torestorepass');
 }
         } else {
@@ -196,13 +196,14 @@ $context->response->redir($url);
     }
 
     public static function confirm_reg($email, $password) {
-        if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
+$app = static::getAppInstance();
+        if (! $app->options->usersenabled || ! $app->options->reguser) {
  return false;
 }
 
 
 
-        Ssession::start('reguser-' . md5( $this->getApp()->options->hash($email)));
+        Ssession::start('reguser-' . md5( $app->options->hash($email)));
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
             if (isset($_SESSION['email'])) {
                 session_write_close();
@@ -222,15 +223,16 @@ $context->response->redir($url);
         session_destroy();
 
         if ($id) {
-             $this->getApp()->options->user = $id;
-             $this->getApp()->options->updategroup();
+             $app->options->user = $id;
+             $app->options->updategroup();
         }
 
         return $id;
     }
 
     public static function confirm_restore($email, $password) {
-        Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
+$app = static::getAppInstance();
+        Session::start('password-restore-' . md5($app->options->hash($email)));
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
             if (isset($_SESSION['email'])) {
                 session_write_close();
@@ -241,8 +243,8 @@ $context->response->redir($url);
         }
 
         session_destroy();
-        if ($email == strtolower(trim( $this->getApp()->options->email))) {
-             $this->getApp()->options->changepassword($password);
+        if ($email == strtolower(trim( $app->options->email))) {
+             $app->options->changePassword($password);
             return 1;
         } else {
             $users = Users::i();

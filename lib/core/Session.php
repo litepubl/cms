@@ -9,16 +9,20 @@
 
 namespace litepubl\core;
 
+use litepubl\Config;
+
 class Session
  {
     public static $initialized = false;
+    public static $instance = false;
+
 public $memcache;
     public $prefix;
     public $lifetime;
 
-    public function __construct($memcache) {
+    public function __construct($memcache, $prefix) {
 $this->memcache = $memcache;
-        $this->prefix = 'ses-' .  $this->getApp()->domain . '-';
+        $this->prefix = 'ses-' . $prefix;
         $this->lifetime = 3600;
         $truefunc = array(
             $this,
@@ -64,13 +68,16 @@ $this->memcache = $memcache;
                 ini_set('igbinary.compact_strings', 0);
                 ini_set('session.serialize_handler', 'igbinary');
             }
-        }
 
-        if ( $this->getApp()->memcache) {
-            return static::iGet(get_called_class());
+$app = litepubl::$app;
+        if ($app->memcache) {
+            static::$instance = new static($app->memcache, $app->controller ? $app->controller->host : Config::$host);
         } else {
             //ini_set('session.gc_probability', 1);
                  }
+}
+
+return static::$instance;
     }
 
     public static function start($id) {

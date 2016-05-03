@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9463887236816afae79438a0199a5976",
-    "content-hash": "b3c969d51675a275253ffe263a64c1c7",
+    "hash": "9ffc7a12833864e7a734ba815b25a2e3",
+    "content-hash": "aba3d8e8eec4c41f586c11029d1c3151",
     "packages": [
         {
             "name": "codeception/codeception",
@@ -355,6 +355,47 @@
                 "uri"
             ],
             "time": "2016-04-13 19:56:01"
+        },
+        {
+            "name": "jakoch/phantomjs-installer",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jakoch/phantomjs-installer.git",
+                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jakoch/phantomjs-installer/zipball/b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
+                "reference": "b8ee2aac9b95f9a9ee30a05a4df4a0984a8a8b85",
+                "shasum": ""
+            },
+            "require": {
+                "ext-openssl": "*"
+            },
+            "type": "custom-installer",
+            "autoload": {
+                "psr-0": {
+                    "PhantomInstaller\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens-André Koch",
+                    "email": "jakoch@web.de"
+                }
+            ],
+            "description": "A Composer package which installs the PhantomJS binary (Linux, Windows, Mac) into `/bin` of your project.",
+            "keywords": [
+                "binaries",
+                "headless",
+                "phantomjs"
+            ],
+            "time": "2016-01-25 16:30:30"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1441,6 +1482,53 @@
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
             "time": "2016-02-04 12:56:52"
+        },
+        {
+            "name": "site5/phantoman",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/site5/phantoman.git",
+                "reference": "f8428a3643a6920cf1e01fe3d5cceb314e569e2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/site5/phantoman/zipball/f8428a3643a6920cf1e01fe3d5cceb314e569e2f",
+                "reference": "f8428a3643a6920cf1e01fe3d5cceb314e569e2f",
+                "shasum": ""
+            },
+            "require": {
+                "codeception/codeception": "~2.1.0",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "jakoch/phantomjs-installer": "Automatically installs PhantomJS locally to your project."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Codeception\\Extension\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Grant Lucas",
+                    "email": "grant.lucas@wwwh.com"
+                }
+            ],
+            "description": "The Codeception extension for automatically starting and stopping PhantomJS when running tests.",
+            "homepage": "https://github.com/site5/phantoman",
+            "keywords": [
+                "codeception",
+                "extension",
+                "headless",
+                "phantomjs"
+            ],
+            "time": "2016-04-14 14:12:08"
         },
         {
             "name": "symfony/browser-kit",

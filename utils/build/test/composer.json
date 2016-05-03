@@ -1,5 +1,18 @@
 {
     "require": {
-        "codeception/codeception": "^2.1"
+        "codeception/codeception": "^2.1",
+        "jakoch/phantomjs-installer": "2.1.1",
+        "site5/phantoman": "^1.1"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ],
+        "post-update-cmd": [
+            "PhantomInstaller\\Installer::installPhantomJS"
+        ]
     }
 }

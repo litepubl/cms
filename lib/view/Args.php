@@ -13,26 +13,36 @@ class Args
  {
 use \litepubl\core\AppTrait;
 
+public static $defaultArgs;
     public $data;
     public $callbacks;
     public $callbackParams;
 
     public static function i() {
-        return  $this->getApp()->classes->newInstance(get_called_class());
+        return  static::getAppInstance()->classes->newInstance(get_called_class());
     }
 
     public function __construct($thisthis = null) {
         $this->callbacks = array();
         $this->callbackParams = array();
-
-        if (!isset(Base::$defaultargs)) {
-            Base::set_defaultargs();
-        }
-
-        $this->data = Base::$defaultargs;
+        $this->data = static::getDefaultArgs();
         if (isset($thisthis)) {
 $this->data['$this'] = $thisthis;
 }
+    }
+
+public static function getDefaultArgs() {
+if (!static::$defaultArgs) {
+$site = static::getAppInstance()->site;
+        static ::$defaultArgs = array(
+            '$site.url' =>  $site->url,
+            '$site.files' =>  $site->files,
+            '{$site.q}' =>  $site->q,
+            '$site.q' =>  $site->q,
+        );
+}
+
+return static::$defaultArgs;
     }
 
     public function __get($name) {

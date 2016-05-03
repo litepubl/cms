@@ -57,7 +57,7 @@ return $result;
 }
 
 $instance  = Forbidden::i();
-$context = new Context(new Reqest(), new Response());
+$context = new Context(new Request('', ''), new Response());
 $context->model = $instance;
 $instance->request($context);
 MainView::i()->render($context);

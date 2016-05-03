@@ -193,7 +193,6 @@ $classes = $this->app->classes;
     $xmlrpc = xmlrpc\Server::i();
     $xmlrpc->lock();
 
-    Theme::$defaultargs = array();
     $theme = Theme::getTheme('default');
 
 $items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));

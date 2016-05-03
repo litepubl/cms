@@ -18,7 +18,6 @@ class Base extends \litepubl\core\Events
  {
     public static $instances = array();
     public static $vars = array();
-    public static $defaultargs;
 
     public $name;
     public $parsing;
@@ -57,21 +56,7 @@ class Base extends \litepubl\core\Events
         $this->addmap('templates', array());
         $this->templates = array();
 
-        if (!isset(static ::$defaultargs)) {
-static ::set_defaultargs();
-}
-
         $this->extratml = '';
-    }
-
-    public static function set_defaultargs() {
-$site = static::getAppInstance()->site;
-        static ::$defaultargs = array(
-            '$site.url' =>  $site->url,
-            '$site.files' =>  $site->files,
-            '{$site.q}' =>  $site->q,
-            '$site.q' =>  $site->q
-        );
     }
 
     public function __destruct() {
@@ -198,8 +183,7 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
  return '';
 }
 
-
-        $s = strtr((string)$s, static ::$defaultargs);
+        $s = strtr((string)$s, Args::getDefaultArgs());
         if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
         array_push($this->parsing, $s);
         try {
@@ -223,10 +207,10 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         return strtr($s, $args->data);
     }
 
-    public function replacelang($s, $lang) {
+    public function replaceLang($s, $lang) {
         $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
         static ::$vars['lang'] = isset($lang) ? $lang : Lang::i('default');
-        $s = strtr($s, static ::$defaultargs);
+        $s = strtr($s, Args::getDefaultArgs());
         if (preg_match_all('/\$lang\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $name = $item[1];
