@@ -41,13 +41,13 @@ $admin = $this->admintheme;
         $ajax = Link::url('/admin/ajaxtageditor.htm', sprintf('id=%d&type=%s&get', $id, $istags ? 'tags' : 'categories'));
         $args->ajax = $ajax;
 
-        if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemexists($id)) {
+        if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemExists($id)) {
 $result .= $this->confirmDeleteItem($tags);
         }
 
         $result.= $admin->h($admin->link('/admin/posts/' . ($istags ? 'addtag' : 'addcat') . '/', $lang->add));
         $item = false;
-        if ($id && $tags->itemexists($id)) {
+        if ($id && $tags->itemExists($id)) {
             $item = $tags->getitem($id);
             $args->formtitle = $lang->edit;
         } elseif (($this->name == 'addcat') || ($this->name == 'addtag')) {
@@ -127,7 +127,7 @@ $result .= $this->confirmDeleteItem($tags);
             )
         ));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 

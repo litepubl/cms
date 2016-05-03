@@ -129,7 +129,7 @@ class Form {
     }
 
     public function get() {
-        return $this->getadmintheme()->parsearg($this->gettml() , $this->args);
+        return $this->getadmintheme()->parseArg($this->gettml() , $this->args);
     }
 
     public function getButtons() {

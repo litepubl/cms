@@ -223,7 +223,7 @@ class MetaWeblog extends Common
         if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) {
+        if (!$menus->itemExists($id)) {
  return $this->xerror(404, "Sorry, no such page.");
 }
 
@@ -293,7 +293,7 @@ class MetaWeblog extends Common
         $postid = (int)$postid;
         $this->canedit($username, $password, $postid);
         $posts = Posts::i();
-        if (!$posts->itemexists($postid)) {
+        if (!$posts->itemExists($postid)) {
  return $this->xerror(404, "Invalid post id.");
 }
 
@@ -323,7 +323,7 @@ class MetaWeblog extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Invalid post id.");
 }
 

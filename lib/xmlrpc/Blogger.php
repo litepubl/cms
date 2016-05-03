@@ -50,7 +50,7 @@ class Blogger extends Common
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Sorry, no such post.");
 }
 
@@ -152,7 +152,7 @@ class Blogger extends Common
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, 'Sorry, no such post.');
 }
 
@@ -171,7 +171,7 @@ class Blogger extends Common
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, 'Sorry, no such post.');
 }
 

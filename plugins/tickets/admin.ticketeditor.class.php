@@ -114,7 +114,7 @@ class tticketeditor extends tposteditor {
         $args->raw = $post->rawcontent;
         $args->code = $post->code;
 
-        return $admintheme->parsearg($tabs->get() , $args);
+        return $admintheme->parseArg($tabs->get() , $args);
     }
 
     public function newpost() {

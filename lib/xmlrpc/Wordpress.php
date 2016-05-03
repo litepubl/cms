@@ -21,7 +21,7 @@ class Wordpress extends MetaWeblog
         if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) {
+        if (!$menus->itemExists($id)) {
  return xerror(404, "Sorry, no such page.");
 }
 
@@ -102,7 +102,7 @@ class Wordpress extends MetaWeblog
         if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) {
+        if (!$menus->itemExists($id)) {
  return xerror(404, "Sorry, no such page.");
 }
 
@@ -121,7 +121,7 @@ class Wordpress extends MetaWeblog
         $this->auth($username, $password, 'editor');
         $id = (int)$id;
         $categories = Cats::i();
-        if (!$categories->itemexists($id)) {
+        if (!$categories->itemExists($id)) {
  return xerror(404, "Sorry, no such page.");
 }
 

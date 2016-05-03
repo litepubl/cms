@@ -28,7 +28,7 @@ $admin = $this->admintheme;
             case 'perms':
                 $tb = $this->newTable();
                 $tb->setowner($perms);
-                $tb->setstruct(array(
+                $tb->setStruct(array(
                     $tb->checkbox('perm') ,
                     array(
                         $lang->edit,
@@ -72,7 +72,7 @@ $class = str_replace('-', '\\', $class);
 
             case 'edit':
                 $id = $this->idget();
-                if (!$perms->itemexists($id)) {
+                if (!$perms->itemExists($id)) {
                     return $this->notfound();
                 }
 
@@ -105,7 +105,7 @@ $class = str_replace('-', '\\', $class);
 
             case 'edit':
                 $id = $this->idget();
-                if (!$perms->itemexists($id)) {
+                if (!$perms->itemExists($id)) {
                     return $this->notfound();
                 }
 

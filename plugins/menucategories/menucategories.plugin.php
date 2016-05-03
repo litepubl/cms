@@ -48,7 +48,7 @@ class tcategoriesmenu extends \litepubl\core\Plugin
 
 
                     $args->add($categories->items[$id]);
-                    $items.= $current == $id ? $theme->parsearg($theme->templates['menu.current'], $args) : $theme->parsearg($tml, $args);
+                    $items.= $current == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
                 }
             }
 
@@ -80,7 +80,7 @@ class tcategoriesmenu extends \litepubl\core\Plugin
             }
             $args->submenu = $submenu;
             $args->add($categories->items[$id]);
-            $result.= $theme->parsearg($current == $id ? $theme->templates['menu.current'] : $tml, $args);
+            $result.= $theme->parseArg($current == $id ? $theme->templates['menu.current'] : $tml, $args);
         }
         return $result;
     }

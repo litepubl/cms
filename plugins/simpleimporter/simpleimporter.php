@@ -43,7 +43,7 @@ class tsimpleimporter extends timporter {
         $args->scriptlabel = $about['scriptlabel'];
         $tml = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'form.tml');
         $html = tadminhtml::i();
-        $result.= $html->parsearg($tml, $args);
+        $result.= $html->parseArg($tml, $args);
         return $result;
     }
 

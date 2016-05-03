@@ -66,7 +66,7 @@ $admin = $this->admintheme;
         }
 
         $tb = $this->newTable();
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             array(
                 $lang->name,
                 '<a href="' . $adminurl . '=$id&action=edit" title="$title">$title</a>'
@@ -99,7 +99,7 @@ $admin = $this->admintheme;
 
             case 'edit':
                 $id = $this->idget();
-                if ($groups->itemexists($id)) {
+                if ($groups->itemExists($id)) {
                     foreach (array(
                         'name',
                         'title',

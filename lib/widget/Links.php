@@ -59,7 +59,7 @@ $view = new View();
             } else {
                 $args->link = $item['url'];
             }
-            $result.= $view->theme->parsearg($tml, $args);
+            $result.= $view->theme->parseArg($tml, $args);
         }
 
         return $view->getContent($result, 'links', $sidebar);

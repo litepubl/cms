@@ -24,7 +24,7 @@ return new Table($admin ? $admin : $this->admintheme);
 
 public function tableItems(array $items, array $struct) {
 $table = $this->newTable();
-        $table->setstruct($struct);
+        $table->setStruct($struct);
         return $table->build($items);
 }
 
@@ -49,12 +49,12 @@ return new Args();
     }
 
     public function getFrom($perpage, $count) {
-        if ( $this->getApp()->router->page <= 1) {
+        if ( $this->getApp()->context->request->page <= 1) {
  return 0;
 }
 
 
-        return min($count, ( $this->getApp()->router->page - 1) * $perpage);
+        return min($count, ( $this->getApp()->context->request->page - 1) * $perpage);
     }
 
     public function confirmDelete($id, $mesg = false) {
@@ -65,7 +65,7 @@ return new Args();
         $args->confirm = $mesg ? $mesg : Lang::i()->confirmdelete;
 
         $admin = $this->admintheme;
-        return $admin->parsearg($admin->templates['confirmform'], $args);
+        return $admin->parseArg($admin->templates['confirmform'], $args);
 }
 
     public function confirmDeleteItem($owner) {
@@ -73,7 +73,7 @@ return new Args();
 $admin = $this->admintheme;
 $lang = Lang::i();
 
-        if (!$owner->itemexists($id)) {
+        if (!$owner->itemExists($id)) {
 return $admin->geterr($lang->notfound);
 }
 
@@ -87,7 +87,7 @@ return $admin->geterr($lang->notfound);
             $args->adminurl = $this->adminurl;
             $args->action = 'delete';
             $args->confirm = $lang->confirmdelete;
-            return $admin->parsearg($admin->templates['confirmform'], $args);
+            return $admin->parseArg($admin->templates['confirmform'], $args);
     }
 
 }

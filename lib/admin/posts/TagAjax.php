@@ -49,7 +49,7 @@ $type = 'categories';
         }
 
         $id = $this->idparam();
-        if (($id > 0) && !$tags->itemexists($id)) {
+        if (($id > 0) && !$tags->itemExists($id)) {
             return static ::error403();
         }
 
@@ -90,7 +90,7 @@ $type = 'categories';
                 $args = new Args();
                 $args->add($item);
                 $result = GetSchema::combo($item['idschema']);
-                $result.= $admin->parsearg('[checkbox=includechilds] [checkbox=includeparents]', $args);
+                $result.= $admin->parseArg('[checkbox=includechilds] [checkbox=includeparents]', $args);
                 $result.= GetPerm::combo($item['idperm']);
                 break;
 
@@ -106,7 +106,7 @@ $type = 'categories';
                     $args->add($tags->contents->getitem($id));
                     $args->url = $tags->items[$id]['url'];
                 }
-                $result = $admin->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
                 break;
 
 

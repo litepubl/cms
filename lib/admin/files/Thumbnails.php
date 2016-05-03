@@ -20,7 +20,7 @@ class Thumbnails extends \litepubl\admin\Menu
     public function getIdfile() {
         $files = FileItems::i();
         $id = $this->idget();
-        if (($id == 0) || !$files->itemexists($id)) {
+        if (($id == 0) || !$files->itemExists($id)) {
  return false;
 }
 

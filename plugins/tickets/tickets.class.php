@@ -21,7 +21,7 @@ class ttickets extends tposts {
 
     protected function create() {
         parent::create();
-        $this->childtable = 'tickets';
+        $this->childTable = 'tickets';
         $this->addmap('cats', array());
         $this->data['idcomauthor'] = 0;
     }
@@ -69,8 +69,8 @@ class ttickets extends tposts {
         $lang->addsearch('ticket');
         $theme = Theme::i();
 
-        $subject = $theme->parsearg($lang->subject, $args);
-        $body = $theme->parsearg($lang->body, $args);
+        $subject = $theme->parseArg($lang->subject, $args);
+        $body = $theme->parseArg($lang->body, $args);
 
         tmailer::sendtoadmin($subject, $body);
     }

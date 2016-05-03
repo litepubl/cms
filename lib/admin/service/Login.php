@@ -31,7 +31,7 @@ $lang = Lang::admin('service');
         $args->login = $this->getparam('login', '');
         $args->password = $this->getparam('pasword', '');
         return $result .
- $admin->parsearg('
+ $admin->parseArg('
 [text=host]
  [text=login]
  [password=password]

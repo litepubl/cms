@@ -68,8 +68,8 @@ class Pingbacks extends \litepubl\core\Items
         $lang = Lang::i('mailcomments');
         $theme = Theme::i();
 
-        $subject = $theme->parsearg($lang->pingbacksubj, $args);
-        $body = $theme->parsearg($lang->pingbackbody, $args);
+        $subject = $theme->parseArg($lang->pingbacksubj, $args);
+        $body = $theme->parseArg($lang->pingbackbody, $args);
 
         Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, 'admin',  $this->getApp()->options->email, $subject, $body);
 

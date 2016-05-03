@@ -68,7 +68,7 @@ class Widgets extends \litepubl\admin\Menu
 
         $args->checkboxes = $checkboxes;
         $args->idschema = $idschema;
-        $form->before = $admintheme->parsearg($admintheme->templates['addwidgets'], $args);
+        $form->before = $admintheme->parseArg($admintheme->templates['addwidgets'], $args);
         $count = count($schema->sidebars);
         $sidebarnames = static ::getsidebarnames($schema);
 
@@ -113,7 +113,7 @@ class Widgets extends \litepubl\admin\Menu
 
         $tb = $this->newTable();
         $tb->args->adminurl = Link::url('/admin/views/widgets/', 'idwidget');
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             array(
                 $lang->widget,
                 '<a href="$adminurl=$id">$title</a>'
@@ -148,7 +148,7 @@ class Widgets extends \litepubl\admin\Menu
         if (!(isset($_GET['action']) && $_GET['action'] == 'delete')) {
             $idwidget = $this->getparam('idwidget', 0);
             $widgets = WidgetItems::i();
-            if ($widgets->itemexists($idwidget)) {
+            if ($widgets->itemExists($idwidget)) {
                 $widget = $widgets->getwidget($idwidget);
                 return $widget->admin->getcontent();
             }
@@ -184,7 +184,7 @@ class Widgets extends \litepubl\admin\Menu
         $idwidget = (int)tadminhtml::getparam('idwidget', 0);
         $widgets = WidgetItems::i();
 
-        if ($widgets->itemexists($idwidget)) {
+        if ($widgets->itemExists($idwidget)) {
             if (isset($_GET['action']) && ($_GET['action'] == 'delete')) {
                 $idschema = (int)tadminhtml::getparam('idschema', 1);
                 $sidebars = Sidebars::i($idschema);
@@ -258,7 +258,7 @@ class Widgets extends \litepubl\admin\Menu
                 foreach ($_POST as $key => $value) {
                     if (Str::begin($key, 'addwidget-')) {
                         $id = (int)$value;
-                        if (!$widgets->itemexists($id) || $widgets->subclass($id)) {
+                        if (!$widgets->itemExists($id) || $widgets->subclass($id)) {
  continue;
 }
 

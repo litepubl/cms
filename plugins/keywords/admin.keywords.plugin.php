@@ -79,11 +79,11 @@ class tadminkeywords extends tadminwidget {
 
             $args->filename = $filename;
             $args->content = file_get_contents($datadir . $filename);
-            $list.= $html->parsearg($tml['item'], $args);
+            $list.= $html->parseArg($tml['item'], $args);
         }
 
         $args->list = $list;
-        $result.= $html->parsearg($tml['form'], $args);
+        $result.= $html->parseArg($tml['form'], $args);
         $result.= $links;
         return $result;
     }

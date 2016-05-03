@@ -85,7 +85,7 @@ class Editor extends \litepubl\admin\Menu
         $post = $this->getvarpost($post);
         $args = new Args();
         $this->getargstab($post, $args);
-        return $this->admintheme->parsearg($this->gettabstemplate() , $args);
+        return $this->admintheme->parseArg($this->gettabstemplate() , $args);
     }
 
     public function getTabstemplate() {
@@ -133,7 +133,7 @@ class Editor extends \litepubl\admin\Menu
         $this->idpost = $this->idget();
         if ($this->idpost > 0) {
             $posts = PostItems::i();
-            if (!$posts->itemexists($this->idpost)) {
+            if (!$posts->itemExists($this->idpost)) {
                 return 404;
             }
         }
@@ -196,7 +196,7 @@ class Editor extends \litepubl\admin\Menu
         $args->id = $post->id;
         $args->title = $post->title;
         $args->adminurl = $this->url;
-        $result.= $admintheme->parsearg($admintheme->templates['posteditor'], $args);
+        $result.= $admintheme->parseArg($admintheme->templates['posteditor'], $args);
         return $result;
     }
 

@@ -54,7 +54,7 @@ $admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
-            if (!$comments->itemexists($id)) {
+            if (!$comments->itemExists($id)) {
                 return $this->notfound;
             }
 
@@ -204,7 +204,7 @@ $admin = $this->admintheme;
         ) , $comment);
         $Table->args->adminurl = $this->adminurl;
 
-        $Table->setstruct(array(
+        $Table->setStruct(array(
             $Table->checkbox('id') ,
 
             array(
@@ -265,7 +265,7 @@ $admin = $this->admintheme;
         $result = $form->get();
 
         $theme = $this->view->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
+        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
 
         return $result;
     }

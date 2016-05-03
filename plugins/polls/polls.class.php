@@ -87,13 +87,13 @@ class polls extends titems {
                 $items = '';
                 for ($vote = 1; $vote <= $item['best']; $vote++) {
                     $args->vote = $vote;
-                    $items.= $theme->parsearg($tml_item, $args);
+                    $items.= $theme->parseArg($tml_item, $args);
                 }
                 $args->item = $items;
             }
         }
 
-        return $theme->parsearg($tml, $args);
+        return $theme->parseArg($tml, $args);
     }
 
     public function err($mesg) {
@@ -121,7 +121,7 @@ class polls extends titems {
         $iduser =  $this->getApp()->options->user;
         if (!$iduser) {
             $result = $this->err('notauth');
-        } else if (!$this->itemexists($idpoll)) {
+        } else if (!$this->itemExists($idpoll)) {
             $result = $this->err('notfound');
         } else if ('closed' == $this->getvalue($idpoll, 'status')) {
             $result = $this->err('closed');
@@ -223,7 +223,7 @@ where idpoll = $id group by vote order by vote asc"));
             $polls = tpolls::i();
             foreach ($m as $item) {
                 $id = (int)$item[1];
-                if ($polls->itemexists($id)) {
+                if ($polls->itemExists($id)) {
                     $html = $polls->gethtml($id);
                     $html = '[html]' . $html . '[/html]';
                 } else {

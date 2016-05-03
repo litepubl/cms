@@ -40,7 +40,7 @@ class Posts extends \litepubl\admin\Menu
 
     public function doaction($posts, $action) {
         $id = $this->idget();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->notfound;
 }
 
@@ -61,7 +61,7 @@ return $this->notfound;
             $args->adminurl = $this->adminurl;
             $args->action = $action;
             $args->confirm = sprintf($this->lang->confirm, $this->lang->$action, $post->bookmark);
-            return $admintheme->parsearg($admintheme->templates['confirmform'], $args);
+            return $admintheme->parseArg($admintheme->templates['confirmform'], $args);
         }
 
         switch ($_GET['action']) {
@@ -137,7 +137,7 @@ return $this->notfound;
 
         $form->submit = false;
         $result = $form->get();
-        $result.= $this->theme->getpages('/admin/posts/',  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages('/admin/posts/',  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 

@@ -19,7 +19,7 @@ class System extends Common
 
     public function methodSignature($name) {
         $caller = Server::i();
-        if (!$caller->itemexists($name)) {
+        if (!$caller->itemExists($name)) {
  return new IXR_Error(-32601, "server error. requested method $name does not exist.");
 }
 
@@ -107,7 +107,7 @@ class System extends Common
 
     public function methodExist($name) {
         $caller = Server::i();
-        return $caller->itemexists($name);
+        return $caller->itemExists($name);
     }
 
     public function sayHello() {

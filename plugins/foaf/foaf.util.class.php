@@ -135,8 +135,8 @@ class tfoafutil extends tevents {
             $lang = Lang::i('mailfoaf');
             $theme = Theme::i();
 
-            $subject = $theme->parsearg($lang->errorsubj, $args);
-            $body = $theme->parsearg($lang->errorbody, $args);
+            $subject = $theme->parseArg($lang->errorsubj, $args);
+            $body = $theme->parseArg($lang->errorbody, $args);
 
             tmailer::sendtoadmin($subject, $body);
         }

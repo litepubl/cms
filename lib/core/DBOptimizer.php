@@ -11,12 +11,12 @@ namespace litepubl\core;
 
 class DbOptimizer extends Events
  {
-    public $childtables;
+    public $childTables;
 
     protected function create() {
         parent::create();
         $this->basename = 'db.optimizer';
-        $this->addmap('childtables', array());
+        $this->addmap('childTables', array());
         $this->addevents('postsdeleted');
     }
 
@@ -51,7 +51,7 @@ class DbOptimizer extends Events
                 $db->delete($deleted);
             }
 
-            foreach ($this->childtables as $table) {
+            foreach ($this->childTables as $table) {
                 $db->table = $table;
                 $db->delete($deleted);
             }

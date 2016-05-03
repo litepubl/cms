@@ -58,7 +58,7 @@ $view = new View();
             if ($this->redir && !Str::begin($item['url'], $url)) {
                 $args->url = $redirlink . $id;
             }
-            $result.= $view->theme->parsearg($tml, $args);
+            $result.= $view->theme->parseArg($tml, $args);
         }
 
         return $view->getContent($result, 'friends', $sidebar);
@@ -67,7 +67,7 @@ $view = new View();
     public function request($arg) {
         $id = empty($_GET['id']) ? 1 : (int)$_GET['id'];
         $foaf = tfoaf::i();
-        if (!$foaf->itemexists($id)) {
+        if (!$foaf->itemExists($id)) {
  return 404;
 }
 

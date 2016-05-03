@@ -35,7 +35,7 @@ class Wiki extends \litepubl\core\Items
     public function __get($name) {
         if (Str::begin($name, 'word_')) {
             $id = (int)substr($name, strlen('word_'));
-            if (($id > 0) && $this->itemexists($id)) {
+            if (($id > 0) && $this->itemExists($id)) {
                 return $this->getLink($id);
             }
 

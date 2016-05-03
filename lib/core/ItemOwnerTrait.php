@@ -14,7 +14,7 @@ trait ItemOwnerTrait
 
     public function load() {
         $owner = $this->owner;
-        if ($owner->itemexists($this->id)) {
+        if ($owner->itemExists($this->id)) {
             $this->data = & $owner->items[$this->id];
             return true;
         }

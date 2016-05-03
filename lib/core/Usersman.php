@@ -57,7 +57,7 @@ class Usersman extends Data
 
     public function edit($id, array $values) {
         $users = Users::i();
-        if (!$users->itemexists($id)) {
+        if (!$users->itemExists($id)) {
  return false;
 }
 
@@ -97,7 +97,7 @@ class Usersman extends Data
 
         $pages = $users->pates;
         if (isset($values['status']) && ('approved' == $values['status']) && ($item['status'] != $values['status'])) {
-            if ($pages->itemexists($id)) {
+            if ($pages->itemExists($id)) {
                 if ($pages->createpage) $pages->addpage($id);
             } else {
                 $pages->add($id);
@@ -142,7 +142,7 @@ class Usersman extends Data
         if (is_string($v)) $v = trim($v);
         if (is_numeric($v)) {
             $id = (int)$v;
-            if (UserGroups::i()->itemexists($id)) {
+            if (UserGroups::i()->itemExists($id)) {
 return $id;
 }
         } else {

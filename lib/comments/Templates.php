@@ -60,11 +60,11 @@ $props->view = $view;
         '<!--' . $theme->templates['content.post.templatecomments.holdcomments'] . '-->' . '<?php } ?>';
 
         $args->comment = '';
-        $mesg = $theme->parsearg($holdmesg, $args);
+        $mesg = $theme->parseArg($holdmesg, $args);
         $mesg.= $this->getmesg('logged', $cm->canedit || $cm->candelete ? 'adminpanel' : false);
         $args->mesg = $mesg;
 
-        $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
+        $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
         $result.= $this->getjs(($view->idperm == 0) && $cm->confirmlogged, 'logged');
 
         $result.= '<?php } else { ?>';
@@ -72,13 +72,13 @@ $props->view = $view;
         switch ($view->comstatus) {
             case 'reg':
                 $args->mesg = $this->getmesg('reqlogin',  $this->getApp()->options->reguser ? 'regaccount' : false);
-                $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
                 break;
 
 
             case 'guest':
                 $args->mesg = $this->getmesg('guest',  $this->getApp()->options->reguser ? 'regaccount' : false);
-                $result.= $theme->parsearg($theme->templates['content.post.templatecomments.regform'], $args);
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
                 $result.= $this->getjs(($view->idperm == 0) && $cm->confirmguest, 'guest');
                 break;
 
@@ -97,7 +97,7 @@ $props->view = $view;
                 $args->subscribe = false;
                 $args->content = '';
 
-                $result.= $theme->parsearg($theme->templates['content.post.templatecomments.form'], $args);
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
                 $result.= $this->getjs(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
                 break;
         }
@@ -137,7 +137,7 @@ $props->view = $view;
         $args->params = json_encode($params);
 
         $theme = Theme::i();
-        return $theme->parsearg($theme->templates['content.post.templatecomments.form.js'], $args);
+        return $theme->parseArg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
 
 }

@@ -115,18 +115,18 @@ class Catbread extends \litepubl\core\Plugin
             $args->url = '/';
             $args->title = $lang->home;
             $args->index = $index++;
-            $items.= $theme->parsearg($tml, $args);
+            $items.= $theme->parseArg($tml, $args);
         }
 
         foreach ($parents as $id) {
             $args->add($cats->getitem($id));
             $args->index = $index++;
-            $items.= $theme->parsearg($tml, $args);
+            $items.= $theme->parseArg($tml, $args);
         }
 
         $args->add($cats->getitem($idcat));
         $args->index = $index++;
-        $current = $theme->parsearg($theme->templates['catbread.items.current'], $args);
+        $current = $theme->parseArg($theme->templates['catbread.items.current'], $args);
 
         $childs = '';
         if ($showchilds) {
@@ -136,8 +136,8 @@ class Catbread extends \litepubl\core\Plugin
         $args->item = $items;
         $args->current = $current;
         $args->childs = $childs;
-        $args->items = $theme->parsearg($theme->templates['catbread.items'], $args);
-        return $theme->parsearg($theme->templates['catbread'], $args);
+        $args->items = $theme->parseArg($theme->templates['catbread.items'], $args);
+        return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
     public function getChilds($parent) {
@@ -155,11 +155,11 @@ class Catbread extends \litepubl\core\Plugin
         $items = '';
         foreach ($sorted as $id) {
             $args->add($cats->getitem($id));
-            $items.= $theme->parsearg($tml, $args);
+            $items.= $theme->parseArg($tml, $args);
         }
 
         $args->item = $items;
-        return $theme->parsearg($theme->templates['catbread.items.childs'], $args);
+        return $theme->parseArg($theme->templates['catbread.items.childs'], $args);
     }
 
     public function getSimilar($list) {
@@ -200,12 +200,12 @@ class Catbread extends \litepubl\core\Plugin
         $items = '';
         foreach ($similar as $id) {
             $args->add($cats->getitem($id));
-            $items.= $theme->parsearg($theme->templates['catbread.similar.item'], $args);
+            $items.= $theme->parseArg($theme->templates['catbread.similar.item'], $args);
         }
 
         $args->item = $items;
-        $args->items = $theme->parsearg($theme->templates['catbread.similar'], $args);
-        return $theme->parsearg($theme->templates['catbread'], $args);
+        $args->items = $theme->parseArg($theme->templates['catbread.similar'], $args);
+        return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
     public function themeparsed(basetheme $theme) {

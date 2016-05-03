@@ -31,7 +31,7 @@ class tadminfoaf extends \litepubl\admin\Menu
         $tb = new Table();
         $tb->admintheme = $this->admintheme;
         $tb->setowner($foaf);
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             $tb->checkbox('checkbox') ,
             array(
                 $lang->nick,
@@ -63,7 +63,7 @@ class tadminfoaf extends \litepubl\admin\Menu
         $form->submit = false;
         $result = $form->get();
 
-        $result.= $this->theme->getpages('/admin/foaf/',  $this->getApp()->router->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages('/admin/foaf/',  $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 
@@ -90,7 +90,7 @@ class tadminfoaf extends \litepubl\admin\Menu
 
                     case 'edit':
                         $id = $this->idget();
-                        if (!$foaf->itemexists($id)) {
+                        if (!$foaf->itemExists($id)) {
                             return $this->notfound;
                         }
 
@@ -117,7 +117,7 @@ class tadminfoaf extends \litepubl\admin\Menu
 
                     case 'delete':
                         $id = $this->idget();
-                        if (!$foaf->itemexists($id)) {
+                        if (!$foaf->itemExists($id)) {
                             return $this->notfound;
                         }
 
@@ -192,7 +192,7 @@ class tadminfoaf extends \litepubl\admin\Menu
                     extract($_POST, EXTR_SKIP);
                     if ($this->action == 'edit') {
                         $id = $this->idget();
-                        if (!$foaf->itemexists($id)) {
+                        if (!$foaf->itemExists($id)) {
                             return '';
                         }
 

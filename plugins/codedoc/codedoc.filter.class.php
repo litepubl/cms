@@ -96,7 +96,7 @@ class tcodedocfilter extends titems {
             "'" => '"',
         ));
 
-        return $theme->parsearg($s, $args);
+        return $theme->parseArg($s, $args);
 
     }
 

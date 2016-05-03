@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\tag;
 use litepubl\core\Context;
@@ -46,10 +53,10 @@ $tags = $this->tags;
             $item = $tags->getItem($id);
             $args->add($item);
             $args->icon = '';
-            $args->subcount = $showcount ? $theme->parsearg($tml['subcount'], $args) : '';
+            $args->subcount = $showcount ? $theme->parseArg($tml['subcount'], $args) : '';
             $args->subitems = $tml['subitems'] ? $this->getSorted($tml, $id, $sortname, $count, $showcount) : '';
 
-            $result.= $theme->parsearg($tml['item'], $args);
+            $result.= $theme->parseArg($tml['item'], $args);
         }
 
         if (!$parent) {
@@ -58,7 +65,7 @@ $tags = $this->tags;
 
         $args->parent = $parent;
         $args->item = $result;
-        return $theme->parsearg($tml['subitems'], $args);
+        return $theme->parseArg($tml['subitems'], $args);
     }
 
 public function getValue($name)

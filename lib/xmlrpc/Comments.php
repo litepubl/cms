@@ -130,7 +130,7 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if ($comments->itemexists($id)) {
+        if ($comments->itemExists($id)) {
  return $this->xerror(404, 'Invalid comment ID.');
 }
 
@@ -184,7 +184,7 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if (!$comments->itemexists($id)) {
+        if (!$comments->itemExists($id)) {
  return $this->xerror(404, 'Invalid comment ID.');
 }
 
@@ -197,7 +197,7 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $id = (int)$id;
         $comments = CommentItems::i();
-        if (!$comments->itemexists($id)) {
+        if (!$comments->itemExists($id)) {
  return $this->xerror(404, 'Invalid comment ID.');
 }
 

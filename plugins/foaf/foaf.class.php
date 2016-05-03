@@ -151,12 +151,12 @@ class tfoaf extends titems {
     }
 
     public function setStatus($id, $value) {
-        if ($this->itemexists($id)) $this->setvalue($id, 'status', $value);
+        if ($this->itemExists($id)) $this->setvalue($id, 'status', $value);
         if (!$this->dbversion) $this->save();
     }
 
     public function changestatus($id, $value) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -264,8 +264,8 @@ class tfoaf extends titems {
         $lang = Lang::i('mailfoaf');
         $theme = Theme::i();
 
-        $subject = $theme->parsearg($lang->subject, $args);
-        $body = $theme->parsearg($lang->body, $args);
+        $subject = $theme->parseArg($lang->subject, $args);
+        $body = $theme->parseArg($lang->body, $args);
 
         tmailer::sendtoadmin($subject, $body);
     }
@@ -293,7 +293,7 @@ class tfoaf extends titems {
     }
 
     public function acceptinvate($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -310,7 +310,7 @@ class tfoaf extends titems {
     }
 
     public function rejectinvate($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 

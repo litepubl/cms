@@ -71,7 +71,7 @@ return $result;
 
     private function doaction($id, $action) {
         $menus = Menus::i();
-        if (!$menus->itemexists($id)) {
+        if (!$menus->itemExists($id)) {
  return $this->notfound;
 }
 

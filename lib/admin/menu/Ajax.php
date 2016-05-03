@@ -36,7 +36,7 @@ if ($response->status == 200) {
     public function getContent() {
         $id = $this->idparam();
         $menus = Menus::i();
-        if (($id != 0) && !$menus->itemexists($id)) {
+        if (($id != 0) && !$menus->itemExists($id)) {
  return static ::error403();
 }
 
@@ -47,7 +47,7 @@ if ($response->status == 200) {
 }
 
 
-        if (($id > 0) && !$menus->itemexists($id)) {
+        if (($id > 0) && !$menus->itemExists($id)) {
  return static ::error403();
 }
 
@@ -70,7 +70,7 @@ $admin = $schema->admintheme;
                 $args->keywords = $menu->keywords;
                 $args->description = $menu->description;
                 $args->head = $menu->data['head'];
-                $result = $admin->parsearg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
                 break;
 
 

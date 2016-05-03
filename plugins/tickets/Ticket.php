@@ -61,7 +61,7 @@ $this->cacheData['closed'] = $timestamp;
         $filter = Filter::i();
         $filter->filterpost($this, $this->rawcontent);
         $result.= $this->filtered;
-        if (!empty($this->childdata['code'])) {
+        if (!empty($this->childData['code'])) {
             $lang = Lang::i('ticket');
             $result.= sprintf('<h2>%s</h2>', $lang->code);
             $result.= highlight_string($this->code, true);
@@ -86,7 +86,7 @@ $this->cacheData['closed'] = $timestamp;
         Theme::$vars['ticket'] = $this;
         $theme = $this->theme;
         $tml = file_get_contents($this->resource . 'ticket.tml');
-        return $theme->parsearg($tml, $args);
+        return $theme->parseArg($tml, $args);
     }
 
     protected function getAssignToName() {
@@ -107,7 +107,7 @@ $this->cacheData['closed'] = $timestamp;
  return;
 }
 
-        $this->childdata['state'] = $state;
+        $this->childData['state'] = $state;
         if ($this->id == 0) {
  return;
 }

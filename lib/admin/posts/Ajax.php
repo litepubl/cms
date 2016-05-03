@@ -87,7 +87,7 @@ return;
         $this->isauthor =  $this->getApp()->options->ingroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
-            if (!$posts->itemexists($this->idpost)) {
+            if (!$posts->itemExists($this->idpost)) {
  return $response->forbidden();
 }
 
@@ -145,7 +145,7 @@ return;
 
                 $args->perms = Perms::getcombo($post->idperm);
                 $args->password = $post->password;
-                $result = Admin::admin()->parsearg('[combo=comstatus]
+                $result = Admin::admin()->parseArg('[combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
@@ -183,7 +183,7 @@ return;
         if ($this->visual) {
             if ($this->ajaxvisual) {
                 $args->scripturl = $this->visual;
-                $args->visual = $admintheme->parsearg($admintheme->templates['posteditor.text.visual'], $args);
+                $args->visual = $admintheme->parseArg($admintheme->templates['posteditor.text.visual'], $args);
             } else {
                 $args->visual = MainView::i()->getjavascript($this->visual);
             }
@@ -192,7 +192,7 @@ return;
         }
 
         $args->raw = $text;
-        return $admintheme->parsearg($admintheme->templates['posteditor.text'], $args);
+        return $admintheme->parseArg($admintheme->templates['posteditor.text'], $args);
     }
 
 }

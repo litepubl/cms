@@ -217,7 +217,7 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         return $result;
     }
 
-    public function parsearg($s, Args $args) {
+    public function parseArg($s, Args $args) {
         $s = $this->parse($s);
         $s = $args->callback($s);
         return strtr($s, $args->data);

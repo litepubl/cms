@@ -24,7 +24,7 @@ class Cats extends Common
     }
 
     public function setDefaultid($id) {
-        if (($id != $this->defaultid) && $this->itemexists($id)) {
+        if (($id != $this->defaultid) && $this->itemExists($id)) {
             $this->data['defaultid'] = $id;
             $this->save();
         }

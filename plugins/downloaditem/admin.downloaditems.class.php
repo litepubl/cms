@@ -100,7 +100,7 @@ class tadmindownloaditems extends \litepubl\admin\Menu
         $result.= $form->get();
 
         $theme = $this->view->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 

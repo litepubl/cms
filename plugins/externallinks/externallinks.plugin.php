@@ -87,7 +87,7 @@ class texternallinks extends titems {
     public function request($arg) {
         //$this->cache = false;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return 404;
 }
 

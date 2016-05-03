@@ -56,7 +56,7 @@ return $this->item[$name];
 $response->cache = false;
 $id = (int) $context->itemRoute['arg'];
         $files = PostFiles::i();
-        if (!$files->itemexists($id)) {
+        if (!$files->itemExists($id)) {
 $response->status = 404;
 return;
 }

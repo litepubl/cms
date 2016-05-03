@@ -99,7 +99,7 @@ $response = $context->response;
         if ($context->itemRoute['arg'] == 'url') {
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
             $users = CoreUsers::i();
-            if (!$users->itemexists($id)) {
+            if (!$users->itemExists($id)) {
 $response->status = 404;
  return;
 }
@@ -116,7 +116,7 @@ return;
         }
 
         $this->id = (int)$context->itemRoute['arg'];
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
 $response->status = 404;
  return;
 }
@@ -166,7 +166,7 @@ $response->redir($url);
 
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $posts =  $this->getApp()->classes->posts;
-        $from = ( $this->getApp()->router->page - 1) * $perpage;
+        $from = ( $this->getApp()->context->request->page - 1) * $perpage;
 
         $poststable = $posts->thistable;
         $count = $posts->db->getcount("$poststable.status = 'published' and $poststable.author = $this->id");
@@ -174,7 +174,7 @@ $response->redir($url);
         $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id", "order by $poststable.posted $order limit $from, $perpage");
 
         $result.= $theme->getposts($items, $schema->postanounce);
-        $result.= $theme->getpages($item['url'],  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $theme->getpages($item['url'],  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
@@ -236,7 +236,7 @@ $response->redir($url);
 }
 
 
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -247,7 +247,7 @@ $response->redir($url);
     }
 
     public function edit($id, array $values) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 

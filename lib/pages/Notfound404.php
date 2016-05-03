@@ -56,8 +56,8 @@ return $theme->simple($this->text);
         $lang = Lang::i('notfound');
         $theme = $this->getSchema()->theme;
 
-        $subject = $theme->parsearg($lang->subject, $args);
-        $body = $theme->parsearg($lang->body, $args);
+        $subject = $theme->parseArg($lang->subject, $args);
+        $body = $theme->parseArg($lang->body, $args);
 
         Mailer::sendtoadmin($subject, $body, true);
     }

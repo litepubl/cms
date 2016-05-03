@@ -119,7 +119,7 @@ return FilesItems::i();
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -152,7 +152,7 @@ return FilesItems::i();
     }
 
     public function setContent($id, $content) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -283,26 +283,26 @@ Theme::$vars['midle'] = $midle;
                     $preview->exchangeArray ($item);
                     $preview->id = $id;
                 } elseif ($type == 'video') {
-                    $args->preview = $theme->parsearg($tml['videos.fallback'], $args);
+                    $args->preview = $theme->parseArg($tml['videos.fallback'], $args);
                     $preview->exchangeArray ([]);
                 }
 
                 if ($preview->count()) {
                     $preview->link = $url . $preview->filename;
-                    $args->preview = $theme->parsearg($tml['preview'], $args);
+                    $args->preview = $theme->parseArg($tml['preview'], $args);
                 }
 
                 $args->json = $this->getjson($id);
-                $sublist.= $theme->parsearg($tml[$type], $args);
+                $sublist.= $theme->parseArg($tml[$type], $args);
             }
 
             $args->__set($type, $sublist);
-            $result.= $theme->parsearg($tml[$type . 's'], $args);
+            $result.= $theme->parseArg($tml[$type . 's'], $args);
         }
 
         unset(Theme::$vars['preview'], $preview, Theme::$vars['midle'], $midle);
         $args->files = $result;
-        return $theme->parsearg($tml['container'], $args);
+        return $theme->parseArg($tml['container'], $args);
     }
 
     public function postedited($idpost) {
@@ -336,7 +336,7 @@ Theme::$vars['midle'] = $midle;
                 $vars->preview = $preview;
                 $vars->midle = $midle;
                 $theme = Theme::i();
-                return $theme->parsearg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
+                return $theme->parseArg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
             }
         }
 

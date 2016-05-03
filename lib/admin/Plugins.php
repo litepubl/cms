@@ -59,7 +59,7 @@ class Plugins extends Menu
             $result.= $admintheme->parse($admintheme->templates['help.plugins']);
 
             $tb = new Table();
-            $tb->setstruct(array(
+            $tb->setStruct(array(
                 $tb->namecheck() ,
 
                 array(
@@ -93,7 +93,7 @@ class Plugins extends Menu
                 $args->name = $name;
                 $args->checked = isset($plugins->items[$name]);
                 $args->short = $about['name'];
-                $body.= $admintheme->parsearg($tb->body, $args);
+                $body.= $admintheme->parseArg($tb->body, $args);
             }
 
             $form = new Form();

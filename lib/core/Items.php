@@ -137,7 +137,7 @@ class Items extends Events
         }
     }
 
-    public function itemexists($id) {
+    public function itemExists($id) {
         if (isset($this->items[$id])) {
             return true;
         }

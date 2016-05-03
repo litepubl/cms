@@ -410,7 +410,7 @@ $vars = new Vars;
 $args->email = $this->app->options->email;
         $args->password = $password;
         $args->likeurl = $this->app->options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
-        $content = $theme->parsearg($tml, $args);
+        $content = $theme->parseArg($tml, $args);
         $this->echohtml($content);
     }
 

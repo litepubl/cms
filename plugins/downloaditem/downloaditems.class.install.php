@@ -22,12 +22,12 @@ function tdownloaditemsInstall($self) {
     if (!dbversion) die("Downloads require database");
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     $manager = DBManager::i();
-    $manager->CreateTable($self->childtable, file_get_contents($dir . 'downloaditem.sql'));
+    $manager->CreateTable($self->childTable, file_get_contents($dir . 'downloaditem.sql'));
     $manager->addenum('posts', 'class', 'litepubl-tdownloaditem');
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
-    $optimizer->childtables[] = 'downloaditems';
+    $optimizer->childTables[] = 'downloaditems';
     $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
     $optimizer->unlock();
 
@@ -145,14 +145,14 @@ function tdownloaditemsUninstall($self) {
     $merger->deleteplugin(Plugins::getname(__file__));
 
     $manager = DBManager::i();
-    $manager->deletetable($self->childtable);
+    $manager->deletetable($self->childTable);
     $manager->delete_enum('posts', 'class', 'tdownloaditem');
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
     $optimizer->unbind($self);
-    if (false !== ($i = array_search('downloaditems', $optimizer->childtables))) {
-        unset($optimizer->childtables[$i]);
+    if (false !== ($i = array_search('downloaditems', $optimizer->childTables))) {
+        unset($optimizer->childTables[$i]);
     }
     $optimizer->unlock();
 

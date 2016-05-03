@@ -119,8 +119,8 @@ $vars = new Vars();
         $lang = Lang::i('mailcomments');
         $theme = Theme::i();
 
-        $subject = $theme->parsearg($lang->subject, $args);
-        $body = $theme->parsearg($lang->body, $args);
+        $subject = $theme->parseArg($lang->subject, $args);
+        $body = $theme->parseArg($lang->body, $args);
         return Mailer::sendtoadmin($subject, $body, false);
     }
 
@@ -171,7 +171,7 @@ $vars = new Vars();
     $response = $context->response;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
         $users = Users::i();
-        if (!$users->itemexists($id)) {
+        if (!$users->itemExists($id)) {
 return $response->redir('/');
 }
 

@@ -64,7 +64,7 @@ $view = new View();
                 $args->rel = 'author profile';
             }
             $args->class = isset($metaclasses[$name]) ? $metaclasses[$name] : '';
-            $result.= $view->theme->parsearg($tml, $args);
+            $result.= $view->theme->parseArg($tml, $args);
         }
 
         if ($result == '') {

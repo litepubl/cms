@@ -66,7 +66,7 @@ return;
         if (!isset($this->perm)) {
             $idperm = isset($get['idperm']) ? (int)$get['idperm'] : 0;
             $perms = Perms::i();
-            if (!$perms->itemexists($idperm)) {
+            if (!$perms->itemExists($idperm)) {
 $response->status = 403;
 return;
 }
@@ -94,7 +94,7 @@ return;
 
         $args->antispam = base64_encode('megaspamer' . strtotime("+1 hour"));
         $args->remember = isset($_POST['remember']);
-        $result.= $this->getSchema()->theme->parsearg($this->form, $args);
+        $result.= $this->getSchema()->theme->parseArg($this->form, $args);
         return $result;
     }
 

@@ -66,7 +66,7 @@ $form .= '[editor=text]
         $result = $this->admin->form($form, $args);
         $lang = $this->lang;
         $tb = $this->newTable();
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             $tb->checkbox('widgetcheck') ,
             array(
                 $lang->widgettitle,

@@ -147,7 +147,7 @@ return $result;
     public function parsetitle(Str $title, $tml) {
         $args = new Args();
         $args->title = $title->value;
-        $result = $this->schema->theme->parsearg($tml, $args);
+        $result = $this->schema->theme->parseArg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
 $result = $this->getApp()->site->name;

@@ -19,10 +19,10 @@ function tcontactsiteInstall($self) {
     $args->add($about);
     $self->title = $about['title'];
     $self->subject = $about['subject'];
-    $self->success = $theme->parsearg('<p><strong>$success</strong></p>', $args);
-    $self->errmesg = $theme->parsearg('<p><strong>$errmesg</strong></p>', $args);
+    $self->success = $theme->parseArg('<p><strong>$success</strong></p>', $args);
+    $self->errmesg = $theme->parseArg('<p><strong>$errmesg</strong></p>', $args);
 
-    $form = $theme->parsearg(file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'form.tml') , $args);
+    $form = $theme->parseArg(file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'form.tml') , $args);
     $self->data['content'] = $form;
     $self->data['rawcontent'] = $form;
 

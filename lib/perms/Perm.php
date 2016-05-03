@@ -19,7 +19,7 @@ use \litepubl\core\ItemOwnerTrait;
 
     public static function i($id = 0) {
         $perms = Perms::i();
-        $class = $perms->itemexists($id) ? $perms->items[$id]['class'] : get_called_class();
+        $class = $perms->itemExists($id) ? $perms->items[$id]['class'] : get_called_class();
         return parent::iteminstance($class, $id);
     }
 

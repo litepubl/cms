@@ -115,7 +115,7 @@ class JsonFiles extends \litepubl\core\Events
 
         $id = (int)$args['idfile'];
         $files = Files::i();
-        if (!$files->itemexists($id)) {
+        if (!$files->itemExists($id)) {
  return $this->forbidden();
 }
 

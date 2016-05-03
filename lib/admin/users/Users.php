@@ -31,7 +31,7 @@ $admin = $this->admintheme;
         $id = $this->idget();
         switch ($this->action) {
             case 'edit':
-                if (!$users->itemexists($id)) {
+                if (!$users->itemExists($id)) {
                     $result.= $this->notfound();
                 } else {
                     $statuses = array();
@@ -86,7 +86,7 @@ $admin = $this->admintheme;
         $params = '';
         if (!empty($_GET['idgroup'])) {
             $idgroup = (int)$this->getparam('idgroup', 0);
-            if ($groups->itemexists($idgroup)) {
+            if ($groups->itemExists($idgroup)) {
                 $grouptable =  $this->getApp()->db->prefix . $users->grouptable;
                 $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
                 $params = "idgroup=$idgroup";
@@ -111,7 +111,7 @@ $admin = $this->admintheme;
         $tb = $thisnewTable();
         $tb->args->adminurl = $this->adminurl;
         $tb->setowner($users);
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             $tb->checkbox('user') ,
             array(
                 $lang->edit,
@@ -138,7 +138,7 @@ $admin = $this->admintheme;
         $form->title = $lang->userstable;
         $result.= $form->getdelete($tb->build($items));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage) , $params);
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage) , $params);
 
         $form = new Form($args);
         $form->method = 'get';
@@ -180,7 +180,7 @@ $admin = $this->admintheme;
 
             case 'edit':
                 $id = $this->idget();
-                if (!$users->itemexists($id)) {
+                if (!$users->itemExists($id)) {
  return;
 }
 

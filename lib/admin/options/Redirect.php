@@ -70,7 +70,7 @@ class Redirector extends \litepubl\admin\Menu
         ));
 
         $args->action = 'delete';
-        $result.= $this->admintheme->parsearg('<form name="deleteform" action="" method="post">
+        $result.= $this->admintheme->parseArg('<form name="deleteform" action="" method="post">
     [hidden=action]
     $table
     <p><input type="submit" name="delete" value="$lang.delete" /></p>

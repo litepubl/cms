@@ -429,7 +429,7 @@ class topenid extends tevents {
                      $this->getApp()->router->cache->set('openid.txt', $result);
                 }
 
-                return tsimplecontent::html(Theme::i()->parsearg($result, $args));
+                return tsimplecontent::html(Theme::i()->parseArg($result, $args));
             } else {
                 switch ($_POST['accept']) {
                     case 'yes':

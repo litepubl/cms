@@ -120,9 +120,9 @@ return;
 
         $schema = Schema::getview($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $list = array_slice($items, ( $this->getApp()->router->page - 1) * $perpage, $perpage);
+        $list = array_slice($items, ( $this->getApp()->context->request->page - 1) * $perpage, $perpage);
         $result = $schema->theme->getposts($list, $schema->postanounce);
-        $result.= $schema->theme->getpages($this->items[$this->date]['url'],  $this->getApp()->router->page, ceil(count($items) / $perpage));
+        $result.= $schema->theme->getpages($this->items[$this->date]['url'],  $this->getApp()->context->request->page, ceil(count($items) / $perpage));
         return $result;
     }
 

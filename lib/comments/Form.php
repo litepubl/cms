@@ -275,7 +275,7 @@ $vars = new Vars();
         $args = new Args();
         $args->confirmid = $confirmid;
         $theme = Simple::i()->getSchema()->theme;
-        return $theme->parsearg($theme->templates['content.post.templatecomments.confirmform'], $args);
+        return $theme->parseArg($theme->templates['content.post.templatecomments.confirmform'], $args);
     }
 
     //htmlhelper

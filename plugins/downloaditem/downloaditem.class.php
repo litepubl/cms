@@ -21,8 +21,8 @@ class tdownloaditem extends \litepubl\post\Post
 
     protected function create() {
         parent::create();
-        $this->data['childdata'] = & $this->childdata;
-        $this->childdata = array(
+        $this->data['childData'] = & $this->childData;
+        $this->childData = array(
             'id' => 0,
             'type' => 'theme',
             'downloads' => 0,
@@ -40,7 +40,7 @@ class tdownloaditem extends \litepubl\post\Post
     }
 
     protected function getAuthorname() {
-        return $this->childdata['authorname'];
+        return $this->childData['authorname'];
     }
 
     public function getParenttag() {

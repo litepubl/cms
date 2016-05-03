@@ -18,7 +18,7 @@ class tadminfriendswidget extends tadminwidget {
     protected function dogetcontent(twidget $widget, Args $args) {
         $args->maxcount = $widget->maxcount;
         $args->redir = $widget->redir;
-        return tadminhtml::i()->parsearg('[checkbox=redir] [text=maxcount]', $args);
+        return tadminhtml::i()->parseArg('[checkbox=redir] [text=maxcount]', $args);
     }
 
     protected function doProcessForm(twidget $widget) {

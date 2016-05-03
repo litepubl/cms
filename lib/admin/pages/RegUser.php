@@ -114,7 +114,7 @@ session_destroy();
             $args->email = isset($_POST['email']) ? $_POST['email'] : '';
             $args->name = isset($_POST['name']) ? $_POST['name'] : '';
             $args->action =  $this->getApp()->site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
-            $result.= $theme->parsearg($this->getform() , $args);
+            $result.= $theme->parseArg($this->getform() , $args);
 
             if (!empty($_GET['backurl'])) {
                 //normalize
@@ -198,8 +198,8 @@ session_destroy();
         $lang = Lang::i('mailusers');
         $theme = Theme::i();
 
-        $subject = $theme->parsearg($lang->subject, $args);
-        $body = $theme->parsearg($lang->body, $args);
+        $subject = $theme->parseArg($lang->subject, $args);
+        $body = $theme->parseArg($lang->body, $args);
 
         Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, $name, $email, $subject, $body);
 

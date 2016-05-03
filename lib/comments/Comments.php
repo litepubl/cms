@@ -73,7 +73,7 @@ $result->pid = $pid;
     }
 
     public function edit($id, $content) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -98,7 +98,7 @@ $result->pid = $pid;
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 

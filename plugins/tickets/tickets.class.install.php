@@ -43,12 +43,12 @@ function tticketsInstall($self) {
      $self->getApp()->options->parsepost = false;
 
     $manager = DBManager::i();
-    $manager->CreateTable($self->childtable, file_get_contents($dir . 'ticket.sql'));
+    $manager->CreateTable($self->childTable, file_get_contents($dir . 'ticket.sql'));
     $manager->addenum('posts', 'class', 'litepubl-tticket');
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
-    $optimizer->childtables[] = 'tickets';
+    $optimizer->childTables[] = 'tickets';
     $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
     $optimizer->unlock();
 
@@ -158,14 +158,14 @@ function tticketsUninstall($self) {
      $self->getApp()->classes->unlock();
 
     $manager = DBManager::i();
-    $manager->deletetable($self->childtable);
+    $manager->deletetable($self->childTable);
     $manager->delete_enum('posts', 'class', 'tticket');
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
     $optimizer->unbind($self);
-    if (false !== ($i = array_search('tickets', $optimizer->childtables))) {
-        unset($optimizer->childtables[$i]);
+    if (false !== ($i = array_search('tickets', $optimizer->childTables))) {
+        unset($optimizer->childTables[$i]);
     }
     $optimizer->unlock();
 

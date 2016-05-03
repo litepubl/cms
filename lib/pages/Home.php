@@ -260,7 +260,7 @@ unset($vars->author);
             $args = new Args();
             $args->post = $result;
             $args->midletitle = $this->midletitle;
-            $result = $theme->parsearg($tml, $args);
+            $result = $theme->parseArg($tml, $args);
         }
 
         return $result;

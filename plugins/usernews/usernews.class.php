@@ -73,7 +73,7 @@ class tusernews extends \litepubl\core\Plugin
         $args->raw = $post->rawcontent;
         $html = tadminhtml::i();
         $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;
-        $result.= $html->parsearg($form, $args);
+        $result.= $html->parseArg($form, $args);
         unset(Theme::$vars['post']);
         return $html->fixquote($result);
     }

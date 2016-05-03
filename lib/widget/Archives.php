@@ -59,7 +59,7 @@ $counttml = $view->getTml($sidebar, 'archives', 'subcount');
 $args->subcount = str_replace('$itemscount', $item['count'], $counttml);
 }
 
-            $result.= $view->theme->parsearg($tml, $args);
+            $result.= $view->theme->parseArg($tml, $args);
         }
 
         return $view->getContent($result, 'archives', $sidebar);

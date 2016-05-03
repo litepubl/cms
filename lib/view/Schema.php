@@ -24,7 +24,7 @@ use \litepubl\core\PoolStorageTrait;
             $class = get_called_class();
         } else {
             $schemes = Schemes::i();
-            $class = $schemes->itemexists($id) ? $schemes->items[$id]['class'] : get_called_class();
+            $class = $schemes->itemExists($id) ? $schemes->items[$id]['class'] : get_called_class();
         }
 
         return parent::iteminstance($class, $id);
@@ -45,7 +45,7 @@ return static ::$instances['schema'][$id];
 }
 
         $schemes = Schemes::i();
-        if (!$schemes->itemexists($id)) {
+        if (!$schemes->itemExists($id)) {
             $id = 1; //default, wich always exists
             $instance->setIdSchema($id);
         }

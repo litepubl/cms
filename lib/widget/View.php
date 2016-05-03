@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\widget;
 use litepubl\view\Theme;
@@ -43,7 +50,7 @@ $vars->post = Post::i($id)->getView();
         $args->title = $title;
         $args->items = $content;
         $args->sidebar = $sidebar;
-        return $this->theme->parsearg($this->getTml($sidebar, $template, '') , $args);
+        return $this->theme->parseArg($this->getTml($sidebar, $template, '') , $args);
     }
 
     public function getWidgetId($id, $title, $content, $template, $sidebar) {
@@ -52,7 +59,7 @@ $vars->post = Post::i($id)->getView();
         $args->title = $title;
         $args->items = $content;
         $args->sidebar = $sidebar;
-        return $this->theme->parsearg($this->getTml($sidebar, $template, '') , $args);
+        return $this->theme->parseArg($this->getTml($sidebar, $template, '') , $args);
     }
 
     public function getItem($name, $index) {
@@ -90,7 +97,7 @@ $tml = '.' . $tml;
         $args->title = $title;
         $args->id = $id;
         $args->sidebar = $sidebar;
-        return $this->theme->parsearg($this->theme->templates[$tml], $args);
+        return $this->theme->parseArg($this->theme->templates[$tml], $args);
     }
 
 }

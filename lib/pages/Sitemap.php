@@ -54,9 +54,9 @@ use \litepubl\view\EmptyViewTrait;
         $theme = $this->getSchema()->theme;
         $perpage = 1000;
         $count = 0;
-        $from = ( $this->getApp()->router->page - 1) * $perpage;
+        $from = ( $this->getApp()->context->request->page - 1) * $perpage;
         $siteurl =  $this->getApp()->site->url;
-        $classes =  $this->getApp()->router->page == 1 ? $this->classes : 'tposts';
+        $classes =  $this->getApp()->context->request->page == 1 ? $this->classes : 'tposts';
         foreach ($classes as $class) {
             $instance = static::iGet($class);
             $links = $instance->getsitemap($from, $perpage - $count);
@@ -76,7 +76,7 @@ use \litepubl\view\EmptyViewTrait;
             if ($count > $perpage) break;
         }
         $result.= '</ul>';
-        //    $result .=$theme->getpages('/sitemap.htm',  $this->getApp()->router->page, ceil($posts->archivescount / $perpage));
+        //    $result .=$theme->getpages('/sitemap.htm',  $this->getApp()->context->request->page, ceil($posts->archivescount / $perpage));
         return $result;
     }
 

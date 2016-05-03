@@ -92,7 +92,7 @@ class Livejournal extends Common
     private function EditPost($id, $struct) {
         $posts = Posts::i();
         if ($id > 0) {
-            if ($posts->itemexists($id)) {
+            if ($posts->itemExists($id)) {
  return $this->xerror(403, 'Post not found');
 }
 
@@ -161,7 +161,7 @@ class Livejournal extends Common
         $id = (int)$struct['itemid'];
         if (empty($struct['event'])) {
             $posts = Posts::i();
-            if (!$posts->itemexists($id)) {
+            if (!$posts->itemExists($id)) {
  return $this->xerror(404, 'Post not found');
 }
 

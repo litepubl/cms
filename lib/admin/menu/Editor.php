@@ -57,7 +57,7 @@ $admin = $this->admintheme;
                     $args->order = $this->theme->comboItems(range(0, 10) , 0);
                     $status = 'published';
                 } else {
-                    if (!$menus->itemexists($id)) {
+                    if (!$menus->itemExists($id)) {
  return $this->notfound;
 }
 
@@ -116,7 +116,7 @@ $admin = $this->admintheme;
 
         $id = $this->idget();
         $menus = Menus::i();
-        if (($id != 0) && !$menus->itemexists($id)) {
+        if (($id != 0) && !$menus->itemExists($id)) {
  return $this->notfound;
 }
 

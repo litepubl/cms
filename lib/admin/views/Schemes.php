@@ -114,7 +114,7 @@ $admin = $this->adminTheme;
                 $lang->addsearch('views');
 
                 $id = $this->getparam('idschema', 0);
-                if (!$id || !$schemes->itemexists($id)) {
+                if (!$id || !$schemes->itemExists($id)) {
                     $adminurl = $this->adminurl . 'schema';
                     $result = $admin->h($admin->link($this->url . '/addschema/', $lang->add));
 
@@ -214,11 +214,11 @@ case 'addschema':
                     $args->name = $name;
                     $args->value = GetSchema::combo($id);
                     $args->data['$lang.$name'] = $lang->$name;
-                    $items.= $theme->parsearg($tml, $args);
+                    $items.= $theme->parseArg($tml, $args);
                 }
                 $args->items = $items;
                 $args->formtitle = $lang->defaultsform;
-                $result.= $theme->parsearg($theme->templates['content.admin.form'], $args);
+                $result.= $theme->parseArg($theme->templates['content.admin.form'], $args);
                 break;
             }
 
@@ -231,7 +231,7 @@ case 'addschema':
                 case 'views':
                     $schemes = SchemaItems::i();
                     $idschema = (int)$this->getparam('idschema', 0);
-                    if (!$idschema || !$schemes->itemexists($idschema)) {
+                    if (!$idschema || !$schemes->itemExists($idschema)) {
                         return '';
                     }
 

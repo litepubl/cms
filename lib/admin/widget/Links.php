@@ -48,7 +48,7 @@ return parent::getFormr()
 
         $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
         $tb = $this->newTable($this->admin);
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             $tb->checkbox('checklink') ,
             array(
                 $lang->url,

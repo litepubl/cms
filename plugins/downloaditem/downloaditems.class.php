@@ -18,7 +18,7 @@ class tdownloaditems extends tposts {
 
     protected function create() {
         parent::create();
-        $this->childtable = 'downloaditems';
+        $this->childTable = 'downloaditems';
     }
 
     public function createpoll() {
@@ -41,8 +41,8 @@ class tdownloaditems extends tposts {
 
     public function postsdeleted(array $items) {
         $deleted = implode(',', $items);
-        $db = $this->getdb($this->childtable);
-        $idpolls = $db->res2id($db->query("select poll from $db->prefix$this->childtable where (id in ($deleted)) and (poll  > 0)"));
+        $db = $this->getdb($this->childTable);
+        $idpolls = $db->res2id($db->query("select poll from $db->prefix$this->childTable where (id in ($deleted)) and (poll  > 0)"));
         if (count($idpolls) > 0) {
             $polls = tpolls::i();
             foreach ($idpolls as $idpoll) $pols->delete($idpoll);

@@ -176,7 +176,7 @@ $context->response->redir($url);
         $args = new Args();
         $args->email = isset($_POST['email']) ? trim(strip_tags($_POST['email'])) : '';
         $args->remember = isset($_POST['remember']);
-        $result = $this->theme->parsearg($result, $args);
+        $result = $this->theme->parseArg($result, $args);
 
         $result = str_replace('&amp;backurl=', '&backurl=', $result);
         if (!empty($_GET['backurl'])) {

@@ -127,7 +127,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    public function parsearg($s, Args $args) {
+    public function parseArg($s, Args $args) {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
         $result = $args->callback($result);
@@ -135,7 +135,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
     }
 
     public function form($tml, Args $args) {
-        return $this->parsearg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
+        return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
     public function getTable($head, $body, $footer = '') {
@@ -193,7 +193,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
             $args->time = '';
         }
 
-        return $this->parsearg($this->templates['calendar'], $args);
+        return $this->parseArg($this->templates['calendar'], $args);
     }
 
     public function getDaterange($from, $to) {
@@ -205,7 +205,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         $args->to = $to ? date(datefilter::$format, $to) : '';
         $args->format = datefilter::$format;
 
-        return $this->parsearg($this->templates['daterange'], $args);
+        return $this->parseArg($this->templates['daterange'], $args);
     }
 
     public function getCats(array $items) {
@@ -227,7 +227,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
                 $args->checked = in_array($item['id'], $items);
                 $args->subcount = '';
                 $args->subitems = $this->getsubcats($id, $items, $exclude);
-                $result.= $this->parsearg($tml, $args);
+                $result.= $this->parseArg($tml, $args);
             }
         }
 
@@ -274,7 +274,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
             $args->items = Str::toJson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
         }
 
-        return $this->parsearg($this->templates['posteditor.filelist'], $args);
+        return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
     public function check2array($prefix) {

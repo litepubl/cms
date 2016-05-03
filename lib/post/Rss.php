@@ -87,7 +87,7 @@ $response->status = 404;
 
                 $id = (int)$match[1];
                 $tags = $arg == 'categories' ? Categories::i() : Tags::i();
-                if (!$tags->itemexists($id)) {
+                if (!$tags->itemExists($id)) {
 $response->status = 404;
                     return;
                 }
@@ -110,7 +110,7 @@ $response->status = 404;
 
                 $idpost = (int)$match[1];
                 $posts = Posts::i();
-                if (!$posts->itemexists($idpost)) {
+                if (!$posts->itemExists($idpost)) {
 $response->status = 404;
                     return;
                 }

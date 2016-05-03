@@ -109,7 +109,7 @@ class tadmintickets extends \litepubl\admin\Menu
         }
 
         $theme = $this->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 

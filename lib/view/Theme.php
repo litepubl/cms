@@ -85,7 +85,7 @@ return new EmptyClass();
 }
 
         $pages = UserPages::i();
-        if (!$pages->itemexists($iduser)) {
+        if (!$pages->itemExists($iduser)) {
 return new emptyclass();
 }
 
@@ -168,7 +168,7 @@ static::$vars[$name] = $obj;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
             if ($params) $link.= $params;
             $args->link = $link;
-            $a[] = $this->parsearg($tml_prev, $args);
+            $a[] = $this->parseArg($tml_prev, $args);
         }
 
         foreach ($items as $i) {
@@ -176,7 +176,7 @@ static::$vars[$name] = $obj;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
             if ($params) $link.= $params;
             $args->link = $link;
-            $a[] = $this->parsearg(($i == $page ? $currenttml : $tml) , $args);
+            $a[] = $this->parseArg(($i == $page ? $currenttml : $tml) , $args);
         }
 
         if (($page < $count) && ($tml_next = trim($this->templates['content.navi.next']))) {
@@ -185,14 +185,14 @@ static::$vars[$name] = $obj;
             $link = $pageurl . $i . '/';
             if ($params) $link.= $params;
             $args->link = $link;
-            $a[] = $this->parsearg($tml_next, $args);
+            $a[] = $this->parseArg($tml_next, $args);
         }
 
         $args->link = $url;
         $args->pageurl = $pageurl;
         $args->page = $page;
         $args->items = implode($this->templates['content.navi.divider'], $a);
-        return $this->parsearg($this->templates['content.navi'], $args);
+        return $this->parseArg($this->templates['content.navi'], $args);
     }
 
 

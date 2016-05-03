@@ -55,7 +55,7 @@ class tkeywordswidget extends twidget {
 
 
         $id =  $this->getApp()->router->item['id'];
-        $filename =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' .  $this->getApp()->router->page . '.php';
+        $filename =  $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' .  $this->getApp()->context->request->page . '.php';
         if (@file_exists($filename)) {
             $links = file_get_contents($filename);
         } else {

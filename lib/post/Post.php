@@ -1,4 +1,11 @@
 <?php
+/**
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
+**/
 
 namespace litepubl\post;
 use litepubl\view\Filter;
@@ -90,11 +97,11 @@ return static::selectChildItems($table, $items);
         }
 
         $db =  static::getAppInstance()->db;
-        $childtable = $db->prefix . $table;
+        $childTable = $db->prefix . $table;
         $list = implode(',', $items);
 $count = count($items);
         return $db->res2items($db->query(
-"select $childtable.* from $childtable where id in ($list) limit $count"
+"select $childTable.* from $childTable where id in ($list) limit $count"
 ));
     }
 

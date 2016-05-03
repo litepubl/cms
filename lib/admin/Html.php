@@ -75,11 +75,11 @@ return call_user_func_array(array(
 
 
         $args = isset($params[0]) && $params[0] instanceof Args ? $params[0] : new Args();
-        return $this->parsearg($s, $args);
+        return $this->parseArg($s, $args);
     }
 
-    public function parsearg($s, Args $args) {
-        return Admin::i()->parsearg($s, $args);
+    public function parseArg($s, Args $args) {
+        return Admin::i()->parseArg($s, $args);
     }
 
     public static function specchars($s) {
@@ -131,7 +131,7 @@ return Lang::i()->noword;
 
     public function buildtable(array $items, array $tablestruct) {
         $tb = new Table();
-        $tb->setstruct($tablestruct);
+        $tb->setStruct($tablestruct);
         return $tb->build($items);
     }
 

@@ -20,7 +20,7 @@ return false;
 }
 
         $comments = Comments::i();
-        if (!$comments->itemexists($id)) {
+        if (!$comments->itemExists($id)) {
 return false;
 }
 

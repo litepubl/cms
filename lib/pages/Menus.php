@@ -157,7 +157,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -194,7 +194,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
     }
 
     public function deletetree($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
@@ -225,7 +225,7 @@ $item->data['idschema'] = $schemes->defaults['menu'];
     }
 
     public function remove($id) {
-        if (!$this->itemexists($id) || $this->haschilds($id)) {
+        if (!$this->itemExists($id) || $this->haschilds($id)) {
 return false;
 }
 
@@ -352,14 +352,14 @@ $this->items[$id]['class'] = $newclass;
 
 
                     $args->add($this->items[$id]);
-                    $items.= $current == $id ? $theme->parsearg($theme->templates['menu.current'], $args) : $theme->parsearg($tml, $args);
+                    $items.= $current == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
                 }
             }
 
             $this->callevent('onitems', array(&$items
             ));
             $args->item = $items;
-            $result = $theme->parsearg($theme->templates['menu'], $args);
+            $result = $theme->parseArg($theme->templates['menu'], $args);
         }
         $this->callevent('onmenu', array(&$result
         ));
@@ -386,7 +386,7 @@ $this->items[$id]['class'] = $newclass;
             if (count($items)) {
                 if ($bootstrap) {
                     $args->submenu = '';
-                    $submenu = $theme->parsearg($tml_single, $args);
+                    $submenu = $theme->parseArg($tml_single, $args);
                 }
                 $submenu.= $this->getsubmenu($items, $current, $bootstrap);
                 $submenu = str_replace('$items', $submenu, $tml_submenu);
@@ -397,7 +397,7 @@ $this->items[$id]['class'] = $newclass;
             ));
             $args->submenu = $submenu;
             $tml = $current == $id ? $tml_current : ($submenu ? $tml_item : $tml_single);
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $theme->parseArg($tml, $args);
         }
 
         return $result;

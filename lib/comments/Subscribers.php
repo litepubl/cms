@@ -122,7 +122,7 @@ return;
 
 
         $comments = Comments::i();
-        if (!$comments->itemexists($id)) {
+        if (!$comments->itemExists($id)) {
  return;
 }
 
@@ -164,8 +164,8 @@ $vars = new Vars();
         $theme = Theme::i();
         $args = new Args();
 
-        $subject = $theme->parsearg($lang->subscribesubj, $args);
-        $body = $theme->parsearg($lang->subscribebody, $args);
+        $subject = $theme->parseArg($lang->subscribesubj, $args);
+        $body = $theme->parseArg($lang->subscribebody, $args);
 
         $body.= "\n";
         $adminurl =  $this->getApp()->site->url . '/admin/subscribers/';

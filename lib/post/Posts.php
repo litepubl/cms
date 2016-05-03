@@ -19,7 +19,7 @@ class Posts extends \litepubl\core\Items
     public $itemcoclasses;
     public $archives;
     public $rawtable;
-    public $childtable;
+    public $childTable;
 
     public static function unsub($obj) {
         static ::i()->unbind($obj);
@@ -29,7 +29,7 @@ class Posts extends \litepubl\core\Items
         $this->dbversion = true;
         parent::create();
         $this->table = 'posts';
-        $this->childtable = '';
+        $this->childTable = '';
         $this->rawtable = 'rawposts';
         $this->basename = 'posts/index';
         $this->addevents('edited', 'changed', 'singlecron', 'beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onselect', 'onhead', 'onanhead', 'ontags');
@@ -107,12 +107,12 @@ Files::i()->preload($fileitems);
 
     public function select($where, $limit) {
         $db =  $this->getApp()->db;
-        if ($this->childtable) {
-            $childtable = $db->prefix . $this->childtable;
+        if ($this->childTable) {
+            $childTable = $db->prefix . $this->childTable;
             return $this->setAssoc($db->res2items($db->query(
-"select $db->posts.*, $childtable.*, $db->urlmap.url as url
-      from $db->posts, $childtable, $db->urlmap
-      where $where and  $db->posts.id = $childtable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
+"select $db->posts.*, $childTable.*, $db->urlmap.url as url
+      from $db->posts, $childTable, $db->urlmap
+      where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
         }
 
         $items = $db->res2items($db->query(
@@ -148,14 +148,14 @@ $class = str_replace('-', '\\', $class) ;
     }
 
     public function getChildscount($where) {
-        if (!$this->childtable) {
+        if (!$this->childTable) {
  return 0;
 }
 
         $db =  $this->getApp()->db;
-        $childtable = $db->prefix . $this->childtable;
-        if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childtable
-    where $db->posts.status <> 'deleted' and $childtable.id = $db->posts.id $where")) {
+        $childTable = $db->prefix . $this->childTable;
+        if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
+    where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where")) {
             if ($r = $db->fetchassoc($res)) {
  return $r['count'];
 }
@@ -235,15 +235,15 @@ $post->status = 'published';
     }
 
     public function delete($id) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 
         $router = $this->getApp()->router;
         $idurl = $this->db->getvalue($id, 'idurl');
         $this->db->setvalue($id, 'status', 'deleted');
-        if ($this->childtable) {
-            $db = $this->getdb($this->childtable);
+        if ($this->childTable) {
+            $db = $this->getdb($this->childTable);
             $db->delete("id = $id");
         }
 

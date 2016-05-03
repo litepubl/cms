@@ -27,13 +27,13 @@ class tadminsapeplugin extends tadminwidget {
         $args = new Args();
         if ($widget->id != 0) {
             $args->maxcount = $widget->counts[$widget->id];
-            $result.= $this->optionsform($this->widget->gettitle($this->widget->id) , $this->html->parsearg('[text=maxcount]', $args));
+            $result.= $this->optionsform($this->widget->gettitle($this->widget->id) , $this->html->parseArg('[text=maxcount]', $args));
         }
 
         $args->user = $widget->user;
         $args->force = $widget->force;
         $tml = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'sapeform.tml');
-        $result.= $this->html->parsearg($tml, $args);
+        $result.= $this->html->parseArg($tml, $args);
         return $result;
     }
 

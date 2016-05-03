@@ -27,7 +27,7 @@ class Pages extends \litepubl\admin\Menu
         }
 
         $users = UserItems::i();
-        if ($users->itemexists($id) && ('approved' == $users->getvalue($id, 'status'))) {
+        if ($users->itemExists($id) && ('approved' == $users->getvalue($id, 'status'))) {
  return $id;
 }
 
@@ -132,7 +132,7 @@ $admin = $this->admintheme;
 
         $tb = $this->newTable();
         $tb->setowner($users);
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             array(
                 $lang->edit,
                 sprintf('<a href="%s=$id">$name</a>', $this->adminurl)
@@ -141,7 +141,7 @@ $admin = $this->admintheme;
 
         $result.= $tb->build($items);
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 

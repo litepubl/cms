@@ -218,17 +218,17 @@ $this->themeInstance->setvar('post', $this);
                 $args->icon = '';
             } else {
                 $files = $this->factory->files;
-                if ($files->itemexists($item['icon'])) {
+                if ($files->itemExists($item['icon'])) {
                     $args->icon = $files->geticon($item['icon']);
                 } else {
                     $args->icon = '';
                 }
             }
-            $list[] = $theme->parsearg($tmlitem, $args);
+            $list[] = $theme->parseArg($tmlitem, $args);
         }
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);
-        $result = $theme->parsearg($theme->templates[$tmlpath], $args);
+        $result = $theme->parseArg($theme->templates[$tmlpath], $args);
         $this->factory->posts->callevent('ontags', array(
             $tags,
             $excerpt, &$result
@@ -570,7 +570,7 @@ $this->updateRevision($posts->revision);
             }
         } else {
             $users = $this->factory->users;
-            if (!$users->itemexists($id)) {
+            if (!$users->itemExists($id)) {
  return '';
 }
 
@@ -591,7 +591,7 @@ $this->updateRevision($posts->revision);
             return sprintf('<a href="%s/" rel="author" title="%2$s">%2$s</a>',  $this->getApp()->site->url,  $this->getApp()->site->author);
         } else {
             $pages = $this->factory->userpages;
-            if (!$pages->itemexists($id)) {
+            if (!$pages->itemExists($id)) {
  return '';
 }
 

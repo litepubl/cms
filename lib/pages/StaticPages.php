@@ -86,7 +86,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
     }
 
     public function edit($id, $title, $description, $keywords, $content) {
-        if (!$this->itemexists($id)) {
+        if (!$this->itemExists($id)) {
  return false;
 }
 

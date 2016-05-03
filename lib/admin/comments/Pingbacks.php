@@ -26,7 +26,7 @@ $admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
-            if (!$pingbacks->itemexists($id)) {
+            if (!$pingbacks->itemExists($id)) {
  return $this->notfound;
 }
 
@@ -76,7 +76,7 @@ break;
         $form = $this->newForm($args);
         $form->body = $admin->getcount($from, $from + count($items) , $total);
         $tb = $this->newTable();
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             $tb->checkbox('id') ,
             array(
                 $lang->date,
@@ -118,7 +118,7 @@ function(Table $t) {
         $result = $form->get();
 
         $theme = Theme::i();
-        $result.= $theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage));
+        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 

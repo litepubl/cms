@@ -44,7 +44,7 @@ $view = new View();
             $args->add($item);
             $args->link = $url . $item['posturl'];
             $args->content = Filter::getexcerpt($item['content'], 120);
-            $result.= $view->theme->parsearg($tml, $args);
+            $result.= $view->theme->parseArg($tml, $args);
         }
         return $view->getContent($result, 'comments', $sidebar);
     }

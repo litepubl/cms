@@ -26,7 +26,7 @@ $admin = $this->admintheme;
 
         if ('delete' == $this->action) {
             $id = $this->idget();
-            if (!$users->itemexists($id)) {
+            if (!$users->itemExists($id)) {
  return $this->notfound();
 }
 
@@ -55,7 +55,7 @@ $db = $users->db;
         $adminurl = $this->adminurl;
         $editurl = Link::url('/admin/users/?id');
         $tb = $this->newTable();
-        $tb->setstruct(array(
+        $tb->setStruct(array(
             array(
                 $lang->author,
                 '$name'
@@ -83,13 +83,13 @@ $db = $users->db;
         ));
 
         $result.= $tb->build($items);
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 
     private function deleteAuthor($uid) {
         $users = Users::i();
-        if (!$users->itemexists($uid)) {
+        if (!$users->itemExists($uid)) {
  return false;
 }
 

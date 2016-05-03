@@ -33,7 +33,7 @@ class Table
     public static function fromitems(array $items, array $struct) {
         $classname = __class__;
         $self = new $classname();
-        $self->setstruct($struct);
+        $self->setStruct($struct);
         return $self->build($items);
     }
 
@@ -140,7 +140,7 @@ class Table
             $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
         }
 
-        return $this->getadmintheme()->parsearg($this->body, $args);
+        return $this->getadmintheme()->parseArg($this->body, $args);
     }
 
     //predefined callbacks
@@ -164,7 +164,7 @@ class Table
 
     public function setPosts(array $struct) {
         array_unshift($struct, $this->checkbox('checkbox'));
-        $this->setstruct($struct);
+        $this->setStruct($struct);
         $this->addcallback('$tempcallback' . count($this->callbacks) , array(
             $this,
             'posts_callback'
@@ -173,7 +173,7 @@ class Table
 
     public function props(array $props) {
         $lang = Lang::i();
-        $this->setstruct(array(
+        $this->setStruct(array(
             array(
                 $lang->name,
                 '$name'
@@ -201,7 +201,7 @@ class Table
                     if ($k2 = $lang->__get($kv)) $kv = $k2;
                     $args->name = $kv;
                     $args->value = $vv;
-                    $body.= $admintheme->parsearg($this->body, $args);
+                    $body.= $admintheme->parseArg($this->body, $args);
                 }
             } else {
                 if ($k2 = $lang->__get($k)) {
@@ -210,7 +210,7 @@ class Table
 
                 $args->name = $k;
                 $args->value = $v;
-                $body.= $admintheme->parsearg($this->body, $args);
+                $body.= $admintheme->parseArg($this->body, $args);
             }
         }
 
@@ -219,7 +219,7 @@ class Table
 
     public function inputs(array $inputs) {
         $lang = Lang::i();
-        $this->setstruct(array(
+        $this->setStruct(array(
             array(
                 $lang->name,
                 '<label for="$name-input">$title</label>'
@@ -262,8 +262,8 @@ class Table
             $args->name = $name;
             $args->title = $lang->$name;
             $args->value = $args->$name;
-            $args->input = $admintheme->parsearg($input, $args);
-            $body.= $admintheme->parsearg($this->body, $args);
+            $args->input = $admintheme->parseArg($input, $args);
+            $body.= $admintheme->parseArg($this->body, $args);
         }
 
         return $admintheme->gettable($this->head, $body);

@@ -55,7 +55,7 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Invalid post id.");
 }
 
@@ -82,7 +82,7 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Invalid post id.");
 }
 
@@ -105,7 +105,7 @@ class MovableType extends Common
     public function getTrackbackPings($id) {
         $id = (int)$id;
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Invalid post id.");
 }
 
@@ -133,7 +133,7 @@ class MovableType extends Common
         $id = (int)$id;
         $this->canedit($username, $password, $id);
         $posts = Posts::i();
-        if (!$posts->itemexists($id)) {
+        if (!$posts->itemExists($id)) {
  return $this->xerror(404, "Invalid post id.");
 }
 

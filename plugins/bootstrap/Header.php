@@ -49,7 +49,7 @@ $admin = $this->admintheme;
         $args = new Args();
         $args->radio = $theme->getradio('radioplace', 'header', $lang->header, true) . $theme->getradio('radioplace', 'logo', $lang->logo, false);
 
-        return $admin->parsearg($tml, $args);
+        return $admin->parseArg($tml, $args);
     }
 
     public function request(Context $context)

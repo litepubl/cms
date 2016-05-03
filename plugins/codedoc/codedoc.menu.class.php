@@ -50,7 +50,7 @@ class tcodedocmenu extends tmenu {
         foreach ($items as $id => $item) {
             $args->add($item);
             Theme::$vars['post'] = tpost::i($id);
-            $result.= $theme->parsearg($tml, $args);
+            $result.= $theme->parseArg($tml, $args);
         }
 
         $result.= '</ul>';

@@ -55,7 +55,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
             $result.= $form->get();
         } else {
             $id = $this->idget();
-            if (!$files->itemexists($id)) {
+            if (!$files->itemExists($id)) {
  return $this->notfound;
 }
 
@@ -130,7 +130,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
             )
         ));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->router->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
@@ -178,7 +178,7 @@ return $r;
             return $admintheme->success($lang->success);
         } elseif ($_GET['action'] == 'edit') {
             $id = $this->idget();
-            if (!$files->itemexists($id)) {
+            if (!$files->itemExists($id)) {
  return $this->notfound;
 }
 
