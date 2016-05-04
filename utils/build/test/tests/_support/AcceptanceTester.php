@@ -23,4 +23,18 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+
+public function checkError()
+{
+$this->dontSee('exception');
+$this->dontSee('warning');
+}
+
+public function openPage($url)
+{
+$this->amOnPage($url);
+$this->checkError();
+}
+
+
 }

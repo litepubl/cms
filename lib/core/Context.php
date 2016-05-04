@@ -16,6 +16,7 @@ public $response;
 public $model;
 public $view;
 public $itemRoute;
+public $abtest;
 
 public function __construct(Request $request, Response $response)
 {

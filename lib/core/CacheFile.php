@@ -56,7 +56,7 @@ unset($this->items[$filename]);
 
     public function exists($filename) {
         return array_key_exists($filename, $this->items) ||
-( file_exists($this->getdir() . $filename) && (filetime($this->getDir() . $filename) + $this->lifetime >= time()));
+( file_exists($this->getdir() . $filename) && (filemtime($this->getDir() . $filename) + $this->lifetime >= time()));
     }
 
 public function setLifetime($value)
@@ -87,7 +87,7 @@ $this->items = [];
 
 public function includePhp($filename) {
 $fn = $this->getDir() . $filename;
-if (file_exists($fn) && (filetime($fn) + $this->lifetime >= time())) {
+if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {
         if (defined('HHVM_VERSION')) {
             // XXX: workaround for https://github.com/facebook/hhvm/issues/1447
 eval('?>' . file_get_contents($fn));

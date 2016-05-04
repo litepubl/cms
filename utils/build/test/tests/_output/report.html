@@ -200,7 +200,7 @@
      <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> 0</a></li>
    </ul>
  <div class="layout">
- <h1>Codeception Results <small><span style="color: green">OK</span> (1.2s)</small></h1>
+ <h1>Codeception Results <small><span style="color: green">OK</span> (3.5s)</small></h1>
 
 
 
@@ -211,7 +211,7 @@
  </td>
 </tr>   <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] Log out (SigninCept) <span style="color: #34495e; font-size: 70%;">1.17s</span></p>
+     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] Log out (SigninCept) <span style="color: #34495e; font-size: 70%;">3.46s</span></p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -225,6 +225,10 @@
 
       <tr>
        <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
       </tr>
 
       <tr>
@@ -248,7 +252,19 @@
       </tr>
 
       <tr>
-       <td class="stepName ">I click <span style="color: #732E81">"Выйти"</span></td>
+       <td class="stepName ">I execute js <span style="color: #732E81">"return $("a[href$='/logout/']").length"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I see element in dom <span style="color: #732E81">"a[href$="logout/"]"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I maximize window</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"a[href$="logout/"]"</span></td>
       </tr>
 
       <tr>

@@ -60,7 +60,7 @@ $vars->widget = $this;
             return '';
         }
 $view = new View();
-return $view->getidwidget($id, $title, $content, $this->template, $sidebar);
+return $view->getWidgetId($id, $title, $content, $this->template, $sidebar);
     }
 
     public function getDeftitle() {

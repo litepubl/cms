@@ -78,12 +78,16 @@ $this->composerLoaded = false;
         return new $class();
     }
 
-    public function newitem($name, $class, $id) {
-        if (!empty($this->remap[$class])) $class = $this->remap[$class];
+    public function newItem($name, $class, $id) {
+        if (!empty($this->remap[$class])) {
+$class = $this->remap[$class];
+}
+
         $this->callevent('onnewitem', array(
             $name, &$class,
             $id
         ));
+
         return new $class();
     }
 

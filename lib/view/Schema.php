@@ -113,7 +113,7 @@ return static ::$instances['schema'][$id];
 
 
         if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
-        if (!basetheme::exists($name)) {
+        if (!Theme::exists($name)) {
  return $this->error(sprintf('Theme %s not exists', $name));
 }
 

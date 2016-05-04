@@ -194,9 +194,9 @@ $this->logManager = new LogManager($this);
 return $this->logManager;
 }
 
-public function getLogger($channel = false) 
+public function getLogger()
 {
-return $this->getLogManager()->getLogger($channel);
+return $this->getLogManager()->logger;
 }
 
 public function logException(\Exception $e) {

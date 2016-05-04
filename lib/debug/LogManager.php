@@ -14,28 +14,21 @@ use Monolog\ErrorHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\HtmlFormatter;
+use Monolog\Handler\NativeMailerHandler;
 
 class LogManager
 {
 use \litepubl\core\AppTrait;
 
-public $loggers;
+public $logger;
 public $runtime;
 
 public function __construct()
  {
-$this->loggers = [];
-}
-
-public function getLogger($channel = 'general')
-{
-if (!isset($this->loggers[$channel])) {
-$logger = new logger($channel);
-$this->loggers[$channel] = $logger;
+$logger = new logger('general');
+$this->logger = $logger;
 
 $app = $this->getApp();
-switch ($channel) {
-case 'general':
 if (!Config::$debug) {
 $handler = new ErrorHandler($logger);
 $handler->registerErrorHandler([], false);
@@ -47,19 +40,15 @@ $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG,
 $handler->setFormatter(new LineFormatter(null,  null,true, false));
 $logger->pushHandler($handler);
 
-            $handler = new RuntimeHandler();
-$handler->setFormatter(new EmptyFormatter());
+            $this->runtime = new RuntimeHandler(Logger::warning);
+$this->runtime->setFormatter(new EmptyFormatter());
+$logger->pushHandler($this->runtime);
+
+if (!Config::$debug) {
+$handler = new NativeMailerHandler($app->options->email, [error] ' . $app->site->name, $app->options->fromemail, Logger::warning);
+$handler->setFormatter(new LineFormatter(null,  null,true, false));
 $logger->pushHandler($handler);
-
-$this->runtime = $handler;
-break;
-
-default:
-
 }
-}
-
-return $this->loggers[$channel];
 }
 
 public function logException(\Exception $e) {

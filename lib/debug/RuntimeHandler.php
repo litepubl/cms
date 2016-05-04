@@ -19,7 +19,6 @@ use Monolog\Handler\AbstractProcessingHandler;
 
 class RuntimeHandler extends AbstractProcessingHandler
 {
-
     public $log;
 
     /**

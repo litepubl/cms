@@ -38,8 +38,10 @@ class Item extends Data
                 $this->free();
                 return false;
             }
+
             static ::$instances[$this->instancename][$id] = $this;
         }
+
         return $this;
     }
 

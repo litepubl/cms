@@ -88,16 +88,18 @@ return $this->getApp()->cache->includePhp($filename);
 
 public function getCacheFileName(Context $context)
 {
+$ext = $context->abtest ? sprintf('.%s.php', $context->abtest) : '.php';
+
 if (!$context->itemRoute) {
-return md5($context->request->url) .'.php';
+return md5($context->request->url) .$ext;
 } else {
         switch ($context->itemRoute['type']) {
             case 'usernormal':
             case 'userget':
-                return sprintf('%s-%d.php', md5($context->request->url), $this->getApp()->options->user);
+                return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
 
             default:
-                return md5($context->request->url) . '.php';
+                return md5($context->request->url) . $ext;
         }
 }
 }
