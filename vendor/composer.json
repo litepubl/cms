@@ -1,4 +1,8 @@
 {
+    "config": {
+        "vendor-dir": "~"
+    },
+
     "require": {
         "monolog/monolog": "^1.19",
         "psr/cache": "^1.0",
