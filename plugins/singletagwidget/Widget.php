@@ -7,47 +7,46 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\singletagwidget;
 use litepubl\widget\View;
+use litepubl\widget\Widgets;
+use litepubl\widget\Sidebars;
+use litepubl\tag\Cats;
 
-class tsingletagwidget extends twidget {
+class Widget extends \litepubl\widget\Widget
+ {
     public $items;
     public $tags;
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
     protected function create() {
         parent::create();
-        $this->adminclass = 'tadminsingletagwidget';
+        $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.singletag';
         $this->addmap('items', array());
-        $this->tags = tcategories::i();
+        $this->tags = Cats::i();
     }
 
-    public function getIdwidget($idtag) {
+    public function getIdWidget($idtag) {
         foreach ($this->items as $id => $item) {
             if ($idtag == $item['idtag']) {
  return $id;
 }
-
-
         }
+
         return false;
     }
 
     public function add($idtag) {
         $tag = $this->tags->getitem($idtag);
-        $widgets = twidgets::i();
-        $id = $widgets->addext($this, $tag['title'], 'widget');
+        $widgets = Widgets::i();
+        $id = $widgets->addExt($this, $tag['title'], 'widget');
         $this->items[$id] = array(
             'idtag' => $idtag,
             'maxcount' => 10,
             'invertorder' => false
         );
 
-        $sidebars = tsidebars::i();
+        $sidebars = Sidebars::i();
         $sidebars->add($id);
         $this->save();
         //$this->added($id);
@@ -59,7 +58,7 @@ class tsingletagwidget extends twidget {
             unset($this->items[$id]);
             $this->save();
 
-            $widgets = twidgets::i();
+            $widgets = Widgets::i();
             $widgets->delete($id);
             //$this->deleted($id);
             
@@ -77,16 +76,15 @@ class tsingletagwidget extends twidget {
         if ($idwidget = $this->getidwidget($idtag)) {
  return $this->delete($idwidget);
 }
-
-
     }
 
     public function getTitle($id) {
         if (isset($this->items[$id])) {
-            if ($tag = $this->tags->getitem($this->items[$id]['idtag'])) {
+            if ($tag = $this->tags->getItem($this->items[$id]['idtag'])) {
                 return $tag['title'];
             }
         }
+
         return '';
     }
 
@@ -95,14 +93,11 @@ class tsingletagwidget extends twidget {
  return '';
 }
 
-
         $item = $this->items[$id];
-        $items = $this->tags->get_sorted_posts($item['idtag'], $item['maxcount'], $item['invertorder']);
-        if (count($items) == 0) {
+        $items = $this->tags->getSortedPosts($item['idtag'], $item['maxcount'], $item['invertorder']);
+        if (!count($items)) {
  return '';
 }
-
-
 
         $view = new View();
         return $view->getPosts($items, $sidebar, '');

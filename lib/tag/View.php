@@ -223,19 +223,6 @@ $vars->menu = $this;
         ) , 0, 'count', 0, 0, false));
     }
 
-    public function get_sorted_posts($id, $count, $invert) {
-        $ti = $this->itemsposts->thistable;
-        $posts = $this->tags->factory->posts;
-        $p = $posts->thistable;
-        $order = $invert ? 'asc' : 'desc';
-        $result = $this->db->res2id($this->db->query("select $p.id as id, $ti.post as post from $p, $ti
-    where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
-    order by $p.posted $order limit 0, $count"));
-
-        $posts->loadItems($result);
-        return $result;
-    }
-
     public function getIdPosts($id) {
         if (isset($this->cachedIdPosts[$id])) {
             return $this->cachedIdPosts[$id];

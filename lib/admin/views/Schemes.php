@@ -244,9 +244,6 @@ case 'addschema':
                     }
 
                     $schema = Schema::i($idschema);
-str::log($idschema);
-//var_dump($_POST);
-str::dump($schema->data);
                     if ($idschema > 1) {
                         $schema->customsidebar = isset($_POST['customsidebar']);
                         $schema->disableajax = isset($_POST['disableajax']);

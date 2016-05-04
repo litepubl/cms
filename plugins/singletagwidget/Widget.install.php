@@ -7,15 +7,16 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\singletagwidget;
+use litepubl\widget\Widgets;
 
-function tsingletagwidgetInstall($self) {
-    $widgets = twidgets::i();
+function WidgetInstall($self) {
+    $widgets = Widgets::i();
     $widgets->deleted = $self->widgetdeleted;
 
     $self->tags->deleted = $self->tagdeleted;
 }
 
-function tsingletagwidgetUninstall($self) {
+function WidgetUninstall($self) {
     $self->tags->unbind($self);
 }

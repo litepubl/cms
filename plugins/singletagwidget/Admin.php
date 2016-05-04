@@ -7,41 +7,38 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\singletagwidget;
 use litepubl\view\Args;
 use litepubl\core\Plugins;
 
-class tadminsingletagwidget extends tadminwidget {
-
-    public static function i() {
-        return static::iGet(__class__);
-    }
+class Admin extends \litepubl\admin\widget\Widget
+{
 
     public function getContent() {
-        $widget = tsingletagwidget::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $html = $this->html;
-        $args = new Args();
-        $id = (int)$this->getparam('idwidget', 0);
+        $widget = Widget::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
+        $id = (int)$this->getParam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
             $args->idwidget = $id;
-            $args->data['$lang.invertorder'] = $about['invertorder'];
-            $args->formtitle = $widget->gettitle($id);
-            return $html->adminform('[text=maxcount]
+            $args->formtitle = $widget->getTitle($id);
+            return $this->admin->form('[text=maxcount]
       [checkbox=invertorder]
       [hidden=idwidget]', $args);
         }
+
         $tags = array();
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }
-        $args->formtitle = $about['formtitle'];
-        return $html->adminform(admintheme::i()->getcats($tags) , $args);
+
+        $args->formtitle = $lang->formtitle;
+        return $this->admin->form($this->admin->getcats($tags) , $args);
     }
 
     public function processForm() {
-        $widget = tsingletagwidget::i();
+        $widget = Widget::i();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
@@ -55,13 +52,13 @@ class tadminsingletagwidget extends tadminwidget {
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }
-        $list = admintheme::i()->processcategories();
+
+        $list = $this->admin->processCategories();
         $add = array_diff($list, $tags);
         $delete = array_diff($tags, $list);
-        if ((count($add) == 0) && (count($delete) == 0)) {
+        if (!count($add) && !count($delete)) {
  return '';
 }
-
 
         $widget->lock();
         foreach ($delete as $idtag) {
@@ -71,6 +68,7 @@ class tadminsingletagwidget extends tadminwidget {
         foreach ($add as $idtag) {
             $widget->add($idtag);
         }
+
         $widget->unlock();
          $this->getApp()->cache->clear();
     }

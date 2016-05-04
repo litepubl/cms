@@ -9,10 +9,13 @@
 
 namespace litepubl\view;
 use litepubl\core\Str;
+use \litepubl\core\ItemOwnerTrait;
 
 class Schema extends \litepubl\core\Item
 {
-use \litepubl\core\PoolStorageTrait;
+use ItemOwnerTrait {
+ItemOwnerTrait ::load as ownerLoad;
+}
 
     public $sidebars;
     protected $themeInstance;
@@ -91,7 +94,7 @@ return static ::$instances['schema'][$id];
     }
 
     public function load() {
-        if (parent::load()) {
+        if ($this->ownerLoad()) {
             $this->sidebars = & $this->data['sidebars'];
             return true;
         }

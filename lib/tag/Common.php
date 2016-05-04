@@ -370,4 +370,18 @@ $limit.= " limit $count";
         ));
     }
 
+    public function getSortedPosts($id, $count, $invert) {
+        $ti = $this->itemsposts->thistable;
+        $posts = $this->factory->posts;
+        $p = $posts->thistable;
+        $order = $invert ? 'asc' : 'desc';
+        $result = $this->db->res2id($this->db->query(
+"select $p.id as id, $ti.post as post from $p, $ti
+    where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
+    order by $p.posted $order limit 0, $count"));
+
+        $posts->loadItems($result);
+        return $result;
+    }
+
 }
