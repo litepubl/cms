@@ -200,7 +200,7 @@
      <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> 0</a></li>
    </ul>
  <div class="layout">
- <h1>Codeception Results <small><span style="color: green">OK</span> (0.5s)</small></h1>
+ <h1>Codeception Results <small><span style="color: green">OK</span> (1.2s)</small></h1>
 
 
 
@@ -211,7 +211,7 @@
  </td>
 </tr>   <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] Log in as admin (SigninCept) <span style="color: #34495e; font-size: 70%;">0.5s</span></p>
+     <p class="scenarioSuccess" onclick="showHide('1', this)">[+] Log out (SigninCept) <span style="color: #34495e; font-size: 70%;">1.17s</span></p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -224,7 +224,11 @@
       </tr>
 
       <tr>
-       <td class="stepName ">I fill field <span style="color: #732E81">"[name=email]","j@jj.jj"</span></td>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#form-login [name=email]","j@jj.jj"</span></td>
       </tr>
 
       <tr>
@@ -236,7 +240,19 @@
       </tr>
 
       <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">I see current url equals <span style="color: #732E81">"/admin/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"Выйти"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
       </tr>
 
 

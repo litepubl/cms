@@ -35,6 +35,11 @@ public function setPost(Post $post)
 $this->post = $post;
 }
 
+public function getView()
+{
+return $this;
+}
+
 public function __get($name)
 {
 if (method_exists($this, $get = 'get'. $name)) {

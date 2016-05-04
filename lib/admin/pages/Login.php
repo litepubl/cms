@@ -143,6 +143,7 @@ $context->response->redir($url);
             $form = new adminform($args);
             $form->title = $lang->regform;
             $form->action = '$site.url/admin/reguser/{$site.q}backurl=';
+$form->id = 'form-reguser';
             $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
             $form->body.= $theme->getinput('text', 'name', '', $lang->name);
             $form->submit = 'signup';
@@ -151,6 +152,7 @@ $context->response->redir($url);
 
         $lang = Lang::admin('login');
         $form = new adminform($args);
+$form->id = 'form-login';
         $form->title = $lang->emailpass;
         $form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
         $form->body.= $theme->getinput('password', 'password', '', $lang->password);
@@ -159,6 +161,7 @@ $context->response->redir($url);
         $result.= $form->gettml();
 
         $form = new adminform($args);
+$form->id = 'form-lostpass';
         $form->title = $lang->lostpass;
         $form->action = '$site.url/admin/password/';
         $form->target = '_blank';
