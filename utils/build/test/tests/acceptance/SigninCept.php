@@ -1,4 +1,6 @@
 <?php 
+
+use Page\Login as LoginPage;
 use \Codeception\Util\Locator;
 
 $lang = new ArrayObject(parse_ini_file(
@@ -6,12 +8,9 @@ dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/lib/languages/ru/admin.
 ArrayObject::ARRAY_AS_PROPS);
 
 $i = new AcceptanceTester($scenario);
-$i->wantTo('log in as Admin');
-$i->openPage('/admin/login/');
-$i->fillField('#form-login [name=email]','j@jj.jj');
-$i->fillField('#password-password','NWjoTT29Fs8xq6Nx6ilnfg');
-$i->click('#submitbutton-log_in');
-$i->dontSee('exception');
+$loginPage = new LoginPage($i);
+$loginPage->login('j@jj.jj', 'NWjoTT29Fs8xq6Nx6ilnfg');
+
 $i->seeCurrentUrlEquals('/admin/');
 
 $i->wantTo('log out');
