@@ -1,5 +1,5 @@
 <?php 
-
+return;
 use litepubl\test\init;
 use Page\Login as LoginPage;
 if (!init::$admin->email) {

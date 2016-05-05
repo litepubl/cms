@@ -1,7 +1,7 @@
 <?php
 namespace Step\Acceptance;
 
-use litepubl\test\init;
+use litepubl\test\config;
 use litepubl\utils\Filer;
 
 class Install extends \AcceptanceTester
@@ -9,10 +9,13 @@ class Install extends \AcceptanceTester
 
     public function install()
     {
+}
+
+public function switchLanguages()
+{
 $this->changeLanguage('en');
 $this->changeLanguage('ru');
-
-    }
+}
 
     public function changeLanguage()
     {
@@ -22,10 +25,9 @@ $this->changeLanguage('ru');
     public function removeData()
     {
 $this->wantTo('Remove data files');
-require_once(init::$homedir . '/lib/utils/Filer.php');
-Filer::delete(init::$homedir . '/storage/data', true, false);
-$this->dontSeeFileExists(init::$home . '/storage/data/storage.php');
+require_once(config::$home . '/lib/utils/Filer.php');
+Filer::delete(config::$home . '/storage/data', true, false);
+$this->dontSeeFileExists(config::$home . '/storage/data/index.htm');
     }
-
 
 }
