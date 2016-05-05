@@ -16,6 +16,7 @@ trait ItemOwnerTrait
         $owner = $this->owner;
         if ($owner->itemExists($this->id)) {
             $this->data = & $owner->items[$this->id];
+$this->afterLoad();
             return true;
         }
         return false;

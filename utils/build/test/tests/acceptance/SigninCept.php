@@ -1,21 +1,21 @@
 <?php 
 
+use litepubl\test\init;
 use Page\Login as LoginPage;
-use \Codeception\Util\Locator;
-
-$lang = new ArrayObject(parse_ini_file(
-dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/lib/languages/ru/admin.ini', false),
-ArrayObject::ARRAY_AS_PROPS);
+if (!init::$admin->email) {
+init::$admin->email = 'j@jj.jj';
+init::$admin->password = 'NWjoTT29Fs8xq6Nx6ilnfg';
+}
 
 $i = new AcceptanceTester($scenario);
 $loginPage = new LoginPage($i);
-$loginPage->login('j@jj.jj', 'NWjoTT29Fs8xq6Nx6ilnfg');
+$loginPage->login(init::$admin->email, init::$admin->password);
 
 $i->seeCurrentUrlEquals('/admin/');
 
 $i->wantTo('log out');
 $v = $i->executeJS('return $("a[href$=\'/logout/\']").length');
-file_put_contents(__DIR__ . '/testlog.txt', $v);
+//file_put_contents(__DIR__ . '/testlog.txt', $v);
 
 $i->seeElementInDOM('a[href$="logout/"]');
 $i->maximizeWindow();

@@ -9,13 +9,10 @@
 
 namespace litepubl\view;
 use litepubl\core\Str;
-use \litepubl\core\ItemOwnerTrait;
 
 class Schema extends \litepubl\core\Item
 {
-use ItemOwnerTrait {
-ItemOwnerTrait ::load as ownerLoad;
-}
+use \litepubl\core\ItemOwnerTrait;
 
     public $sidebars;
     protected $themeInstance;
@@ -93,12 +90,9 @@ return static ::$instances['schema'][$id];
         return Schemes::i();
     }
 
-    public function load() {
-        if ($this->ownerLoad()) {
+    public function afterLoad() {
+parent::afterLoad();
             $this->sidebars = & $this->data['sidebars'];
-            return true;
-        }
-        return false;
     }
 
     protected function get_theme($name) {
