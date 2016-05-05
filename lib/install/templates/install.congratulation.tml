@@ -25,18 +25,18 @@ $template.head
 <div class="jumbotron">
 <h3>$lang.success</h3>
 
-      <p class="has-success help-block">$lang.canlogin: <a href='$site.url/admin/'>$site.url/admin/</a> $lang.uselogin</p>
+      <p class="has-success help-block">$lang.canlogin: <a href="$site.url/admin/" id="admin-login">$site.url/admin/</a> $lang.uselogin</p>
 
    <dl>
    <dt>E-Mail</dt>
-   <dd><code>$email</code></dd>
+   <dd><code id="email">$email</code></dd>
    <dt>$lang.password</dt>
-   <dd><code>$password</code></dd>
+   <dd><code id="password">$password</code></dd>
    </dl>
 
    <p class="has-warning help-block">$lang.passnote</p>
 
-     <p class="has-warning help-block">$lang.lostpass:  <strong><a href='$site.url/admin/password/'>$site.url/admin/password/</a></strong></p>
+     <p class="has-warning help-block">$lang.lostpass:  <strong><a href="$site.url/admin/password/">$site.url/admin/password/</a></strong></p>
 
    <p>$lang.moresteps</p>
 </div>
