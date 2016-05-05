@@ -17,7 +17,7 @@
           <a class="navbar-brand" href="$lang->homeurl">Litepublisher</a>
         </div>
 
-<form name="langform" action="" method="get" class="install">
+<form id="langform" action="" method="get" class="install">
 <div class="form-group">
 <div class="form-inline">
     <select name="lang" id="combo-lang" class="form-control">$combobox</select>
@@ -33,10 +33,10 @@
 <p class="help-block">$lang->hosting</p>
 <p class="help-block">$lang->formhead</p>
 
-    <form method="post" action="" name="form" class="install">
+    <form method="post" action="" id="form" class="install">
 
 <div class="form-group"><label for="text-email">E-Mail</label>
-<input type="text" class="form-control" name="email" id="text-email" value="" /></div>
+<input type="email" class="form-control" name="email" id="text-email" value="" autocapitalize="off" autocorrect="off" autocomplete="on" /></div>
 
 <div class="form-group"><label for="text-name">$lang->blogname</label>
 <input type="text" class="form-control" name="name" id="text-name" value="" /></div>

@@ -7,4 +7,9 @@ namespace Helper;
 class Acceptance extends \Codeception\Module
 {
 
+public function dontSeeFileExists($filename)
+{
+$this->assertFalse(file_exists($filename), 'File not deleted');
+}
+
 }
