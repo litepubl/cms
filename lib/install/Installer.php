@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\install;
+use litepubl\Config;
 use litepubl\core;
 use litepubl\core\litepubl;
 use litepubl\core\Options;
@@ -323,11 +324,24 @@ return $this->autoInstall();
             $checkrewrite = str_replace('$checkrewrite', $lang->checkrewrite, $checkrewrite);
         }
 
+$domain = Config::$host;
+if (!$domain) {
+$domain  = $_SERVER['HTTP_HOST'];
+}
+
+$domain  = \strtolower(\trim($domain ));
+        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $domain , $m)) {
+            $domain = $m[2];
+        }
+
         $dbprefix = strtolower(str_replace(array(
             '.',
             '-'
-        ) , '', $this->app->domain)) . '_';
+        ) , '', $domain)) . '_';
+
         $langcode = $this->language;
+
+$dbaccount = Config::$db ? 'hidden' : '';
         $likeurl = urlencode($lang->homeurl);
         $liketitle = urlencode($lang->homename);
 

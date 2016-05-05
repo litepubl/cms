@@ -23,11 +23,6 @@ $data = [
 ];
 
 config::save('admin', $data);
-
-$i->wantTo('Open login page');
-$i->click(static::$link);
-$i->checkError();
-
 return $this;
 }
 

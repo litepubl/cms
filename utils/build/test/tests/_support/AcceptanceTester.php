@@ -36,6 +36,9 @@ $this->amOnPage($url);
 $this->checkError();
 }
 
-
+public function clickLink($selector)
+{
+$this->click($this->grabTextFrom($selector), $selector);
+}
 
 }
