@@ -22,10 +22,12 @@ public static $form = '#form';
       public static $dbpassword = '#text-dbpassword';
       public static $dbprefix = '#text-dbprefix';
 
+      public static $submit = '#submitbutton-createblog';
+
 public function changeLanguage($name)
 {
 $i = $this->tester;
-$i->selectOption(static::langcombo, $name);
+$i->selectOption(static::$langCombo, $name);
 $i->click(static::$langSubmit);
 $i->checkError();
 }

@@ -1,11 +1,6 @@
 <?php 
 return;
-use litepubl\test\init;
 use Page\Login as LoginPage;
-if (!init::$admin->email) {
-init::$admin->email = 'j@jj.jj';
-init::$admin->password = 'NWjoTT29Fs8xq6Nx6ilnfg';
-}
 
 $i = new AcceptanceTester($scenario);
 $loginPage = new LoginPage($i);

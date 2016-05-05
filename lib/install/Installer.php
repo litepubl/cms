@@ -343,8 +343,7 @@ return $this->autoInstall();
             'en' => 'English',
             'ru' => 'Russian'
             //'ua' => 'Ukrain'
-            
-        );
+                    );
 
         $result = '';
         foreach ($langs as $lang => $value) {

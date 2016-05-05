@@ -1,6 +1,6 @@
 <?php
 namespace Page;
-use litepubl\test\init;
+use litepubl\test\config;
 
 class Installed
 {
@@ -17,11 +17,14 @@ public function saveAccount()
 $i = $this->tester;
 $i->wantTo('Save admin account');
 
-$admin = init::$admin;
-$admin->email = $i->grabTextFrom(static::$email);
-$admin->password = $i->grabTextFrom(static::$password);
-$admin->save();
+$data = [
+'email' => $i->grabTextFrom(static::$email),
+'password' => $i->grabTextFrom(static::$password),
+];
 
+config::save('admin', $data);
+
+$i->wantTo('Open login page');
 $i->click(static::$link);
 $i->checkError();
 

@@ -1,9 +1,9 @@
 {
     "email": "j@jj.jj",
     "name": "Start",
-"description": "Opsinie",
+"description": "Opisan",
 "dbname": "jusoft_test",
 "dblogin": "jusoft_test",
 "dbpassword": "test",
-"dbprefix": "cms_",
+"dbprefix": "cms_"
 }

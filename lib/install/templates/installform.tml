@@ -71,7 +71,9 @@ $lang->showdbhost</label></div>
 </div>
 </div>
 
-<div class="text-center"><div class="center-block"><button type="submit" name="createblog" id="submitbutton-createblog" class="btn btn-primary">$lang->createblog</button></div></div>
+<div class="text-center"><div class="center-block">
+<button type="submit" name="createblog" id="submitbutton-createblog" class="btn btn-primary">$lang->createblog</button>
+</div></div>
     </form>
 </div>
 </div></div>
