@@ -1,5 +1,6 @@
 <?php
 namespace Page;
+use litepubl\test\config;
 
 class Login
 {
@@ -7,21 +8,39 @@ use TesterTrait;
 
     // include url of current page
     public static $url = '/admin/login/';
+    public static $logoutUrl = '/admin/logout/';
       public static $email = '#form-login [name=email]';
 public static $password = '#password-password';
       public static $submit = '#submitbutton-log_in';
 
-public function login($email, $password)
+public function logout()
+{
+$i = $this->tester;
+$i->wantTo('log out');
+$i->openPage(static::$logoutUrl);
+return $this;
+}
+
+public function login()
+{
+$admin = config::load('admin');
+return $this->auth($admin->email, $admin->password);
+}
+
+public function auth($email, $password)
 {
 $i = $this->tester;
 $i->wantTo('log in');
-$i->openPage(static::$url);
 $i->fillField(static::$email, $email);
 $i->fillField(static::$password, $password);
 $i->click(static::$submit);
 $i->checkError();
-
 return $this;
+}
+
+public function signed()
+{
+$i->openPage(static::$url);
 }
 
 }
