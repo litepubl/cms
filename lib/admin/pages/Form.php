@@ -33,7 +33,7 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     }
 
     public function getIdSchema() {
-        return Schemes::i()->defaults['admin'];
+        return 1;
     }
 
     public function setIdSchema($id) {

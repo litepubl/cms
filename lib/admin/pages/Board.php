@@ -54,6 +54,10 @@ return;
         Lang::usefile('admin');
     }
 
+    public function getIdSchema() {
+        return Schemes::i()->defaults['admin'];
+    }
+
     public function getHead() {
         $editor = Editor::i();
         return $editor->gethead();

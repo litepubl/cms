@@ -78,6 +78,10 @@ $app = $this->getApp();
         return parent::request($context);
     }
 
+    public function getIdSchema() {
+        return Schemes::i()->defaults['admin'];
+    }
+
     public function getHead() {
         $result = parent::gethead();
         $result.= Menus::i()->heads;

@@ -28,6 +28,7 @@ class Password extends Form
 
     public function createForm() {
         $form = new AdminForm();
+$form->id = 'form-lostpass';
         $form->title = Lang::admin('password')->enteremail;
         $form->body = $this->theme->getinput('email', 'email', '', 'E-Mail');
         $form->submit = 'send';
@@ -39,7 +40,7 @@ class Password extends Form
         $lang = Lang::admin('password');
 
         if (empty($_GET['confirm'])) {
-            return $this->getform();
+            return $this->getForm();
         }
 
         $email = $_GET['email'];
@@ -57,16 +58,16 @@ class Password extends Form
         $password = $_SESSION['password'];
         session_destroy();
 
-        if ($id = $this->getiduser($email)) {
+        if ($id = $this->getIdUser($email)) {
             if ($id == 1) {
-                 $this->getApp()->options->changepassword($password);
+                 $this->getApp()->options->changePassword($password);
             } else {
-                Users::i()->changepassword($id, $password);
+                Users::i()->changePassword($id, $password);
             }
 
             $admin = $this->admintheme;
             $ulist = new UList($admin);
-            return $admin->getsection($lang->uselogin, $ulist->get(array(
+            return $admin->getSection($lang->uselogin, $ulist->get(array(
                 $theme->link('/admin/login/', $lang->controlpanel) ,
                 'E-Mail' => $email,
                 $lang->password => $password
@@ -76,18 +77,16 @@ class Password extends Form
         }
     }
 
-    public function getIduser($email) {
+    public function getIdUser($email) {
         if (empty($email)) {
  return false;
 }
-
 
         if ($email == strtolower(trim( $this->getApp()->options->email))) {
  return 1;
 }
 
-
-        return Users::i()->emailexists($email);
+        return Users::i()->emailExists($email);
     }
 
     public function processForm() {
@@ -95,10 +94,10 @@ class Password extends Form
             $this->restore($_POST['email']);
         }
         catch(Exception $e) {
-            return sprintf('<h4 class="red">%s</h4>', $e->getMessage());
+            return $this->admintheme->geterr($e->getMessage());
         }
 
-        return $this->admintheme->success(Lang::admin()->success);
+        return $this->admintheme->success(Lang::admin('')->success);
     }
 
     public function restore($email) {
@@ -109,15 +108,11 @@ class Password extends Form
 }
 
 
-        $id = $this->getiduser($email);
-        if (!$id) {
+        $id = $this->getIdUser($email);        if (!$id) {
  return $this->error($lang->error);
 }
 
-
-
         $args = new Args();
-
         Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
         if (!isset($_SESSION['count'])) {
             $_SESSION['count'] = 1;
@@ -125,8 +120,6 @@ class Password extends Form
             if ($_SESSION['count']++ > 3) {
  return $this->error($lang->outofcount);
 }
-
-
         }
 
         $_SESSION['email'] = $email;
@@ -148,8 +141,7 @@ class Password extends Form
         $args->password = $password;
         Lang::usefile('mail');
         $lang = Lang::i('mailpassword');
-        $theme = Theme::i();
-
+        $theme = $this->theme;
         $subject = $theme->parseArg($lang->subject, $args);
         $body = $theme->parseArg($lang->body, $args);
 
