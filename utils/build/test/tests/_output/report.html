@@ -195,12 +195,12 @@
    <ul id="toolbar-filter">
      <li> <a href="#" title="Show all" onClick="showAllScenarios()">◯</a></li>
      <li> <a href="#" title="Successful" onClick="toggleScenarios('scenarioSuccess', this.parentElement)"><strong>✔</strong> 3</a></li>
-     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> 0</a></li>
+     <li> <a href="#" title="Failed" onClick="toggleScenarios('scenarioFailed', this.parentElement)"><strong>✗</strong> 1</a></li>
      <li> <a href="#" title="Skipped" onClick="toggleScenarios('scenarioSkipped', this.parentElement)"><strong>S</strong> 0</a></li>
      <li> <a href="#" title="Incomplete" onClick="toggleScenarios('scenarioIncomplete', this.parentElement)"><strong>I</strong> 0</a></li>
    </ul>
  <div class="layout">
- <h1>Codeception Results <small><span style="color: green">OK</span> (9.3s)</small></h1>
+ <h1>Codeception Results <small><span style="color: #e74c3c">FAILED</span> (25s)</small></h1>
 
 
 
@@ -229,7 +229,7 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('2', this)">[+] Check errors (02loginCept) <span style="color: #34495e; font-size: 70%;">4.23s</span></p>
+     <p class="scenarioSuccess" onclick="showHide('2', this)">[+] Check errors (02loginCept) <span style="color: #34495e; font-size: 70%;">4.94s</span></p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -255,6 +255,10 @@
 
       <tr>
        <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
       </tr>
 
       <tr>
@@ -286,6 +290,10 @@
       </tr>
 
       <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">I see current url equals <span style="color: #732E81">"/admin/"</span></td>
       </tr>
 
@@ -310,6 +318,10 @@
       </tr>
 
       <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">I see current url equals <span style="color: #732E81">"/admin/login/"</span></td>
       </tr>
 
@@ -323,7 +335,7 @@
 
    <tr class="scenarioRow scenarioSuccess">
     <td>
-     <p class="scenarioSuccess" onclick="showHide('3', this)">[+] Check errors (03ContactsCept) <span style="color: #34495e; font-size: 70%;">5.08s</span></p>
+     <p class="scenarioSuccess" onclick="showHide('3', this)">[+] Check errors (10ContactsCept) <span style="color: #34495e; font-size: 70%;">5.88s</span></p>
     </td>
    </tr>
    <tr class="scenarioRow scenarioSuccess">
@@ -353,6 +365,10 @@
 
       <tr>
        <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
       </tr>
 
       <tr>
@@ -388,6 +404,10 @@
       </tr>
 
       <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
        <td class="stepName ">I fill field <span style="color: #732E81">"input[name=email]",""</span></td>
       </tr>
 
@@ -413,6 +433,10 @@
 
       <tr>
        <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
       </tr>
 
       <tr>
@@ -443,8 +467,227 @@
        <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
       </tr>
 
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
 
          
+
+     </table>
+    </td>
+   </tr>
+
+
+   <tr class="scenarioRow scenarioFailed">
+    <td>
+     <p class="scenarioFailed" onclick="showHide('4', this)">[+] Check errors (11CommentCept) <span style="color: #34495e; font-size: 70%;">14.14s</span></p>
+    </td>
+   </tr>
+   <tr class="scenarioRow scenarioFailed">
+    <td>
+     <table border="0" width="100%" class="scenarioFailed scenarioStepsTable" id="stepContainer4">
+
+
+      <tr>
+       <td class="stepName ">I maximize window</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I am on page <span style="color: #732E81">"/"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Parse error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"Первая запись на сайте"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I grab from current url</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#comment","Еще комментарий для проверки1462557532"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"#submit-button"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Parse error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"Я человек"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Parse error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#comment",""</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"#submit-button"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Parse error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I see <span style="color: #732E81">"Ошибка"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"Ok"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"пожалуйста, войдите"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I grab from current url</td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#form-login [name=email]","j@jj.jj"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#password-password","pFjz4gFA5zuN6wzBFypJwA"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"#submitbutton-log_in"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"warning"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Parse error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Fatal error"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I don't see <span style="color: #732E81">"Notice: Undefined"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I make screenshot <span style="color: #732E81">"returned"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I see current url equals <span style="color: #732E81">"/pervaya-zapis-na-sayte.htm"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I fill field <span style="color: #732E81">"#comment","Еще другой комментарий для проверки1462557544"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName ">I click <span style="color: #732E81">"#submit-button"</span></td>
+      </tr>
+
+      <tr>
+       <td class="stepName failedStep">I don't see <span style="color: #732E81">"exception"</span></td>
+      </tr>
+
+
+         <tr >
+    <td class="error">
+        Failed asserting that   <bold>/send-comment.php</bold><br />
+--> <info>Notice: Undefined index: subscribe in D:\OpenServer\domains\cms\lib\core\UserOptions.php on line 55<br />
+ALERT<br />
+Message:<br />
+Caught exception:<br />
+The requested method redir not found in class litepubl\core\Router<br />
+#0 110 \lib\core\Data.php litepubl\core\Data->error<br />
+'The requested method redir not found in class l</info><br />
+<debug>[Content too long to display. See complete response in 'D:\OpenServer\domains\cms\utils\build\test\tests/_output\' directory]</debug><br />
+--> does not contain "exception".
+    </td>
+</tr>
 
      </table>
     </td>
@@ -463,7 +706,7 @@
        </tr>
        <tr>
         <td class="scenarioFailed">Failed scenarios:</td>
-        <td class="scenarioFailedValue"><strong>0</strong></td>
+        <td class="scenarioFailedValue"><strong>1</strong></td>
        </tr>
        <tr>
         <td class="scenarioSkipped">Skipped scenarios:</td>

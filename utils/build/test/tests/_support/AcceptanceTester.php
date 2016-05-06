@@ -31,6 +31,7 @@ $this->dontSee('exception');
 $this->dontSee('warning');
 $this->dontSee('Parse error');
 $this->dontSee('Fatal error');
+$this->dontSee('Notice: Undefined');
 }
 
 public function openPage($url)

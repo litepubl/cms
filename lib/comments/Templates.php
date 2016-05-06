@@ -31,6 +31,7 @@ $props->view = $view;
         $lang = Lang::i('comment');
         $comments = Comments::i();
         $list = $comments->getContent($view);
+
         $theme = $view->theme;
         $args = new Args();
         $args->count = $view->cmtcount;

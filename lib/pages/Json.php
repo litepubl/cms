@@ -47,7 +47,7 @@ $post = $request->getPost();
 }
 
 $args = false;
-        if ($s = trim($request->getInput)()) {
+        if ($s = trim($request->getInput())) {
             $args = json_decode($s, true);
         }
 

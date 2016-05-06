@@ -1,6 +1,5 @@
 <?php
 namespace Page;
-use test\config;
 
 class Contacts 
 {

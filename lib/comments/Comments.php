@@ -143,11 +143,17 @@ $result->pid = $pid;
     }
 
     public function select($where, $limit) {
-        if ($where != '') $where.= ' and ';
+        if ($where) {
+$where.= ' and ';
+}
+
         $table = $this->thistable;
-        $authors =  $this->getApp()->db->users;
-        $res =  $this->getApp()->db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
-    where $where $authors.id = $table.author $limit");
+$db = $this->getApp()->db;
+        $authors =  $db->users;
+        $res =  $db->query(
+"select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    where $where $authors.id = $table.author $limit"
+);
 
         return $this->res2items($res);
     }
@@ -219,7 +225,7 @@ $page = max(0, $view->commentpages - $page) + 1;
         }
 
         $table = $this->thistable;
-        $items = $this->select("$table.post = $this->pid $where and $table.status = '$status'", "order by $table.posted asc limit $from, $count");
+        $items = $this->select("$table.post = $view->id $where and $table.status = '$status'", "order by $table.posted asc limit $from, $count");
 
         $args = new Args();
         $args->from = $from;

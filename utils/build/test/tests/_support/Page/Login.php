@@ -43,7 +43,7 @@ public function check()
 $i = $this->tester;
 $i->wantTo('Wheare are');
 $url = $i->grabFromCurrentUrl();
-codexcept::debug($url);
+codexcept_debug($url);
 
 if (strpos($url, static::$url)) {
 $this->login();
