@@ -2,7 +2,7 @@
 
 use Page\Install;
 use Page\Installed;
-use litepubl\test\config;
+use test\config;
 
 if (config::exists('admin')) {
 codecept_debug('Install skiped');

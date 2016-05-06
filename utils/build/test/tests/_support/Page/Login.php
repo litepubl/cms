@@ -38,8 +38,26 @@ $i->checkError();
 return $this;
 }
 
-public function signed()
+public function check()
 {
+$i = $this->tester;
+$i->wantTo('Wheare are');
+$url = $i->grabFromCurrentUrl();
+codexcept::debug($url);
+
+if (strpos($url, static::$url)) {
+$this->login();
+} else {
+$this->open();
+}
+
+return $this;
+}
+
+public function open()
+{
+$i = $this->tester;
+$i->wantTo('Open login page');
 $i->openPage(static::$url);
 }
 
