@@ -1,6 +1,6 @@
 <?php
 
-namespace litepubl\test;
+namespace test;
 
 config::init();
 

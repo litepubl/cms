@@ -1,7 +1,7 @@
 <?php
 
 namespace Page;
-use litepubl\test\config;
+use test\config;
 use litepubl\utils\Filer;
 
 class Install

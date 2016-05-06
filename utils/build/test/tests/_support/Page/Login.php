@@ -1,6 +1,6 @@
 <?php
 namespace Page;
-use litepubl\test\config;
+use test\config;
 
 class Login
 {
