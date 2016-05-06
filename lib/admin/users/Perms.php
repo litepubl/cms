@@ -118,7 +118,7 @@ $class = str_replace('-', '\\', $class);
                     $perm = new $class();
                     $id = PermItems::i()->add($perm);
                     $perm->admin->processForm();
-                    return  $this->getApp()->router->redir(Link::url($this->url, 'action=edit&id=' . $id));
+                    return  $this->getApp()->context->response->redir(Link::url($this->url, 'action=edit&id=' . $id));
                 }
             }
     }

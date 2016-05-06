@@ -14,6 +14,7 @@ use litepubl\comments\Manager;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Filter;
+use liteepubl\post\Post;
 
 class Moderator extends \litepubl\admin\Menu
 {
@@ -179,7 +180,7 @@ $result .= $admin->help($comment->content);
     }
 
     protected function get_table($kind) {
-        $comments = tcomments::i(0);
+        $comments = Comments::i(0);
         $perpage = 20;
         // get total count
         $status = $kind == 'hold' ? 'hold' : 'approved';
@@ -284,7 +285,7 @@ $admin = $this->admintheme;
 
     public function processForm() {
         $result = '';
-        $comments = tcomments::i();
+        $comments = Comments::i();
         if (isset($_REQUEST['action'])) {
             switch ($_REQUEST['action']) {
                 case 'reply':
@@ -293,9 +294,9 @@ $admin = $this->admintheme;
                     }
 
                     $item = $comments->getitem($this->idget());
-                    $post = tpost::i((int)$item['post']);
+                    $post = Post::i((int)$item['post']);
                     $this->manager->reply($this->idget() , $_POST['content']);
-                    return  $this->getApp()->router->redir($post->lastcommenturl);
+                    return  $this->getApp()->context->response->redir($post->lastcommenturl);
                     break;
 
 

@@ -20,6 +20,7 @@ use litepubl\core\UserOptions;
 use litepubl\core\Session;
 use litepubl\pages\Simple;
 use litepubl\core\Str;
+use litepubl\core\TempProps;
 
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
  {
@@ -48,7 +49,9 @@ $response->status = 405;
 return;
         }
 
-        $response->body = $this->doRequest($_POST);
+$temp = new TempProps($this);
+$temp->context = $context;
+        $response->body = $this->doRequest($context->request->getPost());
     }
 
     public function doRequest(array $args) {
@@ -328,17 +331,16 @@ return $this->helper->getErrorContent($s);
         $values['subscribe'] = isset($values['subscribe']);
     }
 
-    public function sendresult($link, $cookies) {
+    public function sendResult($link, $cookies) {
         if (isset($this->helper) && ($this != $this->helper)) {
  return $this->helper->sendresult($link, $cookies);
 }
-
 
         foreach ($cookies as $name => $value) {
             setcookie($name, $value, time() + 30000000, '/', false);
         }
 
-        return  $this->getApp()->router->redir($link);
+        return  $this->context->response->redir($link);
     }
 
 }

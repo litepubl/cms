@@ -171,7 +171,7 @@ $admin = $this->admintheme;
             case 'add':
                 $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if ($id = $users->add($_POST)) {
-                     $this->getApp()->router->redir("$this->adminurl=$id&action=edit");
+                     $this->getApp()->context->response->redir("$this->adminurl=$id&action=edit");
                 } else {
                     return $this->admintheme->geterr($this->lang->invalidregdata);
                 }

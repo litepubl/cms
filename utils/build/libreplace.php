@@ -229,6 +229,7 @@ $s = strtr($s, [
 'parsearg' => 'parseArg',
 'setstruct' => 'setStruct',
 'router->page' => 'context->request->page',
+'router->redir' => 'context->response->redir',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');
