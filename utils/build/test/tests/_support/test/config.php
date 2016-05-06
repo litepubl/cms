@@ -2,7 +2,7 @@
 
 namespace test;
 
-config::init();
+//config::init();
 
 class config
 {

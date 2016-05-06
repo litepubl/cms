@@ -97,7 +97,7 @@ $form->id = 'form-lostpass';
             return $this->admintheme->geterr($e->getMessage());
         }
 
-        return $this->admintheme->success(Lang::admin('')->success);
+        return $this->admintheme->success(Lang::admin('password')->success);
     }
 
     public function restore($email) {
@@ -107,8 +107,8 @@ $form->id = 'form-lostpass';
  return $this->error($lang->error);
 }
 
-
-        $id = $this->getIdUser($email);        if (!$id) {
+        $id = $this->getIdUser($email);
+        if (!$id) {
  return $this->error($lang->error);
 }
 
