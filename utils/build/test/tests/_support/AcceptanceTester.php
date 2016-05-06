@@ -26,19 +26,17 @@ class AcceptanceTester extends \Codeception\Actor
 
 public function checkError()
 {
+$this->wantTo('Check errors');
 $this->dontSee('exception');
 $this->dontSee('warning');
+$this->dontSee('Parse error');
+$this->dontSee('Fatal error');
 }
 
 public function openPage($url)
 {
 $this->amOnPage($url);
 $this->checkError();
-}
-
-public function clickLink($selector)
-{
-$this->click($this->grabTextFrom($selector), $selector);
 }
 
 }

@@ -2,6 +2,7 @@
 
 namespace Page;
 use litepubl\test\config;
+use litepubl\utils\Filer;
 
 class Install
 {
@@ -11,7 +12,7 @@ use TesterTrait;
     public static $url = '/';
 public static $langForm = '#langform';
 public static $langCombo = '#combo-lang';
-public static $langSubmit= '#langform [name=changelang]';
+public static $langSubmit= '#changelang';
 
 public static $form = '#form';
       public static $email = '#text-email';
@@ -21,12 +22,19 @@ public static $form = '#form';
       public static $dblogin= '#text-dblogin';
       public static $dbpassword = '#text-dbpassword';
       public static $dbprefix = '#text-dbprefix';
-
       public static $submit = '#submitbutton-createblog';
+
+public function switchLanguages()
+{
+$this->tester->wantTo('Switch languages');
+$this->changeLanguage('English');
+$this->changeLanguage('Russian');
+}
 
 public function changeLanguage($name)
 {
 $i = $this->tester;
+$i->wantTo('Switch language');
 $i->selectOption(static::$langCombo, $name);
 $i->click(static::$langSubmit);
 $i->checkError();
@@ -49,6 +57,18 @@ $i->fillField(static::$dbprefix, $data->dbprefix);
 
 $i->click(static::$submit);
 $i->checkError();
+
+return $this;
+}
+
+public function removeData()
+{
+$i = $this->tester;
+$i->wantTo('Remove data files');
+require_once(config::$home . '/lib/utils/Filer.php');
+Filer::delete(config::$home . '/storage/data', true, false);
+//Filer::append(config::$home . '/storage/log.txt', "deleted\n");
+$i->dontSeeFileExists(config::$home . '/storage/data/index.htm');
 
 return $this;
 }

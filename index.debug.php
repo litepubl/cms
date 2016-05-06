@@ -12,6 +12,7 @@ include (__DIR__ . '/temp/zdebug.php');
 include (__DIR__ . '/lib/utils/Filer.php');
 $d = __dir__ . '/storage/data';
 //utils\Filer::delete($d, true, false);
+//utils\Filer::append(__DIR__ . '/storage/log.txt', '');
 
 require (__DIR__ . '/lib/debug/kernel.php');
 //require (__DIR__ . '/lib/kernel.php');

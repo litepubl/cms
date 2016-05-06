@@ -33,4 +33,9 @@ static::$_data . $name . '.json',
 );
 }
 
+public function exists($name)
+{
+return file_exists(static::$_data . $name . '.json');
+}
+
 }

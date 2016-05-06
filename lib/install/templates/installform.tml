@@ -21,7 +21,7 @@
 <div class="form-group">
 <div class="form-inline">
     <select name="lang" id="combo-lang" class="form-control">$combobox</select>
-<button class="btn btn-default" type="submit" name="changelang">Change language</button>
+<button class="btn btn-default" type="submit" id="changelang">Change language</button>
 </div></div>
 </form>
 

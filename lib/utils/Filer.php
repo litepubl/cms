@@ -116,11 +116,15 @@ class Filer {
     public static function log($s, $filename = '') {
         if (!is_string($s)) $s = var_export($s, true);
         if ($filename == '') $filename = 'log.txt';
-        static ::append(date('r') . "\n$s\n\n",  litepubl::$app->paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename);
+        static ::append(litepubl::$app->paths->data . 'logs' . DIRECTORY_SEPARATOR . $filename, date('r') . "\n$s\n\n");
     }
 
-    public static function append($s, $filename) {
+    public static function append($filename, $s) {
+if (isset($_SERVER['REQUEST_URI'])) {
         $s = $_SERVER['REQUEST_URI'] . "\n" . $s;
+}
+
+$s .= "\n";
         $dir = dirname($filename);
         if (!is_dir($dir)) {
             mkdir($dir, 0777);

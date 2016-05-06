@@ -40,12 +40,12 @@ $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG,
 $handler->setFormatter(new LineFormatter(null,  null,true, false));
 $logger->pushHandler($handler);
 
-            $this->runtime = new RuntimeHandler(Logger::warning);
+            $this->runtime = new RuntimeHandler(Logger::WARNING);
 $this->runtime->setFormatter(new EmptyFormatter());
 $logger->pushHandler($this->runtime);
 
 if (!Config::$debug) {
-$handler = new NativeMailerHandler($app->options->email, [error] ' . $app->site->name, $app->options->fromemail, Logger::warning);
+$handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
 $handler->setFormatter(new LineFormatter(null,  null,true, false));
 $logger->pushHandler($handler);
 }
