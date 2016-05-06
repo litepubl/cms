@@ -168,7 +168,7 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
 
     public function getErr($content) {
         return strtr($this->templates['error'], array(
-            '$title' => Lang::i()->error,
+            '$title' => Lang::get('default', 'error'),
             '$content' => $content
         ));
     }

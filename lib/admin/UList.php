@@ -11,6 +11,8 @@ namespace litepubl\admin;
 
 class UList
  {
+use \litepubl\core\AppTrait;
+
     const aslinks = true;
     public $ul;
     public $item;

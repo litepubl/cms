@@ -69,8 +69,8 @@ $form->id = 'form-lostpass';
             $ulist = new UList($admin);
             return $admin->getSection($lang->uselogin, $ulist->get(array(
                 $theme->link('/admin/login/', $lang->controlpanel) ,
-                'E-Mail' => $email,
-                $lang->password => $password
+                'E-Mail' => sprintf('<span class="email">%s</span>', $email),
+                $lang->password => sprintf('<span class="password">%s</span>', $password),
             )));
         } else {
             return $theme->h($lang->notfound);
@@ -93,7 +93,7 @@ $form->id = 'form-lostpass';
         try {
             $this->restore($_POST['email']);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return $this->admintheme->geterr($e->getMessage());
         }
 
@@ -114,10 +114,12 @@ $form->id = 'form-lostpass';
 
         $args = new Args();
         Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
+
         if (!isset($_SESSION['count'])) {
             $_SESSION['count'] = 1;
         } else {
             if ($_SESSION['count']++ > 3) {
+                //session_destroy();
  return $this->error($lang->outofcount);
 }
         }
