@@ -8,20 +8,22 @@
 **/
 
 namespace litepubl\admin;
-use litepubl\view\MainView;
+use litepubl\view\Schema;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\Plugins as PluginItems;
 
 class Panel implements AdminInterface
 {
+use \litepubl\core\AppTrait;
+
 public $admin;
 public $theme;
 public $lang;
 public $args;
 
 public function __construct() {
-$schema = MainView::i()->schema;
+$schema = Schema::getSchema($this->getApp()->context->view);
 $this->admin = $schema->admintheme;
 $this->theme = $schema->theme;
 $this->lang = Lang::admin();

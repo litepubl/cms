@@ -15,6 +15,8 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Filter;
 use liteepubl\post\Post;
+use litepubl\view\Vars;
+use litepubl\admin\Table;
 
 class Moderator extends \litepubl\admin\Menu
 {
@@ -192,13 +194,14 @@ $result .= $admin->help($comment->content);
 
 $admin = $this->admintheme;
         $lang = Lang::admin('comments');
-        $form = new adminform(new Args());
+        $form = $this->newForm();
         $form->title = sprintf($lang->itemscount, $from, $from + count($list) , $total);
 
         $comment = new Comment(0);
-        basetheme::$vars['comment'] = $comment;
+$vars = new Vars();
+        $vars->comment = $comment;
 
-        $Table = new Table();
+        $Table = $this->newTable();
         $Table->addcallback('$excerpt', array(
             $this,
             'get_excerpt'
@@ -259,15 +262,14 @@ $admin = $this->admintheme;
             ) ,
         ));
 
-        $form->before = $this->view->admintheme->templates['tablecols'];
+        $form->before = $this->admintheme->templates['tablecols'];
         $form->body = $Table->build($list);
-        $form->body .= $form->centergroup($formtml->getButtons('approve', 'hold', 'delete'));
+        $form->body .= $form->centerGroup($form->getButtons('approve', 'hold', 'delete'));
         $form->submit = '';
         $result = $form->get();
 
-        $theme = $this->view->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
-
+        $theme = $this->theme;
+        $result.= $theme->getPages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
         return $result;
     }
 

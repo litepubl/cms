@@ -101,7 +101,7 @@ $form->items.= GetPerm::combo(0, 'idperm');
         $result.= $admintheme->getcount($count, $from, $from + count($list));
 
         $args->adminurl = $this->adminurl;
-        $result.= Table::fromitems($files->items, array(
+        $result.= $this->tableItems($files->items, array(
             array(
                 'right',
                 'ID',

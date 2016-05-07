@@ -15,6 +15,7 @@ use litepubl\admin\Link;
 use litepubl\admin\Form;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Schema;
 use litepubl\view\Parser;
 use litepubl\core\Str;
 use litepubl\core\Arr;
@@ -22,7 +23,7 @@ use litepubl\core\Arr;
 class Widgets extends \litepubl\admin\Menu
 {
 
-    public static function getSidebarNames(tview $schema) {
+    public static function getSidebarNames(Schema $schema) {
         $count = $schema->theme->sidebarscount;
         $result = range(1, $count);
         $parser = Parser::i();

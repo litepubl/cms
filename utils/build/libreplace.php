@@ -233,6 +233,7 @@ $s = strtr($s, [
 'getvalue(' => 'getValue(',
 'setvalue(' => 'setValue',
 'getdb(' => 'getDB(',
+'$this->view->admintheme' => '$this->admintheme',
 
 ]);
 

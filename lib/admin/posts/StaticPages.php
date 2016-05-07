@@ -16,7 +16,7 @@ use litepubl\admin\Table;
 class StaticPages extends \litepubl\admin\Menu
 {
 
-    private function editform(targs $args) {
+    private function editForm(Args $args) {
         $args->text = $args->rawcontent;
         $args->formtitle = $this->title;
         return $this->admintheme->form('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);

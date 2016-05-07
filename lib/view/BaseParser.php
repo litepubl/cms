@@ -82,7 +82,7 @@ class BaseParser extends \litepubl\core\Events
         $theme->lock();
 
         if ($parentname = $this->getparentname($theme->name)) {
-            $parent_theme = basetheme::getbyname(get_class($theme) , $parentname);
+            $parent_theme = Base::getByName(get_class($theme) , $parentname);
             $theme->templates = $parent_theme->templates;
             $theme->parent = $parent_theme->name;
         }

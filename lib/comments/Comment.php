@@ -83,7 +83,7 @@ $this->data = $this->data + Users::i()->getitem($this->data['author']);
         return Lang::date($this->posted, $theme->templates['content.post.templatecomments.comments.comment.date']);
     }
 
-    public function GeLangstatus() {
+    public function getLocalStatus() {
         return Lang::get('commentstatus', $this->status);
     }
 
