@@ -59,6 +59,7 @@ public function open()
 $i = $this->tester;
 $i->wantTo('Open login page');
 $i->openPage(static::$url);
+return $this;
 }
 
 }

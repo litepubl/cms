@@ -84,7 +84,7 @@ function MenusInstall($self) {
         $self->createitem($opt, 'links', 'admin', 'litepubl\admin\options\Options');
         $self->createitem($opt, 'cache', 'admin', 'litepubl\admin\options\Options');
         $self->createitem($opt, 'catstags', 'admin', 'litepubl\admin\options\Options');
-        $self->createitem($opt, 'secure', 'admin', 'litepubl\admin\options\Secury');
+        $self->createitem($opt, 'secure', 'admin', 'litepubl\admin\options\Secure');
         $self->createitem($opt, 'robots', 'admin', 'litepubl\admin\options\Options');
         $self->createitem($opt, 'local', 'admin', 'litepubl\admin\options\LangMerger');
         $self->createitem($opt, 'parser', 'admin', 'litepubl\admin\options\Theme');

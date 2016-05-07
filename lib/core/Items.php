@@ -28,24 +28,12 @@ class Items extends Events
         }
     }
 
-    public function load() {
-        if ($this->dbversion) {
-            return  $this->getApp()->poolStorage->load($this);
-        } else {
-            return parent::load();
-        }
-    }
-
-    public function save() {
-        if ($this->lockcount > 0) {
-            return;
-        }
-
-        if ($this->dbversion) {
-            return  $this->getApp()->poolStorage->save($this);
-        } else {
-            return parent::save();
-        }
+    public function getStorage() {
+if ($this->dbversion) {
+        return  $this->getApp()->poolStorage;
+} else {
+return parent::getStorage();
+}
     }
 
     public function loadall() {

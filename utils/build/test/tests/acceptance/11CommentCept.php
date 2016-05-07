@@ -34,7 +34,7 @@ codecept_debug($i->grabFromCurrentUrl());
 $login = new Login($i);
 $login->login();
 $i->wantTo('Must be returned back to post');
-$i->makeScreenshot('returned');
+//$i->makeScreenshot('returned');
 $i->seeCurrentUrlEquals($posturl);
 
 $comment->send($data->comment2 . time());
