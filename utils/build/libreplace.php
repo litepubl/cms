@@ -230,6 +230,10 @@ $s = strtr($s, [
 'setstruct' => 'setStruct',
 'router->page' => 'context->request->page',
 'router->redir' => 'context->response->redir',
+'getvalue(' => 'getValue(',
+'setvalue(' => 'setValue',
+'getdb(' => 'getDB(',
+
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');

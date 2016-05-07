@@ -72,9 +72,9 @@ use \litepubl\core\PoolStorageTrait;
 
     public function changed($id) {
         $comments = Comments::i();
-        $idpost = $comments->getvalue($id, 'post');
+        $idpost = $comments->getValue($id, 'post');
         $count = $comments->db->getcount("post = $idpost and status = 'approved'");
-        $comments->getdb('posts')->setvalue($idpost, 'commentscount', $count);
+        $comments->getDB('posts')->setValue($idpost, 'commentscount', $count);
         if ( $this->getApp()->options->commentspool) {
             Pool::i()->set($idpost, $count);
         }
@@ -94,7 +94,7 @@ use \litepubl\core\PoolStorageTrait;
         $this->onchanged($id);
     }
 
-    public function sendmail($id) {
+    public function sendMail($id) {
         if ($this->sendnotification) {
              $this->getApp()->onClose->on($this, 'send_mail', $id);
         }

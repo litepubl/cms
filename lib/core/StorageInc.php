@@ -33,8 +33,8 @@ return '.inc.php';
     }
 
     public function loadData($filename) {
-        if (\file_exists($filename . $this->ext)) {
-            return include ($filename . $this->ext);
+        if (\file_exists($filename . $this->getExt())) {
+            return include ($filename . $this->getExt());
         }
 
         return false;

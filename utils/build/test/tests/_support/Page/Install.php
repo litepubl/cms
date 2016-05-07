@@ -65,7 +65,13 @@ public function removeData()
 {
 $i = $this->tester;
 $i->wantTo('Remove data files');
+
 Filer::delete(config::$home . '/storage/data', true, false);
+Filer::delete(config::$home . '/storage/cache', true, false);
+Filer::delete(config::$home . '/files/js', true, false);
+Filer::delete(config::$home . '/files/image', true, false);
+Filer::delete(config::$home . '/files/imgresize', true, false);
+
 $i->assertFileNotExists(config::$home . '/storage/data/index.htm', 'Data folder not empty');
 return $this;
 }

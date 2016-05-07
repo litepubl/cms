@@ -11,8 +11,9 @@ namespace litepubl\core;
 
 function UserOptionsInstall($self) {
     $self->defvalues['subscribe'] = 'enabled';
-    if (isset( $self->getApp()->options->defaultsubscribe)) {
-$self->defvalues['subscribe'] =  $self->getApp()->options->defaultsubscribe ? 'enabled' : 'disabled';
+$options = $self->getApp()->options;
+    if (isset( $options->defaultsubscribe)) {
+$self->defvalues['subscribe'] =  $options->defaultsubscribe ? 'enabled' : 'disabled';
 }
 
     $self->defvalues['authorpost_subscribe'] = 'enabled';

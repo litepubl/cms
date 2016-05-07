@@ -4,7 +4,7 @@ define('litepubl_mode', 'config');
 require (__DIR__ . '/index.php');
 Config::$debug = true;
 //Config::$enableZeroDatetime  = true;
-//Config::$classes['storage'] = 'litepubl\storageinc';
+Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$beforeRequest  = function() {
 include (__DIR__ . '/temp/zdebug.php');
 };

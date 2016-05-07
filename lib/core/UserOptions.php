@@ -14,10 +14,6 @@ class UserOptions extends Items
     public $defvalues;
     private $defitems;
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
     protected function create() {
         $this->dbversion = true;
         parent::create();
@@ -28,11 +24,11 @@ class UserOptions extends Items
     }
 
     public function getVal($name) {
-        return $this->getvalue( $this->getApp()->options->user, $name);
+        return $this->getValue( $this->getApp()->options->user, $name);
     }
 
     public function setVal($name, $value) {
-        return $this->setvalue( $this->getApp()->options->user, $name, $value);
+        return $this->setValue( $this->getApp()->options->user, $name, $value);
     }
 
     public function getItem($id) {
@@ -40,8 +36,6 @@ class UserOptions extends Items
         if (isset($this->items[$id]) || $this->select("$this->thistable.id = $id", 'limit 1')) {
  return $this->items[$id];
 }
-
-
 
         $item = $this->defvalues;
         $item['id'] = $id;
@@ -51,7 +45,7 @@ class UserOptions extends Items
     }
 
     public function getValue($id, $name) {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return $item[$name];
     }
 
@@ -62,18 +56,17 @@ class UserOptions extends Items
  return;
 }
 
-
         $this->items[$id][$name] = $value;
         $item[$name] = $value;
         $item['id'] = $id;
-        $this->setitem($item);
+        $this->setItem($item);
     }
 
     public function setItem($item) {
         $this->items[(int)$item['id']] = $item;
         $i = array_search($item['id'], $this->defitems);
         if ($i === false) {
-            $this->db->updateassoc($item);
+            $this->db->updateAssoc($item);
         } else {
             $this->db->insert($item);
             array_splice($this->defitems, $i, 1);
