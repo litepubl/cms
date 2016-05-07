@@ -27,7 +27,7 @@ use AppTrait;
 
     public function save(Data $obj) {
         $this->modified = true;
-        $base = $obj->getbasename();
+        $base = $obj->getBaseName();
         if (!isset($this->data[$base])) {
             $this->data[$base] = & $obj->data;
         }
