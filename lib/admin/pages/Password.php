@@ -47,8 +47,14 @@ $form->id = 'form-lostpass';
         $confirm = $_GET['confirm'];
         Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
 
-        if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
-            if (!isset($_SESSION['email'])) {
+        if (
+!isset($_SESSION['email'])
+ || ($email != $_SESSION['email'])
+ || ($confirm != $_SESSION['confirm'])
+) {
+
+            if (Session::expired(15)
+|| !isset($_SESSION['email'])) {
                 session_destroy();
             }
 
@@ -113,13 +119,17 @@ $form->id = 'form-lostpass';
 }
 
         $args = new Args();
+
         Session::start('password-restore-' . md5( $this->getApp()->options->hash($email)));
+if (Session::expired(15)) {
+session_destroy();
+ return $this->error($lang->outofcount);
+}
 
         if (!isset($_SESSION['count'])) {
             $_SESSION['count'] = 1;
         } else {
             if ($_SESSION['count']++ > 3) {
-                //session_destroy();
  return $this->error($lang->outofcount);
 }
         }

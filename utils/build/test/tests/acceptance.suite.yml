@@ -8,6 +8,7 @@ class_name: AcceptanceTester
 modules:
     enabled:
         - \Helper\Acceptance
+        - Asserts
         - WebDriver :
             url: 'http://cms'
             browser: phantomjs 

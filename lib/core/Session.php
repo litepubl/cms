@@ -87,4 +87,14 @@ return static::$instance;
         return $r;
     }
 
+public static function expired($minutes = 60)
+{
+if (isset($_SESSION['timeCreate'])) {
+return time() >= $_SESSION['timeCreate'] + $minutes * 60;
+} else {
+$_SESSION['timeCreate'] = time();
+return false;
+}
+}
+
 }

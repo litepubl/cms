@@ -1,6 +1,7 @@
 <?php
 namespace Page;
 use test\config;
+use test\Utils;
 
 class Password
 {
@@ -10,7 +11,7 @@ use TesterTrait;
     public static $url = '/admin/password/';
     public static $logoutUrl = '/admin/logout/';
       public static $email = '#form-lostpass [name=email]';
-public static $password = '#password-password';
+public static $password = '.password';
       public static $submit = '#submitbutton-send';
 
 public function logout()
@@ -25,35 +26,26 @@ public function restore()
 {
 $admin = config::load('admin');
 $i = $this->tester;
-$i->wantTo('Send emailin');
+$i->wantTo('Send email');
 $i->fillField(static::$email, $admin->email);
 $i->click(static::$submit);
 $i->checkError();
 
-return $this;
-}
+$i->wantTo('Grab url from email');
+$s = Utils::getSingleFile(config::$home . '/storage/data/logs/');
+$i->assertFalse(empty($s), 'Email file not found');
+$url = Utils::getLine($s, '&confirm=');
+$i->assertNotEmpty($url, 'Url not found in email');
+$i->amOnUrl($url);
+$i->checkError();
+$admin->password = $i->grabTextFrom(static::$password);
+config::save('admin', $admin);
 
-public function check()
-{
-$i = $this->tester;
-$i->wantTo('Wheare are');
-$url = $i->grabFromCurrentUrl();
-codexcept_debug($url);
-
-if (strpos($url, static::$url)) {
-$this->login();
-} else {
-$this->open();
-}
+$login = new Login($i);
+$i->openPage($login::$url);
+$login->auth($admin->email, $admin->password);
 
 return $this;
-}
-
-public function open()
-{
-$i = $this->tester;
-$i->wantTo('Open login page');
-$i->openPage(static::$url);
 }
 
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Step\Acceptance;
 
-use litepubl\test\config;
+use test\config;
 use litepubl\utils\Filer;
 
 class Install extends \AcceptanceTester
@@ -25,9 +25,8 @@ $this->changeLanguage('ru');
     public function removeData()
     {
 $this->wantTo('Remove data files');
-require_once(config::$home . '/lib/utils/Filer.php');
 Filer::delete(config::$home . '/storage/data', true, false);
-$this->dontSeeFileExists(config::$home . '/storage/data/index.htm');
+$this->assertFileNotExists(config::$home . '/storage/data/index.htm', 'Data storage not empty');
     }
 
 }

@@ -75,10 +75,6 @@ return;
         return '';
     }
 
-    public function getIdSchema() {
-        return Schemes::i()->defaults['admin'];
-    }
-
     public function setIdSchema($id) {
     }
 
