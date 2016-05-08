@@ -204,8 +204,12 @@ $this->getLogManager()->logException($e);
 }
 
     public function showErrors() {
-        if (Config::$debug && $this->logManager && ($this->options->echoexception || $this->options->admincookie)) {
-            echo $this->logManager->getHtml();
+        if (Config::$debug
+ && $this->logManager
+ && ($this->options->echoexception || $this->options->admincookie)
+&& ($log = $this->logManager->getHtml())
+) {
+            echo $log;
         }
     }
 

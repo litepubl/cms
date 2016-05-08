@@ -148,7 +148,7 @@ class Options extends \litepubl\admin\Menu
       [checkbox=commentspool]
       ', $args);
 
-                $form = new adminform($args);
+                $form = new $this->newForm($args);
                 $form->submit = 'clearcache';
                 $result.= $form->get();
                 return $result;

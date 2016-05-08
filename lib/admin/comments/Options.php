@@ -24,7 +24,7 @@ class Options extends \litepubl\admin\Menu
         $options =  $this->getApp()->options;
         $lang = Lang::admin('commentmanager');
         $args = new Args();
-        $tabs = new Tabs($this->admintheme);
+        $tabs = $this->newTabs($this->admintheme);
         $args->comstatus = $this->theme->comboItems(array(
             'closed' => $lang->closed,
             'reg' => $lang->reg,

@@ -50,6 +50,8 @@ return false;
     }
 
     public function add($section, $filename) {
+//$this->getApp()->getLogger()->debug($filename);
+// $this->getApp()->getLogManager()->trace();
         if (!($filename = $this->normfilename($filename))) {
  return false;
 }

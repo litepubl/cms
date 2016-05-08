@@ -72,11 +72,15 @@ $this->logger->info($this->getTrace());
 
 public function getHtml()
 {
+if (count($this->runtime->log)) {
 $formatter = new HtmlFormatter();
 $result = $formatter->formatBatch($this->runtime->log);
 //clear current log
 $this->runtime->log = [];
 return $result;
+}
+
+return '';
 }
 
 }
