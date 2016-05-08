@@ -77,7 +77,7 @@ $admin = $schema->admintheme;
             default:
                 $result = var_export($_GET, true);
         }
-        return \litepubl\core\Router::htmlheader(false) . $result;
+        return $result;
     }
 
 }

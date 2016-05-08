@@ -152,7 +152,7 @@ $result .= $admin->help($comment->content);
         $args->content = $comment->rawcontent;
         $args->formtitle = Lang::i()->editform;
         $result = $this->getinfo($comment);
-        $result.= $this->admin->form('[editor=content]', $args);
+        $result.= $this->admintheme->form('[editor=content]', $args);
         return $result;
     }
 

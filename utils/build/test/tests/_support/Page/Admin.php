@@ -1,26 +1,56 @@
 <?php
 namespace Page;
 
+use test\config;
+
 class Admin
 {
 use TesterTrait;
 
     // include url of current page
     public static $url = '/admin/';
+public static $js;
 
-public function getLinksFromMenu()
+public function getMenu()
 {
 $i = $this->tester;
 $i->wantTo('Get menu links');
-$js = file_get_contents(__DIR__ . '/adminLinks.js');
-$result = $i->executeJs($js);
-//codecept_debug(var_export($result, true));
+
+if (!static::$js) {
+static::$js = file_get_contents(__DIR__ . '/adminLinks.js');
+}
+
+$result = $i->executeJs(static::$js);
+//delete logout link
+array_pop($result);
 return $result;
 }
 
 public function submit()
 {
-$this->tester->executeJs('$("form:first").submit();');
+$this->tester->executeJs('$("form:last").submit();');
+}
+
+public function getLinks($name)
+{
+$s = file_get_contents(config::$_data . "/$name.txt");
+$s = trim(str_replace("\r", '', $s));
+return explode("\n", $s);
+}
+
+public function getPages()
+{
+return $this->getLinks('adminPages');
+}
+
+public function getForms()
+{
+return $this->getLinks('adminForms');
+}
+
+public function getAjax()
+{
+return $this->getLinks('ajaxLinks');
 }
 
 }

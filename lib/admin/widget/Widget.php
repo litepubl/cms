@@ -9,7 +9,7 @@
 
 namespace litepubl\admin\widget;
 use litepubl\core\PropException;
-use litepubl\widgets\Widgets;
+use litepubl\widgets\Widgets as WidgetItems;
 use litepubl\admin\Link;
 
 class Widget extends \litepubl\admin\Panel

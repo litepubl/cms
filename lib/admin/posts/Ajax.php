@@ -106,7 +106,7 @@ return;
     }
 
     public function getContent() {
-        $theme = Schemes::i(Schemes::i()->defaults['admin'])->theme;
+        $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $lang = Lang::i('editor');
         $post = Post::i($this->idpost);
         $vars = new Vars();
@@ -143,7 +143,7 @@ return;
                     'draft' => $lang->draft
                 ) , $post->status);
 
-                $args->perms = Perms::getcombo($post->idperm);
+                $args->perms = GetPerm::combo($post->idperm);
                 $args->password = $post->password;
                 $result = Admin::admin()->parseArg('[combo=comstatus]
       [checkbox=pingenabled]
@@ -171,7 +171,7 @@ return;
                 }
         }
 
-        return \litepubl\core\Router::htmlheader(false) . $result;
+        return $result;
     }
 
     public function getText($text, $admintheme = null) {

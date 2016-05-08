@@ -79,7 +79,8 @@ class Editor extends \litepubl\admin\Menu
     }
 
     public function getAjaxlink($idpost) {
-        return  $this->getApp()->site->url . '/admin/ajaxposteditor.htm' .  $this->getApp()->site->q . "id=$idpost&get";
+$site = $this->getApp()->site;
+        return  $site->url . '/admin/ajaxposteditor.htm' .  $site->q . "id=$idpost&get";
     }
 
     public function getTabs($post = null) {
