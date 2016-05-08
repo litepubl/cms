@@ -16,6 +16,7 @@ use litepubl\pages\Menu as StdMenu;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
 use litepubl\view\Lang;
+use litepubl\utils\Filer;
 
 class Group extends \litepubl\admin\Menu
 {
@@ -23,7 +24,7 @@ class Group extends \litepubl\admin\Menu
     public function getContent() {
         $schemes = SchemaItems::i();
 $theme = $this->theme;
-$admin = $this->admin;
+$admin = $this->admintheme;
         $lang = Lang::i('schemes');
         $args = $this->newArgs();
 
@@ -75,7 +76,7 @@ return $result;
 
 
             case 'themes':
-                $themename = $_POST['themeview'];
+                $themename = $_POST['themeschema'];
                 $schemes = SchemaItems::i();
                 $schemes->lock();
                 foreach ($schemes->items as $id => $item) {

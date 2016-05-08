@@ -9,6 +9,7 @@
 
 namespace litepubl\admin\widget;
 use litepubl\widget\Widgets as WidgetItems;
+use litepubl\widget\Widget as WidgetItem;
 use litepubl\view\Parser;
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
@@ -101,7 +102,7 @@ $form .= '[editor=text]
         }
     }
 
-    public function deleteWidgets(twidget $widget) {
+    public function deleteWidgets(WidgetItem $widget) {
         $widgets = WidgetItems::i();
         $widgets->lock();
         $widget->lock();

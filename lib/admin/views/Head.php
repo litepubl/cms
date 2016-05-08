@@ -25,7 +25,7 @@ $admin = $this->admintheme;
         $lang = Lang::i('schemes');
         $args = new Args();
 
-        $tabs = $this->neTabs();
+        $tabs = $this->newTabs();
         $args->heads = MainView::i()->heads;
         $tabs->add($lang->headstitle, '[editor=heads]');
 
