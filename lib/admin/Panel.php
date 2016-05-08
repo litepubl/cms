@@ -9,6 +9,7 @@
 
 namespace litepubl\admin;
 use litepubl\view\Schema;
+use litepubl\view\Schemes;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\Plugins as PluginItems;
@@ -23,7 +24,13 @@ public $lang;
 public $args;
 
 public function __construct() {
-$schema = Schema::getSchema($this->getApp()->context->view);
+$app = $this->getApp();
+if (isset($app->context) && isset($app->context->view)) {
+$schema = Schema::getSchema($app->context->view);
+} else {
+$schema = Schema::i(Schemes::i()->defaults['admin']);
+}
+
 $this->admin = $schema->admintheme;
 $this->theme = $schema->theme;
 $this->lang = Lang::admin();

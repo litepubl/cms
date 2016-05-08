@@ -15,6 +15,7 @@ use litepubl\view\Theme;
 use litepubl\utils\Filer;
 use litepubl\view\MainView;
 use litepubl\utils\LinkGenerator;
+use litepubl\post\MediaParser;
 
 class Options extends \litepubl\admin\Menu
 {
@@ -55,7 +56,7 @@ class Options extends \litepubl\admin\Menu
 
 
             case 'files':
-                $parser = tmediaparser::i();
+                $parser = MediaParser::i();
                 $args->previewwidth = $parser->previewwidth;
                 $args->previewheight = $parser->previewheight;
                 $args->previewmode = $this->theme->getRadioItems('previewmode', array(
@@ -202,7 +203,7 @@ class Options extends \litepubl\admin\Menu
 
 
             case 'files':
-                $parser = tmediaparser::i();
+                $parser = MediaParser::i();
                 $parser->previewmode = $previewmode;
                 $parser->previewwidth = (int)trim($previewwidth);
                 $parser->previewheight = (int)trim($previewheight);

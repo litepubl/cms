@@ -57,6 +57,7 @@ $i->fillField(static::$dbprefix, $data->dbprefix);
 
 $i->click(static::$submit);
 $i->checkError();
+$i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
 
 return $this;
 }

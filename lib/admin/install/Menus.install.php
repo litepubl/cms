@@ -62,7 +62,7 @@ function MenusInstall($self) {
         $self->createitem($views, 'spec', 'admin', 'litepubl\admin\views\Spec');
         $self->createitem($views, 'headers', 'admin', 'litepubl\admin\views\Head');
         $self->createitem($views, 'jsmerger', 'admin', 'litepubl\admin\views\Js');
-        $self->createitem($views, 'cssmerger', 'admin', '\litepubl\admin\Css');
+        $self->createitem($views, 'cssmerger', 'admin', 'litepubl\admin\views\Css');
     }
 
     $menu = $self->createitem(0, 'menu', 'editor', 'litepubl\admin\menu\Manager');

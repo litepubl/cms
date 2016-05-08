@@ -54,16 +54,16 @@ class Widgets extends \litepubl\admin\Menu
         $form = new Form($args);
         $form->title = $lang->formhead;
         $form->body = $form->hidden('action', 'edit');
-        $form->items.= $form->hidden('idschema', $idschema);
+        $form->body .= $form->hidden('idschema', $idschema);
 
         if ($idschema != 1) {
-            $form->body .= $theme->getinput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
+            $form->body .= $theme->getInput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
         }
         //all widgets
         $checkboxes = '';
         foreach ($widgets->items as $id => $item) {
-            if (!Sidebars::getpos($schema->sidebars, $id)) {
-                $checkboxes.= $theme->getinput('checkbox', "addwidget-$id", "value=\"$id\"", $item['title']);
+            if (!Sidebars::getPos($schema->sidebars, $id)) {
+                $checkboxes.= $theme->getInput('checkbox', "addwidget-$id", "value=\"$id\"", $item['title']);
             }
         }
 
@@ -71,7 +71,7 @@ class Widgets extends \litepubl\admin\Menu
         $args->idschema = $idschema;
         $form->before = $admintheme->parseArg($admintheme->templates['addwidgets'], $args);
         $count = count($schema->sidebars);
-        $sidebarnames = static ::getsidebarnames($schema);
+        $sidebarnames = static ::getSidebarNames($schema);
 
         //items for table builder
         $items = array();
@@ -82,7 +82,7 @@ class Widgets extends \litepubl\admin\Menu
             $orders = range(1, count($sidebar));
             foreach ($sidebar as $j => $sb_item) {
                 $id = $sb_item['id'];
-                $w_item = $widgets->getitem($id);
+                $w_item = $widgets->getItem($id);
 
                 $items[] = array(
                     'id' => $id,
@@ -90,20 +90,19 @@ class Widgets extends \litepubl\admin\Menu
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
                     'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
                     'ajaxbuttons' => str_replace('$button',
-
                     strtr($sb_item['ajax'] == false ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'noajax',
                         '$title' => $lang->noajax
-                    )) .
+                    ))
 
-                    strtr(($sb_item['ajax'] && $sb_item['ajax'] != 'inline') ? $tml_active : $tml_btn, array(
+ . strtr(($sb_item['ajax'] && $sb_item['ajax'] !== 'inline') ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
-                    )) .
+                    ))
 
-                    (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($sb_item['ajax'] == 'inline' ? $tml_active : $tml_btn, array(
+ .(($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($sb_item['ajax'] == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'inline',
                         '$title' => $lang->inline

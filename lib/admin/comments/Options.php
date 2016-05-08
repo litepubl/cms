@@ -7,7 +7,7 @@
 * @version 6.15
 **/
 
-namespace litepubl\admin;
+namespace litepubl\admin\comments;
 use litepubl\comments\Manager;
 use litepubl\comments\RssHold;
 use litepubl\comments\Subscribers;

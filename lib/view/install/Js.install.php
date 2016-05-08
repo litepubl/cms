@@ -189,6 +189,8 @@ function Js_bootstrap_admin($js, $add = true) {
 }
 
 function Js_ui_admin($js, $add = true) {
+$js->getApp()->getLogger()->debug(var_export($add, true));
+$js->getApp()->getLogManager()->trace();
     $items = array(
         'admin' => array(
             '/js/jquery/ui/core.min.js',

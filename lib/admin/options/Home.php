@@ -16,6 +16,7 @@ use litepubl\pages\Menus;
 use litepubl\post\MediaParser;
 use litepubl\core\Str;
 use litepubl\view\Parser;
+use litepubl\admin\posts\Editor;
 
 class Home extends \litepubl\admin\Menu
 {
@@ -30,15 +31,16 @@ class Home extends \litepubl\admin\Menu
     }
 
     public function getContent() {
+        $home = HomePage::i();
+$admin = $this->admintheme;
         $args = new Args();
         $lang = Lang::admin('options');
-        $home = HomePage::i();
         $tabs = $this->newTabs();
         $args->image = $home->image;
         $args->smallimage = $home->smallimage;
         $args->parsetags = $home->parsetags;
         $args->showmidle = $home->showmidle;
-        $args->midlecat = tposteditor::getcombocategories(array() , $home->midlecat);
+        $args->midlecat = Editor::getCombocategories(array() , $home->midlecat);
         $args->showposts = $home->showposts;
         $args->invertorder = $home->getSchema()->invertorder;
         $args->showpagenator = $home->showpagenator;
@@ -72,7 +74,6 @@ class Home extends \litepubl\admin\Menu
     </h5>
     ');
 
-$admin = $this->admintheme;
         $tabs->add($lang->includecats, $admin->h($lang->includehome) . $admin->getcats($home->includecats));
         $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . 
 str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));

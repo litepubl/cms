@@ -34,7 +34,7 @@ $args = new Args();
 
 $lang = Lang::admin('options');
                 $args->formtitle = $lang->viewoptions;
-                return $admintheme->form('
+                return $this->admintheme->form('
       [text=perpage]
       [checkbox=usefilter]
       [checkbox=automore]
