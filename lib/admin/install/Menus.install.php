@@ -78,12 +78,12 @@ function MenusInstall($self) {
         $self->createitem($opt, 'mail', 'admin', 'litepubl\admin\options\Mail');
         $self->createitem($opt, 'rss', 'admin', 'litepubl\admin\options\Rss');
         $self->createitem($opt, 'view', 'admin', 'litepubl\admin\options\View');
-        $self->createitem($opt, 'files', 'admin', 'litepubl\admin\options\Options');
-        $self->createitem($opt, 'comments', 'admin', 'litepubl\admin\comments\Options');
+        $self->createitem($opt, 'files', 'admin', 'litepubl\admin\options\Files');
+        $self->createitem($opt, 'comments', 'admin', 'litepubl\admin\options\Comments');
         $self->createitem($opt, 'ping', 'admin', 'litepubl\admin\options\Pinger');
         $self->createitem($opt, 'links', 'admin', 'litepubl\admin\options\Options');
         $self->createitem($opt, 'cache', 'admin', 'litepubl\admin\options\Options');
-        $self->createitem($opt, 'catstags', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'catstags', 'admin', 'litepubl\admin\options\CatsTags');
         $self->createitem($opt, 'secure', 'admin', 'litepubl\admin\options\Secure');
         $self->createitem($opt, 'robots', 'admin', 'litepubl\admin\options\Options');
         $self->createitem($opt, 'local', 'admin', 'litepubl\admin\options\LangMerger');

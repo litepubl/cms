@@ -31,7 +31,7 @@ class Updater extends \litepubl\core\Events
     }
 
     public static function getVersions() {
-        return Str::toArray(file_get_contents( $this->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
+        return Str::toArray(file_get_contents( static::getAppInstance()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
     }
 
     public function getVersion() {

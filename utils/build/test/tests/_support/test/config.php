@@ -9,15 +9,17 @@ class config
 public static $home;
 public static $_data;
 public static $lang;
+public static $screenshot = false;
 
 public function init()
 {
 static::$home = dirname(dirname(dirname(dirname(dirname(dirname(__DIR__))))));
 static::$_data = dirname(dirname(__DIR__)) . '/_data/';
-
+/*
 static::$lang = new \ArrayObject(parse_ini_file(
 static::$home . '/lib/languages/ru/admin.ini', false),
 \ArrayObject::ARRAY_AS_PROPS);
+*/
 }
 
 public function load($name)

@@ -15,10 +15,10 @@ use litepubl\view\Theme;
 use litepubl\utils\Filer;
 use litepubl\view\MainView;
 use litepubl\utils\LinkGenerator;
-use litepubl\post\MediaParser;
 
 class Options extends \litepubl\admin\Menu
 {
+
     public function getContent() {
         $options =  $this->getApp()->options;
         $template = MainView::i();
@@ -50,63 +50,6 @@ class Options extends \litepubl\admin\Menu
       [text=keywords]
       [text=author]
       [editor=footer]
-      ', $args);
-
-                break;
-
-
-            case 'files':
-                $parser = MediaParser::i();
-                $args->previewwidth = $parser->previewwidth;
-                $args->previewheight = $parser->previewheight;
-                $args->previewmode = $this->theme->getRadioItems('previewmode', array(
-                    'fixed' => $lang->fixedsize,
-                    'max' => $lang->maxsize,
-                    'min' => $lang->minsize,
-                    'none' => $lang->disablepreview,
-                ) , $parser->previewmode);
-
-                $args->maxwidth = $parser->maxwidth;
-                $args->maxheight = $parser->maxheight;
-                $args->alwaysresize = $parser->alwaysresize;
-
-                $args->enablemidle = $parser->enablemidle;
-                $args->midlewidth = $parser->midlewidth;
-                $args->midleheight = $parser->midleheight;
-
-                $args->quality_original = $parser->quality_original;
-                $args->quality_snapshot = $parser->quality_snapshot;
-
-                $args->audioext = $parser->audioext;
-                $args->videoext = $parser->videoext;
-
-                $args->video_width =  $this->getApp()->site->video_width;
-                $args->video_height =  $this->getApp()->site->video_height;
-
-                $args->formtitle = $lang->files;
-                return $admin->form('
-      <h4>$lang.imagesize</h4>
-      [checkbox=alwaysresize]
-      [text=maxwidth]
-      [text=maxheight]
-      [text=quality_original]
-      
-      [checkbox=enablemidle]
-      [text=midlewidth]
-      [text=midleheight]
-      
-      <h4>$lang.previewoptions</h4>
-      $previewmode
-      [text=previewwidth]
-      [text=previewheight]
-      [text=quality_snapshot]
-      
-      <h4>$lang.extfile</h4>
-      [text=audioext]
-      [text=videoext]
-      
-      [text=video_width]
-      [text=video_height]
       ', $args);
                 break;
 
@@ -148,26 +91,10 @@ class Options extends \litepubl\admin\Menu
       [checkbox=commentspool]
       ', $args);
 
-                $form = new $this->newForm($args);
+                $form = $this->newForm($args);
                 $form->submit = 'clearcache';
                 $result.= $form->get();
                 return $result;
-
-            case 'catstags':
-            case 'lite': //old version suports
-                $cats =  $this->getApp()->classes->categories;
-                $args->parentcats = $cats->includeparents;
-                $args->childcats = $cats->includechilds;
-
-                $tags =  $this->getApp()->classes->tags;
-                $args->parenttags = $tags->includeparents;
-                $args->childtags = $tags->includechilds;
-                $lang = Lang::admin('options');
-                $args->formtitle = $lang->catstags;
-                $admin = $this->admintheme;
-                return $admin>form('
-      [checkbox=parentcats] [checkbox=childcats]
-      [checkbox=parenttags] [checkbox=childtags]', $args);
 
             case 'robots':
                 $admin = $this->admintheme;
@@ -200,34 +127,6 @@ class Options extends \litepubl\admin\Menu
                 $this->getdb('users')->setvalue(1, 'name', $author);
                 MainView::i()->footer = $footer;
                 break;
-
-
-            case 'files':
-                $parser = MediaParser::i();
-                $parser->previewmode = $previewmode;
-                $parser->previewwidth = (int)trim($previewwidth);
-                $parser->previewheight = (int)trim($previewheight);
-
-                $parser->maxwidth = (int)trim($maxwidth);
-                $parser->maxheight = (int)trim($maxheight);
-                $parser->alwaysresize = isset($alwaysresize);
-
-                $parser->quality_snapshot = (int)trim($quality_snapshot);
-                $parser->quality_original = (int)trim($quality_original);
-
-                $parser->enablemidle = isset($enablemidle);
-                $parser->midlewidth = (int)trim($midlewidth);
-                $parser->midleheight = (int)trim($midleheight);
-
-                $parser->audioext = trim($audioext);
-                $parser->videoext = trim($videoext);
-
-                $parser->save();
-
-                 $this->getApp()->site->video_width = $video_width;
-                 $this->getApp()->site->video_height = $video_height;
-                break;
-
 
             case 'links':
                 $linkgen = LinkGenerator::i();
@@ -274,21 +173,6 @@ $options->filetime_offset = Filer::getFiletimeOffset();
                     $options->unlock();
                 }
                 break;
-
-
-            case 'lite':
-            case 'catstags':
-                $cats =  $this->getApp()->classes->categories;
-                $cats->includeparents = isset($parentcats);
-                $cats->includechilds = isset($childcats);
-                $cats->save();
-
-                $tags =  $this->getApp()->classes->tags;
-                $tags->includeparents = isset($parenttags);
-                $tags->includechilds = isset($childtags);
-                $tags->save();
-                break;
-
 
             case 'robots':
                 $robo = trobotstxt::i();

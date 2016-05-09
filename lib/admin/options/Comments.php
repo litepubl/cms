@@ -7,7 +7,7 @@
 * @version 6.15
 **/
 
-namespace litepubl\admin\comments;
+namespace litepubl\admin\options;
 use litepubl\comments\Manager;
 use litepubl\comments\RssHold;
 use litepubl\comments\Subscribers;
@@ -15,7 +15,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\core\UserOptions;
 
-class Options extends \litepubl\admin\Menu
+class Comments extends \litepubl\admin\Menu
 {
 
     public function getContent() {
