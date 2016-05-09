@@ -10,6 +10,7 @@
 namespace litepubl\admin\service;
 use litepubl\view\Lang;
 use litepubl\core\Str;
+use litepubl\updater\Backuper;
 
 class Upload extends Login
 {
