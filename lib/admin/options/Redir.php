@@ -14,7 +14,7 @@ use litepubl\view\Args;
 use litepubl\admin\Link;
 use litepubl\core\Str;
 
-class Redirector extends \litepubl\admin\Menu
+class Redir extends \litepubl\admin\Menu
 {
 
     public function getContent() {

@@ -89,7 +89,7 @@ function MenusInstall($self) {
         $self->createitem($opt, 'local', 'admin', 'litepubl\admin\options\LangMerger');
         $self->createitem($opt, 'parser', 'admin', 'litepubl\admin\options\ThemeParser');
         $self->createitem($opt, 'notfound404', 'admin', 'litepubl\admin\options\Notfound404');
-        $self->createitem($opt, 'redir', 'admin', 'litepubl\admin\options\Redirect');
+        $self->createitem($opt, 'redir', 'admin', 'litepubl\admin\options\Redir');
     }
 
     $service = $self->createitem(0, 'service', 'admin', 'litepubl\admin\service\Service'); {

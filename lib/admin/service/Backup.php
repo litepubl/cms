@@ -186,7 +186,7 @@ ob_end_clean();
     }
 
     private function getBackupfilelist() {
-        $list = tfiler::getfiles( $this->getApp()->paths->backup);
+        $list = Filer::getfiles( $this->getApp()->paths->backup);
         if (!count($list)) {
             return '';
         }

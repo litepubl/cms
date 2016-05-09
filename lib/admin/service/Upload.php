@@ -22,7 +22,7 @@ $args = $this->newArgs();
 
                 $args->url = str_replace('$mysite', rawurlencode( $this->getApp()->site->url) , $this->getparam('url', ''));
                 $lang = Lang::admin();
-                $form = new adminform($args);
+                $form = $this->newForm();
                 $form->title = $lang->uploaditem;
                 $form->upload = true;
                 $form->body = '[text=url]

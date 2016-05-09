@@ -12,6 +12,8 @@ use litepubl\core\Data;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\updater\Updater;
+use litepubl\post\Posts;
+use litepubl\comments\Manager;
 
 class Service extends Login
 {
@@ -24,8 +26,8 @@ $admin = $this->admintheme;
                 $result.= $this->doupdate($_GET);
                 $tb = $this->newTable();
                 $result.= $tb->props(array(
-                    'postscount' =>  $this->getApp()->classes->posts->count,
-                    'commentscount' =>  $this->getApp()->classes->commentmanager->count,
+                    'postscount' =>  Posts::i()->count,
+                    'commentscount' =>  Manager::i()->count,
                     'version' =>  $this->getApp()->site->version
                 ));
 
