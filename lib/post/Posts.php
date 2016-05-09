@@ -154,16 +154,15 @@ $class = str_replace('-', '\\', $class) ;
 
         $db =  $this->getApp()->db;
         $childTable = $db->prefix . $this->childTable;
-        if ($res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
-    where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where")) {
-            if ($r = $db->fetchassoc($res)) {
+$res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
+    where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where");
+
+            if ($res && ($r = $db->fetchassoc($res))) {
  return $r['count'];
-}
         }
 
         return 0;
     }
-
 
     private function beforeChange($post) {
         $post->title = trim($post->title);
@@ -220,7 +219,9 @@ $post->data['idschema'] = $schemes->defaults['post'];
 $post->status = 'published';
 }
         } else {
-            if ($post->status == 'published') $post->status = 'future';
+            if ($post->status == 'published') {
+$post->status = 'future';
+}
         }
 
         $this->lock();
@@ -239,8 +240,6 @@ $post->status = 'published';
  return false;
 }
 
-        $router = $this->getApp()->router;
-        $idurl = $this->db->getvalue($id, 'idurl');
         $this->db->setvalue($id, 'status', 'deleted');
         if ($this->childTable) {
             $db = $this->getdb($this->childTable);
@@ -287,14 +286,19 @@ $post->status = 'published';
 
     public function PublishFuture() {
         if ($list = $this->db->idselect(sprintf('status = \'future\' and posted <= \'%s\' order by posted asc', Str::sqlDate()))) {
-            foreach ($list as $id) $this->publish($id);
+            foreach ($list as $id) {
+$this->publish($id);
+}
         }
     }
 
     public function getRecent($author, $count) {
         $author = (int)$author;
         $where = "status != 'deleted'";
-        if ($author > 1) $where.= " and author = $author";
+        if ($author > 1) {
+$where.= " and author = $author";
+}
+
         return $this->findItems($where, ' order by posted desc limit ' . (int)$count);
     }
 
@@ -303,7 +307,10 @@ $post->status = 'published';
         $from = ($page - 1) * $perpage;
         $t = $this->thistable;
         $where = "$t.status = 'published'";
-        if ($author > 1) $where.= " and $t.author = $author";
+        if ($author > 1) {
+$where.= " and $t.author = $author";
+}
+
         $order = $invertorder ? 'asc' : 'desc';
         return $this->finditems($where, " order by $t.posted $order limit $from, $perpage");
     }
@@ -321,7 +328,9 @@ $post->status = 'published';
     //coclasses
     private function coInterface($method, $arg) {
         foreach ($this->coinstances as $coinstance) {
-            if ($coinstance instanceof ipost) $coinstance->$method($arg);
+            if ($coinstance instanceof ipost) {
+$coinstance->$method($arg);
+}
         }
     }
 

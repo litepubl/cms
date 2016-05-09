@@ -18,11 +18,21 @@ $comment = new Comment($i);
 $i->wantTo('Send anonimouse comment');
 $comment->send($data->comment . time());
 $i->wantTo('Confirm comment');
+
+if (config::$screenshot) {
+$i->makeScreenshot('11confirm');
+}
+
 $i->click($data->human);
 $i->checkError();
 
 $i->wantTo('Send empty comment');
 $comment->send('');
+
+if (config::$screenshot) {
+$i->makeScreenshot('11error');
+}
+
 $i->see($data->error);
 $i->wantTo('Close error dialog');
 $i->click('Ok');

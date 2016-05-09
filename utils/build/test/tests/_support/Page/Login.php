@@ -2,38 +2,32 @@
 namespace Page;
 use test\config;
 
-class Login
+class Login extends Base
 {
-use TesterTrait;
+use Singleton;
 
-    // include url of current page
-    public static $url = '/admin/login/';
-    public static $logoutUrl = '/admin/logout/';
-      public static $email = '#form-login [name=email]';
-public static $password = '#password-password';
-      public static $submit = '#submitbutton-log_in';
-
-public function logout()
-{
-$i = $this->tester;
-$i->wantTo('log out');
-$i->openPage(static::$logoutUrl);
-return $this;
-}
+    public $url = '/admin/login/';
+      public $email = '#form-login [name=email]';
+public $password = '#password-password';
+      public $submit = '#submitbutton-log_in';
+private $admin;
 
 public function login()
 {
-$admin = config::load('admin');
-return $this->auth($admin->email, $admin->password);
+if (!$this->admin) {
+$this->admin = config::load('admin');
+}
+
+return $this->auth($this->admin->email, $this->admin->password);
 }
 
 public function auth($email, $password)
 {
 $i = $this->tester;
 $i->wantTo('log in');
-$i->fillField(static::$email, $email);
-$i->fillField(static::$password, $password);
-$i->click(static::$submit);
+$i->fillField($this->email, $email);
+$i->fillField($this->password, $password);
+$i->click($this->submit);
 $i->checkError();
 return $this;
 }
@@ -45,7 +39,7 @@ $i->wantTo('Wheare are');
 $url = $i->grabFromCurrentUrl();
 codexcept_debug($url);
 
-if (strpos($url, static::$url)) {
+if (strpos($url, $this->url)) {
 $this->login();
 } else {
 $this->open();
@@ -58,7 +52,7 @@ public function open()
 {
 $i = $this->tester;
 $i->wantTo('Open login page');
-$i->openPage(static::$url);
+$i->openPage($this->url);
 return $this;
 }
 

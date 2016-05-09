@@ -3,24 +3,21 @@ namespace Page;
 
 use test\config;
 
-class Admin
+class Admin extends Base
 {
-use TesterTrait;
-
-    // include url of current page
-    public static $url = '/admin/';
-public static $js;
+    public  $url = '/admin/';
+private $js;
 
 public function getMenu()
 {
 $i = $this->tester;
 $i->wantTo('Get menu links');
 
-if (!static::$js) {
-static::$js = file_get_contents(__DIR__ . '/adminLinks.js');
+if (!$this->js) {
+$this->js = file_get_contents(__DIR__ . '/adminLinks.js');
 }
 
-$result = $i->executeJs(static::$js);
+$result = $i->executeJs($this->js);
 //delete logout link
 array_pop($result);
 return $result;

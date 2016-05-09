@@ -230,8 +230,10 @@ return true;
     }
 
     public function load() {
-        if ($result = $this->LoadFromDB()) {
-            foreach ($this->coinstances as $coinstance) $coinstance->load();
+        if ($result = $this->loadFromDB()) {
+            foreach ($this->coinstances as $coinstance) {
+$coinstance->load();
+}
         }
         return $result;
     }
@@ -299,7 +301,7 @@ $this->getDB($this->rawTable)->insert($rawData);
 
 $this->savePages();
         if ($this->childTable) {
-$$childData = $this->childData;
+$childData = $this->childData;
 $childData['id'] = $id;
             $this->getDB($this->childTable)->insert($childData);
         }
@@ -353,8 +355,13 @@ $this->onIdCallback->add($call);
     }
 
     public function free() {
-        foreach ($this->coinstances as $coinstance) $coinstance->free();
-        if (isset($this->metaInstance)) $this->metaInstance->free();
+        foreach ($this->coinstances as $coinstance) {
+$coinstance->free();
+}
+        if (isset($this->metaInstance)) {
+$this->metaInstance->free();
+}
+
         parent::free();
     }
 
@@ -368,7 +375,10 @@ $this->onIdCallback->add($call);
 
 
     public function getMeta() {
-        if (!isset($this->metaInstance)) $this->metaInstance = $this->factory->getmeta($this->id);
+        if (!isset($this->metaInstance)) {
+$this->metaInstance = $this->factory->getmeta($this->id);
+}
+
         return $this->metaInstance;
     }
 
@@ -518,18 +528,23 @@ $this->setDateProp('posted', strtotime($date));
         return '';
     }
 
-    public function setCatnames($names) {
+    public function setCatNames($names) {
         $categories = $this->factory->categories;
-        $this->categories = $categories->createnames($names);
-        if (count($this->categories) == 0) {
+        $catItems = $categories->createnames($names);
+
+        if (!count($catItems)) {
             $defaultid = $categories->defaultid;
-            if ($defaultid > 0) $this->data['categories '][] = $dfaultid;
+            if ($defaultid > 0) {
+$catItems[] = $defaultid;
+}
         }
+
+$this->categories = $catItems;
     }
 
     public function getCategory() {
         if ($idcat = $this->getidcat()) {
-            return $this->factory->categories->getname($idcat);
+            return $this->factory->categories->getName($idcat);
         }
 
         return '';

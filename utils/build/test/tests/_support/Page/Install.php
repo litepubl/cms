@@ -4,25 +4,23 @@ namespace Page;
 use test\config;
 use litepubl\utils\Filer;
 
-class Install
+class Install extends Base
 {
-use TesterTrait;
 
-    // include url of current page
-    public static $url = '/';
-public static $langForm = '#langform';
-public static $langCombo = '#combo-lang';
-public static $langSubmit= '#changelang';
+    public $url = '/';
+public $langForm = '#langform';
+public $langCombo = '#combo-lang';
+public $langSubmit= '#changelang';
 
-public static $form = '#form';
-      public static $email = '#text-email';
-      public static $name = '#text-name';
-      public static $description = '#text-description';
-      public static $dbname = '#text-dbname';
-      public static $dblogin= '#text-dblogin';
-      public static $dbpassword = '#text-dbpassword';
-      public static $dbprefix = '#text-dbprefix';
-      public static $submit = '#submitbutton-createblog';
+public $form = '#form';
+      public  $email = '#text-email';
+      public  $name = '#text-name';
+      public  $description = '#text-description';
+      public  $dbname = '#text-dbname';
+      public  $dblogin= '#text-dblogin';
+      public  $dbpassword = '#text-dbpassword';
+      public  $dbprefix = '#text-dbprefix';
+      public  $submit = '#submitbutton-createblog';
 
 public function switchLanguages()
 {
@@ -35,8 +33,8 @@ public function changeLanguage($name)
 {
 $i = $this->tester;
 $i->wantTo('Switch language');
-$i->selectOption(static::$langCombo, $name);
-$i->click(static::$langSubmit);
+$i->selectOption($this->langCombo, $name);
+$i->click($this->langSubmit);
 $i->checkError();
 }
 
@@ -46,16 +44,15 @@ $i = $this->tester;
 $i->wantTo('Fill install form');
 
 $data = config::load('install');
+$i->fillField($this->email, $data->email);
+$i->fillField($this->name, $data->name);
+$i->fillField($this->description, $data->description);
+$i->fillField($this->dbname, $data->dbname);
+$i->fillField($this->dblogin, $data->dblogin);
+$i->fillField($this->dbpassword, $data->dbpassword);
+$i->fillField($this->dbprefix, $data->dbprefix);
 
-$i->fillField(static::$email, $data->email);
-$i->fillField(static::$name, $data->name);
-$i->fillField(static::$description, $data->description);
-$i->fillField(static::$dbname, $data->dbname);
-$i->fillField(static::$dblogin, $data->dblogin);
-$i->fillField(static::$dbpassword, $data->dbpassword);
-$i->fillField(static::$dbprefix, $data->dbprefix);
-
-$i->click(static::$submit);
+$i->click($this->submit);
 $i->checkError();
 $i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
 

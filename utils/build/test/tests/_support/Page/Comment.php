@@ -1,21 +1,18 @@
 <?php
 namespace Page;
 
-class Comment
+class Comment extends Base
 {
-use TesterTrait;
-
-public static $comment = '#comment';
-      public static $email = 'input[name=email]';
-
-      public static $submit = '#submit-button';
+public  $comment = '#comment';
+      public  $email = 'input[name=email]';
+      public  $submit = '#submit-button';
 
 public function send($comment)
 {
 $i = $this->tester;
-//$i->fillField(static::$email, $email);
-$i->fillField(static::$comment, $comment);
-$i->click(static::$submit);
+//$i->fillField($this->email, $email);
+$i->fillField($this->comment, $comment);
+$i->click($this->submit);
 $i->checkError();
 return $this;
 }

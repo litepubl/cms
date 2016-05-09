@@ -11,6 +11,11 @@ $data = config::load('contacts');
 $i->wantTo('Click contacts on home page');
 $i->openPage('/');
 $i->click($data->title);
+
+if (config::$screenshot) {
+$i->makeScreenshot('10contacts');
+}
+
 $i->wantTo('Send form');
 $contacts->sendForm($data->email, $data->message);
 $i->wantTo('Send form with empty email');

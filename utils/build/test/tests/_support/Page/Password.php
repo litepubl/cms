@@ -3,32 +3,20 @@ namespace Page;
 use test\config;
 use test\Utils;
 
-class Password
+class Password extends Base
 {
-use TesterTrait;
-
-    // include url of current page
-    public static $url = '/admin/password/';
-    public static $logoutUrl = '/admin/logout/';
-      public static $email = '#form-lostpass [name=email]';
-public static $password = '.password';
-      public static $submit = '#submitbutton-send';
-
-public function logout()
-{
-$i = $this->tester;
-$i->wantTo('log out');
-$i->openPage(static::$logoutUrl);
-return $this;
-}
+    public  $url = '/admin/password/';
+      public  $email = '#form-lostpass [name=email]';
+public  $password = '.password';
+      public  $submit = '#submitbutton-send';
 
 public function restore()
 {
 $admin = config::load('admin');
 $i = $this->tester;
 $i->wantTo('Send email');
-$i->fillField(static::$email, $admin->email);
-$i->click(static::$submit);
+$i->fillField($this->email, $admin->email);
+$i->click($this->submit);
 $i->checkError();
 
 $i->wantTo('Grab url from email');
@@ -38,7 +26,7 @@ $url = Utils::getLine($s, '&confirm=');
 $i->assertNotEmpty($url, 'Url not found in email');
 $i->amOnUrl($url);
 $i->checkError();
-$admin->password = $i->grabTextFrom(static::$password);
+$admin->password = $i->grabTextFrom($this->password);
 config::save('admin', $admin);
 
 $login = new Login($i);

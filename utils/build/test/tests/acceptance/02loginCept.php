@@ -19,4 +19,4 @@ $i->makeScreenshot('02board');
 }
 
 $login->logout();
-$i->seeCurrentUrlEquals($login::$url);
+$i->seeCurrentUrlEquals($login->url);

@@ -11,6 +11,11 @@ $password->logout();
 //clear logs for find single fifile with email and link to restore
 Filer::delete(config::$home . '/storage/data/logs/', false, false);
 $i->wantTo('Open restore password page');
-$i->openPage($password::$url);
+$i->openPage($password->url);
+
+if (config::$screenshot) {
+$i->makeScreenshot('03password');
+}
+
 $password->restore();
 
