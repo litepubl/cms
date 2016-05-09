@@ -40,7 +40,7 @@ $theme = $this->theme;
         $zones = timezone_identifiers_list();
         $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) ,  $this->getApp()->options->timezone);
 
-        return $admin->form('[text=dateformat]
+        return $this->admintheme->form('[text=dateformat]
     [combo=language]
     [combo=timezone]' . $tabs->get() , $args);
     }

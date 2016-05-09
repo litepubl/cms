@@ -81,13 +81,13 @@ function MenusInstall($self) {
         $self->createitem($opt, 'files', 'admin', 'litepubl\admin\options\Files');
         $self->createitem($opt, 'comments', 'admin', 'litepubl\admin\options\Comments');
         $self->createitem($opt, 'ping', 'admin', 'litepubl\admin\options\Pinger');
-        $self->createitem($opt, 'links', 'admin', 'litepubl\admin\options\Options');
-        $self->createitem($opt, 'cache', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'links', 'admin', 'litepubl\admin\options\Links');
+        $self->createitem($opt, 'cache', 'admin', 'litepubl\admin\options\Cache');
         $self->createitem($opt, 'catstags', 'admin', 'litepubl\admin\options\CatsTags');
         $self->createitem($opt, 'secure', 'admin', 'litepubl\admin\options\Secure');
-        $self->createitem($opt, 'robots', 'admin', 'litepubl\admin\options\Options');
+        $self->createitem($opt, 'robots', 'admin', 'litepubl\admin\options\Robots');
         $self->createitem($opt, 'local', 'admin', 'litepubl\admin\options\LangMerger');
-        $self->createitem($opt, 'parser', 'admin', 'litepubl\admin\options\Theme');
+        $self->createitem($opt, 'parser', 'admin', 'litepubl\admin\options\ThemeParser');
         $self->createitem($opt, 'notfound404', 'admin', 'litepubl\admin\options\Notfound404');
         $self->createitem($opt, 'redir', 'admin', 'litepubl\admin\options\Redirect');
     }

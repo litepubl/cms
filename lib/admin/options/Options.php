@@ -9,27 +9,17 @@
 
 namespace litepubl\admin\options;
 use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Base;
-use litepubl\view\Theme;
-use litepubl\utils\Filer;
 use litepubl\view\MainView;
-use litepubl\utils\LinkGenerator;
 
 class Options extends \litepubl\admin\Menu
 {
 
     public function getContent() {
-        $options =  $this->getApp()->options;
         $template = MainView::i();
-        Theme::$vars['template'] = $template;
-        $result = '';
-        $args = new Args();
+        $args = $this->newArgs();
         $lang = Lang::admin('options');
         $admin = $this->admintheme;
 
-        switch ($this->name) {
-            case 'options':
                 $site =  $this->getApp()->site;
                 $args->fixedurl = $site->fixedurl;
                 $args->redirdom =  $this->getApp()->router->redirdom;
@@ -51,71 +41,10 @@ class Options extends \litepubl\admin\Menu
       [text=author]
       [editor=footer]
       ', $args);
-                break;
-
-
-            case 'links':
-                $linkgen = LinkGenerator::i();
-                $args->urlencode = $linkgen->urlencode;
-                $args->post = $linkgen->post;
-                $args->menu = $linkgen->menu;
-                $args->category = $linkgen->category;
-                $args->tag = $linkgen->tag;
-                $args->archive = $linkgen->archive;
-
-                $args->formtitle = $lang->schemalinks;
-                return $admin->form('
-      <p>$lang.taglinks</p>
-      [checkbox=urlencode]
-      [text=post]
-      [text=menu]
-      [text=category]
-      [text=tag]
-      [text=archive]
-      ', $args);
-
-            case 'cache':
-                $args->enabledcache = $options->cache;
-                $args->expiredcache = $options->expiredcache;
-                $args->admincache = $options->admincache;
-                $args->ob_cache = $options->ob_cache;
-                $args->compress = $options->compress;
-                $args->commentspool = $options->commentspool;
-
-                $args->formtitle = $lang->optionscache;
-                $result = $admin->form('
-      [checkbox=enabledcache]
-      [text=expiredcache]
-      [checkbox=ob_cache]
-      [checkbox=admincache]
-      [checkbox=commentspool]
-      ', $args);
-
-                $form = $this->newForm($args);
-                $form->submit = 'clearcache';
-                $result.= $form->get();
-                return $result;
-
-            case 'robots':
-                $admin = $this->admintheme;
-                $args->formtitle = 'robots.txt';
-                $args->robots = trobotstxt::i()->text;
-                $args->appcache = appcache_manifest::i()->text;
-                $tabs = new tabs($this->admintheme);
-                $tabs->add('robots.txt', '[editor=robots]');
-                $tabs->add('manifest.appcache', '[editor=appcache]');
-                return $admin->form($tabs->get() , $args);
-        }
-
-        return $result;
     }
 
     public function processForm() {
         extract($_POST, EXTR_SKIP);
-        $options =  $this->getApp()->options;
-
-        switch ($this->name) {
-            case 'options':
                  $this->getApp()->router->redirdom = isset($redirdom);
                 $site =  $this->getApp()->site;
                 $site->fixedurl = isset($fixedurl);
@@ -126,65 +55,6 @@ class Options extends \litepubl\admin\Menu
                 $site->author = $author;
                 $this->getdb('users')->setvalue(1, 'name', $author);
                 MainView::i()->footer = $footer;
-                break;
-
-            case 'links':
-                $linkgen = LinkGenerator::i();
-                $linkgen->urlencode = isset($urlencode);
-                if (!empty($post)) {
-                    $linkgen->post = $post;
-
-                }
-
-                if (!empty($menu)) {
-                    $linkgen->menu = $menu;
-                }
-
-                if (!empty($category)) {
-                    $linkgen->category = $category;
-                }
-
-                if (!empty($tag)) {
-                    $linkgen->tag = $tag;
-                }
-
-                if (!empty($archive)) {
-                    $linkgen->archive = $archive;
-                }
-
-                $linkgen->save();
-                break;
-
-
-            case 'cache':
-                if (isset($clearcache)) {
-                    Base::clearCache();
-                } else {
-                    $options->lock();
-                    $options->cache = isset($enabledcache);
-                    $options->admincache = isset($admincache);
-                    if (!empty($expiredcache)) {
-                        $options->expiredcache = (int)$expiredcache;
-$options->filetime_offset = Filer::getFiletimeOffset();
-                    }
-
-                    $options->ob_cache = isset($ob_cache);
-                    $options->commentspool = isset($commentspool);
-                    $options->unlock();
-                }
-                break;
-
-            case 'robots':
-                $robo = trobotstxt::i();
-                $robo->text = $robots;
-                $robo->save();
-
-                $appcache_manifest = appcache_manifest::i();
-                $appcache_manifest->text = $appcache;
-                $appcache_manifest->save();
-                break;
-            }
-
             return '';
         }
 
