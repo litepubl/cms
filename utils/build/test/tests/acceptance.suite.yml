@@ -12,3 +12,4 @@ modules:
         - WebDriver :
             url: 'http://cms'
             browser: phantomjs 
+            debug: true

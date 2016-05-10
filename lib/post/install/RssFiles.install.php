@@ -18,7 +18,7 @@ function RssFilesInstall($self) {
      $self->getApp()->router->add('/rss/video.xml', get_class($self) , 'video');
 
     $files = Files::i();
-    $files->changed = $self->fileschanged;
+    $files->changed = $self->filesChanged;
     $self->save();
 
     $meta = MetaWidget::i();

@@ -39,7 +39,9 @@
         on: {
           load: function(e, file) {
             self.queue.push(file);
-            if (self.queue.length == 1) self.start(file);
+            if (self.queue.length == 1) {
+self.start();
+}
           },
 
           beforestart: function(file) {
@@ -68,6 +70,11 @@
         }
       }
     },
+
+add: function(file) {
+            this.queue.push(file);
+this.start();
+},
 
     uploadfile: function(file) {
       var owner = this.owner;

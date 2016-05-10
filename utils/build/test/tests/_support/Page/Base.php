@@ -40,10 +40,11 @@ public function open()
 {
 $i = $this->tester;
 $i->wantTo('Open page');
-$i->openPage($this->url);
 $i->maximizeWindow();
-
-if ($this->url != $i->grabFromCurrentUrl()) {
+$i->openPage($this->url);
+$url = $i->grabFromCurrentUrl();
+codecept_debug($url);
+if ($this->url != $url) {
 $this->login();
 $i->openPage($this->url);
 $i->seeCurrentUrlEquals($this->url);

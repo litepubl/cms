@@ -21,8 +21,8 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
         $this->data['feedburner'] = '';
     }
 
-    public function fileschanged() {
-         $this->getApp()->router->expiredclass(get_class($this));
+    public function filesChanged() {
+         //$this->getApp()->router->expiredclass(get_class($this));
     }
 
     public function request(Context $context)

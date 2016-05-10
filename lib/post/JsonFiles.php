@@ -154,12 +154,9 @@ class JsonFiles extends \litepubl\core\Events
  return $this->forbidden();
 }
 
-
         if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES['Filedata']['tmp_name']) || $_FILES['Filedata']['error'] != 0) {
  return $this->forbidden();
 }
-
-
 
         //psevdo logout
          $this->getApp()->options->user = null;
@@ -167,14 +164,12 @@ class JsonFiles extends \litepubl\core\Events
  return $this->forbidden();
 }
 
-
-
         $parser = MediaParser::i();
-        $id = $parser->uploadfile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);
+        $id = $parser->uploadFile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);
         if (isset($_POST['idperm'])) {
             $idperm = (int)$_POST['idperm'];
             if ($idperm > 0) {
-PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
+PrivateFiles::i()->setPerm($id, (int)$_POST['idperm']);
 }
         }
 

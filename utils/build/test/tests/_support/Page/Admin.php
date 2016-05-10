@@ -14,7 +14,7 @@ $i = $this->tester;
 $i->wantTo('Get menu links');
 
 if (!$this->js) {
-$this->js = file_get_contents(__DIR__ . '/adminLinks.js');
+$this->js = file_get_contents(__DIR__ . '/js/adminLinks.js');
 }
 
 $result = $i->executeJs($this->js);

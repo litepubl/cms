@@ -12,8 +12,10 @@ public  $password = '.password';
 
 public function restore()
 {
-$admin = config::load('admin');
 $i = $this->tester;
+$login = Login::i($i);
+$admin = $login->getAdmin();
+
 $i->wantTo('Send email');
 $i->fillField($this->email, $admin->email);
 $i->click($this->submit);
@@ -29,8 +31,7 @@ $i->checkError();
 $admin->password = $i->grabTextFrom($this->password);
 config::save('admin', $admin);
 
-$login = new Login($i);
-$i->openPage($login::$url);
+$i->openPage($login->url);
 $login->auth($admin->email, $admin->password);
 
 return $this;

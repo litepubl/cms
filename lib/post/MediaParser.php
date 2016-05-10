@@ -182,14 +182,20 @@ class MediaParser extends \litepubl\core\Events
     }
 
     public static function create_filename($filename, $subdir, $overwrite) {
-        $dir =  $this->getApp()->paths->files . $subdir;
+        $dir =  static::getAppInstance()->paths->files . $subdir;
         if (!is_dir($dir)) {
             mkdir($dir, 0777);
             @chmod($dir, 0777);
         }
-        if ($subdir) $dir.= DIRECTORY_SEPARATOR;
+
+        if ($subdir) {
+$dir.= DIRECTORY_SEPARATOR;
+}
+
         if ($overwrite) {
-            if (file_exists($dir . $filename)) unlink($dir . $filename);
+            if (file_exists($dir . $filename)) {
+unlink($dir . $filename);
+}
         } else {
             $filename = static ::getunique($dir, $filename);
         }

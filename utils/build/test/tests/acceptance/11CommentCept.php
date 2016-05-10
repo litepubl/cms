@@ -41,6 +41,7 @@ $i->wantTo('Send comment as admin');
 $i->click($data->login);
 codecept_debug($i->grabFromCurrentUrl());
 Login::i($i)->login();
+
 $i->wantTo('Must be returned back to post');
 $i->seeCurrentUrlEquals($posturl);
 

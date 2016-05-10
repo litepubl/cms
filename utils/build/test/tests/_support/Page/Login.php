@@ -1,6 +1,5 @@
 <?php
 namespace Page;
-use test\config;
 
 class Login extends Base
 {
@@ -14,11 +13,8 @@ private $admin;
 
 public function login()
 {
-if (!$this->admin) {
-$this->admin = config::load('admin');
-}
-
-return $this->auth($this->admin->email, $this->admin->password);
+$admin = $this->getAdmin();
+return $this->auth($admin->email, $admin->password);
 }
 
 public function auth($email, $password)
@@ -30,6 +26,15 @@ $i->fillField($this->password, $password);
 $i->click($this->submit);
 $i->checkError();
 return $this;
+}
+
+public function getAdmin()
+{
+if (!$this->admin) {
+$this->admin = $this->load('admin');
+}
+
+return $this->admin;
 }
 
 }
