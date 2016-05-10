@@ -40,11 +40,8 @@ $i->click('Ok');
 $i->wantTo('Send comment as admin');
 $i->click($data->login);
 codecept_debug($i->grabFromCurrentUrl());
-
-$login = new Login($i);
-$login->login();
+Login::i($i)->login();
 $i->wantTo('Must be returned back to post');
-//$i->makeScreenshot('returned');
 $i->seeCurrentUrlEquals($posturl);
 
 $comment->send($data->comment2 . time());

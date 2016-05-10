@@ -18,4 +18,3 @@ $i->makeScreenshot('03password');
 }
 
 $password->restore();
-

@@ -1,15 +1,26 @@
 <?php
 namespace Page;
 
-class Editor
+class Editor extends Base
 {
-use TesterTrait;
 
-    // include url of current page
-    public static $url = '/admin/posts/editor/';
+    public $url = '/admin/posts/editor/';
+public $title = '#text-title';
+public $content = '#editor-raw';
+public $upload = '#file-input';
 
-public function simpleFill($title, $text)
+
+public function fillTitleContent($title, $content)
 {
+$i = $this->tester;
+$i->fillField($this->title, $title);
+$i->fillField($this->content, $content);
+}
+
+public function upload($filename)
+{
+$this->tester->attachFile($this->upload, $filename);
+
 }
 
 }

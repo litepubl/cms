@@ -4,12 +4,12 @@ namespace Page;
 
 trait Singleton
 {
-private $instance;
+private static $instance;
 
-public static function i()
+public static function i(\AcceptanceTester $I)
 {
 if (!static::$instance) {
-static::$instance = new static;
+static::$instance = new static($I);
 }
 
 return static::$instance;

@@ -32,28 +32,4 @@ $i->checkError();
 return $this;
 }
 
-public function check()
-{
-$i = $this->tester;
-$i->wantTo('Wheare are');
-$url = $i->grabFromCurrentUrl();
-codexcept_debug($url);
-
-if (strpos($url, $this->url)) {
-$this->login();
-} else {
-$this->open();
-}
-
-return $this;
-}
-
-public function open()
-{
-$i = $this->tester;
-$i->wantTo('Open login page');
-$i->openPage($this->url);
-return $this;
-}
-
 }

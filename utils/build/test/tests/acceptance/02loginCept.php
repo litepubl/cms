@@ -4,8 +4,10 @@ use Page\Login;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
-$login = new Login($i);
-$login->open();
+$login = Login::i($i);
+
+$i->wantTo('Open login page');
+$i->openPage($login->url);
 
 if (config::$screenshot) {
 $i->makeScreenshot('02login');
