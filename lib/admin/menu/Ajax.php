@@ -16,6 +16,7 @@ use litepubl\view\Schemes;
 use litepubl\admin\GetSchema;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\core\TempProps;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
@@ -30,6 +31,8 @@ class Ajax extends \litepubl\admin\posts\Ajax
     $response = $context->response;
 $this->auth($context);
 if ($response->status == 200) {
+$temp = new TempProps($this);
+$temp->response = $response;
         $response->body = $this->getContent();
 }
     }
@@ -38,16 +41,16 @@ if ($response->status == 200) {
         $id = $this->idparam();
         $menus = Menus::i();
         if (($id != 0) && !$menus->itemExists($id)) {
- return static ::error403();
+ return $this->response->forbidden();
 }
 
         $menu = Menu::i($id);
         if (( $this->getApp()->options->group == 'author') && ( $this->getApp()->options->user != $menu->author)) {
- return static ::error403();
+ return $this->response->forbidden();
 }
 
         if (($id > 0) && !$menus->itemExists($id)) {
- return static ::error403();
+ return $this->response->forbidden();
 }
 
         $schemes = Schemes::i();

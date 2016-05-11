@@ -10,7 +10,7 @@
 namespace litepubl\admin\posts;
 use litepubl\core\Context;
 use litepubl\tag\Tags as TagItems;
-use litepubl\tag\Cats as TatItems;
+use litepubl\tag\Cats;
 use litepubl\view\Admin;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
@@ -18,6 +18,7 @@ use litepubl\view\Schema;
 use litepubl\admin\GetSchema;
 use litepubl\admin\GetPerm;
 use litepubl\view\Args;
+use litepubl\core\TempProps;
 
 class TagAjax extends Ajax
 {
@@ -33,7 +34,9 @@ class TagAjax extends Ajax
 
 $this->auth($context);
 if ($response->status == 200) {
-        $response->body = $this->getcontent();
+$temp = new TempProps($this);
+$temp->response = $response;
+        $response->body = $this->getContent();
 }
     }
 
@@ -43,19 +46,15 @@ if ($type != 'tags') {
 $type = 'categories';
 }
 
-        $tags = $type == 'tags' ? Tagitems::i() : CatItems::i();
-        if ($err = static ::auth()) {
-            return $err;
-        }
-
+        $tags = $type == 'tags' ? Tagitems::i() : Cats::i();
         $id = $this->idparam();
         if (($id > 0) && !$tags->itemExists($id)) {
-            return static ::error403();
+return $this->response->forbidden();
         }
 
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $admin = Admin::admin();
-        $lang = Lang::i('tags');
+        $lang = Lang::admin('tags');
 
         if ($id == 0) {
             $schemes = Schemes::i();
@@ -118,7 +117,7 @@ $type = 'categories';
             default:
                 $result = var_export($_GET, true);
         }
-        return \litepubl\core\Router::htmlheader(false) . $result;
+        return $result;
     }
 
 }

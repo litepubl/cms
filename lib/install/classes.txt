@@ -71,4 +71,5 @@ admin\pages\RegUser
 admin\pages\Subscribers
 admin\Menus
 admin\posts\Ajax
+admin\posts\TagAjax
 admin\menu\Ajax

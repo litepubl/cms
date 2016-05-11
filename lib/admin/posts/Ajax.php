@@ -55,8 +55,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
     }
 
-
-    public function auth(Context $context) {
+   public function auth(Context $context) {
 $response = $context->response;
         $options =  $this->getApp()->options;
         if (!$options->user) {
