@@ -4,6 +4,7 @@
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Tabs = Class.extend({
 namespace: '.litepubl.tabs',
+uispace: '.litepubl.uitabs',
 
     init: function() {
       this.tabs($($(".admintabs").toArray().reverse()));
@@ -16,6 +17,7 @@ namespace: '.litepubl.tabs',
         beforeLoad: this.beforeLoad
       });
 
+this.proxy(tabs);
       if (events) {
         this.on(tabs, events);
       }
@@ -23,64 +25,66 @@ namespace: '.litepubl.tabs',
       return tabs;
     },
 
+    proxy: function(tabs) {
+var self = this;
+                      tabs
+.on('tabsbeforeactivate' + this.uispace, function(event, ui) {
+tabs.trigger($.Event('before' + self.namespace, {
+        target: event.target,
+        relatedTarget: event.relatedTarget,
+        panel: ui.newPanel
+      }));
+            })
+.on('tabsactivate' + this.uispace, function(event, ui) {
+tabs.trigger($.Event('activated' + self.namespace, {
+        target: event.target,
+        relatedTarget: event.relatedTarget,
+        panel: ui.newPanel
+      }));
+            })
+.on('tabsload' + this.uispace, function(event, ui) {
+tabs.trigger($.Event('loaded' + self.namespace, {
+        target: event.target,
+        relatedTarget: event.relatedTarget,
+        panel: ui.panel
+      }));
+            });
+    },
+
     on: function(tabs, events) {
-      for (var name in events) {
-        switch (name) {
-          case 'before':
-            tabs.on("tabsbeforeactivate' + this.namespace, function(event, ui) {
-              event.panel = ui.newPanel;
-              events.before(event);
-            });
-            break;
-
-          case 'activated':
-            tabs.on("tabsactivate.litepubl", function(event, ui) {
-              event.panel = ui.newPanel;
-              events.activated(event);
-            });
-            break;
-
-          case 'loaded':
-            tabs.on("tabsload.litepubl", function(event, ui) {
-              event.panel = ui.panel;
-              events.loaded(event);
-            });
-            break;
+      if (tabs && events) {
+        for (var name in events) {
+          tabs.on(name + this.namespace, events[name]);
         }
       }
     },
 
     off: function(tabs) {
-      tabs.off(this.namespace);
-    },
-
-    gettml: function() {
-      return litepubl.tml.ui.tabs;
+      tabs.off(this.namespace).off(this.uispace);
     },
 
     beforeLoad: function(event, ui) {
       if (ui.tab.data("loaded")) {
         event.preventDefault();
       } else {
-this.trigger('beforeLoad', 
+panel.closest('.admintabs').trigger($.Event('beforeLoad' + this.namespace, {
+        target: event.target,
+        relatedTarget: event.relatedTarget,
+        panel: ui.panel
+      }));
+
         ui.jqXHR.success(function() {
           ui.tab.data("loaded", true);
-self.trigger('loaded',
         });
       }
     },
 
-    trigger: function(name, link) {
-      var panel = this.getpanel(link);
-      link.closest('.admintabs').trigger($.Event(name + this.namespace, {
-        target: link[0],
-        relatedTarget: panel[0],
-        panel: panel
-      }));
-    },
-
     setenabled: function(link, enabled) {
       link.closest('.admintabs').tabs(enabled ? 'enable' : 'disable', link.parent().index());
+    },
+
+    gettml: function() {
+      return litepubl.tml.ui.tabs;
     }
 
   });
