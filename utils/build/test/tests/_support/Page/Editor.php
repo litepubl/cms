@@ -7,6 +7,7 @@ class Editor extends Base
     public $url = '/admin/posts/editor/';
 public $title = '#text-title';
 public $content = '#editor-raw';
+public $category = 'input[name=category-1]';
 public $calendar = '#calendar-posted';
 public $upload = null;
  //'#file-input';

@@ -160,8 +160,14 @@ return $this->db->findItem('url = ' . Str::quote($url));
     }
 
     public function add($url, $class, $arg, $type = 'normal') {
-        if (empty($url)) $this->error('Empty url to add');
-        if (empty($class)) $this->error('Empty class name of adding url');
+        if (empty($url)) {
+$this->error('Empty url to add');
+}
+
+        if (empty($class)) {
+$this->error('Empty class name of adding url');
+}
+
         if (!in_array($type, array(
             'normal',
             'get',
@@ -222,9 +228,9 @@ return $this->db->findItem('url = ' . Str::quote($url));
     }
 
     public function deleteClass($class) {
-        if ($items = $this->db->getitems('class = ' . Str::quote($class))) {
+        if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
-                $this->db->iddelete($item['id']);
+                $this->db->idDelete($item['id']);
                 $this->deleted($item['id']);
             }
         }
@@ -234,9 +240,10 @@ return $this->db->findItem('url = ' . Str::quote($url));
 
     public function deleteItem($id) {
         if ($item = $this->db->getitem($id)) {
-            $this->db->iddelete($id);
+            $this->db->idDelete($id);
             $this->deleted($id);
         }
+
         $this->clearcache();
     }
 
@@ -266,15 +273,17 @@ $this->updateFilter();
         $this->unlock();
     }
 
-    public function setUrlvalue($url, $name, $value) {
-        if ($id = $this->urlexists($url)) {
-            $this->setvalue($id, $name, $value);
+    public function setUrlValue($url, $name, $value) {
+        if ($id = $this->urlExists($url)) {
+            $this->setValue($id, $name, $value);
         }
     }
 
-    public function setIdurl($id, $url) {
-        $this->db->setvalue($id, 'url', $url);
-        if (isset($this->items[$id])) $this->items[$id]['url'] = $url;
+    public function setIdUrl($id, $url) {
+        $this->db->setValue($id, 'url', $url);
+        if (isset($this->items[$id])) {
+$this->items[$id]['url'] = $url;
+}
     }
 
 //backward compabilty

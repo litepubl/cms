@@ -85,7 +85,7 @@ return parent::getStorage();
         return $result;
     }
 
-    public function finditem($where) {
+    public function findItem($where) {
         $a = $this->select($where, 'limit 1');
         return count($a) ? $a[0] : false;
     }

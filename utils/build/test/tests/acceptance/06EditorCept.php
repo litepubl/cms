@@ -10,10 +10,13 @@ $lang = config::getLang();
 $data = $editor->load('editor');
 
 $editor->open();
-//$editor->upload('img1.jpg');
+$editor->upload('img1.jpg');
 $i->checkError();
 
 $editor->fillTitleContent($data->title, $data->content);
+
+$i->wantTo('Select category');
+$i->checkOption($editor->category);
 
 $i->wantTo('test date time tab');
 $i->click($lang->posted);
@@ -22,8 +25,11 @@ $i->see($lang->date);
 $i->click($editor->calendar);
 $i->see($lang->calendar);
 $i->screenShot('06calendar');
-$i->click('2');
-$i->click($lang->close);
+//$i->waitForJS('return litepubl.tabs.flagLoaded');
+sleep(1);
+
+$i->click(['link' => '2']);
+$i->click($data->close);
 
 //final submit
 $i->executeJs('$("form:last").submit();');
