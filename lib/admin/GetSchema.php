@@ -32,7 +32,7 @@ $id = !empty($_GET['idschema']) ? (int) $_GET['idschema'] : (!empty($_POST['idsc
     }
 
     public static function combo($idschema, $name = 'idschema') {
-        $lang = Lang::i();
+        $lang = Lang::admin();
         $lang->addsearch('views');
         $theme = Theme::i();
         return strtr($theme->templates['content.admin.combo'], array(

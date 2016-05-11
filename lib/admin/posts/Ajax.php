@@ -107,15 +107,14 @@ return;
 
     public function getContent() {
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
-        $lang = Lang::i('editor');
+        $lang = Lang::admin('editor');
         $post = Post::i($this->idpost);
         $vars = new Vars();
         $vars->post = $post;
 
         switch ($_GET['get']) {
             case 'tags':
-                $result = $theme->getinput('text', 'tags', $post->tagnames, $lang->tags);
-                $lang->section = 'editor';
+                $result = $theme->getInput('text', 'tags', $post->tagnames, $lang->tags);
                 $result.= $theme->h($lang->addtags);
                 $items = array();
                 $tags = $post->factory->tags;
@@ -145,13 +144,15 @@ return;
 
                 $args->perms = GetPerm::combo($post->idperm);
                 $args->password = $post->password;
-                $result = Admin::admin()->parseArg('[combo=comstatus]
+$admin = Admin::admin();
+                $result = $admin->parseArg('
+[combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
       [password=password]
-      <p>$lang.notepassword</p>', $args);
-
+' . $admin->help($lang->notepassword),
+ $args);
                 break;
 
 

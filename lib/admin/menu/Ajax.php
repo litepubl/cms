@@ -15,6 +15,7 @@ use litepubl\view\Schema;
 use litepubl\view\Schemes;
 use litepubl\admin\GetSchema;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
@@ -40,23 +41,20 @@ if ($response->status == 200) {
  return static ::error403();
 }
 
-
         $menu = Menu::i($id);
         if (( $this->getApp()->options->group == 'author') && ( $this->getApp()->options->user != $menu->author)) {
  return static ::error403();
 }
 
-
         if (($id > 0) && !$menus->itemExists($id)) {
  return static ::error403();
 }
-
-
 
         $schemes = Schemes::i();
 $schema = Schema::i($schemes->defaults['admin']);
         $theme = $schema->theme;
 $admin = $schema->admintheme;
+$lang = Lang::admin('menu');
 
         switch ($_GET['get']) {
             case 'view':

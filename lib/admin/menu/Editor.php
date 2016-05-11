@@ -152,7 +152,7 @@ $admin = $this->admintheme;
         }
 
 $admin = $this->admintheme;
-        return $admintheme->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title)));
+        return $admin->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title)));
     }
 
 }
