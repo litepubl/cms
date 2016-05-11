@@ -12,9 +12,7 @@ $password->logout();
 Filer::delete(config::$home . '/storage/data/logs/', false, false);
 $i->wantTo('Open restore password page');
 $i->openPage($password->url);
+$i->screenShot('03password');
 
-if (config::$screenshot) {
-$i->makeScreenshot('03password');
-}
 
 $password->restore();

@@ -1,6 +1,7 @@
 <?php
 
 
+use test\config;
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -38,6 +39,13 @@ public function openPage($url)
 {
 $this->amOnPage($url);
 $this->checkError();
+}
+
+public function screenShot($name)
+{
+if (config::$screenshot) {
+$this->makeScreenshot($name);
+}
 }
 
 }

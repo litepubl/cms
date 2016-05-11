@@ -37,7 +37,10 @@ $i->executeJs('$(\'#tempfile-input\').removeClass(\'hidden\');');
 $i->attachFile($this->upload, $filename);
 $i->checkError();
 $r = $i->executeJs($this->uploadJS);
+if ($r) {
 codecept_debug(var_export($r, true));
+}
+
 return $this;
 }
 

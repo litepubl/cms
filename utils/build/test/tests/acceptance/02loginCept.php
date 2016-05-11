@@ -8,17 +8,11 @@ $login = Login::i($i);
 
 $i->wantTo('Open login page');
 $i->openPage($login->url);
-
-if (config::$screenshot) {
-$i->makeScreenshot('02login');
-}
+$i->screenShot('02login');
 
 $login->login();
 $i->seeCurrentUrlEquals('/admin/');
-
-if (config::$screenshot) {
-$i->makeScreenshot('02board');
-}
+$i->screenShot('02board');
 
 $login->logout();
 $i->seeCurrentUrlEquals($login->url);
