@@ -27,11 +27,12 @@ $admin->submit();
 }
 
 $list = $admin->getMenu();
-foreach ($list as $url) {
+foreach ($list as $j => $url) {
 //codecept_debug($url);
 $i->wantTo("Test page $url");
 $i->amOnUrl($url);
 $i->checkError();
+$i->screenShot('06-' . $j . str_replace('/', '-', trim(substr($url, strpos($url, '/', 9)), '/')));
 $admin->submit();
 $i->checkError();
 }

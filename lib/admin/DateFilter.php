@@ -35,26 +35,19 @@ class DateFilter {
  return 0;
 }
 
-
         $date = trim($_POST[$name]);
         if (!$date) {
  return 0;
 }
+            if (!$format) {
+$format = static ::$format;
+}
 
-
-
-        if (version_compare(PHP_VERSION, '5.3', '>=')) {
-            if (!$format) $format = static ::$format;
-            $d = DateTime::createFromFormat($format, $date);
+            $d = \DateTime::createFromFormat($format, $date);
             if ($d && $d->format($format) == $date) {
                 $d->setTime(0, 0, 0);
                 return $d->getTimestamp() + static ::gettime($name . '-time');
             }
-        } else {
-            if (@sscanf($date, '%d.%d.%d', $d, $m, $y)) {
-                return mktime(0, 0, 0, $m, $d, $y) + static ::gettime($name . '-time');
-            }
-        }
 
         return 0;
     }

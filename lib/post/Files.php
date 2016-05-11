@@ -247,9 +247,9 @@ return FilesItems::i();
 
         $url =  $this->getApp()->site->files . '/files/';
 
-        $preview = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $preview = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 Theme::$vars['preview'] =$preview; 
-        $midle = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 Theme::$vars['midle'] = $midle;
 
         $index = 0;
@@ -320,10 +320,10 @@ Theme::$vars['midle'] = $midle;
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getjson($id);
 
-                $preview = new \ArrayObject($this->getitem($idpreview), ArrayObject::ARRAY_AS_PROPS);
+                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
-                $midle = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+                $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
                 if ($idmidle = (int)$item['midle']) {
                     $midle->exchangeArray ($this->getitem($idmidle));
                     $midle->link = $baseurl . $midle->filename;

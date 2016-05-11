@@ -13,7 +13,6 @@ use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 use litepubl\core\Arr;
 use litepubl\core\Str;
-use ArrayObject;
 
 class Widgets extends \litepubl\core\Items
 {
@@ -166,7 +165,7 @@ use \litepubl\core\PoolStorageTrait;
     }
 
     public function getSidebarIndex(ViewInterface $view, $sidebar) {
-        $items = new ArrayObject($this->getWidgets($view, $sidebar), ArrayObject::ARRAY_AS_PROPS);
+        $items = new \ArrayObject($this->getWidgets($view, $sidebar), \ArrayObject::ARRAY_AS_PROPS);
         if ($view instanceof WidgetsInterface) {
             $view->getWidgets($items, $sidebar);
         }
@@ -270,7 +269,7 @@ $items[] = $item;
         return $items;
     }
 
-    protected function getSidebarContent(ArrayObject $items, $sidebar, $disableajax) {
+    protected function getSidebarContent(\ArrayObject $items, $sidebar, $disableajax) {
         $result = '';
 //for call event  getwidget
 $str = new Str();
