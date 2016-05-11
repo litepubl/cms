@@ -14,9 +14,6 @@
     //event namespace
     namespace: '.litepubl.tabs',
 
-// to use in codecept: $I->waitForJS('return litepubl.tabs.flagLoaded');
-flagLoaded: true,
-
     init: function() {
       var self = this;
       $(document).on('show.bs.tab', function(e) {
@@ -68,7 +65,6 @@ flagLoaded: true,
 
     load: function(link, url) {
       link.data("loaded", "loading");
-this.flagLoaded = false;
       var tml = litepubl.tml.bootstrap.tabs;
       link.data("spin", $(tml.spin).prependTo(link));
       var panel = this.getpanel(link);
@@ -82,11 +78,12 @@ this.flagLoaded = false;
       }
 
       panel.attr("aria-busy", "true");
+          this.trigger('beforeLoad', link);
+
       var self = this;
       return $.ajax(this.getajax(url, function(html) {
           panel.html(html);
           self.trigger('loaded', link);
-self.flagLoaded = true;
         }))
         .always(function() {
           panel.removeAttr("aria-busy");

@@ -221,7 +221,9 @@ break;
 
 case 'js':
 $dir = $rootdir . 'js' . DIRECTORY_SEPARATOR . 'litepubl' . DIRECTORY_SEPARATOR;
-foreach (array('admin', 'bootstrap', 'comments', 'common', 'deprecated', 'effects', 'pretty', 'system') as $subdir) {
+//foreach (array('admin', 'bootstrap', 'comments', 'common', 'deprecated', 'effects', 'pretty', 'system') as $subdir) {
+$subdirs = Filer::getDir($dir);
+foreach ($subdirs as $subdir) {
 parsejs($dir . $subdir . DIRECTORY_SEPARATOR);
 if (is_dir($dir . $subdir . DIRECTORY_SEPARATOR. 'css')) {
 parsejs($dir . $subdir . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR);

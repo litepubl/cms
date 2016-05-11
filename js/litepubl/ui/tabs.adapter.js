@@ -3,6 +3,7 @@
 
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Tabs = Class.extend({
+namespace: '.litepubl.tabs',
 
     init: function() {
       this.tabs($($(".admintabs").toArray().reverse()));
@@ -26,7 +27,7 @@
       for (var name in events) {
         switch (name) {
           case 'before':
-            tabs.on("tabsbeforeactivate.litepubl", function(event, ui) {
+            tabs.on("tabsbeforeactivate' + this.namespace, function(event, ui) {
               event.panel = ui.newPanel;
               events.before(event);
             });
@@ -50,7 +51,7 @@
     },
 
     off: function(tabs) {
-      tabs.off('.litepubl');
+      tabs.off(this.namespace);
     },
 
     gettml: function() {
@@ -61,10 +62,21 @@
       if (ui.tab.data("loaded")) {
         event.preventDefault();
       } else {
+this.trigger('beforeLoad', 
         ui.jqXHR.success(function() {
           ui.tab.data("loaded", true);
+self.trigger('loaded',
         });
       }
+    },
+
+    trigger: function(name, link) {
+      var panel = this.getpanel(link);
+      link.closest('.admintabs').trigger($.Event(name + this.namespace, {
+        target: link[0],
+        relatedTarget: panel[0],
+        panel: panel
+      }));
     },
 
     setenabled: function(link, enabled) {

@@ -1,5 +1,4 @@
 try {
-
 var input = $('#tempfile-input');
 input.addClass('hidden');
 var uploader = litepubl.fileman.uploader.handler;
