@@ -78,20 +78,19 @@ class Sidebars extends \litepubl\core\Data
         return false;
     }
 
-    public function deleteclass($classname) {
+    public function deleteClass($classname) {
         if ($id = twidgets::i()->class2id($classname)) {
             Schemes::i()->widgetdeleted($id);
         }
     }
 
-    public function indexof($id, $index) {
+    public function indexOf($id, $index) {
         foreach ($this->items[$index] as $i => $item) {
             if ($id == $item['id']) {
  return $i;
 }
-
-
         }
+
         return false;
     }
 

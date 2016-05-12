@@ -50,4 +50,38 @@ $s = substr($s, 0, $i) . "\n" . $uns . substr($s, $i);
 return $s;
 }
 
+public function find($s)
+{
+foreach ($this->classmap as $old => $new) {
+if (preg_match("/\\b$old::/im", $s, $m)) {
+return $old;
+}
+}
+
+return false;
+}
+
+public function findFile($dir)
+{
+$list = dir($dir);
+while ($name = $list->read()) {
+if ($name == '.' || $name == '..' || $name == 'kernel.php') {
+ continue;
+}
+
+$filename = $dir .'/' . $name;
+if (is_dir($filename)) {
+$this->findFile($filename);
+} else {
+if ($old = $this->find(file_get_contents($filename))) {
+echo basename($dir);
+echo "/$name\n$old\n";
+//exit();
+}
+}
+}
+
+$list->close();
+}
+
 }

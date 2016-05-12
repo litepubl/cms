@@ -9,6 +9,7 @@
 
 namespace litepubl\core;
 use litepubl\Config;
+use litepubl\utils\Mailer;
 
 class Cron extends Events implements ResponsiveInterface
  {
@@ -221,11 +222,10 @@ $this->getApp()->getLogger()->info("cron added $id");
  return;
 }
 
-
         static ::$pinged = true;
 
         register_shutdown_function(array(
-            tcron::i() ,
+            static::i() ,
             'ping'
         ));
     }
@@ -260,7 +260,7 @@ $this->getApp()->getLogger()->info("cron added $id");
 
         $s = file_get_contents($filename);
          $this->getApp()->storage->delete($filename);
-        tmailer::SendAttachmentToAdmin('[error] ' .  $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
+        Mailer::SendAttachmentToAdmin('[error] ' .  $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
         sleep(2);
     }
 

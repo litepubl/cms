@@ -179,8 +179,6 @@ class Widgets extends \litepubl\admin\Menu
     }
 
     public function processForm() {
-         $this->getApp()->cache->clear();
-
         $idwidget = (int)$this->getParam('idwidget', 0);
         $widgets = WidgetItems::i();
 
@@ -191,7 +189,7 @@ class Widgets extends \litepubl\admin\Menu
                 $sidebars->remove($idwidget);
                 $result = $this->admintheme->success($this->lang->deleted);
             } else {
-                $widget = $widgets->getwidget($idwidget);
+                $widget = $widgets->getWidget($idwidget);
                 $result = $widget->admin->processForm();
             }
 
@@ -214,14 +212,17 @@ class Widgets extends \litepubl\admin\Menu
                     $schema->customsidebar = false;
                 } else {
                     $sidebars = Sidebars::i($idschema);
+$newItems = array_fill(0, count($sidebars->items), []);
+
                     foreach ($sidebars->items as $i => $items) {
                         foreach ($items as $j => $item) {
                             $id = $item['id'];
                             if (!isset($_POST["sidebar-$id"])) {
+Arr::append($newItems[$i], $j, $item);
  continue;
 }
 
-
+$item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
 
                             $i2 = (int)$_POST["sidebar-$id"];
                             if ($i2 >= count($sidebars->items)) {
@@ -233,16 +234,15 @@ class Widgets extends \litepubl\admin\Menu
                                 $j2 = count($sidebars[$i2]);
                             }
 
-                            if ($i == $i2) {
-                                Arr::move($sidebars->items[$i2], $j, $j2);
-                            } else {
-                                Arr::delete($sidebars->items[$i], $j);
-                                Arr::insert($sidebars->items[$i2], $item, $j2);
-                            }
-
-                            $sidebars->items[$i2][$j2]['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
-                        }
+Arr::append($newItems[$i2], $j2, $item);
                     }
+}
+
+foreach ($newItems as $i => $items) {
+ksort($items);
+Arr::reIndex($items);
+$sidebars->items[$i] = $items;
+}
 
                     $sidebars->save();
                 }

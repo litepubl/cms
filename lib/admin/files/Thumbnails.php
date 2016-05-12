@@ -10,9 +10,11 @@
 namespace litepubl\admin\files;
 use litepubl\post\Files as FileItems;
 use litepubl\post\MediaParser;
+use litepubl\perms\Files as PrivateFiles;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Parser;
+use litepubl\admin\AuthorRights;
 
 class Thumbnails extends \litepubl\admin\Menu
 {
@@ -99,7 +101,7 @@ return $admin->geterr(Lang::get('uploaderrors', $_FILES["filename"]["error"]));
 return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
 }
 
-        if ($isauthor && ($r = tauthor_rights::i()->canupload())) {
+        if ($isauthor && ($r = AuthorRights::i()->canupload())) {
  return $r;
 }
 
@@ -108,7 +110,7 @@ return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
         $filename = $_FILES['filename']['name'];
         $tempfilename = $_FILES['filename']['tmp_name'];
         $parser = MediaParser::i();
-        $filename = tmediaparser::linkgen($filename);
+        $filename = MediaParser::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $parser->gettempname($parts);
         if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $newtemp)) {
@@ -132,7 +134,7 @@ return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
             $files->setvalue($idpreview, 'parent', $id);
             if ($item['idperm'] > 0) {
                 $files->setvalue($idpreview, 'idperm', $item['idperm']);
-                tprivatefiles::i()->setperm($idpreview, (int)$item['idperm']);
+                PrivateFiles::i()->setperm($idpreview, (int)$item['idperm']);
             }
             return $admin->success($lang->success);
         }

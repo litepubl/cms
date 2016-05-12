@@ -56,6 +56,7 @@ $this->createCache();
          $this->options = Options::i();
          $this->site = Site::i();
          $this->router = Router::i();
+$this->controller = new Controller();
 $this->onClose = new Callback();
 
         if ($installed) {
@@ -122,8 +123,6 @@ new Response()
 );
 
 $this->context = $context;
-$controller = new Controller();
-$this->controller = $controller;
 
         $obEnabled = !Config::$debug &&  $this->options->ob_cache;
 if ($obEnabled) {
@@ -134,9 +133,9 @@ if ($obEnabled) {
             call_user_func_array(Config::$beforeRequest, [$this]);
         }
 
-if (!$controller->cached($context)) {
+if (!$this->controller->cached($context)) {
 $this->router->request($context);
-$controller->request($context);
+$this->controller->request($context);
 $this->router->afterrequest($context);
 }
 

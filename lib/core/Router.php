@@ -248,7 +248,7 @@ $this->error('Empty class name of adding url');
     }
 
     //for Archives
-    public function GetClassUrls($class) {
+    public function getUrlsOfClass($class) {
         $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
         return $this->db->res2id($res);
     }

@@ -22,7 +22,11 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
     }
 
     public function filesChanged() {
-         //$this->getApp()->router->expiredclass(get_class($this));
+$app = $this->getApp();
+$list = $app->router->getUrlsOfClass(get_class($this));
+foreach ($list as $url) {
+$app->cache->delete($app->controller->url2cacheFile($url));
+}
     }
 
     public function request(Context $context)

@@ -104,6 +104,11 @@ return md5($context->request->url) .$ext;
 }
 }
 
+public function url2cacheFile($url)
+{
+return md5($url) .'.php';
+}
+
 public function getModel($class, $arg)
 {
 if (is_a($class, __NAMESPACE__ . '\Item', true)) {

@@ -36,7 +36,7 @@ return [
 'DBManager' => 'litepubl\core\DBManager',
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
 //theme
-'Lang' => 'litepubl\view\Lang',
+//'Lang' => 'litepubl\view\Lang',
 'LangMerger' => 'theme\LangMerger',
 'ttemplate' => 'litepubl\view\MainControler',
 'itemplate' => 'litepubl\view\ControlerInterface',
@@ -104,7 +104,7 @@ return [
 
 //utils
 'tfiler' => 'litepubl\utils\Filer',
-'http' => 'litepubl\utils\Http',
+//'http' => 'litepubl\utils\Http',
 'tmailer' => 'litepubl\utils\Mailer',
 'tsmtp' => 'litepubl\utils\Smtp',
 'TSMTPMailer' => 'litepubl\utils\Smtp',
@@ -150,7 +150,7 @@ return [
 'ulist' => 'litepubl\admin\UList',
 'thtmltag' => 'litepubl\admin\Tag',
 'tadminmenu'=> 'litepubl\admin\Menu',
-'Menus'=> 'litepubl\admin\Menus',
+'tadminmenus'=> 'litepubl\admin\Menus',
 'tadminplugins' => 'litepubl\admin\Plugins',
 
 'tadminboard' => 'litepubl\admin\pages\Board',

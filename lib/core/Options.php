@@ -66,11 +66,9 @@ use PoolStorageTrait;
     private function doChanged($name, $value) {
         if ($name == 'perpage') {
             $this->perpagechanged();
-            $urlmap = turlmap::i();
-            $urlmap->clearcache();
+$this->getApp()->cache->clear();
         } elseif ($name == 'cache') {
-            $urlmap = turlmap::i();
-            $urlmap->clearcache();
+$this->getApp()->cache->clear();
         } else {
             $this->changed($name, $value);
         }
@@ -125,7 +123,7 @@ use PoolStorageTrait;
         if ($iduser == 1) return $this->compare_cookie($cookie);
         if (!$this->usersenabled) return false;
 
-        $users = tusers::i();
+        $users = Users::i();
         try {
             $item = $users->getitem($iduser);
         }
@@ -146,7 +144,7 @@ use PoolStorageTrait;
         if (!$this->authenabled) return false;
         if ($email == $this->email) return 1;
         if (!$this->usersenabled) return false;
-        return tusers::i()->emailexists($email);
+        return Users::i()->emailexists($email);
     }
 
     public function auth($email, $password) {
@@ -160,7 +158,7 @@ use PoolStorageTrait;
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) return false;
         } else {
-            if (!tusers::i()->authpassword($iduser, $password)) return false;
+            if (!Users::i()->authpassword($iduser, $password)) return false;
         }
 
         $this->_user = $iduser;
@@ -175,9 +173,9 @@ use PoolStorageTrait;
                 1
             );
         } else {
-            $user = tusers::i()->getitem($this->_user);
+            $user = Users::i()->getitem($this->_user);
             $this->idgroups = $user['idgroups'];
-            $this->group = count($this->idgroups) ? tusergroups::i()->items[$this->idgroups[0]]['name'] : '';
+            $this->group = count($this->idgroups) ? UserGroups::i()->items[$this->idgroups[0]]['name'] : '';
         }
     }
 
@@ -186,8 +184,11 @@ use PoolStorageTrait;
     }
 
     public function getpassword() {
-        if ($this->user <= 1) return $this->data['password'];
-        $users = tusers::i();
+        if ($this->user <= 1) {
+return $this->data['password'];
+}
+
+        $users = Users::i();
         return $users->getvalue($this->user, 'password');
     }
 
@@ -230,7 +231,7 @@ use PoolStorageTrait;
         if ($this->_user == 1) {
             $this->save_cookie($cookie, $expired);
         } else if ($this->_user) {
-            tusers::i()->setcookie($this->_user, $cookie, $expired);
+            Users::i()->setcookie($this->_user, $cookie, $expired);
         }
     }
 

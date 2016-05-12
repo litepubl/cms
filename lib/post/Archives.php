@@ -64,7 +64,7 @@ use \litepubl\view\ViewTrait;
     public function CreatePageLinks() {
         $this->lock();
         //Compare links
-        $old =  $this->getApp()->router->GetClassUrls(get_class($this));
+        $old =  $this->getApp()->router->getUrlsOfClass(get_class($this));
         foreach ($this->items as $date => $item) {
             $j = array_search($item['url'], $old);
             if (is_int($j)) {

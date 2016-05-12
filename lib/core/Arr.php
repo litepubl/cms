@@ -64,4 +64,18 @@ public static function toEnum($v, array $a) {
     return in_array($v, $a) ? $v : $a[0];
 }
 
+public static function reIndex(array &$a)
+{
+    array_splice($a, count($a), 0, array());
+}
+
+public static function append(array &$a, $index, $value)
+{
+while(array_key_exists($index, $a)) {
+$index++;
+}
+
+$a[$index] = $value;
+}
+
 }

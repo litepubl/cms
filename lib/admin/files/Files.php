@@ -19,6 +19,7 @@ use litepubl\utils\http;
 use litepubl\admin\Form;
 use litepubl\admin\Link;
 use litepubl\view\Parser;
+use litepubl\admin\AuthorRights;
 
 class Files extends \litepubl\admin\Menu
 {
@@ -63,7 +64,8 @@ $form->items.= GetPerm::combo(0, 'idperm');
             switch ($_GET['action']) {
                 case 'delete':
                     if ($this->confirmed) {
-                        if (('author' ==  $this->getApp()->options->group) && ($r = tauthor_rights::i()->candeletefile($id))) {
+                        if (('author' ==  $this->getApp()->options->group)
+ && ($r = AuthorRights::i()->candeletefile($id))) {
  return $r;
 }
 

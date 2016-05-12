@@ -164,7 +164,7 @@ return $r;
 
                 $posts->delete($id);
             } else {
-                $post = tpost::i($id);
+                $post = Post::i($id);
                 if ($this->isauthor && ($iduser != $post->author)) {
  continue;
 }

@@ -156,7 +156,7 @@ return;
             if (move_uploaded_file($_FILES[$name]['tmp_name'], $filename)) {
                 @chmod($filename, 0666);
 
-                if ($image = tmediaparser::readimage($filename)) {
+                if ($image = MediaParser::readimage($filename)) {
                     $maxwidth = 1900;
                     $maxheight = $maxwidth / 4 * 3;
                     if (imagesx($image) > $maxwidth) {

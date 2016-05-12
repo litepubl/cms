@@ -223,7 +223,7 @@ $announce = new Announce($schema->theme);
 }
 
 
-        $posts = tposts::i();
+        $posts = Posts::i();
         $p = $posts->thistable;
         $ci =  $this->getApp()->db->prefix . 'categoriesitems';
         $this->midleposts = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.post as post from $p, $ci

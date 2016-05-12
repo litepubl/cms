@@ -66,17 +66,21 @@ $this->lifetime = $value - $this->timeOffset;
 
     public function clear() {
 $this->items = [];
-        $path = $this->getdir();
+$this->clearDir(       $path = $this->getdir());
+}
+
+public function clearDir($dir)
+{
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = @readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
  continue;
 }
 
-
                 $file = $path . $filename;
                 if (is_dir($file)) {
-                    tfiler::delete($file . DIRECTORY_SEPARATOR, true, true);
+                    $this->clearDir($file . DIRECTORY_SEPARATOR);
+unlink($file);
                 } else {
                     unlink($file);
                 }

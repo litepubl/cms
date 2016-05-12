@@ -105,13 +105,12 @@ return true;
 return false;
     }
 
-    public static function deletedir($dir) {
+    public static function deleteDir($dir) {
         if (!@file_exists($dir)) {
  return false;
 }
 
-
-        tfiler::delete($dir, true, true);
+        Filer::delete($dir, true, true);
         @rmdir($dir);
     }
 
