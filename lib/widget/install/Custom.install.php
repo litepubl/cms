@@ -7,9 +7,9 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\widget;
 
-function tcustomwidgetInstall($self) {
-    $widgets = twidgets::i();
-    $widgets->deleted = $self->widgetdeleted;
+function CustomInstall($self) {
+    $widgets = Widgets::i();
+    $widgets->deleted = $self->widgetDeleted;
 }

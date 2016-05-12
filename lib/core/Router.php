@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\core;
+use litepubl\pages\Redirector;
 
 class Router extends Items
  {
@@ -257,7 +258,7 @@ $this->error('Empty class name of adding url');
             return;
         }
 
-        $Redir = tredirector::i();
+        $Redir = Redirector::i();
         $Redir->add($from, $to);
     }
 

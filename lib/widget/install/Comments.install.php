@@ -7,12 +7,13 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\widget;
+use litepubl\comments\Comments as ComItems;
 
-function tcommentswidgetInstall($self) {
-    tcomments::i()->changed = $self->changed;
+function CommentsInstall($self) {
+    ComItems::i()->changed = $self->changed;
 }
 
-function tcommentswidgetUninstall($self) {
-    tcomments::i()->unbind($self);
+function CommentsUninstall($self) {
+    ComItems::i()->unbind($self);
 }

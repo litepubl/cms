@@ -430,7 +430,7 @@ $id,
     }
 
     public function getPos($id) {
-        return tsidebars::getpos($this->sidebars, $id);
+        return Sidebars::getpos($this->sidebars, $id);
     }
 
     public function &finditem($id) {

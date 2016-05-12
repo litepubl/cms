@@ -26,11 +26,9 @@ function CssInstall($self) {
     $self->add($section, '/js/litepubl/admin/css/calendar.min.css');
     $self->add($section, '/js/litepubl/admin/css/fileman.min.css');
     $self->unlock();
-    //tupdater::i()->onupdated = $self->save;
 }
 
 function CssUninstall($self) {
-    //tupdater::i()->unbind($self);
 }
 
 function Css_pretty_files($self) {

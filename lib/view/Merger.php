@@ -76,8 +76,6 @@ return false;
         return count($this->items[$section]['files']) - 1;
     }
 
-    // fix: Strict Standards: Declaration of tfilemerger::delete() should be compatible with titems::delete($id)
-    //public function delete($section, $filename) {
     public function delete($id) {
         $a = func_get_args();
         return $this->deletefile($id, $a[1]);

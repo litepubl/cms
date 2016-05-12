@@ -9,7 +9,7 @@
 
 namespace litepubl\widget;
 use litepubl\pages\RobotsTxt;
-uuse litepubl;
+use litepubl;
 
 function AjaxInstall($self) {
 litepubl::$app->router->addget($self->url, get_class($self));

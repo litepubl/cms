@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\post;
+use litepubl\widget\Widgets;
 
 function ArchivesInstall($self) {
     $posts = Posts::i();
@@ -17,8 +18,8 @@ function ArchivesInstall($self) {
 function ArchivesUninstall($self) {
      $self->getApp()->router->unbind($self);
     Posts::unsub($self);
-    $widgets = twidgets::i();
-    $widgets->deleteclass(get_class($self));
+    $widgets = Widgets::i();
+    $widgets->deleteClass(get_class($self));
 }
 
 function ArchivesGetSitemap($self, $from, $count) {

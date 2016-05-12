@@ -79,7 +79,7 @@ class Sidebars extends \litepubl\core\Data
     }
 
     public function deleteClass($classname) {
-        if ($id = twidgets::i()->class2id($classname)) {
+        if ($id = Widgets::i()->class2id($classname)) {
             Schemes::i()->widgetdeleted($id);
         }
     }
@@ -138,7 +138,7 @@ class Sidebars extends \litepubl\core\Data
     }
 
     public static function fix() {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         foreach ($widgets->classes as $classname => & $items) {
             foreach ($items as $i => $item) {
                 if (!isset($widgets->items[$item['id']])) unset($items[$i]);

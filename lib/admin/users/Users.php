@@ -51,8 +51,16 @@ $admin = $this->admintheme;
 
                     $tabs = $this->newTabs();
                     $tabs->add($lang->login, '[text=email] [password=password]');
-                    $tabs->add($lang->groups, '[combo=status]' . tadmingroups::getgroups($item['idgroups']));
-                    $tabs->add('Cookie', '[text=cookie] [text=expired] [text=registered] [text=trust]');
+                    $tabs->add($lang->groups, '
+[combo=status]
+' . tadmingroups::getgroups($item['idgroups']));
+
+                    $tabs->add('Cookie', '
+[text=cookie]
+ [text=expired]
+ [text=registered]
+ [text=trust]
+');
 
                     $args->password = '';
                     $result.= $admin->form($tabs->get() , $args);

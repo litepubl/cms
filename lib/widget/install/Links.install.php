@@ -7,32 +7,30 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\widget;
 use litepubl\view\Lang;
+use litepubl\pages\RobotsTxt;
 
-function tlinkswidgetInstall($self) {
-    if (get_class($self) != 'tlinkswidget') {
+function LinksInstall($self) {
+    if (get_class($self) != __NAMESPACE__ . '\Links') {
  return;
 }
-
 
     Lang::usefile('admin');
     $lang = Lang::i('installation');
     $self->add($lang->homeurl, $lang->homedescription, $lang->homename);
 
-    $router = \litepubl\core\Router::i();
-    $router->add($self->redirlink, get_class($self) , null, 'get');
+    $self->getApp()->router->add($self->redirlink, get_class($self) , null, 'get');
 
-    $robots = trobotstxt::i();
+    $robots = RobotsTxt::i();
     $robots->AddDisallow($self->redirlink);
     $robots->save();
 }
 
-function tlinkswidgetUninstall($self) {
-    if (get_class($self) != 'tlinkswidget') {
+function LinksUninstall($self) {
+    if (get_class($self) != __NAMESPACE__ . '\Links') {
  return;
 }
-
 
      $self->getApp()->router->unbind($self);
 }

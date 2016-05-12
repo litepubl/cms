@@ -35,7 +35,7 @@ class Pinger extends \litepubl\core\Events
             if ($value) {
                 $this->install();
             } else {
-                tposts::unsub($this);
+                Posts::unsub($this);
             }
             $this->unlock();
         }

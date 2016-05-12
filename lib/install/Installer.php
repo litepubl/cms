@@ -29,6 +29,7 @@ use litepubl\core\Users;
 use litepubl\comments\Manager;
 use litepubl\comments\Comments;
 use litepubl\utils\Mailer;
+use litepubl\utils\Filer;
 
 class Installer
 {
@@ -427,9 +428,9 @@ $args->email = $this->app->options->email;
     }
 
     public function uninstall() {
-        tfiler::delete($this->app->paths->data, true);
-        tfiler::delete($this->app->paths->cache, true);
-        tfiler::delete($this->app->pathsfiles, true);
+        Filer::delete($this->app->paths->data, true);
+        Filer::delete($this->app->paths->cache, true);
+        Filer::delete($this->app->pathsfiles, true);
     }
 
     private function loadLang() {

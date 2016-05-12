@@ -20,7 +20,9 @@ post\Posts
 post\Meta
 pages\RobotsTxt
 widget\Widgets
+widget\Ajax
 widget\Cache
+widget\Comments
 widget\Custom
 widget\Links
 comments\Comments

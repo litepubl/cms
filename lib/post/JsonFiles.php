@@ -12,6 +12,7 @@ use litepubl\admin\GetPerm;
 use litepubl\view\Theme;
 use litepubl\view\Parser;
 use litepubl\view\Filter;
+use litepubl\admin\AuthorRights;
 
 class JsonFiles extends \litepubl\core\Events
  {
@@ -142,7 +143,7 @@ class JsonFiles extends \litepubl\core\Events
 
 
 
-        if (in_array( $this->getApp()->options->groupnames['author'],  $this->getApp()->options->idgroups) && ($err = tauthor_rights::i()->canupload())) {
+        if (in_array( $this->getApp()->options->groupnames['author'],  $this->getApp()->options->idgroups) && ($err = AuthorRights::i()->canupload())) {
             return false;
         }
 

@@ -451,7 +451,7 @@ $this->post->db->setvalue($this->id, 'idschema', $id);
         }
 
         //inject php code
-        return sprintf('<?php echo litepubl\tcommentspool::i()->getlink(%d, \'%s\'); ?>', $this->id, $tml);
+        return sprintf('<?php echo litepubl\comments\Pool::i()->getLink(%d, \'%s\'); ?>', $this->id, $tml);
     }
 
     public function getCmtCount() {

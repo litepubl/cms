@@ -235,7 +235,7 @@ $result = file_get_contents($filename);
 
     private function readdata($path) {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
-        $filer = Langfiler::i();
+        $filer = Local::i();
         if ($list = $filer->getdir($path)) {
             $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen( $this->getApp()->paths->data)));
             $this->adddir($dir, $filer->getchmod($path));
@@ -293,7 +293,7 @@ $result = file_get_contents($filename);
 
         $this->lastdir = $dir;
         //if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
-        if (!($this->__filer instanceof Langfiler)) {
+        if (!($this->__filer instanceof Local)) {
             $dir = str_replace('\\', '/', $dir);
             if ('/' != DIRECTORY_SEPARATOR) $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
             $dir = rtrim($dir, '/');
@@ -450,7 +450,7 @@ unlink($tempfile);
         $filename = substr($filename, strlen('storage/data/'));
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $filename =  $this->getApp()->paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
-        tfiler::forcedir(dirname($filename));
+        Filer::forcedir(dirname($filename));
         if (file_put_contents($filename, $content) === false) {
  return false;
 }
@@ -742,8 +742,8 @@ break;
     public function createbackup() {
         /*
         $filer = $this->__filer;
-        if (!$filer || ! ($filer instanceof Langfiler)) {
-        $this->__filer = Langfiler::i();
+        if (!$filer || ! ($filer instanceof Local)) {
+        $this->__filer = Local::i();
         }
         */
         $result = $this->_savebackup($this->getpartial(false, false, false));

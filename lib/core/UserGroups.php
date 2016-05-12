@@ -49,7 +49,7 @@ class UserGroups extends Items
         unset($this->items[$id]);
         $this->save();
 
-        $users = tusers::i();
+        $users = Users::i();
         $db = $users->db;
         $items = $db->res2assoc($users->getdb($users->grouptable)->select("idgroup = $id"));
         $users->getdb($users->grouptable)->delete("idgroup = $id");
