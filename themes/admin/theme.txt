@@ -53,6 +53,10 @@ checkbox.name = [
    <input type="checkbox" name="$name" value="$name" $checked />
 ]
 
+checkbox.label = [
+<label><input type="checkbox" name="$name-$id" value="$id" $checked /> $title</label>
+]
+
 checkbox.invert= [
    <input type="checkbox" class="invertcheck" />
 ]
@@ -433,7 +437,7 @@ $confirm - текст вопроса, пример: Вы действитель�
 */
 
 icon = [
-<span class="fa fa-$name"></span>
+<span class="fa fa-$name" aria-hidden="true"></span>
 ]
 
 /*
@@ -544,15 +548,15 @@ $head = [<h4><a target="_blank" href="$site.url/admin/posts/categories/">$lang.c
 posteditor.text = [
 <div id="posteditor-text">
     $visual = [
-    <h6><a href="$site.files$scripturl" id="load-visual-editor" class="dashed"><span class="fa fa-edit"></span> <small>$lang.loadvisual</small></a></h6>
+    <h6><a href="#" id="load-visual-editor" class="dashed"><span class="fa fa-edit"></span> <small>$lang.loadvisual</small></a></h6>
     <script type="text/javascript">
         $(document).ready(function() {
                     $("#load-visual-editor").click(function() {
-                        $.load_script($(this).attr("href"));
+                        $.load_script('$site.files$scripturl');
                         $(this).parent().remove();
                         return false;
                     });
-                }
+                });
     </script>
     ]
     

@@ -37,9 +37,9 @@ return [
 'tdboptimizer' => 'litepubl\core\DBOptimizer',
 //theme
 //'Lang' => 'litepubl\view\Lang',
-'LangMerger' => 'theme\LangMerger',
-'ttemplate' => 'litepubl\view\MainControler',
-'itemplate' => 'litepubl\view\ControlerInterface',
+'LangMerger' => 'theme\view\LangMerger',
+'ttemplate' => 'litepubl\view\MainView',
+'itemplate' => 'litepubl\view\ViewInterface',
 'ttheme' => 'litepubl\view\Theme',
 'basetheme' => 'litepubl\view\Base',
 'admintheme' => 'litepubl\view\Admin',

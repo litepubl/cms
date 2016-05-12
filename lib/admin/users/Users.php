@@ -15,6 +15,7 @@ use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\admin\Link;
 use litepubl\admin\Form;
+use litepubl\admin\GetPerm;
 
 class Users extends \litepubl\admin\Menu
 {
@@ -53,7 +54,7 @@ $admin = $this->admintheme;
                     $tabs->add($lang->login, '[text=email] [password=password]');
                     $tabs->add($lang->groups, '
 [combo=status]
-' . tadmingroups::getgroups($item['idgroups']));
+' . GetPerm::groups($item['idgroups']));
 
                     $tabs->add('Cookie', '
 [text=cookie]
@@ -80,7 +81,7 @@ $admin = $this->admintheme;
 
                 $tabs = $this->newTabs();
                 $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
-                $tabs->add($lang->groups, tadmingroups::getgroups(array()));
+                $tabs->add($lang->groups, GetPerm::groups(array()));
 
                 $result.= $admin->form($tabs->get() , $args);
         }

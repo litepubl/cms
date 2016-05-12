@@ -12,6 +12,8 @@ use litepubl\core\Str;
 
 class Remote
 {
+use \litepubl\core\AppTrait;
+
     protected $host;
     protected $login;
     public $port;

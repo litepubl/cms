@@ -1,15 +1,15 @@
 posteditor.text = [
 <div id="posteditor-text">
     $visual = [
-    <h6><a href="$site.files$scripturl" id="load-visual-editor" class="dashed"><span class="fa fa-edit"></span> <small>$lang.loadvisual</small></a></h6>
+    <h6><a href="#" id="load-visual-editor" class="dashed"><span class="fa fa-edit"></span> <small>$lang.loadvisual</small></a></h6>
     <script type="text/javascript">
         $(document).ready(function() {
                     $("#load-visual-editor").click(function() {
-                        $.load_script($(this).attr("href"));
+                        $.load_script('$site.files$scripturl');
                         $(this).parent().remove();
                         return false;
                     });
-                }
+                });
     </script>
     ]
     
