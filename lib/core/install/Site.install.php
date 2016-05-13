@@ -21,6 +21,8 @@ function SiteInstall($self) {
     $site->home = '/';
     $site->keywords = "blog";
     $site->jquery_version = '1.12.3';
+    $site->author = 'Admin';
+
     $site->mapoptions = array(
         'version' => 'version',
         'language' => 'language',

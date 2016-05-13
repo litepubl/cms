@@ -10,6 +10,7 @@
 namespace litepubl\widget;
 use litepubl\core\Context;
     use litepubl\core\Response;
+    use litepubl\core\litepubl;
 use litepubl\view\Theme;
 use litepubl\view\Schema;
 
@@ -38,16 +39,16 @@ $themename = Schema::i(1)->themename;
         try {
         $theme = Theme::getTheme($themename);
 
-$widgets->onFindContextCallback = function($class) (use $idurl) {
-if ($item = litepubl::$app->router->getItem($idurl))
-&& (is_a($class, $item['class'], true)) {
+$widgets->onFindContextCallback = function($class) use ($idurl) {
+if (($item = litepubl::$app->router->getItem($idurl))
+&& is_a($class, $item['class'], true)) {
 if (is_a($item['class'], 'litepubl\core\Item', true)) {
 return ($item['class'])::i($item['arg']);
 }else {
 return litepubl::$app->classes->getInstance($item['class']);
 }
 }
-});
+};
 
             $response->body= $widgets->getWidgetContent($id, $sidebar);
         }
