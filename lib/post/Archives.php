@@ -10,6 +10,7 @@
 namespace litepubl\post;
 use litepubl\core\Context;
 use litepubl\view\Lang;
+use litepubl\view\Schema;
 use litepubl\utils\LinkGenerator;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
@@ -91,7 +92,7 @@ $context->response->status = 404;
         $this->date = $date;
         $item = $this->items[$date];
 
-        $schema = Schema::getview($this);
+        $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $pages = (int)ceil($item['count'] / $perpage);
         if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
@@ -118,7 +119,7 @@ return;
 
 
 
-        $schema = Schema::getview($this);
+        $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $list = array_slice($items, ( $this->getApp()->context->request->page - 1) * $perpage, $perpage);
         $result = $schema->theme->getposts($list, $schema->postanounce);
@@ -133,7 +134,7 @@ return;
 
 
         $item = $this->items[$this->date];
-        $order = Schema::getview($this)->invertorder ? 'asc' : 'desc';
+        $order = Schema::getSchema($this)->invertorder ? 'asc' : 'desc';
         return $this->_idposts = $this->getdb('posts')->idselect("status = 'published' and
 year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
     ORDER BY posted $order");

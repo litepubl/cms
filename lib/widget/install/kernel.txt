@@ -1,1 +1,3 @@
 #nothing, all files included
+Widget.php
+CommonTags.php

@@ -295,38 +295,6 @@ $view = new View();
 
 }
 
-//CommonTags.php
-namespace litepubl\widget;
-
-class CommonTags extends Widget
- {
-
-    protected function create() {
-        parent::create();
-        $this->adminclass = '\litepubl\admin\widget\Tags';
-        $this->data['sortname'] = 'count';
-        $this->data['showcount'] = true;
-        $this->data['showsubitems'] = true;
-        $this->data['maxcount'] = 0;
-    }
-
-    public function getOwner() {
-        return false;
-    }
-
-    public function getContent($id, $sidebar) {
-$view = new View();
-        $items = $this->owner->getView()->getSorted(array(
-            'item' => $view->getItem($this->template, $sidebar) ,
-            'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
-            'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''
-        ) , 0, $this->sortname, $this->maxcount, $this->showcount);
-
-        return str_replace('$parent', 0, $view->getContent($items, $this->template, $sidebar));
-    }
-
-}
-
 //Custom.php
 namespace litepubl\widget;
 
@@ -986,130 +954,6 @@ $tml = '.' . $tml;
 
 }
 
-//Widget.php
-namespace litepubl\widget;
-use litepubl\view\Theme;
-use litepubl\view\Vars;
-use litepubl\view\Schema;
-
-class Widget extends \litepubl\core\Events
- {
-    public $id;
-    public $template;
-    protected $adminclass;
-protected $adminInstance;
-
-    protected function create() {
-        parent::create();
-        $this->basename = 'widget';
-        $this->cache = 'cache';
-        $this->id = 0;
-        $this->template = 'widget';
-        $this->adminclass = '\litepubl\admin\widget\Widget';
-    }
-
-    public function addToSidebar($sidebar) {
-        $widgets = Widgets::i();
-        $id = $widgets->add($this);
-        $sidebars = Sidebars::i();
-        $sidebars->insert($id, false, $sidebar, -1);
-
-        $this->getApp()->cache->clear();
-        return $id;
-    }
-
-    protected function getAdmin() {
-if (!$this->adminInstance) {
-            $this->adminInstance = $this->getApp()->classes->getinstance($this->adminclass);
-            $this->adminInstance->widget = $this;
-        }
-
-return $this->adminInstance;
-    }
-
-    public function getWidget($id, $sidebar) {
-$vars = new Vars();
-$vars->widget = $this;
-
-        try {
-            $title = $this->gettitle($id);
-            $content = $this->getcontent($id, $sidebar);
-        }
-        catch(\Exception $e) {
-             $this->getApp()->options->handexception($e);
-            return '';
-        }
-$view = new View();
-return $view->getWidgetId($id, $title, $content, $this->template, $sidebar);
-    }
-
-    public function getDeftitle() {
-        return '';
-    }
-
-    public function getTitle($id) {
-        if (!isset($id)) $this->error('no id');
-        $widgets = Widgets::i();
-        if (isset($widgets->items[$id])) {
-            return $widgets->items[$id]['title'];
-        }
-        return $this->getdeftitle();
-    }
-
-    public function setTitle($id, $title) {
-        $widgets = Widgets::i();
-        if (isset($widgets->items[$id]) && ($widgets->items[$id]['title'] != $title)) {
-            $widgets->items[$id]['title'] = $title;
-            $widgets->save();
-        }
-    }
-
-    public function getContent($id, $sidebar) {
-        return '';
-    }
-
-    public static function getCachefilename($id) {
-        $theme = Theme::context();
-        return sprintf('widget.%s.%d.php', $theme->name, $id);
-    }
-
-    public function expired($id) {
-        switch ($this->cache) {
-            case 'cache':
-                Cache::i()->expired($id);
-                break;
-
-
-            case 'include':
-                $sidebar = static ::findsidebar($id);
-                $filename = static ::getCacheFilename($id, $sidebar);
-                 $this->getApp()->cache->setString($filename, $this->getContent($id, $sidebar));
-                break;
-        }
-    }
-
-    public static function findsidebar($id) {
-        $schema = Schema::i();
-        foreach ($schema->sidebars as $i => $sidebar) {
-            foreach ($sidebar as $item) {
-                if ($id == $item['id']) {
-return $i;
-}
-            }
-        }
-
-        return 0;
-    }
-
-    public function expire() {
-        $widgets = Widgets::i();
-        foreach ($widgets->items as $id => $item) {
-            if ($this instanceof $item['class']) $this->expired($id);
-        }
-    }
-
-}
-
 //Widgets.php
 namespace litepubl\widget;
     use litepubl\core\Context;
@@ -1576,5 +1420,161 @@ interface WidgetsInterface
 {
 public function getWidgets(ArrayObject $items, $sidebar);
 public function getSidebar(Str $str, $sidebar);
+}
+
+//Widget.php
+namespace litepubl\widget;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
+use litepubl\view\Schema;
+
+class Widget extends \litepubl\core\Events
+ {
+    public $id;
+    public $template;
+    protected $adminclass;
+protected $adminInstance;
+
+    protected function create() {
+        parent::create();
+        $this->basename = 'widget';
+        $this->cache = 'cache';
+        $this->id = 0;
+        $this->template = 'widget';
+        $this->adminclass = '\litepubl\admin\widget\Widget';
+    }
+
+    public function addToSidebar($sidebar) {
+        $widgets = Widgets::i();
+        $id = $widgets->add($this);
+        $sidebars = Sidebars::i();
+        $sidebars->insert($id, false, $sidebar, -1);
+
+        $this->getApp()->cache->clear();
+        return $id;
+    }
+
+    protected function getAdmin() {
+if (!$this->adminInstance) {
+            $this->adminInstance = $this->getApp()->classes->getinstance($this->adminclass);
+            $this->adminInstance->widget = $this;
+        }
+
+return $this->adminInstance;
+    }
+
+    public function getWidget($id, $sidebar) {
+$vars = new Vars();
+$vars->widget = $this;
+
+        try {
+            $title = $this->gettitle($id);
+            $content = $this->getcontent($id, $sidebar);
+        }
+        catch(\Exception $e) {
+             $this->getApp()->options->handexception($e);
+            return '';
+        }
+$view = new View();
+return $view->getWidgetId($id, $title, $content, $this->template, $sidebar);
+    }
+
+    public function getDeftitle() {
+        return '';
+    }
+
+    public function getTitle($id) {
+        if (!isset($id)) $this->error('no id');
+        $widgets = Widgets::i();
+        if (isset($widgets->items[$id])) {
+            return $widgets->items[$id]['title'];
+        }
+        return $this->getdeftitle();
+    }
+
+    public function setTitle($id, $title) {
+        $widgets = Widgets::i();
+        if (isset($widgets->items[$id]) && ($widgets->items[$id]['title'] != $title)) {
+            $widgets->items[$id]['title'] = $title;
+            $widgets->save();
+        }
+    }
+
+    public function getContent($id, $sidebar) {
+        return '';
+    }
+
+    public static function getCachefilename($id) {
+        $theme = Theme::context();
+        return sprintf('widget.%s.%d.php', $theme->name, $id);
+    }
+
+    public function expired($id) {
+        switch ($this->cache) {
+            case 'cache':
+                Cache::i()->expired($id);
+                break;
+
+
+            case 'include':
+                $sidebar = static ::findsidebar($id);
+                $filename = static ::getCacheFilename($id, $sidebar);
+                 $this->getApp()->cache->setString($filename, $this->getContent($id, $sidebar));
+                break;
+        }
+    }
+
+    public static function findsidebar($id) {
+        $schema = Schema::i();
+        foreach ($schema->sidebars as $i => $sidebar) {
+            foreach ($sidebar as $item) {
+                if ($id == $item['id']) {
+return $i;
+}
+            }
+        }
+
+        return 0;
+    }
+
+    public function expire() {
+        $widgets = Widgets::i();
+        foreach ($widgets->items as $id => $item) {
+            if ($this instanceof $item['class']) $this->expired($id);
+        }
+    }
+
+}
+
+//CommonTags.php
+namespace litepubl\widget;
+
+class CommonTags extends Widget
+ {
+
+    protected function create() {
+        parent::create();
+        $this->adminclass = '\litepubl\admin\widget\Tags';
+        $this->data['sortname'] = 'count';
+        $this->data['showcount'] = true;
+        $this->data['showsubitems'] = true;
+        $this->data['maxcount'] = 0;
+    }
+
+    public function getOwner() {
+        return false;
+    }
+
+    public function getContent($id, $sidebar) {
+$view = new View();
+        $items = $this->owner->getView()->getSorted(array(
+            'item' => $view->getItem($this->template, $sidebar) ,
+            'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
+            'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''
+        ) , 0, $this->sortname, $this->maxcount, $this->showcount);
+
+        return str_replace('$parent', 0, $view->getContent($items, $this->template, $sidebar));
+    }
+
 }
 

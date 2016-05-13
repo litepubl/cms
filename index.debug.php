@@ -8,7 +8,7 @@ namespace litepubl;
 
 define('litepubl_mode', 'config');
 require (__DIR__ . '/index.php');
-//Config::$debug = true;
+Config::$debug = true;
 
 Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$beforeRequest  = function() {
@@ -20,5 +20,8 @@ $d = __dir__ . '/storage/data';
 //utils\Filer::delete($d, true, false);
 //utils\Filer::append(__DIR__ . '/storage/log.txt', '');
 
-//require (__DIR__ . '/lib/debug/kernel.php');
+if (Config::$debug) {
+require (__DIR__ . '/lib/debug/kernel.php');
+} else {
 require (__DIR__ . '/lib/core/kernel.php');
+}

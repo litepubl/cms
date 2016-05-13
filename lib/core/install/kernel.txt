@@ -1,7 +1,6 @@
 !DBManager.php
 !DBOptimizer.php
 !Plugins.php
-!Pool.php
 !ResponseDecorator.php
 !Session.php
 !SingleItems.php
@@ -29,6 +28,7 @@ lib/debug/LogManager.php
 lib/debug/RuntimeHandler.php
 lib/debug/EmptyFormatter.php
 lib/debug/LogException.php
+
 
 #final
 litepubl.php
