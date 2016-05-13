@@ -15,11 +15,12 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Handler\NativeMailerHandler;
+use litepubl\utils\Filer;
 
 class LogManager
 {
 use \litepubl\core\AppTrait;
-
+    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
 public $logger;
 public $runtime;
 
@@ -37,7 +38,7 @@ $handler->registerFatalHandler();
 }
 
 $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-$handler->setFormatter(new LineFormatter(null,  null,true, false));
+$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
 $logger->pushHandler($handler);
 
             $this->runtime = new RuntimeHandler(Logger::WARNING);
@@ -46,7 +47,7 @@ $logger->pushHandler($this->runtime);
 
 if (!Config::$debug) {
 $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
-$handler->setFormatter(new LineFormatter(null,  null,true, false));
+$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
 $logger->pushHandler($handler);
 }
 }
@@ -81,6 +82,23 @@ return $result;
 }
 
 return '';
+}
+
+public static function old($mesg)
+{
+$log = date('r') . "\n";
+if (isset($_SERVER['REQUEST_URI'])) {
+        $log .= $_SERVER['REQUEST_URI'] . "\n";
+}
+
+        if (!is_string($s)) {
+$s = var_export($s, true);
+}
+
+$log .= $s;
+$log .= "\n";
+        Filer::append(static::getAppInstance()->paths->data . 'logs/filer.log', $log);
+    }
 }
 
 }

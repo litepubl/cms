@@ -20,6 +20,7 @@ lib/debug/LogException.php
 vendor/monolog/monolog/src/Monolog/Logger.php
 vendor/psr/log/Psr/Log/LoggerInterface.php
 vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
+vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
