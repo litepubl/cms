@@ -11,9 +11,32 @@ namespace litepubl\install;
 
 class KernelBuilder
 {
+
+public static function buildAll()
+{
+$dir = dirname(__DIR__);
+$list = dir($dir);
+
+while ($filename = $list->read()) {
+if ($filename == '.' || $filename == '..') {
+continue;
+}
+
+if (is_dir($dir . '/' . $filename)) {
+static::build($dir . '/' . $filename . '/');
+}
+}
+
+$list->close();
+}
+
 public static function build($dir) {
 $result ='';
 $rules = static::getRules($dir);
+if ($rules === false) {
+return false;
+}
+
 $dirlist = dir($dir);
 while ($filename = $dirlist->read()) {
 if ((substr($filename, -4) != '.php') || ($filename == 'kernel.php')) {
@@ -44,7 +67,15 @@ file_put_contents($dir . 'kernel.php', $result);
 }
 
 public static function getRules($dir) {
+if (!file_exists($dir . 'install/kernel.txt')) {
+return false;
+}
+
 $s = file_get_contents($dir . 'install/kernel.txt');
+if (!$s) {
+return false;
+}
+
 $a = explode("\n", $s);
 
 $result = [
