@@ -77,7 +77,7 @@ class topenid extends tevents {
             $log.= var_export($this->keys, true);
             $log.= "\nhas key\n";
             $log.= isset($this->keys[$_REQUEST['openid_assoc_handle']]) ? "true\n\n" : "false\n\n";
-            tfiler::log($log, 'openid.log');
+            $this->getApp()->getLogger()->info($log);
         }
         $this->LoadBigMath();
         ini_set('arg_separator.output', '&');

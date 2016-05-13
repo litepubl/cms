@@ -15,6 +15,7 @@ use AppTrait;
 
 public $body;
 public $cache;
+public $cacheHeader;
 public $headers;
 public $protocol;
 public $status;
@@ -48,6 +49,22 @@ $this->headers = [
 ];
 }
 
+public function __set($name, $value)
+{
+if (method_exists($this, $set = 'set' . $name)) {
+$this->$set($value);
+} else {
+throw new PropException(get_class($this), $name);
+}
+}
+
+public function setCache($cache)
+{
+$this->cache = $cache;
+$this->cacheHeader = $cache;
+}
+
+
 public function setCacheHeaders($mode)
 {
 if ($mode) {
@@ -66,7 +83,7 @@ $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists',
 
 header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
 
-$this->setCacheHeaders($this->cache);
+$this->setCacheHeaders($this->cacheHeader);
 if (isset($this->headers['Date'])) {
 unset($this->headers['Last-Modified']);
 }
@@ -118,7 +135,7 @@ public function setXml()
 
 public function setJson($js = '')
 {
-        $this->headers['Content-Type'] = 'application/json';
+        $this->headers['Content-Type'] = 'application/json;charset=utf-8';
 if ($js) {
 $this->cache = false;
 $this->body = $js;

@@ -48,11 +48,17 @@ class Updater extends \litepubl\core\Events
             if (version_compare($cur, $versions[$i]) < 0) {
  return $versions[$i];
 }
-
-
         }
+
         return $versions[0];
     }
+
+public function log($mesg)
+{
+if ($this->log) {
+$this->getApp()->getLogger()->debug($mesg);
+}
+}
 
     public function run($ver) {
         $ver = (string)$ver;
@@ -62,69 +68,52 @@ class Updater extends \litepubl\core\Events
 
         if (file_exists($filename)) {
             require_once ($filename);
-            if ($this->log) Filer::log("$filename is required file", 'update');
+$this->log("$filename is required file", 'update');
             $func = 'update' . str_replace('.', '', $ver);
 
             if (function_exists($func)) {
                 $func();
-                if ($this->log) {
-Filer::log("$func is called", 'update');
-}
-                 $this->getApp()->options->savemodified();
+$this->log("$func is called", 'update');
+                 $this->getApp()->poolStorage->commit();
             } else if (function_exists('litepubl\\' . $func)) {
                 call_user_func_array('litepubl\\' . $func, array());
-                if ($this->log) {
-Filer::log("$func is called", 'update');
-}
-
-                 $this->getApp()->options->savemodified();
+$this->log("$func is called", 'update');
+                 $this->getApp()->poolStorage->commit();
             }
         }
     }
 
     public function update() {
-        $log = $this->log;
-        false;
-        if ($log) {
-Filer::log("begin update", 'update');
-}
-        Lang::clearcache();
+$this->log("begin update", 'update');
+        Lang::clearCache();
         $this->versions = static ::getversions();
         $nextver = $this->nextversion;
-        if ($log) {
-Filer::log("update started from  $this->getApp()->options->version to $this->version", 'update');
-}
-
-        $v =  $this->getApp()->options->version + 0.01;
+$app = $this->getApp();
+        $v =  $app->options->version + 0.01;
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
             if (strlen($ver) == 3) $ver.= '0';
             if (strlen($ver) == 1) $ver.= '.00';
-            if ($log) {
-Filer::log("$v selected to update", 'update');
-}
-
+$this->log("$v selected to update", 'update');
             $this->run($v);
-             $this->getApp()->options->version = $ver;
-             $this->getApp()->options->savemodified();
+             $app->options->version = $ver;
+             $app->poolStorage->commit();
             $v = $v + 0.01;
         }
 
-        Filer::delete( $this->getApp()->paths->data . 'themes', false, false);
-         $this->getApp()->cache->clear();
-        Lang::clearcache();
+        Filer::delete( $app->paths->data . 'themes', false, false);
+         $app->cache->clear();
+        Lang::clearCache();
         Sidebars::fix();
 
         if (function_exists('apc_clear_cache')) {
             apc_clear_cache();
         }
 
-        if ($log) {
-            Filer::log("update finished", 'update');
-        }
+            $this->log("update finished", 'update');
     }
 
-    public function autoupdate($protecttimeout = true) {
+    public function autoUpdate($protecttimeout = true) {
         if ($protecttimeout) {
             if (ob_get_level()) @ob_end_clean();
             Header('Cache-Control: no-cache, must-revalidate');
@@ -136,13 +125,13 @@ Filer::log("$v selected to update", 'update');
         $lang = Lang::i('service');
         $backuper = Backuper::i();
         if ($this->useshell) {
-            $backuper->createshellbackup();
+            $backuper->createShellBackup();
         } else {
-            $backuper->createbackup();
+            $backuper->createBackup();
         }
 
-        $releases = $this->downloadreleases();
-        $latest = $this->getnext($releases);
+        $releases = $this->downloadReleases();
+        $latest = $this->getNext($releases);
         if ($this->download($latest)) {
             $this->result = $lang->successdownload;
             $this->update();
@@ -159,7 +148,6 @@ Filer::log("$v selected to update", 'update');
  return 'Already updated';
 }
 
-
         if (($ver == 0) || ($ver > $latest)) $ver = $latest;
         if ($this->download($ver)) {
             $this->result = $lang->successdownload;
@@ -170,7 +158,7 @@ Filer::log("$v selected to update", 'update');
         return false;
     }
 
-    public function islatest() {
+    public function isLatest() {
         if ($latest = $this->getlatest()) {
             return version_compare($latest,  $this->getApp()->options->version);
         }
@@ -185,7 +173,7 @@ Filer::log("$v selected to update", 'update');
         return false;
     }
 
-    public function downloadreleases() {
+    public function downloadReleases() {
         if (isset($this->releases)) {
             return $this->releases;
         }
@@ -223,7 +211,7 @@ Filer::log("$v selected to update", 'update');
         return true;
     }
 
-    public function downloadshell($version) {
+    public function downloadShell($version) {
         $filename = "litepublisher.$version.tar.gz";
         $cmd = array();
         $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
@@ -236,7 +224,6 @@ Filer::log("$v selected to update", 'update');
         if ($s = implode("\n", $r)) {
  return $s;
 }
-
 
         $this->onupdated();
         return true;

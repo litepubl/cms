@@ -82,6 +82,8 @@ $response->cache = true;
 
 $response->redir($url);
 $response->body = "<?php litepubl\\utils\\Filer::append('$filename', '$id\n'); ?>";
+$response->cache = true;
+$response->cacheHeader = false;
     }
 
     public function filter(&$content) {

@@ -50,7 +50,10 @@ class tlivejournalposter extends \litepubl\core\Plugin
         $client = new IXR_Client($this->host, '/interface/xmlrpc');
         //$client = new IXR_Client($this->host, '/rpc.xml');
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
-            if (Config::$debug) tfiler::log('live journal: error challenge');
+            if (Config::$debug) {
+$this->getApp()->getLogger()->debug('live journal: error challenge');
+}
+}
             return false;
         }
         $response = $client->getResponse();
@@ -102,7 +105,9 @@ class tlivejournalposter extends \litepubl\core\Plugin
         }
 
         if (!$client->query($method, $args)) {
-            if (Config::$debug) tfiler::log('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+            if (Config::$debug) {
+$this->getApp()->getLogger()->debug('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+}
             return false;
         }
 
