@@ -77,10 +77,12 @@ header(sprintf('%s: %s', $k, $v));
 
 if (is_string($this->body)) {
 eval('?>' . $this->body);
+/*
 return;
 $f = $this->getApp()->paths->cache . 'temp.php';
 file_put_contents($f, $this->body);
 require ($f);
+*/
 } elseif (is_callable($this->body)) {
 call_user_func_array($this->body, [$this]);
 }

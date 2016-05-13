@@ -752,7 +752,7 @@ break;
     }
 
     public function getFilename($ext) {
-        $filename =  $this->getApp()->paths->backup .  $this->getApp()->domain . date('-Y-m-d');
+        $filename =  $this->getApp()->paths->backup .  $this->getApp()->site->domain . date('-Y-m-d');
         $result = $filename . $ext;
         $i = 2;
         while (file_exists($result) && ($i < 100)) {
@@ -808,7 +808,7 @@ break;
     public function createshellfilesbackup() {
         $cmd = array();
         $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
-        $filename = 'files_' .  $this->getApp()->domain . date('-Y-m-d');
+        $filename = 'files_' .  $this->getApp()->site->domain . date('-Y-m-d');
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";

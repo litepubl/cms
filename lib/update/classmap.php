@@ -254,6 +254,9 @@ return [
 'admin_bootstrap_header' => 'litepubl\plugins\bootstrap\Header',
 'catbread' => 'litepubl\plugins\catbread\Catbread',
 'admincatbread' => 'litepubl\plugins\catbread\AdminCatbread',
+
+'texternallinks' => 'litepubl\plugins\externallinks\ExternalLinks',
+
 'toldestposts' => 'litepubl\plugins\oldestposts\Oldestposts',
 'tadminoldestposts' => 'litepubl\plugins\oldestposts\Admin',
 'likebuttons' => 'litepubl\plugins\likebuttons\LikeButtons',
@@ -269,4 +272,5 @@ return [
 'lowvision' => 'litepubl\plugins\lowvision\LowVision',
 'tsingletagwidget' => 'litepubl\plugins\singletagwidget\Widget',
 'tadminsingletagwidget' => 'litepubl\singletagwidget\Admin',
+
 ];

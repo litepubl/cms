@@ -7,18 +7,16 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\externallinks;
 use litepubl\core\Str;
+use litepubl\core\Context;
 
-class texternallinks extends titems {
+class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
+ {
     public $exclude;
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
-
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->table = 'externallinks';
         $this->basename = 'externallinks';
@@ -26,28 +24,21 @@ class texternallinks extends titems {
     }
 
     public function add($url) {
-        if ($id = $this->indexof('url', $url)) {
+        if ($id = $this->indexOf('url', $url)) {
  return $id;
 }
-
 
         $item = array(
             'url' => $url,
             'clicked' => 0
         );
 
-        if ($this->dbversion) {
             $id = $this->db->add($item);
             $this->items[$id] = $item;
             return $id;
-        } else {
-            $this->items[++$this->autoid] = $item;
-            $this->save();
-            return $this->autoid;
-        }
     }
 
-    public function updatestat() {
+    public function updateStat() {
         $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
             @unlink($filename);
@@ -59,7 +50,6 @@ class texternallinks extends titems {
  continue;
 }
 
-
                 if (isset($stat[$id])) {
                     $stat[$id]++;
                 } else {
@@ -67,36 +57,31 @@ class texternallinks extends titems {
                 }
             }
 
-            if (count($stat) == 0) {
+            if (!count($stat)) {
  return;
 }
 
-
-            $this->loaditems(array_keys($stat));
+            $this->loadItems(array_keys($stat));
             foreach ($stat as $id => $clicked) {
-                if ($this->dbversion) {
-                    $this->db->setvalue($id, 'clicked', $clicked + $this->items[$id]['clicked']);
-                } else {
-                    $this->items[$id]['clicked']+= $clicked;
-                }
+                    $this->db->setValue($id, 'clicked', $clicked + $this->items[$id]['clicked']);
             }
-            $this->save();
-        }
     }
 
-    public function request($arg) {
-        //$this->cache = false;
-        $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    public function request(Context $context) {
+$response = $context->response;
+$response->cache = true;
+
+        $id = (int) $context->request->getArg('id', 0);
         if (!$this->itemExists($id)) {
- return 404;
+ return $response->notfound();
 }
 
-
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         $url = $item['url'];
         $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
-        return "<?php tfiler::append('$id\n', '$filename');
-    litepubl::\$router->redir('$url');";
+
+$response->redir($url);
+$response->body = "<?php litepubl\\utils\\Filer::append('$filename', '$id\n'); ?>";
     }
 
     public function filter(&$content) {
@@ -104,29 +89,25 @@ class texternallinks extends titems {
  return;
 }
 
-
         $redir =  $this->getApp()->site->url . '/externallink.htm' .  $this->getApp()->site->q . 'id=';
+$siteurl = $this->getApp()->site->url;
         $external = array();
         foreach ($links[1] as $num => $link) {
             if (isset($external[$link])) {
  continue;
 }
 
-
             if (!Str::begin($link, 'http', 'ftp')) {
  continue;
 }
 
-
-            if (Str::begin($link,  $this->getApp()->site->url)) {
+            if (Str::begin($link,  $siteurl) {
  continue;
 }
 
-
-            if ($this->inexclude($link)) {
+            if ($this->inExclude($link)) {
  continue;
 }
-
 
             $id = $this->add($link);
             $external[$link] = $redir . $id;
@@ -138,14 +119,13 @@ class texternallinks extends titems {
         }
     }
 
-    public function inexclude($link) {
+    public function inExclude($link) {
         foreach ($this->exclude as $ex) {
             if (false !== strpos($link, $ex)) {
  return true;
 }
-
-
         }
+
         return false;
     }
 

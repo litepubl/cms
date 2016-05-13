@@ -92,7 +92,8 @@ $response->body .= $this->GetIndex();
     public function getIndex() {
         $lastmod = date('Y-m-d', $this->date);
         $result = '<sitemapindex xmlns="http://www.google.com/schemas/sitemap/0.84">';
-        $url =  $this->getApp()->site->files . '/files/' .  $this->getApp()->domain;
+$app = $this->getApp();
+        $url =  $app->site->files . '/files/' .  $app->site->domain;
         $exists = true;
         for ($i = 1; $i <= $this->countfiles; $i++) {
             $result.= "<sitemap><loc>$url.$i.xml.gz</loc>      <lastmod>$lastmod</lastmod></sitemap>";
@@ -160,10 +161,11 @@ $response->body .= $this->GetIndex();
     private function openfile() {
         $this->count = 0;
         $this->countfiles++;
-        if ($this->fd = gzopen( $this->getApp()->paths->files .  $this->getApp()->domain . ".$this->countfiles.xml.gz", 'w')) {
+$app = $this->getApp();
+        if ($this->fd = gzopen( $app->paths->files .  $app->site->domain . ".$this->countfiles.xml.gz", 'w')) {
             $this->WriteHeader();
         } else {
-            tfiler::log("error write file to folder " .  $this->getApp()->paths->files);
+            $app->getLogger()->error('error write file to folder ' .  $app->paths->files);
             exit();
         }
     }
@@ -171,7 +173,8 @@ $response->body .= $this->GetIndex();
     private function closefile() {
         $this->WriteFooter();
         gzclose($this->fd);
-        @chmod( $this->getApp()->paths->files .  $this->getApp()->domain . ".$this->countfiles.xml.gz", 0666);
+$app = $this->getApp();
+        @chmod( $app->paths->files .  $app->site->domain . ".$this->countfiles.xml.gz", 0666);
         $this->fd = false;
     }
 

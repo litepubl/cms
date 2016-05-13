@@ -117,16 +117,16 @@ $admin = $this->admintheme;
                     @header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
                     exit();
                 } elseif (isset($downloadpartial)) {
-                    $filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . $backuper->getfiletype();
+                    $filename = str_replace('.', '-',  $this->getApp()->site->domain) . date('-Y-m-d') . $backuper->getfiletype();
                     $content = $backuper->getpartial(isset($plugins) , isset($theme) , isset($lib));
                     $this->sendfile($content, $filename);
                 } elseif (isset($fullbackup)) {
-                    $filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . $backuper->getfiletype();
+                    $filename = str_replace('.', '-',  $this->getApp()->site->domain) . date('-Y-m-d') . $backuper->getfiletype();
                     $content = $backuper->getfull();
                     $this->sendfile($content, '');
                 } elseif (isset($sqlbackup)) {
                     $content = $backuper->getdump();
-                    $filename =  $this->getApp()->domain . date('-Y-m-d') . '.sql';
+                    $filename =  $this->getApp()->site->domain . date('-Y-m-d') . '.sql';
 
                     switch ($backuper->archtype) {
                         case 'tar':
@@ -164,9 +164,8 @@ $zip->close();
 }
 
     private function sendfile(&$content, $filename) {
-        //@file_put_contents( $this->getApp()->domain . ".zip", $content);
         if (!$filename) {
-$filename = str_replace('.', '-',  $this->getApp()->domain) . date('-Y-m-d') . '.zip';
+$filename = str_replace('.', '-',  $this->getApp()->site->domain) . date('-Y-m-d') . '.zip';
 }
 
         if (ob_get_level()) {

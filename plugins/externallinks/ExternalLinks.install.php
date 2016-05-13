@@ -7,12 +7,14 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\externallinks;
 use litepubl\core\DBManager;
 use litepubl\view\Filter;
+use litepubl\core\Cron;
+use litepubl\post\Posts;
+use liteubl\pages\RobotsTxt;
 
-function texternallinksInstall($self) {
-    if (dbversion) {
+function ExternalLinksInstall($self) {
         $manager = DBManager::i();
         $manager->createtable($self->table, 'id int UNSIGNED NOT NULL auto_increment,
     clicked int UNSIGNED NOT NULL default 0,
@@ -20,8 +22,6 @@ function texternallinksInstall($self) {
     PRIMARY KEY(id),
     key url (url)
     ');
-    } else {
-    }
 
     $filter = Filter::i();
     $filter->lock();
@@ -29,28 +29,26 @@ function texternallinksInstall($self) {
     $filter->onaftercomment = $self->filter;
     $filter->unlock();
 
-    $cron = tcron::i();
+    $cron = Cron::i();
     $cron->add('hour', get_class($self) , 'updatestat');
 
      $self->getApp()->router->addget('/externallink.htm', get_class($self));
 
-    $robot = trobotstxt::i();
+    $robot = RobotsTxt::i();
     $robot->AddDisallow('/externallink.htm');
-    tposts::i()->addrevision();
+    Posts::i()->addRevision();
 }
 
-function texternallinksUninstall($self) {
+function ExternalLinksUninstall($self) {
     $filter = Filter::i();
     $filter->unbind($self);
 
-    $cron = tcron::i();
-    $cron->deleteclass(get_class($self));
+    $cron = Cron::i();
+    $cron->deleteClass(get_class($self));
 
      $self->getApp()->router->unbind($self);
 
-    if (dbversion) {
         $manager = DBManager::i();
         $manager->deletetable($self->table);
-    }
-    tposts::i()->addrevision();
+    Posts::i()->addRevision();
 }

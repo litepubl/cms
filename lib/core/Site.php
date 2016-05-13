@@ -8,6 +8,7 @@
 **/
 
 namespace litepubl\core;
+use litepubl\Config;
 
 class Site extends Events
 {
@@ -88,6 +89,16 @@ use PoolStorageTrait;
         }
         $this->save();
     }
+
+public function getDomain()
+{
+if (Config::$host) {
+return Config::$host;
+} else {}
+$url = $this->url;
+return substr($url, strpos($url, '//') + 2));
+}
+ }
 
     public function getUserlink() {
         if ($id =  $this->getApp()->options->user) {
