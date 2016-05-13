@@ -10,6 +10,7 @@
 namespace litepubl\tag;
 use litepubl\post\Posts;
 use litepubl\widget\Widgets;
+use litepubl\view\Schema;
 
 function CommonInstall($self) {
     if ((__NAMESPACE__ . '\Common') == get_class($self)) {
@@ -42,12 +43,17 @@ Widgets::i()->deleteclass(get_class($self));
 
 function CommonGetsitemap($self, $from, $count) {
     $result = array();
-    $self->loadall();
+    $self->loadAll();
+$options = $self->getApp()->options;
     foreach ($self->items as $id => $item) {
+            $schema = Schema::i($item['idschema']);
+            $perpage = $schema->perpage ? $schema->perpage :  $options->perpage;
+            $pages = (int)ceil($item['itemscount'] / $perpage);
+
         $result[] = array(
             'url' => $item['url'],
             'title' => $item['title'],
-            'pages' => (int)$item['lite'] ? 1 : ceil($item['itemscount'] /  $self->getApp()->options->perpage)
+            'pages' => $pages,
         );
     }
 

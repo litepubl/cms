@@ -36,9 +36,6 @@ $lang = Lang::admin('options');
                 $args->audioext = $parser->audioext;
                 $args->videoext = $parser->videoext;
 
-                $args->video_width =  $this->getApp()->site->video_width;
-                $args->video_height =  $this->getApp()->site->video_height;
-
                 $args->formtitle = $lang->files;
                 return $admin->form(
 $admin->getSection($lang->imagesize,
@@ -62,9 +59,6 @@ $admin->getSection($lang->imagesize,
 . $admin->getSection($lang->extfile,
       '[text=audioext]
       [text=videoext]
-      
-      [text=video_width]
-      [text=video_height]
       '), $args);
 }
 
@@ -90,9 +84,6 @@ public function processForm()
                 $parser->audioext = trim($audioext);
                 $parser->videoext = trim($videoext);
                 $parser->save();
-
-                 $this->getApp()->site->video_width = $video_width;
-                 $this->getApp()->site->video_height = $video_height;
 }
 
 }

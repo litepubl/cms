@@ -17,9 +17,6 @@
     video_tml: '<video src="%%siteurl%%/files/%%file.filename%%" type="%%file.mime%%" controls="controls" autoplay="autoplay"></video>',
 
     init: function(audio, video) {
-      this.width = ltoptions.video_width;
-      this.height = ltoptions.video_height;
-
       if (audio.length) {
         var self = this;
         this.load(function() {
@@ -31,7 +28,9 @@
     },
 
     load: function(callback) {
-      if (this.script) return this.script.done(callback);
+      if (this.script) {
+return this.script.done(callback);
+}
 
       $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
       this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);

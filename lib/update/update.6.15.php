@@ -1,3 +1,4 @@
+<?php
 /**
 * Lite Publisher CMS
 * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -6,11 +7,12 @@
 * @version 6.15
 **/
 
-namespace litepubl;<?php
+namespace litepubl\update;
 use litepubl\core\Str;
+use litepubl\core\litepubl
 
 function update615() {
-$cl =  $this->getApp()->classes;
+$cl =  litepubl::$app->classes;
 unset($cl->data['factories']);
 unset($cl->data['classes']);
 $cl->kernel = [];
@@ -59,4 +61,9 @@ $man->alter($table, "change idview idschema int unsigned NOT NULL default '1'");
 }
 
 //router: replace url '/getwidget.htm to litepubl\widget\Ajax
+
+    $site->author = 'Admin';
+    unset($app->site->data['video_width']);
+    unset($app->site->data['video_height']);
+
 }
