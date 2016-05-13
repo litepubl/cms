@@ -20,7 +20,7 @@ public $cache;
 public function __construct()
 {
 $options = $this->getApp()->options;
-$this->cache = $options->cache && ! $options->admincookie;
+$this->cache = isset($options->cache) && $options->cache && ! $options->admincookie;
 }
 
 public function request(Context $context)

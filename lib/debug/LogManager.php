@@ -98,7 +98,6 @@ $s = var_export($s, true);
 $log .= $s;
 $log .= "\n";
         Filer::append(static::getAppInstance()->paths->data . 'logs/filer.log', $log);
-    }
 }
 
 }

@@ -94,9 +94,9 @@ public function getDomain()
 {
 if (Config::$host) {
 return Config::$host;
-} else {}
+} else {
 $url = $this->url;
-return substr($url, strpos($url, '//') + 2));
+return substr($url, strpos($url, '//') + 2);
 }
  }
 
