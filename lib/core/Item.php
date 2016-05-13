@@ -105,13 +105,4 @@ return true;
 return false;
     }
 
-    public static function deleteDir($dir) {
-        if (!@file_exists($dir)) {
- return false;
-}
-
-        Filer::delete($dir, true, true);
-        @rmdir($dir);
-    }
-
 }
