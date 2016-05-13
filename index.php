@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl;
-use litepubl\Config;
 
 class Config {
     //set to true to enable debug: logging, error message,

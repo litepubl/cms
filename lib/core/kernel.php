@@ -44,12 +44,12 @@ $litepubl = __NAMESPACE__ . '\litepubl';
          $this->createStorage();
 //check before create any instances
 $installed = $this->poolStorage->isInstalled();
-$this->createCache();
          $this->classes = Classes::i();
          $this->options = Options::i();
          $this->site = Site::i();
          $this->router = Router::i();
 $this->controller = new Controller();
+$this->createCache();
 $this->onClose = new Callback();
 
         if ($installed) {
@@ -991,7 +991,7 @@ $names = explode('\\', $ns);
 $vendor = array_shift($names);
 while(count($names)) {
 if (isset($this->namespaces[$vendor])) {
-                    $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
+                    $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
                     $filename = $dir . 'kernel.php';
                     if (file_exists($filename)) {
 $this->loaded[$ns] = $dir;
@@ -5074,231 +5074,254 @@ $pages->addpage($id);
 
 }
 
-//lib/debug/LogManager.php
-namespace litepubl\debug;
-use litepubl\Config;
-use Monolog\Logger;
-use Monolog\ErrorHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Formatter\HtmlFormatter;
-use Monolog\Handler\NativeMailerHandler;
-use litepubl\utils\Filer;
-
-class LogManager
-{
-use \litepubl\core\AppTrait;
-    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
-public $logger;
-public $runtime;
-
-public function __construct()
- {
-$logger = new logger('general');
-$this->logger = $logger;
-
-$app = $this->getApp();
-if (!Config::$debug) {
-$handler = new ErrorHandler($logger);
-$handler->registerErrorHandler([], false);
-//$handler->registerExceptionHandler();
-$handler->registerFatalHandler();
-}
-
-$handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
-$logger->pushHandler($handler);
-
-            $this->runtime = new RuntimeHandler(Logger::WARNING);
-$this->runtime->setFormatter(new EmptyFormatter());
-$logger->pushHandler($this->runtime);
-
-if (!Config::$debug) {
-$handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
-$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
-$logger->pushHandler($handler);
-}
-}
-
-public function logException(\Exception $e) {
-        $log = "Caught exception:\n" . $e->getMessage() . "\n";
-$log .= LogException::getLog($e);
-$log = str_replace(dirname(dirname(__DIR__)), '', $log);
-$this->logger->alert($log);
-}
-
-public function getTrace()
-{
-$log = LogException::trace();
-$log = str_replace(dirname(dirname(__DIR__)), '', $log);
-return $log;
-}
-
-public function trace()
-{
-$this->logger->info($this->getTrace());
-}
-
-public function getHtml()
-{
-if (count($this->runtime->log)) {
-$formatter = new HtmlFormatter();
-$result = $formatter->formatBatch($this->runtime->log);
-//clear current log
-$this->runtime->log = [];
-return $result;
-}
-
-return '';
-}
-
-public static function old($mesg)
-{
-$log = date('r') . "\n";
-if (isset($_SERVER['REQUEST_URI'])) {
-        $log .= $_SERVER['REQUEST_URI'] . "\n";
-}
-
-        if (!is_string($s)) {
-$s = var_export($s, true);
-}
-
-$log .= $s;
-$log .= "\n";
-        Filer::append(static::getAppInstance()->paths->data . 'logs/filer.log', $log);
-}
-
-}
-
-//lib/debug/RuntimeHandler.php
-namespace litepubl\debug;
-use Monolog\Logger;
-use Monolog\Handler\AbstractProcessingHandler;
-
-/**
- * Description of runtimeHandler
+//vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
+/*
+ * This file is part of the Monolog package.
  *
- * @author Sinisa Culic  <sinisaculic@gmail.com>
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
-class RuntimeHandler extends AbstractProcessingHandler
+namespace Monolog\Handler;
+
+use Monolog\Logger;
+use Monolog\Formatter\FormatterInterface;
+use Monolog\Formatter\LineFormatter;
+
+/**
+ * Base Handler class providing the Handler structure
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
+abstract class AbstractHandler implements HandlerInterface
 {
-    public $log;
+    protected $level = Logger::DEBUG;
+    protected $bubble = true;
 
     /**
-     * @param integer $level  The minimum logging level at which this handler will be triggered
+     * @var FormatterInterface
+     */
+    protected $formatter;
+    protected $processors = array();
+
+    /**
+     * @param int     $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct($level = Logger::DEBUG, $bubble = true)
     {
-        parent::__construct($level, $bubble);
-        $this->log = [];
+        $this->setLevel($level);
+        $this->bubble = $bubble;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function write(array $record)
+    public function isHandling(array $record)
     {
-        $this->log[] = $record;
+        return $record['level'] >= $this->level;
     }
 
-}
-
-//lib/debug/EmptyFormatter.php
-namespace litepubl\debug;
-
-class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
-{
-
-    public function format(array $record)
-{
-return '';
-}
-
-    public function formatBatch(array $records)
-{
-return '';
-}
-}
-
-//lib/debug/LogException.php
-namespace litepubl\debug;
-
-class LogException
-{
-
-public static function getLog(\Exception $e) {
-return static::getTraceLog($e->getTrace());
-}
-
-public static function trace() {
-return static::getTraceLog(debug_backtrace());
-}
-
-public static function getTraceLog(array $trace) {
-$result = '';
-        foreach ($trace as $i => $item) {
-            if (isset($item['line'])) {
-                $result .= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
-            }
-
-            if (isset($item['class'])) {
-                $result .= $item['class'] . $item['type'] . $item['function'];
-            } else {
-                $result .= $item['function'] . '()';
-            }
-
-            if (isset($item['args']) && count($item['args'])) {
-                $result .= "\n";
-                $args = array();
-                foreach ($item['args'] as $arg) {
-                    $args[] = static ::dump($arg);
-                }
-
-                $result .= implode(', ', $args);
-            }
-
-            $result .= "\n";
-        }
-
-return $result;
-}
-
-    public static function dump(&$v) {
-        switch (gettype($v)) {
-            case 'string':
-if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-$v = substr($v, 0, $i);
-}
-
-                return sprintf('\'%s\'', $v);
-
-            case 'object':
-                return get_class($v);
-
-            case 'boolean':
-                return $v ? 'true' : 'false';
-
-            case 'integer':
-            case 'double':
-            case 'float':
-                return $v;
-
-            case 'array':
-                $result = '';
-                foreach ($v as $k => $item) {
-                    $s = static ::dump($item);
-                    $result.= "$k = $s;\n";
-                }
-
-                return "[\n$result]\n";
-
-            default:
-                return gettype($v);
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records)
+    {
+        foreach ($records as $record) {
+            $this->handle($record);
         }
     }
 
+    /**
+     * Closes the handler.
+     *
+     * This will be called automatically when the object is destroyed
+     */
+    public function close()
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pushProcessor($callback)
+    {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
+        }
+        array_unshift($this->processors, $callback);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function popProcessor()
+    {
+        if (!$this->processors) {
+            throw new \LogicException('You tried to pop from an empty processor stack.');
+        }
+
+        return array_shift($this->processors);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setFormatter(FormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFormatter()
+    {
+        if (!$this->formatter) {
+            $this->formatter = $this->getDefaultFormatter();
+        }
+
+        return $this->formatter;
+    }
+
+    /**
+     * Sets minimum logging level at which this handler will be triggered.
+     *
+     * @param  int|string $level Level or level name
+     * @return self
+     */
+    public function setLevel($level)
+    {
+        $this->level = Logger::toMonologLevel($level);
+
+        return $this;
+    }
+
+    /**
+     * Gets minimum logging level at which this handler will be triggered.
+     *
+     * @return int
+     */
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    /**
+     * Sets the bubbling behavior.
+     *
+     * @param  Boolean $bubble true means that this handler allows bubbling.
+     *                         false means that bubbling is not permitted.
+     * @return self
+     */
+    public function setBubble($bubble)
+    {
+        $this->bubble = $bubble;
+
+        return $this;
+    }
+
+    /**
+     * Gets the bubbling behavior.
+     *
+     * @return Boolean true means that this handler allows bubbling.
+     *                 false means that bubbling is not permitted.
+     */
+    public function getBubble()
+    {
+        return $this->bubble;
+    }
+
+    public function __destruct()
+    {
+        try {
+            $this->close();
+        } catch (\Exception $e) {
+            // do nothing
+        }
+    }
+
+    /**
+     * Gets the default formatter.
+     *
+     * @return FormatterInterface
+     */
+    protected function getDefaultFormatter()
+    {
+        return new LineFormatter();
+    }
+}
+
+//vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Monolog\Handler;
+
+/**
+ * Base Handler class providing the Handler structure
+ *
+ * Classes extending it should (in most cases) only implement write($record)
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ * @author Christophe Coevoet <stof@notk.org>
+ */
+abstract class AbstractProcessingHandler extends AbstractHandler
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(array $record)
+    {
+        if (!$this->isHandling($record)) {
+            return false;
+        }
+
+        $record = $this->processRecord($record);
+
+        $record['formatted'] = $this->getFormatter()->format($record);
+
+        $this->write($record);
+
+        return false === $this->bubble;
+    }
+
+    /**
+     * Writes the record down to the log of the implementing handler
+     *
+     * @param  array $record
+     * @return void
+     */
+    abstract protected function write(array $record);
+
+    /**
+     * Processes a record.
+     *
+     * @param  array $record
+     * @return array
+     */
+    protected function processRecord(array $record)
+    {
+        if ($this->processors) {
+            foreach ($this->processors as $processor) {
+                $record = call_user_func($processor, $record);
+            }
+        }
+
+        return $record;
+    }
 }
 
 //vendor/monolog/monolog/src/Monolog/Logger.php
@@ -6270,6 +6293,73 @@ class StreamHandler extends AbstractProcessingHandler
     }
 }
 
+//vendor/monolog/monolog/src/Monolog/Handler/MailHandler.php
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Monolog\Handler;
+
+/**
+ * Base class for all mail handlers
+ *
+ * @author Gyula Sallai
+ */
+abstract class MailHandler extends AbstractProcessingHandler
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function handleBatch(array $records)
+    {
+        $messages = array();
+
+        foreach ($records as $record) {
+            if ($record['level'] < $this->level) {
+                continue;
+            }
+            $messages[] = $this->processRecord($record);
+        }
+
+        if (!empty($messages)) {
+            $this->send((string) $this->getFormatter()->formatBatch($messages), $messages);
+        }
+    }
+
+    /**
+     * Send a mail with the given content
+     *
+     * @param string $content formatted email body to be sent
+     * @param array  $records the array of log records that formed this content
+     */
+    abstract protected function send($content, array $records);
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        $this->send((string) $record['formatted'], array($record));
+    }
+
+    protected function getHighestRecord(array $records)
+    {
+        $highestRecord = null;
+        foreach ($records as $record) {
+            if ($highestRecord === null || $highestRecord['level'] < $record['level']) {
+                $highestRecord = $record;
+            }
+        }
+
+        return $highestRecord;
+    }
+}
+
 //vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
 /*
  * This file is part of the Monolog package.
@@ -6455,256 +6545,6 @@ class NativeMailerHandler extends MailHandler
     }
 }
 
-//vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
-/*
- * This file is part of the Monolog package.
- *
- * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Monolog\Handler;
-
-/**
- * Base Handler class providing the Handler structure
- *
- * Classes extending it should (in most cases) only implement write($record)
- *
- * @author Jordi Boggiano <j.boggiano@seld.be>
- * @author Christophe Coevoet <stof@notk.org>
- */
-abstract class AbstractProcessingHandler extends AbstractHandler
-{
-    /**
-     * {@inheritdoc}
-     */
-    public function handle(array $record)
-    {
-        if (!$this->isHandling($record)) {
-            return false;
-        }
-
-        $record = $this->processRecord($record);
-
-        $record['formatted'] = $this->getFormatter()->format($record);
-
-        $this->write($record);
-
-        return false === $this->bubble;
-    }
-
-    /**
-     * Writes the record down to the log of the implementing handler
-     *
-     * @param  array $record
-     * @return void
-     */
-    abstract protected function write(array $record);
-
-    /**
-     * Processes a record.
-     *
-     * @param  array $record
-     * @return array
-     */
-    protected function processRecord(array $record)
-    {
-        if ($this->processors) {
-            foreach ($this->processors as $processor) {
-                $record = call_user_func($processor, $record);
-            }
-        }
-
-        return $record;
-    }
-}
-
-//vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
-/*
- * This file is part of the Monolog package.
- *
- * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Monolog\Handler;
-
-use Monolog\Logger;
-use Monolog\Formatter\FormatterInterface;
-use Monolog\Formatter\LineFormatter;
-
-/**
- * Base Handler class providing the Handler structure
- *
- * @author Jordi Boggiano <j.boggiano@seld.be>
- */
-abstract class AbstractHandler implements HandlerInterface
-{
-    protected $level = Logger::DEBUG;
-    protected $bubble = true;
-
-    /**
-     * @var FormatterInterface
-     */
-    protected $formatter;
-    protected $processors = array();
-
-    /**
-     * @param int     $level  The minimum logging level at which this handler will be triggered
-     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
-     */
-    public function __construct($level = Logger::DEBUG, $bubble = true)
-    {
-        $this->setLevel($level);
-        $this->bubble = $bubble;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isHandling(array $record)
-    {
-        return $record['level'] >= $this->level;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function handleBatch(array $records)
-    {
-        foreach ($records as $record) {
-            $this->handle($record);
-        }
-    }
-
-    /**
-     * Closes the handler.
-     *
-     * This will be called automatically when the object is destroyed
-     */
-    public function close()
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function pushProcessor($callback)
-    {
-        if (!is_callable($callback)) {
-            throw new \InvalidArgumentException('Processors must be valid callables (callback or object with an __invoke method), '.var_export($callback, true).' given');
-        }
-        array_unshift($this->processors, $callback);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function popProcessor()
-    {
-        if (!$this->processors) {
-            throw new \LogicException('You tried to pop from an empty processor stack.');
-        }
-
-        return array_shift($this->processors);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setFormatter(FormatterInterface $formatter)
-    {
-        $this->formatter = $formatter;
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFormatter()
-    {
-        if (!$this->formatter) {
-            $this->formatter = $this->getDefaultFormatter();
-        }
-
-        return $this->formatter;
-    }
-
-    /**
-     * Sets minimum logging level at which this handler will be triggered.
-     *
-     * @param  int|string $level Level or level name
-     * @return self
-     */
-    public function setLevel($level)
-    {
-        $this->level = Logger::toMonologLevel($level);
-
-        return $this;
-    }
-
-    /**
-     * Gets minimum logging level at which this handler will be triggered.
-     *
-     * @return int
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * Sets the bubbling behavior.
-     *
-     * @param  Boolean $bubble true means that this handler allows bubbling.
-     *                         false means that bubbling is not permitted.
-     * @return self
-     */
-    public function setBubble($bubble)
-    {
-        $this->bubble = $bubble;
-
-        return $this;
-    }
-
-    /**
-     * Gets the bubbling behavior.
-     *
-     * @return Boolean true means that this handler allows bubbling.
-     *                 false means that bubbling is not permitted.
-     */
-    public function getBubble()
-    {
-        return $this->bubble;
-    }
-
-    public function __destruct()
-    {
-        try {
-            $this->close();
-        } catch (\Exception $e) {
-            // do nothing
-        }
-    }
-
-    /**
-     * Gets the default formatter.
-     *
-     * @return FormatterInterface
-     */
-    protected function getDefaultFormatter()
-    {
-        return new LineFormatter();
-    }
-}
-
 //vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
 /*
  * This file is part of the Monolog package.
@@ -6793,148 +6633,6 @@ interface HandlerInterface
      * @return FormatterInterface
      */
     public function getFormatter();
-}
-
-//vendor/monolog/monolog/src/Monolog/Formatter/HtmlFormatter.php
-/*
- * This file is part of the Monolog package.
- *
- * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Monolog\Formatter;
-
-use Monolog\Logger;
-
-/**
- * Formats incoming records into an HTML table
- *
- * This is especially useful for html email logging
- *
- * @author Tiago Brito <tlfbrito@gmail.com>
- */
-class HtmlFormatter extends NormalizerFormatter
-{
-    /**
-     * Translates Monolog log levels to html color priorities.
-     */
-    protected $logLevels = array(
-        Logger::DEBUG     => '#cccccc',
-        Logger::INFO      => '#468847',
-        Logger::NOTICE    => '#3a87ad',
-        Logger::WARNING   => '#c09853',
-        Logger::ERROR     => '#f0ad4e',
-        Logger::CRITICAL  => '#FF7708',
-        Logger::ALERT     => '#C12A19',
-        Logger::EMERGENCY => '#000000',
-    );
-
-    /**
-     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
-     */
-    public function __construct($dateFormat = null)
-    {
-        parent::__construct($dateFormat);
-    }
-
-    /**
-     * Creates an HTML table row
-     *
-     * @param  string $th       Row header content
-     * @param  string $td       Row standard cell content
-     * @param  bool   $escapeTd false if td content must not be html escaped
-     * @return string
-     */
-    private function addRow($th, $td = ' ', $escapeTd = true)
-    {
-        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
-        if ($escapeTd) {
-            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
-        }
-
-        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
-    }
-
-    /**
-     * Create a HTML h1 tag
-     *
-     * @param  string $title Text to be in the h1
-     * @param  int    $level Error level
-     * @return string
-     */
-    private function addTitle($title, $level)
-    {
-        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
-
-        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
-    }
-
-    /**
-     * Formats a log record.
-     *
-     * @param  array $record A record to format
-     * @return mixed The formatted record
-     */
-    public function format(array $record)
-    {
-        $output = $this->addTitle($record['level_name'], $record['level']);
-        $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
-
-        $output .= $this->addRow('Message', (string) $record['message']);
-        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
-        $output .= $this->addRow('Channel', $record['channel']);
-        if ($record['context']) {
-            $embeddedTable = '<table cellspacing="1" width="100%">';
-            foreach ($record['context'] as $key => $value) {
-                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
-            }
-            $embeddedTable .= '</table>';
-            $output .= $this->addRow('Context', $embeddedTable, false);
-        }
-        if ($record['extra']) {
-            $embeddedTable = '<table cellspacing="1" width="100%">';
-            foreach ($record['extra'] as $key => $value) {
-                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
-            }
-            $embeddedTable .= '</table>';
-            $output .= $this->addRow('Extra', $embeddedTable, false);
-        }
-
-        return $output.'</table>';
-    }
-
-    /**
-     * Formats a set of log records.
-     *
-     * @param  array $records A set of records to format
-     * @return mixed The formatted set of records
-     */
-    public function formatBatch(array $records)
-    {
-        $message = '';
-        foreach ($records as $record) {
-            $message .= $this->format($record);
-        }
-
-        return $message;
-    }
-
-    protected function convertToString($data)
-    {
-        if (null === $data || is_scalar($data)) {
-            return (string) $data;
-        }
-
-        $data = $this->normalize($data);
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-
-        return str_replace('\\/', '/', json_encode($data));
-    }
 }
 
 //vendor/monolog/monolog/src/Monolog/Formatter/NormalizerFormatter.php
@@ -7420,6 +7118,375 @@ interface FormatterInterface
      * @return mixed The formatted set of records
      */
     public function formatBatch(array $records);
+}
+
+//vendor/monolog/monolog/src/Monolog/Formatter/HtmlFormatter.php
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Monolog\Formatter;
+
+use Monolog\Logger;
+
+/**
+ * Formats incoming records into an HTML table
+ *
+ * This is especially useful for html email logging
+ *
+ * @author Tiago Brito <tlfbrito@gmail.com>
+ */
+class HtmlFormatter extends NormalizerFormatter
+{
+    /**
+     * Translates Monolog log levels to html color priorities.
+     */
+    protected $logLevels = array(
+        Logger::DEBUG     => '#cccccc',
+        Logger::INFO      => '#468847',
+        Logger::NOTICE    => '#3a87ad',
+        Logger::WARNING   => '#c09853',
+        Logger::ERROR     => '#f0ad4e',
+        Logger::CRITICAL  => '#FF7708',
+        Logger::ALERT     => '#C12A19',
+        Logger::EMERGENCY => '#000000',
+    );
+
+    /**
+     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     */
+    public function __construct($dateFormat = null)
+    {
+        parent::__construct($dateFormat);
+    }
+
+    /**
+     * Creates an HTML table row
+     *
+     * @param  string $th       Row header content
+     * @param  string $td       Row standard cell content
+     * @param  bool   $escapeTd false if td content must not be html escaped
+     * @return string
+     */
+    private function addRow($th, $td = ' ', $escapeTd = true)
+    {
+        $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
+        if ($escapeTd) {
+            $td = '<pre>'.htmlspecialchars($td, ENT_NOQUOTES, 'UTF-8').'</pre>';
+        }
+
+        return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
+    }
+
+    /**
+     * Create a HTML h1 tag
+     *
+     * @param  string $title Text to be in the h1
+     * @param  int    $level Error level
+     * @return string
+     */
+    private function addTitle($title, $level)
+    {
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
+
+        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
+    }
+
+    /**
+     * Formats a log record.
+     *
+     * @param  array $record A record to format
+     * @return mixed The formatted record
+     */
+    public function format(array $record)
+    {
+        $output = $this->addTitle($record['level_name'], $record['level']);
+        $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
+
+        $output .= $this->addRow('Message', (string) $record['message']);
+        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
+        $output .= $this->addRow('Channel', $record['channel']);
+        if ($record['context']) {
+            $embeddedTable = '<table cellspacing="1" width="100%">';
+            foreach ($record['context'] as $key => $value) {
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
+            }
+            $embeddedTable .= '</table>';
+            $output .= $this->addRow('Context', $embeddedTable, false);
+        }
+        if ($record['extra']) {
+            $embeddedTable = '<table cellspacing="1" width="100%">';
+            foreach ($record['extra'] as $key => $value) {
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
+            }
+            $embeddedTable .= '</table>';
+            $output .= $this->addRow('Extra', $embeddedTable, false);
+        }
+
+        return $output.'</table>';
+    }
+
+    /**
+     * Formats a set of log records.
+     *
+     * @param  array $records A set of records to format
+     * @return mixed The formatted set of records
+     */
+    public function formatBatch(array $records)
+    {
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
+        }
+
+        return $message;
+    }
+
+    protected function convertToString($data)
+    {
+        if (null === $data || is_scalar($data)) {
+            return (string) $data;
+        }
+
+        $data = $this->normalize($data);
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        return str_replace('\\/', '/', json_encode($data));
+    }
+}
+
+//lib/debug/LogManager.php
+namespace litepubl\debug;
+use litepubl\Config;
+use Monolog\Logger;
+use Monolog\ErrorHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\HtmlFormatter;
+use Monolog\Handler\NativeMailerHandler;
+use litepubl\utils\Filer;
+
+class LogManager
+{
+use \litepubl\core\AppTrait;
+    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+public $logger;
+public $runtime;
+
+public function __construct()
+ {
+$logger = new logger('general');
+$this->logger = $logger;
+
+$app = $this->getApp();
+if (!Config::$debug) {
+$handler = new ErrorHandler($logger);
+$handler->registerErrorHandler([], false);
+//$handler->registerExceptionHandler();
+$handler->registerFatalHandler();
+}
+
+$handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
+$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
+$logger->pushHandler($handler);
+
+            $this->runtime = new RuntimeHandler(Logger::WARNING);
+$this->runtime->setFormatter(new EmptyFormatter());
+$logger->pushHandler($this->runtime);
+
+if (!Config::$debug) {
+$handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
+$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
+$logger->pushHandler($handler);
+}
+}
+
+public function logException(\Exception $e) {
+        $log = "Caught exception:\n" . $e->getMessage() . "\n";
+$log .= LogException::getLog($e);
+$log = str_replace(dirname(dirname(__DIR__)), '', $log);
+$this->logger->alert($log);
+}
+
+public function getTrace()
+{
+$log = LogException::trace();
+$log = str_replace(dirname(dirname(__DIR__)), '', $log);
+return $log;
+}
+
+public function trace()
+{
+$this->logger->info($this->getTrace());
+}
+
+public function getHtml()
+{
+if (count($this->runtime->log)) {
+$formatter = new HtmlFormatter();
+$result = $formatter->formatBatch($this->runtime->log);
+//clear current log
+$this->runtime->log = [];
+return $result;
+}
+
+return '';
+}
+
+public static function old($mesg)
+{
+$log = date('r') . "\n";
+if (isset($_SERVER['REQUEST_URI'])) {
+        $log .= $_SERVER['REQUEST_URI'] . "\n";
+}
+
+        if (!is_string($s)) {
+$s = var_export($s, true);
+}
+
+$log .= $s;
+$log .= "\n";
+        Filer::append(static::getAppInstance()->paths->data . 'logs/filer.log', $log);
+}
+
+}
+
+//lib/debug/RuntimeHandler.php
+namespace litepubl\debug;
+use Monolog\Logger;
+use Monolog\Handler\AbstractProcessingHandler;
+
+/**
+ * Description of runtimeHandler
+ *
+ * @author Sinisa Culic  <sinisaculic@gmail.com>
+ */
+
+class RuntimeHandler extends AbstractProcessingHandler
+{
+    public $log;
+
+    /**
+     * @param integer $level  The minimum logging level at which this handler will be triggered
+     * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
+     */
+    public function __construct($level = Logger::DEBUG, $bubble = true)
+    {
+        parent::__construct($level, $bubble);
+        $this->log = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function write(array $record)
+    {
+        $this->log[] = $record;
+    }
+
+}
+
+//lib/debug/EmptyFormatter.php
+namespace litepubl\debug;
+
+class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
+{
+
+    public function format(array $record)
+{
+return '';
+}
+
+    public function formatBatch(array $records)
+{
+return '';
+}
+}
+
+//lib/debug/LogException.php
+namespace litepubl\debug;
+
+class LogException
+{
+
+public static function getLog(\Exception $e) {
+return static::getTraceLog($e->getTrace());
+}
+
+public static function trace() {
+return static::getTraceLog(debug_backtrace());
+}
+
+public static function getTraceLog(array $trace) {
+$result = '';
+        foreach ($trace as $i => $item) {
+            if (isset($item['line'])) {
+                $result .= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
+            }
+
+            if (isset($item['class'])) {
+                $result .= $item['class'] . $item['type'] . $item['function'];
+            } else {
+                $result .= $item['function'] . '()';
+            }
+
+            if (isset($item['args']) && count($item['args'])) {
+                $result .= "\n";
+                $args = array();
+                foreach ($item['args'] as $arg) {
+                    $args[] = static ::dump($arg);
+                }
+
+                $result .= implode(', ', $args);
+            }
+
+            $result .= "\n";
+        }
+
+return $result;
+}
+
+    public static function dump(&$v) {
+        switch (gettype($v)) {
+            case 'string':
+if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+$v = substr($v, 0, $i);
+}
+
+                return sprintf('\'%s\'', $v);
+
+            case 'object':
+                return get_class($v);
+
+            case 'boolean':
+                return $v ? 'true' : 'false';
+
+            case 'integer':
+            case 'double':
+            case 'float':
+                return $v;
+
+            case 'array':
+                $result = '';
+                foreach ($v as $k => $item) {
+                    $s = static ::dump($item);
+                    $result.= "$k = $s;\n";
+                }
+
+                return "[\n$result]\n";
+
+            default:
+                return gettype($v);
+        }
+    }
+
 }
 
 //litepubl.php

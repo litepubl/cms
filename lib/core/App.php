@@ -51,12 +51,12 @@ $litepubl = __NAMESPACE__ . '\litepubl';
          $this->createStorage();
 //check before create any instances
 $installed = $this->poolStorage->isInstalled();
-$this->createCache();
          $this->classes = Classes::i();
          $this->options = Options::i();
          $this->site = Site::i();
          $this->router = Router::i();
 $this->controller = new Controller();
+$this->createCache();
 $this->onClose = new Callback();
 
         if ($installed) {

@@ -371,7 +371,7 @@ $names = explode('\\', $ns);
 $vendor = array_shift($names);
 while(count($names)) {
 if (isset($this->namespaces[$vendor])) {
-                    $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
+                    $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
                     $filename = $dir . 'kernel.php';
                     if (file_exists($filename)) {
 $this->loaded[$ns] = $dir;

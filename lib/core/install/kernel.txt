@@ -10,24 +10,25 @@
 !UserOptions.php
 !Usersman.php
 
+#logger
+vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
+vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
+vendor/monolog/monolog/src/Monolog/Logger.php
+vendor/psr/log/Psr/Log/LoggerInterface.php
+vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
+vendor/monolog/monolog/src/Monolog/Handler/MailHandler.php
+vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
+vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
+vendor/monolog/monolog/src/Monolog/Formatter/NormalizerFormatter.php
+vendor/monolog/monolog/src/Monolog/Formatter/LineFormatter.php
+vendor/monolog/monolog/src/Monolog/Formatter/FormatterInterface.php
+vendor/monolog/monolog/src/Monolog/Formatter/HtmlFormatter.php
+
 #debug logger
 lib/debug/LogManager.php
 lib/debug/RuntimeHandler.php
 lib/debug/EmptyFormatter.php
 lib/debug/LogException.php
-
-#logger
-vendor/monolog/monolog/src/Monolog/Logger.php
-vendor/psr/log/Psr/Log/LoggerInterface.php
-vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
-vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
-vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
-vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
-vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
-vendor/monolog/monolog/src/Monolog/Formatter/HtmlFormatter.php
-vendor/monolog/monolog/src/Monolog/Formatter/NormalizerFormatter.php
-vendor/monolog/monolog/src/Monolog/Formatter/LineFormatter.php
-vendor/monolog/monolog/src/Monolog/Formatter/FormatterInterface.php
 
 #final
 litepubl.php

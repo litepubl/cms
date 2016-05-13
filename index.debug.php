@@ -1,9 +1,15 @@
 <?php
 namespace litepubl;
+
+            error_reporting(-1);
+            ini_set('display_errors', 1);
+            Header('Cache-Control: no-cache, must-revalidate');
+            Header('Pragma: no-cache');
+
 define('litepubl_mode', 'config');
 require (__DIR__ . '/index.php');
-Config::$debug = true;
-//Config::$enableZeroDatetime  = true;
+//Config::$debug = true;
+
 Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$beforeRequest  = function() {
 include (__DIR__ . '/temp/zdebug.php');
@@ -14,5 +20,5 @@ $d = __dir__ . '/storage/data';
 //utils\Filer::delete($d, true, false);
 //utils\Filer::append(__DIR__ . '/storage/log.txt', '');
 
-require (__DIR__ . '/lib/debug/kernel.php');
-//require (__DIR__ . '/lib/kernel.php');
+//require (__DIR__ . '/lib/debug/kernel.php');
+require (__DIR__ . '/lib/core/kernel.php');
