@@ -7,20 +7,23 @@
 * @version 6.15
 **/
 
-namespace litepubl;
+namespace litepubl\plugins\faqmenu;
 use litepubl\core\Plugins;
+use litepubl\pages\Menus;
 
-function tfaqmenuInstall($self) {
+function MenuInstall($self) {
     $about = Plugins::getabout(Plugins::getname(__file__));
     $self->title = $about['title'];
     $self->content = $about['content'];
-    $menus = tmenus::i();
+    $menus = Menus::i();
     $menus->add($self);
 }
 
-function tfaqmenuUninstall($self) {
-    $menus = tmenus::i();
+function MenuUninstall($self) {
+    $menus = Menus::i();
     $menus->lock();
-    while ($id = $menus->class2id(get_class($self))) $menus->delete($id);
+    while ($id = $menus->class2id(get_class($self))) {
+$menus->delete($id);
+}
     $menus->unlock();
 }

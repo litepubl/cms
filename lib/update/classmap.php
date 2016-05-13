@@ -257,6 +257,7 @@ return [
 
 'texternallinks' => 'litepubl\plugins\externallinks\ExternalLinks',
 'textracontact' => 'litepubl\plugins\extracontact\ExtraContact',
+'tfaqmenu' => 'litepubl\plugins\faqmenu\Menu',
 
 'toldestposts' => 'litepubl\plugins\oldestposts\Oldestposts',
 'tadminoldestposts' => 'litepubl\plugins\oldestposts\Admin',
