@@ -7,35 +7,34 @@
 * @version 6.15
 **/
 
-namespace litepubl;
-use litepubl\view\Args;
-use litepubl\core\Plugins;
+namespace litepubl\plugins\extracontact;
+use litepubl\pages\Contacts;
 
-class textracontact extends \litepubl\core\Plugin
+class ExtraContact extends \litepubl\core\Plugin implements \litepubl\admin\AdminInterface
  {
+use \litepubl\admin\PanelTrait;
 
-    public static function i() {
-        return static::iGet(__class__);
-    }
+public function __construct() {
+parent::__construct();
+$this->createInstances($this->getSchema());
+}
 
     public function getContent() {
-        $contact = tcontactform::singleinstance('tcontactform');
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args = new Args();
+        $contact = Contacts::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
         $items = '';
         foreach ($contact->data['extra'] as $name => $title) {
             $items.= "$name =$title\n";
         }
         $args->items = $items;
 
-        $args->formtitle = $about['formtitle'];
-        $args->data['$lang.items'] = $about['items'];
-        $html = tadminhtml::i();
-        return $html->adminform('[editor=items]', $args);
+        $args->formtitle = $lang->formtitle;
+        return $this->admin->form('[editor=items]', $args);
     }
 
     public function processForm() {
-        $contact = tcontactform::singleinstance('tcontactform');
+        $contact = Contacts::i('tcontactform');
         $contact->data['extra'] = parse_ini_string(trim($_POST['items']), false);
         $contact->save();
     }

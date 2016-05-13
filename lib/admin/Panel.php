@@ -8,39 +8,14 @@
 **/
 
 namespace litepubl\admin;
-use litepubl\view\Schema;
-use litepubl\view\Schemes;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\core\Plugins as PluginItems;
 
 class Panel implements AdminInterface
 {
+use PanelTrait;
 use \litepubl\core\AppTrait;
 
-public $admin;
-public $theme;
-public $lang;
-public $args;
-
 public function __construct() {
-$app = $this->getApp();
-if (isset($app->context) && isset($app->context->view)) {
-$schema = Schema::getSchema($app->context->view);
-} else {
-$schema = Schema::i(Schemes::i()->defaults['admin']);
-}
-
-$this->admin = $schema->admintheme;
-$this->theme = $schema->theme;
-$this->lang = Lang::admin();
-$this->args = new Args();
-}
-
-public function getLangAbout() {
-        $reflector = new \ReflectionClass($this);
-        $filename = $reflector->getFileName();
-return PluginItems::getLangAbout(basename(dirname($filename)));
+$this->createInstances($this->getSchema());
 }
 
     public function getContent() {

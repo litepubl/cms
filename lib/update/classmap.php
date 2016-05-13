@@ -256,6 +256,7 @@ return [
 'admincatbread' => 'litepubl\plugins\catbread\AdminCatbread',
 
 'texternallinks' => 'litepubl\plugins\externallinks\ExternalLinks',
+'textracontact' => 'litepubl\plugins\extracontact\ExtraContact',
 
 'toldestposts' => 'litepubl\plugins\oldestposts\Oldestposts',
 'tadminoldestposts' => 'litepubl\plugins\oldestposts\Admin',

@@ -12,7 +12,7 @@ namespace litepubl\admin;
 trait Params
 {
 
-    public function idget() {
+    public function idGet() {
         return (int)$this->getparam('id', 0);
     }
 
@@ -20,7 +20,7 @@ trait Params
         return !empty($_GET[$name]) ? $_GET[$name] : (!empty($_POST[$name]) ? $_POST[$name] : $default);
     }
 
-    public function idparam() {
+    public function idParam() {
         return (int)$this->getparam('id', 0);
     }
 

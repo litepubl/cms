@@ -29,7 +29,7 @@ use Params;
         'group'
     );
 
-    public static function getInstancename() {
+    public static function getInstanceName() {
         return 'adminmenu';
     }
 
