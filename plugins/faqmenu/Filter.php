@@ -1,10 +1,15 @@
 <?php
 
 namespace litepubl\plugins\faqmenu;
-use litepubl\view\Filter;
+use litepubl\view\Filter as ViewFilter;
 
 class Filter
 {
+public $templateItems = '<ul>$items</ul>';
+public $template = '<li><a href="#answer-$id" id="question-$id" class="faq-question dashed" data-toggle="collapse" aria-expanded="false" aria-controls="answer-$id">$title</a>
+<div id="answer-$id" class="collapse faq-answer" aria-labelledby="question-$id">$content</div></li>';
+
+private $id = 0;
 
     public function convert($content) {
         $result = '';
@@ -17,18 +22,18 @@ class Filter
         $q = array();
         $a = array();
 
-        $filter = Filter::i();
+        $filter = ViewFilter::i();
         foreach ($lines as $s) {
             $s = trim($s);
             if (Str::begin($s, 'q:') || Str::begin($s, 'Q:')) {
                 $q[] = trim(substr($s, 2));
             } elseif (Str::begin($s, 'a:') || Str::begin($s, 'A:')) {
                 $a[] = trim(substr($s, 2));
-            } elseif ($s != '') {
+            } elseif ($s) {
                 $result.= $this->createlist($q, $a);
+                $result.= $filter->simplefilter($s);
                 $q = array();
                 $a = array();
-                $result.= $filter->simplefilter($s);
             }
         }
 
@@ -37,15 +42,20 @@ class Filter
     }
 
     private function createlist(array $questions, array $answers) {
-        if (count($questions) == 0) {
+        if (!count($questions) {
  return '';
 }
 
         $result = '';
         foreach ($questions as $i => $q) {
-            $result.= sprintf('<li><a href="#" rel="faqitem">%s</a><p>%s</p></li>', $q, $answers[$i]);
+            $result.= strtr($this->template, [
+'$id' => $this->id++,
+'$title' => $q,
+'$content' => $answers[$i],
+]);
         }
-        return sprintf('<ul class="faqlist">%s</ul>', $result);
+
+        return str_replace('$items', $result, $this->templateItems);
     }
 
 }
