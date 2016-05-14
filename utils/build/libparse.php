@@ -43,11 +43,19 @@ $s = str_replace('$this', '$self', $s);
 }
 
 if (strend($filename, 'php')) {
+if ($hastrait = strpos($s, 'trait ')) {
+$s = str_replace('trait ', 'interface ', $s);
+}
+
         $oBeautify->setInputString($s);
         $oBeautify->process();
 $s = $oBeautify->get();
 $s = trim($s);
 $s .= "\n\n";
+
+if ($hastrait) {
+$s = str_replace('interface ', 'trait ', $s);
+}
 } else if (strend($filename, '.less')) {
 $Lines = explode("\n", $s);
 $s = '';

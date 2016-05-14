@@ -230,7 +230,7 @@ class App
 //AppTrait.php
 namespace litepubl\core;
 
-traitAppTrait {
+trait AppTrait {
 
     public static function getAppInstance()
     {
