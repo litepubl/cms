@@ -16,9 +16,4 @@ function tlivejournalposterInstall($self) {
 
 function tlivejournalposterUninstall($self) {
     tposts::unsub($self);
-    if (dbversion) {
-        // $self->getApp()->db->table = 'postsmeta';
-        // $self->getApp()->db->delete("name = 'ljid'");
-        
-    }
 }

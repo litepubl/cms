@@ -21,7 +21,7 @@ class tfoaf extends titems {
     }
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->basename = 'foaf';
         $this->table = 'foaf';

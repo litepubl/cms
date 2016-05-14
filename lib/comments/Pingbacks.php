@@ -57,7 +57,7 @@ class Pingbacks extends \litepubl\core\Items
         $args = new Args();
         $args->add($item);
         $args->id = $id;
-        $status = dbversion ? $item['status'] : ($item['approved'] ? 'approved' : 'hold');
+        $status = $item['status'];
         $args->localstatus = Lang::get('commentstatus', $status);
         $args->adminurl =  $this->getApp()->site->url . '/admin/comments/pingback/' .  $this->getApp()->site->q . "id=$id&post={$item['post']}&action";
         $post = Post::i($item['post']);

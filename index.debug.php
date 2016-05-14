@@ -26,8 +26,7 @@ require (__DIR__ . '/lib/debug/kernel.php');
 } else {
 require (__DIR__ . '/lib/core/kernel.php');
 }
-
+return;
 echo "<pre>\n";
-$man = core\dbmanager::i();
-//echo ltrim(str_replace(__DIR__, '', implode("\n", get_included_files())), '/\\');
+echo ltrim(str_replace(__DIR__, '', implode("\n", get_included_files())), '/\\');
 echo "\n", count(get_included_files());

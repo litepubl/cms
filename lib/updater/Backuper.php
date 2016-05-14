@@ -361,7 +361,7 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
     public function getFull() {
         set_time_limit(300);
         $this->createarchive();
-        if (dbversion) $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+$this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
@@ -462,7 +462,7 @@ unlink($tempfile);
 
     public function uploadfile($filename, $content, $mode) {
         $filename = ltrim($filename, '/');
-        if (dbversion && $filename == 'dump.sql') {
+        if ($filename == 'dump.sql') {
             $this->setdump($content);
             return true;
         }

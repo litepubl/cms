@@ -45,7 +45,7 @@ $logger->pushHandler($handler);
 $this->runtime->setFormatter(new EmptyFormatter());
 $logger->pushHandler($this->runtime);
 
-if (!Config::$debug) {
+if (!Config::$debug && $app->installed) {
 $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
 $handler->setFormatter(new LineFormatter(static::format,  null,true, false));
 $logger->pushHandler($handler);

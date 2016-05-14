@@ -106,17 +106,10 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $idpost = (int)$idpost;
         $comments = CommentItems::i($idpost);
-        if (dbversion) {
             $approved = $comments->getcount("post = $idpost and status = 'approved'");
             $hold = $comments->getcount("post = $idpost and status = 'hold'");
             $spam = $comments->getcount("post = $idpost and status = 'spam'");
             $total = $comments->getcount("post = $idpost");
-        } else {
-            $approved = $comments->count;
-            $hold = $comments->hold->count;
-            $spam = 0;
-            $total = $approved + $spam;
-        }
 
         return array(
             "approved" => $approved,

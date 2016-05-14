@@ -19,12 +19,7 @@ class tsameposts extends tclasswidget {
 
     protected function create() {
         parent::create();
-        if (dbversion) {
             $this->table = 'sameposts';
-        } else {
-            $this->data['revision'] = 1;
-        }
-
         $this->basename = 'widget.sameposts';
         $this->template = 'posts';
         $this->adminclass = 'tadminsameposts';
@@ -37,12 +32,7 @@ class tsameposts extends tclasswidget {
     }
 
     public function postschanged() {
-        if (dbversion) {
             $this->db->exec("truncate $this->thistable");
-        } else {
-            $this->revision+= 1;
-            $this->save();
-        }
     }
 
     private function findsame($idpost) {

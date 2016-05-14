@@ -11,6 +11,7 @@ class App
 public $controller;
 public $context;
     public  $db;
+public $installed;
     public  $logManager;
     public  $memcache;
     public  $microtime;
@@ -43,7 +44,7 @@ $litepubl = __NAMESPACE__ . '\litepubl';
          $this->paths = new paths();
          $this->createStorage();
 //check before create any instances
-$installed = $this->poolStorage->isInstalled();
+$this->installed = $this->poolStorage->isInstalled();
          $this->classes = Classes::i();
          $this->options = Options::i();
          $this->site = Site::i();
@@ -52,7 +53,7 @@ $this->controller = new Controller();
 $this->createCache();
 $this->onClose = new Callback();
 
-        if ($installed) {
+        if ($this->installed) {
          $this->db = DB::i();
 } else {
             require ( $this->paths->lib . 'install/install.php');
@@ -81,9 +82,9 @@ $this->onClose = new Callback();
 public function createCache()
 {
 if ($this->memcache) {
-$this->cache = new CacheMemcache($this->memcache, $this->options->expiredcache, $this->paths->home);
+$this->cache = new CacheMemcache($this->memcache, $this->installed ? $this->options->expiredcache : 3600, $this->paths->home);
 } else {
-$this->cache = new CacheFile($this->paths->cache, $this->options->expiredcache, $this->options->filetime_offset);
+$this->cache = new CacheFile($this->paths->cache, $this->installed ? $this->options->expiredcache : 3600, $this->installed ? $this->options->filetime_offset : 0);
 }
 }
 
@@ -1776,7 +1777,7 @@ return static::getAppInstance();
         $reflector = new \ReflectionClass($class);
         $filename = $reflector->getFileName();
 
-        if (strpos($filename, '/kernel.')) {
+        if (strpos($filename, 'kernel.')) {
             $filename = dirname($filename) . DIRECTORY_SEPARATOR . basename(str_replace('\\', DIRECTORY_SEPARATOR, $class)) . '.php';
         }
 
@@ -7380,7 +7381,7 @@ $logger->pushHandler($handler);
 $this->runtime->setFormatter(new EmptyFormatter());
 $logger->pushHandler($this->runtime);
 
-if (!Config::$debug) {
+if (!Config::$debug && $app->installed) {
 $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
 $handler->setFormatter(new LineFormatter(static::format,  null,true, false));
 $logger->pushHandler($handler);

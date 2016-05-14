@@ -175,10 +175,8 @@ $result .= $this->confirmDeleteItem($tags);
             $tags->items[$id] = $item;
             if (!empty($url) && ($url != $item['url'])) $tags->edit($id, $title, $url);
             $tags->items[$id] = $item;
-            if (dbversion) {
                 unset($item['url']);
                 $tags->db->updateassoc($item);
-            }
         }
 
         if (isset($raw) || isset($keywords)) {

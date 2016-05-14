@@ -104,7 +104,7 @@ public static function getFile($filename) {
 //return php_strip_whitespace($filename);
 $s = file_get_contents($filename);
 $s = trim(substr($s, 5));
-if (!strpos($filename, 'vendor')) {
+if (!strpos($filename, 'vendor') && (substr($s, 0, 2) == '/*')) {
 $s = trim(substr($s, strpos($s, '*/') + 2));
 }
 

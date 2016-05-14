@@ -32,7 +32,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
     protected $useritem;
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->basename = 'userpage';
         $this->table = 'userpage';

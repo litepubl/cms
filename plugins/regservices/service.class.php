@@ -199,7 +199,7 @@ class tregserviceuser extends titems {
     }
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->basename = 'regservices' . DIRECTORY_SEPARATOR . 'users';
         $this->table = 'regservices';

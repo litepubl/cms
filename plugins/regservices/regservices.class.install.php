@@ -48,7 +48,6 @@ function tregservicesInstall($self) {
     $self->unlock();
 
     tusers::i()->deleted = tregserviceuser::i()->delete;
-    if (dbversion) {
         $names = implode("', '", array_keys($self->items));
         DBManager::i()->createtable('regservices', "id int unsigned NOT NULL default 0,
     service enum('$names') default 'google',
@@ -57,7 +56,6 @@ function tregservicesInstall($self) {
     key `id` (`id`),
     KEY (`service`, `uid`)
     ");
-    }
 
      $self->getApp()->router->addget($self->url, get_class($self));
     tcommentform::i()->oncomuser = $self->oncomuser;

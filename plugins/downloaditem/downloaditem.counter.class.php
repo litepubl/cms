@@ -16,7 +16,7 @@ class tdownloaditemcounter extends titems {
     }
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->table = 'downloaditems';
     }

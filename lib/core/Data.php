@@ -164,7 +164,7 @@ return static::getAppInstance();
         $reflector = new \ReflectionClass($class);
         $filename = $reflector->getFileName();
 
-        if (strpos($filename, '/kernel.')) {
+        if (strpos($filename, 'kernel.')) {
             $filename = dirname($filename) . DIRECTORY_SEPARATOR . basename(str_replace('\\', DIRECTORY_SEPARATOR, $class)) . '.php';
         }
 

@@ -771,7 +771,7 @@ $this->createInstances($this->getSchema());
 }
 
 //PanelTrait.php
-mespace litepubl\admin;
+namespace litepubl\admin;
 
 use litepubl\view\Schema;
 use litepubl\view\Schemes;

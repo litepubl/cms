@@ -17,7 +17,7 @@ class treguser extends titems {
     }
 
     protected function create() {
-        $this->dbversion = dbversion;
+        $this->dbversion = true;
         parent::create();
         $this->basename = 'regservices/users';
         //$this->table = 'regservices';
