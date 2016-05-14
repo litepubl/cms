@@ -126,8 +126,8 @@ class Plugins extends Menu
             try {
                 $plugins->update($list);
             }
-            catch(Exception $e) {
-                 $this->getApp()->options->handexception($e);
+            catch(\Exception $e) {
+                 $this->getApp()->logException($e);
             }
             $result = $this->theme->h(Lang::i()->updated);
         } else {

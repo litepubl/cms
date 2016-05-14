@@ -146,7 +146,7 @@ return;
         try {
             $item = $comments->getitem($id);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return;
         }
 

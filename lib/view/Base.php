@@ -9,7 +9,6 @@
 
 namespace litepubl\view;
 use litepubl\utils\Filer;
-use litepubl\debug\LogException;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
 use litepubl\core\Str;
@@ -155,6 +154,7 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
     public function parsecallback($names) {
         $name = $names[1];
         $prop = $names[2];
+//$this->getApp()->getLogger()->debug("$name.$prop");
         if (isset(static ::$vars[$name])) {
             $var = static ::$vars[$name];
         } elseif ($name == 'custom') {
@@ -172,8 +172,8 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         try {
             return $var->{$prop};
         }
-        catch(Exception $e) {
-             $this->getApp()->options->handexception($e);
+        catch(\Exception $e) {
+             $this->getApp()->logException($e);
         }
         return '';
     }
@@ -193,9 +193,9 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
                 'parsecallback'
             ) , $s);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             $result = '';
-             $this->getApp()->options->handexception($e);
+             $this->getApp()->logException($e);
         }
         array_pop($this->parsing);
         return $result;

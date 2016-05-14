@@ -1045,7 +1045,7 @@ use \litepubl\core\PoolStorageTrait;
                 $users->setvalue($idauthor, 'trust', $trust);
             }
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
         }
 
         $this->onchanged($id);
@@ -1324,7 +1324,7 @@ return;
         try {
             $item = $comments->getitem($id);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return;
         }
 

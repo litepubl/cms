@@ -149,7 +149,7 @@ session_destroy();
         try {
             if ($this->reguser($_POST['email'], $_POST['name'])) $this->regstatus = 'mail';
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return sprintf('<h4 class="red">%s</h4>', $e->getMessage());
         }
     }

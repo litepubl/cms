@@ -63,7 +63,7 @@ class emailauth extends \litepubl\core\Plugin
         try {
             return tadminreguser::i()->reguser($args['email'], $args['name']);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return array(
                 'error' => array(
                     'message' => $e->getMessage() ,
@@ -77,7 +77,7 @@ class emailauth extends \litepubl\core\Plugin
         try {
             return tadminpassword::i()->restore($args['email']);
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return array(
                 'error' => array(
                     'message' => $e->getMessage() ,

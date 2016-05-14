@@ -72,7 +72,7 @@ class Action extends \litepubl\core\Items
             try {
                 return call_user_func_array($func, $args);
             }
-            catch(Exception $e) {
+            catch(\Exception $e) {
                 return new IXR_Error($e->getCode() , $e->getMessage());
             }
 
@@ -90,7 +90,7 @@ class Action extends \litepubl\core\Items
                     $func
                 ) , $args);
             }
-            catch(Exception $e) {
+            catch(\Exception $e) {
                 return new IXR_Error($e->getCode() , $e->getMessage());
             }
         }

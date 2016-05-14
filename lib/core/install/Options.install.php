@@ -46,7 +46,7 @@ $app = litepubl::$app;
     try {
         $app->db = new DB();
     }
-    catch(Exception $e) {
+    catch(\Exception $e) {
         die($e->GetMessage());
     }
 

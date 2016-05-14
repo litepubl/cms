@@ -134,7 +134,7 @@ return parent::getStorage();
             try {
                 return $this->getitem($id);
             }
-            catch(Exception $e) {
+            catch(\Exception $e) {
                 return false;
             }
         }

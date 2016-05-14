@@ -12,6 +12,7 @@ use litepubl\core\Context;
 use litepubl\widget\Widgets;
 use litepubl\core\Str;
 use litepubl\perms\Perm;
+use litepubl\Config;
 
 class MainView extends \litepubl\core\Events
 {
@@ -42,6 +43,7 @@ $app->classes->instances[get_class($this) ] = $this;
             'files' =>  $app->site->files,
             'idurl' =>  0,
             'lang' =>  $app->site->language,
+'debug' => Config::$debug,
             'theme' => [],
             'custom' => [],
         );
@@ -232,7 +234,7 @@ $app = $this->getApp();
     public function getHead() {
         $result = $this->heads;
 $result .= $this->view->gethead();
-        $result = $this->getltoptions() . $result;
+        $result = $this->getLtoptions() . $result;
         $result .= $this->extrahead;
         $result = $this->schema->theme->parse($result);
 

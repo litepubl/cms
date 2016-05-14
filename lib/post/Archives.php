@@ -27,7 +27,7 @@ use \litepubl\view\ViewTrait;
         $this->table = 'posts';
     }
 
-    public function getHeadlinks() {
+    public function getHeadLinks() {
         $result = '';
         foreach ($this->items as $date => $item) {
             $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\" $this->getApp()->site->url{$item['url']}\" />\n";
@@ -91,7 +91,6 @@ $context->response->status = 404;
 
         $this->date = $date;
         $item = $this->items[$date];
-
         $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $pages = (int)ceil($item['count'] / $perpage);
@@ -102,8 +101,8 @@ return;
     }
 
     public function getHead() {
-        $result = parent::gethead();
-        $result.= Posts::i()->getanhead($this->getidposts());
+$announce = new Announce($this->schema->theme);
+        $result= $announce->getAnHead($this->getIdPosts());
         return $result;
     }
 
@@ -122,7 +121,8 @@ return;
         $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
         $list = array_slice($items, ( $this->getApp()->context->request->page - 1) * $perpage, $perpage);
-        $result = $schema->theme->getposts($list, $schema->postanounce);
+$announce = new Announce($schema->theme);
+        $result = $announce->getposts($list, $schema->postanounce);
         $result.= $schema->theme->getpages($this->items[$this->date]['url'],  $this->getApp()->context->request->page, ceil(count($items) / $perpage));
         return $result;
     }

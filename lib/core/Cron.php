@@ -66,8 +66,8 @@ $context->response->status = 403;
                 $this->log("started loop");
                 $this->execute();
             }
-            catch(Exception $e) {
-                 $this->getApp()->options->handexception($e);
+            catch(\Exception $e) {
+                 $this->getApp()->logException($e);
             }
             flock($fh, LOCK_UN);
             fclose($fh);
@@ -88,8 +88,8 @@ $context->response->status = 403;
             try {
                 $this->execute();
             }
-            catch(Exception $e) {
-                 $this->getApp()->options->handexception($e);
+            catch(\Exception $e) {
+                 $this->getApp()->logException($e);
             }
 
             flock($fh, LOCK_UN);
@@ -111,8 +111,8 @@ $context->response->status = 403;
                     try {
                         $func($arg);
                     }
-                    catch(Exception $e) {
-                         $this->getApp()->options->handexception($e);
+                    catch(\Exception $e) {
+                         $this->getApp()->logException($e);
                     }
                 } else {
                     $this->db->iddelete($id);
@@ -127,8 +127,8 @@ $context->response->status = 403;
                     $obj = static::iGet($class);
                     $obj->$func($arg);
                 }
-                catch(Exception $e) {
-                     $this->getApp()->options->handexception($e);
+                catch(\Exception $e) {
+                     $this->getApp()->logException($e);
                 }
             } else {
                 $this->db->iddelete($id);

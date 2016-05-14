@@ -10,6 +10,7 @@
 namespace litepubl\admin\service;
 use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\debug\LogException;
 
 class Run extends \litepubl\admin\Menu
 {
@@ -28,7 +29,7 @@ try {
                 $result = eval($_POST['content']);
                 return sprintf('<pre>%s</pre>', $result);
 } catch (\Exception $e) {
-return sprintf('<pre>%s</pre>',  $this->getApp()->options->handexception($e));
+return sprintf('<pre>%s</pre>',  LogException::getLog($e);
 }
 }
 

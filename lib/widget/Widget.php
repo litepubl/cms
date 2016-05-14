@@ -56,7 +56,7 @@ $vars->widget = $this;
             $content = $this->getcontent($id, $sidebar);
         }
         catch(\Exception $e) {
-             $this->getApp()->options->handexception($e);
+             $this->getApp()->logException($e);
             return '';
         }
 $view = new View();
