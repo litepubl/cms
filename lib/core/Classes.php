@@ -224,9 +224,9 @@ return;
 
 if (config::$useKernel && !config::$debug &&
 ($filename = $this->findKernel($classname))) {
-$this->loaded[$classname] = $filename;
-include $filename;
+include_once $filename;
 if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
+$this->loaded[$classname] = $filename;
 return;
 }
 }
@@ -234,7 +234,7 @@ return;
 $filename = $this->findFile($classname);
 $this->loaded[$classname] = $filename;
 if ($filename) {
-include $filename;
+include_once $filename;
 } elseif (!$this->composerLoaded) {
 $this->composerLoaded = true;
 $this->loadComposer($classname);
