@@ -10,7 +10,7 @@
 namespace litepubl\view;
 use litepubl\core\Str;
 
-class Css extends Js
+class Css extends Merger
  {
 
     protected function create() {
@@ -18,13 +18,11 @@ class Css extends Js
         $this->basename = 'cssmerger';
     }
 
-    public function replaceurl($m) {
+    public function replaceUrl($m) {
         $url = $m[1];
         if (Str::begin($url, 'data:')) {
  return " url(\"$url\")";
 }
-
-
 
         $args = '';
         if ($i = strpos($url, '?')) {
@@ -41,7 +39,7 @@ class Css extends Js
         return " url('$url$args')";
     }
 
-    public function readfile($filename) {
+    public function readFile($filename) {
         if ($result = parent::readfile($filename)) {
             chdir(dirname($filename));
             $result = preg_replace_callback('/\s*url\s*\(\s*[\'"]?(.*?)[\'"]?\s*\)/i', array(
@@ -54,11 +52,11 @@ class Css extends Js
         }
     }
 
-    public function getFilename($section, $revision) {
+    public function getFileName($section, $revision) {
         return sprintf('/files/js/%s.%s.css', $section, $revision);
     }
 
-    public function addstyle($filename) {
+    public function addStyle($filename) {
         if (!($filename = $this->normfilename($filename))) {
  return false;
 }
@@ -71,7 +69,7 @@ class Css extends Js
         }
     }
 
-    public function deletestyle($filename) {
+    public function deleteStyle($filename) {
         if (!($filename = $this->normfilename($filename))) {
  return false;
 }

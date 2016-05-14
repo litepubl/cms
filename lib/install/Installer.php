@@ -331,7 +331,7 @@ $domain  = $_SERVER['HTTP_HOST'];
 }
 
 $domain  = \strtolower(\trim($domain ));
-        if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $domain , $m)) {
+        if ($domain   && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $domain  , $m)) {
             $domain = $m[2];
         }
 

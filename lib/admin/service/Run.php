@@ -29,7 +29,7 @@ try {
                 $result = eval($_POST['content']);
                 return sprintf('<pre>%s</pre>', $result);
 } catch (\Exception $e) {
-return sprintf('<pre>%s</pre>',  LogException::getLog($e);
+return sprintf('<pre>%s</pre>',  LogException::getLog($e));
 }
 }
 

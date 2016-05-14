@@ -17,8 +17,8 @@ class Js extends Merger
         $this->basename = 'jsmerger';
 }
 
-    public function addlang($section, $key, array $lang) {
-        return $this->addtext($section, $key, 'window.lang = window.lang || {};' . sprintf('lang.%s = %s;', $section, json_encode($lang)));
+    public function addLang($section, $key, array $lang) {
+        return $this->addText($section, $key, 'window.lang = window.lang || {};' . sprintf('lang.%s = %s;', $section, json_encode($lang)));
     }
 
 }

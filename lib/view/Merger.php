@@ -34,7 +34,7 @@ class Merger extends \litepubl\core\Items
         $this->onsave();
     }
 
-    public function normfilename($filename) {
+    public function normFilename($filename) {
         $filename = trim($filename);
         if (Str::begin($filename,  $this->getApp()->paths->home)) {
 $filename = substr($filename, strlen( $this->getApp()->paths->home));
@@ -81,7 +81,7 @@ return false;
         return $this->deletefile($id, $a[1]);
     }
 
-    public function deletefile($section, $filename) {
+    public function deleteFile($section, $filename) {
         if (!isset($this->items[$section])) {
  return false;
 }
@@ -101,7 +101,7 @@ return false;
         $this->save();
     }
 
-    public function replacefile($section, $src, $dst) {
+    public function replaceFile($section, $src, $dst) {
         if (!isset($this->items[$section])) {
  return false;
 }
@@ -178,7 +178,7 @@ return false;
         $this->unlock();
     }
 
-    public function addtext($section, $key, $s) {
+    public function addText($section, $key, $s) {
         $s = trim($s);
         if (empty($s)) {
  return false;
@@ -204,7 +204,7 @@ return false;
         return count($this->items[$section]['texts']) - 1;
     }
 
-    public function deletetext($section, $key) {
+    public function deleteText($section, $key) {
         if (!isset($this->items[$section]['texts'][$key])) {
  return;
 }
@@ -215,17 +215,17 @@ return false;
         return true;
     }
 
-    public function getFilename($section, $revision) {
+    public function getFileName($section, $revision) {
         return sprintf('/files/js/%s.%s.js', $section, $revision);
     }
 
-    public function readfile($filename) {
+    public function readFile($filename) {
         $result = file_get_contents($filename);
         if ($result === false) $this->error(sprintf('Error read %s file', $filename));
         return $result;
     }
 
-    public function deletesection($section) {
+    public function deleteSection($section) {
         $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         @unlink($home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision)));
 
