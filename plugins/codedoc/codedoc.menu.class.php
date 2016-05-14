@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Args;
 use litepubl\view\Theme;
 
-class tcodedocmenu extends tmenu {
+class tcodedocmenu extends tmenu
+{
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = parent::gethead();
         $result.= '<style type="text/css">
   .doc_classes p { display:none;}
@@ -33,14 +38,14 @@ class tcodedocmenu extends tmenu {
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = parent::getcontent();
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         $items = $db->res2items($db->query("select id, class from {$db->prefix}codedoc order by class"));
         if (count($items) == 0) {
- return $result;
-}
-
+            return $result;
+        }
 
         tposts::i()->loaditems(array_keys($items));
         $theme = Schema::getview($this)->theme;
@@ -58,3 +63,4 @@ class tcodedocmenu extends tmenu {
     }
 
 }
+

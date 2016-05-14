@@ -1,17 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\LangMerger;
-use litepubl\view\Filter;
 
-function tusernewsInstall($self) {
+use litepubl\view\Filter;
+use litepubl\view\LangMerger;
+
+function tusernewsInstall($self)
+{
     $name = basename(dirname(__file__));
     $self->data['dir'] = $name;
     $self->save();
@@ -22,8 +25,8 @@ function tusernewsInstall($self) {
     $filter->phpcode = true;
     $filter->save();
 
-     $self->getApp()->options->parsepost = false;
-     $self->getApp()->options->reguser = true;
+    $self->getApp()->options->parsepost = false;
+    $self->getApp()->options->reguser = true;
     $adminoptions = tadminoptions::i();
     $adminoptions->usersenabled = true;
 
@@ -44,7 +47,9 @@ function tusernewsInstall($self) {
     $rights->unlock();
 }
 
-function tusernewsUninstall($self) {
+function tusernewsUninstall($self)
+{
     tauthor_rights::i()->unbind($self);
     LangMerger::i()->deleteplugin(basename(dirname(__file__)));
 }
+

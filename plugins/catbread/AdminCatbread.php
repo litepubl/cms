@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\catbread;
+
 use litepubl\view\Base;
 
 class Admincatbread extends \litepubl\admin\Panel
 {
-use \litepubl\core\Singleton;
+    use \litepubl\core\Singleton;
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = Catbread::i();
         $lang = $this->getLangAbout();
-$args = $this->args;
+        $args = $this->args;
         $args->showhome = $plugin->showhome;
         $args->showchilds = $plugin->showchilds;
         $args->showsimilar = $plugin->showsimilar;
@@ -53,7 +56,8 @@ $args = $this->args;
     ', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
         $plugin = Catbread::i();
         $plugin->showhome = isset($showchilds);
@@ -68,3 +72,4 @@ $args = $this->args;
     }
 
 }
+

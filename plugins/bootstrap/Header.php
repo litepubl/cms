@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\bootstrap;
+
 use litepubl\core\Context;
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Css;
+use litepubl\view\Lang;
 
 class Header extends \litepubl\admin\Menu
 {
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = parent::gethead();
 
         foreach (array(
@@ -40,9 +43,10 @@ class Header extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $theme = $this->theme;
         $lang = Lang::admin('adminbootstraptheme');
         $lang->addsearch('themeheader', 'editor');
@@ -54,10 +58,10 @@ $admin = $this->admintheme;
 
     public function request(Context $context)
     {
-parent::request($context);
-    $response = $context->response;
-if ($response->status != 200) {
-return;
+        parent::request($context);
+        $response = $context->response;
+        if ($response->status != 200) {
+            return;
         }
 
         if (isset($_FILES['header'])) {
@@ -78,7 +82,7 @@ return;
             $css = str_replace('%%file%%', 'data:%s;base64,%s', $css);
             $css = sprintf($css, $_FILES[$name]['type'], base64_encode($data));
 
-            $filename =  $this->getApp()->paths->files . "js/$name.css";
+            $filename = $this->getApp()->paths->files . "js/$name.css";
             file_put_contents($filename, $css);
             @chmod($filename, 0666);
 
@@ -99,12 +103,13 @@ return;
         }
 
         $js = Str::toJson($result);
-$response->body = $js;
-$response->setJson();
-$response->cache = false;
-    $response->headers['Connection'] = 'close';
-    $response->headers['Content-Length'] = strlen($js);
-    $response->headers['Date'] = date('r');
+        $response->body = $js;
+        $response->setJson();
+        $response->cache = false;
+        $response->headers['Connection'] = 'close';
+        $response->headers['Content-Length'] = strlen($js);
+        $response->headers['Date'] = date('r');
     }
 
 }
+

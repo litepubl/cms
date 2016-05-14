@@ -1,35 +1,39 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\xmlrpc;
+
+use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\utils\http;
-use litepubl\core\Str;
 
 class Pingback extends Common
 {
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function ping($from, $to) {
-        if (!Str::begin($to,  $this->getApp()->site->url)) {
+    public function ping($from, $to)
+    {
+        if (!Str::begin($to, $this->getApp()->site->url)) {
             return new IXR_Error(0, 'Is there no link to us?');
         }
 
-        $url = substr($to, strlen( $this->getApp()->site->url));
-        if (!($item =  $this->getApp()->router->find_item($url))) {
+        $url = substr($to, strlen($this->getApp()->site->url));
+        if (!($item = $this->getApp()->router->find_item($url))) {
             return $this->xerror(0, 'Is there no link to us?');
         }
 
-        if ($item['class'] !=  $this->getApp()->classes->classes['post']) {
+        if ($item['class'] != $this->getApp()->classes->classes['post']) {
             return $this->xerror(33, 'The specified target URL cannot be used as a target. It either doesn\'t exist, or it is not a pingback-enabled resource.');
         }
 
@@ -68,3 +72,4 @@ class Pingback extends Common
     }
 
 }
+

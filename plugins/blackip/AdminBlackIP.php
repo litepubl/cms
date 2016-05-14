@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\blackip;
+
 use litepubl\admin\Tabs;
 use litepubl\view\Lang;
 
 class AdminBlackIP extends \litepubl\admin\Panel
 {
-use \litepubl\core\Singleton;
+    use \litepubl\core\Singleton;
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = BlackIP::i();
         $lang = $this->getLangAbbout();
         $args = $this->args;
@@ -32,7 +35,8 @@ use \litepubl\core\Singleton;
         return $this->admin->form($tabs->get() , $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $plugin = BlackIP::i();
         $plugin->ipstatus = $_POST['ipstatus'];
         $plugin->wordstatus = $_POST['wordstatus'];
@@ -52,3 +56,4 @@ use \litepubl\core\Singleton;
     }
 
 }
+

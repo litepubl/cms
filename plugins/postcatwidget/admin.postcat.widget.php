@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
-class tadminpostcatwidget extends tadmincustomwidget {
+class tadminpostcatwidget extends tadmincustomwidget
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $widget = tpostcatwidget::i();
         $about = Plugins::getabout(Plugins::getname(__file__));
         $args = new Args();
@@ -54,7 +59,8 @@ class tadminpostcatwidget extends tadmincustomwidget {
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $widget = tpostcatwidget::i();
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
@@ -86,3 +92,4 @@ class tadminpostcatwidget extends tadmincustomwidget {
     }
 
 }
+

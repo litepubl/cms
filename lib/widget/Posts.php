@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
-use litepubl\view\Lang;
+
 use litepubl\post\Posts as PostItems;
+use litepubl\view\Lang;
 
 class Posts extends Widget
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'widget.posts';
         $this->template = 'posts';
@@ -22,11 +25,13 @@ class Posts extends Widget
         $this->data['maxcount'] = 10;
     }
 
-    public function getDeftitle() {
+    public function getDeftitle()
+    {
         return Lang::get('default', 'recentposts');
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         $posts = PostItems::i();
         $list = $posts->getpage(0, 1, $this->maxcount, false);
         $view = new View();
@@ -34,3 +39,4 @@ class Posts extends Widget
     }
 
 }
+

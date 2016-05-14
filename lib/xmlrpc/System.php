@@ -1,32 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\xmlrpc;
 
 class System extends Common
 {
 
-    public function listMethods() {
+    public function listMethods()
+    {
         $caller = Server::i();
         return array_keys($caller->items);
     }
 
-    public function methodSignature($name) {
+    public function methodSignature($name)
+    {
         $caller = Server::i();
         if (!$caller->itemExists($name)) {
- return new IXR_Error(-32601, "server error. requested method $name does not exist.");
-}
-
+            return new IXR_Error(-32601, "server error. requested method $name does not exist.");
+        }
 
         $item = $caller->getitem($name);
         if ($item['class'] != __class__) {
-            $obj = static::iGet($item['class']);
+            $obj = static ::iGet($item['class']);
             if (method_exists($obj, 'getsignature')) {
                 return $obj->getsignature($name);
             } else {
@@ -84,11 +86,13 @@ class System extends Common
         }
     }
 
-    public function methodHelp($name) {
+    public function methodHelp($name)
+    {
         return "I know nothing.";
     }
 
-    public function multicall(array $items) {
+    public function multicall(array $items)
+    {
         $result = array();
         $caller = Server::i();
         foreach ($items as $item) {
@@ -105,17 +109,21 @@ class System extends Common
         return $result;
     }
 
-    public function methodExist($name) {
+    public function methodExist($name)
+    {
         $caller = Server::i();
         return $caller->itemExists($name);
     }
 
-    public function sayHello() {
+    public function sayHello()
+    {
         return 'Hello!';
     }
 
-    public function addTwoNumbers($number1, $number2) {
+    public function addTwoNumbers($number1, $number2)
+    {
         return $number1 + $number2;
     }
 
 }
+

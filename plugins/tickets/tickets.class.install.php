@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\Config;
+use litepubl\core\DBManager;
+use litepubl\core\Plugins;
+use litepubl\utils\LinkGenerator;
+use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
-use litepubl\core\Plugins;
-use litepubl\core\DBManager;
-use litepubl\view\Filter;
-use litepubl\utils\LinkGenerator;
 
-function tticketsInstall($self) {
+function tticketsInstall($self)
+{
     if (version_compare(PHP_VERSION, '5.3', '<')) {
         die('Ticket system requires PHP 5.3 or later. You are using PHP ' . PHP_VERSION);
     }
@@ -40,7 +43,7 @@ function tticketsInstall($self) {
     $filter = Filter::i();
     $filter->phpcode = true;
     $filter->save();
-     $self->getApp()->options->parsepost = false;
+    $self->getApp()->options->parsepost = false;
 
     $manager = DBManager::i();
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'ticket.sql'));
@@ -52,18 +55,18 @@ function tticketsInstall($self) {
     $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
     $optimizer->unlock();
 
-     $self->getApp()->classes->lock();
+    $self->getApp()->classes->lock();
     //install polls if its needed
     $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
 
-     $self->getApp()->classes->Add('tticket', 'ticket.class.php', $dirname);
+    $self->getApp()->classes->Add('tticket', 'ticket.class.php', $dirname);
     // $self->getApp()->classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
-     $self->getApp()->classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
-     $self->getApp()->classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
-     $self->getApp()->classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
+    $self->getApp()->classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
+    $self->getApp()->classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
+    $self->getApp()->classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
 
-     $self->getApp()->options->reguser = true;
+    $self->getApp()->options->reguser = true;
     $adminsecure = adminsecure::i();
     $adminsecure->usersenabled = true;
 
@@ -110,7 +113,7 @@ function tticketsInstall($self) {
     }
     $menus->unlock();
     */
-     $self->getApp()->classes->unlock();
+    $self->getApp()->classes->unlock();
 
     $linkgen = LinkGenerator::i();
     $linkgen->data['ticket'] = '/tickets/[title].htm';
@@ -123,21 +126,22 @@ function tticketsInstall($self) {
         $idticket,
         $groups->getidgroup('author')
     );
-    $groups->items[ $self->getApp()->options->groupnames['author']]['parents'][] = $idticket;
-    $groups->items[ $self->getApp()->options->groupnames['commentator']]['parents'][] = $idticket;
+    $groups->items[$self->getApp()->options->groupnames['author']]['parents'][] = $idticket;
+    $groups->items[$self->getApp()->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();
 }
 
-function tticketsUninstall($self) {
+function tticketsUninstall($self)
+{
     //die("Warning! You can lost all tickets!");
-     $self->getApp()->classes->lock();
+    $self->getApp()->classes->lock();
     //if (Config::$debug)  $self->getApp()->classes->delete('tpostclasses');
     tposts::unsub($self);
 
-     $self->getApp()->classes->delete('tticket');
-     $self->getApp()->classes->delete('tticketeditor');
-     $self->getApp()->classes->delete('tadmintickets');
-     $self->getApp()->classes->delete('tadminticketoptions');
+    $self->getApp()->classes->delete('tticket');
+    $self->getApp()->classes->delete('tticketeditor');
+    $self->getApp()->classes->delete('tadmintickets');
+    $self->getApp()->classes->delete('tadminticketoptions');
 
     $adminmenus = Menus::i();
     $adminmenus->lock();
@@ -155,7 +159,7 @@ function tticketsUninstall($self) {
     
      $self->getApp()->classes->delete('tticketsmenu');
     */
-     $self->getApp()->classes->unlock();
+    $self->getApp()->classes->unlock();
 
     $manager = DBManager::i();
     $manager->deletetable($self->childTable);
@@ -171,3 +175,4 @@ function tticketsUninstall($self) {
 
     LangMerger::i()->deleteplugin(Plugins::getname(__file__));
 }
+

@@ -1,32 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\widget;
-use litepubl\widget\Widgets as WidgetItems;
-use litepubl\widget\Widget as WidgetItem;
-use litepubl\view\Parser;
+
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
+use litepubl\view\Parser;
+use litepubl\widget\Widget as WidgetItem;
+use litepubl\widget\Widgets as WidgetItems;
 
 class Custom extends Widget
 {
-use \litepubl\admin\Params;
-use \litepubl\admin\Factory;
+    use \litepubl\admin\Params;
+    use \litepubl\admin\Factory;
 
-public function getAdminTheme() {
-return $this->admin;
-}
+    public function getAdminTheme()
+    {
+        return $this->admin;
+    }
 
-    public function getTemplates() {
+    public function getTemplates()
+    {
         $result = array();
         $lang = $this->lang;
-$lang->section = 'widgets';
+        $lang->section = 'widgets';
         $result['widget'] = $lang->defaulttemplate;
         foreach (Parser::getWidgetNames() as $name) {
             $result[$name] = $lang->$name;
@@ -35,18 +39,19 @@ $lang->section = 'widgets';
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $widget = $this->widget;
         $args = $this->args;
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
             $args->mode = 'edit';
-$form = $this->theme->getinput('text', 'title', $item['title'], $this->lang->widgettitle);
+            $form = $this->theme->getinput('text', 'title', $item['title'], $this->lang->widgettitle);
         } else {
             $id = 0;
-$form = $this->theme->getinput('text', 'title', '', $this->lang->widgettitle);
-            $form .= GetSchema::combo(1);
+            $form = $this->theme->getinput('text', 'title', '', $this->lang->widgettitle);
+            $form.= GetSchema::combo(1);
             $args->mode = 'add';
             $item = array(
                 'title' => '',
@@ -59,7 +64,7 @@ $form = $this->theme->getinput('text', 'title', '', $this->lang->widgettitle);
         $args->text = $item['content'];
         $args->template = $this->theme->comboItems($this->getTemplates() , $item['template']);
 
-$form .= '[editor=text]
+        $form.= '[editor=text]
     [combo=template]
     [hidden=mode]
     [hidden=idwidget]';
@@ -81,7 +86,8 @@ $form .= '[editor=text]
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $widget = $this->widget;
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
@@ -102,17 +108,19 @@ $form .= '[editor=text]
         }
     }
 
-    public function deleteWidgets(WidgetItem $widget) {
+    public function deleteWidgets(WidgetItem $widget)
+    {
         $widgets = WidgetItems::i();
         $widgets->lock();
         $widget->lock();
         foreach ($_POST as $key => $value) {
             if (Str::begin($key, 'widgetcheck-')) {
-$widget->delete((int)$value);
-}
+                $widget->delete((int)$value);
+            }
         }
         $widget->unlock();
         $widgets->unlock();
     }
 
 }
+

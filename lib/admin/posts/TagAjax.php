@@ -1,55 +1,59 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\posts;
-use litepubl\core\Context;
-use litepubl\tag\Tags as TagItems;
-use litepubl\tag\Cats;
-use litepubl\view\Admin;
-use litepubl\view\Lang;
-use litepubl\view\Schemes;
-use litepubl\view\Schema;
-use litepubl\admin\GetSchema;
+
 use litepubl\admin\GetPerm;
-use litepubl\view\Args;
+use litepubl\admin\GetSchema;
+use litepubl\core\Context;
 use litepubl\core\TempProps;
+use litepubl\tag\Cats;
+use litepubl\tag\Tags as TagItems;
+use litepubl\view\Admin;
+use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
 
 class TagAjax extends Ajax
 {
 
-    public function install() {
-         $this->getApp()->router->addget('/admin/ajaxtageditor.htm', get_class($this));
+    public function install()
+    {
+        $this->getApp()->router->addget('/admin/ajaxtageditor.htm', get_class($this));
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
+        $response = $context->response;
         $response->cache = false;
 
-$this->auth($context);
-if ($response->status == 200) {
-$temp = new TempProps($this);
-$temp->response = $response;
-        $response->body = $this->getContent();
-}
+        $this->auth($context);
+        if ($response->status == 200) {
+            $temp = new TempProps($this);
+            $temp->response = $response;
+            $response->body = $this->getContent();
+        }
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $type = !empty($_GET['type']) ? $_GET['type'] : (!empty($_POST['type']) ? $_POST['type'] : 'tags');
-if ($type != 'tags') {
-$type = 'categories';
-}
+        if ($type != 'tags') {
+            $type = 'categories';
+        }
 
         $tags = $type == 'tags' ? Tagitems::i() : Cats::i();
         $id = $this->idparam();
         if (($id > 0) && !$tags->itemExists($id)) {
-return $this->response->forbidden();
+            return $this->response->forbidden();
         }
 
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
@@ -121,3 +125,4 @@ return $this->response->forbidden();
     }
 
 }
+

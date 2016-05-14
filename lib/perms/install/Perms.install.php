@@ -1,16 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\perms;
+
 use litepubl\view\Lang;
 
-function PermsInstall($self) {
+function PermsInstall($self)
+{
     Lang::usefile('install');
     $lang = Lang::i('initgroups');
 
@@ -33,5 +36,7 @@ function PermsInstall($self) {
     $self->unlock();
 }
 
-function PermsUninstall($self) {
+function PermsUninstall($self)
+{
 }
+

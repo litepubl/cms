@@ -1,31 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\MainView;
+
 use litepubl\view\Filter;
+use litepubl\view\MainView;
 
 class tmetatags extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function themeparsed(ttheme $theme) {
+    public function themeparsed(ttheme $theme)
+    {
         $theme->templates['index'] = strtr($theme->templates['index'], array(
             '$template.keywords' => '$metatags.keywords',
             '$template.description' => '$metatags.description',
         ));
     }
 
-    public function getList() {
+    public function getList()
+    {
         $context = MainView::i()->context;
         if ($context instanceof tcommontags) {
             $list = $context->getidposts($context->id);
@@ -43,7 +48,8 @@ class tmetatags extends \litepubl\core\Plugin
         return false;
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {
@@ -55,7 +61,8 @@ class tmetatags extends \litepubl\core\Plugin
         return MainView::i()->getkeywords();
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {
@@ -70,3 +77,4 @@ class tmetatags extends \litepubl\core\Plugin
     }
 
 }
+

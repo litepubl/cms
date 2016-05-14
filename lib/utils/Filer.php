@@ -1,25 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\utils;
+
 use litepubl\core\litepubl;
 
-class Filer {
+class Filer
+{
 
-    public static function callback($callback, $path, $subdir) {
+    public static function callback($callback, $path, $subdir)
+    {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
- continue;
-}
-
+                    continue;
+                }
 
                 $file = $path . $filename;
                 if (is_dir($file)) {
@@ -34,14 +37,14 @@ class Filer {
         }
     }
 
-    public static function delete($path, $subdirs, $rmdir = false) {
+    public static function delete($path, $subdirs, $rmdir = false)
+    {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
- continue;
-}
-
+                    continue;
+                }
 
                 $file = $path . $filename;
                 if (is_dir($file)) {
@@ -55,13 +58,15 @@ class Filer {
         if ($rmdir && is_dir($path)) rmdir($path);
     }
 
-    public static function deletemask($mask) {
+    public static function deletemask($mask)
+    {
         if ($list = glob($mask)) {
             foreach ($list as $filename) static ::_delete($filename);
         }
     }
 
-    public static function deletedirmask($path, $mask) {
+    public static function deletedirmask($path, $mask)
+    {
         foreach (glob($path . $mask) as $filename) {
             if (is_dir($filename)) {
                 static ::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
@@ -71,14 +76,14 @@ class Filer {
         }
     }
 
-    public static function getFiles($path) {
+    public static function getFiles($path)
+    {
         $result = array();
         if ($h = opendir($path)) {
             while (FALSE !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
- continue;
-}
-
+                    continue;
+                }
 
                 if (!is_dir($path . $filename)) $result[] = $filename;
             }
@@ -87,7 +92,8 @@ class Filer {
         return $result;
     }
 
-    public static function getDir($dir) {
+    public static function getDir($dir)
+    {
         $result = array();
         if ($fp = opendir($dir)) {
             while (FALSE !== ($file = readdir($fp))) {
@@ -99,12 +105,12 @@ class Filer {
         return $result;
     }
 
-    public static function forcedir($dir) {
+    public static function forcedir($dir)
+    {
         $dir = rtrim(str_replace('\\', '/', $dir) , '/');
         if (is_dir($dir)) {
- return true;
-}
-
+            return true;
+        }
 
         $up = rtrim(dirname($dir) , '/');
         if (($up != '') || ($up != '.')) static ::forcedir($up);
@@ -113,7 +119,8 @@ class Filer {
         return is_dir($dir);
     }
 
-    public static function append($filename, $s) {
+    public static function append($filename, $s)
+    {
         $dir = dirname($filename);
         if (!is_dir($dir)) {
             mkdir($dir, 0777);
@@ -127,8 +134,9 @@ class Filer {
         }
     }
 
-    public static function getFiletimeOffset() {
-        $filename =  litepubl::$app->paths->data . md5(microtime()) . '.tmp';
+    public static function getFiletimeOffset()
+    {
+        $filename = litepubl::$app->paths->data . md5(microtime()) . '.tmp';
         $t = time();
         touch($filename, $t, $t);
         clearstatcache();
@@ -137,7 +145,8 @@ class Filer {
         return $t2 - $t;
     }
 
-    public static function _delete($filename) {
+    public static function _delete($filename)
+    {
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
             \unlink($filename);
@@ -145,3 +154,4 @@ class Filer {
     }
 
 }
+

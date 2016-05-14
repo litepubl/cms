@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
 
-class DateFilter {
+class DateFilter
+{
     //only date without time
     public static $format = 'd.m.Y';
     public static $timeformat = 'H:i';
 
-    public static function timestamp($date) {
+    public static function timestamp($date)
+    {
         if (is_numeric($date)) {
             $date = (int)$date;
         } else if ($date == '0000-00-00 00:00:00') {
@@ -30,29 +33,31 @@ class DateFilter {
         return $date;
     }
 
-    public static function getDate($name, $format = false) {
+    public static function getDate($name, $format = false)
+    {
         if (empty($_POST[$name])) {
- return 0;
-}
+            return 0;
+        }
 
         $date = trim($_POST[$name]);
         if (!$date) {
- return 0;
-}
-            if (!$format) {
-$format = static ::$format;
-}
+            return 0;
+        }
+        if (!$format) {
+            $format = static ::$format;
+        }
 
-            $d = \DateTime::createFromFormat($format, $date);
-            if ($d && $d->format($format) == $date) {
-                $d->setTime(0, 0, 0);
-                return $d->getTimestamp() + static ::gettime($name . '-time');
-            }
+        $d = \DateTime::createFromFormat($format, $date);
+        if ($d && $d->format($format) == $date) {
+            $d->setTime(0, 0, 0);
+            return $d->getTimestamp() + static ::gettime($name . '-time');
+        }
 
         return 0;
     }
 
-    public static function getTime($name) {
+    public static function getTime($name)
+    {
         $result = 0;
         if (!empty($_POST[$name]) && ($time = trim($_POST[$name]))) {
             if (preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])(:([0-5][0-9]))?$/', $time, $m)) {
@@ -67,3 +72,4 @@ $format = static ::$format;
     }
 
 }
+

@@ -1,29 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\core\Str;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Theme;
-use litepubl\view\Filter;
-use litepubl\utils\LinkGenerator;
 
-class tcodedocfilter extends titems {
+use litepubl\core\Str;
+use litepubl\utils\LinkGenerator;
+use litepubl\view\Args;
+use litepubl\view\Filter;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+
+class tcodedocfilter extends titems
+{
     private $fix;
     private $classes;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'codedoc';
@@ -31,7 +36,8 @@ class tcodedocfilter extends titems {
         $this->classes = array();
     }
 
-    public function filter(tpost $post, $s, $type) {
+    public function filter(tpost $post, $s, $type)
+    {
         Lang::usefile('codedoc');
         $lang = Lang::i('codedoc');
 
@@ -60,7 +66,8 @@ class tcodedocfilter extends titems {
         return $result;
     }
 
-    public function callback_replace_code($m) {
+    public function callback_replace_code($m)
+    {
         $s = strtr(htmlspecialchars($m[1]) , array(
             '"' => '&quot;',
             "'" => '&#39;',
@@ -73,11 +80,11 @@ class tcodedocfilter extends titems {
         return sprintf('<div class="tempcode">%s</div>', $s);
     }
 
-    public function fixpost(tpost $post) {
+    public function fixpost(tpost $post)
+    {
         if (count($this->fix) == 0) {
- return;
-}
-
+            return;
+        }
 
         foreach ($this->fix as $i => $item) {
             if ($post == $item['post']) {
@@ -89,7 +96,8 @@ class tcodedocfilter extends titems {
         }
     }
 
-    public function html($key, Args $args) {
+    public function html($key, Args $args)
+    {
         $theme = Theme::instance();
         $s = strtr(Lang::get('htmlcodedoc', $key) , array(
             '$tableclass' => $theme->templates['content.admin.tableclass'],
@@ -100,7 +108,8 @@ class tcodedocfilter extends titems {
 
     }
 
-    public function getHeaders(array & $a) {
+    public function getHeaders(array & $a)
+    {
         $result = array();
         while ((count($a) > 0) && preg_match('/^\s*(\w*+)\s*[=:]\s*(.*+)/', $a[0], $m)) {
             $result[$m[1]] = trim($m[2]);
@@ -109,7 +118,8 @@ class tcodedocfilter extends titems {
         return $result;
     }
 
-    public function getBody(array & $a) {
+    public function getBody(array & $a)
+    {
         $result = '';
         while ((count($a) > 0) && !preg_match('/^\s*(\w*+)\s*[=:]\s*(.*+)/', $a[0], $m)) {
             $result.= array_shift($a) . "\n";
@@ -117,11 +127,13 @@ class tcodedocfilter extends titems {
         return trim($result);
     }
 
-    public function skip(array & $a) {
+    public function skip(array & $a)
+    {
         while ((count($a) > 0) && (trim($a[0]) == '')) array_splice($a, 0, 1);
     }
 
-    public function replace_props($s) {
+    public function replace_props($s)
+    {
         if (preg_match_all('/\[\[(\w*?)::(.*?)\]\]/', $s, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $class = $item[1];
@@ -139,19 +151,20 @@ class tcodedocfilter extends titems {
         return $s;
     }
 
-    public function find_class($class) {
+    public function find_class($class)
+    {
         //check cache array
         if (isset($this->classes[$class])) {
- return $this->classes[$class];
-}
-
+            return $this->classes[$class];
+        }
 
         $result = $this->indexof('class', $class);
         $this->classes[$class] = $result;
         return $result;
     }
 
-    public function parsedoc(tpost $post, array & $a, $typedoc) {
+    public function parsedoc(tpost $post, array & $a, $typedoc)
+    {
         $lang = Lang::i('codedoc');
         $args = new Args();
         $contentfilter = Filter::i();
@@ -163,7 +176,7 @@ class tcodedocfilter extends titems {
             $class = $headers['interface'];
             $parentclass = '';
             $args->class = $class;
-            $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url, $headers['source']);
+            $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', $this->getApp()->site->url, $headers['source']);
             $args->body = $body;
             $result = $this->html('interface', $args);
         } else {
@@ -272,28 +285,28 @@ class tcodedocfilter extends titems {
         return $toc . $result;
     }
 
-    public function getAboutclass(array $headers, $body) {
+    public function getAboutclass(array $headers, $body)
+    {
         $class = $headers['classname'];
         $lang = Lang::i('codedoc');
         $args = new Args();
         $args->class = $class;
         $args->parent = isset($headers['parent']) ? sprintf('[[%s]]', $headers['parent']) : $lang->noparent;
         $args->childs = $this->getchilds($class);
-        $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url, $headers['source']);
+        $args->source = sprintf('<a href="%1$s/source/%2$s" title="%2$s">%2$s</a>', $this->getApp()->site->url, $headers['source']);
         $args->interfaces = $this->getclasses($headers, 'interface');
         $args->dependent = $this->getclasses($headers, 'dependent');
         $args->body = $body;
         return $this->html('class', $args);
     }
 
-    public function getChilds($parent) {
+    public function getChilds($parent)
+    {
         IF ($parent == '') return '';
         $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, Str::quote($parent))));
         if (count($items) == 0) {
- return '';
-}
-
-
+            return '';
+        }
 
         $links = array();
         tposts::i()->loaditems(array_keys($items));
@@ -304,13 +317,14 @@ class tcodedocfilter extends titems {
         return implode(', ', $links);
     }
 
-    private function getClasses(array $doc, $name) {
+    private function getClasses(array $doc, $name)
+    {
         if (empty($doc[$name])) {
- return '';
-}
-
+            return '';
+        }
 
         return preg_replace('/\w\w*+/', '[[$0]]', $doc[$name]);
     }
 
 }
+

@@ -1,24 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\core\Arr;
 use litepubl\view\Theme;
 
-class tpostcatwidget extends tclasswidget {
+class tpostcatwidget extends tclasswidget
+{
     public $items;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->cache = false;
         $this->adminclass = 'tadminpostcatwidget';
@@ -26,7 +31,8 @@ class tpostcatwidget extends tclasswidget {
         $this->addmap('items', array());
     }
 
-    public function add($title, $content, $template, $cats) {
+    public function add($title, $content, $template, $cats)
+    {
         $widgets = twidgets::i();
         $widgets->lock();
         $id = $widgets->addclass($this, 'tpost');
@@ -44,7 +50,8 @@ class tpostcatwidget extends tclasswidget {
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
@@ -56,58 +63,59 @@ class tpostcatwidget extends tclasswidget {
         }
     }
 
-    public function widgetdeleted($id) {
+    public function widgetdeleted($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
         }
     }
 
-    public function tagdeleted($idtag) {
+    public function tagdeleted($idtag)
+    {
         foreach ($this->items as & $item) {
             Arr::deleteValue($item['cats'], $idtag);
         }
         $this->save();
     }
 
-    public function getWidget($id, $sidebar) {
+    public function getWidget($id, $sidebar)
+    {
         if (!isset($this->items[$id])) {
- return '';
-}
-
+            return '';
+        }
 
         $item = $this->items[$id];
         $post = $this->getcontext('tpost');
         if (0 == count(array_intersect($item['cats'], $post->categories))) {
- return '';
-}
-
+            return '';
+        }
 
         if ($item['template'] == '') {
- return $item['content'];
-}
-
+            return $item['content'];
+        }
 
         $theme = Theme::i();
         return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
-    public function getTitle($id) {
+    public function getTitle($id)
+    {
         if (isset($this->items[$id])) {
- return $this->items[$id]['title'];
-}
-
+            return $this->items[$id]['title'];
+        }
 
         return '';
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         if (isset($this->items[$id])) {
- return $this->items[$id]['content'];
-}
-
+            return $this->items[$id]['content'];
+        }
 
         return '';
     }
 
 }
+

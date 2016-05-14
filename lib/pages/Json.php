@@ -1,24 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
+
 use litepubl\Config;
+use litepubl\core\Arr;
 use litepubl\core\Context;
 use litepubl\core\Request;
 use litepubl\core\Response;
 use litepubl\core\Str;
-use litepubl\core\Arr;
 
 class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'jsonserver';
         $this->addevents('beforerequest', 'beforecall', 'aftercall');
@@ -28,40 +31,37 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     }
 
     public function getArgs(Request $request)
- {
-$get = $request->getGet();
+    {
+        $get = $request->getGet();
         if (isset($get['method'])) {
- return $get;
-}
+            return $get;
+        }
 
-$post = $request->getPost();
+        $post = $request->getPost();
         if (isset($post['method'])) {
             return $post;
         }
 
-        if (isset($post['json'])
-&& ($s = trim($post['json']))
- && ($args = json_decode($s, true))
-&& isset($args['method'])) {
- return $args;
-}
+        if (isset($post['json']) && ($s = trim($post['json'])) && ($args = json_decode($s, true)) && isset($args['method'])) {
+            return $args;
+        }
 
-$args = false;
+        $args = false;
         if ($s = trim($request->getInput())) {
             $args = json_decode($s, true);
         }
 
         if ($args && isset($args['method'])) {
- return $args;
-}
+            return $args;
+        }
 
         return false;
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
-$response->cache = false;
+        $response = $context->response;
+        $response->cache = false;
 
         $this->beforerequest($context);
         $args = $this->getArgs($context->request);
@@ -83,12 +83,12 @@ $response->cache = false;
         }
 
         if (isset($params['litepubl_user'])) {
-$_COOKIE['litepubl_user'] = $params['litepubl_user'];
-}
+            $_COOKIE['litepubl_user'] = $params['litepubl_user'];
+        }
 
         if (isset($params['litepubl_user_id'])) {
-$_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
-}
+            $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
+        }
 
         $a = [&$params];
         $this->callevent('beforecall', $a);
@@ -97,9 +97,9 @@ $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
             $result = $this->callevent($args['method'], $a);
         }
         catch(\Exception $e) {
-if (Config::$debug) {
-                 $this->getApp()->logException($e);
-}
+            if (Config::$debug) {
+                $this->getApp()->logException($e);
+            }
 
             return $this->jsonError($response, $id, $e->getCode() , $e->getMessage());
         }
@@ -136,18 +136,19 @@ if (Config::$debug) {
         }
 
         if ($id) {
-$resp['id'] = $id;
-}
+            $resp['id'] = $id;
+        }
 
         return $this->json($response, $resp);
     }
 
     public function json(Response $response, $result)
- {
-$response->setJson(Str::toJson($result));
+    {
+        $response->setJson(Str::toJson($result));
     }
 
-    public function jsonError(Response $response, $id, $code, $message) {
+    public function jsonError(Response $response, $id, $code, $message)
+    {
         $result = array(
             'jsonrpc' => '2.0',
             'error' => array(
@@ -160,7 +161,8 @@ $response->setJson(Str::toJson($result));
         return $this->json($response, $result);
     }
 
-    public function addevent($name, $class, $func, $once = false) {
+    public function addevent($name, $class, $func, $once = false)
+    {
         if (!in_array($name, $this->eventnames)) {
             $this->eventnames[] = $name;
         }
@@ -168,7 +170,8 @@ $response->setJson(Str::toJson($result));
         return parent::addevent($name, $class, $func, $once);
     }
 
-    public function delete_event($name) {
+    public function delete_event($name)
+    {
         if (isset($this->events[$name])) {
             unset($this->events[$name]);
             Arr::deleteValue($this->eventnames, $name);
@@ -177,3 +180,4 @@ $response->setJson(Str::toJson($result));
     }
 
 }
+

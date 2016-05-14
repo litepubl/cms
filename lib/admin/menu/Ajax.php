@@ -1,63 +1,67 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\menu;
-use litepubl\core\Context;
-use litepubl\pages\Menus;
-use litepubl\pages\Menu;
-use litepubl\view\Schema;
-use litepubl\view\Schemes;
+
 use litepubl\admin\GetSchema;
+use litepubl\core\Context;
+use litepubl\core\TempProps;
+use litepubl\pages\Menu;
+use litepubl\pages\Menus;
 use litepubl\view\Args;
 use litepubl\view\Lang;
-use litepubl\core\TempProps;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
 
-//to prevent call parent method
-    public function install() {
-         $this->getApp()->router->addget('/admin/ajaxmenueditor.htm', get_class($this));
+    //to prevent call parent method
+    public function install()
+    {
+        $this->getApp()->router->addget('/admin/ajaxmenueditor.htm', get_class($this));
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
-$this->auth($context);
-if ($response->status == 200) {
-$temp = new TempProps($this);
-$temp->response = $response;
-        $response->body = $this->getContent();
-}
+        $response = $context->response;
+        $this->auth($context);
+        if ($response->status == 200) {
+            $temp = new TempProps($this);
+            $temp->response = $response;
+            $response->body = $this->getContent();
+        }
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $id = $this->idparam();
         $menus = Menus::i();
         if (($id != 0) && !$menus->itemExists($id)) {
- return $this->response->forbidden();
-}
+            return $this->response->forbidden();
+        }
 
         $menu = Menu::i($id);
-        if (( $this->getApp()->options->group == 'author') && ( $this->getApp()->options->user != $menu->author)) {
- return $this->response->forbidden();
-}
+        if (($this->getApp()->options->group == 'author') && ($this->getApp()->options->user != $menu->author)) {
+            return $this->response->forbidden();
+        }
 
         if (($id > 0) && !$menus->itemExists($id)) {
- return $this->response->forbidden();
-}
+            return $this->response->forbidden();
+        }
 
         $schemes = Schemes::i();
-$schema = Schema::i($schemes->defaults['admin']);
+        $schema = Schema::i($schemes->defaults['admin']);
         $theme = $schema->theme;
-$admin = $schema->admintheme;
-$lang = Lang::admin('menu');
+        $admin = $schema->admintheme;
+        $lang = Lang::admin('menu');
 
         switch ($_GET['get']) {
             case 'view':
@@ -82,3 +86,4 @@ $lang = Lang::admin('menu');
     }
 
 }
+

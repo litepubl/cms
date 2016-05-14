@@ -1,46 +1,50 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\views;
+
 use litepubl\admin\GetSchema;
 use litepubl\core\Str;
-use litepubl\view\Schema;
-use litepubl\view\Schemes as SchemaItems;
-use litepubl\view\Lang;
+use litepubl\utils\Filer;
 use litepubl\view\Args;
 use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
+use litepubl\view\Schemes as SchemaItems;
 use litepubl\view\Theme;
-use litepubl\utils\Filer;
 
 class Schemes extends \litepubl\admin\Menu
 {
 
-    public static function replacemenu($src, $dst) {
+    public static function replacemenu($src, $dst)
+    {
         $schemes = SchemaItems::i();
         foreach ($schemes->items as & $schemaitem) {
             if ($schemaitem['menuclass'] == $src) {
-$schemaitem['menuclass'] = $dst;
-}
+                $schemaitem['menuclass'] = $dst;
+            }
         }
 
         $schemes->save();
     }
 
-    private function get_custom(Schema $schema) {
+    private function get_custom(Schema $schema)
+    {
         $result = '';
         $theme = $this->theme;
         $customadmin = $schema->theme->templates['customadmin'];
 
         foreach ($schema->data['custom'] as $name => $value) {
             if (!isset($customadmin[$name])) {
- continue;
-}
+                continue;
+            }
 
             switch ($customadmin[$name]['type']) {
                 case 'text':
@@ -70,18 +74,18 @@ $schemaitem['menuclass'] = $dst;
         return $result;
     }
 
-    private function set_custom($idschema) {
+    private function set_custom($idschema)
+    {
         $schema = Schema::i($idschema);
         if (count($schema->custom) == 0) {
- return;
-}
+            return;
+        }
 
         $customadmin = $schema->theme->templates['customadmin'];
         foreach ($schema->data['custom'] as $name => $value) {
             if (!isset($customadmin[$name])) {
- continue;
-}
-
+                continue;
+            }
 
             switch ($customadmin[$name]['type']) {
                 case 'checkbox':
@@ -102,10 +106,11 @@ $schemaitem['menuclass'] = $dst;
         }
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $schemes = SchemaItems::i();
-$admin = $this->adminTheme;
+        $admin = $this->adminTheme;
         $lang = Lang::i('views');
         $args = new Args();
 
@@ -142,21 +147,18 @@ $admin = $this->adminTheme;
 
                 $result = GetSchema::form($this->url);
                 $tabs = $this->newTabs();
-                $menuitems = [
-'menu' => $lang->stdmenu,
-'admin' => $lang->adminmenu,
-];
+                $menuitems = ['menu' => $lang->stdmenu, 'admin' => $lang->adminmenu, ];
 
                 $itemview = $schemes->items[$id];
                 $args->add($itemview);
 
-                $dirlist = Filer::getDir( $this->getApp()->paths->themes);
+                $dirlist = Filer::getDir($this->getApp()->paths->themes);
                 sort($dirlist);
                 $list = array();
                 foreach ($dirlist as $dir) {
                     if (!Str::begin($dir, 'admin')) {
-$list[$dir] = $dir;
-}
+                        $list[$dir] = $dir;
+                    }
                 }
 
                 $args->themename = $this->theme->comboItems($list, $itemview['themename']);
@@ -164,8 +166,8 @@ $list[$dir] = $dir;
                 $list = array();
                 foreach ($dirlist as $dir) {
                     if (Str::begin($dir, 'admin')) {
-$list[$dir] = $dir;
-}
+                        $list[$dir] = $dir;
+                    }
                 }
 
                 $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
@@ -175,10 +177,9 @@ $list[$dir] = $dir;
                     'lite' => $lang->postlite
                 ) , $itemview['postanounce']);
 
-                $args->menu = $this->theme->comboItems($menuitems,
- strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
+                $args->menu = $this->theme->comboItems($menuitems, strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
 
-$tabs->add($lang->name, '[text=name]
+                $tabs->add($lang->name, '[text=name]
       [combo=themename]
       [combo=adminname]' . ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) . '[checkbox=hovermenu]
       [combo=menu]
@@ -200,7 +201,7 @@ $tabs->add($lang->name, '[text=name]
 
 
             case 'addview':
-case 'addschema':
+            case 'addschema':
                 $args->formtitle = $lang->addschema;
                 $result.= $admin->form('[text=name]', $args);
                 break;
@@ -220,69 +221,71 @@ case 'addschema':
                 $args->formtitle = $lang->defaultsform;
                 $result.= $theme->parseArg($theme->templates['content.admin.form'], $args);
                 break;
-            }
-
-            return $result;
         }
 
-        public function processForm() {
-            $result = '';
-            switch ($this->name) {
-                case 'views':
-                    $schemes = SchemaItems::i();
-                    $idschema = (int)$this->getparam('idschema', 0);
-                    if (!$idschema || !$schemes->itemExists($idschema)) {
-                        return '';
-                    }
+        return $result;
+    }
 
-                    if ($this->action == 'delete') {
-                        if ($idschema > 1) {
-                            $schemes->delete($idschema);
-                        }
+    public function processForm()
+    {
+        $result = '';
+        switch ($this->name) {
+            case 'views':
+                $schemes = SchemaItems::i();
+                $idschema = (int)$this->getparam('idschema', 0);
+                if (!$idschema || !$schemes->itemExists($idschema)) {
+                    return '';
+                }
 
-                        return '';
-                    }
-
-                    $schema = Schema::i($idschema);
+                if ($this->action == 'delete') {
                     if ($idschema > 1) {
-                        $schema->customsidebar = isset($_POST['customsidebar']);
-                        $schema->disableajax = isset($_POST['disableajax']);
+                        $schemes->delete($idschema);
                     }
 
-                    $schema->name = trim($_POST['name']);
-                    $schema->themename = trim($_POST['themename']);
-                    $schema->adminname = trim($_POST['adminname']);
-                    $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
-                    $schema->hovermenu = isset($_POST['hovermenu']);
-                    $schema->postanounce = $_POST['postanounce'];
-                    $schema->perpage = (int)$_POST['perpage'];
-                    $schema->invertorder = isset($_POST['invertorder']);
+                    return '';
+                }
 
-                    $this->set_custom($idschema);
-                    $schema->save();
-                    break;
+                $schema = Schema::i($idschema);
+                if ($idschema > 1) {
+                    $schema->customsidebar = isset($_POST['customsidebar']);
+                    $schema->disableajax = isset($_POST['disableajax']);
+                }
+
+                $schema->name = trim($_POST['name']);
+                $schema->themename = trim($_POST['themename']);
+                $schema->adminname = trim($_POST['adminname']);
+                $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
+                $schema->hovermenu = isset($_POST['hovermenu']);
+                $schema->postanounce = $_POST['postanounce'];
+                $schema->perpage = (int)$_POST['perpage'];
+                $schema->invertorder = isset($_POST['invertorder']);
+
+                $this->set_custom($idschema);
+                $schema->save();
+                break;
 
 
-                case 'addview':
-case 'addschema':
-                    $name = trim($_POST['name']);
-                    if ($name) {
-                        $schemes = SchemaItems::i();
-                        $id = $schemes->add($name);
-                    }
-                    break;
-
-
-                case 'defaults':
+            case 'addview':
+            case 'addschema':
+                $name = trim($_POST['name']);
+                if ($name) {
                     $schemes = SchemaItems::i();
-                    foreach ($schemes->defaults as $name => $id) {
-                        $schemes->defaults[$name] = (int)$_POST[$name];
-                    }
-                    $schemes->save();
-                    break;
-            }
+                    $id = $schemes->add($name);
+                }
+                break;
 
-            Base::clearCache();
+
+            case 'defaults':
+                $schemes = SchemaItems::i();
+                foreach ($schemes->defaults as $name => $id) {
+                    $schemes->defaults[$name] = (int)$_POST[$name];
+                }
+                $schemes->save();
+                break;
         }
+
+        Base::clearCache();
+    }
 
 }
+

@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tmailruregservice extends tregservice {
+class tmailruregservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['name'] = 'mailru';
         $this->data['title'] = 'mail.ru';
@@ -23,14 +27,16 @@ class tmailruregservice extends tregservice {
         $this->data['url'] = '/mailru-oauth2callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $url = 'https://connect.mail.ru/oauth/authorize?';
         $url.= parent::getauthurl();
         return $url;
     }
 
     //handle callback
-    public function sign(array $request_params, $secret_key) {
+    public function sign(array $request_params, $secret_key)
+    {
         ksort($request_params);
         $params = '';
         foreach ($request_params as $key => $value) {
@@ -39,18 +45,18 @@ class tmailruregservice extends tregservice {
         return md5($params . $secret_key);
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         if ($err = parent::request($arg)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $code = $_REQUEST['code'];
         $resp = http::post('https://connect.mail.ru/oauth/token', array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'redirect_uri' =>  $this->getApp()->site->url . $this->url,
+            'redirect_uri' => $this->getApp()->site->url . $this->url,
             'grant_type' => 'authorization_code'
         ));
 
@@ -83,7 +89,8 @@ class tmailruregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'http://api.mail.ru/sites/my/add',
             'client_id' => 'ID',
@@ -92,3 +99,4 @@ class tmailruregservice extends tregservice {
     }
 
 }
+

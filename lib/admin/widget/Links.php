@@ -1,25 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\widget;
 
 class Links extends Widget
 {
-use \litepubl\admin\Factory;
+    use \litepubl\admin\Factory;
 
-    protected function getForm() {
+    protected function getForm()
+    {
         $this->args->redir = $this->widget->redir;
-return parent::getFormr()
-. '[checkbox=redir]';
+        return parent::getFormr() . '[checkbox=redir]';
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = parent::getcontent();
         $widget = $this->widget;
         $args = $this->args;
@@ -74,15 +76,16 @@ return parent::getFormr()
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $widget = $this->widget;
         $widget->lock();
         if (isset($_POST['delete'])) {
             foreach ($_POST as $key => $value) {
                 $id = (int)$value;
                 if (isset($widget->items[$id])) {
-$widget->delete($id);
-}
+                    $widget->delete($id);
+                }
             }
         } elseif (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
@@ -106,3 +109,4 @@ $widget->delete($id);
     }
 
 }
+

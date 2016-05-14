@@ -1,29 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
 
-class Node {
-    public static function attr($node, $name, $value) {
+class Node
+{
+    public static function attr($node, $name, $value)
+    {
         $attr = $node->ownerDocument->createAttribute($name);
         $attr->value = $value;
         $node->appendChild($attr);
         return $attr;
     }
 
-    public static function add($node, $name) {
+    public static function add($node, $name)
+    {
         $result = $node->ownerDocument->createElement($name);
         $node->appendChild($result);
         return $result;
     }
 
-    public static function addvalue($node, $name, $value) {
+    public static function addvalue($node, $name, $value)
+    {
         $result = $node->ownerDocument->createElement($name);
         $textnode = $node->ownerDocument->createTextNode($value);
         $result->appendChild($textnode);
@@ -31,7 +36,8 @@ class Node {
         Return $result;
     }
 
-    public static function addcdata($node, $name, $value) {
+    public static function addcdata($node, $name, $value)
+    {
         $result = $node->ownerDocument->createElement($name);
         $textnode = $node->ownerDocument->createCDATASection($value);
         $result->appendChild($textnode);
@@ -39,14 +45,13 @@ class Node {
         Return $result;
     }
 
-    public static function copy($node) {
+    public static function copy($node)
+    {
         $result = $node->ownerDocument->createElement($node->nodeName);
         foreach ($node->attributes as $value) $result->setAttribute($value->nodeName, $value->value);
         if (!$node->childNodes) {
- return $result;
-}
-
-
+            return $result;
+        }
 
         foreach ($node->childNodes as $child) {
             if ($child->nodeName == "#text") {
@@ -60,3 +65,4 @@ class Node {
     }
 
 }
+

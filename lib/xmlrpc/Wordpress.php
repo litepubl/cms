@@ -1,30 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\xmlrpc;
-use litepubl\pages\Menus;
+
+use litepubl\core\Str;
 use litepubl\pages\Menu;
+use litepubl\pages\Menus;
 use litepubl\tag\Cats;
 use litepubl\tag\Tags;
-use litepubl\core\Str;
 
 class Wordpress extends MetaWeblog
- {
+{
 
-    private function menutostruct($id) {
+    private function menutostruct($id)
+    {
         if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
         if (!$menus->itemExists($id)) {
- return xerror(404, "Sorry, no such page.");
-}
-
+            return xerror(404, "Sorry, no such page.");
+        }
 
         $menu = Menu::i($id);
 
@@ -59,19 +61,21 @@ class Wordpress extends MetaWeblog
             "wp_page_order" => $menu->order,
             "wp_author_id" => $menu->author,
             "wp_author_display_name" => 'ADMIN',
-            "date_created_gmt" => new IXR_Date(time() -  $this->getApp()->options->gmt)
+            "date_created_gmt" => new IXR_Date(time() - $this->getApp()->options->gmt)
         );
 
         return $Result;
     }
 
     // return struct
-    public function wp_getPage($blogid, $id, $username, $password) {
+    public function wp_getPage($blogid, $id, $username, $password)
+    {
         $this->auth($username, $password, 'editor');
         return $this->menutostruct($id);
     }
 
-    public function wp_getPages($blogid, $username, $password) {
+    public function wp_getPages($blogid, $username, $password)
+    {
         $this->auth($username, $password, 'editor');
         $result = array();
         $menus = Menus::i();
@@ -81,7 +85,8 @@ class Wordpress extends MetaWeblog
         return $result;
     }
 
-    public function wp_getPageList($blogid, $username, $password) {
+    public function wp_getPageList($blogid, $username, $password)
+    {
         $this->auth($username, $password, 'editor');
         $result = array();
         $menus = Menus::i();
@@ -97,40 +102,42 @@ class Wordpress extends MetaWeblog
         return $result;
     }
 
-    public function wp_deletePage($blogid, $username, $password, $id) {
+    public function wp_deletePage($blogid, $username, $password, $id)
+    {
         $this->auth($username, $password, 'editor');
         if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
         $id = (int)$id;
         $menus = Menus::i();
         if (!$menus->itemExists($id)) {
- return xerror(404, "Sorry, no such page.");
-}
-
+            return xerror(404, "Sorry, no such page.");
+        }
 
         $menus->delete($id);
         return true;
     }
 
-    public function wp_newCategory($blogid, $username, $password, $struct) {
+    public function wp_newCategory($blogid, $username, $password, $struct)
+    {
         $this->auth($username, $password, 'editor');
         $categories = Cats::i();
         return (int)$categories->add($struct["name"], $category["slug"]);
     }
 
-    public function deleteCategory($blogid, $username, $password, $id) {
+    public function deleteCategory($blogid, $username, $password, $id)
+    {
         $this->auth($username, $password, 'editor');
         $id = (int)$id;
         $categories = Cats::i();
         if (!$categories->itemExists($id)) {
- return xerror(404, "Sorry, no such page.");
-}
-
+            return xerror(404, "Sorry, no such page.");
+        }
 
         $categories->delete($id);
         return true;
     }
 
-    public function getTags($blogid, $username, $password) {
+    public function getTags($blogid, $username, $password)
+    {
         $this->auth($username, $password, 'editor');
         $tags = Tags::i();
         $result = array();
@@ -141,11 +148,12 @@ class Wordpress extends MetaWeblog
                 'name' => $item['title'],
                 'count' => $item['itemscount'],
                 'slug' => '',
-                'html_url' =>  $this->getApp()->site->url . $item['url'],
-                'rss_url' =>  $this->getApp()->site->url . $item['url']
+                'html_url' => $this->getApp()->site->url . $item['url'],
+                'rss_url' => $this->getApp()->site->url . $item['url']
             );
         }
         return $result;
     }
 
 }
+

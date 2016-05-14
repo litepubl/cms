@@ -1,44 +1,45 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\comments;
-use litepubl\core\Users;
-use litepubl\view\Args;
+
+use litepubl\admin\Link;
 use litepubl\comments\Comments as CommentItems;
 use litepubl\comments\Subscribers;
-use litepubl\admin\Link;
+use litepubl\core\Users;
+use litepubl\view\Args;
 
-class Authors extends \litepubl\admin\Menu 
+class Authors extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $this->basename = 'authors';
         $users = Users::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = $this->lang;
 
         if ('delete' == $this->action) {
             $id = $this->idget();
             if (!$users->itemExists($id)) {
- return $this->notfound();
-}
-
+                return $this->notfound();
+            }
 
             if (!$this->confirmed) {
-return $this->confirmDelete($id, $lang->confirmdelete);
-}
+                return $this->confirmDelete($id, $lang->confirmdelete);
+            }
 
             if (!$this->deleteAuthor($id)) {
- return $this->notfount;
-}
-
+                return $this->notfount;
+            }
 
             $result.= $admin->success($lang->deleted);
         }
@@ -47,7 +48,7 @@ return $this->confirmDelete($id, $lang->confirmdelete);
         $perpage = 20;
         $total = $users->db->getcount("status = 'comuser'");
         $from = $this->getfrom($perpage, $total);
-$db = $users->db;
+        $db = $users->db;
         $res = $db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
         $items = $db->res2assoc($res);
 
@@ -83,21 +84,20 @@ $db = $users->db;
         ));
 
         $result.= $tb->build($items);
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 
-    private function deleteAuthor($uid) {
+    private function deleteAuthor($uid)
+    {
         $users = Users::i();
         if (!$users->itemExists($uid)) {
- return false;
-}
-
+            return false;
+        }
 
         if ('comuser' != $users->getvalue($uid, 'status')) {
- return false;
-}
-
+            return false;
+        }
 
         $comments = CommentItems::i();
         $comments->db->delete("author = $uid");
@@ -106,3 +106,4 @@ $db = $users->db;
     }
 
 }
+

@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
-class tadminlivejournalposter {
+class tadminlivejournalposter
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = tlivejournalposter::i();
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
         if ($plugin->template == '') $plugin->template = file_get_contents($dir . 'livejournalposter.tml');
@@ -41,7 +46,8 @@ class tadminlivejournalposter {
     [editor=template]', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
         $plugin = tlivejournalposter::i();
         $plugin->lock();
@@ -56,3 +62,4 @@ class tadminlivejournalposter {
     }
 
 }
+

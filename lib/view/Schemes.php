@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
+
 use litepubl\core\Arr;
 
 class Schemes extends \litepubl\core\Items
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
     public $defaults;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->basename = 'views';
@@ -24,7 +27,8 @@ use \litepubl\core\PoolStorageTrait;
         $this->addmap('defaults', array());
     }
 
-    public function add($name) {
+    public function add($name)
+    {
         $this->lock();
         $id = ++$this->autoid;
         $schema = Schema::newItem($id);
@@ -36,13 +40,14 @@ use \litepubl\core\PoolStorageTrait;
         return $id;
     }
 
-    public function addSchema(Schema $schema) {
+    public function addSchema(Schema $schema)
+    {
         $this->lock();
         $id = ++$this->autoid;
         $schema->id = $id;
         if (!$schema->name) {
-$schema->name = 'schema_' . $id;
-}
+            $schema->name = 'schema_' . $id;
+        }
 
         $schema->data['class'] = get_class($schema);
         $this->items[$id] = & $schema->data;
@@ -50,7 +55,8 @@ $schema->name = 'schema_' . $id;
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id == 1) {
             return $this->error('You cant delete default view');
         }
@@ -64,7 +70,8 @@ $schema->name = 'schema_' . $id;
         return parent::delete($id);
     }
 
-    public function get($name) {
+    public function get($name)
+    {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
                 return Schema::i($id);
@@ -74,15 +81,17 @@ $schema->name = 'schema_' . $id;
         return false;
     }
 
-    public function resetCustom() {
+    public function resetCustom()
+    {
         foreach ($this->items as $id => $item) {
-            $schema= Schema::i($id);
+            $schema = Schema::i($id);
             $schema->resetCustom();
             $this->save();
         }
     }
 
-    public function widgetdeleted($idwidget) {
+    public function widgetdeleted($idwidget)
+    {
         $deleted = false;
         foreach ($this->items as & $schemaitem) {
             unset($sidebar);
@@ -96,8 +105,9 @@ $schema->name = 'schema_' . $id;
             }
         }
         if ($deleted) {
-$this->save();
-}
+            $this->save();
+        }
     }
 
 }
+

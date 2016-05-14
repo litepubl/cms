@@ -1,22 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Lang;
 
-class tdownloaditemeditor extends tposteditor {
+class tdownloaditemeditor extends tposteditor
+{
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         $lang = Lang::admin('downloaditems');
         $lang->addsearch('downloaditems', 'downloaditem', 'editor');
 
@@ -27,7 +32,8 @@ class tdownloaditemeditor extends tposteditor {
         }
     }
 
-    public function getTabstemplate() {
+    public function getTabstemplate()
+    {
         $admintheme = $this->admintheme;
         return strtr($admintheme->templates['tabs'], array(
             '$id' => 'tabs',
@@ -42,7 +48,8 @@ class tdownloaditemeditor extends tposteditor {
         ));
     }
 
-    public function getArgstab(tpost $post, Args $args) {
+    public function getArgstab(tpost $post, Args $args)
+    {
         parent::getargstab($post, $args);
 
         $args->downloadurl = $post->downloadurl;
@@ -58,11 +65,13 @@ class tdownloaditemeditor extends tposteditor {
         $args->type = $this->theme->comboItems($types, $post->type);
     }
 
-    public function newpost() {
+    public function newpost()
+    {
         return new tdownloaditem();
     }
 
-    public function processtab(tpost $post) {
+    public function processtab(tpost $post)
+    {
         parent::processtab($post);
 
         extract($_POST, EXTR_SKIP);
@@ -74,3 +83,4 @@ class tdownloaditemeditor extends tposteditor {
     }
 
 }
+

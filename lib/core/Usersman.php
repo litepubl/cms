@@ -1,18 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class Usersman extends Data
- {
+{
 
-    public function add(array $values) {
+    public function add(array $values)
+    {
         $users = Users::i();
         $email = trim($values['email']);
         if ($users->emailexists($email)) {
@@ -35,7 +37,7 @@ class Usersman extends Data
             'email' => $email,
             'name' => isset($values['name']) ? trim($values['name']) : '',
             'website' => isset($values['website']) ? trim($values['website']) : '',
-            'password' =>  $this->getApp()->options->hash($email . $password) ,
+            'password' => $this->getApp()->options->hash($email . $password) ,
             'cookie' => Str::md5Uniq() ,
             'expired' => Str::sqlDate() ,
             'idgroups' => implode(',', $idgroups) ,
@@ -55,24 +57,23 @@ class Usersman extends Data
         return $id;
     }
 
-    public function edit($id, array $values) {
+    public function edit($id, array $values)
+    {
         $users = Users::i();
         if (!$users->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $item = $users->getitem($id);
         foreach ($item as $k => $v) {
             if (!isset($values[$k])) {
- continue;
-}
-
+                continue;
+            }
 
             switch ($k) {
                 case 'password':
                     if ($values['password'] != '') {
-                        $item['password'] =  $this->getApp()->options->hash($values['email'] . $values['password']);
+                        $item['password'] = $this->getApp()->options->hash($values['email'] . $values['password']);
                     }
                     break;
 
@@ -108,28 +109,28 @@ class Usersman extends Data
         return true;
     }
 
-    public function cleangroups($v) {
+    public function cleangroups($v)
+    {
         if (is_array($v)) {
- return $this->checkgroups(array_unique($v));
-}
-
-
+            return $this->checkgroups(array_unique($v));
+        }
 
         if (is_string($v)) {
             $v = trim($v);
             if (strpos($v, ',')) {
- return $this->checkgroups(explode(',', $v));
-}
+                return $this->checkgroups(explode(',', $v));
+            }
         }
 
         if ($id = $this->cleangroup($v)) {
- return array(
-            $id
-        );
-}
+            return array(
+                $id
+            );
+        }
     }
 
-    public function checkgroups(array $a) {
+    public function checkgroups(array $a)
+    {
         $result = array();
         foreach ($a as $val) {
             if ($id = $this->cleangroup($val)) $result[] = $id;
@@ -138,13 +139,14 @@ class Usersman extends Data
         return array_unique($result);
     }
 
-    public function cleangroup($v) {
+    public function cleangroup($v)
+    {
         if (is_string($v)) $v = trim($v);
         if (is_numeric($v)) {
             $id = (int)$v;
             if (UserGroups::i()->itemExists($id)) {
-return $id;
-}
+                return $id;
+            }
         } else {
             return UserGroups::i()->getidgroup($v);
         }
@@ -152,3 +154,4 @@ return $id;
     }
 
 }
+

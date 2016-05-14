@@ -1,20 +1,22 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class UserOptions extends Items
- {
+{
     public $defvalues;
     private $defitems;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->basename = 'usersoptions';
@@ -23,19 +25,22 @@ class UserOptions extends Items
         $this->defitems = array();
     }
 
-    public function getVal($name) {
-        return $this->getValue( $this->getApp()->options->user, $name);
+    public function getVal($name)
+    {
+        return $this->getValue($this->getApp()->options->user, $name);
     }
 
-    public function setVal($name, $value) {
-        return $this->setValue( $this->getApp()->options->user, $name, $value);
+    public function setVal($name, $value)
+    {
+        return $this->setValue($this->getApp()->options->user, $name, $value);
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         $id = (int)$id;
         if (isset($this->items[$id]) || $this->select("$this->thistable.id = $id", 'limit 1')) {
- return $this->items[$id];
-}
+            return $this->items[$id];
+        }
 
         $item = $this->defvalues;
         $item['id'] = $id;
@@ -44,17 +49,19 @@ class UserOptions extends Items
         return $item;
     }
 
-    public function getValue($id, $name) {
+    public function getValue($id, $name)
+    {
         $item = $this->getItem($id);
         return $item[$name];
     }
 
-    public function setValue($id, $name, $value) {
+    public function setValue($id, $name, $value)
+    {
         $id = (int)$id;
         $item = $this->getitem($id);
         if ($value === $item[$name]) {
- return;
-}
+            return;
+        }
 
         $this->items[$id][$name] = $value;
         $item[$name] = $value;
@@ -62,7 +69,8 @@ class UserOptions extends Items
         $this->setItem($item);
     }
 
-    public function setItem($item) {
+    public function setItem($item)
+    {
         $this->items[(int)$item['id']] = $item;
         $i = array_search($item['id'], $this->defitems);
         if ($i === false) {
@@ -74,3 +82,4 @@ class UserOptions extends Items
     }
 
 }
+

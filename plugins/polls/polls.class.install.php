@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Js;
-use litepubl\view\Css;
-use litepubl\view\LangMerger;
-use litepubl\core\Plugins;
-use litepubl\view\Parser;
-use litepubl\core\DBManager;
 
-function pollsInstall($self) {
+use litepubl\core\DBManager;
+use litepubl\core\Plugins;
+use litepubl\view\Css;
+use litepubl\view\Js;
+use litepubl\view\LangMerger;
+use litepubl\view\Parser;
+
+function pollsInstall($self)
+{
     $name = basename(dirname(__file__));
     $res = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
 
@@ -33,7 +36,7 @@ function pollsInstall($self) {
 
     Plugins::i()->add('ulogin');
     $js->add('default', '/plugins/polls/resource/polls.min.js');
-    $js->add('default', '/plugins/polls/resource/' .  $self->getApp()->options->language . '.polls.min.js');
+    $js->add('default', '/plugins/polls/resource/' . $self->getApp()->options->language . '.polls.min.js');
 
     $css->add('default', 'plugins/polls/resource/polls.min.css');
     $css->unlock();
@@ -47,7 +50,8 @@ function pollsInstall($self) {
     tposts::i()->deleted = $self->postdeleted;
 }
 
-function pollsUninstall($self) {
+function pollsUninstall($self)
+{
     tjsonserver::i()->unbind($self);
     LangMerger::i()->deleteplugin(Plugins::getname(__file__));
 
@@ -60,7 +64,7 @@ function pollsUninstall($self) {
     Plugins::i()->delete('ulogin');
 
     $js->deletefile('default', '/plugins/polls/resource/polls.min.js');
-    $js->deletefile('default', '/plugins/polls/resource/' .  $self->getApp()->options->language . '.polls.min.js');
+    $js->deletefile('default', '/plugins/polls/resource/' . $self->getApp()->options->language . '.polls.min.js');
 
     $css->deletefile('default', 'plugins/polls/resource/polls.min.css');
     $css->unlock();
@@ -76,3 +80,4 @@ function pollsUninstall($self) {
     tcron::i()->deleteclass(get_class($self));
     tposts::i()->unbind($self);
 }
+

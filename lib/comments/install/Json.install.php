@@ -1,16 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\comments;
+
 use litepubl\pages\Json as Server;
 
-function JsonInstall($self) {
+function JsonInstall($self)
+{
     $json = Server::i();
     $json->lock();
     $json->addevent('comment_delete', get_class($self) , 'comment_delete');
@@ -24,6 +27,8 @@ function JsonInstall($self) {
     $json->unlock();
 }
 
-function JsonUninstall($self) {
+function JsonUninstall($self)
+{
     Server::i()->unbind($self);
 }
+

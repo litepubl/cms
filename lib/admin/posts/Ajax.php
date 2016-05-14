@@ -1,33 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\posts;
-    use litepubl\core\Context;
-use litepubl\post\Posts as PostItems;
-use litepubl\post\Post;
-use litepubl\view\Schemes;
-use litepubl\view\Schema;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Vars;
-use litepubl\view\Admin;
-use litepubl\view\MainView;
-use litepubl\admin\GetSchema;
+
 use litepubl\admin\GetPerm;
+use litepubl\admin\GetSchema;
 use litepubl\core\Arr;
+use litepubl\core\Context;
+use litepubl\post\Post;
+use litepubl\post\Posts as PostItems;
+use litepubl\view\Admin;
+use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\MainView;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
+use litepubl\view\Vars;
 
 class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
- {
+{
     public $idpost;
     private $isauthor;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'ajaxposteditor';
         $this->data['eventnames'] = & $this->eventnames;
@@ -39,7 +42,8 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         $this->data['ajaxvisual'] = true;
     }
 
-    public function addevent($name, $class, $func, $once = false) {
+    public function addevent($name, $class, $func, $once = false)
+    {
         if (!in_array($name, $this->eventnames)) {
             $this->eventnames[] = $name;
         }
@@ -47,7 +51,8 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return parent::addevent($name, $class, $func, $once);
     }
 
-    public function delete_event($name) {
+    public function delete_event($name)
+    {
         if (isset($this->events[$name])) {
             unset($this->events[$name]);
             Arr::deleteValue($this->eventnames, $name);
@@ -55,48 +60,50 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
     }
 
-   public function auth(Context $context) {
-$response = $context->response;
-        $options =  $this->getApp()->options;
+    public function auth(Context $context)
+    {
+        $response = $context->response;
+        $options = $this->getApp()->options;
         if (!$options->user) {
-return $response->forbidden();
-}
+            return $response->forbidden();
+        }
 
         if (!$options->hasgroup('editor')) {
             if (!$options->hasgroup('author')) {
-return $response->forbidden();
-}
+                return $response->forbidden();
+            }
         }
     }
 
-    public function idparam() {
-        return !empty($_GET['id']) ? (int) $_GET['id'] : (!empty($_POST['id']) ? (int) $_POST['id'] : 0);
+    public function idparam()
+    {
+        return !empty($_GET['id']) ? (int)$_GET['id'] : (!empty($_POST['id']) ? (int)$_POST['id'] : 0);
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
+        $response = $context->response;
         $response->cache = false;
-$this->auth($context);
-if ($response->status != 200) {
-return;
-}
+        $this->auth($context);
+        if ($response->status != 200) {
+            return;
+        }
 
         $this->idpost = $this->idparam();
-        $this->isauthor =  $this->getApp()->options->ingroup('author');
+        $this->isauthor = $this->getApp()->options->ingroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemExists($this->idpost)) {
- return $response->forbidden();
-}
+                return $response->forbidden();
+            }
 
-            if (! $this->getApp()->options->hasgroup('editor')) {
-                if ( $this->getApp()->options->hasgroup('author')) {
+            if (!$this->getApp()->options->hasgroup('editor')) {
+                if ($this->getApp()->options->hasgroup('author')) {
                     $this->isauthor = true;
                     $post = Post::i($this->idpost);
-                    if ( $this->getApp()->options->user != $post->author) {
- return $response->forbidden();
-}
+                    if ($this->getApp()->options->user != $post->author) {
+                        return $response->forbidden();
+                    }
                 }
             }
         }
@@ -104,7 +111,8 @@ return;
         $response->body = $this->getcontent();
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $lang = Lang::admin('editor');
         $post = Post::i($this->idpost);
@@ -143,15 +151,14 @@ return;
 
                 $args->perms = GetPerm::combo($post->idperm);
                 $args->password = $post->password;
-$admin = Admin::admin();
+                $admin = Admin::admin();
                 $result = $admin->parseArg('
 [combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
       [password=password]
-' . $admin->help($lang->notepassword),
- $args);
+' . $admin->help($lang->notepassword) , $args);
                 break;
 
 
@@ -174,7 +181,8 @@ $admin = Admin::admin();
         return $result;
     }
 
-    public function getText($text, $admintheme = null) {
+    public function getText($text, $admintheme = null)
+    {
         if (!$admintheme) {
             $admintheme = Admin::admin();
         }
@@ -196,3 +204,4 @@ $admin = Admin::admin();
     }
 
 }
+

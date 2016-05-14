@@ -1,22 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
-use litepubl\core\Plugins;
 
-class tadminopenid {
-    public static function i() {
-        return static::iGet(__class__);
+use litepubl\core\Plugins;
+use litepubl\view\Args;
+
+class tadminopenid
+{
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $openid = topenid::i();
         $args = new Args();
         $args->confirm = $openid->confirm;
@@ -36,7 +41,8 @@ class tadminopenid {
         return $html->adminform($tml, $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
         $openid = topenid::i();
         $openid->confirm = isset($confirm);
@@ -46,3 +52,4 @@ class tadminopenid {
     }
 
 }
+

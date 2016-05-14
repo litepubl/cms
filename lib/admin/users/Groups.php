@@ -1,25 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\users;
-use litepubl\core\UserGroups;
+
 use litepubl\admin\GetPerm;
 use litepubl\admin\Link;
-use litepubl\view\Lang;
+use litepubl\core\UserGroups;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Groups extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $groups = UserGroups::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::admin('users');
         $args = new Args();
         $adminurl = $this->adminurl;
@@ -83,9 +86,10 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $groups = UserGroups::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         switch ($this->action) {
             case 'add':
                 $groups->lock();
@@ -116,3 +120,4 @@ $admin = $this->admintheme;
     }
 
 }
+

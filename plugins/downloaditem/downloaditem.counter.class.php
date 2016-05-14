@@ -1,28 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tdownloaditemcounter extends titems {
+class tdownloaditemcounter extends titems
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'downloaditems';
     }
 
-    public function updatestat() {
-        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
+    public function updatestat()
+    {
+        $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
             @unlink($filename);
             $stat = array();
@@ -30,9 +35,8 @@ class tdownloaditemcounter extends titems {
             foreach ($a as $id) {
                 $id = (int)$id;
                 if ($id == 0) {
- continue;
-}
-
+                    continue;
+                }
 
                 if (isset($stat[$id])) {
                     $stat[$id]++;
@@ -41,9 +45,8 @@ class tdownloaditemcounter extends titems {
                 }
             }
             if (count($stat) == 0) {
- return;
-}
-
+                return;
+            }
 
             $this->loaditems(array_keys($stat));
             $db = $this->db;
@@ -53,19 +56,20 @@ class tdownloaditemcounter extends titems {
         }
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         //$this->cache = false;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if (!$this->itemExists($id)) {
- return 404;
-}
-
+            return 404;
+        }
 
         $item = $this->getitem($id);
         $url = $item['downloadurl'];
-        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
+        $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
         return "<?php tfiler::append('$id\n', '$filename');
     return litepubl::\$router->redir('$url');";
     }
 
 }
+

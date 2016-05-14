@@ -1,29 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\admin\Link;
-use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class tadmintickets extends \litepubl\admin\Menu
- {
+{
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $tickets = ttickets::i();
         $perpage = 20;
-        $where =  $this->getApp()->options->group == 'ticket' ? ' and author = ' .  $this->getApp()->options->user : '';
+        $where = $this->getApp()->options->group == 'ticket' ? ' and author = ' . $this->getApp()->options->user : '';
 
         switch ($this->name) {
             case 'opened':
@@ -82,7 +86,8 @@ class tadmintickets extends \litepubl\admin\Menu
 
             array(
                 $lang->state,
-                function (Table $t) {
+                function (Table $t)
+                {
                     return Lang::i()->__get(basetheme::$vars['post']->state);
                 }
             ) ,
@@ -97,7 +102,7 @@ class tadmintickets extends \litepubl\admin\Menu
         $table = $tb->build($items);
 
         //wrap form
-        if ( $this->getApp()->options->group != 'ticket') {
+        if ($this->getApp()->options->group != 'ticket') {
             $args = new Args();
             $form = new adminform($args);
             $form->body = $table;
@@ -109,23 +114,22 @@ class tadmintickets extends \litepubl\admin\Menu
         }
 
         $theme = $this->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processForm() {
-        if ( $this->getApp()->options->group == 'ticket') {
- return '';
-}
-
+    public function processForm()
+    {
+        if ($this->getApp()->options->group == 'ticket') {
+            return '';
+        }
 
         $tickets = ttickets::i();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : (isset($_POST['setfixed']) ? 'fixed' : 'delete'));
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $id = (int)$id;
             if ($status == 'delete') {
@@ -143,3 +147,4 @@ class tadmintickets extends \litepubl\admin\Menu
     }
 
 }
+

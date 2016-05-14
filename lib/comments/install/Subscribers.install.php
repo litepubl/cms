@@ -1,17 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\comments;
+
 use litepubl\core\users;
 use litepubl\post\Posts;
 
-function SubscribersInstall($self) {
+function SubscribersInstall($self)
+{
     $dbmanager = $self->db->man;
     $dbmanager->CreateTable($self->table, file_get_contents(dirname(dirname(__DIR__)) . '/core/install/sql/ItemsPosts.sql'));
 
@@ -31,8 +34,10 @@ function SubscribersInstall($self) {
     Users::i()->deleted = $self->deleteitem;
 }
 
-function SubscribersUninstall($self) {
+function SubscribersUninstall($self)
+{
     Comments::i()->unbind($self);
     Users::i()->unbind($self);
     Posts::i()->unbind($self);
 }
+

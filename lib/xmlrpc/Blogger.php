@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\xmlrpc;
-use litepubl\post\Posts;
+
 use litepubl\post\Post;
+use litepubl\post\Posts;
 
 class Blogger extends Common
 {
@@ -19,42 +21,43 @@ class Blogger extends Common
     username (string): Login for the Blogger user who's blogs will be retrieved.
     password (string): Password for said username.
     */
-    public function getUsersBlogs($appkey, $login, $password) {
+    public function getUsersBlogs($appkey, $login, $password)
+    {
         $this->auth($login, $password, 'author');
 
         $result = array(
             //'isAdmin'  => true,
-            'url' =>  $this->getApp()->site->url . '/',
+            'url' => $this->getApp()->site->url . '/',
             'blogid' => '1',
-            'blogName' =>  $this->getApp()->site->name
+            'blogName' => $this->getApp()->site->name
         );
         return array(
             $result
         );
     }
 
-    public function getUserInfo($appkey, $login, $password) {
+    public function getUserInfo($appkey, $login, $password)
+    {
         $this->auth($login, $password, 'author');
 
         $result = array(
             'nickname' => $login,
-            'userid' =>  $this->getApp()->options->user,
-            'url' =>  $this->getApp()->site->url . '/',
+            'userid' => $this->getApp()->options->user,
+            'url' => $this->getApp()->site->url . '/',
             'lastname' => '',
             'firstname' => ''
         );
         return $result;
     }
 
-    public function getPost($appkey, $id, $login, $password) {
+    public function getPost($appkey, $id, $login, $password)
+    {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
         if (!$posts->itemExists($id)) {
- return $this->xerror(404, "Sorry, no such post.");
-}
-
-
+            return $this->xerror(404, "Sorry, no such post.");
+        }
 
         $Post = Post::i($id);
         $categories = implode(',', $Post->categories);
@@ -73,7 +76,8 @@ class Blogger extends Common
         return $result;
     }
 
-    public function getRecentPosts($appkey, $blogid, $login, $password, $count) {
+    public function getRecentPosts($appkey, $blogid, $login, $password, $count)
+    {
         $this->auth($login, $password, 'author');
 
         $posts = Posts::i();
@@ -87,7 +91,7 @@ class Blogger extends Common
             $content.= $Post->content;
 
             $result[] = array(
-                'userid' =>  $this->getApp()->options->user,
+                'userid' => $this->getApp()->options->user,
                 'dateCreated' => new IXR_Date($Post->date) ,
                 'content' => $content,
                 'postid' => $Post->id,
@@ -97,7 +101,8 @@ class Blogger extends Common
         return $result;
     }
 
-    private function getPosttitle($content) {
+    private function getPosttitle($content)
+    {
         if (preg_match('/<title>(.+?)<\/title>/is', $content, $matchtitle)) {
             $result = $matchtitle[0];
             $result = preg_replace('/<title>/si', '', $result);
@@ -108,7 +113,8 @@ class Blogger extends Common
         return $result;
     }
 
-    private function getPostcategory($content) {
+    private function getPostcategory($content)
+    {
         if (preg_match('/<category>(.+?)<\/category>/is', $content, $matchcat)) {
             $result = trim($matchcat[1], ',');
             $result = explode(',', $result);
@@ -120,7 +126,8 @@ class Blogger extends Common
         return $result;
     }
 
-    private function removepostdata($content) {
+    private function removepostdata($content)
+    {
         $content = preg_replace('/<title>(.+?)<\/title>/si', '', $content);
         $content = preg_replace('/<category>(.+?)<\/category>/si', '', $content);
         $content = trim($content);
@@ -134,7 +141,8 @@ class Blogger extends Common
     content (string): Contents of the post.
     publish (boolean): If true, the blog will be published immediately after the post is made.
     */
-    public function newPost($appkey, $blogid, $login, $password, $content, $publish) {
+    public function newPost($appkey, $blogid, $login, $password, $content, $publish)
+    {
         $this->auth($login, $password, 'author');
 
         $posts = Posts::i();
@@ -148,14 +156,14 @@ class Blogger extends Common
         return (string)$id;
     }
 
-    public function editPost($appkey, $id, $login, $password, $content, $publish) {
+    public function editPost($appkey, $id, $login, $password, $content, $publish)
+    {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
         if (!$posts->itemExists($id)) {
- return $this->xerror(404, 'Sorry, no such post.');
-}
-
+            return $this->xerror(404, 'Sorry, no such post.');
+        }
 
         $post = Post::i($id);
         $post->status = $publish ? 'published' : 'draft';
@@ -167,24 +175,27 @@ class Blogger extends Common
         return true;
     }
 
-    public function deletePost($appkey, $id, $login, $password) {
+    public function deletePost($appkey, $id, $login, $password)
+    {
         $id = (int)$id;
         $this->canedit($login, $password, $id);
         $posts = Posts::i();
         if (!$posts->itemExists($id)) {
- return $this->xerror(404, 'Sorry, no such post.');
-}
-
+            return $this->xerror(404, 'Sorry, no such post.');
+        }
 
         $posts->delete($id);
         return true;
     }
 
-    public function getTemplate($appkey, $blogid, $login, $password, $templateType) {
+    public function getTemplate($appkey, $blogid, $login, $password, $templateType)
+    {
         return '';
     }
 
-    public function setTemplate($appkey, $blogid, $login, $password, $template, $templateType) {
+    public function setTemplate($appkey, $blogid, $login, $password, $template, $templateType)
+    {
         return true;
     }
 }
+

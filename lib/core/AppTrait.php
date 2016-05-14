@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-trait AppTrait
-{
+traitAppTrait {
 
-public static function getAppInstance() {
-return litepubl::$app;
+    public static function getAppInstance()
+    {
+        return litepubl::$app;
+    }
+
+    public function getApp()
+    {
+        return static ::getAppInstance();
+    }
+
 }
 
-public function getApp() {
-return static::getAppInstance();
-}
-
-}

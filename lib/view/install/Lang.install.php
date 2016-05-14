@@ -1,35 +1,38 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
 
-function LangInstall($self) {
+function LangInstall($self)
+{
     lang::$self = $self;
     //check double install
     if (count($self->ini) > 0) {
- return;
+        return;
+    }
+
+    preloadlanguage($self, $self->getApp()->options->language);
+    $self->getApp()->options->timezone = lang::get('installation', 'timezone');
 }
 
-
-    preloadlanguage($self,  $self->getApp()->options->language);
-     $self->getApp()->options->timezone = lang::get('installation', 'timezone');
-}
-
-function LangPreinstall($language) {
+function LangPreinstall($language)
+{
     $lang = new lang();
     lang::$self = $lang;
-     lang::$self->getApp()->classes->instances[get_class($lang)] = $lang;
+    lang::$self->getApp()->classes->instances[get_class($lang) ] = $lang;
     preloadlanguage($lang, $language);
 }
 
-function preloadlanguage($lang, $language) {
-    $dir =  $lang->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
+function preloadlanguage($lang, $language)
+{
+    $dir = $lang->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
     foreach (array(
         'default',
         'admin',
@@ -41,3 +44,4 @@ function preloadlanguage($lang, $language) {
     }
     date_default_timezone_set(lang::get('installation', 'timezone'));
 }
+

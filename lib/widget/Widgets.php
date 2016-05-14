@@ -1,29 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
-    use litepubl\core\Context;
+
+use litepubl\core\Arr;
+use litepubl\core\Context;
+use litepubl\core\Str;
 use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
-use litepubl\core\Arr;
-use litepubl\core\Str;
 
 class Widgets extends \litepubl\core\Items
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
     public $classes;
     public $currentSidebar;
     public $idwidget;
     public $onFindContextCallback;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
@@ -32,7 +35,8 @@ use \litepubl\core\PoolStorageTrait;
         $this->addMap('classes', array());
     }
 
-    public function add(Widget $widget) {
+    public function add(Widget $widget)
+    {
         return $this->addItem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
@@ -41,7 +45,8 @@ use \litepubl\core\PoolStorageTrait;
         ));
     }
 
-    public function addExt(Widget $widget, $title, $template) {
+    public function addExt(Widget $widget, $title, $template)
+    {
         return $this->addItem(array(
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
@@ -50,7 +55,8 @@ use \litepubl\core\PoolStorageTrait;
         ));
     }
 
-    public function addClass(Widget $widget, $class) {
+    public function addClass(Widget $widget, $class)
+    {
         $this->lock();
         $id = $this->add($widget);
         if (!isset($this->classes[$class])) {
@@ -68,7 +74,8 @@ use \litepubl\core\PoolStorageTrait;
         return $id;
     }
 
-    public function subClass($id) {
+    public function subClass($id)
+    {
         foreach ($this->classes as $class => $items) {
             foreach ($items as $item) {
                 if ($id == $item['id']) {
@@ -80,7 +87,8 @@ use \litepubl\core\PoolStorageTrait;
         return false;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!isset($this->items[$id])) {
             return false;
         }
@@ -99,7 +107,8 @@ use \litepubl\core\PoolStorageTrait;
         return true;
     }
 
-    public function deleteClass($class) {
+    public function deleteClass($class)
+    {
         $this->unbind($class);
         $deleted = array();
         foreach ($this->items as $id => $item) {
@@ -134,7 +143,8 @@ use \litepubl\core\PoolStorageTrait;
         }
     }
 
-    public function class2id($class) {
+    public function class2id($class)
+    {
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
                 return $id;
@@ -144,7 +154,8 @@ use \litepubl\core\PoolStorageTrait;
         return false;
     }
 
-    public function getWidget($id) {
+    public function getWidget($id)
+    {
         if (!isset($this->items[$id])) {
             return $this->error("The requested $id widget not found");
         }
@@ -155,37 +166,39 @@ use \litepubl\core\PoolStorageTrait;
             return $this->error("The $class class not found");
         }
 
-        $result = static::iGet($class);
+        $result = static ::iGet($class);
         $result->id = $id;
         return $result;
     }
 
-    public function getSidebar(ViewInterface $view) {
+    public function getSidebar(ViewInterface $view)
+    {
         return $this->getSidebarIndex($view, $this->currentSidebar++);
     }
 
-    public function getSidebarIndex(ViewInterface $view, $sidebar) {
-        $items = new \ArrayObject($this->getWidgets($view, $sidebar), \ArrayObject::ARRAY_AS_PROPS);
+    public function getSidebarIndex(ViewInterface $view, $sidebar)
+    {
+        $items = new \ArrayObject($this->getWidgets($view, $sidebar) , \ArrayObject::ARRAY_AS_PROPS);
         if ($view instanceof WidgetsInterface) {
             $view->getWidgets($items, $sidebar);
         }
 
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
         if ($options->adminFlag && $options->group == 'admin') {
-            $this->onadminlogged($items,                $sidebar           );
+            $this->onadminlogged($items, $sidebar);
         }
 
-/*
+        /*
         if ( $router->adminpanel) {
             $this->onadminpanel($items, $sidebar);
         }
-*/
+        */
         $this->ongetwidgets($items, $sidebar);
 
-$schema = Schema::getSchema($view);
+        $schema = Schema::getSchema($view);
         $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
 
-$str = new Str($result);
+        $str = new Str($result);
         if ($view instanceof WidgetsInterface) {
             $view->getSidebar($str, $sidebar);
         }
@@ -194,8 +207,9 @@ $str = new Str($result);
         return $str->value;
     }
 
-    private function getWidgets(ViewInterface $view, $sidebar) {
-$schema = Schema::getSchema($view);
+    private function getWidgets(ViewInterface $view, $sidebar)
+    {
+        $schema = Schema::getSchema($view);
         $theme = $schema->theme;
         if (($schema->id > 1) && !$schema->customsidebar) {
             $schema = Schema::i(1);
@@ -214,21 +228,22 @@ $schema = Schema::getSchema($view);
                     $id = $subItem['id'];
                     foreach ($items as $item) {
                         if ($id == $item['id']) {
-Arr::delete($subItems, $index);
-}
+                            Arr::delete($subItems, $index);
+                        }
                     }
                 }
 
                 foreach ($subItems as $item) {
-$items[] = $item;
-}
+                    $items[] = $item;
+                }
             }
         }
 
         return $items;
     }
 
-    private function getSubItems(ViewInterface $view, $sidebar) {
+    private function getSubItems(ViewInterface $view, $sidebar)
+    {
         $result = array();
         foreach ($this->classes as $class => $items) {
             if ($view instanceof $class) {
@@ -241,10 +256,11 @@ $items[] = $item;
         return $result;
     }
 
-    private function joinItems(array $items, array $subitems) {
+    private function joinItems(array $items, array $subitems)
+    {
         if (count($subitems) == 0) {
- return $items;
-}
+            return $items;
+        }
 
         if (count($items)) {
             //delete copies
@@ -269,21 +285,22 @@ $items[] = $item;
         return $items;
     }
 
-    protected function getSidebarContent(\ArrayObject $items, $sidebar, $disableajax) {
+    protected function getSidebarContent(\ArrayObject $items, $sidebar, $disableajax)
+    {
         $result = '';
-//for call event  getwidget
-$str = new Str();
+        //for call event  getwidget
+        $str = new Str();
 
         foreach ($items as $item) {
             $id = $item['id'];
             if (!isset($this->items[$id])) {
- continue;
-}
+                continue;
+            }
 
             $cachetype = $this->items[$id]['cache'];
             if ($disableajax) {
-$item['ajax'] = false;
-}
+                $item['ajax'] = false;
+            }
 
             if ($item['ajax'] === 'inline') {
                 switch ($cachetype) {
@@ -325,23 +342,25 @@ $item['ajax'] = false;
                 }
             }
 
-$str->value = $content;
-            $this->onwidget($id,$str);
+            $str->value = $content;
+            $this->onwidget($id, $str);
             $result.= $str->value;
         }
 
         return $result;
     }
 
-    public function getAjax($id, $sidebar) {
+    public function getAjax($id, $sidebar)
+    {
         $view = new View();
         $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
         $content = "<!--widgetcontent-$id-->";
         return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
-    public function getInline($id, $sidebar) {
-$view = new View();
+    public function getInline($id, $sidebar)
+    {
+        $view = new View();
         $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
         if ('cache' == $this->items[$id]['cache']) {
             $cache = Cache::i();
@@ -355,26 +374,22 @@ $view = new View();
         return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
-    private function includeWidget($id, $sidebar) {
+    private function includeWidget($id, $sidebar)
+    {
         $filename = Widget::getCacheFilename($id, $sidebar);
-$cache = $this->getApp()->cache;
-        if (! $cache->exists($filename)) {
+        $cache = $this->getApp()->cache;
+        if (!$cache->exists($filename)) {
             $widget = $this->getWidget($id);
             $content = $widget->getContent($id, $sidebar);
-             $cache->setString($filename, $content);
+            $cache->setString($filename, $content);
         }
 
-$view = new View();
-        return $view->getWidgetId(
-$id,
- $this->items[$id]['title'],
- "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n",
- $this->items[$id]['template'],
- $sidebar
-);
+        $view = new View();
+        return $view->getWidgetId($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
     }
 
-    private function getCode($id, $sidebar) {
+    private function getCode($id, $sidebar)
+    {
         $class = $this->items[$id]['class'];
         return "\n<?php
     \$widget = $class::i();
@@ -383,19 +398,20 @@ $id,
     ?>\n";
     }
 
-    public function find(Widget $widget) {
+    public function find(Widget $widget)
+    {
         $class = get_class($widget);
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-    public function getWidgetContent($id, $sidebar) {
+    public function getWidgetContent($id, $sidebar)
+    {
         if (!isset($this->items[$id])) {
             return false;
         }
@@ -409,11 +425,11 @@ $id,
 
             case 'include':
                 $filename = Widget::getCacheFilename($id, $sidebar);
-                $result =  $this->getApp()->cache->getString($filename);
+                $result = $this->getApp()->cache->getString($filename);
                 if (!$result) {
                     $widget = $this->getWidget($id);
                     $result = $widget->getContent($id, $sidebar);
-                     $this->getApp()->cache->setString($filename, $result);
+                    $this->getApp()->cache->setString($filename, $result);
                 }
                 break;
 
@@ -429,36 +445,39 @@ $id,
         return $result;
     }
 
-    public function getPos($id) {
+    public function getPos($id)
+    {
         return Sidebars::getpos($this->sidebars, $id);
     }
 
-    public function &finditem($id) {
+    public function &finditem($id)
+    {
         foreach ($this->classes as $class => $items) {
             foreach ($items as $i => $item) {
                 if ($id == $item['id']) {
- return $this->classes[$class][$i];
-}
+                    return $this->classes[$class][$i];
+                }
             }
         }
         $item = null;
         return $item;
     }
 
-public function findContext($class)
-{
-$app = $this->getApp();
-        if ( $app->context->view instanceof $class) {
- return  $app->context->view;
-        } elseif ( $app->context->model instanceof $class) {
- return  $app->context->model;
-}
+    public function findContext($class)
+    {
+        $app = $this->getApp();
+        if ($app->context->view instanceof $class) {
+            return $app->context->view;
+        } elseif ($app->context->model instanceof $class) {
+            return $app->context->model;
+        }
 
-if (is_callable($this->onFindContextCallback)) {
-return call_user_func_array($this->onFindContextCallback, [$class]);
+        if (is_callable($this->onFindContextCallback)) {
+            return call_user_func_array($this->onFindContextCallback, [$class]);
+        }
+
+        return false;
     }
 
-return false;
 }
 
-}

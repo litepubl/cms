@@ -1,27 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\options;
-    use litepubl\core\Context;
-use litepubl\view\Lang;
-use litepubl\view\Args;
+
+use litepubl\admin\posts\Editor;
+use litepubl\core\Context;
+use litepubl\core\Str;
 use litepubl\pages\Home as HomePage;
 use litepubl\pages\Menus;
 use litepubl\post\MediaParser;
-use litepubl\core\Str;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 use litepubl\view\Parser;
-use litepubl\admin\posts\Editor;
 
 class Home extends \litepubl\admin\Menu
 {
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = parent::gethead();
 
         $result.= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
@@ -30,9 +33,10 @@ class Home extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $home = HomePage::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $args = new Args();
         $lang = Lang::admin('options');
         $tabs = $this->newTabs();
@@ -75,14 +79,14 @@ $admin = $this->admintheme;
     ');
 
         $tabs->add($lang->includecats, $admin->h($lang->includehome) . $admin->getcats($home->includecats));
-        $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . 
-str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));
+        $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));
 
         $args->formtitle = $lang->homeform;
         return $admin->form('<h4><a href="$site.url/admin/menu/edit/{$site.q}id=$idhome">$lang.hometext</a></h4>' . $tabs->get() , $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
         $home = HomePage::i();
         $home->lock();
@@ -93,7 +97,7 @@ str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats
         $home->midlecat = (int)$midlecat;
         $home->showposts = isset($showposts);
         $home->getSchema()->invertorder = isset($invertorder);
-$home->getSchema()->save();
+        $home->getSchema()->save();
 
         $home->includecats = $this->admintheme->check2array('category-');
         $home->excludecats = $this->admintheme->check2array('exclude_category-');
@@ -108,36 +112,32 @@ $home->getSchema()->save();
 
     public function request(Context $context)
     {
-    $response = $context->response;
-parent::request($context);
-if ($response->status != 200) {
-return;
-}
+        $response = $context->response;
+        parent::request($context);
+        if ($response->status != 200) {
+            return;
+        }
 
         $name = 'image';
         if (!isset($_FILES[$name])) {
- return;
-}
-
+            return;
+        }
 
         $result = array(
             'result' => 'error'
         );
 
-        if (is_uploaded_file($_FILES[$name]['tmp_name']) &&
- !$_FILES[$name]['error'] &&
- Str::begin($_FILES[$name]['type'], 'image/') &&
- ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
+        if (is_uploaded_file($_FILES[$name]['tmp_name']) && !$_FILES[$name]['error'] && Str::begin($_FILES[$name]['type'], 'image/') && ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
             $home = HomePage::i();
             $index = 1;
             if (preg_match('/^\/files\/home(\d*+)\.jpg$/', $home->image, $m)) {
                 $index = (int)$m[1];
-                $filename =  $this->getApp()->paths->files . "home$index.jpg";
+                $filename = $this->getApp()->paths->files . "home$index.jpg";
                 if (file_exists($filename)) {
                     @unlink($filename);
                 }
 
-                $filename =  $this->getApp()->paths->files . "home$index.small.jpg";
+                $filename = $this->getApp()->paths->files . "home$index.small.jpg";
                 if (file_exists($filename)) {
                     @unlink($filename);
                 }
@@ -148,7 +148,7 @@ return;
             $home->image = "/files/home$index.jpg";
             $home->smallimage = "/files/home$index.small.jpg";
 
-            $filename =  $this->getApp()->paths->files . "home$index.jpg";
+            $filename = $this->getApp()->paths->files . "home$index.jpg";
             if (file_exists($filename)) {
                 @unlink($filename);
             }
@@ -170,7 +170,7 @@ return;
                     }
 
                     //create small image
-                    $smallfile =  $this->getApp()->paths->files . "home$index.small.jpg";
+                    $smallfile = $this->getApp()->paths->files . "home$index.small.jpg";
                     if (file_exists($smallfile)) {
                         @unlink($smallfile);
                     }
@@ -191,6 +191,7 @@ return;
         }
 
         $js = Str::toJson($result);
-$response->setJson($js);
+        $response->setJson($js);
     }
 }
+

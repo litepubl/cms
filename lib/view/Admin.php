@@ -1,46 +1,52 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
-use litepubl\tag\Cats;
-use litepubl\post\Files;
+
 use litepubl\admin\GetPerm;
 use litepubl\admin\datefilter;
-use litepubl\core\Str;
 use litepubl\core\Arr;
+use litepubl\core\Str;
+use litepubl\post\Files;
+use litepubl\tag\Cats;
 
 class Admin extends Base
 {
     public $onfileperm;
 
-    public static function i() {
-        $result = static::iGet(get_called_class());
+    public static function i()
+    {
+        $result = static ::iGet(get_called_class());
         if (!$result->name) {
-$app = static::getAppInstance();
-if ($app->context && $app->context->view && isset($app->context->view->idschema)) {
-            $result->name = Schema::getSchema($app->context->view)->adminname;
-            $result->load();
+            $app = static ::getAppInstance();
+            if ($app->context && $app->context->view && isset($app->context->view->idschema)) {
+                $result->name = Schema::getSchema($app->context->view)->adminname;
+                $result->load();
+            }
         }
-}
 
         return $result;
     }
 
-    public static function admin() {
+    public static function admin()
+    {
         return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return AdminParser::i();
     }
 
-    public function shortcode($s, Args $args) {
+    public function shortcode($s, Args $args)
+    {
         $result = trim($s);
         //replace [tabpanel=name{content}]
         if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
@@ -127,18 +133,21 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    public function parseArg($s, Args $args) {
+    public function parseArg($s, Args $args)
+    {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
         $result = $args->callback($result);
         return $this->parse($result);
     }
 
-    public function form($tml, Args $args) {
+    public function form($tml, Args $args)
+    {
         return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
-    public function getTable($head, $body, $footer = '') {
+    public function getTable($head, $body, $footer = '')
+    {
         return strtr($this->templates['table'], array(
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
@@ -147,37 +156,44 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         ));
     }
 
-    public function success($text) {
+    public function success($text)
+    {
         return str_replace('$text', $text, $this->templates['success']);
     }
 
-    public function getCount($from, $to, $count) {
+    public function getCount($from, $to, $count)
+    {
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
-    public function getIcon($name, $screenreader = false) {
+    public function getIcon($name, $screenreader = false)
+    {
         return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
-    public function getSection($title, $content) {
+    public function getSection($title, $content)
+    {
         return strtr($this->templates['section'], array(
             '$title' => $title,
             '$content' => $content
         ));
     }
 
-    public function getErr($content) {
+    public function getErr($content)
+    {
         return strtr($this->templates['error'], array(
-            '$title' => Lang::get('default', 'error'),
+            '$title' => Lang::get('default', 'error') ,
             '$content' => $content
         ));
     }
 
-    public function help($content) {
+    public function help($content)
+    {
         return str_replace('$content', $content, $this->templates['help']);
     }
 
-    public function getCalendar($name, $date) {
+    public function getCalendar($name, $date)
+    {
         $date = datefilter::timestamp($date);
 
         $args = new Args();
@@ -196,7 +212,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['calendar'], $args);
     }
 
-    public function getDaterange($from, $to) {
+    public function getDaterange($from, $to)
+    {
         $from = datefilter::timestamp($from);
         $to = datefilter::timestamp($to);
 
@@ -208,7 +225,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['daterange'], $args);
     }
 
-    public function getCats(array $items) {
+    public function getCats(array $items)
+    {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
         Cats::i()->loadall();
@@ -216,7 +234,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    protected function getSubcats($parent, array $items, $exclude = false) {
+    protected function getSubcats($parent, array $items, $exclude = false)
+    {
         $result = '';
         $args = new Args();
         $tml = $this->templates['posteditor.categories.item'];
@@ -238,14 +257,16 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    public function processcategories() {
+    public function processcategories()
+    {
         $result = $this->check2array('category-');
         Arr::clean($result);
         Arr::deleteValue($result, 0);
         return $result;
     }
 
-    public function getFilelist(array $list) {
+    public function getFilelist(array $list)
+    {
         $args = new Args();
         $args->fileperm = '';
 
@@ -253,12 +274,12 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
             call_user_func_array($this->onfileperm, array(
                 $args
             ));
-        } else if ( $this->getApp()->options->show_file_perm) {
+        } else if ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
         $files = Files::i();
-        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
+        $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
 
         $db = $files->db;
         //total count files
@@ -277,7 +298,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
-    public function check2array($prefix) {
+    public function check2array($prefix)
+    {
         $result = array();
         foreach ($_POST as $key => $value) {
             if (Str::begin($key, $prefix)) {
@@ -289,3 +311,4 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
     }
 
 }
+

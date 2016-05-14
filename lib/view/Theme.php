@@ -1,25 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
+
+use litepubl\core\Str;
+use litepubl\pages\Users as UserPages;
 use litepubl\post\Post;
 use litepubl\post\Posts;
-use litepubl\pages\Users as UserPages;
-use litepubl\core\Str;
 
 class Theme extends Base
- {
+{
 
-    public static function context() {
+    public static function context()
+    {
         $result = static ::i();
         if (!$result->name) {
-            if (($view =  static::getAppInstance()->context->view) && isset($view->IdSchema)) {
+            if (($view = static ::getAppInstance()->context->view) && isset($view->IdSchema)) {
                 $result = Schema::getSchema($view)->theme;
             } else {
                 $result = Schema::i()->theme;
@@ -29,7 +32,8 @@ class Theme extends Base
         return $result;
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->templates = array(
             'index' => '',
@@ -42,30 +46,34 @@ class Theme extends Base
         );
     }
 
-    public function __tostring() {
+    public function __tostring()
+    {
         return $this->templates['index'];
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return Parser::i();
     }
 
-    public function getSidebarscount() {
+    public function getSidebarscount()
+    {
         return count($this->templates['sidebars']);
     }
-    private function get_author() {
-        $model = isset( $this->getApp()->router->model) ?  $this->getApp()->router->model : MainView::i()->model;
+    private function get_author()
+    {
+        $model = isset($this->getApp()->router->model) ? $this->getApp()->router->model : MainView::i()->model;
         if (!is_object($model)) {
             if (!isset(static ::$vars['post'])) {
-return new EmptyClass();
-}
+                return new EmptyClass();
+            }
 
             $model = static ::$vars['post'];
         }
 
         if ($model instanceof UserPages) {
-return $model;
-}
+            return $model;
+        }
 
         $iduser = 0;
         foreach (array(
@@ -81,22 +89,23 @@ return $model;
         }
 
         if (!$iduser) {
-return new EmptyClass();
-}
+            return new EmptyClass();
+        }
 
         $pages = UserPages::i();
         if (!$pages->itemExists($iduser)) {
-return new emptyclass();
-}
+            return new emptyclass();
+        }
 
         $pages->request($iduser);
         return $pages;
     }
 
-    public function render($model) {
-$vars = new Vars();
-$vars->context = $model;
-$vars->model = $model;
+    public function render($model)
+    {
+        $vars = new Vars();
+        $vars->context = $model;
+        $vars->model = $model;
 
         if (isset($model->index_tml) && ($tml = $model->index_tml)) {
             return $this->parse($tml);
@@ -105,15 +114,18 @@ $vars->model = $model;
         return $this->parse($this->templates['index']);
     }
 
-public function setVar($name, $obj) {
-static::$vars[$name] = $obj;
-}
+    public function setVar($name, $obj)
+    {
+        static ::$vars[$name] = $obj;
+    }
 
-    public function getNotfound() {
+    public function getNotfound()
+    {
         return $this->parse($this->templates['content.notfound']);
     }
 
-    public function getPages($url, $page, $count, $params = '') {
+    public function getPages($url, $page, $count, $params = '')
+    {
         if (!(($count > 1) && ($page >= 1) && ($page <= $count))) {
             return '';
         }
@@ -122,7 +134,7 @@ static::$vars[$name] = $obj;
         $args->count = $count;
         $from = 1;
         $to = $count;
-        $perpage =  $this->getApp()->options->perpage;
+        $perpage = $this->getApp()->options->perpage;
         $args->perpage = $perpage;
         $items = array();
         if ($count > $perpage * 2) {
@@ -157,9 +169,9 @@ static::$vars[$name] = $obj;
 
         $currenttml = $this->templates['content.navi.current'];
         $tml = $this->templates['content.navi.link'];
-        if (!Str::begin($url, 'http')) $url =  $this->getApp()->site->url . $url;
+        if (!Str::begin($url, 'http')) $url = $this->getApp()->site->url . $url;
         $pageurl = rtrim($url, '/') . '/page/';
-        if ($params) $params =  $this->getApp()->site->q . $params;
+        if ($params) $params = $this->getApp()->site->q . $params;
 
         $a = array();
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
@@ -195,12 +207,13 @@ static::$vars[$name] = $obj;
         return $this->parseArg($this->templates['content.navi'], $args);
     }
 
-
-    public function simple($content) {
+    public function simple($content)
+    {
         return str_replace('$content', $content, $this->templates['content.simple']);
     }
 
-    public function getButton($title) {
+    public function getButton($title)
+    {
         return strtr($this->templates['content.admin.button'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -208,7 +221,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getSubmit($title) {
+    public function getSubmit($title)
+    {
         return strtr($this->templates['content.admin.submit'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -216,7 +230,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getInput($type, $name, $value, $title) {
+    public function getInput($type, $name, $value, $title)
+    {
         return strtr($this->templates['content.admin.' . $type], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -224,7 +239,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getRadio($name, $value, $title, $checked) {
+    public function getRadio($name, $value, $title, $checked)
+    {
         return strtr($this->templates['content.admin.radioitem'], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -234,7 +250,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getRadioItems($name, array $items, $selected) {
+    public function getRadioItems($name, array $items, $selected)
+    {
         $result = '';
         foreach ($items as $index => $title) {
             $result.= $this->getradio($name, $index, static ::quote($title) , $index == $selected);
@@ -242,8 +259,8 @@ static::$vars[$name] = $obj;
         return $result;
     }
 
-
-    public function comboItems(array $items, $selected) {
+    public function comboItems(array $items, $selected)
+    {
         $result = '';
         foreach ($items as $i => $title) {
             $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::quote($title));
@@ -253,3 +270,4 @@ static::$vars[$name] = $obj;
     }
 
 }
+

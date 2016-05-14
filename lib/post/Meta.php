@@ -1,41 +1,45 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\core\Str;
 
 class Meta extends \litepubl\core\Item
 {
 
-    public static function getInstancename() {
+    public static function getInstancename()
+    {
         return 'postmeta';
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->table = 'postsmeta';
     }
 
-    public function getDbversion() {
+    public function getDbversion()
+    {
         return true;
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if ($name == 'id') {
- return $this->setid($value);
-}
-
+            return $this->setid($value);
+        }
 
         $exists = isset($this->data[$name]);
         if ($exists && ($this->data[$name] == $value)) {
- return true;
-}
-
+            return true;
+        }
 
         $this->data[$name] = $value;
         $name = Str::quote($name);
@@ -47,17 +51,20 @@ class Meta extends \litepubl\core\Item
         }
     }
 
-    public function __unset($name) {
+    public function __unset($name)
+    {
         $this->remove($name);
     }
 
     //db
-    public function load() {
+    public function load()
+    {
         $this->LoadFromDB();
         return true;
     }
 
-    protected function LoadFromDB() {
+    protected function LoadFromDB()
+    {
         $db = $this->db;
         $res = $db->select("id = $this->id");
         if (is_object($res)) {
@@ -68,14 +75,14 @@ class Meta extends \litepubl\core\Item
         return true;
     }
 
-    protected function SaveToDB() {
+    protected function SaveToDB()
+    {
         $db = $this->db;
         $db->delete("id = $this->id");
         foreach ($this->data as $name => $value) {
             if ($name == 'id') {
- continue;
-}
-
+                continue;
+            }
 
             $name = Str::quote($name);
             $value = Str::quote($value);
@@ -83,36 +90,35 @@ class Meta extends \litepubl\core\Item
         }
     }
 
-    public function remove($name) {
+    public function remove($name)
+    {
         if ($name == 'id') {
- return;
-}
-
+            return;
+        }
 
         unset($this->data[$name]);
         $this->db->delete("id = $this->id and name = '$name'");
     }
 
-    public static function loaditems(array $items) {
+    public static function loaditems(array $items)
+    {
         if (!count($items)) {
- return;
-}
-
+            return;
+        }
 
         //exclude already loaded items
         if (isset(static ::$instances['postmeta'])) {
             $items = array_diff($items, array_keys(static ::$instances['postmeta']));
             if (!count($items)) {
- return;
-}
-
+                return;
+            }
 
         } else {
             static ::$instances['postmeta'] = array();
         }
 
         $instances = & static ::$instances['postmeta'];
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         $db->table = 'postsmeta';
         $res = $db->select(sprintf('id in (%s)', implode(',', $items)));
         while ($row = $db->fetchassoc($res)) {
@@ -129,3 +135,4 @@ class Meta extends \litepubl\core\Item
     }
 
 }
+

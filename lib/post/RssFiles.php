@@ -1,72 +1,78 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
-    use litepubl\core\Context;
+
+use litepubl\core\Context;
 
 class RssFiles extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $domrss;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'rssmultimedia';
         $this->addevents('onroot', 'onitem');
         $this->data['feedburner'] = '';
     }
 
-    public function filesChanged() {
-$app = $this->getApp();
-$list = $app->router->getUrlsOfClass(get_class($this));
-foreach ($list as $url) {
-$app->cache->delete($app->controller->url2cacheFile($url));
-}
+    public function filesChanged()
+    {
+        $app = $this->getApp();
+        $list = $app->router->getUrlsOfClass(get_class($this));
+        foreach ($list as $url) {
+            $app->cache->delete($app->controller->url2cacheFile($url));
+        }
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
+        $response = $context->response;
 
         if (($context->itemRoute['arg'] == null) && $this->feedburner) {
-            $response->body .= "<?php
+            $response->body.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
         \\litepubl\\core\\litepubl::\$app->redirExit('$this->feedburner');
       }
       ?>";
         }
 
-$response->setXml();
+        $response->setXml();
         $this->domrss = new DomRss();
-        $this->domrss->CreateRootMultimedia( $this->getApp()->site->url .  $this->getApp()->router->url, 'media');
+        $this->domrss->CreateRootMultimedia($this->getApp()->site->url . $this->getApp()->router->url, 'media');
         $this->onroot($this->domrss);
 
-        $list = $this->getrecent($arg,  $this->getApp()->options->perpage);
+        $list = $this->getrecent($arg, $this->getApp()->options->perpage);
         foreach ($list as $id) {
             $this->addfile($id);
         }
 
-        $response->body .= $this->domrss->GetStripedXML();
+        $response->body.= $this->domrss->GetStripedXML();
     }
 
-    private function getRecent($type, $count) {
+    private function getRecent($type, $count)
+    {
         $files = Files::i();
         $sql = $type == '' ? '' : "media = '$type' and ";
         return $files->select($sql . 'parent = 0 and idperm = 0', " order by posted desc limit $count");
     }
 
-    public function addfile($id) {
+    public function addfile($id)
+    {
         $files = Files::i();
         $file = $files->getitem($id);
         $posts = $files->itemsposts->getposts($id);
 
         if (count($posts) == 0) {
-            $postlink =  $this->getApp()->site->url . '/';
+            $postlink = $this->getApp()->site->url . '/';
         } else {
             $post = Post::i($posts[0]);
             $postlink = $post->link;
@@ -120,7 +126,8 @@ $response->setXml();
         $this->onitem($item, $file);
     }
 
-    public static function hashtomd5($hash) {
+    public static function hashtomd5($hash)
+    {
         $r = '';
         $a = base64_decode($hash);
         for ($i = 0; $i < 16; $i++) {
@@ -129,12 +136,14 @@ $response->setXml();
         return $r;
     }
 
-    public function setFeedburner($url) {
+    public function setFeedburner($url)
+    {
         if (($this->feedburner != $url)) {
             $this->data['feedburner'] = $url;
             $this->save();
-             $this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         }
     }
 
 }
+

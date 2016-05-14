@@ -1,31 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
+use litepubl\core\Plugins;
 use litepubl\view\Args;
 use litepubl\view\Js;
-use litepubl\core\Plugins;
 
 class tgoogleanalitic extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['user'] = '';
         $this->data['se'] = '';
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $tml = '[text:user]
     [editor:se]';
         $html = tadminhtml::i();
@@ -39,7 +44,8 @@ class tgoogleanalitic extends \litepubl\core\Plugin
         return $html->adminform($tml, $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $this->user = $_POST['user'];
         $this->se = $_POST['se'];
         $this->save();
@@ -54,14 +60,17 @@ class tgoogleanalitic extends \litepubl\core\Plugin
         }
     }
 
-    public function install() {
-        $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR .  $this->getApp()->options->language . 'se.js');
+    public function install()
+    {
+        $this->se = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . $this->getApp()->options->language . 'se.js');
         $this->save();
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $jsmerger = Js::i();
         $jsmerger->deletetext('default', 'googleanalitic');
     }
 
 }
+

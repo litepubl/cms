@@ -1,52 +1,54 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\users;
-use litepubl\core\Users as UserItems;
-use litepubl\core\UserOptions;
-use litepubl\pages\Users as UserPages;
+
 use litepubl\admin\GetSchema;
-use litepubl\view\Lang;
+use litepubl\core\UserOptions;
+use litepubl\core\Users as UserItems;
+use litepubl\pages\Users as UserPages;
 use litepubl\view\Args;
 use litepubl\view\Filter;
+use litepubl\view\Lang;
 
 class Pages extends \litepubl\admin\Menu
 {
 
-    public function getIduser() {
-        if ( $this->getApp()->options->ingroup('admin')) {
+    public function getIduser()
+    {
+        if ($this->getApp()->options->ingroup('admin')) {
             $id = $this->idget();
         } else {
-            $id =  $this->getApp()->options->user;
+            $id = $this->getApp()->options->user;
         }
 
         $users = UserItems::i();
         if ($users->itemExists($id) && ('approved' == $users->getvalue($id, 'status'))) {
- return $id;
-}
-
+            return $id;
+        }
 
         return false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $users = UserItems::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::admin('users');
         $args = new Args();
 
         if (!($id = $this->getiduser())) {
-            if ( $this->getApp()->options->ingroup('admin')) {
- return $this->getUserList();
-}
-
+            if ($this->getApp()->options->ingroup('admin')) {
+                return $this->getUserList();
+            }
 
             return $this->notfound;
         }
@@ -54,13 +56,13 @@ $admin = $this->admintheme;
         $pages = UserPages::i();
         $item = $users->getitem($id) + $pages->getitem($id);
         if (!isset($item['url'])) {
-            $item['url'] = $item['idurl'] ?  $this->getApp()->router->getidurl($item['idurl']) : '';
+            $item['url'] = $item['idurl'] ? $this->getApp()->router->getidurl($item['idurl']) : '';
         }
         $args->add($item);
         $args->formtitle = sprintf('<a href="$site.url%s">%s</a>', $item['url'], $item['name']);
         $tabs = $this->newTabs();
         $tabs->add($lang->title, '[text=name] [text=website]');
-        if ('admin' ==  $this->getApp()->options->group) {
+        if ('admin' == $this->getApp()->options->group) {
             $tabs->add($lang->schema, GetSchema::combo($item['idschema']));
             $tabs->add('SEO', '[text=url] [text=keywords] [text=description] [editor=head]');
         }
@@ -77,19 +79,19 @@ $admin = $this->admintheme;
         return $admin->form($tabs->get() , $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
         if (!($id = $this->getiduser())) {
- return;
-}
-
+            return;
+        }
 
         $item = array(
             'rawcontent' => trim($rawcontent) ,
             'content' => Filter::i()->filter($rawcontent)
         );
 
-        if ('admin' ==  $this->getApp()->options->group) {
+        if ('admin' == $this->getApp()->options->group) {
             $item['idschema'] = (int)$idschema;
             $item['url'] = $url;
             $item['head'] = $head;
@@ -110,7 +112,8 @@ $admin = $this->admintheme;
         $useroptions->setvalue($id, 'authorpost_subscribe', isset($authorpost_subscribe) ? 'enabled' : 'disabled');
     }
 
-    public function getUserList() {
+    public function getUserList()
+    {
         $users = UserItems::i();
         $pages = UserPages::i();
         $perpage = 20;
@@ -124,7 +127,7 @@ $admin = $this->admintheme;
     where not $p.id is null
     order by $u.id desc limit $from, $perpage"));
 
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::admin('users');
         $args = new Args();
         $args->adminurl = $this->adminurl;
@@ -141,8 +144,9 @@ $admin = $this->admintheme;
 
         $result.= $tb->build($items);
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
 }
+

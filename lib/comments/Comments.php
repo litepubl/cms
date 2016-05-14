@@ -1,35 +1,39 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\comments;
+
+use litepubl\core\Str;
 use litepubl\post\Post;
-use litepubl\view\Filter;
+use litepubl\post\View as PostView;
 use litepubl\view\Args;
+use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
-use litepubl\core\Str;
-use litepubl\post\View as PostView;
 
 class Comments extends \litepubl\core\Items
- {
+{
     public $rawtable;
     private $pid;
 
-    public static function i($pid = 0) {
-        $result = static::iGet(get_called_class());
+    public static function i($pid = 0)
+    {
+        $result = static ::iGet(get_called_class());
         if ($pid) {
-$result->pid = $pid;
-}
+            $result->pid = $pid;
+        }
         return $result;
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'comments';
@@ -39,7 +43,8 @@ $result->pid = $pid;
         $this->pid = 0;
     }
 
-    public function add($idpost, $idauthor, $content, $status, $ip) {
+    public function add($idpost, $idauthor, $content, $status, $ip)
+    {
         if ($idauthor == 0) $this->error('Author id = 0');
         $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
@@ -72,11 +77,11 @@ $result->pid = $pid;
         return $id;
     }
 
-    public function edit($id, $content) {
+    public function edit($id, $content)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
@@ -97,11 +102,11 @@ $result->pid = $pid;
         return true;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $this->db->setvalue($id, 'status', 'deleted');
         $this->deleted($id);
@@ -109,15 +114,16 @@ $result->pid = $pid;
         return true;
     }
 
-    public function setStatus($id, $status) {
+    public function setStatus($id, $status)
+    {
         if (!in_array($status, array(
             'approved',
             'hold',
             'spam'
         ))) return false;
         if (!$this->itemExists($id)) {
- return false;
-}
+            return false;
+        }
 
         $old = $this->getvalue($id, 'status');
         if ($old != $status) {
@@ -130,44 +136,49 @@ $result->pid = $pid;
         return false;
     }
 
-    public function postDeleted($idpost) {
+    public function postDeleted($idpost)
+    {
         $this->db->update("status = 'deleted'", "post = $idpost");
     }
 
-    public function getComment($id) {
+    public function getComment($id)
+    {
         return new Comment($id);
     }
 
-    public function getCount($where = '') {
+    public function getCount($where = '')
+    {
         return $this->db->getcount($where);
     }
 
-    public function select($where, $limit) {
+    public function select($where, $limit)
+    {
         if ($where) {
-$where.= ' and ';
-}
+            $where.= ' and ';
+        }
 
         $table = $this->thistable;
-$db = $this->getApp()->db;
-        $authors =  $db->users;
-        $res =  $db->query(
-"select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
-    where $where $authors.id = $table.author $limit"
-);
+        $db = $this->getApp()->db;
+        $authors = $db->users;
+        $res = $db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    where $where $authors.id = $table.author $limit");
 
         return $this->res2items($res);
     }
 
-    public function getRaw() {
+    public function getRaw()
+    {
         return $this->getdb($this->rawtable);
     }
 
-    public function getApprovedCount() {
+    public function getApprovedCount()
+    {
         return $this->db->getcount("post = $this->pid and status = 'approved'");
     }
 
     //uses in import functions
-    public function insert($idauthor, $content, $ip, $posted, $status) {
+    public function insert($idauthor, $content, $ip, $posted, $status)
+    {
         $filtered = Filter::i()->filtercomment($content);
         $item = array(
             'post' => $this->pid,
@@ -194,26 +205,29 @@ $db = $this->getApp()->db;
         return $id;
     }
 
-    public function getContent(PostView $view) {
+    public function getContent(PostView $view)
+    {
         return $this->getcontentWhere($view, 'approved', '');
     }
 
-    public function getHoldContent($idauthor) {
+    public function getHoldContent($idauthor)
+    {
         return $this->getcontentWhere('hold', "and $this->thistable.author = $idauthor");
     }
 
-    public function getContentWhere(PostView $view, $status, $where) {
+    public function getContentWhere(PostView $view, $status, $where)
+    {
         $result = '';
         $theme = $view->theme;
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
         if ($status == 'approved') {
-            if ( $options->commentpages) {
-                $page =  $view->page;
-                if ( $options->comments_invert_order) {
-$page = max(0, $view->commentpages - $page) + 1;
-}
+            if ($options->commentpages) {
+                $page = $view->page;
+                if ($options->comments_invert_order) {
+                    $page = max(0, $view->commentpages - $page) + 1;
+                }
 
-                $count =  $options->commentsperpage;
+                $count = $options->commentsperpage;
                 $from = ($page - 1) * $count;
             } else {
                 $from = 0;
@@ -221,7 +235,7 @@ $page = max(0, $view->commentpages - $page) + 1;
             }
         } else {
             $from = 0;
-            $count =  $options->commentsperpage;
+            $count = $options->commentsperpage;
         }
 
         $table = $this->thistable;
@@ -230,7 +244,7 @@ $page = max(0, $view->commentpages - $page) + 1;
         $args = new Args();
         $args->from = $from;
         $comment = new Comment(0);
-$vars = new Vars();
+        $vars = new Vars();
         $vars->comment = $comment;
         $lang = Lang::i('comment');
 
@@ -250,9 +264,9 @@ $vars = new Vars();
             $result.= $theme->parseArg($tml, $args);
         }
 
-        if (!$result){
- return '';
-}
+        if (!$result) {
+            return '';
+        }
 
         if ($status == 'hold') {
             $tml = $theme->templates['content.post.templatecomments.holdcomments'];
@@ -266,3 +280,4 @@ $vars = new Vars();
     }
 
 }
+

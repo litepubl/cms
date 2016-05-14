@@ -1,28 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
 
 class Panel implements AdminInterface
 {
-use PanelTrait;
-use Params;
-use \litepubl\core\AppTrait;
+    use PanelTrait;
+    use \litepubl\core\AppTrait;
+    use Params;
 
-public function __construct() {
-$this->createInstances($this->getSchema());
+    public function __construct()
+    {
+        $this->createInstances($this->getSchema());
+    }
+
+    public function getContent()
+    {
+    }
+
+    public function processForm()
+    {
+    }
+
 }
 
-    public function getContent() {
-}
-
-    public function processForm() {
-}
-
-}

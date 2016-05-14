@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tregservices extends titems {
+class tregservices extends titems
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->basename = 'regservices' . DIRECTORY_SEPARATOR . 'index';
@@ -25,7 +29,8 @@ class tregservices extends titems {
         $this->data['widget_title'] = '';
     }
 
-    public function add(tregservice $service) {
+    public function add(tregservice $service)
+    {
         $this->lock();
         $this->items[$service->name] = get_class($service);
         $service->save();
@@ -33,11 +38,12 @@ class tregservices extends titems {
         $this->unlock();
     }
 
-    public function update_widget() {
+    public function update_widget()
+    {
         $widget = '';
-        $url =  $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'id';
+        $url = $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
         foreach ($this->items as $name => $classname) {
-            $service = static::iGet($classname);
+            $service = static ::iGet($classname);
             if ($service->valid()) {
                 $widget.= "<a href=\"$url=$name&backurl=\" class=\"$name-regservice\" title=\"$service->title\"></a>";
             }
@@ -62,7 +68,8 @@ class tregservices extends titems {
         $tc->save();
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         $this->cache = false;
         Header('Cache-Control: no-cache, must-revalidate');
         Header('Pragma: no-cache');
@@ -70,46 +77,42 @@ class tregservices extends titems {
         // hook for clien disabled cookies
         if (!isset($_GET['cookietest'])) {
             $backurl = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
-            if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600,  $this->getApp()->site->subdir . '/', false);
-            setcookie('litepubl_cookie_test', 'test', time() + 8000,  $this->getApp()->site->subdir . '/', false);
-            return  $this->getApp()->router->redir( $this->getApp()->router->url . '&cookietest=true');
+            if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, $this->getApp()->site->subdir . '/', false);
+            setcookie('litepubl_cookie_test', 'test', time() + 8000, $this->getApp()->site->subdir . '/', false);
+            return $this->getApp()->router->redir($this->getApp()->router->url . '&cookietest=true');
         }
 
         if (!isset($_COOKIE['litepubl_cookie_test'])) {
- return 403;
-}
+            return 403;
+        }
 
-
-        setcookie('litepubl_cookie_test', '', 0,  $this->getApp()->site->subdir . '/', false);
+        setcookie('litepubl_cookie_test', '', 0, $this->getApp()->site->subdir . '/', false);
 
         $id = empty($_GET['id']) ? 0 : $_GET['id'];
         if (!isset($this->items[$id])) {
- return 404;
-}
+            return 404;
+        }
 
-
-        $service = static::iGet($this->items[$id]);
+        $service = static ::iGet($this->items[$id]);
         if (!$service->valid()) {
- return 403;
-}
-
+            return 403;
+        }
 
         $url = $service->getauthurl();
         if (!$url) {
- return 403;
-}
+            return 403;
+        }
 
-
-        return  $this->getApp()->router->redir($url);
+        return $this->getApp()->router->redir($url);
     }
 
-    public function oncomuser(array $values, $comfirmed) {
+    public function oncomuser(array $values, $comfirmed)
+    {
         //ignore $comfirmed, always return redirect
         $form = tcommentform::i();
         if ($err = $form->processcomuser($values)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $email = strtolower(trim($values['email']));
         $host = substr($email, strpos($email, '@') + 1);
@@ -137,23 +140,19 @@ class tregservices extends titems {
         }
 
         if (!isset($this->items[$name])) {
- return false;
-}
+            return false;
+        }
 
-
-        $service = static::iGet($this->items[$name]);
+        $service = static ::iGet($this->items[$name]);
         if (!$service->valid) {
- return false;
-}
-
+            return false;
+        }
 
         $service->sessdata['comuser'] = $values;
         $url = $service->getauthurl();
         if (!$url) {
- return false;
-}
-
-
+            return false;
+        }
 
         return $form->sendresult($url, array(
             ini_get('session.name') => $service->session_id
@@ -161,3 +160,4 @@ class tregservices extends titems {
     }
 
 }
+

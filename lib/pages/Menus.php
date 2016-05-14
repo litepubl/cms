@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
-use litepubl\view\Theme;
-use litepubl\view\Schemes;
-use litepubl\view\Args;
+
 use litepubl\utils\LinkGenerator;
+use litepubl\view\Args;
+use litepubl\view\Schemes;
+use litepubl\view\Theme;
 
 class Menus extends \litepubl\core\Items
 {
     public $tree;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addevents('edited', 'onprocessForm', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
 
@@ -28,19 +31,21 @@ class Menus extends \litepubl\core\Items
         $this->data['home'] = false;
     }
 
-    public function getLink($id) {
-        return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>',  $this->getApp()->site->url, $this->items[$id]['url'], $this->items[$id]['title']);
+    public function getLink($id)
+    {
+        return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>', $this->getApp()->site->url, $this->items[$id]['url'], $this->items[$id]['title']);
     }
 
-    public function getDir() {
-        return  $this->getApp()->paths->data . 'menus' . DIRECTORY_SEPARATOR;
+    public function getDir()
+    {
+        return $this->getApp()->paths->data . 'menus' . DIRECTORY_SEPARATOR;
     }
 
-    public function add(Menu $item) {
+    public function add(Menu $item)
+    {
         if ($item instanceof FakeMenu) {
- return $this->addFakeMenu($item);
-}
-
+            return $this->addFakeMenu($item);
+        }
 
         //fix null fields
         foreach ($item->get_owner_props() as $prop) {
@@ -57,8 +62,8 @@ class Menus extends \litepubl\core\Items
         if ($item->idschema == 1) {
             $schemes = Schemes::i();
             if (isset($schemes->defaults['menu'])) {
-$item->data['idschema'] = $schemes->defaults['menu'];
-}
+                $item->data['idschema'] = $schemes->defaults['menu'];
+            }
         }
 
         $id = ++$this->autoid;
@@ -77,21 +82,22 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         }
 
         $item->id = $id;
-        $item->idurl =  $this->getApp()->router->Add($item->url, get_class($item) , $item->id);
+        $item->idurl = $this->getApp()->router->Add($item->url, get_class($item) , $item->id);
         if ($item->status != 'draft') $item->status = 'published';
         $this->lock();
         $this->sort();
         $item->save();
         $this->unlock();
         $this->added($id);
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $id;
     }
 
-    public function addFake($url, $title) {
+    public function addFake($url, $title)
+    {
         if ($id = $this->url2id($url)) {
- return $id;
-}
+            return $id;
+        }
 
         $fake = new FakeMenu();
         $fake->title = $title;
@@ -100,7 +106,8 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         return $this->addFakeMenu($fake);
     }
 
-    public function addFakeMenu(Menu $menu) {
+    public function addFakeMenu(Menu $menu)
+    {
         $item = array(
             'id' => ++$this->autoid,
             'idurl' => 0,
@@ -120,29 +127,31 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $this->sort();
         $this->added($this->autoid);
         $this->unlock();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $this->autoid;
     }
 
-    public function additem(array $item) {
+    public function additem(array $item)
+    {
         $item['id'] = ++$this->autoid;
         $item['order'] = $this->autoid;
         $item['status'] = 'published';
 
-        if ($idurl =  $this->getApp()->router->urlexists($item['url'])) {
+        if ($idurl = $this->getApp()->router->urlexists($item['url'])) {
             $item['idurl'] = $idurl;
         } else {
-            $item['idurl'] =  $this->getApp()->router->add($item['url'], $item['class'], $this->autoid, 'get');
+            $item['idurl'] = $this->getApp()->router->add($item['url'], $item['class'], $this->autoid, 'get');
         }
 
         $this->items[$this->autoid] = $item;
         $this->sort();
         $this->save();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $this->autoid;
     }
 
-    public function edit(Menu $item) {
+    public function edit(Menu $item)
+    {
         if (!(($item instanceof Home) || ($item instanceof FakeMenu))) {
             $linkgen = LinkGenerator::i();
             $linkgen->editurl($item, 'menu');
@@ -153,56 +162,53 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $item->save();
         $this->unlock();
         $this->edited($item->id);
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         if ($id == $this->idhome) {
- return false;
-}
-
+            return false;
+        }
 
         if ($this->haschilds($id)) {
- return false;
-}
-
+            return false;
+        }
 
         if ($this->items[$id]['idurl'] > 0) {
-             $this->getApp()->router->delete($this->items[$id]['url']);
+            $this->getApp()->router->delete($this->items[$id]['url']);
         }
         $this->lock();
         unset($this->items[$id]);
         $this->sort();
         $this->unlock();
         $this->deleted($id);
-         $this->getApp()->storage->remove($this->dir . $id);
-         $this->getApp()->cache->clear();
+        $this->getApp()->storage->remove($this->dir . $id);
+        $this->getApp()->cache->clear();
         return true;
     }
 
-    public function deleteurl($url) {
+    public function deleteurl($url)
+    {
         if ($id = $this->url2id($url)) {
- return $this->delete($id);
-}
-
+            return $this->delete($id);
+        }
 
     }
 
-    public function deletetree($id) {
+    public function deletetree($id)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         if ($id == $this->idhome) {
- return false;
-}
-
+            return false;
+        }
 
         $this->lock();
         $childs = $this->getchilds($id);
@@ -213,55 +219,59 @@ $item->data['idschema'] = $schemes->defaults['menu'];
         $this->unlock();
     }
 
-    public function url2id($url) {
+    public function url2id($url)
+    {
         foreach ($this->items as $id => $item) {
             if ($url == $item['url']) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-    public function remove($id) {
+    public function remove($id)
+    {
         if (!$this->itemExists($id) || $this->haschilds($id)) {
-return false;
-}
+            return false;
+        }
 
         $this->lock();
         unset($this->items[$id]);
         $this->sort();
         $this->unlock();
         $this->deleted($id);
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return true;
     }
 
-    public function haschilds($idparent) {
+    public function haschilds($idparent)
+    {
         foreach ($this->items as $id => $item) {
             if ($item['parent'] == $idparent) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-public function renameClass($oldclass, $newclass) {
-foreach ($this->items as $id => $item) {
-if ($oldcalss == $item['class']) {
-$this->items[$id]['class'] = $newclass;
-}
-}
-}
+    public function renameClass($oldclass, $newclass)
+    {
+        foreach ($this->items as $id => $item) {
+            if ($oldcalss == $item['class']) {
+                $this->items[$id]['class'] = $newclass;
+            }
+        }
+    }
 
-    public function sort() {
+    public function sort()
+    {
         $this->tree = $this->getsubtree(0);
     }
 
-    private function getSubtree($parent) {
+    private function getSubtree($parent)
+    {
         $result = array();
         // first step is a find all childs and sort them
         $sort = array();
@@ -279,12 +289,14 @@ $this->items[$id]['class'] = $newclass;
         return $result;
     }
 
-    public function getParent($id) {
+    public function getParent($id)
+    {
         return $this->items[$id]['parent'];
     }
 
     //return array of id
-    public function getParents($id) {
+    public function getParents($id)
+    {
         $result = array();
         $id = $this->items[$id]['parent'];
         while ($id != 0) {
@@ -296,7 +308,8 @@ $this->items[$id]['class'] = $newclass;
     }
 
     //ищет в дереве список детей, так как они уже отсортированы
-    public function getChilds($id) {
+    public function getChilds($id)
+    {
         if ($id == 0) {
             $result = array();
             foreach ($this->tree as $iditem => $items) {
@@ -327,11 +340,13 @@ $this->items[$id]['class'] = $newclass;
         return array_keys($tree);
     }
 
-    public function exclude($id) {
+    public function exclude($id)
+    {
         return !$this->home && ($id == $this->idhome);
     }
 
-    public function getMenu($hover, $current) {
+    public function getMenu($hover, $current)
+    {
         $result = '';
         $this->callevent('onbeforemenu', array(&$result, &$hover,
             $current
@@ -347,9 +362,8 @@ $this->items[$id]['class'] = $newclass;
                 $args->submenu = '';
                 foreach ($this->tree as $id => $subitems) {
                     if ($this->exclude($id)) {
- continue;
-}
-
+                        continue;
+                    }
 
                     $args->add($this->items[$id]);
                     $items.= $current == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
@@ -366,7 +380,8 @@ $this->items[$id]['class'] = $newclass;
         return $result;
     }
 
-    private function getSubmenu(&$tree, $current, $bootstrap) {
+    private function getSubmenu(&$tree, $current, $bootstrap)
+    {
         $result = '';
         $theme = Theme::i();
         $tml_item = $theme->templates['menu.item'];
@@ -377,9 +392,8 @@ $this->items[$id]['class'] = $newclass;
         $args = new Args();
         foreach ($tree as $id => $items) {
             if ($this->exclude($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $args->add($this->items[$id]);
             $submenu = '';
@@ -403,25 +417,27 @@ $this->items[$id]['class'] = $newclass;
         return $result;
     }
 
-    public function class2id($class) {
+    public function class2id($class)
+    {
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-    public function getSitemap($from, $count) {
+    public function getSitemap($from, $count)
+    {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count
         ));
     }
 
-    public function classRenamed($oldclass, $newclass) {
+    public function classRenamed($oldclass, $newclass)
+    {
         foreach ($this->items as $id => $item) {
             if ($oldclass == $item['class']) {
                 $this->items[$id]['class'] = $newclass;
@@ -432,3 +448,4 @@ $this->items[$id]['class'] = $newclass;
     }
 
 }
+

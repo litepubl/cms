@@ -1,18 +1,21 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
-use litepubl\view\Admin;
-use litepubl\view\Theme;
-use litepubl\view\Lang;
 
-class Form {
+use litepubl\view\Admin;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
+
+class Form
+{
     public $args;
     public $title;
     public $before;
@@ -30,7 +33,8 @@ class Form {
     public $class;
     public $target;
 
-    public function __construct($args = null) {
+    public function __construct($args = null)
+    {
         $this->args = $args;
         $this->title = '';
         $this->before = '';
@@ -47,15 +51,18 @@ class Form {
         $this->target = '';
     }
 
-    public function line($content) {
+    public function line($content)
+    {
         return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         return Admin::i();
     }
 
-    public function __set($k, $v) {
+    public function __set($k, $v)
+    {
         switch ($k) {
             case 'upload':
                 if ($v) {
@@ -69,15 +76,18 @@ class Form {
         }
     }
 
-    public function centergroup($buttons) {
+    public function centergroup($buttons)
+    {
         return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
     }
 
-    public function hidden($name, $value) {
+    public function hidden($name, $value)
+    {
         return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
     }
 
-    public function getDelete($table) {
+    public function getDelete($table)
+    {
         $this->body = $table;
         $this->body.= $this->hidden('delete', 'delete');
         $this->submit = 'delete';
@@ -85,11 +95,13 @@ class Form {
         return $this->get();
     }
 
-    public function __tostring() {
+    public function __tostring()
+    {
         return $this->get();
     }
 
-    public function getTml() {
+    public function getTml()
+    {
         $admin = $this->getadmintheme();
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
 
@@ -128,11 +140,13 @@ class Form {
         ));
     }
 
-    public function get() {
+    public function get()
+    {
         return $this->getadmintheme()->parseArg($this->gettml() , $this->args);
     }
 
-    public function getButtons() {
+    public function getButtons()
+    {
         $result = '';
         $theme = Theme::i();
         $lang = Lang::i();
@@ -149,3 +163,4 @@ class Form {
     }
 
 }
+

@@ -1,27 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 use litepubl\Config;
 
 class Session
- {
+{
     public static $initialized = false;
     public static $instance = false;
 
-public $memcache;
+    public $memcache;
     public $prefix;
     public $lifetime;
 
-    public function __construct($memcache, $prefix) {
-$this->memcache = $memcache;
+    public function __construct($memcache, $prefix)
+    {
+        $this->memcache = $memcache;
         $this->prefix = 'ses-' . $prefix;
         $this->lifetime = 3600;
         $truefunc = array(
@@ -40,23 +42,28 @@ $this->memcache = $memcache;
         ) , $truefunc);
     }
 
-    public function truefunc() {
+    public function truefunc()
+    {
         return true;
     }
 
-    public function read($id) {
-        return  $this->memcache->get($this->prefix . $id);
+    public function read($id)
+    {
+        return $this->memcache->get($this->prefix . $id);
     }
 
-    public function write($id, $data) {
-        return  $this->memcache->set($this->prefix . $id, $data, false, $this->lifetime);
+    public function write($id, $data)
+    {
+        return $this->memcache->set($this->prefix . $id, $data, false, $this->lifetime);
     }
 
-    public function destroy($id) {
-        return  $this->memcache->delete($this->prefix . $id);
+    public function destroy($id)
+    {
+        return $this->memcache->delete($this->prefix . $id);
     }
 
-    public static function init($usecookie = false) {
+    public static function init($usecookie = false)
+    {
         if (!static ::$initialized) {
             static ::$initialized = true;
             ini_set('session.use_cookies', $usecookie);
@@ -69,32 +76,35 @@ $this->memcache = $memcache;
                 ini_set('session.serialize_handler', 'igbinary');
             }
 
-$app = litepubl::$app;
-        if ($app->memcache) {
-            static::$instance = new static($app->memcache, $app->controller ? $app->controller->host : Config::$host);
-        } else {
-            //ini_set('session.gc_probability', 1);
-                 }
-}
+            $app = litepubl::$app;
+            if ($app->memcache) {
+                static ::$instance = new static ($app->memcache, $app->controller ? $app->controller->host : Config::$host);
+            } else {
+                //ini_set('session.gc_probability', 1);
+                
+            }
+        }
 
-return static::$instance;
+        return static ::$instance;
     }
 
-    public static function start($id) {
+    public static function start($id)
+    {
         $r = static ::init(false);
         session_id($id);
         session_start();
         return $r;
     }
 
-public static function expired($minutes = 60)
-{
-if (isset($_SESSION['timeCreate'])) {
-return time() >= $_SESSION['timeCreate'] + $minutes * 60;
-} else {
-$_SESSION['timeCreate'] = time();
-return false;
-}
-}
+    public static function expired($minutes = 60)
+    {
+        if (isset($_SESSION['timeCreate'])) {
+            return time() >= $_SESSION['timeCreate'] + $minutes * 60;
+        } else {
+            $_SESSION['timeCreate'] = time();
+            return false;
+        }
+    }
 
 }
+

@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
 
-function MainViewInstall($self) {
+function MainViewInstall($self)
+{
     $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_default" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_default"></script>
   <link rel="alternate" type="application/rss+xml" title="$site.name RSS Feed" href="$site.url/rss.xml" />
@@ -44,3 +46,4 @@ function MainViewInstall($self) {
     $lang = Lang::i('installation');
     $self->footer = "$lang->poweredby $lang->copyright";
 }
+

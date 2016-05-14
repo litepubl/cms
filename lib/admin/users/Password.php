@@ -1,25 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\users;
 
 class Password extends Perm
 {
 
-    public function getForm() {
+    public function getForm()
+    {
         $this->args->password = '';
         return '[password=password]';
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $this->perm->password = $_POST['password'];
         parent::processForm();
     }
 
 }
+

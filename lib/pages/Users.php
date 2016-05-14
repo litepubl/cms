@@ -1,19 +1,21 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
-    use litepubl\core\Context;
-use litepubl\core\Users as CoreUsers;
-use litepubl\view\Filter;
+
+use litepubl\core\Context;
 use litepubl\core\Str;
-use litepubl\view\Theme;
+use litepubl\core\Users as CoreUsers;
 use litepubl\utils\LinkGenerator;
+use litepubl\view\Filter;
+use litepubl\view\Theme;
 
 class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
@@ -31,7 +33,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
     public $id;
     protected $useritem;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->basename = 'userpage';
@@ -39,7 +42,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $this->data['createpage'] = true;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (in_array($name, static ::$userprops)) {
             return CoreUsers::i()->getvalue($this->id, $name);
         }
@@ -51,7 +55,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         return parent::__get($name);
     }
 
-    public function getMd5email() {
+    public function getMd5email()
+    {
         if ($email = CoreUsers::i()->getvalue($this->id, 'email')) {
             return md5($email);
         } else {
@@ -59,7 +64,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getGravatar() {
+    public function getGravatar()
+    {
         if ($md5 = $this->md5email) {
             return sprintf('<img class="avatar photo" src="http://www.gravatar.com/avatar/%s?s=120&amp;r=g&amp;d=wavatar" title="%2$s" alt="%2$s"/>', $md5, $this->name);
         } else {
@@ -67,27 +73,30 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getWebsitelink() {
+    public function getWebsitelink()
+    {
         if ($website = $this->website) {
             return sprintf('<a href="%1$s">%1$s</a>', $website);
         }
         return '';
     }
 
-    public function select($where, $limit) {
+    public function select($where, $limit)
+    {
         if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
         if ($where) $where.= ' and ';
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         $table = $this->thistable;
         $res = $db->query("select $table.*, $db->urlmap.url as url from $table, $db->urlmap
     where $where $db->urlmap.id  = $table.idurl $limit");
         return $this->res2items($res);
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         $item = parent::getitem($id);
         if (!isset($item['url'])) {
-            $item['url'] = $item['idurl'] == 0 ? '' :  $this->getApp()->router->getidurl($item['idurl']);
+            $item['url'] = $item['idurl'] == 0 ? '' : $this->getApp()->router->getidurl($item['idurl']);
             $this->items[$id]['url'] = $item['url'];
         }
         return $item;
@@ -95,68 +104,74 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
     public function request(Context $context)
     {
-$response = $context->response;
+        $response = $context->response;
         if ($context->itemRoute['arg'] == 'url') {
             $id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
             $users = CoreUsers::i();
             if (!$users->itemExists($id)) {
-$response->status = 404;
- return;
-}
+                $response->status = 404;
+                return;
+            }
 
             $item = $users->getitem($id);
             $website = $item['website'];
-            if (!strpos($website, '.')) $website =  $this->getApp()->site->url .  $this->getApp()->site->home;
+            if (!strpos($website, '.')) $website = $this->getApp()->site->url . $this->getApp()->site->home;
             if (!Str::begin($website, 'http')) {
-$website = 'http://' . $website;
-}
+                $website = 'http://' . $website;
+            }
 
-$response->redir($website);
-return;
+            $response->redir($website);
+            return;
         }
 
         $this->id = (int)$context->itemRoute['arg'];
         if (!$this->itemExists($id)) {
-$response->status = 404;
- return;
-}
-
+            $response->status = 404;
+            return;
+        }
 
         $item = $this->getitem($id);
         $schema = Schema::getSchema($this);
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $pages = (int)ceil( $this->getApp()->classes->posts->archivescount / $perpage);
-        if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
-            $url =  $this->getApp()->router->getvalue($item['idurl'], 'url');
-$response->redir($url);
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+        $pages = (int)ceil($this->getApp()->classes->posts->archivescount / $perpage);
+        if (($context->request->page > 1) && ($context->request->page > $pages)) {
+            $url = $this->getApp()->router->getvalue($item['idurl'], 'url');
+            $response->redir($url);
         }
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->name;
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         return $this->getvalue($this->id, 'keywords');
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->getvalue($this->id, 'description');
     }
 
-    public function getIdSchema() {
+    public function getIdSchema()
+    {
         return $this->getvalue($this->id, 'idschema');
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         $this->setvalue($this->id, 'idveiw');
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         return $this->getvalue($this->id, 'head');
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $item = $this->getitem($this->id);
         Theme::$vars['author'] = $this;
 
@@ -164,9 +179,9 @@ $response->redir($url);
         $theme = $schema->theme;
         $result = $theme->parse($theme->templates['content.author']);
 
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $posts =  $this->getApp()->classes->posts;
-        $from = ( $this->getApp()->context->request->page - 1) * $perpage;
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+        $posts = $this->getApp()->classes->posts;
+        $from = ($this->getApp()->context->request->page - 1) * $perpage;
 
         $poststable = $posts->thistable;
         $count = $posts->db->getcount("$poststable.status = 'published' and $poststable.author = $this->id");
@@ -174,16 +189,16 @@ $response->redir($url);
         $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id", "order by $poststable.posted $order limit $from, $perpage");
 
         $result.= $theme->getposts($items, $schema->postanounce);
-        $result.= $theme->getpages($item['url'],  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $theme->getpages($item['url'], $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function addpage($id) {
+    public function addpage($id)
+    {
         $item = $this->getitem($id);
         if ($item['idurl'] > 0) {
- return $item['idurl'];
-}
-
+            return $item['idurl'];
+        }
 
         $item = $this->addurl($item);
         $this->items = $item;
@@ -192,21 +207,22 @@ $response->redir($url);
         $this->db->updateassoc($item);
     }
 
-    private function addurl(array $item) {
+    private function addurl(array $item)
+    {
         if ($item['id'] == 1) {
- return $item;
-}
-
+            return $item;
+        }
 
         $item['url'] = '';
         $linkitem = CoreUsers::i()->getitem($item['id']) + $item;
         $linkgen = LinkGenerator::i();
-        $item['url'] = $linkgen->addurl(new \ArrayObject($linkitem, ArrayObject::ARRAY_AS_PROPS), 'user');
-        $item['idurl'] =  $this->getApp()->router->add($item['url'], get_class($this) , $item['id']);
+        $item['url'] = $linkgen->addurl(new \ArrayObject($linkitem, ArrayObject::ARRAY_AS_PROPS) , 'user');
+        $item['idurl'] = $this->getApp()->router->add($item['url'], get_class($this) , $item['id']);
         return $item;
     }
 
-    public function add($id) {
+    public function add($id)
+    {
         $item = array(
             'id' => $id,
             'idurl' => 0,
@@ -230,27 +246,26 @@ $response->redir($url);
         $this->db->insert($item);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id <= 1) {
- return false;
-}
-
+            return false;
+        }
 
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $idurl = $this->getvalue($id, 'idurl');
-        if ($idurl > 0)  $this->getApp()->router->deleteitem($idurl);
+        if ($idurl > 0) $this->getApp()->router->deleteitem($idurl);
         return parent::delete($id);
     }
 
-    public function edit($id, array $values) {
+    public function edit($id, array $values)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $item = $this->getitem($id);
         $url = isset($values['url']) ? $values['url'] : '';
@@ -262,10 +277,10 @@ $response->redir($url);
         $item['content'] = Filter::i()->filter($item['rawcontent']);
         if ($url && ($url != $item['url'])) {
             if ($item['idurl'] == 0) {
-                $item['idurl'] =  $this->getApp()->router->add($url, get_class($this) , $id);
+                $item['idurl'] = $this->getApp()->router->add($url, get_class($this) , $id);
             } else {
-                 $this->getApp()->router->addredir($item['url'], $url);
-                 $this->getApp()->router->setidurl($item['idurl'], $url);
+                $this->getApp()->router->addredir($item['url'], $url);
+                $this->getApp()->router->setidurl($item['idurl'], $url);
             }
             $item['url'] = $url;
         }
@@ -276,3 +291,4 @@ $response->redir($url);
     }
 
 }
+

@@ -1,86 +1,99 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\pages;
-    use litepubl\core\Context;
+
 use litepubl\admin\posts\Editor;
+use litepubl\core\Context;
+use litepubl\core\UserGroups;
 use litepubl\view\Lang;
 use litepubl\view\Schemes;
-use litepubl\core\UserGroups;
 
 class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->cache = false;
     }
 
-    public function load() {
+    public function load()
+    {
         return true;
     }
-    public function save() {
+    public function save()
+    {
         return true;
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
+        $response = $context->response;
         if ($context->checkAttack()) {
-return;
-}
-
-$app = $this->getApp();
-        if (! $app->options->user) {
-return $response->redir('/admin/login/' .  $app->site->q . 'backurl=' . urlencode( $context->request->url));
+            return;
         }
 
-        if (! $app->options->hasgroup('editor')) {
-            $url = UserGroups::i()->gethome( $app->options->group);
+        $app = $this->getApp();
+        if (!$app->options->user) {
+            return $response->redir('/admin/login/' . $app->site->q . 'backurl=' . urlencode($context->request->url));
+        }
+
+        if (!$app->options->hasgroup('editor')) {
+            $url = UserGroups::i()->gethome($app->options->group);
             if ($url == '/admin/') {
-$response->status = 403;
-return;
+                $response->status = 403;
+                return;
             }
 
-            return  $response->redir($url);
+            return $response->redir($url);
         }
 
         Lang::usefile('admin');
     }
 
-    public function getIdSchema() {
+    public function getIdSchema()
+    {
         return Schemes::i()->defaults['admin'];
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         $editor = Editor::i();
         return $editor->gethead();
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return Lang::get('common', 'board');
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         return '';
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return '';
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $editor = Editor::i();
         return $editor->getexternal();
     }
 
 }
+

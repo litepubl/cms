@@ -1,14 +1,16 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\perms;
-    use litepubl\core\Context;
+
+use litepubl\core\Context;
 use litepubl\post\Files as PostFiles;
 
 class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
@@ -16,75 +18,79 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
     public $id;
     public $item;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'files.private';
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->item[$name])) {
-return $this->item[$name];
-}
+            return $this->item[$name];
+        }
 
         return parent::__get($name);
     }
 
-    public function setPerm($id, $idperm) {
+    public function setPerm($id, $idperm)
+    {
         $files = PostFiles::i();
         $item = $files->getitem($id);
         if ($idperm != $item['idperm']) {
-        $files->setvalue($id, 'idperm', $idperm);
-        if (($idperm == 0) || ($item['idperm'] == 0)) {
-            $filename = basename($item['filename']);
-            $path =  $this->getApp()->paths->files;
-            if ($idperm) {
-                rename($path . $item['filename'], $path . 'private/' . $filename);
-                 $this->getApp()->router->add('/files/' . $item['filename'], get_class($this) , $id);
-            } else {
-                 $this->getApp()->router->delete('/files/' . $item['filename']);
-                rename($path . 'private/' . $filename, $path . $item['filename']);
+            $files->setvalue($id, 'idperm', $idperm);
+            if (($idperm == 0) || ($item['idperm'] == 0)) {
+                $filename = basename($item['filename']);
+                $path = $this->getApp()->paths->files;
+                if ($idperm) {
+                    rename($path . $item['filename'], $path . 'private/' . $filename);
+                    $this->getApp()->router->add('/files/' . $item['filename'], get_class($this) , $id);
+                } else {
+                    $this->getApp()->router->delete('/files/' . $item['filename']);
+                    rename($path . 'private/' . $filename, $path . $item['filename']);
+                }
             }
-        }
 
-        if ($item['preview'] > 0) $this->setperm($item['preview'], $idperm);
-}
+            if ($item['preview'] > 0) $this->setperm($item['preview'], $idperm);
+        }
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
-$response->cache = false;
-$id = (int) $context->itemRoute['arg'];
+        $response = $context->response;
+        $response->cache = false;
+        $id = (int)$context->itemRoute['arg'];
         $files = PostFiles::i();
         if (!$files->itemExists($id)) {
-$response->status = 404;
-return;
-}
+            $response->status = 404;
+            return;
+        }
 
         $item = $files->getitem($id);
         $filename = '/files/' . $item['filename'];
         if ((int)$item['idperm'] == 0) {
-            if ($filename ==  $this->getApp()->router->url) {
-$response->status = 500;
+            if ($filename == $this->getApp()->router->url) {
+                $response->status = 500;
             } else {
-$response->redir($filename);
-}
+                $response->redir($filename);
+            }
 
-return;
+            return;
         }
 
         $this->id = $id;
         $this->item = $item;
 
         $perm = Perm::i($item['idperm']);
-$perm->getResponse($response, $this);
+        $perm->getResponse($response, $this);
         $response->body = sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
     }
 
-    public static function sendfile(array $item) {
+    public static function sendfile(array $item)
+    {
         if (ob_get_level()) {
-ob_end_clean();
-}
+            ob_end_clean();
+        }
 
         if (isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($item['size'] . '-' . $item['hash'] == trim($_SERVER['HTTP_IF_NONE_MATCH'], '"\'')) {
@@ -110,15 +116,16 @@ ob_end_clean();
         }
     }
 
-    private static function send(array $item, $from, $end) {
+    private static function send(array $item, $from, $end)
+    {
         $filename = basename($item['filename']);
-        $realfile =  $this->getApp()->paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
+        $realfile = $this->getApp()->paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
 
         header('Cache-Control: private');
         header('Content-type: ' . $item['mime']);
         if ('application/octet-stream' == $item['mime']) {
-header('Content-Disposition: attachment; filename=' . $filename);
-}
+            header('Content-Disposition: attachment; filename=' . $filename);
+        }
 
         header('Last-Modified: ' . date('r', strtotime($item['posted'])));
         header(sprintf('ETag: "%s-%s"', $item['size'], $item['hash']));
@@ -144,3 +151,4 @@ header('Content-Disposition: attachment; filename=' . $filename);
     }
 
 }
+

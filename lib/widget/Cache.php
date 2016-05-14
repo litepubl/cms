@@ -1,32 +1,37 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
+
 use litepubl\view\Theme;
 
 class Cache extends \litepubl\core\Items
 {
     private $modified;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->modified = false;
     }
 
-    public function getBasename() {
+    public function getBasename()
+    {
         $theme = Theme::i();
         return 'widgetscache.' . $theme->name;
     }
 
-    public function load() {
-        if ($data =  $this->getApp()->cache->get($this->getbasename())) {
+    public function load()
+    {
+        if ($data = $this->getApp()->cache->get($this->getbasename())) {
             $this->data = $data;
             $this->afterload();
             return true;
@@ -35,30 +40,33 @@ class Cache extends \litepubl\core\Items
         return false;
     }
 
-    public function savemodified() {
+    public function savemodified()
+    {
         if ($this->modified) {
-        $this->modified = false;
-             $this->getApp()->cache->set($this->getbasename() , $this->data);
+            $this->modified = false;
+            $this->getApp()->cache->set($this->getbasename() , $this->data);
         }
     }
 
-    public function save() {
+    public function save()
+    {
         if (!$this->modified) {
             $this->modified = true;
-             $this->getApp()->onClose->on($this, 'saveModified');
+            $this->getApp()->onClose->on($this, 'saveModified');
         }
     }
 
-    public function getContent($id, $sidebar, $onlybody = true) {
+    public function getContent($id, $sidebar, $onlybody = true)
+    {
         if (isset($this->items[$id][$sidebar])) {
- return $this->items[$id][$sidebar];
-}
-
+            return $this->items[$id][$sidebar];
+        }
 
         return $this->setcontent($id, $sidebar, $onlybody);
     }
 
-    public function setContent($id, $sidebar, $onlybody = true) {
+    public function setContent($id, $sidebar, $onlybody = true)
+    {
         $widget = Widgets::i()->getwidget($id);
 
         if ($onlybody) {
@@ -72,16 +80,19 @@ class Cache extends \litepubl\core\Items
         return $result;
     }
 
-    public function expired($id) {
+    public function expired($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
         }
     }
 
-    public function onclearcache() {
+    public function onclearcache()
+    {
         $this->items = array();
         $this->modified = false;
     }
 
 }
+

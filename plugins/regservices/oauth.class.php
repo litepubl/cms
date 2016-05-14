@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class toauth extends tdata {
+class toauth extends tdata
+{
     public $urllist;
     public $key;
     public $secret;
@@ -19,7 +21,8 @@ class toauth extends tdata {
     public $response;
     public $response_headers;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'oauth';
         $this->key = '';
@@ -37,21 +40,25 @@ class toauth extends tdata {
     }
 
     //to override in child classes
-    public function setTokens($token, $secret) {
+    public function setTokens($token, $secret)
+    {
         $this->token = $token;
         $this->tokensecret = $secret;
         return $token && $secret;
     }
 
-    public function getKeys() {
+    public function getKeys()
+    {
         return array();
     }
 
-    public function getExtraheaders() {
+    public function getExtraheaders()
+    {
         return array();
     }
 
-    private function getSign($keys, $url, $method = 'GET') {
+    private function getSign($keys, $url, $method = 'GET')
+    {
         $parsed = parse_url($url);
         if (isset($parsed['query'])) {
             parse_str($parsed['query'], $query);
@@ -68,11 +75,13 @@ class toauth extends tdata {
         return $keys;
     }
 
-    public function get_url(array $keys, $url, $method = 'GET') {
+    public function get_url(array $keys, $url, $method = 'GET')
+    {
         return $this->normalize_url($url) . '?' . $this->getparams($this->getsign($keys, $url, $method));
     }
 
-    public function getData(array $keys, $url, $params = array() , $method = 'GET') {
+    public function getData(array $keys, $url, $params = array() , $method = 'GET')
+    {
         $url = $this->get_url($keys, $url, $params, $method);
         if ($method == 'POST') {
             list($url, $postdata) = explode('?', $url, 2);
@@ -83,7 +92,8 @@ class toauth extends tdata {
         return $this->dorequest($url, $method, $postdata);
     }
 
-    private function getSignature($keys, $url, $method) {
+    private function getSignature($keys, $url, $method)
+    {
         $sig = array(
             rawurlencode(strtoupper($method)) ,
             preg_replace('/%7E/', '~', rawurlencode($this->normalize_url($url))) ,
@@ -99,7 +109,8 @@ class toauth extends tdata {
         return base64_encode($this->hmac_sha1($raw, $key, TRUE));
     }
 
-    private function normalize_url($url) {
+    private function normalize_url($url)
+    {
         $parts = parse_url($url);
         $port = '';
         if (array_key_exists('port', $parts) && $parts['port'] != '80') {
@@ -108,7 +119,8 @@ class toauth extends tdata {
         return $parts['scheme'] . '://' . $parts['host'] . $port . $parts['path'];
     }
 
-    private function get_signable($params) {
+    private function get_signable($params)
+    {
         if (isset($params['oauth_signature'])) unset($params['oauth_signature']);
         ksort($params);
         $total = array();
@@ -118,7 +130,8 @@ class toauth extends tdata {
         return implode('&', $total);
     }
 
-    private function getParams($params) {
+    private function getParams($params)
+    {
         $result = array();
         foreach ($params as $k => $v) {
             $result[] = rawurlencode($k) . '=' . rawurlencode($v);
@@ -126,7 +139,8 @@ class toauth extends tdata {
         return implode('&', $result);
     }
 
-    public function getAuthorization($keys, $url) {
+    public function getAuthorization($keys, $url)
+    {
         $params = $this->getsign($keys, $url, 'post');
         ksort($params);
         $result = array();
@@ -136,7 +150,8 @@ class toauth extends tdata {
         return implode(', ', $result);
     }
 
-    private function hmac_sha1($data, $key, $raw = TRUE) {
+    private function hmac_sha1($data, $key, $raw = TRUE)
+    {
         if (strlen($key) > 64) {
             $key = pack('H40', sha1($key));
         }
@@ -150,9 +165,8 @@ class toauth extends tdata {
 
         $hex = sha1($_opad . pack('H40', sha1($_ipad . $data)));
         if (!$raw) {
- return $hex;
-}
-
+            return $hex;
+        }
 
         $bin = '';
         while (strlen($hex)) {
@@ -162,18 +176,19 @@ class toauth extends tdata {
         return $bin;
     }
 
-    public function get_token(array $keys) {
+    public function get_token(array $keys)
+    {
         if ($bits = $this->getbits($this->get_url($keys, $this->urllist['request']))) {
             if ($this->settokens($bits['oauth_token'], $bits['oauth_token_secret'])) {
- return $bits;
-}
-
+                return $bits;
+            }
 
         }
         return false;
     }
 
-    private function getBits($url) {
+    private function getBits($url)
+    {
         if ($crap = $this->dorequest($url)) {
             $bits = explode('&', $crap);
             $result = array();
@@ -187,18 +202,19 @@ class toauth extends tdata {
         return false;
     }
 
-    public function getAccess($keys) {
+    public function getAccess($keys)
+    {
         if ($bits = $this->getbits($this->get_url($keys, $this->urllist['access']))) {
             if ($this->settokens($bits['oauth_token'], $bits['oauth_token_secret'])) {
- return $bits;
-}
-
+                return $bits;
+            }
 
         }
         return false;
     }
 
-    private function dorequest($url, $method = 'GET', $postdata = null) {
+    private function dorequest($url, $method = 'GET', $postdata = null)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -218,34 +234,36 @@ class toauth extends tdata {
         $headers = curl_getinfo($ch);
         curl_close($ch);
         if ($headers['http_code'] != '200') {
- return false;
-}
-
+            return false;
+        }
 
         return $response;
     }
 
-    public function getRequesttoken() {
+    public function getRequesttoken()
+    {
         $keys = $this->getkeys();
         if ($tokens = $this->get_token($keys)) {
             return $tokens;
             /*
             $keys['oauth_token'] = $tokens['oauth_token'];
             if ($this->getaccess($keys)) {
- return true;
-}
-
-
+            return true;
+            }
+            
+            
             */
         }
         return false;
     }
 
-    public function get_authorize_url() {
+    public function get_authorize_url()
+    {
         return $this->urllist['authorize'] . sprintf('?oauth_token=%s&&oauth_callback=%s', rawurlencode($this->token) , rawurlencode($this->urllist['callback']));
     }
 
-    public function getAccesstoken($oauth_verifier) {
+    public function getAccesstoken($oauth_verifier)
+    {
         $keys = $this->getkeys();
         $keys['oauth_token'] = $this->token;
         $keys['oauth_verifier'] = $oauth_verifier;
@@ -255,7 +273,8 @@ class toauth extends tdata {
         return false;
     }
 
-    public function postdata($url, array $post) {
+    public function postdata($url, array $post)
+    {
         $a = array();
         foreach ($post as $k => $v) {
             $a[] = sprintf('%s=%s', rawurlencode($k) , rawurlencode($v));
@@ -289,17 +308,18 @@ class toauth extends tdata {
         $this->response_headers = curl_getinfo($ch);
         curl_close($ch);
         if ($this->response_headers['http_code'] != '200') {
- return false;
-}
-
+            return false;
+        }
 
         return $this->response;
     }
 
-    public function get_data($url) {
+    public function get_data($url)
+    {
         $keys = $this->getkeys();
         $keys['oauth_token'] = $this->token;
         return http::get($this->get_url($keys, $url));
     }
 
 }
+

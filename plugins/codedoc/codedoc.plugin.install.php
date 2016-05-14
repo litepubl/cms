@@ -1,26 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\LangMerger;
-use litepubl\core\Plugins;
-use litepubl\core\DBManager;
-use litepubl\view\Filter;
-use litepubl\utils\LinkGenerator;
 
-function tcodedocpluginInstall($self) {
+use litepubl\core\DBManager;
+use litepubl\core\Plugins;
+use litepubl\utils\LinkGenerator;
+use litepubl\view\Filter;
+use litepubl\view\LangMerger;
+
+function tcodedocpluginInstall($self)
+{
     if (!dbversion) die("Ticket  system only for database version");
     $name = basename(dirname(__file__));
-    $language =  $self->getApp()->options->language;
+    $language = $self->getApp()->options->language;
     $about = Plugins::getabout($name);
-     $self->getApp()->classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
-     $self->getApp()->classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
+    $self->getApp()->classes->Add('tcodedocfilter', 'codedoc.filter.class.php', $name);
+    $self->getApp()->classes->Add('tcodedocmenu', 'codedoc.menu.class.php', basename(dirname(__file__)));
     $menu = tcodedocmenu::i();
     $menu->url = '/doc/';
     $menu->title = $about['menutitle'];
@@ -65,15 +68,16 @@ function tcodedocpluginInstall($self) {
     tposts::i()->deleted = $self->postdeleted;
 }
 
-function tcodedocpluginUninstall($self) {
+function tcodedocpluginUninstall($self)
+{
     //die("Warning! You can lost all tickets!");
     tposts::unsub($self);
 
     $menus = tmenus::i();
     $menus->deleteurl('/doc/');
 
-     $self->getApp()->classes->delete('tcodedocmenu');
-     $self->getApp()->classes->delete('tcodedocfilter');
+    $self->getApp()->classes->delete('tcodedocmenu');
+    $self->getApp()->classes->delete('tcodedocfilter');
 
     $filter = Filter::i();
     $filter->unbind($self);
@@ -84,3 +88,4 @@ function tcodedocpluginUninstall($self) {
     $manager = DBManager::i();
     $manager->deletetable('codedoc');
 }
+

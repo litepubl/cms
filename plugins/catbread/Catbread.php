@@ -1,24 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\catbread;
+
 use litepubl\core\Arr;
-use litepubl\tag\Cats;
 use litepubl\post\Post;
-use litepubl\view\Theme;
-use litepubl\view\Lang;
+use litepubl\tag\Cats;
 use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class Catbread extends \litepubl\core\Plugin
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['showhome'] = true;
         $this->data['showchilds'] = true;
@@ -28,11 +31,13 @@ class Catbread extends \litepubl\core\Plugin
         $this->data['similarpos'] = 'after';
     }
 
-    public function getCats() {
+    public function getCats()
+    {
         return Cats::i();
     }
 
-    public function beforecat(&$result) {
+    public function beforecat(&$result)
+    {
         $cats = $this->cats;
         $idcat = $cats->id;
         if (!$idcat) {
@@ -56,7 +61,8 @@ class Catbread extends \litepubl\core\Plugin
         return $result;
     }
 
-    public function getPost() {
+    public function getPost()
+    {
         $result = '';
         $post = Theme::$vars['post'];
         if (count($post->categories)) {
@@ -72,7 +78,8 @@ class Catbread extends \litepubl\core\Plugin
         return $result;
     }
 
-    public function getSim() {
+    public function getSim()
+    {
         if ($this->showsimilar) {
             $post = Theme::$vars['post'];
             if (count($post->categories)) {
@@ -83,7 +90,8 @@ class Catbread extends \litepubl\core\Plugin
         return '';
     }
 
-    public function getBread($idcat) {
+    public function getBread($idcat)
+    {
         if (!$idcat) {
             return '';
         }
@@ -140,7 +148,8 @@ class Catbread extends \litepubl\core\Plugin
         return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
-    public function getChilds($parent) {
+    public function getChilds($parent)
+    {
         $cats = $this->cats;
         $sorted = $cats->getsorted($parent, $this->childsortname, 0);
         if (!count($sorted)) {
@@ -162,7 +171,8 @@ class Catbread extends \litepubl\core\Plugin
         return $theme->parseArg($theme->templates['catbread.items.childs'], $args);
     }
 
-    public function getSimilar($list) {
+    public function getSimilar($list)
+    {
         if (!$this->showsimilar || !count($list)) {
             return '';
         }
@@ -190,10 +200,8 @@ class Catbread extends \litepubl\core\Plugin
         $similar = $cats->db->idselect("parent in ($parents) and id not in ($list) order by $this->childsortname asc");
         Arr::clean($similar);
         if (!count($similar)) {
- return '';
-}
-
-
+            return '';
+        }
 
         $theme = Theme::i();
         $args = new Args();
@@ -208,8 +216,10 @@ class Catbread extends \litepubl\core\Plugin
         return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
-    public function themeParsed(Theme $theme) {
+    public function themeParsed(Theme $theme)
+    {
         $this->externalfunc(get_class($this) , 'Themeparsed', $theme);
     }
 
 }
+

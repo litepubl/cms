@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\options;
-use litepubl\pages\Redirector as Redir;
-use litepubl\view\Lang;
-use litepubl\view\Args;
+
 use litepubl\admin\Link;
 use litepubl\core\Str;
+use litepubl\pages\Redirector as Redir;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Redir extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $redir = Redir::i();
         $lang = $this->lang;
         $args = new Args();
@@ -76,10 +79,11 @@ class Redir extends \litepubl\admin\Menu
     <p><input type="submit" name="delete" value="$lang.delete" /></p>
     </form>', $args);
 
-return $result;
+        return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $redir = Redir::i();
         switch ($_POST['action']) {
             case 'edit':
@@ -101,3 +105,4 @@ return $result;
     }
 
 }
+

@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
-use litepubl\view\Lang;
-use litepubl\pages\RobotsTxt;
 
-function LinksInstall($self) {
+use litepubl\pages\RobotsTxt;
+use litepubl\view\Lang;
+
+function LinksInstall($self)
+{
     if (get_class($self) != __NAMESPACE__ . '\Links') {
- return;
-}
+        return;
+    }
 
     Lang::usefile('admin');
     $lang = Lang::i('installation');
@@ -27,10 +30,12 @@ function LinksInstall($self) {
     $robots->save();
 }
 
-function LinksUninstall($self) {
+function LinksUninstall($self)
+{
     if (get_class($self) != __NAMESPACE__ . '\Links') {
- return;
+        return;
+    }
+
+    $self->getApp()->router->unbind($self);
 }
 
-     $self->getApp()->router->unbind($self);
-}

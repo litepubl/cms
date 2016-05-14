@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\photoswipe;
-use litepubl\view\Js;
+
 use litepubl\view\Css;
+use litepubl\view\Js;
 
 class PhotoSwipe extends \litepubl\core\Plugin
- {
+{
 
-    public function install() {
+    public function install()
+    {
         $plugindir = basename(dirname(__file__));
-        $lang =  $this->getApp()->options->language;
+        $lang = $this->getApp()->options->language;
 
         $js = Js::i();
         $js->lock();
@@ -38,9 +41,10 @@ class PhotoSwipe extends \litepubl\core\Plugin
         $css->unlock();
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $plugindir = basename(dirname(__file__));
-        $lang =  $this->getApp()->options->language;
+        $lang = $this->getApp()->options->language;
 
         $js = Js::i();
         $js->lock();
@@ -59,3 +63,4 @@ class PhotoSwipe extends \litepubl\core\Plugin
     }
 
 }
+

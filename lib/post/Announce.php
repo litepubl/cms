@@ -1,28 +1,31 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
-use litepubl\view\Theme;
+
 use litepubl\view\Args;
-use litepubl\view\Vars;
 use litepubl\view\Lang;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
 
 class Announce
 {
-public $theme;
+    public $theme;
 
-public function __construct(Theme $theme = null)
-{
-$this->theme = $theme ? $theme : Theme::context();
-}
+    public function __construct(Theme $theme = null)
+    {
+        $this->theme = $theme ? $theme : Theme::context();
+    }
 
-    private function getKey($postanounce) {
+    private function getKey($postanounce)
+    {
         if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
             return 'excerpt';
         }
@@ -34,7 +37,8 @@ $this->theme = $theme ? $theme : Theme::context();
         return 'card';
     }
 
-    public function getPosts(array $items, $postanounce) {
+    public function getPosts(array $items, $postanounce)
+    {
         if (!count($items)) {
             return '';
         }
@@ -42,14 +46,14 @@ $this->theme = $theme ? $theme : Theme::context();
         $result = '';
         $keyTemplate = $this->getKey($postanounce);
         Posts::i()->loaditems($items);
-$this->theme->setVar('lang', Lang::i('default'));
-$vars = new Vars();
-$view = new View();
-$vars->post = $view;
+        $this->theme->setVar('lang', Lang::i('default'));
+        $vars = new Vars();
+        $view = new View();
+        $vars->post = $view;
 
         foreach ($items as $id) {
             $post = Post::i($id);
-$view->setPost($post);
+            $view->setPost($post);
             $result.= $view->getContExcerpt($keyTemplate);
             // has $author.* tags in tml
             if (isset($vars->author)) {
@@ -64,29 +68,29 @@ $view->setPost($post);
         return $result;
     }
 
-    public function getPostsNavi(array $items, $url, $count, $postanounce, $perpage) {
+    public function getPostsNavi(array $items, $url, $count, $postanounce, $perpage)
+    {
         $result = $this->getPosts($items, $postanounce);
 
-$app = $this->theme->getApp();
+        $app = $this->theme->getApp();
         if (!$perpage) {
-$perpage =  $app->options->perpage;
-}
+            $perpage = $app->options->perpage;
+        }
 
-        $result.= $this->theme->getPages($url,  $app->context->request->page, ceil($count / $perpage));
+        $result.= $this->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function getLinks($where, $tml) {
+    public function getLinks($where, $tml)
+    {
         $theme = $this->theme;
         $db = $theme->getApp()->db;
-        $items = $db->res2assoc($db->query(
-"select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
-    where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"
-));
+        $items = $db->res2assoc($db->query("select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
+    where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"));
 
         if (!count($items)) {
- return '';
-}
+            return '';
+        }
 
         $result = '';
         $args = new Args();
@@ -97,17 +101,18 @@ $perpage =  $app->options->perpage;
         return $result;
     }
 
-    public function getAnHead(array $items) {
+    public function getAnHead(array $items)
+    {
         if (!count($items)) {
- return '';
-}
+            return '';
+        }
 
-Posts::i()->loadItems($items);
+        Posts::i()->loadItems($items);
 
         $result = '';
-$view = new View();
+        $view = new View();
         foreach ($items as $id) {
-$view->setPost(Post::i($id));
+            $view->setPost(Post::i($id));
             $result.= $view->anhead;
         }
 
@@ -115,3 +120,4 @@ $view->setPost(Post::i($id));
     }
 
 }
+

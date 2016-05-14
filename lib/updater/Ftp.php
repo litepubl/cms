@@ -1,11 +1,12 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\updater;
 
@@ -14,18 +15,21 @@ class Ftp extends Remote
     public $ssl;
     private $tempfilehandle;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->timeout = 240;
         $this->ssl = false;
         $this->tempfilehandle = false;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->close();
     }
 
-    public function close() {
+    public function close()
+    {
         if ($this->handle) {
             @ftp_close($this->handle);
             $this->handle = false;
@@ -37,11 +41,11 @@ class Ftp extends Remote
         }
     }
 
-    public function connect($host, $login, $password) {
+    public function connect($host, $login, $password)
+    {
         if (!parent::connect($host, $login, $password)) {
- return false;
-}
-
+            return false;
+        }
 
         if (empty($this->port)) $this->port = 21;
 
@@ -58,17 +62,19 @@ class Ftp extends Remote
         return false;
     }
 
-    private function getTempfilehandle() {
+    private function getTempfilehandle()
+    {
         if (!$this->tempfilehandle) {
             //$this->tempfilehandle = tmpfile();
-$max = 6 * 1024 * 1024;
-$this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
+            $max = 6 * 1024 * 1024;
+            $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         }
 
         return $this->tempfilehandle;
     }
 
-    public function getFile($filename) {
+    public function getFile($filename)
+    {
         if ($temp = $this->gettempfilehandle()) {
             fseek($temp, 0);
             ftruncate($temp, 0);
@@ -82,11 +88,11 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return false;
     }
 
-    public function putcontent($filename, $content) {
+    public function putcontent($filename, $content)
+    {
         if (!($temp = $this->gettempfilehandle())) {
- return false;
-}
-
+            return false;
+        }
 
         fseek($temp, 0);
         fwrite($temp, $content);
@@ -96,39 +102,43 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return $result;
     }
 
-    public function upload($localfile, $filename) {
+    public function upload($localfile, $filename)
+    {
         return @ftp_put($this->handle, $filename, $localfile, FTP_BINARY);
     }
 
-    public function pwd() {
+    public function pwd()
+    {
         if ($result = @ftp_pwd($this->handle)) {
- return rtrim($result, '/') . '/';
-}
-
+            return rtrim($result, '/') . '/';
+        }
 
         return false;
     }
 
-    public function chdir($dir) {
+    public function chdir($dir)
+    {
         return @ftp_chdir($this->handle, $dir);
     }
 
-    public function chmod($file, $mode) {
+    public function chmod($file, $mode)
+    {
         $mode = $this->getmode($mode);
         if (!$this->exists($file) && !$this->is_dir($file)) {
- return false;
-}
-
+            return false;
+        }
 
         return @ftp_chmod($this->handle, $mode, $file);
     }
 
-    public function owner($file) {
+    public function owner($file)
+    {
         $dir = $this->getdir($file);
         return $dir[$file]['owner'];
     }
 
-    public function getChmod($file) {
+    public function getChmod($file)
+    {
         if ($this->is_file($file)) {
             $dir = $this->getdir($file);
             return $dir[$file]['mode'];
@@ -138,16 +148,19 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         }
     }
 
-    public function group($file) {
+    public function group($file)
+    {
         $dir = $this->getdir($file);
         return $dir[$file]['group'];
     }
 
-    public function rename($source, $destination) {
+    public function rename($source, $destination)
+    {
         return ftp_rename($this->handle, $source, $destination);
     }
 
-    public function delete($file) {
+    public function delete($file)
+    {
         if ($file) {
             if ($this->is_file($file)) {
                 return @ftp_delete($this->handle, $file);
@@ -159,28 +172,32 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return false;
     }
 
-    public function unlink($file) {
+    public function unlink($file)
+    {
         return @ftp_delete($this->handle, $file);
     }
 
-    public function rm($file) {
+    public function rm($file)
+    {
         return @ftp_rmdir($this->handle, $file);
     }
 
-    public function exists($file) {
+    public function exists($file)
+    {
         $list = @ftp_nlist($this->handle, $file);
         return !empty($list);
     }
 
-    public function is_file($file) {
+    public function is_file($file)
+    {
         return $this->exists($file) && !$this->is_dir($file);
     }
 
-    public function is_dir($path) {
+    public function is_dir($path)
+    {
         if ($path == '.') {
- return true;
-}
-
+            return true;
+        }
 
         $old = $this->pwd();
         $result = @ftp_chdir($this->handle, rtrim($path, '/') . '/');
@@ -192,28 +209,32 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return false;
     }
 
-    public function mtime($file) {
+    public function mtime($file)
+    {
         return ftp_mdtm($this->handle, $file);
     }
 
-    public function size($file) {
+    public function size($file)
+    {
         return ftp_size($this->handle, $file);
     }
 
-    public function mkdir($path, $chmod) {
+    public function mkdir($path, $chmod)
+    {
         if (!ftp_mkdir($this->handle, $path)) {
- return false;
-}
-
+            return false;
+        }
 
         return parent::mkdir($path, $chmod);
     }
 
-    public function rmdir($path) {
+    public function rmdir($path)
+    {
         return $this->delete($path);
     }
 
-    private function perm2mode($mode) {
+    private function perm2mode($mode)
+    {
         $realmode = '';
         $legal = array(
             '',
@@ -242,7 +263,8 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return $newmode;
     }
 
-    private function parselisting($line) {
+    private function parselisting($line)
+    {
         static $is_windows;
         if (is_null($is_windows)) $is_windows = strpos(strtolower(ftp_systype($this->handle)) , 'win') !== false;
         if ($is_windows && preg_match("/([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d) +([0-9]\x7b2\x7d):([0-9]\x7b2\x7d)(AM|PM) +([0-9]+|<DIR>) +(.+)/", $line, $lucifer)) {
@@ -268,9 +290,8 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
 
             $lcount = count($lucifer);
             if ($lcount < 8) {
- return '';
-}
-
+                return '';
+            }
 
             $b = array();
             $b['isdir'] = $lucifer[0] {
@@ -312,26 +333,24 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         return $b;
     }
 
-    public function getDir($path) {
+    public function getDir($path)
+    {
         if ($this->is_file($path)) $path = dirname($path) . '/';
         if (false == ($list = ftp_rawlist($this->handle, '-a ' . $path, false))) {
- return false;
-}
-
+            return false;
+        }
 
         $result = array();
         foreach ($list as $k => $v) {
             $a = $this->parselisting($v);
             if (empty($a)) {
- continue;
-}
-
+                continue;
+            }
 
             $name = $a['name'];
             if (($name == '.') || ($name == '..') || ($name == '.svn')) {
- continue;
-}
-
+                continue;
+            }
 
             $a['mode'] = octdec($this->perm2mode($a['perms']));
             if (!isset($a['isdir'])) $a['isdir'] = $a['type'] == 'd';
@@ -339,11 +358,11 @@ $this->tempfilehandle = fopen('php://temp/maxmemory:' . $max, 'rwb+');
         }
         unset($list);
         if (count($result) == 0) {
- return false;
-}
-
+            return false;
+        }
 
         return $result;
     }
 
 }
+

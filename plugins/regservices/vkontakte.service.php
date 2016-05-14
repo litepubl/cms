@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tvkontakteregservice extends tregservice {
+class tvkontakteregservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['name'] = 'vkontakte';
         $this->data['title'] = 'VKontakte';
@@ -23,25 +27,26 @@ class tvkontakteregservice extends tregservice {
         $this->data['url'] = '/vkontakte-oauth2callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $url = 'http://oauth.vk.com/authorize?';
         $url.= parent::getauthurl();
         return $url;
     }
 
     //handle callback
-    public function request($arg) {
+    public function request($arg)
+    {
         if ($err = parent::request($arg)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $code = $_REQUEST['code'];
         $resp = http::post('https://oauth.vk.com/access_token', array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'redirect_uri' =>  $this->getApp()->site->url . $this->url,
+            'redirect_uri' => $this->getApp()->site->url . $this->url,
             //'grant_type' => 'authorization_code'
             
         ));
@@ -63,7 +68,8 @@ class tvkontakteregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'http://vk.com/editapp?act=create',
             'client_id' => $lang->yandex_id,
@@ -72,3 +78,4 @@ class tvkontakteregservice extends tregservice {
     }
 
 }
+

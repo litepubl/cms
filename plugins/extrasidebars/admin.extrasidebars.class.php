@@ -1,25 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
+use litepubl\admin\AdminInterface;
+use litepubl\core\Plugins;
 use litepubl\view\Args;
 use litepubl\view\Base;
-use litepubl\core\Plugins;
-use litepubl\admin\AdminInterface;
 
-class tadminextrasidebars implements \litepubl\admin\AdminInterface {
+class tadminextrasidebars implements \litepubl\admin\AdminInterface
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = textrasidebars::i();
         $html = tadminhtml::i();
         $themes = tadminthemes::getlist('<li><input name="theme-$name" id="checkbox-theme-$name" type="checkbox" value="$name" $checked />
@@ -35,7 +40,8 @@ class tadminextrasidebars implements \litepubl\admin\AdminInterface {
         return $html->adminform('[checkbox=beforepost] [checkbox=afterpost]' . "<h4>$lang->themes</h4><ul>$themes</ul>", $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $plugin = textrasidebars::i();
         $plugin->beforepost = isset($_POST['beforepost']);
         $plugin->afterpost = isset($_POST['afterpost']);
@@ -46,3 +52,4 @@ class tadminextrasidebars implements \litepubl\admin\AdminInterface {
     }
 
 }
+

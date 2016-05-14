@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
 
-function CssInstall($self) {
+function CssInstall($self)
+{
     $self->lock();
     $self->items = array();
     $section = 'default';
@@ -28,17 +30,20 @@ function CssInstall($self) {
     $self->unlock();
 }
 
-function CssUninstall($self) {
+function CssUninstall($self)
+{
 }
 
-function Css_pretty_files($self) {
+function Css_pretty_files($self)
+{
     return array(
         '/js/prettyphoto/css/prettyPhoto.css',
         '/js/litepubl/pretty/dialog.pretty.min.css',
     );
 }
 
-function Css_deprecated_files($self) {
+function Css_deprecated_files($self)
+{
     return array(
         '/js/litepubl/deprecated/css/align.min.css',
         '/js/litepubl/deprecated/css/button.min.css',
@@ -46,9 +51,11 @@ function Css_deprecated_files($self) {
     );
 }
 
-function Css_bootstrap_files($self) {
+function Css_bootstrap_files($self)
+{
     return array(
         '/js/litepubl/effects/css/homeimage.min.css',
         '/themes/default/css/logo.min.css'
     );
 }
+

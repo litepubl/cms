@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-function UsersInstall($self) {
+function UsersInstall($self)
+{
     $manager = DBManager::i();
     $dir = dirname(__file__) . '/sql/';
     $manager->CreateTable($self->table, file_get_contents($dir . 'users.sql'));
@@ -17,9 +19,9 @@ function UsersInstall($self) {
     $manager->CreateTable($self->grouptable, file_get_contents($dir . 'users.groups.sql'));
 
     $id = $self->db->add(array(
-        'email' =>  $self->getApp()->options->email,
-        'name' =>  $self->getApp()->site->author,
-        'website' =>  $self->getApp()->site->url . '/',
+        'email' => $self->getApp()->options->email,
+        'name' => $self->getApp()->site->author,
+        'website' => $self->getApp()->site->url . '/',
         'password' => '',
         'cookie' => '',
         'expired' => Str::sqlDate() ,
@@ -32,6 +34,9 @@ function UsersInstall($self) {
     ));
 }
 
-function UsersUninstall($self) {
+function UsersUninstall($self)
+{
     //delete table
-    }
+    
+}
+

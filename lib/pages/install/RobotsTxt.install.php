@@ -1,19 +1,21 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
 
-function RobotsTxtInstall($self) {
+function RobotsTxtInstall($self)
+{
     $self->lock();
-    $self->idurl =  $self->getApp()->router->add('/robots.txt', get_class($self) , null);
+    $self->idurl = $self->getApp()->router->add('/robots.txt', get_class($self) , null);
 
-    $self->add("#" .  $self->getApp()->site->url . "/");
+    $self->add("#" . $self->getApp()->site->url . "/");
     $self->add('User-agent: *');
     //$self->AddDisallow('/rss.xml');
     //$self->AddDisallow('/comments.xml');
@@ -25,6 +27,8 @@ function RobotsTxtInstall($self) {
     $self->unlock();
 }
 
-function RobotsTxtUninstall($self) {
-     $self->getApp()->router->unbind($self);
+function RobotsTxtUninstall($self)
+{
+    $self->getApp()->router->unbind($self);
 }
+

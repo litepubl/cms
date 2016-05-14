@@ -1,65 +1,71 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tsourcefiles extends \litepubl\core\Plugin
- implements itemplate {
+class tsourcefiles extends \litepubl\core\Plugin implements itemplate
+{
     public $item;
     public $geshi;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['url'] = '/source/';
         $this->data['zipurl'] = '';
         $this->data['idschema'] = 1;
     }
 
-    public function getDir() {
-        return  $this->getApp()->paths->data . 'sourcecache';
+    public function getDir()
+    {
+        return $this->getApp()->paths->data . 'sourcecache';
     }
 
-    public function getFilename($url) {
+    public function getFilename($url)
+    {
         return $this->dir . '/' . md5($url) . '.txt';
     }
 
-    public function clear() {
+    public function clear()
+    {
         tfiler::delete($this->dir, true, false);
     }
 
-    public function loaditem($filename) {
+    public function loaditem($filename)
+    {
         if (!file_exists($filename)) {
- return false;
-}
-
+            return false;
+        }
 
         $s = file_get_contents($filename);
         if (!$s) {
- return false;
-}
-
-
+            return false;
+        }
 
         return unserialize($s);
     }
 
-    public function saveitem($filename, $data) {
+    public function saveitem($filename, $data)
+    {
         file_put_contents($filename, serialize($data));
         @chmod($filename, 0666);
     }
 
-    public function request($arg) {
-        $url = substr( $this->getApp()->router->url, strlen($this->url));
+    public function request($arg)
+    {
+        $url = substr($this->getApp()->router->url, strlen($this->url));
         $url = trim($url, '/');
         if (!$url) $url = '.';
 
@@ -67,9 +73,9 @@ class tsourcefiles extends \litepubl\core\Plugin
             while ($url && $url != '.') {
                 $url = dirname($url);
                 if ($url == '.') {
-                    return  $this->getApp()->router->redir($this->url);
+                    return $this->getApp()->router->redir($this->url);
                 } else if (file_exists($this->getfilename($url))) {
-                    return  $this->getApp()->router->redir($this->url . $url . '/');
+                    return $this->getApp()->router->redir($this->url . $url . '/');
                 }
             }
 
@@ -78,36 +84,44 @@ class tsourcefiles extends \litepubl\core\Plugin
 
     }
 
-    public function getIdschema() {
+    public function getIdschema()
+    {
         return $this->data['idschema'];
     }
 
-    public function setIdschema($id) {
+    public function setIdschema($id)
+    {
         if ($id != $this->idschema) {
             $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getView() {
+    public function getView()
+    {
         return Schema::getview($this);
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->item['filename'];
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
     }
-    public function getDescription() {
+    public function getDescription()
+    {
     }
-    public function getHead() {
+    public function getHead()
+    {
         if ($this->item['style']) {
             return sprintf('<style type="text/css">%s</style>', $this->item['style']);
         }
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $result = sprintf('<h4>%s</h4>', $this->item['filename']);
         if ($this->item['type'] == 'file') {
             $dir = dirname($this->item['filename']);
@@ -120,7 +134,8 @@ class tsourcefiles extends \litepubl\core\Plugin
         return $this->view->theme->simple($result);
     }
 
-    public function creategeshi() {
+    public function creategeshi()
+    {
         if (!isset($this->geshi)) {
             define('GESHI_ROOT', dirname(__file__) . '/');
             require (dirname(__file__) . '/geshi.php');
@@ -132,7 +147,8 @@ class tsourcefiles extends \litepubl\core\Plugin
         }
     }
 
-    public function syntax($ext, $content) {
+    public function syntax($ext, $content)
+    {
         /*
         if ($ext == 'php') {
         return array(
@@ -174,7 +190,8 @@ class tsourcefiles extends \litepubl\core\Plugin
         );
     }
 
-    public function readzip($zipname) {
+    public function readzip($zipname)
+    {
         $zip = new \zipArchive();
         if ($zip->open($zipname) !== true) {
             $this->error(sprintf('Error open "%s" zip archive', $zipname));
@@ -186,10 +203,8 @@ class tsourcefiles extends \litepubl\core\Plugin
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
             if (preg_match('/\.(min\.js|min\.css|jpg|jpeg|ico|png|gif|svg|swf|xap|otf|eot|ttf|woff|woff2)$/', $filename)) {
- continue;
-}
-
-
+                continue;
+            }
 
             if (!$root) {
                 $list = explode('/', trim($filename, '/'));
@@ -200,10 +215,8 @@ class tsourcefiles extends \litepubl\core\Plugin
             $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
             $content = trim($zip->getFromIndex($i));
             if (!$content) {
- continue;
-}
-
-
+                continue;
+            }
 
             $path = dirname($filename);
             if (isset($dirlist[$path])) {
@@ -237,7 +250,7 @@ class tsourcefiles extends \litepubl\core\Plugin
             }
         }
 
-        $tml = '<li><a href="' .  $this->getApp()->site->url . $this->url . '%s">%s</a></li>';
+        $tml = '<li><a href="' . $this->getApp()->site->url . $this->url . '%s">%s</a></li>';
         $tml_list = '<ul>%s</ul>';
         $dirnames = array_keys($dirlist);
         foreach ($dirlist as $dir => $filelist) {
@@ -277,3 +290,4 @@ class tsourcefiles extends \litepubl\core\Plugin
     }
 
 }
+

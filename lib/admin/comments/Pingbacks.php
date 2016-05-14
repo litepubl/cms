@@ -1,40 +1,43 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\comments;
-use litepubl\comments\Pingbacks as PingItems;
+
 use litepubl\admin\Table;
+use litepubl\comments\Pingbacks as PingItems;
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 use litepubl\view\Theme;
 
 class Pingbacks extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $pingbacks = PingItems::i();
         $lang = $this->lang;
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
             if (!$pingbacks->itemExists($id)) {
- return $this->notfound;
-}
-
+                return $this->notfound;
+            }
 
             switch ($action) {
                 case 'delete':
-$result .= $this->confirmDeleteItem($pingbacks);
-break;
+                    $result.= $this->confirmDeleteItem($pingbacks);
+                    break;
+
 
                 case 'hold':
                     $pingbacks->setstatus($id, false);
@@ -51,13 +54,14 @@ break;
                 case 'edit':
                     $result.= $this->editPingback($id);
                     break;
-                }
+            }
         }
         $result.= $this->getPingList();
         return $result;
     }
 
-    private function getPingList() {
+    private function getPingList()
+    {
         $result = '';
         $pingbacks = PingItems::i();
         $perpage = 20;
@@ -80,14 +84,18 @@ break;
             $tb->checkbox('id') ,
             array(
                 $lang->date,
-function (Table $t) {
-return $t->date($t->item['posted']);
-}) ,
+                function (Table $t)
+                {
+                    return $t->date($t->item['posted']);
+                }
+            ) ,
             array(
                 $lang->status,
-function(Table $t) {
-                return Lang::get('commentstatus', $t->item['status']);
-}) ,
+                function (Table $t)
+                {
+                    return Lang::get('commentstatus', $t->item['status']);
+                }
+            ) ,
             array(
                 $lang->title,
                 '$title'
@@ -113,16 +121,17 @@ function(Table $t) {
 
         $form->items.= $tb->build($items);
 
-        $form->body .= $form->centergroup($form->getButtons('approve', 'hold', 'delete'));
+        $form->body.= $form->centergroup($form->getButtons('approve', 'hold', 'delete'));
         $form->submit = false;
         $result = $form->get();
 
         $theme = Theme::i();
-        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage));
+        $result.= $theme->getpages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 
-    private function editPingback($id) {
+    private function editPingback($id)
+    {
         $pingbacks = PingItems::i();
         $args = new Args();
         $args->add($pingbacks->getitem($id));
@@ -133,7 +142,8 @@ function(Table $t) {
     ', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $pingbacks = PingItems::i();
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') {
             extract($_POST, EXTR_SKIP);
@@ -142,9 +152,8 @@ function(Table $t) {
             $status = isset($_POST['approve']) ? 'approve' : (isset($_POST['hold']) ? 'hold' : 'delete');
             foreach ($_POST as $k => $id) {
                 if (!Str::begin($k, 'id-') || !is_numeric($id)) {
- continue;
-}
-
+                    continue;
+                }
 
                 $id = (int)$id;
                 if ($status == 'delete') {
@@ -159,3 +168,4 @@ function(Table $t) {
     }
 
 }
+

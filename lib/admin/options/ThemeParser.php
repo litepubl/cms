@@ -1,24 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\options;
-use litepubl\view\Parser;
-use litepubl\view\AdminParser;
-use litepubl\view\Lang;
-use litepubl\view\Base;
+
 use litepubl\core\Str;
+use litepubl\view\AdminParser;
 use litepubl\view\Args;
+use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\view\Parser;
 
 class ThemeParser extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $lang = Lang::admin('options');
         $args = new Args();
         $tabs = $this->newTabs();
@@ -37,7 +40,8 @@ class ThemeParser extends \litepubl\admin\Menu
         return $this->admintheme->form($tabs->get() , $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $themeparser = Parser::i();
         $themeparser->tagfiles = Str::toArray($_POST['tagfiles']);
         $themeparser->themefiles = Str::toArray($_POST['themefiles']);
@@ -52,3 +56,4 @@ class ThemeParser extends \litepubl\admin\Menu
     }
 
 }
+

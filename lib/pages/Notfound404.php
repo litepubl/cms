@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
+
 use litepubl\core\Context;
-use litepubl\view\Lang;
-use litepubl\view\Args;
 use litepubl\utils\Mailer;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Notfound404 extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\view\EmptyViewTrait;
+    use \litepubl\view\EmptyViewTrait;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'notfound';
         $this->data['text'] = '';
@@ -25,29 +28,32 @@ use \litepubl\view\EmptyViewTrait;
     }
 
     public function request(Context $context)
-{
-$context->response->status = 404;
+    {
+        $context->response->status = 404;
     }
 
-public function gettitle() {
-return Lang::i()->notfound;
-}
+    public function gettitle()
+    {
+        return Lang::i()->notfound;
+    }
 
-    public function getCont() {
+    public function getCont()
+    {
         if ($this->notify) {
-$this->sendmail();
-}
+            $this->sendmail();
+        }
 
         $schema = $this->getSchema();
         $theme = $schema->theme;
         if ($this->text) {
-return $theme->simple($this->text);
-}
+            return $theme->simple($this->text);
+        }
 
-            return $theme->notfound;
+        return $theme->notfound;
     }
 
-    private function sendmail() {
+    private function sendmail()
+    {
         $args = new Args();
         $args->url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         $args->ref = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
@@ -63,3 +69,4 @@ return $theme->simple($this->text);
     }
 
 }
+

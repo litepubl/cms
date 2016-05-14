@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class todnoklassnikiservice extends tregservice {
+class todnoklassnikiservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['public_key'] = '';
         $this->data['name'] = 'odnoklassniki';
@@ -24,16 +28,18 @@ class todnoklassnikiservice extends tregservice {
         $this->data['url'] = '/odnoklassniki-oauth2callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $url = 'http://www.odnoklassniki.ru/oauth/authorize?';
         $url.= 'response_type=code';
-        $url.= '&redirect_uri=' . urlencode( $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'state=' . $this->newstate());
+        $url.= '&redirect_uri=' . urlencode($this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $this->newstate());
         $url.= '&client_id=' . $this->client_id;
         return $url;
     }
 
     //handle callback
-    public function sign(array $request_params, $secret_key) {
+    public function sign(array $request_params, $secret_key)
+    {
         ksort($request_params);
         $params = '';
         foreach ($request_params as $key => $value) {
@@ -42,11 +48,11 @@ class todnoklassnikiservice extends tregservice {
         return md5($params . $secret_key);
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         if ($err = parent::request($arg)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $code = $_REQUEST['code'];
         $resp = http::post('http://api.odnoklassniki.ru/oauth/token.do', array(
@@ -54,16 +60,14 @@ class todnoklassnikiservice extends tregservice {
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'redirect_uri' =>  $this->getApp()->site->url . $this->url .  $this->getApp()->site->q . 'state=' . $_GET['state'],
+            'redirect_uri' => $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $_GET['state'],
         ));
 
         if ($resp) {
             $tokens = json_decode($resp);
             if (isset($tokens->error)) {
- return 403;
-}
-
-
+                return 403;
+            }
 
             $params = array(
                 'application_key' => $this->public_key,
@@ -90,7 +94,8 @@ class todnoklassnikiservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'http://api.mail.ru/sites/my/add',
             'client_id' => $lang->odnoklass_id,
@@ -99,7 +104,8 @@ class todnoklassnikiservice extends tregservice {
         );
     }
 
-    public function getTab($html, $args, $lang) {
+    public function getTab($html, $args, $lang)
+    {
         $a = $this->getadmininfo($lang);
         $result = $html->p(sprintf($lang->odnoklass_reg, 'http://dev.odnoklassniki.ru/wiki/display/ok/How+to+add+application+on+site'));
 
@@ -110,9 +116,11 @@ class todnoklassnikiservice extends tregservice {
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (isset($_POST["public_key_$this->name"])) $this->public_key = $_POST["public_key_$this->name"];
         parent::processForm();
     }
 
 }
+

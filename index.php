@@ -1,20 +1,22 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class Config {
+class Config
+{
     //set to true to enable debug: logging, error message,
     public static $debug = false;
 
-    // use joined php files lib/kernel.*.  debug = true disable kernel
-    public static $useKernel = true;
+    //     public static $useKernel = true;
+    use joinedphpfileslib / kernel . * . debug = truedisablekernel
 
     // enable logging
     public static $logLevel = false;
@@ -49,8 +51,8 @@ class Config {
     ];
     */
 
-//after connect to database remove from sql_mode values NO_ZERO_IN_DATE, NO_ZERO_DATE
-public static $enableZeroDatetime = false;
+    //after connect to database remove from sql_mode values NO_ZERO_IN_DATE, NO_ZERO_DATE
+    public static $enableZeroDatetime = false;
 
     // false | true | ['host' => '127.0.0.1', 'port' => 11211];
     public static $memcache = false;
@@ -60,10 +62,10 @@ public static $enableZeroDatetime = false;
     //'app' => '\litepubl\core\App',
     //'storage' => '\litepubl\core\Storage',
     //'cache' => '\litepubl\core\CacheFile,
-//'logmanager' => '\litepubl\debug\LogManager',
+    //'logmanager' => '\litepubl\debug\LogManager',
     ];
 
-//key = value for ini_set
+    //key = value for ini_set
     public static $phpIni = [];
 
     //not used, reservedfor future
@@ -81,3 +83,4 @@ if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
         require (__DIR__ . '/lib/core/kernel.php');
     }
 }
+

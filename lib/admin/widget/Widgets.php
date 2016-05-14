@@ -1,29 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\widget;
-use litepubl\widget\Widgets as WidgetItems;
-use litepubl\widget\Sidebars;
+
+use litepubl\admin\Form;
 use litepubl\admin\GetSchema;
 use litepubl\admin\Link;
-use litepubl\admin\Form;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Schema;
-use litepubl\view\Parser;
-use litepubl\core\Str;
 use litepubl\core\Arr;
+use litepubl\core\Str;
+use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Parser;
+use litepubl\view\Schema;
+use litepubl\widget\Sidebars;
+use litepubl\widget\Widgets as WidgetItems;
 
 class Widgets extends \litepubl\admin\Menu
 {
 
-    public static function getSidebarNames(Schema $schema) {
+    public static function getSidebarNames(Schema $schema)
+    {
         $count = $schema->theme->sidebarscount;
         $result = range(1, $count);
         $parser = Parser::i();
@@ -35,12 +38,13 @@ class Widgets extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function getCombobox($name, array $items, $selected) {
-        return sprintf('<select name="%1$s" id="%1$s">%2$s</select>',
- $name, $this->theme->comboItems($items, $selected));
+    public function getCombobox($name, array $items, $selected)
+    {
+        return sprintf('<select name="%1$s" id="%1$s">%2$s</select>', $name, $this->theme->comboItems($items, $selected));
     }
 
-   public function getTableForm() {
+    public function getTableForm()
+    {
         $idschema = (int)$this->getparam('idschema', 1);
         $schema = Schema::i($idschema);
 
@@ -54,10 +58,10 @@ class Widgets extends \litepubl\admin\Menu
         $form = new Form($args);
         $form->title = $lang->formhead;
         $form->body = $form->hidden('action', 'edit');
-        $form->body .= $form->hidden('idschema', $idschema);
+        $form->body.= $form->hidden('idschema', $idschema);
 
         if ($idschema != 1) {
-            $form->body .= $theme->getInput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
+            $form->body.= $theme->getInput('checkbox', 'customsidebar', 'checked="checked"', $lang->customsidebar);
         }
         //all widgets
         $checkboxes = '';
@@ -89,20 +93,15 @@ class Widgets extends \litepubl\admin\Menu
                     'title' => $w_item['title'],
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
                     'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
-                    'ajaxbuttons' => str_replace('$button',
-                    strtr($sb_item['ajax'] == false ? $tml_active : $tml_btn, array(
+                    'ajaxbuttons' => str_replace('$button', strtr($sb_item['ajax'] == false ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'noajax',
                         '$title' => $lang->noajax
-                    ))
-
- . strtr(($sb_item['ajax'] && $sb_item['ajax'] !== 'inline') ? $tml_active : $tml_btn, array(
+                    )) . strtr(($sb_item['ajax'] && $sb_item['ajax'] !== 'inline') ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
-                    ))
-
- .(($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($sb_item['ajax'] == 'inline' ? $tml_active : $tml_btn, array(
+                    )) . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($sb_item['ajax'] == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'inline',
                         '$title' => $lang->inline
@@ -144,7 +143,8 @@ class Widgets extends \litepubl\admin\Menu
         return $form->get();
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         if (!(isset($_GET['action']) && $_GET['action'] == 'delete')) {
             $idwidget = $this->getparam('idwidget', 0);
             $widgets = WidgetItems::i();
@@ -178,7 +178,8 @@ class Widgets extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $idwidget = (int)$this->getParam('idwidget', 0);
         $widgets = WidgetItems::i();
 
@@ -212,17 +213,17 @@ class Widgets extends \litepubl\admin\Menu
                     $schema->customsidebar = false;
                 } else {
                     $sidebars = Sidebars::i($idschema);
-$newItems = array_fill(0, count($sidebars->items), []);
+                    $newItems = array_fill(0, count($sidebars->items) , []);
 
                     foreach ($sidebars->items as $i => $items) {
                         foreach ($items as $j => $item) {
                             $id = $item['id'];
                             if (!isset($_POST["sidebar-$id"])) {
-Arr::append($newItems[$i], $j, $item);
- continue;
-}
+                                Arr::append($newItems[$i], $j, $item);
+                                continue;
+                            }
 
-$item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
+                            $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
 
                             $i2 = (int)$_POST["sidebar-$id"];
                             if ($i2 >= count($sidebars->items)) {
@@ -234,15 +235,15 @@ $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] 
                                 $j2 = count($sidebars[$i2]);
                             }
 
-Arr::append($newItems[$i2], $j2, $item);
+                            Arr::append($newItems[$i2], $j2, $item);
+                        }
                     }
-}
 
-foreach ($newItems as $i => $items) {
-ksort($items);
-Arr::reIndex($items);
-$sidebars->items[$i] = $items;
-}
+                    foreach ($newItems as $i => $items) {
+                        ksort($items);
+                        Arr::reIndex($items);
+                        $sidebars->items[$i] = $items;
+                    }
 
                     $sidebars->save();
                 }
@@ -259,10 +260,8 @@ $sidebars->items[$i] = $items;
                     if (Str::begin($key, 'addwidget-')) {
                         $id = (int)$value;
                         if (!$widgets->itemExists($id) || $widgets->subclass($id)) {
- continue;
-}
-
-
+                            continue;
+                        }
 
                         $schema->sidebars[0][] = array(
                             'id' => $id,
@@ -271,9 +270,10 @@ $sidebars->items[$i] = $items;
                     }
                 }
                 break;
-            }
-
-            $schema->save();
         }
 
+        $schema->save();
+    }
+
 }
+

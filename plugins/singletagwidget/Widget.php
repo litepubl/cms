@@ -1,24 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\singletagwidget;
+
+use litepubl\tag\Cats;
+use litepubl\widget\Sidebars;
 use litepubl\widget\View;
 use litepubl\widget\Widgets;
-use litepubl\widget\Sidebars;
-use litepubl\tag\Cats;
 
 class Widget extends \litepubl\widget\Widget
- {
+{
     public $items;
     public $tags;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.singletag';
@@ -26,17 +29,19 @@ class Widget extends \litepubl\widget\Widget
         $this->tags = Cats::i();
     }
 
-    public function getIdWidget($idtag) {
+    public function getIdWidget($idtag)
+    {
         foreach ($this->items as $id => $item) {
             if ($idtag == $item['idtag']) {
- return $id;
-}
+                return $id;
+            }
         }
 
         return false;
     }
 
-    public function add($idtag) {
+    public function add($idtag)
+    {
         $tag = $this->tags->getitem($idtag);
         $widgets = Widgets::i();
         $id = $widgets->addExt($this, $tag['title'], 'widget');
@@ -53,7 +58,8 @@ class Widget extends \litepubl\widget\Widget
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
@@ -65,20 +71,23 @@ class Widget extends \litepubl\widget\Widget
         }
     }
 
-    public function widgetdeleted($id) {
+    public function widgetdeleted($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
         }
     }
 
-    public function tagdeleted($idtag) {
+    public function tagdeleted($idtag)
+    {
         if ($idwidget = $this->getidwidget($idtag)) {
- return $this->delete($idwidget);
-}
+            return $this->delete($idwidget);
+        }
     }
 
-    public function getTitle($id) {
+    public function getTitle($id)
+    {
         if (isset($this->items[$id])) {
             if ($tag = $this->tags->getItem($this->items[$id]['idtag'])) {
                 return $tag['title'];
@@ -88,19 +97,21 @@ class Widget extends \litepubl\widget\Widget
         return '';
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         if (!isset($this->items[$id])) {
- return '';
-}
+            return '';
+        }
 
         $item = $this->items[$id];
         $items = $this->tags->getSortedPosts($item['idtag'], $item['maxcount'], $item['invertorder']);
         if (!count($items)) {
- return '';
-}
+            return '';
+        }
 
         $view = new View();
         return $view->getPosts($items, $sidebar, '');
     }
 
 }
+

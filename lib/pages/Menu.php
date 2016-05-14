@@ -1,13 +1,15 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
+
 use litepubl\core\Context;
 use litepubl\view\Filter;
 use litepubl\view\Schema;
@@ -24,13 +26,15 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         'status'
     );
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         $class = $id == 0 ? get_called_class() : static ::getowner()->items[$id]['class'];
         return static ::iteminstance(get_called_class() , $id);
     }
 
-    public static function iteminstance($class, $id = 0) {
-        $single = static::iGet($class);
+    public static function iteminstance($class, $id = 0)
+    {
+        $single = static ::iGet($class);
         if ($single->id == $id) {
             return $single;
         }
@@ -46,36 +50,39 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return parent::iteminstance($class, $id);
     }
 
-    public static function singleinstance($class) {
-        $single = static::iGet($class);
+    public static function singleinstance($class)
+    {
+        $single = static ::iGet($class);
         if ($id = $single->get_owner()->class2id($class)) {
             if ($single->id == $id) {
- return $single;
-}
-
+                return $single;
+            }
 
             if (($single->id == 0) && ($id > 0)) {
- return $single->loaddata($id);
-}
-
+                return $single->loaddata($id);
+            }
 
         }
         return $single;
     }
 
-    public static function getInstancename() {
+    public static function getInstancename()
+    {
         return 'menu';
     }
 
-    public static function getOwner() {
+    public static function getOwner()
+    {
         return Menus::i();
     }
 
-    public function get_owner() {
+    public function get_owner()
+    {
         return static ::getowner();
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->formresult = '';
         $this->data = array(
@@ -98,44 +105,44 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         );
     }
 
-    public function getBasename() {
+    public function getBasename()
+    {
         return 'menus' . DIRECTORY_SEPARATOR . $this->id;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if ($name == 'content') {
- return $this->formresult . $this->getcontent();
-}
-
+            return $this->formresult . $this->getcontent();
+        }
 
         if ($name == 'id') {
- return $this->data['id'];
-}
-
+            return $this->data['id'];
+        }
 
         if (method_exists($this, $get = 'get' . $name)) {
- return $this->$get();
-}
-
-
+            return $this->$get();
+        }
 
         if ($this->is_owner_prop($name)) {
- return $this->getownerprop($name);
-}
-
+            return $this->getownerprop($name);
+        }
 
         return parent::__get($name);
     }
 
-    public function get_owner_props() {
+    public function get_owner_props()
+    {
         return static ::$ownerprops;
     }
 
-    public function is_owner_prop($name) {
+    public function is_owner_prop($name)
+    {
         return in_array($name, $this->get_owner_props());
     }
 
-    public function getOwnerprop($name) {
+    public function getOwnerprop($name)
+    {
         $id = $this->data['id'];
         if ($id == 0) {
             return $this->data[$name];
@@ -146,7 +153,8 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if ($this->is_owner_prop($name)) {
             if ($this->id == 0) {
                 $this->data[$name] = $value;
@@ -158,83 +166,97 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         parent::__set($name, $value);
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if ($this->is_owner_prop($name)) {
- return true;
-}
-
+            return true;
+        }
 
         return parent::__isset($name);
     }
 
-    public function getSchema() {
+    public function getSchema()
+    {
         return Schema::getSchema($this);
     }
 
-    public function getTheme() {
+    public function getTheme()
+    {
         return $this->schema->theme;
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         return $this->schema->admintheme;
     }
 
     //ViewInterface
-    public function request(Context $context) {
-if (!$this->loadItem($context->itemRoute['arg']) ||
-($this->status == 'draft')) {
-$context->response->status = 404;
-} else {
-        $this->doProcessForm();
-}
+    public function request(Context $context)
+    {
+        if (!$this->loadItem($context->itemRoute['arg']) || ($this->status == 'draft')) {
+            $context->response->status = 404;
+        } else {
+            $this->doProcessForm();
+        }
     }
 
-    protected function doProcessForm() {
+    protected function doProcessForm()
+    {
         if (isset($_POST) && count($_POST)) {
             $this->formresult.= $this->processForm();
         }
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         return $this->owner->onprocessForm($this->id);
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         return $this->data['head'];
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->getownerprop('title');
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         return $this->data['keywords'];
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->data['description'];
     }
 
-    public function getIdSchema() {
+    public function getIdSchema()
+    {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         if ($id != $this->idschema) {
             $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         return $this->theme->parsevar('menu', $this, $this->theme->templates['content.menu']);
     }
 
-    public function getLink() {
-        return  $this->getApp()->site->url . $this->url;
+    public function getLink()
+    {
+        return $this->getApp()->site->url . $this->url;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = $this->data['content'];
         $this->owner->callevent('oncontent', array(
             $this, &$result
@@ -242,7 +264,8 @@ $context->response->status = 404;
         return $result;
     }
 
-    public function setContent($s) {
+    public function setContent($s)
+    {
         if (!is_string($s)) {
             $this->error('Error! Page content must be string');
         }
@@ -255,3 +278,4 @@ $context->response->status = 404;
     }
 
 }
+

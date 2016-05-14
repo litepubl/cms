@@ -1,20 +1,22 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
-use litepubl\utils\Filer;
+
+use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
-use litepubl\core\Str;
+use litepubl\utils\Filer;
 
 class Base extends \litepubl\core\Events
- {
+{
     public static $instances = array();
     public static $vars = array();
 
@@ -23,22 +25,25 @@ class Base extends \litepubl\core\Events
     public $templates;
     public $extratml;
 
-    public static function exists($name) {
-        return file_exists( static::getAppInstance()->paths->themes . $name . '/about.ini');
+    public static function exists($name)
+    {
+        return file_exists(static ::getAppInstance()->paths->themes . $name . '/about.ini');
     }
 
-    public static function getTheme($name) {
+    public static function getTheme($name)
+    {
         return static ::getByName(get_called_class() , $name);
     }
 
-    public static function getByName($classname, $name) {
+    public static function getByName($classname, $name)
+    {
         if (isset(static ::$instances[$name])) {
             return static ::$instances[$name];
         }
 
-        $result = static::iGet($classname);
+        $result = static ::iGet($classname);
         if ($result->name) {
-            $result =  static::getAppInstance()->classes->newinstance($classname);
+            $result = static ::getAppInstance()->classes->newinstance($classname);
         }
 
         $result->name = $name;
@@ -46,7 +51,8 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->name = '';
         $this->parsing = array();
@@ -58,25 +64,27 @@ class Base extends \litepubl\core\Events
         $this->extratml = '';
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         unset(static ::$instances[$this->name], $this->templates);
         parent::__destruct();
     }
 
-    public function getBasename() {
+    public function getBasename()
+    {
         return 'themes/' . $this->name;
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return BaseParser::i();
     }
 
-    public function load() {
+    public function load()
+    {
         if (!$this->name) {
- return false;
-}
-
-
+            return false;
+        }
 
         if (parent::load()) {
             static ::$instances[$this->name] = $this;
@@ -86,7 +94,8 @@ class Base extends \litepubl\core\Events
         return $this->parsetheme();
     }
 
-    public function parsetheme() {
+    public function parsetheme()
+    {
         if (!static ::exists($this->name)) {
             $this->error(sprintf('The %s theme not exists', $this->name));
         }
@@ -99,7 +108,8 @@ class Base extends \litepubl\core\Events
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (array_key_exists($name, $this->templates)) {
             $this->templates[$name] = $value;
             return;
@@ -107,7 +117,8 @@ class Base extends \litepubl\core\Events
         return parent::__set($name, $value);
     }
 
-    public function reg($exp) {
+    public function reg($exp)
+    {
         if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
         $result = array();
         foreach ($this->templates as $name => $val) {
@@ -116,21 +127,22 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    protected function getVar($name) {
+    protected function getVar($name)
+    {
         switch ($name) {
             case 'site':
-                return  $this->getApp()->site;
+                return $this->getApp()->site;
 
             case 'lang':
                 return lang::i();
 
             case 'post':
-if ($context = $this->getApp()->context) {
-if (isset($context->view) and $context->view instanceof PostView) {
-return $context->view;
-} elseif (isset($context->model) && $context->model instanceof Post) {
-return $context->model->getView();
-}
+                if ($context = $this->getApp()->context) {
+                    if (isset($context->view) and $context->view instanceof PostView) {
+                        return $context->view;
+                    } elseif (isset($context->model) && $context->model instanceof Post) {
+                        return $context->model->getView();
+                    }
                 }
                 break;
 
@@ -141,20 +153,20 @@ return $context->model->getView();
             case 'metapost':
                 return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
-
         $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
-$this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+            $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
             return false;
         }
 
         return $var;
     }
 
-    public function parsecallback($names) {
+    public function parsecallback($names)
+    {
         $name = $names[1];
         $prop = $names[2];
-//$this->getApp()->getLogger()->debug("$name.$prop");
+        //$this->getApp()->getLogger()->debug("$name.$prop");
         if (isset(static ::$vars[$name])) {
             $var = static ::$vars[$name];
         } elseif ($name == 'custom') {
@@ -173,15 +185,16 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
             return $var->{$prop};
         }
         catch(\Exception $e) {
-             $this->getApp()->logException($e);
+            $this->getApp()->logException($e);
         }
         return '';
     }
 
-    public function parse($s) {
+    public function parse($s)
+    {
         if (!$s) {
- return '';
-}
+            return '';
+        }
 
         $s = strtr((string)$s, Args::getDefaultArgs());
         if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
@@ -195,19 +208,21 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         }
         catch(\Exception $e) {
             $result = '';
-             $this->getApp()->logException($e);
+            $this->getApp()->logException($e);
         }
         array_pop($this->parsing);
         return $result;
     }
 
-    public function parseArg($s, Args $args) {
+    public function parseArg($s, Args $args)
+    {
         $s = $this->parse($s);
         $s = $args->callback($s);
         return strtr($s, $args->data);
     }
 
-    public function replaceLang($s, $lang) {
+    public function replaceLang($s, $lang)
+    {
         $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
         static ::$vars['lang'] = isset($lang) ? $lang : Lang::i('default');
         $s = strtr($s, Args::getDefaultArgs());
@@ -222,26 +237,31 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         return $s;
     }
 
-    public static function parsevar($name, $var, $s) {
+    public static function parsevar($name, $var, $s)
+    {
         static ::$vars[$name] = $var;
         return static ::i()->parse($s);
     }
 
-    public static function clearcache() {
-$app = static::getAppInstance();
+    public static function clearcache()
+    {
+        $app = static ::getAppInstance();
         Filer::delete($app->paths->data . 'themes', false, false);
-$app->cache->clear();
+        $app->cache->clear();
     }
 
-    public function h($s) {
+    public function h($s)
+    {
         return sprintf('<h4>%s</h4>', $s);
     }
 
-    public function link($url, $title) {
-        return sprintf('<a href="%s%s">%s</a>', Str::begin($url, 'http') ? '' :  $this->getApp()->site->url, $url, $title);
+    public function link($url, $title)
+    {
+        return sprintf('<a href="%s%s">%s</a>', Str::begin($url, 'http') ? '' : $this->getApp()->site->url, $url, $title);
     }
 
-    public static function quote($s) {
+    public static function quote($s)
+    {
         return strtr($s, array(
             '"' => '&quot;',
             "'" => '&#039;',
@@ -255,3 +275,4 @@ $app->cache->clear();
     }
 
 }
+

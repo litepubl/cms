@@ -1,23 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\utils;
 
-class Http {
+class Http
+{
     public static $timeout = 20;
 
-    public static function get($url, $headers = false) {
+    public static function get($url, $headers = false)
+    {
         $parsed = @parse_url($url);
         if (!$parsed || !is_array($parsed)) {
- return false;
-}
-
+            return false;
+        }
 
         if (!isset($parsed['scheme']) || !in_array($parsed['scheme'], array(
             'http',
@@ -57,9 +59,8 @@ class Http {
                 $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
                 if (($code == 200) || ($code == 201)) {
- return $result;
-}
-
+                    return $result;
+                }
 
                 return false;
             } else {
@@ -70,7 +71,8 @@ class Http {
         return false;
     }
 
-    public static function createcurl($url, $post, $headers = false) {
+    public static function createcurl($url, $post, $headers = false)
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -83,12 +85,13 @@ class Http {
         curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
 
         curl_setopt($ch, CURLOPT_VERBOSE, true);
-        curl_setopt($ch, CURLOPT_STDERR, fopen( $this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
+        curl_setopt($ch, CURLOPT_STDERR, fopen($this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
 
         return $ch;
     }
 
-    public static function post($url, $post, $headers = false) {
+    public static function post($url, $post, $headers = false)
+    {
         $ch = static ::createcurl($url, $post, $headers);
         $response = curl_exec($ch);
         //$respheaders = curl_getinfo($ch);
@@ -101,7 +104,8 @@ class Http {
         return false;
     }
 
-    public static function curl_follow($ch, $maxredirect = 10) {
+    public static function curl_follow($ch, $maxredirect = 10)
+    {
         //manual redirect
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($ch, CURLOPT_FORBID_REUSE, false);
@@ -113,9 +117,8 @@ class Http {
             //$code = $headers['http_code'];
             $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             if ($code == 404) {
- return false;
-}
-
+                return false;
+            }
 
             if ($code == 301 || $code == 302 || $code == 307) {
                 if (isset($headers['redirect_url'])) {
@@ -131,11 +134,11 @@ class Http {
             } else {
                 break;
             }
-        }
-        while ($maxredirect--);
+        } while ($maxredirect--);
 
         curl_close($ch);
         return substr($result, strpos($result, "\r\n\r\n") + 4);
     }
 
 }
+

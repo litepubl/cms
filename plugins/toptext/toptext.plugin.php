@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
 class ttoptext extends \litepubl\core\Plugin
- {
+{
     public $text;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function beforecontent(tpost $post, &$content, &$cancel) {
+    public function beforecontent(tpost $post, &$content, &$cancel)
+    {
         $sign = '[toptext]';
         if ($i = strpos($content, $sign)) {
             $this->text = substr($content, 0, $i);
@@ -25,8 +28,10 @@ class ttoptext extends \litepubl\core\Plugin
         }
     }
 
-    public function aftercontent(tpost $post) {
+    public function aftercontent(tpost $post)
+    {
         if ($this->text) $post->filtered = $this->text . $post->filtered;
     }
 
 }
+

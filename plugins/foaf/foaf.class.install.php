@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Lang;
-use litepubl\view\Base;
-use litepubl\view\LangMerger;
-use litepubl\core\Plugins;
+
 use litepubl\core\DBManager;
+use litepubl\core\Plugins;
+use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\view\LangMerger;
 use litepubl\view\MainView;
 
-function tfoafInstall($self) {
+function tfoafInstall($self)
+{
     $merger = LangMerger::i();
     $merger->addplugin(Plugins::getname(__file__));
 
@@ -34,12 +37,12 @@ function tfoafInstall($self) {
     $actions->add('acceptfriend', get_class($self) , 'Accept');
     $actions->unlock();
 
-    $router =  $self->getApp()->router;
-     $self->getApp()->router->unbind($self);
+    $router = $self->getApp()->router;
+    $self->getApp()->router->unbind($self);
     $router->add('/foaf.xml', get_class($self) , null);
 
     $name = Plugins::getname(__file__);
-    $classes =  $self->getApp()->classes;
+    $classes = $self->getApp()->classes;
     $classes->lock();
     $classes->add('tadminfoaf', 'admin.foaf.class.php', $name);
     $classes->add('tfoafutil', 'foaf.util.class.php', $name);
@@ -49,7 +52,8 @@ function tfoafInstall($self) {
 
     $admin = Menus::i();
     $admin->lock();
-    $id = $admin->createitem(0, 'foaf', 'admin', 'tadminfoaf'); {
+    $id = $admin->createitem(0, 'foaf', 'admin', 'tadminfoaf');
+    {
         $admin->createitem($id, 'profile', 'admin', 'tadminfoaf');
         $admin->createitem($id, 'profiletemplate', 'admin', 'tadminfoaf');
     }
@@ -66,17 +70,18 @@ function tfoafInstall($self) {
     Base::clearCache();
 }
 
-function tfoafUninstall($self) {
+function tfoafUninstall($self)
+{
     $merger = LangMerger::i();
     $merger->deleteplugin(Plugins::getname(__file__));
 
     $actions = TXMLRPCAction::i();
     $actions->deleteclass(get_class($self));
 
-    $router =  $self->getApp()->router;
-     $self->getApp()->router->unbind($self);
+    $router = $self->getApp()->router;
+    $self->getApp()->router->unbind($self);
 
-    $classes =  $self->getApp()->classes;
+    $classes = $self->getApp()->classes;
     $classes->lock();
     $classes->delete('tfoafutil');
     $classes->delete('tprofile');
@@ -107,3 +112,4 @@ function tfoafUninstall($self) {
 
     Base::clearCache();
 }
+

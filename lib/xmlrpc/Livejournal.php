@@ -1,51 +1,52 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\xmlrpc;
-use litepubl\post\Posts;
-use litepubl\post\Post;
+
 use litepubl\Config;
 use litepubl\core\Str;
+use litepubl\post\Post;
+use litepubl\post\Posts;
 
 class Livejournal extends Common
 {
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['_challenge'] = '';
         $this->data['expired'] = 0;
     }
 
-    private function lj_auth(array $struct) {
+    private function lj_auth(array $struct)
+    {
         if ($this->_auth($struct)) {
- return true;
-}
-
+            return true;
+        }
 
         return $this->error('Bad login/pass combination.', 403);
     }
 
-    private function _auth(array $struct) {
+    private function _auth(array $struct)
+    {
         extract($struct, EXTR_SKIP);
-        $options =  $this->getApp()->options;
+        $options = $this->getApp()->options;
         if ($username != $options->email) {
- return false;
-}
-
-
+            return false;
+        }
 
         switch ($auth_method) {
             case 'challenge':
                 if (Config::$debug) {
- return ($this->_challenge == $auth_challenge);
-}
-
+                    return ($this->_challenge == $auth_challenge);
+                }
 
                 return ($this->_challenge == $auth_challenge) && ($auth_response == md5($this->challenge . $options->password));
 
@@ -54,12 +55,13 @@ class Livejournal extends Common
 
             case 'cookie':
                 return false;
-            }
+        }
 
-            return false;
+        return false;
     }
 
-    public function login($struct) {
+    public function login($struct)
+    {
         $this->_auth($struct);
         $profile = tprofile::i();
         $result = array(
@@ -70,7 +72,8 @@ class Livejournal extends Common
         return $result;
     }
 
-    public function getChallenge() {
+    public function getChallenge()
+    {
         if (time() >= $this->expired) {
             $this->_challenge = Str::md5Uniq();
             $this->expired = time() + 3600;
@@ -84,18 +87,19 @@ class Livejournal extends Common
         );
     }
 
-    public function postevent($struct) {
+    public function postevent($struct)
+    {
         $this->lj_auth($struct);
         return $this->EditPost(0, $struct);
     }
 
-    private function EditPost($id, $struct) {
+    private function EditPost($id, $struct)
+    {
         $posts = Posts::i();
         if ($id > 0) {
             if ($posts->itemExists($id)) {
- return $this->xerror(403, 'Post not found');
-}
-
+                return $this->xerror(403, 'Post not found');
+            }
 
         }
         $post = Post::i($id);
@@ -123,7 +127,7 @@ class Livejournal extends Common
 
         if (isset($struct['props'])) {
             $props = & $struct['props'];
-            $post->comstatus = $props['opt_nocomments'] ? 'closed' :  $this->getApp()->options->comstatus;
+            $post->comstatus = $props['opt_nocomments'] ? 'closed' : $this->getApp()->options->comstatus;
             if ($props['opt_preformatted']) {
                 $post->filtered = $struct['event'];
             }
@@ -156,15 +160,15 @@ class Livejournal extends Common
         );
     }
 
-    public function editevent($struct) {
+    public function editevent($struct)
+    {
         $this->lj_auth($struct);
         $id = (int)$struct['itemid'];
         if (empty($struct['event'])) {
             $posts = Posts::i();
             if (!$posts->itemExists($id)) {
- return $this->xerror(404, 'Post not found');
-}
-
+                return $this->xerror(404, 'Post not found');
+            }
 
             $post = Post::i($id);
             $url = $post->url;
@@ -186,3 +190,4 @@ class Livejournal extends Common
     }
     */
 }
+

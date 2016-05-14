@@ -1,30 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
 class textrasidebars extends \litepubl\core\Plugin
- {
+{
     public $themes;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addmap('themes', array());
         $this->data['beforepost'] = false;
         $this->data['afterpost'] = true;
     }
 
-    public function fix(ttheme $theme) {
+    public function fix(ttheme $theme)
+    {
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             if ($this->beforepost) $s.= '<!--$template.sidebar-->';
@@ -34,7 +38,8 @@ class textrasidebars extends \litepubl\core\Plugin
         }
     }
 
-    public function themeparsed(ttheme $theme) {
+    public function themeparsed(ttheme $theme)
+    {
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             $s = str_replace('<!--$template.sidebar-->', '', $s);
@@ -53,3 +58,4 @@ class textrasidebars extends \litepubl\core\Plugin
     }
 
 }
+

@@ -1,33 +1,38 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\perms;
+
 use litepubl\core\Response;
 
 class Perm extends \litepubl\core\Item
 {
-use \litepubl\core\ItemOwnerTrait;
+    use \litepubl\core\ItemOwnerTrait;
 
     protected $adminInstance;
     protected $adminclass;
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         $perms = Perms::i();
         $class = $perms->itemExists($id) ? $perms->items[$id]['class'] : get_called_class();
         return parent::iteminstance($class, $id);
     }
 
-    public static function getInstancename() {
+    public static function getInstancename()
+    {
         return 'perm';
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data = array(
             'id' => 0,
@@ -36,25 +41,29 @@ use \litepubl\core\ItemOwnerTrait;
         );
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return Perms::i();
     }
 
-    public function getAdmin() {
+    public function getAdmin()
+    {
         if (!isset($this->adminInstance)) {
             $class = $this->adminclass;
-            $this->adminInstance =  $this->getApp()->classes->newinstance($class);
+            $this->adminInstance = $this->getApp()->classes->newinstance($class);
             $this->adminInstance->perm = $this;
         }
         return $this->adminInstance;
     }
 
-    public function setResponse(Response $response, $obj) 
-{
+    public function setResponse(Response $response, $obj)
+    {
     }
 
-    public function hasperm($obj) {
+    public function hasperm($obj)
+    {
         return true;
     }
 
 }
+

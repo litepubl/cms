@@ -1,18 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class Options extends Events
 {
-use PoolStorageTrait;
+    use PoolStorageTrait;
 
     public $groupnames;
     public $parentgroups;
@@ -23,7 +25,8 @@ use PoolStorageTrait;
     public $gmt;
     public $errorlog;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'options';
         $this->addevents('changed', 'perpagechanged');
@@ -36,14 +39,16 @@ use PoolStorageTrait;
         $this->addmap('parentgroups', array());
     }
 
-    public function afterLoad() {
+    public function afterLoad()
+    {
         parent::afterload();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
         if (!defined('dbversion')) define('dbversion', true);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (in_array($name, $this->eventnames)) {
             $this->addevent($name, $value['class'], $value['func']);
             return true;
@@ -63,25 +68,28 @@ use PoolStorageTrait;
         return true;
     }
 
-    private function doChanged($name, $value) {
+    private function doChanged($name, $value)
+    {
         if ($name == 'perpage') {
             $this->perpagechanged();
-$this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         } elseif ($name == 'cache') {
-$this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         } else {
             $this->changed($name, $value);
         }
     }
 
-    public function delete($name) {
+    public function delete($name)
+    {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
         }
     }
 
-    public function getAdminFlag() {
+    public function getAdminFlag()
+    {
         if (is_null($this->adminFlagChecked)) {
             return $this->adminFlagChecked = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
         }
@@ -89,11 +97,13 @@ $this->getApp()->cache->clear();
         return $this->adminFlagChecked;
     }
 
-    public function setAdminFlag($val) {
+    public function setAdminFlag($val)
+    {
         $this->adminFlagChecked = $val;
     }
 
-    public function getuser() {
+    public function getuser()
+    {
         if (is_null($this->_user)) {
             $this->_user = $this->authenabled ? $this->authcookie() : false;
         }
@@ -101,15 +111,18 @@ $this->getApp()->cache->clear();
         return $this->_user;
     }
 
-    public function setuser($id) {
+    public function setuser($id)
+    {
         $this->_user = $id;
     }
 
-    public function authCookie() {
+    public function authCookie()
+    {
         return $this->authcookies(isset($_COOKIE['litepubl_user_id']) ? (int)$_COOKIE['litepubl_user_id'] : 0, isset($_COOKIE['litepubl_user']) ? (string)$_COOKIE['litepubl_user'] : '');
     }
 
-    public function authCookies($iduser, $password) {
+    public function authCookies($iduser, $password)
+    {
         if (!$iduser || !$password) return false;
         $password = $this->hash($password);
         if ($password == $this->emptyhash) return false;
@@ -120,7 +133,8 @@ $this->getApp()->cache->clear();
         return $iduser;
     }
 
-    public function findUser($iduser, $cookie) {
+    public function findUser($iduser, $cookie)
+    {
         if ($iduser == 1) return $this->compare_cookie($cookie);
         if (!$this->usersenabled) return false;
 
@@ -136,11 +150,13 @@ $this->getApp()->cache->clear();
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
 
-    private function compare_cookie($cookie) {
+    private function compare_cookie($cookie)
+    {
         return !empty($this->cookiehash) && ($this->cookiehash == $cookie) && ($this->cookieexpired > time());
     }
 
-    public function emailExists($email) {
+    public function emailExists($email)
+    {
         if (!$email) return false;
         if (!$this->authenabled) return false;
         if ($email == $this->email) return 1;
@@ -148,13 +164,15 @@ $this->getApp()->cache->clear();
         return Users::i()->emailexists($email);
     }
 
-    public function auth($email, $password) {
+    public function auth($email, $password)
+    {
         if (!$this->authenabled) return false;
         if (!$email && !$password) return $this->authcookie();
         return $this->authpassword($this->emailexists($email) , $password);
     }
 
-    public function authPassword($iduser, $password) {
+    public function authPassword($iduser, $password)
+    {
         if (!$iduser) return false;
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) return false;
@@ -167,7 +185,8 @@ $this->getApp()->cache->clear();
         return $iduser;
     }
 
-    public function updateGroup() {
+    public function updateGroup()
+    {
         if ($this->_user == 1) {
             $this->group = 'admin';
             $this->idgroups = array(
@@ -180,25 +199,29 @@ $this->getApp()->cache->clear();
         }
     }
 
-    public function can_edit($idauthor) {
+    public function can_edit($idauthor)
+    {
         return ($idauthor == $this->user) || ($this->group == 'admin') || ($this->group == 'editor');
     }
 
-    public function getpassword() {
+    public function getpassword()
+    {
         if ($this->user <= 1) {
-return $this->data['password'];
-}
+            return $this->data['password'];
+        }
 
         $users = Users::i();
         return $users->getvalue($this->user, 'password');
     }
 
-    public function changePassword($newpassword) {
+    public function changePassword($newpassword)
+    {
         $this->data['password'] = $this->hash($newpassword);
         $this->save();
     }
 
-    public function getDBPassword() {
+    public function getDBPassword()
+    {
         if (function_exists('mcrypt_encrypt')) {
             return static ::decrypt($this->data['dbconfig']['password'], $this->solt . Config::$secret);
         } else {
@@ -206,7 +229,8 @@ return $this->data['password'];
         }
     }
 
-    public function setDBPassword($password) {
+    public function setDBPassword($password)
+    {
         if (function_exists('mcrypt_encrypt')) {
             $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . Config::$secret);
         } else {
@@ -216,15 +240,18 @@ return $this->data['password'];
         $this->save();
     }
 
-    public function logout() {
+    public function logout()
+    {
         $this->setcookies('', 0);
     }
 
-    public function setcookie($name, $value, $expired) {
+    public function setcookie($name, $value, $expired)
+    {
         setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
 
-    public function setcookies($cookie, $expired) {
+    public function setcookies($cookie, $expired)
+    {
         $this->setcookie('litepubl_user_id', $cookie ? $this->_user : '', $expired);
         $this->setcookie('litepubl_user', $cookie, $expired);
         $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
@@ -236,11 +263,13 @@ return $this->data['password'];
         }
     }
 
-    public function Getinstalled() {
+    public function Getinstalled()
+    {
         return isset($this->data['email']);
     }
 
-    public function settimezone($value) {
+    public function settimezone($value)
+    {
         if (!isset($this->data['timezone']) || ($this->timezone != $value)) {
             $this->data['timezone'] = $value;
             $this->save();
@@ -249,17 +278,20 @@ return $this->data['password'];
         }
     }
 
-    public function save_cookie($cookie, $expired) {
+    public function save_cookie($cookie, $expired)
+    {
         $this->data['cookiehash'] = $cookie ? $this->hash($cookie) : '';
         $this->cookieexpired = $expired;
         $this->save();
     }
 
-    public function hash($s) {
+    public function hash($s)
+    {
         return Str::basemd5((string)$s . $this->solt . Config::$secret);
     }
 
-    public function inGroup($groupname) {
+    public function inGroup($groupname)
+    {
         //admin has all rights
         if ($this->user == 1) return true;
         if (in_array($this->groupnames['admin'], $this->idgroups)) return true;
@@ -271,12 +303,14 @@ return $this->data['password'];
         return in_array($idgroup, $this->idgroups);
     }
 
-    public function inGroups(array $idgroups) {
+    public function inGroups(array $idgroups)
+    {
         if ($this->ingroup('admin')) return true;
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
-    public function hasGroup($groupname) {
+    public function hasGroup($groupname)
+    {
         if ($this->ingroup($groupname)) return true;
         // if group is children of user groups
         $idgroup = $this->groupnames[$groupname];
@@ -285,3 +319,4 @@ return $this->data['password'];
     }
 
 }
+

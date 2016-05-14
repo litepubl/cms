@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tfacebookregservice extends tregservice {
+class tfacebookregservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['name'] = 'facebook';
         $this->data['title'] = 'FaceBook';
@@ -23,25 +27,26 @@ class tfacebookregservice extends tregservice {
         $this->data['url'] = '/facebook-oauth2callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $url = 'https://www.facebook.com/dialog/oauth?scope=email&';
         $url.= parent::getauthurl();
         return $url;
     }
 
     //handle callback
-    public function request($arg) {
+    public function request($arg)
+    {
         if ($err = parent::request($arg)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $code = $_REQUEST['code'];
         $resp = http::get('https://graph.facebook.com/oauth/access_token?' . http_build_query(array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
-            'redirect_uri' =>  $this->getApp()->site->url . $this->url,
+            'redirect_uri' => $this->getApp()->site->url . $this->url,
             //'grant_type' => 'authorization_code'
             
         )));
@@ -65,7 +70,8 @@ class tfacebookregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'https://developers.facebook.com/apps',
             'client_id' => 'App ID',
@@ -74,3 +80,4 @@ class tfacebookregservice extends tregservice {
     }
 
 }
+

@@ -1,22 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-class Items extends Events 
+class Items extends Events
 {
     public $items;
     public $dbversion;
     protected $idprop;
     protected $autoid;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addevents('added', 'deleted');
         $this->idprop = 'id';
@@ -28,21 +30,24 @@ class Items extends Events
         }
     }
 
-    public function getStorage() {
-if ($this->dbversion) {
-        return  $this->getApp()->poolStorage;
-} else {
-return parent::getStorage();
-}
+    public function getStorage()
+    {
+        if ($this->dbversion) {
+            return $this->getApp()->poolStorage;
+        } else {
+            return parent::getStorage();
+        }
     }
 
-    public function loadall() {
+    public function loadall()
+    {
         if ($this->dbversion) {
             return $this->select('', '');
         }
     }
 
-    public function loaditems(array $items) {
+    public function loaditems(array $items)
+    {
         if (!$this->dbversion) {
             return;
         }
@@ -57,7 +62,8 @@ return parent::getStorage();
         $this->select("$this->thistable.$this->idprop in ($list)", '');
     }
 
-    public function select($where, $limit) {
+    public function select($where, $limit)
+    {
         if (!$this->dbversion) {
             $this->error('Select method must be called ffrom database version');
         }
@@ -69,13 +75,14 @@ return parent::getStorage();
         return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
     }
 
-    public function res2items($res) {
+    public function res2items($res)
+    {
         if (!$res) {
             return array();
         }
 
         $result = array();
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = $item[$this->idprop];
             $result[] = $id;
@@ -85,12 +92,14 @@ return parent::getStorage();
         return $result;
     }
 
-    public function findItem($where) {
+    public function findItem($where)
+    {
         $a = $this->select($where, 'limit 1');
         return count($a) ? $a[0] : false;
     }
 
-    public function getCount() {
+    public function getCount()
+    {
         if ($this->dbversion) {
             return $this->db->getcount();
         } else {
@@ -98,7 +107,8 @@ return parent::getStorage();
         }
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         if (isset($this->items[$id])) {
             return $this->items[$id];
         }
@@ -110,7 +120,8 @@ return parent::getStorage();
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
-    public function getValue($id, $name) {
+    public function getValue($id, $name)
+    {
         if ($this->dbversion && !isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id, $this->idprop);
         }
@@ -118,14 +129,16 @@ return parent::getStorage();
         return $this->items[$id][$name];
     }
 
-    public function setValue($id, $name, $value) {
+    public function setValue($id, $name, $value)
+    {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
             $this->db->update("$name = " . Str::quote($value) , "$this->idprop = $id");
         }
     }
 
-    public function itemExists($id) {
+    public function itemExists($id)
+    {
         if (isset($this->items[$id])) {
             return true;
         }
@@ -141,7 +154,8 @@ return parent::getStorage();
         return false;
     }
 
-    public function indexof($name, $value) {
+    public function indexof($name, $value)
+    {
         if ($this->dbversion) {
             return $this->db->findprop($this->idprop, "$name = " . Str::quote($value));
         }
@@ -154,7 +168,8 @@ return parent::getStorage();
         return false;
     }
 
-    public function additem(array $item) {
+    public function additem(array $item)
+    {
         $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
         $item[$this->idprop] = $id;
         $this->items[$id] = $item;
@@ -166,7 +181,8 @@ return parent::getStorage();
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($this->dbversion) {
             $this->db->delete("$this->idprop = $id");
         }
@@ -184,3 +200,4 @@ return parent::getStorage();
     }
 
 }
+

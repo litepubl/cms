@@ -1,18 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
 
 class CommonTags extends Widget
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->adminclass = '\litepubl\admin\widget\Tags';
         $this->data['sortname'] = 'count';
@@ -21,12 +23,14 @@ class CommonTags extends Widget
         $this->data['maxcount'] = 0;
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return false;
     }
 
-    public function getContent($id, $sidebar) {
-$view = new View();
+    public function getContent($id, $sidebar)
+    {
+        $view = new View();
         $items = $this->owner->getView()->getSorted(array(
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
@@ -37,3 +41,4 @@ $view = new View();
     }
 
 }
+

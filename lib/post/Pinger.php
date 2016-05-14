@@ -1,34 +1,39 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\core\Str;
 
 class Pinger extends \litepubl\core\Events
- {
-    protected function create() {
+{
+    protected function create()
+    {
         parent::create();
         $this->basename = 'pinger';
         $this->data['services'] = '';
         $this->data['enabled'] = true;
     }
 
-    public function install() {
-        if (!$this->services){
- $this->services = file_get_contents( $this->getApp()->paths->libinclude . 'pingservices.txt');
-}
+    public function install()
+    {
+        if (!$this->services) {
+            $this->services = file_get_contents($this->getApp()->paths->libinclude . 'pingservices.txt');
+        }
 
         $posts = Posts::i();
         $posts->singlecron = $this->pingpost;
     }
 
-    public function setEnabled($value) {
+    public function setEnabled($value)
+    {
         if ($value != $this->enabled) {
             $this->lock();
             $this->data['enabled'] = $value;
@@ -41,29 +46,28 @@ class Pinger extends \litepubl\core\Events
         }
     }
 
-    public function setServices($s) {
+    public function setServices($s)
+    {
         if ($this->services != $s) {
             $this->data['services'] = $s;
             $this->save();
         }
     }
 
-    public function pingpost($id) {
+    public function pingpost($id)
+    {
         if (!isset($id)) {
- return;
-}
-
+            return;
+        }
 
         $post = Post::i((int)$id);
         if (!is_object($post)) {
- return;
-}
-
+            return;
+        }
 
         if ($post->status != 'published') {
- return;
-}
-
+            return;
+        }
 
         $posturl = $post->link;
         $meta = $post->meta;
@@ -77,19 +81,16 @@ class Pinger extends \litepubl\core\Events
         $m = microtime(true);
         foreach ($links as $link) {
             if (in_array($link, $pinged)) {
- continue;
-}
-
+                continue;
+            }
 
             if (preg_match('/\.(zip|gz|js|css|mp3|mp4|wav|mov|flv|avi|mpg|mpeg|jpg|jpeg|png|bmp|gif|ogv|webm|flac)$/i', $link)) {
- continue;
-}
-
+                continue;
+            }
 
             if (preg_match('/(youtu\.be|youtube\.com|facebook\.com|twitter\.com|vk\.com|mail\.ru|odnoklassniki\.ru)/i', $link)) {
- continue;
-}
-
+                continue;
+            }
 
             $this->ping($link, $posturl);
             $pinged[] = $link;
@@ -99,7 +100,8 @@ class Pinger extends \litepubl\core\Events
         if (count($pinged)) $meta->pinged = serialize($pinged);
     }
 
-    private function getLinks(tpost $post) {
+    private function getLinks(tpost $post)
+    {
         $posturl = $post->link;
         $result = array();
         $punc = '.:?\-';
@@ -108,48 +110,45 @@ class Pinger extends \litepubl\core\Events
         preg_match_all("{\b http : [$any] +? (?= [$punc] * [^$any] | $)}x", $post->filtered, $links);
         foreach ($links[0] as $link) {
             if (in_array($link, $result)) {
- continue;
-}
-
+                continue;
+            }
 
             if ($link == $posturl) {
- continue;
-}
+                continue;
+            }
 
-
-            if (Str::begin($link,  $this->getApp()->site->url)) {
- continue;
-}
-
+            if (Str::begin($link, $this->getApp()->site->url)) {
+                continue;
+            }
 
             $parts = parse_url($link);
             if (empty($parts['query']) && (empty($parts['path']) || ($parts['path'] == '/'))) {
- continue;
-}
-
+                continue;
+            }
 
             $result[] = $link;
         }
         return $result;
     }
 
-    protected function ping($link, $posturl) {
+    protected function ping($link, $posturl)
+    {
         if ($ping = static ::discover($link)) {
             $client = new IXR_Client($ping);
             $client->timeout = 3;
-            $client->useragent.= " -- Lite Publisher/" .  $this->getApp()->options->version;
+            $client->useragent.= " -- Lite Publisher/" . $this->getApp()->options->version;
             $client->debug = false;
 
             if ($client->query('pingback.ping', $posturl, $link) || (isset($client->error->code) && 48 == $client->error->code)) {
- return true;
-}
-
+                return true;
+            }
 
         }
         return false;
     }
 
-    public static function discover($url, $timeout_bytes = 2048) {
+    public static function discover($url, $timeout_bytes = 2048)
+    {
         $byte_count = 0;
         $contents = '';
         $headers = '';
@@ -173,7 +172,7 @@ class Pinger extends \litepubl\core\Events
         return false;
 
         // Send the GET request
-        $version =  $this->getApp()->options->version;
+        $version = $this->getApp()->options->version;
         $request = "GET $path HTTP/1.1\r\nHost: $host\r\nUser-Agent: Lite Publisher/$version\r\n\r\n";
         fputs($fp, $request);
 
@@ -228,14 +227,15 @@ class Pinger extends \litepubl\core\Events
         return false;
     }
 
-    public function pingservices($url) {
+    public function pingservices($url)
+    {
         $m = microtime(true);
-        $client = new IXR_Client( $this->getApp()->site->url);
+        $client = new IXR_Client($this->getApp()->site->url);
         $client->timeout = 3;
-        $client->useragent.= ' -- Lite Publisher/' .  $this->getApp()->options->version;
+        $client->useragent.= ' -- Lite Publisher/' . $this->getApp()->options->version;
         $client->debug = false;
 
-        $home =  $this->getApp()->site->url .  $this->getApp()->site->home;
+        $home = $this->getApp()->site->url . $this->getApp()->site->home;
         $list = explode("\n", $this->services);
         foreach ($list as $service) {
             $service = trim($service);
@@ -245,8 +245,8 @@ class Pinger extends \litepubl\core\Events
             $client->path = isset($bits['path']) ? $bits['path'] : '/';
             if (!$client->path) $client->path = '/';
 
-            if (!$client->query('weblogUpdates.extendedPing',  $this->getApp()->site->name, $home, $url,  $this->getApp()->site->url . '/rss.xml')) {
-                $client->query('weblogUpdates.ping',  $this->getApp()->site->name, $url);
+            if (!$client->query('weblogUpdates.extendedPing', $this->getApp()->site->name, $home, $url, $this->getApp()->site->url . '/rss.xml')) {
+                $client->query('weblogUpdates.ping', $this->getApp()->site->name, $url);
             }
 
             if ((microtime(true) - $m) > 180) break;
@@ -254,3 +254,4 @@ class Pinger extends \litepubl\core\Events
     }
 
 }
+

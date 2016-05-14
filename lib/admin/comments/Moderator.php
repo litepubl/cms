@@ -1,41 +1,45 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\comments;
-use litepubl\comments\Comments;
+
+use liteepubl\post\Post;
+use litepubl\admin\Table;
 use litepubl\comments\Comment;
+use litepubl\comments\Comments;
 use litepubl\comments\Manager;
 use litepubl\view\Args;
-use litepubl\view\Lang;
 use litepubl\view\Filter;
-use liteepubl\post\Post;
+use litepubl\view\Lang;
 use litepubl\view\Vars;
-use litepubl\admin\Table;
 
 class Moderator extends \litepubl\admin\Menu
 {
     private $moder;
     private $iduser;
 
-    public function canrequest() {
-        $this->moder =  $this->getApp()->options->ingroup('moderator');
-        $this->iduser = $this->moder ? (isset($_GET['iduser']) ? (int)$_GET['iduser'] : 0) :  $this->getApp()->options->user;
+    public function canrequest()
+    {
+        $this->moder = $this->getApp()->options->ingroup('moderator');
+        $this->iduser = $this->moder ? (isset($_GET['iduser']) ? (int)$_GET['iduser'] : 0) : $this->getApp()->options->user;
     }
 
-    public function can($id, $action) {
+    public function can($id, $action)
+    {
         if ($this->moder) {
-return true;
-}
+            return true;
+        }
 
-        if ( $this->getApp()->options->user != Comments::i()->getvalue($id, 'author')) {
-return false;
-}
+        if ($this->getApp()->options->user != Comments::i()->getvalue($id, 'author')) {
+            return false;
+        }
 
         $cm = Manager::i();
         switch ($action) {
@@ -48,12 +52,13 @@ return false;
         return false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $comments = Comments::i();
         $cm = Manager::i();
         $lang = $this->lang;
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
 
         if ($action = $this->action) {
             $id = $this->idget();
@@ -119,8 +124,9 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function getInfo($comment) {
-$admin = $this->admintheme;
+    public function getInfo($comment)
+    {
+        $admin = $this->admintheme;
         $lang = Lang::admin();
         $tb = $this->newTable();
         $result = $tb->props(array(
@@ -133,7 +139,7 @@ $admin = $this->admintheme;
         ));
 
         $result.= $admin->help($lang->content);
-$result .= $admin->help($comment->content);
+        $result.= $admin->help($comment->content);
         $adminurl = $this->adminurl . "=$comment->id&action";
         $result.= $admin->help("
     $lang->cando:
@@ -146,7 +152,8 @@ $result .= $admin->help($comment->content);
         return $result;
     }
 
-    private function editComment($id) {
+    private function editComment($id)
+    {
         $comment = new Comment($id);
         $args = new Args();
         $args->content = $comment->rawcontent;
@@ -156,7 +163,8 @@ $result .= $admin->help($comment->content);
         return $result;
     }
 
-    private function reply($id) {
+    private function reply($id)
+    {
         $comment = new Comment($id);
         $args = new Args();
         $args->pid = $comment->post;
@@ -171,7 +179,8 @@ $result .= $admin->help($comment->content);
     }
 
     //callback for table builder
-    public function get_excerpt(Table $tb, Comment $comment) {
+    public function get_excerpt(Table $tb, Comment $comment)
+    {
         $comment->id = $tb->id;
         $args = $tb->args;
         $args->id = $tb->id;
@@ -181,7 +190,8 @@ $result .= $admin->help($comment->content);
         return $this->admintheme->quote(Filter::getexcerpt($comment->content, 120));
     }
 
-    protected function get_table($kind) {
+    protected function get_table($kind)
+    {
         $comments = Comments::i(0);
         $perpage = 20;
         // get total count
@@ -192,13 +202,13 @@ $result .= $admin->help($comment->content);
         $from = $this->getfrom($perpage, $total);
         $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
 
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::admin('comments');
         $form = $this->newForm();
         $form->title = sprintf($lang->itemscount, $from, $from + count($list) , $total);
 
         $comment = new Comment(0);
-$vars = new Vars();
+        $vars = new Vars();
         $vars->comment = $comment;
 
         $Table = $this->newTable();
@@ -264,28 +274,31 @@ $vars = new Vars();
 
         $form->before = $this->admintheme->templates['tablecols'];
         $form->body = $Table->build($list);
-        $form->body .= $form->centerGroup($form->getButtons('approve', 'hold', 'delete'));
+        $form->body.= $form->centerGroup($form->getButtons('approve', 'hold', 'delete'));
         $form->submit = '';
         $result = $form->get();
 
         $theme = $this->theme;
-        $result.= $theme->getPages($this->url,  $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
+        $result.= $theme->getPages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
         return $result;
     }
 
-    private function moderated($id) {
+    private function moderated($id)
+    {
         $result = $this->admintheme->success($this->lang->successmoderated);
         $result.= $this->getinfo(new Comment($id));
         return $result;
     }
 
-    public function confirmDelete($id, $mesg = false) {
+    public function confirmDelete($id, $mesg = false)
+    {
         $result = parent::confirmDelete($id);
         $result.= $this->getinfo(new Comment($id));
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $result = '';
         $comments = Comments::i();
         if (isset($_REQUEST['action'])) {
@@ -298,7 +311,7 @@ $vars = new Vars();
                     $item = $comments->getitem($this->idget());
                     $post = Post::i((int)$item['post']);
                     $this->manager->reply($this->idget() , $_POST['content']);
-                    return  $this->getApp()->context->response->redir($post->lastcommenturl);
+                    return $this->getApp()->context->response->redir($post->lastcommenturl);
                     break;
 
 
@@ -316,16 +329,13 @@ $vars = new Vars();
         $status = isset($_POST['approve']) ? 'approved' : (isset($_POST['hold']) ? 'hold' : 'delete');
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $id = (int)$id;
             if (!$id) {
- continue;
-}
-
-
+                continue;
+            }
 
             if ($status == 'delete') {
                 if ($this->can($id, 'delete')) $comments->delete($id);
@@ -334,11 +344,12 @@ $vars = new Vars();
             }
         }
 
-                    return $this->admintheme->success($this->lang->successmoderated);
+        return $this->admintheme->success($this->lang->successmoderated);
     }
 
-    public static function refilter() {
-        $db =  $this->getApp()->db;
+    public static function refilter()
+    {
+        $db = $this->getApp()->db;
         $filter = Filter::i();
         $from = 0;
         while ($a = $db->res2assoc($db->query("select id, rawcontent from $db->rawcomments where id > $from limit 500"))) {
@@ -353,3 +364,4 @@ $vars = new Vars();
     }
 
 }
+

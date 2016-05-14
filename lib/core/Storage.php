@@ -1,28 +1,31 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class Storage
- {
-use AppTrait;
+{
+    use AppTrait;
 
-
-    public function getExt() {
-return '.php';
+    public function getExt()
+    {
+        return '.php';
     }
 
-    public function serialize(array $data) {
+    public function serialize(array $data)
+    {
         return \serialize($data);
     }
 
-    public function unserialize($str) {
+    public function unserialize($str)
+    {
         if ($str) {
             return \unserialize($str);
         }
@@ -30,27 +33,33 @@ return '.php';
         return false;
     }
 
-    public function before($str) {
+    public function before($str)
+    {
         return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
     }
 
-    public function after($str) {
+    public function after($str)
+    {
         return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
     }
 
-    public function getFilename(Data $obj) {
+    public function getFilename(Data $obj)
+    {
         return $this->getApp()->paths->data . $obj->getbasename();
     }
 
-    public function save(Data $obj) {
+    public function save(Data $obj)
+    {
         return $this->saveFile($this->getfilename($obj) , $this->serialize($obj->data));
     }
 
-    public function saveData($filename, array $data) {
+    public function saveData($filename, array $data)
+    {
         return $this->saveFile($filename, $this->serialize($data));
     }
 
-    public function load(Data $obj) {
+    public function load(Data $obj)
+    {
         try {
             if ($data = $this->loadData($this->getfilename($obj))) {
                 $obj->data = $data + $obj->data;
@@ -64,7 +73,8 @@ return '.php';
         return false;
     }
 
-    public function loadData($filename) {
+    public function loadData($filename)
+    {
         if ($s = $this->loadFile($filename)) {
             return $this->unserialize($s);
         }
@@ -72,7 +82,8 @@ return '.php';
         return false;
     }
 
-    public function loadFile($filename) {
+    public function loadFile($filename)
+    {
         if (\file_exists($filename . $this->getExt()) && ($s = \file_get_contents($filename . $this->getExt()))) {
             return $this->after($s);
         }
@@ -80,7 +91,8 @@ return '.php';
         return false;
     }
 
-    public function saveFile($filename, $content) {
+    public function saveFile($filename, $content)
+    {
         $tmp = $filename . '.tmp' . $this->getExt();
         if (false === \file_put_contents($tmp, $this->before($content))) {
             $this->error(\sprintf('Error write to file "%s"', $tmp));
@@ -105,20 +117,24 @@ return '.php';
         return true;
     }
 
-    public function remove($filename) {
+    public function remove($filename)
+    {
         $this->delete($filename . $this->getExt());
         $this->delete($filename . '.bak' . $this->getExt());
     }
 
-    public function delete($filename) {
+    public function delete($filename)
+    {
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
             \unlink($filename);
         }
     }
 
-    public function error($mesg) {
-         $this->getApp()->options->trace($mesg);
+    public function error($mesg)
+    {
+        $this->getApp()->options->trace($mesg);
     }
 
 }
+

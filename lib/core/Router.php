@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
+
 use litepubl\pages\Redirector;
 
 class Router extends Items
- {
+{
     public $prefilter;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'urlmap';
@@ -26,13 +29,13 @@ class Router extends Items
     }
 
     public function request(Context $context)
-{
-$app = $this->getApp();
+    {
+        $app = $this->getApp();
         if ($this->redirdom && $app->site->fixedurl) {
-            $parsedUrl = parse_url( $app->site->url . '/');
+            $parsedUrl = parse_url($app->site->url . '/');
             if ($context->request->host != strtolower($parsedUrl['host'])) {
-$context->response->redir($app->site->url . $context->request->url);
-return;
+                $context->response->redir($app->site->url . $context->request->url);
+                return;
             }
         }
 
@@ -41,14 +44,14 @@ return;
     }
 
     public function queryItem(Context $context)
- {
-$url = $context->request->url;
+    {
+        $url = $context->request->url;
         if ($result = $this->query($url)) {
             return $result;
         }
 
-$srcurl = $url;
-$response = $context->response;
+        $srcurl = $url;
+        $response = $context->response;
 
         if ($i = strpos($url, '?')) {
             $url = substr($url, 0, $i);
@@ -56,20 +59,20 @@ $response = $context->response;
 
         if ('//' == substr($url, -2)) {
             $response->redir(rtrim($url, '/') . '/');
-return false;
+            return false;
         }
 
         //extract page number
         if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
             if ('/' != substr($url, -1)) {
                 $response->redir($url . '/');
-return false;
+                return false;
             }
 
             $url = $m[1];
-            if (!$url ) {
-$url = '/';
-}
+            if (!$url) {
+                $url = '/';
+            }
 
             $context->request->page = max(1, abs((int)$m[2]));
         }
@@ -95,22 +98,26 @@ $url = '/';
         return false;
     }
 
-    public function getIdurl($id) {
+    public function getIdurl($id)
+    {
         if (!isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id);
         }
         return $this->items[$id]['url'];
     }
 
-    public function findUrl($url) {
-return $this->db->findItem('url = ' . Str::quote($url));
+    public function findUrl($url)
+    {
+        return $this->db->findItem('url = ' . Str::quote($url));
     }
 
-    public function urlExists($url) {
+    public function urlExists($url)
+    {
         return $this->db->findid('url = ' . Str::quote($url));
     }
 
-    private function query($url) {
+    private function query($url)
+    {
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
@@ -122,8 +129,8 @@ return $this->db->findItem('url = ' . Str::quote($url));
         return false;
     }
 
-
-    public function findFilter($url) {
+    public function findFilter($url)
+    {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
                 case 'begin':
@@ -151,23 +158,26 @@ return $this->db->findItem('url = ' . Str::quote($url));
         return false;
     }
 
-    public function updateFilter() {
+    public function updateFilter()
+    {
         $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
         $this->save();
     }
 
-    public function addGet($url, $class) {
+    public function addGet($url, $class)
+    {
         return $this->add($url, $class, null, 'get');
     }
 
-    public function add($url, $class, $arg, $type = 'normal') {
+    public function add($url, $class, $arg, $type = 'normal')
+    {
         if (empty($url)) {
-$this->error('Empty url to add');
-}
+            $this->error('Empty url to add');
+        }
 
         if (empty($class)) {
-$this->error('Empty class name of adding url');
-}
+            $this->error('Empty class name of adding url');
+        }
 
         if (!in_array($type, array(
             'normal',
@@ -207,7 +217,8 @@ $this->error('Empty class name of adding url');
         return $item['id'];
     }
 
-    public function delete($url) {
+    public function delete($url)
+    {
         $url = Str::quote($url);
         if ($id = $this->db->findid('url = ' . $url)) {
             $this->db->iddelete($id);
@@ -228,7 +239,8 @@ $this->error('Empty class name of adding url');
         return true;
     }
 
-    public function deleteClass($class) {
+    public function deleteClass($class)
+    {
         if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
                 $this->db->idDelete($item['id']);
@@ -239,7 +251,8 @@ $this->error('Empty class name of adding url');
         $this->clearcache();
     }
 
-    public function deleteItem($id) {
+    public function deleteItem($id)
+    {
         if ($item = $this->db->getitem($id)) {
             $this->db->idDelete($id);
             $this->deleted($id);
@@ -249,11 +262,13 @@ $this->error('Empty class name of adding url');
     }
 
     //for Archives
-    public function getUrlsOfClass($class) {
+    public function getUrlsOfClass($class)
+    {
         $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
         return $this->db->res2id($res);
     }
-    public function addRedir($from, $to) {
+    public function addRedir($from, $to)
+    {
         if ($from == $to) {
             return;
         }
@@ -262,35 +277,40 @@ $this->error('Empty class name of adding url');
         $Redir->add($from, $to);
     }
 
-    public static function unsub($obj) {
-static ::i()->unbind($obj);
-}
+    public static function unsub($obj)
+    {
+        static ::i()->unbind($obj);
+    }
 
-public function unbind($obj) {
+    public function unbind($obj)
+    {
         $this->lock();
-parent::unbind($obj);
+        parent::unbind($obj);
         $this->deleteClass(get_class($obj));
-$this->updateFilter();
+        $this->updateFilter();
         $this->unlock();
     }
 
-    public function setUrlValue($url, $name, $value) {
+    public function setUrlValue($url, $name, $value)
+    {
         if ($id = $this->urlExists($url)) {
             $this->setValue($id, $name, $value);
         }
     }
 
-    public function setIdUrl($id, $url) {
+    public function setIdUrl($id, $url)
+    {
         $this->db->setValue($id, 'url', $url);
         if (isset($this->items[$id])) {
-$this->items[$id]['url'] = $url;
-}
+            $this->items[$id]['url'] = $url;
+        }
     }
 
-//backward compabilty
-public function clearCache()
-{
-$this->getApp()->cache->clear();
-}
+    //backward compabilty
+    public function clearCache()
+    {
+        $this->getApp()->cache->clear();
+    }
 
 }
+

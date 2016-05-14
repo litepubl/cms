@@ -1,17 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\bootstrap;
-use litepubl\core\Plugins;
-use litepubl\admin\Menus;
 
-function HeaderInstall($self) {
+use litepubl\admin\Menus;
+use litepubl\core\Plugins;
+
+function HeaderInstall($self)
+{
     $about = Plugins::getabout(Plugins::getname(__file__));
 
     $admin = Menus::i();
@@ -25,6 +28,8 @@ function HeaderInstall($self) {
     ));
 }
 
-function HeaderUninstall($self) {
+function HeaderUninstall($self)
+{
     Menus::i()->deleteurl('/admin/views/bootstrapheader/');
 }
+

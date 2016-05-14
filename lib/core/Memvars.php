@@ -1,29 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class Memvars
 {
-use AppTrait;
+    use AppTrait;
 
-public static $vars;
+    public static $vars;
 
-public static function i() {
-if (!static::$vars) {
-if (static::getAppInstance()->memcache) {
-static::$vars = new MemvarMemcache();
-} else {
-static::$vars = new MemvarMysql();
-}
+    public static function i()
+    {
+        if (!static ::$vars) {
+            if (static ::getAppInstance()->memcache) {
+                static ::$vars = new MemvarMemcache();
+            } else {
+                static ::$vars = new MemvarMysql();
+            }
+        }
+
+        return static ::$vars;
+    }
 }
 
-return  static::$vars;
-}
-}

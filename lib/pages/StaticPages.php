@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
-    use litepubl\core\Context;
-use litepubl\view\Schema;
-use litepubl\view\Filter;
+
+use litepubl\core\Context;
 use litepubl\utils\LinkGenerator;
+use litepubl\view\Filter;
+use litepubl\view\Schema;
 
 class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
     private $id;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'staticpages';
     }
@@ -27,52 +30,62 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         $this->id = (int)$context->itemRoute['arg'];
     }
 
-    public function getVal($name) {
+    public function getVal($name)
+    {
         return $this->items[$this->id][$name];
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->getval('title');
     }
 
-    public function getHead() {
+    public function getHead()
+    {
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         return $this->getval('keywords');
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->getval('description');
     }
 
-    public function getIdSchema() {
+    public function getIdSchema()
+    {
         return $this->getval('idschema');
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         if ($id != $this->data['idschema']) {
             $this->items[$this->id]['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getSchema() {
+    public function getSchema()
+    {
         return Schema::getSchema($this);
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $theme = $this->getSchema()->theme;
         return $theme->simple($this->getval('filtered'));
     }
 
-    public function add($title, $description, $keywords, $content) {
+    public function add($title, $description, $keywords, $content)
+    {
         $filter = Filter::i();
         $title = Filter::escape($title);
         $linkgen = LinkGenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
         $this->items[++$this->autoid] = array(
-            'idurl' =>  $this->getApp()->router->add($url, get_class($this) , $this->autoid) ,
+            'idurl' => $this->getApp()->router->add($url, get_class($this) , $this->autoid) ,
             'url' => $url,
             'title' => $title,
             'filtered' => $filter->filter($content) ,
@@ -85,11 +98,11 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         return $this->autoid;
     }
 
-    public function edit($id, $title, $description, $keywords, $content) {
+    public function edit($id, $title, $description, $keywords, $content)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
-
+            return false;
+        }
 
         $filter = Filter::i();
         $item = $this->items[$id];
@@ -104,12 +117,14 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
             'idschema' => $item['idschema']
         );
         $this->save();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
-    public function delete($id) {
-         $this->getApp()->router->deleteitem($this->items[$id]['idurl']);
+    public function delete($id)
+    {
+        $this->getApp()->router->deleteitem($this->items[$id]['idurl']);
         parent::delete($id);
     }
 
 }
+

@@ -1,25 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Lang;
+
 use litepubl\view\Args;
 use litepubl\view\Filter;
+use litepubl\view\Lang;
 
-class tticketeditor extends tposteditor {
+class tticketeditor extends tposteditor
+{
     private $newstatus;
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         Lang::admin()->addsearch('tickets', 'ticket', 'editor');
         if ($this->idpost == 0) {
             return parent::gettitle();
@@ -28,24 +33,24 @@ class tticketeditor extends tposteditor {
         }
     }
 
-    public function canrequest() {
+    public function canrequest()
+    {
         if ($s = parent::canrequest()) {
- return $s;
-}
-
+            return $s;
+        }
 
         $this->basename = 'tickets';
         if ($this->idpost > 0) {
             $ticket = tticket::i($this->idpost);
-            if (( $this->getApp()->options->group == 'ticket') && ( $this->getApp()->options->user != $ticket->author)) {
- return 403;
-}
-
+            if (($this->getApp()->options->group == 'ticket') && ($this->getApp()->options->user != $ticket->author)) {
+                return 403;
+            }
 
         }
     }
 
-    public function getTabstemplate() {
+    public function getTabstemplate()
+    {
         return strtr($this->admintheme->templates['tabs'], array(
             '$id' => 'tabs',
             '$tab' => '[tab=ticket] [ajaxtab=tags]',
@@ -53,7 +58,8 @@ class tticketeditor extends tposteditor {
         ));
     }
 
-    public function getArgstab(tpost $ticket, Args $args) {
+    public function getArgstab(tpost $ticket, Args $args)
+    {
         $args->ajax = $this->getajaxlink($ticket->id);
         $args->fixed = $ticket->state == 'fixed';
 
@@ -102,7 +108,8 @@ class tticketeditor extends tposteditor {
         ));
     }
 
-    public function getText($post = null) {
+    public function getText($post = null)
+    {
         $post = $this->getvarpost($post);
         $admintheme = $this->admintheme;
         $lang = Lang::admin('tickets');
@@ -117,11 +124,13 @@ class tticketeditor extends tposteditor {
         return $admintheme->parseArg($tabs->get() , $args);
     }
 
-    public function newpost() {
+    public function newpost()
+    {
         return new tticket();
     }
 
-    public function canprocess() {
+    public function canprocess()
+    {
         if ($error = parent::canprocess()) {
             return $error;
         }
@@ -131,9 +140,9 @@ class tticketeditor extends tposteditor {
         $id = (int)$_POST['id'];
         if ($id == 0) {
             $this->newstatus = 'published';
-            if ( $this->getApp()->options->group == 'ticket') {
-                $hold = $tickets->db->getcount('status = \'draft\' and author = ' .  $this->getApp()->options->user);
-                $approved = $tickets->db->getcount('status = \'published\' and author = ' .  $this->getApp()->options->user);
+            if ($this->getApp()->options->group == 'ticket') {
+                $hold = $tickets->db->getcount('status = \'draft\' and author = ' . $this->getApp()->options->user);
+                $approved = $tickets->db->getcount('status = \'published\' and author = ' . $this->getApp()->options->user);
                 if ($approved < 3) {
                     if ($hold - $approved >= 2) {
                         return Lang::admin('tickets')->noapproved;
@@ -145,7 +154,8 @@ class tticketeditor extends tposteditor {
         }
     }
 
-    public function processtab(tpost $ticket) {
+    public function processtab(tpost $ticket)
+    {
         extract($_POST, EXTR_SKIP);
 
         $ticket->title = $title;
@@ -162,7 +172,7 @@ class tticketeditor extends tposteditor {
         }
 
         if ($ticket->author == 0) {
-            $ticket->author =  $this->getApp()->options->user;
+            $ticket->author = $this->getApp()->options->user;
         }
 
         if ($ticket->id == 0) {
@@ -175,3 +185,4 @@ class tticketeditor extends tposteditor {
     }
 
 }
+

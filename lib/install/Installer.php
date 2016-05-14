@@ -1,50 +1,54 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\install;
+
 use litepubl\Config;
+use litepubl\comments\Comments;
+use litepubl\comments\Manager;
 use litepubl\core;
-use litepubl\core\litepubl;
 use litepubl\core\Options;
+use litepubl\core\Plugins;
 use litepubl\core\Router;
-use litepubl\post\Posts;
+use litepubl\core\Users;
+use litepubl\core\litepubl;
 use litepubl\post\Post;
+use litepubl\post\Posts;
+use litepubl\utils\Filer;
+use litepubl\utils\Mailer;
+use litepubl\view\Args;
+use litepubl\view\Css;
+use litepubl\view\Js;
 use litepubl\view\Lang;
+use litepubl\view\MainView;
+use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
-use litepubl\view\Js;
-use litepubl\view\Css;
-use litepubl\view\Schema;
 use litepubl\xmlrpc;
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-use litepubl\view\MainView;
-use litepubl\core\Users;
-use litepubl\comments\Manager;
-use litepubl\comments\Comments;
-use litepubl\utils\Mailer;
-use litepubl\utils\Filer;
 
 class Installer
 {
-public $app;
+    public $app;
     public $language;
     public $mode;
     public $lite;
     public $resulttype;
     public $installed;
 
-public function __construct() {
-$this->app = litepubl::$app;
-}
+    public function __construct()
+    {
+        $this->app = litepubl::$app;
+    }
 
-    public function DefineMode() {
+    public function DefineMode()
+    {
         $this->mode = 'form';
         $this->language = $this->GetBrowserLang();
         $this->lite = false;
@@ -63,24 +67,25 @@ $this->app = litepubl::$app;
 
         if (!empty($_GET['lang'])) {
             if ($this->langexists($_GET['lang'])) {
-$this->language = $_GET['lang'];
-}
+                $this->language = $_GET['lang'];
+            }
         }
 
         if (!empty($_GET['mode'])) {
-$this->mode = $_GET['mode'];
-}
+            $this->mode = $_GET['mode'];
+        }
 
         if (!empty($_GET['lite'])) {
-$this->lite = $_GET['lite'] == 1;
-}
+            $this->lite = $_GET['lite'] == 1;
+        }
 
         if (!empty($_GET['resulttype'])) {
-$this->resulttype = $_GET['resulttype'];
-}
+            $this->resulttype = $_GET['resulttype'];
+        }
     }
 
-    public function autoInstall() {
+    public function autoInstall()
+    {
         $this->canInstall();
         $password = $this->firstStep();
 
@@ -92,10 +97,11 @@ $this->resulttype = $_GET['resulttype'];
         }
     }
 
-    public function outputResult($password) {
+    public function outputResult($password)
+    {
         if ($this->mode != 'remote') {
-return;
-}
+            return;
+        }
 
         $this->app->poolStorage->commit();
 
@@ -121,7 +127,7 @@ return;
 
 
             case 'xmlrpc':
-include ($this->app->paths->lib . 'xmlrpc/IXR.php');
+                include ($this->app->paths->lib . 'xmlrpc/IXR.php');
                 $r = new \litepubl\xmlrpc\IXR_Value($result);
                 $s = '<?xml version="1.0" encoding="utf-8" ?>
       <methodResponse><params><param><value>' . $r->getXml() . '</value></param></params></methodResponse>';
@@ -143,94 +149,100 @@ include ($this->app->paths->lib . 'xmlrpc/IXR.php');
         exit();
     }
 
-    public function createDefaultItems($password) {
+    public function createDefaultItems($password)
+    {
         if ($this->mode != 'remote') {
             $this->congratulation($password);
         }
 
         if (!$this->lite) {
-$this->CreateFirstPost();
-}
+            $this->CreateFirstPost();
+        }
 
         $this->sendEmail($password);
         return $password;
     }
 
-    public function canInstall() {
+    public function canInstall()
+    {
         $this->checkSystem();
         $this->checkFolders();
     }
 
-    public function firstStep() {
+    public function firstStep()
+    {
         $this->checkFolders();
 
         return $this->installEngine($_REQUEST['email'], $this->language);
     }
 
-public function installEngine($email, $language) {
-    //forward create folders
-    @mkdir($this->app->paths->data . 'themes', 0777);
-    @chmod($this->app->paths->data . 'themes', 0777);
+    public function installEngine($email, $language)
+    {
+        //forward create folders
+        @mkdir($this->app->paths->data . 'themes', 0777);
+        @chmod($this->app->paths->data . 'themes', 0777);
 
-    $options = Options::i();
-    $options->lock();
-    require_once (dirname(__DIR__) . '/core/install/Options.install.php');
-    $password = core\installOptions($email, $language);
-    $this->installClasses();
-    $options->unlock();
-    return $password;
-}
+        $options = Options::i();
+        $options->lock();
+        require_once (dirname(__DIR__) . '/core/install/Options.install.php');
+        $password = core\installOptions($email, $language);
+        $this->installClasses();
+        $options->unlock();
+        return $password;
+    }
 
-public function installClasses() {
-$classes = $this->app->classes;
-    $this->app->router = Router::i();
-    $posts = Posts::i();
-    $posts->lock();
-    $js = Js::i();
-    $js->lock();
+    public function installClasses()
+    {
+        $classes = $this->app->classes;
+        $this->app->router = Router::i();
+        $posts = Posts::i();
+        $posts->lock();
+        $js = Js::i();
+        $js->lock();
 
-    $css = Css::i();
-    $css->lock();
+        $css = Css::i();
+        $css->lock();
 
-    $xmlrpc = xmlrpc\Server::i();
-    $xmlrpc->lock();
+        $xmlrpc = xmlrpc\Server::i();
+        $xmlrpc->lock();
 
-    $theme = Theme::getTheme('default');
+        $theme = Theme::getTheme('default');
 
-$items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
-foreach ($items as $classname) {
-$classname = trim($classname);
-if (!$classname || ($classname[0] == ';')) {
-continue;
-}
+        $items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
+        foreach ($items as $classname) {
+            $classname = trim($classname);
+            if (!$classname || ($classname[0] == ';')) {
+                continue;
+            }
 
-$obj = $classes->getInstance('litepubl\\' . $classname);
+            $obj = $classes->getInstance('litepubl\\' . $classname);
             if (method_exists($obj, 'install')) {
                 $obj->install();
             }
         }
 
-    //default installed plugins
-    $plugins = Plugins::i();
-    $plugins->lock();
-    $plugins->add('likebuttons');
-    $plugins->add('oldestposts');
-    $plugins->add('photoswipe');
-    $plugins->add('photoswipeThumbnail');
-    $plugins->add('bootstrap');
-    $plugins->unlock();
+        //default installed plugins
+        $plugins = Plugins::i();
+        $plugins->lock();
+        $plugins->add('likebuttons');
+        $plugins->add('oldestposts');
+        $plugins->add('photoswipe');
+        $plugins->add('photoswipeThumbnail');
+        $plugins->add('bootstrap');
+        $plugins->unlock();
 
-    $xmlrpc->unlock();
-    $css->unlock();
-    $js->unlock();
-    $posts->unlock();
-}
+        $xmlrpc->unlock();
+        $css->unlock();
+        $js->unlock();
+        $posts->unlock();
+    }
 
-    public function run() {
+    public function run()
+    {
         $this->defineMode();
         if ($this->mode != 'form') {
-return $this->autoInstall();
-}
+            return $this->autoInstall();
+        }
 
         if (!isset($_POST) || (count($_POST) <= 1)) {
             $this->canInstall();
@@ -242,7 +254,8 @@ return $this->autoInstall();
         return $this->createDefaultItems($password);
     }
 
-    public function processForm($email, $name, $description, $rewrite) {
+    public function processForm($email, $name, $description, $rewrite)
+    {
         $this->app->options->lock();
         $this->app->options->email = $email;
         $this->app->site->name = $name;
@@ -253,7 +266,8 @@ return $this->autoInstall();
         $this->app->options->unlock();
     }
 
-    public function CheckFolders() {
+    public function CheckFolders()
+    {
         $this->checkFolder($this->app->paths->data);
         $this->CheckFolder($this->app->paths->cache);
         $this->CheckFolder($this->app->paths->files);
@@ -263,7 +277,8 @@ return $this->autoInstall();
         
     }
 
-    public function CheckFolder($folder) {
+    public function CheckFolder($folder)
+    {
         if (!file_exists($folder)) {
             $up = dirname($folder);
             if (!file_exists($up)) {
@@ -287,7 +302,8 @@ return $this->autoInstall();
         
     }
 
-    public function CheckSystem() {
+    public function CheckSystem()
+    {
         if (version_compare(PHP_VERSION, '5.1.4', '<')) {
             echo 'LitePublisher requires PHP 5.1.4 or later. You are using PHP ' . PHP_VERSION;
             exit;
@@ -304,7 +320,8 @@ return $this->autoInstall();
         }
     }
 
-    public function CheckApache($rewrite) {
+    public function CheckApache($rewrite)
+    {
         if ($rewrite || (function_exists('apache_get_modules') && in_array('mod_rewrite', apache_get_modules()))) {
             $this->app->site->q = '?';
         } else {
@@ -312,7 +329,8 @@ return $this->autoInstall();
         }
     }
 
-    public function wizardform() {
+    public function wizardform()
+    {
         $this->loadlang();
         $combobox = $this->getlangcombo();
 
@@ -325,13 +343,13 @@ return $this->autoInstall();
             $checkrewrite = str_replace('$checkrewrite', $lang->checkrewrite, $checkrewrite);
         }
 
-$domain = Config::$host;
-if (!$domain) {
-$domain  = $_SERVER['HTTP_HOST'];
-}
+        $domain = Config::$host;
+        if (!$domain) {
+            $domain = $_SERVER['HTTP_HOST'];
+        }
 
-$domain  = \strtolower(\trim($domain ));
-        if ($domain   && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $domain  , $m)) {
+        $domain = \strtolower(\trim($domain));
+        if ($domain && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $domain, $m)) {
             $domain = $m[2];
         }
 
@@ -342,7 +360,7 @@ $domain  = \strtolower(\trim($domain ));
 
         $langcode = $this->language;
 
-$dbaccount = Config::$db ? 'hidden' : '';
+        $dbaccount = Config::$db ? 'hidden' : '';
         $likeurl = urlencode($lang->homeurl);
         $liketitle = urlencode($lang->homename);
 
@@ -353,12 +371,14 @@ $dbaccount = Config::$db ? 'hidden' : '';
         $this->echohtml($form);
     }
 
-    private function getLangcombo() {
+    private function getLangcombo()
+    {
         $langs = array(
             'en' => 'English',
             'ru' => 'Russian'
             //'ua' => 'Ukrain'
-                    );
+            
+        );
 
         $result = '';
         foreach ($langs as $lang => $value) {
@@ -368,7 +388,8 @@ $dbaccount = Config::$db ? 'hidden' : '';
         return $result;
     }
 
-    public function CreateFirstPost() {
+    public function CreateFirstPost()
+    {
         $lang = Lang::usefile('install');
         $theme = Theme::i();
 
@@ -395,23 +416,26 @@ $dbaccount = Config::$db ? 'hidden' : '';
         Comments::i()->add($post->id, $cm->idguest, $lang->postcomment, 'approved', '127.0.0.1');
     }
 
-    public function SendEmail($password) {
+    public function SendEmail($password)
+    {
         define('mailpassword', $password);
         register_shutdown_function([$this, 'sendMail']);
     }
 
-    public function sendMail() {
+    public function sendMail()
+    {
         $lang = Lang::$self->ini['installation'];
         $body = sprintf($lang['body'], $this->app->site->url, $this->app->options->email, mailpassword);
 
         Mailer::sendmail('', $this->app->options->fromemail, '', $this->app->options->email, $lang['subject'], $body);
     }
 
-    public function congratulation($password) {
+    public function congratulation($password)
+    {
         global $lang;
         $tml = file_get_contents($this->app->paths->lib . 'install/templates/install.congratulation.tml');
         $theme = Theme::getTheme('default');
-$vars = new Vars;
+        $vars = new Vars;
         $vars->template = MainView::i();
         $vars->template->schema = Schema::i(1);
         $vars->template->view = new EmptyView();
@@ -420,39 +444,39 @@ $vars = new Vars;
         $args = new Args();
         $args->title = $this->app->site->name;
         $args->url = $this->app->site->url . '/';
-$args->email = $this->app->options->email;
+        $args->email = $this->app->options->email;
         $args->password = $password;
         $args->likeurl = $this->app->options->language == 'ru' ? 'litepublisher.ru' : 'litepublisher.com';
         $content = $theme->parseArg($tml, $args);
         $this->echohtml($content);
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         Filer::delete($this->app->paths->data, true);
         Filer::delete($this->app->paths->cache, true);
         Filer::delete($this->app->pathsfiles, true);
     }
 
-    private function loadLang() {
-include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
+    private function loadLang()
+    {
+        include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
         \litepubl\view\LangPreinstall($this->language);
     }
 
-    private function GetBrowserLang() {
+    private function GetBrowserLang()
+    {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             $a = explode(',', str_replace(';', ',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE'])));
             if (in_array('ru', $a) || in_array('ru_ru', $a)) {
- return 'ru';
-}
-
-
+                return 'ru';
+            }
 
             foreach ($a as $result) {
                 $result = substr($result, 0, 2);
                 if ($this->langexists($result)) {
- return $result;
-}
-
+                    return $result;
+                }
 
             }
         }
@@ -460,11 +484,13 @@ include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
         return 'en';
     }
 
-    public function langexists($language) {
+    public function langexists($language)
+    {
         return @file_exists($this->app->paths->languages . $language . DIRECTORY_SEPARATOR . 'default.ini');
     }
 
-    public function echohtml($html) {
+    public function echohtml($html)
+    {
         @header('Content-Type: text/html; charset=utf-8');
         @Header('Cache-Control: no-cache, must-revalidate');
         @Header('Pragma: no-cache');
@@ -473,3 +499,4 @@ include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
     }
 
 }
+

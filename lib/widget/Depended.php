@@ -1,19 +1,21 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
 
 class Depended extends Widget
- {
+{
     private $item;
 
-    private function isvalue($name) {
+    private function isvalue($name)
+    {
         return in_array($name, array(
             'ajax',
             'order',
@@ -21,7 +23,8 @@ class Depended extends Widget
         ));
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if ($this->isvalue($name)) {
             if (!$this->item) {
                 $widgets = Widgets::i();
@@ -32,7 +35,8 @@ class Depended extends Widget
         return parent::__get($name);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if ($this->isvalue($name)) {
             if (!$this->item) {
                 $widgets = Widgets::i();
@@ -44,9 +48,11 @@ class Depended extends Widget
         }
     }
 
-    public function save() {
+    public function save()
+    {
         parent::save();
         Widgets::i()->save();
     }
 
 }
+

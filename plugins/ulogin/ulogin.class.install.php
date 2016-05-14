@@ -1,17 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Js;
-use litepubl\core\DBManager;
 
-function uloginInstall($self) {
+use litepubl\core\DBManager;
+use litepubl\view\Js;
+
+function uloginInstall($self)
+{
     $self->data['nets'] = array(
         'vkontakte',
         'odnoklassniki',
@@ -49,14 +52,14 @@ function uloginInstall($self) {
     $areg->widget.= $self->panel;
     $areg->save();
 
-     $self->getApp()->router->addget($self->url, get_class($self));
+    $self->getApp()->router->addget($self->url, get_class($self));
 
     $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-     $self->getApp()->classes->add('emailauth', 'emailauth.class.php', 'ulogin');
+    $self->getApp()->classes->add('emailauth', 'emailauth.class.php', 'ulogin');
 
-    $js->add('default', '/plugins/ulogin/resource/' .  $self->getApp()->options->language . '.authdialog.min.js');
+    $js->add('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
     $js->unlock();
 
@@ -67,9 +70,10 @@ function uloginInstall($self) {
     $json->unlock();
 }
 
-function uloginUninstall($self) {
+function uloginUninstall($self)
+{
     tusers::i()->unbind('tregserviceuser');
-     $self->getApp()->router->unbind($self);
+    $self->getApp()->router->unbind($self);
     $man = DBManager::i();
     $man->deletetable($self->table);
     if ($man->column_exists('users', 'phone')) $man->alter('users', "drop phone");
@@ -85,11 +89,12 @@ function uloginUninstall($self) {
     $js = Js::i();
     $js->lock();
     $js->deletefile('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-    $js->deletefile('default', '/plugins/ulogin/resource/' .  $self->getApp()->options->language . '.authdialog.min.js');
+    $js->deletefile('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->deletefile('default', '/plugins/ulogin/resource/authdialog.min.js');
 
-     $self->getApp()->classes->delete('emailauth');
+    $self->getApp()->classes->delete('emailauth');
     $js->unlock();
 
     tjsonserver::i()->unbind($self);
 }
+

@@ -1,25 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Lang;
+
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class tadminfoaf extends \litepubl\admin\Menu
- {
+{
     private $user;
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    private function getList() {
+    private function getList()
+    {
         $foaf = tfoaf::i();
         $perpage = 20;
         $total = $foaf->getcount();
@@ -45,7 +49,8 @@ class tadminfoaf extends \litepubl\admin\Menu
 
             array(
                 $lang->status,
-                function (Table $b) {
+                function (Table $b)
+                {
                     return Lang::i()->__get($b->item['status']);
                 }
             ) ,
@@ -63,11 +68,12 @@ class tadminfoaf extends \litepubl\admin\Menu
         $form->submit = false;
         $result = $form->get();
 
-        $result.= $this->theme->getpages('/admin/foaf/',  $this->getApp()->context->request->page, ceil($total / $perpage));
+        $result.= $this->theme->getpages('/admin/foaf/', $this->getApp()->context->request->page, ceil($total / $perpage));
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $foaf = tfoaf::i();
         $admintheme = $this->admintheme;
@@ -184,7 +190,8 @@ class tadminfoaf extends \litepubl\admin\Menu
             return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $foaf = tfoaf::i();
         switch ($this->name) {
             case 'foaf':
@@ -215,9 +222,8 @@ class tadminfoaf extends \litepubl\admin\Menu
                     $foaf->lock();
                     foreach ($_POST as $key => $id) {
                         if (!is_numeric($id)) {
- continue;
-}
-
+                            continue;
+                        }
 
                         $id = (int)$id;
                         if ($status == 'delete') {
@@ -247,6 +253,7 @@ class tadminfoaf extends \litepubl\admin\Menu
             }
 
             return '';
-        }
+    }
 
 }
+

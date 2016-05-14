@@ -1,24 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\widget\View;
 
-class tsubcatwidget extends twidget {
+class tsubcatwidget extends twidget
+{
     public $items;
     public $tags;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->adminclass = 'tadminsubcatwidget';
         $this->basename = 'widget.subcat';
@@ -26,18 +31,19 @@ class tsubcatwidget extends twidget {
         $this->tags = tcategories::i();
     }
 
-    public function getIdwidget($idtag) {
+    public function getIdwidget($idtag)
+    {
         foreach ($this->items as $id => $item) {
             if ($idtag == $item['idtag']) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-    public function add($idtag) {
+    public function add($idtag)
+    {
         $tag = $this->tags->getitem($idtag);
         $widgets = twidgets::i();
         $id = $widgets->addext($this, $tag['title'], 'categories');
@@ -57,7 +63,8 @@ class tsubcatwidget extends twidget {
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
@@ -69,22 +76,24 @@ class tsubcatwidget extends twidget {
         }
     }
 
-    public function widgetdeleted($id) {
+    public function widgetdeleted($id)
+    {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
         }
     }
 
-    public function tagdeleted($idtag) {
+    public function tagdeleted($idtag)
+    {
         if ($idwidget = $this->getidwidget($idtag)) {
- return $this->delete($idwidget);
-}
-
+            return $this->delete($idwidget);
+        }
 
     }
 
-    public function getTitle($id) {
+    public function getTitle($id)
+    {
         if (isset($this->items[$id])) {
             if ($tag = $this->tags->getitem($this->items[$id]['idtag'])) {
                 return $tag['title'];
@@ -93,14 +102,14 @@ class tsubcatwidget extends twidget {
         return '';
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         if (!isset($this->items[$id])) {
- return '';
-}
-
+            return '';
+        }
 
         $item = $this->items[$id];
-$view = new View();
+        $view = new View();
         return $this->tags->getView()->getSorted(array(
             'item' => $view->getItem($item['template'], $sidebar) ,
             'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
@@ -109,3 +118,4 @@ $view = new View();
     }
 
 }
+

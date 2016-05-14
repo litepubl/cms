@@ -1,17 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\updater;
+
+use litepubl\core\Plugins;
+use litepubl\core\Str;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
-use litepubl\core\Str;
-use litepubl\core\Plugins;
 
 class Backuper extends \litepubl\core\Events
 {
@@ -24,7 +26,8 @@ class Backuper extends \litepubl\core\Events
     private $lastdir;
     private $hasdata;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'backuper';
         $this->addevents('onuploaded');
@@ -37,31 +40,36 @@ class Backuper extends \litepubl\core\Events
         $this->data['filertype'] = 'ftp';
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         unset($this->__filer, $this->tar, $this->zip);
         parent::__destruct();
     }
 
-    public function newTar() {
-require_once( $this->getApp()->paths->lib . 'include/tar.class.php');
-return new \tar;
+    public function newTar()
+    {
+        require_once ($this->getApp()->paths->lib . 'include/tar.class.php');
+        return new \tar;
     }
 
-    public function unknown_archive() {
+    public function unknown_archive()
+    {
         $this->error('Unknown archive type ' . $this->archtype);
     }
 
-    public function load() {
+    public function load()
+    {
         $result = parent::load();
         if ($this->filertype == 'auto') {
-$this->filertype = static ::getprefered();
-}
+            $this->filertype = static ::getprefered();
+        }
 
         return $result;
     }
 
-    public static function getPrefered() {
-        $datafile =  $this->getApp()->paths->data . 'storage' .  $this->getApp()->storage->ext;
+    public static function getPrefered()
+    {
+        $datafile = $this->getApp()->paths->data . 'storage' . $this->getApp()->storage->ext;
         if (file_exists($datafile)) {
             $dataowner = fileowner($datafile);
             $libowner = fileowner(__DIR__);
@@ -72,22 +80,21 @@ $this->filertype = static ::getprefered();
         }
         //if (extension_loaded('ssh2') && function_exists('stream_get_contents') ) return 'ssh2';
         if (extension_loaded('ftp')) {
- return 'ftp';
-}
-
+            return 'ftp';
+        }
 
         if (extension_loaded('sockets') || function_exists('fsockopen')) {
- return 'socket';
-}
-
+            return 'socket';
+        }
 
         return false;
     }
 
-    public function getFiler() {
+    public function getFiler()
+    {
         if ($this->__filer) {
-return $this->__filer;
-}
+            return $this->__filer;
+        }
 
         switch ($this->filertype) {
             case 'ftp':
@@ -122,7 +129,8 @@ return $this->__filer;
         return $result;
     }
 
-    public function connect($host, $login, $password) {
+    public function connect($host, $login, $password)
+    {
         if ($this->filer->connected) {
             return true;
         }
@@ -141,10 +149,11 @@ return $this->__filer;
         return false;
     }
 
-    public function createarchive() {
+    public function createarchive()
+    {
         if (!$this->filer->connected) {
-$this->error('Filer not connected');
-}
+            $this->error('Filer not connected');
+        }
 
         switch ($this->archtype) {
             case 'tar':
@@ -157,12 +166,14 @@ $this->error('Filer not connected');
                 $this->zip = new \ZipArchive();
                 break;
 
+
             default:
                 $this->unknown_archive();
         }
     }
 
-    public function savearchive() {
+    public function savearchive()
+    {
         switch ($this->archtype) {
             case 'tar':
                 $result = $this->tar->savetostring(true);
@@ -170,11 +181,11 @@ $this->error('Filer not connected');
                 return $result;
 
             case 'zip':
-$filename = $this->zip->filename;
-$this->zip->close();
+                $filename = $this->zip->filename;
+                $this->zip->close();
                 $this->zip = false;
-$result = file_get_contents($filename);
-@unlink($filename);
+                $result = file_get_contents($filename);
+                @unlink($filename);
                 return $result;
 
             default:
@@ -182,7 +193,8 @@ $result = file_get_contents($filename);
         }
     }
 
-    private function addfile($filename, $content, $perm) {
+    private function addfile($filename, $content, $perm)
+    {
         switch ($this->archtype) {
             case 'tar':
                 return $this->tar->addstring($content, $filename, $perm);
@@ -195,7 +207,8 @@ $result = file_get_contents($filename);
         }
     }
 
-    private function adddir($dir, $perm) {
+    private function adddir($dir, $perm)
+    {
         switch ($this->archtype) {
             case 'tar':
                 return $this->tar->adddir($dir, $perm);
@@ -208,7 +221,8 @@ $result = file_get_contents($filename);
         }
     }
 
-    private function readdir($path) {
+    private function readdir($path)
+    {
         $path = rtrim($path, '/');
         $filer = $this->getfiler();
         if ($list = $filer->getdir($path)) {
@@ -221,9 +235,8 @@ $result = file_get_contents($filename);
                     $this->readdir($filename);
                 } else {
                     if (preg_match('/(\.bak\.php$)|(\.lok$)/', $name)) {
- continue;
-}
-
+                        continue;
+                    }
 
                     $this->addfile($filename, $filer->getfile($filename) , $item['mode']);
                     if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
@@ -233,11 +246,12 @@ $result = file_get_contents($filename);
         }
     }
 
-    private function readdata($path) {
+    private function readdata($path)
+    {
         $path = rtrim($path, DIRECTORY_SEPARATOR);
         $filer = Local::i();
         if ($list = $filer->getdir($path)) {
-            $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen( $this->getApp()->paths->data)));
+            $dir = 'storage/data/' . str_replace(DIRECTORY_SEPARATOR, '/', substr($path, strlen($this->getApp()->paths->data)));
             $this->adddir($dir, $filer->getchmod($path));
             $dir = rtrim($dir, '/') . '/';
             $hasindex = false;
@@ -258,9 +272,8 @@ $result = file_get_contents($filename);
                     }
                 } else {
                     if (preg_match('/(\.bak\.php$)|(\.lok$)|(\.log$)/', $name)) {
- continue;
-}
-
+                        continue;
+                    }
 
                     $this->addfile($dir . $name, file_get_contents($filename) , $item['mode']);
                     if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
@@ -270,26 +283,26 @@ $result = file_get_contents($filename);
         }
     }
 
-    private function readhome() {
+    private function readhome()
+    {
         $filer = $this->filer;
-        $this->chdir(rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR));
+        $this->chdir(rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR));
         if ($list = $filer->getdir('.')) {
             foreach ($list as $name => $item) {
                 if ($item['isdir']) {
- continue;
-}
-
+                    continue;
+                }
 
                 $this->addfile($name, $filer->getfile($name) , $item['mode']);
             }
         }
     }
 
-    public function chdir($dir) {
+    public function chdir($dir)
+    {
         if ($dir === $this->lastdir) {
- return;
-}
-
+            return;
+        }
 
         $this->lastdir = $dir;
         //if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
@@ -305,17 +318,19 @@ $result = file_get_contents($filename);
         }
     }
 
-    public function setDir($dir) {
+    public function setDir($dir)
+    {
         $dir = trim($dir, '/');
         if ($i = strpos($dir, '/')) $dir = substr($dir, 0, $i);
-        if (!isset( $this->getApp()->paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
-        $this->chdir(dirname(rtrim( $this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
+        if (!isset($this->getApp()->paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
+        $this->chdir(dirname(rtrim($this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
     }
 
-    public function getPartial($plugins, $theme, $lib) {
+    public function getPartial($plugins, $theme, $lib)
+    {
         set_time_limit(300);
         $this->createarchive();
-$this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+        $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
@@ -336,9 +351,8 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
             $names = array();
             foreach ($schemes->items as $id => $item) {
                 if (in_array($item['themename'], $names)) {
- continue;
-}
-
+                    continue;
+                }
 
                 $names[] = $item['themename'];
                 $this->readdir('themes/' . $item['themename']);
@@ -349,7 +363,7 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
             $this->setdir('plugins');
             $plugins = Plugins::i();
             foreach ($plugins->items as $name => $item) {
-                if (@is_dir( $this->getApp()->paths->plugins . $name)) {
+                if (@is_dir($this->getApp()->paths->plugins . $name)) {
                     $this->readdir('plugins/' . $name);
                 }
             }
@@ -358,10 +372,11 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
         return $this->savearchive();
     }
 
-    public function getFull() {
+    public function getFull()
+    {
         set_time_limit(300);
         $this->createarchive();
-$this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+        $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
@@ -382,40 +397,44 @@ $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
         return $this->savearchive();
     }
 
-    public function getDump() {
-return  $this->getApp()->db->man->export();
+    public function getDump()
+    {
+        return $this->getApp()->db->man->export();
     }
 
-    public function setDump(&$dump) {
-        return  $this->getApp()->db->man->import($dump);
+    public function setDump(&$dump)
+    {
+        return $this->getApp()->db->man->import($dump);
     }
 
-public function getTempName() {
-return  $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-}
+    public function getTempName()
+    {
+        return $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+    }
 
-    public function uploaddump($s, $filename) {
+    public function uploaddump($s, $filename)
+    {
         if (Str::end($filename, '.zip')) {
 
-$tempfile = $this->getTempName();
-file_put_contents($tempfile, $s);
-@chmod($tempfile, 0666);
+            $tempfile = $this->getTempName();
+            file_put_contents($tempfile, $s);
+            @chmod($tempfile, 0666);
 
-$zip = new \ZipArchive();
+            $zip = new \ZipArchive();
             if ($zip->open($tempfile) === true) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
+                for ($i = 0; $i < $zip->numFiles; $i++) {
                     $filename = $zip->getNameIndex($i);
-                if (Str::end($filename, '.sql')) {
-                    $s = $zip->getFromIndex($i);
-                    break;
+                    if (Str::end($filename, '.sql')) {
+                        $s = $zip->getFromIndex($i);
+                        break;
+                    }
                 }
+
+                $zip->close();
+                unset($zip);
             }
 
-$zip->close();
-            unset($zip);
-}
-
-unlink($tempfile);
+            unlink($tempfile);
         } elseif (Str::end($filename, '.tar.gz') || Str::end($filename, '.tar')) {
             $tar = $this->newTar();
             $tar->loadfromstring($s);
@@ -435,32 +454,31 @@ unlink($tempfile);
         return $this->setdump($s);
     }
 
-    private function writedata($filename, $content, $mode) {
+    private function writedata($filename, $content, $mode)
+    {
         if (Str::end($filename, '/.htaccess')) {
- return true;
-}
-
+            return true;
+        }
 
         if (Str::end($filename, '/index.htm')) {
- return true;
-}
-
+            return true;
+        }
 
         $this->hasdata = true;
         $filename = substr($filename, strlen('storage/data/'));
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
-        $filename =  $this->getApp()->paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
+        $filename = $this->getApp()->paths->storage . 'newdata' . DIRECTORY_SEPARATOR . $filename;
         Filer::forcedir(dirname($filename));
         if (file_put_contents($filename, $content) === false) {
- return false;
-}
-
+            return false;
+        }
 
         @chmod($filename, $mode);
         return true;
     }
 
-    public function uploadfile($filename, $content, $mode) {
+    public function uploadfile($filename, $content, $mode)
+    {
         $filename = ltrim($filename, '/');
         if ($filename == 'dump.sql') {
             $this->setdump($content);
@@ -471,16 +489,14 @@ unlink($tempfile);
 
         //ignore home files
         if (!strpos($filename, '/')) {
- return true;
-}
-
+            return true;
+        }
 
         //spec rule for storage folder
         if (Str::begin($filename, 'storage/')) {
             if (Str::begin($filename, 'storage/data/')) {
- return $this->writedata($filename, $content, $mode);
-}
-
+                return $this->writedata($filename, $content, $mode);
+            }
 
             return true;
         }
@@ -493,15 +509,15 @@ unlink($tempfile);
         }
 
         if ($this->filer->putcontent($filename, $content) === false) {
- return false;
-}
-
+            return false;
+        }
 
         $this->filer->chmod($filename, $mode);
         return true;
     }
 
-    public function uploadarch($filename, $archtype) {
+    public function uploadarch($filename, $archtype)
+    {
         switch ($archtype) {
             case 'tar':
                 return $this->uploadtar($filename);
@@ -512,7 +528,8 @@ unlink($tempfile);
         }
     }
 
-    public function upload($content, $archtype) {
+    public function upload($content, $archtype)
+    {
         set_time_limit(300);
         $this->archtype = $archtype;
         $this->hasdata = false;
@@ -548,59 +565,61 @@ unlink($tempfile);
 
 
             case 'unzip':
-case 'zip':
+            case 'zip':
                 $mode = $this->filer->chmod_file;
-$tempfile = $this->getTempName();
-file_put_contents($tempfile, $content);
-@chmod($tempfile, 0666);
+                $tempfile = $this->getTempName();
+                file_put_contents($tempfile, $content);
+                @chmod($tempfile, 0666);
 
                 if ($this->zip->open($tempfile) !== true) {
-unlink($tempfile);
+                    unlink($tempfile);
                     $this->zip = false;
                     return $this->errorarch();
-}
+                }
 
                 $path_checked = false;
                 $path_root = false;
 
-            for ($i = 0; $i < $this->zip->numFiles; $i++) {
-                if ($s = $this->zip->getFromIndex($i)) {
-                    $filename = $this->zip->getNameIndex($i);
+                for ($i = 0; $i < $this->zip->numFiles; $i++) {
+                    if ($s = $this->zip->getFromIndex($i)) {
+                        $filename = $this->zip->getNameIndex($i);
 
-                    if (!$path_checked) {
-                        $path_checked = true;
-                        $path_root = $this->get_path_root($filename);
-                    }
+                        if (!$path_checked) {
+                            $path_checked = true;
+                            $path_root = $this->get_path_root($filename);
+                        }
 
-$filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
-                    if (!$this->uploadfile($filename, $s, $mode)) {
-$this->zip->close();
-unlink($tempfile);
-                        return $this->errorwrite($item->Path . $item->Name);
+                        $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+                        if (!$this->uploadfile($filename, $s, $mode)) {
+                            $this->zip->close();
+                            unlink($tempfile);
+                            return $this->errorwrite($item->Path . $item->Name);
+                        }
                     }
                 }
-}
 
                 $this->onuploaded($this);
-$this->zip->close();
+                $this->zip->close();
                 $this->zip = false;
-unlink($tempfile);
+                unlink($tempfile);
                 break;
+
 
             default:
                 $this->unknown_archive();
-            }
+        }
 
-            $this->existingfolders = false;
-            if ($this->hasdata) {
-                $this->renamedata();
-            }
+        $this->existingfolders = false;
+        if ($this->hasdata) {
+            $this->renamedata();
+        }
 
-            return true;
+        return true;
     }
 
     //define if first dir is versioned
-    public function get_path_root($path) {
+    public function get_path_root($path)
+    {
         $list = explode('/', trim($path, '/'));
         if (preg_match('/\d*+\.\d*+$/', $list[0])) {
             return $list[0];
@@ -609,20 +628,20 @@ unlink($tempfile);
         return false;
     }
 
-    public function uploadtar($filename) {
+    public function uploadtar($filename)
+    {
         if (file_exists($filename)) {
-        return $this->upload(file_get_contents($filename) , 'tar');
-}
+            return $this->upload(file_get_contents($filename) , 'tar');
+        }
 
-return false;
+        return false;
     }
 
-    public function uploadzip($filename) {
+    public function uploadzip($filename)
+    {
         if (!file_exists($filename)) {
- return false;
-}
-
-
+            return false;
+        }
 
         set_time_limit(300);
         $this->archtype = 'unzip';
@@ -633,29 +652,29 @@ return false;
         $path_checked = false;
         $path_root = false;
 
-            $zip = new \ZipArchive();
-            if ($zip->open($filename) !== true) {
-                return $this->errorarch();
-            }
+        $zip = new \ZipArchive();
+        if ($zip->open($filename) !== true) {
+            return $this->errorarch();
+        }
 
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                if ($s = $zip->getFromIndex($i)) {
-                    $filename = $zip->getNameIndex($i);
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            if ($s = $zip->getFromIndex($i)) {
+                $filename = $zip->getNameIndex($i);
 
-                    if (!$path_checked) {
-                        $path_checked = true;
-                        $path_root = $this->get_path_root($filename);
-                    }
+                if (!$path_checked) {
+                    $path_checked = true;
+                    $path_root = $this->get_path_root($filename);
+                }
 
-                    $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
-                    if (!$this->uploadfile($filename, $s, $mode)) {
-                        $zip->close();
-                        return $this->errorwrite($filename);
-                    }
+                $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+                if (!$this->uploadfile($filename, $s, $mode)) {
+                    $zip->close();
+                    return $this->errorwrite($filename);
                 }
             }
+        }
 
-            $zip->close();
+        $zip->close();
         $this->onuploaded($this);
         $this->existingfolders = false;
         if ($this->hasdata) {
@@ -665,31 +684,35 @@ return false;
         return true;
     }
 
-    private function renamedata() {
-        if (!is_dir( $this->getApp()->paths->backup)) {
-            mkdir( $this->getApp()->paths->backup, 0777);
-            @chmod( $this->getApp()->paths->backup, 0777);
+    private function renamedata()
+    {
+        if (!is_dir($this->getApp()->paths->backup)) {
+            mkdir($this->getApp()->paths->backup, 0777);
+            @chmod($this->getApp()->paths->backup, 0777);
         }
-        $backup =  $this->getApp()->paths->backup . 'data-' . time();
-        $data = rtrim( $this->getApp()->paths->data, DIRECTORY_SEPARATOR);
+        $backup = $this->getApp()->paths->backup . 'data-' . time();
+        $data = rtrim($this->getApp()->paths->data, DIRECTORY_SEPARATOR);
         rename($data, $backup);
-        rename( $this->getApp()->paths->storage . 'newdata', $data);
+        rename($this->getApp()->paths->storage . 'newdata', $data);
         Filer::delete($backup, true, true);
     }
 
-    private function errorwrite($filename) {
+    private function errorwrite($filename)
+    {
         $lang = Lang::admin('service');
         $this->result = sprintf($lang->errorwritefile, $filename);
         return false;
     }
 
-    private function errorarch() {
+    private function errorarch()
+    {
         $lang = Lang::admin('service');
         $this->result = $lang->errorarchive;
         return false;
     }
 
-    public function unpack($content, $archtype) {
+    public function unpack($content, $archtype)
+    {
         $result = array();
         switch ($archtype) {
             case 'tar':
@@ -709,24 +732,25 @@ return false;
 
             case 'unzip':
             case 'zip':
-                    $filename =  $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-                    file_put_contents($filename, $content);
-                    @chmod($filename, 0666);
-                    $content = '';
+                $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+                file_put_contents($filename, $content);
+                @chmod($filename, 0666);
+                $content = '';
 
-                    $zip = new \ZipArchive();
-                    if ($zip->open($filename) === true) {
-                        for ($i = 0; $i < $zip->numFiles; $i++) {
-                            if ($s = $zip->getFromIndex($i)) {
-                                $result[$zip->getNameIndex($i) ] = $s;
-                            }
+                $zip = new \ZipArchive();
+                if ($zip->open($filename) === true) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        if ($s = $zip->getFromIndex($i)) {
+                            $result[$zip->getNameIndex($i) ] = $s;
                         }
-
-                        $zip->close();
                     }
 
-                    @unlink($filename);
-break;
+                    $zip->close();
+                }
+
+                @unlink($filename);
+                break;
+
 
             default:
                 $this->unknown_archive();
@@ -735,11 +759,13 @@ break;
         return $result;
     }
 
-    public function createfullbackup() {
+    public function createfullbackup()
+    {
         return $this->_savebackup($this->getpartial(true, true, true));
     }
 
-    public function createbackup() {
+    public function createbackup()
+    {
         /*
         $filer = $this->__filer;
         if (!$filer || ! ($filer instanceof Local)) {
@@ -751,8 +777,9 @@ break;
         return $result;
     }
 
-    public function getFilename($ext) {
-        $filename =  $this->getApp()->paths->backup .  $this->getApp()->site->domain . date('-Y-m-d');
+    public function getFilename($ext)
+    {
+        $filename = $this->getApp()->paths->backup . $this->getApp()->site->domain . date('-Y-m-d');
         $result = $filename . $ext;
         $i = 2;
         while (file_exists($result) && ($i < 100)) {
@@ -761,22 +788,25 @@ break;
         return $result;
     }
 
-    private function _savebackup($s) {
+    private function _savebackup($s)
+    {
         $filename = $this->getfilename($this->archtype == 'zip' ? '.zip' : '.tar.gz');
         file_put_contents($filename, $s);
         @chmod($filename, 0666);
         return $filename;
     }
 
-    public function getShellfilename() {
+    public function getShellfilename()
+    {
         $filename = $this->getfilename('.tar.gz');
         return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')) , strrpos($filename, DIRECTORY_SEPARATOR) + 1);
     }
 
-    public function createshellbackup() {
-        $dbconfig =  $this->getApp()->options->dbconfig;
+    public function createshellbackup()
+    {
+        $dbconfig = $this->getApp()->options->dbconfig;
         $cmd = array();
-        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
+        $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
@@ -786,13 +816,14 @@ break;
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
+        return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
-    public function createshellfullbackup() {
-        $dbconfig =  $this->getApp()->options->dbconfig;
+    public function createshellfullbackup()
+    {
+        $dbconfig = $this->getApp()->options->dbconfig;
         $cmd = array();
-        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
+        $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
@@ -802,63 +833,62 @@ break;
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
+        return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
-    public function createshellfilesbackup() {
+    public function createshellfilesbackup()
+    {
         $cmd = array();
-        $cmd[] = 'cd ' .  $this->getApp()->paths->backup;
-        $filename = 'files_' .  $this->getApp()->site->domain . date('-Y-m-d');
+        $cmd[] = 'cd ' . $this->getApp()->paths->backup;
+        $filename = 'files_' . $this->getApp()->site->domain . date('-Y-m-d');
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";
         $cmd[] = "chmod 0666 $filename.tar.gz";
         exec(implode("\n", $cmd) , $r);
         //echo implode("\n", $r);
-        return  $this->getApp()->paths->backup . $filename . '.tar.gz';
+        return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
 
-    public function test() {
-        if (!@file_put_contents( $this->getApp()->paths->data . 'index.htm', ' ')) {
- return false;
-}
-
+    public function test()
+    {
+        if (!@file_put_contents($this->getApp()->paths->data . 'index.htm', ' ')) {
+            return false;
+        }
 
         if (!$this->filer->connected) {
- return false;
-}
-
+            return false;
+        }
 
         $this->setdir('lib');
         return $this->uploadfile('lib/index.htm', ' ', $this->filer->chmod_file);
     }
 
-    public function getFiletype() {
+    public function getFiletype()
+    {
         if ($this->archtype == 'zip') {
- return '.zip';
-}
-
+            return '.zip';
+        }
 
         if ($this->archtype == 'tar') {
- return '.tar.gz';
-}
-
+            return '.tar.gz';
+        }
 
         return false;
     }
 
-    public function getArchtype($filename) {
+    public function getArchtype($filename)
+    {
         if (Str::end($filename, '.zip')) {
- return 'zip';
-}
-
+            return 'zip';
+        }
 
         if (Str::end($filename, '.tar.gz') || Str::end($filename, '.tar')) {
- return 'tar';
-}
-
+            return 'tar';
+        }
 
         return false;
     }
 
 }
+

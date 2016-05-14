@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class ttwitterregservice extends tregservice {
+class ttwitterregservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['name'] = 'twitter';
         $this->data['title'] = 'Twitter';
@@ -23,7 +27,8 @@ class ttwitterregservice extends tregservice {
         $this->data['url'] = '/twitter-oauth1callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $oauth = $this->getoauth();
         if ($tokens = $oauth->getrequesttoken()) {
             tsession::start(md5($tokens['oauth_token']));
@@ -34,23 +39,24 @@ class ttwitterregservice extends tregservice {
         return false;
     }
 
-    public function getOauth() {
+    public function getOauth()
+    {
         $oauth = new toauth();
-        $oauth->urllist['callback'] =  $this->getApp()->site->url . $this->url;
+        $oauth->urllist['callback'] = $this->getApp()->site->url . $this->url;
         $oauth->key = $this->client_id;
         $oauth->secret = $this->client_secret;
         return $oauth;
     }
 
     //handle callback
-    public function request($arg) {
+    public function request($arg)
+    {
         $this->cache = false;
         \litepubl\core\Router::nocache();
 
         if (empty($_GET['oauth_token'])) {
- return 403;
-}
-
+            return 403;
+        }
 
         tsession::start(md5($_GET['oauth_token']));
         if (!isset($_SESSION['tokens'])) {
@@ -77,7 +83,8 @@ class ttwitterregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'https://dev.twitter.com/apps/new',
             'client_id' => 'Consumer key',
@@ -86,3 +93,4 @@ class ttwitterregservice extends tregservice {
     }
 
 }
+

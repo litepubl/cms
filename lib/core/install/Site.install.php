@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-function SiteInstall($self) {
+function SiteInstall($self)
+{
     $site = $self;
     $site->lock();
     $site->subdir = getrequestdir();
@@ -30,7 +32,8 @@ function SiteInstall($self) {
     $site->unlock();
 }
 
-function getrequestdir() {
+function getrequestdir()
+{
     if (isset($_GET) && (count($_GET) > 0) && ($i = strpos($_SERVER['REQUEST_URI'], '?'))) {
         $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], 0, $i);
     }
@@ -45,3 +48,4 @@ function getrequestdir() {
 
     return rtrim($_SERVER['REQUEST_URI'], '/');
 }
+

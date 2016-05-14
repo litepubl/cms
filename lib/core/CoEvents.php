@@ -1,20 +1,22 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-class CoEvents extends Events 
+class CoEvents extends Events
 {
     protected $owner;
     protected $callbacks;
 
-    public function __construct() {
+    public function __construct()
+    {
         $args = func_get_args();
         if (isset($args[0])) {
             if (is_array($args[0])) {
@@ -34,7 +36,8 @@ class CoEvents extends Events
         parent::__construct();
     }
 
-    public function setOwner(data $owner) {
+    public function setOwner(data $owner)
+    {
         $this->owner = $owner;
         if (!isset($owner->data['events'])) {
             $owner->data['events'] = array();
@@ -43,7 +46,8 @@ class CoEvents extends Events
         $this->events = & $owner->data['events'];
     }
 
-    public function trigger_callback($name) {
+    public function trigger_callback($name)
+    {
         if (isset($this->callbacks[$name])) {
             $callback = $this->callbacks[$name];
             if (is_callable($callback)) {
@@ -52,12 +56,14 @@ class CoEvents extends Events
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
         unset($this->owner, $this->callbacks);
     }
 
-    public function assignmap() {
+    public function assignmap()
+    {
         if (!$this->owner) {
             parent::assignmap();
         }
@@ -65,7 +71,8 @@ class CoEvents extends Events
         $this->trigger_callback('assignmap');
     }
 
-    protected function create() {
+    protected function create()
+    {
         if (!$this->owner) {
             parent::create();
         }
@@ -73,13 +80,15 @@ class CoEvents extends Events
         $this->trigger_callback('create');
     }
 
-    public function load() {
+    public function load()
+    {
         if (!$this->owner) {
             return parent::load();
         }
     }
 
-    public function afterload() {
+    public function afterload()
+    {
         if ($this->owner) {
             $this->events = & $this->owner->data['events'];
         } else {
@@ -89,7 +98,8 @@ class CoEvents extends Events
         $this->trigger_callback('afterload');
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->owner) {
             return $this->owner->save();
         } else {
@@ -97,9 +107,11 @@ class CoEvents extends Events
         }
     }
 
-    public function inject_events() {
+    public function inject_events()
+    {
         $a = func_get_args();
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
 
 }
+

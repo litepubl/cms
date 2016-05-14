@@ -1,30 +1,35 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\Config;
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Args;
-use litepubl\view\Theme;
+use litepubl\view\Lang;
 use litepubl\view\MainView;
+use litepubl\view\Theme;
 
-class topenid extends tevents {
+class topenid extends tevents
+{
     public $keys;
     public $trusted;
     public $url;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->cache = false;
         $this->basename = 'openidserver';
@@ -35,11 +40,13 @@ class topenid extends tevents {
         $this->url = '/openid/';
     }
 
-    public function get_head() {
+    public function get_head()
+    {
         return "<link rel=\"openid.server\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid2.provider\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid.delegate\" href=\"\$site.url$this->url\" />" . "<link rel=\"openid2.local_id\" href=\"\$site.url$this->url\" />";
     }
 
-    public function afterload() {
+    public function afterload()
+    {
         parent::afterload();
         $time = time();
         foreach ($this->keys as $handle => $item) {
@@ -47,8 +54,9 @@ class topenid extends tevents {
         }
     }
 
-    private function LoadBigMath() {
-         $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . 'openid-provider' . DIRECTORY_SEPARATOR . 'bigmath.php');
+    private function LoadBigMath()
+    {
+        $this->getApp()->classes->include_file($this->getApp()->paths->plugins . 'openid-provider' . DIRECTORY_SEPARATOR . 'bigmath.php');
         if (!extension_loaded('bcmath')) {
             if (!@dl('bcmath.' . PHP_SHLIB_SUFFIX) && !@dl('php_bcmath.' . PHP_SHLIB_SUFFIX)) {
                 if (!extension_loaded('gmp')) {
@@ -58,7 +66,8 @@ class topenid extends tevents {
         }
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         if (isset($_POST['submit']) && isset($_POST['assoc_handle'])) {
             $h = $_POST['assoc_handle'];
             if (isset($this->keys[$h]['request'])) {
@@ -83,9 +92,8 @@ class topenid extends tevents {
         ini_set('arg_separator.output', '&');
 
         if (!isset($_REQUEST['openid_mode'])) {
- return $this->nomode();
-}
-
+            return $this->nomode();
+        }
 
         switch ($_REQUEST['openid_mode']) {
             case 'associate':
@@ -114,7 +122,8 @@ class topenid extends tevents {
         }
     }
 
-    private function nomode() {
+    private function nomode()
+    {
         $result = tsimplecontent::html(Lang::get('openidserver', 'nomode'));
         $js = MainView::i()->getready('var s = window.location.toString();
     if (-1 == s.indexof("?")) {
@@ -124,47 +133,55 @@ class topenid extends tevents {
         return $result;
     }
 
-    private function id_res() {
-        if (! $this->getApp()->options->user) {
-             $this->getApp()->router->nocache();
-            return  $this->getApp()->router->redir('/admin/login/?backurl=' . urlencode( $this->getApp()->router->url));
+    private function id_res()
+    {
+        if (!$this->getApp()->options->user) {
+            $this->getApp()->router->nocache();
+            return $this->getApp()->router->redir('/admin/login/?backurl=' . urlencode($this->getApp()->router->url));
         }
 
         return tsimplecontent::html(Lang::get('openidserver', 'logged'));
     }
 
-    private function cancel() {
+    private function cancel()
+    {
         return tsimplecontent::html(Lang::get('openidserver', 'canceled'));
     }
 
-    private function GetMessage($key, $defkey) {
+    private function GetMessage($key, $defkey)
+    {
         $lang = Lang::i()->ini['openidserver'];
         return empty($lang[$key]) ? $lang[$defkey] : $lang[$key];
     }
 
-    private function error400($key) {
+    private function error400($key)
+    {
         $result = "<?php @header('HTTP/1.1 400 Bad Request, true, 400); ?>";
         $result.= tsimplecontent::html($this->GetMessage($key, 'badrequest'));
         return $result;
     }
 
-    private function error500($key) {
+    private function error500($key)
+    {
         $result = "<?php\n@header('HTTP/1.1 500 Internal Server Error', true, 500);\n?>";
         $result.= tsimplecontent::html($this->GetMessage($key, 'internalerror'));
         return $result;
     }
 
-    private function error_post($key) {
+    private function error_post($key)
+    {
         $result = "<?php @header('HTTP/1.1 400 Bad Request', true, 400); ?>";
         $result.= 'error:' . $this->GetMessage($key, 'badrequest');
         return $result;
     }
 
-    private function redir($url) {
+    private function redir($url)
+    {
         return "<?php litepubl::\$router->redir('$url', 302); ?>";
     }
 
-    private function DoError() {
+    private function DoError()
+    {
         if (!empty($_REQUEST['openid_error'])) {
             return tsimplecontent::html($_REQUEST['openid_error']);
         } else {
@@ -172,7 +189,8 @@ class topenid extends tevents {
         }
     }
 
-    private function error_get($url, $key) {
+    private function error_get($url, $key)
+    {
         return $this->RedirKeys($url, array(
             '
     mode' => 'error',
@@ -180,20 +198,23 @@ class topenid extends tevents {
         ));
     }
 
-    private function RedirKeys($url, $keys) {
+    private function RedirKeys($url, $keys)
+    {
         $keys = $this->append_openid($keys);
         $q = strpos($url, '?') ? '&' : '?';
         return $this->redir($url . $q . http_build_query($keys));
     }
 
-    private function append_openid($array) {
+    private function append_openid($array)
+    {
         $r = array();
         foreach ($array as $key => $value) $r["openid.$key"] = $value;
         return $r;
     }
 
     //modes
-    private function associate() {
+    private function associate()
+    {
         //другие типы не поддерживаются, поэтому и проверять не надо
         $assoc_type = 'HMAC-SHA1';
         $session_type = $this->usebigmath && isset($_REQUEST['openid_session_type']) && ($_REQUEST['openid_session_type'] == 'DH-SHA1') ? 'DH-SHA1' : '';
@@ -240,13 +261,15 @@ class topenid extends tevents {
         return $this->GetResult($keys);
     }
 
-    private function GetResult($keys) {
+    private function GetResult($keys)
+    {
         $result = "<?php @header('Content-Type: text/plain; charset=utf-8'); ?>";
         foreach ($keys as $key => $value) $result.= "$key:$value\n";
         return $result;
     }
 
-    private function NewKeys(&$assoc_handle, &$shared_secret, &$lifetime) {
+    private function NewKeys(&$assoc_handle, &$shared_secret, &$lifetime)
+    {
         $assoc_handle = Str::md5Uniq();
 
         $shared_secret = new_secret();
@@ -259,25 +282,23 @@ class topenid extends tevents {
         $this->save();
     }
 
-    private function check_authentication() {
+    private function check_authentication()
+    {
         if (empty($_REQUEST['openid_assoc_handle'])) {
- return $this->error_post('assochandle');
-}
-
+            return $this->error_post('assochandle');
+        }
 
         $assoc_handle = $_REQUEST['openid_assoc_handle'];
 
         if (empty($_REQUEST['openid_sig'])) {
- return $this->error_post('sig');
-}
-
+            return $this->error_post('sig');
+        }
 
         $sig = $_REQUEST['openid_sig'];
 
         if (empty($_REQUEST['openid_signed'])) {
- return $this->error_post('signed');
-}
-
+            return $this->error_post('signed');
+        }
 
         $signed = $_REQUEST['openid_signed'];
 
@@ -313,27 +334,30 @@ class topenid extends tevents {
         return $this->GetResult($keys);
     }
 
-    private function GetSecret($handle) {
+    private function GetSecret($handle)
+    {
         if (isset($this->keys[$handle])) {
             if (time() > $this->keys[$handle]['expired']) {
- return false;
-}
-
+                return false;
+            }
 
             return $this->keys[$handle]['secret'];
         }
         return false;
     }
 
-    private function checkid_immediate() {
+    private function checkid_immediate()
+    {
         return $this->checkid(false);
     }
 
-    private function checkid_setup() {
+    private function checkid_setup()
+    {
         return $this->checkid(true);
     }
 
-    private function getForm() {
+    private function getForm()
+    {
         $lang = Lang::i('openidserver');
         $admintheme = admintheme::admin();
         $result = $admintheme->h($lang->trustform);
@@ -358,32 +382,28 @@ class topenid extends tevents {
         return $result;
     }
 
-    private function checkid($wait) {
+    private function checkid($wait)
+    {
         if (empty($_REQUEST['openid_return_to'])) {
- return $this->error400('return_to');
-}
-
+            return $this->error400('return_to');
+        }
 
         $return_to = $_REQUEST['openid_return_to'];
 
         if (empty($_REQUEST['openid_identity'])) {
- return $this->error_get($return_to, 'identity');
-}
-
+            return $this->error_get($return_to, 'identity');
+        }
 
         $identity = $_REQUEST['openid_identity'];
-        if ($identity !=  $this->getApp()->site->url . $this->url) {
- return $this->error_get($return_to, 'identity');
-}
-
-
+        if ($identity != $this->getApp()->site->url . $this->url) {
+            return $this->error_get($return_to, 'identity');
+        }
 
         $trust_root = !empty($_REQUEST['openid_trust_root']) ? $_REQUEST['openid_trust_root'] : $return_to;
         if ($trust_root != $return_to) {
             if (!$this->urldescends($return_to, $trust_root)) {
- return $this->error500('Invalidtrust');
-}
-
+                return $this->error500('Invalidtrust');
+            }
 
         }
 
@@ -394,18 +414,15 @@ class topenid extends tevents {
         $sreg_required.= ',' . $sreg_optional;
 
         $auth = tauthdigest::i();
-        if ( $this->getApp()->options->cookieenabled) {
-            if (! $this->getApp()->options->user) {
- return  $this->getApp()->router->redir('/admin/login/');
-}
-
+        if ($this->getApp()->options->cookieenabled) {
+            if (!$this->getApp()->options->user) {
+                return $this->getApp()->router->redir('/admin/login/');
+            }
 
         } elseif (!$auth->Auth()) return $auth->headers();
-        if ( $this->getApp()->options->group != 'admin') {
- return 404;
-}
-
-
+        if ($this->getApp()->options->group != 'admin') {
+            return 404;
+        }
 
         $q = strpos($return_to, '?') ? '&' : '?';
         $cancel_url = $return_to . $q . 'openid.mode=cancel';
@@ -423,10 +440,10 @@ class topenid extends tevents {
                 $args->trust_root = $trust_root;
                 $args->assoc_handle = $assoc_handle;
 
-                $result =  $this->getApp()->router->cache->get('openid.txt');
+                $result = $this->getApp()->router->cache->get('openid.txt');
                 if (!$result) {
                     $result = $this->getform();
-                     $this->getApp()->router->cache->set('openid.txt', $result);
+                    $this->getApp()->router->cache->set('openid.txt', $result);
                 }
 
                 return tsimplecontent::html(Theme::i()->parseArg($result, $args));
@@ -451,7 +468,7 @@ class topenid extends tevents {
 
         $keys = array(
             'mode' => 'id_res',
-            'identity' =>  $this->getApp()->site->url . $this->url,
+            'identity' => $this->getApp()->site->url . $this->url,
             'return_to' => $return_to
         );
 
@@ -467,9 +484,8 @@ class topenid extends tevents {
 
         foreach (explode(',', $sreg_required) as $key) {
             if (!isset($_REQUEST[$key])) {
- continue;
-}
-
+                continue;
+            }
 
             $skey = 'sreg.' . $key;
             if ($value = $this->GetReg($key)) $keys[$skey] = $value;
@@ -483,7 +499,8 @@ class topenid extends tevents {
         return $this->RedirKeys($return_to, $keys);
     }
 
-    private function GetReg($key) {
+    private function GetReg($key)
+    {
         $profile = tprofile::i();
         switch ($key) {
             case 'nickname':
@@ -506,11 +523,11 @@ class topenid extends tevents {
         }
     }
 
-    private function urldescends($child, $parent) {
+    private function urldescends($child, $parent)
+    {
         if ($child == $parent) {
- return true;
-}
-
+            return true;
+        }
 
         $keys = array();
         $parts = array();
@@ -529,25 +546,21 @@ class topenid extends tevents {
         ) as $name) {
             $parts[$name] = @parse_url($$name);
             if ($parts[$name] === false) {
- return false;
-}
-
+                return false;
+            }
 
             $keys[$name] = array_keys($parts[$name]);
             if (array_intersect($keys[$name], $req) != $req) {
- return false;
-}
-
+                return false;
+            }
 
             if (array_intersect($keys[$name], $bad) != array()) {
- return false;
-}
-
+                return false;
+            }
 
             if (!preg_match('/^https?$/i', strtolower($parts[$name]['scheme']))) {
- return false;
-}
-
+                return false;
+            }
 
             if (!array_key_exists('port', $parts[$name])) $parts[$name]['port'] = (strtolower($parts[$name]['scheme']) == 'https') ? 443 : 80;
             if (!array_key_exists('path', $parts[$name])) $parts[$name]['path'] = '/';
@@ -555,29 +568,25 @@ class topenid extends tevents {
 
         // port and scheme must match
         if ($parts['parent']['scheme'] != $parts['child']['scheme'] || $parts['parent']['port'] != $parts['child']['port']) {
- return false;
-}
-
-
+            return false;
+        }
 
         // compare the hosts by reversing the strings
         $cr_host = strtolower(strrev($parts['child']['host']));
         $pr_host = strtolower(strrev($parts['parent']['host']));
         $break = str_diff_at($cr_host, $pr_host);
         if ($break >= 0 && ($pr_host[$break] != '*' || substr_count(substr($pr_host, 0, $break) , '.') < 2)) {
- return false;
-}
-
+            return false;
+        }
 
         // now compare the paths
         $break = str_diff_at($parts['child']['path'], $parts['parent']['path']);
         if ($break >= 0 && ($break < strlen($parts['parent']['path']) && $parts['parent']['path'][$break] != '*') || ($break > strlen($parts['child']['path']))) {
- return false;
-}
-
-
+            return false;
+        }
 
         return true;
     }
 
 }
+

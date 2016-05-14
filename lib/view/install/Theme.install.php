@@ -1,16 +1,18 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
 
-function ThemeInstall($self) {
-    $dir =  $self->getApp()->paths->data . 'themes';
+function ThemeInstall($self)
+{
+    $dir = $self->getApp()->paths->data . 'themes';
     if (!is_dir($dir)) {
         mkdir($dir, 0777);
         chmod($dir, 0777);
@@ -18,3 +20,4 @@ function ThemeInstall($self) {
     $self->name = 'default';
     $self->parsetheme();
 }
+

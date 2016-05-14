@@ -1,32 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\posts;
-use litepubl\pages\StaticPages as Pages;
-use litepubl\view\Lang;
-use litepubl\view\Args;
+
 use litepubl\admin\Table;
+use litepubl\pages\StaticPages as Pages;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class StaticPages extends \litepubl\admin\Menu
 {
 
-    private function editForm(Args $args) {
+    private function editForm(Args $args)
+    {
         $args->text = $args->rawcontent;
         $args->formtitle = $this->title;
         return $this->admintheme->form('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $pages = Pages::i();
         $this->basename = 'staticpages';
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::i('staticpages');
         $id = $this->idget();
         if (!$pages->itemExists($id)) $id = 0;
@@ -75,11 +79,11 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (empty($_POST['title'])) {
- return '';
-}
-
+            return '';
+        }
 
         extract($_POST);
         $pages = Pages::i();
@@ -94,3 +98,4 @@ $admin = $this->admintheme;
     }
 
 }
+

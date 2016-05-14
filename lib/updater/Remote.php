@@ -1,18 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\updater;
+
 use litepubl\core\Str;
 
 class Remote
 {
-use \litepubl\core\AppTrait;
+    use \litepubl\core\AppTrait;
 
     protected $host;
     protected $login;
@@ -24,11 +26,13 @@ use \litepubl\core\AppTrait;
     public $chmod_dir;
     public $connected;
 
-    public static function i() {
-        return  $this->getApp()->classes->getinstance(get_called_class());
+    public static function i()
+    {
+        return $this->getApp()->classes->getinstance(get_called_class());
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->port = 21;
         $this->handle = null;
         $this->timeout = 30;
@@ -37,14 +41,15 @@ use \litepubl\core\AppTrait;
         $this->connected = false;
     }
 
-    public function close() {
+    public function close()
+    {
     }
 
-    public function connect($host, $login, $password) {
+    public function connect($host, $login, $password)
+    {
         if (empty($host) || empty($login) || empty($password)) {
- return false;
-}
-
+            return false;
+        }
 
         $this->host = $host;
         $this->login = $login;
@@ -52,12 +57,12 @@ use \litepubl\core\AppTrait;
         return true;
     }
 
-    public function getMode($mode) {
+    public function getMode($mode)
+    {
         static $modes;
         if (!$mode) {
- return $this->chmod_file;
-}
-
+            return $this->chmod_file;
+        }
 
         if (!isset($modes)) {
             foreach (array(
@@ -82,7 +87,8 @@ use \litepubl\core\AppTrait;
         return isset($modes[$mode]) ? $modes[$mode] : $this->chmod_file;
     }
 
-    public static function getOwnername($owner) {
+    public static function getOwnername($owner)
+    {
         if ($owner && function_exists('posix_getpwuid')) {
             $a = posix_getpwuid($owner);
             return $a['name'];
@@ -90,7 +96,8 @@ use \litepubl\core\AppTrait;
         return $owner;
     }
 
-    protected function getGroupname($group) {
+    protected function getGroupname($group)
+    {
         if ($group && function_exists('posix_getgrgid')) {
             $a = posix_getgrgid($group);
             return $a['name'];
@@ -98,21 +105,21 @@ use \litepubl\core\AppTrait;
         return $group;
     }
 
-    public function copy($src, $dst, $overwrite = false) {
+    public function copy($src, $dst, $overwrite = false)
+    {
         if (!$overwrite && $this->exists($dst)) {
- return false;
-}
-
+            return false;
+        }
 
         if (false === ($s = $this->getfile($src))) {
- return false;
-}
-
+            return false;
+        }
 
         return $this->putfile($dst, $s);
     }
 
-    public function move($source, $destination, $overwrite = false) {
+    public function move($source, $destination, $overwrite = false)
+    {
         if ($this->copy($source, $destination, $overwrite) && $this->exists($destination)) {
             $this->delete($source);
             return true;
@@ -120,14 +127,16 @@ use \litepubl\core\AppTrait;
         return false;
     }
 
-    public function mkdir($path, $chmod) {
+    public function mkdir($path, $chmod)
+    {
         if (!$chmod) $chmod = $this->chmod_dir;
         $chmod = $this->getmode($chmod);
         $this->chmod($path, $chmod);
         return true;
     }
 
-    public function forcedir($dir) {
+    public function forcedir($dir)
+    {
         $dir = rtrim($dir, '/');
         if (!$this->is_dir($dir)) {
             $this->forcedir(dirname($dir));
@@ -135,7 +144,8 @@ use \litepubl\core\AppTrait;
         }
     }
 
-    protected function getFileinfo($filename) {
+    protected function getFileinfo($filename)
+    {
         $result = array();
         $result['mode'] = $this->getchmod($filename);
         $result['owner'] = $this->owner($filename);
@@ -146,7 +156,8 @@ use \litepubl\core\AppTrait;
         return $result;
     }
 
-    public function each($dir, $func, $args) {
+    public function each($dir, $func, $args)
+    {
         $dir = rtrim($dir, '/');
         if ($list = $this->getdir($dir)) {
             $call = array(
@@ -166,8 +177,9 @@ use \litepubl\core\AppTrait;
         }
     }
 
-    public function getRoot($root) {
-        $temp =  $this->getApp()->paths->data . Str::md5Rand();
+    public function getRoot($root)
+    {
+        $temp = $this->getApp()->paths->data . Str::md5Rand();
         file_put_contents($temp, ' ');
         @chmod($temp, 0666);
 
@@ -183,7 +195,8 @@ use \litepubl\core\AppTrait;
         return $root;
     }
 
-    public function findroot($filename) {
+    public function findroot($filename)
+    {
         $root = '';
         $filename = str_replace('\\\\', '/', $filename);
         $filename = str_replace('\\', '/', $filename);
@@ -207,3 +220,4 @@ use \litepubl\core\AppTrait;
     }
 
 }
+

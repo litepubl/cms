@@ -1,31 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\users;
-use litepubl\core\Users as UserItems;
-use litepubl\core\UserGroups;
-use litepubl\pages\Users as UserPages;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\admin\Link;
+
 use litepubl\admin\Form;
 use litepubl\admin\GetPerm;
+use litepubl\admin\Link;
+use litepubl\core\UserGroups;
+use litepubl\core\Users as UserItems;
+use litepubl\pages\Users as UserPages;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Users extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $users = UserItems::i();
         $groups = UserGroups::i();
 
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::i('users');
         $args = new Args();
 
@@ -96,14 +99,14 @@ $admin = $this->admintheme;
         if (!empty($_GET['idgroup'])) {
             $idgroup = (int)$this->getparam('idgroup', 0);
             if ($groups->itemExists($idgroup)) {
-                $grouptable =  $this->getApp()->db->prefix . $users->grouptable;
+                $grouptable = $this->getApp()->db->prefix . $users->grouptable;
                 $where = "$users->thistable.id in (select iduser from $grouptable where idgroup = $idgroup)";
                 $params = "idgroup=$idgroup";
             }
         } elseif ($search = trim($this->getparam('search', ''))) {
             $params = 'search=' . urlencode($search);
             $args->search = $search;
-            $search =  $this->getApp()->db->escape($search);
+            $search = $this->getApp()->db->escape($search);
             $search = strtr($search, array(
                 '%' => '\%',
                 '_' => '\_'
@@ -147,7 +150,7 @@ $admin = $this->admintheme;
         $form->title = $lang->userstable;
         $result.= $form->getdelete($tb->build($items));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage) , $params);
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage) , $params);
 
         $form = new Form($args);
         $form->method = 'get';
@@ -158,16 +161,16 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $users = UserItems::i();
         $groups = UserGroups::i();
 
         if (isset($_POST['delete'])) {
             foreach ($_POST as $key => $value) {
                 if (!is_numeric($value)) {
- continue;
-}
-
+                    continue;
+                }
 
                 $id = (int)$value;
                 $users->delete($id);
@@ -180,7 +183,7 @@ $admin = $this->admintheme;
             case 'add':
                 $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if ($id = $users->add($_POST)) {
-                     $this->getApp()->context->response->redir("$this->adminurl=$id&action=edit");
+                    $this->getApp()->context->response->redir("$this->adminurl=$id&action=edit");
                 } else {
                     return $this->admintheme->geterr($this->lang->invalidregdata);
                 }
@@ -190,20 +193,20 @@ $admin = $this->admintheme;
             case 'edit':
                 $id = $this->idget();
                 if (!$users->itemExists($id)) {
- return;
-}
+                    return;
+                }
 
                 $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
                 if (!$users->edit($id, $_POST)) {
- return $this->notfound;
-}
-
+                    return $this->notfound;
+                }
 
                 if ($id == 1) {
-                     $this->getApp()->site->author = $_POST['name'];
+                    $this->getApp()->site->author = $_POST['name'];
                 }
                 break;
-            }
         }
+    }
 
 }
+

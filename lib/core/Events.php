@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-class Events extends Data {
+class Events extends Data
+{
     protected $events;
     protected $eventnames;
     protected $map;
 
-    public function __construct() {
+    public function __construct()
+    {
         if (!is_array($this->eventnames)) {
             $this->eventnames = array();
         }
@@ -29,50 +32,58 @@ class Events extends Data {
         $this->load();
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         unset($this->data, $this->events, $this->eventnames, $this->map);
     }
 
-    protected function create() {
-parent::create();
+    protected function create()
+    {
+        parent::create();
         $this->addmap('events', array());
         $this->addmap('coclasses', array());
     }
 
-    public function assignMap() {
+    public function assignMap()
+    {
         foreach ($this->map as $propname => $key) {
             $this->$propname = & $this->data[$key];
         }
     }
 
-    public function afterLoad() {
+    public function afterLoad()
+    {
         $this->assignmap();
 
         foreach ($this->coclasses as $coclass) {
-            $this->coinstances[] = static::iGet($coclass);
+            $this->coinstances[] = static ::iGet($coclass);
         }
 
         parent::afterload();
     }
 
-    protected function addMap($name, $value) {
+    protected function addMap($name, $value)
+    {
         $this->map[$name] = $name;
         $this->data[$name] = $value;
         $this->$name = & $this->data[$name];
     }
 
-    public function free() {
-        unset( $this->getApp()->classes->instances[get_class($this) ]);
+    public function free()
+    {
+        unset($this->getApp()->classes->instances[get_class($this) ]);
         foreach ($this->coinstances as $coinstance) {
             $coinstance->free();
         }
     }
 
-    public function eventExists($name) {
+    public function eventExists($name)
+    {
         return in_array($name, $this->eventnames);
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (method_exists($this, $name)) {
             return array(
                 get_class($this) ,
@@ -83,7 +94,8 @@ parent::create();
         return parent::__get($name);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (parent::__set($name, $value)) {
             return true;
         }
@@ -95,11 +107,13 @@ parent::create();
         $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
     }
 
-    public function method_exists($name) {
+    public function method_exists($name)
+    {
         return in_array($name, $this->eventnames);
     }
 
-    public function __call($name, $params) {
+    public function __call($name, $params)
+    {
         if (in_array($name, $this->eventnames)) {
             return $this->callevent($name, $params);
         }
@@ -107,16 +121,19 @@ parent::create();
         parent::__call($name, $params);
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return parent::__isset($name) || in_array($name, $this->eventnames);
     }
 
-    protected function addEvents() {
+    protected function addEvents()
+    {
         $a = func_get_args();
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
 
-    public function callEvent($name, $params) {
+    public function callEvent($name, $params)
+    {
         if (!isset($this->events[$name])) {
             return '';
         }
@@ -128,7 +145,7 @@ parent::create();
 
             if (is_string($class) && class_exists($class)) {
                 $call = array(
-                    static::iGet($class) ,
+                    static ::iGet($class) ,
                     isset($item[1]) ? $item[1] : $item['func']
                 );
             } elseif (is_object($class)) {
@@ -167,15 +184,18 @@ parent::create();
         return $result;
     }
 
-    public static function cancelEvent($result) {
+    public static function cancelEvent($result)
+    {
         throw new CancelEvent($result);
     }
 
-    public function setEvent($name, $params) {
+    public function setEvent($name, $params)
+    {
         return $this->addevent($name, $params['class'], $params['func']);
     }
 
-    public function addEvent($name, $class, $func, $once = false) {
+    public function addEvent($name, $class, $func, $once = false)
+    {
         if (!in_array($name, $this->eventnames)) {
             return $this->error(sprintf('No such %s event', $name));
         }
@@ -218,7 +238,8 @@ parent::create();
         }
     }
 
-    public function delete_event_class($name, $class) {
+    public function delete_event_class($name, $class)
+    {
         if (!isset($this->events[$name])) {
             return false;
         }
@@ -247,15 +268,18 @@ parent::create();
         return $deleted;
     }
 
-    public function unsubscribeclass($obj) {
+    public function unsubscribeclass($obj)
+    {
         $this->unbind($obj);
     }
 
-    public function unsubscribeclassname($class) {
+    public function unsubscribeclassname($class)
+    {
         $this->unbind($class);
     }
 
-    public function unbind($c) {
+    public function unbind($c)
+    {
         $class = static ::get_class_name($c);
         foreach ($this->events as $name => $events) {
             foreach ($events as $i => $item) {
@@ -268,7 +292,8 @@ parent::create();
         $this->save();
     }
 
-    public function setEventorder($eventname, $c, $order) {
+    public function setEventorder($eventname, $c, $order)
+    {
         if (!isset($this->events[$eventname])) {
             return false;
         }
@@ -297,19 +322,22 @@ parent::create();
         }
     }
 
-    private function indexofcoclass($class) {
+    private function indexofcoclass($class)
+    {
         return array_search($class, $this->coclasses);
     }
 
-    public function addcoclass($class) {
+    public function addcoclass($class)
+    {
         if ($this->indexofcoclass($class) === false) {
             $this->coclasses[] = $class;
             $this->save();
-            $this->coinstances = static::iGet($class);
+            $this->coinstances = static ::iGet($class);
         }
     }
 
-    public function deletecoclass($class) {
+    public function deletecoclass($class)
+    {
         $i = $this->indexofcoclass($class);
         if (is_int($i)) {
             array_splice($this->coclasses, $i, 1);
@@ -318,3 +346,4 @@ parent::create();
     }
 
 }
+

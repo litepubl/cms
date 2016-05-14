@@ -1,16 +1,18 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\perms;
 
-function FilesInstall($self) {
-    $dir =  $self->getApp()->paths->files . 'private';
+function FilesInstall($self)
+{
+    $dir = $self->getApp()->paths->files . 'private';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $dir.= DIRECTORY_SEPARATOR;
@@ -22,3 +24,4 @@ function FilesInstall($self) {
     file_put_contents($file, 'Deny from all');
     @chmod($file, 0666);
 }
+

@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
-use litepubl\view\Lang;
+
 use litepubl\pages\Redirector;
+use litepubl\view\Lang;
 
-function MenusInstall($self) {
+function MenusInstall($self)
+{
     if (__NAMESPACE__ . '\Menus' != get_class($self)) {
- return;
-}
+        return;
+    }
 
-     $self->getApp()->classes->onrename = $self->classRenamed;
+    $self->getApp()->classes->onrename = $self->classRenamed;
 
     $self->lock();
     $self->heads = '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
@@ -24,7 +27,7 @@ function MenusInstall($self) {
 
     //posts
     $posts = $self->createitem(0, 'posts', 'author', 'litepubl\admin\posts\Posts');
- {
+    {
         $id = $self->createitem($posts, 'editor', 'author', 'litepubl\admin\posts\Editor');
         $self->items[$id]['title'] = Lang::i()->newpost;
         $self->createitem($posts, 'addcat', 'editor', 'litepubl\admin\posts\Tags');
@@ -34,16 +37,14 @@ function MenusInstall($self) {
         $self->createitem($posts, 'staticpages', 'editor', 'litepubl\admin\posts\StaticPages');
     }
 
-    $moder = $self->createitem(0, 'comments', 'commentator', 'litepubl\admin\comments\Moderator');
- {
+    $moder = $self->createitem(0, 'comments', 'commentator', 'litepubl\admin\comments\Moderator'); {
         $self->createitem($moder, 'hold', 'commentator', 'litepubl\admin\comments\Moderator');
         $self->createitem($moder, 'authors', 'moderator', 'litepubl\admin\comments\Authors');
         $self->createitem($moder, 'pingback', 'moderator', 'litepubl\admin\comments\Pingbacks');
     }
 
     $plugins = $self->createitem(0, 'plugins', 'admin', 'litepubl\admin\Plugins');
-    $files = $self->createitem(0, 'files', 'author', 'litepubl\admin\files\Files');
- {
+    $files = $self->createitem(0, 'files', 'author', 'litepubl\admin\files\Files'); {
         $self->createitem($files, 'thumbnail', 'editor', 'litepubl\admin\files\Thumbnails');
         $self->createitem($files, 'image', 'editor', 'litepubl\admin\files\Files');
         $self->createitem($files, 'video', 'editor', 'litepubl\admin\files\Files');
@@ -51,8 +52,7 @@ function MenusInstall($self) {
         $self->createitem($files, 'bin', 'editor', 'litepubl\admin\files\Files');
     }
 
-    $views = $self->createitem(0, 'views', 'admin', 'litepubl\admin\views\Schemes');
- {
+    $views = $self->createitem(0, 'views', 'admin', 'litepubl\admin\views\Schemes'); {
         $self->createitem($views, 'addschema', 'admin', 'litepubl\admin\views\Schemes');
         //$self->createitem($schemes, 'themes', 'admin', 'tadminthemes');
         $self->createitem($views, 'widgets', 'admin', 'litepubl\admin\widget\Widgets');
@@ -65,8 +65,7 @@ function MenusInstall($self) {
         $self->createitem($views, 'cssmerger', 'admin', 'litepubl\admin\views\Css');
     }
 
-    $menu = $self->createitem(0, 'menu', 'editor', 'litepubl\admin\menu\Manager');
- {
+    $menu = $self->createitem(0, 'menu', 'editor', 'litepubl\admin\menu\Manager'); {
         $id = $self->createitem($menu, 'edit', 'editor', 'litepubl\admin\menu\Editor');
         $self->items[$id]['title'] = Lang::get('menu', 'addmenu');
         $id = $self->createitem($menu, 'editfake', 'editor', 'litepubl\admin\menu\Editor');
@@ -106,7 +105,9 @@ function MenusInstall($self) {
     $redir->add('/admin/', '/admin/posts/editor/');
 }
 
-function MenusUninstall($self) {
+function MenusUninstall($self)
+{
     //rmdir(. 'menus');
     
 }
+

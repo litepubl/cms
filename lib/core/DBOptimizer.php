@@ -1,27 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class DbOptimizer extends Events
- {
+{
     public $childTables;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'db.optimizer';
         $this->addmap('childTables', array());
         $this->addevents('postsdeleted');
     }
 
-    public function garbageposts($table) {
-        $db =  $this->getApp()->db;
+    public function garbageposts($table)
+    {
+        $db = $this->getApp()->db;
         $deleted = $db->res2id($db->query("select id from $db->prefix$table where id not in
     (select $db->posts.id from $db->posts)"));
         if (count($deleted) > 0) {
@@ -30,9 +33,10 @@ class DbOptimizer extends Events
         }
     }
 
-    public function deletedeleted() {
+    public function deletedeleted()
+    {
         //posts
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         $db->table = 'posts';
         $items = $db->idselect("status = 'deleted'");
         if (count($items) > 0) {
@@ -96,7 +100,8 @@ class DbOptimizer extends Events
 
     }
 
-    public function optimize() {
+    public function optimize()
+    {
         $this->deletedeleted();
         sleep(2);
         $man = DBManager::i();
@@ -104,3 +109,4 @@ class DbOptimizer extends Events
     }
 
 }
+

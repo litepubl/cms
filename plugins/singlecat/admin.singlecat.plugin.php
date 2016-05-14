@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
-class tadminsinglecat {
+class tadminsinglecat
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = tsinglecat::i();
         $html = tadminhtml::i();
         $lang = Plugins::getlangabout(__file__);
@@ -33,7 +38,8 @@ class tadminsinglecat {
     [editor=tmlitems]', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $plugin = tsinglecat::i();
         $plugin->invertorder = isset($_POST['invertorder']);
         $plugin->maxcount = (int)$_POST['maxcount'];
@@ -43,3 +49,4 @@ class tadminsinglecat {
     }
 
 }
+

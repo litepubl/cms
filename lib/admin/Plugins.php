@@ -1,13 +1,15 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
+
 use litepubl\core\Plugins as PluginItems;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
@@ -16,13 +18,15 @@ class Plugins extends Menu
 {
     private $names;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
-        $this->names = Filer::getdir( $this->getApp()->paths->plugins);
+        $this->names = Filer::getdir($this->getApp()->paths->plugins);
         sort($this->names);
     }
 
-    public function getPluginsmenu() {
+    public function getPluginsmenu()
+    {
         $result = '';
         $link = Link::url($this->url, 'plugin=');
         $plugins = PluginItems::i();
@@ -36,7 +40,8 @@ class Plugins extends Menu
         return sprintf('<ul>%s</ul>', $result);
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = parent::gethead();
         if (!empty($_GET['plugin'])) {
             $name = $_GET['plugin'];
@@ -49,7 +54,8 @@ class Plugins extends Menu
         return $result;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = $this->getPluginsmenu();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
@@ -83,10 +89,8 @@ class Plugins extends Menu
             $args = $tb->args;
             foreach ($this->names as $name) {
                 if (in_array($name, $plugins->deprecated)) {
- continue;
-}
-
-
+                    continue;
+                }
 
                 $about = PluginItems::getabout($name);
                 $args->add($about);
@@ -106,9 +110,8 @@ class Plugins extends Menu
         } else {
             $name = $_GET['plugin'];
             if (!in_array($name, $this->names)) {
- return $this->notfound;
-}
-
+                return $this->notfound;
+            }
 
             if ($admin = $this->getadminplugin($name)) {
                 $result.= $admin->getcontent();
@@ -118,7 +121,8 @@ class Plugins extends Menu
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
             array_pop($list);
@@ -127,38 +131,38 @@ class Plugins extends Menu
                 $plugins->update($list);
             }
             catch(\Exception $e) {
-                 $this->getApp()->logException($e);
+                $this->getApp()->logException($e);
             }
             $result = $this->theme->h(Lang::i()->updated);
         } else {
             $name = $_GET['plugin'];
             if (!in_array($name, $this->names)) {
- return $this->notfound;
-}
-
+                return $this->notfound;
+            }
 
             if ($admin = $this->getadminplugin($name)) {
                 $result = $admin->processForm();
             }
         }
 
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $result;
     }
 
-    private function getAdminplugin($name) {
+    private function getAdminplugin($name)
+    {
         $about = PluginItems::getabout($name);
         if (empty($about['adminclassname'])) {
- return false;
-}
-
+            return false;
+        }
 
         $class = $about['adminclassname'];
         if (!class_exists($class)) {
- $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
-}
+            $this->getApp()->classes->include_file($this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR . $about['adminfilename']);
+        }
 
-        return static::iGet($class);
+        return static ::iGet($class);
     }
 
 }
+

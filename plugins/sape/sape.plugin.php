@@ -1,24 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Lang;
 
-class tsapeplugin extends twidget {
+class tsapeplugin extends twidget
+{
     public $sape;
     public $counts;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'widget.sape';
         $this->cache = 'nocache';
@@ -29,14 +34,16 @@ class tsapeplugin extends twidget {
         $this->addmap('counts', array());
     }
 
-    public function getDeftitle() {
+    public function getDeftitle()
+    {
         return Lang::get('default', 'links');
     }
 
-    private function createsape() {
+    private function createsape()
+    {
         if (!defined('_SAPE_USER')) {
             define('_SAPE_USER', $this->user);
-             $this->getApp()->classes->include_file( $this->getApp()->paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
+            $this->getApp()->classes->include_file($this->getApp()->paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
             $o['charset'] = 'UTF-8';
             $o['multi_site'] = true;
             if ($this->force) $o['force_show_code'] = $this->force;
@@ -44,49 +51,49 @@ class tsapeplugin extends twidget {
         }
     }
 
-    public function getWidget($id, $sidebar) {
+    public function getWidget($id, $sidebar)
+    {
         if ($this->user == '') {
- return '';
-}
+            return '';
+        }
 
-
-        if ( $this->getApp()->router->is404 ||  $this->getApp()->router->adminpanel) {
- return '';
-}
-
+        if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel) {
+            return '';
+        }
 
         return parent::getwidget($id, $sidebar);
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         $links = $this->getlinks();
         if (empty($links)) {
- return '';
-}
-
+            return '';
+        }
 
         return sprintf('<ul><li>%s</li></ul>', $links);
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         return $this->getcontent(0, 0);
     }
-    public function getLinks() {
+    public function getLinks()
+    {
         if ($this->user == '') {
- return '';
-}
+            return '';
+        }
 
-
-        if ( $this->getApp()->router->is404 ||  $this->getApp()->router->adminpanel) {
- return '';
-}
-
+        if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel) {
+            return '';
+        }
 
         if (!isset($this->sape)) $this->createsape();
         return $this->sape->return_links($this->counts[$id]);
     }
 
-    public function setCount($id, $count) {
+    public function setCount($id, $count)
+    {
         $this->counts[$id] = $count;
         $widgets = twidgets::i();
         foreach ($this->counts as $id => $count) {
@@ -95,7 +102,8 @@ class tsapeplugin extends twidget {
         $this->save();
     }
 
-    public function add() {
+    public function add()
+    {
         $id = $this->addtosidebar(0);
         $this->counts[$id] = 10;
         $this->save();
@@ -105,3 +113,4 @@ class tsapeplugin extends twidget {
 } //class
 
 ?>
+

@@ -1,56 +1,56 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\files;
+
+use litepubl\admin\AuthorRights;
+use litepubl\perms\Files as PrivateFiles;
 use litepubl\post\Files as FileItems;
 use litepubl\post\MediaParser;
-use litepubl\perms\Files as PrivateFiles;
-use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 use litepubl\view\Parser;
-use litepubl\admin\AuthorRights;
 
 class Thumbnails extends \litepubl\admin\Menu
 {
 
-    public function getIdfile() {
+    public function getIdfile()
+    {
         $files = FileItems::i();
         $id = $this->idget();
         if (($id == 0) || !$files->itemExists($id)) {
- return false;
-}
+            return false;
+        }
 
+        if ($this->getApp()->options->hasgroup('editor')) {
+            return $id;
+        }
 
-        if ( $this->getApp()->options->hasgroup('editor')) {
- return $id;
-}
-
-
-        $user =  $this->getApp()->options->user;
+        $user = $this->getApp()->options->user;
         $item = $files->getitem($id);
         if ($user == $item['author']) {
- return $id;
-}
-
+            return $id;
+        }
 
         return false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         if (!($id = $this->getidfile())) {
- return $this->notfound;
-}
-
+            return $this->notfound;
+        }
 
         $result = '';
         $files = FileItems::i();
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::admin();
         $args = new Args();
         $item = $files->getitem($id);
@@ -76,15 +76,16 @@ $admin = $this->admintheme;
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (!($id = $this->getidfile())) {
-return $this->notfound;
-}
+            return $this->notfound;
+        }
 
         $files = FileItems::i();
         $item = $files->getitem($id);
-$admin = $this->admintheme;
-$lang = Lang::admin();
+        $admin = $this->admintheme;
+        $lang = Lang::admin();
 
         if (isset($_POST['delete'])) {
             $files->delete($item['preview']);
@@ -92,20 +93,18 @@ $lang = Lang::admin();
             return $admintheme->success($lang->deleted);
         }
 
-        $isauthor = 'author' ==  $this->getApp()->options->group;
+        $isauthor = 'author' == $this->getApp()->options->group;
         if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
-return $admin->geterr(Lang::get('uploaderrors', $_FILES["filename"]["error"]));
+            return $admin->geterr(Lang::get('uploaderrors', $_FILES["filename"]["error"]));
         }
 
         if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
-return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
-}
+            return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
+        }
 
         if ($isauthor && ($r = AuthorRights::i()->canupload())) {
- return $r;
-}
-
-
+            return $r;
+        }
 
         $filename = $_FILES['filename']['name'];
         $tempfilename = $_FILES['filename']['tmp_name'];
@@ -113,11 +112,9 @@ return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
         $filename = MediaParser::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $parser->gettempname($parts);
-        if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $newtemp)) {
- return sprintf($this->html->h4->attack, $_FILES["filename"]["name"]);
-}
-
-
+        if (!move_uploaded_file($tempfilename, $this->getApp()->paths->files . $newtemp)) {
+            return sprintf($this->html->h4->attack, $_FILES["filename"]["name"]);
+        }
 
         $resize = !isset($_POST['noresize']);
 
@@ -141,3 +138,4 @@ return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
     }
 
 }
+

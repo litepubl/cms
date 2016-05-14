@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
 
-function FilesInstall($self) {
+function FilesInstall($self)
+{
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
     $manager->createtable($self->table, file_get_contents($dir . 'files.sql'));
@@ -22,6 +24,8 @@ function FilesInstall($self) {
     $posts->unlock();
 }
 
-function FilesUninstall($self) {
-   Posts::unsub($self);
+function FilesUninstall($self)
+{
+    Posts::unsub($self);
 }
+

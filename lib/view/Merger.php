@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
-use litepubl\core\Str;
+
 use litepubl\core\Arr;
+use litepubl\core\Str;
 
 class Merger extends \litepubl\core\Items
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->basename = 'merger';
@@ -22,11 +25,11 @@ class Merger extends \litepubl\core\Items
         $this->addevents('onsave');
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->lockcount > 0) {
- return;
-}
-
+            return;
+        }
 
         $this->data['revision']++;
         parent::save();
@@ -34,28 +37,29 @@ class Merger extends \litepubl\core\Items
         $this->onsave();
     }
 
-    public function normFilename($filename) {
+    public function normFilename($filename)
+    {
         $filename = trim($filename);
-        if (Str::begin($filename,  $this->getApp()->paths->home)) {
-$filename = substr($filename, strlen( $this->getApp()->paths->home));
-}
+        if (Str::begin($filename, $this->getApp()->paths->home)) {
+            $filename = substr($filename, strlen($this->getApp()->paths->home));
+        }
 
         if (empty($filename)) {
-return false;
-}
+            return false;
+        }
 
         $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
         $filename = '/' . ltrim($filename, '/');
         return $filename;
     }
 
-    public function add($section, $filename) {
-//$this->getApp()->getLogger()->debug($filename);
-// $this->getApp()->getLogManager()->trace();
+    public function add($section, $filename)
+    {
+        //$this->getApp()->getLogger()->debug($filename);
+        // $this->getApp()->getLogManager()->trace();
         if (!($filename = $this->normfilename($filename))) {
- return false;
-}
-
+            return false;
+        }
 
         if (!isset($this->items[$section])) {
             $this->items[$section] = array(
@@ -66,9 +70,8 @@ return false;
             );
         } else {
             if (in_array($filename, $this->items[$section]['files'])) {
- return false;
-}
-
+                return false;
+            }
 
             $this->items[$section]['files'][] = $filename;
         }
@@ -76,77 +79,69 @@ return false;
         return count($this->items[$section]['files']) - 1;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $a = func_get_args();
         return $this->deletefile($id, $a[1]);
     }
 
-    public function deleteFile($section, $filename) {
+    public function deleteFile($section, $filename)
+    {
         if (!isset($this->items[$section])) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($filename = $this->normfilename($filename))) {
- return false;
-}
-
+            return false;
+        }
 
         if (false === ($i = array_search($filename, $this->items[$section]['files']))) {
- return false;
-}
-
+            return false;
+        }
 
         Arr::delete($this->items[$section]['files'], $i);
         $this->save();
     }
 
-    public function replaceFile($section, $src, $dst) {
+    public function replaceFile($section, $src, $dst)
+    {
         if (!isset($this->items[$section])) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($src = $this->normfilename($src))) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($dst = $this->normfilename($dst))) {
- return false;
-}
-
-
+            return false;
+        }
 
         if (false === ($i = array_search($src, $this->items[$section]['files']))) {
- return false;
-}
-
+            return false;
+        }
 
         $this->items[$section]['files'][$i] = $dst;
         $this->save();
     }
 
-    public function after($section, $src, $dst) {
+    public function after($section, $src, $dst)
+    {
         if (!isset($this->items[$section])) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($src = $this->normfilename($src))) {
- return false;
-}
-
+            return false;
+        }
 
         if (in_array($dst, $this->items[$section]['files'])) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($dst = $this->normfilename($dst))) {
- return false;
-}
-
+            return false;
+        }
 
         if (false === ($i = array_search($src, $this->items[$section]['files']))) {
             //simple add
@@ -160,7 +155,8 @@ return false;
         $this->save();
     }
 
-    public function setFiles($section, $s) {
+    public function setFiles($section, $s)
+    {
         $this->lock();
         if (isset($this->items[$section])) {
             $this->items[$section]['files'] = array();
@@ -178,12 +174,12 @@ return false;
         $this->unlock();
     }
 
-    public function addText($section, $key, $s) {
+    public function addText($section, $key, $s)
+    {
         $s = trim($s);
         if (empty($s)) {
- return false;
-}
-
+            return false;
+        }
 
         if (!isset($this->items[$section])) {
             $this->items[$section] = array(
@@ -194,9 +190,8 @@ return false;
             );
         } else {
             if (in_array($s, $this->items[$section]['texts'])) {
- return false;
-}
-
+                return false;
+            }
 
             $this->items[$section]['texts'][$key] = $s;
         }
@@ -204,29 +199,32 @@ return false;
         return count($this->items[$section]['texts']) - 1;
     }
 
-    public function deleteText($section, $key) {
+    public function deleteText($section, $key)
+    {
         if (!isset($this->items[$section]['texts'][$key])) {
- return;
-}
-
+            return;
+        }
 
         unset($this->items[$section]['texts'][$key]);
         $this->save();
         return true;
     }
 
-    public function getFileName($section, $revision) {
+    public function getFileName($section, $revision)
+    {
         return sprintf('/files/js/%s.%s.js', $section, $revision);
     }
 
-    public function readFile($filename) {
+    public function readFile($filename)
+    {
         $result = file_get_contents($filename);
         if ($result === false) $this->error(sprintf('Error read %s file', $filename));
         return $result;
     }
 
-    public function deleteSection($section) {
-        $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
+    public function deleteSection($section)
+    {
+        $home = rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         @unlink($home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision)));
 
         $template = MainView::i();
@@ -238,8 +236,9 @@ return false;
         $this->deleted($section);
     }
 
-    public function merge() {
-        $home = rtrim( $this->getApp()->paths->home, DIRECTORY_SEPARATOR);
+    public function merge()
+    {
+        $home = rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         $theme = Theme::i();
         $template = MainView::i();
         $template->data[$this->basename] = $this->revision;
@@ -266,7 +265,7 @@ return false;
             $template->data[$this->basename . '_' . $section] = $savefile;
         }
         $template->save();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         foreach (array_keys($this->items) as $section) {
             $old = $home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision - 1));
             @unlink($old);
@@ -274,3 +273,4 @@ return false;
     }
 
 }
+

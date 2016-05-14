@@ -1,47 +1,50 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
+
 use litepubl\config;
 use litepubl\utils\Filer;
 
 /* to prevent recurse call */
-function installOptions($email, $language) {
-$app = litepubl::$app;
+function installOptions($email, $language)
+{
+    $app = litepubl::$app;
     $options = Options::i();
     $options->lock();
     $options->solt = Str::md5Uniq();
-        if (config::$db) {
-//set empty dbconfig to options
-    $options->data['dbconfig'] = array(
-        'driver' => 'mysqli',
-        'host' => 'localhost',
-        'port' => 0,
-        'dbname' => '',
-        'login' => '',
-        'password' => '',
-        'prefix' => config::$db['prefix'],
-    );
- } else {
-    $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
-    $options->data['dbconfig'] = array(
-        'driver' => 'mysqli',
-        'host' => $usehost ? $_REQUEST['dbhost'] : 'localhost',
-        'port' => $usehost ? (int)$_REQUEST['dbport'] : 0,
-        'dbname' => $_REQUEST['dbname'],
-        'login' => $_REQUEST['dblogin'],
-        'password' => '',
-        'prefix' => $_REQUEST['dbprefix']
-    );
+    if (config::$db) {
+        //set empty dbconfig to options
+        $options->data['dbconfig'] = array(
+            'driver' => 'mysqli',
+            'host' => 'localhost',
+            'port' => 0,
+            'dbname' => '',
+            'login' => '',
+            'password' => '',
+            'prefix' => config::$db['prefix'],
+        );
+    } else {
+        $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
+        $options->data['dbconfig'] = array(
+            'driver' => 'mysqli',
+            'host' => $usehost ? $_REQUEST['dbhost'] : 'localhost',
+            'port' => $usehost ? (int)$_REQUEST['dbport'] : 0,
+            'dbname' => $_REQUEST['dbname'],
+            'login' => $_REQUEST['dblogin'],
+            'password' => '',
+            'prefix' => $_REQUEST['dbprefix']
+        );
 
-    $options->setdbpassword($_REQUEST['dbpassword']);
-}
+        $options->setdbpassword($_REQUEST['dbpassword']);
+    }
 
     try {
         $app->db = new DB();
@@ -78,7 +81,7 @@ $app = litepubl::$app;
     $options->admincache = false;
     $options->ob_cache = true;
     $options->compress = false;
-$options->filetime_offset = Filer::getFiletimeOffset();
+    $options->filetime_offset = Filer::getFiletimeOffset();
     $options->data['perpage'] = 10;
     $options->commentsdisabled = false;
     $options->comstatus = 'guest';
@@ -100,8 +103,9 @@ $options->filetime_offset = Filer::getFiletimeOffset();
     $options->crontime = time();
     $options->show_file_perm = false;
     //$options->xxxcheck = empty($_SERVER['HTTP_REFERER']) && isset($_POST) && (count($_POST) > 0) ? false : true;
-$options->xxxcheck = false;
+    $options->xxxcheck = false;
     $options->fromemail = 'litepublisher@' . $_SERVER['HTTP_HOST'];
     $options->unlock();
     return $password;
 }
+

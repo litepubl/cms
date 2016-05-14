@@ -1,15 +1,16 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\debug;
 
-class Proxy 
+class Proxy
 {
     public static $trace;
     public static $total;
@@ -20,39 +21,44 @@ class Proxy
     public $items;
     public $templates;
 
-    public function __construct($obj) {
+    public function __construct($obj)
+    {
         $this->obj = $obj;
         if (isset($obj->data)) {
-$this->data = & $obj->data;
-}
+            $this->data = & $obj->data;
+        }
 
         if ($obj instanceof \litepubl\core\Items) {
-$this->items = & $obj->items;
-}
+            $this->items = & $obj->items;
+        }
 
         if ($obj instanceof \litepubl\view\Base) {
-$this->templates = & $obj->templates;
-}
+            $this->templates = & $obj->templates;
+        }
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return $this->obj->__isset($name);
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         $m = microtime(true);
         $r = $this->obj->$name;
         $this->addstat(" get $name", microtime(true) - $m);
         return $r;
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $m = microtime(true);
         $this->obj->$name = $value;
         $this->addstat(" set $name", microtime(true) - $m);
     }
 
-    public function __call($name, $args) {
+    public function __call($name, $args)
+    {
         //echo get_class($this->obj), " call $name<br>";
         $m = microtime(true);
         $r = call_user_func_array(array(
@@ -63,7 +69,8 @@ $this->templates = & $obj->templates;
         return $r;
     }
 
-    public function addstat($s, $time) {
+    public function addstat($s, $time)
+    {
         $name = get_class($this->obj) . $s;
         //echo "$name<br>";
         static ::$trace[] = array(
@@ -79,7 +86,8 @@ $this->templates = & $obj->templates;
         }
     }
 
-    public static function showperformance() {
+    public static function showperformance()
+    {
         echo "<pre>\n";
         arsort(static ::$total);
         $total = 0;
@@ -95,3 +103,4 @@ $this->templates = & $obj->templates;
     }
 
 }
+

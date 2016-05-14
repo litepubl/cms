@@ -1,16 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\likebuttons;
+
 use litepubl\view\Js;
 
-function LikeButtonsInstall($self) {
+function LikeButtonsInstall($self)
+{
     $name = basename(dirname(__file__));
     $js = Js::i();
     $js->lock();
@@ -21,7 +24,8 @@ function LikeButtonsInstall($self) {
     $js->unlock();
 }
 
-function LikeButtonsUninstall($self) {
+function LikeButtonsUninstall($self)
+{
     $name = basename(dirname(__file__));
     $js = Js::i();
     $js->lock();
@@ -30,3 +34,4 @@ function LikeButtonsUninstall($self) {
     $js->deletetext('default', 'facebook_appid');
     $js->unlock();
 }
+

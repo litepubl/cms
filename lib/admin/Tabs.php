@@ -1,30 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
+
 use litepubl\view\Admin;
 
 class Tabs
- {
+{
     public $tabs;
     public $panels;
     public $id;
     public $_admintheme;
     private static $index = 0;
 
-    public function __construct($admintheme = null) {
+    public function __construct($admintheme = null)
+    {
         $this->_admintheme = $admintheme;
         $this->tabs = array();
         $this->panels = array();
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         if (!$this->_admintheme) {
             $this->_admintheme = Admin::i();
         }
@@ -32,7 +36,8 @@ class Tabs
         return $this->_admintheme;
     }
 
-    public function get() {
+    public function get()
+    {
         return strtr($this->getadmintheme()->templates['tabs'], array(
             '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
             '$tab' => implode("\n", $this->tabs) ,
@@ -40,21 +45,25 @@ class Tabs
         ));
     }
 
-    public function add($title, $content) {
+    public function add($title, $content)
+    {
         $this->addtab('', $title, $content);
     }
 
-    public function ajax($title, $url) {
+    public function ajax($title, $url)
+    {
         $this->addtab($url, $title, '');
     }
 
-    public function addtab($url, $title, $content) {
+    public function addtab($url, $title, $content)
+    {
         $id = static ::$index++;
         $this->tabs[] = $this->gettab($id, $url, $title);
         $this->panels[] = $this->getpanel($id, $content);
     }
 
-    public function getTab($id, $url, $title) {
+    public function getTab($id, $url, $title)
+    {
         return strtr($this->getadmintheme()->templates['tabs.tab'], array(
             '$id' => $id,
             '$title' => $title,
@@ -62,7 +71,8 @@ class Tabs
         ));
     }
 
-    public function getPanel($id, $content) {
+    public function getPanel($id, $content)
+    {
         return strtr($this->getadmintheme()->templates['tabs.panel'], array(
             '$id' => $id,
             '$content' => $content,
@@ -70,3 +80,4 @@ class Tabs
     }
 
 }
+

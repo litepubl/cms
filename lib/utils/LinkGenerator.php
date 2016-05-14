@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\utils;
+
 use litepubl\core\Str;
 use litepubl\view\Lang;
 
 class LinkGenerator extends \litepubl\core\Events
- {
+{
     public $source;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'linkgenerator';
         $this->data = array_merge($this->data, array(
@@ -30,11 +33,11 @@ class LinkGenerator extends \litepubl\core\Events
         $this->addevents('onencode');
     }
 
-    public function createlink($source, $schema, $uniq) {
+    public function createlink($source, $schema, $uniq)
+    {
         if (!isset($this->data[$schema])) {
- return $this->error(sprintf('Link schema %s not exists', $schema));
-}
-
+            return $this->error(sprintf('Link schema %s not exists', $schema));
+        }
 
         $this->source = $source;
         $result = $this->data[$schema];
@@ -59,7 +62,8 @@ class LinkGenerator extends \litepubl\core\Events
         return $result;
     }
 
-    public function createurl($title, $schema, $uniq) {
+    public function createurl($title, $schema, $uniq)
+    {
         $title = $this->encode($title);
         $result = $this->data[$schema];
         $result = str_replace('[title]', $title, $result);
@@ -77,25 +81,27 @@ class LinkGenerator extends \litepubl\core\Events
         return $result;
     }
 
-    public function encode($s) {
+    public function encode($s)
+    {
         $s = trim($s, "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         $this->callevent('onencode', array(&$s
         ));
         if ($this->urlencode) {
- return rawurlencode($s);
-}
+            return rawurlencode($s);
+        }
 
-
-        if ( $this->getApp()->options->language != 'en') $s = $this->translit($s);
+        if ($this->getApp()->options->language != 'en') $s = $this->translit($s);
         return strtolower($s);
     }
 
-    public function translit($s) {
+    public function translit($s)
+    {
         Lang::usefile('translit');
         return strtr($s, Lang::$self->ini['translit']);
     }
 
-    public function clean($url) {
+    public function clean($url)
+    {
         $url = strip_tags($url);
         $url = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $url);
         $url = str_replace('%', '', $url);
@@ -110,7 +116,8 @@ class LinkGenerator extends \litepubl\core\Events
         return $url;
     }
 
-    public function filterfilename($filename) {
+    public function filterfilename($filename)
+    {
         $result = trim($filename, "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         //bug with rus encode
         //$result = basename($filename);
@@ -121,16 +128,17 @@ class LinkGenerator extends \litepubl\core\Events
         return trim($result, '/');
     }
 
-    public function AddSlashes($url) {
+    public function AddSlashes($url)
+    {
         if (empty($url) || ($url == '/')) {
- return '/';
-}
-
+            return '/';
+        }
 
         return '/' . trim($url, '/') . '/';
     }
 
-    public function getDate() {
+    public function getDate()
+    {
         if (isset($this->source->date)) {
             return $this->source->date;
         } else {
@@ -138,26 +146,31 @@ class LinkGenerator extends \litepubl\core\Events
         }
     }
 
-    public function year() {
+    public function year()
+    {
         return date('Y', $this->getdate());
     }
 
-    public function month() {
+    public function month()
+    {
         return date('m', $this->getdate());
     }
 
-    public function day() {
+    public function day()
+    {
         return date('d', $this->getdate());
     }
 
-    public function monthname() {
+    public function monthname()
+    {
         return Lang::date($this->getdate() , '%F');
     }
 
-    public function MakeUnique($url) {
-        if (! $this->getApp()->router->urlexists($url)) {
-return $url;
-}
+    public function MakeUnique($url)
+    {
+        if (!$this->getApp()->router->urlexists($url)) {
+            return $url;
+        }
 
         $l = strlen($url);
         if (substr($url, $l - 1, 1) == '/') {
@@ -174,31 +187,29 @@ return $url;
 
         for ($i = 2; $i < 1000; $i++) {
             $Result = "$url-$i$sufix";
-            if (! $this->getApp()->router->urlexists($Result)) {
-return $Result;
-}
+            if (!$this->getApp()->router->urlexists($Result)) {
+                return $Result;
+            }
         }
 
         return "/some-wrong" . time();
     }
 
     // $obj is tpost or tmenu
-    public function addurl($obj, $schema) {
+    public function addurl($obj, $schema)
+    {
         if (!isset($obj->url)) {
- return $this->error("The properties url and title not found");
-}
-
+            return $this->error("The properties url and title not found");
+        }
 
         if ($obj->url == '') {
- return $this->createlink($obj, $schema, true);
-}
-
+            return $this->createlink($obj, $schema, true);
+        }
 
         $url = trim(strip_tags($obj->url) , "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         if ($url == '') {
- return $this->createlink($obj, $schema, true);
-}
-
+            return $this->createlink($obj, $schema, true);
+        }
 
         $result = '/' . $this->encode($url);
         if (Str::end($obj->url, '/')) $result.= '/';
@@ -207,24 +218,22 @@ return $Result;
         return $result;
     }
 
-    public function editurl($obj, $schema) {
+    public function editurl($obj, $schema)
+    {
         if (!isset($obj->url) || !isset($obj->idurl) || !isset($obj->url)) {
- return $this->error("The properties url and title not found");
-}
+            return $this->error("The properties url and title not found");
+        }
 
-
-        $oldurl =  $this->getApp()->router->getidurl($obj->idurl);
+        $oldurl = $this->getApp()->router->getidurl($obj->idurl);
         if ($oldurl == $obj->url) {
- return;
-}
-
+            return;
+        }
 
         if ($obj->url == '') {
             $obj->url = $this->createlink($obj, $schema, false);
             if ($oldurl == $obj->url) {
- return;
-}
-
+                return;
+            }
 
         }
 
@@ -232,9 +241,8 @@ return $Result;
         if ($url == '') {
             $obj->url = $this->createlink($obj, $schema, false);
             if ($oldurl == $obj->url) {
- return;
-}
-
+                return;
+            }
 
         }
 
@@ -254,13 +262,14 @@ return $Result;
         }
 
         //check unique url
-        if ($urlitem =  $this->getApp()->router->findurl($url)) {
+        if ($urlitem = $this->getApp()->router->findurl($url)) {
             $url = $this->MakeUnique($url);
         }
 
         $obj->url = $url;
-         $this->getApp()->router->setidurl($obj->idurl, $obj->url);
-         $this->getApp()->router->addredir($oldurl, $obj->url);
+        $this->getApp()->router->setidurl($obj->idurl, $obj->url);
+        $this->getApp()->router->addredir($oldurl, $obj->url);
     }
 
 }
+

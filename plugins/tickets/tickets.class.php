@@ -1,40 +1,48 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Lang;
+
 use litepubl\view\Args;
+use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class ttickets extends tposts {
+class ttickets extends tposts
+{
     public $cats;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->childTable = 'tickets';
         $this->addmap('cats', array());
         $this->data['idcomauthor'] = 0;
     }
 
-    public function newpost() {
+    public function newpost()
+    {
         return tticket::i();
     }
 
-    public function createpoll($id) {
+    public function createpoll($id)
+    {
         return polls::i()->add('like', $id, 'post');
     }
 
-    public function filtercats(tpost $post) {
+    public function filtercats(tpost $post)
+    {
         $cats = array_intersect($post->categories, $this->cats);
         if (count($cats) == 0) {
             $cats = array(
@@ -49,7 +57,8 @@ class ttickets extends tposts {
         $post->categories = $cats;
     }
 
-    public function add(tpost $post) {
+    public function add(tpost $post)
+    {
         $this->filtercats($post);
         $post->updatefiltered();
 
@@ -59,10 +68,11 @@ class ttickets extends tposts {
         return $id;
     }
 
-    private function notify(tticket $ticket) {
+    private function notify(tticket $ticket)
+    {
         Theme::$vars['ticket'] = $ticket;
         $args = new Args();
-        $args->adminurl =  $this->getApp()->site->url . '/admin/tickets/editor/' .  $this->getApp()->site->q . 'id=' . $ticket->id;
+        $args->adminurl = $this->getApp()->site->url . '/admin/tickets/editor/' . $this->getApp()->site->q . 'id=' . $ticket->id;
 
         Lang::usefile('mail');
         $lang = Lang::i('mailticket');
@@ -75,14 +85,16 @@ class ttickets extends tposts {
         tmailer::sendtoadmin($subject, $body);
     }
 
-    public function edit(tpost $post) {
+    public function edit(tpost $post)
+    {
         $this->filtercats($post);
         $post->updatefiltered();
         return parent::edit($post);
     }
 
-    public function onexclude($id) {
-        if ( $this->getApp()->options->group == 'ticket') {
+    public function onexclude($id)
+    {
+        if ($this->getApp()->options->group == 'ticket') {
             $admin = Menus::i();
             return $admin->items[$id]['url'] == '/admin/posts/';
         }
@@ -90,3 +102,4 @@ class ttickets extends tposts {
     }
 
 }
+

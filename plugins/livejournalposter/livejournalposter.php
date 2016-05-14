@@ -1,24 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\Config;
 use litepubl\view\Theme;
 
 class tlivejournalposter extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['host'] = '';
         $this->data['login'] = '';
@@ -28,11 +32,11 @@ class tlivejournalposter extends \litepubl\core\Plugin
         $this->data['template'] = '';
     }
 
-    public function sendpost($id) {
+    public function sendpost($id)
+    {
         if ($this->host == '' || $this->login == '') {
- return false;
-}
-
+            return false;
+        }
 
         $post = tpost::i($id);
         Theme::$vars['post'] = $post;
@@ -41,9 +45,8 @@ class tlivejournalposter extends \litepubl\core\Plugin
         $date = getdate($post->posted);
 
         if ($post->status != 'published') {
- return;
-}
-
+            return;
+        }
 
         $meta = $post->meta;
 
@@ -51,71 +54,72 @@ class tlivejournalposter extends \litepubl\core\Plugin
         //$client = new IXR_Client($this->host, '/rpc.xml');
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
             if (Config::$debug) {
-$this->getApp()->getLogger()->debug('live journal: error challenge');
-}
-}
-            return false;
+                $this->getApp()->getLogger()->debug('live journal: error challenge');
+            }
         }
-        $response = $client->getResponse();
-        $challenge = $response['challenge'];
+        return false;
+    }
+    $response = $client->getResponse();
+    $challenge = $response['challenge'];
 
-        $args = array(
-            'username' => $this->login,
-            'auth_method' => 'challenge',
-            'auth_challenge' => $challenge,
-            'auth_response' => md5($challenge . md5($this->password)) ,
-            'ver' => "1",
-            'event' => $content,
-            'subject' => $post->title,
-            'year' => $date['year'],
-            'mon' => $date['mon'],
-            'day' => $date['mday'],
-            'hour' => $date['hours'],
-            'min' => $date['minutes'],
-            'props' => array(
-                'opt_nocomments' => !$post->commentsenabled,
-                'opt_preformatted' => true,
-                'taglist' => $post->tagnames
-            )
-        );
+    $args = array(
+        'username' => $this->login,
+        'auth_method' => 'challenge',
+        'auth_challenge' => $challenge,
+        'auth_response' => md5($challenge . md5($this->password)) ,
+        'ver' => "1",
+        'event' => $content,
+        'subject' => $post->title,
+        'year' => $date['year'],
+        'mon' => $date['mon'],
+        'day' => $date['mday'],
+        'hour' => $date['hours'],
+        'min' => $date['minutes'],
+        'props' => array(
+            'opt_nocomments' => !$post->commentsenabled,
+            'opt_preformatted' => true,
+            'taglist' => $post->tagnames
+        )
+    );
 
-        switch ($this->privacy) {
-            case "public":
-                $args['security'] = "public";
-                break;
-
-
-            case "private":
-                $args['security'] = "private";
-                break;
+    switch ($this->privacy) {
+        case "public":
+            $args['security'] = "public";
+            break;
 
 
-            case "friends":
-                $args['security'] = "usemask";
-                $args['allowmask'] = 1;
-        }
+        case "private":
+            $args['security'] = "private";
+            break;
 
-        if ($this->community != '') $args['usejournal'] = $this->community;
 
-        if (isset($meta->ljid)) {
-            $method = 'LJ.XMLRPC.editevent';
-            $args['itemid'] = $meta->ljid;
-        } else {
-            $method = 'LJ.XMLRPC.postevent';
-        }
-
-        if (!$client->query($method, $args)) {
-            if (Config::$debug) {
-$this->getApp()->getLogger()->debug('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
-}
-            return false;
-        }
-
-        if (!isset($meta->ljid)) {
-            $response = $client->getResponse();
-            $meta->ljid = $response['itemid'];
-        }
-        return $meta->ljid;
+        case "friends":
+            $args['security'] = "usemask";
+            $args['allowmask'] = 1;
     }
 
+    if ($this->community != '') $args['usejournal'] = $this->community;
+
+    if (isset($meta->ljid)) {
+        $method = 'LJ.XMLRPC.editevent';
+        $args['itemid'] = $meta->ljid;
+    } else {
+        $method = 'LJ.XMLRPC.postevent';
+    }
+
+    if (!$client->query($method, $args)) {
+        if (Config::$debug) {
+            $this->getApp()->getLogger()->debug('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+        }
+        return false;
+    }
+
+    if (!isset($meta->ljid)) {
+        $response = $client->getResponse();
+        $meta->ljid = $response['itemid'];
+    }
+    return $meta->ljid;
 }
+
+}
+

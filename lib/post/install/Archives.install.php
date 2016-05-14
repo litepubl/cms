@@ -1,28 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\widget\Widgets;
 
-function ArchivesInstall($self) {
+function ArchivesInstall($self)
+{
     $posts = Posts::i();
     $posts->changed = $self->postschanged;
 }
 
-function ArchivesUninstall($self) {
-     $self->getApp()->router->unbind($self);
+function ArchivesUninstall($self)
+{
+    $self->getApp()->router->unbind($self);
     Posts::unsub($self);
     $widgets = Widgets::i();
     $widgets->deleteClass(get_class($self));
 }
 
-function ArchivesGetSitemap($self, $from, $count) {
+function ArchivesGetSitemap($self, $from, $count)
+{
     $result = array();
     foreach ($self->items as $date => $item) {
         $result[] = array(
@@ -33,3 +38,4 @@ function ArchivesGetSitemap($self, $from, $count) {
     }
     return $result;
 }
+

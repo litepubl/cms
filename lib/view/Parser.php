@@ -1,27 +1,31 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
+
 use litepubl\core\Str;
 
 class Parser extends BaseParser
- {
+{
     private $sidebar_index;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'themeparser';
         $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
         $this->sidebar_index = 0;
     }
 
-    public function loadpaths() {
+    public function loadpaths()
+    {
         if (!count($this->tagfiles)) {
             $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
         }
@@ -29,7 +33,8 @@ class Parser extends BaseParser
         return parent::loadpaths();
     }
 
-    public function doreplacelang(Base $theme) {
+    public function doreplacelang(Base $theme)
+    {
         parent::doreplacelang($theme);
 
         $sidebars = & $theme->templates['sidebars'];
@@ -41,7 +46,8 @@ class Parser extends BaseParser
 
     }
 
-    public function checkabout($name) {
+    public function checkabout($name)
+    {
         $about = $this->getabout($name);
         switch ($about['type']) {
             case 'litepublisher3':
@@ -55,23 +61,22 @@ class Parser extends BaseParser
         }
     }
 
-    public function getParentname($name) {
+    public function getParentname($name)
+    {
         if ($name == 'default') {
- return false;
-}
-
+            return false;
+        }
 
         if ($name == 'default-old') {
- return 'default';
-}
-
-
+            return 'default';
+        }
 
         $about = $this->getabout($name);
         return empty($about['parent']) ? 'default-old' : $about['parent'];
     }
 
-    public function getFile($filename) {
+    public function getFile($filename)
+    {
         if ($s = parent::getfile($filename)) {
             //fix some old tags
             $s = strtr($s, array(
@@ -91,7 +96,8 @@ class Parser extends BaseParser
         return $s;
     }
 
-    protected function preparetag($name) {
+    protected function preparetag($name)
+    {
         $name = parent::preparetag($name);
         if (Str::begin($name, 'sidebar')) {
             if (preg_match('/^sidebar(\d)\.?/', $name, $m)) {
@@ -108,7 +114,8 @@ class Parser extends BaseParser
         return $name;
     }
 
-    protected function setValue($name, $s) {
+    protected function setValue($name, $s)
+    {
         if (Str::begin($name, 'sidebar')) {
             $this->setwidgetvalue($name, $s);
         } elseif (isset($this->paths[$name])) {
@@ -122,7 +129,8 @@ class Parser extends BaseParser
         }
     }
 
-    public function set_value($name, $value) {
+    public function set_value($name, $value)
+    {
         $this->parsedtags[] = $name;
         switch ($name) {
             case 'content.menu':
@@ -140,7 +148,8 @@ class Parser extends BaseParser
         $this->theme->templates[$name] = $value;
     }
 
-    public function getInfo($name, $child) {
+    public function getInfo($name, $child)
+    {
         if (Str::begin($child, '$template.sidebar') && (substr_count($child, '.') == 1)) {
             return array(
                 'path' => substr($child, strlen('$template.')) ,
@@ -150,9 +159,8 @@ class Parser extends BaseParser
         }
 
         if (($name == '') || ($child == '$template')) {
- return 'index';
-}
-
+            return 'index';
+        }
 
         if (Str::begin($name, '$template.')) $name = substr($name, strlen('$template.'));
         if ($name == '$template') $name = '';
@@ -186,46 +194,43 @@ class Parser extends BaseParser
         $this->error("The '$child' not found in path '$name'");
     }
 
-    private function setWidgetValue($path, $value) {
+    private function setWidgetValue($path, $value)
+    {
         if (!strpos($path, '.')) {
- return;
-}
-
+            return;
+        }
 
         if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
         $widgetname = $m[2];
         //backward compability deprecated submenu
         if ($widgetname == 'submenu') {
- return;
-}
+            return;
+        }
 
-
-
-        if (($widgetname != 'widget') && (!in_array($widgetname, static::getWidgetNames()))) {
-$this->error("Unknown widget '$widgetname' name");
-}
+        if (($widgetname != 'widget') && (!in_array($widgetname, static ::getWidgetNames()))) {
+            $this->error("Unknown widget '$widgetname' name");
+        }
 
         $path = $this->getWidgetPath(empty($m[3]) ? '' : $m[3]);
         if ($path === false) {
-$this->error("Unknown '$path' widget path");
-}
+            $this->error("Unknown '$path' widget path");
+        }
 
         $this->setWidgetItem($widgetname, $path, $value);
 
         if ($widgetname == 'widget') {
-            foreach (static::getWidgetNames() as $widgetname) {
+            foreach (static ::getWidgetNames() as $widgetname) {
                 if ((($widgetname == 'posts') || ($widgetname == 'comments')) && ($path == '.item')) {
- continue;
-}
-
-
+                    continue;
+                }
 
                 $this->setwidgetitem($widgetname, $path, $value);
             }
         }
     }
 
-    private function setWidgetitem($widgetname, $path, $value) {
+    private function setWidgetitem($widgetname, $path, $value)
+    {
         $sidebar = & $this->theme->templates['sidebars'][$this->sidebar_index];
         if (!isset($sidebar[$widgetname])) {
             foreach (array(
@@ -243,12 +248,12 @@ $this->error("Unknown '$path' widget path");
         $sidebar[$widgetname . $path] = $value;
     }
 
-    public function setCustom($path, $value) {
+    public function setCustom($path, $value)
+    {
         $names = explode('.', $path);
         if (count($names) < 2) {
- return;
-}
-
+            return;
+        }
 
         if (($names[0] != '$custom') && ($names[0] != 'custom')) $this->error("The '$path' path is not a custom path");
         $name = $names[1];
@@ -277,7 +282,8 @@ $this->error("Unknown '$path' widget path");
             }
     }
 
-    public function afterparse($theme) {
+    public function afterparse($theme)
+    {
         parent::afterparse($theme);
 
         $templates = & $this->theme->templates;
@@ -347,7 +353,7 @@ $this->error("Unknown '$path' widget path");
         $sidebars = & $templates['sidebars'];
         for ($i = 0; $i < count($sidebars); $i++) {
             $sidebar = & $sidebars[$i];
-            foreach (static::getWidgetNames() as $widgetname) {
+            foreach (static ::getWidgetNames() as $widgetname) {
                 foreach (array(
                     '',
                     '.items',
@@ -415,7 +421,8 @@ $this->error("Unknown '$path' widget path");
         $this->reuse($templates);
     }
 
-    public static function getMetaclasses($s) {
+    public static function getMetaclasses($s)
+    {
         $result = array(
             'rss' => '',
             'comments' => '',
@@ -434,10 +441,11 @@ $this->error("Unknown '$path' widget path");
         return $result;
     }
 
-    public function getWidgetPath($path) {
+    public function getWidgetPath($path)
+    {
         if ($path === '') {
- return '';
-}
+            return '';
+        }
 
         switch ($path) {
             case '.items':
@@ -465,7 +473,8 @@ $this->error("Unknown '$path' widget path");
         return false;
     }
 
-    public static function getWidgetNames() {
+    public static function getWidgetNames()
+    {
         return array(
             'categories',
             'tags',
@@ -479,3 +488,4 @@ $this->error("Unknown '$path' widget path");
     }
 
 }
+

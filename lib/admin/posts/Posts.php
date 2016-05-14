@@ -1,32 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\posts;
-use litepubl\post\Posts as PostItems;
-use litepubl\post\Post;
-use litepubl\view\Lang;
-use litepubl\view\Args;
+
 use litepubl\admin\AuthorRights;
 use litepubl\admin\Link;
+use litepubl\post\Post;
+use litepubl\post\Posts as PostItems;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Posts extends \litepubl\admin\Menu
 {
     private $isauthor;
 
-    public function canrequest() {
+    public function canrequest()
+    {
         $this->isauthor = false;
-        if (! $this->getApp()->options->hasgroup('editor')) {
-            $this->isauthor =  $this->getApp()->options->hasgroup('author');
+        if (!$this->getApp()->options->hasgroup('editor')) {
+            $this->isauthor = $this->getApp()->options->hasgroup('author');
         }
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         if (isset($_GET['action']) && in_array($_GET['action'], array(
             'delete',
             'setdraft',
@@ -38,21 +42,21 @@ class Posts extends \litepubl\admin\Menu
         return $this->gettable(PostItems::i() , $where = "status <> 'deleted' ");
     }
 
-    public function doaction($posts, $action) {
+    public function doaction($posts, $action)
+    {
         $id = $this->idget();
         if (!$posts->itemExists($id)) {
- return $this->notfound;
-}
-
+            return $this->notfound;
+        }
 
         $post = Post::i($id);
         if ($this->isauthor && ($r = AuthorRights::i()->changeposts($action))) {
-return $r;
-}
+            return $r;
+        }
 
-        if ($this->isauthor && ( $this->getApp()->options->user != $post->author)) {
-return $this->notfound;
-}
+        if ($this->isauthor && ($this->getApp()->options->user != $post->author)) {
+            return $this->notfound;
+        }
 
         $admintheme = $this->admintheme;
         if (!$this->confirmed) {
@@ -88,9 +92,10 @@ return $this->notfound;
         return $result;
     }
 
-    public function getTable($posts, $where) {
+    public function getTable($posts, $where)
+    {
         $perpage = 20;
-        if ($this->isauthor) $where.= ' and author = ' .  $this->getApp()->options->user;
+        if ($this->isauthor) $where.= ' and author = ' . $this->getApp()->options->user;
         $count = $posts->db->getcount($where);
         $from = $this->getfrom($perpage, $count);
         $items = $posts->select($where, " order by posted desc limit $from, $perpage");
@@ -130,45 +135,43 @@ return $this->notfound;
             ) ,
         ));
 
-        $form->body .= $tb->build($items);
-        $form->body .= $form->centergroup('[button=publish]
+        $form->body.= $tb->build($items);
+        $form->body.= $form->centergroup('[button=publish]
     [button=setdraft]
     [button=delete]');
 
         $form->submit = false;
         $result = $form->get();
-        $result.= $this->theme->getpages('/admin/posts/',  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages('/admin/posts/', $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $posts = PostItems::i();
         $posts->lock();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
         if ($this->isauthor && ($r = AuthorRights::i()->changeposts($status))) {
-return $r;
-}
-        $iduser =  $this->getApp()->options->user;
+            return $r;
+        }
+        $iduser = $this->getApp()->options->user;
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $id = (int)$id;
             if ($status == 'delete') {
                 if ($this->isauthor && ($iduser != $posts->db->getvalue('author'))) {
- continue;
-}
-
+                    continue;
+                }
 
                 $posts->delete($id);
             } else {
                 $post = Post::i($id);
                 if ($this->isauthor && ($iduser != $post->author)) {
- continue;
-}
-
+                    continue;
+                }
 
                 $post->status = $status;
                 $posts->edit($post);
@@ -178,3 +181,4 @@ return $r;
     }
 
 }
+

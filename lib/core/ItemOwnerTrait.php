@@ -1,29 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-trait ItemOwnerTrait
-{
+traitItemOwnerTrait {
 
-    public function load() {
+    public function load()
+    {
         $owner = $this->owner;
         if ($owner->itemExists($this->id)) {
             $this->data = & $owner->items[$this->id];
-$this->afterLoad();
+            $this->afterLoad();
             return true;
         }
         return false;
     }
 
-    public function save() {
+    public function save()
+    {
         return $this->owner->save();
     }
 
 }
+

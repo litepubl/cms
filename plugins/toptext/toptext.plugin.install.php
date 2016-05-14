@@ -1,16 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Filter;
 
-function ttoptextinstall($self) {
+function ttoptextinstall($self)
+{
     $filter = Filter::i();
     $filter->lock();
     $filter->beforecontent = $self->beforecontent;
@@ -18,7 +21,9 @@ function ttoptextinstall($self) {
     $filter->unlock();
 }
 
-function ttoptextuninstall($self) {
+function ttoptextuninstall($self)
+{
     $filter = Filter::i();
     $filter->unbind($self);
 }
+

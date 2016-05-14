@@ -1,25 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
-use litepubl\core\Str;
-use litepubl\core\Arr;
 
-function JsInstall($self) {
-    $dir =  $self->getApp()->paths->files . 'js';
+use litepubl\core\Arr;
+use litepubl\core\Str;
+
+function JsInstall($self)
+{
+    $dir = $self->getApp()->paths->files . 'js';
     @mkdir($dir, 0777);
     @chmod($dir, 0777);
     $file = $dir . DIRECTORY_SEPARATOR . 'index.htm';
     file_put_contents($file, ' ');
     @chmod($file, 0666);
 
-    $language =  $self->getApp()->options->language;
+    $language = $self->getApp()->options->language;
     $self->lock();
     $self->items = array();
     $section = 'default';
@@ -98,10 +101,12 @@ function JsInstall($self) {
     $self->unlock();
 }
 
-function JsUninstall($self) {
+function JsUninstall($self)
+{
 }
 
-function Js_switch($self, $add, $delete) {
+function Js_switch($self, $add, $delete)
+{
     $self->lock();
 
     foreach ($delete as $filename) {
@@ -115,7 +120,8 @@ function Js_switch($self, $add, $delete) {
     $self->unlock();
 }
 
-function Js_pretty_files() {
+function Js_pretty_files()
+{
     return array(
         '/js/prettyphoto/js/jquery.prettyPhoto.js',
         '/js/litepubl/pretty/dialog.pretty.min.js',
@@ -126,7 +132,8 @@ function Js_pretty_files() {
     );
 }
 
-function Js_bootstrap_files() {
+function Js_bootstrap_files()
+{
     return array(
         // fix
         '/js/fix/ie10.min.js',
@@ -162,7 +169,8 @@ function Js_bootstrap_files() {
     );
 }
 
-function Js_bootstrap_admin($js, $add = true) {
+function Js_bootstrap_admin($js, $add = true)
+{
     $items = array(
         'admin' => array(
             '/js/bootstrap/tab.min.js',
@@ -188,9 +196,10 @@ function Js_bootstrap_admin($js, $add = true) {
 
 }
 
-function Js_ui_admin($js, $add = true) {
-$js->getApp()->getLogger()->debug(var_export($add, true));
-$js->getApp()->getLogManager()->trace();
+function Js_ui_admin($js, $add = true)
+{
+    $js->getApp()->getLogger()->debug(var_export($add, true));
+    $js->getApp()->getLogManager()->trace();
     $items = array(
         'admin' => array(
             '/js/jquery/ui/core.min.js',
@@ -224,3 +233,4 @@ $js->getApp()->getLogManager()->trace();
         Arr::move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']) , 0);
     }
 }
+

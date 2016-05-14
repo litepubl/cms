@@ -1,27 +1,32 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\Config;
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class polls extends titems {
+class polls extends titems
+{
     const votes = 'pollvotes';
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->addevents('edited');
@@ -29,7 +34,8 @@ class polls extends titems {
         $this->table = 'polls';
     }
 
-    public function add($template, $idobject, $typeobject) {
+    public function add($template, $idobject, $typeobject)
+    {
         $best = $template == 'stars' ? 5 : 2;
         return $this->additem(array(
             'idobject' => (int)$idobject,
@@ -43,32 +49,37 @@ class polls extends titems {
         ));
     }
 
-    public function setStatus($id, $status) {
+    public function setStatus($id, $status)
+    {
         $this->setvalue($id, 'status', $status);
         if ($status == 'closed') {
             $this->getdb(static ::votes)->delete("idpoll = $id");
         }
     }
 
-    public function close($id) {
+    public function close($id)
+    {
         $this->setstatus($id, 'closed');
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->db->iddelete($id);
         return parent::delete($id);
     }
 
-    public function getObjectpoll($idobject, $typeobject) {
+    public function getObjectpoll($idobject, $typeobject)
+    {
         return $this->getpoll($this->finditem("idobject = $idobject and typeobject = '$typeobject'"));
     }
 
-    public function getPoll($id) {
+    public function getPoll($id)
+    {
         if (!$id) {
             return '';
         }
 
-        if (Config::$debug) $this->getdb(static ::votes)->delete('iduser = ' .  $this->getApp()->options->user);
+        if (Config::$debug) $this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
         $item = $this->getitem($id);
 
         $lang = Lang::i('poll');
@@ -96,7 +107,8 @@ class polls extends titems {
         return $theme->parseArg($tml, $args);
     }
 
-    public function err($mesg) {
+    public function err($mesg)
+    {
         $lang = Lang::i('poll');
 
         return array(
@@ -107,7 +119,8 @@ class polls extends titems {
         );
     }
 
-    public function polls_sendvote(array $args) {
+    public function polls_sendvote(array $args)
+    {
         extract($args, EXTR_SKIP);
         if (!isset($idpoll) || !isset($vote)) {
             $this->error('Invalid data', 403);
@@ -118,7 +131,7 @@ class polls extends titems {
             $this->error('Invalid data', 403);
         }
 
-        $iduser =  $this->getApp()->options->user;
+        $iduser = $this->getApp()->options->user;
         if (!$iduser) {
             $result = $this->err('notauth');
         } else if (!$this->itemExists($idpoll)) {
@@ -142,11 +155,13 @@ class polls extends titems {
         return $result;
     }
 
-    public function hasvote($idpoll, $iduser) {
+    public function hasvote($idpoll, $iduser)
+    {
         return $this->getdb(static ::votes)->findprop('idpoll', "idpoll = $idpoll and iduser = $iduser");
     }
 
-    public function addvote($id, $iduser, $vote) {
+    public function addvote($id, $iduser, $vote)
+    {
         $db = $this->getdb(static ::votes);
         $db->insert(array(
             'idpoll' => (int)$id,
@@ -180,7 +195,8 @@ where idpoll = $id group by vote order by vote asc"));
         $this->items[$id] = $item;
     }
 
-    public function addfakevote($id) {
+    public function addfakevote($id)
+    {
         $item = $this->getitem($id);
         $best = (int)$item['best'];
         $this->getdb(static ::votes)->insert(array(
@@ -198,7 +214,8 @@ where idpoll = $id group by vote order by vote asc"));
         $this->items[$id] = $item;
     }
 
-    public function optimize() {
+    public function optimize()
+    {
         $date = Str::sqlDate(strtotime('-1 month'));
         $list = $this->db->idselect("created <= '$date' and status = 'opened'");
         if (count($list)) {
@@ -208,17 +225,20 @@ where idpoll = $id group by vote order by vote asc"));
         }
     }
 
-    public function objectdeleted($idobject, $typeobject) {
+    public function objectdeleted($idobject, $typeobject)
+    {
         if ($id = $this->db->findid("idobject = $idobject and typeobject = '$typeobject'")) {
             $this->delete($id);
         }
     }
 
-    public function postdeleted($idpost) {
+    public function postdeleted($idpost)
+    {
         $this->objectdeleted($idpost, 'post');
     }
 
-    public function filter(&$content) {
+    public function filter(&$content)
+    {
         if (preg_match_all('/\[poll\=(\d*?)\]/', $content, $m, PREG_SET_ORDER)) {
             $polls = tpolls::i();
             foreach ($m as $item) {
@@ -236,3 +256,4 @@ where idpoll = $id group by vote order by vote asc"));
     }
 
 }
+

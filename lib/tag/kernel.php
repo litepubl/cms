@@ -1,13 +1,14 @@
 <?php
 //Cats.php
 namespace litepubl\tag;
+
 use litepubl\widget\Cats as CatsWidget;
 
 class Cats extends Common
 {
     //public  $defaultid;
-
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->table = 'categories';
         $this->contents->table = 'catscontent';
@@ -16,14 +17,16 @@ class Cats extends Common
         $this->data['defaultid'] = 0;
     }
 
-    public function setDefaultid($id) {
+    public function setDefaultid($id)
+    {
         if (($id != $this->defaultid) && $this->itemExists($id)) {
             $this->data['defaultid'] = $id;
             $this->save();
         }
     }
 
-    public function save() {
+    public function save()
+    {
         parent::save();
         if (!$this->locked) {
             CatsWidget::i()->expire();
@@ -34,15 +37,16 @@ class Cats extends Common
 
 //Common.php
 namespace litepubl\tag;
+
+use litepubl\core\Arr;
 use litepubl\core\ItemsPosts;
+use litepubl\utils\LinkGenerator;
+use litepubl\view\Filter;
 use litepubl\view\Schema;
 use litepubl\view\Schemes;
-use litepubl\view\Filter;
-use litepubl\utils\LinkGenerator;
-use litepubl\core\Arr;
 
 class Common extends \litepubl\core\Items
- {
+{
     public $factory;
     public $contents;
     public $itemsposts;
@@ -51,7 +55,8 @@ class Common extends \litepubl\core\Items
     private $newtitle;
     private $all_loaded;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->addevents('changed', 'onbeforecontent', 'oncontent');
@@ -63,78 +68,84 @@ class Common extends \litepubl\core\Items
         $this->createFactory();
     }
 
-    protected function createFactory() {
+    protected function createFactory()
+    {
         $this->factory = new Factory();
         $this->contents = new Content($this);
         $this->itemsposts = new ItemsPosts();
     }
 
-public function getView()
-{
-$view = View::i();
-$view->setTags($this);
-return $view;
-}
+    public function getView()
+    {
+        $view = View::i();
+        $view->setTags($this);
+        return $view;
+    }
 
-    public function loadAll() {
+    public function loadAll()
+    {
         //prevent double request
         if ($this->all_loaded) {
- return;
-}
+            return;
+        }
 
         $this->all_loaded = true;
         return parent::loadAll();
     }
 
-    public function select($where, $limit) {
+    public function select($where, $limit)
+    {
         if ($where) {
-$where.= ' and ';
-}
+            $where.= ' and ';
+        }
 
-        $db =  $this->db;
+        $db = $this->db;
         $t = $this->thistable;
         $u = $db->urlmap;
-        $res = $db->query(
-"select $t.*, $u.url from $t, $u
-    where $where $u.id = $t.idurl $limit"
-);
+        $res = $db->query("select $t.*, $u.url from $t, $u
+    where $where $u.id = $t.idurl $limit");
 
         return $this->res2items($res);
     }
 
-    public function getUrl($id) {
+    public function getUrl($id)
+    {
         $item = $this->getItem($id);
         return $item['url'];
     }
 
-    public function getName($id) {
+    public function getName($id)
+    {
         $item = $this->getItem($id);
         return $item['title'];
     }
 
-    public function postEdited($idpost) {
+    public function postEdited($idpost)
+    {
         $post = $this->factory->getPost((int)$idpost);
         $items = $post->{$this->postpropname};
         Arr::clean($items);
         if (count($items)) {
-$items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
-}
+            $items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
+        }
 
         $changed = $this->itemsposts->setItems($idpost, $items);
         $this->updateCount($changed);
     }
 
-    public function postDeleted($idpost) {
+    public function postDeleted($idpost)
+    {
         $changed = $this->itemsposts->deletePost($idpost);
         $this->updateCount($changed);
     }
 
-    protected function updateCount(array $items) {
+    protected function updateCount(array $items)
+    {
         if (!count($items)) {
- return;
-}
+            return;
+        }
 
-        $db =  $this->db;
+        $db = $this->db;
         //next queries update values
         $items = implode(',', $items);
         $thistable = $this->thistable;
@@ -142,10 +153,8 @@ $items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
         $itemprop = $this->itemsposts->itemprop;
         $postprop = $this->itemsposts->postprop;
         $poststable = $db->posts;
-        $list = $db->res2assoc($db->query(
-"select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
-    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"
-));
+        $list = $db->res2assoc($db->query("select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
+    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"));
 
         $db->table = $this->table;
         foreach ($list as $item) {
@@ -153,24 +162,26 @@ $items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
         }
     }
 
-    public function getUrlType() {
+    public function getUrlType()
+    {
         return 'normal';
     }
 
-    public function add($parent, $title) {
+    public function add($parent, $title)
+    {
         $title = trim($title);
         if (empty($title)) {
- return false;
-}
+            return false;
+        }
 
         if ($id = $this->indexOf('title', $title)) {
- return $id;
-}
+            return $id;
+        }
 
         $parent = (int)$parent;
         if ($parent && !$this->itemExists($parent)) {
-$parent = 0;
-}
+            $parent = 0;
+        }
 
         $url = LinkGenerator::i()->createurl($title, $this->PermalinkIndex, true);
         $schemes = Schemes::i();
@@ -191,28 +202,29 @@ $parent = 0;
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
-        $idurl =  $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
+        $idurl = $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
         $this->changed();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $id;
     }
 
-    public function edit($id, $title, $url) {
+    public function edit($id, $title, $url)
+    {
         $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['url'] == $url)) {
- return;
-}
+            return;
+        }
 
         $item['title'] = $title;
-            $this->db->updateAssoc(array(
-                'id' => $id,
-                'title' => $title
-            ));
+        $this->db->updateAssoc(array(
+            'id' => $id,
+            'title' => $title
+        ));
 
-$app = $this->getApp();
+        $app = $this->getApp();
         $linkgen = LinkGenerator::i();
         $url = trim($url);
         // try rebuild url
@@ -221,46 +233,48 @@ $app = $this->getApp();
         }
 
         if ($item['url'] != $url) {
-            if (($urlitem =  $app->router->queryItem($url)) && ($urlitem['id'] != $item['idurl'])) {
+            if (($urlitem = $app->router->queryItem($url)) && ($urlitem['id'] != $item['idurl'])) {
                 $url = $linkgen->MakeUnique($url);
             }
-             $app->router->setIdUrl($item['idurl'], $url);
-             $app->router->addRedir($item['url'], $url);
+            $app->router->setIdUrl($item['idurl'], $url);
+            $app->router->addRedir($item['url'], $url);
             $item['url'] = $url;
         }
 
         $this->items[$id] = $item;
         $this->save();
         $this->changed();
-         $app->cache->clear();
+        $app->cache->clear();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $item = $this->getitem($id);
-         $this->getApp()->router->deleteitem($item['idurl']);
+        $this->getApp()->router->deleteitem($item['idurl']);
         $this->contents->delete($id);
         $list = $this->itemsposts->getPosts($id);
         $this->itemsposts->deleteItem($id);
         parent::delete($id);
         if ($this->postpropname) {
-$this->itemsposts->updatePosts($list, $this->postpropname);
-}
+            $this->itemsposts->updatePosts($list, $this->postpropname);
+        }
 
         $this->changed();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
-    public function createNames($list) {
+    public function createNames($list)
+    {
         if (is_string($list)) {
-$list = explode(',', trim($list));
-}
+            $list = explode(',', trim($list));
+        }
 
         $result = array();
         foreach ($list as $title) {
             $title = Filter::escape($title);
             if ($title == '') {
- continue;
-}
+                continue;
+            }
 
             $result[] = $this->add(0, $title);
         }
@@ -268,13 +282,14 @@ $list = explode(',', trim($list));
         return $result;
     }
 
-    public function getNames(array $list) {
+    public function getNames(array $list)
+    {
         $this->loadItems($list);
         $result = array();
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
- continue;
-}
+                continue;
+            }
 
             $result[] = $this->items[$id]['title'];
         }
@@ -282,30 +297,32 @@ $list = explode(',', trim($list));
         return $result;
     }
 
-    public function getLinks(array $list) {
+    public function getLinks(array $list)
+    {
         if (!count($list)) {
- return array();
-}
+            return array();
+        }
 
         $this->loadItems($list);
         $result = array();
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
- continue;
-}
+                continue;
+            }
 
             $item = $this->items[$id];
-            $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>',  $this->getApp()->site->url . $item['url'], $item['title']);
+            $result[] = sprintf('<a href="%1$s" title="%2$s">%2$s</a>', $this->getApp()->site->url . $item['url'], $item['title']);
         }
 
         return $result;
     }
 
-    public function getSorted($parent, $sortname, $count) {
+    public function getSorted($parent, $sortname, $count)
+    {
         $count = (int)$count;
         if ($sortname == 'count') {
-$sortname = 'itemscount';
-}
+            $sortname = 'itemscount';
+        }
 
         if (!in_array($sortname, array(
             'title',
@@ -313,19 +330,20 @@ $sortname = 'itemscount';
             'customorder',
             'id'
         ))) {
-$sortname = 'title';
-}
+            $sortname = 'title';
+        }
 
-            $limit = $sortname == 'itemscount' ? "order by $this->thistable.$sortname desc" : "order by $this->thistable.$sortname asc";
+        $limit = $sortname == 'itemscount' ? "order by $this->thistable.$sortname desc" : "order by $this->thistable.$sortname asc";
 
-            if ($count) {
-$limit.= " limit $count";
-}
+        if ($count) {
+            $limit.= " limit $count";
+        }
 
-            return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
-}
+        return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
+    }
 
-    public function getIdPosts($id, $from, $perpage, $invertOrder) {
+    public function getIdPosts($id, $from, $perpage, $invertOrder)
+    {
         $item = $this->getItem($id);
         $includeparents = (int)$item['includeparents'];
         $includechilds = (int)$item['includechilds'];
@@ -357,18 +375,17 @@ $limit.= " limit $count";
             $tags = " = $id";
         }
 
-        $result = $this->db->res2id($this->db->query(
-"select $ti.$postprop as $postprop, $p.id as id from $ti, $p
+        $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'
-    order by $p.posted $order limit $from, $perpage"
-));
+    order by $p.posted $order limit $from, $perpage"));
 
         $result = array_unique($result);
         $posts->loadItems($result);
         return $result;
     }
 
-    public function getParents($id) {
+    public function getParents($id)
+    {
         $result = array();
         while ($id = (int)$this->items[$id]['parent']) {
             //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
@@ -378,7 +395,8 @@ $limit.= " limit $count";
         return $result;
     }
 
-    public function getChilds($parent) {
+    public function getChilds($parent)
+    {
         $result = array();
         foreach ($this->items as $id => $item) {
             if ($parent == $item['parent']) {
@@ -389,20 +407,21 @@ $limit.= " limit $count";
         return $result;
     }
 
-    public function getSitemap($from, $count) {
+    public function getSitemap($from, $count)
+    {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count
         ));
     }
 
-    public function getSortedPosts($id, $count, $invert) {
+    public function getSortedPosts($id, $count, $invert)
+    {
         $ti = $this->itemsposts->thistable;
         $posts = $this->factory->posts;
         $p = $posts->thistable;
         $order = $invert ? 'asc' : 'desc';
-        $result = $this->db->res2id($this->db->query(
-"select $p.id as id, $ti.post as post from $p, $ti
+        $result = $this->db->res2id($this->db->query("select $p.id as id, $ti.post as post from $p, $ti
     where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
     order by $p.posted $order limit 0, $count"));
 
@@ -414,23 +433,26 @@ $limit.= " limit $count";
 
 //Content.php
 namespace litepubl\tag;
+
 use litepubl\view\Filter;
 
 class Content extends \litepubl\core\Data
- {
+{
     private $owner;
     private $items;
 
-    public function __construct(Common $owner) {
+    public function __construct(Common $owner)
+    {
         parent::__construct();
         $this->owner = $owner;
         $this->items = array();
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         if (isset($this->items[$id])) {
-return $this->items[$id];
-}
+            return $this->items[$id];
+        }
 
         $item = array(
             'description' => '',
@@ -441,24 +463,26 @@ return $this->items[$id];
         );
 
         if ($r = $this->db->getitem($id)) {
-$item = $r;
-}
+            $item = $r;
+        }
 
         $this->items[$id] = $item;
         return $item;
     }
 
-    public function setItem($id, $item) {
+    public function setItem($id, $item)
+    {
         if (isset($this->items[$id]) && ($this->items[$id] == $item)) {
-return;
-}
+            return;
+        }
 
         $this->items[$id] = $item;
         $item['id'] = $id;
         $this->db->addupdate($item);
     }
 
-    public function edit($id, $content, $description, $keywords, $head) {
+    public function edit($id, $content, $description, $keywords, $head)
+    {
         $item = $this->getitem($id);
         $filter = Filter::i();
         $item = array(
@@ -471,26 +495,31 @@ return;
         $this->setitem($id, $item);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->db->iddelete($id);
     }
 
-    public function getValue($id, $name) {
+    public function getValue($id, $name)
+    {
         $item = $this->getitem($id);
         return $item[$name];
     }
 
-    public function setValue($id, $name, $value) {
+    public function setValue($id, $name, $value)
+    {
         $item = $this->getitem($id);
         $item[$name] = $value;
         $this->setitem($id, $item);
     }
 
-    public function getContent($id) {
+    public function getContent($id)
+    {
         return $this->getvalue($id, 'content');
     }
 
-    public function setContent($id, $content) {
+    public function setContent($id, $content)
+    {
         $item = $this->getitem($id);
         $filter = Filter::i();
         $item['rawcontent'] = $content;
@@ -499,15 +528,18 @@ return;
         $this->setitem($id, $item);
     }
 
-    public function getDescription($id) {
+    public function getDescription($id)
+    {
         return $this->getvalue($id, 'description');
     }
 
-    public function getKeywords($id) {
+    public function getKeywords($id)
+    {
         return $this->getvalue($id, 'keywords');
     }
 
-    public function getHead($id) {
+    public function getHead($id)
+    {
         return $this->getvalue($id, 'head');
     }
 
@@ -515,20 +547,24 @@ return;
 
 //Factory.php
 namespace litepubl\tag;
+
 use litepubl\post\Post;
 use litepubl\post\Posts;
 
 class Factory
 {
-public function __get($name) {
-return $this->{'get' . $name}();
-}
+    public function __get($name)
+    {
+        return $this->{'get' . $name}();
+    }
 
-    public function getPosts() {
+    public function getPosts()
+    {
         return Posts::i();
     }
 
-    public function getPost($id) {
+    public function getPost($id)
+    {
         return Post::i($id);
     }
 
@@ -536,16 +572,19 @@ return $this->{'get' . $name}();
 
 //Tags.php
 namespace litepubl\tag;
+
 use litepubl\widget\Tags as TagsWidget;
 
 class Tags extends Common
 {
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->table = 'tags';
         $this->basename = 'tags';
@@ -555,7 +594,8 @@ class Tags extends Common
         $this->itemsposts->table = $this->table . 'items';
     }
 
-    public function save() {
+    public function save()
+    {
         parent::save();
         if (!$this->locked) {
             TagsWidget::i()->expire();
@@ -566,43 +606,46 @@ class Tags extends Common
 
 //View.php
 namespace litepubl\tag;
+
 use litepubl\core\Context;
-use litepubl\view\Theme;
-use litepubl\view\Args;
-use litepubl\view\Schemes;
-use litepubl\view\Schema;
-use litepubl\view\Vars;
-use litepubl\view\Lang;
-use litepubl\post\Announce;
 use litepubl\core\Str;
+use litepubl\post\Announce;
+use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
     public $id;
-private $tags;
+    private $tags;
     private $cachedIdPosts;
-private $context;
+    private $context;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addEvents('onbeforecontent', 'oncontent');
         $this->cachedIdPosts = array();
-}
+    }
 
-public function setTags(Common $tags)
-{
-$this->tags = $tags;
-}
+    public function setTags(Common $tags)
+    {
+        $this->tags = $tags;
+    }
 
-    public function getSorted(array $tml, $parent, $sortname, $count, $showcount) {
+    public function getSorted(array $tml, $parent, $sortname, $count, $showcount)
+    {
         $sorted = $this->tags->getSorted($parent, $sortname, $count);
         if (!count($sorted)) {
- return '';
-}
+            return '';
+        }
 
         $result = '';
         $theme = Theme::i();
-$tags = $this->tags;
+        $tags = $this->tags;
         $args = new Args();
         $args->rel = $tags->PermalinkIndex;
         $args->parent = $parent;
@@ -618,47 +661,49 @@ $tags = $this->tags;
         }
 
         if (!$parent) {
- return $result;
-}
+            return $result;
+        }
 
         $args->parent = $parent;
         $args->item = $result;
         return $theme->parseArg($tml['subitems'], $args);
     }
 
-public function getValue($name)
-{
-return $this->tags->getValue($this->id, $name);
-}
+    public function getValue($name)
+    {
+        return $this->tags->getValue($this->id, $name);
+    }
 
-public function getPostPropName()
-{
-return $this->tags->postpropname;
-}
+    public function getPostPropName()
+    {
+        return $this->tags->postpropname;
+    }
 
-    public function request(Context $context) {
-        if ($this->id = (int) $context->itemRoute['arg']) {
+    public function request(Context $context)
+    {
+        if ($this->id = (int)$context->itemRoute['arg']) {
             try {
                 $item = $this->tags->getItem($this->id);
             }
             catch(\Exception $e) {
-$context->response->status = 404;
+                $context->response->status = 404;
                 return;
             }
 
             $schema = Schema::getSchema($this);
-            $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+            $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
             $pages = (int)ceil($item['itemscount'] / $perpage);
-            if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
-$context->response->redir($item['url']);
-return;
+            if (($context->request->page > 1) && ($context->request->page > $pages)) {
+                $context->response->redir($item['url']);
+                return;
             }
         }
 
-$this->context = $context;
+        $this->context = $context;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         if ($this->id) {
             return $this->getValue('title');
         }
@@ -666,7 +711,8 @@ $this->context = $context;
         return Lang::i()->categories;
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'head');
 
@@ -674,36 +720,39 @@ $this->context = $context;
             $result.= $theme->templates['head.tags'];
 
             $list = $this->getIdPosts($this->id);
-$announce = new Announce($theme);
+            $announce = new Announce($theme);
             $result.= $announce->getAnHead($list);
 
             return $theme->parse($result);
         }
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'keywords');
             if (!$result) {
-$result = $this->title;
-}
+                $result = $this->title;
+            }
 
             return $result;
         }
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         if ($this->id) {
             $result = $this->tags->contents->getvalue($this->id, 'description');
             if (!$result) {
-$result = $this->title;
-}
+                $result = $this->title;
+            }
 
             return $result;
         }
     }
 
-    public function getIdschema() {
+    public function getIdschema()
+    {
         if ($this->id) {
             return $this->getValue('idschema');
         }
@@ -711,13 +760,15 @@ $result = $this->title;
         return 1;
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         if ($id != $this->idschema) {
             $this->tags->setValue($this->id, 'idschema', $id);
         }
     }
 
-    public function getIdPerm() {
+    public function getIdPerm()
+    {
         if ($this->id) {
             $item = $this->tags->getItem($this->id);
             return isset($item['idperm']) ? (int)$item['idperm'] : 0;
@@ -726,54 +777,58 @@ $result = $this->title;
         return 0;
     }
 
-    public function getIndex_tml() {
+    public function getIndex_tml()
+    {
         $theme = Theme::i();
         if (!empty($theme->templates['index.tag'])) {
- return $theme->templates['index.tag'];
-}
+            return $theme->templates['index.tag'];
+        }
 
         return false;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         if ($s = $this->tags->contents->getcontent($this->id)) {
             $pages = explode('<!--nextpage-->', $s);
-            $page =  $this->context->request->page - 1;
+            $page = $this->context->request->page - 1;
             if (isset($pages[$page])) {
- return $pages[$page];
-}
+                return $pages[$page];
+            }
         }
 
         return '';
     }
 
-    public function getCont() {
-$result = new Str('');
+    public function getCont()
+    {
+        $result = new Str('');
         $this->onbeforecontent($result);
 
         if (!$this->id) {
-            $result->value .= $this->getcont_all();
+            $result->value.= $this->getcont_all();
         } else {
             $schema = Schema::getSchema($this);
-$theme = $schema->theme;
+            $theme = $schema->theme;
 
             if ($this->getContent()) {
-$vars = new Vars();
-$vars->menu = $this;
-                $result->value .= $theme->parse($theme->templates['content.menu']);
+                $vars = new Vars();
+                $vars->menu = $this;
+                $result->value.= $theme->parse($theme->templates['content.menu']);
             }
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
             $announce = new Announce($theme);
-            $result->value .= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $result->value.= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
         }
 
         $this->oncontent($result);
         return $result->value;
     }
 
-    public function getCont_all() {
+    public function getCont_all()
+    {
         return sprintf('<ul>%s</ul>', $this->getSorted(array(
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
@@ -781,19 +836,20 @@ $vars->menu = $this;
         ) , 0, 'count', 0, 0, false));
     }
 
-    public function getIdPosts($id) {
+    public function getIdPosts($id)
+    {
         if (isset($this->cachedIdPosts[$id])) {
             return $this->cachedIdPosts[$id];
         }
 
         $schema = Schema::i($this->tags->getValue($id, 'idschema'));
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $from = ( $this->context->request->page - 1) * $perpage;
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+        $from = ($this->context->request->page - 1) * $perpage;
 
-$result = $this->tags->getIdPosts($id, $from, $perpage, $schema->invertorder);
+        $result = $this->tags->getIdPosts($id, $from, $perpage, $schema->invertorder);
         $this->cachedIdPosts[$id] = $result;
-return $result;
-}
+        return $result;
+    }
 
 }
 

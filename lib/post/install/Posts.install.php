@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
-use litepubl\core\Cron;
-use litepubl\widget\Widgets;
-use litepubl\core\Str;
 
-function PostsInstall($self) {
-    if (__NAMESPACE__  . '\Posts' != get_class($self)) {
- return;
-}
+use litepubl\core\Cron;
+use litepubl\core\Str;
+use litepubl\widget\Widgets;
+
+function PostsInstall($self)
+{
+    if (__NAMESPACE__ . '\Posts' != get_class($self)) {
+        return;
+    }
 
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
@@ -27,12 +30,11 @@ function PostsInstall($self) {
     $Cron->add('hour', get_class($self) , 'HourCron');
 }
 
-function PostsUninstall($self) {
+function PostsUninstall($self)
+{
     if ('litepubl\post\Posts' != get_class($self)) {
- return;
-}
-
-
+        return;
+    }
 
     $Cron = Cron::i();
     $Cron->deleteclass(get_class($self));
@@ -41,10 +43,11 @@ function PostsUninstall($self) {
     $widgets->deleteclass($self);
 }
 
-function PostsGetsitemap($self, $from, $count) {
+function PostsGetsitemap($self, $from, $count)
+{
     $result = array();
-    $commentpages =  $self->getApp()->options->commentpages;
-    $commentsperpage =  $self->getApp()->options->commentsperpage;
+    $commentpages = $self->getApp()->options->commentpages;
+    $commentsperpage = $self->getApp()->options->commentsperpage;
 
     $db = $self->db;
     $now = Str::sqlDate();
@@ -62,3 +65,4 @@ function PostsGetsitemap($self, $from, $count) {
     }
     return $result;
 }
+

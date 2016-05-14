@@ -1,30 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\pages;
-    use litepubl\core\Context;
+
+use litepubl\core\Context;
 use litepubl\core\Session;
-use litepubl\core\Users;
-use litepubl\core\UserGroups;
-use litepubl\view\Lang;
-use litepubl\view\Filter;
-use litepubl\view\Theme;
-use litepubl\utils\Mailer;
 use litepubl\core\Str;
+use litepubl\core\UserGroups;
+use litepubl\core\Users;
+use litepubl\utils\Mailer;
 use litepubl\view\Args;
+use litepubl\view\Filter;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class RegUser extends Form
 {
     private $regstatus;
     private $backurl;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'admin.reguser';
         $this->addevents('oncontent');
@@ -33,31 +36,33 @@ class RegUser extends Form
         $this->regstatus = false;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return Lang::get('users', 'adduser');
     }
 
-    public function getLogged() {
-        return  $this->getApp()->options->authcookie();
+    public function getLogged()
+    {
+        return $this->getApp()->options->authcookie();
     }
 
     public function request(Context $context)
     {
-    $response = $context->response;
-        if (! $this->getApp()->options->usersenabled || ! $this->getApp()->options->reguser) {
- return $response->forbidden();
-}
+        $response = $context->response;
+        if (!$this->getApp()->options->usersenabled || !$this->getApp()->options->reguser) {
+            return $response->forbidden();
+        }
 
         parent::request($context);
 
         if (!empty($_GET['confirm'])) {
             $confirm = $_GET['confirm'];
             $email = $_GET['email'];
-            Session::start('reguser-' . md5( $this->getApp()->options->hash($email)));
+            Session::start('reguser-' . md5($this->getApp()->options->hash($email)));
             if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
                 if (!isset($_SESSION['email'])) {
-session_destroy();
-}
+                    session_destroy();
+                }
 
                 $this->regstatus = 'error';
                 return;
@@ -76,16 +81,17 @@ session_destroy();
                 $this->regstatus = 'ok';
                 $expired = time() + 31536000;
                 $cookie = Str::md5Uniq();
-                 $this->getApp()->options->user = $id;
-                 $this->getApp()->options->updategroup();
-                 $this->getApp()->options->setcookies($cookie, $expired);
+                $this->getApp()->options->user = $id;
+                $this->getApp()->options->updategroup();
+                $this->getApp()->options->setcookies($cookie, $expired);
             } else {
                 $this->regstatus = 'error';
             }
         }
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $theme = $this->theme;
         $lang = Lang::admin('users');
@@ -98,8 +104,8 @@ session_destroy();
             switch ($this->regstatus) {
                 case 'ok':
                     $backurl = $this->backurl;
-                    if (!$backurl) $backurl = UserGroups::i()->gethome( $this->getApp()->options->group);
-                    if (!Str::begin($backurl, 'http')) $backurl =  $this->getApp()->site->url . $backurl;
+                    if (!$backurl) $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
+                    if (!Str::begin($backurl, 'http')) $backurl = $this->getApp()->site->url . $backurl;
                     return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
                 case 'mail':
@@ -113,7 +119,7 @@ session_destroy();
             $args = new Args();
             $args->email = isset($_POST['email']) ? $_POST['email'] : '';
             $args->name = isset($_POST['name']) ? $_POST['name'] : '';
-            $args->action =  $this->getApp()->site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
+            $args->action = $this->getApp()->site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
             $result.= $theme->parseArg($this->getform() , $args);
 
             if (!empty($_GET['backurl'])) {
@@ -128,7 +134,8 @@ session_destroy();
             return $result;
     }
 
-    public function createform() {
+    public function createform()
+    {
         $lang = Lang::i('users');
         $theme = $this->theme;
 
@@ -144,7 +151,8 @@ session_destroy();
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $this->regstatus = 'error';
         try {
             if ($this->reguser($_POST['email'], $_POST['name'])) $this->regstatus = 'mail';
@@ -154,30 +162,26 @@ session_destroy();
         }
     }
 
-    public function reguser($email, $name) {
+    public function reguser($email, $name)
+    {
         $email = strtolower(trim($email));
         if (!Filter::ValidateEmail($email)) {
- return $this->error(Lang::get('comment', 'invalidemail'));
-}
-
-
+            return $this->error(Lang::get('comment', 'invalidemail'));
+        }
 
         if (substr_count($email, '.', 0, strpos($email, '@')) > 2) {
- return $this->error(Lang::get('comment', 'invalidemail'));
-}
-
-
+            return $this->error(Lang::get('comment', 'invalidemail'));
+        }
 
         $users = Users::i();
         if ($id = $users->emailexists($email)) {
             if ('comuser' != $users->getvalue($id, 'status')) {
- return $this->error(Lang::i()->invalidregdata);
-}
-
+                return $this->error(Lang::i()->invalidregdata);
+            }
 
         }
 
-        Session::start('reguser-' . md5( $this->getApp()->options->hash($email)));
+        Session::start('reguser-' . md5($this->getApp()->options->hash($email)));
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $name;
         $confirm = Str::md5Rand();
@@ -192,7 +196,7 @@ session_destroy();
         $args->email = $email;
         $args->confirm = $confirm;
         $args->password = $password;
-        $args->confirmurl =  $this->getApp()->site->url . '/admin/reguser/' .  $this->getApp()->site->q . 'email=' . urlencode($email);
+        $args->confirmurl = $this->getApp()->site->url . '/admin/reguser/' . $this->getApp()->site->q . 'email=' . urlencode($email);
 
         Lang::usefile('mail');
         $lang = Lang::i('mailusers');
@@ -201,9 +205,10 @@ session_destroy();
         $subject = $theme->parseArg($lang->subject, $args);
         $body = $theme->parseArg($lang->body, $args);
 
-        Mailer::sendmail( $this->getApp()->site->name,  $this->getApp()->options->fromemail, $name, $email, $subject, $body);
+        Mailer::sendmail($this->getApp()->site->name, $this->getApp()->options->fromemail, $name, $email, $subject, $body);
 
         return true;
     }
 
 }
+

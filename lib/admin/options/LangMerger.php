@@ -1,27 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\options;
-use litepubl\view\LangMerger as LngMerger;
-use litepubl\utils\Filer;
+
 use litepubl\post\Archives;
+use litepubl\utils\Filer;
 use litepubl\view\Lang;
+use litepubl\view\LangMerger as LngMerger;
 
 class LangMerger extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $merger = LngMerger::i();
         $tabs = $this->newTabs();
         $lang = Lang::admin('options');
-$args = $this->newArgs();
-$theme = $this->theme;
+        $args = $this->newArgs();
+        $theme = $this->theme;
 
         foreach ($merger->items as $section => $items) {
             $tab = $this->newTabs();
@@ -34,24 +37,25 @@ $theme = $this->theme;
         }
 
         $args->formtitle = $lang->optionslocal;
-        $args->dateformat =  $this->getApp()->options->dateformat;
-        $dirs = Filer::getdir( $this->getApp()->paths->languages);
-        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) ,  $this->getApp()->options->language);
+        $args->dateformat = $this->getApp()->options->dateformat;
+        $dirs = Filer::getdir($this->getApp()->paths->languages);
+        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) , $this->getApp()->options->language);
         $zones = timezone_identifiers_list();
-        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) ,  $this->getApp()->options->timezone);
+        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) , $this->getApp()->options->timezone);
 
         return $this->admintheme->form('[text=dateformat]
     [combo=language]
     [combo=timezone]' . $tabs->get() , $args);
     }
 
-    public function processForm() {
-         $this->getApp()->options->dateformat = $_POST['dateformat'];
-         $this->getApp()->options->language = $_POST['language'];
-        if ( $this->getApp()->options->timezone != $_POST['timezone']) {
-             $this->getApp()->options->timezone = $_POST['timezone'];
+    public function processForm()
+    {
+        $this->getApp()->options->dateformat = $_POST['dateformat'];
+        $this->getApp()->options->language = $_POST['language'];
+        if ($this->getApp()->options->timezone != $_POST['timezone']) {
+            $this->getApp()->options->timezone = $_POST['timezone'];
             $archives = Archives::i();
-             $this->getApp()->router->unbind($archives);
+            $this->getApp()->router->unbind($archives);
             $archives->PostsChanged();
         }
 
@@ -71,3 +75,4 @@ $theme = $this->theme;
     }
 
 }
+

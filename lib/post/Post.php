@@ -1,30 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
-use litepubl\view\Filter;
+
 use litepubl\core\Arr;
 use litepubl\core\Str;
+use litepubl\view\Filter;
 
 class Post extends \litepubl\core\Item
 {
     protected $childTable;
-protected $rawTable;
-protected $pagesTable;
+    protected $rawTable;
+    protected $pagesTable;
     protected $childData;
-protected $cacheData;
-protected $rawData;
+    protected $cacheData;
+    protected $rawData;
     protected $factory;
     private $metaInstance;
     private $onIdCallback;
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         if ($id = (int)$id) {
             if (isset(static ::$instances['post'][$id])) {
                 $result = static ::$instances['post'][$id];
@@ -40,15 +43,16 @@ protected $rawData;
         return $result;
     }
 
-    public static function loadPost($id) {
+    public static function loadPost($id)
+    {
         if ($a = static ::loadAssoc($id)) {
             $self = static ::newPost($a['class']);
             $self->setAssoc($a);
 
-if (get_class($self) != get_called_class()) {
-$items =static::selectChildItems($self->getChildTable(), [$id]);
-            $self->setAssoc($items[0]);
-}
+            if (get_class($self) != get_called_class()) {
+                $items = static ::selectChildItems($self->getChildTable() , [$id]);
+                $self->setAssoc($items[0]);
+            }
 
             return $self;
         }
@@ -56,62 +60,66 @@ $items =static::selectChildItems($self->getChildTable(), [$id]);
         return false;
     }
 
-    public static function loadAssoc($id) {
-        $db =  static::getAppInstance()->db;
-$table = static::getChildTable();
-if ($table) {
-        return $db->selectAssoc(
-"select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+    public static function loadAssoc($id)
+    {
+        $db = static ::getAppInstance()->db;
+        $table = static ::getChildTable();
+        if ($table) {
+            return $db->selectAssoc("select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
  from $db->posts, $table, $db->urlmap
     where $db->posts.id = $id and $table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
-} else {
-        return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+        } else {
+            return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
-}
+        }
     }
 
-    public static function newPost($classname) {
+    public static function newPost($classname)
+    {
         $classname = $classname ? str_replace('-', '\\', $classname) : get_called_class();
         return new $classname();
     }
 
-    public static function getInstanceName() {
+    public static function getInstanceName()
+    {
         return 'post';
     }
 
-    public static function getChildTable() {
+    public static function getChildTable()
+    {
         return '';
     }
 
-    public static function loadChildData(array $items) {
-if ($table = static::getChildTable()) {
-return static::selectChildItems($table, $items);
-} else {
-        return [];
-}
+    public static function loadChildData(array $items)
+    {
+        if ($table = static ::getChildTable()) {
+            return static ::selectChildItems($table, $items);
+        } else {
+            return [];
+        }
     }
 
-    protected static function selectChildItems($table, array $items) {
+    protected static function selectChildItems($table, array $items)
+    {
         if (!$table || !count($items)) {
             return array();
         }
 
-        $db =  static::getAppInstance()->db;
+        $db = static ::getAppInstance()->db;
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
-$count = count($items);
-        return $db->res2items($db->query(
-"select $childTable.* from $childTable where id in ($list) limit $count"
-));
+        $count = count($items);
+        return $db->res2items($db->query("select $childTable.* from $childTable where id in ($list) limit $count"));
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->table = 'posts';
         $this->rawTable = 'rawposts';
         $this->pagesTable = 'pages';
         $this->childTable = static ::getChildTable();
 
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
         $this->data = array(
             'id' => 0,
             'idschema' => 1,
@@ -122,7 +130,7 @@ $options = $this->getApp()->options;
             'icon' => 0,
             'idperm' => 0,
             'class' => str_replace('\\', '-', get_class($this)) ,
-            'posted' => static::ZERODATE,
+            'posted' => static ::ZERODATE,
             'title' => '',
             'title2' => '',
             'filtered' => '',
@@ -136,109 +144,103 @@ $options = $this->getApp()->options;
             'tags' => '',
             'files' => '',
             'status' => 'published',
-            'comstatus' =>  $options->comstatus,
-            'pingenabled' =>  $options->pingenabled ? '1' : '0',
+            'comstatus' => $options->comstatus,
+            'pingenabled' => $options->pingenabled ? '1' : '0',
             'password' => '',
             'commentscount' => 0,
             'pingbackscount' => 0,
             'pagescount' => 0,
         );
 
-
-$this->rawData = [];
-$this->childData = [];
-$this->cacheData = [
-'posted' => 0,
-'categories' => [],
-'tags' => [],
-'files' => [],
-            'url' => '',
-'created' => 0,
-            'modified' => 0,
-                                    'pages' => [],
-];
+        $this->rawData = [];
+        $this->childData = [];
+        $this->cacheData = ['posted' => 0, 'categories' => [], 'tags' => [], 'files' => [], 'url' => '', 'created' => 0, 'modified' => 0, 'pages' => [], ];
 
         $this->factory = $this->getfactory();
-/*
+        /*
         $posts = $this->factory->posts;
         foreach ($posts->itemcoclasses as $class) {
             $coinstance =  $this->getApp()->classes->newinstance($class);
             $coinstance->post = $this;
             $this->coinstances[] = $coinstance;
         }
-*/
+        */
     }
 
-    public function getFactory() {
+    public function getFactory()
+    {
         return Factory::i();
     }
 
-public function getView() {
-$view = $this->factory->getView();
-$view->setPost($this);
-return $view;
-}
-
-    public function __get($name) {
-            if ($name == 'id') {
-                $result = (int) $this->data['id'];
-            } elseif (method_exists($this, $get = 'get' . $name)) {
-                $result = $this->$get();
-}            elseif (array_key_exists($name, $this->cacheData)) {
-$result = $this->cacheData[$name];
-            } elseif (method_exists($this, $get = 'getCache' . $name)) {
-                $result = $this->$get();
-$this->cacheData[$name] = $result;
-            } elseif (array_key_exists($name, $this->data)) {
-$result = $this->data[$name];
-            } elseif (array_key_exists($name, $this->childData)) {
-                $result = $this->childData[$name];
-}            elseif (array_key_exists($name, $this->rawData)) {
-$result = $this->rawData[$name];
-} else {
-                $result = parent::__get($name);
-}
-
-return $result;
+    public function getView()
+    {
+        $view = $this->factory->getView();
+        $view->setPost($this);
+        return $view;
     }
 
-    public function __set($name, $value) {
-            if ($name == 'id') {
-                $this->setId($value);
-            } elseif (method_exists($this, $set = 'set' . $name)) {
-                $this->$set($value);
-            }elseif (array_key_exists($name, $this->cacheData)) {
-$this->cacheData[$name] = $value;
-            }elseif (array_key_exists($name, $this->data)) {
-$this->data[$name] = $value;
-            }elseif (array_key_exists($name, $this->childData)) {
-                $this->childData[$name] = $value;
-            }elseif (array_key_exists($name, $this->rawData)) {
-$this->rawData[$name] = $value;
+    public function __get($name)
+    {
+        if ($name == 'id') {
+            $result = (int)$this->data['id'];
+        } elseif (method_exists($this, $get = 'get' . $name)) {
+            $result = $this->$get();
+        } elseif (array_key_exists($name, $this->cacheData)) {
+            $result = $this->cacheData[$name];
+        } elseif (method_exists($this, $get = 'getCache' . $name)) {
+            $result = $this->$get();
+            $this->cacheData[$name] = $result;
+        } elseif (array_key_exists($name, $this->data)) {
+            $result = $this->data[$name];
+        } elseif (array_key_exists($name, $this->childData)) {
+            $result = $this->childData[$name];
+        } elseif (array_key_exists($name, $this->rawData)) {
+            $result = $this->rawData[$name];
         } else {
-        return parent::__set($name, $value);
-}
+            $result = parent::__get($name);
+        }
 
-return true;
+        return $result;
     }
 
-    public function __isset($name) {
-        return parent::__isset($name)
- || array_key_exists($name, $this->cacheData)
- || array_key_exists($name, $this->childData)
- || array_key_exists($name, $this->rawData);
+    public function __set($name, $value)
+    {
+        if ($name == 'id') {
+            $this->setId($value);
+        } elseif (method_exists($this, $set = 'set' . $name)) {
+            $this->$set($value);
+        } elseif (array_key_exists($name, $this->cacheData)) {
+            $this->cacheData[$name] = $value;
+        } elseif (array_key_exists($name, $this->data)) {
+            $this->data[$name] = $value;
+        } elseif (array_key_exists($name, $this->childData)) {
+            $this->childData[$name] = $value;
+        } elseif (array_key_exists($name, $this->rawData)) {
+            $this->rawData[$name] = $value;
+        } else {
+            return parent::__set($name, $value);
+        }
+
+        return true;
     }
 
-    public function load() {
+    public function __isset($name)
+    {
+        return parent::__isset($name) || array_key_exists($name, $this->cacheData) || array_key_exists($name, $this->childData) || array_key_exists($name, $this->rawData);
+    }
+
+    public function load()
+    {
         if ($result = $this->loadFromDB()) {
             foreach ($this->coinstances as $coinstance) {
-$coinstance->load();
-}
+                $coinstance->load();
+            }
         }
         return $result;
     }
 
-    protected function loadFromDB() {
+    protected function loadFromDB()
+    {
         if ($a = static ::loadAssoc($this->id)) {
             $this->setAssoc($a);
             return true;
@@ -247,22 +249,24 @@ $coinstance->load();
         return false;
     }
 
-    public function setAssoc(array $a) {
-$this->cacheData = [];
-foreach ($a as $k =>$v) {
-if (array_key_exists($k, $this->data)) {
-$this->data[$k] = $v;
-} elseif (array_key_exists($k, $this->childData)) {
-$this->childData[$k] = $v;
-} elseif (array_key_exists($k, $this->rawData)) {
-$this->rawData[$k] = $v;
-} else {
-$this->cacheData[$k] = $v;
-}
-}
+    public function setAssoc(array $a)
+    {
+        $this->cacheData = [];
+        foreach ($a as $k => $v) {
+            if (array_key_exists($k, $this->data)) {
+                $this->data[$k] = $v;
+            } elseif (array_key_exists($k, $this->childData)) {
+                $this->childData[$k] = $v;
+            } elseif (array_key_exists($k, $this->rawData)) {
+                $this->rawData[$k] = $v;
+            } else {
+                $this->cacheData[$k] = $v;
+            }
+        }
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->lockcount > 0) {
             return;
         }
@@ -274,35 +278,37 @@ $this->cacheData[$k] = $v;
         }
     }
 
-    protected function saveToDB() {
-if ($this->id) {
-$this->db->updateAssoc($this->data);
+    protected function saveToDB()
+    {
+        if ($this->id) {
+            $this->db->updateAssoc($this->data);
 
-$this->modified = time();
-$this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
-} else {
-}
+            $this->modified = time();
+            $this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
+        } else {
+        }
 
         if ($this->childTable) {
-$this->getDB($this->childTable)->setValues($this->id, $this->childData);
+            $this->getDB($this->childTable)->setValues($this->id, $this->childData);
         }
     }
 
-    public function add() {
-$a = $this->data;
-unset($a['id']);
-$id = $this->db->add($a);
+    public function add()
+    {
+        $a = $this->data;
+        unset($a['id']);
+        $id = $this->db->add($a);
 
-$rawData = $this->prepareRawData();
-$rawData['id'] = $id;
-$this->getDB($this->rawTable)->insert($rawData);
+        $rawData = $this->prepareRawData();
+        $rawData['id'] = $id;
+        $this->getDB($this->rawTable)->insert($rawData);
 
         $this->setId($id);
 
-$this->savePages();
+        $this->savePages();
         if ($this->childTable) {
-$childData = $this->childData;
-$childData['id'] = $id;
+            $childData = $this->childData;
+            $childData['id'] = $id;
             $this->getDB($this->childTable)->insert($childData);
         }
 
@@ -313,32 +319,34 @@ $childData['id'] = $id;
         return $id;
     }
 
-protected function prepareRawData()
-{
-if (!$this->created) {
-$this->created = time();
-}
+    protected function prepareRawData()
+    {
+        if (!$this->created) {
+            $this->created = time();
+        }
 
-if (!$this->modified) {
-$this->modified = time();
-}
+        if (!$this->modified) {
+            $this->modified = time();
+        }
 
-if (!isset($this->rawData['rawcontent'])) {
-$this->rawData['rawcontent'] = '';
-}
+        if (!isset($this->rawData['rawcontent'])) {
+            $this->rawData['rawcontent'] = '';
+        }
 
-return $this->rawData;
-}
-
-    public function createUrl() {
-        return  $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
+        return $this->rawData;
     }
 
-    public function onId() {
+    public function createUrl()
+    {
+        return $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
+    }
+
+    public function onId()
+    {
         if ($this->onIdCallback) {
-$this->onIdCallback->fire();
-$this->onIdCallback = null;
-       }
+            $this->onIdCallback->fire();
+            $this->onIdCallback = null;
+        }
 
         if (isset($this->metaInstance)) {
             $this->metaInstance->id = $this->id;
@@ -346,136 +354,150 @@ $this->onIdCallback = null;
         }
     }
 
-    public function setOnId($callback) {
+    public function setOnId($callback)
+    {
         if (!$this->onIdCallback) {
-$this->onIdCallback = new Callback();
+            $this->onIdCallback = new Callback();
         }
 
-$this->onIdCallback->add($call);
+        $this->onIdCallback->add($call);
     }
 
-    public function free() {
+    public function free()
+    {
         foreach ($this->coinstances as $coinstance) {
-$coinstance->free();
-}
+            $coinstance->free();
+        }
         if (isset($this->metaInstance)) {
-$this->metaInstance->free();
-}
+            $this->metaInstance->free();
+        }
 
         parent::free();
     }
 
-    public function getComments() {
+    public function getComments()
+    {
         return $this->factory->getcomments($this->id);
     }
 
-    public function getPingbacks() {
+    public function getPingbacks()
+    {
         return $this->factory->getpingbacks($this->id);
     }
 
-
-    public function getMeta() {
+    public function getMeta()
+    {
         if (!isset($this->metaInstance)) {
-$this->metaInstance = $this->factory->getmeta($this->id);
-}
+            $this->metaInstance = $this->factory->getmeta($this->id);
+        }
 
         return $this->metaInstance;
     }
 
-//props
-protected function setDataProp($name, $value, $sql)
-{
-$this->cacheData[$name] = $value;
-if (array_key_exists($name, $this->data)) {
-$this->data[$name] = $sql;
-} elseif (array_key_exists($name, $this->childData)) {
-$this->childData[$name] = $sql;
-} elseif (array_key_exists($name, $this->rawData)) {
-$this->rawData[$name] = $sql;
-}
-}
+    //props
+    protected function setDataProp($name, $value, $sql)
+    {
+        $this->cacheData[$name] = $value;
+        if (array_key_exists($name, $this->data)) {
+            $this->data[$name] = $sql;
+        } elseif (array_key_exists($name, $this->childData)) {
+            $this->childData[$name] = $sql;
+        } elseif (array_key_exists($name, $this->rawData)) {
+            $this->rawData[$name] = $sql;
+        }
+    }
 
     protected function setArrProp($name, array $list)
- {
+    {
         Arr::clean($list);
-$this->setDataProp($name, $list, implode(',', $list));
+        $this->setDataProp($name, $list, implode(',', $list));
     }
 
-protected function setBoolProp($name, $value)
-{
-$this->setDataProp($name, $value, $value ? '1' : '0');
-}
-
-//cache props
-protected function getArrProp($name)
-{
-if ($s = $this->data[$name]) {
-return explode(',', $s);
-} else {
-return [];
-}
-}
-
-protected function getCacheCategories()
-{
-return $this->getArrProp('categories');
-}
-
-protected function getCacheTags()
-{
-return $this->getArrProp('tags');
-}
-
-protected function getCacheFiles()
-{
-return $this->getArrProp('files');
-}
-
-    public function setFiles(array $list) {
-$this->setArrProp('files', $list);
+    protected function setBoolProp($name, $value)
+    {
+        $this->setDataProp($name, $value, $value ? '1' : '0');
     }
 
-
-    public function setCategories(array $list) {
-$this->setArrProp('categories', $list);
+    //cache props
+    protected function getArrProp($name)
+    {
+        if ($s = $this->data[$name]) {
+            return explode(',', $s);
+        } else {
+            return [];
+        }
     }
 
-    public function setTags(array $list) {
-$this->setArrProp('tags', $list);
+    protected function getCacheCategories()
+    {
+        return $this->getArrProp('categories');
     }
 
-    protected function getCachePosted() {
-return $this->data['posted'] == static::ZERODATE ? 0 : strtotime($this->data['posted']);
+    protected function getCacheTags()
+    {
+        return $this->getArrProp('tags');
     }
 
-    public function setPosted($timestamp) {
-$this->data['posted'] = Str::sqlDate($timestamp);
-$this->cacheData['posted'] = $timestamp;
+    protected function getCacheFiles()
+    {
+        return $this->getArrProp('files');
     }
 
-    protected function getCacheModified() {
-return !isset($this->rawData['modified']) || $this->rawData['modified'] == static::ZERODATE ? 0 : strtotime($this->rawData['modified']);
+    public function setFiles(array $list)
+    {
+        $this->setArrProp('files', $list);
     }
 
-    public function setModified($timestamp) {
-$this->rawData['modified'] = Str::sqlDate($timestamp);
-$this->cacheData['modified'] = $timestamp;
+    public function setCategories(array $list)
+    {
+        $this->setArrProp('categories', $list);
     }
 
-    protected function getCacheCreated() {
-return !isset($this->rawData['created']) || $this->rawData['created'] == static::ZERODATE ? 0 : strtotime($this->rawData['created']);
+    public function setTags(array $list)
+    {
+        $this->setArrProp('tags', $list);
     }
 
-    public function setCreated($timestamp) {
-$this->rawData['created'] = Str::sqlDate($timestamp);
-$this->cacheData['created'] = $timestamp;
+    protected function getCachePosted()
+    {
+        return $this->data['posted'] == static ::ZERODATE ? 0 : strtotime($this->data['posted']);
     }
 
-    public function Getlink() {
-        return  $this->getApp()->site->url . $this->url;
+    public function setPosted($timestamp)
+    {
+        $this->data['posted'] = Str::sqlDate($timestamp);
+        $this->cacheData['posted'] = $timestamp;
     }
 
-    public function Setlink($link) {
+    protected function getCacheModified()
+    {
+        return !isset($this->rawData['modified']) || $this->rawData['modified'] == static ::ZERODATE ? 0 : strtotime($this->rawData['modified']);
+    }
+
+    public function setModified($timestamp)
+    {
+        $this->rawData['modified'] = Str::sqlDate($timestamp);
+        $this->cacheData['modified'] = $timestamp;
+    }
+
+    protected function getCacheCreated()
+    {
+        return !isset($this->rawData['created']) || $this->rawData['created'] == static ::ZERODATE ? 0 : strtotime($this->rawData['created']);
+    }
+
+    public function setCreated($timestamp)
+    {
+        $this->rawData['created'] = Str::sqlDate($timestamp);
+        $this->cacheData['created'] = $timestamp;
+    }
+
+    public function Getlink()
+    {
+        return $this->getApp()->site->url . $this->url;
+    }
+
+    public function Setlink($link)
+    {
         if ($a = @parse_url($link)) {
             if (empty($a['query'])) {
                 $this->url = $a['path'];
@@ -485,27 +507,33 @@ $this->cacheData['created'] = $timestamp;
         }
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->data['title'] = Filter::escape(Filter::unescape($title));
     }
 
-    public function getIsoDate() {
+    public function getIsoDate()
+    {
         return date('c', $this->posted);
     }
 
-    public function getPubDate() {
+    public function getPubDate()
+    {
         return date('r', $this->posted);
     }
 
-    public function setPubDate($date) {
-$this->setDateProp('posted', strtotime($date));
+    public function setPubDate($date)
+    {
+        $this->setDateProp('posted', strtotime($date));
     }
 
-    public function getSqlDate() {
+    public function getSqlDate()
+    {
         return $this->data['posted'];
     }
 
-    public function getTagnames() {
+    public function getTagnames()
+    {
         if (count($this->tags)) {
             $tags = $this->factory->tags;
             return implode(', ', $tags->getnames($this->tags));
@@ -514,12 +542,14 @@ $this->setDateProp('posted', strtotime($date));
         return '';
     }
 
-    public function setTagnames($names) {
+    public function setTagnames($names)
+    {
         $tags = $this->factory->tags;
         $this->tags = $tags->createnames($names);
     }
 
-    public function getCatnames() {
+    public function getCatnames()
+    {
         if (count($this->categories)) {
             $categories = $this->factory->categories;
             return implode(', ', $categories->getnames($this->categories));
@@ -528,21 +558,23 @@ $this->setDateProp('posted', strtotime($date));
         return '';
     }
 
-    public function setCatNames($names) {
+    public function setCatNames($names)
+    {
         $categories = $this->factory->categories;
         $catItems = $categories->createnames($names);
 
         if (!count($catItems)) {
             $defaultid = $categories->defaultid;
             if ($defaultid > 0) {
-$catItems[] = $defaultid;
-}
+                $catItems[] = $defaultid;
+            }
         }
 
-$this->categories = $catItems;
+        $this->categories = $catItems;
     }
 
-    public function getCategory() {
+    public function getCategory()
+    {
         if ($idcat = $this->getidcat()) {
             return $this->factory->categories->getName($idcat);
         }
@@ -550,7 +582,8 @@ $this->categories = $catItems;
         return '';
     }
 
-    public function getIdcat() {
+    public function getIdcat()
+    {
         if (($cats = $this->categories) && count($cats)) {
             return $cats[0];
         }
@@ -558,48 +591,53 @@ $this->categories = $catItems;
         return 0;
     }
 
-public function checkRevision()
-{
-$this->updateRevision((int)$this->factory->posts->revision);
-}
+    public function checkRevision()
+    {
+        $this->updateRevision((int)$this->factory->posts->revision);
+    }
 
-    public function updateRevision($value) {
+    public function updateRevision($value)
+    {
         if ($value != $this->revision) {
             $this->updateFiltered();
             $posts = $this->factory->posts;
             $this->revision = (int)$posts->revision;
             if ($this->id > 0) {
-$this->save();
-}
+                $this->save();
+            }
         }
     }
 
-    public function updateFiltered() {
+    public function updateFiltered()
+    {
         Filter::i()->filterPost($this, $this->rawcontent);
     }
 
-    public function setRawContent($s) {
-$this->rawData['rawcontent'] = $s;
-}
+    public function setRawContent($s)
+    {
+        $this->rawData['rawcontent'] = $s;
+    }
 
-    public function getRawContent() {
-if (isset($this->rawData['rawcontent'])) {
-return $this->rawData['rawcontent'];
-}
+    public function getRawContent()
+    {
+        if (isset($this->rawData['rawcontent'])) {
+            return $this->rawData['rawcontent'];
+        }
 
-if (!$this->id) {
-return '';
-}
+        if (!$this->id) {
+            return '';
+        }
 
-            $this->rawData = $this->getDB($this->rawTable)->getItem($this->id);
-unset($this->rawData['id']);
+        $this->rawData = $this->getDB($this->rawTable)->getItem($this->id);
+        unset($this->rawData['id']);
         return $this->rawData['rawcontent'];
     }
 
-    public function getPage($i) {
+    public function getPage($i)
+    {
         if (isset($this->cacheData['pages'][$i])) {
- return $this->cacheData['pages'][$i];
-}
+            return $this->cacheData['pages'][$i];
+        }
 
         if ($this->id > 0) {
             if ($r = $this->getdb($this->pagesTable)->getAssoc("(id = $this->id) and (page = $i) limit 1")) {
@@ -613,7 +651,8 @@ unset($this->rawData['id']);
         return false;
     }
 
-    public function addPage($s) {
+    public function addPage($s)
+    {
         $this->childData['pages'][] = $s;
         $this->data['pagescount'] = count($this->cacheData['pages']);
         if ($this->id > 0) {
@@ -625,72 +664,83 @@ unset($this->rawData['id']);
         }
     }
 
-    public function deletePages() {
+    public function deletePages()
+    {
         $this->childData['pages'] = array();
         $this->data['pagescount'] = 0;
         if ($this->id > 0) {
-$this->getdb($this->pagesTable)->iddelete($this->id);
-}
-    }
-
-    public function savePages() {
-if (isset($this->childData['pages'])) {
-            $db =  $this->getDB($this->pagesTable);
-        foreach ($this->childData['pages'] as $index => $content) {
-$db->insert(array(
-                'id' => $this->id,
-                'page' => $index,
-                'content' => $content,
-            ));
+            $this->getdb($this->pagesTable)->iddelete($this->id);
         }
-}
     }
 
-    public function getHasPages() {
+    public function savePages()
+    {
+        if (isset($this->childData['pages'])) {
+            $db = $this->getDB($this->pagesTable);
+            foreach ($this->childData['pages'] as $index => $content) {
+                $db->insert(array(
+                    'id' => $this->id,
+                    'page' => $index,
+                    'content' => $content,
+                ));
+            }
+        }
+    }
+
+    public function getHasPages()
+    {
         return ($this->pagescount > 1) || ($this->commentpages > 1);
     }
 
-    public function getPagesCount() {
+    public function getPagesCount()
+    {
         return $this->data['pagescount'] + 1;
     }
 
-    public function getCountPages() {
+    public function getCountPages()
+    {
         return max($this->pagescount, $this->commentpages);
     }
 
-    public function getCommentPages() {
-$options = $this->getApp()->options;
-        if (! $options->commentpages || ($this->commentscount <=  $options->commentsperpage)) {
- return 1;
-}
+    public function getCommentPages()
+    {
+        $options = $this->getApp()->options;
+        if (!$options->commentpages || ($this->commentscount <= $options->commentsperpage)) {
+            return 1;
+        }
 
-        return ceil($this->commentscount /  $options->commentsperpage);
+        return ceil($this->commentscount / $options->commentsperpage);
     }
 
-    public function getLastCommentUrl() {
+    public function getLastCommentUrl()
+    {
         $c = $this->commentpages;
         $url = $this->url;
-        if (($c > 1) && ! $this->getApp()->options->comments_invert_order) {
-$url = rtrim($url, '/') . "/page/$c/";
-}
+        if (($c > 1) && !$this->getApp()->options->comments_invert_order) {
+            $url = rtrim($url, '/') . "/page/$c/";
+        }
 
         return $url;
     }
 
-    public function clearCache() {
-         $this->getApp()->cache->clearUrl($this->url);
+    public function clearCache()
+    {
+        $this->getApp()->cache->clearUrl($this->url);
     }
 
-    public function getSchemalink() {
+    public function getSchemalink()
+    {
         return 'post';
     }
 
-    public function setContent($s) {
+    public function setContent($s)
+    {
         if (!is_string($s)) {
             $this->error('Error! Post content must be string');
         }
 
         $this->rawcontent = $s;
         Filter::i()->filterpost($this, $s);
+    }
 }
-}
+

@@ -1,23 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Filter;
 
 class tyoutubeplayer extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['template'] = '<object width="425" height="350">' . '<param name="movie" value="http://www.youtube.com/v/$id?fs=1&amp;rel=0"></param>' .
         //'<param name="wmode" value="transparent"></param>' .
@@ -26,7 +30,8 @@ class tyoutubeplayer extends \litepubl\core\Plugin
         'allowscriptaccess="always" ' . 'allowfullscreen="true" ' . 'width="425" height="350">' . '</embed></object>';
     }
 
-    public function filter(&$content) {
+    public function filter(&$content)
+    {
         if (preg_match_all("/\[youtube\=http:\/\/([a-zA-Z0-9\-\_]+\.|)youtube\.com\/watch(\?v\=|\/v\/|#!v=)([a-zA-Z0-9\-\_]{11})([^<\s]*)\]/",
         //"/\[youtube\=http:\/\/([a-zA-Z0-9\-\_]+\.|)youtube\.com\/watch(\?v\=|\/v\/)([a-zA-Z0-9\-\_]{11})([^<\s]*)\]/",
         $content, $m, PREG_SET_ORDER)) {
@@ -44,12 +49,15 @@ class tyoutubeplayer extends \litepubl\core\Plugin
         }
     }
 
-    public function install() {
+    public function install()
+    {
         Filter::i()->afterfilter = $this->filter;
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         Filter::i()->unbind($this);
     }
 
 }
+

@@ -1,40 +1,46 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
-use litepubl\view\Lang;
+
 use litepubl\core\UserGroups;
 use litepubl\pages\Menu as StdMenu;
+use litepubl\view\Lang;
 
 class Menus extends \litepubl\pages\Menus
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'adminmenu';
         $this->addevents('onexclude');
         $this->data['heads'] = '';
     }
 
-    public function setTitle($id, $title) {
+    public function setTitle($id, $title)
+    {
         if ($id && isset($this->items[$id])) {
             $this->items[$id]['title'] = $title;
             $this->save();
-             $this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         }
     }
 
-    public function getDir() {
-        return  $this->getApp()->paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
+    public function getDir()
+    {
+        return $this->getApp()->paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
     }
 
-    public function getAdmintitle($name) {
+    public function getAdmintitle($name)
+    {
         $lang = Lang::i();
         $ini = & $lang->ini;
         if (isset($ini[$name]['title'])) {
@@ -53,11 +59,13 @@ class Menus extends \litepubl\pages\Menus
         return $name;
     }
 
-    public function createurl($parent, $name) {
+    public function createurl($parent, $name)
+    {
         return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
     }
 
-    public function createitem($parent, $name, $group, $class) {
+    public function createitem($parent, $name, $group, $class)
+    {
         $title = $this->getadmintitle($name);
         $url = $this->createurl($parent, $name);
         return $this->additem(array(
@@ -70,7 +78,8 @@ class Menus extends \litepubl\pages\Menus
         ));
     }
 
-    public function additem(array $item) {
+    public function additem(array $item)
+    {
         if (empty($item['group'])) {
             $groups = UserGroups::i();
             $item['group'] = $groups->items[$groups->defaults[0]]['name'];
@@ -78,7 +87,8 @@ class Menus extends \litepubl\pages\Menus
         return parent::additem($item);
     }
 
-    public function addfakemenu(StdMenu $menu) {
+    public function addfakemenu(StdMenu $menu)
+    {
         $this->lock();
         $id = parent::addfakemenu($menu);
         if (empty($this->items[$id]['group'])) {
@@ -91,10 +101,11 @@ class Menus extends \litepubl\pages\Menus
         return $id;
     }
 
-    public function getChilds($id) {
+    public function getChilds($id)
+    {
         if ($id == 0) {
             $result = array();
-            $options =  $this->getApp()->options;
+            $options = $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
                 if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
             }
@@ -122,13 +133,14 @@ class Menus extends \litepubl\pages\Menus
         return array_keys($tree);
     }
 
-    public function exclude($id) {
-        if (! $this->getApp()->options->hasgroup($this->items[$id]['group'])) {
- return true;
-}
-
+    public function exclude($id)
+    {
+        if (!$this->getApp()->options->hasgroup($this->items[$id]['group'])) {
+            return true;
+        }
 
         return $this->onexclude($id);
     }
 
 }
+

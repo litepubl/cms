@@ -1,25 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\view;
+
 use litepubl\core\Str;
 
 class Schema extends \litepubl\core\Item
 {
-use \litepubl\core\ItemOwnerTrait;
+    use \litepubl\core\ItemOwnerTrait;
 
     public $sidebars;
     protected $themeInstance;
     protected $adminInstance;
     private $originalCustom;
 
-    public static function i($id = 1) {
+    public static function i($id = 1)
+    {
         if ($id == 1) {
             $class = get_called_class();
         } else {
@@ -30,19 +33,22 @@ use \litepubl\core\ItemOwnerTrait;
         return parent::iteminstance($class, $id);
     }
 
-    public static function newItem($id) {
-return static::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
+    public static function newItem($id)
+    {
+        return static ::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
     }
 
-    public static function getInstancename() {
+    public static function getInstancename()
+    {
         return 'schema';
     }
 
-    public static function getSchema($instance) {
+    public static function getSchema($instance)
+    {
         $id = $instance->getIdSchema();
         if (isset(static ::$instances['schema'][$id])) {
-return static ::$instances['schema'][$id];
-}
+            return static ::$instances['schema'][$id];
+        }
 
         $schemes = Schemes::i();
         if (!$schemes->itemExists($id)) {
@@ -53,7 +59,8 @@ return static ::$instances['schema'][$id];
         return static ::i($id);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->originalCustom = [];
         $this->data = array(
@@ -80,41 +87,44 @@ return static ::$instances['schema'][$id];
         $this->adminInstance = null;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->themeInstance = null;
         $this->adminInstance = null;
         parent::__destruct();
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return Schemes::i();
     }
 
-    public function afterLoad() {
-parent::afterLoad();
-            $this->sidebars = & $this->data['sidebars'];
+    public function afterLoad()
+    {
+        parent::afterLoad();
+        $this->sidebars = & $this->data['sidebars'];
     }
 
-    protected function get_theme($name) {
+    protected function get_theme($name)
+    {
         return Theme::getTheme($name);
     }
 
-    protected function get_admintheme($name) {
+    protected function get_admintheme($name)
+    {
         return Admin::getTheme($name);
     }
 
-    public function setThemename($name) {
+    public function setThemename($name)
+    {
         if ($name == $this->themename) {
- return false;
-}
-
+            return false;
+        }
 
         if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
         if (!Theme::exists($name)) {
- return $this->error(sprintf('Theme %s not exists', $name));
-}
-
-
+            return $this->error(sprintf('Theme %s not exists', $name));
+        }
 
         $this->data['themename'] = $name;
         $this->themeInstance = $this->get_theme($name);
@@ -125,13 +135,13 @@ parent::afterLoad();
         static ::getowner()->themechanged($this);
     }
 
-    public function setAdminname($name) {
+    public function setAdminname($name)
+    {
         if ($name != $this->adminname) {
             if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
             if (!Admin::exists($name)) {
- return $this->error(sprintf('Admin theme %s not exists', $name));
-}
-
+                return $this->error(sprintf('Admin theme %s not exists', $name));
+            }
 
             $this->data['adminname'] = $name;
             $this->adminInstance = $this->get_admintheme($name);
@@ -139,7 +149,8 @@ parent::afterLoad();
         }
     }
 
-    public function getTheme() {
+    public function getTheme()
+    {
         if ($this->themeInstance) {
             return $this->themeInstance;
         }
@@ -161,7 +172,8 @@ parent::afterLoad();
         return $this->themeInstance;
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         if ($this->adminInstance) {
             return $this->adminInstance;
         }
@@ -173,18 +185,20 @@ parent::afterLoad();
         return $this->adminInstance = $this->get_admintheme($this->adminname);
     }
 
-    public function resetCustom() {
+    public function resetCustom()
+    {
         $this->data['custom'] = $this->originalCustom;
     }
 
-    public function setCustomsidebar($value) {
+    public function setCustomsidebar($value)
+    {
         if ($value != $this->customsidebar) {
             if ($this->id == 1) {
-return false;
-}
+                return false;
+            }
 
             if ($value) {
-                $default = static::i(1);
+                $default = static ::i(1);
                 $this->sidebars = $default->sidebars;
             } else {
                 $this->sidebars = array();
@@ -195,3 +209,4 @@ return false;
     }
 
 }
+

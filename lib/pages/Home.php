@@ -1,31 +1,34 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
+
 use litepubl\core\CoEvents;
-    use litepubl\core\Context;
-use litepubl\post\Posts;
-use litepubl\post\Post;
+use litepubl\core\Context;
 use litepubl\post\Announce;
-use litepubl\view\Schema;
-use litepubl\view\Lang;
-use litepubl\view\Vars;
+use litepubl\post\Post;
+use litepubl\post\Posts;
 use litepubl\view\Args;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
 use litepubl\view\Theme;
+use litepubl\view\Vars;
 
 class Home extends SingleMenu
 {
     public $cacheposts;
     public $midleposts;
-public $page;
+    public $page;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'homepage';
         $this->data['image'] = '';
@@ -43,27 +46,29 @@ public $page;
         $this->midleposts = false;
     }
 
-    public function getIndex_tml() {
+    public function getIndex_tml()
+    {
         $theme = $this->theme;
         if (!empty($theme->templates['index.home'])) {
-return $theme->templates['index.home'];
-}
+            return $theme->templates['index.home'];
+        }
 
         return false;
     }
 
     public function request(Context $context)
-{
+    {
         if (!$this->showpagenator && ($context->request->page > 1)) {
-$context->response->status = 404;
- return;
-}
+            $context->response->status = 404;
+            return;
+        }
 
-$this->page = $context->request->page;
+        $this->page = $context->request->page;
         return parent::request($context);
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = parent::gethead();
 
         $theme = Schema::getSchema($this)->theme;
@@ -71,7 +76,7 @@ $this->page = $context->request->page;
 
         if ($this->showposts) {
             $items = $this->getIdPosts();
-$announce = new Announce($theme);
+            $announce = new Announce($theme);
             $result.= $announce->getanHead($items);
         }
 
@@ -79,14 +84,16 @@ $announce = new Announce($theme);
         return $theme->parse($result);
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
     }
 
-    public function getBefore() {
+    public function getBefore()
+    {
         if ($result = $this->content) {
             $theme = $this->theme;
             $result = $theme->simple($result);
-            if ($this->parsetags ||  $this->getApp()->options->parsepost) {
+            if ($this->parsetags || $this->getApp()->options->parsepost) {
                 $result = $theme->parse($result);
             }
 
@@ -96,9 +103,10 @@ $announce = new Announce($theme);
         return '';
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $result = '';
-        if ( $this->page == 1) {
+        if ($this->page == 1) {
             $result.= $this->getbefore();
             if ($this->showmidle && $this->midlecat) {
                 $result.= $this->getmidle();
@@ -112,36 +120,38 @@ $announce = new Announce($theme);
         return $result;
     }
 
-    public function getPostnavi() {
+    public function getPostnavi()
+    {
         $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
-$announce = new Announce($schema->theme);
+        $announce = new Announce($schema->theme);
         $result = $announce->getPosts($items, $schema->postanounce);
         if ($this->showpagenator) {
-            $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-            $result.= $schema->theme->getpages($this->url,  $this->page, ceil($this->data['archcount'] / $perpage));
+            $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+            $result.= $schema->theme->getpages($this->url, $this->page, ceil($this->data['archcount'] / $perpage));
         }
 
         return $result;
     }
 
-    public function getIdposts() {
+    public function getIdposts()
+    {
         if (is_array($this->cacheposts)) {
- return $this->cacheposts;
-}
+            return $this->cacheposts;
+        }
 
         if ($result = $this->onbeforegetitems()) {
- return $result;
-}
+            return $result;
+        }
 
         $posts = Posts::i();
         $schema = Schema::getSchema($this);
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $from = ( $this->page - 1) * $perpage;
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+        $from = ($this->page - 1) * $perpage;
         $order = $schema->invertorder ? 'asc' : 'desc';
 
-        $p =  $this->getApp()->db->prefix . 'posts';
-        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
+        $p = $this->getApp()->db->prefix . 'posts';
+        $ci = $this->getApp()->db->prefix . 'categoriesitems';
 
         if ($where = $this->getwhere()) {
             $result = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.item as item from $p, $ci
@@ -152,7 +162,7 @@ $announce = new Announce($schema->theme);
             $posts->loaditems($result);
         } else {
             $this->data['archcount'] = $posts->archivescount;
-            $result = $posts->getpage(0,  $this->page, $perpage, $schema->invertorder);
+            $result = $posts->getpage(0, $this->page, $perpage, $schema->invertorder);
         }
 
         $this->callevent('ongetitems', array(&$result
@@ -161,10 +171,11 @@ $announce = new Announce($schema->theme);
         return $result;
     }
 
-    public function getWhere() {
+    public function getWhere()
+    {
         $result = '';
-        $p =  $this->getApp()->db->prefix . 'posts';
-        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
+        $p = $this->getApp()->db->prefix . 'posts';
+        $ci = $this->getApp()->db->prefix . 'categoriesitems';
         if ($this->showmidle && $this->midlecat) {
             $ex = $this->getmidleposts();
             if (count($ex)) $result.= sprintf('%s.id not in (%s) ', $p, implode(',', $ex));
@@ -186,17 +197,16 @@ $announce = new Announce($schema->theme);
         return $result;
     }
 
-    public function postschanged() {
+    public function postschanged()
+    {
         if (!$this->showposts || !$this->showpagenator) {
- return;
-}
-
-
+            return;
+        }
 
         if ($where = $this->getwhere()) {
             $db = $this->db;
-            $p =  $this->getApp()->db->prefix . 'posts';
-            $ci =  $this->getApp()->db->prefix . 'categoriesitems';
+            $p = $this->getApp()->db->prefix . 'posts';
+            $ci = $this->getApp()->db->prefix . 'categoriesitems';
 
             $res = $db->query("select count(DISTINCT $p.id) as count from $p, $ci
       where    $where and $p.id = $ci.post and $p.status = 'published'");
@@ -209,7 +219,8 @@ $announce = new Announce($schema->theme);
         $this->save();
     }
 
-    public function getMidletitle() {
+    public function getMidletitle()
+    {
         if ($idcat = $this->midlecat) {
             return $this->getdb('categories')->getvalue($idcat, 'title');
         }
@@ -217,32 +228,33 @@ $announce = new Announce($schema->theme);
         return '';
     }
 
-    public function getMidleposts() {
+    public function getMidleposts()
+    {
         if (is_array($this->midleposts)) {
- return $this->midleposts;
-}
-
+            return $this->midleposts;
+        }
 
         $posts = Posts::i();
         $p = $posts->thistable;
-        $ci =  $this->getApp()->db->prefix . 'categoriesitems';
+        $ci = $this->getApp()->db->prefix . 'categoriesitems';
         $this->midleposts = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.post as post from $p, $ci
     where    $ci.item = $this->midlecat and $p.id = $ci.post and $p.status = 'published'
-    order by  $p.posted desc limit " .  $this->getApp()->options->perpage));
+    order by  $p.posted desc limit " . $this->getApp()->options->perpage));
 
         if (count($this->midleposts)) $posts->loaditems($this->midleposts);
         return $this->midleposts;
     }
 
-    public function getMidle() {
+    public function getMidle()
+    {
         $result = '';
         $items = $this->getmidleposts();
         if (!count($items)) {
-return '';
-}
+            return '';
+        }
 
-$vars = new Vars();
-$vars->lang = Lang::i('default');
+        $vars = new Vars();
+        $vars->lang = Lang::i('default');
         $vars->home = $this;
         $theme = $this->theme;
         $tml = $theme->templates['content.home.midle.post'];
@@ -251,8 +263,8 @@ $vars->lang = Lang::i('default');
             $result.= $theme->parse($tml);
             // has $author.* tags in tml
             if (isset($vars->author)) {
-unset($vars->author);
-}
+                unset($vars->author);
+            }
         }
 
         $tml = $theme->templates['content.home.midle'];
@@ -267,3 +279,4 @@ unset($vars->author);
     }
 
 }
+

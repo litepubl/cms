@@ -1,21 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
-class tyandexregservice extends tregservice {
+class tyandexregservice extends tregservice
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->data['name'] = 'yandex';
         $this->data['title'] = 'Yandex';
@@ -23,18 +27,19 @@ class tyandexregservice extends tregservice {
         $this->data['url'] = '/yandex-oauth2callback.php';
     }
 
-    public function getAuthurl() {
+    public function getAuthurl()
+    {
         $url = 'https://oauth.yandex.ru/authorize?response_type=code' . $url.= '&client_id=' . $this->client_id;
         $url.= '&state=' . $this->newstate();
         return $url;
     }
 
     //handle callback
-    public function request($arg) {
+    public function request($arg)
+    {
         if ($err = parent::request($arg)) {
- return $err;
-}
-
+            return $err;
+        }
 
         $code = $_REQUEST['code'];
         $resp = http::post('https://oauth.yandex.ru/token', array(
@@ -60,7 +65,8 @@ class tyandexregservice extends tregservice {
         return $this->errorauth();
     }
 
-    protected function getAdmininfo($lang) {
+    protected function getAdmininfo($lang)
+    {
         return array(
             'regurl' => 'https://oauth.yandex.ru/client/new',
             'client_id' => $lang->yandex_id,
@@ -69,3 +75,4 @@ class tyandexregservice extends tregservice {
     }
 
 }
+

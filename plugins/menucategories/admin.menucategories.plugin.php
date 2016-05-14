@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
-class tadmincategoriesmenu {
+class tadmincategoriesmenu
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = tcategoriesmenu::i();
         $about = Plugins::getabout(Plugins::getname(__file__));
         $args = new Args();
@@ -28,10 +33,12 @@ class tadmincategoriesmenu {
         return $html->adminform('$cats', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $plugin = tcategoriesmenu::i();
         $plugin->exitems = tadminhtml::check2array('category-');
         $plugin->save();
     }
 
 }
+

@@ -1,11 +1,12 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
@@ -14,13 +15,15 @@ class SingleItems extends Items
     public static $instances;
     public $copyprops;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->copyprops = array();
     }
 
-    public function addinstance($instance) {
+    public function addinstance($instance)
+    {
         $classname = get_class($instance);
         $item = array(
             'classname' => $classname,
@@ -45,10 +48,11 @@ class SingleItems extends Items
         return $id;
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $id = (int)$id;
         $classname = $this->items[$id]['classname'];
-        $result = static::iGet($classname);
+        $result = static ::iGet($classname);
         if ($id != $result->id) {
             if (!isset(static ::$instances[$classname])) {
                 static ::$instances[$classname] = array();
@@ -71,3 +75,4 @@ class SingleItems extends Items
     }
 
 }
+

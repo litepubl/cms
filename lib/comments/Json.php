@@ -1,32 +1,35 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\comments;
-use litepubl\view\Theme;
+
 use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class Json extends \litepubl\core\Events
- {
+{
 
-    public function auth($id, $action) {
-        if (! $this->getApp()->options->user) {
-return false;
-}
+    public function auth($id, $action)
+    {
+        if (!$this->getApp()->options->user) {
+            return false;
+        }
 
         $comments = Comments::i();
         if (!$comments->itemExists($id)) {
-return false;
-}
+            return false;
+        }
 
-        if ( $this->getApp()->options->ingroup('moderator')) {
-return true;
-}
+        if ($this->getApp()->options->ingroup('moderator')) {
+            return true;
+        }
 
         $cm = Manager::i();
         switch ($action) {
@@ -35,64 +38,63 @@ return true;
                     return false;
                 }
 
-                if ('closed' ==  $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
                     return false;
                 }
 
-                return $comments->getvalue($id, 'author') ==  $this->getApp()->options->user;
+                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
 
             case 'delete':
                 if (!$cm->candelete) {
                     return false;
                 }
 
-                if ('closed' ==  $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
                     return false;
                 }
 
-                return $comments->getvalue($id, 'author') ==  $this->getApp()->options->user;
+                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
         }
 
         return false;
     }
 
-    public function forbidden() {
+    public function forbidden()
+    {
         $this->error('Forbidden', 403);
     }
 
-    public function comment_delete(array $args) {
+    public function comment_delete(array $args)
+    {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'delete')) {
- return $this->forbidden();
-}
-
-
+            return $this->forbidden();
+        }
 
         return Comments::i()->delete($id);
     }
 
-    public function comment_setstatus($args) {
+    public function comment_setstatus($args)
+    {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'status')) {
- return $this->forbidden();
-}
-
+            return $this->forbidden();
+        }
 
         return Comments::i()->setstatus($id, $args['status']);
     }
 
-    public function comment_edit(array $args) {
+    public function comment_edit(array $args)
+    {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'edit')) {
- return $this->forbidden();
-}
-
+            return $this->forbidden();
+        }
 
         $content = trim($args['content']);
         if (empty($content)) {
- return false;
-}
-
+            return false;
+        }
 
         $comments = Comments::i();
         if ($comments->edit($id, $content)) {
@@ -105,12 +107,12 @@ return true;
         }
     }
 
-    public function comment_getraw(array $args) {
+    public function comment_getraw(array $args)
+    {
         $id = (int)$args['id'];
         if (!$this->auth($id, 'edit')) {
- return $this->forbidden();
-}
-
+            return $this->forbidden();
+        }
 
         $comments = Comments::i();
         $raw = $comments->raw->getvalue($id, 'rawcontent');
@@ -120,20 +122,19 @@ return true;
         );
     }
 
-    public function comments_get_hold(array $args) {
-        if (! $this->getApp()->options->user) {
- return $this->forbidden();
-}
-
-
+    public function comments_get_hold(array $args)
+    {
+        if (!$this->getApp()->options->user) {
+            return $this->forbidden();
+        }
 
         $idpost = (int)$args['idpost'];
         $comments = Comments::i($idpost);
 
-        if ( $this->getApp()->options->ingroup('moderator')) {
+        if ($this->getApp()->options->ingroup('moderator')) {
             $where = '';
         } else {
-            $where = "and $comments->thistable.author = " .  $this->getApp()->options->user;
+            $where = "and $comments->thistable.author = " . $this->getApp()->options->user;
         }
 
         return array(
@@ -141,34 +142,38 @@ return true;
         );
     }
 
-    public function comment_add(array $args) {
-        if ( $this->getApp()->options->commentsdisabled) {
- return array(
-            'error' => array(
-                'message' => 'Comments disabled',
-                'code' => 403
-            )
-        );
-}
+    public function comment_add(array $args)
+    {
+        if ($this->getApp()->options->commentsdisabled) {
+            return array(
+                'error' => array(
+                    'message' => 'Comments disabled',
+                    'code' => 403
+                )
+            );
+        }
 
         $commentform = Form::i();
         $commentform->helper = $this;
         return $commentform->dorequest($args);
     }
 
-    public function comment_confirm(array $args) {
+    public function comment_confirm(array $args)
+    {
         return $this->comment_add($args);
     }
 
     //commentform helper
-    public function confirm($confirmid) {
+    public function confirm($confirmid)
+    {
         return array(
             'confirmid' => $confirmid,
             'code' => 'confirm',
         );
     }
 
-    public function getErrorcontent($s) {
+    public function getErrorcontent($s)
+    {
         return array(
             'error' => array(
                 'message' => $s,
@@ -177,7 +182,8 @@ return true;
         );
     }
 
-    public function sendresult($url, $cookies) {
+    public function sendresult($url, $cookies)
+    {
         return array(
             'cookies' => $cookies,
             'posturl' => $url,
@@ -185,19 +191,19 @@ return true;
         );
     }
 
-    public function comments_get_logged(array $args) {
-        if (! $this->getApp()->options->user) {
- return $this->forbidden();
-}
-
-
+    public function comments_get_logged(array $args)
+    {
+        if (!$this->getApp()->options->user) {
+            return $this->forbidden();
+        }
 
         $theme = Theme::context();
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
-        $mesg = str_replace('$site.liveuser',  $this->getApp()->site->getuserlink() , $mesg);
+        $mesg = str_replace('$site.liveuser', $this->getApp()->site->getuserlink() , $mesg);
 
         $lang = Lang::i('comment');
         return $theme->parse($mesg);
     }
 
 }
+

@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\core\Str;
 use litepubl\utils\LinkGenerator;
 
 class MediaParser extends \litepubl\core\Events
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'mediaparser';
         $this->addevents('added', 'onbefore', 'onresize', 'noresize', 'onimage');
@@ -35,45 +38,49 @@ class MediaParser extends \litepubl\core\Events
         $this->data['videoext'] = 'mp4|ogv|webm';
     }
 
-    public static function fixfilename($filename) {
+    public static function fixfilename($filename)
+    {
         if (preg_match('/\.(htm|html|js|php|phtml|php\d|htaccess)$/i', $filename)) {
- return $filename . '.txt';
-}
-
+            return $filename . '.txt';
+        }
 
         return $filename;
     }
 
-    public static function linkgen($filename) {
+    public static function linkgen($filename)
+    {
         $filename = LinkGenerator::i()->filterfilename($filename);
         return static ::fixfilename($filename);
     }
 
-    public function addlocal($filename) {
+    public function addlocal($filename)
+    {
         return $this->upload(basename($filename) , file_get_contents($filename) , '', '', '', false);
     }
 
-    public function upload($filename, $content, $title, $description, $keywords, $overwrite) {
+    public function upload($filename, $content, $title, $description, $keywords, $overwrite)
+    {
         if ($title == '') $title = $filename;
         $filename = static ::linkgen($filename);
         $tempfilename = $this->doupload($filename, $content);
         return $this->addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite);
     }
 
-    public function getTempname($parts) {
+    public function getTempname($parts)
+    {
         return 'tmp.' . Str::md5Rand() . '.' . $parts['filename'] . (empty($parts['extension']) ? '' : '.' . $parts['extension']);
     }
 
-    public function uploadfile($filename, $tempfilename, $title, $description, $keywords, $overwrite) {
+    public function uploadfile($filename, $tempfilename, $title, $description, $keywords, $overwrite)
+    {
         if ($title == '') $title = $filename;
         if ($description == '') $description = $title;
         $filename = static ::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $this->gettempname($parts);
-        if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $newtemp)) {
- return $this->error('Error access to uploaded file');
-}
-
+        if (!move_uploaded_file($tempfilename, $this->getApp()->paths->files . $newtemp)) {
+            return $this->error('Error access to uploaded file');
+        }
 
         //return $this->addfile($filename, $newtemp, $title, $description, $keywords, $overwrite);
         return $this->add(array(
@@ -86,25 +93,27 @@ class MediaParser extends \litepubl\core\Events
         ));
     }
 
-    public static function move_uploaded($filename, $tempfilename, $subdir) {
+    public static function move_uploaded($filename, $tempfilename, $subdir)
+    {
         $filename = static ::linkgen($filename);
         $filename = static ::create_filename($filename, $subdir, false);
         $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-        if (!move_uploaded_file($tempfilename,  $this->getApp()->paths->files . $sep . $filename)) {
- return false;
-}
-
+        if (!move_uploaded_file($tempfilename, $this->getApp()->paths->files . $sep . $filename)) {
+            return false;
+        }
 
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
-    public static function prepare_filename($filename, $subdir) {
+    public static function prepare_filename($filename, $subdir)
+    {
         $filename = static ::linkgen($filename);
         $filename = static ::create_filename($filename, $subdir, false);
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
-    public function uploadicon($filename, $content, $overwrite) {
+    public function uploadicon($filename, $content, $overwrite)
+    {
         $filename = static ::linkgen($filename);
         $tempfilename = $this->doupload($filename, $content, $overwrite);
         $info = $this->getinfo($tempfilename);
@@ -120,7 +129,8 @@ class MediaParser extends \litepubl\core\Events
         return $files->additem($item);
     }
 
-    public function addicon($filename) {
+    public function addicon($filename)
+    {
         $info = $this->getinfo($filename);
         if ($info['media'] != 'image') $this->error('Invalid icon file format ' . $info['media']);
         $info['media'] = 'icon';
@@ -134,38 +144,41 @@ class MediaParser extends \litepubl\core\Events
         return $files->additem($item);
     }
 
-    private function doupload($filename, &$content) {
+    private function doupload($filename, &$content)
+    {
         $filename = static ::fixfilename($filename);
         $parts = pathinfo($filename);
         $filename = $this->gettempname($parts);
-        if (@file_put_contents( $this->getApp()->paths->files . $filename, $content)) {
-            @chmod( $this->getApp()->paths->files . $filename, 0666);
+        if (@file_put_contents($this->getApp()->paths->files . $filename, $content)) {
+            @chmod($this->getApp()->paths->files . $filename, 0666);
             return $filename;
         }
         return false;
     }
 
-    public static function replace_ext($filename, $ext) {
+    public static function replace_ext($filename, $ext)
+    {
         $parts = pathinfo($filename);
         $result = $parts['filename'] . $ext;
         if (!empty($parts['dirname']) && ($parts['dirname'] != '.')) $result = $parts['dirname'] . DIRECTORY_SEPARATOR . $result;
         return $result;
     }
 
-    public static function makeunique($filename) {
+    public static function makeunique($filename)
+    {
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $i = strrpos($filename, DIRECTORY_SEPARATOR);
         $dir = substr($filename, 0, $i + 1);
         return $dir . static ::getunique($dir, substr($filename, $i + 1));
     }
 
-    public static function getUnique($dir, $filename) {
+    public static function getUnique($dir, $filename)
+    {
         $files = Files::i();
         $subdir = basename(rtrim($dir, '/' . DIRECTORY_SEPARATOR)) . '/';
         if (!$files->exists($subdir . $filename) && !@file_exists($dir . $filename)) {
- return $filename;
-}
-
+            return $filename;
+        }
 
         $parts = pathinfo($filename);
         $base = $parts['filename'];
@@ -173,29 +186,29 @@ class MediaParser extends \litepubl\core\Events
         for ($i = 2; $i < 10000; $i++) {
             $filename = "$base$i$ext";
             if (!$files->exists($subdir . $filename) && !file_exists($dir . $filename)) {
- return $filename;
-}
-
+                return $filename;
+            }
 
         }
         return $filename;
     }
 
-    public static function create_filename($filename, $subdir, $overwrite) {
-        $dir =  static::getAppInstance()->paths->files . $subdir;
+    public static function create_filename($filename, $subdir, $overwrite)
+    {
+        $dir = static ::getAppInstance()->paths->files . $subdir;
         if (!is_dir($dir)) {
             mkdir($dir, 0777);
             @chmod($dir, 0777);
         }
 
         if ($subdir) {
-$dir.= DIRECTORY_SEPARATOR;
-}
+            $dir.= DIRECTORY_SEPARATOR;
+        }
 
         if ($overwrite) {
             if (file_exists($dir . $filename)) {
-unlink($dir . $filename);
-}
+                unlink($dir . $filename);
+            }
         } else {
             $filename = static ::getunique($dir, $filename);
         }
@@ -203,29 +216,30 @@ unlink($dir . $filename);
         return $filename;
     }
 
-    public function getMediafolder($media) {
+    public function getMediafolder($media)
+    {
         if (isset($this->data[$media])) {
             if ($result = $this->data[$media]) {
- return $result;
-}
-
+                return $result;
+            }
 
         }
         return $media;
     }
 
-    public function movetofolder($filename, $tempfilename, $subdir, $overwrite) {
+    public function movetofolder($filename, $tempfilename, $subdir, $overwrite)
+    {
         $filename = static ::create_filename($filename, $subdir, $overwrite);
         $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-        if (!rename( $this->getApp()->paths->files . $tempfilename,  $this->getApp()->paths->files . $sep . $filename)) {
- return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
-}
-
+        if (!rename($this->getApp()->paths->files . $tempfilename, $this->getApp()->paths->files . $sep . $filename)) {
+            return $this->error(sprintf('Error rename file %s to %s', $tempfilename, $filename));
+        }
 
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
-    public function addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite) {
+    public function addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite)
+    {
         return $this->add(array(
             'filename' => $filename,
             'tempfilename' => $tempfilename,
@@ -236,13 +250,14 @@ unlink($dir . $filename);
         ));
     }
 
-    public function add(array $file) {
+    public function add(array $file)
+    {
         if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
 
         $files = Files::i();
-        $hash = $files->gethash( $this->getApp()->paths->files . $file['tempfilename']);
+        $hash = $files->gethash($this->getApp()->paths->files . $file['tempfilename']);
         if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::quote($hash)))) {
-            @unlink( $this->getApp()->paths->files . $file['tempfilename']);
+            @unlink($this->getApp()->paths->files . $file['tempfilename']);
             return $id;
         }
 
@@ -257,7 +272,7 @@ unlink($dir . $filename);
         $preview = false;
         $midle = false;
         if ($item['media'] == 'image') {
-            $srcfilename =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
+            $srcfilename = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
             $this->callevent('onbefore', array(&$item,
                 $srcfilename
             ));
@@ -300,7 +315,7 @@ unlink($dir . $filename);
                     if (!Str::end($srcfilename, '.jpg')) {
                         $fixfilename = static ::replace_ext($srcfilename, '.jpg');
                         $fixfilename = static ::makeunique($fixfilename);
-                        $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen( $this->getApp()->paths->files)));
+                        $item['filename'] = str_replace(DIRECTORY_SEPARATOR, '/', substr($fixfilename, strlen($this->getApp()->paths->files)));
 
                         rename($srcfilename, $fixfilename);
                         @chmod($fixfilename, 0666);
@@ -338,11 +353,11 @@ unlink($dir . $filename);
         return $id;
     }
 
-    public function uploadthumbnail($filename, $content) {
+    public function uploadthumbnail($filename, $content)
+    {
         if (!preg_match('/\.(jpg|jpeg|gif|png|bmp)$/i', $filename)) {
- return false;
-}
-
+            return false;
+        }
 
         $linkgen = LinkGenerator::i();
         $filename = $linkgen->filterfilename($filename);
@@ -356,7 +371,8 @@ unlink($dir . $filename);
     }
 
     //$filename must be specefied before such as  thumb/img004893.jpg
-    public function uploadthumb($filename, &$content) {
+    public function uploadthumb($filename, &$content)
+    {
         $hash = trim(base64_encode(md5($content, true)) , '=');
         $files = Files::i();
         if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::quote($hash)))) {
@@ -364,11 +380,11 @@ unlink($dir . $filename);
         }
 
         if ($image = imagecreatefromstring($content)) {
-            if (!Str::begin($filename,  $this->getApp()->paths->files)) $filename =  $this->getApp()->paths->files . ltrim($filename, '\/');
+            if (!Str::begin($filename, $this->getApp()->paths->files)) $filename = $this->getApp()->paths->files . ltrim($filename, '\/');
             $destfilename = static ::replace_ext($filename, '.jpg');
             $destfilename = static ::makeunique($destfilename);
             if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-                $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
+                $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen($this->getApp()->paths->files))));
                 $item['media'] = 'image';
                 $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
                 $item['width'] = $size['width'];
@@ -389,7 +405,8 @@ unlink($dir . $filename);
         return false;
     }
 
-    public function getDefaultvalues($filename) {
+    public function getDefaultvalues($filename)
+    {
         return array(
             'parent' => 0,
             'midle' => 0,
@@ -409,8 +426,9 @@ unlink($dir . $filename);
         );
     }
 
-    public function getInfo($filename) {
-        $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+    public function getInfo($filename)
+    {
+        $realfile = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $result = $this->getdefaultvalues($filename);
         if (preg_match("/\\.($this->videoext)\$/", $filename, $m)) {
             $ext = $m[1];
@@ -465,9 +483,9 @@ unlink($dir . $filename);
             $result['media'] = 'flash';
             $result['mime'] = 'application/x-shockwave-flash';
 
-            require_once ( $this->getApp()->paths->libinclude . 'getid3.php');
-            require_once ( $this->getApp()->paths->libinclude . 'getid3.lib.php');
-            require_once ( $this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
+            require_once ($this->getApp()->paths->libinclude . 'getid3.php');
+            require_once ($this->getApp()->paths->libinclude . 'getid3.lib.php');
+            require_once ($this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
 
             $getID3 = new \getID3;
             $getID3->option_md5_data = true;
@@ -491,22 +509,19 @@ unlink($dir . $filename);
 
     }
 
-    public static function readimage($srcfilename) {
+    public static function readimage($srcfilename)
+    {
         if (!file_exists($srcfilename)) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($info = @getimagesize($srcfilename))) {
- return false;
-}
-
+            return false;
+        }
 
         if (!$info[0] || !$info[1]) {
- return false;
-}
-
-
+            return false;
+        }
 
         switch ($info[2]) {
             case 1:
@@ -539,7 +554,8 @@ unlink($dir . $filename);
         return false;
     }
 
-    public static function createsnapshot($srcfilename, $destfilename, $x, $y, $mode) {
+    public static function createsnapshot($srcfilename, $destfilename, $x, $y, $mode)
+    {
         if (!($source = static ::readimage($srcfilename))) {
             return false;
         }
@@ -549,7 +565,8 @@ unlink($dir . $filename);
         return $r;
     }
 
-    public static function createthumb($source, $destfilename, $x, $y, $quality, $mode) {
+    public static function createthumb($source, $destfilename, $x, $y, $quality, $mode)
+    {
         if ($result = static ::scale($source, $x, $y, $mode)) {
             imagejpeg($result['image'], $destfilename, $quality);
             imagedestroy($result['image']);
@@ -561,21 +578,19 @@ unlink($dir . $filename);
         return false;
     }
 
-    public static function scale($source, $x, $y, $mode) {
+    public static function scale($source, $x, $y, $mode)
+    {
         if (!$source) {
- return false;
-}
-
+            return false;
+        }
 
         $sourcex = imagesx($source);
         $sourcey = imagesy($source);
         if (!$x) $x = $y;
         if (!$y) $y = $x;
         if (($x >= $sourcex) && ($y >= $sourcey)) {
- return false;
-}
-
-
+            return false;
+        }
 
         switch ($mode) {
             case 'fixed':
@@ -614,11 +629,12 @@ unlink($dir . $filename);
         );
     }
 
-    public function getSnapshot($srcfilename, $image) {
+    public function getSnapshot($srcfilename, $image)
+    {
         $destfilename = static ::replace_ext($srcfilename, '.preview.jpg');
         $destfilename = static ::makeunique($destfilename);
         if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
-            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
+            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen($this->getApp()->paths->files))));
             $result['media'] = 'image';
             $result['mime'] = 'image/jpeg';
             $result['width'] = $size['width'];
@@ -629,7 +645,8 @@ unlink($dir . $filename);
         return false;
     }
 
-    public function createmidle($srcfilename, $image) {
+    public function createmidle($srcfilename, $image)
+    {
         if (imagesx($image) <= $this->midlewidth && imagesy($image) <= $this->midleheight) {
             return false;
         }
@@ -638,7 +655,7 @@ unlink($dir . $filename);
         $destfilename = static ::makeunique($destfilename);
 
         if ($sizes = $this->resize($destfilename, $image, $this->midlewidth, $this->midleheight)) {
-            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen( $this->getApp()->paths->files))));
+            $result = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen($this->getApp()->paths->files))));
             $result['media'] = 'image';
             $result['mime'] = 'image/jpeg';
             $result['width'] = $sizes['width'];
@@ -649,7 +666,8 @@ unlink($dir . $filename);
         return false;
     }
 
-    public function resize($filename, $image, $x, $y) {
+    public function resize($filename, $image, $x, $y)
+    {
         $sourcex = imagesx($image);
         $sourcey = imagesy($image);
         if (!$x || !$sourcex || !$sourcey) {
@@ -682,14 +700,15 @@ unlink($dir . $filename);
         );
     }
 
-    private function getAudioinfo($filename) {
+    private function getAudioinfo($filename)
+    {
         return false;
         /*
         if (!class_exists('getID3')) {
- return false;
-}
-
-
+        return false;
+        }
+        
+        
         $realfile =  $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $filename);
         
         // Initialize getID3 engine
@@ -700,10 +719,10 @@ unlink($dir . $filename);
         
         $info = $getID3->analyze($realfile);
         if (isset($info['error'])) {
- return false;
-}
-
-
+        return false;
+        }
+        
+        
         
         $result = array (
         'bitrate'  => @$info['audio']['bitrate'],
@@ -717,8 +736,10 @@ unlink($dir . $filename);
         */
     }
 
-    public function getVideopreview($filename) {
+    public function getVideopreview($filename)
+    {
         return 0;
     }
 
 }
+

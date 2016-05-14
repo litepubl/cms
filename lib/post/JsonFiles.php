@@ -1,62 +1,63 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
-use litepubl\admin\GetPerm;
-use litepubl\view\Theme;
-use litepubl\view\Parser;
-use litepubl\view\Filter;
+
 use litepubl\admin\AuthorRights;
+use litepubl\admin\GetPerm;
+use litepubl\view\Filter;
+use litepubl\view\Parser;
+use litepubl\view\Theme;
 
 class JsonFiles extends \litepubl\core\Events
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addevents('uploaded', 'onprops');
     }
 
-    public function auth($idpost) {
-        if (! $this->getApp()->options->user) {
- return false;
-}
+    public function auth($idpost)
+    {
+        if (!$this->getApp()->options->user) {
+            return false;
+        }
 
-
-        if ( $this->getApp()->options->ingroup('editor')) {
- return true;
-}
-
+        if ($this->getApp()->options->ingroup('editor')) {
+            return true;
+        }
 
         if ($idpost == 0) {
- return true;
-}
-
+            return true;
+        }
 
         if ($idauthor = $this->getdb('posts')->getvalue($idpost, 'author')) {
-            return  $this->getApp()->options->user == (int)$idauthor;
+            return $this->getApp()->options->user == (int)$idauthor;
         }
         return false;
     }
 
-    public function forbidden() {
+    public function forbidden()
+    {
         $this->error('Forbidden', 403);
     }
 
-    public function files_getpost(array $args) {
+    public function files_getpost(array $args)
+    {
         $idpost = (int)$args['idpost'];
         if (!$this->auth($idpost)) {
- return $this->forbidden();
-}
+            return $this->forbidden();
+        }
 
-
-
-        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
+        $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
 
         $files = Files::i();
         $result = array(
@@ -72,7 +73,7 @@ class JsonFiles extends \litepubl\core\Events
             }
         }
 
-        if ( $this->getApp()->options->show_file_perm) {
+        if ($this->getApp()->options->show_file_perm) {
             $theme = Theme::getTheme('default');
             $result['fileperm'] = GetPerm::combo(0, 'idperm_upload');
         }
@@ -80,17 +81,17 @@ class JsonFiles extends \litepubl\core\Events
         return $result;
     }
 
-    public function files_getpage(array $args) {
-        if (! $this->getApp()->options->hasgroup('author')) {
- return $this->forbidden();
-}
-
+    public function files_getpage(array $args)
+    {
+        if (!$this->getApp()->options->hasgroup('author')) {
+            return $this->forbidden();
+        }
 
         $page = (int)$args['page'];
         $perpage = isset($args['perpage']) ? (int)$args['perpage'] : 10;
 
         $from = $page * $perpage;
-        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
+        $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
 
         $files = Files::i();
         $db = $files->db;
@@ -108,18 +109,17 @@ class JsonFiles extends \litepubl\core\Events
         );
     }
 
-    public function files_setprops(array $args) {
-        if (! $this->getApp()->options->hasgroup('author')) {
- return $this->forbidden();
-}
-
+    public function files_setprops(array $args)
+    {
+        if (!$this->getApp()->options->hasgroup('author')) {
+            return $this->forbidden();
+        }
 
         $id = (int)$args['idfile'];
         $files = Files::i();
         if (!$files->itemExists($id)) {
- return $this->forbidden();
-}
-
+            return $this->forbidden();
+        }
 
         $item = $files->getitem($id);
         $item['title'] = Filter::escape(Filter::unescape($args['title']));
@@ -136,42 +136,42 @@ class JsonFiles extends \litepubl\core\Events
         );
     }
 
-    public function canupload() {
-        if (! $this->getApp()->options->hasgroup('author')) {
- return false;
-}
+    public function canupload()
+    {
+        if (!$this->getApp()->options->hasgroup('author')) {
+            return false;
+        }
 
-
-
-        if (in_array( $this->getApp()->options->groupnames['author'],  $this->getApp()->options->idgroups) && ($err = AuthorRights::i()->canupload())) {
+        if (in_array($this->getApp()->options->groupnames['author'], $this->getApp()->options->idgroups) && ($err = AuthorRights::i()->canupload())) {
             return false;
         }
 
         return true;
     }
 
-    public function files_upload(array $args) {
+    public function files_upload(array $args)
+    {
         if ('POST' != $_SERVER['REQUEST_METHOD']) {
- return $this->forbidden();
-}
+            return $this->forbidden();
+        }
 
         if (!isset($_FILES['Filedata']) || !is_uploaded_file($_FILES['Filedata']['tmp_name']) || $_FILES['Filedata']['error'] != 0) {
- return $this->forbidden();
-}
+            return $this->forbidden();
+        }
 
         //psevdo logout
-         $this->getApp()->options->user = null;
+        $this->getApp()->options->user = null;
         if (!$this->canupload()) {
- return $this->forbidden();
-}
+            return $this->forbidden();
+        }
 
         $parser = MediaParser::i();
         $id = $parser->uploadFile($_FILES['Filedata']['name'], $_FILES['Filedata']['tmp_name'], '', '', '', false);
         if (isset($_POST['idperm'])) {
             $idperm = (int)$_POST['idperm'];
             if ($idperm > 0) {
-PrivateFiles::i()->setPerm($id, (int)$_POST['idperm']);
-}
+                PrivateFiles::i()->setPerm($id, (int)$_POST['idperm']);
+            }
         }
 
         $this->uploaded($id);
@@ -197,3 +197,4 @@ PrivateFiles::i()->setPerm($id, (int)$_POST['idperm']);
     }
 
 }
+

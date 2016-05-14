@@ -1,25 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\core\Str;
+
 use litepubl\core\DBManager;
+use litepubl\core\Str;
 use litepubl\view\Filter;
 
 class ulogin extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addevents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
@@ -28,12 +32,11 @@ class ulogin extends \litepubl\core\Plugin
         $this->data['nets'] = array();
     }
 
-    public function add($id, $service, $uid) {
+    public function add($id, $service, $uid)
+    {
         if (!$id || !$service || !$uid) {
- return;
-}
-
-
+            return;
+        }
 
         if (!in_array($service, $this->data['nets'])) {
             $this->data['nets'][] = $service;
@@ -51,15 +54,18 @@ class ulogin extends \litepubl\core\Plugin
         return $id;
     }
 
-    public function find($service, $uid) {
+    public function find($service, $uid)
+    {
         return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
-    public function userdeleted($id) {
+    public function userdeleted($id)
+    {
         $this->db->delete("id = $id");
     }
 
-    public function request($arg) {
+    public function request($arg)
+    {
         $this->cache = false;
         Header('Cache-Control: no-cache, must-revalidate');
         Header('Pragma: no-cache');
@@ -69,26 +75,22 @@ class ulogin extends \litepubl\core\Plugin
             //try fix ulogin bug double symbol ?
             $uri = $_SERVER['REQUEST_URI'];
             if (substr_count($uri, '?') <= 1) {
- return 403;
-}
-
+                return 403;
+            }
 
             $q = substr($uri, strpos($uri, '?') + 1);
             $q = str_replace('?', '&', $q);
             parse_str($q, $_GET);
             $token = isset($_GET['token']) ? $_GET['token'] : '';
             if (!$token) {
- return 403;
-}
-
+                return 403;
+            }
 
         }
 
         if (!($cookies = $this->auth($token))) {
- return 403;
-}
-
-
+            return 403;
+        }
 
         if (!empty($_GET['backurl'])) {
             $backurl = $_GET['backurl'];
@@ -101,30 +103,27 @@ class ulogin extends \litepubl\core\Plugin
 
         if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
             if ($url = $this->onphone($backurl)) {
-                return  $this->getApp()->router->redir($url);
+                return $this->getApp()->router->redir($url);
             }
         }
 
-        setcookie('backurl', '', 0,  $this->getApp()->site->subdir, false);
-        return  $this->getApp()->router->redir($backurl);
+        setcookie('backurl', '', 0, $this->getApp()->site->subdir, false);
+        return $this->getApp()->router->redir($backurl);
     }
 
-    public function auth($token) {
+    public function auth($token)
+    {
         if (!($s = http::get('http://ulogin.ru/token.php?token=' . $token . '&host=' . $_SERVER['HTTP_HOST']))) {
- return false;
-}
-
+            return false;
+        }
 
         if (!($info = json_decode($s, true))) {
- return false;
-}
-
+            return false;
+        }
 
         if (isset($info['error']) || !isset($info['network'])) {
- return false;
-}
-
-
+            return false;
+        }
 
         $name = !empty($info['first_name']) ? $info['first_name'] : '';
         $name.= !empty($info['last_name']) ? ' ' . $info['last_name'] : '';
@@ -147,7 +146,7 @@ class ulogin extends \litepubl\core\Plugin
                 if ($phone && empty($user['phone'])) {
                     $users->setvalue($id, 'phone', $phone);
                 }
-            } elseif ( $this->getApp()->options->reguser) {
+            } elseif ($this->getApp()->options->reguser) {
                 $newreg = true;
                 $id = $users->add(array(
                     'email' => $info['email'],
@@ -170,7 +169,7 @@ class ulogin extends \litepubl\core\Plugin
                 if ($id = $this->find($info['network'], $uid)) {
                     //nothing
                     
-                } elseif ( $this->getApp()->options->reguser) {
+                } elseif ($this->getApp()->options->reguser) {
                     $newreg = true;
                     $id = $users->add(array(
                         'email' => '',
@@ -192,12 +191,12 @@ class ulogin extends \litepubl\core\Plugin
 
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
-         $this->getApp()->options->user = $id;
-         $this->getApp()->options->updategroup();
-         $this->getApp()->options->setcookies($cookie, $expired);
-        if ( $this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired,  $this->getApp()->site->subdir . '/', false);
+        $this->getApp()->options->user = $id;
+        $this->getApp()->options->updategroup();
+        $this->getApp()->options->setcookies($cookie, $expired);
+        if ($this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
 
-        setcookie('litepubl_regservice', $info['network'], $expired,  $this->getApp()->site->subdir . '/', false);
+        setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
         $this->onadd($id, $info, $newreg);
 
         return array(
@@ -207,19 +206,20 @@ class ulogin extends \litepubl\core\Plugin
         );
     }
 
-    public function ulogin_auth(array $args) {
+    public function ulogin_auth(array $args)
+    {
         if (!isset($args['token']) || (!($token = $args['token']))) {
- return $this->error('Invalide token', 403);
-}
-
+            return $this->error('Invalide token', 403);
+        }
 
         $result = $this->auth($token);
         if (!$result) $this->error('Not authorized', 403);
         return $result;
     }
 
-    public function check_logged(array $args) {
-        if ( $this->getApp()->options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
+    public function check_logged(array $args)
+    {
+        if ($this->getApp()->options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
             return array(
                 'logged' => true
             );
@@ -233,7 +233,8 @@ class ulogin extends \litepubl\core\Plugin
         }
     }
 
-    public static function filterphone($phone) {
+    public static function filterphone($phone)
+    {
         $phone = trim(str_replace(array(
             ' ',
             '+',
@@ -249,3 +250,4 @@ class ulogin extends \litepubl\core\Plugin
     }
 
 }
+

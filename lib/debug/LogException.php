@@ -1,60 +1,65 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\debug;
 
 class LogException
 {
 
-public static function getLog(\Exception $e) {
-return static::getTraceLog($e->getTrace());
-}
+    public static function getLog(\Exception $e)
+    {
+        return static ::getTraceLog($e->getTrace());
+    }
 
-public static function trace() {
-return static::getTraceLog(debug_backtrace());
-}
+    public static function trace()
+    {
+        return static ::getTraceLog(debug_backtrace());
+    }
 
-public static function getTraceLog(array $trace) {
-$result = '';
+    public static function getTraceLog(array $trace)
+    {
+        $result = '';
         foreach ($trace as $i => $item) {
             if (isset($item['line'])) {
-                $result .= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
+                $result.= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
             }
 
             if (isset($item['class'])) {
-                $result .= $item['class'] . $item['type'] . $item['function'];
+                $result.= $item['class'] . $item['type'] . $item['function'];
             } else {
-                $result .= $item['function'] . '()';
+                $result.= $item['function'] . '()';
             }
 
             if (isset($item['args']) && count($item['args'])) {
-                $result .= "\n";
+                $result.= "\n";
                 $args = array();
                 foreach ($item['args'] as $arg) {
                     $args[] = static ::dump($arg);
                 }
 
-                $result .= implode(', ', $args);
+                $result.= implode(', ', $args);
             }
 
-            $result .= "\n";
+            $result.= "\n";
         }
 
-return $result;
-}
+        return $result;
+    }
 
-    public static function dump(&$v) {
+    public static function dump(&$v)
+    {
         switch (gettype($v)) {
             case 'string':
-if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-$v = substr($v, 0, $i);
-}
+                if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+                    $v = substr($v, 0, $i);
+                }
 
                 return sprintf('\'%s\'', $v);
 
@@ -84,3 +89,4 @@ $v = substr($v, 0, $i);
     }
 
 }
+

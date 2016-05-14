@@ -1,30 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\posts;
-use litepubl\tag\Tags as TagItems;
+
+use litepubl\admin\Form;
+use litepubl\admin\Link;
+use litepubl\admin\Table;
 use litepubl\tag\Cats as CatItems;
-use litepubl\view\Lang;
+use litepubl\tag\Tags as TagItems;
 use litepubl\view\Args;
 use litepubl\view\Filter;
-use litepubl\admin\Table;
-use litepubl\admin\Link;
-use litepubl\admin\Form;
+use litepubl\view\Lang;
 
 class Tags extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
         $tags = $istags ? TagItems::i() : CatItems::i();
-$tags->loadAll();
+        $tags->loadAll();
 
         $parents = array(
             0 => '-----'
@@ -34,7 +37,7 @@ $tags->loadAll();
         }
 
         $this->basename = 'tags';
-$admin = $this->admintheme;
+        $admin = $this->admintheme;
         $lang = Lang::i('tags');
         $id = $this->idget();
         $args = new Args();
@@ -44,7 +47,7 @@ $admin = $this->admintheme;
         $args->ajax = $ajax;
 
         if (isset($_GET['action']) && ($_GET['action'] == 'delete') && $tags->itemExists($id)) {
-$result .= $this->confirmDeleteItem($tags);
+            $result.= $this->confirmDeleteItem($tags);
         }
 
         $result.= $admin->h($admin->link('/admin/posts/' . ($istags ? 'addtag' : 'addcat') . '/', $lang->add));
@@ -73,8 +76,7 @@ $result .= $this->confirmDeleteItem($tags);
       [text=title]
       [combo=parent]
       [combo=order]
-      [hidden=id]' .
- $admin->help($lang->ordernote));
+      [hidden=id]' . $admin->help($lang->ordernote));
 
             $tabs->ajax($lang->text, "$ajax=text");
             $tabs->ajax($lang->view, "$ajax=view");
@@ -129,11 +131,12 @@ $result .= $this->confirmDeleteItem($tags);
             )
         ));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    private function set_view(array $item) {
+    private function set_view(array $item)
+    {
         extract($_POST, EXTR_SKIP);
         $item['idschema'] = (int)$idschema;
         $item['includechilds'] = isset($includechilds);
@@ -143,11 +146,11 @@ $result .= $this->confirmDeleteItem($tags);
         return $item;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (empty($_POST['title'])) {
- return '';
-}
-
+            return '';
+        }
 
         extract($_POST, EXTR_SKIP);
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');
@@ -175,8 +178,8 @@ $result .= $this->confirmDeleteItem($tags);
             $tags->items[$id] = $item;
             if (!empty($url) && ($url != $item['url'])) $tags->edit($id, $title, $url);
             $tags->items[$id] = $item;
-                unset($item['url']);
-                $tags->db->updateassoc($item);
+            unset($item['url']);
+            $tags->db->updateassoc($item);
         }
 
         if (isset($raw) || isset($keywords)) {
@@ -200,3 +203,4 @@ $result .= $this->confirmDeleteItem($tags);
     }
 
 }
+

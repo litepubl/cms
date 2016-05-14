@@ -1,16 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class Paths
- {
+{
     public $home;
     public $lib;
     public $libinclude;
@@ -23,7 +24,8 @@ class Paths
     public $themes;
     public $files;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->home = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
         $this->lib = dirname(__DIR__) . DIRECTORY_SEPARATOR;
         $this->libinclude = $this->lib . 'include' . DIRECTORY_SEPARATOR;
@@ -38,3 +40,4 @@ class Paths
         $this->js = $this->home . 'js' . DIRECTORY_SEPARATOR;
     }
 }
+

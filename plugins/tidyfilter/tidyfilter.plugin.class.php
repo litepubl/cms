@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
 
 class ttidyfilter extends \litepubl\core\Plugin
- {
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getHtml($s) {
+    public function getHtml($s)
+    {
         return sprintf('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' . '<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -25,14 +28,16 @@ class ttidyfilter extends \litepubl\core\Plugin
     <body><div>%s</div></body></html>', $s);
     }
 
-    public function getBody($s) {
+    public function getBody($s)
+    {
         $tag = '<div>';
         $i = strpos($s, $tag) + strlen($tag);
         $j = strrpos($s, '</div>');
         return substr($s, $i, $j - $i);
     }
 
-    public function filter(&$content) {
+    public function filter(&$content)
+    {
         $config = array(
             'clean' => true,
             'enclose-block-text' => true,
@@ -55,3 +60,4 @@ class ttidyfilter extends \litepubl\core\Plugin
     }
 
 }
+

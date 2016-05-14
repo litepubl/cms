@@ -1,56 +1,60 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\service;
-use litepubl\core\Data;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\updater\Updater;
-use litepubl\post\Posts;
+
 use litepubl\comments\Manager;
+use litepubl\core\Data;
+use litepubl\post\Posts;
+use litepubl\updater\Updater;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Service extends Login
 {
 
-    public function getContent() {
-$admin = $this->admintheme;
+    public function getContent()
+    {
+        $admin = $this->admintheme;
         $args = new Args();
-                $lang = Lang::admin('service');
-                $result= $admin->h($lang->info);
-                $result.= $this->doupdate($_GET);
-                $tb = $this->newTable();
-                $result.= $tb->props(array(
-                    'postscount' =>  Posts::i()->count,
-                    'commentscount' =>  Manager::i()->count,
-                    'version' =>  $this->getApp()->site->version
-                ));
+        $lang = Lang::admin('service');
+        $result = $admin->h($lang->info);
+        $result.= $this->doupdate($_GET);
+        $tb = $this->newTable();
+        $result.= $tb->props(array(
+            'postscount' => Posts::i()->count,
+            'commentscount' => Manager::i()->count,
+            'version' => $this->getApp()->site->version
+        ));
 
-                $updater = Updater::i();
-                $islatest = $updater->islatest();
-                if ($islatest === false) {
-                    $result.= $admin->geterr($lang->errorservice);
-                } elseif ($islatest <= 0) {
-                    $result.= $admin->success($lang->islatest);
-                } else {
-                    $form = new Form($args);
-                    $form->title = $lang->requireupdate;
-                    $form->body = $this->getloginform() . '[submit=autoupdate]';
-                    $form->submit = 'manualupdate';
-                    $result.= $form->get();
-                }
+        $updater = Updater::i();
+        $islatest = $updater->islatest();
+        if ($islatest === false) {
+            $result.= $admin->geterr($lang->errorservice);
+        } elseif ($islatest <= 0) {
+            $result.= $admin->success($lang->islatest);
+        } else {
+            $form = new Form($args);
+            $form->title = $lang->requireupdate;
+            $form->body = $this->getloginform() . '[submit=autoupdate]';
+            $form->submit = 'manualupdate';
+            $result.= $form->get();
+        }
 
-return $result;
+        return $result;
     }
 
-    private function doUpdate($req) {
+    private function doUpdate($req)
+    {
         $admin = $this->admintheme;
-$lang = Lang::i();
+        $lang = Lang::i();
         $updater = Updater::i();
         if (isset($req['autoupdate'])) {
             if (!$this->checkbackuper()) {
@@ -69,8 +73,10 @@ $lang = Lang::i();
         return '';
     }
 
-    public function processForm() {
-                return $this->doupdate($_POST);
-}
+    public function processForm()
+    {
+        return $this->doupdate($_POST);
+    }
 
 }
+

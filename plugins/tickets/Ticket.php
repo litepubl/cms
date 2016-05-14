@@ -1,62 +1,60 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\tickets;
+
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Args;
-use litepubl\view\Theme;
 use litepubl\view\Filter;
+use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 class Ticket extends \litepubl\post\Post
 {
 
-    public static function getChildtable() {
+    public static function getChildtable()
+    {
         return 'tickets';
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
-        $this->childData = [
-            'type' => 'bug',
-            'state' => 'opened',
-            'prio' => 'major',
-            'assignto' => 0,
-            'closed' => static::ZERODATE,
-            'version' =>  $this->getApp()->options->version,
-            'os' => '*',
-            'reproduced' => false,
-            'code' => ''
-        ];
+        $this->childData = ['type' => 'bug', 'state' => 'opened', 'prio' => 'major', 'assignto' => 0, 'closed' => static ::ZERODATE, 'version' => $this->getApp()->options->version, 'os' => '*', 'reproduced' => false, 'code' => ''];
     }
 
-    public function getFactory() {
+    public function getFactory()
+    {
         return Factory::i();
     }
 
-protected function getCacheClosed() {
-return $this->childData['closed'] == static::ZERODATA ? 0 : strtotime($this->childData['closed']);
-}
+    protected function getCacheClosed()
+    {
+        return $this->childData['closed'] == static ::ZERODATA ? 0 : strtotime($this->childData['closed']);
+    }
 
-public function setClosed($timestamp)
-{
-$this->childData['closed'] = Str::sqldate($timestamp);
-$this->cacheData['closed'] = $timestamp;
-}
+    public function setClosed($timestamp)
+    {
+        $this->childData['closed'] = Str::sqldate($timestamp);
+        $this->cacheData['closed'] = $timestamp;
+    }
 
-    protected function getContentpage($page) {
+    protected function getContentpage($page)
+    {
         $result = parent::getcontentpage($page);
         $result.= polls::i()->getobjectpoll($this->id, 'post');
         return $result;
     }
 
-    public function updatefiltered() {
+    public function updatefiltered()
+    {
         $result = $this->getticketcontent();
         $filter = Filter::i();
         $filter->filterpost($this, $this->rawcontent);
@@ -69,7 +67,8 @@ $this->cacheData['closed'] = $timestamp;
         $this->filtered = $result;
     }
 
-    public function getTicketcontent() {
+    public function getTicketcontent()
+    {
         $lang = Lang::i('ticket');
         $args = new Args();
         foreach (array(
@@ -89,28 +88,32 @@ $this->cacheData['closed'] = $timestamp;
         return $theme->parseArg($tml, $args);
     }
 
-    protected function getAssignToName() {
+    protected function getAssignToName()
+    {
         return $this->getUserName($this->assignto, true);
     }
 
-    public static function getResource() {
-        return  $this->getApp()->paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+    public static function getResource()
+    {
+        return $this->getApp()->paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     }
 
-    public function getSchemaLink() {
+    public function getSchemaLink()
+    {
         return 'ticket';
     }
 
-    public function set_state($state) {
+    public function set_state($state)
+    {
         $old = $this->state;
         if ($state == $old) {
- return;
-}
+            return;
+        }
 
         $this->childData['state'] = $state;
         if ($this->id == 0) {
- return;
-}
+            return;
+        }
 
         $lang = Lang::i('ticket');
         $content = sprintf($lang->statechanged, $lang->$old, $lang->$state);
@@ -119,3 +122,4 @@ $this->cacheData['closed'] = $timestamp;
     }
 
 }
+

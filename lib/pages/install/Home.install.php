@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
-use litepubl\view\Lang;
-use litepubl\view\Schemes;
-use litepubl\view\Schema;
-use litepubl\post\Posts;
 
-function HomeInstall($self) {
-     $self->getApp()->site->home = '/';
+use litepubl\post\Posts;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
+use litepubl\view\Schemes;
+
+function HomeInstall($self)
+{
+    $self->getApp()->site->home = '/';
     $menus = Menus::i();
     $menus->lock();
     $self->lock();
@@ -32,8 +35,9 @@ function HomeInstall($self) {
     Posts::i()->addevent('changed', get_class($self) , 'postschanged');
 }
 
-function HomeUninstall($self) {
-     $self->getApp()->router->unbind($self);
+function HomeUninstall($self)
+{
+    $self->getApp()->router->unbind($self);
     Posts::unsub($self);
 
     $menus = Menus::i();
@@ -42,3 +46,4 @@ function HomeUninstall($self) {
     $menus->sort();
     $menus->unlock();
 }
+

@@ -1,22 +1,25 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\bootstrap;
-use litepubl\view\Lang;
+
 use litepubl\view\Args;
-use litepubl\view\Schemes;
 use litepubl\view\Base;
+use litepubl\view\Lang;
+use litepubl\view\Schemes;
 
 class Admin extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $theme = $this->theme;
         $admintheme = $this->admintheme;
@@ -32,8 +35,8 @@ class Admin extends \litepubl\admin\Menu
         $schemes = Schemes::i();
         foreach ($schemes->items as $id => $item) {
             if (!isset($item['custom']['mainsidebar'])) {
- continue;
-}
+                continue;
+            }
 
             $result.= $admintheme->h($item['name']);
             $result.= $theme->getinput('combo', "mainsidebar-$id", $this->theme->comboItems($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
@@ -45,13 +48,14 @@ class Admin extends \litepubl\admin\Menu
         return $admintheme->form($result, $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $lang = Lang::admin('adminbootstraptheme');
         $schemes = Schemes::i();
         foreach ($schemes->items as $id => $item) {
             if (!isset($item['custom']['mainsidebar'])) {
- continue;
-}
+                continue;
+            }
 
             $sidebar = $_POST["mainsidebar-$id"];
             if (!in_array($sidebar, array(
@@ -70,3 +74,4 @@ class Admin extends \litepubl\admin\Menu
     }
 
 }
+

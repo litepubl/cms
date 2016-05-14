@@ -1,18 +1,21 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 use litepubl\view\Theme;
 
-function tcontactsiteInstall($self) {
+function tcontactsiteInstall($self)
+{
     $theme = Theme::i();
     $args = new Args();
     $about = Plugins::getabout(Plugins::getname(__file__));
@@ -32,9 +35,11 @@ function tcontactsiteInstall($self) {
     $menus->add($self);
 }
 
-function tcontactsiteUninstall($self) {
+function tcontactsiteUninstall($self)
+{
     $menus = tmenus::i();
     $menus->lock();
     while ($id = $menus->class2id(get_class($self))) $menus->delete($id);
     $menus->unlock();
 }
+

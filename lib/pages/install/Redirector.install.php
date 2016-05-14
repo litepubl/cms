@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
 
-function RedirectorInstall($self) {
+function RedirectorInstall($self)
+{
     $self->lock();
     $self->add('/rss/', '/rss.xml');
     $self->add('/rss', '/rss.xml');
@@ -21,3 +23,4 @@ function RedirectorInstall($self) {
     $self->add('/wp-login.php', '/admin/login/');
     $self->unlock();
 }
+

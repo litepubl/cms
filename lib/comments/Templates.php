@@ -1,33 +1,37 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\comments;
+
+use litepubl\core\TempProps;
 use litepubl\post\Post;
+use litepubl\post\View as PostView;
+use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
-use litepubl\view\Args;
-use litepubl\post\View as PostView;
-use litepubl\core\TempProps;
 
 class Templates extends \litepubl\core\Events
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'comments.templates';
     }
 
-    public function getComments(PostView $view) {
+    public function getComments(PostView $view)
+    {
         $result = '';
         $idpost = (int)$view->id;
-$props = new TempProps($this);
-$props->view = $view;
+        $props = new TempProps($this);
+        $props->view = $view;
         $lang = Lang::i('comment');
         $comments = Comments::i();
         $list = $comments->getContent($view);
@@ -38,12 +42,12 @@ $props->view = $view;
         $result.= $theme->parseArg($theme->templates['content.post.templatecomments.comments.count'], $args);
         $result.= $list;
 
-        if (( $view->page == 1) && ($view->pingbackscount > 0)) {
+        if (($view->page == 1) && ($view->pingbackscount > 0)) {
             $pingbacks = Pingbacks::i($view->id);
             $result.= $pingbacks->getcontent();
         }
 
-        if ( $this->getApp()->options->commentsdisabled || ($view->comstatus == 'closed')) {
+        if ($this->getApp()->options->commentsdisabled || ($view->comstatus == 'closed')) {
             $result.= $theme->parse($theme->templates['content.post.templatecomments.closed']);
             return $result;
         }
@@ -72,20 +76,20 @@ $props->view = $view;
 
         switch ($view->comstatus) {
             case 'reg':
-                $args->mesg = $this->getmesg('reqlogin',  $this->getApp()->options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('reqlogin', $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
                 break;
 
 
             case 'guest':
-                $args->mesg = $this->getmesg('guest',  $this->getApp()->options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
                 $result.= $this->getjs(($view->idperm == 0) && $cm->confirmguest, 'guest');
                 break;
 
 
             case 'comuser':
-                $args->mesg = $this->getmesg('comuser',  $this->getApp()->options->reguser ? 'regaccount' : false);
+                $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
 
                 foreach (array(
                     'name',
@@ -108,7 +112,8 @@ $props->view = $view;
         return $result;
     }
 
-    public function getMesg($k1, $k2) {
+    public function getMesg($k1, $k2)
+    {
         $theme = Theme::i();
         $result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
         if ($k2) {
@@ -124,7 +129,8 @@ $props->view = $view;
         return $theme->parse($result);
     }
 
-    public function getJs($confirmcomment, $authstatus) {
+    public function getJs($confirmcomment, $authstatus)
+    {
         $cm = Manager::i();
         $params = array(
             'confirmcomment' => $confirmcomment,
@@ -142,3 +148,4 @@ $props->view = $view;
     }
 
 }
+

@@ -1,23 +1,28 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
-class tadminsourcefiles {
+class tadminsourcefiles
+{
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $plugin = tsourcefiles::i();
         $lang = Plugins::getnamelang(basename(dirname(__file__)));
         $html = tadminhtml::i();
@@ -27,7 +32,8 @@ class tadminsourcefiles {
         return $html->adminform('[text=zipurl]', $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $plugin = tsourcefiles::i();
         $m = microtime(true);
         $url = trim($_POST['zipurl']);
@@ -35,7 +41,7 @@ class tadminsourcefiles {
             $plugin->data['zipurl'] = $url;
             $plugin->save();
             set_time_limit(120);
-            $filename =  $this->getApp()->paths->data . 'sourcefile.temp.zip';
+            $filename = $this->getApp()->paths->data . 'sourcefile.temp.zip';
             file_put_contents($filename, $s);
             @chmod($filename, 0666);
             $plugin->clear();
@@ -46,3 +52,4 @@ class tadminsourcefiles {
     }
 
 }
+

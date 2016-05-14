@@ -1,32 +1,37 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Args;
 use litepubl\view\Theme;
 
 class tcategoriesmenu extends \litepubl\core\Plugin
- {
+{
     public $tree;
     public $exitems;
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addmap('tree', array());
         $this->addmap('exitems', array());
     }
 
-    public function getMenu($hover, $current) {
+    public function getMenu($hover, $current)
+    {
         $result = '';
         $categories = tcategories::i();
         $categories->loadall();
@@ -43,9 +48,8 @@ class tcategoriesmenu extends \litepubl\core\Plugin
                 $args->submenu = '';
                 foreach ($this->tree as $id => $subitems) {
                     if ($this->exclude($id)) {
- continue;
-}
-
+                        continue;
+                    }
 
                     $args->add($categories->items[$id]);
                     $items.= $current == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
@@ -57,11 +61,13 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         return $result;
     }
 
-    public function exclude($id) {
+    public function exclude($id)
+    {
         return in_array($id, $this->exitems);
     }
 
-    private function getSubmenu(&$tree, $current) {
+    private function getSubmenu(&$tree, $current)
+    {
         $result = '';
         $categories = tcategories::i();
         $theme = Theme::i();
@@ -70,9 +76,8 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         $args = new Args();
         foreach ($tree as $id => $items) {
             if ($this->exclude($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $submenu = '';
             if ((count($items) > 0) && ($s = $this->getsubmenu($items, $current))) {
@@ -85,7 +90,8 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         return $result;
     }
 
-    public function buildtree() {
+    public function buildtree()
+    {
         $categories = tcategories::i();
         $categories->loadall();
         $this->tree = $this->getsubtree(0);
@@ -94,7 +100,8 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         $this->save();
     }
 
-    private function getSubtree($parent) {
+    private function getSubtree($parent)
+    {
         $result = array();
         $categories = tcategories::i();
         // first step is a find all childs and sort them
@@ -114,3 +121,4 @@ class tcategoriesmenu extends \litepubl\core\Plugin
     }
 
 }
+

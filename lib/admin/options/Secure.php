@@ -1,28 +1,31 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\options;
-use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Parser;
-use litepubl\view\Filter;
-use litepubl\view\AdminParser;
-use litepubl\updater\Updater;
-use litepubl\updater\Backuper;
+
 use litepubl\admin\Form;
 use litepubl\admin\Menus;
+use litepubl\updater\Backuper;
+use litepubl\updater\Updater;
+use litepubl\view\AdminParser;
+use litepubl\view\Args;
+use litepubl\view\Filter;
+use litepubl\view\Lang;
+use litepubl\view\Parser;
 
 class Secure extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
-        $options =  $this->getApp()->options;
+    public function getContent()
+    {
+        $options = $this->getApp()->options;
         $lang = Lang::admin('options');
         $args = new Args();
         $args->echoexception = $options->echoexception;
@@ -79,11 +82,12 @@ class Secure extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         extract($_POST, EXTR_SKIP);
-        $options =  $this->getApp()->options;
-$admin = $this->admintheme;
-$lang = Lang::admin('options');
+        $options = $this->getApp()->options;
+        $admin = $this->admintheme;
+        $lang = Lang::admin('options');
 
         if (isset($_POST['oldpassword'])) {
             if ($oldpassword == '') {
@@ -100,7 +104,7 @@ $lang = Lang::admin('options');
 
             $options->changepassword($newpassword);
             $options->logout();
-                return $admin->success($lang->passwordchanged);
+            return $admin->success($lang->passwordchanged);
         }
 
         $options->echoexception = isset($echoexception);
@@ -138,12 +142,13 @@ $lang = Lang::admin('options');
         }
     }
 
-    public function setUsersenabled($value) {
-        if ( $this->getApp()->options->usersenabled == $value) {
+    public function setUsersenabled($value)
+    {
+        if ($this->getApp()->options->usersenabled == $value) {
             return;
         }
 
-         $this->getApp()->options->usersenabled = $value;
+        $this->getApp()->options->usersenabled = $value;
         $menus = Menus::i();
         $menus->lock();
         if ($value) {
@@ -165,3 +170,4 @@ $lang = Lang::admin('options');
     }
 
 }
+

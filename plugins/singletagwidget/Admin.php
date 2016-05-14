@@ -1,20 +1,23 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\singletagwidget;
-use litepubl\view\Args;
+
 use litepubl\core\Plugins;
+use litepubl\view\Args;
 
 class Admin extends \litepubl\admin\widget\Widget
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $widget = Widget::i();
         $lang = $this->getLangAbout();
         $args = $this->args;
@@ -37,14 +40,15 @@ class Admin extends \litepubl\admin\widget\Widget
         return $this->admin->form($this->admin->getcats($tags) , $args);
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $widget = Widget::i();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $widget->items[$id]['maxcount'] = (int)$_POST['maxcount'];
             $widget->items[$id]['invertorder'] = isset($_POST['invertorder']);
             $widget->save();
-             $this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
             return '';
         }
 
@@ -57,8 +61,8 @@ class Admin extends \litepubl\admin\widget\Widget
         $add = array_diff($list, $tags);
         $delete = array_diff($tags, $list);
         if (!count($add) && !count($delete)) {
- return '';
-}
+            return '';
+        }
 
         $widget->lock();
         foreach ($delete as $idtag) {
@@ -70,7 +74,8 @@ class Admin extends \litepubl\admin\widget\Widget
         }
 
         $widget->unlock();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
 }
+

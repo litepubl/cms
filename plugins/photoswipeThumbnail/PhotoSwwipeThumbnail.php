@@ -1,23 +1,26 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\photoswipeThumbnail;
-use litepubl\view\Js;
-use litepubl\view\Css;
-use litepubl\post\MediaParser;
+
 use litepubl\post\Files;
+use litepubl\post\MediaParser;
+use litepubl\view\Css;
+use litepubl\view\Js;
 use litepubl\view\Parser;
 
 class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
- {
+{
 
-    public function install() {
+    public function install()
+    {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
         $js->lock();
@@ -38,7 +41,8 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
         $this->rescale();
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
         $js->lock();
@@ -59,7 +63,8 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
         $this->rescale();
     }
 
-    public function rescale() {
+    public function rescale()
+    {
         $parser = MediaParser::i();
         $files = Files::i();
         $db = $files->db;
@@ -72,8 +77,8 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
     "));
 
         foreach ($items as $i => $item) {
-            $srcfilename =  $this->getApp()->paths->files . $item['filename'];
-            $destfilename =  $this->getApp()->paths->files . $item['filenamethumb'];
+            $srcfilename = $this->getApp()->paths->files . $item['filename'];
+            $destfilename = $this->getApp()->paths->files . $item['filenamethumb'];
             $image = MediaParser::readimage($srcfilename);
             if ($size = MediaParser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
                 imagedestroy($image);
@@ -89,3 +94,4 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
     }
 
 }
+

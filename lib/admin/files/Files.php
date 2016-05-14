@@ -1,30 +1,33 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin\files;
+
+use litepubl\admin\AuthorRights;
+use litepubl\admin\Form;
+use litepubl\admin\GetPerm;
+use litepubl\admin\Link;
+use litepubl\perms\Files as PrivateFiles;
 use litepubl\post\Files as FileItems;
 use litepubl\post\MediaParser;
-use litepubl\view\Lang;
+use litepubl\utils\http;
 use litepubl\view\Args;
 use litepubl\view\Filter;
-use litepubl\perms\Files as PrivateFiles;
-use litepubl\admin\GetPerm;
-use litepubl\utils\http;
-use litepubl\admin\Form;
-use litepubl\admin\Link;
+use litepubl\view\Lang;
 use litepubl\view\Parser;
-use litepubl\admin\AuthorRights;
 
 class Files extends \litepubl\admin\Menu
 {
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $files = FileItems::i();
         $admintheme = $this->admintheme;
@@ -50,25 +53,22 @@ class Files extends \litepubl\admin\Menu
       [text=keywords]
       [checkbox=overwrite]';
 
-            if ( $this->getApp()->options->show_file_perm) {
-$form->items.= GetPerm::combo(0, 'idperm');
-}
+            if ($this->getApp()->options->show_file_perm) {
+                $form->items.= GetPerm::combo(0, 'idperm');
+            }
             $result.= $form->get();
         } else {
             $id = $this->idget();
             if (!$files->itemExists($id)) {
- return $this->notfound;
-}
-
+                return $this->notfound;
+            }
 
             switch ($_GET['action']) {
                 case 'delete':
                     if ($this->confirmed) {
-                        if (('author' ==  $this->getApp()->options->group)
- && ($r = AuthorRights::i()->candeletefile($id))) {
- return $r;
-}
-
+                        if (('author' == $this->getApp()->options->group) && ($r = AuthorRights::i()->candeletefile($id))) {
+                            return $r;
+                        }
 
                         $files->delete($id);
                         $result.= $admintheme->success($lang->deleted);
@@ -86,15 +86,15 @@ $form->items.= GetPerm::combo(0, 'idperm');
                     $args->description = Filter::unescape($item['description']);
                     $args->keywords = Filter::unescape($item['keywords']);
                     $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ( $this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
                     break;
-                }
+            }
         }
 
         $perpage = 20;
         $type = $this->name == 'files' ? '' : $this->name;
         $sql = 'parent =0';
-        $sql.=  $this->getApp()->options->user <= 1 ? '' : ' and author = ' .  $this->getApp()->options->user;
+        $sql.= $this->getApp()->options->user <= 1 ? '' : ' and author = ' . $this->getApp()->options->user;
         $sql.= $type == '' ? " and media<> 'icon'" : " and media = '$type'";
         $count = $files->db->getcount($sql);
         $from = $this->getfrom($perpage, $count);
@@ -132,17 +132,18 @@ $form->items.= GetPerm::combo(0, 'idperm');
             )
         ));
 
-        $result.= $this->theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $files = FileItems::i();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
 
         if (empty($_GET['action'])) {
-            $isauthor = 'author' ==  $this->getApp()->options->group;
+            $isauthor = 'author' == $this->getApp()->options->group;
             if ($_POST['uploadmode'] == 'file') {
                 if (isset($_FILES['filename']['error']) && $_FILES['filename']['error'] > 0) {
                     return $admintheme->geterr(Lang::get('uploaderrors', $_FILES['filename']['error']));
@@ -151,8 +152,8 @@ $form->items.= GetPerm::combo(0, 'idperm');
                     return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
                 }
                 if ($isauthor && ($r = AuthorRights::i()->canupload())) {
-return $r;
-}
+                    return $r;
+                }
 
                 $overwrite = isset($_POST['overwrite']);
                 $parser = MediaParser::i();
@@ -166,8 +167,8 @@ return $r;
                 $filename = basename(trim($_POST['downloadurl'], '/'));
                 if ($filename == '') $filename = 'noname.txt';
                 if ($isauthor && ($r = AuthorRights::i()->canupload())) {
-return $r;
-}
+                    return $r;
+                }
                 $overwrite = isset($_POST['overwrite']);
                 $parser = MediaParser::i();
                 $id = $parser->upload($filename, $content, $_POST['title'], $_POST['description'], $_POST['keywords'], $overwrite);
@@ -181,14 +182,13 @@ return $r;
         } elseif ($_GET['action'] == 'edit') {
             $id = $this->idget();
             if (!$files->itemExists($id)) {
- return $this->notfound;
-}
-
+                return $this->notfound;
+            }
 
             $files->edit($id, $_POST['title'], $_POST['description'], $_POST['keywords']);
             if (isset($_POST['idperm'])) {
-PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
-}
+                PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
+            }
 
             return $admintheme->success($lang->edited);
         }
@@ -197,3 +197,4 @@ PrivateFiles::i()->setperm($id, (int)$_POST['idperm']);
     }
 
 }
+

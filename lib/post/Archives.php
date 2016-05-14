@@ -1,33 +1,36 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\core\Context;
+use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
-use litepubl\utils\LinkGenerator;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
-use \litepubl\view\ViewTrait;
+    use \litepubl\view\ViewTrait;
 
     public $date;
     private $_idposts;
 
-
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'archives';
         $this->table = 'posts';
     }
 
-    public function getHeadLinks() {
+    public function getHeadLinks()
+    {
         $result = '';
         foreach ($this->items as $date => $item) {
             $result.= "<link rel=\"archives\" title=\"{$item['title']}\" href=\" $this->getApp()->site->url{$item['url']}\" />\n";
@@ -36,7 +39,8 @@ use \litepubl\view\ViewTrait;
         return $this->schema->theme->parse($result);
     }
 
-    public function postschanged() {
+    public function postschanged()
+    {
         $posts = Posts::i();
         $this->lock();
         $this->items = array();
@@ -62,76 +66,79 @@ use \litepubl\view\ViewTrait;
         $this->unlock();
     }
 
-    public function CreatePageLinks() {
+    public function CreatePageLinks()
+    {
         $this->lock();
         //Compare links
-        $old =  $this->getApp()->router->getUrlsOfClass(get_class($this));
+        $old = $this->getApp()->router->getUrlsOfClass(get_class($this));
         foreach ($this->items as $date => $item) {
             $j = array_search($item['url'], $old);
             if (is_int($j)) {
                 array_splice($old, $j, 1);
             } else {
-                $this->items[$date]['idurl'] =  $this->getApp()->router->Add($item['url'], get_class($this) , $date);
+                $this->items[$date]['idurl'] = $this->getApp()->router->Add($item['url'], get_class($this) , $date);
             }
         }
         foreach ($old as $url) {
-             $this->getApp()->router->delete($url);
+            $this->getApp()->router->delete($url);
         }
 
         $this->unlock();
     }
 
     //ITemplate
-    public function request(Context $context) {
+    public function request(Context $context)
+    {
         $date = $context->id;
         if (!isset($this->items[$date])) {
-$context->response->status = 404;
- return;
-}
+            $context->response->status = 404;
+            return;
+        }
 
         $this->date = $date;
         $item = $this->items[$date];
         $schema = Schema::getSchema($this);
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
         $pages = (int)ceil($item['count'] / $perpage);
-        if (( $context->request->page > 1) && ( $context->request->page > $pages)) {
-$context->response->redir($item['url']);
-return;
+        if (($context->request->page > 1) && ($context->request->page > $pages)) {
+            $context->response->redir($item['url']);
+            return;
         }
     }
 
-    public function getHead() {
-$announce = new Announce($this->schema->theme);
-        $result= $announce->getAnHead($this->getIdPosts());
+    public function getHead()
+    {
+        $announce = new Announce($this->schema->theme);
+        $result = $announce->getAnHead($this->getIdPosts());
         return $result;
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->items[$this->date]['title'];
     }
 
-    public function getCont() {
+    public function getCont()
+    {
         $items = $this->getidposts();
         if (count($items) == 0) {
- return '';
-}
-
-
+            return '';
+        }
 
         $schema = Schema::getSchema($this);
-        $perpage = $schema->perpage ? $schema->perpage :  $this->getApp()->options->perpage;
-        $list = array_slice($items, ( $this->getApp()->context->request->page - 1) * $perpage, $perpage);
-$announce = new Announce($schema->theme);
+        $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
+        $list = array_slice($items, ($this->getApp()->context->request->page - 1) * $perpage, $perpage);
+        $announce = new Announce($schema->theme);
         $result = $announce->getposts($list, $schema->postanounce);
-        $result.= $schema->theme->getpages($this->items[$this->date]['url'],  $this->getApp()->context->request->page, ceil(count($items) / $perpage));
+        $result.= $schema->theme->getpages($this->items[$this->date]['url'], $this->getApp()->context->request->page, ceil(count($items) / $perpage));
         return $result;
     }
 
-    public function getIdposts() {
+    public function getIdposts()
+    {
         if (isset($this->_idposts)) {
- return $this->_idposts;
-}
-
+            return $this->_idposts;
+        }
 
         $item = $this->items[$this->date];
         $order = Schema::getSchema($this)->invertorder ? 'asc' : 'desc';
@@ -140,11 +147,13 @@ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
     ORDER BY posted $order");
     }
 
-    public function getSitemap($from, $count) {
-        return $this->externalfunc(get_class($this), 'GetSitemap', array(
+    public function getSitemap($from, $count)
+    {
+        return $this->externalfunc(get_class($this) , 'GetSitemap', array(
             $from,
             $count
         ));
     }
 
 }
+

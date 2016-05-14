@@ -1,108 +1,117 @@
 <?php
 //App.php
 namespace litepubl\core;
+
 use litepubl\config;
 use litepubl\debug\LogManager;
 
 class App
- {
-    public  $cache;
-    public  $classes;
-public $controller;
-public $context;
-    public  $db;
-public $installed;
-    public  $logManager;
-    public  $memcache;
-    public  $microtime;
-public $onClose;
-    public  $options;
-    public  $paths;
-    public  $poolStorage;
-    public  $router;
-    public  $site;
-    public  $storage;
+{
+    public $cache;
+    public $classes;
+    public $controller;
+    public $context;
+    public $db;
+    public $installed;
+    public $logManager;
+    public $memcache;
+    public $microtime;
+    public $onClose;
+    public $options;
+    public $paths;
+    public $poolStorage;
+    public $router;
+    public $site;
+    public $storage;
 
-    public  function __construct() {
-         $this->microtime = microtime(true);
-}
-
-public function init() {
-         $this->createAliases();
-         $this->createInstances();
+    public function __construct()
+    {
+        $this->microtime = microtime(true);
     }
 
-    public function createAliases() {
-$litepubl = __NAMESPACE__ . '\litepubl';
+    public function init()
+    {
+        $this->createAliases();
+        $this->createInstances();
+    }
+
+    public function createAliases()
+    {
+        $litepubl = __NAMESPACE__ . '\litepubl';
         class_alias($litepubl, 'litepublisher');
         class_alias($litepubl, 'litepubl\litepublisher');
         class_alias($litepubl, 'litepubl');
         class_alias($litepubl, 'litepubl\litepubl');
     }
 
-    public  function createInstances() {
-         $this->paths = new paths();
-         $this->createStorage();
-//check before create any instances
-$this->installed = $this->poolStorage->isInstalled();
-         $this->classes = Classes::i();
-         $this->options = Options::i();
-         $this->site = Site::i();
-         $this->router = Router::i();
-$this->controller = new Controller();
-$this->createCache();
-$this->onClose = new Callback();
+    public function createInstances()
+    {
+        $this->paths = new paths();
+        $this->createStorage();
+        //check before create any instances
+        $this->installed = $this->poolStorage->isInstalled();
+        $this->classes = Classes::i();
+        $this->options = Options::i();
+        $this->site = Site::i();
+        $this->router = Router::i();
+        $this->controller = new Controller();
+        $this->createCache();
+        $this->onClose = new Callback();
 
         if ($this->installed) {
-         $this->db = DB::i();
-} else {
-            require ( $this->paths->lib . 'install/install.php');
+            $this->db = DB::i();
+        } else {
+            require ($this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
-                    }
+            
+        }
     }
 
-    public  function createStorage() {
+    public function createStorage()
+    {
         if (config::$memcache && class_exists('Memcache')) {
-             $this->memcache = new \Memcache;
-             $this->memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['port']) ? config::$memcache['port'] : 1211);
+            $this->memcache = new \Memcache;
+            $this->memcache->connect(isset(config::$memcache['host']) ? config::$memcache['host'] : '127.0.0.1', isset(config::$memcache['port']) ? config::$memcache['port'] : 1211);
         }
 
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
-             $this->storage = new $classname();
-        } else if ( $this->memcache) {
-             $this->storage = new StorageMemcache();
+            $this->storage = new $classname();
+        } else if ($this->memcache) {
+            $this->storage = new StorageMemcache();
         } else {
-             $this->storage = new Storage();
+            $this->storage = new Storage();
         }
 
-         $this->poolStorage = new PoolStorage();
+        $this->poolStorage = new PoolStorage();
     }
 
-public function createCache()
-{
-if ($this->memcache) {
-$this->cache = new CacheMemcache($this->memcache, $this->installed ? $this->options->expiredcache : 3600, $this->paths->home);
-} else {
-$this->cache = new CacheFile($this->paths->cache, $this->installed ? $this->options->expiredcache : 3600, $this->installed ? $this->options->filetime_offset : 0);
-}
-}
+    public function createCache()
+    {
+        if ($this->memcache) {
+            $this->cache = new CacheMemcache($this->memcache, $this->installed ? $this->options->expiredcache : 3600, $this->paths->home);
+        } else {
+            $this->cache = new CacheFile($this->paths->cache, $this->installed ? $this->options->expiredcache : 3600, $this->installed ? $this->options->filetime_offset : 0);
+        }
+    }
 
-    public  function cachefile($filename) {
-        if (! $this->memcache) {
+    public function cachefile($filename)
+    {
+        if (!$this->memcache) {
             return file_get_contents($filename);
         }
 
-        if ($s =  $this->memcache->get($filename)) {
+        if ($s = $this->memcache->get($filename)) {
             return $s;
         }
 
         $s = file_get_contents($filename);
-         $this->memcache->set($filename, $s, false, 3600);
+        $this->memcache->set($filename, $s, false, 3600);
         return $s;
     }
 
-public function process() {
+    public function process()
+    {
         if (Config::$debug) {
             error_reporting(-1);
             ini_set('display_errors', 1);
@@ -110,129 +119,128 @@ public function process() {
             Header('Pragma: no-cache');
         }
 
-try {
-$context = new Context(
-new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']),
-new Response()
-);
-
-$this->context = $context;
-
-        $obEnabled = !Config::$debug &&  $this->options->ob_cache;
-if ($obEnabled) {
-            ob_start();
-}
-
-        if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
-            call_user_func_array(Config::$beforeRequest, [$this]);
-        }
-
-if (!$this->controller->cached($context)) {
-$this->router->request($context);
-$this->controller->request($context);
-$this->router->afterrequest($context);
-}
-
-$this->showErrors();
-
-if ($obEnabled) {	
-if ($this->onClose->getCount()) {
-        ignore_user_abort(true);
-$context->response->closeConnection();
-            while (@ob_end_flush());
-            flush();
-
-                if (function_exists('fastcgi_finish_request')) {
-                    fastcgi_finish_request();
-                }
-
-//prevent any output
-ob_start();
-} else {
-            while (@ob_end_flush());
-}
-}
-
-$this->onClose->fire();
-} catch (\Exception $e) {
-$this->logException($e);
-}
-}
-
-    public  function run() {
         try {
-             $this->init();
-            if (!config::$ignoreRequest) {
-$this->process();
-        }
-        } catch(\Exception $e) {
-             $this->logException($e);
-        }
+            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']) , new Response());
 
-$this->poolStorage->commit();
-$this->showErrors();
+            $this->context = $context;
+
+            $obEnabled = !Config::$debug && $this->options->ob_cache;
+            if ($obEnabled) {
+                ob_start();
+            }
+
+            if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
+                call_user_func_array(Config::$beforeRequest, [$this]);
+            }
+
+            if (!$this->controller->cached($context)) {
+                $this->router->request($context);
+                $this->controller->request($context);
+                $this->router->afterrequest($context);
+            }
+
+            $this->showErrors();
+
+            if ($obEnabled) {
+                if ($this->onClose->getCount()) {
+                    ignore_user_abort(true);
+                    $context->response->closeConnection();
+                    while (@ob_end_flush());
+                    flush();
+
+                    if (function_exists('fastcgi_finish_request')) {
+                        fastcgi_finish_request();
+                    }
+
+                    //prevent any output
+                    ob_start();
+                } else {
+                    while (@ob_end_flush());
+                }
+            }
+
+            $this->onClose->fire();
+        }
+        catch(\Exception $e) {
+            $this->logException($e);
+        }
     }
 
-public function getLogManager()
- {
-if (!$this->logManager) {
-if (isset(Config::$classes['logmanager'])) {
-$class = Config::$classes['logmanager'];
-$this->logManager = new $class($this);
-} else {
-$this->logManager = new LogManager($this);
-}
-}
+    public function run()
+    {
+        try {
+            $this->init();
+            if (!config::$ignoreRequest) {
+                $this->process();
+            }
+        }
+        catch(\Exception $e) {
+            $this->logException($e);
+        }
 
-return $this->logManager;
-}
+        $this->poolStorage->commit();
+        $this->showErrors();
+    }
 
-public function getLogger()
-{
-return $this->getLogManager()->logger;
-}
+    public function getLogManager()
+    {
+        if (!$this->logManager) {
+            if (isset(Config::$classes['logmanager'])) {
+                $class = Config::$classes['logmanager'];
+                $this->logManager = new $class($this);
+            } else {
+                $this->logManager = new LogManager($this);
+            }
+        }
 
-public function logException(\Exception $e) {
-$this->getLogManager()->logException($e);
-}
+        return $this->logManager;
+    }
 
-    public function showErrors() {
-        if ($this->logManager
-&& (Config::$debug
- || $this->options->echoexception || $this->options->adminFlag)
-&& ($log = $this->logManager->getHtml())
-) {
+    public function getLogger()
+    {
+        return $this->getLogManager()->logger;
+    }
+
+    public function logException(\Exception $e)
+    {
+        $this->getLogManager()->logException($e);
+    }
+
+    public function showErrors()
+    {
+        if ($this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag) && ($log = $this->logManager->getHtml())) {
             echo $log;
         }
     }
 
-public function redirExit($url)
-{
-$this->poolStorage->commit();
-if (!Str::begin($url, 'http')) {
-$url = $this->site->url . $url;
-}
+    public function redirExit($url)
+    {
+        $this->poolStorage->commit();
+        if (!Str::begin($url, 'http')) {
+            $url = $this->site->url . $url;
+        }
 
-header('HTTP/1.1 307 Temporary Redirect', true, 307);
-header('Location: '. $url);
-exit();
-}
+        header('HTTP/1.1 307 Temporary Redirect', true, 307);
+        header('Location: ' . $url);
+        exit();
+    }
 
 }
 
 //AppTrait.php
 namespace litepubl\core;
 
-trait AppTrait
-{
+traitAppTrait {
 
-public static function getAppInstance() {
-return litepubl::$app;
-}
+    public static function getAppInstance()
+    {
+        return litepubl::$app;
+    }
 
-public function getApp() {
-return static::getAppInstance();
-}
+    public function getApp()
+    {
+        return static ::getAppInstance();
+    }
 
 }
 
@@ -241,72 +249,78 @@ namespace litepubl\core;
 
 class Arr
 {
-public static function delete(array & $a, $i) {
-    array_splice($a, $i, 1);
-}
-
-public static function deleteValue(array & $a, $value) {
-    $i = array_search($value, $a);
-    if ($i !== false) {
+    public static function delete(array & $a, $i)
+    {
         array_splice($a, $i, 1);
-        return true;
     }
 
-    return false;
-}
+    public static function deleteValue(array & $a, $value)
+    {
+        $i = array_search($value, $a);
+        if ($i !== false) {
+            array_splice($a, $i, 1);
+            return true;
+        }
 
-public static function clean(array & $items) {
-    $items = array_unique($items);
-    foreach (array(
-        0,
-        false,
-        null,
-        ''
-    ) as $v) {
-        $i = array_search($v, $items);
-        if (($i !== false) && ($items[$i] === $v)) {
-            array_splice($items, $i, 1);
+        return false;
+    }
+
+    public static function clean(array & $items)
+    {
+        $items = array_unique($items);
+        foreach (array(
+            0,
+            false,
+            null,
+            ''
+        ) as $v) {
+            $i = array_search($v, $items);
+            if (($i !== false) && ($items[$i] === $v)) {
+                array_splice($items, $i, 1);
+            }
         }
     }
-}
 
-public static function insert(array & $a, $item, $index) {
-    array_splice($a, $index, 0, array(
-        $item
-    ));
-}
+    public static function insert(array & $a, $item, $index)
+    {
+        array_splice($a, $index, 0, array(
+            $item
+        ));
+    }
 
-public static function move(array & $a, $oldindex, $newindex) {
-    //delete and insert
-    if (($oldindex == $newindex) || !isset($a[$oldindex])) {
- return false;
-}
+    public static function move(array & $a, $oldindex, $newindex)
+    {
+        //delete and insert
+        if (($oldindex == $newindex) || !isset($a[$oldindex])) {
+            return false;
+        }
 
-    $item = $a[$oldindex];
-    array_splice($a, $oldindex, 1);
-    array_splice($a, $newindex, 0, array(
-        $item
-    ));
-}
+        $item = $a[$oldindex];
+        array_splice($a, $oldindex, 1);
+        array_splice($a, $newindex, 0, array(
+            $item
+        ));
+    }
 
-public static function toEnum($v, array $a) {
-    $v = trim($v);
-    return in_array($v, $a) ? $v : $a[0];
-}
+    public static function toEnum($v, array $a)
+    {
+        $v = trim($v);
+        return in_array($v, $a) ? $v : $a[0];
+    }
 
-public static function reIndex(array &$a)
-{
-    array_splice($a, count($a), 0, array());
-}
+    public static function reIndex(array & $a)
+    {
+        array_splice($a, count($a) , 0, array());
+    }
 
-public static function append(array &$a, $index, $value)
-{
-while(array_key_exists($index, $a)) {
-$index++;
-}
+    public static function append(array & $a, $index, $value)
+    {
+        while (array_key_exists($index, $a)) {
+            $index++;
+        }
 
-$a[$index] = $value;
-}
+        $a[$index] = $value;
+    }
 
 }
 
@@ -315,22 +329,24 @@ namespace litepubl\core;
 
 class BaseCache
 {
-protected $items = [];
-protected $lifetime = 3600;
+    protected $items = [];
+    protected $lifetime = 3600;
 
     public function getString($filename)
-{
-}
+    {
+    }
 
     public function setString($filename, $str)
-{
-}
+    {
+    }
 
-    public function set($filename, $data) {
+    public function set($filename, $data)
+    {
         $this->setString($filename, $this->serialize($data));
     }
 
-    public function get($filename) {
+    public function get($filename)
+    {
         if ($s = $this->getString($filename)) {
             return $this->unserialize($s);
         }
@@ -338,40 +354,45 @@ protected $lifetime = 3600;
         return false;
     }
 
-    public function serialize($data) {
+    public function serialize($data)
+    {
         return serialize($data);
     }
 
-    public function unserialize(&$data) {
+    public function unserialize(&$data)
+    {
         return unserialize($data);
     }
 
-public function savePhp($filename, $str) {
-$this->setString($filename, $str);
-}
+    public function savePhp($filename, $str)
+    {
+        $this->setString($filename, $str);
+    }
 
-public function includePhp($filename) {
-if ($str = $this->getString($filename)) {
-eval('?>'. $str);
-return true;
-}
+    public function includePhp($filename)
+    {
+        if ($str = $this->getString($filename)) {
+            eval('?>' . $str);
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
-    public function exists($filename) {
-return array_key_exists($this->items);
-}
+    public function exists($filename)
+    {
+        return array_key_exists($this->items);
+    }
 
-public function setLifetime($value)
-{
-$this->lifetime = $value;
-}
+    public function setLifetime($value)
+    {
+        $this->lifetime = $value;
+    }
 
-public function clearUrl($url)
-{
-$this->delete(md5($url) . '.php');
-}
+    public function clearUrl($url)
+    {
+        $this->delete(md5($url) . '.php');
+    }
 
 }
 
@@ -380,32 +401,35 @@ namespace litepubl\core;
 
 class CacheFile extends BaseCache
 {
-protected $dir;
-protected $timeOffset;
+    protected $dir;
+    protected $timeOffset;
 
-public function __construct($dir, $lifetime, $timeOffset)
- {
-$this->dir = $dir;
-$this->timeOffset = $timeOffset;
-$this->lifetime = $lifetime - $timeOffset;
-$this->items = [];
-}
-
-    public function getDir() {
-        return  $this->dir;
+    public function __construct($dir, $lifetime, $timeOffset)
+    {
+        $this->dir = $dir;
+        $this->timeOffset = $timeOffset;
+        $this->lifetime = $lifetime - $timeOffset;
+        $this->items = [];
     }
 
-    public function setString($filename, $str) {
-$this->items[$filename] = $str;
+    public function getDir()
+    {
+        return $this->dir;
+    }
+
+    public function setString($filename, $str)
+    {
+        $this->items[$filename] = $str;
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
     }
 
-    public function getString($filename) {
-if (array_key_exists($filename, $this->items)) {
-return $this->items[$filename];
-}
+    public function getString($filename)
+    {
+        if (array_key_exists($filename, $this->items)) {
+            return $this->items[$filename];
+        }
 
         $fn = $this->getdir() . $filename;
         if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {
@@ -415,41 +439,43 @@ return $this->items[$filename];
         return false;
     }
 
-    public function delete($filename) {
-unset($this->items[$filename]);
+    public function delete($filename)
+    {
+        unset($this->items[$filename]);
         $fn = $this->getdir() . $filename;
         if (file_exists($fn)) {
             unlink($fn);
         }
     }
 
-    public function exists($filename) {
-        return array_key_exists($filename, $this->items) ||
-( file_exists($this->getdir() . $filename) && (filemtime($this->getDir() . $filename) + $this->lifetime >= time()));
+    public function exists($filename)
+    {
+        return array_key_exists($filename, $this->items) || (file_exists($this->getdir() . $filename) && (filemtime($this->getDir() . $filename) + $this->lifetime >= time()));
     }
 
-public function setLifetime($value)
-{
-$this->lifetime = $value - $this->timeOffset;
-}
+    public function setLifetime($value)
+    {
+        $this->lifetime = $value - $this->timeOffset;
+    }
 
-    public function clear() {
-$this->items = [];
-$this->clearDir(       $path = $this->getdir());
-}
+    public function clear()
+    {
+        $this->items = [];
+        $this->clearDir($path = $this->getdir());
+    }
 
-public function clearDir($dir)
-{
+    public function clearDir($dir)
+    {
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = @readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
- continue;
-}
+                    continue;
+                }
 
                 $file = $path . $filename;
                 if (is_dir($file)) {
                     $this->clearDir($file . DIRECTORY_SEPARATOR);
-unlink($file);
+                    unlink($file);
                 } else {
                     unlink($file);
                 }
@@ -458,20 +484,21 @@ unlink($file);
         }
     }
 
-public function includePhp($filename) {
-$fn = $this->getDir() . $filename;
-if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {
-        if (defined('HHVM_VERSION')) {
-            // XXX: workaround for https://github.com/facebook/hhvm/issues/1447
-eval('?>' . file_get_contents($fn));
-        } else {
-include $fn;
-}
-return true;
-}
+    public function includePhp($filename)
+    {
+        $fn = $this->getDir() . $filename;
+        if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {
+            if (defined('HHVM_VERSION')) {
+                // XXX: workaround for https://github.com/facebook/hhvm/issues/1447
+                eval('?>' . file_get_contents($fn));
+            } else {
+                include $fn;
+            }
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
 }
 
@@ -480,60 +507,67 @@ namespace litepubl\core;
 
 class CacheMemcache extends BaseCache
 {
-    protected$memcache;
-   protected$prefix;
+    protected $memcache;
+    protected $prefix;
     protected $revision;
     protected $revisionKey;
 
     public function __construct($memcache, $lifetime, $prefix)
- {
-        $this->memcache =  $memcache;
+    {
+        $this->memcache = $memcache;
         $this->lifetime = $lifetime;
-        $this->prefix =  $prefix . ':cache:';
+        $this->prefix = $prefix . ':cache:';
         $this->revision = 0;
         $this->revisionKey = 'cache_revision';
-$this->items = [];
-            $this->getRevision();
+        $this->items = [];
+        $this->getRevision();
     }
 
-    public function getPrefix() {
+    public function getPrefix()
+    {
         return $this->prefix . $this->revision . '.';
     }
 
-    public function getRevision() {
+    public function getRevision()
+    {
         return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
     }
 
-    public function clear() {
+    public function clear()
+    {
         $this->revision++;
         $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
-$this->items = [];
+        $this->items = [];
     }
 
-    public function setString($filename, $str) {
-$this->items[$filename] = $str;
+    public function setString($filename, $str)
+    {
+        $this->items[$filename] = $str;
         $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
     }
 
-   public function getString($filename) {
-if (array_key_exists($filename, $this->items)) {
-return $this->items[$filename];
-}
+    public function getString($filename)
+    {
+        if (array_key_exists($filename, $this->items)) {
+            return $this->items[$filename];
+        }
 
         return $this->memcache->get($this->getPrefix() . $filename);
     }
 
-    public function delete($filename) {
-unset($this->items[$filename]);
+    public function delete($filename)
+    {
+        unset($this->items[$filename]);
         $this->memcache->delete($this->getPrefix() . $filename);
     }
 
-    public function exists($filename) {
-if (parent::exists($filename)) {
-return $this->items[$filename] !== false;
-}
+    public function exists($filename)
+    {
+        if (parent::exists($filename)) {
+            return $this->items[$filename] !== false;
+        }
 
-return $this->items[$filename] = $this->getString($filename);
+        return $this->items[$filename] = $this->getString($filename);
     }
 
 }
@@ -541,11 +575,11 @@ return $this->items[$filename] = $this->getString($filename);
 //CacheStorageTrait.php
 namespace litepubl\core;
 
-trait CacheStorageTrait
- {
+traitCacheStorageTrait {
 
-    public function getStorage() {
-        return  $this->getApp()->cache;
+    public function getStorage()
+    {
+        return $this->getApp()->cache;
     }
 
 }
@@ -555,73 +589,72 @@ namespace litepubl\core;
 
 class Callback
 {
-private $events;
+    private $events;
 
-public function __construct()
-{
-$this->events = [];
-}
+    public function __construct()
+    {
+        $this->events = [];
+    }
 
-public function on()
-{
+    public function on()
+    {
         return $this->add(func_get_args());
-}
+    }
 
-public function add(array $callback)
-{
-if (count($callback)) {
-$this->events[] = $callback;
-$indexes = array_keys($this->events);
-return $indexes[count($indexes) - 1];
-}
-}
+    public function add(array $callback)
+    {
+        if (count($callback)) {
+            $this->events[] = $callback;
+            $indexes = array_keys($this->events);
+            return $indexes[count($indexes) - 1];
+        }
+    }
 
-public function delete($index)
-{
-if (isset($this->events[$index])) {
-unset($this->events[$index]);
-}
-}
+    public function delete($index)
+    {
+        if (isset($this->events[$index])) {
+            unset($this->events[$index]);
+        }
+    }
 
-public function clear()
-{
-$this->events = [];
-}
+    public function clear()
+    {
+        $this->events = [];
+    }
 
-public function getCount()
-{
-return count($this->events);
-}
+    public function getCount()
+    {
+        return count($this->events);
+    }
 
-public function fire()
-{
+    public function fire()
+    {
         foreach ($this->events as $a) {
             try {
                 $c = array_shift($a);
                 if (!is_callable($c)) {
-                    $c = [
-                        $c,
-                        array_shift($a)
-                    ];
+                    $c = [$c, array_shift($a) ];
                 }
 
                 call_user_func_array($c, $a);
             }
             catch(\Exception $e) {
-litepubl::$app->logException($e);
+                litepubl::$app->logException($e);
             }
-}
-}
+        }
+    }
 
 }
 
 //CancelEvent.php
 namespace litepubl\core;
 
-class CancelEvent extends \Exception {
+class CancelEvent extends \Exception
+{
     public $result;
 
-    public function __construct($message, $code = 0) {
+    public function __construct($message, $code = 0)
+    {
         $this->result = $message;
         parent::__construct('', 0);
     }
@@ -629,33 +662,36 @@ class CancelEvent extends \Exception {
 
 //Classes.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class Classes extends Items
 {
-use PoolStorageTrait;
+    use PoolStorageTrait;
 
     public $namespaces;
     public $kernel;
     public $remap;
-public $classmap;
+    public $classmap;
     public $aliases;
     public $instances;
-public $loaded;
-private $composerLoaded;
+    public $loaded;
+    private $composerLoaded;
 
-    public static function i() {
-$app = static::getAppInstance();
+    public static function i()
+    {
+        $app = static ::getAppInstance();
         if (!isset($app->classes)) {
             $classname = get_called_class();
             $app->classes = new $classname();
-            $app->classes->instances[$classname] =  $app->classes;
+            $app->classes->instances[$classname] = $app->classes;
         }
 
         return $app->classes;
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'classes';
         $this->dbversion = false;
@@ -664,18 +700,19 @@ $app = static::getAppInstance();
         $this->addmap('kernel', array());
         $this->addmap('remap', array());
         $this->instances = array();
-$this->classmap = [];
+        $this->classmap = [];
         $this->aliases = [];
-$this->loaded = [];
-$this->composerLoaded = false;
+        $this->loaded = [];
+        $this->composerLoaded = false;
 
         spl_autoload_register(array(
             $this,
             'autoload'
-        ), true, true);
+        ) , true, true);
     }
 
-    public function getInstance($class) {
+    public function getInstance($class)
+    {
         if (isset($this->instances[$class])) {
             return $this->instances[$class];
         }
@@ -691,7 +728,8 @@ $this->composerLoaded = false;
         return $this->instances[$class] = $this->newinstance($class);
     }
 
-    public function newinstance($class) {
+    public function newinstance($class)
+    {
         if (!empty($this->remap[$class])) {
             $class = $this->remap[$class];
         }
@@ -699,10 +737,11 @@ $this->composerLoaded = false;
         return new $class();
     }
 
-    public function newItem($name, $class, $id) {
+    public function newItem($name, $class, $id)
+    {
         if (!empty($this->remap[$class])) {
-$class = $this->remap[$class];
-}
+            $class = $this->remap[$class];
+        }
 
         $this->callevent('onnewitem', array(
             $name, &$class,
@@ -712,7 +751,8 @@ $class = $this->remap[$class];
         return new $class();
     }
 
-    public function add($class, $filename, $deprecatedPath = false) {
+    public function add($class, $filename, $deprecatedPath = false)
+    {
         if ($incfilename = $this->findPSR4($class)) {
             $this->include($incfilename);
         } else {
@@ -735,7 +775,8 @@ $class = $this->remap[$class];
         return true;
     }
 
-    public function installClass($classname) {
+    public function installClass($classname)
+    {
         $instance = $this->getinstance($classname);
         if (method_exists($instance, 'install')) {
             $instance->install();
@@ -744,7 +785,8 @@ $class = $this->remap[$class];
         return $instance;
     }
 
-    public function uninstallClass($classname) {
+    public function uninstallClass($classname)
+    {
         if (class_exists($classname)) {
             $instance = $this->getinstance($classname);
             if (method_exists($instance, 'uninstall')) {
@@ -753,7 +795,8 @@ $class = $this->remap[$class];
         }
     }
 
-    public function delete($class) {
+    public function delete($class)
+    {
         if (!isset($this->items[$class])) {
             return false;
         }
@@ -766,7 +809,8 @@ $class = $this->remap[$class];
         $this->deleted($class);
     }
 
-    public function reinstall($class) {
+    public function reinstall($class)
+    {
         if (isset($this->items[$class])) {
             $this->lock();
             $filename = $this->items[$class];
@@ -780,7 +824,8 @@ $class = $this->remap[$class];
         }
     }
 
-    public function baseclass($classname) {
+    public function baseclass($classname)
+    {
         if ($i = strrpos($classname, '\\')) {
             return substr($classname, $i + 1);
         }
@@ -788,7 +833,8 @@ $class = $this->remap[$class];
         return $classname;
     }
 
-    public function addAlias($classname, $alias) {
+    public function addAlias($classname, $alias)
+    {
         if (!$alias) {
             if ($i = strrpos($classname, '\\')) {
                 $alias = substr($classname, $i + 1);
@@ -810,218 +856,228 @@ $class = $this->remap[$class];
         }
     }
 
-public function getClassmap($classname) {
-if (isset($this->aliases[$classname])) {
-return $this->aliases[$classname];
-}
+    public function getClassmap($classname)
+    {
+        if (isset($this->aliases[$classname])) {
+            return $this->aliases[$classname];
+        }
 
-if (!count($this->classmap)) {
-$this->classmap = include( $this->getApp()->paths->lib . 'update/classmap.php');
-}
-$classname = $this->baseclass($classname);
-if (isset($this->classmap[$classname])) {
-$result = $this->classmap[$classname];
-if (!isset($this->aliases[$classname])) {
-class_alias($result, $classname, false);
-$this->aliases[$classname] = $result;
-}
+        if (!count($this->classmap)) {
+            $this->classmap = include ($this->getApp()->paths->lib . 'update/classmap.php');
+        }
+        $classname = $this->baseclass($classname);
+        if (isset($this->classmap[$classname])) {
+            $result = $this->classmap[$classname];
+            if (!isset($this->aliases[$classname])) {
+                class_alias($result, $classname, false);
+                $this->aliases[$classname] = $result;
+            }
 
-$classname = 'litepubl\\' . $classname;
-if (!isset($this->aliases[$classname])) {
-class_alias($result, $classname, false);
-$this->aliases[$classname] = $result;
-}
+            $classname = 'litepubl\\' . $classname;
+            if (!isset($this->aliases[$classname])) {
+                class_alias($result, $classname, false);
+                $this->aliases[$classname] = $result;
+            }
 
-return $result;
-}
+            return $result;
+        }
 
-return false;
-}
+        return false;
+    }
 
-    public function autoload($classname) {
-if (isset($this->loaded[$classname])) {
-return;
-}
+    public function autoload($classname)
+    {
+        if (isset($this->loaded[$classname])) {
+            return;
+        }
 
-if (config::$useKernel && !config::$debug &&
-($filename = $this->findKernel($classname))) {
-include_once $filename;
-if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
-$this->loaded[$classname] = $filename;
-return;
-}
-}
+        if (config::$useKernel && !config::$debug && ($filename = $this->findKernel($classname))) {
+            include_once $filename;
+            if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
+                $this->loaded[$classname] = $filename;
+                return;
+            }
+        }
 
-$filename = $this->findFile($classname);
-$this->loaded[$classname] = $filename;
-if ($filename) {
-include_once $filename;
-} elseif (!$this->composerLoaded) {
-$this->composerLoaded = true;
-$this->loadComposer($classname);
-}
-}
+        $filename = $this->findFile($classname);
+        $this->loaded[$classname] = $filename;
+        if ($filename) {
+            include_once $filename;
+        } elseif (!$this->composerLoaded) {
+            $this->composerLoaded = true;
+            $this->loadComposer($classname);
+        }
+    }
 
-public function findFile($classname) {
-/*
-if ($newclass = $this->getClassmap($classname)) {
-$classname = $newclass;
-}
-*/
+    public function findFile($classname)
+    {
+        /*
+        if ($newclass = $this->getClassmap($classname)) {
+        $classname = $newclass;
+        }
+        */
 
-$result = $this->findPSR4($classname);
-if (!$result) {
+        $result = $this->findPSR4($classname);
+        if (!$result) {
             $result = $this->findClassmap($classname);
         }
 
-return $result;
+        return $result;
     }
 
-    public function findClassmap($classname) {
+    public function findClassmap($classname)
+    {
         if (isset($this->items[$classname])) {
             $filename = $this->app->paths->home . $this->items[$classname];
-if (file_exists($filename)) {
-return $filename;
-}
+            if (file_exists($filename)) {
+                return $filename;
+            }
         }
-   }
+    }
 
-    public function include ($filename) {
+    public function include ($filename)
+    {
         //if (is_dir($filename)) $this->error($filename);
         require_once $filename;
     }
 
-    public function include_file($filename) {
+    public function include_file($filename)
+    {
         if ($filename && file_exists($filename)) {
             $this->include($filename);
         }
     }
 
-    public function findPSR4($classname) {
+    public function findPSR4($classname)
+    {
         if (false === ($i = strrpos($classname, '\\'))) {
-return false;
-}
+            return false;
+        }
 
-            $ns = substr($classname, 0, $i);
-if ($ns[0] == '\\') {
-$ns = substr($ns, 1);
-}
+        $ns = substr($classname, 0, $i);
+        if ($ns[0] == '\\') {
+            $ns = substr($ns, 1);
+        }
 
-            $baseclass = substr($classname, $i + 1);
-$paths = $this->app->paths;
+        $baseclass = substr($classname, $i + 1);
+        $paths = $this->app->paths;
 
-if (isset($this->loaded[$ns])) {
-$filename = $this->loaded[$ns] . $baseclass . '.php';
-if (file_exists($filename)) {
-return $filename;
-}
+        if (isset($this->loaded[$ns])) {
+            $filename = $this->loaded[$ns] . $baseclass . '.php';
+            if (file_exists($filename)) {
+                return $filename;
+            }
 
-return false;
-}
+            return false;
+        }
 
-            if (isset($this->namespaces[$ns])) {
-$dir =$paths->home . $this->namespaces[$ns] . '/';
+        if (isset($this->namespaces[$ns])) {
+            $dir = $paths->home . $this->namespaces[$ns] . '/';
+            $filename = $dir . $baseclass . '.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
+            }
+        }
+
+        $names = explode('\\', $ns);
+        $vendor = array_shift($names);
+        while (count($names)) {
+            if (isset($this->namespaces[$vendor])) {
+                $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
                 $filename = $dir . $baseclass . '.php';
                 if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
+                    $this->loaded[$ns] = $dir;
                     return $filename;
                 }
             }
 
-$names = explode('\\', $ns);
-$vendor = array_shift($names);
-while(count($names)) {
-if (isset($this->namespaces[$vendor])) {
-                    $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
-                    $filename = $dir . $baseclass . '.php';
-                    if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
-                        return $filename;
-                    }
-                }
+            $vendor.= '\\' . array_shift($names);
+        }
 
-$vendor .= '\\' . array_shift($names);
-            }
-
-            //last chanse
-            $name = 'litepubl\plugins';
-            if (Str::begin($ns, $name)) {
-                $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
-                $filename = $dir . $baseclass . '.php';
-                if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
-                    return $filename;
+        //last chanse
+        $name = 'litepubl\plugins';
+        if (Str::begin($ns, $name)) {
+            $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
+            $filename = $dir . $baseclass . '.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
             }
         }
 
         return false;
     }
 
-    public function findKernel($classname) {
+    public function findKernel($classname)
+    {
         if (false === ($i = strrpos($classname, '\\'))) {
-return false;
-}
+            return false;
+        }
 
-            $ns = substr($classname, 0, $i);
-if ($ns[0] == '\\') {
-$ns = substr($ns, 1);
-}
+        $ns = substr($classname, 0, $i);
+        if ($ns[0] == '\\') {
+            $ns = substr($ns, 1);
+        }
 
-if (isset($this->loaded[$ns])) {
-return false;
-}
+        if (isset($this->loaded[$ns])) {
+            return false;
+        }
 
-$home = $this->app->paths->home;
-if (isset($this->kernel[$ns])) {
-                $filename = $home . $this->kernel[$ns];
-                if (file_exists($filename)) {
-                    return $filename;
-                }
+        $home = $this->app->paths->home;
+        if (isset($this->kernel[$ns])) {
+            $filename = $home . $this->kernel[$ns];
+            if (file_exists($filename)) {
+                return $filename;
             }
+        }
 
-            if (isset($this->namespaces[$ns])) {
-                $dir = $home . $this->namespaces[$ns] . '/';
+        if (isset($this->namespaces[$ns])) {
+            $dir = $home . $this->namespaces[$ns] . '/';
+            $filename = $dir . 'kernel.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
+            }
+        }
+
+        $names = explode('\\', $ns);
+        $vendor = array_shift($names);
+        while (count($names)) {
+            if (isset($this->namespaces[$vendor])) {
+                $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
                 $filename = $dir . 'kernel.php';
                 if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
+                    $this->loaded[$ns] = $dir;
                     return $filename;
                 }
             }
 
-$names = explode('\\', $ns);
-$vendor = array_shift($names);
-while(count($names)) {
-if (isset($this->namespaces[$vendor])) {
-                    $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
-                    $filename = $dir . 'kernel.php';
-                    if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
-                        return $filename;
-                    }
-                }
+            $vendor.= '\\' . array_shift($names);
+        }
 
-$vendor .= '\\' . array_shift($names);
-            }
-
-                $dir = $home . $ns . '/';
-                $filename = $dir . 'kernel.php';
-                if (file_exists($filename)) {
-$this->loaded[$ns] = $dir;
-                    return $filename;
-                }
+        $dir = $home . $ns . '/';
+        $filename = $dir . 'kernel.php';
+        if (file_exists($filename)) {
+            $this->loaded[$ns] = $dir;
+            return $filename;
+        }
 
         return false;
     }
 
-    public function subSpace($namespace, $root) {
+    public function subSpace($namespace, $root)
+    {
         return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
     }
 
-    public function exists($class) {
+    public function exists($class)
+    {
         return isset($this->items[$class]);
     }
 
-    public function rename($oldclass, $newclass) {
+    public function rename($oldclass, $newclass)
+    {
         if (isset($this->items[$oldclass])) {
             $this->items[$newclass] = $this->items[$oldclass];
             unset($this->items[$oldclass]);
@@ -1030,40 +1086,43 @@ $this->loaded[$ns] = $dir;
                 unset($this->kernel[$oldclass]);
             }
 
-             $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
+            $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
             $this->save();
             $this->onrename($oldclass, $newclass);
         }
     }
 
-    public function getResourcedir($c) {
+    public function getResourcedir($c)
+    {
         $reflector = new \ReflectionClass($c);
         $filename = $reflector->getFileName();
         return dirname($filename) . '/resource/';
     }
-public function loadComposer($classToAutoLoad) {
-require_once($this->getApp()->paths->home . 'vendor/autoload.php');
-if ($classToAutoLoad && ($a = spl_autoload_functions())) {
-$compclass = 'Composer\Autoload\ClassLoader';
-foreach ($a as $item) {
-if (is_array($item) && is_a($item[0], $compclass)) {
-return call_user_func_array($item, [$classToAutoLoad]);
-}
-}
-}
-}
+    public function loadComposer($classToAutoLoad)
+    {
+        require_once ($this->getApp()->paths->home . 'vendor/autoload.php');
+        if ($classToAutoLoad && ($a = spl_autoload_functions())) {
+            $compclass = 'Composer\Autoload\ClassLoader';
+            foreach ($a as $item) {
+                if (is_array($item) && is_a($item[0], $compclass)) {
+                    return call_user_func_array($item, [$classToAutoLoad]);
+                }
+            }
+        }
+    }
 
 }
 
 //CoEvents.php
 namespace litepubl\core;
 
-class CoEvents extends Events 
+class CoEvents extends Events
 {
     protected $owner;
     protected $callbacks;
 
-    public function __construct() {
+    public function __construct()
+    {
         $args = func_get_args();
         if (isset($args[0])) {
             if (is_array($args[0])) {
@@ -1083,7 +1142,8 @@ class CoEvents extends Events
         parent::__construct();
     }
 
-    public function setOwner(data $owner) {
+    public function setOwner(data $owner)
+    {
         $this->owner = $owner;
         if (!isset($owner->data['events'])) {
             $owner->data['events'] = array();
@@ -1092,7 +1152,8 @@ class CoEvents extends Events
         $this->events = & $owner->data['events'];
     }
 
-    public function trigger_callback($name) {
+    public function trigger_callback($name)
+    {
         if (isset($this->callbacks[$name])) {
             $callback = $this->callbacks[$name];
             if (is_callable($callback)) {
@@ -1101,12 +1162,14 @@ class CoEvents extends Events
         }
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         parent::__destruct();
         unset($this->owner, $this->callbacks);
     }
 
-    public function assignmap() {
+    public function assignmap()
+    {
         if (!$this->owner) {
             parent::assignmap();
         }
@@ -1114,7 +1177,8 @@ class CoEvents extends Events
         $this->trigger_callback('assignmap');
     }
 
-    protected function create() {
+    protected function create()
+    {
         if (!$this->owner) {
             parent::create();
         }
@@ -1122,13 +1186,15 @@ class CoEvents extends Events
         $this->trigger_callback('create');
     }
 
-    public function load() {
+    public function load()
+    {
         if (!$this->owner) {
             return parent::load();
         }
     }
 
-    public function afterload() {
+    public function afterload()
+    {
         if ($this->owner) {
             $this->events = & $this->owner->data['events'];
         } else {
@@ -1138,7 +1204,8 @@ class CoEvents extends Events
         $this->trigger_callback('afterload');
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->owner) {
             return $this->owner->save();
         } else {
@@ -1146,7 +1213,8 @@ class CoEvents extends Events
         }
     }
 
-    public function inject_events() {
+    public function inject_events()
+    {
         $a = func_get_args();
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
@@ -1158,208 +1226,213 @@ namespace litepubl\core;
 
 class Context
 {
-public $request;
-public $response;
-public $model;
-public $view;
-public $itemRoute;
-public $abtest;
+    public $request;
+    public $response;
+    public $model;
+    public $view;
+    public $itemRoute;
+    public $abtest;
 
-public function __construct(Request $request, Response $response)
-{
-$this->request = $request;
-$this->response = $response;
-}
+    public function __construct(Request $request, Response $response)
+    {
+        $this->request = $request;
+        $this->response = $response;
+    }
 
-public function __get($name)
-{
-if (strtolower($name) == 'id') {
-return (int) $this->itemRoute['arg'];
-}
+    public function __get($name)
+    {
+        if (strtolower($name) == 'id') {
+            return (int)$this->itemRoute['arg'];
+        }
 
-throw new PropException(get_class($this), $name);
-}
+        throw new PropException(get_class($this) , $name);
+    }
 
-    public function checkAttack() {
-if ($this->request->checkAttack()) {
-$errorPages = new ErrorPages();
-$this->response->cache = false;
-$this->response->body = $errorPages->attack($this->request->url);
-return true;
-}
+    public function checkAttack()
+    {
+        if ($this->request->checkAttack()) {
+            $errorPages = new ErrorPages();
+            $this->response->cache = false;
+            $this->response->body = $errorPages->attack($this->request->url);
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
 }
 
 //Controller.php
 namespace litepubl\core;
-use litepubl\view\MainView;
+
 use litepubl\pages\Redirector;
+use litepubl\view\MainView;
 
 class Controller
 {
-use AppTrait;
+    use AppTrait;
 
-public $cache;
+    public $cache;
 
-public function __construct()
-{
-$options = $this->getApp()->options;
-$this->cache = isset($options->cache) && $options->cache && ! $options->adminFlag;
-}
+    public function __construct()
+    {
+        $options = $this->getApp()->options;
+        $this->cache = isset($options->cache) && $options->cache && !$options->adminFlag;
+    }
 
-public function request(Context $context)
-{
-if ($this->cached($context)) {
-return;
-}
+    public function request(Context $context)
+    {
+        if ($this->cached($context)) {
+            return;
+        }
 
-if ($context->itemRoute) {
-if (class_exists($context->itemRoute['class'])) {
-$context->model = $this->getModel($context->itemRoute['class'], $context->itemRoute['arg']);
-$this->render($context);
-} else {
-$this->getApp()->getLogger()->warning('Class for requested item not found', $context->itemRoute);
-$this->renderStatus($context);
-}
-} elseif ($context->model) {
-$this->render($context);
-} elseif ($context->response->body) {
-$context->response->send();
-} else {
-$this->renderStatus($context);
-}
-}
+        if ($context->itemRoute) {
+            if (class_exists($context->itemRoute['class'])) {
+                $context->model = $this->getModel($context->itemRoute['class'], $context->itemRoute['arg']);
+                $this->render($context);
+            } else {
+                $this->getApp()->getLogger()->warning('Class for requested item not found', $context->itemRoute);
+                $this->renderStatus($context);
+            }
+        } elseif ($context->model) {
+            $this->render($context);
+        } elseif ($context->response->body) {
+            $context->response->send();
+        } else {
+            $this->renderStatus($context);
+        }
+    }
 
-public function render(Context $context)
-{
-if (!$context->view && !($context->view  = $this->findView($context))) {
-throw new \RuntimeException('View not found form model');
-}
+    public function render(Context $context)
+    {
+        if (!$context->view && !($context->view = $this->findView($context))) {
+            throw new \RuntimeException('View not found form model');
+        }
 
-$context->view->request($context);
-$response = $context->response;
-if (!$response->body && $response->status == 200) {
-MainView::i()->render($context);
-}
+        $context->view->request($context);
+        $response = $context->response;
+        if (!$response->body && $response->status == 200) {
+            MainView::i()->render($context);
+        }
 
-$response->send();
-if ($this->cache && $response->cache) {
-$this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
-}
-}
+        $response->send();
+        if ($this->cache && $response->cache) {
+            $this->getApp()->cache->savePhp($this->getCacheFileName($context) , $response->getString());
+        }
+    }
 
-public function findView(Context$context)
-{
-$model = $context->model;
-if ($model instanceof ResponsiveInterface) {
-return $model;
-} elseif (isset($model->view) && ($view = $model->view) && ($view instanceof ResponsiveInterface)) {
-return $view;
-}
+    public function findView(Context $context)
+    {
+        $model = $context->model;
+        if ($model instanceof ResponsiveInterface) {
+            return $model;
+        } elseif (isset($model->view) && ($view = $model->view) && ($view instanceof ResponsiveInterface)) {
+            return $view;
+        }
 
-return false;
-}
+        return false;
+    }
 
-public function cached(Context $context)
-{
-if (!$this->cache) {
-return false;
-}
+    public function cached(Context $context)
+    {
+        if (!$this->cache) {
+            return false;
+        }
 
-$filename = $this->getCacheFileName($context);
-return $this->getApp()->cache->includePhp($filename);
-}
+        $filename = $this->getCacheFileName($context);
+        return $this->getApp()->cache->includePhp($filename);
+    }
 
-public function getCacheFileName(Context $context)
-{
-$ext = $context->abtest ? sprintf('.%s.php', $context->abtest) : '.php';
+    public function getCacheFileName(Context $context)
+    {
+        $ext = $context->abtest ? sprintf('.%s.php', $context->abtest) : '.php';
 
-if (!$context->itemRoute) {
-return md5($context->request->url) .$ext;
-} else {
-        switch ($context->itemRoute['type']) {
-            case 'usernormal':
-            case 'userget':
-                return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
+        if (!$context->itemRoute) {
+            return md5($context->request->url) . $ext;
+        } else {
+            switch ($context->itemRoute['type']) {
+                case 'usernormal':
+                case 'userget':
+                    return sprintf('%s-%d%s', md5($context->request->url) , $this->getApp()->options->user, $ext);
+
+                default:
+                    return md5($context->request->url) . $ext;
+            }
+        }
+    }
+
+    public function url2cacheFile($url)
+    {
+        return md5($url) . '.php';
+    }
+
+    public function getModel($class, $arg)
+    {
+        if (is_a($class, __NAMESPACE__ . '\Item', true)) {
+            return $class::i($arg);
+        } else {
+            return $this->getApp()->classes->getInstance($class);
+        }
+    }
+
+    public function renderStatus(Context $context)
+    {
+        $response = $context->response;
+        if (!$response->isRedir()) {
+            $redir = Redirector::i();
+            if ($url = $redir->get($context->request->url)) {
+                $response->redir($url);
+            }
+        }
+
+        if ($response->status == 200) {
+            $response->status = 404;
+        }
+
+        $cache = $this->getApp()->cache;
+        switch ($response->status) {
+            case 404:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->notfound();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                }
+                break;
+
+
+            case 403:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->forbidden();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                }
+                break;
+
 
             default:
-                return md5($context->request->url) . $ext;
+                $response->send();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context) , $response->getString());
+                }
         }
-}
-}
-
-public function url2cacheFile($url)
-{
-return md5($url) .'.php';
-}
-
-public function getModel($class, $arg)
-{
-if (is_a($class, __NAMESPACE__ . '\Item', true)) {
-return $class::i($arg);
-}else {
-return $this->getApp()->classes->getInstance($class);
-}
-}
-
-public function renderStatus(Context $context)
-{
-$response = $context->response;
-if (!$response->isRedir()) {
-        $redir = Redirector::i();
-        if ($url = $redir->get($context->request->url)) {
-$response->redir($url);
-}
-}
-
-if ($response->status == 200) {
-$response->status = 404;
-}
-
-$cache = $this->getApp()->cache;
-switch ($response->status) {
-case 404:
-$errorPages = new ErrorPages();
-$content = $errorPages->notfound();
-if ($this->cache && $response->cache) {
-$cache->savePhp($this->getCacheFileName($context), $content);
-}
-break;
-
-case 403:
-$errorPages = new ErrorPages();
-$content = $errorPages->forbidden();
-if ($this->cache && $response->cache) {
-$cache->savePhp($this->getCacheFileName($context), $content);
-}
-break;
-
-default:
-$response->send();
-if ($this->cache && $response->cache) {
-$cache->savePhp($this->getCacheFileName($context), $response->getString());
-}
-}
-}
-
+    }
 
 }
 
 //Cron.php
 namespace litepubl\core;
+
 use litepubl\Config;
 use litepubl\utils\Mailer;
 
 class Cron extends Events implements ResponsiveInterface
- {
+{
     public static $pinged = false;
     public $disableadd;
     private $socket;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'cron';
         $this->addevents('added', 'deleted');
@@ -1371,34 +1444,36 @@ class Cron extends Events implements ResponsiveInterface
         $this->table = 'cron';
     }
 
-    protected function getUrl() {
-        return sprintf('/croncron.htm%scronpass=%s',  $this->getApp()->site->q, urlencode($this->password));
+    protected function getUrl()
+    {
+        return sprintf('/croncron.htm%scronpass=%s', $this->getApp()->site->q, urlencode($this->password));
     }
 
-    public function getLockpath() {
+    public function getLockpath()
+    {
         if ($result = $this->path) {
             if (is_dir($result)) {
- return $result;
-}
-
+                return $result;
+            }
 
         }
-        return  $this->getApp()->paths->data;
+        return $this->getApp()->paths->data;
     }
 
-    public function request(Context $context) {
+    public function request(Context $context)
+    {
         if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
-$context->response->status = 403;
- return;
-}
+            $context->response->status = 403;
+            return;
+        }
 
-       if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
+        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
             try {
                 set_time_limit(300);
                 if (Config::$debug) {
                     ignore_user_abort(true);
                 } else {
-                     $this->getApp()->router->close_connection();
+                    $this->getApp()->router->close_connection();
                 }
 
                 if (ob_get_level()) ob_end_flush();
@@ -1409,7 +1484,7 @@ $context->response->status = 403;
                 $this->execute();
             }
             catch(\Exception $e) {
-                 $this->getApp()->logException($e);
+                $this->getApp()->logException($e);
             }
             flock($fh, LOCK_UN);
             fclose($fh);
@@ -1420,7 +1495,8 @@ $context->response->status = 403;
         return 'locked';
     }
 
-    public function run() {
+    public function run()
+    {
         if (ob_get_level()) ob_end_flush();
         flush();
 
@@ -1431,7 +1507,7 @@ $context->response->status = 403;
                 $this->execute();
             }
             catch(\Exception $e) {
-                 $this->getApp()->logException($e);
+                $this->getApp()->logException($e);
             }
 
             flock($fh, LOCK_UN);
@@ -1443,7 +1519,8 @@ $context->response->status = 403;
         return false;
     }
 
-    public function execute() {
+    public function execute()
+    {
         while ($item = $this->db->getassoc(sprintf("date <= '%s' order by date asc limit 1", Str::sqlDate()))) {
             extract($item);
             $this->log("task started:\n{$class}->{$func}($arg)");
@@ -1454,30 +1531,26 @@ $context->response->status = 403;
                         $func($arg);
                     }
                     catch(\Exception $e) {
-                         $this->getApp()->logException($e);
+                        $this->getApp()->logException($e);
                     }
                 } else {
-                    $this->db->iddelete($id);
-                    {
- continue;
-}
-
+                    $this->db->iddelete($id); {
+                        continue;
+                    }
 
                 }
             } elseif (class_exists($class)) {
                 try {
-                    $obj = static::iGet($class);
+                    $obj = static ::iGet($class);
                     $obj->$func($arg);
                 }
                 catch(\Exception $e) {
-                     $this->getApp()->logException($e);
+                    $this->getApp()->logException($e);
                 }
             } else {
-                $this->db->iddelete($id);
-                {
- continue;
-}
-
+                $this->db->iddelete($id); {
+                    continue;
+                }
 
             }
             if ($type == 'single') {
@@ -1488,19 +1561,19 @@ $context->response->status = 403;
         }
     }
 
-    public function add($type, $class, $func, $arg = null) {
+    public function add($type, $class, $func, $arg = null)
+    {
         if (!preg_match('/^single|hour|day|week$/', $type)) $this->error("Unknown cron type $type");
         if ($this->disableadd) {
- return false;
-}
-
+            return false;
+        }
 
         $id = $this->doadd($type, $class, $func, $arg);
 
         if (($type == 'single') && !$this->disableping && !static ::$pinged) {
             if (Config::$debug) {
-$this->getApp()->getLogger()->info("cron added $id");
-}
+                $this->getApp()->getLogger()->info("cron added $id");
+            }
 
             $memvars = Memvars::i();
             if (!$memvars->singlecron) {
@@ -1511,7 +1584,8 @@ $this->getApp()->getLogger()->info("cron added $id");
         return $id;
     }
 
-    protected function doadd($type, $class, $func, $arg) {
+    protected function doadd($type, $class, $func, $arg)
+    {
         $id = $this->db->add(array(
             'date' => Str::sqlDate() ,
             'type' => $type,
@@ -1524,7 +1598,8 @@ $this->getApp()->getLogger()->info("cron added $id");
         return $id;
     }
 
-    public function addnightly($class, $func, $arg) {
+    public function addnightly($class, $func, $arg)
+    {
         $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'day',
@@ -1536,7 +1611,8 @@ $this->getApp()->getLogger()->info("cron added $id");
         return $id;
     }
 
-    public function addweekly($class, $func, $arg) {
+    public function addweekly($class, $func, $arg)
+    {
         $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'week',
@@ -1549,35 +1625,40 @@ $this->getApp()->getLogger()->info("cron added $id");
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $this->db->iddelete($id);
         $this->deleted($id);
     }
 
-    public function deleteclass($c) {
+    public function deleteclass($c)
+    {
         $class = static ::get_class_name($c);
         $this->db->delete("class = '$class'");
     }
 
-    public static function pingonshutdown() {
+    public static function pingonshutdown()
+    {
         if (static ::$pinged) {
- return;
-}
+            return;
+        }
 
         static ::$pinged = true;
 
         register_shutdown_function(array(
-            static::i() ,
+            static ::i() ,
             'ping'
         ));
     }
 
-    public function ping() {
-        $p = parse_url( $this->getApp()->site->url . $this->url);
+    public function ping()
+    {
+        $p = parse_url($this->getApp()->site->url . $this->url);
         $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
     }
 
-    private function pinghost($host, $path) {
+    private function pinghost($host, $path)
+    {
         //$this->log("pinged host $host$path");
         if ($this->socket = @fsockopen($host, 80, $errno, $errstr, 0.10)) {
             fputs($this->socket, "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n");
@@ -1586,35 +1667,34 @@ $this->getApp()->getLogger()->info("cron added $id");
         }
     }
 
-    public function sendexceptions() {
-        $filename =  $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
+    public function sendexceptions()
+    {
+        $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
         if (!file_exists($filename)) {
- return;
-}
-
-
+            return;
+        }
 
         $time = @filectime($filename);
         if (($time === false) || ($time + 3600 > time())) {
- return;
-}
-
+            return;
+        }
 
         $s = file_get_contents($filename);
-         $this->getApp()->storage->delete($filename);
-        Mailer::SendAttachmentToAdmin('[error] ' .  $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
+        $this->getApp()->storage->delete($filename);
+        Mailer::SendAttachmentToAdmin('[error] ' . $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
         sleep(2);
     }
 
-    public function log($s) {
+    public function log($s)
+    {
         echo date('r') . "\n$s\n\n";
         flush();
         if (Config::$debug) {
             if (Config::$debug) {
-$this->getApp()->getLogger()->info($s);
-}
+                $this->getApp()->getLogger()->info($s);
+            }
 
-}
+        }
     }
 
 }
@@ -1622,7 +1702,8 @@ $this->getApp()->getLogger()->info($s);
 //Data.php
 namespace litepubl\core;
 
-class Data {
+class Data
+{
     const ZERODATE = '0000-00-00 00:00:00';
     public static $guid = 0;
     public $basename;
@@ -1633,19 +1714,23 @@ class Data {
     public $lockcount;
     public $table;
 
-    public static function i() {
-        return  static::iGet(get_called_class());
+    public static function i()
+    {
+        return static ::iGet(get_called_class());
     }
 
-    public static function iGet($class) {
-        return  static::getAppInstance()->classes->getInstance($class);
+    public static function iGet($class)
+    {
+        return static ::getAppInstance()->classes->getInstance($class);
     }
 
-public static function getAppInstance() {
-return litepubl::$app;
-}
+    public static function getAppInstance()
+    {
+        return litepubl::$app;
+    }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->lockcount = 0;
         $this->cache = true;
         $this->data = array();
@@ -1653,22 +1738,25 @@ return litepubl::$app;
         $this->coclasses = array();
 
         if (!$this->basename) {
-$class = get_class($this);
+            $class = get_class($this);
             $this->basename = substr($class, strrpos($class, '\\') + 1);
         }
 
         $this->create();
     }
 
-    protected function create() {
-$this->createData();
+    protected function create()
+    {
+        $this->createData();
     }
 
-//method to override in traits when in base class declared create method
-    protected function createData() {
-}
+    //method to override in traits when in base class declared create method
+    protected function createData()
+    {
+    }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (method_exists($this, $get = 'get' . $name)) {
             return $this->$get();
         } elseif (array_key_exists($name, $this->data)) {
@@ -1680,30 +1768,32 @@ $this->createData();
                 }
             }
 
-            throw new PropException(get_class($this), $name);
+            throw new PropException(get_class($this) , $name);
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
         } elseif (key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
-        foreach ($this->coinstances as $coinstance) {
-            if (isset($coinstance->$name)) {
-                $coinstance->$name = $value;
-                return true;
+            foreach ($this->coinstances as $coinstance) {
+                if (isset($coinstance->$name)) {
+                    $coinstance->$name = $value;
+                    return true;
+                }
             }
+
+            return false;
         }
 
-        return false;
+        return true;
     }
 
-return true;
-}
-
-    public function __call($name, $params) {
+    public function __call($name, $params)
+    {
         if (method_exists($this, strtolower($name))) {
             return call_user_func_array(array(
                 $this,
@@ -1723,7 +1813,8 @@ return true;
         $this->error("The requested method $name not found in class " . get_class($this));
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) {
             return true;
         }
@@ -1737,35 +1828,43 @@ return true;
         return false;
     }
 
-    public function method_exists($name) {
+    public function method_exists($name)
+    {
         return false;
     }
 
-    public function error($Msg, $code = 0) {
+    public function error($Msg, $code = 0)
+    {
         throw new \Exception($Msg, $code);
     }
 
-    public function getBaseName() {
+    public function getBaseName()
+    {
         return $this->basename;
     }
 
-public function getApp() {
-return static::getAppInstance();
-}
+    public function getApp()
+    {
+        return static ::getAppInstance();
+    }
 
-    public function install() {
+    public function install()
+    {
         $this->externalchain('Install');
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $this->externalchain('Uninstall');
     }
 
-    public function validate($repair = false) {
+    public function validate($repair = false)
+    {
         $this->externalchain('Validate', $repair);
     }
 
-    protected function externalChain($func, $arg = null) {
+    protected function externalChain($func, $arg = null)
+    {
         $parents = class_parents($this);
         array_splice($parents, 0, 0, get_class($this));
         foreach ($parents as $class) {
@@ -1773,7 +1872,8 @@ return static::getAppInstance();
         }
     }
 
-    public function getExternalFuncName($class, $func) {
+    public function getExternalFuncName($class, $func)
+    {
         $reflector = new \ReflectionClass($class);
         $filename = $reflector->getFileName();
 
@@ -1795,14 +1895,15 @@ return static::getAppInstance();
 
         $fnc = $class . $func;
         if (function_exists($fnc)) {
-return $fnc;
-}
+            return $fnc;
+        }
 
-return false;
-}
+        return false;
+    }
 
-    public function externalFunc($class, $func, $args) {
-if ($fnc = $this->getExternalFuncName($class, $func)) {
+    public function externalFunc($class, $func, $args)
+    {
+        if ($fnc = $this->getExternalFuncName($class, $func)) {
             if (is_array($args)) {
                 array_unshift($args, $this);
             } else {
@@ -1813,14 +1914,16 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
             }
 
             return \call_user_func_array($fnc, $args);
-}
+        }
     }
 
-    public function getStorage() {
-        return  $this->getApp()->storage;
+    public function getStorage()
+    {
+        return $this->getApp()->storage;
     }
 
-    public function load() {
+    public function load()
+    {
         if ($this->getStorage()->load($this)) {
             $this->afterLoad();
             return true;
@@ -1829,7 +1932,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return false;
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->lockcount) {
             return;
         }
@@ -1837,7 +1941,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return $this->getStorage()->save($this);
     }
 
-    public function afterload() {
+    public function afterload()
+    {
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, 'afterload')) {
                 $coinstance->afterload();
@@ -1845,47 +1950,56 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         }
     }
 
-    public function lock() {
+    public function lock()
+    {
         $this->lockcount++;
     }
 
-    public function unlock() {
+    public function unlock()
+    {
         if (--$this->lockcount <= 0) {
             $this->save();
         }
     }
 
-    public function getLocked() {
+    public function getLocked()
+    {
         return $this->lockcount > 0;
     }
 
-    public function Getclass() {
+    public function Getclass()
+    {
         return get_class($this);
     }
 
-    public function getDbversion() {
+    public function getDbversion()
+    {
         return false;
 
     }
 
-    public function getDb($table = '') {
+    public function getDb($table = '')
+    {
         $table = $table ? $table : $this->table;
         if ($table) {
-             $this->getApp()->db->table = $table;
+            $this->getApp()->db->table = $table;
         }
 
-        return  $this->getApp()->db;
+        return $this->getApp()->db;
     }
 
-    protected function getThistable() {
-        return  $this->getApp()->db->prefix . $this->table;
+    protected function getThistable()
+    {
+        return $this->getApp()->db->prefix . $this->table;
     }
 
-    public static function get_class_name($c) {
+    public static function get_class_name($c)
+    {
         return is_object($c) ? get_class($c) : trim($c);
     }
 
-    public static function encrypt($s, $key) {
+    public static function encrypt($s, $key)
+    {
         $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         if (strlen($key) > $maxkey) {
             $key = substr($key, $maxkey);
@@ -1897,7 +2011,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return mcrypt_encrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
     }
 
-    public static function decrypt($s, $key) {
+    public static function decrypt($s, $key)
+    {
         $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         if (strlen($key) > $maxkey) {
             $key = substr($key, $maxkey);
@@ -1913,12 +2028,13 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
 
 //DB.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class DB
 {
-use AppTrait;
-use Singleton;
+    use AppTrait;
+    use Singleton;
 
     public $mysqli;
     public $result;
@@ -1928,7 +2044,8 @@ use Singleton;
     public $prefix;
     public $history;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->sql = '';
         $this->table = '';
         $this->history = array();
@@ -1936,27 +2053,28 @@ use Singleton;
         $this->setconfig($this->getconfig());
     }
 
-    public function getConfig() {
+    public function getConfig()
+    {
         if (config::$db) {
             return config::$db;
         }
 
-$options = $this->getApp()->options;
-        if (isset( $options->dbconfig)) {
-            $result =  $options->dbconfig;
+        $options = $this->getApp()->options;
+        if (isset($options->dbconfig)) {
+            $result = $options->dbconfig;
             //decrypt db password
-            $result['password'] =  $options->dbpassword;
+            $result['password'] = $options->dbpassword;
             return $result;
         }
 
         return false;
     }
 
-    public function setConfig($dbconfig) {
+    public function setConfig($dbconfig)
+    {
         if (!$dbconfig) {
- return false;
-}
-
+            return false;
+        }
 
         $this->dbname = $dbconfig['dbname'];
         $this->prefix = $dbconfig['prefix'];
@@ -1969,10 +2087,9 @@ $options = $this->getApp()->options;
 
         $this->mysqli->set_charset('utf8');
         //$this->query('SET NAMES utf8');
-
-if (Config::$enableZeroDatetime ) {
-$this->enableZeroDatetime();
-}
+        if (Config::$enableZeroDatetime) {
+            $this->enableZeroDatetime();
+        }
 
         /* lost performance
         $timezone = date('Z') / 3600;
@@ -1988,19 +2105,22 @@ $this->enableZeroDatetime();
     }
     }
     */
-    public function __get($name) {
-if ($name == 'man') {
-return DBManager::i();
-}
+    public function __get($name)
+    {
+        if ($name == 'man') {
+            return DBManager::i();
+        }
 
         return $this->prefix . $name;
     }
 
-    public function exec($sql) {
+    public function exec($sql)
+    {
         return $this->query($sql);
     }
 
-    public function query($sql) {
+    public function query($sql)
+    {
         $this->sql = $sql;
         if (Config::$debug) {
             $this->history[] = array(
@@ -2011,8 +2131,8 @@ return DBManager::i();
         }
 
         if (is_object($this->result)) {
-$this->result->close();
-}
+            $this->result->close();
+        }
 
         $this->result = $this->mysqli->query($sql);
         if ($this->result == false) {
@@ -2020,24 +2140,26 @@ $this->result->close();
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
-$this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
+                $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
-}
+        }
 
         return $this->result;
     }
 
-    protected function logError($mesg) {
+    protected function logError($mesg)
+    {
         $log = "exception:\n$mesg\n$this->sql\n";
-$app = $this->getApp();
-$log .= $app->getLogManager()->getTrace();
+        $app = $this->getApp();
+        $log.= $app->getLogManager()->getTrace();
         $log.= $this->performance();
-die($log);
-//$app->getLogger()->alert($log);
-throw new \Exception($log);
-}
+        die($log);
+        //$app->getLogger()->alert($log);
+        throw new \Exception($log);
+    }
 
-    public function performance() {
+    public function performance()
+    {
         $result = '';
         $total = 0.0;
         $max = 0.0;
@@ -2054,53 +2176,62 @@ throw new \Exception($log);
         return $result;
     }
 
-    public function quote($s) {
+    public function quote($s)
+    {
         return sprintf('\'%s\'', $this->mysqli->real_escape_string($s));
     }
 
-    public function escape($s) {
+    public function escape($s)
+    {
         return $this->mysqli->real_escape_string($s);
     }
 
-    public function setTable($table) {
+    public function setTable($table)
+    {
         $this->table = $table;
         return $this;
     }
 
-    public function select($where) {
+    public function select($where)
+    {
         if ($where != '') $where = 'where ' . $where;
         return $this->query("SELECT * FROM $this->prefix$this->table $where");
     }
 
-    public function idSelect($where) {
+    public function idSelect($where)
+    {
         return $this->res2id($this->query("select id from $this->prefix$this->table where $where"));
     }
 
-    public function selectAssoc($sql) {
+    public function selectAssoc($sql)
+    {
         return $this->query($sql)->fetch_assoc();
     }
 
-    public function getAssoc($where) {
+    public function getAssoc($where)
+    {
         return $this->select($where)->fetch_assoc();
     }
 
-    public function update($values, $where) {
+    public function update($values, $where)
+    {
         return $this->query("update $this->prefix$this->table set $values   where $where");
     }
 
-    public function idUpdate($id, $values) {
+    public function idUpdate($id, $values)
+    {
         return $this->update($values, "id = $id");
     }
 
-    public function assoc2update(array $a) {
+    public function assoc2update(array $a)
+    {
         $list = array();
         foreach ($a As $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
-                $list[] = sprintf('%s = %s ', $name, $value);
-                {
- continue;
-}
+                $list[] = sprintf('%s = %s ', $name, $value); {
+                    continue;
+                }
             }
 
             $list[] = sprintf('%s = %s', $name, $this->quote($value));
@@ -2109,27 +2240,31 @@ throw new \Exception($log);
         return implode(', ', $list);
     }
 
-    public function updateAssoc(array $a, $index = 'id') {
+    public function updateAssoc(array $a, $index = 'id')
+    {
         $id = $a[$index];
         unset($a[$index]);
         return $this->update($this->assoc2update($a) , "$index = '$id' limit 1");
     }
 
-public function setValues($id, array $values)
-{
+    public function setValues($id, array $values)
+    {
         return $this->update($this->assoc2update($values) , "id = '$id' limit 1");
-}
+    }
 
-    public function insertRow($row) {
+    public function insertRow($row)
+    {
         return $this->query(sprintf('INSERT INTO %s%s %s', $this->prefix, $this->table, $row));
     }
 
-    public function insertAssoc(array $a) {
+    public function insertAssoc(array $a)
+    {
         unset($a['id']);
         return $this->add($a);
     }
 
-    public function addUpdate(array $a) {
+    public function addUpdate(array $a)
+    {
         if ($this->idexists($a['id'])) {
             $this->updateAssoc($a);
         } else {
@@ -2137,21 +2272,24 @@ public function setValues($id, array $values)
         }
     }
 
-    public function add(array $a) {
+    public function add(array $a)
+    {
         $this->insertRow($this->assocToRow($a));
         if ($id = $this->mysqli->insert_id) {
- return $id;
-}
+            return $id;
+        }
 
         $r = $this->query('select last_insert_id() from ' . $this->prefix . $this->table)->fetch_row();
         return (int)$r[0];
     }
 
-    public function insert(array $a) {
+    public function insert(array $a)
+    {
         $this->insertRow($this->assocToRow($a));
     }
 
-    public function assocToRow(array $a) {
+    public function assocToRow(array $a)
+    {
         $vals = array();
         foreach ($a as $val) {
             if (is_bool($val)) {
@@ -2164,7 +2302,8 @@ public function setValues($id, array $values)
         return sprintf('(%s) values (%s)', implode(', ', array_keys($a)) , implode(', ', $vals));
     }
 
-    public function getCount($where = '') {
+    public function getCount($where = '')
+    {
         $sql = "SELECT COUNT(*) as count FROM $this->prefix$this->table";
         if ($where) $sql.= ' where ' . $where;
         if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
@@ -2173,19 +2312,23 @@ public function setValues($id, array $values)
         return false;
     }
 
-    public function delete($where) {
+    public function delete($where)
+    {
         return $this->query("delete from $this->prefix$this->table where $where");
     }
 
-    public function idDelete($id) {
+    public function idDelete($id)
+    {
         return $this->query("delete from $this->prefix$this->table where id = $id");
     }
 
-    public function deleteItems(array $items) {
+    public function deleteItems(array $items)
+    {
         return $this->delete('id in (' . implode(', ', $items) . ')');
     }
 
-    public function idExists($id) {
+    public function idExists($id)
+    {
         if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
             return $r && $r->fetch_assoc();
         }
@@ -2193,66 +2336,74 @@ public function setValues($id, array $values)
         return false;
     }
 
-    public function exists($where) {
+    public function exists($where)
+    {
         return $this->query("select *  from $this->prefix$this->table where $where limit 1")->num_rows;
     }
 
-    public function getList(array $list) {
+    public function getList(array $list)
+    {
         return $this->res2assoc($this->select(sprintf('id in (%s)', implode(',', $list))));
     }
 
-    public function getItems($where) {
+    public function getItems($where)
+    {
         return $this->res2assoc($this->select($where));
     }
 
-    public function getItem($id, $propname = 'id') {
+    public function getItem($id, $propname = 'id')
+    {
         if ($r = $this->query("select * from $this->prefix$this->table where $propname = $id limit 1")) {
- return $r->fetch_assoc();
-}
+            return $r->fetch_assoc();
+        }
 
         return false;
     }
 
-    public function findItem($where) {
+    public function findItem($where)
+    {
         return $this->query("select * from $this->prefix$this->table where $where limit 1")->fetch_assoc();
     }
 
-    public function findId($where) {
+    public function findId($where)
+    {
         return $this->findprop('id', $where);
     }
 
-    public function findProp($propname, $where) {
+    public function findProp($propname, $where)
+    {
         if ($r = $this->query("select $propname from $this->prefix$this->table where $where limit 1")->fetch_assoc()) {
- return $r[$propname];
-}
-
+            return $r[$propname];
+        }
 
         return false;
     }
 
-    public function getVal($table, $id, $name) {
+    public function getVal($table, $id, $name)
+    {
         if ($r = $this->query("select $name from $this->prefix$table where id = $id limit 1")->fetch_assoc()) {
- return $r[$name];
-}
-
+            return $r[$name];
+        }
 
         return false;
     }
 
-    public function getValue($id, $name) {
+    public function getValue($id, $name)
+    {
         if ($r = $this->query("select $name from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) {
- return $r[$name];
-}
-
+            return $r[$name];
+        }
 
         return false;
     }
 
-    public function setValue($id, $name, $value) {
+    public function setValue($id, $name, $value)
+    {
         return $this->update("$name = " . $this->quote($value) , "id = $id");
     }
 
-    public function getValues($names, $where) {
+    public function getValues($names, $where)
+    {
         $result = array();
         $res = $this->query("select $names from $this->prefix$this->table where $where");
         if (is_object($res)) {
@@ -2263,7 +2414,8 @@ public function setValues($id, array $values)
         return $result;
     }
 
-    public function res2array($res) {
+    public function res2array($res)
+    {
         $result = array();
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
@@ -2273,7 +2425,8 @@ public function setValues($id, array $values)
         }
     }
 
-    public function res2id($res) {
+    public function res2id($res)
+    {
         $result = array();
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
@@ -2283,7 +2436,8 @@ public function setValues($id, array $values)
         return $result;
     }
 
-    public function res2assoc($res) {
+    public function res2assoc($res)
+    {
         $result = array();
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
@@ -2293,7 +2447,8 @@ public function setValues($id, array $values)
         return $result;
     }
 
-    public function res2items($res) {
+    public function res2items($res)
+    {
         $result = array();
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
@@ -2303,115 +2458,121 @@ public function setValues($id, array $values)
         return $result;
     }
 
-    public function fetchassoc($res) {
+    public function fetchassoc($res)
+    {
         return is_object($res) ? $res->fetch_assoc() : false;
     }
 
-    public function fetchnum($res) {
+    public function fetchnum($res)
+    {
         return is_object($res) ? $res->fetch_row() : false;
     }
 
-    public function countof($res) {
+    public function countof($res)
+    {
         return is_object($res) ? $res->num_rows : 0;
     }
 
-public function enableZeroDatetime()
-{
-//use mysqli to prevent strange warnings
+    public function enableZeroDatetime()
+    {
+        //use mysqli to prevent strange warnings
         $v = $this->fetchassoc($this->mysqli->query('show variables like \'sql_mode\''));
-$a = explode(',', $v['Value']);
-$ex = ['NO_ZERO_IN_DATE', 'NO_ZERO_DATE'];
-$a = array_diff($a, $ex);
-$v = implode(',', $a);
-$this->mysqli->query("set sql_mode = '$v'");
-}
+        $a = explode(',', $v['Value']);
+        $ex = ['NO_ZERO_IN_DATE', 'NO_ZERO_DATE'];
+        $a = array_diff($a, $ex);
+        $v = implode(',', $a);
+        $this->mysqli->query("set sql_mode = '$v'");
+    }
 }
 
 //ErrorPages.php
 namespace litepubl\core;
-use litepubl\pages\Notfound404;
+
 use litepubl\pages\Forbidden;
-use litepubl\view\MainView;
+use litepubl\pages\Notfound404;
 use litepubl\view\Lang;
+use litepubl\view\MainView;
 
 class ErrorPages
 {
-use AppTrait;
+    use AppTrait;
 
-public $cache;
+    public $cache;
 
-public function __construct()
-{
-$options = $this->getApp()->options;
-$this->cache = $options->cache && ! $options->adminFlag;
-}
+    public function __construct()
+    {
+        $options = $this->getApp()->options;
+        $this->cache = $options->cache && !$options->adminFlag;
+    }
 
-public function notfound()
-{
-$filename = '404.php';
-if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result);
-return $result;
-}
-
-$instance  = Notfound404::i();
-$context = new Context(new Request('', ''), new Response());
-$context->model = $instance;
-$context->view = $instance;
-$instance->request($context);
-MainView::i()->render($context);
-$context->response->send();
-
-if ($this->cache) {
-$result = $context->response->getString();
-$this->getApp()->cache->savePhp($filename, $result);
-return $result;
-}
-}
-
-public function forbidden()
-{
-$filename = '403.php';
-if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
-eval('?>' . $result);
-return $result;
-}
-
-$instance  = Forbidden::i();
-$context = new Context(new Request('', ''), new Response());
-$context->model = $instance;
-$instance->request($context);
-MainView::i()->render($context);
-$context->response->send();
-
-if ($this->cache) {
-$result = $context->response->getString();
-$this->getApp()->cache->savePhp($filename, $result);
-return $result;
-}
-}
-
-public function attack($url) {
-Lang::usefile('admin');
-            if ($_POST) {
-                return Lang::get('login', 'xxxattack');
-            }
-
-                return Lang::get('login', 'confirmxxxattack')
- . sprintf(' <a href="%1$s">%1$s</a>', $url);
+    public function notfound()
+    {
+        $filename = '404.php';
+        if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
+            eval('?>' . $result);
+            return $result;
         }
+
+        $instance = Notfound404::i();
+        $context = new Context(new Request('', '') , new Response());
+        $context->model = $instance;
+        $context->view = $instance;
+        $instance->request($context);
+        MainView::i()->render($context);
+        $context->response->send();
+
+        if ($this->cache) {
+            $result = $context->response->getString();
+            $this->getApp()->cache->savePhp($filename, $result);
+            return $result;
+        }
+    }
+
+    public function forbidden()
+    {
+        $filename = '403.php';
+        if ($this->cache && ($result = $this->getApp()->cache->getString($filename))) {
+            eval('?>' . $result);
+            return $result;
+        }
+
+        $instance = Forbidden::i();
+        $context = new Context(new Request('', '') , new Response());
+        $context->model = $instance;
+        $instance->request($context);
+        MainView::i()->render($context);
+        $context->response->send();
+
+        if ($this->cache) {
+            $result = $context->response->getString();
+            $this->getApp()->cache->savePhp($filename, $result);
+            return $result;
+        }
+    }
+
+    public function attack($url)
+    {
+        Lang::usefile('admin');
+        if ($_POST) {
+            return Lang::get('login', 'xxxattack');
+        }
+
+        return Lang::get('login', 'confirmxxxattack') . sprintf(' <a href="%1$s">%1$s</a>', $url);
+    }
 
 }
 
 //Events.php
 namespace litepubl\core;
 
-class Events extends Data {
+class Events extends Data
+{
     protected $events;
     protected $eventnames;
     protected $map;
 
-    public function __construct() {
+    public function __construct()
+    {
         if (!is_array($this->eventnames)) {
             $this->eventnames = array();
         }
@@ -2426,50 +2587,58 @@ class Events extends Data {
         $this->load();
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         unset($this->data, $this->events, $this->eventnames, $this->map);
     }
 
-    protected function create() {
-parent::create();
+    protected function create()
+    {
+        parent::create();
         $this->addmap('events', array());
         $this->addmap('coclasses', array());
     }
 
-    public function assignMap() {
+    public function assignMap()
+    {
         foreach ($this->map as $propname => $key) {
             $this->$propname = & $this->data[$key];
         }
     }
 
-    public function afterLoad() {
+    public function afterLoad()
+    {
         $this->assignmap();
 
         foreach ($this->coclasses as $coclass) {
-            $this->coinstances[] = static::iGet($coclass);
+            $this->coinstances[] = static ::iGet($coclass);
         }
 
         parent::afterload();
     }
 
-    protected function addMap($name, $value) {
+    protected function addMap($name, $value)
+    {
         $this->map[$name] = $name;
         $this->data[$name] = $value;
         $this->$name = & $this->data[$name];
     }
 
-    public function free() {
-        unset( $this->getApp()->classes->instances[get_class($this) ]);
+    public function free()
+    {
+        unset($this->getApp()->classes->instances[get_class($this) ]);
         foreach ($this->coinstances as $coinstance) {
             $coinstance->free();
         }
     }
 
-    public function eventExists($name) {
+    public function eventExists($name)
+    {
         return in_array($name, $this->eventnames);
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (method_exists($this, $name)) {
             return array(
                 get_class($this) ,
@@ -2480,7 +2649,8 @@ parent::create();
         return parent::__get($name);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (parent::__set($name, $value)) {
             return true;
         }
@@ -2492,11 +2662,13 @@ parent::create();
         $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
     }
 
-    public function method_exists($name) {
+    public function method_exists($name)
+    {
         return in_array($name, $this->eventnames);
     }
 
-    public function __call($name, $params) {
+    public function __call($name, $params)
+    {
         if (in_array($name, $this->eventnames)) {
             return $this->callevent($name, $params);
         }
@@ -2504,16 +2676,19 @@ parent::create();
         parent::__call($name, $params);
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return parent::__isset($name) || in_array($name, $this->eventnames);
     }
 
-    protected function addEvents() {
+    protected function addEvents()
+    {
         $a = func_get_args();
         array_splice($this->eventnames, count($this->eventnames) , 0, $a);
     }
 
-    public function callEvent($name, $params) {
+    public function callEvent($name, $params)
+    {
         if (!isset($this->events[$name])) {
             return '';
         }
@@ -2525,7 +2700,7 @@ parent::create();
 
             if (is_string($class) && class_exists($class)) {
                 $call = array(
-                    static::iGet($class) ,
+                    static ::iGet($class) ,
                     isset($item[1]) ? $item[1] : $item['func']
                 );
             } elseif (is_object($class)) {
@@ -2564,15 +2739,18 @@ parent::create();
         return $result;
     }
 
-    public static function cancelEvent($result) {
+    public static function cancelEvent($result)
+    {
         throw new CancelEvent($result);
     }
 
-    public function setEvent($name, $params) {
+    public function setEvent($name, $params)
+    {
         return $this->addevent($name, $params['class'], $params['func']);
     }
 
-    public function addEvent($name, $class, $func, $once = false) {
+    public function addEvent($name, $class, $func, $once = false)
+    {
         if (!in_array($name, $this->eventnames)) {
             return $this->error(sprintf('No such %s event', $name));
         }
@@ -2615,7 +2793,8 @@ parent::create();
         }
     }
 
-    public function delete_event_class($name, $class) {
+    public function delete_event_class($name, $class)
+    {
         if (!isset($this->events[$name])) {
             return false;
         }
@@ -2644,15 +2823,18 @@ parent::create();
         return $deleted;
     }
 
-    public function unsubscribeclass($obj) {
+    public function unsubscribeclass($obj)
+    {
         $this->unbind($obj);
     }
 
-    public function unsubscribeclassname($class) {
+    public function unsubscribeclassname($class)
+    {
         $this->unbind($class);
     }
 
-    public function unbind($c) {
+    public function unbind($c)
+    {
         $class = static ::get_class_name($c);
         foreach ($this->events as $name => $events) {
             foreach ($events as $i => $item) {
@@ -2665,7 +2847,8 @@ parent::create();
         $this->save();
     }
 
-    public function setEventorder($eventname, $c, $order) {
+    public function setEventorder($eventname, $c, $order)
+    {
         if (!isset($this->events[$eventname])) {
             return false;
         }
@@ -2694,19 +2877,22 @@ parent::create();
         }
     }
 
-    private function indexofcoclass($class) {
+    private function indexofcoclass($class)
+    {
         return array_search($class, $this->coclasses);
     }
 
-    public function addcoclass($class) {
+    public function addcoclass($class)
+    {
         if ($this->indexofcoclass($class) === false) {
             $this->coclasses[] = $class;
             $this->save();
-            $this->coinstances = static::iGet($class);
+            $this->coinstances = static ::iGet($class);
         }
     }
 
-    public function deletecoclass($class) {
+    public function deletecoclass($class)
+    {
         $i = $this->indexofcoclass($class);
         if (is_int($i)) {
             array_splice($this->coclasses, $i, 1);
@@ -2720,22 +2906,25 @@ parent::create();
 namespace litepubl\core;
 
 class Getter
- {
+{
     public $get;
     public $set;
 
-    public function __construct($get = null, $set = null) {
+    public function __construct($get = null, $set = null)
+    {
         $this->get = $get;
         $this->set = $set;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         return call_user_func_array($this->get, array(
             $name
         ));
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         call_user_func_array($this->set, array(
             $name,
             $value
@@ -2751,11 +2940,13 @@ class Item extends Data
 {
     public static $instances;
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return static ::itemInstance(get_called_class() , (int)$id);
     }
 
-    public static function itemInstance($class, $id = 0) {
+    public static function itemInstance($class, $id = 0)
+    {
         $name = $class::getInstanceName();
         if (!isset(static ::$instances)) {
             static ::$instances = [];
@@ -2765,11 +2956,12 @@ class Item extends Data
             return static ::$instances[$name][$id];
         }
 
-        $self =  static::getAppInstance()->classes->newItem($name, $class, $id);
+        $self = static ::getAppInstance()->classes->newItem($name, $class, $id);
         return $self->loadData($id);
     }
 
-    public function loadData($id) {
+    public function loadData($id)
+    {
         $this->data['id'] = $id;
         if ($id) {
             if (!$this->load()) {
@@ -2783,64 +2975,69 @@ class Item extends Data
         return $this;
     }
 
-    public function free() {
+    public function free()
+    {
         unset(static ::$instances[$this->getinstancename() ][$this->id]);
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->data['id'] = 0;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->free();
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (parent::__set($name, $value)) {
- return true;
-}
-
+            return true;
+        }
 
         return $this->Error("Field $name not exists in class " . get_class($this));
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         if ($id != $this->id) {
             $name = $this->instanceName;
             if (!isset(static ::$instances)) {
-static ::$instances = array();
-}
+                static ::$instances = array();
+            }
 
             if (!isset(static ::$instances[$name])) {
-static ::$instances[$name] = array();
-}
+                static ::$instances[$name] = array();
+            }
 
             $a = & static ::$instances[$this->instanceName];
             if (isset($a[$this->id])) {
-unset($a[$this->id]);
-}
+                unset($a[$this->id]);
+            }
 
             if (isset($a[$id])) {
-$a[$id] = 0;
-}
+                $a[$id] = 0;
+            }
 
             $a[$id] = $this;
             $this->data['id'] = $id;
         }
     }
 
-    public function loadItem($id) {
+    public function loadItem($id)
+    {
         if ($id == $this->id) {
-return true;
-}
-
-            $this->setid($id);
-            if ($this->load()) {
- return true;
+            return true;
         }
 
-return false;
+        $this->setid($id);
+        if ($this->load()) {
+            return true;
+        }
+
+        return false;
     }
 
 }
@@ -2848,20 +3045,21 @@ return false;
 //ItemOwnerTrait.php
 namespace litepubl\core;
 
-trait ItemOwnerTrait
-{
+traitItemOwnerTrait {
 
-    public function load() {
+    public function load()
+    {
         $owner = $this->owner;
         if ($owner->itemExists($this->id)) {
             $this->data = & $owner->items[$this->id];
-$this->afterLoad();
+            $this->afterLoad();
             return true;
         }
         return false;
     }
 
-    public function save() {
+    public function save()
+    {
         return $this->owner->save();
     }
 
@@ -2870,14 +3068,15 @@ $this->afterLoad();
 //Items.php
 namespace litepubl\core;
 
-class Items extends Events 
+class Items extends Events
 {
     public $items;
     public $dbversion;
     protected $idprop;
     protected $autoid;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->addevents('added', 'deleted');
         $this->idprop = 'id';
@@ -2889,21 +3088,24 @@ class Items extends Events
         }
     }
 
-    public function getStorage() {
-if ($this->dbversion) {
-        return  $this->getApp()->poolStorage;
-} else {
-return parent::getStorage();
-}
+    public function getStorage()
+    {
+        if ($this->dbversion) {
+            return $this->getApp()->poolStorage;
+        } else {
+            return parent::getStorage();
+        }
     }
 
-    public function loadall() {
+    public function loadall()
+    {
         if ($this->dbversion) {
             return $this->select('', '');
         }
     }
 
-    public function loaditems(array $items) {
+    public function loaditems(array $items)
+    {
         if (!$this->dbversion) {
             return;
         }
@@ -2918,7 +3120,8 @@ return parent::getStorage();
         $this->select("$this->thistable.$this->idprop in ($list)", '');
     }
 
-    public function select($where, $limit) {
+    public function select($where, $limit)
+    {
         if (!$this->dbversion) {
             $this->error('Select method must be called ffrom database version');
         }
@@ -2930,13 +3133,14 @@ return parent::getStorage();
         return $this->res2items($this->db->query("SELECT * FROM $this->thistable $where $limit"));
     }
 
-    public function res2items($res) {
+    public function res2items($res)
+    {
         if (!$res) {
             return array();
         }
 
         $result = array();
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = $item[$this->idprop];
             $result[] = $id;
@@ -2946,12 +3150,14 @@ return parent::getStorage();
         return $result;
     }
 
-    public function findItem($where) {
+    public function findItem($where)
+    {
         $a = $this->select($where, 'limit 1');
         return count($a) ? $a[0] : false;
     }
 
-    public function getCount() {
+    public function getCount()
+    {
         if ($this->dbversion) {
             return $this->db->getcount();
         } else {
@@ -2959,7 +3165,8 @@ return parent::getStorage();
         }
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         if (isset($this->items[$id])) {
             return $this->items[$id];
         }
@@ -2971,7 +3178,8 @@ return parent::getStorage();
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
-    public function getValue($id, $name) {
+    public function getValue($id, $name)
+    {
         if ($this->dbversion && !isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id, $this->idprop);
         }
@@ -2979,14 +3187,16 @@ return parent::getStorage();
         return $this->items[$id][$name];
     }
 
-    public function setValue($id, $name, $value) {
+    public function setValue($id, $name, $value)
+    {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
             $this->db->update("$name = " . Str::quote($value) , "$this->idprop = $id");
         }
     }
 
-    public function itemExists($id) {
+    public function itemExists($id)
+    {
         if (isset($this->items[$id])) {
             return true;
         }
@@ -3002,7 +3212,8 @@ return parent::getStorage();
         return false;
     }
 
-    public function indexof($name, $value) {
+    public function indexof($name, $value)
+    {
         if ($this->dbversion) {
             return $this->db->findprop($this->idprop, "$name = " . Str::quote($value));
         }
@@ -3015,7 +3226,8 @@ return parent::getStorage();
         return false;
     }
 
-    public function additem(array $item) {
+    public function additem(array $item)
+    {
         $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
         $item[$this->idprop] = $id;
         $this->items[$id] = $item;
@@ -3027,7 +3239,8 @@ return parent::getStorage();
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($this->dbversion) {
             $this->db->delete("$this->idprop = $id");
         }
@@ -3055,7 +3268,8 @@ class ItemsPosts extends Items
     public $postprop;
     public $itemprop;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'itemsposts';
         $this->table = 'itemsposts';
@@ -3064,7 +3278,8 @@ class ItemsPosts extends Items
         $this->itemprop = 'item';
     }
 
-    public function add($idpost, $iditem) {
+    public function add($idpost, $iditem)
+    {
         $this->db->insert(array(
             $this->postprop => $idpost,
             $this->itemprop => $iditem
@@ -3072,31 +3287,37 @@ class ItemsPosts extends Items
         $this->added();
     }
 
-    public function exists($idpost, $iditem) {
+    public function exists($idpost, $iditem)
+    {
         return $this->db->exists("$this->postprop = $idpost and $this->itemprop = $iditem");
     }
 
-    public function remove($idpost, $iditem) {
+    public function remove($idpost, $iditem)
+    {
         return $this->db->delete("$this->postprop = $idpost and $this->itemprop = $iditem");
     }
 
-    public function delete($idpost) {
+    public function delete($idpost)
+    {
         return $this->deletepost($idpost);
     }
 
-    public function deletepost($idpost) {
+    public function deletepost($idpost)
+    {
         $db = $this->db;
         $result = $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
         $db->delete("$this->postprop = $idpost");
         return $result;
     }
 
-    public function deleteitem($iditem) {
+    public function deleteitem($iditem)
+    {
         $this->db->delete("$this->itemprop = $iditem");
         $this->deleted();
     }
 
-    public function setItems($idpost, array $items) {
+    public function setItems($idpost, array $items)
+    {
         Arr::clean($items);
         $db = $this->db;
         $old = $this->getitems($idpost);
@@ -3115,20 +3336,24 @@ class ItemsPosts extends Items
         return array_merge($old, $add);
     }
 
-    public function getItems($idpost) {
-        return  $this->getApp()->db->res2id( $this->getApp()->db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+    public function getItems($idpost)
+    {
+        return $this->getApp()->db->res2id($this->getApp()->db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
     }
 
-    public function getPosts($iditem) {
-        return  $this->getApp()->db->res2id( $this->getApp()->db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+    public function getPosts($iditem)
+    {
+        return $this->getApp()->db->res2id($this->getApp()->db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
     }
 
-    public function getPostscount($ititem) {
+    public function getPostscount($ititem)
+    {
         $db = $this->getdb($this->tablepost);
         return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
     }
 
-    public function updateposts(array $list, $propname) {
+    public function updateposts(array $list, $propname)
+    {
         $db = $this->db;
         foreach ($list as $idpost) {
             $items = $this->getitems($idpost);
@@ -3146,39 +3371,46 @@ class MemvarMemcache extends CacheMemcache
 {
     public $data;
 
-    public function __construct() {
-parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
         $this->data = array();
     }
 
-    public function getRevision() {
-//nothing, just to override parent method
-}
+    public function getRevision()
+    {
+        //nothing, just to override parent method
+        
+    }
 
-    public function getPrefix() {
+    public function getPrefix()
+    {
         return $this->prefix;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
 
-            if ($result = $this->get($name)) {
-                $this->data[$name] = $result;
-            }
+        if ($result = $this->get($name)) {
+            $this->data[$name] = $result;
+        }
 
         return $result;
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         $this->data[$name] = $value;
-            $this->set($name, $value);
-        }
+        $this->set($name, $value);
+    }
 
-    public function __unset($name) {
-            unset($this->data[$name]);
-$this->delete($name);
+    public function __unset($name)
+    {
+        unset($this->data[$name]);
+        $this->delete($name);
     }
 
 }
@@ -3188,34 +3420,38 @@ namespace litepubl\core;
 
 class MemvarMysql
 {
-use appTrait;
+    use appTrait;
 
     public $lifetime;
     public $table;
     public $data;
     private $checked;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->table = 'memstorage';
         $this->checked = false;
         $this->data = array();
-            $this->lifetime = 10800;
+        $this->lifetime = 10800;
     }
 
-public function getDb() {
-return  $this->getApp()->db;
-}
+    public function getDb()
+    {
+        return $this->getApp()->db;
+    }
 
-public function getName($name) {
+    public function getName($name)
+    {
         if (strlen($name) > 32) {
-return md5($name);
+            return md5($name);
         }
 
-return $name;
-}
+        return $name;
+    }
 
-    public function __get($name) {
-$name = $this->getname($name);
+    public function __get($name)
+    {
+        $name = $this->getname($name);
         if (isset($this->data[$name])) {
             return $this->data[$name];
         }
@@ -3223,61 +3459,67 @@ $name = $this->getname($name);
         return $this->get($name);
     }
 
-    public function get($name) {
+    public function get($name)
+    {
         $result = false;
-            if (!$this->checked) {
-                $this->check();
-            }
+        if (!$this->checked) {
+            $this->check();
+        }
 
-            $db = $this->getdb();
-            if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
-                $result = $this->unserialize($r['value']);
-                $this->data[$name] = $result;
-            }
+        $db = $this->getdb();
+        if ($r = $db->query("select value from $db->prefix$this->table where name = '$name' limit 1")->fetch_assoc()) {
+            $result = $this->unserialize($r['value']);
+            $this->data[$name] = $result;
+        }
 
         return $result;
     }
 
-    public function __set($name, $value) {
-$name = $this->getname($name);
+    public function __set($name, $value)
+    {
+        $name = $this->getname($name);
         $exists = isset($this->data[$name]);
         $this->data[$name] = $value;
-            if (!$this->checked) {
-                $this->check();
-            }
+        if (!$this->checked) {
+            $this->check();
+        }
 
-            $db = $this->getdb();
-            $v = $db->quote($this->serialize($value));
-            if ($exists) {
-                $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
-            } else {
-                $db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
-            }
-}
+        $db = $this->getdb();
+        $v = $db->quote($this->serialize($value));
+        if ($exists) {
+            $db->query("update $db->prefix$this->table set value = $v where name = '$name' limit 1");
+        } else {
+            $db->query("insert into $db->prefix$this->table (name, value) values('$name', $v)");
+        }
+    }
 
-    public function __unset($name) {
-$name = $this->getname($name);
+    public function __unset($name)
+    {
+        $name = $this->getname($name);
         if (isset($this->data[$name])) {
             unset($this->data[$name]);
         }
 
-            if (!$this->checked) {
-                $this->check();
-            }
+        if (!$this->checked) {
+            $this->check();
+        }
 
-            $db = $this->getdb();
-            $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
+        $db = $this->getdb();
+        $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
 
-    public function serialize($data) {
+    public function serialize($data)
+    {
         return serialize($data);
     }
 
-    public function unserialize(&$data) {
+    public function unserialize(&$data)
+    {
         return unserialize($data);
     }
 
-    public function check() {
+    public function check()
+    {
         $this->checked = true;
 
         //exclude throw exception
@@ -3298,7 +3540,8 @@ $name = $this->getname($name);
         }
     }
 
-    public function loadAll() {
+    public function loadAll()
+    {
         $db = $this->getdb();
         $res = $db->query("select * from $db->prefix$this->table");
         if (is_object($res)) {
@@ -3308,7 +3551,8 @@ $name = $this->getname($name);
         }
     }
 
-    public function saveAll() {
+    public function saveAll()
+    {
         $db = $this->getdb();
         $a = array();
         foreach ($this->data as $name => $value) {
@@ -3319,7 +3563,8 @@ $name = $this->getname($name);
         $db->query("insert into $db->prefix$this->table (name, value) values $values");
     }
 
-    public function createTable() {
+    public function createTable()
+    {
         $db = $this->getdb();
         $db->mysqli->query("create table if not exists $db->prefix$this->table (
     name varchar(32) not null,
@@ -3331,7 +3576,8 @@ $name = $this->getname($name);
     COLLATE = utf8_general_ci");
     }
 
-    public function clear() {
+    public function clear()
+    {
         $db = $this->getdb();
         try {
             $db->query("truncate table $db->prefix$this->table");
@@ -3347,30 +3593,32 @@ namespace litepubl\core;
 
 class Memvars
 {
-use AppTrait;
+    use AppTrait;
 
-public static $vars;
+    public static $vars;
 
-public static function i() {
-if (!static::$vars) {
-if (static::getAppInstance()->memcache) {
-static::$vars = new MemvarMemcache();
-} else {
-static::$vars = new MemvarMysql();
-}
-}
+    public static function i()
+    {
+        if (!static ::$vars) {
+            if (static ::getAppInstance()->memcache) {
+                static ::$vars = new MemvarMemcache();
+            } else {
+                static ::$vars = new MemvarMysql();
+            }
+        }
 
-return  static::$vars;
-}
+        return static ::$vars;
+    }
 }
 
 //Options.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class Options extends Events
 {
-use PoolStorageTrait;
+    use PoolStorageTrait;
 
     public $groupnames;
     public $parentgroups;
@@ -3381,7 +3629,8 @@ use PoolStorageTrait;
     public $gmt;
     public $errorlog;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'options';
         $this->addevents('changed', 'perpagechanged');
@@ -3394,14 +3643,16 @@ use PoolStorageTrait;
         $this->addmap('parentgroups', array());
     }
 
-    public function afterLoad() {
+    public function afterLoad()
+    {
         parent::afterload();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
         if (!defined('dbversion')) define('dbversion', true);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (in_array($name, $this->eventnames)) {
             $this->addevent($name, $value['class'], $value['func']);
             return true;
@@ -3421,25 +3672,28 @@ use PoolStorageTrait;
         return true;
     }
 
-    private function doChanged($name, $value) {
+    private function doChanged($name, $value)
+    {
         if ($name == 'perpage') {
             $this->perpagechanged();
-$this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         } elseif ($name == 'cache') {
-$this->getApp()->cache->clear();
+            $this->getApp()->cache->clear();
         } else {
             $this->changed($name, $value);
         }
     }
 
-    public function delete($name) {
+    public function delete($name)
+    {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
         }
     }
 
-    public function getAdminFlag() {
+    public function getAdminFlag()
+    {
         if (is_null($this->adminFlagChecked)) {
             return $this->adminFlagChecked = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
         }
@@ -3447,11 +3701,13 @@ $this->getApp()->cache->clear();
         return $this->adminFlagChecked;
     }
 
-    public function setAdminFlag($val) {
+    public function setAdminFlag($val)
+    {
         $this->adminFlagChecked = $val;
     }
 
-    public function getuser() {
+    public function getuser()
+    {
         if (is_null($this->_user)) {
             $this->_user = $this->authenabled ? $this->authcookie() : false;
         }
@@ -3459,15 +3715,18 @@ $this->getApp()->cache->clear();
         return $this->_user;
     }
 
-    public function setuser($id) {
+    public function setuser($id)
+    {
         $this->_user = $id;
     }
 
-    public function authCookie() {
+    public function authCookie()
+    {
         return $this->authcookies(isset($_COOKIE['litepubl_user_id']) ? (int)$_COOKIE['litepubl_user_id'] : 0, isset($_COOKIE['litepubl_user']) ? (string)$_COOKIE['litepubl_user'] : '');
     }
 
-    public function authCookies($iduser, $password) {
+    public function authCookies($iduser, $password)
+    {
         if (!$iduser || !$password) return false;
         $password = $this->hash($password);
         if ($password == $this->emptyhash) return false;
@@ -3478,7 +3737,8 @@ $this->getApp()->cache->clear();
         return $iduser;
     }
 
-    public function findUser($iduser, $cookie) {
+    public function findUser($iduser, $cookie)
+    {
         if ($iduser == 1) return $this->compare_cookie($cookie);
         if (!$this->usersenabled) return false;
 
@@ -3494,11 +3754,13 @@ $this->getApp()->cache->clear();
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
 
-    private function compare_cookie($cookie) {
+    private function compare_cookie($cookie)
+    {
         return !empty($this->cookiehash) && ($this->cookiehash == $cookie) && ($this->cookieexpired > time());
     }
 
-    public function emailExists($email) {
+    public function emailExists($email)
+    {
         if (!$email) return false;
         if (!$this->authenabled) return false;
         if ($email == $this->email) return 1;
@@ -3506,13 +3768,15 @@ $this->getApp()->cache->clear();
         return Users::i()->emailexists($email);
     }
 
-    public function auth($email, $password) {
+    public function auth($email, $password)
+    {
         if (!$this->authenabled) return false;
         if (!$email && !$password) return $this->authcookie();
         return $this->authpassword($this->emailexists($email) , $password);
     }
 
-    public function authPassword($iduser, $password) {
+    public function authPassword($iduser, $password)
+    {
         if (!$iduser) return false;
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) return false;
@@ -3525,7 +3789,8 @@ $this->getApp()->cache->clear();
         return $iduser;
     }
 
-    public function updateGroup() {
+    public function updateGroup()
+    {
         if ($this->_user == 1) {
             $this->group = 'admin';
             $this->idgroups = array(
@@ -3538,25 +3803,29 @@ $this->getApp()->cache->clear();
         }
     }
 
-    public function can_edit($idauthor) {
+    public function can_edit($idauthor)
+    {
         return ($idauthor == $this->user) || ($this->group == 'admin') || ($this->group == 'editor');
     }
 
-    public function getpassword() {
+    public function getpassword()
+    {
         if ($this->user <= 1) {
-return $this->data['password'];
-}
+            return $this->data['password'];
+        }
 
         $users = Users::i();
         return $users->getvalue($this->user, 'password');
     }
 
-    public function changePassword($newpassword) {
+    public function changePassword($newpassword)
+    {
         $this->data['password'] = $this->hash($newpassword);
         $this->save();
     }
 
-    public function getDBPassword() {
+    public function getDBPassword()
+    {
         if (function_exists('mcrypt_encrypt')) {
             return static ::decrypt($this->data['dbconfig']['password'], $this->solt . Config::$secret);
         } else {
@@ -3564,7 +3833,8 @@ return $this->data['password'];
         }
     }
 
-    public function setDBPassword($password) {
+    public function setDBPassword($password)
+    {
         if (function_exists('mcrypt_encrypt')) {
             $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . Config::$secret);
         } else {
@@ -3574,15 +3844,18 @@ return $this->data['password'];
         $this->save();
     }
 
-    public function logout() {
+    public function logout()
+    {
         $this->setcookies('', 0);
     }
 
-    public function setcookie($name, $value, $expired) {
+    public function setcookie($name, $value, $expired)
+    {
         setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
 
-    public function setcookies($cookie, $expired) {
+    public function setcookies($cookie, $expired)
+    {
         $this->setcookie('litepubl_user_id', $cookie ? $this->_user : '', $expired);
         $this->setcookie('litepubl_user', $cookie, $expired);
         $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
@@ -3594,11 +3867,13 @@ return $this->data['password'];
         }
     }
 
-    public function Getinstalled() {
+    public function Getinstalled()
+    {
         return isset($this->data['email']);
     }
 
-    public function settimezone($value) {
+    public function settimezone($value)
+    {
         if (!isset($this->data['timezone']) || ($this->timezone != $value)) {
             $this->data['timezone'] = $value;
             $this->save();
@@ -3607,17 +3882,20 @@ return $this->data['password'];
         }
     }
 
-    public function save_cookie($cookie, $expired) {
+    public function save_cookie($cookie, $expired)
+    {
         $this->data['cookiehash'] = $cookie ? $this->hash($cookie) : '';
         $this->cookieexpired = $expired;
         $this->save();
     }
 
-    public function hash($s) {
+    public function hash($s)
+    {
         return Str::basemd5((string)$s . $this->solt . Config::$secret);
     }
 
-    public function inGroup($groupname) {
+    public function inGroup($groupname)
+    {
         //admin has all rights
         if ($this->user == 1) return true;
         if (in_array($this->groupnames['admin'], $this->idgroups)) return true;
@@ -3629,12 +3907,14 @@ return $this->data['password'];
         return in_array($idgroup, $this->idgroups);
     }
 
-    public function inGroups(array $idgroups) {
+    public function inGroups(array $idgroups)
+    {
         if ($this->ingroup('admin')) return true;
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
-    public function hasGroup($groupname) {
+    public function hasGroup($groupname)
+    {
         if ($this->ingroup($groupname)) return true;
         // if group is children of user groups
         $idgroup = $this->groupnames[$groupname];
@@ -3648,7 +3928,7 @@ return $this->data['password'];
 namespace litepubl\core;
 
 class Paths
- {
+{
     public $home;
     public $lib;
     public $libinclude;
@@ -3661,7 +3941,8 @@ class Paths
     public $themes;
     public $files;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->home = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR;
         $this->lib = dirname(__DIR__) . DIRECTORY_SEPARATOR;
         $this->libinclude = $this->lib . 'include' . DIRECTORY_SEPARATOR;
@@ -3681,19 +3962,21 @@ class Paths
 namespace litepubl\core;
 
 class Plugin extends Events
- {
+{
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'plugins/' . strtolower(str_replace('\\', '-', get_class($this)));
     }
 
-    public function addClass($classname, $filename) {
+    public function addClass($classname, $filename)
+    {
         $ns = dirname(get_class($this));
         $reflector = new \ReflectionClass($class);
         $dir = dirname($reflector->getFileName());
 
-         $this->getApp()->classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
+        $this->getApp()->classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
     }
 
 }
@@ -3708,7 +3991,8 @@ class Pool extends Data
     protected $modified;
     protected $ongetitem;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'poolitems';
         $this->perpool = 20;
@@ -3716,7 +4000,8 @@ class Pool extends Data
         $this->modified = array();
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         if (isset($this->ongetitem)) {
             return call_user_func_array($this->ongetitem, array(
                 $id
@@ -3726,50 +4011,57 @@ class Pool extends Data
         $this->error('Call abstract method getitem in class' . get_class($this));
     }
 
-    public function getFilename($idpool) {
+    public function getFilename($idpool)
+    {
         return $this->basename . '.pool.' . $idpool;
     }
 
-    public function loadpool($idpool) {
-        if ($data =  $this->getApp()->router->cache->get($this->getfilename($idpool))) {
+    public function loadpool($idpool)
+    {
+        if ($data = $this->getApp()->router->cache->get($this->getfilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
             $this->pool[$idpool] = array();
         }
     }
 
-    public function savepool($idpool) {
+    public function savepool($idpool)
+    {
         if (!isset($this->modified[$idpool])) {
-             $this->getApp()->onClose->on($this, 'saveModified', $idpool);
+            $this->getApp()->onClose->on($this, 'saveModified', $idpool);
             $this->modified[$idpool] = true;
         }
     }
 
-    public function savemodified($idpool) {
-         $this->getApp()->router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+    public function savemodified($idpool)
+    {
+        $this->getApp()->router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
     }
 
-    public function getIdpool($id) {
+    public function getIdpool($id)
+    {
         $idpool = (int)floor($id / $this->perpool);
         if (!isset($this->pool[$idpool])) {
-$this->loadpool($idpool);
-}
+            $this->loadpool($idpool);
+        }
 
         return $idpool;
     }
 
-    public function get($id) {
+    public function get($id)
+    {
         $idpool = $this->getidpool($id);
         if (isset($this->pool[$idpool][$id])) {
-return $this->pool[$idpool][$id];
-}
+            return $this->pool[$idpool][$id];
+        }
         $result = $this->getitem($id);
         $this->pool[$idpool][$id] = $result;
         $this->savepool($idpool);
         return $result;
     }
 
-    public function set($id, $item) {
+    public function set($id, $item)
+    {
         $idpool = $this->getidpool($id);
         $this->pool[$idpool][$id] = $item;
         $this->savepool($idpool);
@@ -3781,22 +4073,25 @@ return $this->pool[$idpool][$id];
 namespace litepubl\core;
 
 class PoolStorage
- {
-use AppTrait;
+{
+    use AppTrait;
 
     public $data;
     private $modified;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->data = [];
-         $this->loadData();
+        $this->loadData();
     }
 
-    public function getStorage() {
+    public function getStorage()
+    {
         return $this->getApp()->storage;
     }
 
-    public function save(Data $obj) {
+    public function save(Data $obj)
+    {
         $this->modified = true;
         $base = $obj->getBaseName();
         if (!isset($this->data[$base])) {
@@ -3806,7 +4101,8 @@ use AppTrait;
         return true;
     }
 
-    public function load(Data $obj) {
+    public function load(Data $obj)
+    {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             $obj->data = & $this->data[$base];
@@ -3817,7 +4113,8 @@ use AppTrait;
         }
     }
 
-    public function remove(Data $obj) {
+    public function remove(Data $obj)
+    {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             unset($this->data[$base]);
@@ -3826,8 +4123,9 @@ use AppTrait;
         }
     }
 
-    public function loadData() {
-        if ($data = $this->getStorage()->loaddata( $this->getApp()->paths->data . 'storage')) {
+    public function loadData()
+    {
+        if ($data = $this->getStorage()->loaddata($this->getApp()->paths->data . 'storage')) {
             $this->data = $data;
             return true;
         }
@@ -3835,14 +4133,15 @@ use AppTrait;
         return false;
     }
 
-    public function commit() {
+    public function commit()
+    {
         if (!$this->modified) {
             return false;
         }
 
-        $lockfile =  $this->getApp()->paths->data . 'storage.lok';
+        $lockfile = $this->getApp()->paths->data . 'storage.lok';
         if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-            $this->getStorage()->saveData( $this->getApp()->paths->data . 'storage', $this->data);
+            $this->getStorage()->saveData($this->getApp()->paths->data . 'storage', $this->data);
             $this->modified = false;
             \flock($fh, LOCK_UN);
             \fclose($fh);
@@ -3858,11 +4157,13 @@ use AppTrait;
         }
     }
 
-    public function error($mesg) {
+    public function error($mesg)
+    {
         $this->getApp()->getLogger()->error($mesg);
     }
 
-    public function isInstalled() {
+    public function isInstalled()
+    {
         return count($this->data);
     }
 
@@ -3871,11 +4172,11 @@ use AppTrait;
 //PoolStorageTrait.php
 namespace litepubl\core;
 
-trait PoolStorageTrait
- {
+traitPoolStorageTrait {
 
-    public function getStorage() {
-        return  $this->getApp()->poolStorage;
+    public function getStorage()
+    {
+        return $this->getApp()->poolStorage;
     }
 
 }
@@ -3886,23 +4187,25 @@ namespace litepubl\core;
 class PropException extends \UnexpectedValueException
 {
     public $propName;
-public $className;
+    public $className;
 
-    public function __construct($className, $propName) {
-$this->className = $className;
+    public function __construct($className, $propName)
+    {
+        $this->className = $className;
         $this->propName = $propName;
 
-        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className), 404);
+        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className) , 404);
     }
 }
 
 //Request.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class Request
 {
-use AppTrait;
+    use AppTrait;
 
     public $host;
     public $isAdminPanel;
@@ -3910,89 +4213,94 @@ use AppTrait;
     public $url;
     public $uripath;
 
-public function __construct($host, $url)
- {
+    public function __construct($host, $url)
+    {
         $this->host = $this->getHost($host);
         $this->page = 1;
         $this->uripath = [];
 
-if ($url) {
-$app = $this->getApp();
-        if ( $app->site->q == '?') {
-            $this->url = substr($url, strlen( $app->site->subdir));
+        if ($url) {
+            $app = $this->getApp();
+            if ($app->site->q == '?') {
+                $this->url = substr($url, strlen($app->site->subdir));
+            } else {
+                $this->url = $_GET['url'];
+            }
         } else {
-            $this->url = $_GET['url'];
+            $this->url = '';
         }
-} else {
-$this->url = '';
-}
 
         $this->isAdminPanel = Str::begin($this->url, '/admin/') || ($this->url == '/admin');
-}
+    }
 
-    public  function getHost($host) {
+    public function getHost($host)
+    {
         if (Config::$host) {
             return config::$host;
         }
 
-$host = \strtolower(\trim($host));
+        $host = \strtolower(\trim($host));
         if ($host && \preg_match('/(www\.)?([\w\.\-]+)(:\d*)?/', $host, $m)) {
             return $m[2];
         }
 
-return 'localhost';
+        return 'localhost';
     }
 
-public function getInput()
- {
-return file_get_contents('php://input');
-}
+    public function getInput()
+    {
+        return file_get_contents('php://input');
+    }
 
-public function getGet()
-{
-return $_GET;
-}
+    public function getGet()
+    {
+        return $_GET;
+    }
 
-public function getPost()
-{
-return $_POST;
-}
+    public function getPost()
+    {
+        return $_POST;
+    }
 
-public function getArg($name, $default = false)
-{
-return isset($_GET[$name]) ? $_GET[$name] : $default;
-}
+    public function getArg($name, $default = false)
+    {
+        return isset($_GET[$name]) ? $_GET[$name] : $default;
+    }
 
-    public function getNextPage() {
+    public function getNextPage()
+    {
         $url = $this->itemRoute['url'];
-        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
+        return $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page + 1) . '/';
     }
 
-    public function getPrevpage() {
+    public function getPrevpage()
+    {
         $url = $this->itemRoute['url'];
         if ($this->page <= 2) {
             return url;
         }
 
-        return  $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
+        return $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
     }
 
-    public function signedRef() {
+    public function signedRef()
+    {
         if (isset($_GET['ref'])) {
             $ref = $_GET['ref'];
             $url = $this->url;
             $url = substr($url, 0, strpos($url, '&ref='));
-$app = $this->getApp();
-            if ($ref == md5(Config::$secret .  $app->site->url . $url .  $app->options->solt)) {
- return true;
-}
+            $app = $this->getApp();
+            if ($ref == md5(Config::$secret . $app->site->url . $url . $app->options->solt)) {
+                return true;
+            }
         }
-}
+    }
 
-    public function isXXX() {
-if ($this->signedRef()) {
-return false;
-}
+    public function isXXX()
+    {
+        if ($this->signedRef()) {
+            return false;
+        }
 
         $host = '';
         if (!empty($_SERVER['HTTP_REFERER'])) {
@@ -4003,8 +4311,9 @@ return false;
         return $host != $this->host;
     }
 
-    public function checkAttack() {
-return $this->getApp()->options->xxxcheck && $this->isXXX();
+    public function checkAttack()
+    {
+        return $this->getApp()->options->xxxcheck && $this->isXXX();
     }
 
 }
@@ -4014,165 +4323,147 @@ namespace litepubl\core;
 
 class Response
 {
-use AppTrait;
+    use AppTrait;
 
-public $body;
-public $cache;
-public $cacheHeader;
-public $headers;
-public $protocol;
-public $status;
-    protected $phrases = [
-        200 => 'OK',
-        206 => 'Partial Content',
-        301 => 'Moved Permanently',
-        302 => 'Found',
-        303 => 'See Other',
-        304 => 'Not Modified',
-        307 => 'Temporary Redirect',
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        403 => 'Forbidden',
-        404 => 'Not Found',
-        405 => 'Method Not Allowed',
-        500 => 'Internal Server Error',
-        503 => 'Service Unavailable',
-];
+    public $body;
+    public $cache;
+    public $cacheHeader;
+    public $headers;
+    public $protocol;
+    public $status;
+    protected $phrases = [200 => 'OK', 206 => 'Partial Content', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 307 => 'Temporary Redirect', 400 => 'Bad Request', 401 => 'Unauthorized', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 500 => 'Internal Server Error', 503 => 'Service Unavailable', ];
 
-public function __construct()
-{
-$this->body = '';
-$this->cache = true;
-$this->protocol = '1.1';
-$this->status = 200;
-$this->headers = [
-'Content-type' => 'text/html;charset=utf-8',
-'Last-Modified' => date('r'),
-//'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
-];
-}
+    public function __construct()
+    {
+        $this->body = '';
+        $this->cache = true;
+        $this->protocol = '1.1';
+        $this->status = 200;
+        $this->headers = ['Content-type' => 'text/html;charset=utf-8', 'Last-Modified' => date('r') ,
+        //'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
+        ];
+    }
 
-public function __set($name, $value)
-{
-if (method_exists($this, $set = 'set' . $name)) {
-$this->$set($value);
-} else {
-throw new PropException(get_class($this), $name);
-}
-}
+    public function __set($name, $value)
+    {
+        if (method_exists($this, $set = 'set' . $name)) {
+            $this->$set($value);
+        } else {
+            throw new PropException(get_class($this) , $name);
+        }
+    }
 
-public function setCache($cache)
-{
-$this->cache = $cache;
-$this->cacheHeader = $cache;
-}
+    public function setCache($cache)
+    {
+        $this->cache = $cache;
+        $this->cacheHeader = $cache;
+    }
 
+    public function setCacheHeaders($mode)
+    {
+        if ($mode) {
+            unset($this->headers['Cache-Control']);
+            unset($this->headers['Pragma']);
+        } else {
+            $this->headers['Cache-Control'] = 'no-cache, must-revalidate';
+            $this->headers['Pragma'] = 'no-cache';
+        }
+    }
 
-public function setCacheHeaders($mode)
-{
-if ($mode) {
-unset($this->headers['Cache-Control']);
-unset($this->headers['Pragma']);
-} else {
-$this->headers['Cache-Control'] = 'no-cache, must-revalidate';
-$this->headers['Pragma'] = 'no-cache';
-}
-}
+    public function send()
+    {
+        if (!isset($this->phrases[$this->status])) {
+            $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
+        }
 
-public function send() {
-if (!isset($this->phrases[$this->status])) {
-$this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
-}
+        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]) , true, $this->status);
 
-header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
+        $this->setCacheHeaders($this->cacheHeader);
+        if (isset($this->headers['Date'])) {
+            unset($this->headers['Last-Modified']);
+        }
 
-$this->setCacheHeaders($this->cacheHeader);
-if (isset($this->headers['Date'])) {
-unset($this->headers['Last-Modified']);
-}
+        foreach ($this->headers as $k => $v) {
+            header(sprintf('%s: %s', $k, $v));
+        }
 
-foreach ($this->headers as $k => $v) {
-header(sprintf('%s: %s', $k, $v));
-}
+        if (is_string($this->body)) {
+            eval('?>' . $this->body);
+            /*
+            return;
+            $f = $this->getApp()->paths->cache . 'temp.php';
+            file_put_contents($f, $this->body);
+            require ($f);
+            */
+        } elseif (is_callable($this->body)) {
+            call_user_func_array($this->body, [$this]);
+        }
+    }
 
-if (is_string($this->body)) {
-eval('?>' . $this->body);
-/*
-return;
-$f = $this->getApp()->paths->cache . 'temp.php';
-file_put_contents($f, $this->body);
-require ($f);
-*/
-} elseif (is_callable($this->body)) {
-call_user_func_array($this->body, [$this]);
-}
-}
+    public function getString()
+    {
+        return $this->__tostring();
+    }
 
-public function getString()
-{
-return $this->__tostring();
-}
+    public function __tostring()
+    {
+        $headers = sprintf('header(\'HTTP/%s %d %s\', true, %d);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status);
 
-public function __tostring()
- {
-$headers =sprintf('header(\'HTTP/%s %d %s\', true, %d);',
- $this->protocol, $this->status, $this->phrases[$this->status], $this->status);
+        foreach ($this->headers as $k => $v) {
+            $headers.= sprintf('header(\'%s: %s\');', $k, $v);
+        }
 
-foreach ($this->headers as $k => $v) {
-$headers .= sprintf('header(\'%s: %s\');', $k, $v);
-}
+        $result = sprintf('<?php %s ?>', $headers);
+        if ($this->body) {
+            $result.= $this->body;
+        }
 
-$result = sprintf('<?php %s ?>', $headers);
-if ($this->body) {
-$result .= $this->body;
-}
+        return $result;
+    }
 
-return $result;
-}
-
-public function setXml()
-{
+    public function setXml()
+    {
         $this->headers['Content-Type'] = 'text/xml; charset=utf-8';
-        $this->body .= '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
-}
+        $this->body.= '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
+    }
 
-public function setJson($js = '')
-{
+    public function setJson($js = '')
+    {
         $this->headers['Content-Type'] = 'application/json;charset=utf-8';
-if ($js) {
-$this->cache = false;
-$this->body = $js;
-    $this->headers['Connection'] = 'close';
-    $this->headers['Content-Length'] = strlen($js);
-    $this->headers['Date'] = date('r');
-}
-}
+        if ($js) {
+            $this->cache = false;
+            $this->body = $js;
+            $this->headers['Connection'] = 'close';
+            $this->headers['Content-Length'] = strlen($js);
+            $this->headers['Date'] = date('r');
+        }
+    }
 
-public function redir($url, $status = 301)
- {
-$this->status = $status;
+    public function redir($url, $status = 301)
+    {
+        $this->status = $status;
 
-//check if relative path
-if (!strpos($url, '://')) {
-$url = $this->getApp()->site->url . $url;
-}
+        //check if relative path
+        if (!strpos($url, '://')) {
+            $url = $this->getApp()->site->url . $url;
+        }
 
-$this->headers['Location'] = $url;
-}
+        $this->headers['Location'] = $url;
+    }
 
-public function isRedir()
-{
-return in_array($this->status, [301, 302, 303, 307]);
-}
+    public function isRedir()
+    {
+        return in_array($this->status, [301, 302, 303, 307]);
+    }
 
-public function forbidden()
-{
-$this->status = 403;
-$this->cache = false;
-}
+    public function forbidden()
+    {
+        $this->status = 403;
+        $this->cache = false;
+    }
 
     public function closeConnection()
- {
+    {
         $len = ob_get_length();
         header('Connection: close');
         header('Content-Length: ' . $len);
@@ -4180,29 +4471,30 @@ $this->cache = false;
     }
 
     public function getReasonPhrase()
-{
-return $this->phrases[$this->status];
-}
+    {
+        return $this->phrases[$this->status];
+    }
 
 }
 
 //ResponsiveInterface.php
 namespace litepubl\core;
 
-interface ResponsiveInterface
-{
-public function request(Context $context);
+interface ResponsiveInterface {
+    public function request(Context $context);
 }
 
 //Router.php
 namespace litepubl\core;
+
 use litepubl\pages\Redirector;
 
 class Router extends Items
- {
+{
     public $prefilter;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'urlmap';
@@ -4214,13 +4506,13 @@ class Router extends Items
     }
 
     public function request(Context $context)
-{
-$app = $this->getApp();
+    {
+        $app = $this->getApp();
         if ($this->redirdom && $app->site->fixedurl) {
-            $parsedUrl = parse_url( $app->site->url . '/');
+            $parsedUrl = parse_url($app->site->url . '/');
             if ($context->request->host != strtolower($parsedUrl['host'])) {
-$context->response->redir($app->site->url . $context->request->url);
-return;
+                $context->response->redir($app->site->url . $context->request->url);
+                return;
             }
         }
 
@@ -4229,14 +4521,14 @@ return;
     }
 
     public function queryItem(Context $context)
- {
-$url = $context->request->url;
+    {
+        $url = $context->request->url;
         if ($result = $this->query($url)) {
             return $result;
         }
 
-$srcurl = $url;
-$response = $context->response;
+        $srcurl = $url;
+        $response = $context->response;
 
         if ($i = strpos($url, '?')) {
             $url = substr($url, 0, $i);
@@ -4244,20 +4536,20 @@ $response = $context->response;
 
         if ('//' == substr($url, -2)) {
             $response->redir(rtrim($url, '/') . '/');
-return false;
+            return false;
         }
 
         //extract page number
         if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
             if ('/' != substr($url, -1)) {
                 $response->redir($url . '/');
-return false;
+                return false;
             }
 
             $url = $m[1];
-            if (!$url ) {
-$url = '/';
-}
+            if (!$url) {
+                $url = '/';
+            }
 
             $context->request->page = max(1, abs((int)$m[2]));
         }
@@ -4283,22 +4575,26 @@ $url = '/';
         return false;
     }
 
-    public function getIdurl($id) {
+    public function getIdurl($id)
+    {
         if (!isset($this->items[$id])) {
             $this->items[$id] = $this->db->getitem($id);
         }
         return $this->items[$id]['url'];
     }
 
-    public function findUrl($url) {
-return $this->db->findItem('url = ' . Str::quote($url));
+    public function findUrl($url)
+    {
+        return $this->db->findItem('url = ' . Str::quote($url));
     }
 
-    public function urlExists($url) {
+    public function urlExists($url)
+    {
         return $this->db->findid('url = ' . Str::quote($url));
     }
 
-    private function query($url) {
+    private function query($url)
+    {
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
@@ -4310,8 +4606,8 @@ return $this->db->findItem('url = ' . Str::quote($url));
         return false;
     }
 
-
-    public function findFilter($url) {
+    public function findFilter($url)
+    {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
                 case 'begin':
@@ -4339,23 +4635,26 @@ return $this->db->findItem('url = ' . Str::quote($url));
         return false;
     }
 
-    public function updateFilter() {
+    public function updateFilter()
+    {
         $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
         $this->save();
     }
 
-    public function addGet($url, $class) {
+    public function addGet($url, $class)
+    {
         return $this->add($url, $class, null, 'get');
     }
 
-    public function add($url, $class, $arg, $type = 'normal') {
+    public function add($url, $class, $arg, $type = 'normal')
+    {
         if (empty($url)) {
-$this->error('Empty url to add');
-}
+            $this->error('Empty url to add');
+        }
 
         if (empty($class)) {
-$this->error('Empty class name of adding url');
-}
+            $this->error('Empty class name of adding url');
+        }
 
         if (!in_array($type, array(
             'normal',
@@ -4395,7 +4694,8 @@ $this->error('Empty class name of adding url');
         return $item['id'];
     }
 
-    public function delete($url) {
+    public function delete($url)
+    {
         $url = Str::quote($url);
         if ($id = $this->db->findid('url = ' . $url)) {
             $this->db->iddelete($id);
@@ -4416,7 +4716,8 @@ $this->error('Empty class name of adding url');
         return true;
     }
 
-    public function deleteClass($class) {
+    public function deleteClass($class)
+    {
         if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
                 $this->db->idDelete($item['id']);
@@ -4427,7 +4728,8 @@ $this->error('Empty class name of adding url');
         $this->clearcache();
     }
 
-    public function deleteItem($id) {
+    public function deleteItem($id)
+    {
         if ($item = $this->db->getitem($id)) {
             $this->db->idDelete($id);
             $this->deleted($id);
@@ -4437,11 +4739,13 @@ $this->error('Empty class name of adding url');
     }
 
     //for Archives
-    public function getUrlsOfClass($class) {
+    public function getUrlsOfClass($class)
+    {
         $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
         return $this->db->res2id($res);
     }
-    public function addRedir($from, $to) {
+    public function addRedir($from, $to)
+    {
         if ($from == $to) {
             return;
         }
@@ -4450,62 +4754,68 @@ $this->error('Empty class name of adding url');
         $Redir->add($from, $to);
     }
 
-    public static function unsub($obj) {
-static ::i()->unbind($obj);
-}
+    public static function unsub($obj)
+    {
+        static ::i()->unbind($obj);
+    }
 
-public function unbind($obj) {
+    public function unbind($obj)
+    {
         $this->lock();
-parent::unbind($obj);
+        parent::unbind($obj);
         $this->deleteClass(get_class($obj));
-$this->updateFilter();
+        $this->updateFilter();
         $this->unlock();
     }
 
-    public function setUrlValue($url, $name, $value) {
+    public function setUrlValue($url, $name, $value)
+    {
         if ($id = $this->urlExists($url)) {
             $this->setValue($id, $name, $value);
         }
     }
 
-    public function setIdUrl($id, $url) {
+    public function setIdUrl($id, $url)
+    {
         $this->db->setValue($id, 'url', $url);
         if (isset($this->items[$id])) {
-$this->items[$id]['url'] = $url;
-}
+            $this->items[$id]['url'] = $url;
+        }
     }
 
-//backward compabilty
-public function clearCache()
-{
-$this->getApp()->cache->clear();
-}
+    //backward compabilty
+    public function clearCache()
+    {
+        $this->getApp()->cache->clear();
+    }
 
 }
 
 //Singleton.php
 namespace litepubl\core;
 
-trait Singleton
-{
+traitSingleton {
 
-public static function i() {
-return litepubl::$app->classes->getInstance(get_called_class());
-}
+    public static function i()
+    {
+        return litepubl::$app->classes->getInstance(get_called_class());
+    }
 }
 
 //Site.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 class Site extends Events
 {
-use PoolStorageTrait;
+    use PoolStorageTrait;
 
     public $mapoptions;
     private $users;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'site';
         $this->addmap('mapoptions', array(
@@ -4514,36 +4824,37 @@ use PoolStorageTrait;
         ));
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
             if (is_array($prop)) {
                 list($classname, $method) = $prop;
                 return call_user_func_array(array(
-                    static::iGet($classname) ,
+                    static ::iGet($classname) ,
                     $method
                 ) , array(
                     $name
                 ));
             }
 
-            return  $this->getApp()->options->data[$prop];
+            return $this->getApp()->options->data[$prop];
         }
 
         return parent::__get($name);
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if ($name == 'url') {
- return $this->seturl($value);
-}
-
+            return $this->seturl($value);
+        }
 
         if (in_array($name, $this->eventnames)) {
             $this->addevent($name, $value['class'], $value['func']);
         } elseif (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
-            if (is_string($prop))  $this->getApp()->options->{$prop} = $value;
+            if (is_string($prop)) $this->getApp()->options->{$prop} = $value;
         } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
             $this->save();
@@ -4551,23 +4862,26 @@ use PoolStorageTrait;
         return true;
     }
 
-    public function getUrl() {
+    public function getUrl()
+    {
         if ($this->fixedurl) {
- return $this->data['url'];
-}
+            return $this->data['url'];
+        }
 
-        return 'http://' .  $this->getApp()->context->request->host;
+        return 'http://' . $this->getApp()->context->request->host;
     }
 
-    public function getFiles() {
+    public function getFiles()
+    {
         if ($this->fixedurl) {
- return $this->data['files'];
-}
+            return $this->data['files'];
+        }
 
-        return 'http://' .  $this->getApp()->context->request->host;
+        return 'http://' . $this->getApp()->context->request->host;
     }
 
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         $url = rtrim($url, '/');
         $this->data['url'] = $url;
         $this->data['files'] = $url;
@@ -4578,23 +4892,23 @@ use PoolStorageTrait;
         $this->save();
     }
 
-public function getDomain()
-{
-if (Config::$host) {
-return Config::$host;
-} else {
-$url = $this->url;
-return substr($url, strpos($url, '//') + 2);
-}
- }
+    public function getDomain()
+    {
+        if (Config::$host) {
+            return Config::$host;
+        } else {
+            $url = $this->url;
+            return substr($url, strpos($url, '//') + 2);
+        }
+    }
 
-    public function getUserlink() {
-        if ($id =  $this->getApp()->options->user) {
+    public function getUserlink()
+    {
+        if ($id = $this->getApp()->options->user) {
             if (!isset($this->users)) $this->users = array();
             if (isset($this->users[$id])) {
- return $this->users[$id];
-}
-
+                return $this->users[$id];
+            }
 
             $item = Users::i()->getitem($id);
             if ($item['website']) {
@@ -4602,7 +4916,7 @@ return substr($url, strpos($url, '//') + 2);
             } else {
                 $page = $this->getdb('userpage')->getitem($id);
                 if ((int)$page['idurl']) {
-                    $result = sprintf('<a href="%s%s">%s</a>', $this->url,  $this->getApp()->router->getvalue($page['idurl'], 'url') , $item['name']);
+                    $result = sprintf('<a href="%s%s">%s</a>', $this->url, $this->getApp()->router->getvalue($page['idurl'], 'url') , $item['name']);
                 } else {
                     $result = $item['name'];
                 }
@@ -4613,7 +4927,8 @@ return substr($url, strpos($url, '//') + 2);
         return '';
     }
 
-    public function getLiveuser() {
+    public function getLiveuser()
+    {
         return '<?php echo  litepubl::$app->site->getuserlink(); ?>';
     }
 
@@ -4623,19 +4938,21 @@ return substr($url, strpos($url, '//') + 2);
 namespace litepubl\core;
 
 class Storage
- {
-use AppTrait;
+{
+    use AppTrait;
 
-
-    public function getExt() {
-return '.php';
+    public function getExt()
+    {
+        return '.php';
     }
 
-    public function serialize(array $data) {
+    public function serialize(array $data)
+    {
         return \serialize($data);
     }
 
-    public function unserialize($str) {
+    public function unserialize($str)
+    {
         if ($str) {
             return \unserialize($str);
         }
@@ -4643,27 +4960,33 @@ return '.php';
         return false;
     }
 
-    public function before($str) {
+    public function before($str)
+    {
         return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
     }
 
-    public function after($str) {
+    public function after($str)
+    {
         return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
     }
 
-    public function getFilename(Data $obj) {
+    public function getFilename(Data $obj)
+    {
         return $this->getApp()->paths->data . $obj->getbasename();
     }
 
-    public function save(Data $obj) {
+    public function save(Data $obj)
+    {
         return $this->saveFile($this->getfilename($obj) , $this->serialize($obj->data));
     }
 
-    public function saveData($filename, array $data) {
+    public function saveData($filename, array $data)
+    {
         return $this->saveFile($filename, $this->serialize($data));
     }
 
-    public function load(Data $obj) {
+    public function load(Data $obj)
+    {
         try {
             if ($data = $this->loadData($this->getfilename($obj))) {
                 $obj->data = $data + $obj->data;
@@ -4677,7 +5000,8 @@ return '.php';
         return false;
     }
 
-    public function loadData($filename) {
+    public function loadData($filename)
+    {
         if ($s = $this->loadFile($filename)) {
             return $this->unserialize($s);
         }
@@ -4685,7 +5009,8 @@ return '.php';
         return false;
     }
 
-    public function loadFile($filename) {
+    public function loadFile($filename)
+    {
         if (\file_exists($filename . $this->getExt()) && ($s = \file_get_contents($filename . $this->getExt()))) {
             return $this->after($s);
         }
@@ -4693,7 +5018,8 @@ return '.php';
         return false;
     }
 
-    public function saveFile($filename, $content) {
+    public function saveFile($filename, $content)
+    {
         $tmp = $filename . '.tmp' . $this->getExt();
         if (false === \file_put_contents($tmp, $this->before($content))) {
             $this->error(\sprintf('Error write to file "%s"', $tmp));
@@ -4718,20 +5044,23 @@ return '.php';
         return true;
     }
 
-    public function remove($filename) {
+    public function remove($filename)
+    {
         $this->delete($filename . $this->getExt());
         $this->delete($filename . '.bak' . $this->getExt());
     }
 
-    public function delete($filename) {
+    public function delete($filename)
+    {
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
             \unlink($filename);
         }
     }
 
-    public function error($mesg) {
-         $this->getApp()->options->trace($mesg);
+    public function error($mesg)
+    {
+        $this->getApp()->options->trace($mesg);
     }
 
 }
@@ -4739,30 +5068,36 @@ return '.php';
 //StorageInc.php
 namespace litepubl\core;
 
-class StorageInc extends Storage 
+class StorageInc extends Storage
 {
 
-    public function getExt() {
-return '.inc.php';
+    public function getExt()
+    {
+        return '.inc.php';
     }
 
-    public function serialize(array $data) {
+    public function serialize(array $data)
+    {
         return \var_export($data, true);
     }
 
-    public function unserialize($str) {
+    public function unserialize($str)
+    {
         $this->error('Call unserialize');
     }
 
-    public function before($str) {
+    public function before($str)
+    {
         return \sprintf('<?php return %s;', $str);
     }
 
-    public function after($str) {
+    public function after($str)
+    {
         $this->error('Call after method');
     }
 
-    public function loadData($filename) {
+    public function loadData($filename)
+    {
         if (\file_exists($filename . $this->getExt())) {
             return include ($filename . $this->getExt());
         }
@@ -4770,7 +5105,8 @@ return '.inc.php';
         return false;
     }
 
-    public function loadFile($filename) {
+    public function loadFile($filename)
+    {
         $this->error('Call loadfile');
     }
 
@@ -4780,15 +5116,17 @@ return '.inc.php';
 namespace litepubl\core;
 
 class StorageMemcache extends Storage
- {
+{
     public $memcache;
 
-    public function __construct() {
-parent::__construct();
-        $this->memcache =  $this->getApp()->memcache;
+    public function __construct()
+    {
+        parent::__construct();
+        $this->memcache = $this->getApp()->memcache;
     }
 
-    public function loadFile($filename) {
+    public function loadFile($filename)
+    {
         if ($s = $this->memcache->get($filename)) {
             return $s;
         }
@@ -4801,12 +5139,14 @@ parent::__construct();
         return false;
     }
 
-    public function saveFile($filename, $content) {
+    public function saveFile($filename, $content)
+    {
         $this->memcache->set($filename, $content, false, 3600);
         return parent::saveFile($filename, $content);
     }
 
-    public function delete($filename) {
+    public function delete($filename)
+    {
         parent::delete($filename);
         $this->memcache->delete($filename);
     }
@@ -4815,92 +5155,103 @@ parent::__construct();
 
 //Str.php
 namespace litepubl\core;
+
 use litepubl\Config;
 
 Class Str
 {
-public $value;
+    public $value;
 
-public function __construct($s = '')
-{
-$this->value = (string) $s;
-}
-
-public function __tostring()
-{
-return $this->value;
-}
-
-//static methods
-public static function sqlDate($date = 0) {
-    if (!$date) {
-        $date = time();
+    public function __construct($s = '')
+    {
+        $this->value = (string)$s;
     }
 
-    return date('Y-m-d H:i:s', $date);
-}
+    public function __tostring()
+    {
+        return $this->value;
+    }
 
-public static function sqlTime($date = 0) {
-    if ($date) {
+    //static methods
+    public static function sqlDate($date = 0)
+    {
+        if (!$date) {
+            $date = time();
+        }
+
         return date('Y-m-d H:i:s', $date);
     }
 
-    return '0000-00-00 00:00:00';
-}
+    public static function sqlTime($date = 0)
+    {
+        if ($date) {
+            return date('Y-m-d H:i:s', $date);
+        }
 
-public static function quote($s) {
-    return  litepubl::$app->db->quote($s);
-}
-
-public static function md5Rand() {
-    return md5(mt_rand() . Config::$secret . microtime());
-}
-
-public static function md5Uniq() {
-    return static::baseMd5(mt_rand() . Config::$secret . microtime());
-}
-
-public static function baseMd5($s) {
-    return trim(base64_encode(md5($s, true)) , '=');
-}
-
-public static function begin($s, $begin) {
-    return strncmp($s, $begin, strlen($begin)) == 0;
-}
-
-public static function begins() {
-    $a = func_get_args();
-    $s = array_shift($a);
-    while ($begin = array_shift($a)) {
-        if (strncmp($s, $begin, strlen($begin)) == 0) {
- return true;
-}
-
-
-    }
-    return false;
-}
-
-public static function end($s, $end) {
-    return $end == substr($s, 0 - strlen($end));
-}
-
-public static function trimUtf($s) {
-    $utf = "\xEF\xBB\xBF";
-    return static::begin($s, $utf) ? substr($s, strlen($utf)) : $s;
-}
-
-
-public static function toArray($s) {
-    $a = explode("\n", trim($s));
-    foreach ($a as $k => $v) {
-        $a[$k] = trim($v);
+        return '0000-00-00 00:00:00';
     }
 
-    return $a;
-}
+    public static function quote($s)
+    {
+        return litepubl::$app->db->quote($s);
+    }
 
-    public static function toIntArray($s) {
+    public static function md5Rand()
+    {
+        return md5(mt_rand() . Config::$secret . microtime());
+    }
+
+    public static function md5Uniq()
+    {
+        return static ::baseMd5(mt_rand() . Config::$secret . microtime());
+    }
+
+    public static function baseMd5($s)
+    {
+        return trim(base64_encode(md5($s, true)) , '=');
+    }
+
+    public static function begin($s, $begin)
+    {
+        return strncmp($s, $begin, strlen($begin)) == 0;
+    }
+
+    public static function begins()
+    {
+        $a = func_get_args();
+        $s = array_shift($a);
+        while ($begin = array_shift($a)) {
+            if (strncmp($s, $begin, strlen($begin)) == 0) {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    public static function end($s, $end)
+    {
+        return $end == substr($s, 0 - strlen($end));
+    }
+
+    public static function trimUtf($s)
+    {
+        $utf = "\xEF\xBB\xBF";
+        return static ::begin($s, $utf) ? substr($s, strlen($utf)) : $s;
+    }
+
+    public static function toArray($s)
+    {
+        $a = explode("\n", trim($s));
+        foreach ($a as $k => $v) {
+            $a[$k] = trim($v);
+        }
+
+        return $a;
+    }
+
+    public static function toIntArray($s)
+    {
         $result = array();
         foreach (explode(',', $s) as $value) {
             if ($v = (int)trim($value)) {
@@ -4909,25 +5260,29 @@ public static function toArray($s) {
         }
 
         return $result;
-}
+    }
 
-public static function toJson($a) {
-    return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
-}
+    public static function toJson($a)
+    {
+        return json_encode($a, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE);
+    }
 
-public static function jsonAttr($a) {
-    return str_replace('"', '&quot;', Str::toJson($a));
-}
+    public static function jsonAttr($a)
+    {
+        return str_replace('"', '&quot;', Str::toJson($a));
+    }
 
-public static function log($s) {
-    echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
-}
+    public static function log($s)
+    {
+        echo "<pre>\n", htmlspecialchars($s) , "</pre>\n";
+    }
 
-public static function dump($v) {
-    echo "<pre>\n";
-    var_dump($v);
-    echo "</pre>\n";
-}
+    public static function dump($v)
+    {
+        echo "<pre>\n";
+        var_dump($v);
+        echo "</pre>\n";
+    }
 
 }
 
@@ -4935,24 +5290,25 @@ public static function dump($v) {
 namespace litepubl\core;
 
 class TempProps extends \ArrayObject
- {
-private $owner;
-
-public function __construct(Data $owner)
 {
-parent::__construct([], \ArrayObject::ARRAY_AS_PROPS);
-$this->owner = $owner;
-$owner->coinstances[] = $this;
-}
+    private $owner;
 
-    public function __destruct() {
-foreach ($this->owner->coinstances as $i => $obj) {
-if ($this == $obj) {
-unset($this->owner->coinstances[$i]);
-}
-}
+    public function __construct(Data $owner)
+    {
+        parent::__construct([], \ArrayObject::ARRAY_AS_PROPS);
+        $this->owner = $owner;
+        $owner->coinstances[] = $this;
+    }
 
-$this->owner = null;
+    public function __destruct()
+    {
+        foreach ($this->owner->coinstances as $i => $obj) {
+            if ($this == $obj) {
+                unset($this->owner->coinstances[$i]);
+            }
+        }
+
+        $this->owner = null;
     }
 
 }
@@ -4961,10 +5317,11 @@ $this->owner = null;
 namespace litepubl\core;
 
 class Users extends Items
- {
+{
     public $grouptable;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->basename = 'users';
@@ -4973,14 +5330,14 @@ class Users extends Items
         $this->addevents('beforedelete');
     }
 
-    public function res2items($res) {
+    public function res2items($res)
+    {
         if (!$res) {
- return array();
-}
-
+            return array();
+        }
 
         $result = array();
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = (int)$item['id'];
             $item['idgroups'] = Str::toIntArray($item['idgroups']);
@@ -4990,15 +5347,18 @@ class Users extends Items
         return $result;
     }
 
-    public function add(array $values) {
+    public function add(array $values)
+    {
         return Usersman::i()->add($values);
     }
 
-    public function edit($id, array $values) {
+    public function edit($id, array $values)
+    {
         return Usersman::i()->edit($id, $values);
     }
 
-    public function setGroups($id, array $idgroups) {
+    public function setGroups($id, array $idgroups)
+    {
         $idgroups = array_unique($idgroups);
         Arr::deleteValue($idgroups, '');
         Arr::deleteValue($idgroups, false);
@@ -5015,11 +5375,11 @@ class Users extends Items
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id == 1) {
- return;
-}
-
+            return;
+        }
 
         $this->beforedelete($id);
         $this->getdb($this->grouptable)->delete('iduser = ' . (int)$id);
@@ -5028,27 +5388,25 @@ class Users extends Items
         return parent::delete($id);
     }
 
-public function getPages() {
-return \litepubl\pages\Users::i();
-}
+    public function getPages()
+    {
+        return \litepubl\pages\Users::i();
+    }
 
-    public function emailexists($email) {
+    public function emailexists($email)
+    {
         if ($email == '') {
- return false;
-}
+            return false;
+        }
 
-
-        if ($email ==  $this->getApp()->options->email) {
- return 1;
-}
-
-
+        if ($email == $this->getApp()->options->email) {
+            return 1;
+        }
 
         foreach ($this->items as $id => $item) {
             if ($email == $item['email']) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
 
@@ -5061,66 +5419,69 @@ return \litepubl\pages\Users::i();
         return false;
     }
 
-    public function getPassword($id) {
-        return $id == 1 ?  $this->getApp()->options->password : $this->getvalue($id, 'password');
+    public function getPassword($id)
+    {
+        return $id == 1 ? $this->getApp()->options->password : $this->getvalue($id, 'password');
     }
 
-    public function changepassword($id, $password) {
+    public function changepassword($id, $password)
+    {
         $item = $this->getitem($id);
-        $this->setvalue($id, 'password',  $this->getApp()->options->hash($item['email'] . $password));
+        $this->setvalue($id, 'password', $this->getApp()->options->hash($item['email'] . $password));
     }
 
-    public function approve($id) {
+    public function approve($id)
+    {
         $this->setvalue($id, 'status', 'approved');
         $pages = $this->pages;
         if ($pages->createpage) {
-$pages->addpage($id);
-}
+            $pages->addpage($id);
+        }
     }
 
-    public function auth($email, $password) {
+    public function auth($email, $password)
+    {
         return $this->authpassword($this->emailexists($email) , $password);
     }
 
-    public function authpassword($id, $password) {
+    public function authpassword($id, $password)
+    {
         if (!$id || !$password) {
- return false;
-}
-
+            return false;
+        }
 
         $item = $this->getitem($id);
-        if ($item['password'] ==  $this->getApp()->options->hash($item['email'] . $password)) {
+        if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
             if ($item['status'] == 'wait') $this->approve($id);
             return $id;
         }
         return false;
     }
 
-    public function authcookie($cookie) {
+    public function authcookie($cookie)
+    {
         $cookie = (string)$cookie;
         if (empty($cookie)) {
- return false;
-}
+            return false;
+        }
 
-
-        $cookie =  $this->getApp()->options->hash($cookie);
-        if ($cookie ==  $this->getApp()->options->hash('')) {
- return false;
-}
-
+        $cookie = $this->getApp()->options->hash($cookie);
+        if ($cookie == $this->getApp()->options->hash('')) {
+            return false;
+        }
 
         if ($id = $this->findcookie($cookie)) {
             $item = $this->getitem($id);
             if (strtotime($item['expired']) > time()) {
- return $id;
-}
-
+                return $id;
+            }
 
         }
         return false;
     }
 
-    public function findcookie($cookie) {
+    public function findcookie($cookie)
+    {
         $cookie = Str::quote($cookie);
         if (($a = $this->select('cookie = ' . $cookie, 'limit 1')) && (count($a) > 0)) {
             return (int)$a[0];
@@ -5128,18 +5489,21 @@ $pages->addpage($id);
         return false;
     }
 
-    public function getGroupname($id) {
+    public function getGroupname($id)
+    {
         $item = $this->getitem($id);
         $groups = UserGroups::i();
         return $groups->items[$item['idgroups'][0]]['name'];
     }
 
-    public function clearcookie($id) {
+    public function clearcookie($id)
+    {
         $this->setcookie($id, '', 0);
     }
 
-    public function setCookie($id, $cookie, $expired) {
-        if ($cookie) $cookie =  $this->getApp()->options->hash($cookie);
+    public function setCookie($id, $cookie, $expired)
+    {
+        if ($cookie) $cookie = $this->getApp()->options->hash($cookie);
         $expired = Str::sqlDate($expired);
         if (isset($this->items[$id])) {
             $this->items[$id]['cookie'] = $cookie;
@@ -7345,104 +7709,107 @@ class HtmlFormatter extends NormalizerFormatter
 
 //lib/debug/LogManager.php
 namespace litepubl\debug;
-use litepubl\Config;
-use Monolog\Logger;
+
 use Monolog\ErrorHandler;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
 use Monolog\Formatter\HtmlFormatter;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\NativeMailerHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use litepubl\Config;
 use litepubl\utils\Filer;
 
 class LogManager
 {
-use \litepubl\core\AppTrait;
+    use \litepubl\core\AppTrait;
     const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
-public $logger;
-public $runtime;
+    public $logger;
+    public $runtime;
 
-public function __construct()
- {
-$logger = new logger('general');
-$this->logger = $logger;
+    public function __construct()
+    {
+        $logger = new logger('general');
+        $this->logger = $logger;
 
-$app = $this->getApp();
-if (!Config::$debug) {
-$handler = new ErrorHandler($logger);
-$handler->registerErrorHandler([], false);
-//$handler->registerExceptionHandler();
-$handler->registerFatalHandler();
-}
+        $app = $this->getApp();
+        if (!Config::$debug) {
+            $handler = new ErrorHandler($logger);
+            $handler->registerErrorHandler([], false);
+            //$handler->registerExceptionHandler();
+            $handler->registerFatalHandler();
+        }
 
-$handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
-$logger->pushHandler($handler);
+        $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
+        $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+        $logger->pushHandler($handler);
 
-            $this->runtime = new RuntimeHandler(Logger::WARNING);
-$this->runtime->setFormatter(new EmptyFormatter());
-$logger->pushHandler($this->runtime);
+        $this->runtime = new RuntimeHandler(Logger::WARNING);
+        $this->runtime->setFormatter(new EmptyFormatter());
+        $logger->pushHandler($this->runtime);
 
-if (!Config::$debug && $app->installed) {
-$handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING );
-$handler->setFormatter(new LineFormatter(static::format,  null,true, false));
-$logger->pushHandler($handler);
-}
-}
+        if (!Config::$debug && $app->installed) {
+            $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING);
+            $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+            $logger->pushHandler($handler);
+        }
+    }
 
-public function logException(\Exception $e) {
+    public function logException(\Exception $e)
+    {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
-$log .= LogException::getLog($e);
-$log = str_replace(dirname(dirname(__DIR__)), '', $log);
-$this->logger->alert($log);
-}
+        $log.= LogException::getLog($e);
+        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        $this->logger->alert($log);
+    }
 
-public function getTrace()
-{
-$log = LogException::trace();
-$log = str_replace(dirname(dirname(__DIR__)), '', $log);
-return $log;
-}
+    public function getTrace()
+    {
+        $log = LogException::trace();
+        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        return $log;
+    }
 
-public function trace()
-{
-$this->logger->info($this->getTrace());
-}
+    public function trace()
+    {
+        $this->logger->info($this->getTrace());
+    }
 
-public function getHtml()
-{
-if (count($this->runtime->log)) {
-$formatter = new HtmlFormatter();
-$result = $formatter->formatBatch($this->runtime->log);
-//clear current log
-$this->runtime->log = [];
-return $result;
-}
+    public function getHtml()
+    {
+        if (count($this->runtime->log)) {
+            $formatter = new HtmlFormatter();
+            $result = $formatter->formatBatch($this->runtime->log);
+            //clear current log
+            $this->runtime->log = [];
+            return $result;
+        }
 
-return '';
-}
+        return '';
+    }
 
-public static function old($mesg)
-{
-$log = date('r') . "\n";
-if (isset($_SERVER['REQUEST_URI'])) {
-        $log .= $_SERVER['REQUEST_URI'] . "\n";
-}
+    public static function old($mesg)
+    {
+        $log = date('r') . "\n";
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $log.= $_SERVER['REQUEST_URI'] . "\n";
+        }
 
         if (!is_string($s)) {
-$s = var_export($s, true);
-}
+            $s = var_export($s, true);
+        }
 
-$log .= $s;
-$log .= "\n";
-        Filer::append(static::getAppInstance()->paths->data . 'logs/filer.log', $log);
-}
+        $log.= $s;
+        $log.= "\n";
+        Filer::append(static ::getAppInstance()->paths->data . 'logs/filer.log', $log);
+    }
 
 }
 
 //lib/debug/RuntimeHandler.php
 namespace litepubl\debug;
-use Monolog\Logger;
+
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
 
 /**
  * Description of runtimeHandler
@@ -7481,14 +7848,14 @@ class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
 {
 
     public function format(array $record)
-{
-return '';
-}
+    {
+        return '';
+    }
 
     public function formatBatch(array $records)
-{
-return '';
-}
+    {
+        return '';
+    }
 }
 
 //lib/debug/LogException.php
@@ -7497,49 +7864,53 @@ namespace litepubl\debug;
 class LogException
 {
 
-public static function getLog(\Exception $e) {
-return static::getTraceLog($e->getTrace());
-}
+    public static function getLog(\Exception $e)
+    {
+        return static ::getTraceLog($e->getTrace());
+    }
 
-public static function trace() {
-return static::getTraceLog(debug_backtrace());
-}
+    public static function trace()
+    {
+        return static ::getTraceLog(debug_backtrace());
+    }
 
-public static function getTraceLog(array $trace) {
-$result = '';
+    public static function getTraceLog(array $trace)
+    {
+        $result = '';
         foreach ($trace as $i => $item) {
             if (isset($item['line'])) {
-                $result .= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
+                $result.= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
             }
 
             if (isset($item['class'])) {
-                $result .= $item['class'] . $item['type'] . $item['function'];
+                $result.= $item['class'] . $item['type'] . $item['function'];
             } else {
-                $result .= $item['function'] . '()';
+                $result.= $item['function'] . '()';
             }
 
             if (isset($item['args']) && count($item['args'])) {
-                $result .= "\n";
+                $result.= "\n";
                 $args = array();
                 foreach ($item['args'] as $arg) {
                     $args[] = static ::dump($arg);
                 }
 
-                $result .= implode(', ', $args);
+                $result.= implode(', ', $args);
             }
 
-            $result .= "\n";
+            $result.= "\n";
         }
 
-return $result;
-}
+        return $result;
+    }
 
-    public static function dump(&$v) {
+    public static function dump(&$v)
+    {
         switch (gettype($v)) {
             case 'string':
-if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-$v = substr($v, 0, $i);
-}
+                if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+                    $v = substr($v, 0, $i);
+                }
 
                 return sprintf('\'%s\'', $v);
 
@@ -7572,25 +7943,27 @@ $v = substr($v, 0, $i);
 
 //litepubl.php
 namespace litepubl\core;
+
 use litepubl\config;
 
 class litepubl
- {
+{
     public static $app;
 
-    public static function init() {
+    public static function init()
+    {
         if (\version_compare(\PHP_VERSION, '5.4', '<')) {
             die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
         }
 
         if (isset(config::$classes['app']) && class_exists(config::$classes['app'])) {
-$className = config::$classes['app'];
-static::$app = new className();
+            $className = config::$classes['app'];
+            static ::$app = new className();
         } else {
             static ::$app = new App();
         }
 
-static::$app->run();
+        static ::$app->run();
     }
 
 }

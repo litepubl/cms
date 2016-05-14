@@ -1,43 +1,30 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
-    use litepubl\core\Context;
+
+use litepubl\core\Context;
 use litepubl\post\Node;
 
 class Manifest extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
- {
+{
 
     public function request(Context $context)
     {
-    $response = $context->response;
-$response->setXml();
-        $site =  $this->getApp()->site;
+        $response = $context->response;
+        $response->setXml();
+        $site = $this->getApp()->site;
 
         switch ($context->itemRoute['arg']) {
             case 'manifest':
-                $response->body .= '<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">' . '<options>' . '<clientType>WordPress</clientType>'
- . '<supportsKeywords>Yes</supportsKeywords>'
- . '<supportsGetTags>Yes</supportsGetTags>'
- . '<supportsNewCategories>Yes</supportsNewCategories>'
- . '</options>'
- .'<weblog>'
- . '<serviceName>Lite Publisher</serviceName>'
- . "<homepageLinkText>$site->name</homepageLinkText>"
- . "<adminLinkText>$site->name</adminLinkText>"
- . "<adminUrl>$site->url/admin/</adminUrl>"
- . '<postEditingUrl>' . "<![CDATA[$site->url/admin/posts/editor/{$site->q}id={post-id}]]>"
- . '</postEditingUrl>'
- . '</weblog>'
- . '<buttons>'
- . '<button>'
- . '<id>0</id>' . '<text>Manage Comments</text>' .
+                $response->body.= '<manifest xmlns="http://schemas.microsoft.com/wlw/manifest/weblog">' . '<options>' . '<clientType>WordPress</clientType>' . '<supportsKeywords>Yes</supportsKeywords>' . '<supportsGetTags>Yes</supportsGetTags>' . '<supportsNewCategories>Yes</supportsNewCategories>' . '</options>' . '<weblog>' . '<serviceName>Lite Publisher</serviceName>' . "<homepageLinkText>$site->name</homepageLinkText>" . "<adminLinkText>$site->name</adminLinkText>" . "<adminUrl>$site->url/admin/</adminUrl>" . '<postEditingUrl>' . "<![CDATA[$site->url/admin/posts/editor/{$site->q}id={post-id}]]>" . '</postEditingUrl>' . '</weblog>' . '<buttons>' . '<button>' . '<id>0</id>' . '<text>Manage Comments</text>' .
                 //'<imageUrl>images/wlw/wp-comments.png</imageUrl>' .
                 '<imageUrl>/favicon.ico</imageUrl>' . '<clickUrl>' . "<![CDATA[$site->url/admin/comments/]]>" . '</clickUrl>' . '</button>' .
 
@@ -71,34 +58,34 @@ $response->setXml();
                 $service = Node::add($rsd, 'service');
                 Node::addvalue($service, 'engineName', 'LitePublisher');
                 Node::addvalue($service, 'engineLink', 'http://litepublisher.com/');
-                Node::addvalue($service, 'homePageLink',  $site->url . '/');
+                Node::addvalue($service, 'homePageLink', $site->url . '/');
                 $apis = Node::add($service, 'apis');
                 $api = Node::add($apis, 'api');
                 Node::attr($api, 'name', 'WordPress');
                 Node::attr($api, 'blogID', '1');
                 Node::attr($api, 'preferred', 'true');
-                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                Node::attr($api, 'apiLink', $this->getApp()->site->url . '/rpc.xml');
 
                 $api = Node::add($apis, 'api');
                 Node::attr($api, 'name', 'Movable Type');
                 Node::attr($api, 'blogID', '1');
                 Node::attr($api, 'preferred', 'false');
-                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                Node::attr($api, 'apiLink', $this->getApp()->site->url . '/rpc.xml');
 
                 $api = Node::add($apis, 'api');
                 Node::attr($api, 'name', 'MetaWeblog');
                 Node::attr($api, 'blogID', '1');
                 Node::attr($api, 'preferred', 'false');
-                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                Node::attr($api, 'apiLink', $this->getApp()->site->url . '/rpc.xml');
 
                 $api = Node::add($apis, 'api');
                 Node::attr($api, 'name', 'Blogger');
                 Node::attr($api, 'blogID', '1');
                 Node::attr($api, 'preferred', 'false');
-                Node::attr($api, 'apiLink',  $this->getApp()->site->url . '/rpc.xml');
+                Node::attr($api, 'apiLink', $this->getApp()->site->url . '/rpc.xml');
 
                 $xml = $dom->saveXML();
-                $response->body .= substr($xml, strpos($xml, '?>') + 2);
+                $response->body.= substr($xml, strpos($xml, '?>') + 2);
                 break;
         }
 
@@ -106,3 +93,4 @@ $response->setXml();
     }
 
 }
+

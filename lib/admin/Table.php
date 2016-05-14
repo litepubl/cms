@@ -1,18 +1,20 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\admin;
+
+use litepubl\post\Post;
 use litepubl\view\Admin;
+use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Lang;
-use litepubl\post\Post;
-use litepubl\view\Args;
 
 class Table
 {
@@ -30,14 +32,16 @@ class Table
     public $admintheme;
     public $callbacks;
 
-    public static function fromitems(array $items, array $struct) {
+    public static function fromitems(array $items, array $struct)
+    {
         $classname = __class__;
         $self = new $classname();
         $self->setStruct($struct);
         return $self->build($items);
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->head = '';
         $this->body = '';
         $this->footer = '';
@@ -46,16 +50,15 @@ class Table
         $this->data = array();
     }
 
-    public function setStruct(array $struct) {
+    public function setStruct(array $struct)
+    {
         $this->head = '';
         $this->body = '<tr>';
 
         foreach ($struct as $index => $item) {
             if (!$item || !count($item)) {
- continue;
-}
-
-
+                continue;
+            }
 
             if (count($item) == 2) {
                 $colclass = 'text-left';
@@ -85,7 +88,8 @@ class Table
         $this->body.= '</tr>';
     }
 
-    public function addCallback($varname, $callback, $param = null) {
+    public function addCallback($varname, $callback, $param = null)
+    {
         $this->callbacks[$varname] = array(
             'callback' => $callback,
             'params' => array(
@@ -95,15 +99,18 @@ class Table
         );
     }
 
-    public function addfooter($footer) {
+    public function addfooter($footer)
+    {
         $this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
     }
 
-    public function td($colclass, $content) {
+    public function td($colclass, $content)
+    {
         return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass) , $content);
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         if (!$this->admintheme) {
             $this->admintheme = Admin::i();
         }
@@ -111,7 +118,8 @@ class Table
         return $this->admintheme;
     }
 
-    public function build(array $items) {
+    public function build(array $items)
+    {
         $body = '';
 
         foreach ($items as $id => $item) {
@@ -121,7 +129,8 @@ class Table
         return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
     }
 
-    public function parseitem($id, $item) {
+    public function parseitem($id, $item)
+    {
         $args = $this->args;
 
         if (is_array($item)) {
@@ -144,25 +153,29 @@ class Table
     }
 
     //predefined callbacks
-    public function titems_callback(Table $self, titems $owner) {
+    public function titems_callback(Table $self, titems $owner)
+    {
         $self->item = $owner->getitem($self->id);
         $self->args->add($self->item);
     }
 
-    public function setOwner(titems $owner) {
+    public function setOwner(titems $owner)
+    {
         $this->addCallback('$tempcallback' . count($this->callbacks) , array(
             $this,
             'titems_callback'
         ) , $owner);
     }
 
-    public function posts_callback(Table $self) {
+    public function posts_callback(Table $self)
+    {
         $post = Post::i($self->id);
         Base::$vars['post'] = $post->getView();
         $self->args->poststatus = Lang::i()->__get($post->status);
     }
 
-    public function setPosts(array $struct) {
+    public function setPosts(array $struct)
+    {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
         $this->addCallback('$tempcallback' . count($this->callbacks) , array(
@@ -171,7 +184,8 @@ class Table
         ) , false);
     }
 
-    public function props(array $props) {
+    public function props(array $props)
+    {
         $lang = Lang::i();
         $this->setStruct(array(
             array(
@@ -191,10 +205,8 @@ class Table
 
         foreach ($props as $k => $v) {
             if (($k === false) || ($v === false)) {
- continue;
-}
-
-
+                continue;
+            }
 
             if (is_array($v)) {
                 foreach ($v as $kv => $vv) {
@@ -217,7 +229,8 @@ class Table
         return $admintheme->gettable($this->head, $body);
     }
 
-    public function inputs(array $inputs) {
+    public function inputs(array $inputs)
+    {
         $lang = Lang::i();
         $this->setStruct(array(
             array(
@@ -236,11 +249,9 @@ class Table
         $admintheme = $this->getadmintheme();
 
         foreach ($inputs as $name => $type) {
-            if (($name === false) || ($type === false)) {
-                {
- continue;
-}
-
+            if (($name === false) || ($type === false)) { {
+                    continue;
+                }
 
             }
 
@@ -269,7 +280,8 @@ class Table
         return $admintheme->gettable($this->head, $body);
     }
 
-    public function action($action, $adminurl) {
+    public function action($action, $adminurl)
+    {
         $title = Lang::i()->__get($action);
 
         return array(
@@ -278,7 +290,8 @@ class Table
         );
     }
 
-    public function checkbox($name) {
+    public function checkbox($name)
+    {
         $admin = $this->getadmintheme();
 
         return array(
@@ -288,7 +301,8 @@ class Table
         );
     }
 
-    public function namecheck() {
+    public function namecheck()
+    {
         $admin = Admin::i();
 
         return array(
@@ -298,7 +312,8 @@ class Table
         );
     }
 
-    public static function getColclass($s) {
+    public static function getColclass($s)
+    {
         //most case
         if (!$s || $s == 'left') {
             return 'text-left';
@@ -320,7 +335,8 @@ class Table
         return implode(' ', $list);
     }
 
-    public function date($date) {
+    public function date($date)
+    {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
@@ -328,7 +344,8 @@ class Table
         }
     }
 
-    public function datetime($date) {
+    public function datetime($date)
+    {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
@@ -337,3 +354,4 @@ class Table
     }
 
 }
+

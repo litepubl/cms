@@ -1,31 +1,35 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
 class PoolStorage
- {
-use AppTrait;
+{
+    use AppTrait;
 
     public $data;
     private $modified;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->data = [];
-         $this->loadData();
+        $this->loadData();
     }
 
-    public function getStorage() {
+    public function getStorage()
+    {
         return $this->getApp()->storage;
     }
 
-    public function save(Data $obj) {
+    public function save(Data $obj)
+    {
         $this->modified = true;
         $base = $obj->getBaseName();
         if (!isset($this->data[$base])) {
@@ -35,7 +39,8 @@ use AppTrait;
         return true;
     }
 
-    public function load(Data $obj) {
+    public function load(Data $obj)
+    {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             $obj->data = & $this->data[$base];
@@ -46,7 +51,8 @@ use AppTrait;
         }
     }
 
-    public function remove(Data $obj) {
+    public function remove(Data $obj)
+    {
         $base = $obj->getbasename();
         if (isset($this->data[$base])) {
             unset($this->data[$base]);
@@ -55,8 +61,9 @@ use AppTrait;
         }
     }
 
-    public function loadData() {
-        if ($data = $this->getStorage()->loaddata( $this->getApp()->paths->data . 'storage')) {
+    public function loadData()
+    {
+        if ($data = $this->getStorage()->loaddata($this->getApp()->paths->data . 'storage')) {
             $this->data = $data;
             return true;
         }
@@ -64,14 +71,15 @@ use AppTrait;
         return false;
     }
 
-    public function commit() {
+    public function commit()
+    {
         if (!$this->modified) {
             return false;
         }
 
-        $lockfile =  $this->getApp()->paths->data . 'storage.lok';
+        $lockfile = $this->getApp()->paths->data . 'storage.lok';
         if (($fh = @\fopen($lockfile, 'w')) && \flock($fh, LOCK_EX | LOCK_NB)) {
-            $this->getStorage()->saveData( $this->getApp()->paths->data . 'storage', $this->data);
+            $this->getStorage()->saveData($this->getApp()->paths->data . 'storage', $this->data);
             $this->modified = false;
             \flock($fh, LOCK_UN);
             \fclose($fh);
@@ -87,12 +95,15 @@ use AppTrait;
         }
     }
 
-    public function error($mesg) {
+    public function error($mesg)
+    {
         $this->getApp()->getLogger()->error($mesg);
     }
 
-    public function isInstalled() {
+    public function isInstalled()
+    {
         return count($this->data);
     }
 
 }
+

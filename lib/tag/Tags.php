@@ -1,23 +1,27 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\tag;
+
 use litepubl\widget\Tags as TagsWidget;
 
 class Tags extends Common
 {
 
-    public static function i() {
-        return static::iGet(__class__);
+    public static function i()
+    {
+        return static ::iGet(__class__);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->table = 'tags';
         $this->basename = 'tags';
@@ -27,7 +31,8 @@ class Tags extends Common
         $this->itemsposts->table = $this->table . 'items';
     }
 
-    public function save() {
+    public function save()
+    {
         parent::save();
         if (!$this->locked) {
             TagsWidget::i()->expire();
@@ -35,3 +40,4 @@ class Tags extends Common
     }
 
 }
+

@@ -1,25 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\admin\Link;
-use litepubl\view\Lang;
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class tadmindownloaditems extends \litepubl\admin\Menu
- {
+{
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return parent::iteminstance(__class__, $id);
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = '';
         $admintheme = $this->admintheme;
         $lang = Lang::admin('downloaditems');
@@ -32,7 +36,7 @@ class tadmindownloaditems extends \litepubl\admin\Menu
 
         $downloaditems = tdownloaditems::i();
         $perpage = 20;
-        $where =  $this->getApp()->options->group == 'downloaditem' ? ' and author = ' .  $this->getApp()->options->user : '';
+        $where = $this->getApp()->options->group == 'downloaditem' ? ' and author = ' . $this->getApp()->options->user : '';
 
         switch ($this->name) {
             case 'addurl':
@@ -100,22 +104,22 @@ class tadmindownloaditems extends \litepubl\admin\Menu
         $result.= $form->get();
 
         $theme = $this->view->theme;
-        $result.= $theme->getpages($this->url,  $this->getApp()->context->request->page, ceil($count / $perpage));
+        $result.= $theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         $downloaditems = tdownloaditems::i();
         if ($this->name == 'addurl') {
             $url = trim($_POST['url']);
             if ($url == '') {
- return '';
-}
-
+                return '';
+            }
 
             if ($downloaditem = taboutparser::parse($url)) {
                 $id = $downloaditems->add($downloaditem);
-                 $this->getApp()->router->redir(Link::url('/admin/downloaditems/editor/', "id=$id"));
+                $this->getApp()->router->redir(Link::url('/admin/downloaditems/editor/', "id=$id"));
             }
             return '';
         }
@@ -124,9 +128,8 @@ class tadmindownloaditems extends \litepubl\admin\Menu
 
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) {
- continue;
-}
-
+                continue;
+            }
 
             $id = (int)$id;
             if ($status == 'delete') {
@@ -140,3 +143,4 @@ class tadmindownloaditems extends \litepubl\admin\Menu
     }
 
 }
+

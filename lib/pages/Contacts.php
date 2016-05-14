@@ -1,13 +1,15 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\pages;
+
 use litepubl\utils\Mailer;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
@@ -15,7 +17,8 @@ use litepubl\view\Lang;
 class Contacts extends SingleMenu
 {
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->cache = false;
         $this->data['extra'] = array();
@@ -24,32 +27,31 @@ class Contacts extends SingleMenu
         $this->data['success'] = '';
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (!isset($_POST['contactvalue'])) {
- return '';
-}
-
+            return '';
+        }
 
         $time = substr($_POST['contactvalue'], strlen('_contactform'));
         if (time() > $time) {
- return $this->errmesg;
-}
-
+            return $this->errmesg;
+        }
 
         $email = trim($_POST['email']);
 
         if (!Filter::ValidateEmail($email)) {
-return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'invalidemail'));
-}
+            return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'invalidemail'));
+        }
 
         $content = trim($_POST['content']);
         if (strlen($content) <= 10) {
-return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'emptycontent'));
-}
+            return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'emptycontent'));
+        }
 
         if (false !== strpos($content, '<a href')) {
-return $this->errmesg;
-}
+            return $this->errmesg;
+        }
 
         foreach ($this->data['extra'] as $name => $title) {
             if (isset($_POST[$name])) {
@@ -57,13 +59,14 @@ return $this->errmesg;
             }
         }
 
-        Mailer::sendmail('', $email, '',  $this->getApp()->options->email, $this->subject, $content);
+        Mailer::sendmail('', $email, '', $this->getApp()->options->email, $this->subject, $content);
         return $this->success;
     }
 
-public function update()
-{
-$this->externalFunc(get_class($self), 'Update', null);
-}
+    public function update()
+    {
+        $this->externalFunc(get_class($self) , 'Update', null);
+    }
 
 }
+

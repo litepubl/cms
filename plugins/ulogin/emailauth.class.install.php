@@ -1,16 +1,19 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\view\Js;
 
-function emailauthInstall($self) {
+function emailauthInstall($self)
+{
     $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/email.auth.min.js');
@@ -24,7 +27,8 @@ function emailauthInstall($self) {
     $json->unlock();
 }
 
-function emailauthUninstall($self) {
+function emailauthUninstall($self)
+{
     $js = Js::i();
     $js->lock();
     $js->deletefile('default', '/plugins/ulogin/resource/email.auth.min.js');
@@ -32,3 +36,4 @@ function emailauthUninstall($self) {
 
     tjsonserver::i()->unbind($self);
 }
+

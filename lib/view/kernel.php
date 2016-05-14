@@ -3,57 +3,62 @@
 namespace litepubl\view;
 
 class Args
- {
-use \litepubl\core\AppTrait;
+{
+    use \litepubl\core\AppTrait;
 
-public static $defaultArgs;
+    public static $defaultArgs;
     public $data;
     public $callbacks;
     public $callbackParams;
 
-    public static function i() {
-        return  static::getAppInstance()->classes->newInstance(get_called_class());
+    public static function i()
+    {
+        return static ::getAppInstance()->classes->newInstance(get_called_class());
     }
 
-    public function __construct($thisthis = null) {
+    public function __construct($thisthis = null)
+    {
         $this->callbacks = array();
         $this->callbackParams = array();
-        $this->data = static::getDefaultArgs();
+        $this->data = static ::getDefaultArgs();
         if (isset($thisthis)) {
-$this->data['$this'] = $thisthis;
-}
+            $this->data['$this'] = $thisthis;
+        }
     }
 
-public static function getDefaultArgs() {
-if (!static::$defaultArgs) {
-$site = static::getAppInstance()->site;
-        static ::$defaultArgs = array(
-            '$site.url' =>  $site->url,
-            '$site.files' =>  $site->files,
-            '{$site.q}' =>  $site->q,
-            '$site.q' =>  $site->q,
-        );
-}
+    public static function getDefaultArgs()
+    {
+        if (!static ::$defaultArgs) {
+            $site = static ::getAppInstance()->site;
+            static ::$defaultArgs = array(
+                '$site.url' => $site->url,
+                '$site.files' => $site->files,
+                '{$site.q}' => $site->q,
+                '$site.q' => $site->q,
+            );
+        }
 
-return static::$defaultArgs;
+        return static ::$defaultArgs;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (($name == 'link') && !isset($this->data['$link']) && isset($this->data['$url'])) {
-            return  $this->getApp()->site->url . $this->data['$url'];
+            return $this->getApp()->site->url . $this->data['$url'];
         }
 
         return $this->data['$' . $name];
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (!$name || !is_string($name)) {
- return;
-}
+            return;
+        }
 
         if (is_array($value)) {
- return;
-}
+            return;
+        }
 
         if (!is_string($value) && is_callable($value)) {
             $this->callbacks['$' . $name] = $value;
@@ -68,37 +73,40 @@ return static::$defaultArgs;
         $this->data["%%$name%%"] = $value;
 
         if (($name == 'url') && !isset($this->data['$link'])) {
-            $this->data['$link'] =  $this->getApp()->site->url . $value;
-            $this->data['%%link%%'] =  $this->getApp()->site->url . $value;
+            $this->data['$link'] = $this->getApp()->site->url . $value;
+            $this->data['%%link%%'] = $this->getApp()->site->url . $value;
         }
     }
 
-    public function add(array $a) {
+    public function add(array $a)
+    {
         foreach ($a as $k => $v) {
             $this->__set($k, $v);
             if ($k == 'url') {
-                $this->data['$link'] =  $this->getApp()->site->url . $v;
-                $this->data['%%link%%'] =  $this->getApp()->site->url . $v;
+                $this->data['$link'] = $this->getApp()->site->url . $v;
+                $this->data['%%link%%'] = $this->getApp()->site->url . $v;
             }
         }
 
         if (isset($a['title']) && !isset($a['text'])) {
-$this->__set('text', $a['title']);
-}
+            $this->__set('text', $a['title']);
+        }
 
         if (isset($a['text']) && !isset($a['title'])) {
-$this->__set('title', $a['text']);
-}
+            $this->__set('title', $a['text']);
+        }
     }
 
-    public function parse($s) {
+    public function parse($s)
+    {
         return Theme::i()->parseArg($s, $this);
     }
 
-    public function callback($s) {
+    public function callback($s)
+    {
         if (!count($this->callbacks)) {
- return $s;
-}
+            return $s;
+        }
 
         $params = $this->callbackParams;
         array_unshift($params, $this);
@@ -117,50 +125,42 @@ namespace litepubl\view;
 
 class AutoVars extends \litepubl\core\Items
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
-public $defaults;
+    public $defaults;
 
-public function create() {
-parent::create();
-$this->basename = 'autovars';
-$this->defaults = [
-'post' => '\litepubl\post\Post',
-'files' => '\litepubl\post\Files',
-'archives' => '\litepubl\post\Archives',
-'categories' => '\litepubl\tag\Cats',
-'cats' => '\litepubl\tag\Cats',
-'tags' => '\litepubl\tag\Tags',
-'home' => '\litepubl\pages\Home',
-'template' => '\litepubl\view\MainView',
-'comments' => '\litepubl\comments\Comments',
-'menu' => '\litepubl\pages\Menu',
-];
-}
+    public function create()
+    {
+        parent::create();
+        $this->basename = 'autovars';
+        $this->defaults = ['post' => '\litepubl\post\Post', 'files' => '\litepubl\post\Files', 'archives' => '\litepubl\post\Archives', 'categories' => '\litepubl\tag\Cats', 'cats' => '\litepubl\tag\Cats', 'tags' => '\litepubl\tag\Tags', 'home' => '\litepubl\pages\Home', 'template' => '\litepubl\view\MainView', 'comments' => '\litepubl\comments\Comments', 'menu' => '\litepubl\pages\Menu', ];
+    }
 
-public function get($name) {
-if (isset($this->items[$name])) {
-return $this->app->classes->getInstance($this->items[$name]);
-}
+    public function get($name)
+    {
+        if (isset($this->items[$name])) {
+            return $this->app->classes->getInstance($this->items[$name]);
+        }
 
-if (isset($this->defaults[$name])) {
-return $this->app->classes->getInstance($this->defaults[$name]);
-}
+        if (isset($this->defaults[$name])) {
+            return $this->app->classes->getInstance($this->defaults[$name]);
+        }
 
-return false;
-}
+        return false;
+    }
 
 }
 
 //Base.php
 namespace litepubl\view;
-use litepubl\utils\Filer;
+
+use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
-use litepubl\core\Str;
+use litepubl\utils\Filer;
 
 class Base extends \litepubl\core\Events
- {
+{
     public static $instances = array();
     public static $vars = array();
 
@@ -169,22 +169,25 @@ class Base extends \litepubl\core\Events
     public $templates;
     public $extratml;
 
-    public static function exists($name) {
-        return file_exists( static::getAppInstance()->paths->themes . $name . '/about.ini');
+    public static function exists($name)
+    {
+        return file_exists(static ::getAppInstance()->paths->themes . $name . '/about.ini');
     }
 
-    public static function getTheme($name) {
+    public static function getTheme($name)
+    {
         return static ::getByName(get_called_class() , $name);
     }
 
-    public static function getByName($classname, $name) {
+    public static function getByName($classname, $name)
+    {
         if (isset(static ::$instances[$name])) {
             return static ::$instances[$name];
         }
 
-        $result = static::iGet($classname);
+        $result = static ::iGet($classname);
         if ($result->name) {
-            $result =  static::getAppInstance()->classes->newinstance($classname);
+            $result = static ::getAppInstance()->classes->newinstance($classname);
         }
 
         $result->name = $name;
@@ -192,7 +195,8 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->name = '';
         $this->parsing = array();
@@ -204,25 +208,27 @@ class Base extends \litepubl\core\Events
         $this->extratml = '';
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         unset(static ::$instances[$this->name], $this->templates);
         parent::__destruct();
     }
 
-    public function getBasename() {
+    public function getBasename()
+    {
         return 'themes/' . $this->name;
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return BaseParser::i();
     }
 
-    public function load() {
+    public function load()
+    {
         if (!$this->name) {
- return false;
-}
-
-
+            return false;
+        }
 
         if (parent::load()) {
             static ::$instances[$this->name] = $this;
@@ -232,7 +238,8 @@ class Base extends \litepubl\core\Events
         return $this->parsetheme();
     }
 
-    public function parsetheme() {
+    public function parsetheme()
+    {
         if (!static ::exists($this->name)) {
             $this->error(sprintf('The %s theme not exists', $this->name));
         }
@@ -245,7 +252,8 @@ class Base extends \litepubl\core\Events
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (array_key_exists($name, $this->templates)) {
             $this->templates[$name] = $value;
             return;
@@ -253,7 +261,8 @@ class Base extends \litepubl\core\Events
         return parent::__set($name, $value);
     }
 
-    public function reg($exp) {
+    public function reg($exp)
+    {
         if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
         $result = array();
         foreach ($this->templates as $name => $val) {
@@ -262,21 +271,22 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    protected function getVar($name) {
+    protected function getVar($name)
+    {
         switch ($name) {
             case 'site':
-                return  $this->getApp()->site;
+                return $this->getApp()->site;
 
             case 'lang':
                 return lang::i();
 
             case 'post':
-if ($context = $this->getApp()->context) {
-if (isset($context->view) and $context->view instanceof PostView) {
-return $context->view;
-} elseif (isset($context->model) && $context->model instanceof Post) {
-return $context->model->getView();
-}
+                if ($context = $this->getApp()->context) {
+                    if (isset($context->view) and $context->view instanceof PostView) {
+                        return $context->view;
+                    } elseif (isset($context->model) && $context->model instanceof Post) {
+                        return $context->model->getView();
+                    }
                 }
                 break;
 
@@ -287,20 +297,20 @@ return $context->model->getView();
             case 'metapost':
                 return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
-
         $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
-$this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
+            $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $this->parsing[count($this->parsing) - 1]));
             return false;
         }
 
         return $var;
     }
 
-    public function parsecallback($names) {
+    public function parsecallback($names)
+    {
         $name = $names[1];
         $prop = $names[2];
-//$this->getApp()->getLogger()->debug("$name.$prop");
+        //$this->getApp()->getLogger()->debug("$name.$prop");
         if (isset(static ::$vars[$name])) {
             $var = static ::$vars[$name];
         } elseif ($name == 'custom') {
@@ -319,15 +329,16 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
             return $var->{$prop};
         }
         catch(\Exception $e) {
-             $this->getApp()->logException($e);
+            $this->getApp()->logException($e);
         }
         return '';
     }
 
-    public function parse($s) {
+    public function parse($s)
+    {
         if (!$s) {
- return '';
-}
+            return '';
+        }
 
         $s = strtr((string)$s, Args::getDefaultArgs());
         if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
@@ -341,19 +352,21 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         }
         catch(\Exception $e) {
             $result = '';
-             $this->getApp()->logException($e);
+            $this->getApp()->logException($e);
         }
         array_pop($this->parsing);
         return $result;
     }
 
-    public function parseArg($s, Args $args) {
+    public function parseArg($s, Args $args)
+    {
         $s = $this->parse($s);
         $s = $args->callback($s);
         return strtr($s, $args->data);
     }
 
-    public function replaceLang($s, $lang) {
+    public function replaceLang($s, $lang)
+    {
         $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', (string)$s);
         static ::$vars['lang'] = isset($lang) ? $lang : Lang::i('default');
         $s = strtr($s, Args::getDefaultArgs());
@@ -368,26 +381,31 @@ $this->app->getLogger()->warning(sprintf('Object "%s" not found in %s', $name, $
         return $s;
     }
 
-    public static function parsevar($name, $var, $s) {
+    public static function parsevar($name, $var, $s)
+    {
         static ::$vars[$name] = $var;
         return static ::i()->parse($s);
     }
 
-    public static function clearcache() {
-$app = static::getAppInstance();
+    public static function clearcache()
+    {
+        $app = static ::getAppInstance();
         Filer::delete($app->paths->data . 'themes', false, false);
-$app->cache->clear();
+        $app->cache->clear();
     }
 
-    public function h($s) {
+    public function h($s)
+    {
         return sprintf('<h4>%s</h4>', $s);
     }
 
-    public function link($url, $title) {
-        return sprintf('<a href="%s%s">%s</a>', Str::begin($url, 'http') ? '' :  $this->getApp()->site->url, $url, $title);
+    public function link($url, $title)
+    {
+        return sprintf('<a href="%s%s">%s</a>', Str::begin($url, 'http') ? '' : $this->getApp()->site->url, $url, $title);
     }
 
-    public static function quote($s) {
+    public static function quote($s)
+    {
         return strtr($s, array(
             '"' => '&quot;',
             "'" => '&#039;',
@@ -406,14 +424,16 @@ $app->cache->clear();
 namespace litepubl\view;
 
 class DateFormater
- {
+{
     public $date;
 
-    public function __construct($date) {
+    public function __construct($date)
+    {
         $this->date = $date;
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         return Lang::translate(date($name, $this->date) , 'datetime');
     }
 
@@ -422,56 +442,65 @@ class DateFormater
 //EmptyClass.php
 namespace litepubl\view;
 
-class EmptyClass {
-    public function __get($name) {
+class EmptyClass
+{
+    public function __get($name)
+    {
         return '';
     }
 }
 
 //EmptyViewTrait.php
 namespace litepubl\view;
-    use litepubl\core\Context;
 
-trait EmptyViewTrait 
-{
+use litepubl\core\Context;
 
-    protected function createData() {
+traitEmptyViewTrait {
+
+    protected function createData()
+    {
         parent::createData();
         $this->data['idschema'] = 1;
     }
 
     public function request(Context $context)
-{
-}
-
-    public function getHead() {
+    {
     }
 
-    public function getKeywords() {
+    public function getHead()
+    {
     }
 
-    public function getDescription() {
+    public function getKeywords()
+    {
     }
 
-    public function getIdSchema() {
+    public function getDescription()
+    {
+    }
+
+    public function getIdSchema()
+    {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         if ($id != $this->IdSchema) {
             $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getSchema() {
+    public function getSchema()
+    {
         return Schema::getSchema($this);
     }
 
-public function getView()
-{
-return $this;
-}
+    public function getView()
+    {
+        return $this;
+    }
 
 }
 
@@ -480,7 +509,7 @@ namespace litepubl\view;
 
 class Lang
 {
-use \litepubl\core\AppTrait;
+    use \litepubl\core\AppTrait;
 
     const ZERODATE = '0000-00-00 00:00:00';
     public static $self;
@@ -489,7 +518,8 @@ use \litepubl\core\AppTrait;
     public $section;
     public $searchsect;
 
-    public static function i($section = '') {
+    public static function i($section = '')
+    {
         if (!isset(static ::$self)) {
             static ::$self = static ::getInstance();
             static ::$self->loadfile('default');
@@ -499,17 +529,20 @@ use \litepubl\core\AppTrait;
         return static ::$self;
     }
 
-    public static function getInstance() {
-        return  static::getAppInstance()->classes->getInstance(get_called_class());
+    public static function getInstance()
+    {
+        return static ::getAppInstance()->classes->getInstance(get_called_class());
     }
 
-    public static function admin($section = '') {
+    public static function admin($section = '')
+    {
         $result = static ::i($section);
         $result->check('admin');
         return $result;
     }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->ini = array();
         $this->loaded = array();
         $this->searchsect = array(
@@ -518,59 +551,62 @@ use \litepubl\core\AppTrait;
         );
     }
 
-    public static function get($section, $key) {
+    public static function get($section, $key)
+    {
         return static ::i()->ini[$section][$key];
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (isset($this->ini[$this->section][$name])) {
- return $this->ini[$this->section][$name];
-}
-
+            return $this->ini[$this->section][$name];
+        }
 
         foreach ($this->searchsect as $section) {
             if (isset($this->ini[$section][$name])) {
- return $this->ini[$section][$name];
-}
-
+                return $this->ini[$section][$name];
+            }
 
         }
         return '';
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if (isset($this->ini[$this->section][$name])) {
- return true;
-}
-
+            return true;
+        }
 
         foreach ($this->searchsect as $section) {
             if (isset($this->ini[$section][$name])) {
- return true;
-}
-
+                return true;
+            }
 
         }
 
         return false;
     }
 
-    public function __call($name, $args) {
+    public function __call($name, $args)
+    {
         return strtr($this->__get($name) , $args->data);
     }
 
-    public function addsearch() {
+    public function addsearch()
+    {
         $this->joinsearch(func_get_args());
     }
 
-    public function joinsearch(array $a) {
+    public function joinsearch(array $a)
+    {
         foreach ($a as $sect) {
             $sect = trim(trim($sect) , "\"',;:.");
             if (!in_array($sect, $this->searchsect)) $this->searchsect[] = $sect;
         }
     }
 
-    public function firstsearch() {
+    public function firstsearch()
+    {
         $a = array_reverse(func_get_args());
         foreach ($a as $sect) {
             $i = array_search($sect, $this->searchsect);
@@ -579,29 +615,34 @@ use \litepubl\core\AppTrait;
         }
     }
 
-    public static function date($date, $format = '') {
+    public static function date($date, $format = '')
+    {
         if (empty($format)) $format = static ::i()->getdateformat();
         return static ::i()->translate(date($format, $date) , 'datetime');
     }
 
-    public function getDateformat() {
-        $format =  $this->getApp()->options->dateformat;
+    public function getDateformat()
+    {
+        $format = $this->getApp()->options->dateformat;
         return $format != '' ? $format : $this->ini['datetime']['dateformat'];
     }
 
-    public function translate($s, $section = 'default') {
+    public function translate($s, $section = 'default')
+    {
         return strtr($s, $this->ini[$section]);
     }
 
-    public function check($name) {
+    public function check($name)
+    {
         if ($name == '') $name = 'default';
         if (!in_array($name, $this->loaded)) $this->loadfile($name);
     }
 
-    public function loadfile($name) {
+    public function loadfile($name)
+    {
         $this->loaded[] = $name;
         $filename = static ::getcachedir() . $name;
-        if (($data =  $this->getApp()->storage->loaddata($filename)) && is_array($data)) {
+        if (($data = $this->getApp()->storage->loaddata($filename)) && is_array($data)) {
             $this->ini = $data + $this->ini;
             if (isset($data['searchsect'])) {
                 $this->joinsearch($data['searchsect']);
@@ -612,16 +653,19 @@ use \litepubl\core\AppTrait;
         }
     }
 
-    public static function usefile($name) {
+    public static function usefile($name)
+    {
         static ::i()->check($name);
         return static ::$self;
     }
 
-    public static function getCacheDir() {
-return static::getAppInstance()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
+    public static function getCacheDir()
+    {
+        return static ::getAppInstance()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
     }
 
-    public static function clearcache() {
+    public static function clearcache()
+    {
         \litepubl\utils\Filer::delete(static ::getcachedir() , false, false);
         static ::i()->loaded = array();
     }
@@ -630,17 +674,18 @@ return static::getAppInstance()->paths->data . 'languages' . DIRECTORY_SEPARATOR
 
 //MainView.php
 namespace litepubl\view;
+
+use litepubl\Config;
 use litepubl\core\Context;
-use litepubl\widget\Widgets;
 use litepubl\core\Str;
 use litepubl\perms\Perm;
-use litepubl\Config;
+use litepubl\widget\Widgets;
 
 class MainView extends \litepubl\core\Events
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
-public $context;
+    public $context;
     public $custom;
     public $extrahead;
     public $extrabody;
@@ -651,21 +696,22 @@ public $context;
     public $schema;
     public $url;
 
-    protected function create() {
-$app = $this->getApp();
+    protected function create()
+    {
+        $app = $this->getApp();
         //prevent recursion
-$app->classes->instances[get_class($this) ] = $this;
+        $app->classes->instances[get_class($this) ] = $this;
         parent::create();
         $this->basename = 'template';
         $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
-        $this->path =  $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
-        $this->url =  $app->site->files . '/themes/default';
+        $this->path = $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
+        $this->url = $app->site->files . '/themes/default';
         $this->ltoptions = array(
-            'url' =>  $app->site->url,
-            'files' =>  $app->site->files,
-            'idurl' =>  0,
-            'lang' =>  $app->site->language,
-'debug' => Config::$debug,
+            'url' => $app->site->url,
+            'files' => $app->site->files,
+            'idurl' => 0,
+            'lang' => $app->site->language,
+            'debug' => Config::$debug,
             'theme' => [],
             'custom' => [],
         );
@@ -681,85 +727,90 @@ $app->classes->instances[get_class($this) ] = $this;
         $this->extrabody = '';
     }
 
-    public function assignMap() {
+    public function assignMap()
+    {
         parent::assignMap();
         $this->ltoptions['custom'] = & $this->custom;
         $this->ltoptions['jsmerger'] = & $this->data['jsmerger'];
         $this->ltoptions['cssmerger'] = & $this->data['cssmerger'];
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (method_exists($this, $get = 'get' . $name)) {
-return $this->$get();
-} elseif (array_key_exists($name, $this->data)) {
-return $this->data[$name];
-} elseif (preg_match('/^sidebar(\d)$/', $name, $m)) {
+            return $this->$get();
+        } elseif (array_key_exists($name, $this->data)) {
+            return $this->data[$name];
+        } elseif (preg_match('/^sidebar(\d)$/', $name, $m)) {
             $widgets = Widgets::i();
             return $widgets->getSidebarIndex($this->view, (int)$m[1]);
         } elseif (isset($this->view) && isset($this->view->$name)) {
-return $this->view->$name;
-}
+            return $this->view->$name;
+        }
 
         return parent::__get($name);
     }
 
-    public function render(Context $context) {
-$this->context = $context;
+    public function render(Context $context)
+    {
+        $this->context = $context;
         $this->view = $context->view;
 
-$vars = new Vars();
-$vars->view = $context->view;
-$vars->template = $this;
-$vars->mainview = $this;
+        $vars = new Vars();
+        $vars->view = $context->view;
+        $vars->template = $this;
+        $vars->mainview = $this;
 
         $this->schema = Schema::getSchema($context->view);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
         $this->ltoptions['idurl'] = $context->itemRoute['id'];
 
-$app = $this->getApp();
-         $app->classes->instances[get_class($theme) ] = $theme;
-        $this->path =  $app->paths->themes . $theme->name . DIRECTORY_SEPARATOR;
-        $this->url =  $app->site->files . '/themes/' . $theme->name;
-$this->hover = $this->getHover($this->schema);
+        $app = $this->getApp();
+        $app->classes->instances[get_class($theme) ] = $theme;
+        $this->path = $app->paths->themes . $theme->name . DIRECTORY_SEPARATOR;
+        $this->url = $app->site->files . '/themes/' . $theme->name;
+        $this->hover = $this->getHover($this->schema);
 
         if (isset($context->model->idperm) && ($idperm = $context->model->idperm)) {
             $perm = Perm::i($idperm);
-$perm->setResponse($context->response, $context->model);
+            $perm->setResponse($context->response, $context->model);
         }
 
-        $context->response->body .= $theme->render($context->view);
+        $context->response->body.= $theme->render($context->view);
         $this->onbody($this);
         if ($this->extrabody) {
-$context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
-}
+            $context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
+        }
 
         $this->onrequest($this);
 
-$this->context = null;
-$this->view = null;
-$this->schema = null;
+        $this->context = null;
+        $this->view = null;
+        $this->schema = null;
     }
 
-protected function getHover(Schema $schema)
-{
-$result = false;
+    protected function getHover(Schema $schema)
+    {
+        $result = false;
         if ($schema->hovermenu) {
-$result = $schema->theme->templates['menu.hover'];
+            $result = $schema->theme->templates['menu.hover'];
             if ($result != 'bootstrap') {
-$result = ($result == 'true');
-}
+                $result = ($result == 'true');
+            }
         }
 
-return $result;
-}
+        return $result;
+    }
 
     //html tags
-    public function getSidebar() {
+    public function getSidebar()
+    {
         return Widgets::i()->getSidebar($this->view);
     }
 
-    public function getTitle() {
+    public function getTitle()
+    {
         $title = new str($this->view->gettitle());
         if ($this->ontitle($title)) {
             return $title->value;
@@ -768,74 +819,82 @@ return $result;
         }
     }
 
-    public function parsetitle(Str $title, $tml) {
+    public function parsetitle(Str $title, $tml)
+    {
         $args = new Args();
         $args->title = $title->value;
         $result = $this->schema->theme->parseArg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
-$result = $this->getApp()->site->name;
-}
+            $result = $this->getApp()->site->name;
+        }
 
         return $result;
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         $result = $this->view->getkeywords();
         if (!$result) {
- $result = $this->getApp()->site->keywords;
-}
+            $result = $this->getApp()->site->keywords;
+        }
 
         return $result;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         $result = $this->view->getdescription();
         if (!$result) {
- $result = $this->getApp()->site->description;
-}
+            $result = $this->getApp()->site->description;
+        }
 
         return $result;
     }
 
-    public function getMenu() {
+    public function getMenu()
+    {
         if ($r = $this->ongetmenu()) {
             return $r;
         }
 
-$app = $this->getApp();
+        $app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-        $filename = $schema->theme->name
- . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) ,  $app->options->group ?  $app->options->group : 'nobody');
+        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , $app->options->group ? $app->options->group : 'nobody');
 
-        if ($result =  $app->cache->getString($filename)) {
+        if ($result = $app->cache->getString($filename)) {
             return $result;
         }
 
-        $menus = static::iGet($menuclass);
+        $menus = static ::iGet($menuclass);
         $result = $menus->getmenu($this->hover, 0);
-         $app->cache->setString($filename, $result);
+        $app->cache->setString($filename, $result);
         return $result;
     }
 
-    private function getLtoptions() {
+    private function getLtoptions()
+    {
         return sprintf('<script type="text/javascript">window.ltoptions = %s;</script>', Str::toJson($this->ltoptions));
     }
 
-    public function getJavascript($filename) {
-        return sprintf($this->js,  $this->getApp()->site->files . $filename);
+    public function getJavascript($filename)
+    {
+        return sprintf($this->js, $this->getApp()->site->files . $filename);
     }
 
-    public function getReady($s) {
+    public function getReady($s)
+    {
         return sprintf($this->jsready, $s);
     }
 
-    public function getLoadjavascript($s) {
+    public function getLoadjavascript($s)
+    {
         return sprintf($this->jsload, $s);
     }
 
-    public function addToHead($s) {
+    public function addToHead($s)
+    {
         $s = trim($s);
         if (false === strpos($this->heads, $s)) {
             $this->heads = trim($this->heads) . "\n" . $s;
@@ -843,7 +902,8 @@ $app = $this->getApp();
         }
     }
 
-    public function deleteFromHead($s) {
+    public function deleteFromHead($s)
+    {
         $s = trim($s);
         $i = strpos($this->heads, $s);
         if (false !== $i) {
@@ -853,38 +913,42 @@ $app = $this->getApp();
         }
     }
 
-    public function getHead() {
+    public function getHead()
+    {
         $result = $this->heads;
-$result .= $this->view->gethead();
+        $result.= $this->view->gethead();
         $result = $this->getLtoptions() . $result;
-        $result .= $this->extrahead;
+        $result.= $this->extrahead;
         $result = $this->schema->theme->parse($result);
 
-$s = new Str($result);
+        $s = new Str($result);
         $this->onhead($s);
         return $s->value;
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $result = new Str('');
         $this->beforecontent($result);
-        $result->value .= $this->view->getCont();
+        $result->value.= $this->view->getCont();
         $this->aftercontent($result);
         return $result->value;
     }
 
-    protected function setFooter($s) {
+    protected function setFooter($s)
+    {
         if ($s != $this->data['footer']) {
             $this->data['footer'] = $s;
             $this->Save();
         }
     }
 
-    public function getPage() {
-        $page =  $this->context->request->page;
+    public function getPage()
+    {
+        $page = $this->context->request->page;
         if ($page <= 1) {
- return '';
-}
+            return '';
+        }
 
         return sprintf(Lang::get('default', 'pagetitle') , $page);
     }
@@ -893,18 +957,20 @@ $s = new Str($result);
 
 //Schema.php
 namespace litepubl\view;
+
 use litepubl\core\Str;
 
 class Schema extends \litepubl\core\Item
 {
-use \litepubl\core\ItemOwnerTrait;
+    use \litepubl\core\ItemOwnerTrait;
 
     public $sidebars;
     protected $themeInstance;
     protected $adminInstance;
     private $originalCustom;
 
-    public static function i($id = 1) {
+    public static function i($id = 1)
+    {
         if ($id == 1) {
             $class = get_called_class();
         } else {
@@ -915,19 +981,22 @@ use \litepubl\core\ItemOwnerTrait;
         return parent::iteminstance($class, $id);
     }
 
-    public static function newItem($id) {
-return static::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
+    public static function newItem($id)
+    {
+        return static ::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
     }
 
-    public static function getInstancename() {
+    public static function getInstancename()
+    {
         return 'schema';
     }
 
-    public static function getSchema($instance) {
+    public static function getSchema($instance)
+    {
         $id = $instance->getIdSchema();
         if (isset(static ::$instances['schema'][$id])) {
-return static ::$instances['schema'][$id];
-}
+            return static ::$instances['schema'][$id];
+        }
 
         $schemes = Schemes::i();
         if (!$schemes->itemExists($id)) {
@@ -938,7 +1007,8 @@ return static ::$instances['schema'][$id];
         return static ::i($id);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->originalCustom = [];
         $this->data = array(
@@ -965,41 +1035,44 @@ return static ::$instances['schema'][$id];
         $this->adminInstance = null;
     }
 
-    public function __destruct() {
+    public function __destruct()
+    {
         $this->themeInstance = null;
         $this->adminInstance = null;
         parent::__destruct();
     }
 
-    public function getOwner() {
+    public function getOwner()
+    {
         return Schemes::i();
     }
 
-    public function afterLoad() {
-parent::afterLoad();
-            $this->sidebars = & $this->data['sidebars'];
+    public function afterLoad()
+    {
+        parent::afterLoad();
+        $this->sidebars = & $this->data['sidebars'];
     }
 
-    protected function get_theme($name) {
+    protected function get_theme($name)
+    {
         return Theme::getTheme($name);
     }
 
-    protected function get_admintheme($name) {
+    protected function get_admintheme($name)
+    {
         return Admin::getTheme($name);
     }
 
-    public function setThemename($name) {
+    public function setThemename($name)
+    {
         if ($name == $this->themename) {
- return false;
-}
-
+            return false;
+        }
 
         if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
         if (!Theme::exists($name)) {
- return $this->error(sprintf('Theme %s not exists', $name));
-}
-
-
+            return $this->error(sprintf('Theme %s not exists', $name));
+        }
 
         $this->data['themename'] = $name;
         $this->themeInstance = $this->get_theme($name);
@@ -1010,13 +1083,13 @@ parent::afterLoad();
         static ::getowner()->themechanged($this);
     }
 
-    public function setAdminname($name) {
+    public function setAdminname($name)
+    {
         if ($name != $this->adminname) {
             if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
             if (!Admin::exists($name)) {
- return $this->error(sprintf('Admin theme %s not exists', $name));
-}
-
+                return $this->error(sprintf('Admin theme %s not exists', $name));
+            }
 
             $this->data['adminname'] = $name;
             $this->adminInstance = $this->get_admintheme($name);
@@ -1024,7 +1097,8 @@ parent::afterLoad();
         }
     }
 
-    public function getTheme() {
+    public function getTheme()
+    {
         if ($this->themeInstance) {
             return $this->themeInstance;
         }
@@ -1046,7 +1120,8 @@ parent::afterLoad();
         return $this->themeInstance;
     }
 
-    public function getAdmintheme() {
+    public function getAdmintheme()
+    {
         if ($this->adminInstance) {
             return $this->adminInstance;
         }
@@ -1058,18 +1133,20 @@ parent::afterLoad();
         return $this->adminInstance = $this->get_admintheme($this->adminname);
     }
 
-    public function resetCustom() {
+    public function resetCustom()
+    {
         $this->data['custom'] = $this->originalCustom;
     }
 
-    public function setCustomsidebar($value) {
+    public function setCustomsidebar($value)
+    {
         if ($value != $this->customsidebar) {
             if ($this->id == 1) {
-return false;
-}
+                return false;
+            }
 
             if ($value) {
-                $default = static::i(1);
+                $default = static ::i(1);
                 $this->sidebars = $default->sidebars;
             } else {
                 $this->sidebars = array();
@@ -1084,25 +1161,27 @@ return false;
 //SchemaTrait.php
 namespace litepubl\view;
 
-trait SchemaTrait
- {
+traitSchemaTrait {
 
-public function getSchema() {
-return Schema::getSchema($this);
-}
+    public function getSchema()
+    {
+        return Schema::getSchema($this);
+    }
 }
 
 //Schemes.php
 namespace litepubl\view;
+
 use litepubl\core\Arr;
 
 class Schemes extends \litepubl\core\Items
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
     public $defaults;
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = false;
         parent::create();
         $this->basename = 'views';
@@ -1110,7 +1189,8 @@ use \litepubl\core\PoolStorageTrait;
         $this->addmap('defaults', array());
     }
 
-    public function add($name) {
+    public function add($name)
+    {
         $this->lock();
         $id = ++$this->autoid;
         $schema = Schema::newItem($id);
@@ -1122,13 +1202,14 @@ use \litepubl\core\PoolStorageTrait;
         return $id;
     }
 
-    public function addSchema(Schema $schema) {
+    public function addSchema(Schema $schema)
+    {
         $this->lock();
         $id = ++$this->autoid;
         $schema->id = $id;
         if (!$schema->name) {
-$schema->name = 'schema_' . $id;
-}
+            $schema->name = 'schema_' . $id;
+        }
 
         $schema->data['class'] = get_class($schema);
         $this->items[$id] = & $schema->data;
@@ -1136,7 +1217,8 @@ $schema->name = 'schema_' . $id;
         return $id;
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if ($id == 1) {
             return $this->error('You cant delete default view');
         }
@@ -1150,7 +1232,8 @@ $schema->name = 'schema_' . $id;
         return parent::delete($id);
     }
 
-    public function get($name) {
+    public function get($name)
+    {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
                 return Schema::i($id);
@@ -1160,15 +1243,17 @@ $schema->name = 'schema_' . $id;
         return false;
     }
 
-    public function resetCustom() {
+    public function resetCustom()
+    {
         foreach ($this->items as $id => $item) {
-            $schema= Schema::i($id);
+            $schema = Schema::i($id);
             $schema->resetCustom();
             $this->save();
         }
     }
 
-    public function widgetdeleted($idwidget) {
+    public function widgetdeleted($idwidget)
+    {
         $deleted = false;
         foreach ($this->items as & $schemaitem) {
             unset($sidebar);
@@ -1182,26 +1267,28 @@ $schema->name = 'schema_' . $id;
             }
         }
         if ($deleted) {
-$this->save();
-}
+            $this->save();
+        }
     }
 
 }
 
 //Theme.php
 namespace litepubl\view;
+
+use litepubl\core\Str;
+use litepubl\pages\Users as UserPages;
 use litepubl\post\Post;
 use litepubl\post\Posts;
-use litepubl\pages\Users as UserPages;
-use litepubl\core\Str;
 
 class Theme extends Base
- {
+{
 
-    public static function context() {
+    public static function context()
+    {
         $result = static ::i();
         if (!$result->name) {
-            if (($view =  static::getAppInstance()->context->view) && isset($view->IdSchema)) {
+            if (($view = static ::getAppInstance()->context->view) && isset($view->IdSchema)) {
                 $result = Schema::getSchema($view)->theme;
             } else {
                 $result = Schema::i()->theme;
@@ -1211,7 +1298,8 @@ class Theme extends Base
         return $result;
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->templates = array(
             'index' => '',
@@ -1224,30 +1312,34 @@ class Theme extends Base
         );
     }
 
-    public function __tostring() {
+    public function __tostring()
+    {
         return $this->templates['index'];
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return Parser::i();
     }
 
-    public function getSidebarscount() {
+    public function getSidebarscount()
+    {
         return count($this->templates['sidebars']);
     }
-    private function get_author() {
-        $model = isset( $this->getApp()->router->model) ?  $this->getApp()->router->model : MainView::i()->model;
+    private function get_author()
+    {
+        $model = isset($this->getApp()->router->model) ? $this->getApp()->router->model : MainView::i()->model;
         if (!is_object($model)) {
             if (!isset(static ::$vars['post'])) {
-return new EmptyClass();
-}
+                return new EmptyClass();
+            }
 
             $model = static ::$vars['post'];
         }
 
         if ($model instanceof UserPages) {
-return $model;
-}
+            return $model;
+        }
 
         $iduser = 0;
         foreach (array(
@@ -1263,22 +1355,23 @@ return $model;
         }
 
         if (!$iduser) {
-return new EmptyClass();
-}
+            return new EmptyClass();
+        }
 
         $pages = UserPages::i();
         if (!$pages->itemExists($iduser)) {
-return new emptyclass();
-}
+            return new emptyclass();
+        }
 
         $pages->request($iduser);
         return $pages;
     }
 
-    public function render($model) {
-$vars = new Vars();
-$vars->context = $model;
-$vars->model = $model;
+    public function render($model)
+    {
+        $vars = new Vars();
+        $vars->context = $model;
+        $vars->model = $model;
 
         if (isset($model->index_tml) && ($tml = $model->index_tml)) {
             return $this->parse($tml);
@@ -1287,15 +1380,18 @@ $vars->model = $model;
         return $this->parse($this->templates['index']);
     }
 
-public function setVar($name, $obj) {
-static::$vars[$name] = $obj;
-}
+    public function setVar($name, $obj)
+    {
+        static ::$vars[$name] = $obj;
+    }
 
-    public function getNotfound() {
+    public function getNotfound()
+    {
         return $this->parse($this->templates['content.notfound']);
     }
 
-    public function getPages($url, $page, $count, $params = '') {
+    public function getPages($url, $page, $count, $params = '')
+    {
         if (!(($count > 1) && ($page >= 1) && ($page <= $count))) {
             return '';
         }
@@ -1304,7 +1400,7 @@ static::$vars[$name] = $obj;
         $args->count = $count;
         $from = 1;
         $to = $count;
-        $perpage =  $this->getApp()->options->perpage;
+        $perpage = $this->getApp()->options->perpage;
         $args->perpage = $perpage;
         $items = array();
         if ($count > $perpage * 2) {
@@ -1339,9 +1435,9 @@ static::$vars[$name] = $obj;
 
         $currenttml = $this->templates['content.navi.current'];
         $tml = $this->templates['content.navi.link'];
-        if (!Str::begin($url, 'http')) $url =  $this->getApp()->site->url . $url;
+        if (!Str::begin($url, 'http')) $url = $this->getApp()->site->url . $url;
         $pageurl = rtrim($url, '/') . '/page/';
-        if ($params) $params =  $this->getApp()->site->q . $params;
+        if ($params) $params = $this->getApp()->site->q . $params;
 
         $a = array();
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
@@ -1377,12 +1473,13 @@ static::$vars[$name] = $obj;
         return $this->parseArg($this->templates['content.navi'], $args);
     }
 
-
-    public function simple($content) {
+    public function simple($content)
+    {
         return str_replace('$content', $content, $this->templates['content.simple']);
     }
 
-    public function getButton($title) {
+    public function getButton($title)
+    {
         return strtr($this->templates['content.admin.button'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -1390,7 +1487,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getSubmit($title) {
+    public function getSubmit($title)
+    {
         return strtr($this->templates['content.admin.submit'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
@@ -1398,7 +1496,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getInput($type, $name, $value, $title) {
+    public function getInput($type, $name, $value, $title)
+    {
         return strtr($this->templates['content.admin.' . $type], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -1406,7 +1505,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getRadio($name, $value, $title, $checked) {
+    public function getRadio($name, $value, $title, $checked)
+    {
         return strtr($this->templates['content.admin.radioitem'], array(
             '$lang.$name' => $title,
             '$name' => $name,
@@ -1416,7 +1516,8 @@ static::$vars[$name] = $obj;
         ));
     }
 
-    public function getRadioItems($name, array $items, $selected) {
+    public function getRadioItems($name, array $items, $selected)
+    {
         $result = '';
         foreach ($items as $index => $title) {
             $result.= $this->getradio($name, $index, static ::quote($title) , $index == $selected);
@@ -1424,8 +1525,8 @@ static::$vars[$name] = $obj;
         return $result;
     }
 
-
-    public function comboItems(array $items, $selected) {
+    public function comboItems(array $items, $selected)
+    {
         $result = '';
         foreach ($items as $i => $title) {
             $result.= sprintf('<option value="%s" %s>%s</option>', $i, $i == $selected ? 'selected' : '', static ::quote($title));
@@ -1440,10 +1541,11 @@ static::$vars[$name] = $obj;
 namespace litepubl\view;
 
 class Vars
- {
+{
     public $keys = array();
 
-    public function __destruct() {
+    public function __destruct()
+    {
         foreach ($this->keys as $name) {
             if (isset(Base::$vars[$name])) {
                 unset(Base::$vars[$name]);
@@ -1451,11 +1553,13 @@ class Vars
         }
     }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         return Base::$vars[$name];
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         Base::$vars[$name] = $value;
 
         if (!in_array($name, $this->keys)) {
@@ -1463,11 +1567,13 @@ class Vars
         }
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         return isset(Base::$vars[$name]);
     }
 
-    public function __unset($name) {
+    public function __unset($name)
+    {
         unset(Base::$vars[$name]);
     }
 
@@ -1476,8 +1582,7 @@ class Vars
 //ViewInterface.php
 namespace litepubl\view;
 
-interface ViewInterface extends \litepubl\core\ResponsiveInterface
- {
+interface ViewInterface extends \litepubl\core\ResponsiveInterface {
     public function getTitle();
     public function getKeywords();
     public function getDescription();
@@ -1489,12 +1594,13 @@ interface ViewInterface extends \litepubl\core\ResponsiveInterface
 
 //ViewTrait.php
 namespace litepubl\view;
-    use litepubl\core\Context;
 
-trait ViewTrait
-{
+use litepubl\core\Context;
 
-    protected function createData() {
+traitViewTrait {
+
+    protected function createData()
+    {
         parent::createData();
         $this->data['idschema'] = 1;
         $this->data['keywords'] = '';
@@ -1503,78 +1609,89 @@ trait ViewTrait
     }
 
     public function request(Context $context)
-{
-}
+    {
+    }
 
-    public function getHead() {
+    public function getHead()
+    {
         return $this->data['head'];
     }
 
-    public function getKeywords() {
+    public function getKeywords()
+    {
         return $this->data['keywords'];
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->data['description'];
     }
 
-    public function getIdSchema() {
+    public function getIdSchema()
+    {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id) {
+    public function setIdSchema($id)
+    {
         if ($id != $this->data['idschema']) {
             $this->data['idschema'] = $id;
             $this->save();
         }
     }
 
-    public function getSchema() {
+    public function getSchema()
+    {
         return Schema::getSchema($this);
     }
 
-public function getView()
-{
-return $this;
-}
+    public function getView()
+    {
+        return $this;
+    }
 
 }
 
 //Admin.php
 namespace litepubl\view;
-use litepubl\tag\Cats;
-use litepubl\post\Files;
+
 use litepubl\admin\GetPerm;
 use litepubl\admin\datefilter;
-use litepubl\core\Str;
 use litepubl\core\Arr;
+use litepubl\core\Str;
+use litepubl\post\Files;
+use litepubl\tag\Cats;
 
 class Admin extends Base
 {
     public $onfileperm;
 
-    public static function i() {
-        $result = static::iGet(get_called_class());
+    public static function i()
+    {
+        $result = static ::iGet(get_called_class());
         if (!$result->name) {
-$app = static::getAppInstance();
-if ($app->context && $app->context->view && isset($app->context->view->idschema)) {
-            $result->name = Schema::getSchema($app->context->view)->adminname;
-            $result->load();
+            $app = static ::getAppInstance();
+            if ($app->context && $app->context->view && isset($app->context->view->idschema)) {
+                $result->name = Schema::getSchema($app->context->view)->adminname;
+                $result->load();
+            }
         }
-}
 
         return $result;
     }
 
-    public static function admin() {
+    public static function admin()
+    {
         return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
-    public function getParser() {
+    public function getParser()
+    {
         return AdminParser::i();
     }
 
-    public function shortcode($s, Args $args) {
+    public function shortcode($s, Args $args)
+    {
         $result = trim($s);
         //replace [tabpanel=name{content}]
         if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
@@ -1661,18 +1778,21 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    public function parseArg($s, Args $args) {
+    public function parseArg($s, Args $args)
+    {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
         $result = $args->callback($result);
         return $this->parse($result);
     }
 
-    public function form($tml, Args $args) {
+    public function form($tml, Args $args)
+    {
         return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
-    public function getTable($head, $body, $footer = '') {
+    public function getTable($head, $body, $footer = '')
+    {
         return strtr($this->templates['table'], array(
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
@@ -1681,37 +1801,44 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         ));
     }
 
-    public function success($text) {
+    public function success($text)
+    {
         return str_replace('$text', $text, $this->templates['success']);
     }
 
-    public function getCount($from, $to, $count) {
+    public function getCount($from, $to, $count)
+    {
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
-    public function getIcon($name, $screenreader = false) {
+    public function getIcon($name, $screenreader = false)
+    {
         return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
-    public function getSection($title, $content) {
+    public function getSection($title, $content)
+    {
         return strtr($this->templates['section'], array(
             '$title' => $title,
             '$content' => $content
         ));
     }
 
-    public function getErr($content) {
+    public function getErr($content)
+    {
         return strtr($this->templates['error'], array(
-            '$title' => Lang::get('default', 'error'),
+            '$title' => Lang::get('default', 'error') ,
             '$content' => $content
         ));
     }
 
-    public function help($content) {
+    public function help($content)
+    {
         return str_replace('$content', $content, $this->templates['help']);
     }
 
-    public function getCalendar($name, $date) {
+    public function getCalendar($name, $date)
+    {
         $date = datefilter::timestamp($date);
 
         $args = new Args();
@@ -1730,7 +1857,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['calendar'], $args);
     }
 
-    public function getDaterange($from, $to) {
+    public function getDaterange($from, $to)
+    {
         $from = datefilter::timestamp($from);
         $to = datefilter::timestamp($to);
 
@@ -1742,7 +1870,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['daterange'], $args);
     }
 
-    public function getCats(array $items) {
+    public function getCats(array $items)
+    {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
         Cats::i()->loadall();
@@ -1750,7 +1879,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    protected function getSubcats($parent, array $items, $exclude = false) {
+    protected function getSubcats($parent, array $items, $exclude = false)
+    {
         $result = '';
         $args = new Args();
         $tml = $this->templates['posteditor.categories.item'];
@@ -1772,14 +1902,16 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $result;
     }
 
-    public function processcategories() {
+    public function processcategories()
+    {
         $result = $this->check2array('category-');
         Arr::clean($result);
         Arr::deleteValue($result, 0);
         return $result;
     }
 
-    public function getFilelist(array $list) {
+    public function getFilelist(array $list)
+    {
         $args = new Args();
         $args->fileperm = '';
 
@@ -1787,12 +1919,12 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
             call_user_func_array($this->onfileperm, array(
                 $args
             ));
-        } else if ( $this->getApp()->options->show_file_perm) {
+        } else if ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
         $files = Files::i();
-        $where =  $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' .  $this->getApp()->options->user;
+        $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
 
         $db = $files->db;
         //total count files
@@ -1811,7 +1943,8 @@ if ($app->context && $app->context->view && isset($app->context->view->idschema)
         return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
-    public function check2array($prefix) {
+    public function check2array($prefix)
+    {
         $result = array();
         foreach ($_POST as $key => $value) {
             if (Str::begin($key, $prefix)) {

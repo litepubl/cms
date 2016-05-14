@@ -1,11 +1,12 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\updater;
 
@@ -16,18 +17,19 @@ class Ssh2 extends Remote
     protected $public_key;
     protected $private_key;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->port = 22;
         $this->ssl = false;
         $this->hostkey = false;
     }
 
-    public function connect($host, $login, $password) {
+    public function connect($host, $login, $password)
+    {
         if (!parent::connect($host, $login, $password)) {
- return false;
-}
-
+            return false;
+        }
 
         if (empty($this->port)) $this->port = 22;
         $this->handle = empty($this->key) ? @ssh2_connect($this->host, $this->port) : @ssh2_connect($this->host, $this->port, $this->hostkey);
@@ -43,7 +45,8 @@ class Ssh2 extends Remote
         return false;
     }
 
-    private function run($cmd) {
+    private function run($cmd)
+    {
         if ($h = ssh2_exec($this->handle, $cmd)) {
             stream_set_blocking($h, true);
             stream_set_timeout($h, $this->timeout);
@@ -54,93 +57,104 @@ class Ssh2 extends Remote
         return false;
     }
 
-    private function runbool($cmd) {
+    private function runbool($cmd)
+    {
         if ($result = $this->run($cmd)) {
- return trim($result) != '';
-}
-
+            return trim($result) != '';
+        }
 
         return false;
     }
 
-    public function getFilename($file) {
+    public function getFilename($file)
+    {
         return "ssh2.sftp://$this->sftp/" . ltrim($filename, '/');
     }
 
-    public function getFile($filename) {
+    public function getFile($filename)
+    {
         return file_get_contents($this->getfilename($filename));
     }
 
-    public function putcontent($filename, $content) {
+    public function putcontent($filename, $content)
+    {
         return file_put_contents($this->getfilename($filename) , $content) !== false;
     }
 
-    public function upload($localfile, $filename) {
+    public function upload($localfile, $filename)
+    {
         return file_put_contents($this->getfilename($filename) , file_get_contents($localfile)) !== false;
     }
 
-    public function pwd() {
+    public function pwd()
+    {
         if ($result = $this->run('pwd')) {
- return rtrim(rtrim($result) , '/') . '/';
-}
-
+            return rtrim(rtrim($result) , '/') . '/';
+        }
 
         return false;
     }
 
-    public function chdir($dir) {
+    public function chdir($dir)
+    {
         return $this->runbool('cd ' . $dir);
     }
 
-    protected function runcommand($cmd, $filename, $mode, $recursive) {
+    protected function runcommand($cmd, $filename, $mode, $recursive)
+    {
         if (!$this->exists($filename)) {
- return false;
-}
-
+            return false;
+        }
 
         if ($recursive && $this->is_dir($filename)) $cmd.= ' -R';
         return $this->runbool(sprintf('%s %o %s', $cmd, $mode, escapeshellarg($filename)));
     }
 
-    public function chgrp($filename, $group, $recursive) {
+    public function chgrp($filename, $group, $recursive)
+    {
         return $this->runcommand('chgrp', $filename, $group, $recursive);
     }
 
-    public function chmod($file, $mode, $recursive) {
+    public function chmod($file, $mode, $recursive)
+    {
         $mode = $this->getmode($mode);
         return $this->runcommand('chmod', $filename, $mode, $recursive);
     }
 
-    public function chown($filename, $owner, $recursive) {
+    public function chown($filename, $owner, $recursive)
+    {
         return $this->runcommand('chown ', $filename, $owner, $recursive);
     }
 
-    public function owner($file) {
+    public function owner($file)
+    {
         return static ::getownername(@fileowner($this->$file));
     }
 
-    public function group($file) {
+    public function group($file)
+    {
         return $this->getgroupname(@filegroup($file));
     }
 
-    public function getChmod($file) {
+    public function getChmod($file)
+    {
         return @fileperms($this->getfilename($file)) & 0777;
     }
 
-    public function rename($source, $destination) {
+    public function rename($source, $destination)
+    {
         return @ssh2_sftp_rename($this->handle, $source, $destination);
     }
 
-    public function delete($file, $recursive = false) {
+    public function delete($file, $recursive = false)
+    {
         if ($this->is_file($file)) {
- return ssh2_sftp_unlink($this->sftp, $file);
-}
-
+            return ssh2_sftp_unlink($this->sftp, $file);
+        }
 
         if (!$recursive) {
- return ssh2_sftp_rmdir($this->sftp, $file);
-}
-
+            return ssh2_sftp_rmdir($this->sftp, $file);
+        }
 
         $filelist = $this->getdir($file);
         if (is_array($filelist)) {
@@ -151,60 +165,68 @@ class Ssh2 extends Remote
         return ssh2_sftp_rmdir($this->sftp, $file);
     }
 
-    public function exists($file) {
+    public function exists($file)
+    {
         return file_exists($this->getfilename($file));
     }
 
-    public function is_file($file) {
+    public function is_file($file)
+    {
         return is_file($this->getfilename($file));
     }
 
-    public function is_dir($path) {
+    public function is_dir($path)
+    {
         $path = ltrim($path, '/');
         return is_dir($this->getfilename($file));
     }
 
-    public function is_readable($file) {
+    public function is_readable($file)
+    {
         return is_readable($this->getfilename($file));
     }
 
-    public function is_writable($file) {
+    public function is_writable($file)
+    {
         return is_writable($this->getfilename($file));
     }
 
-    public function atime($file) {
+    public function atime($file)
+    {
         return fileatime($this->getfilename($file));
     }
 
-    public function mtime($file) {
+    public function mtime($file)
+    {
         return filemtime($this->getfilename($file));
     }
 
-    public function size($file) {
+    public function size($file)
+    {
         return filesize($this->getfilename($file));
     }
 
-    public function mkdir($path, $chmod) {
+    public function mkdir($path, $chmod)
+    {
         $path = rtrim($path, '/');
         if (!$chmod) $chmod = $this->chmod_dir;
         $chmod = $this->getmode($chmod);
         return ssh2_sftp_mkdir($this->sftp, $path, $chmod, true);
     }
 
-    public function getDir($path) {
+    public function getDir($path)
+    {
         if ($this->is_file($path)) $path = dirname($path);
         if (!$this->is_dir($path)) {
- return false;
-}
-
+            return false;
+        }
 
         $result = array();
         if ($dir = @dir($this->getfilename($path))) {
             while (false !== ($name = $dir->read())) {
                 if (($name == '.') || ($name == '..') || ($name == '.svn')) {
- continue;
-}
-
+                    continue;
+                }
 
                 $fullname = $path . '/' . $name;
                 $a = $this->getfileinfo($fullname);
@@ -220,3 +242,4 @@ class Ssh2 extends Remote
     }
 
 }
+

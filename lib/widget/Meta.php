@@ -1,21 +1,24 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\widget;
-use litepubl\view\Lang;
+
 use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Meta extends Widget
- {
+{
     public $items;
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->basename = 'widget.meta';
         $this->template = 'meta';
@@ -23,11 +26,13 @@ class Meta extends Widget
         $this->addmap('items', array());
     }
 
-    public function getDeftitle() {
+    public function getDeftitle()
+    {
         return Lang::get('default', 'subscribe');
     }
 
-    public function add($name, $url, $title) {
+    public function add($name, $url, $title)
+    {
         $this->items[$name] = array(
             'enabled' => true,
             'url' => $url,
@@ -36,24 +41,25 @@ class Meta extends Widget
         $this->save();
     }
 
-    public function delete($name) {
+    public function delete($name)
+    {
         if (isset($this->items[$name])) {
             unset($this->items[$name]);
             $this->save();
         }
     }
 
-    public function getContent($id, $sidebar) {
+    public function getContent($id, $sidebar)
+    {
         $result = '';
-$view = new View();
+        $view = new View();
         $tml = $view->getItem('meta', $sidebar);
         $metaclasses = $view->getTml($sidebar, 'meta', 'classes');
         $args = new Args();
         foreach ($this->items as $name => $item) {
             if (!$item['enabled']) {
- continue;
-}
-
+                continue;
+            }
 
             $args->add($item);
             $args->icon = '';
@@ -68,11 +74,11 @@ $view = new View();
         }
 
         if ($result == '') {
- return '';
-}
-
+            return '';
+        }
 
         return $view->getContent($result, 'meta', $sidebar);
     }
 
 }
+

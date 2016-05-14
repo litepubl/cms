@@ -1,24 +1,29 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl;
+
 use litepubl\core\Str;
-use litepubl\view\Lang;
 use litepubl\view\Filter;
+use litepubl\view\Lang;
 
-class tcontactsite extends tmenu {
+class tcontactsite extends tmenu
+{
 
-    public static function i($id = 0) {
+    public static function i($id = 0)
+    {
         return static ::iteminstance(__class__, $id);
     }
 
-    protected function create() {
+    protected function create()
+    {
         parent::create();
         $this->cache = false;
         $this->data['subject'] = '';
@@ -26,36 +31,32 @@ class tcontactsite extends tmenu {
         $this->data['success'] = '';
     }
 
-    public function processForm() {
+    public function processForm()
+    {
         if (!isset($_POST['contactvalue'])) {
- return '';
-}
-
+            return '';
+        }
 
         $time = substr($_POST['contactvalue'], strlen('_contactform'));
         if (time() > $time) {
- return $this->errmesg;
-}
-
+            return $this->errmesg;
+        }
 
         $email = trim($_POST['email']);
 
         if (!Filter::ValidateEmail($email)) {
- return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'invalidemail'));
-}
-
+            return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'invalidemail'));
+        }
 
         $url = trim($_POST['site']);
-        if (empty($url) || Str::begin($url,  $this->getApp()->site->url)) {
- return $this->errmesg;
-}
-
+        if (empty($url) || Str::begin($url, $this->getApp()->site->url)) {
+            return $this->errmesg;
+        }
 
         if ($s = http::get($url)) {
             if (!strpos($s, '<meta name="generator" content="Lite Publisher')) {
- return $this->errmesg;
-}
-
+                return $this->errmesg;
+            }
 
         } else {
             return $this->errmesg;
@@ -63,13 +64,13 @@ class tcontactsite extends tmenu {
 
         $content = trim($_POST['content']);
         if (strlen($content) <= 15) {
- return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'emptycontent'));
-}
-
+            return sprintf('<p><strong>%s</strong></p>', Lang::get('comment', 'emptycontent'));
+        }
 
         $content = "$url\n" . $_POST['sitetitle'] . "\n\n" . $content;
-        tmailer::sendmail('', $email, '',  $this->getApp()->options->email, $this->subject, $content);
+        tmailer::sendmail('', $email, '', $this->getApp()->options->email, $this->subject, $content);
         return $this->success;
     }
 
 }
+

@@ -1,15 +1,17 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\core;
 
-class Data {
+class Data
+{
     const ZERODATE = '0000-00-00 00:00:00';
     public static $guid = 0;
     public $basename;
@@ -20,19 +22,23 @@ class Data {
     public $lockcount;
     public $table;
 
-    public static function i() {
-        return  static::iGet(get_called_class());
+    public static function i()
+    {
+        return static ::iGet(get_called_class());
     }
 
-    public static function iGet($class) {
-        return  static::getAppInstance()->classes->getInstance($class);
+    public static function iGet($class)
+    {
+        return static ::getAppInstance()->classes->getInstance($class);
     }
 
-public static function getAppInstance() {
-return litepubl::$app;
-}
+    public static function getAppInstance()
+    {
+        return litepubl::$app;
+    }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->lockcount = 0;
         $this->cache = true;
         $this->data = array();
@@ -40,22 +46,25 @@ return litepubl::$app;
         $this->coclasses = array();
 
         if (!$this->basename) {
-$class = get_class($this);
+            $class = get_class($this);
             $this->basename = substr($class, strrpos($class, '\\') + 1);
         }
 
         $this->create();
     }
 
-    protected function create() {
-$this->createData();
+    protected function create()
+    {
+        $this->createData();
     }
 
-//method to override in traits when in base class declared create method
-    protected function createData() {
-}
+    //method to override in traits when in base class declared create method
+    protected function createData()
+    {
+    }
 
-    public function __get($name) {
+    public function __get($name)
+    {
         if (method_exists($this, $get = 'get' . $name)) {
             return $this->$get();
         } elseif (array_key_exists($name, $this->data)) {
@@ -67,30 +76,32 @@ $this->createData();
                 }
             }
 
-            throw new PropException(get_class($this), $name);
+            throw new PropException(get_class($this) , $name);
         }
     }
 
-    public function __set($name, $value) {
+    public function __set($name, $value)
+    {
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
         } elseif (key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
-        foreach ($this->coinstances as $coinstance) {
-            if (isset($coinstance->$name)) {
-                $coinstance->$name = $value;
-                return true;
+            foreach ($this->coinstances as $coinstance) {
+                if (isset($coinstance->$name)) {
+                    $coinstance->$name = $value;
+                    return true;
+                }
             }
+
+            return false;
         }
 
-        return false;
+        return true;
     }
 
-return true;
-}
-
-    public function __call($name, $params) {
+    public function __call($name, $params)
+    {
         if (method_exists($this, strtolower($name))) {
             return call_user_func_array(array(
                 $this,
@@ -110,7 +121,8 @@ return true;
         $this->error("The requested method $name not found in class " . get_class($this));
     }
 
-    public function __isset($name) {
+    public function __isset($name)
+    {
         if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) {
             return true;
         }
@@ -124,35 +136,43 @@ return true;
         return false;
     }
 
-    public function method_exists($name) {
+    public function method_exists($name)
+    {
         return false;
     }
 
-    public function error($Msg, $code = 0) {
+    public function error($Msg, $code = 0)
+    {
         throw new \Exception($Msg, $code);
     }
 
-    public function getBaseName() {
+    public function getBaseName()
+    {
         return $this->basename;
     }
 
-public function getApp() {
-return static::getAppInstance();
-}
+    public function getApp()
+    {
+        return static ::getAppInstance();
+    }
 
-    public function install() {
+    public function install()
+    {
         $this->externalchain('Install');
     }
 
-    public function uninstall() {
+    public function uninstall()
+    {
         $this->externalchain('Uninstall');
     }
 
-    public function validate($repair = false) {
+    public function validate($repair = false)
+    {
         $this->externalchain('Validate', $repair);
     }
 
-    protected function externalChain($func, $arg = null) {
+    protected function externalChain($func, $arg = null)
+    {
         $parents = class_parents($this);
         array_splice($parents, 0, 0, get_class($this));
         foreach ($parents as $class) {
@@ -160,7 +180,8 @@ return static::getAppInstance();
         }
     }
 
-    public function getExternalFuncName($class, $func) {
+    public function getExternalFuncName($class, $func)
+    {
         $reflector = new \ReflectionClass($class);
         $filename = $reflector->getFileName();
 
@@ -182,14 +203,15 @@ return static::getAppInstance();
 
         $fnc = $class . $func;
         if (function_exists($fnc)) {
-return $fnc;
-}
+            return $fnc;
+        }
 
-return false;
-}
+        return false;
+    }
 
-    public function externalFunc($class, $func, $args) {
-if ($fnc = $this->getExternalFuncName($class, $func)) {
+    public function externalFunc($class, $func, $args)
+    {
+        if ($fnc = $this->getExternalFuncName($class, $func)) {
             if (is_array($args)) {
                 array_unshift($args, $this);
             } else {
@@ -200,14 +222,16 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
             }
 
             return \call_user_func_array($fnc, $args);
-}
+        }
     }
 
-    public function getStorage() {
-        return  $this->getApp()->storage;
+    public function getStorage()
+    {
+        return $this->getApp()->storage;
     }
 
-    public function load() {
+    public function load()
+    {
         if ($this->getStorage()->load($this)) {
             $this->afterLoad();
             return true;
@@ -216,7 +240,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return false;
     }
 
-    public function save() {
+    public function save()
+    {
         if ($this->lockcount) {
             return;
         }
@@ -224,7 +249,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return $this->getStorage()->save($this);
     }
 
-    public function afterload() {
+    public function afterload()
+    {
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, 'afterload')) {
                 $coinstance->afterload();
@@ -232,47 +258,56 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         }
     }
 
-    public function lock() {
+    public function lock()
+    {
         $this->lockcount++;
     }
 
-    public function unlock() {
+    public function unlock()
+    {
         if (--$this->lockcount <= 0) {
             $this->save();
         }
     }
 
-    public function getLocked() {
+    public function getLocked()
+    {
         return $this->lockcount > 0;
     }
 
-    public function Getclass() {
+    public function Getclass()
+    {
         return get_class($this);
     }
 
-    public function getDbversion() {
+    public function getDbversion()
+    {
         return false;
 
     }
 
-    public function getDb($table = '') {
+    public function getDb($table = '')
+    {
         $table = $table ? $table : $this->table;
         if ($table) {
-             $this->getApp()->db->table = $table;
+            $this->getApp()->db->table = $table;
         }
 
-        return  $this->getApp()->db;
+        return $this->getApp()->db;
     }
 
-    protected function getThistable() {
-        return  $this->getApp()->db->prefix . $this->table;
+    protected function getThistable()
+    {
+        return $this->getApp()->db->prefix . $this->table;
     }
 
-    public static function get_class_name($c) {
+    public static function get_class_name($c)
+    {
         return is_object($c) ? get_class($c) : trim($c);
     }
 
-    public static function encrypt($s, $key) {
+    public static function encrypt($s, $key)
+    {
         $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         if (strlen($key) > $maxkey) {
             $key = substr($key, $maxkey);
@@ -284,7 +319,8 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
         return mcrypt_encrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
     }
 
-    public static function decrypt($s, $key) {
+    public static function decrypt($s, $key)
+    {
         $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         if (strlen($key) > $maxkey) {
             $key = substr($key, $maxkey);
@@ -297,3 +333,4 @@ if ($fnc = $this->getExternalFuncName($class, $func)) {
     }
 
 }
+

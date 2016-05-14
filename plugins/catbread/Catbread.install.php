@@ -1,19 +1,22 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\plugins\catbread;
-use litepubl\view\Parser;
+
 use litepubl\view\Base;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
+use litepubl\view\Parser;
 
-function CatbreadInstall($self) {
+function CatbreadInstall($self)
+{
     LangMerger::i()->addplugin(basename(dirname(__file__)));
     $self->cats->onbeforecontent = $self->beforecat;
 
@@ -25,7 +28,8 @@ function CatbreadInstall($self) {
     Base::clearcache();
 }
 
-function CatbreadUninstall($self) {
+function CatbreadUninstall($self)
+{
     LangMerger::i()->deleteplugin(basename(dirname(__file__)));
     $self->cats->unbind($self);
     $parser = Parser::i();
@@ -36,7 +40,8 @@ function CatbreadUninstall($self) {
     Base::clearcache();
 }
 
-function CatbreadThemeparsed(Catbread $self, Base $theme) {
+function CatbreadThemeparsed(Catbread $self, Base $theme)
+{
     $tag1 = '$catbread.post';
     $tag2 = '$catbread.sim';
 
@@ -108,3 +113,4 @@ if (Parser::i()->replacelang) {
     }
 }
 }
+

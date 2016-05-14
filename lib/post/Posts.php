@@ -1,31 +1,35 @@
 <?php
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\post;
+
 use litepubl\core\Cron;
 use litepubl\core\Str;
-use litepubl\view\Schemes;
 use litepubl\utils\LinkGenerator;
+use litepubl\view\Schemes;
 
 class Posts extends \litepubl\core\Items
- {
+{
     const POSTCLASS = __NAMESPACE__ . '/Post';
     public $itemcoclasses;
     public $archives;
     public $rawtable;
     public $childTable;
 
-    public static function unsub($obj) {
+    public static function unsub($obj)
+    {
         static ::i()->unbind($obj);
     }
 
-    protected function create() {
+    protected function create()
+    {
         $this->dbversion = true;
         parent::create();
         $this->table = 'posts';
@@ -39,16 +43,17 @@ class Posts extends \litepubl\core\Items
         $this->addmap('itemcoclasses', array());
     }
 
-    public function getItem($id) {
+    public function getItem($id)
+    {
         if ($result = Post::i($id)) {
- return $result;
-}
-
+            return $result;
+        }
 
         $this->error("Item $id not found in class " . get_class($this));
     }
 
-    public function findItems($where, $limit) {
+    public function findItems($where, $limit)
+    {
         if (isset(Post::$instances['post']) && (count(Post::$instances['post']) > 0)) {
             $result = $this->db->idselect($where . ' ' . $limit);
             $this->loadItems($result);
@@ -58,65 +63,65 @@ class Posts extends \litepubl\core\Items
         }
     }
 
-    public function loadItems(array $items) {
+    public function loadItems(array $items)
+    {
         //exclude already loaded items
         if (!isset(Post::$instances['post'])) {
-Post::$instances['post'] = array();
-}
+            Post::$instances['post'] = array();
+        }
 
         $loaded = array_keys(Post::$instances['post']);
         $newitems = array_diff($items, $loaded);
         if (!count($newitems)) {
- return $items;
-}
-
+            return $items;
+        }
 
         $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , '');
         return array_merge($newitems, array_intersect($loaded, $items));
     }
 
-    public function setAssoc(array $items) {
+    public function setAssoc(array $items)
+    {
         if (!count($items)) {
- return array();
-}
+            return array();
+        }
 
         $result = array();
         $fileitems = array();
         foreach ($items as $a) {
-$post = Post::newPost($a['class']);
-$post->setAssoc($a);
+            $post = Post::newPost($a['class']);
+            $post->setAssoc($a);
             $result[] = $post->id;
 
             $f = $post->files;
             if (count($f)) {
-$fileitems = array_merge($fileitems, array_diff($f, $fileitems));
-}
+                $fileitems = array_merge($fileitems, array_diff($f, $fileitems));
+            }
         }
 
         if ($this->syncmeta) {
-Meta::loadItems($result);
-}
+            Meta::loadItems($result);
+        }
 
         if (count($fileitems)) {
-Files::i()->preload($fileitems);
-}
+            Files::i()->preload($fileitems);
+        }
 
         $this->onselect($result);
         return $result;
     }
 
-    public function select($where, $limit) {
-        $db =  $this->getApp()->db;
+    public function select($where, $limit)
+    {
+        $db = $this->getApp()->db;
         if ($this->childTable) {
             $childTable = $db->prefix . $this->childTable;
-            return $this->setAssoc($db->res2items($db->query(
-"select $db->posts.*, $childTable.*, $db->urlmap.url as url
+            return $this->setAssoc($db->res2items($db->query("select $db->posts.*, $childTable.*, $db->urlmap.url as url
       from $db->posts, $childTable, $db->urlmap
       where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
         }
 
-        $items = $db->res2items($db->query(
-"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+        $items = $db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $where and  $db->urlmap.id  = $db->posts.idurl $limit"));
 
         if (!count($items)) {
@@ -133,7 +138,7 @@ Files::i()->preload($fileitems);
         }
 
         foreach ($subclasses as $class => $list) {
-$class = str_replace('-', '\\', $class) ;
+            $class = str_replace('-', '\\', $class);
             $subitems = $class::loadChildData($list);
             foreach ($subitems as $id => $subitem) {
                 $items[$id] = array_merge($items[$id], $subitem);
@@ -143,32 +148,35 @@ $class = str_replace('-', '\\', $class) ;
         return $this->setAssoc($items);
     }
 
-    public function getCount() {
+    public function getCount()
+    {
         return $this->db->getcount("status<> 'deleted'");
     }
 
-    public function getChildscount($where) {
+    public function getChildscount($where)
+    {
         if (!$this->childTable) {
- return 0;
-}
+            return 0;
+        }
 
-        $db =  $this->getApp()->db;
+        $db = $this->getApp()->db;
         $childTable = $db->prefix . $this->childTable;
-$res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
+        $res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
     where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where");
 
-            if ($res && ($r = $db->fetchassoc($res))) {
- return $r['count'];
+        if ($res && ($r = $db->fetchassoc($res))) {
+            return $r['count'];
         }
 
         return 0;
     }
 
-    private function beforeChange($post) {
+    private function beforeChange($post)
+    {
         $post->title = trim($post->title);
         $post->modified = time();
         $post->revision = $this->revision;
-        $post->class = str_replace('\\', '-', ltrim(get_class($post), '\\'));
+        $post->class = str_replace('\\', '-', ltrim(get_class($post) , '\\'));
         if (($post->status == 'published') && ($post->posted > time())) {
             $post->status = 'future';
         } elseif (($post->status == 'future') && ($post->posted <= time())) {
@@ -176,27 +184,28 @@ $res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childT
         }
     }
 
-    public function add(Post $post) {
+    public function add(Post $post)
+    {
         $this->beforeChange($post);
         if (!$post->posted) {
-$post->posted = time();
-}
+            $post->posted = time();
+        }
 
         if ($post->posted <= time()) {
             if ($post->status == 'future') {
-$post->status = 'published';
-}
+                $post->status = 'published';
+            }
         } else {
             if ($post->status == 'published') {
-$post->status = 'future';
-}
+                $post->status = 'future';
+            }
         }
 
         if ($post->idschema == 1) {
             $schemes = Schemes::i();
             if (isset($schemes->defaults['post'])) {
-$post->data['idschema'] = $schemes->defaults['post'];
-}
+                $post->data['idschema'] = $schemes->defaults['post'];
+            }
         }
 
         $post->url = LinkGenerator::i()->addUrl($post, $post->schemaLink);
@@ -206,22 +215,23 @@ $post->data['idschema'] = $schemes->defaults['post'];
         $this->cointerface('add', $post);
         $this->added($id);
         $this->changed();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
         return $id;
     }
 
-    public function edit(Post $post) {
+    public function edit(Post $post)
+    {
         $this->beforeChange($post);
         $linkgen = LinkGenerator::i();
         $linkgen->editurl($post, $post->schemaLink);
         if ($post->posted <= time()) {
             if ($post->status == 'future') {
-$post->status = 'published';
-}
+                $post->status = 'published';
+            }
         } else {
             if ($post->status == 'published') {
-$post->status = 'future';
-}
+                $post->status = 'future';
+            }
         }
 
         $this->lock();
@@ -232,13 +242,14 @@ $post->status = 'future';
         $this->edited($post->id);
         $this->changed();
 
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!$this->itemExists($id)) {
- return false;
-}
+            return false;
+        }
 
         $this->db->setvalue($id, 'status', 'deleted');
         if ($this->childTable) {
@@ -257,68 +268,77 @@ $post->status = 'future';
         return true;
     }
 
-    public function updated(Post $post) {
+    public function updated(Post $post)
+    {
         $this->PublishFuture();
         $this->UpdateArchives();
         Cron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
     }
 
-    public function UpdateArchives() {
+    public function UpdateArchives()
+    {
         $this->archivescount = $this->db->getcount("status = 'published' and posted <= '" . Str::sqlDate() . "'");
     }
 
-    public function dosinglecron($id) {
+    public function dosinglecron($id)
+    {
         $this->PublishFuture();
         Theme::$vars['post'] = Post::i($id);
         $this->singlecron($id);
         unset(Theme::$vars['post']);
     }
 
-    public function hourcron() {
+    public function hourcron()
+    {
         $this->PublishFuture();
     }
 
-    private function publish($id) {
+    private function publish($id)
+    {
         $post = Post::i($id);
         $post->status = 'published';
         $this->edit($post);
     }
 
-    public function PublishFuture() {
+    public function PublishFuture()
+    {
         if ($list = $this->db->idselect(sprintf('status = \'future\' and posted <= \'%s\' order by posted asc', Str::sqlDate()))) {
             foreach ($list as $id) {
-$this->publish($id);
-}
+                $this->publish($id);
+            }
         }
     }
 
-    public function getRecent($author, $count) {
+    public function getRecent($author, $count)
+    {
         $author = (int)$author;
         $where = "status != 'deleted'";
         if ($author > 1) {
-$where.= " and author = $author";
-}
+            $where.= " and author = $author";
+        }
 
         return $this->findItems($where, ' order by posted desc limit ' . (int)$count);
     }
 
-    public function getPage($author, $page, $perpage, $invertorder) {
+    public function getPage($author, $page, $perpage, $invertorder)
+    {
         $author = (int)$author;
         $from = ($page - 1) * $perpage;
         $t = $this->thistable;
         $where = "$t.status = 'published'";
         if ($author > 1) {
-$where.= " and $t.author = $author";
-}
+            $where.= " and $t.author = $author";
+        }
 
         $order = $invertorder ? 'asc' : 'desc';
         return $this->finditems($where, " order by $t.posted $order limit $from, $perpage");
     }
 
-    public function stripDrafts(array $items) {
+    public function stripDrafts(array $items)
+    {
         if (count($items) == 0) {
- return array();
-}
+            return array();
+        }
 
         $list = implode(', ', $items);
         $t = $this->thistable;
@@ -326,46 +346,53 @@ $where.= " and $t.author = $author";
     }
 
     //coclasses
-    private function coInterface($method, $arg) {
+    private function coInterface($method, $arg)
+    {
         foreach ($this->coinstances as $coinstance) {
             if ($coinstance instanceof ipost) {
-$coinstance->$method($arg);
-}
+                $coinstance->$method($arg);
+            }
         }
     }
 
-    public function addRevision() {
+    public function addRevision()
+    {
         $this->data['revision']++;
         $this->save();
-         $this->getApp()->cache->clear();
+        $this->getApp()->cache->clear();
     }
 
     //fix call reference
-    public function beforecontent($post, &$result) {
+    public function beforecontent($post, &$result)
+    {
         $this->callevent('beforecontent', array(
             $post, &$result
         ));
     }
 
-    public function aftercontent($post, &$result) {
+    public function aftercontent($post, &$result)
+    {
         $this->callevent('aftercontent', array(
             $post, &$result
         ));
     }
 
-    public function beforeexcerpt($post, &$result) {
+    public function beforeexcerpt($post, &$result)
+    {
         $this->callevent('beforeexcerpt', array(
             $post, &$result
         ));
     }
 
-    public function afterexcerpt($post, &$result) {
+    public function afterexcerpt($post, &$result)
+    {
         $this->callevent('afterexcerpt', array(
             $post, &$result
         ));
     }
 
-    public function getSitemap($from, $count) {
+    public function getSitemap($from, $count)
+    {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
             $count
@@ -373,3 +400,4 @@ $coinstance->$method($arg);
     }
 
 }
+
