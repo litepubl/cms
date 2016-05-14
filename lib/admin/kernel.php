@@ -819,9 +819,9 @@ namespace litepubl\admin;
 
 class Panel implements AdminInterface
 {
-    use Params;
-    use \litepubl\core\AppTrait;
     use PanelTrait;
+    use \litepubl\core\AppTrait;
+    use Params;
 
     public function __construct()
     {

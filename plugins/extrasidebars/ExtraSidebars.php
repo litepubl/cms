@@ -8,16 +8,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\extrasidebars;
 
-class textrasidebars extends \litepubl\core\Plugin
+use litepubl\view\Theme;
+
+class ExtraSidebars extends \litepubl\core\Plugin
 {
     public $themes;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,18 +24,26 @@ class textrasidebars extends \litepubl\core\Plugin
         $this->data['afterpost'] = true;
     }
 
-    public function fix(ttheme $theme)
+    public function fix(Theme $theme)
     {
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
-            if ($this->beforepost) $s.= '<!--$template.sidebar-->';
-            if ($this->afterpost) $s.= '<!--$template.sidebar-->';
+            if ($this->beforepost) {
+$s.= '<!--$template.sidebar-->';
+}
+
+            if ($this->afterpost) {
+$s.= '<!--$template.sidebar-->';
+}
+
             $count = substr_count($s, '$template.sidebar');
-            while (count($theme->templates['sidebars']) < $count) $theme->templates['sidebars'][] = $theme->templates['sidebars'][0];
+            while (count($theme->templates['sidebars']) < $count) {
+$theme->templates['sidebars'][] = $theme->templates['sidebars'][0];
+}
         }
     }
 
-    public function themeparsed(ttheme $theme)
+    public function themeParsed(Theme $theme)
     {
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
@@ -52,8 +57,13 @@ class textrasidebars extends \litepubl\core\Plugin
 
             $theme->templates['extrasidebars'] = $sidebar;
             $post = & $theme->templates['content.post'];
-            if ($this->beforepost) $post = str_replace('$post.content', $tag . $sidebar++ . '$post.content', $post);
-            if ($this->afterpost) $post = str_replace('$post.content', '$post.content ' . $tag . $sidebar++, $post);
+            if ($this->beforepost) {
+$post = str_replace('$post.content', $tag . $sidebar++ . '$post.content', $post);
+}
+
+            if ($this->afterpost) {
+$post = str_replace('$post.content', '$post.content ' . $tag . $sidebar++, $post);
+}
         }
     }
 

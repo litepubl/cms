@@ -8,23 +8,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\extrasidebars;
 
 use litepubl\view\Base;
 use litepubl\view\Parser;
 
-function textrasidebarsInstall($self)
+function ExtraSidebarsInstall($self)
 {
     $parser = Parser::i();
     $parser->lock();
     $parser->onfix = $self->fix;
-    $parser->parsed = $self->themeparsed;
+    $parser->parsed = $self->themeParsed;
     $parser->unlock();
 
     Base::clearCache();
 }
 
-function textrasidebarsUninstall($self)
+function ExtraSidebarsUninstall($self)
 {
     Parser::i()->unbind($self);
     Base::clearCache();

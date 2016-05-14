@@ -8,46 +8,43 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\extrasidebars;
 
 use litepubl\admin\AdminInterface;
-use litepubl\core\Plugins;
-use litepubl\view\Args;
 use litepubl\view\Base;
 
-class tadminextrasidebars implements \litepubl\admin\AdminInterface
+class Admin implements \litepubl\admin\AdminInterface
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
+use \litepubl\admin\PanelTrait;
 
     public function getContent()
     {
-        $plugin = textrasidebars::i();
-        $html = tadminhtml::i();
+        $plugin = ExtraSidebars::i();
         $themes = tadminthemes::getlist('<li><input name="theme-$name" id="checkbox-theme-$name" type="checkbox" value="$name" $checked />
     <label for="checkbox-theme-$name"><img src="$site.files/themes/$name/$screenshot" alt="$name" /></label>
     $lang.version:$version $lang.author: <a href="$url">$author</a> $lang.description:  $description</li>', $plugin->themes);
 
-        $args = new Args();
-        $lang = Plugins::getlangabout(__file__);
+        $args = $this->args;
+        $lang = $this->getLangAbout();
         $args->formtitle = $lang->name;
         $args->beforepost = $plugin->beforepost;
         $args->afterpost = $plugin->afterpost;
 
-        return $html->adminform('[checkbox=beforepost] [checkbox=afterpost]' . "<h4>$lang->themes</h4><ul>$themes</ul>", $args);
+        return $this->admin->form('
+[checkbox=beforepost]
+ [checkbox=afterpost]
+'
+ . "<h4>$lang->themes</h4><ul>$themes</ul>"
+, $args);
     }
 
     public function processForm()
     {
-        $plugin = textrasidebars::i();
+        $plugin = ExtraSidebars::i();
         $plugin->beforepost = isset($_POST['beforepost']);
         $plugin->afterpost = isset($_POST['afterpost']);
         $plugin->themes = tadminhtml::check2array('theme-');
         $plugin->save();
-
         Base::clearCache();
     }
 

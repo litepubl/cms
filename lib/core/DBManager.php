@@ -12,8 +12,8 @@ namespace litepubl\core;
 
 class DBManager
 {
-    use Singleton;
     use AppTrait;
+    use Singleton;
 
     public $engine;
     private $max_allowed_packet;
