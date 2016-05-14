@@ -8,7 +8,7 @@
 **/
 
 namespace litepubl\admin;
-use litepubl\core\Plugins;
+use litepubl\core\Plugins as PluginItems;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
 
@@ -25,9 +25,9 @@ class Plugins extends Menu
     public function getPluginsmenu() {
         $result = '';
         $link = Link::url($this->url, 'plugin=');
-        $plugins = Plugins::i();
+        $plugins = PluginItems::i();
         foreach ($this->names as $name) {
-            $about = Plugins::getabout($name);
+            $about = PluginItems::getabout($name);
             if (isset($plugins->items[$name]) && !empty($about['adminclassname'])) {
                 $result.= sprintf('<li><a href="%s%s">%s</a></li>', $link, $name, $about['name']);
             }
@@ -53,7 +53,7 @@ class Plugins extends Menu
         $result = $this->getPluginsmenu();
         $admintheme = $this->admintheme;
         $lang = $this->lang;
-        $plugins = Plugins::i();
+        $plugins = PluginItems::i();
 
         if (empty($_GET['plugin'])) {
             $result.= $admintheme->parse($admintheme->templates['help.plugins']);
@@ -88,7 +88,7 @@ class Plugins extends Menu
 
 
 
-                $about = Plugins::getabout($name);
+                $about = PluginItems::getabout($name);
                 $args->add($about);
                 $args->name = $name;
                 $args->checked = isset($plugins->items[$name]);
@@ -122,7 +122,7 @@ class Plugins extends Menu
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
             array_pop($list);
-            $plugins = Plugins::i();
+            $plugins = PluginItems::i();
             try {
                 $plugins->update($list);
             }
@@ -147,7 +147,7 @@ class Plugins extends Menu
     }
 
     private function getAdminplugin($name) {
-        $about = Plugins::getabout($name);
+        $about = PluginItems::getabout($name);
         if (empty($about['adminclassname'])) {
  return false;
 }

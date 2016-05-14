@@ -208,7 +208,7 @@ class Catbread extends \litepubl\core\Plugin
         return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
-    public function themeparsed(basetheme $theme) {
+    public function themeParsed(Theme $theme) {
         $this->externalfunc(get_class($this) , 'Themeparsed', $theme);
     }
 

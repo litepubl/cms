@@ -22,7 +22,7 @@ public $cache;
 public function __construct()
 {
 $options = $this->getApp()->options;
-$this->cache = $options->cache && ! $options->admincookie;
+$this->cache = $options->cache && ! $options->adminFlag;
 }
 
 public function notfound()

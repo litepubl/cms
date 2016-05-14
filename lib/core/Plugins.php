@@ -70,7 +70,6 @@ static ::$abouts = array();
         }
 
         $about = static ::getabout($name);
-
         $dir =  $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
         if (file_exists($dir . $about['filename'])) {
             require_once ($dir . $about['filename']);
@@ -86,7 +85,8 @@ static ::$abouts = array();
             }
         }
 
-         $this->getApp()->classes->lock();
+         $classes = $this->getApp()->classes;
+$classes->lock();
         $this->lock();
         $classname = trim($about['classname']);
         if ($i = strrpos($classname, '\\')) {
@@ -94,9 +94,9 @@ static ::$abouts = array();
                 'namespace' => substr($classname, 0, $i) ,
             );
 
-             $this->getApp()->classes->installClass($classname);
+             $classes->installClass($classname);
             if ($about['adminclassname']) {
-                 $this->getApp()->classes->installClass($about['adminclassname']);
+                 $classes->installClass($about['adminclassname']);
             }
         } else {
             $this->items[$name] = array(
@@ -107,19 +107,19 @@ static ::$abouts = array();
                 $classname = 'litepubl\\' . $classname;
             }
 
-             $this->getApp()->classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
+             $classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
 
             if ($adminclass = $about['adminclassname']) {
                 if (!class_exists($adminclass, false)) {
                     $adminclass = 'litepubl\\' . $adminclass;
                 }
 
-                 $this->getApp()->classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
+                 $classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
             }
         }
 
         $this->unlock();
-         $this->getApp()->classes->unlock();
+         $classes->unlock();
         $this->added($name);
         return $name;
     }

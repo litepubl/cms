@@ -197,9 +197,9 @@ $this->getLogManager()->logException($e);
 }
 
     public function showErrors() {
-        if (Config::$debug
- && $this->logManager
- && ($this->options->echoexception || $this->options->admincookie)
+        if ($this->logManager
+&& (Config::$debug
+ || $this->options->echoexception || $this->options->adminFlag)
 && ($log = $this->logManager->getHtml())
 ) {
             echo $log;
@@ -1207,7 +1207,7 @@ public $cache;
 public function __construct()
 {
 $options = $this->getApp()->options;
-$this->cache = isset($options->cache) && $options->cache && ! $options->admincookie;
+$this->cache = isset($options->cache) && $options->cache && ! $options->adminFlag;
 }
 
 public function request(Context $context)
@@ -2343,7 +2343,7 @@ public $cache;
 public function __construct()
 {
 $options = $this->getApp()->options;
-$this->cache = $options->cache && ! $options->admincookie;
+$this->cache = $options->cache && ! $options->adminFlag;
 }
 
 public function notfound()
@@ -3377,7 +3377,7 @@ use PoolStorageTrait;
     public $group;
     public $idgroups;
     protected $_user;
-    protected $_admincookie;
+    protected $adminFlagChecked;
     public $gmt;
     public $errorlog;
 
@@ -3439,15 +3439,16 @@ $this->getApp()->cache->clear();
         }
     }
 
-    public function getAdminCookie() {
-        if (is_null($this->_admincookie)) {
-            return $this->_admincookie = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
+    public function getAdminFlag() {
+        if (is_null($this->adminFlagChecked)) {
+            return $this->adminFlagChecked = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
         }
-        return $this->_admincookie;
+
+        return $this->adminFlagChecked;
     }
 
-    public function setAdminCookie($val) {
-        $this->_admincookie = $val;
+    public function setAdminFlag($val) {
+        $this->adminFlagChecked = $val;
     }
 
     public function getuser() {

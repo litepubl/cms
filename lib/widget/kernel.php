@@ -1119,7 +1119,7 @@ use \litepubl\core\PoolStorageTrait;
         }
 
 $options = $this->getApp()->options;
-        if ($options->admincookie) {
+        if ($options->adminFlag && $options->group == 'admin') {
             $this->onadminlogged($items,                $sidebar           );
         }
 

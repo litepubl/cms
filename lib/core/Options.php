@@ -19,7 +19,7 @@ use PoolStorageTrait;
     public $group;
     public $idgroups;
     protected $_user;
-    protected $_admincookie;
+    protected $adminFlagChecked;
     public $gmt;
     public $errorlog;
 
@@ -81,15 +81,16 @@ $this->getApp()->cache->clear();
         }
     }
 
-    public function getAdminCookie() {
-        if (is_null($this->_admincookie)) {
-            return $this->_admincookie = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
+    public function getAdminFlag() {
+        if (is_null($this->adminFlagChecked)) {
+            return $this->adminFlagChecked = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
         }
-        return $this->_admincookie;
+
+        return $this->adminFlagChecked;
     }
 
-    public function setAdminCookie($val) {
-        $this->_admincookie = $val;
+    public function setAdminFlag($val) {
+        $this->adminFlagChecked = $val;
     }
 
     public function getuser() {
