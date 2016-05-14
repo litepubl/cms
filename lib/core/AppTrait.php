@@ -10,7 +10,8 @@
 
 namespace litepubl\core;
 
-traitAppTrait {
+trait AppTrait
+{
 
     public static function getAppInstance()
     {

@@ -10,7 +10,8 @@
 
 namespace litepubl\view;
 
-traitSchemaTrait {
+trait SchemaTrait
+{
 
     public function getSchema()
     {

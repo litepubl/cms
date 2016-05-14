@@ -12,7 +12,8 @@ namespace litepubl\view;
 
 use litepubl\core\Context;
 
-traitViewTrait {
+trait ViewTrait
+{
 
     protected function createData()
     {

@@ -10,7 +10,8 @@
 
 namespace litepubl\core;
 
-traitPoolStorageTrait {
+trait PoolStorageTrait
+{
 
     public function getStorage()
     {

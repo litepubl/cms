@@ -13,7 +13,8 @@ namespace litepubl\admin;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
-traitFactory {
+trait Factory
+{
 
     public function getLang()
     {

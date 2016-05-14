@@ -94,7 +94,8 @@ namespace litepubl\admin;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
-traitFactory {
+trait Factory
+{
 
     public function getLang()
     {
@@ -818,9 +819,9 @@ namespace litepubl\admin;
 
 class Panel implements AdminInterface
 {
-    use PanelTrait;
-    use \litepubl\core\AppTrait;
     use Params;
+    use \litepubl\core\AppTrait;
+    use PanelTrait;
 
     public function __construct()
     {
@@ -846,7 +847,8 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 use litepubl\view\Schemes;
 
-traitPanelTrait {
+trait PanelTrait
+{
     public $admin;
     public $theme;
     public $lang;
@@ -882,7 +884,8 @@ traitPanelTrait {
 //Params.php
 namespace litepubl\admin;
 
-traitParams {
+trait Params
+{
 
     public function idGet()
     {

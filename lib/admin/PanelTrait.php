@@ -16,7 +16,8 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 use litepubl\view\Schemes;
 
-traitPanelTrait {
+trait PanelTrait
+{
     public $admin;
     public $theme;
     public $lang;

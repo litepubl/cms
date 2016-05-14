@@ -44,7 +44,7 @@ $s = str_replace('$this', '$self', $s);
 
 if (strend($filename, 'php')) {
 if ($hastrait = strpos($s, 'trait ')) {
-$s = str_replace('trait ', 'interface ', $s);
+$s = str_replace("\ntrait ", "\nclass ", $s);
 }
 
         $oBeautify->setInputString($s);
@@ -54,7 +54,7 @@ $s = trim($s);
 $s .= "\n\n";
 
 if ($hastrait) {
-$s = str_replace('interface ', 'trait ', $s);
+$s = str_replace("\nclass ", "\ntrait ", $s);
 }
 } else if (strend($filename, '.less')) {
 $Lines = explode("\n", $s);

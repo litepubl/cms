@@ -10,7 +10,8 @@
 
 namespace litepubl\admin;
 
-traitParams {
+trait Params
+{
 
     public function idGet()
     {

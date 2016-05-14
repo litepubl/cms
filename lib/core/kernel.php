@@ -230,7 +230,8 @@ class App
 //AppTrait.php
 namespace litepubl\core;
 
-trait AppTrait {
+trait AppTrait
+{
 
     public static function getAppInstance()
     {
@@ -575,7 +576,8 @@ class CacheMemcache extends BaseCache
 //CacheStorageTrait.php
 namespace litepubl\core;
 
-traitCacheStorageTrait {
+trait CacheStorageTrait
+{
 
     public function getStorage()
     {
@@ -3045,7 +3047,8 @@ class Item extends Data
 //ItemOwnerTrait.php
 namespace litepubl\core;
 
-traitItemOwnerTrait {
+trait ItemOwnerTrait
+{
 
     public function load()
     {
@@ -4172,7 +4175,8 @@ class PoolStorage
 //PoolStorageTrait.php
 namespace litepubl\core;
 
-traitPoolStorageTrait {
+trait PoolStorageTrait
+{
 
     public function getStorage()
     {
@@ -4794,7 +4798,8 @@ class Router extends Items
 //Singleton.php
 namespace litepubl\core;
 
-traitSingleton {
+trait Singleton
+{
 
     public static function i()
     {

@@ -12,9 +12,9 @@ namespace litepubl\admin;
 
 class Panel implements AdminInterface
 {
-    use PanelTrait;
-    use \litepubl\core\AppTrait;
     use Params;
+    use \litepubl\core\AppTrait;
+    use PanelTrait;
 
     public function __construct()
     {

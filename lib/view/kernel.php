@@ -455,7 +455,8 @@ namespace litepubl\view;
 
 use litepubl\core\Context;
 
-traitEmptyViewTrait {
+trait EmptyViewTrait
+{
 
     protected function createData()
     {
@@ -1161,7 +1162,8 @@ class Schema extends \litepubl\core\Item
 //SchemaTrait.php
 namespace litepubl\view;
 
-traitSchemaTrait {
+trait SchemaTrait
+{
 
     public function getSchema()
     {
@@ -1597,7 +1599,8 @@ namespace litepubl\view;
 
 use litepubl\core\Context;
 
-traitViewTrait {
+trait ViewTrait
+{
 
     protected function createData()
     {

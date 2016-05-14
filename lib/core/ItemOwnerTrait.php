@@ -10,7 +10,8 @@
 
 namespace litepubl\core;
 
-traitItemOwnerTrait {
+trait ItemOwnerTrait
+{
 
     public function load()
     {

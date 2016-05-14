@@ -10,7 +10,8 @@
 
 namespace litepubl\core;
 
-traitCacheStorageTrait {
+trait CacheStorageTrait
+{
 
     public function getStorage()
     {

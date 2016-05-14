@@ -10,7 +10,8 @@
 
 namespace litepubl\core;
 
-traitSingleton {
+trait Singleton
+{
 
     public static function i()
     {

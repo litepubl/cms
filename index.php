@@ -15,7 +15,7 @@ class Config
     //set to true to enable debug: logging, error message,
     public static $debug = false;
 
-    // use joined php files lib/kernel.*.  debug = true disable kernel
+    // include joined php files kernel.php; $debug = true disables kernel
     public static $useKernel = true;
 
     // enable logging
