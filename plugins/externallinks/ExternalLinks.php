@@ -45,27 +45,23 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
             $stat = array();
             $a = explode("\n", $s);
             foreach ($a as $id) {
-                $id = (int)$id;
-                if ($id == 0) {
- continue;
-}
-
+                if ($id = (int)$id) {
                 if (isset($stat[$id])) {
                     $stat[$id]++;
                 } else {
                     $stat[$id] = 1;
                 }
+}
             }
 
-            if (!count($stat)) {
- return;
-}
-
+            if (count($stat)) {
             $this->loadItems(array_keys($stat));
             foreach ($stat as $id => $clicked) {
                     $this->db->setValue($id, 'clicked', $clicked + $this->items[$id]['clicked']);
             }
+}
     }
+}
 
     public function request(Context $context) {
 $response = $context->response;
@@ -103,7 +99,7 @@ $siteurl = $this->getApp()->site->url;
  continue;
 }
 
-            if (Str::begin($link,  $siteurl) {
+            if (Str::begin($link,  $siteurl)) {
  continue;
 }
 
