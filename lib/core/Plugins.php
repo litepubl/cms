@@ -38,7 +38,7 @@ static ::$abouts = array();
         return static ::$abouts[$name];
     }
 
-    public static function localabout($dir) {
+    public static function localAbout($dir) {
         $filename = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'about.ini';
         $about = parse_ini_file($filename, true);
         if (isset($about[ static::getAppInstance()->options->language])) {
@@ -52,12 +52,12 @@ static ::$abouts = array();
         return basename(dirname($filename));
     }
 
-    public static function getLangabout($filename) {
-        return static ::getnamelang(static ::getname($filename));
+    public static function getLangAbout($filename) {
+        return static ::getNameLang(static ::getName($filename));
     }
 
     public static function getNamelang($name) {
-        $about = static ::getabout($name);
+        $about = static ::getAbout($name);
         $lang = Lang::admin();
         $lang->ini[$name] = $about;
         $lang->section = $name;

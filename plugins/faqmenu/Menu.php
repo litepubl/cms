@@ -8,7 +8,6 @@
 **/
 
 namespace litepubl\plugins\faqmenu;
-use litepubl\core\Str;
 
 class Menu extends \litepubl\pages\Menu
  {

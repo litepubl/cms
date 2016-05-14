@@ -2,6 +2,7 @@
 
 namespace litepubl\plugins\faqmenu;
 use litepubl\view\Filter as ViewFilter;
+use litepubl\core\Str;
 
 class Filter
 {
@@ -42,7 +43,7 @@ private $id = 0;
     }
 
     private function createlist(array $questions, array $answers) {
-        if (!count($questions) {
+        if (!count($questions)) {
  return '';
 }
 

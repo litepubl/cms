@@ -756,6 +756,7 @@ namespace litepubl\admin;
 class Panel implements AdminInterface
 {
 use PanelTrait;
+use Params;
 use \litepubl\core\AppTrait;
 
 public function __construct() {
@@ -808,7 +809,7 @@ public function getLangAbout()
  {
         $reflector = new \ReflectionClass($this);
         $filename = $reflector->getFileName();
-return PluginItems::getLangAbout(basename(dirname($filename)));
+return PluginItems::getLangAbout($filename);
 }
 
 }

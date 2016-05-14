@@ -12,7 +12,7 @@ use litepubl\core\DBManager;
 use litepubl\view\Filter;
 use litepubl\core\Cron;
 use litepubl\post\Posts;
-use liteubl\pages\RobotsTxt;
+use litepubl\pages\RobotsTxt;
 
 function ExternalLinksInstall($self) {
         $manager = DBManager::i();

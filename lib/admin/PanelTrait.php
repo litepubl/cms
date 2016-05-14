@@ -37,7 +37,7 @@ public function getLangAbout()
  {
         $reflector = new \ReflectionClass($this);
         $filename = $reflector->getFileName();
-return PluginItems::getLangAbout(basename(dirname($filename)));
+return PluginItems::getLangAbout($filename);
 }
 
 }

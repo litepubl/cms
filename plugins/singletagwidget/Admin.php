@@ -7,7 +7,7 @@
 * @version 6.15
 **/
 
-namespace litepubl\singletagwidget;
+namespace litepubl\plugins\singletagwidget;
 use litepubl\view\Args;
 use litepubl\core\Plugins;
 
