@@ -1,18 +1,18 @@
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ **/
 
 (function($, document, litepubl) {
   'use strict';
 
   litepubl.ui = litepubl.ui || {};
   litepubl.ui.Tabs = Class.extend({
-namespace: '.litepubl.tabs',
-uispace: '.litepubl.uitabs',
+    namespace: '.litepubl.tabs',
+    uispace: '.litepubl.uitabs',
 
     init: function() {
       this.tabs($($(".admintabs").toArray().reverse()));
@@ -25,7 +25,7 @@ uispace: '.litepubl.uitabs',
         beforeLoad: this.beforeLoad
       });
 
-this.proxy(tabs);
+      this.proxy(tabs);
       if (events) {
         this.on(tabs, events);
       }
@@ -34,29 +34,29 @@ this.proxy(tabs);
     },
 
     proxy: function(tabs) {
-var self = this;
-                      tabs
-.on('tabsbeforeactivate' + this.uispace, function(event, ui) {
-tabs.trigger($.Event('before' + self.namespace, {
-        target: event.target,
-        relatedTarget: event.relatedTarget,
-        panel: ui.newPanel
-      }));
-            })
-.on('tabsactivate' + this.uispace, function(event, ui) {
-tabs.trigger($.Event('activated' + self.namespace, {
-        target: event.target,
-        relatedTarget: event.relatedTarget,
-        panel: ui.newPanel
-      }));
-            })
-.on('tabsload' + this.uispace, function(event, ui) {
-tabs.trigger($.Event('loaded' + self.namespace, {
-        target: event.target,
-        relatedTarget: event.relatedTarget,
-        panel: ui.panel
-      }));
-            });
+      var self = this;
+      tabs
+        .on('tabsbeforeactivate' + this.uispace, function(event, ui) {
+          tabs.trigger($.Event('before' + self.namespace, {
+            target: event.target,
+            relatedTarget: event.relatedTarget,
+            panel: ui.newPanel
+          }));
+        })
+        .on('tabsactivate' + this.uispace, function(event, ui) {
+          tabs.trigger($.Event('activated' + self.namespace, {
+            target: event.target,
+            relatedTarget: event.relatedTarget,
+            panel: ui.newPanel
+          }));
+        })
+        .on('tabsload' + this.uispace, function(event, ui) {
+          tabs.trigger($.Event('loaded' + self.namespace, {
+            target: event.target,
+            relatedTarget: event.relatedTarget,
+            panel: ui.panel
+          }));
+        });
     },
 
     on: function(tabs, events) {
@@ -75,11 +75,11 @@ tabs.trigger($.Event('loaded' + self.namespace, {
       if (ui.tab.data("loaded")) {
         event.preventDefault();
       } else {
-panel.closest('.admintabs').trigger($.Event('beforeLoad' + this.namespace, {
-        target: event.target,
-        relatedTarget: event.relatedTarget,
-        panel: ui.panel
-      }));
+        panel.closest('.admintabs').trigger($.Event('beforeLoad' + this.namespace, {
+          target: event.target,
+          relatedTarget: event.relatedTarget,
+          panel: ui.panel
+        }));
 
         ui.jqXHR.success(function() {
           ui.tab.data("loaded", true);

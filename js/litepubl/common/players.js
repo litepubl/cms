@@ -1,10 +1,10 @@
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ **/
 
 ;
 (function($) {
@@ -29,8 +29,8 @@
 
     load: function(callback) {
       if (this.script) {
-return this.script.done(callback);
-}
+        return this.script.done(callback);
+      }
 
       $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
       this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
