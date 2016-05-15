@@ -16,6 +16,13 @@ use litepubl\view\Vars;
 
 class Widget extends \litepubl\core\Events
 {
+const CACHE = 'cache';
+const NOCACHE = 'nocache';
+const CODE = 'code';
+const AJAX = 'ajax';
+const INLINE = 'inline';
+const NOAJAX = 'noajax';
+
     public $id;
     public $template;
     protected $adminclass;
