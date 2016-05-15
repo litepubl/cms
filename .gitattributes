@@ -103,6 +103,7 @@ themes/default/css/spacelab.css export-ignore
 themes/default/css/superhero.css export-ignore
 themes/default/css/united.css export-ignore
 themes/default/css/yeti.css export-ignore
+lib/ztoto.txt export-ignore
 lib/ztodo.txt export-ignore
 vendor/composer.bat export-ignore
 vendor/composer.json export-ignore

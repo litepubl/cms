@@ -13,7 +13,7 @@ namespace litepubl\pages;
 use litepubl\core\Context;
 use litepubl\view\Theme;
 
-class AppCache extends \litepubl\core\Items
+class Appcache extends \litepubl\core\Items
 {
 
     public function create()
