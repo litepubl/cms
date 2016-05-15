@@ -270,5 +270,6 @@ return array(
     'lowvision' => 'litepubl\plugins\lowvision\LowVision',
     'tsingletagwidget' => 'litepubl\plugins\singletagwidget\Widget',
     'tadminsingletagwidget' => 'litepubl\singletagwidget\Admin',
+'ulogin' => 'litepubl\plugins\ulogin\Ulogin',
 );
 

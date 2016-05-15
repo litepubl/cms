@@ -8,19 +8,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\ulogin;
 
 use litepubl\core\DBManager;
 use litepubl\core\Str;
 use litepubl\view\Filter;
+use litepubl\core\Users;
+use litepubl\core\UserGroups;
+use litepubl\core\Context;
+use litepubl\utils\Http;
 
-class ulogin extends \litepubl\core\Plugin
+class Ulogin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -41,7 +40,7 @@ class ulogin extends \litepubl\core\Plugin
         if (!in_array($service, $this->data['nets'])) {
             $this->data['nets'][] = $service;
             $this->save();
-            DBManager::i()->add_enum($this->table, 'service', $service);
+            DBManager::i()->addEnum($this->table, 'service', $service);
         }
 
         $this->db->insert(array(
@@ -56,26 +55,25 @@ class ulogin extends \litepubl\core\Plugin
 
     public function find($service, $uid)
     {
-        return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
+        return $this->db->findId('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
-    public function userdeleted($id)
+    public function userDeleted($id)
     {
         $this->db->delete("id = $id");
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        $this->cache = false;
-        Header('Cache-Control: no-cache, must-revalidate');
-        Header('Pragma: no-cache');
+$response = $context->response;
+        $response->cache = false;
 
         $token = isset($_POST['token']) ? $_POST['token'] : (isset($_GET['token']) ? $_GET['token'] : '');
         if (!$token) {
             //try fix ulogin bug double symbol ?
             $uri = $_SERVER['REQUEST_URI'];
             if (substr_count($uri, '?') <= 1) {
-                return 403;
+                return $response->forbidden;
             }
 
             $q = substr($uri, strpos($uri, '?') + 1);
@@ -83,13 +81,13 @@ class ulogin extends \litepubl\core\Plugin
             parse_str($q, $_GET);
             $token = isset($_GET['token']) ? $_GET['token'] : '';
             if (!$token) {
-                return 403;
+                return $response->forbidden();
             }
 
         }
 
         if (!($cookies = $this->auth($token))) {
-            return 403;
+            return $response->forbidden();;
         }
 
         if (!empty($_GET['backurl'])) {
@@ -97,18 +95,18 @@ class ulogin extends \litepubl\core\Plugin
         } elseif (!empty($_COOKIE['backurl'])) {
             $backurl = $_COOKIE['backurl'];
         } else {
-            $user = tusers::i()->getitem($cookies['id']);
-            $backurl = tusergroups::i()->gethome($user['idgroups'][0]);
+            $user = Users::i()->getItem($cookies['id']);
+            $backurl = UserGroups::i()->getHome($user['idgroups'][0]);
         }
 
-        if (!(int)tusers::i()->db->getvalue($cookies['id'], 'phone')) {
+        if (!(int)Users::i()->db->getValue((int) $cookies['id'], 'phone')) {
             if ($url = $this->onphone($backurl)) {
-                return $this->getApp()->router->redir($url);
+                return $response->redir($url);
             }
         }
 
         setcookie('backurl', '', 0, $this->getApp()->site->subdir, false);
-        return $this->getApp()->router->redir($backurl);
+        return $response->redir($backurl);
     }
 
     public function auth($token)
@@ -132,19 +130,19 @@ class ulogin extends \litepubl\core\Plugin
         $uid = !empty($info['uid']) ? $info['uid'] : (!empty($info['id']) ? $info['id'] : (!empty($info['identity']) ? $info['identity'] : (!empty($info['profile']) ? $info['profile'] : '')));
         if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
 
-        $phone = !empty($info['phone']) ? static ::filterphone($info['phone']) : false;
+        $phone = !empty($info['phone']) ? static ::filterPhone($info['phone']) : false;
 
         $newreg = false;
-        $users = tusers::i();
+        $users = Users::i();
         if (!empty($info['email'])) {
-            if ($id = $users->emailexists($info['email'])) {
-                $user = $users->getitem($id);
+            if ($id = $users->emailExists($info['email'])) {
+                $user = $users->getItem($id);
                 if ($user['status'] == 'comuser') {
                     $users->approve($id);
                 }
 
                 if ($phone && empty($user['phone'])) {
-                    $users->setvalue($id, 'phone', $phone);
+                    $users->setValue($id, 'phone', $phone);
                 }
             } elseif ($this->getApp()->options->reguser) {
                 $newreg = true;
@@ -155,7 +153,7 @@ class ulogin extends \litepubl\core\Plugin
                 ));
 
                 if ($phone) {
-                    $users->db->setvalue($id, 'phone', $phone);
+                    $users->db->setValue($id, 'phone', $phone);
                 }
                 if ($uid) {
                     $this->add($id, $info['network'], $uid);

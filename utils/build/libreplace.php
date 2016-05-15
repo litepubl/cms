@@ -234,7 +234,8 @@ $s = strtr($s, [
 'setvalue(' => 'setValue',
 'getdb(' => 'getDB(',
 '$this->view->admintheme' => '$this->admintheme',
-
+'http:get' => 'Http::get',
+'http:post' => 'Http::post',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');

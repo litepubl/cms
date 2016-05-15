@@ -8,12 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\ulogin;
 
 use litepubl\core\DBManager;
 use litepubl\view\Js;
+use litepubl\pages\Json;
+use litepubl\core\Users;
 
-function uloginInstall($self)
+function UloginInstall($self)
 {
     $self->data['nets'] = array(
         'vkontakte',
@@ -40,9 +42,12 @@ function uloginInstall($self)
     );
 
     $man = DBManager::i();
-    $man->createtable($self->table, str_replace('$names', implode("', '", $self->data['nets']) , file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
-    if (!$man->column_exists('users', 'phone')) $man->alter('users', "add phone bigint not null default '0' after status");
-    tusers::i()->deleted = $self->userdeleted;
+    $man->createTable($self->table, str_replace('$names', implode("', '", $self->data['nets']) , file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
+    if (!$man->column_exists('users', 'phone')) {
+$man->alter('users', "add phone bigint not null default '0' after status");
+}
+
+    Users::i()->deleted = $self->userDeleted;
 
     $alogin = tadminlogin::i();
     $alogin->widget.= $self->panel;
@@ -63,20 +68,22 @@ function uloginInstall($self)
     $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
     $js->unlock();
 
-    $json = tjsonserver::i();
+    $json = Json::i();
     $json->lock();
     $json->addevent('ulogin_auth', get_class($self) , 'ulogin_auth');
     $json->addevent('check_logged', get_class($self) , 'check_logged');
     $json->unlock();
 }
 
-function uloginUninstall($self)
+function UloginUninstall($self)
 {
-    tusers::i()->unbind('tregserviceuser');
+    Users::i()->unbind('tregserviceuser');
     $self->getApp()->router->unbind($self);
     $man = DBManager::i();
     $man->deletetable($self->table);
-    if ($man->column_exists('users', 'phone')) $man->alter('users', "drop phone");
+    if ($man->column_exists('users', 'phone')) {
+$man->alter('users', "drop phone");
+}
 
     $alogin = tadminlogin::i();
     $alogin->widget = str_replace($self->panel, '', $alogin->widget);
@@ -95,6 +102,6 @@ function uloginUninstall($self)
     $self->getApp()->classes->delete('emailauth');
     $js->unlock();
 
-    tjsonserver::i()->unbind($self);
+    Json::i()->unbind($self);
 }
 
