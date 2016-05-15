@@ -271,5 +271,6 @@ return array(
     'tsingletagwidget' => 'litepubl\plugins\singletagwidget\Widget',
     'tadminsingletagwidget' => 'litepubl\singletagwidget\Admin',
 'ulogin' => 'litepubl\plugins\ulogin\Ulogin',
+'emailauth' => 'litepubl\plugins\ulogin\EmailAuth',
 );
 

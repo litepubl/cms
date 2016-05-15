@@ -232,7 +232,7 @@ class Widgets extends \litepubl\admin\Menu
 
                             $j2 = (int)$_POST["order-$id"];
                             if ($j2 > count($sidebars->items[$i2])) {
-                                $j2 = count($sidebars[$i2]);
+                                $j2 = count($sidebars->items[$i2]);
                             }
 
                             Arr::append($newItems[$i2], $j2, $item);

@@ -8,18 +8,19 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\ulogin;
 
 use litepubl\view\Js;
+use litepubl\pages\Json;
 
-function emailauthInstall($self)
+function EmailAuthInstall($self)
 {
     $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/email.auth.min.js');
     $js->unlock();
 
-    $json = tjsonserver::i();
+    $json = Json::i();
     $json->lock();
     $json->addevent('email_login', get_class($self) , 'email_login');
     $json->addevent('email_reg', get_class($self) , 'email_reg');
@@ -27,13 +28,13 @@ function emailauthInstall($self)
     $json->unlock();
 }
 
-function emailauthUninstall($self)
+function emailAuthUninstall($self)
 {
     $js = Js::i();
     $js->lock();
     $js->deletefile('default', '/plugins/ulogin/resource/email.auth.min.js');
     $js->unlock();
 
-    tjsonserver::i()->unbind($self);
+    Json::i()->unbind($self);
 }
 

@@ -189,10 +189,13 @@ $response = $context->response;
 
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
-        $this->getApp()->options->user = $id;
-        $this->getApp()->options->updategroup();
-        $this->getApp()->options->setcookies($cookie, $expired);
-        if ($this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
+$options = $this->getApp()->options;
+        $options->user = $id;
+        $options->updateGroup();
+        $options->setCookies($cookie, $expired);
+        if ($options->inGroup('admin')) {
+setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
+}
 
         setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
         $this->onadd($id, $info, $newreg);
@@ -207,17 +210,20 @@ $response = $context->response;
     public function ulogin_auth(array $args)
     {
         if (!isset($args['token']) || (!($token = $args['token']))) {
-            return $this->error('Invalide token', 403);
+            return $this->error('Invalid token', 403);
         }
 
         $result = $this->auth($token);
-        if (!$result) $this->error('Not authorized', 403);
+        if (!$result) {
+$this->error('Not authorized', 403);
+}
+
         return $result;
     }
 
     public function check_logged(array $args)
     {
-        if ($this->getApp()->options->authcookies($args['litepubl_user_id'], $args['litepubl_user'])) {
+        if ($this->getApp()->options->authCookies($args['litepubl_user_id'], $args['litepubl_user'])) {
             return array(
                 'logged' => true
             );
@@ -231,7 +237,7 @@ $response = $context->response;
         }
     }
 
-    public static function filterphone($phone)
+    public static function filterPhone($phone)
     {
         $phone = trim(str_replace(array(
             ' ',

@@ -236,6 +236,7 @@ $s = strtr($s, [
 '$this->view->admintheme' => '$this->admintheme',
 'http:get' => 'Http::get',
 'http:post' => 'Http::post',
+'column_exists' => 'columnExists',
 ]);
 
 $s = insertUse($s, 'MainView:', 'litepubl\view\MainView');

@@ -17,7 +17,8 @@ class Links extends Widget
     protected function getForm()
     {
         $this->args->redir = $this->widget->redir;
-        return parent::getFormr() . '[checkbox=redir]';
+        return parent::getForm() 
+. '[checkbox=redir]';
     }
 
     public function getContent()

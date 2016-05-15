@@ -8,18 +8,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\ulogin;
 
 use litepubl\core\Str;
 use litepubl\view\Lang;
+use litepubl\admin\pages\Login;
+use litepubl\admin\pages\RegUser;
+use litepubl\admin\pages\Password;
 
-class emailauth extends \litepubl\core\Plugin
+class EmailAuth extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function email_login(array $args)
     {
@@ -30,7 +28,7 @@ class emailauth extends \litepubl\core\Plugin
         $email = strtolower(trim($args['email']));
         $password = trim($args['password']);
 
-        if ($mesg = tadminlogin::autherror($email, $password)) {
+        if ($mesg = Login::authError($email, $password)) {
             return array(
                 'error' => array(
                     'message' => $mesg,
@@ -41,7 +39,7 @@ class emailauth extends \litepubl\core\Plugin
 
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
-        $this->getApp()->options->setcookies($cookie, $expired);
+        $this->getApp()->options->setCookies($cookie, $expired);
 
         return array(
             'id' => $this->getApp()->options->user,
@@ -55,16 +53,15 @@ class emailauth extends \litepubl\core\Plugin
     {
         if (!$this->getApp()->options->usersenabled || !$this->getApp()->options->reguser) {
             return array(
-            }
-
             'error' => array(
                 'message' => Lang::admin('users')->regdisabled,
                 'code' => 403,
             )
         );
+}
 
         try {
-            return tadminreguser::i()->reguser($args['email'], $args['name']);
+            return RegUser::i()->regUser($args['email'], $args['name']);
         }
         catch(\Exception $e) {
             return array(
@@ -79,7 +76,7 @@ class emailauth extends \litepubl\core\Plugin
     public function email_lostpass(array $args)
     {
         try {
-            return tadminpassword::i()->restore($args['email']);
+            return Password::i()->restore($args['email']);
         }
         catch(\Exception $e) {
             return array(

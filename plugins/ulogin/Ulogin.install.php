@@ -14,6 +14,8 @@ use litepubl\core\DBManager;
 use litepubl\view\Js;
 use litepubl\pages\Json;
 use litepubl\core\Users;
+use litepubl\admin\pages\Login;
+use litepubl\admin\pages\RegUser;
 
 function UloginInstall($self)
 {
@@ -43,26 +45,26 @@ function UloginInstall($self)
 
     $man = DBManager::i();
     $man->createTable($self->table, str_replace('$names', implode("', '", $self->data['nets']) , file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
-    if (!$man->column_exists('users', 'phone')) {
+    if (!$man->columnExists('users', 'phone')) {
 $man->alter('users', "add phone bigint not null default '0' after status");
 }
 
     Users::i()->deleted = $self->userDeleted;
 
-    $alogin = tadminlogin::i();
-    $alogin->widget.= $self->panel;
-    $alogin->save();
+    $login = Login::i();
+    $login->widget.= $self->panel;
+    $login->save();
 
-    $areg = tadminreguser::i();
-    $areg->widget.= $self->panel;
-    $areg->save();
+    $reg = RegUser::i();
+    $reg->widget.= $self->panel;
+    $reg->save();
 
-    $self->getApp()->router->addget($self->url, get_class($self));
+    $self->getApp()->router->addGet($self->url, get_class($self));
 
     $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-    $self->getApp()->classes->add('emailauth', 'emailauth.class.php', 'ulogin');
+EmailAuth::i()->install();
 
     $js->add('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
@@ -80,18 +82,18 @@ function UloginUninstall($self)
     Users::i()->unbind('tregserviceuser');
     $self->getApp()->router->unbind($self);
     $man = DBManager::i();
-    $man->deletetable($self->table);
-    if ($man->column_exists('users', 'phone')) {
+    $man->deleteTable($self->table);
+    if ($man->columnExists('users', 'phone')) {
 $man->alter('users', "drop phone");
 }
 
-    $alogin = tadminlogin::i();
-    $alogin->widget = str_replace($self->panel, '', $alogin->widget);
-    $alogin->save();
+    $login = Login::i();
+    $login->widget = str_replace($self->panel, '', $login->widget);
+    $login->save();
 
-    $areg = tadminreguser::i();
-    $areg->widget = str_replace($self->panel, '', $areg->widget);
-    $areg->save();
+    $reg = RegUser::i();
+    $reg->widget = str_replace($self->panel, '', $reg->widget);
+    $reg->save();
 
     $js = Js::i();
     $js->lock();
@@ -99,7 +101,7 @@ $man->alter('users', "drop phone");
     $js->deletefile('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->deletefile('default', '/plugins/ulogin/resource/authdialog.min.js');
 
-    $self->getApp()->classes->delete('emailauth');
+EmailAuth::i()->uninstall();
     $js->unlock();
 
     Json::i()->unbind($self);

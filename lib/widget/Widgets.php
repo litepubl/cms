@@ -183,17 +183,14 @@ class Widgets extends \litepubl\core\Items
             $view->getWidgets($items, $sidebar);
         }
 
-        $options = $this->getApp()->options;
-        if ($options->adminFlag && $options->group == 'admin') {
+        $app = $this->getApp();
+        if ($app->options->adminFlag && $app->options->group == 'admin') {
             $this->onadminlogged($items, $sidebar);
         }
 
-        /*
-        if ( $router->adminpanel) {
+        if (isset($app->context) && $app->context->request->isAdminPanel) {
             $this->onadminpanel($items, $sidebar);
         }
-        */
-        $this->ongetwidgets($items, $sidebar);
 
         $schema = Schema::getSchema($view);
         $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);

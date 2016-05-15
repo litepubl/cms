@@ -40,7 +40,7 @@ class Cache extends \litepubl\core\Items
         return false;
     }
 
-    public function savemodified()
+    public function saveModified()
     {
         if ($this->modified) {
             $this->modified = false;
