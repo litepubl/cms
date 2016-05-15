@@ -45,7 +45,7 @@ class Widget extends \litepubl\core\Events
     protected function getAdmin()
     {
         if (!$this->adminInstance) {
-            $this->adminInstance = $this->getApp()->classes->getinstance($this->adminclass);
+            $this->adminInstance = $this->getApp()->classes->getInstance($this->adminclass);
             $this->adminInstance->widget = $this;
         }
 
@@ -58,30 +58,35 @@ class Widget extends \litepubl\core\Events
         $vars->widget = $this;
 
         try {
-            $title = $this->gettitle($id);
-            $content = $this->getcontent($id, $sidebar);
+            $title = $this->getTitle($id);
+            $content = $this->getContent($id, $sidebar);
         }
         catch(\Exception $e) {
             $this->getApp()->logException($e);
             return '';
         }
+
         $view = new View();
         return $view->getWidgetId($id, $title, $content, $this->template, $sidebar);
     }
 
-    public function getDeftitle()
+    public function getDefTitle()
     {
         return '';
     }
 
     public function getTitle($id)
     {
-        if (!isset($id)) $this->error('no id');
+        if (!isset($id)) {
+$this->error('no id');
+}
+
         $widgets = Widgets::i();
         if (isset($widgets->items[$id])) {
             return $widgets->items[$id]['title'];
         }
-        return $this->getdeftitle();
+
+        return $this->getDefTitle();
     }
 
     public function setTitle($id, $title)
@@ -98,7 +103,7 @@ class Widget extends \litepubl\core\Events
         return '';
     }
 
-    public static function getCachefilename($id)
+    public static function getCacheFilename($id)
     {
         $theme = Theme::context();
         return sprintf('widget.%s.%d.php', $theme->name, $id);
@@ -113,14 +118,14 @@ class Widget extends \litepubl\core\Events
 
 
             case 'include':
-                $sidebar = static ::findsidebar($id);
+                $sidebar = static ::findSidebar($id);
                 $filename = static ::getCacheFilename($id, $sidebar);
                 $this->getApp()->cache->setString($filename, $this->getContent($id, $sidebar));
                 break;
         }
     }
 
-    public static function findsidebar($id)
+    public static function findSidebar($id)
     {
         $schema = Schema::i();
         foreach ($schema->sidebars as $i => $sidebar) {
