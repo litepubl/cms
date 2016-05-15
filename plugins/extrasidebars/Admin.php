@@ -12,17 +12,34 @@ namespace litepubl\plugins\extrasidebars;
 
 use litepubl\admin\AdminInterface;
 use litepubl\view\Base;
+use litepubl\admin\UList;
+use litepubl\utils\Filer;
 
 class Admin implements \litepubl\admin\AdminInterface
 {
+use \litepubl\core\AppTrait;
 use \litepubl\admin\PanelTrait;
 
     public function getContent()
     {
         $plugin = ExtraSidebars::i();
-        $themes = tadminthemes::getlist('<li><input name="theme-$name" id="checkbox-theme-$name" type="checkbox" value="$name" $checked />
-    <label for="checkbox-theme-$name"><img src="$site.files/themes/$name/$screenshot" alt="$name" /></label>
-    $lang.version:$version $lang.author: <a href="$url">$author</a> $lang.description:  $description</li>', $plugin->themes);
+$ul = new UList($this->admin);
+$themes = '';
+$tml = str_replace(
+'$value',
+ $this->admin->templates['checkbox.label'],
+ $this->admin->templates['list.value]
+);
+
+$dirnames = Filer::getDir($this->getApp()->paths->themes);
+foreach ($dirrnames as $name) {
+$themes .= strtr($tml, array(
+'$name' => 'theme',
+'$id' => $name,
+'$checked' => in_array($name, $plugins->themes) ? 'checked="checked"' : '',
+'$title' => $name,
+));
+}
 
         $args = $this->args;
         $lang = $this->getLangAbout();
@@ -34,8 +51,8 @@ use \litepubl\admin\PanelTrait;
 [checkbox=beforepost]
  [checkbox=afterpost]
 '
- . "<h4>$lang->themes</h4><ul>$themes</ul>"
-, $args);
+ . $this->admin->section($lang->themes, $ul->ul($themes)),
+$args);
     }
 
     public function processForm()
@@ -43,7 +60,7 @@ use \litepubl\admin\PanelTrait;
         $plugin = ExtraSidebars::i();
         $plugin->beforepost = isset($_POST['beforepost']);
         $plugin->afterpost = isset($_POST['afterpost']);
-        $plugin->themes = tadminhtml::check2array('theme-');
+        $plugin->themes = $this->admin->check2array('theme-');
         $plugin->save();
         Base::clearCache();
     }
