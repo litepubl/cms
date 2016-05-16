@@ -84,7 +84,7 @@ header('Location: $this->feedburnercomments');
 
             case 'categories':
             case 'tags':
-                if (!preg_match('/\/(\d*?)\.xml$/', $this->getApp()->router->url, $match)) {
+                if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
                     $response->status = 404;
                     return;
                 }
@@ -107,7 +107,7 @@ header('Location: $this->feedburnercomments');
 
 
             default:
-                if (!preg_match('/\/(\d*?)\.xml$/', $this->getApp()->router->url, $match)) {
+                if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
                     $response->status = 404;
                     return;
                 }

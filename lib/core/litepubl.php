@@ -18,8 +18,8 @@ class litepubl
 
     public static function init()
     {
-        if (\version_compare(\PHP_VERSION, '5.4', '<')) {
-            die('Lite Publisher requires PHP 5.4 or later. You are using PHP ' . \PHP_VERSION);
+        if (\version_compare(\PHP_VERSION, '7.0', '<')) {
+            die('Lite Publisher requires PHP 7.0 or later. You are using PHP ' . \PHP_VERSION);
         }
 
         if (isset(config::$classes['app']) && class_exists(config::$classes['app'])) {

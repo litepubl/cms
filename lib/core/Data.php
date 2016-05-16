@@ -15,7 +15,6 @@ class Data
     const ZERODATE = '0000-00-00 00:00:00';
     public static $guid = 0;
     public $basename;
-    public $cache;
     public $data;
     public $coclasses;
     public $coinstances;
@@ -40,7 +39,6 @@ class Data
     public function __construct()
     {
         $this->lockcount = 0;
-        $this->cache = true;
         $this->data = array();
         $this->coinstances = array();
         $this->coclasses = array();

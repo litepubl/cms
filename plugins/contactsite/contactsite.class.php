@@ -25,7 +25,6 @@ class tcontactsite extends tmenu
     protected function create()
     {
         parent::create();
-        $this->cache = false;
         $this->data['subject'] = '';
         $this->data['errmesg'] = '';
         $this->data['success'] = '';

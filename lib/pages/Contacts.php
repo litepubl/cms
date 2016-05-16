@@ -13,6 +13,7 @@ namespace litepubl\pages;
 use litepubl\utils\Mailer;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
+use litepubl\core\Context;
 
 class Contacts extends SingleMenu
 {
@@ -20,13 +21,18 @@ class Contacts extends SingleMenu
     protected function create()
     {
         parent::create();
-        $this->cache = false;
         $this->data['extra'] = array();
         $this->data['subject'] = '';
         $this->data['errmesg'] = '';
         $this->data['success'] = '';
     }
 
+    public function request(Context $context)
+{
+$context->response->cache = false;
+
+parent::request($context);
+}
     public function processForm()
     {
         if (!isset($_POST['contactvalue'])) {

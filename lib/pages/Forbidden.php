@@ -27,6 +27,7 @@ class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInte
     public function request(Context $context)
     {
         $context->response->status = 403;
+        $context->response->cache = false;
     }
 
     public function gettitle()
@@ -36,7 +37,6 @@ class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInte
 
     public function getCont()
     {
-        $this->cache = false;
         $schema = $this->getSchema();
         $theme = $schema->theme;
         if ($this->text) {

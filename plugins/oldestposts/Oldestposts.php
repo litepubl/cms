@@ -24,7 +24,7 @@ class Oldestposts extends \litepubl\widget\Depended
         parent::create();
         $this->basename = 'widget.oldestposts';
         $this->template = 'posts';
-        $this->adminclass = 'tadminoldestposts';
+        $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->cache = 'nocache';
         $this->data['maxcount'] = 10;
     }
