@@ -22,7 +22,6 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         parent::create();
         $this->basename = 'xmlrpc';
         $this->dbversion = false;
-        $this->cache = false;
         $this->addevents('beforecall', 'aftercall', 'getmethods');
     }
 

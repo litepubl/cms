@@ -41,12 +41,6 @@ class Menu extends \litepubl\pages\Menu
         return Menus::i();
     }
 
-    protected function create()
-    {
-        parent::create();
-        $this->cache = false;
-    }
-
     public function get_owner_props()
     {
         return static ::$adminownerprops;
@@ -138,18 +132,19 @@ class Menu extends \litepubl\pages\Menu
 
     public function getCont()
     {
-        if ($this->getApp()->options->admincache) {
+$app = $this->getApp();
+        if ($app->options->admincache) {
             $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-            $filename = 'adminmenu.' . $this->getApp()->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-            if ($result = $this->getApp()->router->cache->get($filename)) {
+            $filename = 'adminmenu.' . $app->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+            if ($result = $app->cache->getString($filename)) {
                 return $result;
             }
 
             $result = parent::getcont();
-            $this->getApp()->router->cache->set($filename, $result);
+            $app->cache->setString($filename, $result);
             return $result;
         } else {
-            return parent::getcont();
+            return parent::getCont();
         }
     }
 

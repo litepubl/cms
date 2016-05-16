@@ -27,7 +27,6 @@ class Cron extends Events implements ResponsiveInterface
         $this->data['password'] = '';
         $this->data['path'] = '';
         $this->data['disableping'] = false;
-        $this->cache = false;
         $this->disableadd = false;
         $this->table = 'cron';
     }
@@ -50,6 +49,7 @@ class Cron extends Events implements ResponsiveInterface
 
     public function request(Context $context)
     {
+            $context->response->cache = false;
         if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
             $context->response->status = 403;
             return;

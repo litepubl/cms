@@ -44,7 +44,7 @@ class Pool extends Data
 
     public function loadpool($idpool)
     {
-        if ($data = $this->getApp()->router->cache->get($this->getfilename($idpool))) {
+        if ($data = $this->getApp()->cache->get($this->getFilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
             $this->pool[$idpool] = array();
@@ -61,7 +61,7 @@ class Pool extends Data
 
     public function savemodified($idpool)
     {
-        $this->getApp()->router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+        $this->getApp()->cache->set($this->getFilename($idpool) , $this->pool[$idpool]);
     }
 
     public function getIdpool($id)

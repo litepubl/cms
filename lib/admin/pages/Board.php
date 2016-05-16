@@ -19,12 +19,6 @@ use litepubl\view\Schemes;
 class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
 
-    protected function create()
-    {
-        parent::create();
-        $this->cache = false;
-    }
-
     public function load()
     {
         return true;
@@ -37,6 +31,7 @@ class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterfac
     public function request(Context $context)
     {
         $response = $context->response;
+$response->cache = false;
         if ($context->checkAttack()) {
             return;
         }

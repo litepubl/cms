@@ -440,10 +440,10 @@ class topenid extends tevents
                 $args->trust_root = $trust_root;
                 $args->assoc_handle = $assoc_handle;
 
-                $result = $this->getApp()->router->cache->get('openid.txt');
+                $result = $this->getApp()->cache->getString('openid.txt');
                 if (!$result) {
                     $result = $this->getform();
-                    $this->getApp()->router->cache->set('openid.txt', $result);
+                    $this->getApp()->cache->setString('openid.txt', $result);
                 }
 
                 return tsimplecontent::html(Theme::i()->parseArg($result, $args));

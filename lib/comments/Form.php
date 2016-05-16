@@ -32,13 +32,13 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     {
         parent::create();
         $this->basename = 'commentform';
-        $this->cache = false;
         $this->addevents('oncomuser');
     }
 
     public function request(Context $context)
     {
         $response = $context->response;
+$response->cache = false;
 
         if ($this->getApp()->options->commentsdisabled) {
             $response->status = 404;
