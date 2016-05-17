@@ -117,7 +117,7 @@ function tdownloaditemsInstall($self)
     $linkgen = LinkGenerator::i();
     $linkgen->data['downloaditem'] = '/[type]/[title].htm';
     $linkgen->save();
-    $self->getApp()->options->savemodified();
+    $self->getApp()->poolStorage->commit();
 }
 
 function tdownloaditemsUninstall($self)

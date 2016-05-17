@@ -288,6 +288,7 @@ return true;
     {
         $result = '';
 $view = new View();
+$cache = Cache::i();
 
         //for call event  getwidget
         $str = new Str();
@@ -309,7 +310,7 @@ switch ($ajax) {
 case 'disabled':
                 switch ($item['cache']) {
                     case 'cache':
-                        $content = Cache::i()->getContent($id, $sidebar, false);
+                        $content = $cache->getWidget($id, $sidebar);
                         break;
 
 
@@ -333,9 +334,19 @@ throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
                 }
 
 case 'inline':
-if ($item['cache'] == 'cache' || $item['cache'] == 'nocache') {
-                        $content = $view->getInline($id, $sidebar, $item);
-} else {
+switch ($item['cache']) {
+case 'cache':
+$widgetBody = $cache->getContent($id, $sidebar);
+                        $content = $view->getInline($id, $sidebar, $widgetBody , $item);
+break;
+
+case 'nocache':
+$widget = $this->getWidget($id);
+$widgetBody = $widget->getcontent($id, $sidebar);
+                        $content = $view->getInline($id, $sidebar, $widgetBody , $item);
+break;
+
+default:
                         $content = $view->getAjax($id, $sidebar, $item);
 }
                         break;

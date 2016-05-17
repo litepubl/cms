@@ -41,7 +41,7 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
         return false;
     }
 
-    public function saveModified()
+    public function commit()
     {
         if ($this->modified) {
             $this->modified = false;
@@ -53,35 +53,47 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
     {
         if (!$this->modified) {
             $this->modified = true;
-            $this->getApp()->onClose->on($this, 'saveModified');
+            $this->getApp()->onClose->on($this, 'commit');
         }
     }
 
-    public function getContent($id, $sidebar, $onlybody = true)
+    public function getContent(int $id, int $sidebar): string
     {
-        if (isset($this->items[$id][$sidebar])) {
-            return $this->items[$id][$sidebar];
+        if (isset($this->items[$id][$sidebar]['content'])) {
+            return $this->items[$id][$sidebar]['content'];
         }
 
-        return $this->setcontent($id, $sidebar, $onlybody);
+        return $this->setcontent($id, $sidebar);
     }
 
-    public function setContent($id, $sidebar, $onlybody = true)
+    public function setContent(int $id, int $sidebar): string
     {
         $widget = Widgets::i()->getwidget($id);
-
-        if ($onlybody) {
             $result = $widget->getcontent($id, $sidebar);
-        } else {
-            $result = $widget->getwidget($id, $sidebar);
-        }
-
-        $this->items[$id][$sidebar] = $result;
+        $this->items[$id][$sidebar]['content'] = $result;
         $this->save();
         return $result;
     }
 
-    public function expired($id)
+    public function getWidget(int $id, int $sidebar): string
+    {
+        if (isset($this->items[$id][$sidebar]['widget'])) {
+            return $this->items[$id][$sidebar]['widget'];
+        }
+
+        return $this->setWidget($id, $sidebar);
+    }
+
+    public function setWidget(int $id, int $sidebar): string
+    {
+        $widget = Widgets::i()->getwidget($id);
+            $result = $widget->getwidget($id, $sidebar);
+        $this->items[$id][$sidebar]['widget'] = $result;
+        $this->save();
+        return $result;
+    }
+
+    public function expired(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);

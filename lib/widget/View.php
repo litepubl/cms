@@ -117,17 +117,9 @@ class View
         return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
     }
 
-    public function getInline(int $id, int $sidebar, array $item): string
+    public function getInline(int $id, int $sidebar,  string $content, array $item): string
     {
         $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'inlinewidget');
-        if ('cache' == $item['cache']) {
-            $cache = Cache::i();
-            $content = $cache->getContent($id, $sidebar);
-        } else {
-            $widget = $this->getWidget($id);
-            $content = $widget->getContent($id, $sidebar);
-        }
-
         $content = sprintf('<!--%s-->', $content);
         return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
     }
