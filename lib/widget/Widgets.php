@@ -314,36 +314,45 @@ case 'disabled':
                         break;
 
 
-                    case 'include':
-                        $content = $this->includeWidget($id, $sidebar);
-                        break;
-
-
                     case 'nocache':
                         $widget = $this->getWidget($id);
                         $content = $widget->getWidget($id, $sidebar);
                         break;
 
 
+                    case 'include':
+        $filename = Widget::getCacheFilename($id, $sidebar);
+        $cache = $this->getApp()->cache;
+        if (!$cache->exists($filename)) {
+            $widget = $this->getWidget($id);
+            $widgetContent = $widget->getContent($id, $sidebar);
+            $cache->setString($filename, $widgetContent);
+        }
+
+                        $content = $view->getInclude($id, $sidebar, $item, $filename);
+                        break;
+
+
                     case 'code':
-                        $content = $this->getCode($id, $sidebar);
+                        $content = $view->getCode($id, $sidebar);
                         break;
 
 default:
 throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
                 }
+break;
 
 case 'inline':
 switch ($item['cache']) {
 case 'cache':
 $widgetBody = $cache->getContent($id, $sidebar);
-                        $content = $view->getInline($id, $sidebar, $widgetBody , $item);
+                        $content = $view->getInline($id, $sidebar, $item, $widgetBody);
 break;
 
 case 'nocache':
 $widget = $this->getWidget($id);
 $widgetBody = $widget->getcontent($id, $sidebar);
-                        $content = $view->getInline($id, $sidebar, $widgetBody , $item);
+                        $content = $view->getInline($id, $sidebar, $item, $widgetBody );
 break;
 
 default:
@@ -367,31 +376,7 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
         return $result;
     }
 
-    private function includeWidget($id, $sidebar)
-    {
-        $filename = Widget::getCacheFilename($id, $sidebar);
-        $cache = $this->getApp()->cache;
-        if (!$cache->exists($filename)) {
-            $widget = $this->getWidget($id);
-            $content = $widget->getContent($id, $sidebar);
-            $cache->setString($filename, $content);
-        }
-
-        $view = new View();
-        return $view->getWidgetId($id, $this->items[$id]['title'], "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n", $this->items[$id]['template'], $sidebar);
-    }
-
-    private function getCode($id, $sidebar)
-    {
-        $class = $this->items[$id]['class'];
-        return "\n<?php
-    \$widget = $class::i();
-    \$widget->id = \$id;
-    echo \$widget->getwidget($id, $sidebar);
-    ?>\n";
-    }
-
-    public function find(Widget $widget)
+    public function find(Widget $widget): int
     {
         $class = get_class($widget);
         foreach ($this->items as $id => $item) {
@@ -400,13 +385,13 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
         }
-        return false;
+        return 0;
     }
 
-    public function getWidgetContent($id, $sidebar)
+    public function getWidgetContent(int $id, int $sidebar): string
     {
         if (!isset($this->items[$id])) {
-            return false;
+            return '';
         }
 
         switch ($this->items[$id]['cache']) {
@@ -429,18 +414,12 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
 
             case 'nocache':
             case 'code':
-            case false:
                 $widget = $this->getwidget($id);
                 $result = $widget->getcontent($id, $sidebar);
                 break;
         }
 
         return $result;
-    }
-
-    public function getPos($id)
-    {
-        return Sidebars::getpos($this->sidebars, $id);
     }
 
     public function &finditem($id)
@@ -456,7 +435,7 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
         return $item;
     }
 
-    public function findContext($class)
+    public function findContext(string $class)
     {
         $app = $this->getApp();
         if ($app->context->view instanceof $class) {

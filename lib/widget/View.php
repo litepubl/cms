@@ -117,11 +117,28 @@ class View
         return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
     }
 
-    public function getInline(int $id, int $sidebar,  string $content, array $item): string
+    public function getInline(int $id, int $sidebar,  array $item, string $content): string
     {
         $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'inlinewidget');
         $content = sprintf('<!--%s-->', $content);
         return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
+    }
+
+    public function getInclude(int $id, int $sidebar, array $item, string $filename): string
+    {
+        return $this->getWidgetId($id, $item['title'],
+ "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n",
+ $item['template'], $sidebar);
+    }
+
+    public function getCode(int $id, int $sidebar, array $item): string
+    {
+        $class = $item['class'];
+        return "\n<?php
+    \$widget = $class::i();
+    \$widget->id = \$id;
+    echo \$widget->getWidget($id, $sidebar);
+    ?>\n";
     }
 
 }

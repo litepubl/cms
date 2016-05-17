@@ -86,6 +86,15 @@ class Widgets extends \litepubl\admin\Menu
             $orders = range(1, count($sidebar));
             foreach ($sidebar as $j => $sb_item) {
                 $id = $sb_item['id'];
+$ajax = $sb_item['ajax'];
+if ($ajax === true) {
+$ajax = 'ajax';
+}
+
+if (!$ajax) {
+$ajax = 'disabled';
+}
+
                 $w_item = $widgets->getItem($id);
 
                 $items[] = array(
@@ -93,19 +102,25 @@ class Widgets extends \litepubl\admin\Menu
                     'title' => $w_item['title'],
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
                     'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
-                    'ajaxbuttons' => str_replace('$button', strtr($sb_item['ajax'] == false ? $tml_active : $tml_btn, array(
+                    'ajaxbuttons' => str_replace('$button', 
+strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
-                        '$value' => 'noajax',
+                        '$value' => 'disabled',
                         '$title' => $lang->noajax
-                    )) . strtr(($sb_item['ajax'] && $sb_item['ajax'] !== 'inline') ? $tml_active : $tml_btn, array(
+                    ))
+
+ . strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
-                    )) . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($sb_item['ajax'] == 'inline' ? $tml_active : $tml_btn, array(
+                    ))
+
+ . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'inline',
                         '$title' => $lang->inline
-                    )) : '') , $admintheme->templates['radiogroup'])
+                    )) : ''),
+ $admintheme->templates['radiogroup'])
                 );
             }
         }
@@ -223,7 +238,7 @@ class Widgets extends \litepubl\admin\Menu
                                 continue;
                             }
 
-                            $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax');
+                            $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax' ? 'ajax' : 'disabled');
 
                             $i2 = (int)$_POST["sidebar-$id"];
                             if ($i2 >= count($sidebars->items)) {
