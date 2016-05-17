@@ -321,15 +321,7 @@ case 'disabled':
 
 
                     case 'include':
-        $filename = Widget::getCacheFilename($id, $sidebar);
-        $cache = $this->getApp()->cache;
-        if (!$cache->exists($filename)) {
-            $widget = $this->getWidget($id);
-            $widgetContent = $widget->getContent($id, $sidebar);
-            $cache->setString($filename, $widgetContent);
-        }
-
-                        $content = $view->getInclude($id, $sidebar, $item, $filename);
+                        $content = $view->getInclude($id, $sidebar, $item);
                         break;
 
 

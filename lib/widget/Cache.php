@@ -57,6 +57,12 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
         }
     }
 
+    public function onClearCache()
+    {
+        $this->items = array();
+        $this->modified = false;
+    }
+
     public function getContent(int $id, int $sidebar): string
     {
         if (isset($this->items[$id][$sidebar]['content'])) {
@@ -93,7 +99,7 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
         return $result;
     }
 
-    public function expired(int $id)
+    public function delete(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
@@ -101,11 +107,40 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
         }
     }
 
-    public function onClearCache()
+    public function remove(int $id, string $cacheType)
     {
-        $this->items = array();
-        $this->modified = false;
+        switch ($cacheType) {
+            case 'cache':
+$this->delete($id);
+                break;
+
+
+            case 'include':
+                $filename = $this->getIncludeFilename($id);
+                $this->getApp()->cache->delete($filename);
+                break;
+        }
     }
 
+    public function getIncludeFilename(int $id): string
+    {
+        $theme = Theme::context();
+        return sprintf('widget.%s.%d.php', $theme->name, $id);
+    }
+
+public function getInclude(int $id, int $sidebar): string
+{
+$filename = $this->getIncludeFilename($id);
+$appCache = $this->getApp()->cache;
+if ($result = $appCache->getString($filename)) {
+return $result;
 }
 
+            $widget = Widgets::i()->getWidget($id);
+            $result = $widget->getContent($id, $sidebar);
+
+$appCache->setString($filename, $result);
+return $result;
+}
+
+}

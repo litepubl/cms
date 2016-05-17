@@ -56,7 +56,7 @@ class Comments extends Widget
 
     public function changed()
     {
-        $this->expire();
+        Cache::i()->remove($this->id, $this->cache);
     }
 
     public function getRecent($count, $status = 'approved')

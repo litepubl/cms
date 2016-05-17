@@ -124,10 +124,11 @@ class View
         return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
     }
 
-    public function getInclude(int $id, int $sidebar, array $item, string $filename): string
+    public function getInclude(int $id, int $sidebar, array $item): string
     {
+$content = sprintf('<?php echo %s\Cache::i()->getInclude(%d, %d); ?>', __NAMESPACE__, $id, $sidebar);
         return $this->getWidgetId($id, $item['title'],
- "\n<?php echo litepubl::\$app->cache->getString('$filename'); ?>\n",
+ $content,
  $item['template'], $sidebar);
     }
 

@@ -79,7 +79,7 @@ class Custom extends Widget
         $widgets = Widgets::i();
         $widgets->items[$id]['title'] = $title;
         $widgets->save();
-        $this->expired($id);
+
         $this->getApp()->cache->clear();
     }
 
