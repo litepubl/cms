@@ -10,18 +10,19 @@
 
 namespace litepubl\core;
 
-class BaseCache
+abstract class BaseCache
 {
     protected $items = [];
     protected $lifetime = 3600;
+public $onClear;
 
-    public function getString($filename)
-    {
-    }
+public function__construct()
+{
+$this->onClear = new Callback();
+}
 
-    public function setString($filename, $str)
-    {
-    }
+    abstract public function getString(string $filename): string;
+    abstract public function setString(string $filename, string $str);
 
     public function set($filename, $data)
     {
@@ -71,6 +72,12 @@ class BaseCache
     {
         $this->lifetime = $value;
     }
+
+public function clear()
+{
+        $this->items = [];
+$this->onClear->fire();
+}
 
     public function clearUrl($url)
     {

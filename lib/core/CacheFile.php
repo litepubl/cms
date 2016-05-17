@@ -15,20 +15,20 @@ class CacheFile extends BaseCache
     protected $dir;
     protected $timeOffset;
 
-    public function __construct($dir, $lifetime, $timeOffset)
+    public function __construct(string $dir, int $lifetime, int $timeOffset)
     {
+parent::__construct();
         $this->dir = $dir;
         $this->timeOffset = $timeOffset;
         $this->lifetime = $lifetime - $timeOffset;
-        $this->items = [];
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         return $this->dir;
     }
 
-    public function setString($filename, $str)
+    public function setString(string $filename, string $str)
     {
         $this->items[$filename] = $str;
         $fn = $this->getdir() . $filename;
@@ -36,7 +36,7 @@ class CacheFile extends BaseCache
         @chmod($fn, 0666);
     }
 
-    public function getString($filename)
+    public function getString(string $filename): string
     {
         if (array_key_exists($filename, $this->items)) {
             return $this->items[$filename];
@@ -50,7 +50,7 @@ class CacheFile extends BaseCache
         return false;
     }
 
-    public function delete($filename)
+    public function delete(string $filename)
     {
         unset($this->items[$filename]);
         $fn = $this->getdir() . $filename;
@@ -59,23 +59,23 @@ class CacheFile extends BaseCache
         }
     }
 
-    public function exists($filename)
+    public function exists(string $filename): bool
     {
         return array_key_exists($filename, $this->items) || (file_exists($this->getdir() . $filename) && (filemtime($this->getDir() . $filename) + $this->lifetime >= time()));
     }
 
-    public function setLifetime($value)
+    public function setLifetime(int $value)
     {
         $this->lifetime = $value - $this->timeOffset;
     }
 
     public function clear()
     {
-        $this->items = [];
         $this->clearDir($path = $this->getdir());
+parent::clear();
     }
 
-    public function clearDir($dir)
+    public function clearDir(string $dir)
     {
         if ($h = @opendir($path)) {
             while (FALSE !== ($filename = @readdir($h))) {
@@ -95,7 +95,7 @@ class CacheFile extends BaseCache
         }
     }
 
-    public function includePhp($filename)
+    public function includePhp(string $filename)
     {
         $fn = $this->getDir() . $filename;
         if (file_exists($fn) && (filemtime($fn) + $this->lifetime >= time())) {

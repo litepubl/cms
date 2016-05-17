@@ -21,19 +21,20 @@ class Cache extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->modified = false;
+$this->getApp()->cache->onClear->on($this, 'onClearCache');
     }
 
-    public function getBasename()
+    public function getBasename(): string
     {
         $theme = Theme::i();
         return 'widgetscache.' . $theme->name;
     }
 
-    public function load()
+    public function load(): bool
     {
-        if ($data = $this->getApp()->cache->get($this->getbasename())) {
+        if ($data = $this->getApp()->cache->get($this->getBasename())) {
             $this->data = $data;
-            $this->afterload();
+            $this->afterLoad();
             return true;
         }
 
@@ -88,7 +89,7 @@ class Cache extends \litepubl\core\Items
         }
     }
 
-    public function onclearcache()
+    public function onClearCache()
     {
         $this->items = array();
         $this->modified = false;

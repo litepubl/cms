@@ -17,23 +17,23 @@ class CacheMemcache extends BaseCache
     protected $revision;
     protected $revisionKey;
 
-    public function __construct($memcache, $lifetime, $prefix)
+    public function __construct(\Memcache $memcache, int $lifetime, int $prefix)
     {
+parent::__construct();
         $this->memcache = $memcache;
         $this->lifetime = $lifetime;
         $this->prefix = $prefix . ':cache:';
         $this->revision = 0;
         $this->revisionKey = 'cache_revision';
-        $this->items = [];
         $this->getRevision();
     }
 
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix . $this->revision . '.';
     }
 
-    public function getRevision()
+    public function getRevision(): int
     {
         return $this->revision = (int)$this->memcache->get($this->prefix . $this->revisionKey);
     }
@@ -42,16 +42,16 @@ class CacheMemcache extends BaseCache
     {
         $this->revision++;
         $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
-        $this->items = [];
+parent::clear();
     }
 
-    public function setString($filename, $str)
+    public function setString(string $filename, string $str)
     {
         $this->items[$filename] = $str;
         $this->memcache->set($this->getPrefix() . $filename, $str, false, $this->lifetime);
     }
 
-    public function getString($filename)
+    public function getString(string $filename): string
     {
         if (array_key_exists($filename, $this->items)) {
             return $this->items[$filename];
@@ -60,13 +60,13 @@ class CacheMemcache extends BaseCache
         return $this->memcache->get($this->getPrefix() . $filename);
     }
 
-    public function delete($filename)
+    public function delete(string $filename)
     {
         unset($this->items[$filename]);
         $this->memcache->delete($this->getPrefix() . $filename);
     }
 
-    public function exists($filename)
+    public function exists(string $filename)
     {
         if (parent::exists($filename)) {
             return $this->items[$filename] !== false;
