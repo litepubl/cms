@@ -118,15 +118,4 @@ $this->error('no id');
         return 0;
     }
 
-    public function expire()
-    {
-        $widgets = Widgets::i();
-        foreach ($widgets->items as $id => $item) {
-            if ($this instanceof $item['class']) {
-$this->expired($id);
 }
-        }
-    }
-
-}
-

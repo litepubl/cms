@@ -122,6 +122,16 @@ $this->delete($id);
         }
     }
 
+    public function removeWidget(Widget $widget)
+    {
+        $widgets = Widgets::i();
+        foreach ($widgets->items as $id => $item) {
+            if ($widget instanceof $item['class']) {
+$this->remove($id, $widget->cache);
+}
+        }
+    }
+
     public function getIncludeFilename(int $id): string
     {
         $theme = Theme::context();

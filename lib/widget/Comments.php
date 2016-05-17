@@ -56,7 +56,7 @@ class Comments extends Widget
 
     public function changed()
     {
-        Cache::i()->remove($this->id, $this->cache);
+Cache::i()->removeWidget($this);
     }
 
     public function getRecent($count, $status = 'approved')
