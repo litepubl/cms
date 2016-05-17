@@ -35,7 +35,7 @@ class Widgets extends \litepubl\core\Items
         $this->addMap('classes', array());
     }
 
-    public function add(Widget $widget)
+    public function add(Widget $widget): int
     {
         return $this->addItem(array(
             'class' => get_class($widget) ,
@@ -45,7 +45,7 @@ class Widgets extends \litepubl\core\Items
         ));
     }
 
-    public function addExt(Widget $widget, $title, $template)
+    public function addExt(Widget $widget, string $title, string $template): int
     {
         return $this->addItem(array(
             'class' => get_class($widget) ,
@@ -55,7 +55,7 @@ class Widgets extends \litepubl\core\Items
         ));
     }
 
-    public function addClass(Widget $widget, $class)
+    public function addClass(Widget $widget, string $class): int
     {
         $this->lock();
         $id = $this->add($widget);
@@ -74,7 +74,7 @@ class Widgets extends \litepubl\core\Items
         return $id;
     }
 
-    public function subClass($id)
+    public function subClass(int $id): string
     {
         foreach ($this->classes as $class => $items) {
             foreach ($items as $item) {
@@ -87,7 +87,7 @@ class Widgets extends \litepubl\core\Items
         return false;
     }
 
-    public function delete($id)
+    public function delete(int $id): bool
     {
         if (!isset($this->items[$id])) {
             return false;
@@ -107,7 +107,7 @@ class Widgets extends \litepubl\core\Items
         return true;
     }
 
-    public function deleteClass($class)
+    public function deleteClass(string $class): bool
     {
         $this->unbind($class);
         $deleted = array();
@@ -141,9 +141,11 @@ class Widgets extends \litepubl\core\Items
         foreach ($deleted as $id) {
             $this->deleted($id);
         }
+
+return true;
     }
 
-    public function class2id($class)
+    public function class2id(string $class): int
     {
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
@@ -151,10 +153,10 @@ class Widgets extends \litepubl\core\Items
             }
         }
 
-        return false;
+        return 0;
     }
 
-    public function getWidget($id)
+    public function getWidget(int $id): Widget
     {
         if (!isset($this->items[$id])) {
             return $this->error("The requested $id widget not found");
@@ -171,12 +173,12 @@ class Widgets extends \litepubl\core\Items
         return $result;
     }
 
-    public function getSidebar(ViewInterface $view)
+    public function getSidebar(ViewInterface $view): string
     {
         return $this->getSidebarIndex($view, $this->currentSidebar++);
     }
 
-    public function getSidebarIndex(ViewInterface $view, $sidebar)
+    public function getSidebarIndex(ViewInterface $view, int $sidebar): string
     {
         $items = new \ArrayObject($this->getWidgets($view, $sidebar) , \ArrayObject::ARRAY_AS_PROPS);
         if ($view instanceof WidgetsInterface) {
@@ -204,7 +206,7 @@ class Widgets extends \litepubl\core\Items
         return $str->value;
     }
 
-    private function getWidgets(ViewInterface $view, $sidebar)
+    private function getWidgets(ViewInterface $view, int $sidebar): array
     {
         $schema = Schema::getSchema($view);
         $theme = $schema->theme;
@@ -239,7 +241,7 @@ class Widgets extends \litepubl\core\Items
         return $items;
     }
 
-    private function getSubItems(ViewInterface $view, $sidebar)
+    private function getSubItems(ViewInterface $view, int $sidebar): array
     {
         $result = array();
         foreach ($this->classes as $class => $items) {
@@ -253,7 +255,7 @@ class Widgets extends \litepubl\core\Items
         return $result;
     }
 
-    private function joinItems(array $items, array $subitems)
+    private function joinItems(array $items, array $subitems): array
     {
         if (count($subitems) == 0) {
             return $items;
@@ -282,40 +284,30 @@ class Widgets extends \litepubl\core\Items
         return $items;
     }
 
-    protected function getSidebarContent(\ArrayObject $items, $sidebar, $disableajax)
+    protected function getSidebarContent(\ArrayObject $sidebarItems, int $sidebar, bool $disableajax): string
     {
         $result = '';
+$view = new View();
+
         //for call event  getwidget
         $str = new Str();
 
-        foreach ($items as $item) {
-            $id = $item['id'];
+//$sidebarItem contains only id and ajax
+        foreach ($sidebarItems as $sidebarItem) {
+            $id = $sidebarItem['id'];
             if (!isset($this->items[$id])) {
                 continue;
             }
 
-            $cachetype = $this->items[$id]['cache'];
-            if ($disableajax) {
-                $item['ajax'] = false;
+$item = $this->items[$id];
+                $ajax = $sidebarItem['ajax'];
+            if ($disableajax || !$ajax) {
+                $ajax = 'disabled';
             }
 
-            if ($item['ajax'] === 'inline') {
-                switch ($cachetype) {
-                    case 'cache':
-                    case 'nocache':
-                    case false:
-                        $content = $this->getInline($id, $sidebar);
-                        break;
-
-
-                    default:
-                        $content = $this->getAjax($id, $sidebar);
-                        break;
-                }
-            } elseif ($item['ajax']) {
-                $content = $this->getAjax($id, $sidebar);
-            } else {
-                switch ($cachetype) {
+switch ($ajax) {
+case 'disabled':
+                switch ($item['cache']) {
                     case 'cache':
                         $content = Cache::i()->getContent($id, $sidebar, false);
                         break;
@@ -327,7 +319,6 @@ class Widgets extends \litepubl\core\Items
 
 
                     case 'nocache':
-                    case false:
                         $widget = $this->getWidget($id);
                         $content = $widget->getWidget($id, $sidebar);
                         break;
@@ -336,7 +327,25 @@ class Widgets extends \litepubl\core\Items
                     case 'code':
                         $content = $this->getCode($id, $sidebar);
                         break;
+
+default:
+throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
                 }
+
+case 'inline':
+if ($item['cache'] == 'cache' || $item['cache'] == 'nocache') {
+                        $content = $view->getInline($id, $sidebar, $item);
+} else {
+                        $content = $view->getAjax($id, $sidebar, $item);
+}
+                        break;
+
+case 'ajax':
+                $content = $view->getAjax($id, $sidebar, $item);
+break;
+
+default:
+throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
             $str->value = $content;
@@ -345,30 +354,6 @@ class Widgets extends \litepubl\core\Items
         }
 
         return $result;
-    }
-
-    public function getAjax($id, $sidebar)
-    {
-        $view = new View();
-        $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'ajaxwidget');
-        $content = "<!--widgetcontent-$id-->";
-        return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
-    }
-
-    public function getInline($id, $sidebar)
-    {
-        $view = new View();
-        $title = $view->getAjax($id, $this->items[$id]['title'], $sidebar, 'inlinewidget');
-        if ('cache' == $this->items[$id]['cache']) {
-            $cache = Cache::i();
-            $content = $cache->getContent($id, $sidebar);
-        } else {
-            $widget = $this->getWidget($id);
-            $content = $widget->getContent($id, $sidebar);
-        }
-
-        $content = sprintf('<!--%s-->', $content);
-        return $view->getWidgetId($id, $title, $content, $this->items[$id]['template'], $sidebar);
     }
 
     private function includeWidget($id, $sidebar)

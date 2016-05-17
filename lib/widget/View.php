@@ -101,13 +101,35 @@ class View
         $this->error("Unknown widget '$name' and template '$tml' in $index sidebar");
     }
 
-    public function getAjax($id, $title, $sidebar, $tml)
+    public function getAjaxTitle(int $id, int $sidebar, string $title, string $templateKey): string
     {
         $args = new Args();
-        $args->title = $title;
         $args->id = $id;
         $args->sidebar = $sidebar;
-        return $this->theme->parseArg($this->theme->templates[$tml], $args);
+        $args->title = $title;
+        return $this->theme->parseArg($this->theme->templates[$templateKey], $args);
+    }
+
+    public function getAjax(int $id, int $sidebar, array $item): string
+    {
+        $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'ajaxwidget');
+        $content = "<!--widgetcontent-$id-->";
+        return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
+    }
+
+    public function getInline(int $id, int $sidebar, array $item): string
+    {
+        $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'inlinewidget');
+        if ('cache' == $item['cache']) {
+            $cache = Cache::i();
+            $content = $cache->getContent($id, $sidebar);
+        } else {
+            $widget = $this->getWidget($id);
+            $content = $widget->getContent($id, $sidebar);
+        }
+
+        $content = sprintf('<!--%s-->', $content);
+        return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
     }
 
 }
