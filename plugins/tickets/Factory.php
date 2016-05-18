@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepul\plugins\tickets;
+namespace litepubl\plugins\tickets;
 
 class Factory extends \litepubl\post\Factory
 {
@@ -24,4 +24,3 @@ class Factory extends \litepubl\post\Factory
     }
 
 }
-

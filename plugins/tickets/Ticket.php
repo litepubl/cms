@@ -27,7 +27,7 @@ class Ticket extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->childdata = array(
+        $this->childData = array(
             'type' => 'bug',
             'state' => 'opened',
             'prio' => 'major',

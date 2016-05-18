@@ -122,13 +122,13 @@ class Form
 
         if ($this->inline) {
             if ($this->submit) {
-                $body.= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
+                $body.= $theme->getInput('button', $this->submit, '', $lang->__get($this->submit));
             }
 
             $body = $this->line($body);
         } else {
             if ($this->submit) {
-                $body.= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
+                $body.= $theme->getInput('submit', $this->submit, '', $lang->__get($this->submit));
             }
         }
 

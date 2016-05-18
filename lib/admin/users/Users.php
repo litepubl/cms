@@ -88,6 +88,7 @@ class Users extends \litepubl\admin\Menu
 
                 $result.= $admin->form($tabs->get() , $args);
         }
+
         $args->search = '';
 
         //table
@@ -120,7 +121,7 @@ class Users extends \litepubl\admin\Menu
         $items = $users->select($where, " order by id desc limit $from, $perpage");
         if (!$items) $items = array();
 
-        $tb = $thisnewTable();
+        $tb = $this->newTable();
         $tb->args->adminurl = $this->adminurl;
         $tb->setowner($users);
         $tb->setStruct(array(

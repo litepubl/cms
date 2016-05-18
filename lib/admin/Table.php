@@ -15,6 +15,7 @@ use litepubl\view\Admin;
 use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Lang;
+use litepubl\core\Items;
 
 class Table
 {
@@ -153,17 +154,17 @@ class Table
     }
 
     //predefined callbacks
-    public function titems_callback(Table $self, titems $owner)
+    public function itemsCallback(Table $self, Items $owner)
     {
-        $self->item = $owner->getitem($self->id);
+        $self->item = $owner->getItem($self->id);
         $self->args->add($self->item);
     }
 
-    public function setOwner(titems $owner)
+    public function setOwner(Items $owner)
     {
         $this->addCallback('$tempcallback' . count($this->callbacks) , array(
             $this,
-            'titems_callback'
+            'itemsCallback'
         ) , $owner);
     }
 

@@ -15,7 +15,7 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\post\Post;
 
-class Editor extends \litepubl\admin\posts\Editor;
+class Editor extends \litepubl\admin\posts\Editor
 {
     private $newstatus;
 
@@ -60,7 +60,7 @@ class Editor extends \litepubl\admin\posts\Editor;
         $args->fixed = $ticket->state == 'fixed';
 
         $lang = Lang::admin('tickets');
-        $tickets = ttickets::i();
+        $tickets = Tickets::i();
         $args->category = static ::getComboCategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : (count($tickets->cats) ? $tickets->cats[0] : 0));
 
         $args->version = $ticket->version;
@@ -93,7 +93,7 @@ class Editor extends \litepubl\admin\posts\Editor;
 
         $args->prio = $this->theme->comboItems($prio, $ticket->prio);
 
-        $tb = new Table($this->admintheme);
+        $tb = $this->newTable($this->admintheme);
         $tb->args = $args;
         $args->ticket = $tb->inputs(array(
             'category' => 'combo',
@@ -109,7 +109,7 @@ class Editor extends \litepubl\admin\posts\Editor;
         $post = $this->getvarpost($post);
         $admintheme = $this->admintheme;
         $lang = Lang::admin('tickets');
-        $tabs = new tabs($admintheme);
+        $tabs = $this->newtabs($admintheme);
         $tabs->add($lang->text, '[editor=raw]');
         $tabs->add($lang->codetext, '[editor=code]');
 

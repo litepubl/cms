@@ -99,9 +99,9 @@ class Admin extends \litepubl\admin\Menu
         //wrap form
         if ($this->getApp()->options->group != 'ticket') {
             $args = new Args();
-            $form = new adminform($args);
+            $form = $this->newForm($args);
             $form->body = $table;
-            $form->body.= $form->centergroup($this->html->getsubmit('delete', 'setdraft', 'publish', 'setfixed'));
+            $form->body.= $form->centergroup($form->getButtons('delete', 'setdraft', 'publish', 'setfixed'));
             $form->submit = '';
             $result.= $form->get();
         } else {

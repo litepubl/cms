@@ -153,14 +153,14 @@ class Secure extends \litepubl\admin\Menu
         $menus->lock();
         if ($value) {
             if (!$menus->url2id('/admin/users/')) {
-                $id = $menus->createitem(0, 'users', 'admin', 'tadminusers');
-                $menus->createitem($id, 'pages', 'author', 'tadminuserpages');
-                $menus->createitem($id, 'groups', 'admin', 'tadmingroups');
-                $menus->createitem($id, 'options', 'admin', 'tadminuseroptions');
-                $menus->createitem($id, 'perms', 'admin', 'tadminperms');
-                $menus->createitem($id, 'search', 'admin', 'tadminusersearch');
+                $id = $menus->createitem(0, 'users', 'admin', 'litepubl\admin\users\Users');
+                $menus->createitem($id, 'pages', 'author', 'litepubl\admin\users\Pages');
+                $menus->createitem($id, 'groups', 'admin', 'litepubl\admin\users\Groups');
+                $menus->createitem($id, 'options', 'admin', 'litepubl\admin\users\Options');
+                $menus->createitem($id, 'perms', 'admin', 'litepubl\admin\users\Perms');
+                //$menus->createitem($id, 'search', 'admin', 'litepubl\admin\users\Users');
 
-                $menus->createitem($menus->url2id('/admin/posts/') , 'authorpage', 'author', 'tadminuserpages');
+                $menus->createitem($menus->url2id('/admin/posts/') , 'authorpage', 'author', 'litepubl\admin\users\Pages');
             }
         } else {
             $menus->deletetree($menus->url2id('/admin/users/'));
