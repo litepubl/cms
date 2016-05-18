@@ -29,12 +29,12 @@ class Oldestposts extends \litepubl\widget\Depended
         $this->data['maxcount'] = 10;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'prev');
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $post = Widgets::i()->findcontext('litepubl\post\Post');
         if (!$post) {

@@ -17,11 +17,6 @@ class tsapeplugin extends twidget
     public $sape;
     public $counts;
 
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
     protected function create()
     {
         parent::create();
@@ -34,7 +29,7 @@ class tsapeplugin extends twidget
         $this->addmap('counts', array());
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'links');
     }
@@ -51,7 +46,7 @@ class tsapeplugin extends twidget
         }
     }
 
-    public function getWidget($id, $sidebar)
+    public function getWidget(int $id, int $sidebar): string
     {
         if ($this->user == '') {
             return '';
@@ -64,7 +59,7 @@ class tsapeplugin extends twidget
         return parent::getwidget($id, $sidebar);
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $links = $this->getlinks();
         if (empty($links)) {

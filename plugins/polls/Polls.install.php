@@ -18,6 +18,7 @@ use litepubl\view\LangMerger;
 use litepubl\view\Parser;
 use litepubl\post\Posts;
 use litepubl\pages\Json;
+use litepubl\core\Cron;
 
 function PollsInstall($self)
 {

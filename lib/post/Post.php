@@ -26,7 +26,7 @@ class Post extends \litepubl\core\Item
     private $metaInstance;
     private $onIdCallback;
 
-    public static function i(int $id = 0)
+    public static function i($id = 0)
     {
         if ($id = (int)$id) {
             if (isset(static ::$instances['post'][$id])) {

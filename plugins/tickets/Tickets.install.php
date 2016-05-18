@@ -105,13 +105,15 @@ $ns = __NAMESPACE__ . '\\';
     $groups->items[$app->options->groupnames['author']]['parents'][] = $idticket;
     $groups->items[$app->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();
+
+$app->cache->clear();
 }
 
 function TicketsUninstall($self)
 {
     Posts::unsub($self);
 
-    $app->classes->delete('tticket');
+$app = $self->getApp();
     $adminmenus = AdminMenus::i();
     $adminmenus->lock();
     $adminmenus->deletetree($adminmenus->url2id('/admin/tickets/'));
@@ -131,5 +133,7 @@ function TicketsUninstall($self)
     $optimizer->unlock();
 
     LangMerger::i()->deletePlugin(Plugins::getname(__file__));
+
+$app->cache->clear();
 }
 

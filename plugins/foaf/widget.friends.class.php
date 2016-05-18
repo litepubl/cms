@@ -18,11 +18,6 @@ use litepubl\widget\View;
 class tfriendswidget extends twidget
 {
 
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
     protected function create()
     {
         parent::create();
@@ -34,13 +29,13 @@ class tfriendswidget extends twidget
         $this->data['redirlink'] = '/foaflink.htm';
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         $about = Plugins::getabout(Plugins::getname(__file__));
         return $about['name'];
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $foaf = tfoaf::i();
         $items = $foaf->getapproved($this->maxcount);

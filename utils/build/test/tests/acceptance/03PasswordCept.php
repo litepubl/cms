@@ -3,7 +3,7 @@
 use Page\Password;
 use test\config;
 use litepubl\utils\Filer;
-return;
+//return;
 $i = new AcceptanceTester($scenario);
 $password = new Password($i);
 $password->logout();
