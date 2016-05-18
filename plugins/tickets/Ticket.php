@@ -45,39 +45,34 @@ class Ticket extends \litepubl\post\Post
         return Factory::i();
     }
 
-    protected function getCacheClosed()
+    protected function getCacheClosed(): int
     {
-        return $this->childData['closed'] == static ::ZERODATA ? 0 : strtotime($this->childData['closed']);
+        return $this->childData['closed'] == static ::ZERODATE ? 0 : strtotime($this->childData['closed']);
     }
 
-    public function setClosed($timestamp)
+    public function setClosed(int $timestamp)
     {
         $this->childData['closed'] = Str::sqldate($timestamp);
         $this->cacheData['closed'] = $timestamp;
     }
 
-    protected function getContentpage($page)
+    public function updateFiltered()
     {
-        $result = parent::getcontentpage($page);
-        $result.= polls::i()->getobjectpoll($this->id, 'post');
-        return $result;
-    }
-
-    public function updatefiltered()
-    {
-        $result = $this->getticketcontent();
+        $result = $this->getTicketContent();
         $filter = Filter::i();
-        $filter->filterpost($this, $this->rawcontent);
+        $filter->filterPost($this, $this->rawcontent);
         $result.= $this->filtered;
+
         if (!empty($this->childData['code'])) {
             $lang = Lang::i('ticket');
             $result.= sprintf('<h2>%s</h2>', $lang->code);
             $result.= highlight_string($this->code, true);
         }
+
         $this->filtered = $result;
     }
 
-    public function getTicketcontent()
+    public function getTicketContent(): string
     {
         $lang = Lang::i('ticket');
         $args = new Args();

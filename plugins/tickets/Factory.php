@@ -18,5 +18,10 @@ class Factory extends \litepubl\post\Factory
         return Tickets::i();
     }
 
+    public function getView()
+    {
+        return View::i();
+    }
+
 }
 

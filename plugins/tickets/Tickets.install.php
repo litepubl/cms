@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tickets;
 
 use litepubl\Config;
 use litepubl\core\DBManager;
@@ -17,20 +17,20 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
+use litepubl\core\Users;
+use litepubl\core\UserGroups;
+use litepubl\admin\Menus as AdminMenus;
+use litepubl\post\Posts;
 
-function tticketsInstall($self)
+function TicketsInstall($self)
 {
-    if (version_compare(PHP_VERSION, '5.3', '<')) {
-        die('Ticket system requires PHP 5.3 or later. You are using PHP ' . PHP_VERSION);
-    }
-
     $dirname = basename(dirname(__file__));
-    LangMerger::i()->addplugin($dirname);
+    LangMerger::i()->addPlugin($dirname);
     $lang = Lang::admin('tickets');
-    $lang->addsearch('ticket', 'tickets');
+    $lang->addSearch('ticket', 'tickets');
 
     $self->data['cats'] = array();
-    $self->data['idcomauthor'] = tusers::i()->add(array(
+    $self->data['idcomauthor'] = Users::i()->add(array(
         'email' => '',
         'name' => Lang::get('ticket', 'comname') ,
         'status' => 'approved',
@@ -43,11 +43,13 @@ function tticketsInstall($self)
     $filter = Filter::i();
     $filter->phpcode = true;
     $filter->save();
-    $self->getApp()->options->parsepost = false;
+
+$app = $self->getApp();
+$app->options->parsepost = false;
 
     $manager = DBManager::i();
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'ticket.sql'));
-    $manager->addenum('posts', 'class', 'litepubl-tticket');
+    $manager->addEnum('posts', 'class', str_replace('\\', '-', __NAMESPACE__ . '\Ticket'));
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
@@ -55,22 +57,18 @@ function tticketsInstall($self)
     $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
     $optimizer->unlock();
 
-    $self->getApp()->classes->lock();
     //install polls if its needed
     $plugins = Plugins::i();
-    if (!isset($plugins->items['polls'])) $plugins->add('polls');
+    if (!isset($plugins->items['polls'])) {
+$plugins->add('polls');
+}
 
-    $self->getApp()->classes->Add('tticket', 'ticket.class.php', $dirname);
-    // $self->getApp()->classes->Add('tticketsmenu', 'tickets.menu.class.php', $dirname);
-    $self->getApp()->classes->Add('tticketeditor', 'admin.ticketeditor.class.php', $dirname);
-    $self->getApp()->classes->Add('tadmintickets', 'admin.tickets.class.php', $dirname);
-    $self->getApp()->classes->Add('tadminticketoptions', 'admin.tickets.options.php', $dirname);
-
-    $self->getApp()->options->reguser = true;
+    $app->options->reguser = true;
     $adminsecure = adminsecure::i();
     $adminsecure->usersenabled = true;
 
-    $adminmenus = Menus::i();
+$ns = __NAMESPACE__ . '\\';
+    $adminmenus = AdminMenus::i();
     $adminmenus->lock();
 
     $parent = $adminmenus->createitem(0, 'tickets', 'ticket', 'tadmintickets');
@@ -90,80 +88,37 @@ function tticketsInstall($self)
 
     $adminmenus->onexclude = $self->onexclude;
     $adminmenus->unlock();
-    /*
-    $menus = tmenus::i();
-    $menus->lock();
-    $ini = parse_ini_file($dir .  $self->getApp()->options->language . '.install.ini', false);
-    
-    $menu = tticketsmenu::i();
-    $menu->type = 'tickets';
-    $menu->url = '/tickets/';
-    $menu->title = $ini['tickets'];
-    $menu->content = $ini['contenttickets'];
-    $id = $menus->add($menu);
-    
-    foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menu = tticketsmenu::i();
-    $menu->type = $type;
-    $menu->parent = $id;
-    $menu->url = "/$type/";
-    $menu->title = $ini[$type];
-    $menu->content = '';
-    $menus->add($menu);
-    }
-    $menus->unlock();
-    */
-    $self->getApp()->classes->unlock();
 
     $linkgen = LinkGenerator::i();
     $linkgen->data['ticket'] = '/tickets/[title].htm';
     $linkgen->save();
 
-    $groups = tusergroups::i();
+    $groups = UserGroups::i();
     $groups->lock();
     $idticket = $groups->add('ticket', 'Tickets', '/admin/tickets/editor/');
     $groups->defaults = array(
         $idticket,
         $groups->getidgroup('author')
     );
-    $groups->items[$self->getApp()->options->groupnames['author']]['parents'][] = $idticket;
-    $groups->items[$self->getApp()->options->groupnames['commentator']]['parents'][] = $idticket;
+    $groups->items[$app->options->groupnames['author']]['parents'][] = $idticket;
+    $groups->items[$app->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();
 }
 
-function tticketsUninstall($self)
+function TicketsUninstall($self)
 {
-    //die("Warning! You can lost all tickets!");
-    $self->getApp()->classes->lock();
-    //if (Config::$debug)  $self->getApp()->classes->delete('tpostclasses');
-    tposts::unsub($self);
+    Posts::unsub($self);
 
-    $self->getApp()->classes->delete('tticket');
-    $self->getApp()->classes->delete('tticketeditor');
-    $self->getApp()->classes->delete('tadmintickets');
-    $self->getApp()->classes->delete('tadminticketoptions');
-
-    $adminmenus = Menus::i();
+    $app->classes->delete('tticket');
+    $adminmenus = AdminMenus::i();
     $adminmenus->lock();
     $adminmenus->deletetree($adminmenus->url2id('/admin/tickets/'));
     $adminmenus->unbind($self);
     $adminmenus->unlock();
-    /*
-    $menus = tmenus::i();
-    $menus->lock();
-    foreach (array('bug', 'feature', 'support', 'task') as $type) {
-    $menus->deleteurl("/$type/");
-    }
-    $menus->deleteurl('/tickets/');
-    $menus->unlock();
-    
-     $self->getApp()->classes->delete('tticketsmenu');
-    */
-    $self->getApp()->classes->unlock();
 
     $manager = DBManager::i();
-    $manager->deletetable($self->childTable);
-    $manager->delete_enum('posts', 'class', 'tticket');
+    $manager->deleteTable($self->childTable);
+    $manager->deleteEnum('posts', 'class', 'tticket');
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
@@ -173,6 +128,6 @@ function tticketsUninstall($self)
     }
     $optimizer->unlock();
 
-    LangMerger::i()->deleteplugin(Plugins::getname(__file__));
+    LangMerger::i()->deletePlugin(Plugins::getname(__file__));
 }
 

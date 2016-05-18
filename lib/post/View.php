@@ -571,13 +571,13 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return '';
     }
 
-    protected function getContentPage($page)
+    protected function getContentPage(int $page): string
     {
         $result = '';
         if ($page == 1) {
             $result.= $this->filtered;
-            $result = $this->replacemore($result, false);
-        } elseif ($s = $this->getpage($page - 2)) {
+            $result = $this->replaceMore($result, false);
+        } elseif ($s = $this->post->getPage($page - 2)) {
             $result.= $s;
         } elseif ($page <= $this->commentpages) {
         } else {
@@ -587,7 +587,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $posts = $this->factory->posts;

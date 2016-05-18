@@ -68,9 +68,9 @@ class polls extends titems
         return parent::delete($id);
     }
 
-    public function getObjectpoll($idobject, $typeobject)
+    public function getObjectPoll($idobject, $typeobject)
     {
-        return $this->getpoll($this->finditem("idobject = $idobject and typeobject = '$typeobject'"));
+        return $this->getPoll($this->findItem("idobject = $idobject and typeobject = '$typeobject'"));
     }
 
     public function getPoll($id)

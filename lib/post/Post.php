@@ -635,7 +635,7 @@ class Post extends \litepubl\core\Item
         return $this->rawData['rawcontent'];
     }
 
-    public function getPage($i)
+    public function getPage(int $i)
     {
         if (isset($this->cacheData['pages'][$i])) {
             return $this->cacheData['pages'][$i];
@@ -647,6 +647,7 @@ class Post extends \litepubl\core\Item
             } else {
                 $s = false;
             }
+
             $this->childData['pages'][$i] = $s;
             return $s;
         }
