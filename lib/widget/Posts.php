@@ -25,12 +25,12 @@ class Posts extends Widget
         $this->data['maxcount'] = 10;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'recentposts');
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $posts = PostItems::i();
         $list = $posts->getpage(0, 1, $this->maxcount, false);

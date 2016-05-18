@@ -25,7 +25,7 @@ class Tags extends CommonTags
         $this->showcount = false;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'tags');
     }

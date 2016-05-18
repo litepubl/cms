@@ -196,6 +196,7 @@ class Items extends Events
             $this->deleted($id);
             return true;
         }
+
         return false;
     }
 

@@ -34,12 +34,12 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $this->data['redir'] = false;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'links');
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         if (count($this->items) == 0) {
             return '';
@@ -69,7 +69,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         return $view->getContent($result, 'links', $sidebar);
     }
 
-    public function add($url, $title, $text)
+    public function add(string $url, string $title, string $text): int
     {
         $this->items[++$this->autoid] = array(
             'url' => $url,
@@ -82,7 +82,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         return $this->autoid;
     }
 
-    public function edit($id, $url, $title, $text)
+    public function edit(int $id, string $url, string $title, string $text)
     {
         $id = (int)$id;
         if (!isset($this->items[$id])) {
@@ -97,7 +97,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $this->save();
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);

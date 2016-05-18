@@ -87,7 +87,7 @@ class Widgets extends \litepubl\core\Items
         return false;
     }
 
-    public function delete(int $id): bool
+    public function delete($id)
     {
         if (!isset($this->items[$id])) {
             return false;
@@ -304,6 +304,8 @@ $item = $this->items[$id];
                 $ajax = $sidebarItem['ajax'];
             if ($disableajax || !$ajax) {
                 $ajax = 'disabled';
+} elseif ($ajax === true) {
+$ajax = 'ajax';
             }
 
 switch ($ajax) {

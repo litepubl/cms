@@ -26,12 +26,12 @@ class Meta extends Widget
         $this->addmap('items', array());
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'subscribe');
     }
 
-    public function add($name, $url, $title)
+    public function add(string $name, string $url, string $title)
     {
         $this->items[$name] = array(
             'enabled' => true,
@@ -41,7 +41,7 @@ class Meta extends Widget
         $this->save();
     }
 
-    public function delete($name)
+    public function delete(string $name)
     {
         if (isset($this->items[$name])) {
             unset($this->items[$name]);
@@ -49,7 +49,7 @@ class Meta extends Widget
         }
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $result = '';
         $view = new View();

@@ -28,7 +28,7 @@ class CommonTags extends Widget
         return false;
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $view = new View();
         $items = $this->owner->getView()->getSorted(array(

@@ -20,19 +20,22 @@ class Order extends Widget
         parent::create();
         unset($this->id);
         $this->data['id'] = 0;
-        $this->data['ajax'] = false;
+        $this->data['ajax'] = 'disabled';
         $this->data['order'] = 0;
         $this->data['sidebar'] = 0;
     }
 
-    public function onsidebar(array & $items, $sidebar)
+    public function onsidebar(array & $items, int $sidebar)
     {
         if ($sidebar != $this->sidebar) {
             return;
         }
 
         $order = $this->order;
-        if (($order < 0) || ($order >= count($items))) $order = count($items);
+        if (($order < 0) || ($order >= count($items))) {
+$order = count($items);
+}
+
         Arr::insert($items, array(
             'id' => $this->id,
             'ajax' => $this->ajax

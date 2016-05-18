@@ -99,14 +99,6 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
         return $result;
     }
 
-    public function delete(int $id)
-    {
-        if (isset($this->items[$id])) {
-            unset($this->items[$id]);
-            $this->save();
-        }
-    }
-
     public function remove(int $id, string $cacheType)
     {
         switch ($cacheType) {

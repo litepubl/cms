@@ -23,7 +23,7 @@ class Custom extends Widget
         $this->addevents('added', 'deleted');
     }
 
-    public function getWidget($id, $sidebar)
+    public function getWidget(int $id, int $sidebar): string
     {
         if (!isset($this->items[$id])) {
             return '';
@@ -38,21 +38,21 @@ class Custom extends Widget
         return $view->getWidget($item['title'], $item['content'], $item['template'], $sidebar);
     }
 
-    public function getTitle($id)
+    public function getTitle(int $id): string
     {
         return $this->items[$id]['title'];
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         return $this->items[$id]['content'];
     }
 
-    public function add($idschema, $title, $content, $template)
+    public function add(int $idschema, string $title, string $content, string $template): int
     {
         $widgets = Widgets::i();
         $widgets->lock();
-        $id = $widgets->addext($this, $title, $template);
+        $id = $widgets->addExt($this, $title, $template);
         $this->items[$id] = array(
             'title' => $title,
             'content' => $content,
@@ -67,7 +67,7 @@ class Custom extends Widget
         return $id;
     }
 
-    public function edit($id, $title, $content, $template)
+    public function edit(int $id, string $title, string $content, string $template)
     {
         $this->items[$id] = array(
             'title' => $title,
@@ -95,7 +95,7 @@ class Custom extends Widget
         }
     }
 
-    public function widgetdeleted($id)
+    public function widgetDeleted(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);

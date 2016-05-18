@@ -26,7 +26,7 @@ class Archives extends Widget
         $this->data['showcount'] = false;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'archives');
     }
@@ -39,7 +39,7 @@ class Archives extends Widget
         }
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $arch = Arch::i();
         if (!count($arch->items)) {

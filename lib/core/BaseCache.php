@@ -16,7 +16,7 @@ abstract class BaseCache
     protected $lifetime = 3600;
 public $onClear;
 
-public function__construct()
+public function __construct()
 {
 $this->onClear = new Callback();
 }
@@ -24,12 +24,12 @@ $this->onClear = new Callback();
     abstract public function getString(string $filename): string;
     abstract public function setString(string $filename, string $str);
 
-    public function set($filename, $data)
+    public function set(string $filename, $data)
     {
         $this->setString($filename, $this->serialize($data));
     }
 
-    public function get($filename)
+    public function get(string $filename)
     {
         if ($s = $this->getString($filename)) {
             return $this->unserialize($s);
@@ -48,12 +48,12 @@ $this->onClear = new Callback();
         return unserialize($data);
     }
 
-    public function savePhp($filename, $str)
+    public function savePhp(string $filename, string $str)
     {
         $this->setString($filename, $str);
     }
 
-    public function includePhp($filename)
+    public function includePhp(string $filename)
     {
         if ($str = $this->getString($filename)) {
             eval('?>' . $str);
@@ -63,12 +63,12 @@ $this->onClear = new Callback();
         return false;
     }
 
-    public function exists($filename)
+    public function exists(string $filename)
     {
         return array_key_exists($this->items);
     }
 
-    public function setLifetime($value)
+    public function setLifetime(int $value)
     {
         $this->lifetime = $value;
     }
@@ -79,7 +79,7 @@ public function clear()
 $this->onClear->fire();
 }
 
-    public function clearUrl($url)
+    public function clearUrl(string $url)
     {
         $this->delete(md5($url) . '.php');
     }

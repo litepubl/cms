@@ -14,7 +14,7 @@ class Depended extends Widget
 {
     private $item;
 
-    private function isvalue($name)
+    private function isValue(string $name): bool
     {
         return in_array($name, array(
             'ajax',

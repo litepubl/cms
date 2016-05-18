@@ -27,12 +27,12 @@ class Comments extends Widget
         $this->data['maxcount'] = 7;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'recentcomments');
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         $recent = $this->getrecent($this->maxcount);
         if (!count($recent)) {
@@ -59,7 +59,7 @@ class Comments extends Widget
 Cache::i()->removeWidget($this);
     }
 
-    public function getRecent($count, $status = 'approved')
+    public function getRecent(int $count, string $status = 'approved'): array
     {
         $db = $this->getApp()->db;
         $result = $db->res2assoc($db->query("select $db->comments.*,
@@ -78,9 +78,12 @@ Cache::i()->removeWidget($this);
         if ($this->getApp()->options->commentpages && !$this->getApp()->options->comments_invert_order) {
             foreach ($result as $i => $item) {
                 $page = ceil($item['commentscount'] / $this->getApp()->options->commentsperpage);
-                if ($page > 1) $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
+                if ($page > 1) {
+$result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
+}
             }
         }
+
         return $result;
     }
 

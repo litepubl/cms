@@ -23,7 +23,7 @@ class Cats extends CommonTags
         $this->template = 'categories';
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'categories');
     }
