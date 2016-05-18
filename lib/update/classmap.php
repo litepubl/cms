@@ -263,6 +263,9 @@ return array(
 
     'tticket' => 'litepubl\plugins\tickets\Ticket',
     'ttickets' => 'litepubl\plugins\tickets\Tickets',
+'tticketeditor' => 'litepubl\plugins\tickets\Editor',
+'tadminticketoptions' => 'litepubl\plugins\tickets\Options',
+'tadmintickets' => 'litepubl\plugins\tickets\Admin',
 
     'twikiwords' => 'litepubl\plugins\wikiwords\Wiki',
     'tstatfooter' => 'litepubl\plugins\statfooter\Stat',

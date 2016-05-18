@@ -135,7 +135,7 @@ class Menus extends \litepubl\pages\Menus
 
     public function exclude($id)
     {
-        if (!$this->getApp()->options->hasgroup($this->items[$id]['group'])) {
+        if (!$this->getApp()->options->hasGroup($this->items[$id]['group'])) {
             return true;
         }
 

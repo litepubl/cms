@@ -44,7 +44,7 @@ class Editor extends \litepubl\admin\Menu
         return $result;
     }
 
-    public static function getCombocategories(array $items, $idselected)
+    public static function getComboCategories(array $items, $idselected)
     {
         $result = '';
         $categories = Cats::i();
@@ -139,12 +139,12 @@ class Editor extends \litepubl\admin\Menu
         return $ajax->gettext($post->rawcontent, $this->admintheme);
     }
 
-    public function canrequest()
+    public function canRequest()
     {
         Lang::admin()->searchsect[] = 'editor';
         $this->isauthor = false;
         $this->basename = 'editor';
-        $this->idpost = $this->idget();
+        $this->idpost = $this->idGet();
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemExists($this->idpost)) {

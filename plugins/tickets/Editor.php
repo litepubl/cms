@@ -8,24 +8,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tickets;
 
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
+use litepubl\post\Post;
 
-class tticketeditor extends tposteditor
+class Editor extends \litepubl\admin\posts\Editor;
 {
     private $newstatus;
 
-    public static function i($id = 0)
-    {
-        return parent::iteminstance(__class__, $id);
-    }
-
     public function getTitle()
     {
-        Lang::admin()->addsearch('tickets', 'ticket', 'editor');
+        Lang::admin()->addSearch('tickets', 'ticket', 'editor');
         if ($this->idpost == 0) {
             return parent::gettitle();
         } else {
@@ -33,15 +29,15 @@ class tticketeditor extends tposteditor
         }
     }
 
-    public function canrequest()
+    public function canRequest()
     {
-        if ($s = parent::canrequest()) {
-            return $s;
+        if ($r = parent::canRequest()) {
+            return $r;
         }
 
         $this->basename = 'tickets';
         if ($this->idpost > 0) {
-            $ticket = tticket::i($this->idpost);
+            $ticket = Ticket::i($this->idpost);
             if (($this->getApp()->options->group == 'ticket') && ($this->getApp()->options->user != $ticket->author)) {
                 return 403;
             }
@@ -49,7 +45,7 @@ class tticketeditor extends tposteditor
         }
     }
 
-    public function getTabstemplate()
+    public function getTabsTemplate()
     {
         return strtr($this->admintheme->templates['tabs'], array(
             '$id' => 'tabs',
@@ -58,14 +54,14 @@ class tticketeditor extends tposteditor
         ));
     }
 
-    public function getArgstab(tpost $ticket, Args $args)
+    public function getArgstab(Post $ticket, Args $args)
     {
-        $args->ajax = $this->getajaxlink($ticket->id);
+        $args->ajax = $this->getAjaxLink($ticket->id);
         $args->fixed = $ticket->state == 'fixed';
 
         $lang = Lang::admin('tickets');
         $tickets = ttickets::i();
-        $args->category = static ::getcombocategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : (count($tickets->cats) ? $tickets->cats[0] : 0));
+        $args->category = static ::getComboCategories($tickets->cats, count($ticket->categories) ? $ticket->categories[0] : (count($tickets->cats) ? $tickets->cats[0] : 0));
 
         $args->version = $ticket->version;
         $args->os = $ticket->os;
@@ -124,19 +120,19 @@ class tticketeditor extends tposteditor
         return $admintheme->parseArg($tabs->get() , $args);
     }
 
-    public function newpost()
+    public function newPost()
     {
-        return new tticket();
+        return new Ticket();
     }
 
-    public function canprocess()
+    public function canProcess()
     {
-        if ($error = parent::canprocess()) {
+        if ($error = parent::canProcess()) {
             return $error;
         }
 
         // check spam
-        $tickets = ttickets::i();
+        $tickets = Tickets::i();
         $id = (int)$_POST['id'];
         if ($id == 0) {
             $this->newstatus = 'published';
@@ -154,7 +150,7 @@ class tticketeditor extends tposteditor
         }
     }
 
-    public function processtab(tpost $ticket)
+    public function processTab(Post $ticket)
     {
         extract($_POST, EXTR_SKIP);
 

@@ -71,22 +71,22 @@ $ns = __NAMESPACE__ . '\\';
     $adminmenus = AdminMenus::i();
     $adminmenus->lock();
 
-    $parent = $adminmenus->createitem(0, 'tickets', 'ticket', 'tadmintickets');
+    $parent = $adminmenus->createitem(0, 'tickets', 'ticket', $ns . 'Admin');
     $adminmenus->items[$parent]['title'] = Lang::get('tickets', 'tickets');
 
-    $idmenu = $adminmenus->createitem($parent, 'editor', 'ticket', 'tticketeditor');
+    $idmenu = $adminmenus->createitem($parent, 'editor', 'ticket', $ns . 'Editor');
     $adminmenus->items[$idmenu]['title'] = Lang::get('tickets', 'editortitle');
 
-    $idmenu = $adminmenus->createitem($parent, 'opened', 'ticket', 'tadmintickets');
+    $idmenu = $adminmenus->createitem($parent, 'opened', 'ticket', $ns . 'Admin');
     $adminmenus->items[$idmenu]['title'] = Lang::get('ticket', 'opened');
 
-    $idmenu = $adminmenus->createitem($parent, 'fixed', 'ticket', 'tadmintickets');
+    $idmenu = $adminmenus->createitem($parent, 'fixed', 'ticket', $ns . 'Admin');
     $adminmenus->items[$idmenu]['title'] = Lang::get('ticket', 'fixed');
 
-    $idmenu = $adminmenus->createitem($parent, 'options', 'admin', 'tadminticketoptions');
+    $idmenu = $adminmenus->createitem($parent, 'options', 'admin', $ns . 'Options');
     $adminmenus->items[$idmenu]['title'] = Lang::i()->options;
 
-    $adminmenus->onexclude = $self->onexclude;
+    $adminmenus->onexclude = $self->onExclude;
     $adminmenus->unlock();
 
     $linkgen = LinkGenerator::i();

@@ -10,9 +10,13 @@
 
 namespace litepubl\plugins\tickets;
 
+use litepubl\post\Post;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\view\Vars;
+use litepubl\utils\Mailer;
+use litepubl\admin\Menus;
 
 class Tickets extends \litepubl\post\Posts
 {
@@ -22,24 +26,24 @@ class Tickets extends \litepubl\post\Posts
     {
         parent::create();
         $this->childTable = 'tickets';
-        $this->addmap('cats', array());
+        $this->addMap('cats', array());
         $this->data['idcomauthor'] = 0;
     }
 
-    public function newpost()
+    public function newPost()
     {
-        return tticket::i();
+        return Ticket::i();
     }
 
-    public function createpoll($id)
+    public function createPoll(int $id): int
     {
         return polls::i()->add('like', $id, 'post');
     }
 
-    public function filtercats(tpost $post)
+    public function filterCats(Post $post)
     {
         $cats = array_intersect($post->categories, $this->cats);
-        if (count($cats) == 0) {
+        if (!count($cats)) {
             $cats = array(
                 $this->cats[0]
             );
@@ -52,42 +56,43 @@ class Tickets extends \litepubl\post\Posts
         $post->categories = $cats;
     }
 
-    public function add(tpost $post)
+    public function add(Post $post)
     {
-        $this->filtercats($post);
-        $post->updatefiltered();
+        $this->filterCats($post);
+        $post->updateFiltered();
 
         $id = parent::add($post);
-        $this->createpoll($id);
+        $this->createPoll($id);
         $this->notify($post);
         return $id;
     }
 
-    private function notify(tticket $ticket)
+    private function notify(Ticket $ticket)
     {
-        Theme::$vars['ticket'] = $ticket;
+$vars = new Vars;
+        $vars->ticket = $ticket;
         $args = new Args();
         $args->adminurl = $this->getApp()->site->url . '/admin/tickets/editor/' . $this->getApp()->site->q . 'id=' . $ticket->id;
 
         Lang::usefile('mail');
         $lang = Lang::i('mailticket');
-        $lang->addsearch('ticket');
+        $lang->addSearch('ticket');
         $theme = Theme::i();
 
         $subject = $theme->parseArg($lang->subject, $args);
         $body = $theme->parseArg($lang->body, $args);
 
-        tmailer::sendtoadmin($subject, $body);
+        Mailer::sendToAdmin($subject, $body);
     }
 
-    public function edit(tpost $post)
+    public function edit(Post $post)
     {
-        $this->filtercats($post);
-        $post->updatefiltered();
+        $this->filterCats($post);
+        $post->updateFiltered();
         return parent::edit($post);
     }
 
-    public function onexclude($id)
+    public function onExclude(int $id)
     {
         if ($this->getApp()->options->group == 'ticket') {
             $admin = Menus::i();

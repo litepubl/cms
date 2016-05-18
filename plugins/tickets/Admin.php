@@ -8,24 +8,19 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tickets;
 
 use litepubl\admin\Link;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
-class tadmintickets extends \litepubl\admin\Menu
+class Admin extends \litepubl\admin\Menu
 {
-
-    public static function i($id = 0)
-    {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function getContent()
     {
         $result = '';
-        $tickets = ttickets::i();
+        $tickets = Tickets::i();
         $perpage = 20;
         $where = $this->getApp()->options->group == 'ticket' ? ' and author = ' . $this->getApp()->options->user : '';
 
@@ -54,10 +49,10 @@ class tadmintickets extends \litepubl\admin\Menu
         $lang = Lang::admin('tickets');
         $lang->addsearch('ticket', 'tickets');
         $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
-        $result.= $admintheme->getcount($from, $from + count($items) , $count);
+        $result.= $admintheme->getCount($from, $from + count($items) , $count);
 
         $tb = $this->newTable();
-        $tb->setposts(array(
+        $tb->setPosts(array(
             array(
                 'right',
                 $lang->date,
@@ -124,7 +119,7 @@ class tadmintickets extends \litepubl\admin\Menu
             return '';
         }
 
-        $tickets = ttickets::i();
+        $tickets = Tickets::i();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : (isset($_POST['setfixed']) ? 'fixed' : 'delete'));
         foreach ($_POST as $key => $id) {
             if (!is_numeric($id)) {
@@ -135,7 +130,7 @@ class tadmintickets extends \litepubl\admin\Menu
             if ($status == 'delete') {
                 $tickets->delete($id);
             } else {
-                $ticket = tticket::i($id);
+                $ticket = Ticket::i($id);
                 if ($status == 'fixed') {
                     $ticket->set_state($status);
                 } else {
