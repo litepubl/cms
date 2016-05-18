@@ -8,20 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tickets;
 
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class ttickets extends tposts
+class Tickets extends \litepubl\post\Posts
 {
     public $cats;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
