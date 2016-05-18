@@ -1,1 +1,1 @@
-phpcbf  -s widgets.php --report-file=report.txt --generator=Markdown
+phpcbf  -s ticket.php --report-file=report.txt

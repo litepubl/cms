@@ -19,7 +19,7 @@ use litepubl\view\Theme;
 class Ticket extends \litepubl\post\Post
 {
 
-    public static function getChildtable()
+    public static function getChildtable():string
     {
         return 'tickets';
     }
@@ -27,7 +27,8 @@ class Ticket extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->childData = ['type' => 'bug', 'state' => 'opened', 'prio' => 'major', 'assignto' => 0, 'closed' => static ::ZERODATE, 'version' => $this->getApp()->options->version, 'os' => '*', 'reproduced' => false, 'code' => ''];
+        $this->childData = [
+'type' => 'bug', 'state' => 'opened', 'prio' => 'major', 'assignto' => 0, 'closed' => static ::ZERODATE, 'version' => $this->getApp()->options->version, 'os' => '*', 'reproduced' => false, 'code' => ''];
     }
 
     public function getFactory()

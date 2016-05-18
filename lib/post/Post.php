@@ -26,7 +26,7 @@ class Post extends \litepubl\core\Item
     private $metaInstance;
     private $onIdCallback;
 
-    public static function i($id = 0)
+    public static function i(int $id = 0)
     {
         if ($id = (int)$id) {
             if (isset(static ::$instances['post'][$id])) {
@@ -43,7 +43,7 @@ class Post extends \litepubl\core\Item
         return $result;
     }
 
-    public static function loadPost($id)
+    public static function loadPost(int $id)
     {
         if ($a = static ::loadAssoc($id)) {
             $self = static ::newPost($a['class']);
@@ -60,7 +60,7 @@ class Post extends \litepubl\core\Item
         return false;
     }
 
-    public static function loadAssoc($id)
+    public static function loadAssoc(int $id)
     {
         $db = static ::getAppInstance()->db;
         $table = static ::getChildTable();
@@ -74,18 +74,18 @@ class Post extends \litepubl\core\Item
         }
     }
 
-    public static function newPost($classname)
+    public static function newPost(string $classname): Post
     {
         $classname = $classname ? str_replace('-', '\\', $classname) : get_called_class();
         return new $classname();
     }
 
-    public static function getInstanceName()
+    public static function getInstanceName(): string
     {
         return 'post';
     }
 
-    public static function getChildTable()
+    public static function getChildTable(): string
     {
         return '';
     }
@@ -99,7 +99,7 @@ class Post extends \litepubl\core\Item
         }
     }
 
-    protected static function selectChildItems($table, array $items)
+    protected static function selectChildItems(string $table, array $items): array
     {
         if (!$table || !count($items)) {
             return array();
@@ -109,7 +109,9 @@ class Post extends \litepubl\core\Item
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
-        return $db->res2items($db->query("select $childTable.* from $childTable where id in ($list) limit $count"));
+        return $db->res2items($db->query(
+"select $childTable.* from $childTable where id in ($list) limit $count"
+));
     }
 
     protected function create()
@@ -172,7 +174,7 @@ class Post extends \litepubl\core\Item
         return Factory::i();
     }
 
-    public function getView()
+    public function getView(): View
     {
         $view = $this->factory->getView();
         $view->setPost($this);

@@ -103,7 +103,7 @@ class App
         }
     }
 
-    public function cachefile($filename)
+    public function cachefile(string $filename)
     {
         if (!$this->memcache) {
             return file_get_contents($filename);
@@ -190,7 +190,7 @@ class App
         $this->showErrors();
     }
 
-    public function getLogManager()
+    public function getLogManager(): LogManager
     {
         if (!$this->logManager) {
             if (isset(Config::$classes['logmanager'])) {
@@ -221,7 +221,7 @@ class App
         }
     }
 
-    public function redirExit($url)
+    public function redirExit(string $url)
     {
         $this->poolStorage->commit();
         if (!Str::begin($url, 'http')) {

@@ -13,12 +13,12 @@ namespace litepubl\core;
 trait AppTrait
 {
 
-    public static function getAppInstance()
+    public static function getAppInstance(): App
     {
         return litepubl::$app;
     }
 
-    public function getApp()
+    public function getApp(): App
     {
         return static ::getAppInstance();
     }

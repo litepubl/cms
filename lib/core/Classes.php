@@ -58,7 +58,7 @@ class Classes extends Items
         ) , true, true);
     }
 
-    public function getInstance($class)
+    public function getInstance(string $class)
     {
         if (isset($this->instances[$class])) {
             return $this->instances[$class];
@@ -75,7 +75,7 @@ class Classes extends Items
         return $this->instances[$class] = $this->newinstance($class);
     }
 
-    public function newinstance($class)
+    public function newinstance(string $class)
     {
         if (!empty($this->remap[$class])) {
             $class = $this->remap[$class];
@@ -84,7 +84,7 @@ class Classes extends Items
         return new $class();
     }
 
-    public function newItem($name, $class, $id)
+    public function newItem(string $name, string $class, $id)
     {
         if (!empty($this->remap[$class])) {
             $class = $this->remap[$class];
@@ -122,7 +122,7 @@ class Classes extends Items
         return true;
     }
 
-    public function installClass($classname)
+    public function installClass(string $classname)
     {
         $instance = $this->getinstance($classname);
         if (method_exists($instance, 'install')) {
@@ -132,7 +132,7 @@ class Classes extends Items
         return $instance;
     }
 
-    public function uninstallClass($classname)
+    public function uninstallClass(string $classname)
     {
         if (class_exists($classname)) {
             $instance = $this->getinstance($classname);
@@ -156,7 +156,7 @@ class Classes extends Items
         $this->deleted($class);
     }
 
-    public function reinstall($class)
+    public function reinstall(string $class)
     {
         if (isset($this->items[$class])) {
             $this->lock();
@@ -171,7 +171,7 @@ class Classes extends Items
         }
     }
 
-    public function baseclass($classname)
+    public function baseClass(string $classname)
     {
         if ($i = strrpos($classname, '\\')) {
             return substr($classname, $i + 1);
@@ -180,7 +180,7 @@ class Classes extends Items
         return $classname;
     }
 
-    public function addAlias($classname, $alias)
+    public function addAlias(string $classname, string $alias)
     {
         if (!$alias) {
             if ($i = strrpos($classname, '\\')) {
@@ -203,7 +203,7 @@ class Classes extends Items
         }
     }
 
-    public function getClassmap($classname)
+    public function getClassmap(string $classname)
     {
         if (isset($this->aliases[$classname])) {
             return $this->aliases[$classname];
@@ -232,7 +232,7 @@ class Classes extends Items
         return false;
     }
 
-    public function autoload($classname)
+    public function autoload(string $classname)
     {
         if (isset($this->loaded[$classname])) {
             return;
@@ -256,7 +256,7 @@ class Classes extends Items
         }
     }
 
-    public function findFile($classname)
+    public function findFile(string $classname)
     {
         /*
         if ($newclass = $this->getClassmap($classname)) {
@@ -272,7 +272,7 @@ class Classes extends Items
         return $result;
     }
 
-    public function findClassmap($classname)
+    public function findClassmap(string $classname)
     {
         if (isset($this->items[$classname])) {
             $filename = $this->app->paths->home . $this->items[$classname];
@@ -282,20 +282,20 @@ class Classes extends Items
         }
     }
 
-    public function include ($filename)
+    public function include (string $filename)
     {
         //if (is_dir($filename)) $this->error($filename);
         require_once $filename;
     }
 
-    public function include_file($filename)
+    public function include_file(string $filename)
     {
         if ($filename && file_exists($filename)) {
             $this->include($filename);
         }
     }
 
-    public function findPSR4($classname)
+    public function findPSR4(string $classname)
     {
         if (false === ($i = strrpos($classname, '\\'))) {
             return false;
@@ -356,7 +356,7 @@ class Classes extends Items
         return false;
     }
 
-    public function findKernel($classname)
+    public function findKernel(string $classname)
     {
         if (false === ($i = strrpos($classname, '\\'))) {
             return false;
@@ -413,17 +413,17 @@ class Classes extends Items
         return false;
     }
 
-    public function subSpace($namespace, $root)
+    public function subSpace(string $namespace, string $root)
     {
         return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
     }
 
-    public function exists($class)
+    public function exists(string $class): bool
     {
-        return isset($this->items[$class]);
+        return isset($this->instances[$class]) || isset($this->items[$class]);
     }
 
-    public function rename($oldclass, $newclass)
+    public function rename(string $oldclass, string $newclass)
     {
         if (isset($this->items[$oldclass])) {
             $this->items[$newclass] = $this->items[$oldclass];
