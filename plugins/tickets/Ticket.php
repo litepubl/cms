@@ -27,8 +27,17 @@ class Ticket extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->childData = [
-'type' => 'bug', 'state' => 'opened', 'prio' => 'major', 'assignto' => 0, 'closed' => static ::ZERODATE, 'version' => $this->getApp()->options->version, 'os' => '*', 'reproduced' => false, 'code' => ''];
+        $this->childdata = array(
+            'type' => 'bug',
+            'state' => 'opened',
+            'prio' => 'major',
+            'assignto' => 0,
+            'closed' => static::ZERODATE,
+            'version' => $this->getApp()->options->version,
+            'os' => '*',
+            'reproduced' => false,
+            'code' => ''
+        );
     }
 
     public function getFactory()
