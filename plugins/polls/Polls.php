@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\polls;
 
 use litepubl\Config;
 use litepubl\core\Str;
@@ -16,14 +16,9 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class polls extends titems
+class Polls extends \litepubl\core\Items
 {
     const votes = 'pollvotes';
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -34,10 +29,10 @@ class polls extends titems
         $this->table = 'polls';
     }
 
-    public function add($template, $idobject, $typeobject)
+    public function add(string $template, int $idobject, string $typeobject): int
     {
         $best = $template == 'stars' ? 5 : 2;
-        return $this->additem(array(
+        return $this->addItem(array(
             'idobject' => (int)$idobject,
             'typeobject' => $typeobject,
             'votes' => 0,
@@ -49,38 +44,41 @@ class polls extends titems
         ));
     }
 
-    public function setStatus($id, $status)
+    public function setStatus(int $id, string $status)
     {
-        $this->setvalue($id, 'status', $status);
+        $this->setValue($id, 'status', $status);
         if ($status == 'closed') {
             $this->getdb(static ::votes)->delete("idpoll = $id");
         }
     }
 
-    public function close($id)
+    public function close(int $id)
     {
         $this->setstatus($id, 'closed');
     }
 
     public function delete($id)
     {
-        $this->db->iddelete($id);
+        $this->db->idDelete($id);
         return parent::delete($id);
     }
 
-    public function getObjectPoll($idobject, $typeobject)
+    public function getObjectPoll(int $idobject, string $typeobject): string
     {
         return $this->getPoll($this->findItem("idobject = $idobject and typeobject = '$typeobject'"));
     }
 
-    public function getPoll($id)
+    public function getPoll(int $id): string
     {
         if (!$id) {
             return '';
         }
 
-        if (Config::$debug) $this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
-        $item = $this->getitem($id);
+        if (Config::$debug) {
+$this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
+}
+
+        $item = $this->getItem($id);
 
         $lang = Lang::i('poll');
         $args = new Args();
@@ -107,7 +105,7 @@ class polls extends titems
         return $theme->parseArg($tml, $args);
     }
 
-    public function err($mesg)
+    public function err(string $mesg): array
     {
         $lang = Lang::i('poll');
 
@@ -155,12 +153,12 @@ class polls extends titems
         return $result;
     }
 
-    public function hasvote($idpoll, $iduser)
+    public function hasVote(int $idpoll, int $iduser)
     {
         return $this->getdb(static ::votes)->findprop('idpoll', "idpoll = $idpoll and iduser = $iduser");
     }
 
-    public function addvote($id, $iduser, $vote)
+    public function addVote(int $id, int $iduser, int $vote)
     {
         $db = $this->getdb(static ::votes);
         $db->insert(array(
@@ -195,7 +193,7 @@ where idpoll = $id group by vote order by vote asc"));
         $this->items[$id] = $item;
     }
 
-    public function addfakevote($id)
+    public function addFakeVote(int $id)
     {
         $item = $this->getitem($id);
         $best = (int)$item['best'];
@@ -225,16 +223,16 @@ where idpoll = $id group by vote order by vote asc"));
         }
     }
 
-    public function objectdeleted($idobject, $typeobject)
+    public function objectDeleted(int $idobject, string $typeobject)
     {
         if ($id = $this->db->findid("idobject = $idobject and typeobject = '$typeobject'")) {
             $this->delete($id);
         }
     }
 
-    public function postdeleted($idpost)
+    public function postDeleted(int $idpost)
     {
-        $this->objectdeleted($idpost, 'post');
+        $this->objectDeleted($idpost, 'post');
     }
 
     public function filter(&$content)

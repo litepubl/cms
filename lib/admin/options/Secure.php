@@ -109,7 +109,7 @@ class Secure extends \litepubl\admin\Menu
 
         $options->echoexception = isset($echoexception);
         $options->reguser = isset($reguser);
-        $this->setusersenabled(isset($usersenabled));
+        $this->setUsersEnabled(isset($usersenabled));
         $options->parsepost = isset($parsepost);
         $options->show_draft_post = isset($show_draft_post);
         $options->xxxcheck = isset($xxxcheck);
@@ -142,7 +142,7 @@ class Secure extends \litepubl\admin\Menu
         }
     }
 
-    public function setUsersenabled($value)
+    public function setUsersEnabled(bool $value)
     {
         if ($this->getApp()->options->usersenabled == $value) {
             return;

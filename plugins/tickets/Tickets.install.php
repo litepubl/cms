@@ -21,6 +21,8 @@ use litepubl\core\Users;
 use litepubl\core\UserGroups;
 use litepubl\admin\Menus as AdminMenus;
 use litepubl\post\Posts;
+use litepubl\admin\options\Secure;
+use litepubl\core\DBOptimizer;
 
 function TicketsInstall($self)
 {
@@ -51,7 +53,7 @@ $app->options->parsepost = false;
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'ticket.sql'));
     $manager->addEnum('posts', 'class', str_replace('\\', '-', __NAMESPACE__ . '\Ticket'));
 
-    $optimizer = tdboptimizer::i();
+    $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->childTables[] = 'tickets';
     $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
@@ -64,8 +66,8 @@ $plugins->add('polls');
 }
 
     $app->options->reguser = true;
-    $adminsecure = adminsecure::i();
-    $adminsecure->usersenabled = true;
+    $secure = Secure::i();
+    $secure ->usersEnabled = true;
 
 $ns = __NAMESPACE__ . '\\';
     $adminmenus = AdminMenus::i();
@@ -120,7 +122,7 @@ function TicketsUninstall($self)
     $manager->deleteTable($self->childTable);
     $manager->deleteEnum('posts', 'class', 'tticket');
 
-    $optimizer = tdboptimizer::i();
+    $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->unbind($self);
     if (false !== ($i = array_search('tickets', $optimizer->childTables))) {

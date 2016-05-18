@@ -260,6 +260,7 @@ return array(
     'likebuttons' => 'litepubl\plugins\likebuttons\LikeButtons',
     'photoswipe' => 'litepubl\plugins\photoswipe\PhotoSwipe',
     'photoswipethumbnail' => 'litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail',
+'polls' => 'litepubl\plugins\polls\Polls',
 
     'tticket' => 'litepubl\plugins\tickets\Ticket',
     'ttickets' => 'litepubl\plugins\tickets\Tickets',

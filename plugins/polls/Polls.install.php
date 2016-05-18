@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\polls;
 
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
@@ -16,17 +16,19 @@ use litepubl\view\Css;
 use litepubl\view\Js;
 use litepubl\view\LangMerger;
 use litepubl\view\Parser;
+use litepubl\post\Posts;
+use litepubl\pages\Json;
 
-function pollsInstall($self)
+function PollsInstall($self)
 {
     $name = basename(dirname(__file__));
     $res = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
 
     $manager = DBManager::i();
     $manager->createtable($self->table, file_get_contents($res . 'polls.sql'));
-    $manager->createtable(polls::votes, file_get_contents($res . 'votes.sql'));
+    $manager->createTable(polls::votes, file_get_contents($res . 'votes.sql'));
 
-    tjsonserver::i()->addevent('polls_sendvote', get_class($self) , 'polls_sendvote');
+    Json::i()->addevent('polls_sendvote', get_class($self) , 'polls_sendvote');
 
     $js = Js::i();
     $js->lock();
@@ -46,13 +48,13 @@ function pollsInstall($self)
     $parser->addtags('plugins/polls/resource/theme.txt', 'plugins/polls/resource/themetags.ini');
 
     LangMerger::i()->addplugin($name);
-    tcron::i()->addnightly(get_class($self) , 'optimize', null);
-    tposts::i()->deleted = $self->postdeleted;
+    Cron::i()->addnightly(get_class($self) , 'optimize', null);
+    Posts::i()->deleted = $self->postdeleted;
 }
 
-function pollsUninstall($self)
+function PollsUninstall($self)
 {
-    tjsonserver::i()->unbind($self);
+    Json::i()->unbind($self);
     LangMerger::i()->deleteplugin(Plugins::getname(__file__));
 
     $js = Js::i();
@@ -78,6 +80,6 @@ function pollsUninstall($self)
     $manager->deletetable(polls::votes);
 
     tcron::i()->deleteclass(get_class($self));
-    tposts::i()->unbind($self);
+    Posts::i()->unbind($self);
 }
 
