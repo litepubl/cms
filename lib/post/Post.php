@@ -71,8 +71,10 @@ unset($self->childData['id']);
  from $db->posts, $db->prefix$table, $db->urlmap
     where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
         } else {
-            return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
-    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
+            return $db->selectAssoc(
+"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1"
+);
         }
     }
 
@@ -245,15 +247,6 @@ $this->cacheData = [
         return $result;
     }
 
-    protected function loadFromDB()
-    {
-        if ($a = static ::loadAssoc($this->id)) {
-            $this->setAssoc($a);
-            return true;
-        }
-
-        return false;
-    }
 
     public function setAssoc(array $a)
     {
