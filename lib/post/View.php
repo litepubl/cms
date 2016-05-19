@@ -17,6 +17,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\MainView;
 use litepubl\view\Theme;
+use litepubl\view\Schema;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {

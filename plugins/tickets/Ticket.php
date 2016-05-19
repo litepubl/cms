@@ -1,4 +1,4 @@
-<?php
+r<?php
 /**
  * Lite Publisher CMS
  * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
@@ -11,10 +11,8 @@
 namespace litepubl\plugins\tickets;
 
 use litepubl\core\Str;
-use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
-use litepubl\view\Theme;
 
 class Ticket extends \litepubl\post\Post
 {
@@ -28,7 +26,6 @@ class Ticket extends \litepubl\post\Post
     {
         parent::create();
         $this->childData = array(
-            'type' => 'bug',
             'state' => 'opened',
             'prio' => 'major',
             'assignto' => 0,
@@ -58,7 +55,7 @@ class Ticket extends \litepubl\post\Post
 
     public function updateFiltered()
     {
-        $result = $this->getTicketContent();
+        $result = $this->view->ticketContent;
         $filter = Filter::i();
         $filter->filterPost($this, $this->rawcontent);
         $result.= $this->filtered;
@@ -70,37 +67,6 @@ class Ticket extends \litepubl\post\Post
         }
 
         $this->filtered = $result;
-    }
-
-    public function getTicketContent(): string
-    {
-        $lang = Lang::i('ticket');
-        $args = new Args();
-        foreach (array(
-            'state',
-            'prio'
-        ) as $prop) {
-            $value = $this->$prop;
-            $args->$prop = $lang->$value;
-        }
-        $args->reproduced = $this->reproduced ? $lang->yesword : $lang->noword;
-        $args->assignto = $this->assigntoname;
-        $args->author = $this->authorlink;
-
-        Theme::$vars['ticket'] = $this;
-        $theme = $this->theme;
-        $tml = file_get_contents($this->resource . 'ticket.tml');
-        return $theme->parseArg($tml, $args);
-    }
-
-    protected function getAssignToName()
-    {
-        return $this->getUserName($this->assignto, true);
-    }
-
-    public static function getResource()
-    {
-        return $this->getApp()->paths->plugins . 'tickets' . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     }
 
     public function getSchemaLink()
