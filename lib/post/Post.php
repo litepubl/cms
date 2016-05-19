@@ -66,9 +66,10 @@ unset($self->childData['id']);
         $db = static ::getAppInstance()->db;
         $table = static ::getChildTable();
         if ($table) {
-            return $db->selectAssoc("select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
- from $db->posts, $table, $db->urlmap
-    where $db->posts.id = $id and $table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
+            return $db->selectAssoc(
+"select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+ from $db->posts, $db->prefix$table, $db->urlmap
+    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
         } else {
             return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
