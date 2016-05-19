@@ -52,10 +52,10 @@ class Posts extends \litepubl\core\Items
         $this->error("Item $id not found in class " . get_class($this));
     }
 
-    public function findItems($where, $limit)
+    public function findItems(string $where, string $limit): array
     {
-        if (isset(Post::$instances['post']) && (count(Post::$instances['post']) > 0)) {
-            $result = $this->db->idselect($where . ' ' . $limit);
+        if (isset(Post::$instances['post']) && (count(Post::$instances['post']))) {
+            $result = $this->db->idSelect($where . ' ' . $limit);
             $this->loadItems($result);
             return $result;
         } else {
@@ -77,6 +77,7 @@ class Posts extends \litepubl\core\Items
         }
 
         $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , '');
+var_dump($newitems);
         return array_merge($newitems, array_intersect($loaded, $items));
     }
 
@@ -325,9 +326,8 @@ Post::$instances['post'][$post->id] = $post;
         return $this->findItems($where, ' order by posted desc limit ' . (int)$count);
     }
 
-    public function getPage($author, $page, $perpage, $invertorder)
+    public function getPage(int $author, int $page, int $perpage, bool $invertorder): array
     {
-        $author = (int)$author;
         $from = ($page - 1) * $perpage;
         $t = $this->thistable;
         $where = "$t.status = 'published'";
@@ -336,7 +336,7 @@ Post::$instances['post'][$post->id] = $post;
         }
 
         $order = $invertorder ? 'asc' : 'desc';
-        return $this->finditems($where, " order by $t.posted $order limit $from, $perpage");
+        return $this->findItems($where, " order by $t.posted $order limit $from, $perpage");
     }
 
     public function stripDrafts(array $items)
