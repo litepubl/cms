@@ -151,7 +151,7 @@ class Comments extends \litepubl\core\Items
         return $this->db->getcount($where);
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if ($where) {
             $where.= ' and ';

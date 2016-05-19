@@ -65,7 +65,7 @@ class Common extends \litepubl\core\Items
         return parent::loadAll();
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if ($where) {
             $where.= ' and ';

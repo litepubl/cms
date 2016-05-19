@@ -76,8 +76,8 @@ class Posts extends \litepubl\core\Items
             return $items;
         }
 
-        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , '');
-var_dump($newitems);
+        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , 'limit ' . count($newitems));
+
         return array_merge($newitems, array_intersect($loaded, $items));
     }
 
@@ -113,7 +113,7 @@ Post::$instances['post'][$post->id] = $post;
         return $result;
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         $db = $this->getApp()->db;
         if ($this->childTable) {

@@ -199,7 +199,7 @@ class Editor extends \litepubl\admin\Menu
 
         $post = $this->idpost ? Post::i($this->idpost) : $this->newpost();
         $vars = new Vars();
-        $vars->post = $post->getView();;
+        $vars->post = $post->getView();
         $vars->posteditor = $this;
 
         if ($post->id != 0) {

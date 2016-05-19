@@ -81,7 +81,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         return '';
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
         if ($where) $where.= ' and ';

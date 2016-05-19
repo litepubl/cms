@@ -62,7 +62,7 @@ class Items extends Events
         $this->select("$this->thistable.$this->idprop in ($list)", '');
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if (!$this->dbversion) {
             $this->error('Select method must be called ffrom database version');
