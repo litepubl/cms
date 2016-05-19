@@ -1,1 +1,1 @@
-phpcbf  -s ticket.php --report-file=report.txt
+phpcbf  -s posts.php --report-file=report.txt

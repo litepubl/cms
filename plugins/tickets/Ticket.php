@@ -1,4 +1,4 @@
-r<?php
+<?php
 /**
  * Lite Publisher CMS
  * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/

@@ -17,6 +17,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 use litepubl\utils\Mailer;
 use litepubl\admin\Menus;
+use litepubl\plugins\polls\Polls;
 
 class Tickets extends \litepubl\post\Posts
 {

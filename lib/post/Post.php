@@ -49,9 +49,10 @@ class Post extends \litepubl\core\Item
             $self = static ::newPost($a['class']);
             $self->setAssoc($a);
 
-            if (get_class($self) != get_called_class()) {
-                $items = static ::selectChildItems($self->getChildTable() , [$id]);
-                $self->setAssoc($items[0]);
+            if ($table = $self->getChildTable()) {
+                $items = static ::selectChildItems($table, [$id]);
+                $self->childData = $items[$id];
+unset($self->childData['id']);
             }
 
             return $self;
@@ -90,16 +91,7 @@ class Post extends \litepubl\core\Item
         return '';
     }
 
-    public static function loadChildData(array $items)
-    {
-        if ($table = static ::getChildTable()) {
-            return static ::selectChildItems($table, $items);
-        } else {
-            return [];
-        }
-    }
-
-    protected static function selectChildItems(string $table, array $items): array
+    public static function selectChildItems(string $table, array $items): array
     {
         if (!$table || !count($items)) {
             return array();
@@ -109,6 +101,7 @@ class Post extends \litepubl\core\Item
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
+static::getappinstance()->getlogmanager()->trace($list);
         return $db->res2items($db->query(
 "select $childTable.* from $childTable where id in ($list) limit $count"
 ));
@@ -156,7 +149,17 @@ class Post extends \litepubl\core\Item
 
         $this->rawData = [];
         $this->childData = [];
-        $this->cacheData = ['posted' => 0, 'categories' => [], 'tags' => [], 'files' => [], 'url' => '', 'created' => 0, 'modified' => 0, 'pages' => [], ];
+$this->cacheData = [
+'posted' => 0,
+'categories' => [],
+'tags' => [],
+'files' => [],
+            'url' => '',
+'created' => 0,
+            'modified' => 0,
+                                    'pages' => [],
+];
+
 
         $this->factory = $this->getfactory();
         /*
@@ -648,7 +651,7 @@ class Post extends \litepubl\core\Item
                 $s = false;
             }
 
-            $this->childData['pages'][$i] = $s;
+            $this->cacheData['pages'][$i] = $s;
             return $s;
         }
         return false;
@@ -656,7 +659,7 @@ class Post extends \litepubl\core\Item
 
     public function addPage($s)
     {
-        $this->childData['pages'][] = $s;
+        $this->cacheData['pages'][] = $s;
         $this->data['pagescount'] = count($this->cacheData['pages']);
         if ($this->id > 0) {
             $this->getdb($this->pagesTable)->insert(array(
@@ -669,18 +672,18 @@ class Post extends \litepubl\core\Item
 
     public function deletePages()
     {
-        $this->childData['pages'] = array();
+        $this->cacheData['pages'] = array();
         $this->data['pagescount'] = 0;
         if ($this->id > 0) {
-            $this->getdb($this->pagesTable)->iddelete($this->id);
+            $this->getdb($this->pagesTable)->idDelete($this->id);
         }
     }
 
     public function savePages()
     {
-        if (isset($this->childData['pages'])) {
+        if (isset($this->cacheData['pages'])) {
             $db = $this->getDB($this->pagesTable);
-            foreach ($this->childData['pages'] as $index => $content) {
+            foreach ($this->cacheData['pages'] as $index => $content) {
                 $db->insert(array(
                     'id' => $this->id,
                     'page' => $index,

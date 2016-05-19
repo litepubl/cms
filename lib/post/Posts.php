@@ -91,6 +91,7 @@ class Posts extends \litepubl\core\Items
         foreach ($items as $a) {
             $post = Post::newPost($a['class']);
             $post->setAssoc($a);
+Post::$instances['post'][$post->id] = $post;
             $result[] = $post->id;
 
             $f = $post->files;
@@ -104,7 +105,7 @@ class Posts extends \litepubl\core\Items
         }
 
         if (count($fileitems)) {
-            Files::i()->preload($fileitems);
+            Files::i()->preLoad($fileitems);
         }
 
         $this->onselect($result);
@@ -116,13 +117,17 @@ class Posts extends \litepubl\core\Items
         $db = $this->getApp()->db;
         if ($this->childTable) {
             $childTable = $db->prefix . $this->childTable;
-            return $this->setAssoc($db->res2items($db->query("select $db->posts.*, $childTable.*, $db->urlmap.url as url
+            return $this->setAssoc($db->res2items($db->query(
+"select $db->posts.*, $childTable.*, $db->urlmap.url as url
       from $db->posts, $childTable, $db->urlmap
-      where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit")));
+      where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit"
+)));
         }
 
-        $items = $db->res2items($db->query("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
-    where $where and  $db->urlmap.id  = $db->posts.idurl $limit"));
+        $items = $db->res2items($db->query(
+"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+    where $where and  $db->urlmap.id  = $db->posts.idurl $limit"
+));
 
         if (!count($items)) {
             return array();
@@ -139,9 +144,9 @@ class Posts extends \litepubl\core\Items
 
         foreach ($subclasses as $class => $list) {
             $class = str_replace('-', '\\', $class);
-            $subitems = $class::loadChildData($list);
-            foreach ($subitems as $id => $subitem) {
-                $items[$id] = array_merge($items[$id], $subitem);
+            $childDataItems = $class::selectChildItems($class::getChildTable(), $list);
+            foreach ($childDataItems as $id => $childData) {
+                $items[$id] = array_merge($items[$id], $childData);
             }
         }
 
@@ -153,7 +158,7 @@ class Posts extends \litepubl\core\Items
         return $this->db->getcount("status<> 'deleted'");
     }
 
-    public function getChildscount($where)
+    public function getChildsCount($where)
     {
         if (!$this->childTable) {
             return 0;

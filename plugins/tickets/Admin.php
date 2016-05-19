@@ -13,6 +13,7 @@ namespace litepubl\plugins\tickets;
 use litepubl\admin\Link;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\admin\Table;
 
 class Admin extends \litepubl\admin\Menu
 {
@@ -83,7 +84,7 @@ class Admin extends \litepubl\admin\Menu
                 $lang->state,
                 function (Table $t)
                 {
-                    return Lang::i()->__get(basetheme::$vars['post']->state);
+                    return Lang::i()->__get(Ticket::i($t->id)->state);
                 }
             ) ,
 
