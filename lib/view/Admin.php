@@ -257,7 +257,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function processcategories()
+    public function processCategories()
     {
         $result = $this->check2array('category-');
         Arr::clean($result);

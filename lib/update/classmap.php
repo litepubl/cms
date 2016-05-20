@@ -262,6 +262,8 @@ return array(
     'photoswipethumbnail' => 'litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail',
 'polls' => 'litepubl\plugins\polls\Polls',
 
+'tpostcatwidget' => 'litepubl\plugins\postwidget\Widget',
+
     'tticket' => 'litepubl\plugins\tickets\Ticket',
     'ttickets' => 'litepubl\plugins\tickets\Tickets',
 'tticketeditor' => 'litepubl\plugins\tickets\Editor',

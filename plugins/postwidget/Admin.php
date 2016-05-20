@@ -8,25 +8,19 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\postwidget;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
+use litepubl\widget\Widgets;
 
-class tadminpostcatwidget extends tadmincustomwidget
+class Admin extends \litepubl\admin\widget\Custom
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $widget = tpostcatwidget::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args = new Args();
-        $id = (int)$this->getparam('idwidget', 0);
+        $widget = Widget::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
+        $id = (int)$this->getParam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
             $args->mode = 'edit';
@@ -42,31 +36,32 @@ class tadminpostcatwidget extends tadmincustomwidget
             $args->idwidget = 0;
         }
 
-        $cats = admintheme::i()->getcats($item['cats']);
-        $html = $this->html;
-        $html->section = 'widgets';
+        $cats = $this->admin->getCats($item['cats']);
         $args->add($item);
         $args->widgettitle = $item['title'];
         $args->template = $this->theme->comboItems(static ::gettemplates() , $item['template']);
         $args->formtitle = $item['title'] == '' ? $this->lang->widget : $item['title'];
-        $result = $html->adminform('
+        $result = $this->admin->form('
     [text=widgettitle]
     [editor=content]
     [combo=template]
     [hidden=idwidget]
-    [hidden=mode]' . sprintf('<h4>%s</h4>', $about['cats']) . $cats, $args);
-        $result.= $this->getlist($widget);
+    [hidden=mode]
+' . $this->admin->h($lang->cats)
+ . $cats, $args);
+
+        $result.= $this->getList($widget);
         return $result;
     }
 
     public function processForm()
     {
-        $widget = tpostcatwidget::i();
+        $widget = Widget::i();
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
             switch ($mode) {
                 case 'add':
-                    $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, admintheme::i()->processcategories());
+                    $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, $this->admin->processCategories());
                     break;
 
 
@@ -77,17 +72,17 @@ class tadminpostcatwidget extends tadmincustomwidget
                     $item['title'] = $widgettitle;
                     $item['content'] = $content;
                     $item['template'] = $template;
-                    $item['cats'] = admintheme::i()->processcategories();
+                    $item['cats'] = $this->admin->processCategories();
                     $widget->items[$id] = $item;
                     $widget->save();
 
-                    $widgets = twidgets::i();
+                    $widgets = Widgets::i();
                     $widgets->items[$id]['title'] = $widgettitle;
                     $widgets->save();
                     break;
                 }
         } else {
-            $this->deletewidgets($widget);
+            $this->deleteWidgets($widget);
         }
     }
 

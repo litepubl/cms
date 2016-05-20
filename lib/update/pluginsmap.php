@@ -8,5 +8,11 @@
  *
  */
 
-return ['black-ip' => 'blackip', 'bootstrap-theme' => 'bootstrap', 'photoswipe-thumbnail' => 'photoswipeThumbnail', ];
+return [
+'black-ip' => 'blackip',
+ 'bootstrap-theme' => 'bootstrap',
+ 'photoswipe-thumbnail' => 'photoswipeThumbnail',
+'postcatwidget' => 'postwidget',
+
+ ];
 

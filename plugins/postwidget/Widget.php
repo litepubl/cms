@@ -8,36 +8,34 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\postwidget;
 
 use litepubl\core\Arr;
 use litepubl\view\Theme;
+use litepubl\widget\Widgets;
 
-class tpostcatwidget extends tclasswidget
+class Widget extends \litepubl\widget\Depended
 {
+const POSTCLASS = 'litepubl\post\Post';
     public $items;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
         parent::create();
-        $this->cache = false;
-        $this->adminclass = 'tadminpostcatwidget';
+        $this->cache = 'nocache';
+        $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.postcat';
         $this->addmap('items', array());
     }
 
-    public function add($title, $content, $template, $cats)
+    public function add(string $title, string $content, string $template, array $cats): int
     {
-        $widgets = twidgets::i();
+        $widgets = Widgets::i();
         $widgets->lock();
-        $id = $widgets->addclass($this, 'tpost');
+        $id = $widgets->addclass($this, static::POSTCLASS);
         $widgets->items[$id]['title'] = $title;
         $widgets->unlock();
+
         $this->items[$id] = array(
             'title' => $title,
             'content' => $content,
@@ -46,24 +44,21 @@ class tpostcatwidget extends tclasswidget
         );
 
         $this->save();
-        //$this->added($id);
         return $id;
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
 
-            $widgets = twidgets::i();
+            $widgets = Widgets::i();
             $widgets->delete($id);
-            //$this->deleted($id);
-            
         }
     }
 
-    public function widgetdeleted($id)
+    public function widgetDeleted(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
@@ -71,7 +66,7 @@ class tpostcatwidget extends tclasswidget
         }
     }
 
-    public function tagdeleted($idtag)
+    public function tagDeleted(int $idtag)
     {
         foreach ($this->items as & $item) {
             Arr::deleteValue($item['cats'], $idtag);
@@ -86,7 +81,7 @@ class tpostcatwidget extends tclasswidget
         }
 
         $item = $this->items[$id];
-        $post = $this->getContext('litepubl\post\Post');
+        $post = $this->getContext(static::POSTCLASS);
         if (0 == count(array_intersect($item['cats'], $post->categories))) {
             return '';
         }
@@ -98,7 +93,7 @@ class tpostcatwidget extends tclasswidget
         return $this->getView()->getWidget($id, $sitebar, $item['title'], $item['content'], $item['template']);
     }
 
-    public function getTitle($id)
+    public function getTitle(int $id): string
     {
         if (isset($this->items[$id])) {
             return $this->items[$id]['title'];
@@ -107,7 +102,7 @@ class tpostcatwidget extends tclasswidget
         return '';
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         if (isset($this->items[$id])) {
             return $this->items[$id]['content'];
