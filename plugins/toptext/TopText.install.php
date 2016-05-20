@@ -8,20 +8,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\toptext;
 
 use litepubl\view\Filter;
 
-function ttoptextinstall($self)
+function TopTextinstall($self)
 {
     $filter = Filter::i();
     $filter->lock();
-    $filter->beforecontent = $self->beforecontent;
-    $filter->aftercontent = $self->aftercontent;
+    $filter->beforecontent = $self->beforeContent;
+    $filter->aftercontent = $self->afterContent;
     $filter->unlock();
 }
 
-function ttoptextuninstall($self)
+function TopTextuninstall($self)
 {
     $filter = Filter::i();
     $filter->unbind($self);

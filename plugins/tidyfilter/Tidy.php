@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tidyfilter;
 
-class ttidyfilter extends \litepubl\core\Plugin
+class Tidy extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getHtml($s)
     {

@@ -269,7 +269,8 @@ return array(
 'tticketeditor' => 'litepubl\plugins\tickets\Editor',
 'tadminticketoptions' => 'litepubl\plugins\tickets\Options',
 'tadmintickets' => 'litepubl\plugins\tickets\Admin',
-
+'ttidyfilter' => 'litepubl\plugins\tidyfiler\Tidy',
+'ttoptext' => 'litepubl\plugins\toptext\TopText',
     'twikiwords' => 'litepubl\plugins\wikiwords\Wiki',
     'tstatfooter' => 'litepubl\plugins\statfooter\Stat',
     'tclearcache' => 'litepubl\plugins\clearcache\ClearCache',

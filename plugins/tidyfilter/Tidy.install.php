@@ -8,11 +8,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\tidyfilter;
 
 use litepubl\view\Filter;
 
-function ttidyfilterInstall($self)
+function TtidyInstall($self)
 {
     if (!class_exists('tidy')) die('PHP tidy extension is required');
     $filter = Filter::i();
@@ -22,7 +22,7 @@ function ttidyfilterInstall($self)
     $filter->unlock();
 }
 
-function ttidyfilterUninstall($self)
+function TidyUninstall($self)
 {
     $filter = Filter::i();
     $filter->unbind($self);

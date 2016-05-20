@@ -109,7 +109,6 @@ vendor/composer.bat export-ignore
 vendor/composer.json export-ignore
 
 #ignore not updated plugins
-plugins/extrasidebars* export-ignore
 plugins/foaf* export-ignore
 plugins/googleanalitic* export-ignore
 plugins/imgresize* export-ignore
@@ -120,8 +119,6 @@ plugins/menucategories* export-ignore
 plugins/metatags* export-ignore
 plugins/nautilus* export-ignore
 plugins/openid-provider* export-ignore
-plugins/polls* export-ignore
-plugins/postcatwidget* export-ignore
 plugins/postcontent* export-ignore
 plugins/regservices* export-ignore
 plugins/regservices-ulogin* export-ignore
@@ -138,6 +135,5 @@ plugins/smushit* export-ignore
 plugins/subcatwidget* export-ignore
 plugins/tidyfilter* export-ignore
 plugins/toptext* export-ignore
-plugins/ulogin* export-ignore
 plugins/usernews* export-ignore
 plugins/youtubeplayer* export-ignore

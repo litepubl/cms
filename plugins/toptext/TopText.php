@@ -8,18 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\toptext;
 
-class ttoptext extends \litepubl\core\Plugin
+use litepubl\post\Post;
+
+class TopText extends \litepubl\core\Plugin
 {
     public $text;
 
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
-    public function beforecontent(tpost $post, &$content, &$cancel)
+    public function beforeContent(Post $post, &$content, &$cancel)
     {
         $sign = '[toptext]';
         if ($i = strpos($content, $sign)) {
@@ -28,7 +25,7 @@ class ttoptext extends \litepubl\core\Plugin
         }
     }
 
-    public function aftercontent(tpost $post)
+    public function afterContent(Post $post)
     {
         if ($this->text) $post->filtered = $this->text . $post->filtered;
     }
