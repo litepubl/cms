@@ -46,7 +46,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         }
 
         $result = '';
-        $view = new View();
+        $view = $this->getView();
         $tml = $view->getItem('links', $sidebar);
         $redirlink = $this->getApp()->site->url . $this->redirlink . $this->getApp()->site->q . 'id=';
         $url = $this->getApp()->site->url;

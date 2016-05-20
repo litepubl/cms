@@ -52,7 +52,7 @@ class Meta extends Widget
     public function getContent(int $id, int $sidebar): string
     {
         $result = '';
-        $view = new View();
+        $view = $this->getView();
         $tml = $view->getItem('meta', $sidebar);
         $metaclasses = $view->getTml($sidebar, 'meta', 'classes');
         $args = new Args();

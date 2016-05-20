@@ -79,24 +79,23 @@ class tpostcatwidget extends tclasswidget
         $this->save();
     }
 
-    public function getWidget($id, $sidebar)
+    public function getWidget(int $id, int $sidebar): string
     {
         if (!isset($this->items[$id])) {
             return '';
         }
 
         $item = $this->items[$id];
-        $post = $this->getcontext('tpost');
+        $post = $this->getContext('litepubl\post\Post');
         if (0 == count(array_intersect($item['cats'], $post->categories))) {
             return '';
         }
 
-        if ($item['template'] == '') {
+        if (!$item['template']) {
             return $item['content'];
         }
 
-        $theme = Theme::i();
-        return $theme->getwidget($item['title'], $item['content'], $item['template'], $sidebar);
+        return $this->getView()->getWidget($id, $sitebar, $item['title'], $item['content'], $item['template']);
     }
 
     public function getTitle($id)

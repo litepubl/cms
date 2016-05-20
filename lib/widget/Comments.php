@@ -40,7 +40,7 @@ class Comments extends Widget
         }
 
         $result = '';
-        $view = new View();
+        $view = $this->getView();
         $tml = $view->getItem('comments', $sidebar);
         $url = $this->getApp()->site->url;
         $args = new Args();

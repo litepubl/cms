@@ -41,19 +41,19 @@ class tkeywordswidget extends twidget
         return $about['deftitle'];
     }
 
-    public function getWidget($id, $sidebar)
+    public function getWidget(int $id, int $sidebar): string
     {
         $content = $this->getcontent($id, $sidebar);
-        if ($content == '') {
+        if (!$content) {
             return '';
         }
 
         $title = $this->gettitle($id);
-        $theme = Theme::i();
-        return $theme->getwidget($title, $content, $this->template, $sidebar);
+        $view = new View();
+        return $view->getWidget($id, $sidebar, $title, $content, $this->template);
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel || Str::begin($this->getApp()->router->url, '/croncron.php') || Str::end($this->getApp()->router->url, '.xml')) {
             return '';

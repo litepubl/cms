@@ -47,7 +47,7 @@ class Archives extends Widget
         }
 
         $result = '';
-        $view = new View();
+        $view = $this->getView();
         $tml = $view->getItem('archives', $sidebar);
         if ($this->showcount) {
             $counttml = $view->getTml($sidebar, 'archives', 'subcount');

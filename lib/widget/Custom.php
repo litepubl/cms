@@ -30,12 +30,11 @@ class Custom extends Widget
         }
 
         $item = $this->items[$id];
-        if ($item['template'] == '') {
+        if (!$item['template']) {
             return $item['content'];
         }
 
-        $view = new View();
-        return $view->getWidget($item['title'], $item['content'], $item['template'], $sidebar);
+        return $this->getview()->getWidget($id, $sidebar, $item['title'], $item['content'], $item['template']);
     }
 
     public function getTitle(int $id): string

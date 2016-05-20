@@ -57,7 +57,7 @@ class Tickets extends \litepubl\post\Posts
         $post->categories = $cats;
     }
 
-    public function add(Post $post)
+    public function add(Post $post): int
     {
         $this->filterCats($post);
         $post->updateFiltered();

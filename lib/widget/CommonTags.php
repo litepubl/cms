@@ -30,7 +30,7 @@ class CommonTags extends Widget
 
     public function getContent(int $id, int $sidebar): string
     {
-        $view = new View();
+        $view = $this->getView();
         $items = $this->owner->getView()->getSorted(array(
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,

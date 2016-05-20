@@ -48,22 +48,13 @@ class View
         return str_replace('$item', $items, $this->getItems($name, $sidebar));
     }
 
-    public function getWidget($title, $content, $template, $sidebar)
-    {
-        $args = new Args();
-        $args->title = $title;
-        $args->items = $content;
-        $args->sidebar = $sidebar;
-        return $this->theme->parseArg($this->getTml($sidebar, $template, '') , $args);
-    }
-
-    public function getWidgetId($id, $title, $content, $template, $sidebar)
+    public function getWidget(int $id, int $sidebar, string $title, string $body, string $template): string
     {
         $args = new Args();
         $args->id = $id;
-        $args->title = $title;
-        $args->items = $content;
         $args->sidebar = $sidebar;
+        $args->title = $title;
+        $args->items = $body;
         return $this->theme->parseArg($this->getTml($sidebar, $template, '') , $args);
     }
 

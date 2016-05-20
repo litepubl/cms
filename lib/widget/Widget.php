@@ -67,9 +67,13 @@ public $cache;
             return '';
         }
 
-        $view = new View();
-        return $view->getWidgetId($id, $title, $content, $this->template, $sidebar);
+        return $this->getView()->getWidget($id, $sidebar, $title, $content, $this->template);
     }
+
+public function getView()
+{
+return new View();
+}
 
     public function getDefTitle(): string
     {
