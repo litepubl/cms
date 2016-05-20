@@ -15,29 +15,7 @@ use litepubl\core\litepubl;
 class Filer
 {
 
-    public static function callback($callback, $path, $subdir)
-    {
-        $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-        if ($h = opendir($path)) {
-            while (FALSE !== ($filename = readdir($h))) {
-                if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
-                    continue;
-                }
-
-                $file = $path . $filename;
-                if (is_dir($file)) {
-                    if ($subdir) static ::callback($callback, $file . DIRECTORY_SEPARATOR, $subdir);
-                } else {
-                    call_user_func_array($callback, array(
-                        $filename
-                    ));
-                }
-            }
-            closedir($h);
-        }
-    }
-
-    public static function delete($path, $subdirs, $rmdir = false)
+   public static function delete($path, $subdirs, $rmdir = false)
     {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = @opendir($path)) {
@@ -58,21 +36,10 @@ class Filer
         if ($rmdir && is_dir($path)) rmdir($path);
     }
 
-    public static function deletemask($mask)
+    public static function deleteMask($mask)
     {
         if ($list = glob($mask)) {
             foreach ($list as $filename) static ::_delete($filename);
-        }
-    }
-
-    public static function deletedirmask($path, $mask)
-    {
-        foreach (glob($path . $mask) as $filename) {
-            if (is_dir($filename)) {
-                static ::deletedirmask($filename . DIRECTORY_SEPARATOR, $mask);
-            } else {
-                static ::_delete($filename);
-            }
         }
     }
 
@@ -105,7 +72,7 @@ class Filer
         return $result;
     }
 
-    public static function forcedir($dir)
+    public static function forceDir($dir)
     {
         $dir = rtrim(str_replace('\\', '/', $dir) , '/');
         if (is_dir($dir)) {

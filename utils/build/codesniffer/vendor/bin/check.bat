@@ -1,1 +1,1 @@
-phpcbf  -s posts.php --report-file=report.txt
+phpcbf  --report-file=report.txt

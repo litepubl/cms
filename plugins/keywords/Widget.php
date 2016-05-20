@@ -8,34 +8,29 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\keywords;
 
 use litepubl\core\Plugins;
 use litepubl\core\Str;
 use litepubl\view\Theme;
 
-class tkeywordswidget extends twidget
+class Widget extends \litepubl\widget\Widget
 {
     public $links;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function create()
     {
         parent::create();
         $this->basename = 'keywords' . DIRECTORY_SEPARATOR . 'index';
         $this->cache = 'nocache';
-        $this->adminclass = 'tadminkeywords';
+        $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->data['count'] = 6;
         $this->data['notify'] = true;
         $this->data['trace'] = true;
         $this->addmap('links', array());
     }
 
-    public function getDeftitle()
+    public function getDefTitle(): string
     {
         $about = Plugins::getabout(Plugins::getname(__file__));
         return $about['deftitle'];
@@ -43,13 +38,13 @@ class tkeywordswidget extends twidget
 
     public function getWidget(int $id, int $sidebar): string
     {
-        $content = $this->getcontent($id, $sidebar);
+        $content = $this->getContent($id, $sidebar);
         if (!$content) {
             return '';
         }
 
-        $title = $this->gettitle($id);
-        $view = new View();
+        $title = $this->getTitle($id);
+        $view = $this->getView();
         return $view->getWidget($id, $sidebar, $title, $content, $this->template);
     }
 
@@ -85,8 +80,7 @@ class tkeywordswidget extends twidget
             }
         }
 
-        $theme = Theme::i();
-        return $theme->getwidgetcontent($links, $this->template, $sidebar);
+        return $this->getView()->getContent($links, $this->template, $sidebar);
     }
 
 }

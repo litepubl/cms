@@ -281,5 +281,8 @@ return array(
     'tadminsingletagwidget' => 'litepubl\singletagwidget\Admin',
 'ulogin' => 'litepubl\plugins\ulogin\Ulogin',
 'emailauth' => 'litepubl\plugins\ulogin\EmailAuth',
+
+'tkeywordswidget' => 'litepubl\keywords\Widget',
+
 );
 
