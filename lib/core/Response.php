@@ -28,7 +28,9 @@ class Response
         $this->cache = true;
         $this->protocol = '1.1';
         $this->status = 200;
-        $this->headers = ['Content-type' => 'text/html;charset=utf-8', 'Last-Modified' => date('r') ,
+        $this->headers = [
+'Content-type' => 'text/html;charset=utf-8',
+ 'Last-Modified' => date('r') ,
         //'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
         ];
     }

@@ -50,12 +50,17 @@ class Widget extends \litepubl\widget\Widget
 
     public function getContent(int $id, int $sidebar): string
     {
-        if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel || Str::begin($this->getApp()->router->url, '/croncron.php') || Str::end($this->getApp()->router->url, '.xml')) {
+$app = $this->getApp();
+        if (!isset($app->context)
+|| $app->context->request->isAdminPanel
+|| ($app->context->response->status != 200)
+|| Str::begin($app->context->request->url, '/croncron.php')
+|| ($app->context->response->headers['Content-type'] != 'text/html;charset=utf-8')) {
             return '';
         }
 
-        $id = $this->getApp()->router->item['id'];
-        $filename = $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . $this->getApp()->context->request->page . '.php';
+        $id = $app->router->item['id'];
+        $filename = $app->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . $app->context->request->page . '.php';
         if (@file_exists($filename)) {
             $links = file_get_contents($filename);
         } else {
