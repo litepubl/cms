@@ -92,7 +92,7 @@ class Posts extends \litepubl\core\Items
         foreach ($items as $a) {
             $post = Post::newPost($a['class']);
             $post->setAssoc($a);
-Post::$instances['post'][$post->id] = $post;
+$post->afterLoad();
             $result[] = $post->id;
 
             $f = $post->files;

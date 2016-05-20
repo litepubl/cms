@@ -247,14 +247,19 @@ class Data
         return $this->getStorage()->save($this);
     }
 
-    public function afterload()
+    public function afterLoad()
     {
+$this->coInstanceCall('afterLoad', []);
+    }
+
+    public function coInstanceCall(string $method, array $args)
+{
         foreach ($this->coinstances as $coinstance) {
-            if (method_exists($coinstance, 'afterload')) {
-                $coinstance->afterload();
+            if (method_exists($coinstance, $method)) {
+call_user_func_array([$coinstance, $method], $args);
             }
         }
-    }
+}
 
     public function lock()
     {

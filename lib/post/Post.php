@@ -32,7 +32,7 @@ class Post extends \litepubl\core\Item
             if (isset(static ::$instances['post'][$id])) {
                 $result = static ::$instances['post'][$id];
             } else if ($result = static ::loadPost($id)) {
-                static ::$instances['post'][$id] = $result;
+                // nothing: set $instances in afterLoad method
             } else {
                 $result = null;
             }
@@ -55,6 +55,7 @@ class Post extends \litepubl\core\Item
 unset($self->childData['id']);
             }
 
+$self->afterLoad();
             return $self;
         }
 
@@ -165,14 +166,7 @@ $this->cacheData = [
 
 
         $this->factory = $this->getfactory();
-        /*
-        $posts = $this->factory->posts;
-        foreach ($posts->itemcoclasses as $class) {
-            $coinstance =  $this->getApp()->classes->newinstance($class);
-            $coinstance->post = $this;
-            $this->coinstances[] = $coinstance;
-        }
-        */
+$this->factory->createCoInstances($this);
     }
 
     public function getFactory()
@@ -239,14 +233,14 @@ $this->cacheData = [
 
     public function load()
     {
-        if ($result = $this->loadFromDB()) {
-            foreach ($this->coinstances as $coinstance) {
-                $coinstance->load();
-            }
-        }
-        return $result;
-    }
+return true;
+}
 
+public function afterLoad()
+{
+static::$instances['post'][$this->id] = $this;
+parent::afterLoad();
+}
 
     public function setAssoc(array $a)
     {
@@ -272,9 +266,7 @@ $this->cacheData = [
 
         $this->saveToDB();
 
-        foreach ($this->coinstances as $coinstance) {
-            $coinstance->save();
-        }
+            $this->coInstanceCall('save()', []);
     }
 
     protected function saveToDB()
@@ -364,9 +356,8 @@ $this->cacheData = [
 
     public function free()
     {
-        foreach ($this->coinstances as $coinstance) {
-            $coinstance->free();
-        }
+            $this->coInstanceCall('free', []);
+
         if (isset($this->metaInstance)) {
             $this->metaInstance->free();
         }
