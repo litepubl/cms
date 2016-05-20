@@ -190,7 +190,7 @@ $post->afterLoad();
         }
     }
 
-    public function add(Post $post)
+    public function add(Post $post): int
     {
         $this->beforeChange($post);
         if (!$post->posted) {
@@ -218,7 +218,7 @@ $post->afterLoad();
         $id = $post->add();
 
         $this->updated($post);
-        $this->cointerface('add', $post);
+        $this->coInstanceCall('add', [$post]);
         $this->added($id);
         $this->changed();
         $this->getApp()->cache->clear();
@@ -243,7 +243,7 @@ $post->afterLoad();
         $this->lock();
         $post->save();
         $this->updated($post);
-        $this->cointerface('edit', $post);
+        $this->coInstanceCall('edit', [$post]);
         $this->unlock();
         $this->edited($post->id);
         $this->changed();
@@ -266,7 +266,7 @@ $post->afterLoad();
         $this->lock();
         $this->PublishFuture();
         $this->UpdateArchives();
-        $this->cointerface('delete', $id);
+        $this->coInstanceCall('delete', [$id]);
         $this->unlock();
         $this->deleted($id);
         $this->changed();
@@ -348,16 +348,6 @@ $post->afterLoad();
         $list = implode(', ', $items);
         $t = $this->thistable;
         return $this->db->idSelect("$t.status = 'published' and $t.id in ($list)");
-    }
-
-    //coclasses
-    private function coInterface($method, $arg)
-    {
-        foreach ($this->coinstances as $coinstance) {
-            if ($coinstance instanceof ipost) {
-                $coinstance->$method($arg);
-            }
-        }
     }
 
     public function addRevision()

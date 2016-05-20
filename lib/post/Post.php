@@ -266,25 +266,26 @@ parent::afterLoad();
 
         $this->saveToDB();
 
-            $this->coInstanceCall('save()', []);
+            $this->coInstanceCall('save', []);
     }
 
     protected function saveToDB()
     {
-        if ($this->id) {
+        if (!$this->id) {
+return $this->add();
+}
+
             $this->db->updateAssoc($this->data);
 
             $this->modified = time();
             $this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
-        } else {
-        }
 
         if ($this->childTable) {
             $this->getDB($this->childTable)->setValues($this->id, $this->childData);
         }
     }
 
-    public function add()
+    public function add(): int
     {
         $a = $this->data;
         unset($a['id']);
@@ -295,8 +296,8 @@ parent::afterLoad();
         $this->getDB($this->rawTable)->insert($rawData);
 
         $this->setId($id);
-
         $this->savePages();
+
         if ($this->childTable) {
             $childData = $this->childData;
             $childData['id'] = $id;
@@ -306,6 +307,7 @@ parent::afterLoad();
         $this->idurl = $this->createUrl();
         $this->db->setValue($id, 'idurl', $this->idurl);
 
+            $this->coInstanceCall('add', []);
         $this->onId();
         return $id;
     }
