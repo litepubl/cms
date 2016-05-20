@@ -8,19 +8,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\Keywords;
 
 use litepubl\core\Str;
 use litepubl\view\Lang;
+use litepubl\utils\Filer;
+use litepubl\utils\Mailer;
 
-class tkeywordsplugin extends \litepubl\core\Plugin
+class Keywords extends \litepubl\core\Plugin
 {
     public $blackwords;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function create()
     {
@@ -28,12 +25,12 @@ class tkeywordsplugin extends \litepubl\core\Plugin
         $this->addmap('blackwords', array());
     }
 
-    public function urldeleted($id)
+    public function urlDeleted(int $id)
     {
-        tfiler::deletemask($this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $item['id'] . ".*.php");
+        Filer::deleteMask($this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $item['id'] . ".*.php");
     }
 
-    public function parseref($url)
+    public function parseRef(string $url)
     {
         if (Str::begin($url, '/admin/') || Str::begin($url, '/croncron.php')) {
             return;
@@ -127,22 +124,22 @@ class tkeywordsplugin extends \litepubl\core\Plugin
         $widget->save();
     }
 
-    private function hasru($s)
+    private function hasRu($s)
     {
         return preg_match('/[à-ÿÀ-ß]{1,}/', $s);
     }
 
-    public function added($filename, $content)
+    public function added(string $filename, string $content)
     {
         $filename = basename($filename);
         $site = $this->getApp()->site;
         $subject = "[$site->name] new keywords added";
         $body = "The new widget has been added on\n$site->url{$_SERVER['REQUEST_URI']}\n\nWidget content:\n\n$content\n\nYou can edit this links at:\n$site->url/admin/plugins/{$site->q}plugin=keywords&filename=$filename\n";
 
-        tmailer::sendmail($site->name, $this->getApp()->options->fromemail, 'admin', $this->getApp()->options->email, $subject, $body);
+        Mailer::sendMail($site->name, $this->getApp()->options->fromemail, 'admin', $this->getApp()->options->email, $subject, $body);
     }
 
-    public function inblack($s)
+    public function inBlack($s)
     {
         if ($this->getApp()->options->language != 'en') {
             Lang::usefile('translit');

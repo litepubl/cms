@@ -8,9 +8,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\keywords;
 
-function tkeywordspluginInstall($self)
+function KeywordsInstall($self)
 {
     @mkdir($self->getApp()->paths->data . 'keywords', 0777);
     @chmod($self->getApp()->paths->data . 'keywords', 0777);
@@ -18,8 +18,8 @@ function tkeywordspluginInstall($self)
     $item = $self->getApp()->classes->items[get_class($self) ];
     $self->getApp()->classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
 
-    $widget = tkeywordswidget::i();
-    $widgets = twidgets::i();
+    $widget = Widget::i();
+    $widgets = Widgets::i();
     $widgets->lock();
     $id = $widgets->add($widget);
     $sidebars = tsidebars::i();
@@ -33,13 +33,12 @@ function tkeywordspluginInstall($self)
     $router->unlock();
 }
 
-function tkeywordspluginUninstall($self)
+function KeywordsUninstall($self)
 {
     $self->getApp()->router->unbind($self);
     $widgets = twidgets::i();
     $widgets->deleteclass('tkeywordswidget');
     $self->getApp()->classes->delete('tkeywordswidget');
-    //TFiler::DeleteFiles( $self->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR  , true);
-    
+  
 }
 

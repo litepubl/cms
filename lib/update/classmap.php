@@ -283,6 +283,7 @@ return array(
 'emailauth' => 'litepubl\plugins\ulogin\EmailAuth',
 
 'tkeywordswidget' => 'litepubl\keywords\Widget',
+'tkeywordsplugin' => 'litepubl\plugins\keywords\Keywords',
 
 );
 
