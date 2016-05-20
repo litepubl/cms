@@ -8,17 +8,19 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\subcat;
 
-function tsubcatwidgetInstall($self)
+use litepubl\widget\Widgets;
+
+function WidgetInstall($self)
 {
-    $widgets = twidgets::i();
-    $widgets->deleted = $self->widgetdeleted;
+    $widgets = Widgets::i();
+    $widgets->deleted = $self->widgetDeleted;
 
-    $self->tags->deleted = $self->tagdeleted;
+    $self->tags->deleted = $self->tagDeleted;
 }
 
-function tsubcatwidgetUninstall($self)
+function WidgetUninstall($self)
 {
     $self->tags->unbind($self);
 }

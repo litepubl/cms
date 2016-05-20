@@ -133,7 +133,5 @@ plugins/simpleimporter* export-ignore
 plugins/smiles* export-ignore
 plugins/smushit* export-ignore
 plugins/subcatwidget* export-ignore
-plugins/tidyfilter* export-ignore
-plugins/toptext* export-ignore
 plugins/usernews* export-ignore
 plugins/youtubeplayer* export-ignore

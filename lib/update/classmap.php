@@ -276,6 +276,8 @@ return array(
     'tclearcache' => 'litepubl\plugins\clearcache\ClearCache',
     'lowvision' => 'litepubl\plugins\lowvision\LowVision',
     'tsingletagwidget' => 'litepubl\plugins\singletagwidget\Widget',
+'tsubcatwidget' => 'litepubl\plugins\subcat\Widget',
+
     'tadminsingletagwidget' => 'litepubl\singletagwidget\Admin',
 'ulogin' => 'litepubl\plugins\ulogin\Ulogin',
 'emailauth' => 'litepubl\plugins\ulogin\EmailAuth',

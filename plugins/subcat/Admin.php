@@ -8,34 +8,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\subcat;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-use litepubl\view\Lang;
-
-class tadminsubcatwidget extends tadminwidget
+class Admin extends \litepubl\admin\widget\Widget
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $widget = tsubcatwidget::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $html = $this->html;
-        $args = new Args();
-        $id = (int)$this->getparam('idwidget', 0);
+        $widget = Widget::i();
+        $lang = $this->getlangAbout();
+        $args = $this->args;
+        $id = (int)$this->getParam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $args->add($widget->items[$id]);
-            $args->sort = $this->theme->comboItems(Lang::admin()->ini['sortnametags'], $widget->items[$id]['sortname']);
+            $args->sort = $this->theme->comboItems($lang->ini['sortnametags'], $widget->items[$id]['sortname']);
             $args->idwidget = $id;
-            $args->data['$lang.invertorder'] = $about['invertorder'];
-            $args->formtitle = $widget->gettitle($id);
-            return $html->adminform('
+            $args->formtitle = $widget->getTitle($id);
+            return $this->admin->form('
       [combo=sort]
       [checkbox=showsubitems]
       [checkbox=showcount]
@@ -46,13 +35,13 @@ class tadminsubcatwidget extends tadminwidget
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }
-        $args->formtitle = $about['formtitle'];
-        return $html->adminform(admintheme::i()->getcats($tags) , $args);
+        $args->formtitle = $lang->formtitle;
+        return $this->admin->form($this->admin->getCats($tags), $args);
     }
 
     public function processForm()
     {
-        $widget = tsubcatwidget::i();
+        $widget = Widget::i();
         $id = (int)$this->getparam('idwidget', 0);
         if (isset($widget->items[$id])) {
             $item = $widget->items[$id];
@@ -70,7 +59,7 @@ class tadminsubcatwidget extends tadminwidget
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }
-        $list = admintheme::i()->processcategories();
+        $list = $this->admin->processCategories();
         $add = array_diff($list, $tags);
         $delete = array_diff($tags, $list);
         if ((count($add) == 0) && (count($delete) == 0)) {
@@ -79,12 +68,13 @@ class tadminsubcatwidget extends tadminwidget
 
         $widget->lock();
         foreach ($delete as $idtag) {
-            $widget->tagdeleted($idtag);
+            $widget->tagDeleted($idtag);
         }
 
         foreach ($add as $idtag) {
             $widget->add($idtag);
         }
+
         $widget->unlock();
     }
 

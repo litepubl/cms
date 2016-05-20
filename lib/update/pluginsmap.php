@@ -13,6 +13,6 @@ return [
  'bootstrap-theme' => 'bootstrap',
  'photoswipe-thumbnail' => 'photoswipeThumbnail',
 'postcatwidget' => 'postwidget',
-
+'subcatwidget' => 'subcat',
  ];
 
