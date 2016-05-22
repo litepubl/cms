@@ -62,7 +62,11 @@ include (dirname(__DIR__) . '/core/AppTrait.php');
 include (dirname(__DIR__) . '/core/Storage.php');
 include (dirname(__DIR__) . '/core/StorageInc.php');
 
-$self = new static(new Storage(), new StorageInc());
+$self = new static(
+ new StorageInc(),
+new Storage()
+);
+
 $self->switch(dirname(dirname(__DIR__)) . '/storage/data');
 }
 }

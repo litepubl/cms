@@ -114,11 +114,12 @@ class Events extends Data
 
     public function __call($name, $params)
     {
-        if (in_array($name, $this->eventnames)) {
-            return $this->callevent($name, $params);
+$eventName = strtolower($name);
+        if (in_array($eventName , $this->eventnames)) {
+            return $this->callEvent($eventName , $params);
         }
 
-        parent::__call($name, $params);
+        return parent::__call($name, $params);
     }
 
     public function __isset($name)
@@ -129,7 +130,9 @@ class Events extends Data
     protected function addEvents()
     {
         $a = func_get_args();
-        array_splice($this->eventnames, count($this->eventnames) , 0, $a);
+foreach ($a as $name) {
+$this->eventnames[] = strtolower($name);
+}
     }
 
     public function callEvent($name, $params)

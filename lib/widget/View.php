@@ -104,22 +104,22 @@ class View
     {
         $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'ajaxwidget');
         $content = "<!--widgetcontent-$id-->";
-        return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
+        return $this->getWidget($id, $sidebar, $title, $content, $item['template']);
     }
 
     public function getInline(int $id, int $sidebar,  array $item, string $content): string
     {
         $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'inlinewidget');
         $content = sprintf('<!--%s-->', $content);
-        return $this->getWidgetId($id, $title, $content, $item['template'], $sidebar);
+        return $this->getWidget($id, $sidebar, $title, $content, $item['template']);
     }
 
     public function getInclude(int $id, int $sidebar, array $item): string
     {
 $content = sprintf('<?php echo %s\Cache::i()->getInclude(%d, %d); ?>', __NAMESPACE__, $id, $sidebar);
-        return $this->getWidgetId($id, $item['title'],
+        return $this->getWidget($id, $sidebar, $item['title'],
  $content,
- $item['template'], $sidebar);
+ $item['template']);
     }
 
     public function getCode(int $id, int $sidebar, array $item): string

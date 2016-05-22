@@ -56,7 +56,6 @@ $app->options->parsepost = false;
     $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->childTables[] = 'tickets';
-    $optimizer->addevent('postsdeleted', 'ttickets', 'postsdeleted');
     $optimizer->unlock();
 
     //install polls if its needed
