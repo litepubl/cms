@@ -15,30 +15,19 @@ function KeywordsInstall($self)
     @mkdir($self->getApp()->paths->data . 'keywords', 0777);
     @chmod($self->getApp()->paths->data . 'keywords', 0777);
 
-    $item = $self->getApp()->classes->items[get_class($self) ];
-    $self->getApp()->classes->add('tkeywordswidget', 'keywords.widget.php', $item[1]);
-
     $widget = Widget::i();
-    $widgets = Widgets::i();
-    $widgets->lock();
-    $id = $widgets->add($widget);
-    $sidebars = tsidebars::i();
-    $sidebars->insert($id, false, 1, -1);
-    $widgets->unlock();
+$widget->addToSidebar(1);
 
-    $router = \litepubl\core\Router::i();
+    $router = $self->getApp()->router;
     $router->lock();
     $router->afterrequest = $self->parseref;
-    $router->deleted = $self->urldeleted;
+    $router->deleted = $self->urlDeleted;
     $router->unlock();
 }
 
 function KeywordsUninstall($self)
 {
     $self->getApp()->router->unbind($self);
-    $widgets = twidgets::i();
-    $widgets->deleteclass('tkeywordswidget');
-    $self->getApp()->classes->delete('tkeywordswidget');
-  
+    $widget = Widget::i();
+$widget->uninstall();
 }
-

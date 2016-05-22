@@ -1,6 +1,6 @@
 <?php
 
-namespace litepubl\utils;
+namespace litepubl\updater;
 
 use litepubl\core\Storage;
 use litepubl\core\StorageInc;

@@ -100,8 +100,9 @@ class Events extends Data
             return true;
         }
 
-        if (in_array($name, $this->eventnames)) {
-            $this->addevent($name, $value[0], $value[1]);
+$eventName = strtolower($name);
+        if (in_array($eventName , $this->eventnames)) {
+            $this->addEvent($eventName , $value[0], $value[1]);
             return true;
         }
         $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
@@ -194,7 +195,7 @@ $this->eventnames[] = strtolower($name);
 
     public function setEvent($name, $params)
     {
-        return $this->addevent($name, $params['class'], $params['func']);
+        return $this->addEvent($name, $params['class'], $params['func']);
     }
 
     public function addEvent($name, $class, $func, $once = false)
@@ -217,7 +218,7 @@ $this->eventnames[] = strtolower($name);
 
         //check if event already added
         foreach ($this->events[$name] as $event) {
-            if (isset($event[0]) && $event[0] == $class && $event[1] == $func) {
+            if (isset($event[0]) && strtolower($event[0]) == strtolower($class ) && strtolower($event[1]) == strtolower($func)) {
                 return false;
                 //backward compability
                 

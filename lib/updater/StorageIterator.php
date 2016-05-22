@@ -1,6 +1,6 @@
 <?php
 
-namespace litepubl\utils;
+namespace litepubl\updater;
 
 use litepubl\core\Storage;
 use litepubl\core\StorageInc;
@@ -8,15 +8,16 @@ use litepubl\core\StorageInc;
 class StorageIterator 
 {
 private $callback;
-public $storage;
+private $storage;
 
-public function __construct($callback)
+public function __construct(Storage $storage, $callback)
 {
 if (!is_callable($callback)) {
 throw new \UnexpectedValueException('No callback');
 }
 
 $this->callback = $callback;
+$this->storage = $storage;
 }
 
 public function dir(string $dir)
@@ -53,26 +54,15 @@ $this->storage->saveData($filename, $std->data);
 
 public static function run($callback)
 {
-include (dirname(__DIR__) . '/core/AppTrait.php');
-include (dirname(__DIR__) . '/core/Storage.php');
-include (dirname(__DIR__) . '/core/StorageInc.php');
+include_once (dirname(__DIR__) . '/core/AppTrait.php');
+include_once (dirname(__DIR__) . '/core/Storage.php');
+include_once (dirname(__DIR__) . '/core/StorageInc.php');
 
-$self = new static($callback);
-$self->storage = new StorageInc();
+$self = new static(
+new StorageInc(),
+$callback);
+
 $self->dir(dirname(dirname(__DIR__)) . '/storage/data/');
 }
-}
 
-
-StorageIterator::run(function(\StdClass $std) {
-if (isset($std->data['events']) && count($std->data['events'])) {
-foreach ($std->data['events'] as $name => $events) {
-unset($std->data['events'][$name]);
-$name = strtolower($name);
-$std->data['events'][$name] = $events;
-echo "$name\n";
 }
-
-return true;
-}
-});

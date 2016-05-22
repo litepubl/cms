@@ -78,13 +78,16 @@ $this->garbagePosts($table);
         }
 
         //comments
-$db->query(
-"update $db->comments set $db->comments.status = 'deleted' where $db->comments.id in
-(select $db->comments.id FROM $db->comments
+$items = $db->res2id($db->query(
+"select $db->comments.id FROM $db->comments
     LEFT JOIN $db->posts ON $db->comments.post = $db->posts.id
-    WHERE $db->posts.id IS NULL)"
-);
+    WHERE $db->posts.id IS NULL"
+));
 
+if (count($items)) {
+$db->query("update $db->comments set $db->comments.status = 'deleted' where $db->comments.id in ("
+ . implode(',', $items) . ')');
+}
 
         $db->table = 'comments';
         $items = $db->idSelect("status = 'deleted'");

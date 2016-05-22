@@ -44,8 +44,7 @@ class Widget extends \litepubl\widget\Widget
         }
 
         $title = $this->getTitle($id);
-        $view = $this->getView();
-        return $view->getWidget($id, $sidebar, $title, $content, $this->template);
+        return $this->getView()->getWidget($id, $sidebar, $title, $content, $this->template);
     }
 
     public function getContent(int $id, int $sidebar): string
@@ -59,9 +58,9 @@ $app = $this->getApp();
             return '';
         }
 
-        $id = $app->router->item['id'];
+        $id = $app->context->itemRoute['id'];
         $filename = $app->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $id . '.' . $app->context->request->page . '.php';
-        if (@file_exists($filename)) {
+        if (file_exists($filename)) {
             $links = file_get_contents($filename);
         } else {
             if (count($this->links) < $this->count) {
@@ -71,16 +70,16 @@ $app = $this->getApp();
             $arlinks = array_splice($this->links, 0, $this->count);
             $this->save();
 
-            //$links = "\n<li>" . implode("</li>\n<li>", $arlinks)  . "</li>";
             $links = '';
             $text = '';
             foreach ($arlinks as $link) {
                 $links.= sprintf('<li><a href="%s">%s</a></li>', $link['url'], $link['text']);
                 $text.= $link['text'] . "\n";
             }
+
             file_put_contents($filename, $links);
             if ($this->notify) {
-                $plugin = tkeywordsplugin::i();
+                $plugin = Keywords::i();
                 $plugin->added($filename, $text);
             }
         }
