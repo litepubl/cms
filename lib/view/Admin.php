@@ -161,7 +161,7 @@ class Admin extends Base
         return str_replace('$text', $text, $this->templates['success']);
     }
 
-    public function getCount($from, $to, $count)
+    public function getCount(int $from, int $to, int $count): string
     {
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }

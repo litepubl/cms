@@ -10,88 +10,89 @@
 
 namespace litepubl;
 
-use litepubl\core\Plugins;
 use litepubl\core\Str;
-use litepubl\view\Args;
+use litepubl\widget\Widgets;
+use litepubl\utils\Filer;
 use litepubl\view\Lang;
+use litepubl\admin\Form;
 
-class tadminkeywords extends tadminwidget
+class Admin extends \litepubl\admin\widget\Widget
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
         $datadir = $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
-        $selfdir = dirname(__file__) . DIRECTORY_SEPARATOR;
-        $tml = parse_ini_file($selfdir . 'keywords.templates.ini', false);
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $html = $this->html;
-        $lang = $this->lang;
-        $args = new Args();
+        $selfdir = __DIR__ . DIRECTORY_SEPARATOR;
+$admin = $this->admin;
+        $lang = $this->getLangAbout();
+        $args = $this->args;
         if (isset($_GET['filename'])) {
             $filename = $_GET['filename'];
             if (!@file_exists($datadir . $filename)) {
-                return $html->h3->notfound;
+                return $admin->geterr($lang->notfound);
             }
 
             $args->filename = $filename;
             $args->content = file_get_contents($datadir . $filename);
-            $args->formtitle = $about['edithead'];
-            return $html->adminform('[editor=content]', $args);
+            $args->formtitle = $lang->edithead;
+            return $admin->form('
+[editor=content]
+', $args);
         }
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $result = '';
         if ($page == 1) {
-            $widget = tkeywordswidget::i();
-            $widgets = twidgets::i();
+            $widget = Widget::i();
+            $widgets = Widgets::i();
             $idwidget = $widgets->find($widget);
             $args->count = $widget->count;
             $args->trace = $widget->trace;
             $args->notify = $widget->notify;
             $args->optionsform = 1;
             $args->title = $widget->gettitle($idwidget);
-            $args->blackwords = tadminhtml::specchars(implode("\n", tkeywordsplugin::i()->blackwords));
-            $lang = Plugins::getlangabout(__file__);
-            $args->formtitle = $about['name'];
-            $result.= $html->adminform('[text=title]
+            $args->blackwords = $admin->quote(implode("\n", tkeywordsplugin::i()->blackwords));
+            $args->formtitle = $lang->name;
+            $result.= $admin->form('
+[text=title]
       [text=count]
       [checkbox=trace]
       [checkbox=notify]
       [editor=blackwords]
-      [hidden=optionsform]', $args);
+      [hidden=optionsform]
+', $args);
         }
 
         $from = 100 * ($page - 1);
-        $filelist = tfiler::getfiles($datadir);
+        $filelist = Filer::getFiles($datadir);
         sort($filelist);
-        $count = ceil(count($filelist) / 100);
-        $links = $this->getlinkpages($page, $count);
-        $result.= $links;
+$count = count($filelist);
+        $pages = ceil($count / 100);
         $filelist = array_slice($filelist, $from, 100, true);
-        $list = '';
         $args->url = $this->getApp()->site->url . '/admin/plugins/' . $this->getApp()->site->q . 'plugin=' . basename(dirname(__file__));
+
+$form = new Form($this->args);
+$form->body = $admin->getCount($from, $from + count($filelist), $count);
+
         foreach ($filelist as $filename) {
             if (!preg_match('/^\d+?\.\d+?\.php$/', $filename)) {
                 continue;
             }
 
             $args->filename = $filename;
-            $args->content = file_get_contents($datadir . $filename);
-            $list.= $html->parseArg($tml['item'], $args);
+$form->body .= 
+$form->body .= sprintf('<ul>%s</ul>', file_get_contents($datadir . $filename));
         }
 
-        $args->list = $list;
-        $result.= $html->parseArg($tml['form'], $args);
+        $links = $this->getLinkPages($page, $pages);
+        $result.= $links;
+$form->submit = 'delete';
+        $result.= $form->get();
         $result.= $links;
         return $result;
     }
 
-    private function getLinkpages($page, $count)
+    private function getLinkPages($page, $count)
     {
         $url = $this->getApp()->site->url . '/admin/plugins/' . $this->getApp()->site->q . 'plugin=' . basename(dirname(__file__));
         $result = "<a href='$url'>1</a>\n";
@@ -106,12 +107,12 @@ class tadminkeywords extends tadminwidget
         $datadir = $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         if (isset($_POST['optionsform'])) {
             extract($_POST, EXTR_SKIP);
-            $plugin = tkeywordsplugin::i();
-            $widget = tkeywordswidget::i();
-            $widgets = twidgets::i();
+            $plugin = Keywords::i();
+            $widget = Widget::i();
+            $widgets = Widgets::i();
             $idwidget = $widgets->find($widget);
             $widget->lock();
-            $widget->settitle($idwidget, $title);
+            $widget->setTitle($idwidget, $title);
             $widget->count = (int)$count;
             $widget->notify = isset($notify);
             $trace = isset($trace);
