@@ -16,4 +16,12 @@ use litepubl\core\litepubl;
 function update700()
 {
     litepubl::$app->site->jquery_version = '1.12.4';
+
+if (count(litepubl::$app->classes->items)) {
+include (__DIR__ . '/updateEvents.php');
+updateEvents();
+
+include (__DIR__ . '/updatePlugins.php');
+updatePlugins();
+}
 }

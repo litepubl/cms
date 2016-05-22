@@ -42,11 +42,23 @@ public function process(string $filename)
 {
 $ext = $this->storage->getExt();
 if (substr($filename, 0 - strlen($ext)) == $ext) {
-$filename = substr($filename, 0, strlen($filename) - strlen($ext));
+$basefile = substr($filename, 0, strlen($filename) - strlen($ext));
 $std = new \StdClass();
-if ($std->data = $this->storage->loadData($filename)) {
+if ($std->data = $this->storage->loadData($basefile)) {
+//poolStorage
+if (basename($basefile) == 'storage') {
+$sub = new \StdClass();
+foreach ($std->data as $name => $data) {
+$sub->data = $data;
+call_user_func_array($this->callback, [$sub]));
+$std->data[$name] = $sub->data;
+}
+
+$this->storage->saveData($basefile, $std->data);
+} else {
 if (call_user_func_array($this->callback, [$std])) {
-$this->storage->saveData($filename, $std->data);
+$this->storage->saveData($basefile, $std->data);
+}
 }
 }
 }
