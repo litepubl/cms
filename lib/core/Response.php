@@ -103,6 +103,8 @@ class Response
             */
         } elseif (is_callable($this->body)) {
             call_user_func_array($this->body, [$this]);
+//free resource in callable
+$this->body = null;
         }
     }
 

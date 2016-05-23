@@ -286,5 +286,7 @@ return array(
 'tkeywordsplugin' => 'litepubl\plugins\keywords\Keywords',
 
 'tgoogleanalitic' => 'litepubl\plugins\googleanalitic\Plugin',
+'imgresize' => 'litepubl\plugins\imgresize\Plugin',
+'nautilus_font' => 'litepubl\plugins\nautilus\Plugin',
 );
 

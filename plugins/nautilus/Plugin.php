@@ -8,18 +8,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\nautilus;
 
 use litepubl\view\Css;
 use litepubl\view\Js;
 
-class nautilus_font extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function install()
     {
