@@ -8,24 +8,33 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\smiles;
 
 use litepubl\view\Filter;
+use litepubl\post\Posts;
+use litepubl\view\Admin;
+use litepubl\core\Plugins;
 
-function tsmilesInstall($self)
+function PluginInstall($self)
 {
+$admin = Admin::admin();
+$about = Plugins::getAbout(basename(__DIR__));
+$self->data['smile'] = $admin->getIcon('smile-o', $about['smile']);
+$self->data['sad'] = $admin->getIcon('frown-o', $about['sad']);
+$self->save();
+
     $filter = Filter::i();
     $filter->lock();
     $filter->onsimplefilter = $self->filter;
     $filter->oncomment = $self->filter;
     $filter->unlock();
 
-    tposts::i()->addrevision();
+    Posts::i()->addRevision();
 }
 
-function tsmilesUninstall($self)
+function PluginUninstall($self)
 {
     Filter::i()->unbind($self);
-    tposts::i()->addrevision();
+    Posts::i()->addRevision();
 }
 

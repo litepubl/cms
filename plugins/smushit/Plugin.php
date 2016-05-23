@@ -8,41 +8,38 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\smushit;
 
 use litepubl\core\Str;
+use litepubl\post\MediaParser;
+use litepubl\post\Files;
+use litepubl\utils\Http;
 
-class tsmushitplugin extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function install()
     {
-
-        $parser = tmediaparser::i();
-        $parser->added = $this->fileadded;
+        $parser = MediaParser::i();
+        $parser->added = $this->fileAdded;
     }
 
     public function uninstall()
     {
-        $parser = tmediaparser::i();
+        $parser = MediaParser::i();
         $parser->unbind($this);
     }
 
-    public function fileadded($id)
+    public function fileAdded($id)
     {
-        $files = tfiles::i();
-        $item = $files->getitem($id);
+        $files = Files::i();
+        $item = $files->getItem($id);
         if ('image' != $item['media']) {
             return;
         }
 
-        $fileurl = $files->geturl($id);
-        if ($s = http::get('http://www.smushit.com/ysmush.it/ws.php?img=' . urlencode($fileurl))) {
+        $fileurl = $files->getUrl($id);
+        if ($s = Http::get('http://www.smushit.com/ysmush.it/ws.php?img=' . urlencode($fileurl))) {
             $json = json_decode($s);
             if (isset($json->error) || (-1 === (int)$json->dest_size) || !$json->dest) {
                 return;
@@ -55,8 +52,8 @@ class tsmushitplugin extends \litepubl\core\Plugin
 
             $dest = urldecode($json->dest);
             if (!Str::begin($dest, 'http')) $dest = 'http://www.smushit.com/' . $dest;
-            if ($content = http::get($dest)) {
-                return $files->setcontent($id, $content);
+            if ($content = Http::get($dest)) {
+                return $files->setContent($id, $content);
             }
         }
     }

@@ -168,7 +168,8 @@ class Admin extends Base
 
     public function getIcon($name, $screenreader = false)
     {
-        return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
+        return str_replace('$name', $name, $this->templates['icon'])
+ . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
     public function getSection($title, $content)

@@ -288,5 +288,7 @@ return array(
 'tgoogleanalitic' => 'litepubl\plugins\googleanalitic\Plugin',
 'imgresize' => 'litepubl\plugins\imgresize\Plugin',
 'nautilus_font' => 'litepubl\plugins\nautilus\Plugin',
+'tsmushitplugin' => 'litepubl\plugins\smushit\Plugin',
+'tsmiles' => 'litepubl\plugins\smiles\Plugin',
 );
 

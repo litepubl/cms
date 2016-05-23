@@ -127,7 +127,5 @@ plugins/sape* export-ignore
 plugins/shortcode* export-ignore
 plugins/singlecat\* export-ignore
 plugins/simpleimporter* export-ignore
-plugins/smiles* export-ignore
-plugins/smushit* export-ignore
 plugins/usernews* export-ignore
 plugins/youtubeplayer* export-ignore
