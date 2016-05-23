@@ -291,5 +291,7 @@ return array(
 'tsmushitplugin' => 'litepubl\plugins\smushit\Plugin',
 'tsmiles' => 'litepubl\plugins\smiles\Plugin',
 'tmarkdownplugin' => 'litepubl\plugins\markdown\Plugin',
+'tmetatags' => 'litepubl\plugins\metatags\Plugin',
+
 );
 

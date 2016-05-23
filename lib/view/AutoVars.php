@@ -20,7 +20,18 @@ class AutoVars extends \litepubl\core\Items
     {
         parent::create();
         $this->basename = 'autovars';
-        $this->defaults = ['post' => '\litepubl\post\Post', 'files' => '\litepubl\post\Files', 'archives' => '\litepubl\post\Archives', 'categories' => '\litepubl\tag\Cats', 'cats' => '\litepubl\tag\Cats', 'tags' => '\litepubl\tag\Tags', 'home' => '\litepubl\pages\Home', 'template' => '\litepubl\view\MainView', 'comments' => '\litepubl\comments\Comments', 'menu' => '\litepubl\pages\Menu', ];
+        $this->defaults = [
+'post' => '\litepubl\post\Post',
+ 'files' => '\litepubl\post\Files',
+ 'archives' => '\litepubl\post\Archives',
+ 'categories' => '\litepubl\tag\Cats',
+ 'cats' => '\litepubl\tag\Cats',
+ 'tags' => '\litepubl\tag\Tags',
+ 'home' => '\litepubl\pages\Home',
+ 'template' => 'litepubl\view\MainView',
+ 'comments' => 'litepubl\comments\Comments',
+ 'menu' => 'litepubl\pages\Menu',
+ ];
     }
 
     public function get($name)

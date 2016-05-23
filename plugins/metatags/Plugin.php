@@ -8,20 +8,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\metatags;
 
-use litepubl\view\Filter;
+use litepubl\post\Post;
+use litepubl\post\Posts;
+use litepubl\view\Theme;
+use litepubl\tag\View as CatView;
 use litepubl\view\MainView;
 
-class tmetatags extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
 
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
-    public function themeparsed(ttheme $theme)
+    public function themeParsed(Theme $theme)
     {
         $theme->templates['index'] = strtr($theme->templates['index'], array(
             '$template.keywords' => '$metatags.keywords',
@@ -31,17 +29,21 @@ class tmetatags extends \litepubl\core\Plugin
 
     public function getList()
     {
-        $context = MainView::i()->context;
-        if ($context instanceof tcommontags) {
-            $list = $context->getidposts($context->id);
-        } elseif (isset($context) && isset($context->idposts)) {
-            $list = $context->idposts;
+        $context = $this->getApp()->context;
+if (!$context) {
+return false;
+}
+
+        if ($context->view instanceof CatView) {
+            $list = $context->view->getIdPosts($context->id);
+        } elseif (isset($context->view->idposts)) {
+            $list = $context->view->idposts;
         } else {
             return false;
         }
 
-        if (count($list) > 0) {
-            tposts::i()->loaditems($list);
+        if (count($list)) {
+            Posts::i()->loadItems($list);
             return array_slice($list, 0, 3);
         }
 
@@ -53,11 +55,12 @@ class tmetatags extends \litepubl\core\Plugin
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {
-                $post = tpost::i($id);
+                $post = Post::i($id);
                 $result.= $post->keywords . ', ';
             }
             return trim($result, ', ');
         }
+
         return MainView::i()->getkeywords();
     }
 
@@ -66,11 +69,10 @@ class tmetatags extends \litepubl\core\Plugin
         if ($list = $this->getlist()) {
             $result = '';
             foreach ($list as $id) {
-                $post = tpost::i($id);
+                $post = Post::i($id);
                 $result.= $post->title . ' ';
                 if (strlen($result) > 250) break;
             }
-            //return Filter::getexcerpt($result, 300);
             return $result;
         }
         return MainView::i()->getdescription();

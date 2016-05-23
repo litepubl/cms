@@ -8,16 +8,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\metatags;
 
+use litepubl\view\AutoVars;
 use litepubl\view\Base;
 use litepubl\view\MainView;
 use litepubl\view\Parser;
 
-function tmetatagsInstall($self)
+function PluginInstall($self)
 {
-    $self->getApp()->classes->classes['metatags'] = get_class($self);
-    $self->getApp()->classes->save();
+$vars = AutoVars::i();
+$vars->items['metatags'] = get_class($self);
+$vars->save();
 
     $t = MainView::i();
     $t->heads = strtr($t->heads, array(
@@ -26,11 +28,11 @@ function tmetatagsInstall($self)
     ));
     $t->save();
 
-    Parser::i()->parsed = $self->themeparsed;
+    Parser::i()->parsed = $self->themeParsed;
     Base::clearCache();
 }
 
-function tmetatagsUninstall($self)
+function PluginUninstall($self)
 {
     $t = MainView::i();
     $t->heads = strtr($t->heads, array(
@@ -42,7 +44,8 @@ function tmetatagsUninstall($self)
     Parser::i()->unbind($self);
     Base::clearCache();
 
-    unset($self->getApp()->classes->classes['metatags']);
-    $self->getApp()->classes->save();
+$vars = AutoVars::i();
+unset($vars->items['metatags']);
+$vars->save();
 }
 
