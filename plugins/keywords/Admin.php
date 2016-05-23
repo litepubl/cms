@@ -15,6 +15,7 @@ use litepubl\widget\Widgets;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
 use litepubl\admin\Form;
+use litepubl\admin\Link;
 
 class Admin extends \litepubl\admin\widget\Widget
 {
@@ -69,19 +70,27 @@ $admin = $this->admin;
 $count = count($filelist);
         $pages = ceil($count / 100);
         $filelist = array_slice($filelist, $from, 100, true);
-        $args->url = $this->getApp()->site->url . '/admin/plugins/' . $this->getApp()->site->q . 'plugin=' . basename(dirname(__file__));
-
 $form = new Form($this->args);
+$form->class = 'header-left';
 $form->body = $admin->getCount($from, $from + count($filelist), $count);
+
+$tml =strtr($admin->templates['checkbox.name'], [
+'$name' => '$filename',
+'$checked'=> '',
+]);
+
+$tml .= Link::parse('href=/admin/plugins/?plugin=keywords&filename=$filename, text=' . $lang->edit);
+
 
         foreach ($filelist as $filename) {
             if (!preg_match('/^\d+?\.\d+?\.php$/', $filename)) {
                 continue;
             }
 
-            $args->filename = $filename;
-$form->body .= 
-$form->body .= sprintf('<ul>%s</ul>', file_get_contents($datadir . $filename));
+$form->body .= $admin->getSection(
+str_replace('$filename', $filename, $tml),
+sprintf('<ul>%s</ul>', file_get_contents($datadir . $filename))
+);
         }
 
         $links = $this->getLinkPages($page, $pages);
