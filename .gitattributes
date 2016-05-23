@@ -109,10 +109,7 @@ vendor/composer.bat export-ignore
 vendor/composer.json export-ignore
 
 #ignore not updated plugins
-plugins/foaf* export-ignore
-plugins/googleanalitic* export-ignore
 plugins/imgresize* export-ignore
-plugins/keywords* export-ignore
 plugins/livejournalposter* export-ignore
 plugins/markdown* export-ignore
 plugins/menucategories* export-ignore

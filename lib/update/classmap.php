@@ -285,5 +285,6 @@ return array(
 'tkeywordswidget' => 'litepubl\keywords\Widget',
 'tkeywordsplugin' => 'litepubl\plugins\keywords\Keywords',
 
+'tgoogleanalitic' => 'litepubl\plugins\googleanalitic\Plugin',
 );
 

@@ -82,7 +82,7 @@ class Merger extends \litepubl\core\Items
     public function delete($id)
     {
         $a = func_get_args();
-        return $this->deletefile($id, $a[1]);
+        return $this->deleteFile($id, $a[1]);
     }
 
     public function deleteFile($section, $filename)
