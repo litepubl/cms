@@ -8,24 +8,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\shortcode;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-
-class tadminshortcodeplugin
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tshortcode::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args = new Args();
+        $plugin = Plugin::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
 
         $s = '';
         foreach ($plugin->items as $name => $value) {
@@ -33,17 +25,14 @@ class tadminshortcodeplugin
         }
 
         $args->codes = $s;
-        $args->formtitle = $about['formtitle'];
-        $args->data['$lang.codes'] = $about['codes'];
+        $args->formtitle = $lang->formtitle;
 
-        $html = tadminhtml::i();
-        return $html->adminform('[editor=codes]', $args);
+        return $this->admin->form('[editor=codes]', $args);
     }
 
     public function processForm()
     {
-        $plugin = tshortcode::i();
-        //$plugin->setcodes($_POST['codes']);
+        $plugin = Plugin::i();
         $plugin->items = parse_ini_string($_POST['codes'], false);
         $plugin->save();
     }

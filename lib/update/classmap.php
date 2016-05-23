@@ -294,6 +294,8 @@ return array(
 'tmetatags' => 'litepubl\plugins\metatags\Plugin',
 'tcategoriesmenu' => 'litepubl\plugins\menucategories\Plugin',
 'topenid' => 'litepubl\plugins\openid\Plugin',
+'tpostcontentplugin' => 'litepubl\plugins\postcontent\Plugin',
+'tshortcode' => 'litepubl\plugins\shortcode\Plugin',
 
 );
 

@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\shortcode;
 
-class tshortcode extends titems
+class Plugin extends \litepubl\core\Items
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {

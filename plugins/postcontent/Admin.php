@@ -1,0 +1,40 @@
+<?php
+/**
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
+
+namespace litepubl\plugins\postcontent;
+
+
+class Admin extends \litepubl\admin\Panel
+{
+
+    public function getContent()
+    {
+        $plugin = Plugin::i();
+        $args = $this->args;
+        $lang = $this->getLangAbout();
+        $args->formtitle = $lang->formtitle;
+        $args->before = $plugin->before;
+        $args->after = $plugin->after;
+        return $this->admin->form('[editor=before] [editor=after]', $args);
+    }
+
+    public function processForm()
+    {
+        extract($_POST, EXTR_SKIP);
+        $plugin = Plugin::i();
+        $plugin->lock();
+        $plugin->before = $before;
+        $plugin->after = $after;
+        $plugin->unlock();
+        return '';
+    }
+
+}
+

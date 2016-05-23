@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\postcontent;
 
-class tpostcontentplugin extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -25,7 +20,7 @@ class tpostcontentplugin extends \litepubl\core\Plugin
         $this->data['after'] = '';
     }
 
-    public function beforecontent($post, &$content)
+    public function beforeContent($post, &$content)
     {
         $content = $this->before . $content;
     }

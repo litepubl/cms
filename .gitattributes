@@ -111,8 +111,6 @@ vendor/composer.json export-ignore
 #ignore not updated plugins
 plugins/imgresize* export-ignore
 plugins/livejournalposter* export-ignore
-plugins/openid-provider* export-ignore
-plugins/postcontent* export-ignore
 plugins/regservices* export-ignore
 plugins/regservices-ulogin* export-ignore
 plugins/rss-chrome* export-ignore
@@ -120,7 +118,6 @@ plugins/rss-filelist* export-ignore
 plugins/rss-prev-next* export-ignore
 plugins/sameposts* export-ignore
 plugins/sape* export-ignore
-plugins/shortcode* export-ignore
 plugins/singlecat\* export-ignore
 plugins/simpleimporter* export-ignore
 plugins/usernews* export-ignore

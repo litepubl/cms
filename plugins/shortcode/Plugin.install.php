@@ -8,11 +8,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\shortcode;
 
 use litepubl\view\Filter;
 
-function tshortcodeInstall($self)
+function PluginInstall($self)
 {
     $filter = Filter::i();
     $filter->lock();
@@ -21,7 +21,7 @@ function tshortcodeInstall($self)
     $filter->unlock();
 }
 
-function tshortcodeUninstall($self)
+function PluginUninstall($self)
 {
     Filter::i()->unbind($self);
 }

@@ -8,19 +8,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\postcontent;
 
-function tpostcontentpluginInstall($self)
+use litepubl\post\Posts;
+
+function PluginInstall($self)
 {
-    $posts = tposts::i();
+    $posts = Posts::i();
     $posts->lock();
     $posts->beforecontent = $self->beforecontent;
     $posts->aftercontent = $self->aftercontent;
     $posts->unlock();
 }
 
-function tpostcontentpluginUninstall($self)
+function PluginUninstall($self)
 {
-    tposts::unsub($self);
+    Posts::unsub($self);
 }
 
