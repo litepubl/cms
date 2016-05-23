@@ -8,35 +8,27 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\menucategories;
 
 use litepubl\core\Plugins;
 use litepubl\view\Args;
 
-class tadmincategoriesmenu
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tcategoriesmenu::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args = new Args();
-        $args->cats = admintheme::i()->getcats($plugin->exitems);
-        $args->formtitle = $about['formtitle'];
-        //    $args->data['$lang.before'] = $about['before'];
-        $html = tadminhtml::i();
-        return $html->adminform('$cats', $args);
+        $plugin = Plugin::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
+        $args->formtitle = $lang->formtitle;
+        return $this->admin->form($this->admin->getcats($plugin->exitems), $args);
     }
 
     public function processForm()
     {
-        $plugin = tcategoriesmenu::i();
-        $plugin->exitems = tadminhtml::check2array('category-');
+        $plugin = Plugin::i();
+        $plugin->exitems = $this->admin->processCategories();
         $plugin->save();
     }
 

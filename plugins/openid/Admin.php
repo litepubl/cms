@@ -8,43 +8,33 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\openid;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-
-class tadminopenid
+class Admin extends \litepubl\admin\Panel
 {
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $openid = topenid::i();
-        $args = new Args();
+        $openid = Plugin::i();
+        $args = $this->args;
         $args->confirm = $openid->confirm;
         $args->usebigmath = $openid->usebigmath;
         $args->trusted = implode("\n", $openid->trusted);
 
-        $tml = '[checkbox:confirm]
-    [checkbox:usebigmath]
-    [editor:trusted]';
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args->formtitle = $about['formtitle'];
-        $args->data['$lang.confirm'] = $about['confirm'];
-        $args->data['$lang.usebigmath'] = $about['usebigmath'];
-        $args->data['$lang.trusted'] = $about['trusted'];
+        $tml = '[checkbox=confirm]
+    [checkbox=usebigmath]
+    [editor=trusted]';
 
-        $html = tadminhtml::i();
-        return $html->adminform($tml, $args);
+        $lang = $this->getLangAbout();
+        $args->formtitle = $lang->formtitle;
+
+        return $this->admin->form($tml, $args);
     }
 
     public function processForm()
     {
         extract($_POST, EXTR_SKIP);
-        $openid = topenid::i();
+        $openid = Plugin::i();
         $openid->confirm = isset($confirm);
         $openid->usebigmath = isset($usebigmath);
         $openid->trusted = explode("\n", trim($trusted));

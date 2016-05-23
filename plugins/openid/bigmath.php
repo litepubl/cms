@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\openid;
 
 function long($b)
 {

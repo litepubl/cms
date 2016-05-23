@@ -8,13 +8,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\openid;
 
 use litepubl\core\Plugins;
 use litepubl\view\LangMerger;
 use litepubl\view\MainView;
 
-function topenidInstall($self)
+function PluginInstall($self)
 {
     $self->getApp()->router->add($self->url, get_class($self) , null, 'get');
 
@@ -25,7 +25,7 @@ function topenidInstall($self)
     $merger->addplugin(Plugins::getname(__file__));
 }
 
-function topenidUninstall($self)
+function PluginUninstall($self)
 {
     $self->getApp()->router->unbind($self);
     $template = MainView::i();

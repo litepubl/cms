@@ -14,5 +14,6 @@ return [
  'photoswipe-thumbnail' => 'photoswipeThumbnail',
 'postcatwidget' => 'postwidget',
 'subcatwidget' => 'subcat',
+'openid-provider' => 'openid',
  ];
 

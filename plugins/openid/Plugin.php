@@ -8,30 +8,29 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\openid;
 
 use litepubl\Config;
+use litepubl\core\Context;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\MainView;
 use litepubl\view\Theme;
+use litepubl\core\TempProps;
+use litepubl\pages\Simple;
+use litepubl\view\Admin;
+use litepubl\admin\Form;
 
-class topenid extends tevents
+class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
     public $keys;
     public $trusted;
     public $url;
 
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
     protected function create()
     {
         parent::create();
-        $this->cache = false;
         $this->basename = 'openidserver';
         $this->addmap('keys', array());
         $this->addmap('trusted', array());
@@ -45,7 +44,7 @@ class topenid extends tevents
         return "<link rel=\"openid.server\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid2.provider\" href=\"\$site.url$this->url\" />\n" . "<link rel=\"openid.delegate\" href=\"\$site.url$this->url\" />" . "<link rel=\"openid2.local_id\" href=\"\$site.url$this->url\" />";
     }
 
-    public function afterload()
+    public function afterLoad()
     {
         parent::afterload();
         $time = time();
@@ -66,8 +65,13 @@ class topenid extends tevents
         }
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
+$response = $context->response;
+$response->cache = false;
+$props = new TempProps($this);
+$props->response = $response;
+
         if (isset($_POST['submit']) && isset($_POST['assoc_handle'])) {
             $h = $_POST['assoc_handle'];
             if (isset($this->keys[$h]['request'])) {
@@ -88,47 +92,61 @@ class topenid extends tevents
             $log.= isset($this->keys[$_REQUEST['openid_assoc_handle']]) ? "true\n\n" : "false\n\n";
             $this->getApp()->getLogger()->info($log);
         }
+
         $this->LoadBigMath();
         ini_set('arg_separator.output', '&');
 
         if (!isset($_REQUEST['openid_mode'])) {
-            return $this->nomode();
+            $response->body = $this->nomode();
+return;
         }
 
         switch ($_REQUEST['openid_mode']) {
             case 'associate':
-                return $this->associate();
+                $result = $this->associate();
+break;
 
             case 'cancel':
-                return $this->cancel();
+                $result = $this->cancel();
+break;
 
             case 'checkid_immediate':
-                return $this->checkid_immediate();
+                $result = $this->checkid_immediate();
+break;
 
             case 'checkid_setup':
-                return $this->checkid_setup();
+                $result = $this->checkid_setup();
+break;
 
             case 'check_authentication':
-                return $this->check_authentication();
+                $result = $this->check_authentication();
+break;
 
             case 'error':
-                return $this->DoError();
+                $result = $this->DoError();
+break;
 
             case 'id_res':
-                return $this->id_res();
+                $result = $this->id_res();
+break;
 
             default:
-                return $this->nomode();
+                $result = $this->nomode();
         }
+
+if ($response->status == 200) {
+$response->body = $result;
+}
     }
 
     private function nomode()
     {
-        $result = tsimplecontent::html(Lang::get('openidserver', 'nomode'));
+        $result = Simple::html(Lang::get('openidserver', 'nomode'));
         $js = MainView::i()->getready('var s = window.location.toString();
     if (-1 == s.indexof("?")) {
       window.location = ltoptions.url + "/";
     }');
+
         $result = str_replace('</head>', $js . '</head>', $result);
         return $result;
     }
@@ -136,16 +154,15 @@ class topenid extends tevents
     private function id_res()
     {
         if (!$this->getApp()->options->user) {
-            $this->getApp()->router->nocache();
-            return $this->getApp()->router->redir('/admin/login/?backurl=' . urlencode($this->getApp()->router->url));
+            return $this->response->redir('/admin/login/?backurl=' . urlencode($this->getApp()->context->request->url));
         }
 
-        return tsimplecontent::html(Lang::get('openidserver', 'logged'));
+        return Simple::html(Lang::get('openidserver', 'logged'));
     }
 
     private function cancel()
     {
-        return tsimplecontent::html(Lang::get('openidserver', 'canceled'));
+        return Simple::html(Lang::get('openidserver', 'canceled'));
     }
 
     private function GetMessage($key, $defkey)
@@ -156,34 +173,31 @@ class topenid extends tevents
 
     private function error400($key)
     {
-        $result = "<?php @header('HTTP/1.1 400 Bad Request, true, 400); ?>";
-        $result.= tsimplecontent::html($this->GetMessage($key, 'badrequest'));
-        return $result;
+$this->response->status = 400;
+$this->response->body = Simple::html($this->GetMessage($key, 'badrequest'));
     }
 
     private function error500($key)
     {
-        $result = "<?php\n@header('HTTP/1.1 500 Internal Server Error', true, 500);\n?>";
-        $result.= tsimplecontent::html($this->GetMessage($key, 'internalerror'));
-        return $result;
+$this->response->status = 500;
+$this->response->body = Simple::html($this->GetMessage($key, 'internalerror'));
     }
 
     private function error_post($key)
     {
-        $result = "<?php @header('HTTP/1.1 400 Bad Request', true, 400); ?>";
-        $result.= 'error:' . $this->GetMessage($key, 'badrequest');
-        return $result;
+$this->response->request->status = 400;
+$this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequest'));
     }
 
     private function redir($url)
     {
-        return "<?php litepubl::\$router->redir('$url', 302); ?>";
+        return $this->response->redir($url, 302);
     }
 
     private function DoError()
     {
         if (!empty($_REQUEST['openid_error'])) {
-            return tsimplecontent::html($_REQUEST['openid_error']);
+            return Simple::html($_REQUEST['openid_error']);
         } else {
             return $this->error500();
         }
@@ -263,7 +277,7 @@ class topenid extends tevents
 
     private function GetResult($keys)
     {
-        $result = "<?php @header('Content-Type: text/plain; charset=utf-8'); ?>";
+$this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
         foreach ($keys as $key => $value) $result.= "$key:$value\n";
         return $result;
     }
@@ -359,12 +373,12 @@ class topenid extends tevents
     private function getForm()
     {
         $lang = Lang::i('openidserver');
-        $admintheme = admintheme::admin();
+        $admintheme = Admin::admin();
         $result = $admintheme->h($lang->trustform);
         $result.= $admintheme->h('<a href="$trust_root">$trust_root</a>');
         $result.= $admintheme->h($lang->confirmtrust);
 
-        $form = new adminform();
+        $form = new Form();
         $form->body = $form->hidden('accept', 'yes');
         $form->body.= $form->hidden('assoc_handle', '$assoc_handle');
         $form->submit = 'yestrust';
@@ -413,15 +427,12 @@ class topenid extends tevents
         //join  fields
         $sreg_required.= ',' . $sreg_optional;
 
-        $auth = tauthdigest::i();
-        if ($this->getApp()->options->cookieenabled) {
             if (!$this->getApp()->options->user) {
-                return $this->getApp()->router->redir('/admin/login/');
+                return $this->response->redir('/admin/login/');
             }
 
-        } elseif (!$auth->Auth()) return $auth->headers();
         if ($this->getApp()->options->group != 'admin') {
-            return 404;
+            return $this->response->forbidden();
         }
 
         $q = strpos($return_to, '?') ? '&' : '?';
@@ -446,7 +457,7 @@ class topenid extends tevents
                     $this->getApp()->cache->setString('openid.txt', $result);
                 }
 
-                return tsimplecontent::html(Theme::i()->parseArg($result, $args));
+                return Simple::html(Theme::i()->parseArg($result, $args));
             } else {
                 switch ($_POST['accept']) {
                     case 'yes':

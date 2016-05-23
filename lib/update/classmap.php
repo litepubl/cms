@@ -293,6 +293,7 @@ return array(
 'tmarkdownplugin' => 'litepubl\plugins\markdown\Plugin',
 'tmetatags' => 'litepubl\plugins\metatags\Plugin',
 'tcategoriesmenu' => 'litepubl\plugins\menucategories\Plugin',
+'topenid' => 'litepubl\plugins\openid\Plugin',
 
 );
 
