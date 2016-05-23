@@ -8,21 +8,29 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\singlecat;
 
 use litepubl\view\Base;
 use litepubl\view\Parser;
+use litepubl\view\AutoVars;
 
-function tsinglecatInstall($self)
+function PluginInstall($self)
 {
-    if (!dbversion) die('Required database version');
+$vars = AutoVars::i();
+$vars->items['singlecat'] = get_class($self);
+$vars->save();
+
     Parser::i()->parsed = $self->themeparsed;
     Base::clearCache();
 }
 
-function tsinglecatUninstall($self)
+function PluginUninstall($self)
 {
     Parser::i()->unbind($self);
     Base::clearCache();
+
+$vars = AutoVars::i();
+unset($vars->items['singlecat']);
+$vars->save();
 }
 

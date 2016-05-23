@@ -8,15 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\singlecat;
 
-class tsinglecat extends \litepubl\core\Plugin
+use litepubl\view\Theme;
+use litepubl\post\Post;
+use litepubl\post\Posts;
+use litepubl\post\Announce;
+
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,7 +27,7 @@ class tsinglecat extends \litepubl\core\Plugin
         $this->data['tmlitems'] = '<ul>$items</ul>';
     }
 
-    public function themeparsed(ttheme $theme)
+    public function themeParsed(Theme $theme)
     {
         $tag = '$singlecat.content';
         if (!strpos($theme->templates['content.post'], $tag)) {
@@ -37,8 +37,8 @@ class tsinglecat extends \litepubl\core\Plugin
 
     public function getContent()
     {
-        $post = $this->getApp()->router->context;
-        if (!($post instanceof tpost)) {
+        $post = $this->getApp()->context->model;
+        if (!($post instanceof Post)) {
             return '';
         }
 
@@ -53,8 +53,9 @@ class tsinglecat extends \litepubl\core\Plugin
 
         $table = $this->getApp()->db->prefix . 'categoriesitems';
         $order = $this->invertorder ? 'asc' : 'desc';
-        $posts = tposts::i();
-        $result = $posts->getlinks("$posts->thistable.id in
+        $posts = Posts::i();
+$annnounce= new Anounce();
+        $result = $announce->getLinks("$posts->thistable.id in
     (select  $table.post from $table where $table.item = $idcat)
     and $posts->thistable.id != $post->id
     order by $posts->thistable.posted  $order limit $this->maxcount", $this->tml);

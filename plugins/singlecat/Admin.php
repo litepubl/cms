@@ -8,31 +8,23 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\singlecat;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-
-class tadminsinglecat
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tsinglecat::i();
-        $html = tadminhtml::i();
-        $lang = Plugins::getlangabout(__file__);
-        $args = new Args();
+        $plugin = Plugin::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
         $args->maxcount = $plugin->maxcount;
         $args->invertorder = $plugin->invertorder;
         $args->tml = $plugin->tml;
         $args->tmlitems = $plugin->tmlitems;
         $args->formtitle = $lang->formtitle;
-        return $html->adminform(' [checkbox=invertorder]
+        return $this->admin->form('
+ [checkbox=invertorder]
     [text=maxcount]
     [editor=tml]
     [editor=tmlitems]', $args);
@@ -40,7 +32,7 @@ class tadminsinglecat
 
     public function processForm()
     {
-        $plugin = tsinglecat::i();
+        $plugin = Plugin::i();
         $plugin->invertorder = isset($_POST['invertorder']);
         $plugin->maxcount = (int)$_POST['maxcount'];
         $plugin->tml = $_POST['tml'];

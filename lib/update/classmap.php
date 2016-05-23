@@ -296,6 +296,6 @@ return array(
 'topenid' => 'litepubl\plugins\openid\Plugin',
 'tpostcontentplugin' => 'litepubl\plugins\postcontent\Plugin',
 'tshortcode' => 'litepubl\plugins\shortcode\Plugin',
-
+'tsinglecat' => 'litepubl\plugins\singlecat\Plugin',
 );
 
