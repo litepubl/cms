@@ -23,7 +23,7 @@ use litepubl\view\Theme;
 class Schemes extends \litepubl\admin\Menu
 {
 
-    public static function replacemenu($src, $dst)
+    public static function replaceMenu(string $src, string $dst)
     {
         $schemes = SchemaItems::i();
         foreach ($schemes->items as & $schemaitem) {

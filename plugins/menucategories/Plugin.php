@@ -8,20 +8,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\menucategories;
 
 use litepubl\view\Args;
 use litepubl\view\Theme;
+use litepubl\tag\Cats;
 
-class tcategoriesmenu extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
     public $tree;
     public $exitems;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -33,14 +29,13 @@ class tcategoriesmenu extends \litepubl\core\Plugin
     public function getMenu($hover, $current)
     {
         $result = '';
-        $categories = tcategories::i();
-        $categories->loadall();
-        //$this->buildtree();
-        //var_dump($this->tree);
-        if (count($this->tree) > 0) {
+        $categories = Cats::i();
+        $categories->loadAll();
+
+        if (count($this->tree)) {
             $theme = Theme::i();
             if ($hover) {
-                $items = $this->getsubmenu($this->tree, $current);
+                $items = $this->getSubMenu($this->tree, $current);
             } else {
                 $items = '';
                 $tml = $theme->templates['menu.item'];
@@ -66,7 +61,7 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         return in_array($id, $this->exitems);
     }
 
-    private function getSubmenu(&$tree, $current)
+    private function getSubMenu(&$tree, $current)
     {
         $result = '';
         $categories = tcategories::i();
@@ -90,17 +85,17 @@ class tcategoriesmenu extends \litepubl\core\Plugin
         return $result;
     }
 
-    public function buildtree()
+    public function buildTree()
     {
-        $categories = tcategories::i();
-        $categories->loadall();
-        $this->tree = $this->getsubtree(0);
-        //var_dump($this->exitems );
+        $categories = Cats::i();
+        $categories->loadAll();
+        $this->tree = $this->getSubTree(0);
+
         $this->exitems = array_intersect(array_keys($categories->items) , $this->exitems);
         $this->save();
     }
 
-    private function getSubtree($parent)
+    private function getSubTree($parent)
     {
         $result = array();
         $categories = tcategories::i();

@@ -292,6 +292,7 @@ return array(
 'tsmiles' => 'litepubl\plugins\smiles\Plugin',
 'tmarkdownplugin' => 'litepubl\plugins\markdown\Plugin',
 'tmetatags' => 'litepubl\plugins\metatags\Plugin',
+'tcategoriesmenu' => 'litepubl\plugins\menucategories\Plugin',
 
 );
 
