@@ -13,9 +13,7 @@ namespace litepubl\plugins\regservices;
 use litepubl\core\Context;
 use litepubl\utils\Http;
 use litepubl\view\Lang;
-use litepubl\view\Admin;
-use litepubl\view\Theme;
-use litepubl\view\Args;
+use litepubl\admin\Panel;
 
 class Odnoklassniki extends Service
 {
@@ -26,7 +24,7 @@ class Odnoklassniki extends Service
         $this->data['public_key'] = '';
         $this->data['name'] = 'odnoklassniki';
         $this->data['title'] = 'odnoklassniki.ru';
-        $this->data['icon'] = 'odnoklassniki.png';
+        $this->data['icon'] = 'odnoklassniki';
         $this->data['url'] = '/odnoklassniki-oauth2callback.php';
     }
 
@@ -95,7 +93,6 @@ return;
             }
         }
 
-        return $this->errorauth();
                 return $context->response->forbidden();
 
     protected function getAdminInfo(Lang $lang): array
@@ -108,12 +105,13 @@ return;
         );
     }
 
-    public function getTab(Admin $admin, Args $args, Lang $lang): string
+    public function getTab(Panel $admin): string
     {
+$lang = $admin->lang;
         $a = $this->getAdminInfo($lang);
-        $result = $admin->help(sprintf($lang->odnoklass_reg, 'http://dev.odnoklassniki.ru/wiki/display/ok/How+to+add+application+on+site'));
+        $result = $admin->admin->help(sprintf($lang->odnoklass_reg, 'http://dev.odnoklassniki.ru/wiki/display/ok/How+to+add+application+on+site'));
 
-$theme =Theme::i();
+$theme =$admin->theme;
         $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id) , $a['client_id']);
         $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret) , $a['client_secret']);
 

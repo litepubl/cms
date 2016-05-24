@@ -97,5 +97,16 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return '';
     }
 
+public function setWidget(string $widget)
+{
+$login = Login::i();
+$login->widget = $widget;
+$login->save();
+
+$reg = RegUser::i();
+$reg->widget = $widget;
+$reg->save();
+}
+
 }
 

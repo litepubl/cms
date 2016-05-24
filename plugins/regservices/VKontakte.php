@@ -22,7 +22,7 @@ class VKontakte extends Service
         parent::create();
         $this->data['name'] = 'vkontakte';
         $this->data['title'] = 'VKontakte';
-        $this->data['icon'] = 'vkontakte.png';
+        $this->data['icon'] = 'vk';
         $this->data['url'] = '/vkontakte-oauth2callback.php';
     }
 

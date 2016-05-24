@@ -14,6 +14,7 @@ use litepubl\core\DBManager;
 use litepubl\core\Plugins;
 use litepubl\core\Users;
 use litepubl\comments\Form;
+use litepubl\utils\Filer;
 
 function PluginInstall($self)
 {
@@ -24,31 +25,15 @@ function PluginInstall($self)
     $about = Plugins::getabout($name);
     $self->lock();
 
-    $css = Css::i();
-    $css->addstyle("/plugins/$name/regservices.min.css");
-
     $self->dirname = $name;
     $self->widget_title = sprintf('<h4>%s</h4>', $about['widget_title']);
-    $self->getApp()->classes->add('tregservice', 'service.class.php', $name);
-    $self->getApp()->classes->add('tregserviceuser', 'service.class.php', $name);
-    $self->getApp()->classes->add('tgoogleregservice', 'google.service.php', $name);
-    $self->getApp()->classes->add('tfacebookregservice', 'facebook.service.php', $name);
-    $self->getApp()->classes->add('ttwitterregservice', 'twitter.service.php', $name);
-    $self->getApp()->classes->add('tmailruregservice', 'mailru.service.php', $name);
-    $self->getApp()->classes->add('tyandexregservice', 'yandex.service.php', $name);
-    $self->getApp()->classes->add('tvkontakteregservice', 'vkontakte.service.php', $name);
-    $self->getApp()->classes->add('todnoklassnikiservice', 'odnoklassniki.service.php', $name);
-
-    $self->getApp()->classes->add('toauth', 'oauth.class.php', $name);
-
-    $self->add(tgoogleregservice::i());
-    $self->add(tfacebookregservice::i());
-    $self->add(ttwitterregservice::i());
-    $self->add(tmailruregservice::i());
-    $self->add(tyandexregservice::i());
-    $self->add(tvkontakteregservice::i());
-    $self->add(todnoklassnikiservice::i());
-
+Google::i()->install();
+Facebook::i()->install();
+Twitter::i()->install();
+MailRu::i()->install();
+Yandex::i()->install();
+VKontakte::i()->install();
+Odnoklassniki::i()->install();
     $self->unlock();
 
     Users::i()->deleted = tregserviceuser::i()->delete;
@@ -70,21 +55,20 @@ function PluginInstall($self)
 function PluginUninstall($self)
 {
     $name = basename(dirname(__file__));
-    tcommentform::i()->unbind($self);
+    Form::i()->unbind($self);
     $self->getApp()->router->unbind($self);
-    foreach ($self->items as $id => $classname) {
-        $self->getApp()->classes->delete($classname);
-    }
 
-    $self->getApp()->classes->delete('tregserviceuser');
-    $self->getApp()->classes->delete('toauth');
+Google::i()->install();
+Facebook::i()->install();
+Twitter::i()->install();
+MailRu::i()->install();
+Yandex::i()->install();
+VKontakte::i()->install();
+Odnoklassniki::i()->install();
 
-    tfiler::delete($self->getApp()->paths->data . 'regservices', true, true);
+    Filer::delete($self->getApp()->paths->data . 'regservices', true, true);
 
-    tusers::i()->unbind('tregserviceuser');
+    Users::i()->unbind('tregserviceuser');
     DBManager::i()->deletetable('regservices');
-
-    $css = Css::i();
-    $css->deletestyle("/plugins/$name/regservices.min.css");
 }
 

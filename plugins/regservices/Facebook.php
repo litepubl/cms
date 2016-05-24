@@ -8,56 +8,55 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class tfacebookregservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+
+class Facebook extends Service
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
         parent::create();
         $this->data['name'] = 'facebook';
         $this->data['title'] = 'FaceBook';
-        $this->data['icon'] = 'facebook.png';
+        $this->data['icon'] = 'facebook';
         $this->data['url'] = '/facebook-oauth2callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
         $url = 'https://www.facebook.com/dialog/oauth?scope=email&';
-        $url.= parent::getauthurl();
+        $url.= parent::getAuthUrl();
         return $url;
     }
 
     //handle callback
-    public function request($arg)
+    public function request(Context $context)
     {
-        if ($err = parent::request($arg)) {
-            return $err;
+parent::request($context);
+
+if ($context->response->status != 200) {
+return;
         }
 
         $code = $_REQUEST['code'];
-        $resp = http::get('https://graph.facebook.com/oauth/access_token?' . http_build_query(array(
+        $resp = Http::get('https://graph.facebook.com/oauth/access_token?' . http_build_query(array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url,
-            //'grant_type' => 'authorization_code'
-            
         )));
 
         if ($resp) {
             $params = null;
             parse_str($resp, $params);
 
-            if ($r = http::get('https://graph.facebook.com/me?access_token=' . $params['access_token'])) {
+            if ($r = Http::get('https://graph.facebook.com/me?access_token=' . $params['access_token'])) {
                 $info = json_decode($r);
-                return $this->adduser(array(
+                return $this->addUser($context, array(
                     'service' => $this->name,
                     'uid' => isset($info->id) ? $info->id : '',
                     'email' => isset($info->email) ? $info->email : '',
@@ -67,10 +66,10 @@ class tfacebookregservice extends tregservice
             }
         }
 
-        return $this->errorauth();
+$context->response->forbidden();
     }
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'https://developers.facebook.com/apps',

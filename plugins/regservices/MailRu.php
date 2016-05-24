@@ -8,15 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class tmailruregservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+
+class MailRu extends Service
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,7 +26,7 @@ class tmailruregservice extends tregservice
         $this->data['url'] = '/mailru-oauth2callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
         $url = 'https://connect.mail.ru/oauth/authorize?';
         $url.= parent::getauthurl();
@@ -35,7 +34,7 @@ class tmailruregservice extends tregservice
     }
 
     //handle callback
-    public function sign(array $request_params, $secret_key)
+    public function sign(array $request_params, string $secret_key): string
     {
         ksort($request_params);
         $params = '';
@@ -45,14 +44,16 @@ class tmailruregservice extends tregservice
         return md5($params . $secret_key);
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        if ($err = parent::request($arg)) {
-            return $err;
+parent::request($context);
+
+if ($context->response->status != 200) {
+return;
         }
 
         $code = $_REQUEST['code'];
-        $resp = http::post('https://connect.mail.ru/oauth/token', array(
+        $resp = Http::post('https://connect.mail.ru/oauth/token', array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
@@ -74,10 +75,10 @@ class tmailruregservice extends tregservice
 
             ksort($params);
             $params['sig'] = $this->sign($params, $this->client_secret);
-            if ($r = http::get('http://www.appsmail.ru/platform/api?' . http_build_query($params))) {
+            if ($r = Http::get('http://www.appsmail.ru/platform/api?' . http_build_query($params))) {
                 $js = json_decode($r);
                 $info = $js[0];
-                return $this->adduser(array(
+                return $this->addUser($context, array(
                     'uid' => $info->uid,
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->nick,
@@ -86,10 +87,10 @@ class tmailruregservice extends tregservice
             }
         }
 
-        return $this->errorauth();
+$context->response->forbidden();
     }
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'http://api.mail.ru/sites/my/add',

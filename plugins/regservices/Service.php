@@ -16,8 +16,7 @@ use litepubl\view\Filter;
 use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\view\Lang;
-use litepubl\view\Args;
-use litepubl\view\Admin;
+use litepubl\admin\Panel;
 use litepubl\core\Users;
 use litepubl\comments\Form;
 
@@ -53,6 +52,7 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
     public function install()
     {
         if ($this->url) $this->getApp()->router->addget($this->url, get_class($this));
+Plugin::i()->add($this);
     }
 
     public function uninstall()
@@ -116,11 +116,11 @@ $response = $context->response;
         );
     }
 
-    public function getTab(Admin $admin, Args $args, Lang $lang): string
+    public function getTab(Panel $admin): string
     {
-        $a = $this->getadminInfo($lang);
-        $result = $admin->help(sprintf($lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
-            $theme = Theme::i();
+        $a = $this->getadminInfo($admin->lang);
+        $result = $admin->admin->help(sprintf($admin->lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
+            $theme = $admin->theme;
         $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id) , $a['client_id']);
         $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret) , $a['client_secret']);
         return $result;
@@ -131,11 +131,6 @@ $response = $context->response;
         if (isset($_POST["client_id_$this->name"])) $this->client_id = $_POST["client_id_$this->name"];
         if (isset($_POST["client_secret_$this->name"])) $this->client_secret = $_POST["client_secret_$this->name"];
         $this->save();
-    }
-
-    public function errorAuth()
-    {
-        return 403;
     }
 
     public function addUser(Context $context, array $item, $rawdata)

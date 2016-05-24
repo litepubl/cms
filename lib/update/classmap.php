@@ -310,17 +310,8 @@ return array(
 'tvkontakteregservice' => 'litepubl\plugins\regservices\VKontakte',
 'ttwitterregservice' => 'litepubl\plugins\regservices\Twitter',
 'todnoklassnikiservice' => 'litepubl\plugins\regservices\Odnoklassniki',
-
-
-
-
-
-
-
-
-
-
-
-
+'tmailruregservice' =>'litepubl\plugins\regservices\MailRu',
+'tgoogleregservice' => litepubl\plugins\regservices\Google',
+'tfacebookregservice' => litepubl\plugins\regservices\Facebook',
 );
 

@@ -8,46 +8,38 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-use litepubl\admin\AdminInterface;
-use litepubl\core\Plugins;
-use litepubl\view\Args;
+use litepubl\admin\Tabs;
 
-class tadminregservices implements \litepubl\admin\AdminInterface
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tregservices::i();
-        $html = tadminhtml::i();
-        $tabs = new tabs();
-        $args = new Args();
-        $lang = Plugins::getnamelang($plugin->dirname);
+        $plugin = Plugin::i();
+        $tabs = new Tabs($this->admin);
+        $args = $this->args;
+        $lang = $this->getLangAbout();
         $args->formtitle = $lang->options;
         foreach ($plugin->items as $id => $classname) {
             $service = static ::iGet($classname);
-            $tabs->add($service->title, $service->gettab($html, $args, $lang));
+            $tabs->add($service->title, $service->gettab($this);
         }
 
-        return $html->adminform($tabs->get() , $args);
+        return $this->admin->form($tabs->get() , $args);
     }
 
     public function processForm()
     {
-        $plugin = tregservices::i();
+        $plugin = Plugin::i();
         $plugin->lock();
         foreach ($plugin->items as $name => $classname) {
             $service = static ::iGet($classname);
             $service->processForm();
         }
 
-        $plugin->update_widget();
+        $plugin->updateWidget();
         $plugin->unlock();
         return '';
     }

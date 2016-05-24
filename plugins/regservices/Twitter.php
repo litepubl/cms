@@ -23,7 +23,7 @@ class Twitter extends Service
         parent::create();
         $this->data['name'] = 'twitter';
         $this->data['title'] = 'Twitter';
-        $this->data['icon'] = 'twitter.png';
+        $this->data['icon'] = 'twitter';
         $this->data['url'] = '/twitter-oauth1callback.php';
     }
 
@@ -80,8 +80,8 @@ $response = $context->response;
             }
         }
 
-        return $this->errorauth();
 $response->forbidden();
+}
 
     protected function getAdminInfo(Lang $lang): array
     {

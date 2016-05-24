@@ -11,9 +11,14 @@
 namespace litepubl\plugins\regservices;
 
 use litepubl\comments\Form;
+use litepubl\admin\pages\Form as LoginForms;
+use litepubl\view\Admin;
+
 
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
+public $tml = '<a role="button" class="btn btn-default tooltip-toggle" target="_blank" href="$url=$name&backurl=" title="$title"><span class="fa fa-$icon"></span></a>';
+public $tmlWidget = '<div class="btn-group">$buttons</div>';
 
     protected function create()
     {
@@ -37,26 +42,30 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
 
     public function updateWidget()
     {
-        $widget = '';
         $url = $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
+        $buttons = '';
         foreach ($this->items as $name => $classname) {
             $service = static ::iGet($classname);
             if ($service->valid()) {
-                $widget.= "<a href=\"$url=$name&backurl=\" class=\"$name-regservice\" title=\"$service->title\"></a>";
+                $buttons .= strtr($this->tml, array(
+'$url' => $url,
+'$name' => $name,
+'$icon' => $service->icon,
+'$title' => $service->title,
+));
             }
         }
 
-        $widget = str_replace('&', '&amp;', $widget);
-        $this->widget = $this->widget_title . sprintf('<div class="regservices">%s</div>', $widget);
+        $content = str_replace(
+'$buttons',
+str_replace('&', '&amp;', $buttons),
+$this->tmlWidget);
+
+$widget = Admin::admin()->getSection($this->widget_title, $content );
+        $this->widget = $widget;
         $this->save();
 
-        $admin = tadminlogin::i();
-        $admin->widget = $this->widget;
-        $admin->save();
-
-        $admin = tadminreguser::i();
-        $admin->widget = $this->widget;
-        $admin->save();
+LoginForms::i()->setWidget($this->widget);
 
         $tc = ttemplatecomments::i();
         if ($i = strpos($tc->regaccount, $this->widget_title)) {
