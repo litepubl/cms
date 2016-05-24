@@ -262,7 +262,7 @@ class Oauth
         return $this->urllist['authorize'] . sprintf('?oauth_token=%s&&oauth_callback=%s', rawurlencode($this->token) , rawurlencode($this->urllist['callback']));
     }
 
-    public function getAccesstoken($oauth_verifier)
+    public function getAccessToken($oauth_verifier)
     {
         $keys = $this->getkeys();
         $keys['oauth_token'] = $this->token;

@@ -138,10 +138,12 @@ $response = $context->response;
         return 403;
     }
 
-    public function addUser(array $item, $rawdata)
+    public function addUser(Context $context, array $item, $rawdata)
     {
         $users = Users::i();
         $reguser = RegUser::i();
+$response = $context->response;
+
         if (!empty($item['email'])) {
             if ($id = $users->emailExists($item['email'])) {
                 $user = $users->getItem($id);
@@ -160,7 +162,7 @@ $response = $context->response;
                 }
             } else {
                 //registration disabled
-                return 403;
+                return $response->forbidden();
             }
         } else {
             $uid = !empty($item['uid']) ? $item['uid'] : (!empty($item['website']) ? $item['website'] : '');
@@ -178,11 +180,11 @@ $response = $context->response;
                     $reguser->add($id, $this->name, $uid);
                 } else {
                     //registration disabled
-                    return 403;
+                return $response->forbidden();
                 }
             } else {
                 //nothing found and hasnt email or uid
-                return 403;
+                return $response->forbidden();
             }
         }
 
@@ -209,7 +211,7 @@ $options->user = $id;
             $backurl = UserGroups::i()->gethome($user['idgroups'][0]);
         }
 
-        return $this->getApp()->router->redir($backurl);
+        return $response->redir($backurl);
     }
 
 }

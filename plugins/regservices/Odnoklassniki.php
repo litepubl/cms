@@ -8,15 +8,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class todnoklassnikiservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+use litepubl\view\Admin;
+use litepubl\view\Theme;
+use litepubl\view\Args;
+
+class Odnoklassniki extends Service
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -28,7 +30,7 @@ class todnoklassnikiservice extends tregservice
         $this->data['url'] = '/odnoklassniki-oauth2callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
         $url = 'http://www.odnoklassniki.ru/oauth/authorize?';
         $url.= 'response_type=code';
@@ -48,14 +50,16 @@ class todnoklassnikiservice extends tregservice
         return md5($params . $secret_key);
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        if ($err = parent::request($arg)) {
-            return $err;
+parent::request($context);
+
+if ($context->response->status != 200) {
+return;
         }
 
         $code = $_REQUEST['code'];
-        $resp = http::post('http://api.odnoklassniki.ru/oauth/token.do', array(
+        $resp = Http::post('http://api.odnoklassniki.ru/oauth/token.do', array(
             'grant_type' => 'authorization_code',
             'code' => $code,
             'client_id' => $this->client_id,
@@ -66,7 +70,7 @@ class todnoklassnikiservice extends tregservice
         if ($resp) {
             $tokens = json_decode($resp);
             if (isset($tokens->error)) {
-                return 403;
+                return $context->response->forbidden();
             }
 
             $params = array(
@@ -82,7 +86,7 @@ class todnoklassnikiservice extends tregservice
             if ($r = http::post('http://api.odnoklassniki.ru/fb.do', $params)) {
                 $js = json_decode($r);
                 if (!isset($js->error)) {
-                    return $this->adduser(array(
+                    return $this->addUser($context, array(
                         'uid' => $js->uid,
                         'name' => $js->name,
                         'website' => isset($js->link) ? $js->link : ''
@@ -92,9 +96,9 @@ class todnoklassnikiservice extends tregservice
         }
 
         return $this->errorauth();
-    }
+                return $context->response->forbidden();
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'http://api.mail.ru/sites/my/add',
@@ -104,15 +108,16 @@ class todnoklassnikiservice extends tregservice
         );
     }
 
-    public function getTab($html, $args, $lang)
+    public function getTab(Admin $admin, Args $args, Lang $lang): string
     {
-        $a = $this->getadmininfo($lang);
-        $result = $html->p(sprintf($lang->odnoklass_reg, 'http://dev.odnoklassniki.ru/wiki/display/ok/How+to+add+application+on+site'));
+        $a = $this->getAdminInfo($lang);
+        $result = $admin->help(sprintf($lang->odnoklass_reg, 'http://dev.odnoklassniki.ru/wiki/display/ok/How+to+add+application+on+site'));
 
-        $result.= $html->getinput('text', "client_id_$this->name", tadminhtml::specchars($this->client_id) , $a['client_id']);
-        $result.= $html->getinput('text', "client_secret_$this->name", tadminhtml::specchars($this->client_secret) , $a['client_secret']);
+$theme =Theme::i();
+        $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id) , $a['client_id']);
+        $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret) , $a['client_secret']);
 
-        $result.= $html->getinput('text', "public_key_$this->name", tadminhtml::specchars($this->public_key) , $lang->odnoklass_public_key);
+        $result.= $theme->getInput('text', "public_key_$this->name", $theme->quote($this->public_key) , $lang->odnoklass_public_key);
         return $result;
     }
 

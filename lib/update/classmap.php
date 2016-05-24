@@ -307,6 +307,12 @@ return array(
 'tregserviceuser' => 'litepubl\plugins\regservices\RegUser',
 'toauth' => 'litepubl\plugins\regservices\Oauth',
 'tyandexregservice' => 'litepubl\plugins\regservices\Yandex',
+'tvkontakteregservice' => 'litepubl\plugins\regservices\VKontakte',
+'ttwitterregservice' => 'litepubl\plugins\regservices\Twitter',
+'todnoklassnikiservice' => 'litepubl\plugins\regservices\Odnoklassniki',
+
+
+
 
 
 

@@ -36,8 +36,10 @@ class Yandex extends Service
     //handle callback
     public function request(Context $context)
     {
-        if ($err = parent::request($context)) {
-            return $err;
+parent::request($context);
+
+if ($context->response->status != 200) {
+return;
         }
 
         $code = $_REQUEST['code'];
@@ -52,7 +54,7 @@ class Yandex extends Service
             $tokens = json_decode($resp);
             if ($r = Http::get('https://login.yandex.ru/info?format=json&oauth_token=' . $tokens->access_token)) {
                 $info = json_decode($r);
-                $this->addUser(array(
+                return $this->addUser($context, array(
                     'service' => $this->name,
                     'uid' => $info->id,
                     'email' => isset($info->default_email) ? $info->default_email : $info->emails[0],

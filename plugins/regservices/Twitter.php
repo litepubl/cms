@@ -8,15 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class ttwitterregservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+use litepubl\core\Session;
+
+class Twitter extends Service
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,11 +27,11 @@ class ttwitterregservice extends tregservice
         $this->data['url'] = '/twitter-oauth1callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
-        $oauth = $this->getoauth();
-        if ($tokens = $oauth->getrequesttoken()) {
-            tsession::start(md5($tokens['oauth_token']));
+        $oauth = $this->getOauth();
+        if ($tokens = $oauth->getRequestToken()) {
+            Session::start(md5($tokens['oauth_token']));
             $_SESSION['tokens'] = $tokens;
             session_write_close();
             return $oauth->get_authorize_url();
@@ -41,7 +41,7 @@ class ttwitterregservice extends tregservice
 
     public function getOauth()
     {
-        $oauth = new toauth();
+        $oauth = new Oauth();
         $oauth->urllist['callback'] = $this->getApp()->site->url . $this->url;
         $oauth->key = $this->client_id;
         $oauth->secret = $this->client_secret;
@@ -49,30 +49,30 @@ class ttwitterregservice extends tregservice
     }
 
     //handle callback
-    public function request($arg)
+    public function request(Context $context)
     {
-        $this->cache = false;
-        \litepubl\core\Router::nocache();
+$response = $context->response;
+        $response->cache = false;
 
         if (empty($_GET['oauth_token'])) {
-            return 403;
+            return $response->forbidden();
         }
 
-        tsession::start(md5($_GET['oauth_token']));
+        Session::start(md5($_GET['oauth_token']));
         if (!isset($_SESSION['tokens'])) {
             session_destroy();
-            return 403;
+            return $response->forbidden();
         }
 
         $tokens = $_SESSION['tokens'];
         session_destroy();
-        $oauth = $this->getoauth();
-        $oauth->settokens($tokens['oauth_token'], $tokens['oauth_token_secret']);
+        $oauth = $this->getOauth();
+        $oauth->setTokens($tokens['oauth_token'], $tokens['oauth_token_secret']);
 
-        if ($tokens = $oauth->getaccesstoken($_REQUEST['oauth_verifier'])) {
+        if ($tokens = $oauth->getAccessToken($_REQUEST['oauth_verifier'])) {
             if ($r = $oauth->get_data('https://api.twitter.com/1/account/verify_credentials.json')) {
                 $info = json_decode($r);
-                return $this->adduser(array(
+                return $this->addUser($context, array(
                     'uid' => $info->id,
                     'name' => $info->name,
                     'website' => 'http://twitter.com/account/redirect_by_id?id=' . $info->id_str
@@ -81,9 +81,9 @@ class ttwitterregservice extends tregservice
         }
 
         return $this->errorauth();
-    }
+$response->forbidden();
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'https://dev.twitter.com/apps/new',

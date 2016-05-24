@@ -8,15 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class tvkontakteregservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+
+class VKontakte extends Service
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,36 +26,36 @@ class tvkontakteregservice extends tregservice
         $this->data['url'] = '/vkontakte-oauth2callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
         $url = 'http://oauth.vk.com/authorize?';
-        $url.= parent::getauthurl();
+        $url.= parent::getAuthUrl();
         return $url;
     }
 
     //handle callback
-    public function request($arg)
+    public function request(Context $context)
     {
-        if ($err = parent::request($arg)) {
-            return $err;
+parent::request($context);
+
+if ($context->response->status != 200) {
+return;
         }
 
         $code = $_REQUEST['code'];
-        $resp = http::post('https://oauth.vk.com/access_token', array(
+        $resp = Http::post('https://oauth.vk.com/access_token', array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url,
-            //'grant_type' => 'authorization_code'
-            
         ));
 
         if ($resp) {
             $tokens = json_decode($resp);
-            if ($r = http::get('https://api.vk.com/method/getProfiles?uids=' . $tokens->user_id . '&access_token=' . $tokens->access_token)) {
+            if ($r = Http::get('https://api.vk.com/method/getProfiles?uids=' . $tokens->user_id . '&access_token=' . $tokens->access_token)) {
                 $js = json_decode($r);
                 $info = $js->response[0];
-                return $this->adduser(array(
+                return $this->addUser($context, array(
                     'service' => $this->name,
                     'uid' => $info->uid,
                     'name' => $info->first_name . ' ' . $info->last_name,
@@ -65,10 +64,10 @@ class tvkontakteregservice extends tregservice
             }
         }
 
-        return $this->errorauth();
+$context->response->forbidden();
     }
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'http://vk.com/editapp?act=create',
