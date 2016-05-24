@@ -16,5 +16,6 @@ return [
 'subcatwidget' => 'subcat',
 'openid-provider' => 'openid',
 'rss-chrome' => 'rsschrome',
+'rss-filelist' => 'rssfiles',
  ];
 

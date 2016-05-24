@@ -8,19 +8,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\rssfiles;
 
-function trssfilelistInstall($self)
+use litepubl\post\Rss;
+
+function PluginInstall($self)
 {
-    $rss = trss::i();
-    $rss->beforepost = $self->beforepost;
+    $rss = Rss::i();
+    $rss->beforepost = $self->beforePost;
 
     $self->getApp()->cache->clear();
 }
 
-function trssfilelistUninstall($self)
+function PluginUninstall($self)
 {
-    $rss = trss::i();
+    $rss = Rss::i();
     $rss->unbind($self);
 
     $self->getApp()->cache->clear();
