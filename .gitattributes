@@ -113,7 +113,6 @@ plugins/imgresize* export-ignore
 plugins/livejournalposter* export-ignore
 plugins/regservices* export-ignore
 plugins/regservices-ulogin* export-ignore
-plugins/rss-prev-next* export-ignore
 plugins/sameposts* export-ignore
 plugins/sape* export-ignore
 plugins/simpleimporter* export-ignore

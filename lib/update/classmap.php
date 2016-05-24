@@ -299,6 +299,7 @@ return array(
 'tsinglecat' => 'litepubl\plugins\singlecat\Plugin',
 'rsschrome' => 'litepubl\plugins\rsschrome\Plugin',
 'trssfilelist' => 'litepubl\plugins\rssfiles\Plugin',
+'TRSSPrevNext' => 'litepubl\plugins\rssprevnext\Plugin',
 
 
 );

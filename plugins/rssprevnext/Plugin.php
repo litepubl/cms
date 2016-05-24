@@ -8,20 +8,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\rssprevnext;
 
-class TRSSPrevNext extends \litepubl\core\Plugin
+use litepubl\post\Post;
+
+class Plugin extends \litepubl\core\Plugin
 {
 
-    public static function i()
+    public function beforePost($id, &$content)
     {
-        return static ::iGet(__class__);
-    }
-
-    public function beforepost($id, &$content)
-    {
-        $post = tpost::i($id);
-        $content.= $post->prevnext;
+        $post = Post::i($id);
+        $content.= $post->getView()->prevnext;
     }
 
 }

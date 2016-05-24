@@ -17,5 +17,7 @@ return [
 'openid-provider' => 'openid',
 'rss-chrome' => 'rsschrome',
 'rss-filelist' => 'rssfiles',
+'rss-prev-next' => 'rssprevnext',
+
  ];
 
