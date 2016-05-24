@@ -11,12 +11,15 @@
 namespace litepubl\plugins\regservices;
 
 use litepubl\core\Str;
+use litepubl\core\UserGroups;
 use litepubl\view\Filter;
 use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\view\Lang;
 use litepubl\view\Args;
 use litepubl\view\Admin;
+use litepubl\core\Users;
+use litepubl\comments\Form;
 
 class Service extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
@@ -117,8 +120,9 @@ $response = $context->response;
     {
         $a = $this->getadminInfo($lang);
         $result = $admin->help(sprintf($lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
-        $result.= $html->getinput('text', "client_id_$this->name", tadminhtml::specchars($this->client_id) , $a['client_id']);
-        $result.= $html->getinput('text', "client_secret_$this->name", tadminhtml::specchars($this->client_secret) , $a['client_secret']);
+            $theme = Theme::i();
+        $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id) , $a['client_id']);
+        $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret) , $a['client_secret']);
         return $result;
     }
 
@@ -129,18 +133,18 @@ $response = $context->response;
         $this->save();
     }
 
-    public function errorauth()
+    public function errorAuth()
     {
         return 403;
     }
 
-    public function adduser(array $item, $rawdata)
+    public function addUser(array $item, $rawdata)
     {
-        $users = tusers::i();
-        $reguser = tregserviceuser::i();
+        $users = Users::i();
+        $reguser = RegUser::i();
         if (!empty($item['email'])) {
-            if ($id = $users->emailexists($item['email'])) {
-                $user = $users->getitem($id);
+            if ($id = $users->emailExists($item['email'])) {
+                $user = $users->getItem($id);
                 if ($user['status'] == 'comuser') $users->approve($id);
             } elseif ($this->getApp()->options->reguser) {
                 $id = $users->add(array(
@@ -148,6 +152,7 @@ $response = $context->response;
                     'name' => $item['name'],
                     'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
                 ));
+
                 if (isset($item['uid'])) {
                     $uid = $item['uid'];
                     if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
@@ -163,7 +168,6 @@ $response = $context->response;
                 if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
                 if ($id = $reguser->find($this->name, $uid)) {
                     //nothing
-                    
                 } elseif ($this->getApp()->options->reguser) {
                     $id = $users->add(array(
                         'email' => '',
@@ -184,65 +188,28 @@ $response = $context->response;
 
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
-        $this->getApp()->options->user = $id;
-        $this->getApp()->options->updategroup();
-        $this->getApp()->options->setcookies($cookie, $expired);
-        if ($this->getApp()->options->ingroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
+        $options = $this->getApp()->options;
+$options->user = $id;
+        $options->updateGroup();
+        $options->setCookies($cookie, $expired);
+        if ($options->inGroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
 
         setcookie('litepubl_regservice', $this->name, $expired, $this->getApp()->site->subdir . '/', false);
 
         $this->onadd($id, $rawdata);
 
         if (isset($this->sessdata['comuser'])) {
-            return tcommentform::i()->processForm($this->sessdata['comuser'], true);
+            return Form::i()->processForm($this->sessdata['comuser'], true);
         }
 
         if (!empty($_COOKIE['backurl'])) {
             $backurl = $_COOKIE['backurl'];
         } else {
-            $user = $users->getitem($id);
-            $backurl = tusergroups::i()->gethome($user['idgroups'][0]);
+            $user = $users->getItem($id);
+            $backurl = UserGroups::i()->gethome($user['idgroups'][0]);
         }
 
         return $this->getApp()->router->redir($backurl);
     }
 
-} //class
-class tregserviceuser extends titems
-{
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
-    protected function create()
-    {
-        $this->dbversion = true;
-        parent::create();
-        $this->basename = 'regservices' . DIRECTORY_SEPARATOR . 'users';
-        $this->table = 'regservices';
-    }
-
-    public function add($id, $service, $uid)
-    {
-        if (($id == 0) || ($service == '') || ($uid == '')) {
-            return;
-        }
-
-        $this->db->insert(array(
-            'id' => $id,
-            'service' => $service,
-            'uid' => $uid
-        ));
-
-        $this->added($id, $service);
-    }
-
-    public function find($service, $uid)
-    {
-        return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
-    }
-
 }
-

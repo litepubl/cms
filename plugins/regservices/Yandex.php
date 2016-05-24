@@ -10,7 +10,11 @@
 
 namespace litepubl\plugins\regservices;
 
-class tyandexregservice extends tregservice
+use litepubl\core\Context;
+use litepubl\utils\Http;
+use litepubl\view\Lang;
+
+class Yandex extends Service
 {
 
     protected function create()
@@ -30,14 +34,14 @@ class tyandexregservice extends tregservice
     }
 
     //handle callback
-    public function request($arg)
+    public function request(Context $context)
     {
-        if ($err = parent::request($arg)) {
+        if ($err = parent::request($context)) {
             return $err;
         }
 
         $code = $_REQUEST['code'];
-        $resp = http::post('https://oauth.yandex.ru/token', array(
+        $resp = Http::post('https://oauth.yandex.ru/token', array(
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
@@ -46,9 +50,9 @@ class tyandexregservice extends tregservice
 
         if ($resp) {
             $tokens = json_decode($resp);
-            if ($r = http::get('https://login.yandex.ru/info?format=json&oauth_token=' . $tokens->access_token)) {
+            if ($r = Http::get('https://login.yandex.ru/info?format=json&oauth_token=' . $tokens->access_token)) {
                 $info = json_decode($r);
-                return $this->adduser(array(
+                $this->addUser(array(
                     'service' => $this->name,
                     'uid' => $info->id,
                     'email' => isset($info->default_email) ? $info->default_email : $info->emails[0],
@@ -57,10 +61,10 @@ class tyandexregservice extends tregservice
             }
         }
 
-        return $this->errorauth();
+$context->response->forbidden();
     }
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => 'https://oauth.yandex.ru/client/new',

@@ -10,7 +10,9 @@
 
 namespace litepubl\plugins\regservices;
 
-class Plugin extends \litepubl\core\Items
+use litepubl\comments\Form;
+
+class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
 
     protected function create()
@@ -43,6 +45,7 @@ class Plugin extends \litepubl\core\Items
                 $widget.= "<a href=\"$url=$name&backurl=\" class=\"$name-regservice\" title=\"$service->title\"></a>";
             }
         }
+
         $widget = str_replace('&', '&amp;', $widget);
         $this->widget = $this->widget_title . sprintf('<div class="regservices">%s</div>', $widget);
         $this->save();
@@ -63,49 +66,48 @@ class Plugin extends \litepubl\core\Items
         $tc->save();
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        $this->cache = false;
-        Header('Cache-Control: no-cache, must-revalidate');
-        Header('Pragma: no-cache');
+$response = $context->response;
+        $response->cache = false;
 
         // hook for clien disabled cookies
         if (!isset($_GET['cookietest'])) {
             $backurl = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
             if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, $this->getApp()->site->subdir . '/', false);
             setcookie('litepubl_cookie_test', 'test', time() + 8000, $this->getApp()->site->subdir . '/', false);
-            return $this->getApp()->router->redir($this->getApp()->router->url . '&cookietest=true');
+            return $response->redir($context->request->url . '&cookietest=true');
         }
 
         if (!isset($_COOKIE['litepubl_cookie_test'])) {
-            return 403;
+            return $response->forbidden();
         }
 
         setcookie('litepubl_cookie_test', '', 0, $this->getApp()->site->subdir . '/', false);
 
         $id = empty($_GET['id']) ? 0 : $_GET['id'];
         if (!isset($this->items[$id])) {
-            return 404;
+            return $response->notfound();
         }
 
         $service = static ::iGet($this->items[$id]);
         if (!$service->valid()) {
-            return 403;
+            return $response->forbidden();
         }
 
-        $url = $service->getauthurl();
+        $url = $service->getAuthUrl();
         if (!$url) {
-            return 403;
+            return $response->forbidden();
         }
 
-        return $this->getApp()->router->redir($url);
+$response->redir($url);
     }
 
     public function oncomuser(array $values, $comfirmed)
     {
         //ignore $comfirmed, always return redirect
-        $form = tcommentform::i();
-        if ($err = $form->processcomuser($values)) {
+        $form = Form::i();
+        if ($err = $form->processComUser($values)) {
             return $err;
         }
 
@@ -149,7 +151,7 @@ class Plugin extends \litepubl\core\Items
             return false;
         }
 
-        return $form->sendresult($url, array(
+        return $form->sendResult($url, array(
             ini_get('session.name') => $service->session_id
         ));
     }

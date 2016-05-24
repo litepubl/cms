@@ -304,6 +304,12 @@ return array(
 'tsapeplugin' => 'litepubl\plugins\sape\Widget',
 'tregservices' => 'litepubl\plugins\regservices\Plugin',
 'tregservice' => 'litepubl\plugins\regservices\Service',
+'tregserviceuser' => 'litepubl\plugins\regservices\RegUser',
+'toauth' => 'litepubl\plugins\regservices\Oauth',
+'tyandexregservice' => 'litepubl\plugins\regservices\Yandex',
+
+
+
 
 
 

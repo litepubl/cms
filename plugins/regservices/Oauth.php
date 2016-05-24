@@ -8,9 +8,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class toauth extends tdata
+class Oauth
 {
     public $urllist;
     public $key;
