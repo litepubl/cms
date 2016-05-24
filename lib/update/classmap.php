@@ -300,6 +300,8 @@ return array(
 'rsschrome' => 'litepubl\plugins\rsschrome\Plugin',
 'trssfilelist' => 'litepubl\plugins\rssfiles\Plugin',
 'TRSSPrevNext' => 'litepubl\plugins\rssprevnext\Plugin',
+'tsameposts' => 'litepubl\plugins\sameposts\Widget',
+
 
 
 );

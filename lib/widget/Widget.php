@@ -53,6 +53,11 @@ public $cache;
         return $this->adminInstance;
     }
 
+    public function getWidgets(): Widgets
+{
+return Widgets::i();
+}
+
     public function getWidget(int $id, int $sidebar): string
     {
         $vars = new Vars();

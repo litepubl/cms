@@ -8,18 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sameposts;
 
 use litepubl\view\Lang;
-use litepubl\widget\View;
+use litepubl\post\Post;
+use litepubl\post\Posts;
 
-class tsameposts extends tclasswidget
+class Widget extends tclasswidget
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
+const POSTCLASS = 'litepubl\post\Post';
 
     protected function create()
     {
@@ -27,31 +24,31 @@ class tsameposts extends tclasswidget
         $this->table = 'sameposts';
         $this->basename = 'widget.sameposts';
         $this->template = 'posts';
-        $this->adminclass = 'tadminsameposts';
+        $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->cache = 'nocache';
         $this->data['maxcount'] = 10;
     }
 
-    public function getDeftitle()
+    public function getDeftitle(): string
     {
         return Lang::get('default', 'sameposts');
     }
 
-    public function postschanged()
+    public function postsChanged()
     {
         $this->db->exec("truncate $this->thistable");
     }
 
-    private function findsame($idpost)
+    private function findSame(int $idpost): array
     {
-        $posts = tposts::i();
-        $post = tpost::i($idpost);
+        $posts = Posts::i();
+        $post = Post::i($idpost);
         if (count($post->categories) == 0) {
             return array();
         }
 
-        $cats = tcategories::i();
-        $cats->loadall();
+        $cats = $post->factory->cats;
+        $cats->loadAll();
         $same = array();
         foreach ($post->categories as $idcat) {
             if (!isset($cats->items[$idcat])) {
@@ -59,7 +56,7 @@ class tsameposts extends tclasswidget
             }
 
             $itemsposts = $cats->itemsposts->getposts($idcat);
-            $itemsposts = $posts->stripdrafts($itemsposts);
+            $itemsposts = $posts->stripDrafts($itemsposts);
             foreach ($itemsposts as $id) {
                 if ($id == $idpost) {
                     continue;
@@ -73,13 +70,13 @@ class tsameposts extends tclasswidget
         return array_slice(array_keys($same) , 0, $this->maxcount);
     }
 
-    public function getSame($id)
+    public function getSame(int $id): array
     {
-        $items = $this->db->getvalue($id, 'items');
+        $items = $this->db->getValue($id, 'items');
         if (is_string($items)) {
             return $items == '' ? array() : explode(',', $items);
         } else {
-            $result = $this->findsame($id);
+            $result = $this->findSame($id);
             $this->db->add(array(
                 'id' => $id,
                 'items' => implode(',', $result)
@@ -88,18 +85,17 @@ class tsameposts extends tclasswidget
         }
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
-        $post = $this->getcontext('tpost');
-        $list = $this->getsame($post->id);
+        $post = $this->getWidgets()->findContext(static::POSTCLASS );
+        $list = $this->getSame($post->id);
         if (count($list) == 0) {
             return '';
         }
 
-        $posts = tposts::i();
-        $posts->loaditems($list);
-        $view = new View();
-        return $view->getPosts($list, $sidebar, '');
+        $posts = Posts::i();
+        $posts->loadItems($list);
+        return $this->view->getPosts($list, $sidebar, '');
     }
 
 }
