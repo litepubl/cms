@@ -8,44 +8,56 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\spae;
 
-use litepubl\view\Args;
 
-class tadminsapeplugin extends tadminwidget
+use litepubl\admin\Form;
+class Admin extends \litepubl\admin\widget\Widget
 {
 
-    public static function i()
+    public function __construct()
     {
-        return static ::iGet(__class__);
-    }
-
-    protected function create()
-    {
-        parent::create();
-        $this->widget = tsapeplugin::i();
+        parent::__construct();
+        $this->widget = Widget::i();
     }
 
     public function getContent()
     {
         $result = '';
+$form = '';
         $widget = $this->widget;
-        $args = new Args();
+$lang = $this->getLangAbout();
+        $args = $this->args;
+
         if ($widget->id != 0) {
             $args->maxcount = $widget->counts[$widget->id];
-            $result.= $this->optionsform($this->widget->gettitle($this->widget->id) , $this->html->parseArg('[text=maxcount]', $args));
+            $form = parent::getForm();
+$forrm .= '[text=maxcount]';
         }
 
         $args->user = $widget->user;
         $args->force = $widget->force;
-        $tml = file_get_contents(dirname(__file__) . DIRECTORY_SEPARATOR . 'sapeform.tml');
-        $result.= $this->html->parseArg($tml, $args);
-        return $result;
-    }
+$args->sapeoptions = 1;
+$args->formtitle = $lang->formtitle;
 
-    protected function doProcessForm(twidget $widget)
+$form .= '
+[text=user]
+[checkbox=force]
+[hidden=sapeoptions]
+';
+
+$result .= $this->admin->form($form, $args);
+$addform = new Form($args);
+$addform->title = $lang->addtitle;
+$addform->submit = 'addwidget';
+
+$result .= $addform->get();
+return $result;    }
+
+    protected function doProcessForm()
     {
         extract($_POST, EXTR_SKIP);
+$widget = $this->widget;
         if (isset($addwidget)) {
             $widget->add();
         } elseif (isset($sapeoptions)) {

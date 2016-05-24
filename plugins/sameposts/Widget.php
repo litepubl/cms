@@ -14,7 +14,7 @@ use litepubl\view\Lang;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 
-class Widget extends tclasswidget
+class Widget extends \litepubl\widget\Depended
 {
 const POSTCLASS = 'litepubl\post\Post';
 

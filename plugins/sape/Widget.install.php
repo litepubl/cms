@@ -8,9 +8,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sape;
 
-function tsapepluginInstall($self)
+function WidgetInstall($self)
 {
     $self->add();
 }

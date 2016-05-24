@@ -67,8 +67,6 @@ class Widget extends \litepubl\admin\Panel
 
     protected function doProcessForm()
     {
-        //nothing
-        
     }
 
 }

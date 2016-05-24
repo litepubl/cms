@@ -8,11 +8,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sape;
 
 use litepubl\view\Lang;
 
-class tsapeplugin extends twidget
+class Widget extends \litepubl\widget\Widget
 {
     public $sape;
     public $counts;
@@ -38,7 +38,7 @@ class tsapeplugin extends twidget
     {
         if (!defined('_SAPE_USER')) {
             define('_SAPE_USER', $this->user);
-            $this->getApp()->classes->include_file($this->getApp()->paths->plugins . 'sape' . DIRECTORY_SEPARATOR . 'sape.php');
+include_once(__DIR__ . '/sape.php');
             $o['charset'] = 'UTF-8';
             $o['multi_site'] = true;
             if ($this->force) $o['force_show_code'] = $this->force;
@@ -46,22 +46,26 @@ class tsapeplugin extends twidget
         }
     }
 
+public function getValid(): bool
+{
+$app = $this->getApp();
+return $this->user
+&& $app->context->response->status == 200
+ && !$app->context->request->isAdminPanel;
+}
+
     public function getWidget(int $id, int $sidebar): string
     {
-        if ($this->user == '') {
+        if (!$this->getValid()) {
             return '';
         }
 
-        if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel) {
-            return '';
-        }
-
-        return parent::getwidget($id, $sidebar);
+        return parent::getWidget($id, $sidebar);
     }
 
     public function getContent(int $id, int $sidebar): string
     {
-        $links = $this->getlinks();
+        $links = $this->getLinks();
         if (empty($links)) {
             return '';
         }
@@ -73,13 +77,10 @@ class tsapeplugin extends twidget
     {
         return $this->getcontent(0, 0);
     }
+
     public function getLinks()
     {
-        if ($this->user == '') {
-            return '';
-        }
-
-        if ($this->getApp()->router->is404 || $this->getApp()->router->adminpanel) {
+        if (!$this->getValid()) {
             return '';
         }
 
@@ -87,25 +88,24 @@ class tsapeplugin extends twidget
         return $this->sape->return_links($this->counts[$id]);
     }
 
-    public function setCount($id, $count)
+    public function setCount(int $id, int $count)
     {
         $this->counts[$id] = $count;
-        $widgets = twidgets::i();
+        $widgets = $this->gettWidgets();
+
         foreach ($this->counts as $id => $count) {
             if (!isset($widgets->items[$id])) unset($this->counts[$id]);
         }
+
         $this->save();
     }
 
     public function add()
     {
-        $id = $this->addtosidebar(0);
+        $id = $this->addToSidebar(0);
         $this->counts[$id] = 10;
         $this->save();
         return $id;
     }
 
-} //class
-
-?>
-
+}

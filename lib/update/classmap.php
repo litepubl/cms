@@ -301,6 +301,8 @@ return array(
 'trssfilelist' => 'litepubl\plugins\rssfiles\Plugin',
 'TRSSPrevNext' => 'litepubl\plugins\rssprevnext\Plugin',
 'tsameposts' => 'litepubl\plugins\sameposts\Widget',
+'tsapeplugin' => 'litepubl\plugins\sape\Widget',
+
 
 
 
