@@ -297,5 +297,7 @@ return array(
 'tpostcontentplugin' => 'litepubl\plugins\postcontent\Plugin',
 'tshortcode' => 'litepubl\plugins\shortcode\Plugin',
 'tsinglecat' => 'litepubl\plugins\singlecat\Plugin',
+'rsschrome' => 'litepubl\plugins\rsschrome\Plugin',
+
 );
 

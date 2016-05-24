@@ -8,15 +8,9 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\rsschrome;
 
-class rsschrome extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
-
 }
 

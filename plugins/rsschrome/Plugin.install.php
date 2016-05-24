@@ -8,11 +8,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\rsschrome;
 
 use litepubl\view\Js;
 
-function rsschromeInstall($self)
+function PluginInstall($self)
 {
     $name = basename(dirname(__file__));
     $js = Js::i();
@@ -23,7 +23,7 @@ function rsschromeInstall($self)
     $js->unlock();
 }
 
-function rsschromeUninstall($self)
+function PluginUninstall($self)
 {
     $name = basename(dirname(__file__));
     $js = Js::i();

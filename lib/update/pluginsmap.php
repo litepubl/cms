@@ -15,5 +15,6 @@ return [
 'postcatwidget' => 'postwidget',
 'subcatwidget' => 'subcat',
 'openid-provider' => 'openid',
+'rss-chrome' => 'rsschrome',
  ];
 
