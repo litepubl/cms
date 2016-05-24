@@ -8,20 +8,20 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
 use litepubl\core\Str;
 use litepubl\view\Filter;
+use litepubl\core\Context;
+use litepubl\core\Session;
+use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\view\Admin;
 
-class tregservice extends \litepubl\core\Plugin
+class Service extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
     public $sessdata;
     public $session_id;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -42,7 +42,7 @@ class tregservice extends \litepubl\core\Plugin
         return 'regservices' . DIRECTORY_SEPARATOR . $this->name;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return $this->client_id && $this->client_secret;
     }
@@ -57,37 +57,37 @@ class tregservice extends \litepubl\core\Plugin
         $this->getApp()->router->unbind($this);
     }
 
-    public function start_session()
+    public function startSession()
     {
-        tsession::init(1);
+        Session::init(1);
         session_start();
         $this->session_id = session_id();
     }
 
     //handle callback
-    public function request($arg)
+    public function request(Context $context)
     {
-        $this->cache = false;
-        Header('Cache-Control: no-cache, must-revalidate');
-        Header('Pragma: no-cache');
+$response = $context->response;
+        $response->cache = false;
 
         if (empty($_REQUEST['code'])) {
-            return 403;
+            return $response->forbidden();
         }
 
-        $this->start_session();
+        $this->startSession();
 
         if (empty($_REQUEST['state']) || empty($_SESSION['state']) || ($_REQUEST['state'] != $_SESSION['state'])) {
             session_destroy();
-            return 403;
+            return $response->forbidden();
         }
+
         $this->sessdata = isset($_SESSION['sessdata']) ? $_SESSION['sessdata'] : array();
         session_destroy();
     }
 
-    public function newstate()
+    public function newState()
     {
-        $this->start_session();
+        $this->startSession();
         $state = Str::md5Rand();
         $_SESSION['state'] = $state;
         $_SESSION['sessdata'] = $this->sessdata;
@@ -95,16 +95,16 @@ class tregservice extends \litepubl\core\Plugin
         return $state;
     }
 
-    public function getAuthurl()
+    public function getAuthUrl(): string
     {
         $url = 'response_type=code';
         $url.= '&redirect_uri=' . urlencode($this->getApp()->site->url . $this->url);
         $url.= '&client_id=' . $this->client_id;
-        $url.= '&state=' . $this->newstate();
+        $url.= '&state=' . $this->newState();
         return $url;
     }
 
-    protected function getAdmininfo($lang)
+    protected function getAdminInfo(Lang $lang): array
     {
         return array(
             'regurl' => '',
@@ -113,10 +113,10 @@ class tregservice extends \litepubl\core\Plugin
         );
     }
 
-    public function getTab($html, $args, $lang)
+    public function getTab(Admin $admin, Args $args, Lang $lang): string
     {
-        $a = $this->getadmininfo($lang);
-        $result = $html->p(sprintf($lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
+        $a = $this->getadminInfo($lang);
+        $result = $admin->help(sprintf($lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
         $result.= $html->getinput('text', "client_id_$this->name", tadminhtml::specchars($this->client_id) , $a['client_id']);
         $result.= $html->getinput('text', "client_secret_$this->name", tadminhtml::specchars($this->client_secret) , $a['client_secret']);
         return $result;

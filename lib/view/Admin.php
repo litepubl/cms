@@ -35,17 +35,17 @@ class Admin extends Base
         return $result;
     }
 
-    public static function admin()
+    public static function admin(): Admin
     {
         return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return AdminParser::i();
     }
 
-    public function shortcode($s, Args $args)
+    public function shortCode(string $s, Args $args): string
     {
         $result = trim($s);
         //replace [tabpanel=name{content}]
@@ -133,7 +133,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function parseArg($s, Args $args)
+    public function parseArg(string $s, Args $args): string
     {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
@@ -141,12 +141,12 @@ class Admin extends Base
         return $this->parse($result);
     }
 
-    public function form($tml, Args $args)
+    public function form(string $tml, Args $args): string
     {
         return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
     }
 
-    public function getTable($head, $body, $footer = '')
+    public function getTable(string $head, string $body, string $footer = ''): string
     {
         return strtr($this->templates['table'], array(
             '$class' => Theme::i()->templates['content.admin.tableclass'],
@@ -156,7 +156,7 @@ class Admin extends Base
         ));
     }
 
-    public function success($text)
+    public function success(string $text): string
     {
         return str_replace('$text', $text, $this->templates['success']);
     }
@@ -166,13 +166,13 @@ class Admin extends Base
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
-    public function getIcon($name, $screenreader = false)
+    public function getIcon(string $name, $screenreader = false): string
     {
         return str_replace('$name', $name, $this->templates['icon'])
  . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
-    public function getSection($title, $content)
+    public function getSection(string $title, string $content): string
     {
         return strtr($this->templates['section'], array(
             '$title' => $title,
@@ -180,7 +180,7 @@ class Admin extends Base
         ));
     }
 
-    public function getErr($content)
+    public function getErr(string $content): string
     {
         return strtr($this->templates['error'], array(
             '$title' => Lang::get('default', 'error') ,
@@ -188,12 +188,12 @@ class Admin extends Base
         ));
     }
 
-    public function help($content)
+    public function help(string $content): string
     {
         return str_replace('$content', $content, $this->templates['help']);
     }
 
-    public function getCalendar($name, $date)
+    public function getCalendar(string $name, $date): string
     {
         $date = datefilter::timestamp($date);
 
@@ -213,7 +213,7 @@ class Admin extends Base
         return $this->parseArg($this->templates['calendar'], $args);
     }
 
-    public function getDaterange($from, $to)
+    public function getDaterange($from, $to): string
     {
         $from = datefilter::timestamp($from);
         $to = datefilter::timestamp($to);
@@ -226,16 +226,16 @@ class Admin extends Base
         return $this->parseArg($this->templates['daterange'], $args);
     }
 
-    public function getCats(array $items)
+    public function getCats(array $items): string
     {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
         Cats::i()->loadall();
-        $result.= $this->getsubcats(0, $items);
+        $result.= $this->getSubCats(0, $items);
         return $result;
     }
 
-    protected function getSubcats($parent, array $items, $exclude = false)
+    protected function getSubCats(int $parent, array $items, $exclude = false): string
     {
         $result = '';
         $args = new Args();
@@ -246,7 +246,7 @@ class Admin extends Base
                 $args->add($item);
                 $args->checked = in_array($item['id'], $items);
                 $args->subcount = '';
-                $args->subitems = $this->getsubcats($id, $items, $exclude);
+                $args->subitems = $this->getSubCats($id, $items, $exclude);
                 $result.= $this->parseArg($tml, $args);
             }
         }
@@ -258,7 +258,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function processCategories()
+    public function processCategories(): array
     {
         $result = $this->check2array('category-');
         Arr::clean($result);
@@ -266,7 +266,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function getFilelist(array $list)
+    public function getFilelist(array $list): string
     {
         $args = new Args();
         $args->fileperm = '';
@@ -299,7 +299,7 @@ class Admin extends Base
         return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
-    public function check2array($prefix)
+    public function check2array(string $prefix): string
     {
         $result = array();
         foreach ($_POST as $key => $value) {

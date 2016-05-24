@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
-class tregservices extends titems
+class Plugin extends \litepubl\core\Items
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -29,16 +24,16 @@ class tregservices extends titems
         $this->data['widget_title'] = '';
     }
 
-    public function add(tregservice $service)
+    public function add(Service $service)
     {
         $this->lock();
         $this->items[$service->name] = get_class($service);
         $service->save();
-        $this->update_widget();
+        $this->updateWidget();
         $this->unlock();
     }
 
-    public function update_widget()
+    public function updateWidget()
     {
         $widget = '';
         $url = $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';

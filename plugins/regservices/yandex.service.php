@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
 class tyandexregservice extends tregservice
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -27,7 +22,7 @@ class tyandexregservice extends tregservice
         $this->data['url'] = '/yandex-oauth2callback.php';
     }
 
-    public function getAuthurl()
+    public function getAuthurl(): string
     {
         $url = 'https://oauth.yandex.ru/authorize?response_type=code' . $url.= '&client_id=' . $this->client_id;
         $url.= '&state=' . $this->newstate();

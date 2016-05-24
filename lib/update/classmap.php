@@ -302,6 +302,10 @@ return array(
 'TRSSPrevNext' => 'litepubl\plugins\rssprevnext\Plugin',
 'tsameposts' => 'litepubl\plugins\sameposts\Widget',
 'tsapeplugin' => 'litepubl\plugins\sape\Widget',
+'tregservices' => 'litepubl\plugins\regservices\Plugin',
+'tregservice' => 'litepubl\plugins\regservices\Service',
+
+
 
 
 

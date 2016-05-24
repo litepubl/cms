@@ -8,13 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices;
 
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
-use litepubl\view\Css;
+use litepubl\core\Users;
+use litepubl\comments\Form;
 
-function tregservicesInstall($self)
+function PluginInstall($self)
 {
     $dir = $self->getApp()->paths->data . 'regservices';
     @mkdir($dir, 0777);
@@ -50,7 +51,8 @@ function tregservicesInstall($self)
 
     $self->unlock();
 
-    tusers::i()->deleted = tregserviceuser::i()->delete;
+    Users::i()->deleted = tregserviceuser::i()->delete;
+
     $names = implode("', '", array_keys($self->items));
     DBManager::i()->createtable('regservices', "id int unsigned NOT NULL default 0,
     service enum('$names') default 'google',
@@ -61,11 +63,11 @@ function tregservicesInstall($self)
     ");
 
     $self->getApp()->router->addget($self->url, get_class($self));
-    tcommentform::i()->oncomuser = $self->oncomuser;
+    Form::i()->oncomuser = $self->oncomuser;
     $self->getApp()->cache->clear();
 }
 
-function tregservicesUninstall($self)
+function PluginUninstall($self)
 {
     $name = basename(dirname(__file__));
     tcommentform::i()->unbind($self);

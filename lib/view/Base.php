@@ -75,7 +75,7 @@ class Base extends \litepubl\core\Events
         return 'themes/' . $this->name;
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return BaseParser::i();
     }

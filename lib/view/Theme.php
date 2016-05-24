@@ -51,7 +51,7 @@ class Theme extends Base
         return $this->templates['index'];
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return Parser::i();
     }
