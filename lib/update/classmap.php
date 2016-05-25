@@ -318,5 +318,7 @@ return array(
 
 'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
+'tusernews' => 'litepubl\plugins\usernews\Plugin',
+
 
 );

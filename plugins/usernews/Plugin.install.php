@@ -8,13 +8,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\usernews;
 
 use litepubl\view\Filter;
 use litepubl\view\LangMerger;
+use litepubl\core\UserGroups;
+use litepubl\core\Plugins;
+use litepubl\admin\AuthorRights;
 
-function tusernewsInstall($self)
+function PluginInstall($self)
 {
+$plugins= Plugins::i();
+    if (!isset($plugins->items['ulogin'])) {
+$plugins->add('ulogin');
+}
+
     $name = basename(dirname(__file__));
     $self->data['dir'] = $name;
     $self->save();
@@ -27,29 +35,27 @@ function tusernewsInstall($self)
 
     $self->getApp()->options->parsepost = false;
     $self->getApp()->options->reguser = true;
-    $adminoptions = tadminoptions::i();
-    $adminoptions->usersenabled = true;
 
-    $groups = tusergroups::i();
+    $groups = UserGroups::i();
     $groups->defaults = array(
-        $groups->getidgroup('author')
+        $groups->getIdGroup('author')
     );
     $groups->save();
 
-    $rights = tauthor_rights::i();
+    $rights = AuthorRights::i();
     $rights->lock();
     $rights->gethead = $self->gethead;
-    $rights->getposteditor = $self->getposteditor;
+    $rights->getposteditor = $self->getPostEditor;
     $rights->editpost = $self->editpost;
-    $rights->changeposts = $self->changeposts;
-    $rights->canupload = $self->canupload;
-    $rights->candeletefile = $self->candeletefile;
+    $rights->changeposts = $self->changePosts;
+    $rights->canupload = $self->canUpload;
+    $rights->candeletefile = $self->canDeleteFile;
     $rights->unlock();
 }
 
-function tusernewsUninstall($self)
+function PluginUninstall($self)
 {
-    tauthor_rights::i()->unbind($self);
+    AuthorRights::i()->unbind($self);
     LangMerger::i()->deleteplugin(basename(dirname(__file__)));
 }
 

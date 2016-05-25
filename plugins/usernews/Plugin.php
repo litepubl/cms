@@ -8,19 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\usernews;
 
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class tusernews extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function create()
     {
@@ -35,34 +30,31 @@ class tusernews extends \litepubl\core\Plugin
         $this->data['editorfile'] = 'editor.htm';
     }
 
-    public function getNorights()
+    public function getNoRights()
     {
         $lang = Lang::admin('usernews');
         return sprintf('<h4>%s</h4>', $lang->norights);
     }
 
-    public function changeposts($action)
+    public function changePosts($action)
     {
         if (!$this->_changeposts) {
-            return $this->norights;
+            return $this->noRights;
         }
-
     }
 
-    public function canupload()
+    public function canUpload()
     {
         if (!$this->_canupload) {
-            return $this->norights;
+            return $this->noRights;
         }
-
     }
 
-    public function candeletefile()
+    public function canDeleteFile()
     {
         if (!$this->_candeletefile) {
-            return $this->norights;
+            return $this->noRights;
         }
-
     }
 
     public function getHead()
@@ -70,12 +62,11 @@ class tusernews extends \litepubl\core\Plugin
         return '';
     }
 
-    public function getPosteditor($post, $args)
+    public function getPostEditor($post, $args)
     {
         $args->data['$lang.sourceurl'] = Lang::admin()->get('usernews', 'sourceurl');
         if ($this->insertsource) $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
 
-        //$form =  $this->getApp()->cache->getString( $this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
         $form = file_get_contents($this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
         $args->raw = $post->rawcontent;
         $html = tadminhtml::i();
@@ -85,7 +76,7 @@ class tusernews extends \litepubl\core\Plugin
         return $html->fixquote($result);
     }
 
-    public function editpost(tpost $post)
+    public function editPost(tpost $post)
     {
         extract($_POST, EXTR_SKIP);
         $posts = tposts::i();

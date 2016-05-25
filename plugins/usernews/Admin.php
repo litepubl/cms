@@ -8,24 +8,16 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\usernews;
 
-use litepubl\view\Args;
-use litepubl\view\Lang;
-
-class tadminusernews
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tusernews::i();
-        $lang = Lang::admin('usernews');
-        $args = new Args();
+        $plugin = Plugin::i();
+        $lang = $this->lang;
+        $args = $this->args;
         $form = '';
         foreach (array(
             '_changeposts',
@@ -35,7 +27,6 @@ class tadminusernews
             'insertsource'
         ) as $name) {
             $args->$name = $plugin->data[$name];
-            //$args->data["\$lang.$name"] = $about[$name];
             $form.= "[checkbox=$name]";
         }
 
@@ -44,18 +35,16 @@ class tadminusernews
             'editorfile'
         ) as $name) {
             $args->$name = $plugin->data[$name];
-            //$args->data["\$lang.$name"] = $about[$name . 'label'];
             $form.= "[text=$name]";
         }
 
         $args->formtitle = $lang->formtitle;
-        $html = tadminhtml::i();
-        return $html->adminform($form, $args);
+        return $this->admin->form($form, $args);
     }
 
     public function processForm()
     {
-        $plugin = tusernews::i();
+        $plugin = Plugin::i();
         foreach (array(
             '_changeposts',
             '_canupload',
@@ -65,6 +54,7 @@ class tadminusernews
         ) as $name) {
             $plugin->data[$name] = isset($_POST[$name]);
         }
+
         foreach (array(
             'sourcetml',
             'editorfile'
