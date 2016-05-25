@@ -8,28 +8,22 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices2ulogin;
 
 use litepubl\core\Str;
 
-class treguser extends titems
+class Plugin extends \litepubl\core\Items
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
         $this->dbversion = true;
         parent::create();
         $this->basename = 'regservices/users';
-        //$this->table = 'regservices';
         $this->table = 'ulogin';
     }
 
-    public function add($id, $service, $uid)
+    public function add(int $id, string $service, string $uid)
     {
         if (($id == 0) || ($service == '') || ($uid == '')) {
             return;
@@ -44,7 +38,7 @@ class treguser extends titems
         $this->added($id, $service);
     }
 
-    public function find($service, $uid)
+    public function find($string service, string $uid)
     {
         return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }

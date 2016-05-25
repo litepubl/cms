@@ -111,8 +111,6 @@ vendor/composer.json export-ignore
 #ignore not updated plugins
 plugins/imgresize* export-ignore
 plugins/livejournalposter* export-ignore
-plugins/regservices* export-ignore
-plugins/regservices-ulogin* export-ignore
 plugins/simpleimporter* export-ignore
 plugins/usernews* export-ignore
 plugins/youtubeplayer* export-ignore

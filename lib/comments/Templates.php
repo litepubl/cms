@@ -26,7 +26,7 @@ class Templates extends \litepubl\core\Events
         $this->basename = 'comments.templates';
     }
 
-    public function getComments(PostView $view)
+    public function getComments(PostView $view): string
     {
         $result = '';
         $idpost = (int)$view->id;
@@ -70,7 +70,7 @@ class Templates extends \litepubl\core\Events
         $args->mesg = $mesg;
 
         $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-        $result.= $this->getjs(($view->idperm == 0) && $cm->confirmlogged, 'logged');
+        $result.= $this->getJS(($view->idperm == 0) && $cm->confirmlogged, 'logged');
 
         $result.= '<?php } else { ?>';
 
@@ -84,7 +84,7 @@ class Templates extends \litepubl\core\Events
             case 'guest':
                 $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
                 $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmguest, 'guest');
+                $result.= $this->getJS(($view->idperm == 0) && $cm->confirmguest, 'guest');
                 break;
 
 
@@ -103,7 +103,7 @@ class Templates extends \litepubl\core\Events
                 $args->content = '';
 
                 $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
-                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
+                $result.= $this->getJS(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
                 break;
         }
 
@@ -112,7 +112,7 @@ class Templates extends \litepubl\core\Events
         return $result;
     }
 
-    public function getMesg($k1, $k2)
+    public function getMesg(string $k1, string $k2): string
     {
         $theme = Theme::i();
         $result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
@@ -129,7 +129,7 @@ class Templates extends \litepubl\core\Events
         return $theme->parse($result);
     }
 
-    public function getJs($confirmcomment, $authstatus)
+    public function getJS(bool $confirmcomment, string $authstatus): string
     {
         $cm = Manager::i();
         $params = array(

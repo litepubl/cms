@@ -313,5 +313,7 @@ return array(
 'tmailruregservice' =>'litepubl\plugins\regservices\MailRu',
 'tgoogleregservice' => litepubl\plugins\regservices\Google',
 'tfacebookregservice' => litepubl\plugins\regservices\Facebook',
+
+'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
 );
 

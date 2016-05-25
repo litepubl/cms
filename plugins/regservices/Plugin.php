@@ -61,8 +61,7 @@ public $tmlWidget = '<div class="btn-group">$buttons</div>';
 str_replace('&', '&amp;', $buttons),
 $this->tmlWidget);
 
-$widget = Admin::admin()->getSection($this->widget_title, $content );
-        $this->widget = $widget;
+$this->widget = Admin::admin()->getSection($this->widget_title, $content );
         $this->save();
 
 LoginForms::i()->setWidget($this->widget);

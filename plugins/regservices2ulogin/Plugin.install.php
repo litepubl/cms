@@ -8,21 +8,21 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\regservices2ulogin;
 
-function treguserInstall($self)
+function PluginInstall($self)
 {
     $self->getApp()->classes->remap['tregserviceuser'] = get_class($self);
     $self->getApp()->classes->save();
 
-    $items = $self->getdb('regservices')->getitems('id > 0');
+    $items = $self->getdb('regservices')->getItems('id > 0');
     $db = $self->db;
     foreach ($items as $item) {
         $db->insert($item);
     }
 }
 
-function treguserUninstall($self)
+function PluginUninstall($self)
 {
     unset($self->getApp()->classes->remap['tregserviceuser']);
     $self->getApp()->classes->save();
