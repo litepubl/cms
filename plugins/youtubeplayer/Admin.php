@@ -8,29 +8,25 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\youtubeplayer;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
-
-class tadminyoutubeplayer
+class Admin extends \litepubl\admin\Panel
 {
 
     public function getContent()
     {
-        $plugin = tyoutubeplayer::i();
-        $about = Plugins::getabout(Plugins::getname(__file__));
-        $args = new Args();
-        $args->formtitle = $about['formtitle'];
-        $args->data['$lang.template'] = $about['template'];
+        $plugin = Plugin::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
+        $args->formtitle = $lang->formtitle;
         $args->template = $plugin->template;
-        $html = tadminhtml::i();
-        return $html->adminform('[editor:template]', $args);
+
+        return $this->admin->form('[editor=template]', $args);
     }
 
     public function processForm()
     {
-        $plugin = tyoutubeplayer::i();
+        $plugin = Plugin::i();
         $plugin->template = $_POST['template'];
         $plugin->save();
     }

@@ -113,4 +113,3 @@ plugins/imgresize* export-ignore
 plugins/livejournalposter* export-ignore
 plugins/simpleimporter* export-ignore
 plugins/usernews* export-ignore
-plugins/youtubeplayer* export-ignore

@@ -8,17 +8,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\youtubeplayer;
 
 use litepubl\view\Filter;
 
-class tyoutubeplayer extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {

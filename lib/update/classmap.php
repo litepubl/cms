@@ -317,5 +317,6 @@ return array(
 'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
 
 'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
+'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
 
 );
