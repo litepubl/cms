@@ -8,9 +8,11 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sourcefiles;
 
-function tsourcefilesInstall($self)
+use litepubl\utils\Filer;
+
+function PluginInstall($self)
 {
     $self->getApp()->router->add($self->url, get_class($self) , '', 'begin');
 
@@ -18,10 +20,10 @@ function tsourcefilesInstall($self)
     @chmod($self->dir, 0777);
 }
 
-function tsourcefilesUninstall($self)
+function PluginUninstall($self)
 {
     $self->getApp()->router->delete($self->url);
-    tfiler::delete($self->dir, true, true);
+    Filer::delete($self->dir, true, true);
 }
 
 function get_ignore_source()
@@ -35,7 +37,6 @@ function get_ignore_source()
         'plugins/sape/sape.php',
         'plugins/sape/' . $self->getApp()->domain . '.links.db',
         'plugins/markdown/markdown.parser.class.php',
-        'plugins/nicedit/nicEdit.js',
         'js/jsibox/jsibox_basic.js',
         'js/audio-player/audio-player.js',
         'js/audio-player/audio-player-noswfobject.js',

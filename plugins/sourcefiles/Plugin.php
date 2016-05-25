@@ -8,17 +8,17 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sourcefiles;
 
-class tsourcefiles extends \litepubl\core\Plugin implements itemplate
+
+use litepubl\core\Context;
+use litepubl\utils\Filer;
+use litepubl\view\Schema;
+
+class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterface
 {
     public $item;
     public $geshi;
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -28,22 +28,22 @@ class tsourcefiles extends \litepubl\core\Plugin implements itemplate
         $this->data['idschema'] = 1;
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         return $this->getApp()->paths->data . 'sourcecache';
     }
 
-    public function getFilename($url)
+    public function getFilename(string $url): string
     {
         return $this->dir . '/' . md5($url) . '.txt';
     }
 
     public function clear()
     {
-        tfiler::delete($this->dir, true, false);
+        Filer::delete($this->dir, true, false);
     }
 
-    public function loaditem($filename)
+    public function loadItem(string $filename)
     {
         if (!file_exists($filename)) {
             return false;
@@ -57,29 +57,30 @@ class tsourcefiles extends \litepubl\core\Plugin implements itemplate
         return unserialize($s);
     }
 
-    public function saveitem($filename, $data)
+    public function saveItem(string $filename, $data)
     {
         file_put_contents($filename, serialize($data));
         @chmod($filename, 0666);
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        $url = substr($this->getApp()->router->url, strlen($this->url));
+$response = $context->response;
+        $url = substr($context->request->url, strlen($this->url));
         $url = trim($url, '/');
         if (!$url) $url = '.';
 
-        if (!($this->item = $this->loaditem($this->getfilename($url)))) {
+        if (!($this->item = $this->loadItem($this->getFilename($url)))) {
             while ($url && $url != '.') {
                 $url = dirname($url);
                 if ($url == '.') {
-                    return $this->getApp()->router->redir($this->url);
+                    return $response->redir($this->url);
                 } else if (file_exists($this->getfilename($url))) {
-                    return $this->getApp()->router->redir($this->url . $url . '/');
+                    return $response->redir($this->url . $url . '/');
                 }
             }
 
-            return 404;
+            return $response->notfound();
         }
 
     }
@@ -97,9 +98,9 @@ class tsourcefiles extends \litepubl\core\Plugin implements itemplate
         }
     }
 
-    public function getView()
+    public function getSchema()
     {
-        return Schema::getview($this);
+        return Schema::getSchema($this);
     }
 
     public function getTitle()

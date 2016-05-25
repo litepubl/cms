@@ -8,36 +8,29 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sourcefiles;
 
-use litepubl\core\Plugins;
-use litepubl\view\Args;
+use litepubl\utils\Http;
 
-class tadminsourcefiles
+class Admin extends \litepubl\admin\Panel
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     public function getContent()
     {
-        $plugin = tsourcefiles::i();
-        $lang = Plugins::getnamelang(basename(dirname(__file__)));
-        $html = tadminhtml::i();
-        $args = new Args();
+        $plugin = Plugin::i();
+        $lang = $this->getLangAbout();
+        $args = $this->args;
         $args->zipurl = $plugin->zipurl;
         $args->formtitle = $lang->title;
-        return $html->adminform('[text=zipurl]', $args);
+        return $this->admin->form('[text=zipurl]', $args);
     }
 
     public function processForm()
     {
-        $plugin = tsourcefiles::i();
+        $plugin = Plugin::i();
         $m = microtime(true);
         $url = trim($_POST['zipurl']);
-        if ($url && ($s = http::get($url))) {
+        if ($url && ($s = Http::get($url))) {
             $plugin->data['zipurl'] = $url;
             $plugin->save();
             set_time_limit(120);
@@ -45,7 +38,7 @@ class tadminsourcefiles
             file_put_contents($filename, $s);
             @chmod($filename, 0666);
             $plugin->clear();
-            $plugin->readzip($filename);
+            $plugin->readZip($filename);
             unlink($filename);
             return sprintf('<h4>Processed  by %f seconds</h4>', round(microtime(true) - $m, 2));
         }

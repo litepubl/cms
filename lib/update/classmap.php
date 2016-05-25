@@ -315,5 +315,7 @@ return array(
 'tfacebookregservice' => litepubl\plugins\regservices\Facebook',
 
 'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
-);
 
+'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
+
+);
