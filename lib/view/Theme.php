@@ -254,8 +254,9 @@ class Theme extends Base
     {
         $result = '';
         foreach ($items as $index => $title) {
-            $result.= $this->getradio($name, $index, static ::quote($title) , $index == $selected);
+            $result.= $this->getRadio($name, $index, static ::quote($title) , $index == $selected);
         }
+
         return $result;
     }
 

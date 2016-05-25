@@ -8,16 +8,18 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\livejournalposter;
 
-function tlivejournalposterInstall($self)
+use litepubl\post\Posts;
+
+function PluginInstall($self)
 {
-    $posts = tposts::i();
-    $posts->singlecron = $self->sendpost;
+    $posts = Posts::i();
+    $posts->singlecron = $self->sendPost;
 }
 
-function tlivejournalposterUninstall($self)
+function PluginUninstall($self)
 {
-    tposts::unsub($self);
+    Posts::unsub($self);
 }
 

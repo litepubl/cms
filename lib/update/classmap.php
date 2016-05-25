@@ -315,7 +315,7 @@ return array(
 'tfacebookregservice' => litepubl\plugins\regservices\Facebook',
 
 'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
-
+'tlivejournalposter' => 'litepubl\plugins\livejournalposter\Plugin',
 'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
 'tusernews' => 'litepubl\plugins\usernews\Plugin',

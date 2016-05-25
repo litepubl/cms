@@ -8,18 +8,15 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\livejournalposter;
 
 use litepubl\Config;
 use litepubl\view\Theme;
+use litepubl\post\Post;
+use litepubl\xmlrpc\IXR_Client;
 
-class tlivejournalposter extends \litepubl\core\Plugin
+class Plugin extends \litepubl\core\Plugin
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -32,13 +29,13 @@ class tlivejournalposter extends \litepubl\core\Plugin
         $this->data['template'] = '';
     }
 
-    public function sendpost($id)
+    public function sendPost($id)
     {
         if ($this->host == '' || $this->login == '') {
             return false;
         }
 
-        $post = tpost::i($id);
+        $post = Post::i($id);
         Theme::$vars['post'] = $post;
         $theme = Theme::i();
         $content = $theme->parse($this->template);
@@ -51,14 +48,14 @@ class tlivejournalposter extends \litepubl\core\Plugin
         $meta = $post->meta;
 
         $client = new IXR_Client($this->host, '/interface/xmlrpc');
-        //$client = new IXR_Client($this->host, '/rpc.xml');
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
             if (Config::$debug) {
-                $this->getApp()->getLogger()->debug('live journal: error challenge');
+                $this->getApp()->getLogger()->warning('live journal: error challenge');
             }
         }
         return false;
     }
+
     $response = $client->getResponse();
     $challenge = $response['challenge'];
 
@@ -109,7 +106,7 @@ class tlivejournalposter extends \litepubl\core\Plugin
 
     if (!$client->query($method, $args)) {
         if (Config::$debug) {
-            $this->getApp()->getLogger()->debug('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+            $this->getApp()->getLogger()->warning('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
         }
         return false;
     }
