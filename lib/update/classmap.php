@@ -318,7 +318,7 @@ return array(
 'tlivejournalposter' => 'litepubl\plugins\livejournalposter\Plugin',
 'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
 'tdownloaditems' => 'litepubl\plugins\downloaditem\Plugin',
-'tdownloaditem' => 'litepubl\plugins\downloaditem\Item',
+'tdownloaditem' => 'litepubl\plugins\downloaditem\Download',
 'tdownloaditemcounter' => 'litepubl\plugins\downloaditem\Counter',
 
 

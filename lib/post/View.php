@@ -606,7 +606,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     }
 
     //author
-    protected function getAuthorname()
+    protected function getAuthorName(): string
     {
         return $this->getusername($this->author, false);
     }
