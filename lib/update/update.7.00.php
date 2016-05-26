@@ -12,6 +12,9 @@ namespace litepubl\update;
 
 use litepubl\core\Str;
 use litepubl\core\litepubl;
+use liteubl\view\Js;
+use litepubl\view\Css;
+use litepubl\core\Plugins;
 
 function update700()
 {
@@ -19,6 +22,14 @@ function update700()
     $css = Css::i();
     $css->deletestyle("/plugins/regservices/regservices.min.css");
 
+$js = Js::i();
+$js->lock();
+$js->replaceFile('default',
+'/plugins/downloaditem/downloaditem.min.js',
+'/plugins/downloaditem/resource/downloaditem.min.js'
+);
+
+$js->unlock();
 
 if (count(litepubl::$app->classes->items)) {
 include (__DIR__ . '/updateEvents.php');

@@ -8,15 +8,12 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
-class tdownloaditemcounter extends titems
+use litepubl\core\Context;
+
+class Counter extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -25,7 +22,7 @@ class tdownloaditemcounter extends titems
         $this->table = 'downloaditems';
     }
 
-    public function updatestat()
+    public function updateStat()
     {
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
@@ -48,27 +45,28 @@ class tdownloaditemcounter extends titems
                 return;
             }
 
-            $this->loaditems(array_keys($stat));
+            $this->loadItems(array_keys($stat));
             $db = $this->db;
             foreach ($stat as $id => $downloads) {
-                $db->setvalue($id, 'downloads', $downloads + $this->items[$id]['downloads']);
+                $db->setValue($id, 'downloads', $downloads + $this->items[$id]['downloads']);
             }
         }
     }
 
-    public function request($arg)
+    public function request(Context $context)
     {
-        //$this->cache = false;
+$response = $context->response;
         $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         if (!$this->itemExists($id)) {
-            return 404;
+            return $response->notfound;
         }
 
         $item = $this->getitem($id);
         $url = $item['downloadurl'];
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
-        return "<?php tfiler::append('$id\n', '$filename');
-    return litepubl::\$router->redir('$url');";
+
+    $response->redir($url);";
+        $response->body = "<?php litepubl\\utils\\Filer::append('$filename', '$id\n'); ?>";
     }
 
 }

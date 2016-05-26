@@ -8,13 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\tag\Tags;
 
-class tdownloaditem extends \litepubl\post\Post
+class Item extends \litepubl\post\Post
 {
 
     public static function getChildTable()
@@ -25,9 +26,7 @@ class tdownloaditem extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->data['childData'] = & $this->childData;
         $this->childData = array(
-            'id' => 0,
             'type' => 'theme',
             'downloads' => 0,
             'downloadurl' => '',
@@ -62,7 +61,7 @@ class tdownloaditem extends \litepubl\post\Post
             return;
         }
         $parent = $this->getparenttag();
-        $tags = ttags::i();
+        $tags = Tags::i();
         $items = array();
         $list = explode(',', trim($names));
         foreach ($list as $title) {

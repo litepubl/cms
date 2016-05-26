@@ -8,23 +8,26 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
-function tdownloaditemcounterInstall($self)
+use litepubl\core\Cron;
+use litepubl\pages\RobotsTxt;
+
+function CounterInstall($self)
 {
-    $cron = tcron::i();
+    $cron = Cron::i();
     $cron->add('hour', get_class($self) , 'updatestat');
 
     $self->getApp()->router->addget('/downloaditem.htm', get_class($self));
 
-    $robot = trobotstxt::i();
+    $robot = RobotsTxt::i();
     $robot->AddDisallow('/downloaditem.htm');
 }
 
-function tdownloaditemcounterUninstall($self)
+function CounterUninstall($self)
 {
-    $cron = tcron::i();
-    $cron->deleteclass(get_class($self));
+    $cron = Cron::i();
+    $cron->deleteClass(get_class($self));
 
     $self->getApp()->router->unbind($self);
 }

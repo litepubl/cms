@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
@@ -20,13 +20,12 @@ use litepubl\view\LangMerger;
 use litepubl\view\Parser;
 use litepubl\view\Theme;
 
-function tdownloaditemsInstall($self)
+function PluginInstall($self)
 {
-    if (!dbversion) die("Downloads require database");
     $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
     $manager = DBManager::i();
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'downloaditem.sql'));
-    $manager->addenum('posts', 'class', 'litepubl-tdownloaditem');
+    $manager->addEnum('posts', 'class', str_replace('\\', '-', __NAMESPACE__ . '\Item'));
 
     $optimizer = tdboptimizer::i();
     $optimizer->lock();
@@ -38,7 +37,7 @@ function tdownloaditemsInstall($self)
 
     $ini = parse_ini_file($dir . $self->getApp()->options->language . '.install.ini', false);
 
-    $tags = ttags::i();
+    $tags = Tags::i();
     $self->getApp()->options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
     $self->getApp()->options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
     $base = basename(dirname(__file__));
@@ -108,7 +107,7 @@ function tdownloaditemsInstall($self)
     }
     $menus->unlock();
 
-    Js::i()->add('default', '/plugins/downloaditem/downloaditem.min.js');
+    Js::i()->add('default', '/plugins/downloaditem/resource/downloaditem.min.js');
 
     $parser = Parser::i();
     $parser->parsed = $self->themeparsed;
@@ -120,10 +119,10 @@ function tdownloaditemsInstall($self)
     $self->getApp()->poolStorage->commit();
 }
 
-function tdownloaditemsUninstall($self)
+function PluginUninstall($self)
 {
     //die("Warning! You can lost all downloaditems!");
-    tposts::unsub($self);
+    Posts::unsub($self);
 
     $adminmenus = Menus::i();
     $adminmenus->deletetree($adminmenus->url2id('/admin/downloaditems/'));
@@ -137,7 +136,6 @@ function tdownloaditemsUninstall($self)
 
     $classes = $self->getApp()->classes;
     $classes->lock();
-    $classes->delete('tdownloaditem');
     $classes->delete('tdownloaditemsmenu');
     $classes->delete('tdownloaditemeditor');
     $classes->delete('tadmindownloaditems');
@@ -160,7 +158,7 @@ function tdownloaditemsUninstall($self)
     }
     $optimizer->unlock();
 
-    Js::i()->deletefile('default', '/plugins/downloaditem/downloaditem.min.js');
+    Js::i()->deletefile('default', '/plugins/downloaditem/resource/downloaditem.min.js');
 
     $self->getApp()->options->delete('downloaditem_themetag');
     $self->getApp()->options->delete('downloaditem_plugintag');

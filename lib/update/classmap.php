@@ -317,6 +317,11 @@ return array(
 'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
 'tlivejournalposter' => 'litepubl\plugins\livejournalposter\Plugin',
 'tsourcefiles' => 'litepubl\plugins\sourcefiles\Plugin',
+'tdownloaditems' => 'litepubl\plugins\downloaditem\Plugin',
+'tdownloaditem' => 'litepubl\plugins\downloaditem\Item',
+'tdownloaditemcounter' => 'litepubl\plugins\downloaditem\Counter',
+
+
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
 'tusernews' => 'litepubl\plugins\usernews\Plugin',
 
