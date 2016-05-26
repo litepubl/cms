@@ -8,27 +8,25 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\core\Str;
+use litepubl\utils\Http;
+use litepubl\updater\Backuper;
+use litepubl\post\MediaParser;
 
-class taboutparser
+class AboutParser
 {
 
-    public static function i()
+    public static function parse(string $url)
     {
-        return static ::iGet(__class__);
-    }
-
-    public static function parse($url)
-    {
-        if ($s = http::get($url)) {
-            $backuper = tbackuper::i();
-            $archtype = $backuper->getarchtype($url);
+        if ($s = Http::get($url)) {
+            $backuper = Backuper::i();
+            $archtype = $backuper->getArchType($url);
             if ($files = $backuper->unpack($s, $archtype)) {
                 list($filename, $content) = each($files);
-                if ($about = static ::getabout($files)) {
-                    $item = new tdownloaditem();
+                if ($about = static ::getAbout($files)) {
+                    $item = new Download();
                     $item->type = Str::begin($filename, 'plugins/') ? 'plugin' : 'theme';
                     $item->title = $about['name'];
                     $item->downloadurl = $url;
@@ -38,8 +36,8 @@ class taboutparser
                     $item->version = $about['version'];
                     $item->tagnames = empty($about['tags']) ? '' : trim($about['tags']);
                     if ($screenshot = static ::getfile($files, 'screenshot.png')) {
-                        $media = tmediaparser::i();
-                        $idscreenshot = $media->uploadthumbnail($about['name'] . '.png', $screenshot);
+                        $media = MediaParser::i();
+                        $idscreenshot = $media->uploadThumbnail($about['name'] . '.png', $screenshot);
                         $item->files = array(
                             $idscreenshot
                         );
@@ -58,8 +56,8 @@ class taboutparser
             if ($name == basename($filename)) {
                 return $content;
             }
-
         }
+
         return false;
     }
 

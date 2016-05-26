@@ -8,33 +8,28 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\admin\Link;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
-class tadmindownloaditems extends \litepubl\admin\Menu
+class Admin extends \litepubl\admin\Menu
 {
-
-    public static function i($id = 0)
-    {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function getContent()
     {
         $result = '';
         $admintheme = $this->admintheme;
         $lang = Lang::admin('downloaditems');
-        $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
+        $lang->addsearch['downloaditem');
 
         $args = new Args();
         $args->adminurl = $this->adminurl;
         $editurl = Link::url('/admin/downloaditems/editor/', 'id');
         $args->editurl = $editurl;
 
-        $downloaditems = tdownloaditems::i();
+        $downloaditems = Plugin::i();
         $perpage = 20;
         $where = $this->getApp()->options->group == 'downloaditem' ? ' and author = ' . $this->getApp()->options->user : '';
 
@@ -63,10 +58,10 @@ class tadmindownloaditems extends \litepubl\admin\Menu
             $items = array();
         }
 
-        $form = new adminform(new Args());
+        $form = $this->newFform(new Args());
         $form->body = $admintheme->getcount($from, $from + count($items) , $count);
-        $tb = new Table();
-        $tb->setposts(array(
+        $tb = $this->newTable();
+        $tb->setPosts(array(
             array(
                 'right',
                 $lang->downloads,

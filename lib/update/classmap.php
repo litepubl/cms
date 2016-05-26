@@ -320,6 +320,8 @@ return array(
 'tdownloaditems' => 'litepubl\plugins\downloaditem\Plugin',
 'tdownloaditem' => 'litepubl\plugins\downloaditem\Download',
 'tdownloaditemcounter' => 'litepubl\plugins\downloaditem\Counter',
+'tdownloaditemsmenu' => 'litepubl\plugins\downloaditem\Menu',
+'tadmindownloaditems' => 'litepubl\plugins\downloaditem\Admin',
 
 
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',

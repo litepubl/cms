@@ -35,7 +35,7 @@ function CatbreadUninstall($self)
     $parser = Parser::i();
     $parser->lock();
     $parser->unbind($self);
-    $parser->removetags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
+    $parser->removeTags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
     Base::clearcache();
 }

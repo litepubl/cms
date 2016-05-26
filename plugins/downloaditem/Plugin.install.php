@@ -19,6 +19,9 @@ use litepubl\view\Lang;
 use litepubl\view\LangMerger;
 use litepubl\view\Parser;
 use litepubl\view\Theme;
+use litepubl\tag\Tags;
+use litepubl\pages\Menus;
+use litepubl\admin\Menus as AdminMenus;
 
 function PluginInstall($self)
 {
@@ -33,77 +36,64 @@ function PluginInstall($self)
     $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
     $optimizer->unlock();
 
-    LangMerger::i()->add('default', "plugins/" . basename(dirname(__file__)) . "/resource/" . $self->getApp()->options->language . ".ini");
+    LangMerger::i()->addPlugin(basename(__DIR__));
 
-    $ini = parse_ini_file($dir . $self->getApp()->options->language . '.install.ini', false);
+Lang::usefile('install');
+$lang = Lang::i('installdownloaditems');
 
     $tags = Tags::i();
-    $self->getApp()->options->downloaditem_themetag = $tags->add(0, $ini['themetag']);
-    $self->getApp()->options->downloaditem_plugintag = $tags->add(0, $ini['plugintag']);
+$app = $self->getApp();
+    $app->options->downloaditem_themetag = $tags->add(0, $lang->themetag);
+    $app->options->downloaditem_plugintag = $tags->add(0, $lang->plugintag);
     $base = basename(dirname(__file__));
-    $classes = $self->getApp()->classes;
-    $classes->lock();
-    /*
-    //install polls if its needed
     $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
-    $polls = tpolls::i();
-    $polls->garbage = false;
-    $polls->save();
-    */
-    $classes->Add('tdownloaditem', 'downloaditem.class.php', $base);
-    $classes->Add('tdownloaditemsmenu', 'downloaditems.menu.class.php', $base);
-    $classes->Add('tdownloaditemeditor', 'admin.downloaditem.editor.class.php', $base);
-    $classes->Add('tadmindownloaditems', 'admin.downloaditems.class.php', $base);
-    $classes->Add('tdownloaditemcounter', 'downloaditem.counter.class.php', $base);
-    $classes->Add('taboutparser', 'about.parser.class.php', $base);
-    $classes->unlock();
+Counter::i()->install();
 
-    tadminhtml::i()->inidir(dirname(__file__) . '/resource/');
-    $lang = Lang::i('downloaditems');
-    $lang->ini['downloaditems'] = $lang->ini['downloaditem'] + $lang->ini['downloaditems'];
+Lang::usefile('admin');
+$lang->addSearch('downloaditem', 'downloaditems');
 
-    $adminmenus = Menus::i();
+    $adminmenus = AdminMenus::i();
     $adminmenus->lock();
-    $parent = $adminmenus->createitem(0, 'downloaditems', 'editor', 'tadmindownloaditems');
+    $parent = $adminmenus->createitem(0, 'downloaditems', 'editor', __NAMESPACE__ . '\Admin');
     $adminmenus->items[$parent]['title'] = $lang->downloaditems;
 
-    $idmenu = $adminmenus->createitem($parent, 'addurl', 'editor', 'tadmindownloaditems');
+    $idmenu = $adminmenus->createitem($parent, 'addurl', 'editor', __NAMESPACE__ . '\Admin');
     $adminmenus->items[$idmenu]['title'] = $lang->addurl;
 
-    $idmenu = $adminmenus->createitem($parent, 'editor', 'editor', 'tdownloaditemeditor');
+    $idmenu = $adminmenus->createitem($parent, 'editor', 'editor', __NAMESPACE__ . '\Editor');
     $adminmenus->items[$idmenu]['title'] = $lang->add;
 
-    $idmenu = $adminmenus->createitem($parent, 'theme', 'editor', 'tadmindownloaditems');
+    $idmenu = $adminmenus->createitem($parent, 'theme', 'editor', __NAMESPACE__ . '\Admin');
     $adminmenus->items[$idmenu]['title'] = $lang->themes;
 
-    $idmenu = $adminmenus->createitem($parent, 'plugin', 'editor', 'tadmindownloaditems');
+    $idmenu = $adminmenus->createitem($parent, 'plugin', 'editor', __NAMESPACE__ . '\Admin');
     $adminmenus->items[$idmenu]['title'] = $lang->plugins;
 
     $adminmenus->unlock();
 
-    $menus = tmenus::i();
+    $menus = Menus::i();
     $menus->lock();
-    $menu = tdownloaditemsmenu::i();
+    $menu = new Menui();
     $menu->type = '';
     $menu->url = '/downloads.htm';
-    $menu->title = $ini['downloads'];
+    $menu->title = $lang->downloads;
     $menu->content = '';
     $id = $menus->add($menu);
-    $self->getApp()->router->db->setvalue($menu->idurl, 'type', 'get');
+$app->router->db->setvalue($menu->idurl, 'type', 'get');
 
     foreach (array(
         'theme',
         'plugin'
     ) as $type) {
-        $menu = tdownloaditemsmenu::i();
+        $menu = new Menu();
         $menu->type = $type;
         $menu->parent = $id;
         $menu->url = sprintf('/downloads/%ss.htm', $type);
         $menu->title = $lang->__get($type . 's');
         $menu->content = '';
         $menus->add($menu);
-        $self->getApp()->router->db->setvalue($menu->idurl, 'type', 'get');
+$app->router->db->setvalue($menu->idurl, 'type', 'get');
     }
     $menus->unlock();
 
@@ -111,12 +101,13 @@ function PluginInstall($self)
 
     $parser = Parser::i();
     $parser->parsed = $self->themeparsed;
+    $parser->addTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
 
     $linkgen = LinkGenerator::i();
     $linkgen->data['downloaditem'] = '/[type]/[title].htm';
     $linkgen->save();
-    $self->getApp()->poolStorage->commit();
+    $app->poolStorage->commit();
 }
 
 function PluginUninstall($self)
@@ -124,24 +115,18 @@ function PluginUninstall($self)
     //die("Warning! You can lost all downloaditems!");
     Posts::unsub($self);
 
-    $adminmenus = Menus::i();
-    $adminmenus->deletetree($adminmenus->url2id('/admin/downloaditems/'));
+    $adminmenus = AdminMenus::i();
+    $adminmenus->deleteTree($adminmenus->url2id('/admin/downloaditems/'));
 
-    $menus = tmenus::i();
-    $menus->deletetree($menus->class2id('tdownloaditemsmenu'));
+    $menus = Menus::i();
+    $menus->deleteTree($menus->class2id(__NAMESPACE__ . '\Menu'));
 
     $parser = Parser::i();
     $parser->unbind($self);
+    $parser->removeTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
 
-    $classes = $self->getApp()->classes;
-    $classes->lock();
-    $classes->delete('tdownloaditemsmenu');
-    $classes->delete('tdownloaditemeditor');
-    $classes->delete('tadmindownloaditems');
-    $classes->delete('tdownloaditemcounter');
-    $classes->delete('taboutparser');
-    $classes->unlock();
+Counter::i()->uninstall();
 
     $merger = LangMerger::i();
     $merger->deleteplugin(Plugins::getname(__file__));
@@ -160,9 +145,10 @@ function PluginUninstall($self)
 
     Js::i()->deletefile('default', '/plugins/downloaditem/resource/downloaditem.min.js');
 
-    $self->getApp()->options->delete('downloaditem_themetag');
-    $self->getApp()->options->delete('downloaditem_plugintag');
-    $self->getApp()->options->savemodified();
+$app = $self->getApp();
+    $app->options->delete('downloaditem_themetag');
+    $app->options->delete('downloaditem_plugintag');
+    $app->poolStorage->commit();
 }
 
 function getd_download_js()

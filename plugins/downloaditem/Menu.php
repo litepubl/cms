@@ -8,18 +8,13 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
-class tdownloaditemsmenu extends tmenu
+class Menu extends \litepubl\pages\Menu
 {
-
-    public static function i($id = 0)
-    {
-        return parent::iteminstance(__class__, $id);
-    }
 
     protected function create()
     {
@@ -30,18 +25,20 @@ class tdownloaditemsmenu extends tmenu
     public function getCont()
     {
         $result = '';
-        $theme = Theme::i();
-        if (($this->getApp()->context->request->page == 1) && ($this->content != '')) {
+$schema = $this->schema;
+        $theme = $schema->theme;
+$app = $this->getApp();
+        if (($app->context->request->page == 1) && ($this->content != '')) {
             $result.= $theme->simple($theme->parse($this->rawcontent));
         }
 
-        $perpage = $this->getApp()->options->perpage;
-        $downloaditems = tdownloaditems::i();
-        $d = $this->getApp()->db->prefix . $downloaditems->childTable;
-        $p = $this->getApp()->db->posts;
+        $perpage = $schema->perpage ? $schema->perpage : $app->options->perpage;
+        $downloaditems = Plugin::i();
+        $d = $downloaditems->db->prefix . $downloaditems->childTable;
+        $p = $downloaditems ->db->posts;
         $where = $this->type == '' ? '' : " and $d.type = '$this->type'";
-        $count = $downloaditems->getchildscount($where);
-        $from = ($this->getApp()->context->request->page - 1) * $perpage;
+        $count = $downloaditems->getChildsCount($where);
+        $from = ($app->context->request->page - 1) * $perpage;
         if ($from <= $count) {
             $items = $downloaditems->select("$p.status = 'published' $where", " order by $p.posted desc limit $from, $perpage");
             Theme::$vars['lang'] = Lang::i('downloaditem');
