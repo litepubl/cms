@@ -1,3 +1,4 @@
+downloaditem\resource\downloatitem
 polls\resource\polls
 polls\resource\ru.polls
 polls\resource\en.polls

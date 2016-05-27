@@ -534,7 +534,7 @@ return $this->add();
         return '';
     }
 
-    public function setTagnames($names)
+    public function setTagNames(string $names)
     {
         $tags = $this->factory->tags;
         $this->tags = $tags->createnames($names);

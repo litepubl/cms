@@ -6,31 +6,34 @@
 **/
 
 (function( $ ){
-$(document).ready(function() {
-var links = $("a[rel='theme'], a[rel='plugin']");
-if (links.length) {
-// save file url's
-links.each(function() {
-$(this).data("url", $(this).attr("href"));
-});
+  'use strict';
 
-function get_download_site() {
+litepubl.classDownloadItem = Class.extend({
+
+init: function() {
+$(document).on("click.downloaditem", ".downloaditem", function() {
+});
+},
+
+getsite: function() {
 var result = '';
 if (result = get_get('site')) {
 set_cookie('download_site', result);
 } else {
 result = get_cookie('download_site');
 }
-return result;
-}
 
-function get_download_item(url, type) {
+return result;
+},
+
+getitem: function(url, type) {
 var args  = 'itemtype=' + type + '&url=' +encodeURIComponent(url);
 var q = ltoptions.download_site.indexOf('?')== -1  ? '?' : '&';
 return ltoptions.download_site + '/admin/service/upload/' + q + args;
-}
+},
 
-function siteurl_dialog(fn) {
+dialog: function(callback) {
+var self = this;
 $.litedialog({
 title: ltoptions.siteurl_dialog.title,
 html: ltoptions.siteurl_dialog.html,
@@ -41,8 +44,8 @@ buttons: [
 var url = $.trim($("input[name='text_download_site']").val());
           $.closedialog();
 if (url != '') set_cookie('download_site', url);
-update_siteurl(url);
-if ($.isFunction(fn)) fn();
+self.update(url);
+if ($.isFunction(callback)) callback();
 }
     },
 {
@@ -53,20 +56,22 @@ if ($.isFunction(fn)) fn();
     }
 ]
 } );
-}
+},
 
-function download_item_clicked() {
+clicked: function() {
 var url = $(this).data("url");
 var type = $(this).attr("rel");
 if (ltoptions.download_site == '') {
-siteurl_dialog(function() {
-window.location= get_download_item(url, type);
+var self = this;
+this.dialog(function() {
+window.location= self.getitem(url, type);
 });
 }
+
 return false;
 }
 
-function update_siteurl(url) {
+update: function(url) {
 if ('/' == url.charAt(url.length - 1)) url = url.substring(0, url.length - 1);
 if (ltoptions.download_site ==url) return;
 ltoptions.download_site =url;
@@ -77,31 +82,34 @@ link.attr("title", url);
 link.text(url);
 
 if (url == '') {
-$("a[rel='theme'], a[rel='plugin']").click(download_item_clicked);
+$("a[rel='theme'], a[rel='plugin']").click(this.clicked);
 } else {
 $("a[rel='theme'], a[rel='plugin']").each(function() {
 $(this).off("click");
 var type = $(this).attr("rel");
 var fileurl = $(this).data("url");
-$(this).attr("href", get_download_item(fileurl, type));
+$(this).attr("href", this.getitem(fileurl, type));
 });
 }
 }
 
 //try {
 $("#change_url").click(function() {
-siteurl_dialog();
+this.dialog();
 return false;
 });
 
-if (url = get_download_site()) {
-update_siteurl(url);
+if (url = this.getsite()) {
+this.update(url);
 } else {
 ltoptions.download_site = '';
-links.click(download_item_clicked);
+links.click(this.clicked);
 }
 //} catch(e) { alert('ex' + e.message); }
 
 }
+
+$(function() {
+litepubl.downloadItem = new litepubl.classDownloadItem();
 });
 })( jQuery );

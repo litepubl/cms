@@ -11,7 +11,6 @@
 namespace litepubl\plugins\downloaditem;
 
 use litepubl\view\Filter;
-use litepubl\tag\Tags;
 
 class Download extends \litepubl\post\Post
 {
@@ -44,17 +43,18 @@ class Download extends \litepubl\post\Post
         return $this->type == 'theme' ? $this->getApp()->options->downloaditem_themetag : $this->getApp()->options->downloaditem_plugintag;
     }
 
-    public function setTagnames($names)
+    public function setTagNames(string $names)
     {
         $names = trim($names);
         if ($names == '') {
             $this->tags = array();
             return;
         }
-        $parent = $this->getparenttag();
-        $tags = Tags::i();
+
+        $parent = $this->getParentTag();
+        $tags = $this->factory->tags;
         $items = array();
-        $list = explode(',', trim($names));
+        $list = explode(',', $names);
         foreach ($list as $title) {
             $title = Filter::escape($title);
             if ($title == '') {
