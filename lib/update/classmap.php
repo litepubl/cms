@@ -322,6 +322,7 @@ return array(
 'tdownloaditemcounter' => 'litepubl\plugins\downloaditem\Counter',
 'tdownloaditemsmenu' => 'litepubl\plugins\downloaditem\Menu',
 'tadmindownloaditems' => 'litepubl\plugins\downloaditem\Admin',
+'tdownloaditemeditor' => 'litepubl\plugins\downloaditem\Editor',
 
 
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',

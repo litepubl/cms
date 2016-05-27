@@ -14,6 +14,7 @@ use litepubl\core\Str;
 use litepubl\core\litepubl;
 use liteubl\view\Js;
 use litepubl\view\Css;
+use litepubl\view\Parser;
 use litepubl\core\Plugins;
 
 function update700()
@@ -30,6 +31,9 @@ $js->replaceFile('default',
 );
 
 $js->unlock();
+
+$parser = Parser::i();
+    $parser->unbind('tdownloaditems');
 
 if (count(litepubl::$app->classes->items)) {
 include (__DIR__ . '/updateEvents.php');

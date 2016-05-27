@@ -100,7 +100,6 @@ $app->router->db->setvalue($menu->idurl, 'type', 'get');
     Js::i()->add('default', '/plugins/downloaditem/resource/downloaditem.min.js');
 
     $parser = Parser::i();
-    $parser->parsed = $self->themeparsed;
     $parser->addTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
 
@@ -122,7 +121,6 @@ function PluginUninstall($self)
     $menus->deleteTree($menus->class2id(__NAMESPACE__ . '\Menu'));
 
     $parser = Parser::i();
-    $parser->unbind($self);
     $parser->removeTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
 

@@ -13,6 +13,19 @@ litepubl.classDownloadItem = Class.extend({
 init: function() {
 $(document).on("click.downloaditem", ".downloaditem", function() {
 });
+
+$("#change_url").click(function() {
+this.dialog();
+return false;
+});
+
+if (url = this.getsite()) {
+this.update(url);
+} else {
+ltoptions.download_site = '';
+links.click(this.clicked);
+}
+
 },
 
 getsite: function() {
@@ -48,12 +61,7 @@ self.update(url);
 if ($.isFunction(callback)) callback();
 }
     },
-{
-        title: lang.dialog.cancel,
-        click: function() {
-          $.closedialog();
-}
-    }
+$.get_cancel_button()
 ]
 } );
 },
@@ -92,22 +100,7 @@ $(this).attr("href", this.getitem(fileurl, type));
 });
 }
 }
-
-//try {
-$("#change_url").click(function() {
-this.dialog();
-return false;
 });
-
-if (url = this.getsite()) {
-this.update(url);
-} else {
-ltoptions.download_site = '';
-links.click(this.clicked);
-}
-//} catch(e) { alert('ex' + e.message); }
-
-}
 
 $(function() {
 litepubl.downloadItem = new litepubl.classDownloadItem();

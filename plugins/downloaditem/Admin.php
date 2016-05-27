@@ -112,7 +112,7 @@ class Admin extends \litepubl\admin\Menu
                 return '';
             }
 
-            if ($downloaditem = taboutparser::parse($url)) {
+            if ($downloaditem = AboutParser::parse($url)) {
                 $id = $downloaditems->add($downloaditem);
                 $this->getApp()->router->redir(Link::url('/admin/downloaditems/editor/', "id=$id"));
             }

@@ -8,17 +8,14 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\downloaditem;
 
 use litepubl\view\Lang;
+use litepubl\view\Args;
+use litepubl\post\Post;
 
-class tdownloaditemeditor extends tposteditor
+class Editor extends \litepubl\admin\posts\Editor
 {
-
-    public static function i($id = 0)
-    {
-        return parent::iteminstance(__class__, $id);
-    }
 
     public function getTitle()
     {
@@ -48,9 +45,9 @@ class tdownloaditemeditor extends tposteditor
         ));
     }
 
-    public function getArgstab(tpost $post, Args $args)
+    public function getArgstab(Post $post, Args $args)
     {
-        parent::getargstab($post, $args);
+        parent::getArgsTab($post, $args);
 
         $args->downloadurl = $post->downloadurl;
         $args->authorname = $post->authorname;
@@ -65,14 +62,14 @@ class tdownloaditemeditor extends tposteditor
         $args->type = $this->theme->comboItems($types, $post->type);
     }
 
-    public function newpost()
+    public function newPost()
     {
-        return new tdownloaditem();
+        return new Download();
     }
 
-    public function processtab(tpost $post)
+    public function processTab(Post $post)
     {
-        parent::processtab($post);
+        parent::processTab($post);
 
         extract($_POST, EXTR_SKIP);
         $post->version = $version;

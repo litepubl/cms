@@ -41,11 +41,5 @@ return $id;
         return parent::edit($post);
     }
 
-    public function themeparsed($theme)
-    {
-        include_once ($this->getApp()->paths->plugins . 'downloaditem' . DIRECTORY_SEPARATOR . 'downloaditems.class.install.php');
-        add_downloaditems_to_theme($theme);
-    }
-
 }
 

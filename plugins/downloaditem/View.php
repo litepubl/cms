@@ -26,7 +26,8 @@ class View extends \litepubl\post\View
 
     protected function getContentpage(int $page): string
     {
-        $result = $this->theme->templates['custom']['siteform'];
+$theme = $this->theme;
+        $result = $theme->parse($theme->templates['downloaditem.form']);
         $result.= $this->getDownloadContent();
         $result .= parent::getcontentpage($page);
         $result.= Polls::i()->getObjectPoll($this->id, 'post');
@@ -43,7 +44,7 @@ class View extends \litepubl\post\View
         Theme::$vars['lang'] = Lang::i('downloaditem');
         Theme::$vars['post'] = $this;
         $theme = $this->theme;
-        return $theme->parse($theme->templates['custom']['downloaditem']);
+        return $theme->parse($theme->templates['downloaditem.post']);
     }
 
     public function getDownloadCount()
