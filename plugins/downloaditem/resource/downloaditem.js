@@ -9,6 +9,8 @@
   'use strict';
 
 litepubl.classDownloadItem = Class.extend({
+fileurl: "",
+siteurl: "",
 
 init: function() {
 $(document).on("click.downloaditem", ".downloaditem", function() {
@@ -19,18 +21,17 @@ this.dialog();
 return false;
 });
 
-if (url = this.getsite()) {
+var url = this.getsite();
+if (url) {
 this.update(url);
 } else {
-ltoptions.download_site = '';
 links.click(this.clicked);
 }
-
 },
 
 getsite: function() {
-var result = '';
-if (result = get_get('site')) {
+var result = get_get('site');
+if (result) {
 set_cookie('download_site', result);
 } else {
 result = get_cookie('download_site');
@@ -41,8 +42,8 @@ return result;
 
 getitem: function(url, type) {
 var args  = 'itemtype=' + type + '&url=' +encodeURIComponent(url);
-var q = ltoptions.download_site.indexOf('?')== -1  ? '?' : '&';
-return ltoptions.download_site + '/admin/service/upload/' + q + args;
+var q = this.siteurl.indexOf('?')== -1  ? '?' : '&';
+return this.siteurl + '/admin/service/upload/' + q + args;
 },
 
 dialog: function(callback) {
@@ -56,7 +57,9 @@ buttons: [
         click: function() {
 var url = $.trim($("input[name='text_download_site']").val());
           $.closedialog();
-if (url != '') set_cookie('download_site', url);
+if (url ) {
+set_cookie('download_site', url);
+}
 self.update(url);
 if ($.isFunction(callback)) callback();
 }
@@ -69,7 +72,7 @@ $.get_cancel_button()
 clicked: function() {
 var url = $(this).data("url");
 var type = $(this).attr("rel");
-if (ltoptions.download_site == '') {
+if (!this.siteurl) {
 var self = this;
 this.dialog(function() {
 window.location= self.getitem(url, type);
@@ -81,8 +84,8 @@ return false;
 
 update: function(url) {
 if ('/' == url.charAt(url.length - 1)) url = url.substring(0, url.length - 1);
-if (ltoptions.download_site ==url) return;
-ltoptions.download_site =url;
+if (this.siteurl ==url) return;
+this.siteurl =url;
 $("#text_download_site").val(url);
 var link = $("#yoursite");
 link.attr("href", url);
@@ -100,6 +103,7 @@ $(this).attr("href", this.getitem(fileurl, type));
 });
 }
 }
+
 });
 
 $(function() {
