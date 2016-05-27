@@ -14,7 +14,7 @@
     radio: '<div class="radio"><label><input type="radio" name="%%name%%" id="radio_%%name%%_%%value%%" value="%%value%%" />%%title%%</label></div>',
 
     getedit: function(title, name, value) {
-      return $.simpletml(litepubl.tml.text, {
+      return $.parsetml(litepubl.tml.text, {
         name: name,
         value: value ? value : '',
         title: title

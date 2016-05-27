@@ -26,17 +26,10 @@ class View extends \litepubl\post\View
 
     protected function getContentpage(int $page): string
     {
-$theme = $this->theme;
-        $result = $theme->parse($theme->templates['downloaditem.form']);
-        $result.= $this->getDownloadContent();
+        $result= $this->getDownloadContent();
         $result .= parent::getcontentpage($page);
         $result.= Polls::i()->getObjectPoll($this->id, 'post');
         return $result;
-    }
-
-    public function get_excerpt()
-    {
-        return $this->getdownloadcontent() . $this->data['excerpt'];
     }
 
     public function getDownloadContent(): string
@@ -44,7 +37,7 @@ $theme = $this->theme;
         Theme::$vars['lang'] = Lang::i('downloaditem');
         Theme::$vars['post'] = $this;
         $theme = $this->theme;
-        return $theme->parse($theme->templates['downloaditem.post']);
+        return $theme->parse($theme->templates['downloaditem']);
     }
 
     public function getDownloadCount()

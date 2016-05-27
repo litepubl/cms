@@ -28,11 +28,7 @@ $plugins = Plugins::i();
 if (isset($plugins->items['downloatitems'])) {
 $js = Js::i();
 $js->lock();
-$js->replaceFile('default',
-'/plugins/downloaditem/downloaditem.min.js',
-'/plugins/downloaditem/resource/downloaditem.min.js'
-);
-
+$js->deleteFile('default', '/plugins/downloaditem/downloaditem.min.js');
 $js->unlock();
 
 $parser = Parser::i();

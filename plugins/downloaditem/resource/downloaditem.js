@@ -5,103 +5,63 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-(function( $ ){
+(function( $, litepubl){
   'use strict';
 
 litepubl.classDownloadItem = Class.extend({
-fileurl: "",
 siteurl: "",
 
 init: function() {
+var self = this;
 $(document).on("click.downloaditem", ".downloaditem", function() {
-});
-
-$("#change_url").click(function() {
-this.dialog();
+self.uploadFile($(this));
 return false;
 });
 
-var url = this.getsite();
-if (url) {
-this.update(url);
+this.siteurl = get_get('site');
+if (this.siteurl) {
+set_cookie('download_site', this.siteurl);
 } else {
-links.click(this.clicked);
+this.siteurl = get_cookie('download_site');
 }
 },
 
-getsite: function() {
-var result = get_get('site');
-if (result) {
-set_cookie('download_site', result);
+uploadFile: function(link) {
+var fileurl = link.attr("href");
+var type = link.attr("data-type");
+
+if (this.siteurl) {
+window.location= this.geturl(this.siteurl, fileurl, type);
 } else {
-result = get_cookie('download_site');
+this.dialog(fileurl, type);
 }
-
-return result;
 },
 
-getitem: function(url, type) {
-var args  = 'itemtype=' + type + '&url=' +encodeURIComponent(url);
-var q = this.siteurl.indexOf('?')== -1  ? '?' : '&';
-return this.siteurl + '/admin/service/upload/' + q + args;
+geturl: function(siteurl, fileurl, type) {
+var q = siteurl.indexOf('?')== -1  ? '?' : '&';
+return siteurl + '/admin/service/upload/' + q + 
+'itemtype=' + type + '&url=' +encodeURIComponent(fileurl);
 },
 
-dialog: function(callback) {
+dialog: function(fileurl, type) {
 var self = this;
 $.litedialog({
-title: ltoptions.siteurl_dialog.title,
-html: ltoptions.siteurl_dialog.html,
+title: lang.downloaditem.title,
+html: litepubl.tml.getedit(lang.downloaditem.editsite, 'editsite', ''),
 buttons: [
 {
         title: "Ok",
         click: function() {
-var url = $.trim($("input[name='text_download_site']").val());
-          $.closedialog();
+var url = $.trim($("#text-siteurl").val());
 if (url ) {
 set_cookie('download_site', url);
+window.location= self.geturl(url, fileurl, type);
 }
-self.update(url);
-if ($.isFunction(callback)) callback();
 }
     },
 $.get_cancel_button()
 ]
 } );
-},
-
-clicked: function() {
-var url = $(this).data("url");
-var type = $(this).attr("rel");
-if (!this.siteurl) {
-var self = this;
-this.dialog(function() {
-window.location= self.getitem(url, type);
-});
-}
-
-return false;
-}
-
-update: function(url) {
-if ('/' == url.charAt(url.length - 1)) url = url.substring(0, url.length - 1);
-if (this.siteurl ==url) return;
-this.siteurl =url;
-$("#text_download_site").val(url);
-var link = $("#yoursite");
-link.attr("href", url);
-link.attr("title", url);
-link.text(url);
-
-if (url == '') {
-$("a[rel='theme'], a[rel='plugin']").click(this.clicked);
-} else {
-$("a[rel='theme'], a[rel='plugin']").each(function() {
-$(this).off("click");
-var type = $(this).attr("rel");
-var fileurl = $(this).data("url");
-$(this).attr("href", this.getitem(fileurl, type));
-});
-}
 }
 
 });
@@ -109,4 +69,4 @@ $(this).attr("href", this.getitem(fileurl, type));
 $(function() {
 litepubl.downloadItem = new litepubl.classDownloadItem();
 });
-})( jQuery );
+})( jQuery, litepubl);

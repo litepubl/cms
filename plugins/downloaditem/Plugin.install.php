@@ -14,7 +14,6 @@ use litepubl\core\DBManager;
 use litepubl\core\Plugins;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Base;
-use litepubl\view\Js;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
 use litepubl\view\Parser;
@@ -97,8 +96,6 @@ $app->router->db->setvalue($menu->idurl, 'type', 'get');
     }
     $menus->unlock();
 
-    Js::i()->add('default', '/plugins/downloaditem/resource/downloaditem.min.js');
-
     $parser = Parser::i();
     $parser->addTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
@@ -141,55 +138,8 @@ Counter::i()->uninstall();
     }
     $optimizer->unlock();
 
-    Js::i()->deletefile('default', '/plugins/downloaditem/resource/downloaditem.min.js');
-
 $app = $self->getApp();
     $app->options->delete('downloaditem_themetag');
     $app->options->delete('downloaditem_plugintag');
     $app->poolStorage->commit();
 }
-
-function getd_download_js()
-{
-    $result = '<script type="text/javascript">';
-    $result.= "\n\$(document).ready(function() {\n";
-    $result.= "if (\$(\"a[rel='theme'], a[rel='plugin']\").length) {\n";
-    $result.= '$.load_script("$site.files/plugins/' . basename(dirname(__file__)) . "/downloaditem.min.js\");\n";
-    $result.= "}\n";
-    $result.= "});\n";
-    $result.= "</script>";
-    return $result;
-}
-
-function add_downloaditems_to_theme($theme)
-{
-    if (empty($theme->templates['custom']['downloadexcerpt'])) {
-        $dir = dirname(__file__) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
-        Theme::$vars['lang'] = Lang::admin('downloaditems');
-        $custom = & $theme->templates['custom'];
-        $custom['downloaditem'] = $theme->replacelang(file_get_contents($dir . 'downloaditem.tml') , Lang::i('downloaditem'));
-        $lang = Lang::i('downloaditems');
-        $custom['downloadexcerpt'] = $theme->replacelang(file_get_contents($dir . 'downloadexcerpt.tml') , $lang);
-        $custom['siteform'] = $theme->parse(file_get_contents($dir . 'siteform.tml'));
-
-        //admin
-        $admin = & $theme->templates['customadmin'];
-        $admin['downloadexcerpt'] = array(
-            'type' => 'editor',
-            'title' => $lang->downloadexcerpt
-        );
-
-        $admin['downloaditem'] = array(
-            'type' => 'editor',
-            'title' => $lang->downloadlinks
-        );
-
-        $admin['siteform'] = array(
-            'type' => 'editor',
-            'title' => $lang->siteform
-        );
-    }
-    //var_dump($theme->templates['customadmin'], $theme->templates['custom']);
-    
-}
-
