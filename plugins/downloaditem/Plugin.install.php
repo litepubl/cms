@@ -20,6 +20,7 @@ use litepubl\view\Parser;
 use litepubl\view\Theme;
 use litepubl\tag\Tags;
 use litepubl\pages\Menus;
+use litepubl\pages\FakeMenu;
 use litepubl\admin\Menus as AdminMenus;
 
 function PluginInstall($self)
@@ -41,9 +42,16 @@ Lang::usefile('install');
 $lang = Lang::i('installdownloaditems');
 
     $tags = Tags::i();
+$idparent = $tags->add(0, $lang->downloads);
+$tags->setValue($idparent, 'includechilds', '1');
+
+$idplugin = $tags->add($idparent, $lang->plugintag);
+$idtheme = $tags->add($idparent, $lang->themetag);
+
 $app = $self->getApp();
-    $app->options->downloaditem_themetag = $tags->add(0, $lang->themetag);
-    $app->options->downloaditem_plugintag = $tags->add(0, $lang->plugintag);
+    $app->options->downloaditem_themetag = $idtheme;
+    $app->options->downloaditem_plugintag = $idplugin;
+
     $base = basename(dirname(__file__));
     $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) $plugins->add('polls');
@@ -73,27 +81,30 @@ $lang->addSearch('downloaditem', 'downloaditems');
 
     $menus = Menus::i();
     $menus->lock();
-    $menu = new Menui();
-    $menu->type = '';
-    $menu->url = '/downloads.htm';
-    $menu->title = $lang->downloads;
-    $menu->content = '';
-    $id = $menus->add($menu);
-$app->router->db->setvalue($menu->idurl, 'type', 'get');
+$item = $tags->getItem($idparent);
+    $menu = new FakeMenu();
+    $menu->url = $item['url'];
+//'/downloads.htm';
+    $menu->title = $item['title'];
+    $id = $menus->addFakeMenu($menu);
 
-    foreach (array(
-        'theme',
-        'plugin'
-    ) as $type) {
-        $menu = new Menu();
-        $menu->type = $type;
+$item = $tags->getItem($idplugin);
+        $menu = new FakeMenu();
         $menu->parent = $id;
-        $menu->url = sprintf('/downloads/%ss.htm', $type);
-        $menu->title = $lang->__get($type . 's');
-        $menu->content = '';
-        $menus->add($menu);
-$app->router->db->setvalue($menu->idurl, 'type', 'get');
-    }
+        $menu->url = $item['url'];
+//sprintf('/downloads/%ss.htm', $type);
+        $menu->title = $item['title'];
+        $menus->addFakeMenu($menu);
+
+
+$item = $tags->getItem($idtheme);
+        $menu = new FakeMenu();
+        $menu->parent = $id;
+        $menu->url = $item['url'];
+//sprintf('/downloads/%ss.htm', $type);
+        $menu->title = $item['title'];
+        $menus->addFakeMenu($menu);
+
     $menus->unlock();
 
     $parser = Parser::i();
@@ -109,13 +120,18 @@ $app->router->db->setvalue($menu->idurl, 'type', 'get');
 function PluginUninstall($self)
 {
     //die("Warning! You can lost all downloaditems!");
+$app = $self->getApp();
     Posts::unsub($self);
 
     $adminmenus = AdminMenus::i();
     $adminmenus->deleteTree($adminmenus->url2id('/admin/downloaditems/'));
 
+$tags = Tags::i();
+$tags->loadAll();
+$item = $tags->getItem($app->options->downloaditem_plugintag);
+$item = $tags->getItem($item['parent']);
     $menus = Menus::i();
-    $menus->deleteTree($menus->class2id(__NAMESPACE__ . '\Menu'));
+    $menus->deleteTree($menus->url2id($item['url']));
 
     $parser = Parser::i();
     $parser->removeTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
@@ -138,7 +154,6 @@ Counter::i()->uninstall();
     }
     $optimizer->unlock();
 
-$app = $self->getApp();
     $app->options->delete('downloaditem_themetag');
     $app->options->delete('downloaditem_plugintag');
     $app->poolStorage->commit();
