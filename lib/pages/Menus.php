@@ -31,17 +31,17 @@ class Menus extends \litepubl\core\Items
         $this->data['home'] = false;
     }
 
-    public function getLink($id)
+    public function getLink(int $id): string
     {
         return sprintf('<a href="%1$s%2$s" title="%3$s">%3$s</a>', $this->getApp()->site->url, $this->items[$id]['url'], $this->items[$id]['title']);
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         return $this->getApp()->paths->data . 'menus' . DIRECTORY_SEPARATOR;
     }
 
-    public function add(Menu $item)
+    public function add(Menu $item): int
     {
         if ($item instanceof FakeMenu) {
             return $this->addFakeMenu($item);
@@ -93,7 +93,7 @@ class Menus extends \litepubl\core\Items
         return $id;
     }
 
-    public function addFake($url, $title)
+    public function addFake(string $url, string $title): int
     {
         if ($id = $this->url2id($url)) {
             return $id;
@@ -106,7 +106,7 @@ class Menus extends \litepubl\core\Items
         return $this->addFakeMenu($fake);
     }
 
-    public function addFakeMenu(Menu $menu)
+    public function addFakeMenu(Menu $menu): int
     {
         $item = array(
             'id' => ++$this->autoid,
@@ -131,7 +131,7 @@ class Menus extends \litepubl\core\Items
         return $this->autoid;
     }
 
-    public function additem(array $item)
+    public function addItem(array $item): int
     {
         $item['id'] = ++$this->autoid;
         $item['order'] = $this->autoid;
@@ -192,7 +192,7 @@ class Menus extends \litepubl\core\Items
         return true;
     }
 
-    public function deleteurl($url)
+    public function deleteUrl(string $url)
     {
         if ($id = $this->url2id($url)) {
             return $this->delete($id);
@@ -200,7 +200,7 @@ class Menus extends \litepubl\core\Items
 
     }
 
-    public function deletetree($id)
+    public function deleteTree(int $id)
     {
         if (!$this->itemExists($id)) {
             return false;
@@ -219,7 +219,7 @@ class Menus extends \litepubl\core\Items
         $this->unlock();
     }
 
-    public function url2id($url)
+    public function url2id(string $url): int
     {
         foreach ($this->items as $id => $item) {
             if ($url == $item['url']) {
@@ -230,7 +230,7 @@ class Menus extends \litepubl\core\Items
         return false;
     }
 
-    public function remove($id)
+    public function remove(int $id)
     {
         if (!$this->itemExists($id) || $this->haschilds($id)) {
             return false;
@@ -245,18 +245,18 @@ class Menus extends \litepubl\core\Items
         return true;
     }
 
-    public function haschilds($idparent)
+    public function hasChilds(int $idparent): int
     {
         foreach ($this->items as $id => $item) {
             if ($item['parent'] == $idparent) {
                 return $id;
             }
-
         }
-        return false;
+
+        return 0;
     }
 
-    public function renameClass($oldclass, $newclass)
+    public function renameClass(string $oldclass, string $newclass)
     {
         foreach ($this->items as $id => $item) {
             if ($oldcalss == $item['class']) {
@@ -270,7 +270,7 @@ class Menus extends \litepubl\core\Items
         $this->tree = $this->getsubtree(0);
     }
 
-    private function getSubtree($parent)
+    private function getSubTree(int $parent): array
     {
         $result = array();
         // first step is a find all childs and sort them
@@ -289,13 +289,13 @@ class Menus extends \litepubl\core\Items
         return $result;
     }
 
-    public function getParent($id)
+    public function getParent(int $id): int
     {
         return $this->items[$id]['parent'];
     }
 
     //return array of id
-    public function getParents($id)
+    public function getParents(int $id): array
     {
         $result = array();
         $id = $this->items[$id]['parent'];
@@ -308,7 +308,7 @@ class Menus extends \litepubl\core\Items
     }
 
     //ищет в дереве список детей, так как они уже отсортированы
-    public function getChilds($id)
+    public function getChilds(int $id): array
     {
         if ($id == 0) {
             $result = array();
@@ -340,7 +340,7 @@ class Menus extends \litepubl\core\Items
         return array_keys($tree);
     }
 
-    public function exclude($id)
+    public function exclude(int $id): bool
     {
         return !$this->home && ($id == $this->idhome);
     }
@@ -417,7 +417,7 @@ class Menus extends \litepubl\core\Items
         return $result;
     }
 
-    public function class2id($class)
+    public function class2id(string $class): int
     {
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
@@ -428,7 +428,7 @@ class Menus extends \litepubl\core\Items
         return false;
     }
 
-    public function getSitemap($from, $count)
+    public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
@@ -436,7 +436,7 @@ class Menus extends \litepubl\core\Items
         ));
     }
 
-    public function classRenamed($oldclass, $newclass)
+    public function classRenamed(string $oldclass, string $newclass)
     {
         foreach ($this->items as $id => $item) {
             if ($oldclass == $item['class']) {

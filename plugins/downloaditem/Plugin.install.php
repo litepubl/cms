@@ -47,6 +47,8 @@ $tags->setValue($idparent, 'includechilds', '1');
 
 $idplugin = $tags->add($idparent, $lang->plugintag);
 $idtheme = $tags->add($idparent, $lang->themetag);
+$tags->setValue($idplugin, 'includechilds', '1');
+$tags->setValue($idtheme, 'includechilds', '1');
 
 $app = $self->getApp();
     $app->options->downloaditem_themetag = $idtheme;

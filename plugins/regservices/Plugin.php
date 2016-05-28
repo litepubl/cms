@@ -14,7 +14,6 @@ use litepubl\comments\Form;
 use litepubl\admin\pages\Form as LoginForms;
 use litepubl\view\Admin;
 
-
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
 public $tml = '<a role="button" class="btn btn-default tooltip-toggle" target="_blank" href="$url=$name&backurl=" title="$title"><span class="fa fa-$icon"></span></a>';

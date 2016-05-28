@@ -78,8 +78,10 @@ $tags->edit($idparent, $title, '/downloads.htm');
 $tags->setValue($idparent, 'includechilds', '1');
 
 $tags->setvalue($idplugin, 'parent', $idparent);
+$tags->setValue($idplugin, 'includechilds', '1');
 $idtheme = litepubl::$app->options->downloaditem_themetag;
 $tags->setvalue($idtheme, 'parent', $idparent);
+$tags->setValue($idtheme, 'includechilds', '1');
 $item = $tags->getItem($idparent);
     $menu = new FakeMenu();
     $menu->url = $item['url'];

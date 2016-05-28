@@ -13,8 +13,10 @@ namespace litepubl\plugins\usernews;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\post\Post;
+use litepubl\post\Posts;
 
-class Plugin extends \litepubl\core\Plugin
+class Plugin extends \litepubl\admin\posts\Editor
 {
 
     public function create()
@@ -62,24 +64,23 @@ class Plugin extends \litepubl\core\Plugin
         return '';
     }
 
-    public function getPostEditor($post, $args)
+    public function getPostEditor(Post $post, Args $args)
     {
         $args->data['$lang.sourceurl'] = Lang::admin()->get('usernews', 'sourceurl');
         if ($this->insertsource) $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
 
         $form = file_get_contents($this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
         $args->raw = $post->rawcontent;
-        $html = tadminhtml::i();
         $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;
         $result.= $html->parseArg($form, $args);
         unset(Theme::$vars['post']);
         return $html->fixquote($result);
     }
 
-    public function editPost(tpost $post)
+    public function editPost(Post $post)
     {
         extract($_POST, EXTR_SKIP);
-        $posts = tposts::i();
+        $posts = Posts::i();
         $html = tadminhtml::i();
 
         if ($this->checkspam && ($id == 0)) {

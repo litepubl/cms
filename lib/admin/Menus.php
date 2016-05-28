@@ -64,11 +64,11 @@ class Menus extends \litepubl\pages\Menus
         return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
     }
 
-    public function createitem($parent, $name, $group, $class)
+    public function createItem(int $parent, string $name, string $group, string $class): int
     {
-        $title = $this->getadmintitle($name);
-        $url = $this->createurl($parent, $name);
-        return $this->additem(array(
+        $title = $this->getAdminTitle($name);
+        $url = $this->createUrl($parent, $name);
+        return $this->addItem(array(
             'parent' => $parent,
             'url' => $url,
             'title' => $title,
@@ -78,16 +78,16 @@ class Menus extends \litepubl\pages\Menus
         ));
     }
 
-    public function additem(array $item)
+    public function addItem(array $item): int
     {
         if (empty($item['group'])) {
             $groups = UserGroups::i();
             $item['group'] = $groups->items[$groups->defaults[0]]['name'];
         }
-        return parent::additem($item);
+        return parent::addItem($item);
     }
 
-    public function addfakemenu(StdMenu $menu)
+    public function addFakeMenu(StdMenu $menu): int
     {
         $this->lock();
         $id = parent::addfakemenu($menu);
@@ -101,7 +101,7 @@ class Menus extends \litepubl\pages\Menus
         return $id;
     }
 
-    public function getChilds($id)
+    public function getChilds(int $id): array
     {
         if ($id == 0) {
             $result = array();
@@ -133,7 +133,7 @@ class Menus extends \litepubl\pages\Menus
         return array_keys($tree);
     }
 
-    public function exclude($id)
+    public function exclude(int $id): bool
     {
         if (!$this->getApp()->options->hasGroup($this->items[$id]['group'])) {
             return true;
