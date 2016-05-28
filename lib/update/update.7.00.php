@@ -24,27 +24,6 @@ function update700()
     $css = Css::i();
     $css->deletestyle("/plugins/regservices/regservices.min.css");
 
-$plugins = Plugins::i();
-if (isset($plugins->items['downloatitems'])) {
-$js = Js::i();
-$js->lock();
-$js->deleteFile('default', '/plugins/downloaditem/downloaditem.min.js');
-$js->unlock();
-
-$parser = Parser::i();
-    $parser->unbind('tdownloaditems');
-    $parser->addTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
-
-$man = DBManager::i();
-if ($man->columnExists('downloaditems', 'votes')) {
-$man->deleteColumn('downloaditems', 'votes');
-}
-
-if ($man->columnExists('downloaditems', 'poll')) {
-$man->deleteColumn('downloaditems', 'poll');
-}
-}
-
 if (count(litepubl::$app->classes->items)) {
 include (__DIR__ . '/updateEvents.php');
 updateEvents();

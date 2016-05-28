@@ -84,7 +84,6 @@ $lang->addSearch('downloaditem', 'downloaditems');
 $item = $tags->getItem($idparent);
     $menu = new FakeMenu();
     $menu->url = $item['url'];
-//'/downloads.htm';
     $menu->title = $item['title'];
     $id = $menus->addFakeMenu($menu);
 

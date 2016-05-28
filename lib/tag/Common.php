@@ -80,19 +80,19 @@ class Common extends \litepubl\core\Items
         return $this->res2items($res);
     }
 
-    public function getUrl($id)
+    public function getUrl(int $id): string
     {
         $item = $this->getItem($id);
         return $item['url'];
     }
 
-    public function getName($id)
+    public function getName(int $id): string
     {
         $item = $this->getItem($id);
         return $item['title'];
     }
 
-    public function postEdited($idpost)
+    public function postEdited(int $idpost)
     {
         $post = $this->factory->getPost((int)$idpost);
         $items = $post->{$this->postpropname};
@@ -105,7 +105,7 @@ class Common extends \litepubl\core\Items
         $this->updateCount($changed);
     }
 
-    public function postDeleted($idpost)
+    public function postDeleted(int $idpost)
     {
         $changed = $this->itemsposts->deletePost($idpost);
         $this->updateCount($changed);
@@ -134,12 +134,12 @@ class Common extends \litepubl\core\Items
         }
     }
 
-    public function getUrlType()
+    public function getUrlType(): string
     {
         return 'normal';
     }
 
-    public function add($parent, $title)
+    public function add(int $parent, string $title): int
     {
         $title = trim($title);
         if (empty($title)) {
@@ -155,7 +155,7 @@ class Common extends \litepubl\core\Items
             $parent = 0;
         }
 
-        $url = LinkGenerator::i()->createurl($title, $this->PermalinkIndex, true);
+        $url = LinkGenerator::i()->createUrl($title, $this->PermalinkIndex, true);
         $schemes = Schemes::i();
         $idschema = isset($schemes->defaults[$this->PermalinkIndex]) ? $schemes->defaults[$this->PermalinkIndex] : 1;
 
@@ -183,7 +183,7 @@ class Common extends \litepubl\core\Items
         return $id;
     }
 
-    public function edit($id, $title, $url)
+    public function edit(int $id, string $title, string $url)
     {
         $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['url'] == $url)) {
@@ -200,8 +200,8 @@ class Common extends \litepubl\core\Items
         $linkgen = LinkGenerator::i();
         $url = trim($url);
         // try rebuild url
-        if ($url == '') {
-            $url = $linkgen->createurl($title, $this->PermalinkIndex, false);
+        if (!$url) {
+            $url = $linkgen->createUrl($title, $this->PermalinkIndex, false);
         }
 
         if ($item['url'] != $url) {
@@ -254,7 +254,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getNames(array $list)
+    public function getNames(array $list): array
     {
         $this->loadItems($list);
         $result = array();
@@ -269,7 +269,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getLinks(array $list)
+    public function getLinks(array $list): array
     {
         if (!count($list)) {
             return array();
@@ -289,7 +289,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getSorted($parent, $sortname, $count)
+    public function getSorted(int $parent, string $sortname, int $count): array
     {
         $count = (int)$count;
         if ($sortname == 'count') {
@@ -314,7 +314,7 @@ class Common extends \litepubl\core\Items
         return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
     }
 
-    public function getIdPosts($id, $from, $perpage, $invertOrder)
+    public function getIdPosts(int $id, int $from, int $perpage, bool $invertOrder): array
     {
         $item = $this->getItem($id);
         $includeparents = (int)$item['includeparents'];
@@ -356,7 +356,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getParents($id)
+    public function getParents(int $id): array
     {
         $result = array();
         while ($id = (int)$this->items[$id]['parent']) {
@@ -367,7 +367,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getChilds($parent)
+    public function getChilds(int $parent): array
     {
         $result = array();
         foreach ($this->items as $id => $item) {
@@ -379,7 +379,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getSitemap($from, $count)
+    public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(__class__, 'Getsitemap', array(
             $from,
@@ -387,7 +387,7 @@ class Common extends \litepubl\core\Items
         ));
     }
 
-    public function getSortedPosts($id, $count, $invert)
+    public function getSortedPosts(int $id, int $count, bool $invert): array
     {
         $ti = $this->itemsposts->thistable;
         $posts = $this->factory->posts;
