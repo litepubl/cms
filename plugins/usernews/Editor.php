@@ -17,27 +17,57 @@ use litepubl\post\Posts;
 
 class Editor extends \litepubl\admin\Editor
 {
-
-    public function getPostEditor(Post $post, Args $args)
+    public function getTabsTemplate()
     {
-        $args->data['$lang.sourceurl'] = Lang::admin()->get('usernews', 'sourceurl');
-        if ($this->insertsource) $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
+$result = '';
+$plugin = Plugin::i();
+        if ($plugin->insertsource) {
+$result .= '[text=sourceurl]';
+}
 
-        $form = file_get_contents($this->getApp()->paths->plugins . $this->dir . DIRECTORY_SEPARATOR . $this->editorfile);
-        $args->raw = $post->rawcontent;
-        $result = $post->id == 0 ? '' : $html->h2->formhead . $post->bookmark;
-        $result.= $html->parseArg($form, $args);
-        unset(Theme::$vars['post']);
-        return $html->fixquote($result);
+$result .= '$categories';
+return $result;
+}
+
+    public function getArgsTab(Post $post, Args $args)
+    {
+        $args->id = $post->id;
+        $args->ajax = $this->getajaxlink($post->id);
+        $args->categories = $this->getCategories($post);
+
+$plugin = Plugin::i();
+        if ($plugin->insertsource) {
+        $args->data['$lang.sourceurl'] = Lang::admin()->get('usernews', 'sourceurl');
+$args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
+}
     }
 
-    public function editPost(Post $post)
+    protected function processtab(Post $post)
     {
         extract($_POST, EXTR_SKIP);
-        $posts = Posts::i();
-        $html = tadminhtml::i();
 
-        if ($this->checkspam && ($id == 0)) {
+        $post->title = $title;
+        $post->categories = $this->admintheme->processcategories();
+        $post->content = $raw;
+
+$plugin = Plugin::i();
+        if ($plugin->insertsource) {
+$post->meta->sourceurl = $sourceurl;
+$post->filtered = sprintf($this->sourcetml, $post->meta->sourceurl) . $post->filtered;
+}
+}
+
+    public function canProcess()
+    {
+if ($err = parent::canProcess()) {
+return $err;
+}
+
+        $id = (int)$_POST['id'];
+if ($id == 0) {
+$plugin = Plugin::i();
+        if ($plugin->checkspam) {
+        $posts = Posts::i();
             $post->status = 'published';
             $hold = $posts->db->getcount('status = \'draft\' and author = ' . $this->getApp()->options->user);
             $approved = $posts->db->getcount('status = \'published\' and author = ' . $this->getApp()->options->user);
@@ -49,31 +79,3 @@ class Editor extends \litepubl\admin\Editor
                 $post->status = 'draft';
             }
         }
-
-        if ($this->insertsource) $post->meta->sourceurl = $sourceurl;
-        $post->title = $title;
-        $post->categories = admintheme::i()->processcategories();
-        if ($this->getApp()->options->user > 1) {
-            $post->author = $this->getApp()->options->user;
-        }
-
-        if (isset($files)) {
-            $files = trim($files);
-            $post->files = $files == '' ? array() : explode(',', $files);
-        }
-
-        $post->content = Filter::remove_scripts($raw);
-        if ($this->insertsource) $post->filtered = sprintf($this->sourcetml, $post->meta->sourceurl) . $post->filtered;
-        if ($id == 0) {
-            $id = $posts->add($post);
-            $_GET['id'] = $id;
-            $_POST['id'] = $id;
-        } else {
-            $posts->edit($post);
-        }
-
-        return $html->h4->successedit;
-    }
-
-}
-

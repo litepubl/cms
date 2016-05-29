@@ -87,11 +87,11 @@ class Editor extends \litepubl\admin\Menu
     {
         $post = $this->getVarPost($post);
         $args = new Args();
-        $this->getargstab($post, $args);
-        return $this->admintheme->parseArg($this->gettabstemplate() , $args);
+        $this->getArgsTab($post, $args);
+        return $this->admintheme->parseArg($this->getTabsTemplate() , $args);
     }
 
-    public function getTabstemplate()
+    public function getTabsTemplate()
     {
         $admintheme = $this->admintheme;
         return strtr($admintheme->templates['tabs'], array(
@@ -101,12 +101,12 @@ class Editor extends \litepubl\admin\Menu
         ));
     }
 
-    public function getArgstab(Post $post, Args $args)
+    public function getArgsTab(Post $post, Args $args)
     {
         $args->id = $post->id;
         $args->ajax = $this->getajaxlink($post->id);
         //categories tab
-        $args->categories = $this->getcategories($post);
+        $args->categories = $this->getCategories($post);
 
         //datetime tab
         $args->posted = $post->posted;
@@ -268,7 +268,7 @@ class Editor extends \litepubl\admin\Menu
         return new Post();
     }
 
-    public function canprocess()
+    public function canProcess()
     {
         if (empty($_POST['title'])) {
             $lang = Lang::admin('editor');
@@ -276,7 +276,7 @@ class Editor extends \litepubl\admin\Menu
         }
     }
 
-    public function afterprocess(Post $post)
+    public function afterProcess(Post $post)
     {
     }
 
@@ -285,14 +285,14 @@ class Editor extends \litepubl\admin\Menu
         $lang = Lang::admin('editor');
         $admintheme = $this->admintheme;
 
-        if ($error = $this->canprocess()) {
+        if ($error = $this->canProcess()) {
             return $admintheme->geterr($lang->error, $error);
         }
 
         $id = (int)$_POST['id'];
-        $post = $id ? Post::i($id) : $this->newpost();
-        $this->processtab($post);
-        $this->processfiles($post);
+        $post = $id ? Post::i($id) : $this->newPost();
+        $this->processTab($post);
+        $this->processFiles($post);
 
         $posts = $post->factory->posts;
         if ($id == 0) {
@@ -303,7 +303,7 @@ class Editor extends \litepubl\admin\Menu
         }
         $_GET['id'] = $this->idpost;
 
-        $this->afterprocess($post);
+        $this->afterProcess($post);
         return $admintheme->success($lang->success);
     }
 
