@@ -53,7 +53,7 @@ $args->sourceurl = isset($post->meta->sourceurl) ? $post->meta->sourceurl : '';
 $plugin = Plugin::i();
         if ($plugin->insertsource) {
 $post->meta->sourceurl = $sourceurl;
-$post->filtered = sprintf($this->sourcetml, $post->meta->sourceurl) . $post->filtered;
+$post->filtered = sprintf($plugin->sourcetml, $post->meta->sourceurl) . $post->filtered;
 }
 }
 
@@ -68,14 +68,14 @@ if ($id == 0) {
 $plugin = Plugin::i();
         if ($plugin->checkspam) {
         $posts = Posts::i();
-            $post->status = 'published';
             $hold = $posts->db->getcount('status = \'draft\' and author = ' . $this->getApp()->options->user);
             $approved = $posts->db->getcount('status = \'published\' and author = ' . $this->getApp()->options->user);
-            if ($approved < 3) {
-                if ($hold - $approved >= 2) {
-                    return $this->norights;
+            if ($approved < 3 && $hold - $approved >= 2) {
+                    return Lang::admin('usernews')->manydrafts ;
                 }
 
-                $post->status = 'draft';
-            }
-        }
+}
+}
+}
+
+}
