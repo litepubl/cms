@@ -16,7 +16,7 @@ class AuthorRights extends \litepubl\core\Events
     protected function create()
     {
         parent::create();
-        $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
+        $this->addevents('changeposts', 'canupload', 'candeletefile');
         $this->basename = 'authorrights';
     }
 

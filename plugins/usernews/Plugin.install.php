@@ -42,8 +42,6 @@ $app->options->parsepost = false;
 
     $rights = AuthorRights::i();
     $rights->lock();
-    $rights->gethead = $self->gethead;
-    $rights->editpost = $self->editpost;
     $rights->changeposts = $self->changePosts;
     $rights->canupload = $self->canUpload;
     $rights->candeletefile = $self->canDeleteFile;

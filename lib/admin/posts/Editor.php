@@ -10,7 +10,6 @@
 
 namespace litepubl\admin\posts;
 
-use litepubl\admin\AuthorRights;
 use litepubl\admin\DateFilter;
 use litepubl\core\DB;
 use litepubl\core\Str;
@@ -35,12 +34,7 @@ class Editor extends \litepubl\admin\Menu
 
         $mainView = MainView::i();
         $mainView->ltoptions['idpost'] = $this->idget();
-        $result.= $mainView->getjavascript($mainView->jsmerger_posteditor);
-
-        if ($this->isauthor && ($h = AuthorRights::i()->gethead())) {
-            $result.= $h;
-        }
-
+        $result.= $mainView->getJavaScript($mainView->jsmerger_posteditor);
         return $result;
     }
 
@@ -206,10 +200,6 @@ class Editor extends \litepubl\admin\Menu
             $result.= $admintheme->h($lang->formhead . $post->view->bookmark);
         }
 
-        if ($this->isauthor && ($r = AuthorRights::i()->getposteditor($post, $args))) {
-            return $r;
-        }
-
         $args->id = $post->id;
         $args->title = $post->title;
         $args->adminurl = $this->url;
@@ -301,12 +291,6 @@ class Editor extends \litepubl\admin\Menu
 
         $id = (int)$_POST['id'];
         $post = $id ? Post::i($id) : $this->newpost();
-
-        if ($this->isauthor && ($r = AuthorRights::i()->editpost($post))) {
-            $this->idpost = $post->id;
-            return $r;
-        }
-
         $this->processtab($post);
         $this->processfiles($post);
 
