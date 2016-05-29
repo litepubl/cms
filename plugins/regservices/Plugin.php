@@ -13,6 +13,7 @@ namespace litepubl\plugins\regservices;
 use litepubl\comments\Form;
 use litepubl\admin\pages\Form as LoginForms;
 use litepubl\view\Admin;
+use litepubl\core\Context;
 
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {

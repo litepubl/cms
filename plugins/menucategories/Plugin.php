@@ -64,7 +64,7 @@ class Plugin extends \litepubl\core\Plugin
     private function getSubMenu(&$tree, $current)
     {
         $result = '';
-        $categories = tcategories::i();
+        $categories = Cats::i();
         $theme = Theme::i();
         $tml = $theme->templates['menu.item'];
         $tml_submenu = $theme->templates['menu.item.submenu'];
@@ -98,7 +98,7 @@ class Plugin extends \litepubl\core\Plugin
     private function getSubTree($parent)
     {
         $result = array();
-        $categories = tcategories::i();
+        $categories = Cats::i();
         // first step is a find all childs and sort them
         $sort = array();
         foreach ($categories->items as $id => $item) {

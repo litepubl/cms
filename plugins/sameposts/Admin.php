@@ -8,15 +8,10 @@
  *
  */
 
-namespace litepubl;
+namespace litepubl\plugins\sameposts;
 
-class tadminsameposts extends tadminorderwidget
+class Admin extends \litepubl\admin\widget\Order
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {

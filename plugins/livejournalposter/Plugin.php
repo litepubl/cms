@@ -51,7 +51,6 @@ class Plugin extends \litepubl\core\Plugin
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
             if (Config::$debug) {
                 $this->getApp()->getLogger()->warning('live journal: error challenge');
-            }
         }
         return false;
     }

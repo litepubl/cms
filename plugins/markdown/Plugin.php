@@ -20,7 +20,7 @@ class Plugin extends \litepubl\core\Plugin
         $this->data['deletep'] = false;
 include_once(__DIR__ . '/MarkdownInterface.php');
 include_once(__DIR__ . '/Markdown.php');
-        $this->parser = new Michelf\Markdown();
+        $this->parser = new \Michelf\Markdown();
     }
 
     public function filter(&$content)

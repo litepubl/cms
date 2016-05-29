@@ -24,7 +24,7 @@ class Admin extends \litepubl\admin\Panel
         $args->formtitle = $lang->options;
         foreach ($plugin->items as $id => $classname) {
             $service = static ::iGet($classname);
-            $tabs->add($service->title, $service->gettab($this);
+            $tabs->add($service->title, $service->gettab($this));
         }
 
         return $this->admin->form($tabs->get() , $args);

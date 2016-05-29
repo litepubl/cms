@@ -14,6 +14,7 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 use litepubl\utils\Filer;
 use litepubl\utils\Mailer;
+use litepubl\core\Context;
 
 class Keywords extends \litepubl\core\Plugin
 {
@@ -30,8 +31,9 @@ class Keywords extends \litepubl\core\Plugin
         Filer::deleteMask($this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR . $item['id'] . ".*.php");
     }
 
-    public function parseRef(string $url)
+    public function parseRef(Context $context)
     {
+$url = $context->request->url;
         if (Str::begin($url, '/admin/') || Str::begin($url, '/croncron.php')) {
             return;
         }
