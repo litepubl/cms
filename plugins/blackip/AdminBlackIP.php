@@ -20,7 +20,7 @@ class AdminBlackIP extends \litepubl\admin\Panel
     public function getContent()
     {
         $plugin = BlackIP::i();
-        $lang = $this->getLangAbbout();
+        $lang = $this->getLangAbout();
         $args = $this->args;
         $args->ip = implode("\n", $plugin->ip);
         $args->words = implode("\n", $plugin->words);

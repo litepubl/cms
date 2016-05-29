@@ -13,9 +13,9 @@ namespace litepubl\plugins\oldestposts;
 class Admin extends \litepubl\admin\widget\Order
 {
 
-    protected function create()
+public function __construct()
     {
-        parent::create();
+        parent::__construct();
         $this->widget = Oldestposts::i();
     }
 
