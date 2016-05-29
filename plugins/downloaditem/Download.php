@@ -15,7 +15,7 @@ use litepubl\view\Filter;
 class Download extends \litepubl\post\Post
 {
 
-    public static function getChildTable()
+    public static function getChildTable(): string
     {
         return 'downloaditems';
     }

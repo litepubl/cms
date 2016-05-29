@@ -22,6 +22,8 @@ use litepubl\tag\Tags;
 use litepubl\pages\Menus;
 use litepubl\pages\FakeMenu;
 use litepubl\admin\Menus as AdminMenus;
+use litepubl\core\DBOptimizer;
+use litepubl\post\Posts;
 
 function PluginInstall($self)
 {
@@ -30,7 +32,7 @@ function PluginInstall($self)
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'downloaditem.sql'));
     $manager->addEnum('posts', 'class', str_replace('\\', '-', __NAMESPACE__ . '\Item'));
 
-    $optimizer = tdboptimizer::i();
+    $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->childTables[] = 'downloaditems';
     $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
@@ -83,6 +85,8 @@ $lang->addSearch('downloaditem', 'downloaditems');
 
     $menus = Menus::i();
     $menus->lock();
+
+$tags->loadAll();
 $item = $tags->getItem($idparent);
     $menu = new FakeMenu();
     $menu->url = $item['url'];
@@ -145,9 +149,9 @@ Counter::i()->uninstall();
 
     $manager = DBManager::i();
     $manager->deletetable($self->childTable);
-    $manager->delete_enum('posts', 'class', 'tdownloaditem');
+    $manager->deleteEnum('posts', 'class', 'tdownloaditem');
 
-    $optimizer = tdboptimizer::i();
+    $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->unbind($self);
     if (false !== ($i = array_search('downloaditems', $optimizer->childTables))) {

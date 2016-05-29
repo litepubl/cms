@@ -65,7 +65,7 @@ $response = $context->response;
         $url = $item['downloadurl'];
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
 
-    $response->redir($url);";
+    $response->redir($url);
         $response->body = "<?php litepubl\\utils\\Filer::append('$filename', '$id\n'); ?>";
     }
 

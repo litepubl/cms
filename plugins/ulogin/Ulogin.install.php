@@ -59,7 +59,7 @@ $man->alter('users', "add phone bigint not null default '0' after status");
     $reg->widget.= $self->panel;
     $reg->save();
 
-    //$self->getApp()->router->unbind($self);
+    $self->getApp()->router->unbind($self);
     $self->getApp()->router->addGet($self->url, get_class($self));
 
     $js = Js::i();

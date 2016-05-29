@@ -299,7 +299,7 @@ class Admin extends Base
         return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
-    public function check2array(string $prefix): string
+    public function check2array(string $prefix): array
     {
         $result = array();
         foreach ($_POST as $key => $value) {

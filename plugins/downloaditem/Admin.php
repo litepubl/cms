@@ -22,7 +22,7 @@ class Admin extends \litepubl\admin\Menu
         $result = '';
         $admintheme = $this->admintheme;
         $lang = Lang::admin('downloaditems');
-        $lang->addsearch['downloaditem');
+        $lang->addsearch('downloaditem');
 
         $args = new Args();
         $args->adminurl = $this->adminurl;
@@ -58,7 +58,7 @@ class Admin extends \litepubl\admin\Menu
             $items = array();
         }
 
-        $form = $this->newFform(new Args());
+        $form = $this->newForm(new Args());
         $form->body = $admintheme->getcount($from, $from + count($items) , $count);
         $tb = $this->newTable();
         $tb->setPosts(array(
@@ -98,14 +98,14 @@ class Admin extends \litepubl\admin\Menu
         $form->submit = false;
         $result.= $form->get();
 
-        $theme = $this->view->theme;
+        $theme = $this->theme;
         $result.= $theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
     public function processForm()
     {
-        $downloaditems = tdownloaditems::i();
+        $downloaditems = Plugin::i();
         if ($this->name == 'addurl') {
             $url = trim($_POST['url']);
             if ($url == '') {
@@ -130,7 +130,7 @@ class Admin extends \litepubl\admin\Menu
             if ($status == 'delete') {
                 $downloaditems->delete($id);
             } else {
-                $downloaditem = tdownloaditem::i($id);
+                $downloaditem = Download::i($id);
                 $downloaditem->status = $status;
                 $downloaditems->edit($downloaditem);
             }

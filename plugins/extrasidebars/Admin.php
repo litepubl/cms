@@ -15,10 +15,8 @@ use litepubl\view\Base;
 use litepubl\admin\UList;
 use litepubl\utils\Filer;
 
-class Admin implements \litepubl\admin\AdminInterface
+class Admin extends \litepubl\admin\Panel
 {
-use \litepubl\core\AppTrait;
-use \litepubl\admin\PanelTrait;
 
     public function getContent()
     {
@@ -28,15 +26,15 @@ $themes = '';
 $tml = str_replace(
 '$value',
  $this->admin->templates['checkbox.label'],
- $this->admin->templates['list.value]
+ $this->admin->templates['list.value']
 );
 
 $dirnames = Filer::getDir($this->getApp()->paths->themes);
-foreach ($dirrnames as $name) {
+foreach ($dirnames as $name) {
 $themes .= strtr($tml, array(
 '$name' => 'theme',
 '$id' => $name,
-'$checked' => in_array($name, $plugins->themes) ? 'checked="checked"' : '',
+'$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
 '$title' => $name,
 ));
 }
@@ -51,7 +49,7 @@ $themes .= strtr($tml, array(
 [checkbox=beforepost]
  [checkbox=afterpost]
 '
- . $this->admin->section($lang->themes, $ul->ul($themes)),
+ . $this->admin->getSection($lang->themes, $ul->ul($themes)),
 $args);
     }
 

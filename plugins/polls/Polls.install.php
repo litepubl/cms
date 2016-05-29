@@ -80,7 +80,7 @@ function PollsUninstall($self)
     $manager->deletetable($self->table);
     $manager->deletetable(polls::votes);
 
-    tcron::i()->deleteclass(get_class($self));
+    Cron::i()->deleteclass(get_class($self));
     Posts::i()->unbind($self);
 }
 
