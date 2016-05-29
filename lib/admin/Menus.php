@@ -34,7 +34,7 @@ class Menus extends \litepubl\pages\Menus
         }
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         return $this->getApp()->paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
     }

@@ -190,7 +190,7 @@ class Base extends \litepubl\core\Events
         return '';
     }
 
-    public function parse($s)
+    public function parse(string $s): string
     {
         if (!$s) {
             return '';
@@ -201,10 +201,7 @@ class Base extends \litepubl\core\Events
         array_push($this->parsing, $s);
         try {
             $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
-            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', array(
-                $this,
-                'parsecallback'
-            ) , $s);
+            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', [$this, 'parsecallback'] , $s);
         }
         catch(\Exception $e) {
             $result = '';
@@ -214,7 +211,7 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    public function parseArg($s, Args $args)
+    public function parseArg(string $s, Args $args): string
     {
         $s = $this->parse($s);
         $s = $args->callback($s);
