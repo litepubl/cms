@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl\plugins\spae;
+namespace litepubl\plugins\sape;
 
 
 use litepubl\admin\Form;

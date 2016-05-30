@@ -13,26 +13,26 @@ namespace litepubl\plugins\sameposts;
 class Admin extends \litepubl\admin\widget\Order
 {
 
-    protected function create()
+public function __construct()
     {
-        parent::create();
-        $widgets = twidgets::i();
-        $this->widget = $widgets->getwidget($widgets->find(tsameposts::i()));
+        parent::__construct();
+$this->widget = Widget::i();
+$this->widget->id = $this->widget->getWidgets()->find($this->widget);
     }
 
-    protected function dogetcontent(twidget $widget, Args $args)
+    protected function getForm()
     {
-        $args->maxcount = $widget->maxcount;
-        $result = $this->html->parseArg('[text=maxcount]', $args);
-        $result.= parent::dogetcontent($widget, $args);
+        $result= parent::getForm();
+        $this->args->maxcount = $this->widget->maxcount;
+        $result .= '[text=maxcount]';
         return $result;
     }
 
-    protected function doProcessForm(twidget $widget)
+    protected function doProcessForm()
     {
-        $widget->maxcount = (int)$_POST['maxcount'];
-        $widget->postschanged();
-        return parent::doProcessForm($widget);
+        $this->widget->maxcount = (int)$_POST['maxcount'];
+        $this->widget->postsChanged();
+        return parent::doProcessForm();
     }
 
 }

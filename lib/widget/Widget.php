@@ -58,6 +58,11 @@ public $cache;
 return Widgets::i();
 }
 
+public function getView()
+{
+return new View();
+}
+
     public function getWidget(int $id, int $sidebar): string
     {
         $vars = new Vars();
@@ -74,11 +79,6 @@ return Widgets::i();
 
         return $this->getView()->getWidget($id, $sidebar, $title, $content, $this->template);
     }
-
-public function getView()
-{
-return new View();
-}
 
     public function getDefTitle(): string
     {
