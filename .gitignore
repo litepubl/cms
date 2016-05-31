@@ -1,11 +1,10 @@
 *.log
-build/*
+/build/*
 old/
-PLUGINS/SHOP*
-PLUGINS/IMGRESIZE
-plugins/smalplugs*
-temp/
-THEMES/SHOP*
+/plugins/shop*
+/plugins/imgresize
+/plugins/smalplugs*
+/temp/
+/themes/shop*
 .sonar/*
 sonar/*
-lib/ztoto.txt

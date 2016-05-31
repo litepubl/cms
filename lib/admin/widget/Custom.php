@@ -64,12 +64,19 @@ class Custom extends Widget
         $args->text = $item['content'];
         $args->template = $this->theme->comboItems($this->getTemplates() , $item['template']);
 
-        $form.= '[editor=text]
+        $form.= '
+[editor=text]
     [combo=template]
     [hidden=mode]
     [hidden=idwidget]';
 
         $result = $this->admin->form($form, $args);
+$result .= $this->getTableWidgets();
+        return $result;
+}
+
+protected function getTableWidgets()
+{
         $lang = $this->lang;
         $tb = $this->newTable();
         $tb->setStruct(array(
@@ -80,10 +87,9 @@ class Custom extends Widget
             ) ,
         ));
 
-        $form = $this->newForm($args);
+        $form = $this->newForm($this->args);
         $form->title = $lang->widgets;
-        $result.= $form->getdelete($tb->build($widget->items));
-        return $result;
+return $form->getDelete($tb->build($this->widget->items));
     }
 
     public function processForm()

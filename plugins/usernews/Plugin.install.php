@@ -12,6 +12,7 @@ namespace litepubl\plugins\usernews;
 
 use litepubl\view\Filter;
 use litepubl\view\LangMerger;
+use litepubl\view\Lang;
 use litepubl\core\UserGroups;
 use litepubl\core\Plugins;
 use litepubl\admin\AuthorRights;
@@ -24,7 +25,7 @@ $plugins= Plugins::i();
 $plugins->add('ulogin');
 }
 
-    LangMerger::i()->addplugin($name);
+    LangMerger::i()->addPlugin(basename(__DIR__));
 $lang = Lang::admin('usernews');
     $filter = Filter::i();
     $filter->phpcode = true;
@@ -66,7 +67,7 @@ $menus->unlock();
 function PluginUninstall($self)
 {
     AuthorRights::i()->unbind($self);
-    LangMerger::i()->deleteplugin(basename(dirname(__file__)));
+    LangMerger::i()->deletePlugin(basename(dirname(__file__)));
 $menus = Menus::i();
 $menus->deleteUrl('/admin/posts/usernews/');
 }

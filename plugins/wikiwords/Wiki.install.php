@@ -19,11 +19,11 @@ use litepubl\view\Parser;
 function WikiInstall($self)
 {
     $manager = DBManager::i();
-    $manager->createtable($self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
+    $manager->createTable($self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
     `word` text NOT NULL,
     PRIMARY KEY  (`id`)");
 
-    $manager->createtable($self->itemsposts->table, file_get_contents($self->getApp()->paths->lib . 'core/install/sql/ItemsPosts.sql');
+    $manager->createTable($self->itemsposts->table, file_get_contents($self->getApp()->paths->lib . 'core/install/sql/ItemsPosts.sql'));
 
     $filter = Filter::i();
     $filter->beforecontent = $self->beforefilter;

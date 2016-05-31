@@ -15,9 +15,15 @@ use litepubl\widget\Widgets;
 class Admin extends \litepubl\admin\widget\Custom
 {
 
+public function __construct()
+{
+parent::__construct();
+$this->widget = Widget::i();
+}
+
     public function getContent()
     {
-        $widget = Widget::i();
+        $widget = $this->widget;
         $lang = $this->getLangAbout();
         $args = $this->args;
         $id = (int)$this->getParam('idwidget', 0);
@@ -50,7 +56,7 @@ class Admin extends \litepubl\admin\widget\Custom
 ' . $this->admin->h($lang->cats)
  . $cats, $args);
 
-        $result.= $this->getList($widget);
+$result .= $this->getTableWidgets();
         return $result;
     }
 

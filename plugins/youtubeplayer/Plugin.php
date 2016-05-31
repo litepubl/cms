@@ -8,7 +8,7 @@
  *
  */
 
-namespace litepubl\youtubeplayer;
+namespace litepubl\plugins\youtubeplayer;
 
 use litepubl\view\Filter;
 

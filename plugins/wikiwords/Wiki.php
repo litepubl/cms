@@ -13,6 +13,7 @@ namespace litepubl\plugins\wikiwords;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\Posts;
+use litepubl\core\ItemsPosts;
 
 class Wiki extends \litepubl\core\Items
 {
@@ -97,7 +98,7 @@ class Wiki extends \litepubl\core\Items
     public function add($word, $idpost)
     {
         $word = trim(strip_tags($word));
-        if ($!word) {
+        if (!$word) {
             return false;
         }
 

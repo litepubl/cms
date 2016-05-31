@@ -29,7 +29,7 @@ class Widget extends \litepubl\widget\Widget
         $this->tags = Cats::i();
     }
 
-    public function getIdWidget($idtag)
+    public function getIdWidget(int $idtag): int
     {
         foreach ($this->items as $id => $item) {
             if ($idtag == $item['idtag']) {
@@ -37,12 +37,12 @@ class Widget extends \litepubl\widget\Widget
             }
         }
 
-        return false;
+        return 0;
     }
 
-    public function add($idtag)
+    public function add(int $idtag): int
     {
-        $tag = $this->tags->getitem($idtag);
+        $tag = $this->tags->getItem($idtag);
         $widgets = Widgets::i();
         $id = $widgets->addExt($this, $tag['title'], 'widget');
         $this->items[$id] = array(
@@ -54,11 +54,10 @@ class Widget extends \litepubl\widget\Widget
         $sidebars = Sidebars::i();
         $sidebars->add($id);
         $this->save();
-        //$this->added($id);
         return $id;
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
@@ -66,12 +65,10 @@ class Widget extends \litepubl\widget\Widget
 
             $widgets = Widgets::i();
             $widgets->delete($id);
-            //$this->deleted($id);
-            
         }
     }
 
-    public function widgetdeleted($id)
+    public function widgetDeleted(int $id)
     {
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
@@ -79,14 +76,14 @@ class Widget extends \litepubl\widget\Widget
         }
     }
 
-    public function tagdeleted($idtag)
+    public function tagDeleted(int $idtag)
     {
         if ($idwidget = $this->getidwidget($idtag)) {
             return $this->delete($idwidget);
         }
     }
 
-    public function getTitle($id)
+    public function getTitle(int $id): string
     {
         if (isset($this->items[$id])) {
             if ($tag = $this->tags->getItem($this->items[$id]['idtag'])) {
@@ -97,7 +94,7 @@ class Widget extends \litepubl\widget\Widget
         return '';
     }
 
-    public function getContent($id, $sidebar)
+    public function getContent(int $id, int $sidebar): string
     {
         if (!isset($this->items[$id])) {
             return '';
