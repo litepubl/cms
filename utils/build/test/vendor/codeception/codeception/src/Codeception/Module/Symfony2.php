@@ -162,15 +162,16 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__,
+            throw new ModuleRequireException(
+                __CLASS__,
                 "Symfony2 bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
                 "modules:\n    enabled:\n" .
                 "    - Symfony2:\n" .
                 "        var_path: '../../app'\n" .
-                "        app_path: '../../app'");
-
+                "        app_path: '../../app'"
+            );
         }
         require_once $cache;
         $this->kernelClass = $this->getKernelClass();
@@ -194,7 +195,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     public function _before(\Codeception\TestCase $test)
     {
         $this->persistentServices = array_merge($this->persistentServices, $this->permanentServices);
-        $this->client = new Symfony2Connector($this->kernel, $this->persistentServices, $this->config['rebootable_client']);
+        $this->client = new Symfony2Connector(
+            $this->kernel,
+            $this->persistentServices,
+            $this->config['rebootable_client']
+        );
     }
 
     /**
@@ -253,14 +258,22 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
     {
         $path = \Codeception\Configuration::projectDir() . $this->config['app_path'];
         if (!file_exists(\Codeception\Configuration::projectDir() . $this->config['app_path'])) {
-            throw new ModuleRequireException(__CLASS__, "Can't load Kernel from $path.\nDirectory does not exists. Use `app_path` parameter to provide valid application path");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "Can't load Kernel from $path.\n"
+                . "Directory does not exists. Use `app_path` parameter to provide valid application path"
+            );
         }
 
         $finder = new Finder();
         $finder->name('*Kernel.php')->depth('0')->in($path);
         $results = iterator_to_array($finder);
         if (!count($results)) {
-            throw new ModuleRequireException(__CLASS__, "AppKernel was not found at $path. Specify directory where Kernel class for your application is located with `app_path` parameter.");
+            throw new ModuleRequireException(
+                __CLASS__,
+                "AppKernel was not found at $path. "
+                . "Specify directory where Kernel class for your application is located with `app_path` parameter."
+            );
         }
 
         $file = current($results);
@@ -358,8 +371,18 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         if (!$router->getRouteCollection()->get($routeName)) {
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
-        $url = $router->generate($routeName, $params);
-        $this->seeCurrentUrlEquals($url);
+
+        $uri = explode('?', $this->grabFromCurrentUrl())[0];
+        try {
+            $match = $router->match($uri);
+        } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
+            $this->fail(sprintf('The "%s" url does not match with any route', $uri));
+        }
+        $expected = array_merge(array('_route' => $routeName), $params);
+        $intersection = array_intersect_assoc($expected, $match);
+
+        $this->assertEquals($expected, $intersection);
+
     }
 
     /**
@@ -381,10 +404,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
             $this->fail(sprintf('Route with name "%s" does not exists.', $routeName));
         }
 
+        $uri = explode('?', $this->grabFromCurrentUrl())[0];
         try {
-            $matchedRouteName = $router->match($this->grabFromCurrentUrl())['_route'];
-        } catch (\Exception\ResourceNotFoundException $e) {
-            $this->fail(sprintf('The "%s" url does not match with any route', $routeName));
+            $matchedRouteName = $router->match($uri)['_route'];
+        } catch (\Symfony\Component\Routing\Exception\ResourceNotFoundException $e) {
+            $this->fail(sprintf('The "%s" url does not match with any route', $uri));
         }
 
         $this->assertEquals($matchedRouteName, $routeName);
@@ -474,7 +498,11 @@ class Symfony2 extends Framework implements DoctrineProvider, PartedModule
         if ($profile = $this->getProfile()) {
             if ($profile->hasCollector('security')) {
                 if ($profile->getCollector('security')->isAuthenticated()) {
-                    $this->debugSection('User', $profile->getCollector('security')->getUser() . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']');
+                    $this->debugSection(
+                        'User',
+                        $profile->getCollector('security')->getUser()
+                        . ' [' . implode(',', $profile->getCollector('security')->getRoles()) . ']'
+                    );
                 } else {
                     $this->debugSection('User', 'Anonymous');
                 }

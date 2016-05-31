@@ -465,7 +465,12 @@ EOF;
 
         if (is_array($parameters) || $method === 'GET') {
             if (!empty($parameters) && $method === 'GET') {
-                $url .= '?' . http_build_query($parameters);
+                if (strpos($url, '?') !== false) {
+                    $url .= '&';
+                } else {
+                    $url .= '?';
+                }
+                $url .= http_build_query($parameters);
             }
             if ($method == 'GET') {
                 $this->debugSection("Request", "$method $url");
@@ -616,7 +621,8 @@ EOF;
 
     /**
      * Returns data from the current JSON response using [JSONPath](http://goessner.net/articles/JsonPath/) as selector.
-     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * JsonPath is XPath equivalent for querying Json structures.
+     * Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * Even for a single value an array is returned.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -686,14 +692,16 @@ EOF;
     {
         $response = $this->connectionModule->_getResponseContent();
         $this->assertGreaterThan(
-            0, (new JsonArray($response))->filterByXPath($xpath)->length,
+            0,
+            (new JsonArray($response))->filterByXPath($xpath)->length,
             "Received JSON did not match the XPath `$xpath`.\nJson Response: \n" . $response
         );
     }
 
     /**
      * Checks if json structure in response matches [JsonPath](http://goessner.net/articles/JsonPath/).
-     * JsonPath is XPath equivalent for querying Json structures. Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
+     * JsonPath is XPath equivalent for querying Json structures.
+     * Try your JsonPath expressions [online](http://jsonpath.curiousconcept.com/).
      * This assertion allows you to check the structure of response json.
      *
      * This method **require [`flow/jsonpath` > 0.2](https://github.com/FlowCommunications/JSONPath/) library to be installed**.
@@ -881,7 +889,11 @@ EOF;
             $jsonArray = $jsonArray->filterByJsonPath($jsonPath);
         }
         $matched = (new JsonType($jsonArray))->matches($jsonType);
-        $this->assertNotEquals(true, $matched, sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true)));
+        $this->assertNotEquals(
+            true,
+            $matched,
+            sprintf("Unexpectedly the response matched the %s data type", var_export($jsonType, true))
+        );
     }
 
     /**
@@ -1036,7 +1048,10 @@ EOF;
      */
     public function dontSeeXmlResponseEquals($xml)
     {
-        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString($this->connectionModule->_getResponseContent(), $xml);
+        \PHPUnit_Framework_Assert::assertXmlStringNotEqualsXmlString(
+            $this->connectionModule->_getResponseContent(),
+            $xml
+        );
     }
 
     /**
@@ -1057,7 +1072,11 @@ EOF;
      */
     public function seeXmlResponseIncludes($xml)
     {
-        $this->assertContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(), "found in XML Response");
+        $this->assertContains(
+            XmlUtils::toXml($xml)->C14N(),
+            XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(),
+            "found in XML Response"
+        );
     }
 
     /**
@@ -1070,7 +1089,11 @@ EOF;
      */
     public function dontSeeXmlResponseIncludes($xml)
     {
-        $this->assertNotContains(XmlUtils::toXml($xml)->C14N(), XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(), "found in XML Response");
+        $this->assertNotContains(
+            XmlUtils::toXml($xml)->C14N(),
+            XmlUtils::toXml($this->connectionModule->_getResponseContent())->C14N(),
+            "found in XML Response"
+        );
     }
 
     /**
@@ -1082,7 +1105,11 @@ EOF;
      */
     public function grabDataFromJsonResponse($path)
     {
-        throw new ModuleException($this, "This action was deprecated in Codeception 2.0.9 and removed in 2.1. Please use `grabDataFromResponseByJsonPath` instead");
+        throw new ModuleException(
+            $this,
+            "This action was deprecated in Codeception 2.0.9 and removed in 2.1. "
+            . "Please use `grabDataFromResponseByJsonPath` instead"
+        );
     }
 
     /**
@@ -1100,5 +1127,4 @@ EOF;
     {
         $this->client->followRedirects(true);
     }
-
 }

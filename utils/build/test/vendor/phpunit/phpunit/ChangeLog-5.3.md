@@ -2,6 +2,18 @@
 
 All notable changes of the PHPUnit 5.3 release series are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [5.3.4] - 2016-05-11
+
+### Changed
+
+* The checks that can be enabled by `--strict-coverage` and `beStrictAboutCoversAnnotation` are no longer performed for tests annotated with `@medium` or `@large`
+
+## [5.3.3] - 2016-05-10
+
+### Fixed
+
+* Fixed [#2158](https://github.com/sebastianbergmann/phpunit/issues/2158): Failure to run tests in separate processes if a file included into main process contains constant definition
+
 ## [5.3.2] - 2016-04-12
 
 ### Fixed
@@ -27,6 +39,8 @@ All notable changes of the PHPUnit 5.3 release series are documented in this fil
 * The passing of test doubles from one test to another has been improved
 * Implemented [phpunit-mock-objects/#296](https://github.com/sebastianbergmann/phpunit-mock-objects/issues/296): Trigger an error when final or private method is configured on a test double
 
+[5.3.4]: https://github.com/sebastianbergmann/phpunit/compare/5.3.3...5.3.4
+[5.3.3]: https://github.com/sebastianbergmann/phpunit/compare/5.3.2...5.3.3
 [5.3.2]: https://github.com/sebastianbergmann/phpunit/compare/5.3.1...5.3.2
 [5.3.1]: https://github.com/sebastianbergmann/phpunit/compare/5.3.0...5.3.1
 [5.3.0]: https://github.com/sebastianbergmann/phpunit/compare/5.2...5.3.0

@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class Codecept
 {
-    const VERSION = "2.1.8";
+    const VERSION = "2.1.9";
 
     /**
      * @var \Codeception\PHPUnit\Runner
@@ -52,7 +52,8 @@ class Codecept
         'fail-fast'     => false,
         'verbosity'     => 1,
         'interactive'   => true,
-        'no-rebuild'    => false
+        'no-rebuild'    => false,
+        'quiet'         => false,
     ];
 
     protected $config = [];
@@ -162,7 +163,10 @@ class Codecept
 
     public function run($suite, $test = null)
     {
-        ini_set('memory_limit', isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M');
+        ini_set(
+            'memory_limit',
+            isset($this->config['settings']['memory_limit']) ? $this->config['settings']['memory_limit'] : '1024M'
+        );
         $settings = Configuration::suiteSettings($suite, Configuration::config());
 
         $selectedEnvironments = $this->options['env'];
