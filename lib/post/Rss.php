@@ -14,7 +14,7 @@ use litepubl\coments\Manager as CommentManager;
 use litepubl\comments\Comments;
 use litepubl\core\Context;
 use litepubl\perm\Perm;
-use litepubl\tag\Categories;
+use litepubl\tag\Cats;
 use litepubl\tag\Tags;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
@@ -90,7 +90,7 @@ header('Location: $this->feedburnercomments');
                 }
 
                 $id = (int)$match[1];
-                $tags = $arg == 'categories' ? Categories::i() : Tags::i();
+                $tags = $arg == 'categories' ? Cats::i() : Tags::i();
                 if (!$tags->itemExists($id)) {
                     $response->status = 404;
                     return;
@@ -134,10 +134,6 @@ header('Location: $this->feedburnercomments');
         }
 
         $response->setXml();
-        if ($before) {
-            $response->body = $before . $response->body;
-        }
-
         $response->body.= $this->domrss->GetStripedXML();
     }
 
@@ -168,7 +164,7 @@ header('Location: $this->feedburnercomments');
         $this->domrss->CreateRoot($this->getApp()->site->url . '/comments.xml', Lang::get('comment', 'onrecent') . ' ' . $this->getApp()->site->name);
 
         $title = Lang::get('comment', 'onpost') . ' ';
-        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $comment = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
         $recent = CommentWidget::i()->getrecent($this->getApp()->options->perpage);
         foreach ($recent as $item) {
             $comment->exchangeArray($item);
@@ -217,7 +213,7 @@ header('Location: $this->feedburnercomments');
         }
     }
 
-    public function addpost(tpost $post)
+    public function addPost(Post $post)
     {
         $item = $this->domrss->AddItem();
         Node::addvalue($item, 'title', $post->title);
@@ -235,7 +231,7 @@ header('Location: $this->feedburnercomments');
             Node::addvalue($item, 'dc:creator', 'admin');
         }
 
-        $categories = Categories::i();
+        $categories = Cats::i();
         $names = $categories->getnames($post->categories);
         foreach ($names as $name) {
             if (empty($name)) {
@@ -260,7 +256,7 @@ header('Location: $this->feedburnercomments');
             $post->id, &$content
         ));
         if ($this->template == '') {
-            $content.= $post->replacemore($post->rss, true);
+            $content.= $post->view->replaceMore($post->rss, true);
         } else {
             $content.= Theme::parsevar('post', $post, $this->template);
         }
@@ -269,7 +265,7 @@ header('Location: $this->feedburnercomments');
         ));
         Node::addcdata($item, 'content:encoded', $content);
         Node::addcdata($item, 'description', strip_tags($content));
-        Node::addvalue($item, 'wfw:commentRss', $post->rsscomments);
+        Node::addvalue($item, 'wfw:commentRss', $post->view->rsscomments);
 
         if (count($post->files) > 0) {
             $files = Files::i();
@@ -282,7 +278,8 @@ header('Location: $this->feedburnercomments');
                 Node::attr($enclosure, 'type', $file['mime']);
             }
         }
-        $post->onrssitem($item);
+
+        $post->view->onRssItem($item);
         $this->onpostitem($item, $post);
         return $item;
     }

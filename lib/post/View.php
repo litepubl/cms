@@ -541,7 +541,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
         $result = $this->excerpt;
         $posts->beforeexcerpt($this, $result);
-        $result = $this->replacemore($result, true);
+        $result = $this->replaceMore($result, true);
         if ($this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
@@ -549,9 +549,9 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function replaceMore($content, $excerpt)
+    public function replaceMore(string $content, string $excerpt): string
     {
-        $more = $this->parsetml($excerpt ? 'content.excerpts.excerpt.morelink' : 'content.post.more');
+        $more = $this->parseTml($excerpt ? 'content.excerpts.excerpt.morelink' : 'content.post.more');
         $tag = '<!--more-->';
         if ($i = strpos($content, $tag)) {
             return str_replace($tag, $more, $content);

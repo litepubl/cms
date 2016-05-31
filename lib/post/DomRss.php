@@ -10,6 +10,8 @@
 
 namespace litepubl\post;
 
+use litepubl\core\litepubl;
+
 class DomRss extends \domDocument
 {
     public $items;
@@ -25,7 +27,7 @@ class DomRss extends \domDocument
     public function CreateRoot($url, $title)
     {
         $this->encoding = 'utf-8';
-        $this->appendChild($this->createComment('generator="Lite Publisher/' . $this->getApp()->options->version . ' version"'));
+        $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$app->options->version . ' version"'));
         $this->rss = $this->createElement('rss');
         $this->appendChild($this->rss);
 
@@ -44,16 +46,16 @@ class DomRss extends \domDocument
 
         Node::addvalue($this->channel, 'title', $title);
         Node::addvalue($this->channel, 'link', $url);
-        Node::addvalue($this->channel, 'description', $this->getApp()->site->description);
+        Node::addvalue($this->channel, 'description', litepubl::$app->site->description);
         Node::addvalue($this->channel, 'pubDate', date('r'));
-        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . $this->getApp()->options->version);
+        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$app->options->version);
         Node::addvalue($this->channel, 'language', 'en');
     }
 
     public function CreateRootMultimedia($url, $title)
     {
         $this->encoding = 'utf-8';
-        $this->appendChild($this->createComment('generator="Lite Publisher/' . $this->getApp()->options->version . ' version"'));
+        $this->appendChild($this->createComment('generator="Lite Publisher/' . litepubl::$app->options->version . ' version"'));
         $this->rss = $this->createElement('rss');
         $this->appendChild($this->rss);
 
@@ -70,9 +72,9 @@ class DomRss extends \domDocument
 
         Node::addvalue($this->channel, 'title', $title);
         Node::addvalue($this->channel, 'link', $url);
-        Node::addvalue($this->channel, 'description', $this->getApp()->site->description);
+        Node::addvalue($this->channel, 'description', litepubl::$app->site->description);
         Node::addvalue($this->channel, 'pubDate', date('r'));
-        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . $this->getApp()->options->version);
+        Node::addvalue($this->channel, 'generator', 'http://litepublisher.com/generator.htm?version=' . litepubl::$app->options->version);
         Node::addvalue($this->channel, 'language', 'en');
     }
 
