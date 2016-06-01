@@ -1,0 +1,7 @@
+class_name: apiTester
+modules:
+    enabled:
+        - \Helper\api
+        - REST:
+            url: 'http://cms'
+            depends: PhpBrowser

@@ -14,6 +14,7 @@ use litepubl\coments\Manager as CommentManager;
 use litepubl\comments\Comments;
 use litepubl\core\Context;
 use litepubl\perm\Perm;
+use litepubl\tag\Common;
 use litepubl\tag\Cats;
 use litepubl\tag\Tags;
 use litepubl\view\Lang;
@@ -96,13 +97,14 @@ header('Location: $this->feedburnercomments');
                     return;
                 }
 
-                $tags->id = $id;
+                //$tags->view->id = $id;
                 if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
                     $perm = Perm::i($idperm);
                     $perm->setResponse($response, $tags);
                 }
 
-                $this->gettagrss($tags, $id);
+        $this->domrss->CreateRoot($this->getApp()->site->url . $context->request->url, $tags->getValue($id, 'title'));
+                $this->getTagRss($tags, $id);
                 break;
 
 
@@ -151,12 +153,10 @@ header('Location: $this->feedburnercomments');
         }
     }
 
-    public function getTagrss(tcommontags $tags, $id)
+    public function getTagRss(Common $tags, int $id)
     {
-        $this->domrss->CreateRoot($this->getApp()->site->url . $this->getApp()->router->url, $tags->getvalue($id, 'title'));
-
-        $items = $tags->getidposts($id);
-        $this->getrssposts(array_slice($items, 0, $this->getApp()->options->perpage));
+        $items = $tags->getIdPosts($id, 0, $this->getApp()->options->perpage, false);
+        $this->getRssPosts($items);
     }
 
     public function GetRecentComments()
@@ -198,10 +198,10 @@ header('Location: $this->feedburnercomments');
         $post = Post::i($idpost);
         $lang = Lang::i('comment');
         $title = $lang->from . ' ';
-        $this->domrss->CreateRoot($post->rsscomments, "$lang->onpost $post->title");
+        $this->domrss->CreateRoot($post->view->rsscomments, "$lang->onpost $post->title");
         $comments = Comments::i($idpost);
         $comtable = $comments->thistable;
-        $comment = new \ArrayObject([], ArrayObject::ARRAY_AS_PROPS);
+        $comment = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
 
         $recent = $comments->select("$comtable.post = $idpost and $comtable.status = 'approved'", "order by $comtable.posted desc limit " . $this->getApp()->options->perpage);
 
