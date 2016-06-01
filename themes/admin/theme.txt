@@ -567,3 +567,21 @@ posteditor.text = [
 /*
 Шаблон текстовых вкладок
 */
+
+home = [
+<div id="dropzone" class="help-block">$lang.dragfiles</div>
+
+<h5 id="helpstatus" class="help-block">
+    <span id="img-help" class="text-info">$lang.imagehelp</span>
+    <span id="img-success" class="text-success hide">$lang.imgsuccess</span>
+    <span id="img-fail" class="text-danger hide">$lang.imgfail</span>
+    <span id="img-percent" class="text-info hide"></span>
+</h5>
+
+<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>
+<script type="text/javascript" src="$site.files/js/litepubl/admin/homeuploader.min.js"></script>
+]
+
+/*
+Дополнительный шаблон для админки главной, добавляется сразу после кнопки загрузки изображения и включает в себя область для перетакскивания файлов, строка статуса и подключаемые javascript для поддержки загрузки файлов.
+*/

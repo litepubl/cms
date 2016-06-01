@@ -33,7 +33,7 @@ class Table
     public $admintheme;
     public $callbacks;
 
-    public static function fromitems(array $items, array $struct)
+    public static function fromitems(array $items, array $struct): string
     {
         $classname = __class__;
         $self = new $classname();
@@ -89,7 +89,7 @@ class Table
         $this->body.= '</tr>';
     }
 
-    public function addCallback($varname, $callback, $param = null)
+    public function addCallback(string $varname, $callback, $param = null)
     {
         $this->callbacks[$varname] = array(
             'callback' => $callback,
@@ -100,17 +100,17 @@ class Table
         );
     }
 
-    public function addfooter($footer)
+    public function addFooter(string $footer)
     {
         $this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
     }
 
-    public function td($colclass, $content)
+    public function td(string $colclass, string $content): string
     {
         return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass) , $content);
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         if (!$this->admintheme) {
             $this->admintheme = Admin::i();
@@ -119,7 +119,7 @@ class Table
         return $this->admintheme;
     }
 
-    public function build(array $items)
+    public function build(array $items): string
     {
         $body = '';
 
@@ -130,7 +130,7 @@ class Table
         return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
     }
 
-    public function parseitem($id, $item)
+    public function parseItem($id, $item)
     {
         $args = $this->args;
 
@@ -185,7 +185,7 @@ class Table
         ) , false);
     }
 
-    public function props(array $props)
+    public function props(array $props): string
     {
         $lang = Lang::i();
         $this->setStruct(array(
@@ -227,10 +227,10 @@ class Table
             }
         }
 
-        return $admintheme->gettable($this->head, $body);
+        return $admintheme->getTable($this->head, $body);
     }
 
-    public function inputs(array $inputs)
+    public function inputs(array $inputs): string
     {
         $lang = Lang::i();
         $this->setStruct(array(
@@ -278,10 +278,10 @@ class Table
             $body.= $admintheme->parseArg($this->body, $args);
         }
 
-        return $admintheme->gettable($this->head, $body);
+        return $admintheme->getTable($this->head, $body);
     }
 
-    public function action($action, $adminurl)
+    public function action(string $action, string $adminurl): array
     {
         $title = Lang::i()->__get($action);
 
@@ -291,7 +291,7 @@ class Table
         );
     }
 
-    public function checkbox($name)
+    public function checkbox(string $name): array
     {
         $admin = $this->getadmintheme();
 
@@ -302,7 +302,7 @@ class Table
         );
     }
 
-    public function namecheck()
+    public function nameCheck(): array
     {
         $admin = Admin::i();
 
@@ -313,7 +313,7 @@ class Table
         );
     }
 
-    public static function getColclass($s)
+    public static function getColclass($s): string
     {
         //most case
         if (!$s || $s == 'left') {
@@ -336,7 +336,7 @@ class Table
         return implode(' ', $list);
     }
 
-    public function date($date)
+    public function date($date): string
     {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
@@ -345,7 +345,7 @@ class Table
         }
     }
 
-    public function datetime($date)
+    public function datetime($date): string
     {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;

@@ -51,3 +51,5 @@ tml/33posteditor.categories.txt
 ru/33posteditor.categories.txt
 tml/34posteditor.text.txt
 ru/34posteditor.text.txt
+tml/40home.txt
+ru/40home.txt

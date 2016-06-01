@@ -23,16 +23,6 @@ use litepubl\view\Parser;
 class Home extends \litepubl\admin\Menu
 {
 
-    public function getHead()
-    {
-        $result = parent::gethead();
-
-        $result.= '<script type="text/javascript" src="$site.files/js/plugins/filereader.min.js"></script>';
-        $result.= '<script type="text/javascript" src="$site.files/js/litepubl/admin/homeuploader.min.js"></script>';
-
-        return $result;
-    }
-
     public function getContent()
     {
         $home = HomePage::i();
@@ -68,21 +58,16 @@ class Home extends \litepubl\admin\Menu
     [text=image]
     [text=smallimage]
     [upload=imgupload]
-    <div id="dropzone" class="help-block">$lang.dragfiles</div>
-    
-    <h5 id="helpstatus" class="help-block">
-    <span id="img-help" class="text-info">$lang.imagehelp</span>
-    <span id="img-success" class="text-success hide">$lang.imgsuccess</span>
-    <span id="img-fail" class="text-danger hide">$lang.imgfail</span>
-    <span id="img-percent" class=text-info hide"></span>
-    </h5>
-    ');
+    '
+. $admin->templates['home']);
 
         $tabs->add($lang->includecats, $admin->h($lang->includehome) . $admin->getcats($home->includecats));
         $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));
 
         $args->formtitle = $lang->homeform;
-        return $admin->form('<h4><a href="$site.url/admin/menu/edit/{$site.q}id=$idhome">$lang.hometext</a></h4>' . $tabs->get() , $args);
+        return $admin->form(
+$admin->h($admin->link('/admin/menu/edit/{$site.q}id=$idhome', $lang->hometext))
+. $tabs->get() , $args);
     }
 
     public function processForm()

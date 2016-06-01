@@ -66,7 +66,7 @@ class Plugins extends Menu
 
             $tb = new Table();
             $tb->setStruct(array(
-                $tb->namecheck() ,
+                $tb->nameCheck() ,
 
                 array(
                     $lang->name,
