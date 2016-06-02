@@ -1,10 +1,10 @@
 <?php
 namespace Page;
 
-class RegUser extends Base
+class Cats extends Base
 {
-    public  $url = '/admin/reguser/';
-    public  $optionsUrl = '/admin/options/secure/';
+    public  $url = '/admin/posts/addcats/';
+
 public $enabled = 'input[name=usersenabled]';
 public $reguser = 'input[name=reguser]';
 

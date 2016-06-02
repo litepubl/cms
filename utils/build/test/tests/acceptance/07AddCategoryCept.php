@@ -1,24 +1,20 @@
 <?php 
 
-use Page\Editor;
+use Page\Cats;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
-$i->wantTo('Test post editor');
-$editor = new Editor($i);
-$lang = config::getLang();
+$i->wantTo('Test category editor');
+$cats = new Cats($i);
 $data = $editor->load('editor');
+$cats->open();
+$i->screenShot('07.01addcats');
 
-$editor->open();
-$i->screenShot('06.01empty');
-$editor->upload('img1.jpg');
-$i->checkError();
-
-$editor->fillTitleContent($data->title, $data->content);
+$cats->fillTitleContent($data->title, $data->content);
 $i->screenShot('06.02title');
 
 $i->wantTo('Select category');
-$i->checkOption($editor->category);
+$i->checkOption($cats->category);
 $i->screenShot('06.03cat');
 
 $i->wantTo('test date time tab');
@@ -26,7 +22,7 @@ $i->click($lang->posted);
 $i->checkError();
 $i->screenShot('06.04datetime');
 $i->see($lang->date);
-$i->click($editor->calendar);
+$i->click($cats->calendar);
 $i->see($lang->calendar);
 
 //$i->waitForJS('return litepubl.tabs.flagLoaded');
