@@ -1,16 +1,15 @@
 <?php 
 
 use Page\Cats;
-use test\config;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test category editor');
 $cats = new Cats($i);
-$data = $editor->load('editor');
 $cats->open();
 $i->screenShot('07.01addcats');
 
-$cats->fillTitleContent($data->title, $data->content);
+$i->fillField($cats->title, $cats->titleFixture);
+$i->selectOption($cats->parent, 
 $i->screenShot('06.02title');
 
 $i->wantTo('Select category');
