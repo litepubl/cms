@@ -39,4 +39,4 @@ $i->screenShot('06.06final');
 //final submit
 $i->executeJs('$("form:last").submit();');
 $i->checkError();
-$i->screenShot('06.07saved
+$i->screenShot('06.07saved');
