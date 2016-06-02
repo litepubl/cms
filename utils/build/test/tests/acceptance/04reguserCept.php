@@ -2,6 +2,7 @@
 
 use Page\RegUser;
 use Page\Password;
+use Page\Login;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
@@ -12,7 +13,7 @@ $password = new Password($i);
 $i->wantTo('Enable user registration');
 $reguser->open($reguser->optionsUrl);
 $i->checkOption($reguser->enabled);
-$i->checkOption($editor->reguser);
+$i->checkOption($reguser->reguser);
 $i->screenshot('04.01options');
 $i->click($reguser->updateButton);
 $i->checkError();
@@ -40,3 +41,16 @@ $i->screenshot('04.05logged');
 $i->wantTo('Check restore passwordof new user');
 $reguser->logout();
 
+$password->removeLogs();
+$i->wantTo('Open restore password page');
+$i->openPage($password->url);
+
+$login = Login::i($i);
+$user->password = $password->restore($user->email);
+config::save('admin', $user);
+
+$i->wantTo('Login with new password');
+$i->openPage($login->url);
+$login->auth($user->email, $user->password);
+
+$reguser->logout();
