@@ -5,7 +5,6 @@ use test\config;
 
 $i = new AcceptanceTester($scenario);
 $login = Login::i($i);
-
 $i->wantTo('Open login page');
 $i->openPage($login->url);
 $i->screenShot('02login');

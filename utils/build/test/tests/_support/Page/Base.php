@@ -7,6 +7,7 @@ class Base
 {
 public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
+public $updateButton = '#submitbutton-update';
     protected $tester;
 
     public function __construct(\AcceptanceTester $I)
@@ -36,18 +37,23 @@ $login->login();
 return $this;
 }
 
-public function open()
+public function open(string $url = '')
 {
 $i = $this->tester;
 $i->wantTo('Open page');
 $i->maximizeWindow();
-$i->openPage($this->url);
-$url = $i->grabFromCurrentUrl();
-codecept_debug($url);
-if ($this->url != $url) {
+
+if (!$url) {
+$url = $this->url;
+}
+
+$i->openPage($url);
+$cur = $i->grabFromCurrentUrl();
+codecept_debug($cur);
+if ($url != $cur) {
 $this->login();
-$i->openPage($this->url);
-$i->seeCurrentUrlEquals($this->url);
+$i->openPage($url);
+$i->seeCurrentUrlEquals($url);
 }
 
 return $this;

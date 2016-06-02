@@ -20,6 +20,7 @@ use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\admin\Form as AdminForm;
 
 class RegUser extends Form
 {
@@ -139,11 +140,11 @@ class RegUser extends Form
         $lang = Lang::i('users');
         $theme = $this->theme;
 
-        $form = new adminform();
+        $form = new AdminForm();
         $form->title = $lang->regform;
         $form->action = '$action';
-        $form->body = $theme->getinput('email', 'email', '$email', 'E-Mail');
-        $form->body.= $theme->getinput('text', 'name', '$name', $lang->name);
+        $form->body = $theme->getInput('email', 'email', '$email', 'E-Mail');
+        $form->body.= $theme->getInput('text', 'name', '$name', $lang->name);
         $form->submit = 'signup';
 
         $result = $form->gettml();

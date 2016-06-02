@@ -1,18 +1,24 @@
 <?php 
 
 use Page\Password;
+use Page\Login;
 use test\config;
-use litepubl\utils\Filer;
-//return;
+
 $i = new AcceptanceTester($scenario);
 $password = new Password($i);
 $password->logout();
+$password->removeLogs();
 
-//clear logs for find single fifile with email and link to restore
-Filer::delete(config::$home . '/storage/data/logs/', false, false);
 $i->wantTo('Open restore password page');
 $i->openPage($password->url);
-$i->screenShot('03password');
+$i->screenShot('03.01password');
 
+$login = Login::i($i);
+$admin = $login->getAdmin();
+$admin->password = $password->restore($admin->email);
+config::save('admin', $admin);
+$i->screenShot('03.02restored');
 
-$password->restore();
+$i->wantTo('Login with new password');
+$i->openPage($login->url);
+$login->auth($admin->email, $admin->password);

@@ -1,7 +1,9 @@
 <?php
 namespace Page;
+
 use test\config;
 use test\Utils;
+use litepubl\utils\Filer;
 
 class Password extends Base
 {
@@ -10,17 +12,25 @@ class Password extends Base
 public  $password = '.password';
       public  $submit = '#submitbutton-send';
 
-public function restore()
+public function removeLogs()
+{
+Filer::delete(config::$home . '/storage/data/logs/', false, false);
+}
+
+public function restore(string $email)
 {
 $i = $this->tester;
-$login = Login::i($i);
-$admin = $login->getAdmin();
-
 $i->wantTo('Send email');
-$i->fillField($this->email, $admin->email);
+$i->fillField($this->email, $email);
 $i->click($this->submit);
 $i->checkError();
+$this->confirmEmail();
+return $i->grabTextFrom($this->password);
+}
 
+public function confirmEmail()
+{
+$i = $this->tester;
 $i->wantTo('Grab url from email');
 $s = Utils::getSingleFile(config::$home . '/storage/data/logs/');
 $i->assertFalse(empty($s), 'Email file not found');
@@ -28,13 +38,6 @@ $url = Utils::getLine($s, '&confirm=');
 $i->assertNotEmpty($url, 'Url not found in email');
 $i->amOnUrl($url);
 $i->checkError();
-$admin->password = $i->grabTextFrom($this->password);
-config::save('admin', $admin);
-
-$i->openPage($login->url);
-$login->auth($admin->email, $admin->password);
-
-return $this;
 }
 
 }
