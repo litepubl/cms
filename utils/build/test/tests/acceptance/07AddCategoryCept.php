@@ -9,29 +9,10 @@ $cats->open();
 $i->screenShot('07.01addcats');
 
 $i->fillField($cats->title, $cats->titleFixture);
-$i->selectOption($cats->parent, 
+//$i->selectOption($cats->parent, 
 $i->screenShot('06.02title');
 
-$i->wantTo('Select category');
-$i->checkOption($cats->category);
-$i->screenShot('06.03cat');
-
-$i->wantTo('test date time tab');
-$i->click($lang->posted);
-$i->checkError();
-$i->screenShot('06.04datetime');
-$i->see($lang->date);
-$i->click($cats->calendar);
-$i->see($lang->calendar);
-
-//$i->waitForJS('return litepubl.tabs.flagLoaded');
-sleep(1);
-$i->screenShot('06.05calendar');
-$i->click(['link' => '2']);
-$i->click($data->close);
-
-$i->screenShot('06.06final');
 //final submit
 $i->executeJs('$("form:last").submit();');
 $i->checkError();
-$i->screenShot('06.07saved
+$i->screenShot('07.07saved');

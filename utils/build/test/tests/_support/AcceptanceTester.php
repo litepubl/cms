@@ -35,13 +35,13 @@ $this->dontSee('Fatal error');
 $this->dontSee('Notice: Undefined');
 }
 
-public function openPage($url)
+public function openPage(string $url)
 {
 $this->amOnPage($url);
 $this->checkError();
 }
 
-public function screenShot($name)
+public function screenShot(string $name)
 {
 if (config::$screenshot) {
 $this->makeScreenshot($name);

@@ -3,7 +3,7 @@ namespace Page;
 
 class Cats extends Base
 {
-    public  $url = '/admin/posts/addcats/';
+    public  $url = '/admin/posts/addcat/';
 public $title = '#text-title';
 public $content = '#editor-raw';
 public $parent = 'select[name=parent]';

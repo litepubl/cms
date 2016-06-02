@@ -11,7 +11,6 @@ class Install extends Base
 public $langForm = '#langform';
 public $langCombo = '#combo-lang';
 public $langSubmit= '#changelang';
-
 public $form = '#form';
       public  $email = '#text-email';
       public  $name = '#text-name';
@@ -38,27 +37,6 @@ $i->click($this->langSubmit);
 $i->checkError();
 }
 
-public function fillForm()
-{
-$i = $this->tester;
-$i->wantTo('Fill install form');
-
-$data = config::load('install');
-$i->fillField($this->email, $data->email);
-$i->fillField($this->name, $data->name);
-$i->fillField($this->description, $data->description);
-$i->fillField($this->dbname, $data->dbname);
-$i->fillField($this->dblogin, $data->dblogin);
-$i->fillField($this->dbpassword, $data->dbpassword);
-$i->fillField($this->dbprefix, $data->dbprefix);
-
-$i->click($this->submit);
-$i->checkError();
-$i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
-
-return $this;
-}
-
 public function removeData()
 {
 $i = $this->tester;
@@ -75,3 +53,4 @@ return $this;
 }
 
 }
+

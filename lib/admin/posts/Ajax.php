@@ -181,7 +181,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return $result;
     }
 
-    public function getText($text, $admintheme = null)
+    public function getText(string $text, $admintheme = null): string
     {
         if (!$admintheme) {
             $admintheme = Admin::admin();
@@ -200,6 +200,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $args->raw = $text;
+Lang::admin('editor');
         return $admintheme->parseArg($admintheme->templates['posteditor.text'], $args);
     }
 

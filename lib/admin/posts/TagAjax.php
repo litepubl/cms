@@ -114,7 +114,7 @@ class TagAjax extends Ajax
 
 
             case 'text':
-                return $this->gettext($id == 0 ? '' : $tags->contents->getcontent($id));
+                return $this->getText($id == 0 ? '' : $tags->contents->getContent($id));
                 break;
 
 

@@ -47,7 +47,7 @@ $i->openPage($password->url);
 
 $login = Login::i($i);
 $user->password = $password->restore($user->email);
-config::save('admin', $user);
+config::save('reguser', $user);
 
 $i->wantTo('Login with new password');
 $i->openPage($login->url);

@@ -63,6 +63,7 @@ class Tags extends \litepubl\admin\Menu
                 'parent' => 0,
                 'customorder' => 0,
             );
+
             $args->formtitle = $lang->add;
         }
 
