@@ -16,19 +16,9 @@ $i->seeResponseIsXml();
 $i->sendGET($rss->post);
 $i->seeResponseIsXml();
 
-
 $i->sendGET($rss->cats);
 $i->seeResponseIsXml();
 
 $i->sendGET($rss->tags);
 $i->seeResponseIsXml();
 
-/*
-$I->seeXmlResponseIncludes(XmlUtils::toXml(
-		'user' => [
-			'name' => 'davert',
-			'email' => 'davert@codeception.com',
-			'status' => 'inactive'
-	]
-));
-*/

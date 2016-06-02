@@ -19,6 +19,7 @@ use litepubl\view\Lang;
 
 class Backup extends Login
 {
+
     public function getContent()
     {
         $admin = $this->admintheme;
@@ -29,14 +30,14 @@ class Backup extends Login
             $args->plugins = false;
             $args->theme = false;
             $args->lib = false;
-            $args->dbversion = '';
             $args->saveurl = true;
 
             $form = new Form($args);
             $form->upload = true;
             $form->body = $admin->h($lang->partialform);
-            $form->body.= $this->getloginform();
-            $form->body.= '[checkbox=plugins]
+            $form->body.= $this->getLoginForm();
+            $form->body.= '
+[checkbox=plugins]
         [checkbox=theme]
         [checkbox=lib]
         [submit=downloadpartial]';
@@ -51,7 +52,7 @@ class Backup extends Login
 
             $form->submit = 'restore';
             $result = $form->get();
-            $result.= $this->getbackupfilelist();
+            $result.= $this->getBackupFileList();
         } else {
             $filename = $_GET['id'];
             if (strpbrk($filename, '/\<>')) {
@@ -81,14 +82,17 @@ class Backup extends Login
                     }
             }
         }
+
+return $result;
     }
 
     public function processForm()
     {
         $admin = $this->admintheme;
+$lang = Lang::admin('service');
         if (!isset($_POST['sqlbackup'])) {
-            if (!$this->checkbackuper()) {
-                return $admin->geterr($lang->erroraccount);
+            if (!$this->checkBackuper()) {
+                return $admin->getErr($lang->erroraccount);
             }
         }
 
@@ -189,7 +193,7 @@ class Backup extends Login
         exit();
     }
 
-    private function getBackupfilelist()
+    private function getBackupFileList()
     {
         $list = Filer::getfiles($this->getApp()->paths->backup);
         if (!count($list)) {
