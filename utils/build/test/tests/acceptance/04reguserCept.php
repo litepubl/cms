@@ -22,6 +22,7 @@ $reguser->logout();
 $reguser->open();
 $i->wantTo('Register new user');
 $user = $reguser->load('reguser');
+$user->email = time() . $user->email;
 $i->fillField($reguser->email, $user->email);
 $i->fillField($reguser->name, $user->email);
 $i->screenshot('04.02reguser');
@@ -47,7 +48,7 @@ $i->openPage($password->url);
 
 $login = Login::i($i);
 $user->password = $password->restore($user->email);
-config::save('reguser', $user);
+//config::save('reguser', $user);
 
 $i->wantTo('Login with new password');
 $i->openPage($login->url);

@@ -15,6 +15,7 @@ use litepubl\pages\Users as UserPages;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\admin\GetPerm;
 
 class Options extends \litepubl\admin\Menu
 {

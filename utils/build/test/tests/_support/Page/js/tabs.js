@@ -1,7 +1,7 @@
 (function($, document, litepubl) {
   'use strict';
 
-$(document).ready(function() {
+$(function() {
 var tabs = litepubl.tabs;
 // to use in codecept: $I->waitForJS('return litepubl.tabs.flagLoaded');
 tabs.flagLoaded = true;

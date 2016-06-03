@@ -48,4 +48,10 @@ $this->makeScreenshot($name);
 }
 }
 
+public function appendJS(string $js)
+{
+$js = str_replace("'", "\\'", $js);
+$this->executeJs('$(\'head:first\').append(\'<script type="text/javascript">' . $js . '</script>\');');
+}
+
 }

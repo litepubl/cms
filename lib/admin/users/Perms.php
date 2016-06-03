@@ -42,7 +42,7 @@ class Perms extends \litepubl\admin\Menu
                 $items = array_keys($perms->items);
                 array_shift($items);
 
-                $form = new Form($args);
+                $form = $this->newForm($args);
                 $form->title = $lang->table;
                 $result.= $form->getdelete($tb->build($items));
 
