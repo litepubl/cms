@@ -80,7 +80,7 @@ class Perms extends \litepubl\admin\Menu
                 }
 
                 $perm = PerItem::i($id);
-                return $perm->admin->getcont();
+                return $perm->admin->getContent();
 
             case 'delete':
                 return $this->confirmDeleteItem($perms);
@@ -95,14 +95,15 @@ class Perms extends \litepubl\admin\Menu
         switch ($action) {
             case 'perms':
                 $perms->lock();
-                foreach ($_POST as $name => $val) {
+                foreach ($_POST as $name => $value) {
                     if (!is_numeric($value)) {
                         continue;
                     }
 
-                    $id = (int)$val;
+                    $id = (int)$value;
                     $perms->delete($id);
                 }
+
                 $perms->unlock();
                 return;
 

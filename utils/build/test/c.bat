@@ -1,3 +1,4 @@
+del tests\_output\*.* /fq
 codecept.bat run acceptance  --steps --html --debug>bresult.txt
 @rem codecept.bat run acceptance  03PasswordCept.php --steps --html --debug>bresult.txt
 @rem codecept.bat run acceptance  07AddCategoryCept.php --steps --html --debug>bresult.txt
