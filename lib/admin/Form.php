@@ -51,17 +51,17 @@ class Form
         $this->target = '';
     }
 
-    public function line($content)
+    public function line(string $content): string
     {
-        return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
+        return str_replace('$content', $content, $this->getAdminTheme()->templates['inline']);
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         return Admin::i();
     }
 
-    public function __set($k, $v)
+    public function __set(string $k, $v)
     {
         switch ($k) {
             case 'upload':
@@ -76,17 +76,17 @@ class Form
         }
     }
 
-    public function centergroup($buttons)
+    public function centerGroup(string $buttons): string
     {
-        return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
+        return str_replace('$buttons', $buttons, $this->getAdminTheme()->templates['centergroup']);
     }
 
-    public function hidden($name, $value)
+    public function hidden(string $name, string $value): string
     {
         return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
     }
 
-    public function getDelete($table)
+    public function getDelete(string $table): string
     {
         $this->body = $table;
         $this->body.= $this->hidden('delete', 'delete');
@@ -100,7 +100,7 @@ class Form
         return $this->get();
     }
 
-    public function getTml()
+    public function getTml(): string
     {
         $admin = $this->getadmintheme();
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
@@ -140,12 +140,12 @@ class Form
         ));
     }
 
-    public function get()
+    public function get(): string
     {
-        return $this->getadmintheme()->parseArg($this->gettml() , $this->args);
+        return $this->getAdminTheme()->parseArg($this->getTml() , $this->args);
     }
 
-    public function getButtons()
+    public function getButtons(): string
     {
         $result = '';
         $theme = Theme::i();

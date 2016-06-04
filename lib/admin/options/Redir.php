@@ -51,7 +51,7 @@ class Redir extends \litepubl\admin\Menu
         }
 
         $adminurl = Link::url($this->url, 'from');
-        $args->table = $this->tableItems($items, array(
+$table = $this->tableItems($items, array(
             array(
                 'center',
                 '+',
@@ -72,13 +72,8 @@ class Redir extends \litepubl\admin\Menu
             )
         ));
 
-        $args->action = 'delete';
-        $result.= $this->admintheme->parseArg('<form name="deleteform" action="" method="post">
-    [hidden=action]
-    $table
-    <p><input type="submit" name="delete" value="$lang.delete" /></p>
-    </form>', $args);
-
+$form = $this->newForm($args);
+        $result.= $form->getDelete($table);
         return $result;
     }
 
