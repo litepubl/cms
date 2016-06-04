@@ -3,6 +3,7 @@
 
 $(function() {
 var tabs = litepubl.tabs;
+if (!("flagLoaded" in tabs)) {
 // to use in codecept: $I->waitForJS('return litepubl.tabs.flagLoaded');
 tabs.flagLoaded = true;
 
@@ -13,6 +14,7 @@ tabs.flagLoaded = true;
 .on('beforeLoad' + tabs.namespace, function() {
 tabs.flagLoaded = false;
 });
+}
 });
 
 })(jQuery, document, litepubl);

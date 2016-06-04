@@ -9,6 +9,7 @@ public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
 public $updateButton = '#submitbutton-update';
     protected $tester;
+private $tabJS;
 
     public function __construct(\AcceptanceTester $I)
     {
@@ -57,6 +58,22 @@ $i->seeCurrentUrlEquals($url);
 }
 
 return $this;
+}
+
+public function clickTab(string $tab)
+{
+$i = $this->tester;
+if (!$i->executeJS('return "flagLoaded" in litepubl.tabs;')) {
+if (!$this->tabJS) {
+$this->tabJS = file_get_contents(__DIR__ . '/js/tabs.js');
+}
+
+$i->appendJS($this->tabJS);
+}
+
+$i->click($tab);
+$i->waitForJS('return litepubl.tabs.flagLoaded');
+//$i->checkError();
 }
 
     }
