@@ -6056,14 +6056,18 @@ fieldset[disabled] .btn-danger.active {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 body {
   padding-top: 70px;
@@ -6119,9 +6123,11 @@ footer {
   }
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 h1,
 h2,
@@ -6137,6 +6143,14 @@ h6,
 .h6 {
   text-align: center;
 }
+.header-left h1,
+.header-left h2,
+.header-left h3,
+.header-left h4,
+.header-left h5,
+.header-left h6 {
+  text-align: left;
+}
 ins {
   text-decoration: none;
 }
@@ -6150,9 +6164,11 @@ ins {
   text-align: left;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .cursor-loading,
 .cursor-loading:hover {
@@ -6177,9 +6193,11 @@ A.dashed:focus {
   font-size: 120%;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .modal-dialog {
   margin-left: auto;
@@ -6190,9 +6208,11 @@ A.dashed:focus {
   overflow: hidden;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .popover-title,
 .title-nowrap {
@@ -6210,9 +6230,11 @@ A.dashed:focus {
   max-width: 1200px;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .fa {
   color: #5bc0de;
@@ -6236,9 +6258,11 @@ A.dashed:focus {
   color: #45668e;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .post-header {
   position: relative;
@@ -6257,9 +6281,11 @@ A.dashed:focus {
   margin: 6px 12px;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .anpost {
   position: relative;
@@ -6284,9 +6310,11 @@ A.dashed:focus {
   margin: 0;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .postcard {
   position: relative;
@@ -6324,9 +6352,11 @@ A.dashed:focus {
   margin: 0;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .photo img,
 .anpost-image img {
@@ -6340,9 +6370,11 @@ A.dashed:focus {
   font-size: 2em;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .header-comments {
   text-align: center;
@@ -6369,9 +6401,11 @@ A.dashed:focus {
   margin-top: 6px;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .sidebar-top .widget-image {
   float: left;
@@ -6414,17 +6448,21 @@ A.dashed:focus {
   }
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .panel-body {
   overflow: hidden;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .footer-widget-content {
   display: inline;
@@ -6433,9 +6471,11 @@ A.dashed:focus {
   margin: 6px 12px;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 #text-count,
 input[id^="text-count"] {
@@ -6446,9 +6486,11 @@ input[id^="text-coupon"] {
   width: 10em;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .propname-gtin,
 .prop-mpn,
@@ -6469,9 +6511,11 @@ input[id^="text-coupon"] {
   content: "";
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .buyform > div {
   text-align: center;
@@ -6484,9 +6528,11 @@ input[id^="text-coupon"] {
   text-align: left;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .price {
   font-weight: bold;
@@ -6535,9 +6581,11 @@ input[id^="text-coupon"] {
   display: inline;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .btn-text {
   vertical-align: middle;
@@ -6566,9 +6614,11 @@ input[id^="text-coupon"] {
   text-align: center;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .proppage-form,
 .proppage-form-submit,
@@ -6588,9 +6638,11 @@ proppage-form-submit,
   overflow-y: auto;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .jcarousel-wrapper {
   display: block;
@@ -6669,9 +6721,11 @@ proppage-form-submit,
   white-space: nowrap;
 }
 /**
-* Lite Publisher
-* Copyright (C) 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* Licensed under the MIT (LICENSE.txt) license.
+* Lite Publisher CMS
+* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+* @link https://github.com/litepubl\cms
+* @version 6.15
 **/
 .navbar-brand,
 h1,
