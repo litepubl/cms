@@ -36,7 +36,5 @@ $i->click(['link' => '2']);
 $i->click($data->close);
 
 $i->screenShot('06.06final');
-//final submit
-$i->executeJs('$("form:last").submit();');
-$i->checkError();
+$editor->submit();
 $i->screenShot('06.07saved');

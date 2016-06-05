@@ -13,6 +13,7 @@ namespace litepubl\post;
 use litepubl\core\Arr;
 use litepubl\core\Str;
 use litepubl\view\Filter;
+use litepubl\core\Callback;
 
 /**
  * This is the post base class 
@@ -411,7 +412,7 @@ return $this->add();
             $this->onIdCallback = new Callback();
         }
 
-        $this->onIdCallback->add($call);
+        $this->onIdCallback->add($callback);
     }
 
     public function free()

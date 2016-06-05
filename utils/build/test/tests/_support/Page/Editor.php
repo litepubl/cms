@@ -3,7 +3,6 @@ namespace Page;
 
 class Editor extends Base
 {
-
     public $url = '/admin/posts/editor/';
 public $title = '#text-title';
 public $content = '#editor-raw';
@@ -44,6 +43,13 @@ codecept_debug(var_export($r, true));
 }
 
 return $this;
+}
+
+public function submit()
+{
+$i = $this->tester;
+$i->executeJs('$("form:last").submit();');
+$i->checkError();
 }
 
 }

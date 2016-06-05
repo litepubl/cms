@@ -14,6 +14,7 @@ use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\core\ItemsPosts;
+use litepubl\view\Theme;
 
 class Wiki extends \litepubl\core\Items
 {
@@ -71,7 +72,7 @@ class Wiki extends \litepubl\core\Items
         }
 
         $items = $this->itemsposts->getposts($id);
-        $theme = $this->getTheme();
+        $theme = Theme::context();
 
         $c = count($items);
         if ($c == 0) {
@@ -211,10 +212,7 @@ class Wiki extends \litepubl\core\Items
                     $result[] = $id;
                     if ($post->id == 0) {
                         $this->fix[$id] = $post;
-                        $post->onId = array(
-                            $this,
-                            'fixpost'
-                        );
+                        $post->onId = [$this, 'fixpost', $post];
                     }
                     $content = str_replace($item[0], "<span class=\"wiki\" id=\"wikiword-$id\">$word</span>", $content);
                 }
