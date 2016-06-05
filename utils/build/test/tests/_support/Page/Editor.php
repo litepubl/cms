@@ -49,6 +49,7 @@ public function submit()
 {
 $i = $this->tester;
 $i->executeJs('$("form:last").submit();');
+usleep(250000);
 $i->checkError();
 }
 

@@ -51,7 +51,7 @@ class Wiki extends \litepubl\core\Items
         return parent::__get($name);
     }
 
-    public function getPost($word)
+    public function getPost(string $word)
     {
         if ($id = $this->add($word, 0)) {
             $items = $this->itemsposts->getposts($id);
@@ -63,7 +63,7 @@ class Wiki extends \litepubl\core\Items
         return false;
     }
 
-    public function getLink($id)
+    public function getLink(int $id): string
     {
         $item = $this->getItem($id);
         $word = $item['word'];
@@ -79,19 +79,30 @@ class Wiki extends \litepubl\core\Items
             $result = str_replace('$word', $word, $theme->templates['wiki.word']);
         } elseif ($c == 1) {
             $post = Post::i($items[0]);
-            $result = strtr($theme->templates['wiki.link'], ['$id' => $id, '$word' => $word, '$post.link' => $post->link, ]);
+            $result = strtr($theme->templates['wiki.link'], [
+'$id' => $id,
+ '$word' => $word,
+ '$post.link' => $post->link,
+]);
         } else {
             $links = '';
             $posts = Posts::i();
             $posts->loadItems($items);
             foreach ($items as $idpost) {
                 $post = Post::i($idpost);
-                $links.= strtr($theme->templates['wiki.links.item'], ['$id' => $id, '$word' => $word, '$post.link' => $post->link, '$post.title' => $post->title, ]);
+                $links.= strtr($theme->templates['wiki.links.item'], [
+'$id' => $id,
+ '$word' => $word,
+ '$post.link' => $post->link,
+ '$post.title' => $post->title, 
+]);
             }
 
             $result = strtr($theme->templates['wiki.links'], ['$id' => $id, '$word' => $word, '$item' => $links, ]);
         }
 
+//remove line breaks
+$result = str_replace(["\n", "\r"], ' ', $result);
         $this->links[$word] = $result;
         return $result;
     }
@@ -230,8 +241,7 @@ class Wiki extends \litepubl\core\Items
                 $word = $item[1];
                 if ($id = $this->add($word, 0)) {
                     $result[] = $id;
-                    //$content = str_replace($item[0], "\$wikiwords.word_$id", $content);
-                    $content = str_replace($item[0], $this->getlink($id) , $content);
+                    $content = str_replace($item[0], $this->getLink($id) , $content);
                 }
             }
         }

@@ -5,6 +5,7 @@
 wiki.link = [
 <a href="$post.link#wikiword-$id">$word</a>
 ]
+
 wiki.links = [
 <span class="dropdown wikiwords">
   <a href="#wikiword-links-$id" class="dropdown-toggle" id="wikiword-$id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

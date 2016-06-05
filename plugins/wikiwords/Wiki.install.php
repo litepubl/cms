@@ -26,7 +26,7 @@ function WikiInstall($self)
     $manager->createTable($self->itemsposts->table, file_get_contents($self->getApp()->paths->lib . 'core/install/sql/ItemsPosts.sql'));
 
     $filter = Filter::i();
-    $filter->beforecontent = $self->beforefilter;
+    $filter->beforecontent = $self->beforeFilter;
 
     $posts = Posts::i();
     $posts->deleted = $self->postdeleted;
