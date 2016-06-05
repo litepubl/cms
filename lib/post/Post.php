@@ -14,6 +14,64 @@ use litepubl\core\Arr;
 use litepubl\core\Str;
 use litepubl\view\Filter;
 
+/**
+ * This is the post base class 
+ *
+ * @property int $id
+ * @property int $idschema
+ * @property int $idurl
+ * @property int $parent
+ * @property int $author
+ * @property int $revision
+ * @property  int $icon
+ * @property  int $idperm
+ * @property string $class
+ * @property  int $posted timestamp
+ * @property string $title
+ * @property string $title2
+ * @property string $filtered
+ * @property string $excerpt
+ * @property string $rss
+ * @property string $keywords
+ * @property string $description
+ * @property string $rawhead
+ * @property string $moretitle
+ * @property array $categories
+             * @property array $tags
+ * @property array $files
+ * @property string $status enum
+ * @property string $comstatus enum
+ * @property int $pingenabled bool
+ * @property string $password
+ * @property int $commentscount
+ * @property int $pingbackscount
+ * @property int $pagescount
+ * @property string $url
+ * @property int $created timestamp
+ * @property int $modified timestamp
+ * @property array $pages
+ * @property string $rawcontent
+ * @property-read string $instanceName
+ * @property-read string $childTable
+ * @property-read Factory $factory
+ * @property-read View $view
+ * @property-read Meta $meta
+ * @property string $link absolute url
+ * @property-read string isoDate
+ * @property string pubDate
+ * @property-read string sqlDate
+ * @property string $tagNames tags title separated by ,
+ * @property string $catNames categories title separated by ,
+ * @property-read string $category first category title
+ * @property-read int $idCat first category ID
+ * @property-read bool $hasPages true if has content or comments pages
+ * @property-read int $pagesCount index from 1
+ * @property-read int $countPages  maximum of content or comments pages
+ * @property-read int commentPages
+ * @property-read string lastCommentUrl
+ * @property-read string schemaLink to generate new url
+ */
+
 class Post extends \litepubl\core\Item
 {
     protected $childTable;
@@ -565,7 +623,7 @@ return $this->add();
         $this->categories = $catItems;
     }
 
-    public function getCategory()
+    public function getCategory(): string
     {
         if ($idcat = $this->getidcat()) {
             return $this->factory->categories->getName($idcat);
@@ -574,7 +632,7 @@ return $this->add();
         return '';
     }
 
-    public function getIdcat()
+    public function getIdCat(): int
     {
         if (($cats = $this->categories) && count($cats)) {
             return $cats[0];
@@ -680,7 +738,7 @@ return $this->add();
         }
     }
 
-    public function getHasPages()
+    public function getHasPages(): bool
     {
         return ($this->pagescount > 1) || ($this->commentpages > 1);
     }

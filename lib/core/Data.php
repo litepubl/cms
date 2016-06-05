@@ -10,6 +10,15 @@
 
 namespace litepubl\core;
 
+/**
+ * This is the base class to storage data
+ *
+ * @property App $app
+ * @property-read Storage $storage
+ * @property-read DB $db
+ * @property-read string $thisTable
+ */
+
 class Data
 {
     const ZERODATE = '0000-00-00 00:00:00';
@@ -299,7 +308,7 @@ call_user_func_array([$coinstance, $method], $args);
         return $this->getApp()->db;
     }
 
-    protected function getThistable()
+    protected function getThisTable()
     {
         return $this->getApp()->db->prefix . $this->table;
     }
