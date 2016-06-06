@@ -7,13 +7,24 @@ wiki.link = [
 ]
 
 wiki.links = [
-<span class="dropdown wikiwords">
-  <a href="#wikiword-links-$id" class="dropdown-toggle" id="wikiword-$id" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <a href="#" class="dashed popover-toggle" id="wikiword-$id" aria-haspopup="true" aria-expanded="false">
     $word
     <span class="caret"></span>
   </a>
-  <ul class="dropdown-menu" id="wikiword-links-$id" aria-labelledby="wikiword-$id">
+  <script type="text/javascript">
+  $(function() {
+     $("#wikiword-1").on('getoptions.popover', function(event) {
+      event.options = $.extend({
+           trigger: 'hover focus click',
+                    placement: 'bottom',
+                             title: 'wikilink',
+                              html: true,
+                               content: '<ul>
 $item = [<li><a href="$post.link#wikiword-$id">$post.title</a></li>]
-</ul>
-</span>
+</ul>'
+}, event.options);
+dump(event.options);
+});
+});
+</script>
 ]

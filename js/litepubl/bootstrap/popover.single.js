@@ -57,8 +57,8 @@
     });
   };
 
-  $(document).ready(function() {
-    $("body").on("click.singlepopover", function(e) {
+  $(function() {
+    $(document).on("click.singlepopover", function(e) {
       if (!popovers.length) return;
 
       var target = e.target;

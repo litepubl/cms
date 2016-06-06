@@ -98,10 +98,13 @@ class Wiki extends \litepubl\core\Items
 ]);
             }
 
-            $result = strtr($theme->templates['wiki.links'], ['$id' => $id, '$word' => $word, '$item' => $links, ]);
+            $result = strtr($theme->templates['wiki.links'], [
+'$id' => $id,
+ '$word' => $word,
+ '$item' => $links,
+ ]);
         }
 
-//remove line breaks
 $result = str_replace(["\n", "\r"], ' ', $result);
         $this->links[$word] = $result;
         return $result;
