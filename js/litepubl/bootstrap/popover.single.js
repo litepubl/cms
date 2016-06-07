@@ -21,47 +21,60 @@
     popovers.length = 0;
   };
 
-  $.fn.setpopover = function(selector, options) {
-    selector = selector || '.popover-toggle';
-    return this.on('mouseenter.setpopover focus.setpopover', selector + ":not(.popover-ready)", function(event) {
-      var self = $(this);
-      self.addClass("popover-ready");
-      if (self.data("bs.popover")) return;
+  $.fn.lazypopover = function(options) {
+if (options) this.data('lazypopover', options);
+return this.addClass('lazy-popover');
+};
+
+  $.fn.initpopover = function(options) {
+      if (this.data("bs.popover")) return this;
 
       var o = $.extend({
         container: 'body',
         placement: 'auto right',
         trigger: 'hover focus'
-      }, options);
+      }, options, this.data('lazypopover'));
 
-      self.trigger($.Event('getoptions.popover', {
-          target: this,
-          relatedTarget: event.relatedTarget,
-          options: o
-        }))
-        .popover(o)
-        .on('show.bs.popover.singletip', function() {
-          popovers.push(this);
+this.removeData('lazypopover');
+        return this.popover(o)
+};
+
+  $(function() {
+$(document)
+        .on('show.bs.popover.singletip', function(event) {
+          popovers.push(event.target);
         })
-        .on('hide.bs.popover.singletip', function() {
+        .on('hide.bs.popover.singletip', function(event) {
           //remove from popovers array
           for (var i = popovers.length - 1; i >= 0; i--) {
-            if (this === popovers[i]) {
+            if (event.target === popovers[i]) {
               popovers.splice(i, 1);
               return;
             }
           }
-        });
+        })
 
+.on('mouseenter.lazypopover focus.lazypopover click.lazypopover', '.lazy-popover', function(event) {
+var self = $(this)
+.removeClass('lazy-popover')
+.addClass('popover-toggle')
+.initpopover();
+
+if (event.type == 'click') {
+event.preventDefault();
+var trigger = self.data("bs.popover").options.trigger;
+if (trigger.indexOf('click') != -1) {
       self.trigger(event);
-    });
-  };
+}
+} else {
+      self.trigger(event);
+}
+})
 
-  $(function() {
-    $(document).on("click.singlepopover", function(e) {
+.on("click.singlepopover", function(event) {
       if (!popovers.length) return;
 
-      var target = e.target;
+      var target = event.target;
       for (var i = popovers.length - 1; i >= 0; i--) {
         if (target === popovers[i]) return;
         if ($.contains(popovers[i], target)) return;

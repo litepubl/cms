@@ -23,10 +23,6 @@ class PhotoSwipe extends \litepubl\core\Plugin
 
         $js = Js::i();
         $js->lock();
-        //remove popimage
-        $js->deletefile('default', '/js/litepubl/bootstrap/popover.image.min.js');
-        $js->deletefile('default', '/js/litepubl/bootstrap/popover.image.init.min.js');
-
         $js->add('default', "plugins/$plugindir/resource/photoswipe.min.js");
         $js->add('default', "plugins/$plugindir/resource/photoswipe-ui-default.min.js");
         $js->add('default', "plugins/$plugindir/resource/photoswipe.plugin.tml.min.js");

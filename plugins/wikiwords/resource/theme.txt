@@ -7,23 +7,20 @@ wiki.link = [
 ]
 
 wiki.links = [
-  <a href="#" class="dashed popover-toggle" id="wikiword-$id" aria-haspopup="true" aria-expanded="false">
+  <a href="#" class="dashed" id="wikiword-$id" aria-haspopup="true" aria-expanded="false">
     $word
     <span class="caret"></span>
   </a>
   <script type="text/javascript">
   $(function() {
-     $("#wikiword-1").on('getoptions.popover', function(event) {
-      event.options = $.extend({
-           trigger: 'hover focus click',
+     $('#wikiword-$id').lazypopover({
+           trigger: 'hover click',
                     placement: 'bottom',
-                             title: 'wikilink',
+                             title: '$word',
                               html: true,
                                content: '<ul>
 $item = [<li><a href="$post.link#wikiword-$id">$post.title</a></li>]
 </ul>'
-}, event.options);
-dump(event.options);
 });
 });
 </script>

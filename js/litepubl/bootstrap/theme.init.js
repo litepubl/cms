@@ -9,15 +9,11 @@
 (function($, document) {
   'use strict';
 
-  $(document).ready(function() {
-    //$("textarea").filter("[name^='note'], [name='content']").editorheight();
+$(function() {
     $("textarea").editorheight();
-
-    $(document).settooltip();
-  });
-
-  $.ready2(function() {
-    $(".scroll-to").on("click.scrollto", function() {
+    $(document)
+.settooltip()
+.on("click.scrollto", ".scroll-to", function() {
       var hash = $(this).attr("href");
       $(hash).scrollto(2000, function() {
         window.location.hash = hash;
