@@ -1,5 +1,5 @@
 ﻿wiki.word = [
-<span class="wikiword">$word</span>
+<span class="wikiword">$word</span> 
 ]
 
 wiki.link = [
@@ -7,21 +7,17 @@ wiki.link = [
 ]
 
 wiki.links = [
-  <a href="#" class="dashed" id="wikiword-$id" aria-haspopup="true" aria-expanded="false">
-    $word
-    <span class="caret"></span>
-  </a>
-  <script type="text/javascript">
-  $(function() {
-     $('#wikiword-$id').lazypopover({
-           trigger: 'hover click',
-                    placement: 'bottom',
-                             title: '$word',
-                              html: true,
-                               content: '<ul>
-$item = [<li><a href="$post.link#wikiword-$id">$post.title</a></li>]
-</ul>'
-});
-});
+<a href="#" class="dashed" id="wikiword-$id">$word</a>
+<script type="text/javascript">
+    $(function() {
+        $('#wikiword-$id').lazypopover({
+            trigger: 'hover click',
+            placement: 'bottom',
+            title: '$word',
+            html: true,
+            content: '<ul>
+            $item = [ < li > < a href = "$post.link#wikiword-$id" > $post.title < /a></li > ] < /ul>'
+        });
+    });
 </script>
 ]
