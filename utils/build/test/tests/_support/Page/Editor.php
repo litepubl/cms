@@ -9,6 +9,7 @@ public $content = '#editor-raw';
 public $category = 'input[name=category-1]';
 public $calendar = '#calendar-posted';
 public $postbookmark = '.post-bookmark';
+public $idpost = 'input[name=id]';
 public $upload = null;
  //'#file-input';
 public $uploadJS;
@@ -57,6 +58,11 @@ $i->checkError();
 public function getPostLink()
 {
 return $this->tester->grabAttributeFrom($this->postbookmark, 'href');
+}
+
+public function getPostId()
+{
+return $this->tester->grabAttributeFrom($this->idpost, 'value');
 }
 
 }

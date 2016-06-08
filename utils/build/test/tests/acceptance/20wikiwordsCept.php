@@ -2,6 +2,7 @@
 
 use Page\Plugin;
 use Page\Editor;
+use page\Posts;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test wikiwords plugin');
@@ -18,6 +19,7 @@ $editor->fillTitleContent(
 );
 
 $editor->submit();
+$id1 = $editor->getPostId();
 $holderlink = $editor->getPostLink();
 $i->screenShot('20.wikiwords.01declare');
 
@@ -31,11 +33,18 @@ $editor->fillTitleContent(
 
 $editor->submit();
 $i->screenShot('20.wikiwords.02use');
+$id2 = $editor->getPostId();
+
 $i->wantTo('Check used word');
 $i->amOnUrl($editor->getPostLink());
 $i->checkError();
 $i->screenShot('20.wikiwords.03used');
 $i->click('.wiki-link');
 $i->checkError();
-
+$i->assertEquals($holderlink, $i->getAbsoluteUrl(), 'Wiki word linked');
 $i->screenShot('20.wikiwords.04declared');
+
+$posts = new Posts($i);
+$posts->screenShotName = '20.wikiwords.05';
+$posts->delete($id1, $id2);
+$plugin->uninstall('wikiwords');

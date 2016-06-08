@@ -41,6 +41,16 @@ $this->amOnPage($url);
 $this->checkError();
 }
 
+public function getAbsoluteUrl()
+{
+$url = $this->executeJS('return location.href');
+if ($i = strrpos($url, '#')) {
+$url = substr($url, 0, $i);
+}
+
+return $url;
+}
+
 public function screenShot(string $name)
 {
 if (config::$screenshot) {
