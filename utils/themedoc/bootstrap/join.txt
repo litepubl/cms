@@ -27,6 +27,8 @@ tml/31post.date.txt
 ru/31post.date.txt
 tml/32post.more.txt
 ru/32post.more.txt
+tml/33post.bookmark.txt
+ru/33post.bookmark.txt
 tml/33post.taglinks.txt
 ru/33post.taglinks.txt
 tml/34post.catlinks.txt

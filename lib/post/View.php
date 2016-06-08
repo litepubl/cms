@@ -157,7 +157,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getBookmark()
     {
-        return $this->theme->parse('<a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a>');
+        return $this->theme->parse($this->theme->templates['content.post.bookmark']);
     }
 
     public function getRsscomments()

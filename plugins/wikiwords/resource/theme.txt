@@ -16,7 +16,8 @@ wiki.links = [
             title: '$word',
             html: true,
             content: '<ul>
-            $item = [ < li > < a href = "$post.link#wikiword-$id" > $post.title < /a></li > ] < /ul>'
+            $item = [ < li > < a href = "$post.link#wikiword-$id" target="_blank"> $post.title < /a></li > ]
+            < /ul>'
         });
     });
 </script>

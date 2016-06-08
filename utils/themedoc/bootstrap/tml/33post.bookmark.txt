@@ -1,0 +1,3 @@
+content.post.bookmark = [
+<a href="$post.link" class="post-bookmark" rel="bookmark" title="$lang.permalink $post.title">$post.title</a>
+]
