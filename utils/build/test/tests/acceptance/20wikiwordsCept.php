@@ -18,6 +18,7 @@ $editor->fillTitleContent(
 );
 
 $editor->submit();
+$holderlink = $editor->getPostLink();
 $i->screenShot('20.wikiwords.01declare');
 
 $i->openPage($editor->url);
@@ -30,3 +31,11 @@ $editor->fillTitleContent(
 
 $editor->submit();
 $i->screenShot('20.wikiwords.02use');
+$i->wantTo('Check used word');
+$i->amOnUrl($editor->getPostLink());
+$i->checkError();
+$i->screenShot('20.wikiwords.03used');
+$i->click('.wiki-link');
+$i->checkError();
+
+$i->screenShot('20.wikiwords.04declared');

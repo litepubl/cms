@@ -3,11 +3,11 @@
 ]
 
 wiki.link = [
-<a href="$post.link#wikiword-$id">$word</a>
+<a href="$post.link#wikiword-$id" class="wiki-link">$word</a>
 ]
 
 wiki.links = [
-<a href="#" class="dashed" id="wikiword-$id">$word</a>
+<a href="#" class="dashed wiki-link" id="wikiword-$id">$word</a>
 <script type="text/javascript">
     $(function() {
         $('#wikiword-$id').lazypopover({

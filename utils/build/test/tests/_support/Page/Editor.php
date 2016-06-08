@@ -8,6 +8,7 @@ public $title = '#text-title';
 public $content = '#editor-raw';
 public $category = 'input[name=category-1]';
 public $calendar = '#calendar-posted';
+public $postbookmark = '.post-bookmark';
 public $upload = null;
  //'#file-input';
 public $uploadJS;
@@ -51,6 +52,11 @@ $i = $this->tester;
 $i->executeJs('$("form:last").submit();');
 usleep(250000);
 $i->checkError();
+}
+
+public function getPostLink()
+{
+return $this->tester->grabAttributeFrom($this->postbookmark, 'href');
 }
 
 }
