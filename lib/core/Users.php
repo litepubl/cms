@@ -38,20 +38,21 @@ class Users extends Items
             $result[] = $id;
             $this->items[$id] = $item;
         }
+
         return $result;
     }
 
-    public function add(array $values)
+    public function add(array $values): int
     {
         return Usersman::i()->add($values);
     }
 
-    public function edit($id, array $values)
+    public function edit(int $id, array $values)
     {
         return Usersman::i()->edit($id, $values);
     }
 
-    public function setGroups($id, array $idgroups)
+    public function setGroups(int $id, array $idgroups)
     {
         $idgroups = array_unique($idgroups);
         Arr::deleteValue($idgroups, '');
@@ -87,10 +88,10 @@ class Users extends Items
         return \litepubl\pages\Users::i();
     }
 
-    public function emailexists($email)
+    public function emailExists(string $email): int
     {
-        if ($email == '') {
-            return false;
+        if (!$email) {
+            return 0;
         }
 
         if ($email == $this->getApp()->options->email) {
@@ -104,21 +105,22 @@ class Users extends Items
 
         }
 
-        if ($item = $this->db->finditem('email = ' . Str::quote($email))) {
+        if ($item = $this->db->findItem('email = ' . Str::quote($email))) {
             $id = (int)$item['id'];
+$item['idgroups'] = str::toIntArray($item['idgroups']);
             $this->items[$id] = $item;
             return $id;
         }
 
-        return false;
+        return 0;
     }
 
-    public function getPassword($id)
+    public function getPassword(int $id): string
     {
-        return $id == 1 ? $this->getApp()->options->password : $this->getvalue($id, 'password');
+        return $id == 1 ? $this->getApp()->options->password : $this->getValue($id, 'password');
     }
 
-    public function changepassword($id, $password)
+    public function changePassword(int $id, string $password)
     {
         $item = $this->getitem($id);
         $this->setvalue($id, 'password', $this->getApp()->options->hash($item['email'] . $password));
@@ -126,35 +128,36 @@ class Users extends Items
 
     public function approve($id)
     {
-        $this->setvalue($id, 'status', 'approved');
+        $this->setValue($id, 'status', 'approved');
         $pages = $this->pages;
         if ($pages->createpage) {
-            $pages->addpage($id);
+            $pages->addPage($id);
         }
     }
 
-    public function auth($email, $password)
+    public function auth(string $email, string $password): int
     {
-        return $this->authpassword($this->emailexists($email) , $password);
+        return $this->authPassword($this->emailExists($email) , $password);
     }
 
-    public function authpassword($id, $password)
+    public function authPassword(int $id, string $password): int
     {
-        if (!$id || !$password) {
-            return false;
-        }
-
-        $item = $this->getitem($id);
+        if ($id && $password) {
+        $item = $this->getItem($id);
         if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
-            if ($item['status'] == 'wait') $this->approve($id);
+            if ($item['status'] == 'wait') {
+$this->approve($id);
+}
+
             return $id;
         }
-        return false;
+}
+
+        return 0;
     }
 
-    public function authcookie($cookie)
+    public function authCookie(string $cookie)
     {
-        $cookie = (string)$cookie;
         if (empty($cookie)) {
             return false;
         }
@@ -164,7 +167,7 @@ class Users extends Items
             return false;
         }
 
-        if ($id = $this->findcookie($cookie)) {
+        if ($id = $this->findCookie($cookie)) {
             $item = $this->getitem($id);
             if (strtotime($item['expired']) > time()) {
                 return $id;
@@ -174,7 +177,7 @@ class Users extends Items
         return false;
     }
 
-    public function findcookie($cookie)
+    public function findCookie(string $cookie)
     {
         $cookie = Str::quote($cookie);
         if (($a = $this->select('cookie = ' . $cookie, 'limit 1')) && (count($a) > 0)) {
@@ -183,19 +186,19 @@ class Users extends Items
         return false;
     }
 
-    public function getGroupname($id)
+    public function getGroupName(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         $groups = UserGroups::i();
         return $groups->items[$item['idgroups'][0]]['name'];
     }
 
-    public function clearcookie($id)
+    public function clearCookie(int $id)
     {
-        $this->setcookie($id, '', 0);
+        $this->setCookie($id, '', 0);
     }
 
-    public function setCookie($id, $cookie, $expired)
+    public function setCookie(int $id, string $cookie, int $expired)
     {
         if ($cookie) $cookie = $this->getApp()->options->hash($cookie);
         $expired = Str::sqlDate($expired);

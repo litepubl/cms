@@ -140,7 +140,7 @@ class Options extends Events
 
         $users = Users::i();
         try {
-            $item = $users->getitem($iduser);
+            $item = $users->getItem($iduser);
         }
         catch(\Exception $e) {
             return false;
@@ -161,7 +161,7 @@ class Options extends Events
         if (!$this->authenabled) return false;
         if ($email == $this->email) return 1;
         if (!$this->usersenabled) return false;
-        return Users::i()->emailexists($email);
+        return Users::i()->emailExists($email);
     }
 
     public function auth($email, $password)
@@ -177,7 +177,7 @@ class Options extends Events
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) return false;
         } else {
-            if (!Users::i()->authpassword($iduser, $password)) return false;
+            if (!Users::i()->authPassword($iduser, $password)) return false;
         }
 
         $this->_user = $iduser;
@@ -189,11 +189,9 @@ class Options extends Events
     {
         if ($this->_user == 1) {
             $this->group = 'admin';
-            $this->idgroups = array(
-                1
-            );
+            $this->idgroups = [1];
         } else {
-            $user = Users::i()->getitem($this->_user);
+            $user = Users::i()->getItem($this->_user);
             $this->idgroups = $user['idgroups'];
             $this->group = count($this->idgroups) ? UserGroups::i()->items[$this->idgroups[0]]['name'] : '';
         }
@@ -211,7 +209,7 @@ class Options extends Events
         }
 
         $users = Users::i();
-        return $users->getvalue($this->user, 'password');
+        return $users->getValue($this->user, 'password');
     }
 
     public function changePassword($newpassword)
@@ -259,7 +257,7 @@ class Options extends Events
         if ($this->_user == 1) {
             $this->save_cookie($cookie, $expired);
         } else if ($this->_user) {
-            Users::i()->setcookie($this->_user, $cookie, $expired);
+            Users::i()->setCookie($this->_user, $cookie, $expired);
         }
     }
 

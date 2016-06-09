@@ -76,7 +76,7 @@ class Items extends Events
     }
 
     public function res2items($res)
-    {
+{
         if (!$res) {
             return array();
         }
