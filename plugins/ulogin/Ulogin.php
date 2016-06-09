@@ -18,7 +18,7 @@ use litepubl\core\UserGroups;
 use litepubl\core\Context;
 use litepubl\utils\Http;
 
-class Ulogin extends \litepubl\core\Plugin
+class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
 
     protected function create()

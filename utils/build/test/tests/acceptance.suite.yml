@@ -10,6 +10,6 @@ modules:
         - \Helper\Acceptance
         - Asserts
         - WebDriver :
-            url: 'http://cms'
+            url: 'http://cms.cms'
             browser: phantomjs 
             debug: true

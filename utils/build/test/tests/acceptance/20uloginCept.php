@@ -1,12 +1,20 @@
 <?php 
 
 use Page\Plugin;
+use Page\Ulogin;
 
 $i = new AcceptanceTester($scenario);
+$i->openPage('/admin/login/');
+$ulogin = new Ulogin($i);
+$ulogin->auth();
+/*
+return;
+
 $i->wantTo('Test ulogin plugin');
 $plugin = new Plugin($i);
 $plugin->install('ulogin');
 $plugin->logout();
+
 $i->wantTo('Send comment as authorized user');
 $i->openPage('/');
 $i->wantTo('Open first post');
@@ -39,3 +47,4 @@ $i->seeCurrentUrlEquals($posturl);
 $comment->send($data->comment2 . time());
 $i->wantTo('Check comment sent');
 $i->see($data->comment2);
+*/

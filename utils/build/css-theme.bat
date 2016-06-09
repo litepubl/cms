@@ -2,7 +2,7 @@ SETLOCAL
 set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
 set css=node D:\OpenServer\modules\node_modules\clean-css\bin\cleancss
 rem set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar --type css
-set home=d:\OpenServer\domains\cms
+set home=d:\OpenServer\domains\cms.cms
 set lesspath=%home%\utils\less\
 cd %home%\themes\default\css
 del %lesspath%bootstrap\variables.less

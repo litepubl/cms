@@ -64,7 +64,7 @@ $this->tmlWidget);
 $this->widget = Admin::admin()->getSection($this->widget_title, $content );
         $this->save();
 
-LoginForms::i()->setWidget($this->widget);
+LoginForms::i()->setWidgets($this->widget);
 
         $tc = ttemplatecomments::i();
         if ($i = strpos($tc->regaccount, $this->widget_title)) {

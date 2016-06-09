@@ -1,16 +1,15 @@
 (function($, litepubl) {
   'use strict';
 
-litepubl.uloginclicked = false;
+litepubl.uloginopened  = false;
 $(function() {
-litepubl.authdialog.ulogin.ready(function() {
-      setTimeout(function() {
-$('[data-uloginbutton=twitter]').click();
-      setTimeout(function() {
-litepubl.uloginclicked = true;
-}, 60);
-}, 10);
-});
+litepubl.authdialog.ulogin.onready = function() {
+$('[data-uloginbutton=mailru]').click();
+};
+
+litepubl.authdialog.ulogin.onopened = function() {
+litepubl.uloginopened = true;
+};
 });
 
 })(jQuery, litepubl);

@@ -11,12 +11,12 @@ $context = stream_context_create(array(
 )
 ));
 
-echo file_get_contents('http://cms/utils/build/libparse.php?dir=lib', false, $context);
+echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=lib', false, $context);
 flush();
 //@unlink('plugins/sape/blogolet.ru.links.db');
-echo file_get_contents('http://cms/utils/build/libparse.php?dir=js', false, $context);
+echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=js', false, $context);
 flush();
-echo file_get_contents('http://cms/utils/build/libparse.php?dir=plugins', false, $context);
+echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=plugins', false, $context);
 flush();
-//echo file_get_contents('http://cms/utils/build/libparse.php?dir=geo', false, $context);
+//echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=geo', false, $context);
 flush();

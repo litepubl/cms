@@ -7,4 +7,9 @@ namespace Helper;
 class Acceptance extends \Codeception\Module
 {
 
+public function savehtml(string $name)
+{
+    $this->getModule('WebDriver')->_savePageSource(codecept_output_dir()."$name.html");
+}
+
 }

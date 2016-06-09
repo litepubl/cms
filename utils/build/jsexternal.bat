@@ -1,5 +1,5 @@
 SETLOCAL  
-set home=d:\OpenServer\domains\cms
+set home=d:\OpenServer\domains\cms.cms
 for /f %%f in (jsexternal.txt) do java -jar closure\compiler.jar --js=%home%\js\%%f.js --js_output_file=%home%\js\%%f.min.js
 call jsfile %home%\js\fix\android-select
 call jsfile %home%\js\fix\ie10

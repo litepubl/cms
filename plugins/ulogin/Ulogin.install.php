@@ -40,7 +40,10 @@ function UloginInstall($self)
         'youtube',
         'foursquare',
         'tumblr',
-        'googleplus'
+        'googleplus',
+'uid',
+'instagram',
+'wargaming',
     );
 
     $man = DBManager::i();

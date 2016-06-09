@@ -1,7 +1,7 @@
 SETLOCAL  
-set mini=java -jar d:\OpenServer\domains\cms\build\closure\compiler.jar --js=
-set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar
-cd d:\OpenServer\domains\cms\js\jquery\ui
+set mini=java -jar d:\OpenServer\domains\cms.cms\build\closure\compiler.jar --js=
+set css=java -jar d:\OpenServer\domains\cms.cms\build\compress-javascript\com.jar
+cd d:\OpenServer\domains\cms.cms\js\jquery\ui
 %mini%accordion.js --js_output_file=accordion.min.js
 %mini%autocomplete.js --js_output_file=autocomplete.min.js
 %mini%button.js --js_output_file=button.min.js

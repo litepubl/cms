@@ -6,13 +6,17 @@
 * @version 6.15
 **/
 
-(function($, document, window) {
+(function($, window) {
   "use strict";
 
   litepubl.Ulogin = Class.extend({
     url: '/admin/ulogin.php?backurl=',
     autoinit: "#ulogin-autoinit",
     script: false,
+//callbacks for  ulogin native events
+onready: $.noop,
+onopened: $.noop,
+onclosed: $.noop,
 
     css: '',
     tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
@@ -29,6 +33,7 @@
     init: function() {
       $.ready2($.proxy(this.adminbuttons, this));
     },
+
     html: function(args) {
       //preload script when animating dialog
       this.ready();
@@ -45,10 +50,8 @@
     },
 
     onopen: function(dialog) {
-      this.script.done(function() {
-          uLogin.customInit('ulogin-holder');
-        })
-        .fail(function() {
+this.initOnReady('ulogin-holder');
+        this.script.fail(function() {
           $("#ulogin-dialog").remove();
         });
     },
@@ -70,10 +73,28 @@
       });
 
       holder.append(html);
-      this.ready(function() {
-        uLogin.customInit('ulogin-buttons');
-      });
+this.initOnReady('ulogin-buttons');
     },
+
+initOnReady: function(id) {
+var self = this;
+      this.ready(function() {
+        uLogin.customInit(id);
+$('[data-uloginbutton]', '#' + id).attr('role', 'button');
+
+uLogin.setStateListener(id, 'ready', function(){
+self.onready();
+});
+
+uLogin.setStateListener(id, 'open', function(){
+self.onopened();
+});
+
+uLogin.setStateListener(id, 'close', function(){
+self.onclosed();
+});
+});
+},
 
     ready: function(callback) {
       if (this.script) {
@@ -105,4 +126,4 @@
 
   }); //class
 
-}(jQuery, document, window));
+}(jQuery, window));

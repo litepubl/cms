@@ -1,7 +1,7 @@
 [DEFAULT]
 BASEURL=http://dest/build/index.php
 [InternetShortcut]
-URL=http://cms/utils/build/reparse.php
+URL=http://cms.cms/utils/build/reparse.php
 IDList=
 IconFile=http://cms/favicon.ico
 IconIndex=1

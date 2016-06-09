@@ -3,5 +3,5 @@ modules:
     enabled:
         - \Helper\api
         - REST:
-            url: 'http://cms'
+            url: 'http://cms.cms'
             depends: PhpBrowser
