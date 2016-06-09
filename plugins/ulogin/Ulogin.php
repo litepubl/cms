@@ -73,7 +73,7 @@ $response = $context->response;
             //try fix ulogin bug double symbol ?
             $uri = $_SERVER['REQUEST_URI'];
             if (substr_count($uri, '?') <= 1) {
-                return $response->forbidden;
+                return $response->forbidden();
             }
 
             $q = substr($uri, strpos($uri, '?') + 1);
@@ -83,7 +83,6 @@ $response = $context->response;
             if (!$token) {
                 return $response->forbidden();
             }
-
         }
 
         if (!($cookies = $this->auth($token))) {
