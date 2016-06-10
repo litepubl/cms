@@ -32,7 +32,8 @@ $this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebD
 
 public function setWindow(int $index)
 {
-$this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+$this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($index)
+{
      $webdriver->switchTo()->window($this->winhandles[$index]);
 });
 }
@@ -42,7 +43,8 @@ public function auth(string $net = 'twitter')
 $i = $this->tester;
 $i->wantTo('Wait for load ulogin widget');
 $i->appendJS(file_get_contents(__DIR__ . '/js/ulogin.js'));
-$i->waitForJS('return litepubl.uloginopened;', 6);
+//codecept_debug($i->executejs('return litepubl.ulog;'));
+$i->waitForJS('return litepubl.uloginopened;', 3);
 $i->screenshot('20.ulogin.01wait');
 $i->wantTo('Switch to new window');
 $name = 'mailru';
@@ -55,12 +57,12 @@ case 'mailru':
 $i->waitForElementVisible($this->mailruLogin, 10);
 $i->fillField($this->mailruLogin, $data->login);
 $i->fillField($this->mailruPassword, $data->password);
+$i->savehtml('form');
 $i->wantTo('Auth app');
 $i->screenshot('20.ulogin.02auth');
-$i->click($this->mailruSubmit);
-$i->screenshot('20.ulogin.03allow');
-//sleep(4);
-$i->savehtml('auth');
+//$i->click($this->mailruSubmit);
+$i->executeJS(file_get_contents(__DIR__ . '/js/mailruSubmit.js'));
+//$i->savehtml('auth');
 break;
 
 case 'yandex':
@@ -89,7 +91,7 @@ break;
 }
 
 $this->setWindow(0);
-sleep(3);
+sleep(5);
 $i->savehtml('logged');
 }
 

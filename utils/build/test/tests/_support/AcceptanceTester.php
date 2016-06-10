@@ -61,6 +61,7 @@ $this->makeScreenshot($name);
 public function appendJS(string $js)
 {
 $js = strtr($js, [
+"\\" => "\\\\",
 "'" => "\\'",
 "\n" => '\n',
 "\r" => '',
