@@ -169,7 +169,7 @@ class App
 
             $this->onClose->fire();
         }
-        catch(\Exception $e) {
+        catch(\Throwable $e) {
             $this->logException($e);
         }
     }
@@ -182,7 +182,7 @@ class App
                 $this->process();
             }
         }
-        catch(\Exception $e) {
+        catch(\Throwable  $e) {
             $this->logException($e);
         }
 

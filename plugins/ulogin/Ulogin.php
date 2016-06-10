@@ -94,6 +94,10 @@ $response = $context->response;
         } elseif (!empty($_COOKIE['backurl'])) {
             $backurl = $_COOKIE['backurl'];
         } else {
+$backurl = false;
+}
+
+if (!$backurl || (strpos($backurl, '/') === false)) {
             $user = Users::i()->getItem($cookies['id']);
             $backurl = UserGroups::i()->getHome($user['idgroups'][0]);
         }

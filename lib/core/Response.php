@@ -15,7 +15,7 @@ class Response
     use AppTrait;
 
     public $body;
-    public $cache;
+    public $cacheFile;
     public $cacheHeader;
     public $headers;
     public $protocol;
@@ -40,7 +40,8 @@ class Response
     public function __construct()
     {
         $this->body = '';
-        $this->cache = true;
+        $this->cacheFile = true;
+$this->cacheHeader = true;
         $this->protocol = '1.1';
         $this->status = 200;
         $this->headers = [
@@ -49,6 +50,15 @@ class Response
         //'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
         ];
     }
+
+    public function __get(string $name)
+    {
+        if (method_exists($this, $get = 'get' . $name)) {
+            return $this->$get();
+        } else {
+            throw new PropException(get_class($this) , $name);
+        }
+}
 
     public function __set($name, $value)
     {
@@ -59,15 +69,20 @@ class Response
         }
     }
 
-    public function setCache($cache)
+    public function getCache(): bool
     {
-        $this->cache = $cache;
+return $this->cacheFile;
+}
+
+    public function setCache(bool $cache)
+    {
+        $this->cacheFile = $cache;
         $this->cacheHeader = $cache;
     }
 
-    public function setCacheHeaders($mode)
+    public function setCacheHeaders(bool $cache)
     {
-        if ($mode) {
+        if ($cache) {
             unset($this->headers['Cache-Control']);
             unset($this->headers['Pragma']);
         } else {
@@ -108,7 +123,7 @@ $this->body = null;
         }
     }
 
-    public function getString()
+    public function getString(): string
     {
         return $this->__tostring();
     }
@@ -135,7 +150,7 @@ $this->body = null;
         $this->body.= '<?php echo \'<?xml version="1.0" encoding="utf-8" ?>\'; ?>';
     }
 
-    public function setJson($js = '')
+    public function setJson(string $js = '')
     {
         $this->headers['Content-Type'] = 'application/json;charset=utf-8';
         if ($js) {
@@ -147,7 +162,7 @@ $this->body = null;
         }
     }
 
-    public function redir($url, $status = 301)
+    public function redir(string $url, int $status = 301)
     {
         $this->status = $status;
 
@@ -159,7 +174,7 @@ $this->body = null;
         $this->headers['Location'] = $url;
     }
 
-    public function isRedir()
+    public function isRedir(): bool
     {
         return in_array($this->status, [301, 302, 303, 307]);
     }
