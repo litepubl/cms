@@ -64,10 +64,11 @@ this.initOnReady('ulogin-holder');
       var holder = $(this.autoinit);
       if (!holder.length) return;
 
+var backurl = get_get('backurl');
       var html = $.parsetml(this.tml_admin, {
         lang: lang.authdialog,
         data: $.parsetml(this.tml_data, {
-          redirurl: encodeURIComponent(ltoptions.url + this.url + encodeURIComponent(get_get('backurl'))),
+          redirurl: encodeURIComponent(ltoptions.url + this.url + (backurl ? encodeURIComponent(backurl) : '')),
           callback: ''
         })
       });
