@@ -29,7 +29,7 @@ class Password extends Form
         $this->section = 'password';
     }
 
-    public function createForm()
+    public function createForm(): string
     {
         $form = new AdminForm();
         $form->id = 'form-lostpass';

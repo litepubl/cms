@@ -32,7 +32,6 @@ class RegUser extends Form
         parent::create();
         $this->basename = 'admin.reguser';
         $this->addevents('oncontent');
-        $this->data['widget'] = '';
         $this->section = 'users';
         $this->regstatus = false;
     }
@@ -135,7 +134,7 @@ class RegUser extends Form
             return $result;
     }
 
-    public function createform()
+    public function createForm(): string
     {
         $lang = Lang::i('users');
         $theme = $this->theme;
@@ -148,7 +147,7 @@ class RegUser extends Form
         $form->submit = 'signup';
 
         $result = $form->gettml();
-        $result.= $this->widget;
+        $result .= $theme->parse($theme->templates['content.login']);
         return $result;
     }
 

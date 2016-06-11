@@ -28,7 +28,6 @@ class Login extends Form
         parent::create();
         $this->basename = 'admin.loginform';
         $this->addevents('oncontent');
-        $this->data['widget'] = '';
     }
 
     public function auth(Context $context)
@@ -142,8 +141,8 @@ class Login extends Form
 
     public function createform()
     {
-        $result = $this->widget;
         $theme = $this->theme;
+        $result = $theme->parse($theme->templates['content.login']);
         $args = new Args();
 
         if ($this->getApp()->options->usersenabled && $this->getApp()->options->reguser) {

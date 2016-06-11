@@ -81,7 +81,7 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $theme->simple($result);
     }
 
-    public function getForm()
+    public function getForm(): string
     {
         if ($result = $this->getApp()->cache->getString($this->getbasename())) {
             return $result;
@@ -92,21 +92,9 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function createForm()
+    public function createForm(): string
     {
         return '';
     }
 
-public function setWidgets(string $widget)
-{
-$login = Login::i();
-$login->widget = $widget;
-$login->save();
-
-$reg = RegUser::i();
-$reg->widget = $widget;
-$reg->save();
 }
-
-}
-

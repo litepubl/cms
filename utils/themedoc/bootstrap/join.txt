@@ -73,6 +73,8 @@ tml/54content.navi.txt
 ru/54content.navi.txt
 tml/55admin.txt
 ru/55admin.txt
+tml/56login.txt
+ru/56login.txt
 ru/60sidebar.intro.txt
 tml/61sidebar.widget.txt
 ru/61sidebar.widget.txt

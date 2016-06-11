@@ -6,3 +6,13 @@ regservices = [
     </div>
 </div>
 ]
+
+content.post.templatecomments.form.mesg.regaccount = [
+$lang.regaccount
+<a class="registration mesg-regaccount" href="$site.url/admin/reguser/{$site.q}backurl=">$lang.signup</a>
+$regservices.widget
+]
+
+content.login = [
+$regservices.widget
+]
