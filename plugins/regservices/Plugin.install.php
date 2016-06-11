@@ -15,6 +15,8 @@ use litepubl\core\Plugins;
 use litepubl\core\Users;
 use litepubl\comments\Form;
 use litepubl\utils\Filer;
+use litepubl\view\Parser;
+use litepubl\view\AutoVars;
 
 function PluginInstall($self)
 {
@@ -24,9 +26,7 @@ function PluginInstall($self)
     $name = basename(dirname(__file__));
     $about = Plugins::getabout($name);
     $self->lock();
-
-    $self->dirname = $name;
-    $self->widget_title = sprintf('<h4>%s</h4>', $about['widget_title']);
+    $self->title = $about['widget_title'];
 Google::i()->install();
 Facebook::i()->install();
 Twitter::i()->install();
@@ -50,10 +50,17 @@ Odnoklassniki::i()->install();
     $self->getApp()->router->addget($self->url, get_class($self));
     Form::i()->oncomuser = $self->oncomuser;
     $self->getApp()->cache->clear();
+
+Parser::i()->addTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
+$vars = AutoVars::i();
+$vars->items['regservices'] = get_class($self);
+$vars->save();
 }
 
 function PluginUninstall($self)
 {
+Parser::i()->removeTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
+AutoVars::i()->delete('regservices');
     $name = basename(dirname(__file__));
     Form::i()->unbind($self);
     $self->getApp()->router->unbind($self);

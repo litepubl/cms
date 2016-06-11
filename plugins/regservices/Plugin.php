@@ -12,23 +12,19 @@ namespace litepubl\plugins\regservices;
 
 use litepubl\comments\Form;
 use litepubl\admin\pages\Form as LoginForms;
-use litepubl\view\Admin;
+use litepubl\view\Theme;
 use litepubl\core\Context;
 
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
-public $tml = '<a role="button" class="btn btn-default tooltip-toggle" target="_blank" href="$url=$name&backurl=" title="$title"><span class="fa fa-$icon"></span></a>';
-public $tmlWidget = '<div class="btn-group">$buttons</div>';
 
     protected function create()
     {
         $this->dbversion = false;
         parent::create();
         $this->basename = 'regservices' . DIRECTORY_SEPARATOR . 'index';
-        $this->data['dirname'] = '';
         $this->data['url'] = '/admin/regservice.htm';
-        $this->data['widget'] = '';
-        $this->data['widget_title'] = '';
+        $this->data['title'] = '';
     }
 
     public function add(Service $service)
@@ -36,42 +32,46 @@ public $tmlWidget = '<div class="btn-group">$buttons</div>';
         $this->lock();
         $this->items[$service->name] = get_class($service);
         $service->save();
-        $this->updateWidget();
         $this->unlock();
+        $this->getApp()->cache->clear();
     }
 
-    public function updateWidget()
+    public function getWidget(): string
+{
+$cache = $this->getApp()->cache;
+$filename = 'regservices.' . Theme::i()->name;
+if ($result = $cache->getString($filename)) {
+return $result;
+}
+
+$result = $this->renderWidget();
+$cache->setString($filename, $result);
+return $result;
+}
+
+    public function renderWidget(): string
     {
+$theme = Theme::i();
+$tml = $theme->templates['regservices.button'];
         $url = $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
         $buttons = '';
         foreach ($this->items as $name => $classname) {
             $service = static ::iGet($classname);
             if ($service->valid()) {
-                $buttons .= strtr($this->tml, array(
+                $buttons .= strtr($tml, array(
 '$url' => $url,
 '$name' => $name,
 '$icon' => $service->icon,
 '$title' => $service->title,
+'&' => '&amp;',
 ));
             }
         }
 
-        $content = str_replace(
-'$buttons',
-str_replace('&', '&amp;', $buttons),
-$this->tmlWidget);
-
-$this->widget = Admin::admin()->getSection($this->widget_title, $content );
-        $this->save();
-
-LoginForms::i()->setWidgets($this->widget);
-
-        $tc = ttemplatecomments::i();
-        if ($i = strpos($tc->regaccount, $this->widget_title)) {
-            $tc->regaccount = trim(substr($tc->regaccount, 0, $i));
-        }
-        $tc->regaccount.= "\n" . $this->widget;
-        $tc->save();
+return strtr($theme->templates['regservices'], [
+'$title' => $this->title,
+'$button' => $buttons
+]);
     }
 
     public function request(Context $context)

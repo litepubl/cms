@@ -13,12 +13,6 @@ public $yandexPassword = '#passwd';
 public $yandexSubmit = 'button[type=submit]';
 public $yandexAllow = '.authrequest-request-allow button';
 public $yandexCancel = '.authrequest-request-deny button';
-
-public $twitterLogin = '#username_or_email';
-public $twitterPassword = '#password';
-public $twitterSubmit = '#allow';
-public $twitterCancel = '#cancel';
-public $twitterAllow = '#allow';
 private $winhandles = [];
 
 public function getwindows()
@@ -38,16 +32,18 @@ $this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebD
 });
 }
 
-public function auth(string $net = 'twitter')
+public function auth(string $name = 'mailru')
 {
 $i = $this->tester;
 $i->wantTo('Wait for load ulogin widget');
-$i->appendJS(file_get_contents(__DIR__ . '/js/ulogin.js'));
+$js = file_get_contents(__DIR__ . '/js/ulogin.js');
+$js = str_replace('mailru', $name, $js);
+$i->appendJS($js);
 //codecept_debug($i->executejs('return litepubl.ulog;'));
 $i->waitForJS('return litepubl.uloginopened;', 3);
 $i->screenshot('20.ulogin.01wait');
 $i->wantTo('Switch to new window');
-$name = 'mailru';
+
 $data = $this->load($name);
 $this->getwindows();
 $i->maximizeWindow();
@@ -62,7 +58,6 @@ $i->wantTo('Auth app');
 $i->screenshot('20.ulogin.02auth');
 //$i->click($this->mailruSubmit);
 $i->executeJS(file_get_contents(__DIR__ . '/js/mailruSubmit.js'));
-//$i->savehtml('auth');
 break;
 
 case 'yandex':
@@ -77,21 +72,13 @@ $i->savehtml('auth');
 $i->click($this->yandexAllow);
 break;
 
-case 'twitter':
-$i->waitForElementVisible($this->twitterLogin, 10);
-$i->fillField($this->twitterLogin, $data->login);
-$i->fillField($this->twitterPassword, $data->password);
-$i->wantTo('Auth app');
-$i->screenshot('20.ulogin.02auth');
-$i->click($this->twitterSubmit);
-$i->screenshot('20.ulogin.03allow');
-$i->savehtml('auth');
-$i->click($this->twitterAllow);
-break;
+default:
+throw new \RuntimeException('Unknown net');
 }
 
 $this->setWindow(0);
-sleep(5);
+codecept_debug($i->executeJS('return litepubl.ulog;'));
+sleep(3);
 $i->savehtml('logged');
 }
 

@@ -168,7 +168,7 @@ class Items extends Events
         return false;
     }
 
-    public function additem(array $item)
+    public function addItem(array $item)
     {
         $id = $this->dbversion ? $this->db->add($item) : ++$this->autoid;
         $item[$this->idprop] = $id;
