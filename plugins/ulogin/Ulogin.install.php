@@ -14,8 +14,7 @@ use litepubl\core\DBManager;
 use litepubl\view\Js;
 use litepubl\pages\Json;
 use litepubl\core\Users;
-use litepubl\admin\pages\Login;
-use litepubl\admin\pages\RegUser;
+use litepubl\view\Parser;
 
 function UloginInstall($self)
 {
@@ -53,17 +52,9 @@ $man->alter('users', "add phone bigint not null default '0' after status");
 }
 
     Users::i()->deleted = $self->userDeleted;
-
-    $login = Login::i();
-    $login->widget.= $self->panel;
-    $login->save();
-
-    $reg = RegUser::i();
-    $reg->widget.= $self->panel;
-    $reg->save();
-
     $self->getApp()->router->unbind($self);
     $self->getApp()->router->addGet($self->url, get_class($self));
+Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();
     $js->lock();
@@ -91,13 +82,7 @@ function UloginUninstall($self)
 $man->alter('users', "drop phone");
 }
 
-    $login = Login::i();
-    $login->widget = str_replace($self->panel, '', $login->widget);
-    $login->save();
-
-    $reg = RegUser::i();
-    $reg->widget = str_replace($self->panel, '', $reg->widget);
-    $reg->save();
+Parser::i()->removeTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();
     $js->lock();

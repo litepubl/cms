@@ -43,6 +43,18 @@ $vars->items['wiki'] = 'litepubl\plugins\wikiwords\Wiki';
 $vars->save();
 }
 
+if (isset($plugins->items['ulogin'])) {
+Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
+ $man = DBManager::i();
+$man->addEnum('ulogin', 'service', 'uid');
+$man->addEnum('ulogin', 'service', 'instagram');
+$man->addEnum('ulogin', 'service', 'wargaming');
+
+$ulogin = \litepubl\plugins\ulogin\Ulogin::i();
+unset($ulogin->data['panel']);
+$ulogin->save();
+}
+
 if (isset($plugins->items['downloatitem'])) {
 $js = Js::i();
 $js->lock();

@@ -1,0 +1,16 @@
+content.login = [
+<div id="ulogin-autoinit" class="section">
+    <h4 class="header-help"></h4>
+    <div>
+        <div id="ulogin-buttons" data-ulogin=""></div>
+    </div>
+
+    <script type="text/javascript">
+        (function($, litepubl) {
+            $.ready2(function() {
+                litepubl.authdialog.ulogin.autoinit('#ulogin-autoinit', '#ulogin-buttons');
+            });
+        }(jQuery, litepubl));
+    </script>
+</div>
+]

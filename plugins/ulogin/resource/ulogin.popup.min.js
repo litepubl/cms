@@ -6,12 +6,11 @@
 * @version 6.15
 **/
 
-(function($, window) {
+(function($, litepubl, window) {
   "use strict";
 
   litepubl.Ulogin = Class.extend({
     url: '/admin/ulogin.php?backurl=',
-    autoinit: "#ulogin-autoinit",
     script: false,
 //callbacks for  ulogin native events
 onready: $.noop,
@@ -19,9 +18,7 @@ onopened: $.noop,
 onclosed: $.noop,
 
     css: '',
-    tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
-    tml_admin: '<h4>%%lang.helptitle%%</h4>' +
-      '<div id="ulogin-buttons" data-ulogin="%%data%%"></div>',
+     tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
     tml_data: 'display=small;' +
       'fields=first_name,last_name;' +
       'optional=email,phone,nickname;' +
@@ -31,7 +28,6 @@ onclosed: $.noop,
       '%%callback%%',
 
     init: function() {
-      $.ready2($.proxy(this.adminbuttons, this));
     },
 
     html: function(args) {
@@ -60,21 +56,20 @@ this.initOnReady('ulogin-holder');
       //noop
     },
 
-    adminbuttons: function() {
-      var holder = $(this.autoinit);
+    autoinit: function(holder, buttons) {
+holder = $(holder);
       if (!holder.length) return;
+buttons = $(buttons, holder);
+$('.header-help', holder).text(lang.authdialog.helptitle);
 
 var backurl = get_get('backurl');
-      var html = $.parsetml(this.tml_admin, {
-        lang: lang.authdialog,
-        data: $.parsetml(this.tml_data, {
+        var data = $.parsetml(this.tml_data, {
           redirurl: encodeURIComponent(ltoptions.url + this.url + (backurl ? encodeURIComponent(backurl) : '')),
           callback: ''
-        })
-      });
+        });
 
-      holder.append(html);
-this.initOnReady('ulogin-buttons');
+buttons.attr('data-ulogin', data);
+this.initOnReady(buttons.attr('id'));
     },
 
 initOnReady: function(id) {
@@ -127,4 +122,4 @@ self.onclosed();
 
   }); //class
 
-}(jQuery, window));
+}(jQuery, litepubl, window));

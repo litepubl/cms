@@ -27,7 +27,6 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $this->addevents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
         $this->data['url'] = '/admin/ulogin.php';
-        $this->data['panel'] = '<div id="ulogin-autoinit"></div>';
         $this->data['nets'] = array();
     }
 
