@@ -20,14 +20,26 @@ class AdminParser extends BaseParser
         $this->tagfiles[] = 'themes/admin/admintags.ini';
     }
 
-    public function loadpaths()
+    public function loadPaths(): array
     {
         if (!count($this->tagfiles)) {
             $this->tagfiles[] = 'themes/admin/admintags.ini';
         }
 
-        return parent::loadpaths();
+        return parent::loadPaths();
     }
+
+    public function getFileList(string $name): array
+    {
+if ($name == 'admin') {
+$result = parent::getFileList($name);
+} else {
+        $about = $this->getAbout($name);
+        $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
+}
+
+return $result;
+}
 
 }
 

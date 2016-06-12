@@ -139,10 +139,11 @@ class Login extends Form
         $context->response->redir($url);
     }
 
-    public function createform()
+    public function createform(): string
     {
         $theme = $this->theme;
         $result = $theme->parse($theme->templates['content.login']);
+//str::dump($result);
         $args = new Args();
 
         if ($this->getApp()->options->usersenabled && $this->getApp()->options->reguser) {

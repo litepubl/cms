@@ -40,20 +40,23 @@ class BaseParser extends \litepubl\core\Events
         $this->pathmap = array();
     }
 
-    public function checkabout($name)
+    public function checkAbout(string $name): bool
     {
         return true;
     }
 
-    public function getParentname($name)
+    public function getParentName(string $name): string
     {
-        $about = $this->getabout($name);
-        return empty($about['parent']) ? false : $about['parent'];
+        $about = $this->getAbout($name);
+        return $about['parent'] ?? '';
     }
 
-    public function getFilelist($name)
+    public function getFileList(string $name): array
     {
         $result = array();
+$paths = $this->getApp()->paths;
+        $about = $this->getAbout($name);
+        $result[] = $paths->themes . $name . '/' . $about['file'];
 
         foreach ($this->themefiles as $filename) {
             $filename = ltrim($filename, '/');
@@ -61,39 +64,36 @@ class BaseParser extends \litepubl\core\Events
                 continue;
             }
 
-            if (file_exists($this->getApp()->paths->home . $filename)) {
-                $result[] = $this->getApp()->paths->home . $filename;
-            } else if (file_exists($this->getApp()->paths->themes . $filename)) {
-                $result[] = $this->getApp()->paths->themes . $filename;
-            } else if (file_exists($this->getApp()->paths->plugins . $filename)) {
-                $result[] = $this->getApp()->paths->plugins . $filename;
+            if (file_exists($paths->home . $filename)) {
+                $result[] = $paths->home . $filename;
+            } else if (file_exists($paths->themes . $filename)) {
+                $result[] = $paths->themes . $filename;
+            } else if (file_exists($paths->plugins . $filename)) {
+                $result[] = $paths->plugins . $filename;
             }
         }
 
-        $about = $this->getabout($name);
-        $result[] = $this->getApp()->paths->themes . $name . '/' . $about['file'];
         return $result;
     }
 
     public function parse(Base $theme)
     {
-        $this->checkparent($theme->name);
-        if (!$this->checkabout($theme->name)) {
+        $this->checkParent($theme->name);
+        if (!$this->checkAbout($theme->name)) {
             return false;
         }
 
         $theme->lock();
-
-        if ($parentname = $this->getparentname($theme->name)) {
+        if ($parentname = $this->getParentName($theme->name)) {
             $parent_theme = Base::getByName(get_class($theme) , $parentname);
             $theme->templates = $parent_theme->templates;
             $theme->parent = $parent_theme->name;
         }
 
         $this->parsedtags = array();
-        $about = $this->getabout($theme->name);
+        $about = $this->getAbout($theme->name);
 
-        $filelist = $this->getfilelist($theme->name);
+        $filelist = $this->getFileList($theme->name);
 
         foreach ($filelist as $filename) {
             if ($s = $this->getfile($filename)) {
@@ -193,7 +193,7 @@ class BaseParser extends \litepubl\core\Events
         return $s;
     }
 
-    public function getAbout($name)
+    public function getAbout(string $name): array
     {
         if (!isset($this->abouts)) $this->abouts = array();
         if (!isset($this->abouts[$name])) {
@@ -213,16 +213,14 @@ class BaseParser extends \litepubl\core\Events
         return $this->abouts[$name];
     }
 
-    public function checkparent($name)
+    public function checkParent(string $name): bool
     {
         if ($name == 'default') {
             return true;
         }
 
-        $about = $this->getabout($name);
-        $parents = array(
-            $name
-        );
+        $about = $this->getAbout($name);
+        $parents = [$name];
         while (!empty($about['parent'])) {
             $name = $about['parent'];
             if (in_array($name, $parents)) {
@@ -230,7 +228,7 @@ class BaseParser extends \litepubl\core\Events
             }
 
             $parents[] = $name;
-            $about = $this->getabout($name);
+            $about = $this->getAbout($name);
         }
 
         return true;
@@ -458,11 +456,12 @@ class BaseParser extends \litepubl\core\Events
         return str_replace('> <', '><', $s);
     }
 
-    public function loadpaths()
+    public function loadPaths(): array
     {
         $result = array();
+$paths = $this->getApp()->paths;
         foreach ($this->tagfiles as $filename) {
-            $filename = $this->getApp()->paths->home . trim($filename, '/');
+            $filename = $paths->home . trim($filename, '/');
             if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
                 if (isset($a['remap'])) {
                     $this->pathmap = $this->pathmap + $a['remap'];

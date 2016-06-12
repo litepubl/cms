@@ -24,18 +24,30 @@ class Parser extends BaseParser
         $this->sidebar_index = 0;
     }
 
-    public function loadpaths()
+    public function loadPaths(): array
     {
         if (!count($this->tagfiles)) {
             $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
         }
 
-        return parent::loadpaths();
+        return parent::loadPaths();
     }
 
-    public function doreplacelang(Base $theme)
+    public function getFileList(string $name): array
     {
-        parent::doreplacelang($theme);
+if ($name == 'default') {
+$result = parent::getFileList($name);
+} else {
+        $about = $this->getAbout($name);
+        $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
+}
+
+return $result;
+}
+
+    public function doReplaceLang(Base $theme)
+    {
+        parent::doReplaceLang($theme);
 
         $sidebars = & $theme->templates['sidebars'];
         foreach ($sidebars as $i => $sidebar) {
@@ -46,9 +58,9 @@ class Parser extends BaseParser
 
     }
 
-    public function checkabout($name)
+    public function checkAbout(string $name): bool
     {
-        $about = $this->getabout($name);
+        $about = $this->getAbout($name);
         switch ($about['type']) {
             case 'litepublisher3':
             case 'litepublisher':
@@ -61,10 +73,10 @@ class Parser extends BaseParser
         }
     }
 
-    public function getParentname($name)
+    public function getParentName(string $name): string
     {
         if ($name == 'default') {
-            return false;
+            return '';
         }
 
         if ($name == 'default-old') {
@@ -72,7 +84,7 @@ class Parser extends BaseParser
         }
 
         $about = $this->getabout($name);
-        return empty($about['parent']) ? 'default-old' : $about['parent'];
+        return $about['parent'] ?? 'default-old';
     }
 
     public function getFile($filename)
