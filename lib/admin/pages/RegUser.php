@@ -26,6 +26,8 @@ class RegUser extends Form
 {
     private $regstatus;
     private $backurl;
+private $trusted;
+public $blackhost;
 
     protected function create()
     {
@@ -34,6 +36,8 @@ class RegUser extends Form
         $this->addevents('oncontent');
         $this->section = 'users';
         $this->regstatus = false;
+$this->trusted = ['mail.ru', 'yandex.ru', 'gmail.com'];
+$this->addMap('blackhost', []);
     }
 
     public function getTitle()
@@ -162,24 +166,36 @@ class RegUser extends Form
         }
     }
 
-    public function reguser($email, $name)
+    public function reguser(string $email, string $name)
     {
         $email = strtolower(trim($email));
         if (!Filter::ValidateEmail($email)) {
             return $this->error(Lang::get('comment', 'invalidemail'));
         }
 
-        if (substr_count($email, '.', 0, strpos($email, '@')) > 2) {
+$host = substr($email, strpos($email, '@') + 1);
+        if (!strpos($host, '.') || in_array($host, $this->blackhost)) {
             return $this->error(Lang::get('comment', 'invalidemail'));
         }
 
         $users = Users::i();
-        if ($id = $users->emailexists($email)) {
+        if ($id = $users->emailExists($email)) {
             if ('comuser' != $users->getvalue($id, 'status')) {
                 return $this->error(Lang::i()->invalidregdata);
             }
-
         }
+
+if (!in_array($host, $this->trusted)) {
+//host already validated but wi want to protect
+$host = $users->db->quote($host);
+if (!$users->db->findId("email like '%@$host'")) {
+if (!$this->hostExists($host)) {
+$this->blackhost[] = $host;
+$this->save();
+            return $this->error(Lang::get('comment', 'invalidemail'));
+}
+}
+}
 
         Session::start('reguser-' . md5($this->getApp()->options->hash($email)));
         $_SESSION['email'] = $email;
@@ -209,6 +225,15 @@ class RegUser extends Form
 
         return true;
     }
+
+public function hostExists(string $host): bool
+{
+    if ($records = dns_get_record($host, \DNS_ANY)) {
+      return count($records);
+    }
+
+    return false;
+}
 
 }
 
