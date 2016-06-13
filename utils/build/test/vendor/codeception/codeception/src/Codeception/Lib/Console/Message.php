@@ -18,14 +18,12 @@ class Message
     {
         $args = array_merge([$this->message], func_get_args());
         $this->message = call_user_func_array('sprintf', $args);
-
         return $this;
     }
 
     public function style($name)
     {
         $this->message = sprintf('<%s>%s</%s>', $name, $this->message, $name);
-
         return $this;
     }
 
@@ -42,7 +40,6 @@ class Message
     public function cut($length)
     {
         $this->message = mb_substr($this->message, 0, $length, 'utf-8');
-
         return $this;
     }
 

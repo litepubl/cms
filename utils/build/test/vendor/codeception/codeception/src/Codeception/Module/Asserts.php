@@ -73,14 +73,6 @@ class Asserts extends CodeceptionModule
     }
 
     /**
-     * @deprecated
-     */
-    public function assertGreaterThen($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThan($expected, $actual, $message);
-    }
-
-    /**
      * Checks that actual is greater or equal than expected
      *
      * @param        $expected
@@ -88,14 +80,6 @@ class Asserts extends CodeceptionModule
      * @param string $message
      */
     public function assertGreaterThanOrEqual($expected, $actual, $message = '')
-    {
-        parent::assertGreaterThanOrEqual($expected, $actual, $message);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function assertGreaterThenOrEqual($expected, $actual, $message = '')
     {
         parent::assertGreaterThanOrEqual($expected, $actual, $message);
     }

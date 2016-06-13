@@ -2,7 +2,7 @@
 namespace Codeception\Module;
 
 use Codeception\Lib\Framework;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Configuration;
 use Codeception\Lib\Interfaces\DoctrineProvider;
 use Codeception\Util\ReflectionHelper;
@@ -82,14 +82,14 @@ class ZF2 extends Framework implements DoctrineProvider
         $this->client->setApplicationConfig($this->applicationConfig);
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new ZF2Connector();
         $this->client->setApplicationConfig($this->applicationConfig);
         $_SERVER['REQUEST_URI'] = '';
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_GET = [];

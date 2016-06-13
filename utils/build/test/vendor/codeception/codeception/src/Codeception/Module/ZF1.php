@@ -3,7 +3,7 @@ namespace Codeception\Module;
 
 use Codeception\Configuration;
 use Codeception\Lib\Framework;
-use Codeception\TestCase;
+use Codeception\TestInterface;
 use Codeception\Exception\ModuleException;
 use Codeception\Util\ReflectionHelper;
 use Codeception\Lib\Connector\ZF1 as ZF1Connector;
@@ -39,9 +39,6 @@ use Zend_Controller_Router_Route_Chain;
  * * bootstrap - current bootstrap file.
  *
  * ## Cleaning up
- *
- * For Doctrine1 and Doctrine2 all queries are put inside rollback transaction.
- * If you are using one of this ORMs connect their modules to speed up testing.
  *
  * Unfortunately Zend_Db doesn't support nested transactions,
  * thus, for cleaning your database you should either use standard Db module or
@@ -126,7 +123,7 @@ class ZF1 extends Framework
         \Zend_Loader_Autoloader::getInstance();
     }
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = new ZF1Connector();
 
@@ -150,7 +147,7 @@ class ZF1 extends Framework
         }
     }
 
-    public function _after(TestCase $test)
+    public function _after(TestInterface $test)
     {
         $_SESSION = [];
         $_GET = [];

@@ -15,7 +15,7 @@ PHPUnit %s by Sebastian Bergmann and contributors.
 
 E                                                                   1 / 1 (100%)
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 There was 1 error:
 
@@ -24,5 +24,5 @@ NewException: Testing GH-74
 
 %sIssue74Test.php:7
 
-FAILURES!
+ERRORS!
 Tests: 1, Assertions: 0, Errors: 1.

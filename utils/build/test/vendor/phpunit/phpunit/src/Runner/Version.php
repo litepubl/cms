@@ -30,7 +30,7 @@ class PHPUnit_Runner_Version
         }
 
         if (self::$version === null) {
-            $version       = new SebastianBergmann\Version('5.3.4', dirname(dirname(__DIR__)));
+            $version       = new SebastianBergmann\Version('5.4.4', dirname(dirname(__DIR__)));
             self::$version = $version->getVersion();
         }
 
@@ -64,7 +64,7 @@ class PHPUnit_Runner_Version
     /**
      * @return string
      *
-     * @since  Method available since Release 4.0.0
+     * @since Method available since Release 4.0.0
      */
     public static function getReleaseChannel()
     {

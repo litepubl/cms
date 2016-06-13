@@ -17,12 +17,12 @@ PHPUnit %s by Sebastian Bergmann and contributors.
 <testsuites>
   <testsuite name="BankAccountTest" file="%sBankAccountTest.php" tests="3" assertions="3" failures="0" errors="0" time="%f">
     <testcase name="testBalanceIsInitiallyZero" class="BankAccountTest" file="%sBankAccountTest.php" line="30" assertions="1" time="%f"/>
-    <testcase name="testBalanceCannotBecomeNegative" class="BankAccountTest" file="%sBankAccountTest.php" line="40" assertions="1" time="%f"/>
-    <testcase name="testBalanceCannotBecomeNegative2" class="BankAccountTest" file="%sBankAccountTest.php" line="58" assertions="1" time="%f"/>
+    <testcase name="testBalanceCannotBecomeNegative" class="BankAccountTest" file="%sBankAccountTest.php" line="47" assertions="1" time="%f"/>
+    <testcase name="testBalanceCannotBecomeNegative2" class="BankAccountTest" file="%sBankAccountTest.php" line="65" assertions="1" time="%f"/>
   </testsuite>
 </testsuites>
 
 
-Time: %s, Memory: %sMb
+Time: %s, Memory: %s
 
 OK (3 tests, 3 assertions)

@@ -1,9 +1,11 @@
 <?php
 namespace Codeception\Module;
 
+use Codeception\Exception\ModuleException;
+use Codeception\Lib\Interfaces\ConflictsWithModule;
 use Codeception\Module as CodeceptionModule;
-use Codeception\TestCase;
-use Codeception\Exception\ModuleException as ModuleException;
+use Codeception\TestInterface;
+use Codeception\Lib\Interfaces\API;
 use Codeception\Lib\Framework;
 use Codeception\Lib\InnerBrowser;
 use Codeception\Lib\Interfaces\DependsOnModule;
@@ -20,14 +22,6 @@ use Codeception\Util\Soap as XmlUtils;
  * This module can be used either with frameworks or PHPBrowser.
  * If a framework module is connected, the testing will occur in the application directly.
  * Otherwise, a PHPBrowser should be specified as a dependency to send requests and receive responses from a server.
- *
- *
- * ## Status
- *
- * * Maintainer: **tiger-seo**, **davert**
- * * Stability: **stable**
- * * Contact: codecept@davert.mail.ua
- * * Contact: tiger.seo@gmail.com
  *
  * ## Configuration
  *
@@ -49,14 +43,17 @@ use Codeception\Util\Soap as XmlUtils;
  * * params - array of sent data
  * * response - last response (string)
  *
- *
  * ## Parts
  *
  * * Json - actions for validating Json responses (no Xml responses)
  * * Xml - actions for validating XML responses (no Json responses)
  *
+ * ## Conflicts
+ *
+ * Conflicts with SOAP module
+ *
  */
-class REST extends CodeceptionModule implements DependsOnModule, PartedModule
+class REST extends CodeceptionModule implements DependsOnModule, PartedModule, API, ConflictsWithModule
 {
     protected $config = [
         'url'           => '',
@@ -86,11 +83,10 @@ EOF;
      */
     protected $connectionModule;
 
-    public $headers = [];
     public $params = [];
     public $response = "";
 
-    public function _before(TestCase $test)
+    public function _before(TestInterface $test)
     {
         $this->client = &$this->connectionModule->client;
         $this->resetVariables();
@@ -107,12 +103,17 @@ EOF;
 
     protected function resetVariables()
     {
-        $this->headers = [];
         $this->params = [];
         $this->response = "";
+        $this->connectionModule->headers = [];
         if ($this->client) {
             $this->client->setServerParameters([]);
         }
+    }
+
+    public function _conflicts()
+    {
+        return 'Codeception\Lib\Interfaces\API';
     }
 
     public function _depends()
@@ -147,7 +148,14 @@ EOF;
     }
 
     /**
-     * Sets HTTP header
+     * Sets HTTP header valid for all next requests. Use `deleteHeader` to unset it
+     *
+     * ```php
+     * <?php
+     * $I->haveHttpHeader('Content-Type', 'application/json');
+     * // all next requests will contain this header
+     * ?>
+     * ```
      *
      * @param $name
      * @param $value
@@ -156,7 +164,7 @@ EOF;
      */
     public function haveHttpHeader($name, $value)
     {
-        $this->headers[$name] = $value;
+        $this->connectionModule->haveHttpHeader($name, $value);
     }
 
     /**
@@ -403,7 +411,7 @@ EOF;
             $values[] = $linkEntry['uri'] . '; ' . $linkEntry['link-param'];
         }
 
-        $this->headers['Link'] = join(', ', $values);
+        $this->haveHttpHeader('Link', implode(', ', $values));
     }
 
     /**
@@ -442,18 +450,6 @@ EOF;
 
     protected function execute($method, $url, $parameters = [], $files = [])
     {
-        $this->debugSection("Request headers", $this->headers);
-
-        foreach ($this->headers as $header => $val) {
-            $header = str_replace('-', '_', strtoupper($header));
-            $this->client->setServerParameter("HTTP_$header", $val);
-
-            // Issue #827 - symfony foundation requires 'CONTENT_TYPE' without HTTP_
-            if ($this->isFunctional && $header === 'CONTENT_TYPE') {
-                $this->client->setServerParameter($header, $val);
-            }
-        }
-
         // allow full url to be requested
         if (strpos($url, '://') === false) {
             $url = $this->config['url'] . $url;
@@ -477,7 +473,7 @@ EOF;
             } else {
                 $this->debugSection("Request", "$method $url " . json_encode($parameters));
             }
-            $this->client->request($method, $url, $parameters, $files);
+            $this->response = (string)$this->connectionModule->_request($method, $url, $parameters, $files);
         } else {
             $requestData = $parameters;
             if (!ctype_print($requestData) && false === mb_detect_encoding($requestData, mb_detect_order(), true)) {
@@ -486,23 +482,16 @@ EOF;
                 $requestData = '[binary-data length:'.strlen($requestData).' md5:'.md5($requestData).']';
             }
             $this->debugSection("Request", "$method $url " . $requestData);
-            $this->client->request($method, $url, [], $files, [], $parameters);
+            $this->response = (string) $this->connectionModule->_request($method, $url, [], $files, [], $parameters);
         }
-        $this->response = (string)$this->connectionModule->_getResponseContent();
         $this->debugSection("Response", $this->response);
-
-        if (count($this->client->getInternalRequest()->getCookies())) {
-            $this->debugSection('Cookies', $this->client->getInternalRequest()->getCookies());
-        }
-        $this->debugSection("Headers", $this->client->getInternalResponse()->getHeaders());
-        $this->debugSection("Status", $this->client->getInternalResponse()->getStatus());
     }
 
     protected function encodeApplicationJson($method, $parameters)
     {
-        if ($method !== 'GET' && array_key_exists('Content-Type', $this->headers)
-            && ($this->headers['Content-Type'] === 'application/json'
-                || preg_match('!^application/.+\+json$!', $this->headers['Content-Type'])
+        if ($method !== 'GET' && array_key_exists('Content-Type', $this->connectionModule->headers)
+            && ($this->connectionModule->headers['Content-Type'] === 'application/json'
+                || preg_match('!^application/.+\+json$!', $this->connectionModule->headers['Content-Type'])
             )
         ) {
             if ($parameters instanceof \JsonSerializable) {
@@ -1013,7 +1002,7 @@ EOF;
      * @return string
      * @part xml
      */
-    public function grabAttributeFrom($cssOrXPath, $attribute)
+    public function grabAttributeFromXmlElement($cssOrXPath, $attribute)
     {
         $el = (new XmlStructure($this->connectionModule->_getResponseContent()))->matchElement($cssOrXPath);
         if (!$el->hasAttribute($attribute)) {
