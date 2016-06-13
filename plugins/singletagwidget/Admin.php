@@ -16,7 +16,7 @@ use litepubl\view\Args;
 class Admin extends \litepubl\admin\widget\Widget
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $widget = Widget::i();
         $lang = $this->getLangAbout();

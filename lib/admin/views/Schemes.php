@@ -106,7 +106,7 @@ class Schemes extends \litepubl\admin\Menu
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $schemes = SchemaItems::i();

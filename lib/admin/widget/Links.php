@@ -21,7 +21,7 @@ class Links extends Widget
 . '[checkbox=redir]';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = parent::getcontent();
         $widget = $this->widget;

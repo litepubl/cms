@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 
 class Run extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $args = new Args();
         $lang = Lang::admin('service');

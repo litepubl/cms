@@ -40,7 +40,7 @@ class Plugins extends Menu
         return sprintf('<ul>%s</ul>', $result);
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = parent::gethead();
         if (!empty($_GET['plugin'])) {
@@ -54,7 +54,7 @@ class Plugins extends Menu
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = $this->getPluginsmenu();
         $admintheme = $this->admintheme;
@@ -149,7 +149,7 @@ class Plugins extends Menu
         return $result;
     }
 
-    private function getAdminplugin($name)
+    private function getAdminplugin(string $name)
     {
         $about = PluginItems::getabout($name);
         if (empty($about['adminclassname'])) {

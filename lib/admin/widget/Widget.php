@@ -46,7 +46,7 @@ class Widget extends \litepubl\admin\Panel
         return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle);
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $form = $this->getForm();
         return $this->admin->form($form, $this->args);

@@ -21,14 +21,14 @@ use litepubl\view\MainView;
 class Editor extends \litepubl\admin\Menu
 {
 
-    public function getHead()
+    public function getHead(): string
     {
         $mainView = MainView::i();
         $mainView->ltoptions['idpost'] = $this->idget();
         return parent::gethead();
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         if ($this->idget()) {
             return $this->lang->edit;
@@ -37,7 +37,7 @@ class Editor extends \litepubl\admin\Menu
         return parent::gettitle();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $id = $this->idparam();
         $menus = Menus::i();

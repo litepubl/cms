@@ -37,7 +37,7 @@ class Pages extends \litepubl\admin\Menu
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $users = UserItems::i();

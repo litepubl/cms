@@ -22,7 +22,7 @@ class ExtraContact extends \litepubl\core\Plugin implements \litepubl\admin\Admi
         $this->createInstances($this->getSchema());
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $contact = Contacts::i();
         $lang = $this->getLangAbout();

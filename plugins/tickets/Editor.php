@@ -19,7 +19,7 @@ class Editor extends \litepubl\admin\posts\Editor
 {
     private $newstatus;
 
-    public function getTitle()
+    public function getTitle(): string
     {
         Lang::admin()->addSearch('tickets', 'ticket', 'editor');
         if ($this->idpost == 0) {

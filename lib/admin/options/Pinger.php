@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 
 class Pinger extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $pinger = PostPinger::i();
         $args = new Args();

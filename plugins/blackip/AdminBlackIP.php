@@ -17,7 +17,7 @@ class AdminBlackIP extends \litepubl\admin\Panel
 {
     use \litepubl\core\Singleton;
 
-    public function getContent()
+    public function getContent(): string
     {
         $plugin = BlackIP::i();
         $lang = $this->getLangAbout();

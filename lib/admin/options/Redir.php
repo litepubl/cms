@@ -19,7 +19,7 @@ use litepubl\view\Lang;
 class Redir extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $redir = Redir::i();
         $lang = $this->lang;

@@ -28,7 +28,7 @@ class Spec extends \litepubl\admin\Menu
         );
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $schemes = SchemaItems::i();

@@ -18,7 +18,7 @@ use litepubl\view\Schemes;
 class Admin extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $theme = $this->theme;

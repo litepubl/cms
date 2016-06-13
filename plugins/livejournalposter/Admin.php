@@ -13,7 +13,7 @@ namespace litepubl\plugins\livejournalposter;
 class Admin extends \litepubl\admin\Panel
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $plugin = Plugin::i();
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR;

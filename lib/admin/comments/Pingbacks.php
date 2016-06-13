@@ -20,7 +20,7 @@ use litepubl\view\Theme;
 class Pingbacks extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $pingbacks = PingItems::i();

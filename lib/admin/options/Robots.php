@@ -17,7 +17,7 @@ use litepubl\view\Lang;
 class Robots extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $admin = $this->admintheme;
         $lang = Lang::admin('options');

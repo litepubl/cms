@@ -20,7 +20,7 @@ use litepubl\view\Lang;
 class Service extends Login
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $admin = $this->admintheme;
         $args = new Args();

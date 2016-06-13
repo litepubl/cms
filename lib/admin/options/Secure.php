@@ -23,7 +23,7 @@ use litepubl\view\Parser;
 class Secure extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $options = $this->getApp()->options;
         $lang = Lang::admin('options');

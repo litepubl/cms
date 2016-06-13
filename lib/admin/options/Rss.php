@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 
 class Rss extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $rss = PostRss::i();
         $args = new Args();

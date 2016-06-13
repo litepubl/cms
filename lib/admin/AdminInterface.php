@@ -11,7 +11,7 @@
 namespace litepubl\admin;
 
 interface AdminInterface {
-    public function getContent();
+    public function getContent(): string;
     public function processForm();
 }
 

@@ -19,7 +19,7 @@ use litepubl\view\Lang;
 class Perms extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $perms = PermItems::i();

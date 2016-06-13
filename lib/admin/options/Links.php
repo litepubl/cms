@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 class Links extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $lang = Lang::admin('options');
         $admin = $this->admintheme;

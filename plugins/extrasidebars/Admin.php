@@ -18,7 +18,7 @@ use litepubl\utils\Filer;
 class Admin extends \litepubl\admin\Panel
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $plugin = ExtraSidebars::i();
 $ul = new UList($this->admin);

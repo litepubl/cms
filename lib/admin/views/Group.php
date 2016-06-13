@@ -23,7 +23,7 @@ use litepubl\view\Schemes as SchemaItems;
 class Group extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $schemes = SchemaItems::i();
         $theme = $this->theme;

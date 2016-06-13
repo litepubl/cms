@@ -20,7 +20,7 @@ use litepubl\view\Schemes as SchemaItems;
 class Head extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $schemes = SchemaItems::i();

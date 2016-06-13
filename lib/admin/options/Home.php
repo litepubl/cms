@@ -23,7 +23,7 @@ use litepubl\view\Parser;
 class Home extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $home = HomePage::i();
         $admin = $this->admintheme;

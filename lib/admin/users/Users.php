@@ -22,7 +22,7 @@ use litepubl\view\Lang;
 class Users extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $users = UserItems::i();

@@ -11,7 +11,8 @@ namespace litepubl\plugins\markdown;
 class Admin extends \litepubl\admin\Panel
 {
 
-  public function getcontent() {  
+  public function getcontent(): string
+ {  
 $plugin = Plugin::i();
     $lang = $this->getLangAbout();
     $args = $this->args;

@@ -14,7 +14,7 @@ class Perm extends \litepubl\admin\Panel
 {
     public $perm;
 
-    public function getContent()
+    public function getContent(): string
     {
         $this->args->add($this->perm->data);
         $this->lang->section = 'adminperm';

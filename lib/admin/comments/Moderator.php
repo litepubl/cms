@@ -52,7 +52,7 @@ class Moderator extends \litepubl\admin\Menu
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $comments = Comments::i();

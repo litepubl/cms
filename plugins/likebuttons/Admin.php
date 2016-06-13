@@ -13,7 +13,7 @@ namespace litepubl\plugins\likebuttons;
 class Admin extends \litepubl\admin\Panel
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $lang = $this->getLangAbout();
         $args = $this->args;

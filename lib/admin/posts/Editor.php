@@ -28,7 +28,7 @@ class Editor extends \litepubl\admin\Menu
     public $idpost;
     protected $isauthor;
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = parent::gethead();
 
@@ -157,7 +157,7 @@ class Editor extends \litepubl\admin\Menu
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         if ($this->idpost == 0) {
             return parent::gettitle();
@@ -184,7 +184,7 @@ class Editor extends \litepubl\admin\Menu
         $args->title = Filter::unescape($post->title);
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $admintheme = $this->admintheme;

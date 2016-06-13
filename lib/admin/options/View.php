@@ -17,7 +17,7 @@ use litepubl\view\Parser;
 
 class View extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $options = $this->getApp()->options;
         $args = new Args();

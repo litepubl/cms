@@ -20,7 +20,7 @@ use litepubl\view\Lang;
 class Backup extends Login
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $admin = $this->admintheme;
         $lang = Lang::admin('service');

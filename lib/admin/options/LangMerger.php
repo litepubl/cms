@@ -18,7 +18,7 @@ use litepubl\view\LangMerger as LngMerger;
 class LangMerger extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $merger = LngMerger::i();
         $tabs = $this->newTabs();

@@ -13,7 +13,7 @@ namespace litepubl\plugins\openid;
 class Admin extends \litepubl\admin\Panel
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $openid = Plugin::i();
         $args = $this->args;

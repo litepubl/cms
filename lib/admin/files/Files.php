@@ -26,7 +26,7 @@ use litepubl\view\Parser;
 class Files extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $files = FileItems::i();

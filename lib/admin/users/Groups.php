@@ -19,7 +19,7 @@ use litepubl\view\Lang;
 class Groups extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $groups = UserGroups::i();
         $admin = $this->admintheme;

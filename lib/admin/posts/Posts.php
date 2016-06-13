@@ -29,7 +29,7 @@ class Posts extends \litepubl\admin\Menu
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if (isset($_GET['action']) && in_array($_GET['action'], array(
             'delete',

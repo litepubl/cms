@@ -42,7 +42,7 @@ class Thumbnails extends \litepubl\admin\Menu
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if (!($id = $this->getidfile())) {
             return $this->notfound;

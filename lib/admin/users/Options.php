@@ -20,7 +20,7 @@ use litepubl\admin\GetPerm;
 class Options extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $admin = $this->admintheme;

@@ -39,7 +39,7 @@ class Custom extends Widget
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $widget = $this->widget;
         $args = $this->args;

@@ -17,7 +17,7 @@ use litepubl\view\Lang;
 
 class Mail extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $options = $this->getApp()->options;
         $lang = Lang::admin('options');

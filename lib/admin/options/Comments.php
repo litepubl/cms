@@ -20,7 +20,7 @@ use litepubl\view\Lang;
 class Comments extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $cm = Manager::i();

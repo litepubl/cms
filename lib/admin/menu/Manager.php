@@ -20,7 +20,7 @@ use litepubl\view\Lang;
 class Manager extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         if (isset($_GET['action']) && in_array($_GET['action'], array(

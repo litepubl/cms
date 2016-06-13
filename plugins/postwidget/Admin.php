@@ -21,7 +21,7 @@ parent::__construct();
 $this->widget = Widget::i();
 }
 
-    public function getContent()
+    public function getContent(): string
     {
         $widget = $this->widget;
         $lang = $this->getLangAbout();

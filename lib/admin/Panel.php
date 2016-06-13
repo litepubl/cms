@@ -21,7 +21,7 @@ class Panel implements AdminInterface
         $this->createInstances($this->getSchema());
     }
 
-    public function getContent()
+    public function getContent(): string
     {
     }
 

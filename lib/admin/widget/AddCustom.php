@@ -15,7 +15,7 @@ use litepubl\widget\Custom as CustomWidget;
 class AddCustom extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $widget = CustomWidget::i();
         return $widget->admin->getcontent();

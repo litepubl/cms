@@ -17,7 +17,7 @@ use litepubl\view\Lang;
 class Admin extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $admintheme = $this->admintheme;

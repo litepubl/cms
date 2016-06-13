@@ -19,7 +19,7 @@ use litepubl\view\Args;
 class Authors extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $this->basename = 'authors';

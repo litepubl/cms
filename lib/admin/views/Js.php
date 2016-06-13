@@ -21,7 +21,7 @@ class Js extends \litepubl\admin\Menu
         return \litepubl\view\Js::i();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $merger = $this->getmerger();
         $tabs = $this->newTabs();

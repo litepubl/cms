@@ -56,12 +56,12 @@ class Menu extends \litepubl\pages\Menu
         return true;
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return Menus::i()->heads;
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return Schemes::i()->defaults['admin'];
     }
@@ -130,7 +130,7 @@ class Menu extends \litepubl\pages\Menu
         return parent::doProcessForm();
     }
 
-    public function getCont()
+    public function getCont(): string
     {
 $app = $this->getApp();
         if ($app->options->admincache) {
@@ -148,12 +148,12 @@ $app = $this->getApp();
         }
     }
 
-    public function getAdminurl()
+    public function getAdminurl(): string
     {
         return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
     }
 
-    public function getLang()
+    public function getLang(): Lang
     {
         return Lang::i($this->name);
     }

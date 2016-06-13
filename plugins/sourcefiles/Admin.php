@@ -15,7 +15,7 @@ use litepubl\utils\Http;
 class Admin extends \litepubl\admin\Panel
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $plugin = Plugin::i();
         $lang = $this->getLangAbout();

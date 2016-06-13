@@ -158,7 +158,7 @@ strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
         return $form->get();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if (!(isset($_GET['action']) && $_GET['action'] == 'delete')) {
             $idwidget = $this->getparam('idwidget', 0);

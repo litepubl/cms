@@ -13,7 +13,7 @@ namespace litepubl\plugins\subcat;
 class Admin extends \litepubl\admin\widget\Widget
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $widget = Widget::i();
         $lang = $this->getlangAbout();

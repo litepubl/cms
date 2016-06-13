@@ -21,7 +21,7 @@ class Admin extends \litepubl\admin\widget\Widget
         $this->widget = Widget::i();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
 $form = '';

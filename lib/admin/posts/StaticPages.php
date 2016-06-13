@@ -25,7 +25,7 @@ class StaticPages extends \litepubl\admin\Menu
         return $this->admintheme->form('[text=title] [text=description] [text=keywords] [editor=text] [hidden=id]', $args);
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $pages = Pages::i();

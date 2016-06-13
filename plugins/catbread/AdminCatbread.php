@@ -16,7 +16,7 @@ class Admincatbread extends \litepubl\admin\Panel
 {
     use \litepubl\core\Singleton;
 
-    public function getContent()
+    public function getContent(): string
     {
         $plugin = Catbread::i();
         $lang = $this->getLangAbout();

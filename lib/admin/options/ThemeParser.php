@@ -20,7 +20,7 @@ use litepubl\view\Parser;
 class ThemeParser extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $lang = Lang::admin('options');
         $args = new Args();

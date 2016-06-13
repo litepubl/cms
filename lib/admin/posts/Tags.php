@@ -22,7 +22,7 @@ use litepubl\view\Lang;
 class Tags extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $istags = ($this->name == 'tags') || ($this->name == 'addtag');

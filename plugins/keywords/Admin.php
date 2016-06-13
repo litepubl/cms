@@ -20,7 +20,7 @@ use litepubl\admin\Link;
 class Admin extends \litepubl\admin\widget\Widget
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $datadir = $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         $selfdir = __DIR__ . DIRECTORY_SEPARATOR;

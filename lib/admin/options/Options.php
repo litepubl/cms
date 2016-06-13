@@ -16,7 +16,7 @@ use litepubl\view\MainView;
 class Options extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $template = MainView::i();
         $args = $this->newArgs();

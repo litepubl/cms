@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 
 class Notfound404 extends \litepubl\admin\Menu
 {
-    public function getContent()
+    public function getContent(): string
     {
         $page404 = Page404::i();
         $args = new Args();

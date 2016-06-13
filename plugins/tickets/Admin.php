@@ -18,7 +18,7 @@ use litepubl\admin\Table;
 class Admin extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $tickets = Tickets::i();
