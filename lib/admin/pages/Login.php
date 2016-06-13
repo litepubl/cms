@@ -181,7 +181,7 @@ class Login extends Form
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = $this->getform();
 
@@ -207,11 +207,11 @@ class Login extends Form
         return $result;
     }
 
-    public static function confirm_reg($email, $password)
+    public static function confirm_reg(string $email, string $password): int
     {
         $app = static ::getAppInstance();
         if (!$app->options->usersenabled || !$app->options->reguser) {
-            return false;
+            return 0;
         }
 
         Ssession::start('reguser-' . md5($app->options->hash($email)));
@@ -221,7 +221,7 @@ class Login extends Form
             } else {
                 session_destroy();
             }
-            return false;
+            return 0;
         }
 
         $users = Users::i();
@@ -241,7 +241,7 @@ class Login extends Form
         return $id;
     }
 
-    public static function confirm_restore($email, $password)
+    public static function confirm_restore(string $email, string $password): int
     {
         $app = static ::getAppInstance();
         Session::start('password-restore-' . md5($app->options->hash($email)));
@@ -251,7 +251,7 @@ class Login extends Form
             } else {
                 session_destroy();
             }
-            return false;
+            return 0;
         }
 
         session_destroy();

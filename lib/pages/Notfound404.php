@@ -32,12 +32,12 @@ class Notfound404 extends \litepubl\core\Events implements \litepubl\view\ViewIn
         $context->response->status = 404;
     }
 
-    public function gettitle()
+    public function getTitle(): string
     {
         return Lang::i()->notfound;
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         if ($this->notify) {
             $this->sendmail();
@@ -52,7 +52,7 @@ class Notfound404 extends \litepubl\core\Events implements \litepubl\view\ViewIn
         return $theme->notfound;
     }
 
-    private function sendmail()
+    private function sendMail()
     {
         $args = new Args();
         $args->url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];

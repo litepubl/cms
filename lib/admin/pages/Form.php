@@ -14,6 +14,8 @@ use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
 use litepubl\view\Schemes;
+use litepubl\view\Theme;
+use litepubl\view\Admin;
 
 class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -21,38 +23,41 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     protected $title;
     protected $section;
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return Lang::get($this->section, 'title');
     }
 
-    public function getHead()
+    public function getHead(): string
     {
+return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
+return '';
     }
 
     public function getDescription()
     {
+return '';
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return 1;
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
         return Schema::getSchema($this)->theme;
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         return Schema::getSchema($this)->admintheme;
     }
@@ -72,7 +77,7 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         Lang::admin($this->section);
         $result = $this->formresult;

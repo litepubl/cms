@@ -40,7 +40,7 @@ $this->trusted = ['mail.ru', 'yandex.ru', 'gmail.com'];
 $this->addMap('blackhost', []);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return Lang::get('users', 'adduser');
     }
@@ -94,7 +94,7 @@ $this->addMap('blackhost', []);
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $theme = $this->theme;
@@ -187,7 +187,7 @@ $host = substr($email, strpos($email, '@') + 1);
 
 if (!in_array($host, $this->trusted)) {
 //host already validated but wi want to protect
-$host = $users->db->quote($host);
+$host = $users->db->mysqli->real_escape_string($host);
 if (!$users->db->findId("email like '%@$host'")) {
 if (!$this->hostExists($host)) {
 $this->blackhost[] = $host;

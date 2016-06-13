@@ -13,6 +13,8 @@ namespace litepubl\pages;
 use litepubl\core\Context;
 use litepubl\view\Filter;
 use litepubl\view\Schema;
+use litepubl\view\Theme;
+use litepubl\view\Admin;
 
 class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
@@ -175,17 +177,17 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return parent::__isset($name);
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
         return $this->schema->theme;
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         return $this->schema->admintheme;
     }
@@ -212,32 +214,32 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return $this->owner->onprocessForm($this->id);
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return $this->data['head'];
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->getownerprop('title');
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return $this->data['keywords'];
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->data['description'];
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->idschema) {
             $this->data['idschema'] = $id;
@@ -245,17 +247,17 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         return $this->theme->parsevar('menu', $this, $this->theme->templates['content.menu']);
     }
 
-    public function getLink()
+    public function getLink(): string
     {
         return $this->getApp()->site->url . $this->url;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = $this->data['content'];
         $this->owner->callevent('oncontent', array(
@@ -264,7 +266,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function setContent($s)
+    public function setContent(string $s)
     {
         if (!is_string($s)) {
             $this->error('Error! Page content must be string');

@@ -35,31 +35,32 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         return $this->items[$this->id][$name];
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->getval('title');
     }
 
-    public function getHead()
+    public function getHead(): string
     {
+return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return $this->getval('keywords');
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getval('description');
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->getval('idschema');
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->data['idschema']) {
             $this->items[$this->id]['idschema'] = $id;
@@ -67,18 +68,18 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $theme = $this->getSchema()->theme;
         return $theme->simple($this->getval('filtered'));
     }
 
-    public function add($title, $description, $keywords, $content)
+    public function add(string $title, string $description, string $keywords, string $content): int
     {
         $filter = Filter::i();
         $title = Filter::escape($title);
@@ -98,7 +99,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         return $this->autoid;
     }
 
-    public function edit($id, $title, $description, $keywords, $content)
+    public function edit(int $id, string $title, string $description, string $keywords, string $content)
     {
         if (!$this->itemExists($id)) {
             return false;

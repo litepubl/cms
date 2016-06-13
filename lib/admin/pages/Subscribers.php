@@ -81,19 +81,19 @@ class Subscribers extends Form
         return parent::request($context);
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return Schemes::i()->defaults['admin'];
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = parent::gethead();
         $result.= Menus::i()->heads;
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $result = '';
         $admin = $this->admintheme;

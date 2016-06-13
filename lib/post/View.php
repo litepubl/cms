@@ -325,12 +325,12 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->context->request->page;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->post->title;
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = $this->rawhead;
         MainView::i()->ltoptions['idpost'] = $this->id;
@@ -359,7 +359,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function getAnhead()
+    public function getAnhead(): string
     {
         $result = '';
         $this->factory->posts->callevent('onanhead', array(
@@ -368,7 +368,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         if ($result = $this->post->keywords) {
             return $result;
@@ -377,17 +377,17 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->post->description;
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->post->idschema;
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->idschema) {
             $this->post->idschema = $id;
@@ -427,7 +427,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return false;
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         return $this->parsetml('content.post');
     }

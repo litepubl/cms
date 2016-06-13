@@ -33,11 +33,12 @@ class Simple extends \litepubl\core\Events implements \litepubl\view\ViewInterfa
         $context->response->cache = false;
     }
 
-    public function gettitle()
+    public function gettitle(): string
     {
+return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = empty($this->text) ? $this->html : sprintf("<h2>%s</h2>\n", $this->text);
         return $this->getSchema()->theme->simple($result);

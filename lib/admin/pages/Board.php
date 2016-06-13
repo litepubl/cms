@@ -54,37 +54,37 @@ $response->cache = false;
         Lang::usefile('admin');
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return Schemes::i()->defaults['admin'];
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $editor = Editor::i();
         return $editor->gethead();
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return Lang::get('common', 'board');
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return '';
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $editor = Editor::i();
         return $editor->getexternal();

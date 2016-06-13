@@ -106,19 +106,19 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
         }
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $announce = new Announce($this->schema->theme);
         $result = $announce->getAnHead($this->getIdPosts());
         return $result;
     }
 
-    public function getTitle()
+    public function getTitle(): string: string
     {
         return $this->items[$this->date]['title'];
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $items = $this->getidposts();
         if (count($items) == 0) {

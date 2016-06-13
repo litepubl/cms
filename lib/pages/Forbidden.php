@@ -30,12 +30,12 @@ class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInte
         $context->response->cache = false;
     }
 
-    public function gettitle()
+    public function gettitle(): string
     {
         return Lang::i()->forbidden;
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $schema = $this->getSchema();
         $theme = $schema->theme;

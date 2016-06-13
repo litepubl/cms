@@ -105,7 +105,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $this->context = $context;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         if ($this->id) {
             return $this->getValue('title');
@@ -114,7 +114,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return Lang::i()->categories;
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'head');
@@ -128,9 +128,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $theme->parse($result);
         }
+
+return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'keywords');
@@ -140,9 +142,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $result;
         }
+
+return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getvalue($this->id, 'description');
@@ -152,9 +156,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $result;
         }
+
+return '';
     }
 
-    public function getIdschema()
+    public function getIdschema(): int
     {
         if ($this->id) {
             return $this->getValue('idschema');
@@ -163,14 +169,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return 1;
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->idschema) {
             $this->tags->setValue($this->id, 'idschema', $id);
         }
     }
 
-    public function getIdPerm()
+    public function getIdPerm(): int
     {
         if ($this->id) {
             $item = $this->tags->getItem($this->id);
@@ -203,7 +209,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = new Str('');
         $this->onbeforecontent($result);

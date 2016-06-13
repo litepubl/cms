@@ -85,12 +85,12 @@ $response = $context->response;
 
     }
 
-    public function getIdschema()
+    public function getIdschema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdschema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->idschema) {
             $this->data['idschema'] = $id;
@@ -98,30 +98,36 @@ $response = $context->response;
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->item['filename'];
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
+return '';
     }
-    public function getDescription()
+
+    public function getDescription(): string
     {
+return '';
     }
-    public function getHead()
+
+    public function getHead(): string
     {
         if ($this->item['style']) {
             return sprintf('<style type="text/css">%s</style>', $this->item['style']);
         }
+
+return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = sprintf('<h4>%s</h4>', $this->item['filename']);
         if ($this->item['type'] == 'file') {

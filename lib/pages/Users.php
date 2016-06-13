@@ -64,7 +64,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getGravatar()
+    public function getGravatar(): string
     {
         if ($md5 = $this->md5email) {
             return sprintf('<img class="avatar photo" src="http://www.gravatar.com/avatar/%s?s=120&amp;r=g&amp;d=wavatar" title="%2$s" alt="%2$s"/>', $md5, $this->name);
@@ -73,7 +73,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getWebsitelink()
+    public function getWebsitelink(): string
     {
         if ($website = $this->website) {
             return sprintf('<a href="%1$s">%1$s</a>', $website);
@@ -140,37 +140,37 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->name;
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return $this->getvalue($this->id, 'keywords');
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->getvalue($this->id, 'description');
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->getvalue($this->id, 'idschema');
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         $this->setvalue($this->id, 'idveiw');
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return $this->getvalue($this->id, 'head');
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $item = $this->getitem($this->id);
         Theme::$vars['author'] = $this;
@@ -207,7 +207,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $this->db->updateassoc($item);
     }
 
-    private function addurl(array $item)
+    private function addUrl(array $item)
     {
         if ($item['id'] == 1) {
             return $item;
@@ -221,7 +221,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         return $item;
     }
 
-    public function add($id)
+    public function add(int $id)
     {
         $item = array(
             'id' => $id,
@@ -261,7 +261,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         return parent::delete($id);
     }
 
-    public function edit($id, array $values)
+    public function edit(int $id, array $values)
     {
         if (!$this->itemExists($id)) {
             return false;

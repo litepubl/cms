@@ -89,12 +89,12 @@ class Page extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return Lang::i('perms')->reqpassword;
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = $this->formresult == '' ? '' : sprintf('<h4>%s</h4>', $this->formresult);
 

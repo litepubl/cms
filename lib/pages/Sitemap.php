@@ -50,12 +50,12 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         $this->createfiles();
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return Lang::get('default', 'sitemap');
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = '<h4>' . Lang::get('default', 'sitemap') . '</h4><ul>';
         $theme = $this->getSchema()->theme;
@@ -158,7 +158,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         }
     }
 
-    private function writeitem($url, $prio)
+    private function writeItem($url, $prio)
     {
         $url = $this->getApp()->site->url . $url;
         gzwrite($this->fd, "<url><loc>$url</loc><lastmod>$this->lastmod</lastmod>" . "<changefreq>daily</changefreq><priority>0.$prio</priority></url>");
@@ -169,7 +169,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         }
     }
 
-    private function openfile()
+    private function openFile()
     {
         $this->count = 0;
         $this->countfiles++;
@@ -182,7 +182,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         }
     }
 
-    private function closefile()
+    private function closeFile()
     {
         $this->WriteFooter();
         gzclose($this->fd);

@@ -28,27 +28,27 @@ trait ViewTrait
     {
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return $this->data['head'];
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return $this->data['keywords'];
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->data['description'];
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->data['idschema']) {
             $this->data['idschema'] = $id;
@@ -56,12 +56,12 @@ trait ViewTrait
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getView()
+    public function getView(): ViewInterface
     {
         return $this;
     }

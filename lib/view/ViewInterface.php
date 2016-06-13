@@ -11,12 +11,12 @@
 namespace litepubl\view;
 
 interface ViewInterface extends \litepubl\core\ResponsiveInterface {
-    public function getTitle();
-    public function getKeywords();
-    public function getDescription();
-    public function getHead();
-    public function getCont();
-    public function getIdSchema();
-    public function setIdSchema($id);
+    public function getTitle(): string;
+    public function getKeywords(): string;
+    public function getDescription(): string;
+    public function getHead(): string;
+    public function getCont(): string;
+    public function getIdSchema(): int;
+    public function setIdSchema(int $id);
 }
 

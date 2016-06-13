@@ -39,7 +39,7 @@ class Password extends Form
         return $form->gettml();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $theme = $this->theme;
         $lang = Lang::admin('password');
@@ -83,10 +83,10 @@ class Password extends Form
         }
     }
 
-    public function getIdUser($email)
+    public function getIdUser(string $email): int
     {
         if (empty($email)) {
-            return false;
+            return 0;
         }
 
         if ($email == strtolower(trim($this->getApp()->options->email))) {
@@ -108,7 +108,7 @@ class Password extends Form
         return $this->admintheme->success(Lang::admin('password')->success);
     }
 
-    public function restore($email)
+    public function restore(string $email)
     {
         $lang = Lang::admin('password');
         $email = strtolower(trim($email));

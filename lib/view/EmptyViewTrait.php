@@ -25,24 +25,27 @@ trait EmptyViewTrait
     {
     }
 
-    public function getHead()
+    public function getHead(): string
     {
+return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
+return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
+return '';
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->IdSchema) {
             $this->data['idschema'] = $id;
@@ -50,12 +53,12 @@ trait EmptyViewTrait
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getView()
+    public function getView(): ViewInterface
     {
         return $this;
     }
