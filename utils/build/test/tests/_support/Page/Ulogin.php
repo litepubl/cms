@@ -32,52 +32,77 @@ $this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebD
 });
 }
 
+public function click(string $name = 'mailru')
+{
+$i = $this->tester;
+$i->wantTo("click $name button");
+$i->waitForElement("[data-uloginbutton=$name]", 3);
+$i->waitForJS('return litepubl.authdialog.ulogin.status == \'ready\';', 3);
+codecept_debug($i->executeJs("return \$('[data-uloginbutton=$name]').length;"));
+$i->executeJs("\$('[data-uloginbutton=$name]').click();");
+codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
+$i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 3);
+}
+
+public function waitForcloseDialog()
+{
+$i = $this->tester;
+$i->wantTo('Close auth dialog');
+$i->waitForJS('return !litepubl.authdialog.dialog;', 3);
+}
+
 public function auth(string $name = 'mailru')
 {
 $i = $this->tester;
-$i->wantTo('Wait for load ulogin widget');
-$js = file_get_contents(__DIR__ . '/js/ulogin.js');
-$js = str_replace('mailru', $name, $js);
-$i->appendJS($js);
-//codecept_debug($i->executejs('return litepubl.ulog;'));
-$i->waitForJS('return litepubl.uloginopened;', 3);
-$i->screenshot('20.ulogin.01wait');
 $i->wantTo('Switch to new window');
-
-$data = $this->load($name);
 $this->getwindows();
 //$i->maximizeWindow();
 
 switch ($name) {
 case 'mailru':
-$i->waitForElementVisible($this->mailruLogin, 10);
-$i->fillField($this->mailruLogin, $data->login);
-$i->fillField($this->mailruPassword, $data->password);
-//$i->savehtml('form');
-$i->wantTo('Auth app');
-$i->screenshot('20.ulogin.02auth');
-//$i->click($this->mailruSubmit);
-$i->executeJS(file_get_contents(__DIR__ . '/js/mailruSubmit.js'));
+$this->mailruAuth();
 break;
 
 case 'yandex':
-$i->waitForElementVisible($this->yandexLogin, 10);
-$i->fillField($this->yandexLogin, $data->login);
-$i->fillField($this->yandexPassword, $data->password);
-$i->wantTo('Auth app');
-$i->screenshot('20.ulogin.02auth');
-$i->click($this->yandexSubmit);
-$i->screenshot('20.ulogin.03allow');
-$i->savehtml('auth');
-$i->click($this->yandexAllow);
+$this->yandexAuth();
 break;
 
 default:
 throw new \RuntimeException('Unknown net');
 }
 
+$i->wantTo('Switch to back window');
 $this->setWindow(0);
-codecept_debug($i->executeJS('return litepubl.ulog;'));
+codecept_debug($i->executeJS('return litepubl.authdialog.ulogin.status;'));
+}
+
+public function mailruAuth()
+{
+$data = $this->load('mailru');
+$i = $this->tester;
+$i->waitForElementVisible($this->mailruLogin, 10);
+$i->screenshot('20.ulogin.01auth');
+$i->fillField($this->mailruLogin, $data->login);
+$i->fillField($this->mailruPassword, $data->password);
+//$i->savehtml('form');
+$i->wantTo('Auth app');
+//$i->click($this->mailruSubmit);
+$i->executeJS(file_get_contents(__DIR__ . '/js/mailruSubmit.js'));
+}
+
+public function yandexAuth()
+{
+$data = $this->load('yandex');
+$i = $this->tester;
+$i->waitForElementVisible($this->yandexLogin, 10);
+$i->screenshot('20.ulogin.01auth');
+$i->fillField($this->yandexLogin, $data->login);
+$i->fillField($this->yandexPassword, $data->password);
+$i->wantTo('Auth app');
+$i->click($this->yandexSubmit);
+$i->screenshot('20.ulogin.03allow');
+$i->savehtml('auth');
+$i->click($this->yandexAllow);
 }
 
 }

@@ -12,10 +12,8 @@
   litepubl.Ulogin = Class.extend({
     url: '/admin/ulogin.php?backurl=',
     script: false,
-//callbacks for  ulogin native events
-onready: $.noop,
-onopened: $.noop,
-onclosed: $.noop,
+//status values: wait, script, ready, open, close, receive, token
+status: 'wait',
 
     css: '',
      tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
@@ -75,19 +73,24 @@ this.initOnReady(buttons.attr('id'));
 initOnReady: function(id) {
 var self = this;
       this.ready(function() {
+self.status = 'script';
         uLogin.customInit(id);
 $('[data-uloginbutton]', '#' + id).attr('role', 'button');
 
 uLogin.setStateListener(id, 'ready', function(){
-self.onready();
+self.status = 'ready';
 });
 
 uLogin.setStateListener(id, 'open', function(){
-self.onopened();
+self.status = 'open';
 });
 
 uLogin.setStateListener(id, 'close', function(){
-self.onclosed();
+self.status = 'close';
+});
+
+uLogin.setStateListener(id, 'receive', function(){
+self.status = 'receive';
 });
 });
 },
@@ -101,12 +104,13 @@ self.onclosed();
     },
 
     ontoken: function(token) {
-      litepubl.authdialog.setstatus("info", lang.authdialog.request);
+this.status = 'token';
+      var authdialog = litepubl.authdialog;
+      authdialog.setstatus("info", lang.authdialog.request);
       setTimeout(function() {
         litepubl.stat('ulogin_token');
       }, 10);
 
-      var authdialog = litepubl.authdialog;
       return $.jsonrpc({
         method: "ulogin_auth",
         params: {
@@ -115,7 +119,7 @@ self.onclosed();
         slave: authdialog.args.rpc,
         callback: $.proxy(authdialog.setuser, authdialog),
         error: function(message, code) {
-          litepubl.authdialog.setstatus("error", message);
+          authdialog.setstatus("error", message);
         }
       });
     }

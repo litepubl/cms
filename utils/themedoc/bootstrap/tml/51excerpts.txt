@@ -4,7 +4,7 @@ content.excerpts = [
         $post.firstimage = [<div class="anpost-image" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject"><a class="photo" id="postfile-$post.id-$id" itemprop="contentUrl" href="$link" title="$post.title" data-file="$json" data-idpost="$post.id" data-midle="$midle.json"><img data-width="$preview.width" data-height="$preview.height" src="$preview.link" alt="$post.title" itemprop="thumbnail" /></a></div>]
 
         <div class="anpost-body">
-            <h4 class="anpost-title"><a href="$post.link" class="anpost-link" rel="bookmark">$post.title</a></h4>
+            <h4 class="anpost-title"><a href="$post.link" class="anpost-link post-bookmark">$post.title</a></h4>
 
             <div class="clearfix">
                 <div class="post-date">
