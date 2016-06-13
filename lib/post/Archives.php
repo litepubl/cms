@@ -113,7 +113,7 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
         return $result;
     }
 
-    public function getTitle(): string: string
+    public function getTitle(): string
     {
         return $this->items[$this->date]['title'];
     }

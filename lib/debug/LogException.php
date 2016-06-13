@@ -13,17 +13,20 @@ namespace litepubl\debug;
 class LogException
 {
 
-    public static function getLog(\Throwable $e)
+    public static function getLog(\Throwable $e): string
     {
-        return static ::getTraceLog($e->getTrace());
+                $result= sprintf('#0 %d %s ', $e->getLine(), $e->getFile());
+$result .= "\n";
+        $result .= static ::getTraceLog($e->getTrace());
+return $result;
     }
 
-    public static function trace()
+    public static function trace(): string
     {
         return static ::getTraceLog(debug_backtrace());
     }
 
-    public static function getTraceLog(array $trace)
+    public static function getTraceLog(array $trace): string
     {
         $result = '';
         foreach ($trace as $i => $item) {

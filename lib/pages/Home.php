@@ -67,7 +67,7 @@ class Home extends SingleMenu
         return parent::request($context);
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = parent::gethead();
 
@@ -84,11 +84,12 @@ class Home extends SingleMenu
         return $theme->parse($result);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
+return '';
     }
 
-    public function getBefore()
+    public function getBefore(): string
     {
         if ($result = $this->content) {
             $theme = $this->theme;
@@ -103,7 +104,7 @@ class Home extends SingleMenu
         return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = '';
         if ($this->page == 1) {
@@ -120,7 +121,7 @@ class Home extends SingleMenu
         return $result;
     }
 
-    public function getPostnavi()
+    public function getPostnavi(): string
     {
         $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
@@ -134,7 +135,7 @@ class Home extends SingleMenu
         return $result;
     }
 
-    public function getIdposts()
+    public function getIdposts(): array
     {
         if (is_array($this->cacheposts)) {
             return $this->cacheposts;
@@ -171,7 +172,7 @@ class Home extends SingleMenu
         return $result;
     }
 
-    public function getWhere()
+    public function getWhere(): string
     {
         $result = '';
         $p = $this->getApp()->db->prefix . 'posts';
@@ -219,7 +220,7 @@ class Home extends SingleMenu
         $this->save();
     }
 
-    public function getMidletitle()
+    public function getMidletitle(): string
     {
         if ($idcat = $this->midlecat) {
             return $this->getdb('categories')->getvalue($idcat, 'title');
@@ -228,7 +229,7 @@ class Home extends SingleMenu
         return '';
     }
 
-    public function getMidleposts()
+    public function getMidleposts(): array
     {
         if (is_array($this->midleposts)) {
             return $this->midleposts;
@@ -245,7 +246,7 @@ class Home extends SingleMenu
         return $this->midleposts;
     }
 
-    public function getMidle()
+    public function getMidle(): string
     {
         $result = '';
         $items = $this->getmidleposts();

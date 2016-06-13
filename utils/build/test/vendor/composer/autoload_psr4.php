@@ -23,6 +23,6 @@ return array(
     'Facebook\\WebDriver\\' => array($vendorDir . '/facebook/webdriver/lib'),
     'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
-    'Codeception\\Extension\\' => array($vendorDir . '/site5/phantoman/src', $vendorDir . '/codeception/codeception/ext'),
+    'Codeception\\Extension\\' => array($vendorDir . '/codeception/codeception/ext', $vendorDir . '/site5/phantoman/src'),
     'Codeception\\' => array($vendorDir . '/codeception/codeception/src/Codeception'),
 );

@@ -31,7 +31,7 @@ class Archives extends Widget
         return Lang::get('default', 'archives');
     }
 
-    protected function setShowcount($value)
+    protected function setShowcount(bool $value)
     {
         if ($value != $this->showcount) {
             $this->data['showcount'] = $value;
