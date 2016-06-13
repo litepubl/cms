@@ -54,7 +54,7 @@ class LogManager
         }
     }
 
-    public function logException(\Exception $e)
+    public function logException(\Throwable $e)
     {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
         $log.= LogException::getLog($e);

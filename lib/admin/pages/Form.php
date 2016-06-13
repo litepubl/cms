@@ -38,7 +38,7 @@ return '';
 return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
 return '';
     }

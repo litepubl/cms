@@ -13,7 +13,7 @@ namespace litepubl\debug;
 class LogException
 {
 
-    public static function getLog(\Exception $e)
+    public static function getLog(\Throwable $e)
     {
         return static ::getTraceLog($e->getTrace());
     }

@@ -209,7 +209,7 @@ class App
         return $this->getLogManager()->logger;
     }
 
-    public function logException(\Exception $e)
+    public function logException(\Throwable $e)
     {
         $this->getLogManager()->logException($e);
     }
