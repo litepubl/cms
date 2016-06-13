@@ -1,20 +1,17 @@
 <?php 
 
 use Page\Comment;
-use Page\Login;
-use test\config;
 
 $i = new AcceptanceTester($scenario);
 $i->maximizeWindow();
-$data = config::load('comment');
+$comment = new Comment($i);
+$data = $comment->load('comment');
 
 $i->wantTo('Click post on home page');
 $i->openPage('/');
 $i->wantTo('Open first post');
-$i->click($data->title);
+$i->click($comment->postlink);
 $posturl = $i->grabFromCurrentUrl();
-
-$comment = new Comment($i);
 $i->wantTo('Send anonimouse comment');
 $comment->send($data->comment . time());
 $i->wantTo('Confirm comment');
@@ -33,7 +30,7 @@ $i->click('Ok');
 $i->wantTo('Send comment as admin');
 $i->click($data->login);
 codecept_debug($i->grabFromCurrentUrl());
-Login::i($i)->login();
+$comment->login();
 
 $i->wantTo('Must be returned back to post');
 $i->seeCurrentUrlEquals($posturl);

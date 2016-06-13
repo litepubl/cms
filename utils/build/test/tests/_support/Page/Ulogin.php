@@ -46,14 +46,14 @@ $i->wantTo('Switch to new window');
 
 $data = $this->load($name);
 $this->getwindows();
-$i->maximizeWindow();
+//$i->maximizeWindow();
 
 switch ($name) {
 case 'mailru':
 $i->waitForElementVisible($this->mailruLogin, 10);
 $i->fillField($this->mailruLogin, $data->login);
 $i->fillField($this->mailruPassword, $data->password);
-$i->savehtml('form');
+//$i->savehtml('form');
 $i->wantTo('Auth app');
 $i->screenshot('20.ulogin.02auth');
 //$i->click($this->mailruSubmit);
@@ -78,8 +78,6 @@ throw new \RuntimeException('Unknown net');
 
 $this->setWindow(0);
 codecept_debug($i->executeJS('return litepubl.ulog;'));
-sleep(3);
-$i->savehtml('logged');
 }
 
 }

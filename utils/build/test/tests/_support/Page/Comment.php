@@ -6,6 +6,7 @@ class Comment extends Base
 public  $comment = '#comment';
       public  $email = 'input[name=email]';
       public  $submit = '#submit-button';
+public $postlink= '.post-bookmark';
 
 public function send($comment)
 {
