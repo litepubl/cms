@@ -82,7 +82,7 @@ public function mailruAuth()
 $data = $this->load('mailru');
 $i = $this->tester;
 $i->waitForElementVisible($this->mailruLogin, 10);
-$i->screenshot('20.ulogin.01auth');
+$this->screenshot('auth');
 $i->fillField($this->mailruLogin, $data->login);
 $i->fillField($this->mailruPassword, $data->password);
 //$i->savehtml('form');

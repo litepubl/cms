@@ -6,7 +6,7 @@ use page\Comment;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test ulogin plugin');
-$ulogin = new Ulogin($i);
+$ulogin = new Ulogin($i, '20.ulogin');
 $comment = new Comment($i);
 $data = $comment->load('comment');
 $plugin = new Plugin($i);
@@ -20,17 +20,18 @@ $i->click($comment->postlink);
 $i->wantTo('Open auth dialog');
 $i->click($data->login);
 $ulogin->click();
-$i->screenshot('20ulogin.22dialog');
+$ulogin->screenshot('dialog');
 $ulogin->auth();
 $ulogin->waitForcloseDialog();
 $text = $data->comment . time();
 $comment->send($text);
 $i->wantTo('Check comment sent');
 $i->waitForText($text, 6);
-
+$ulogin->screenshot('comment');
 $i->wantTo('test ulogin without dialog box');
 $ulogin->logout();
 $i->openPage('/admin/login/');
+$ulogin->screenshot('login');
 $ulogin->click();
 //dont need to wait auth because mailru remember prev auth
 //$ulogin->auth();

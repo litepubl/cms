@@ -8,12 +8,17 @@ class Base
 public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
 public $updateButton = '#submitbutton-update';
+public $screenshotName = '00base';
+protected $screenshotIndex = 0;
     protected $tester;
 private $tabJS;
 
-    public function __construct(\AcceptanceTester $I)
+    public function __construct(\AcceptanceTester $I, string $screenshotName = '')
     {
         $this->tester = $I;
+if ($screenshotName) {
+$this->screenshotName = $screenshotName;
+}
     }
 
 public function load($name)
@@ -74,6 +79,11 @@ $i->appendJS($this->tabJS);
 $i->click($tab);
 $i->waitForJS('return litepubl.tabs.flagLoaded');
 //$i->checkError();
+}
+
+public function screenshot(string $subname)
+{
+$this->tester->screenshot(sprintf('%s.%02d%s', $this->screenshotName, $this->screenshotIndex++, $subname));
 }
 
     }
