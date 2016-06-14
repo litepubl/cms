@@ -1,10 +1,10 @@
 /**
-* Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
-* @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ **/
 
 (function($, litepubl, window) {
   "use strict";
@@ -12,11 +12,11 @@
   litepubl.Ulogin = Class.extend({
     url: '/admin/ulogin.php?backurl=',
     script: false,
-//status values: wait, script, ready, open, close, receive, token
-status: 'wait',
+    //status values: wait, script, ready, open, close, receive, token
+    status: 'wait',
 
     css: '',
-     tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
+    tml: '<div id="ulogin-dialog"><div id="ulogin-holder" data-ulogin="%%data%%"></div></div>',
     tml_data: 'display=small;' +
       'fields=first_name,last_name;' +
       'optional=email,phone,nickname;' +
@@ -25,8 +25,7 @@ status: 'wait',
       'redirect_uri=%%redirurl%%;' +
       '%%callback%%',
 
-    init: function() {
-    },
+    init: function() {},
 
     html: function(args) {
       //preload script when animating dialog
@@ -44,10 +43,10 @@ status: 'wait',
     },
 
     onopen: function(dialog) {
-this.initOnReady('ulogin-holder');
-        this.script.fail(function() {
-          $("#ulogin-dialog").remove();
-        });
+      this.initOnReady('ulogin-holder');
+      this.script.fail(function() {
+        $("#ulogin-dialog").remove();
+      });
     },
 
     onclose: function() {
@@ -55,45 +54,45 @@ this.initOnReady('ulogin-holder');
     },
 
     autoinit: function(holder, buttons) {
-holder = $(holder);
+      holder = $(holder);
       if (!holder.length) return;
-buttons = $(buttons, holder);
-$('.header-help', holder).text(lang.authdialog.helptitle);
+      buttons = $(buttons, holder);
+      $('.header-help', holder).text(lang.authdialog.helptitle);
 
-var backurl = get_get('backurl');
-        var data = $.parsetml(this.tml_data, {
-          redirurl: encodeURIComponent(ltoptions.url + this.url + (backurl ? encodeURIComponent(backurl) : '')),
-          callback: ''
-        });
+      var backurl = get_get('backurl');
+      var data = $.parsetml(this.tml_data, {
+        redirurl: encodeURIComponent(ltoptions.url + this.url + (backurl ? encodeURIComponent(backurl) : '')),
+        callback: ''
+      });
 
-buttons.attr('data-ulogin', data);
-this.initOnReady(buttons.attr('id'));
+      buttons.attr('data-ulogin', data);
+      this.initOnReady(buttons.attr('id'));
     },
 
-initOnReady: function(id) {
-var self = this;
+    initOnReady: function(id) {
+      var self = this;
       this.ready(function() {
-self.status = 'script';
+        self.status = 'script';
         uLogin.customInit(id);
-$('[data-uloginbutton]', '#' + id).attr('role', 'button');
+        $('[data-uloginbutton]', '#' + id).attr('role', 'button');
 
-uLogin.setStateListener(id, 'ready', function(){
-self.status = 'ready';
-});
+        uLogin.setStateListener(id, 'ready', function() {
+          self.status = 'ready';
+        });
 
-uLogin.setStateListener(id, 'open', function(){
-self.status = 'open';
-});
+        uLogin.setStateListener(id, 'open', function() {
+          self.status = 'open';
+        });
 
-uLogin.setStateListener(id, 'close', function(){
-self.status = 'close';
-});
+        uLogin.setStateListener(id, 'close', function() {
+          self.status = 'close';
+        });
 
-uLogin.setStateListener(id, 'receive', function(){
-self.status = 'receive';
-});
-});
-},
+        uLogin.setStateListener(id, 'receive', function() {
+          self.status = 'receive';
+        });
+      });
+    },
 
     ready: function(callback) {
       if (this.script) {
@@ -104,7 +103,7 @@ self.status = 'receive';
     },
 
     ontoken: function(token) {
-this.status = 'token';
+      this.status = 'token';
       var authdialog = litepubl.authdialog;
       authdialog.setstatus("info", lang.authdialog.request);
       setTimeout(function() {

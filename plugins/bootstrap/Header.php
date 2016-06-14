@@ -19,7 +19,7 @@ use litepubl\view\Lang;
 class Header extends \litepubl\admin\Menu
 {
 
-    public function getHead()
+    public function getHead(): string
     {
         $result = parent::gethead();
 
@@ -43,7 +43,7 @@ class Header extends \litepubl\admin\Menu
         return $result;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $tml = file_get_contents(dirname(__file__) . '/resource/content.tml');
         $admin = $this->admintheme;

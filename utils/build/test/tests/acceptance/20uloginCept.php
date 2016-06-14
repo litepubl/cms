@@ -6,11 +6,13 @@ use page\Comment;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test ulogin plugin');
+return;
 $ulogin = new Ulogin($i, '20.ulogin');
 $comment = new Comment($i);
 $data = $comment->load('comment');
 $plugin = new Plugin($i);
 $plugin->install('ulogin');
+$ulogin->screenshot('install');
 $plugin->logout();
 
 $i->wantTo('Send comment as authorized user');
@@ -18,13 +20,17 @@ $i->openPage('/');
 $i->wantTo('Open first post');
 $i->click($comment->postlink);
 $i->wantTo('Open auth dialog');
+$ulogin->screenshot('post');
 $i->click($data->login);
 $ulogin->click();
 $ulogin->screenshot('dialog');
 $ulogin->auth();
 $ulogin->waitForcloseDialog();
 $text = $data->comment . time();
-$comment->send($text);
+$i->fillField($comment->comment, $text);
+$ulogin->screenshot('comment');
+$i->click($comment->submit);
+$i->checkError();
 $i->wantTo('Check comment sent');
 $i->waitForText($text, 6);
 $ulogin->screenshot('comment');
@@ -41,3 +47,4 @@ $ulogin->logout();
 
 
 $plugin->uninstall('ulogin');
+$ulogin->screenshot('uninstall');

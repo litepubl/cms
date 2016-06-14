@@ -8,7 +8,7 @@ public  $comment = '#comment';
       public  $submit = '#submit-button';
 public $postlink= '.post-bookmark';
 
-public function send($comment)
+public function send(string $comment)
 {
 $i = $this->tester;
 //$i->fillField($this->email, $email);

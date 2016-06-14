@@ -22,3 +22,7 @@ modules:
             dump: tests/_data/dump.sql
         Phantoman:
             debug: true
+            suites: ['acceptance']
+            cookiesFile: tests/_output/storage
+            localStoragePath: tests/_output/storage
+            webStorageEnabled: true

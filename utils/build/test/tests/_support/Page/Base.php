@@ -9,7 +9,7 @@ public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
 public $updateButton = '#submitbutton-update';
 public $screenshotName = '00base';
-protected $screenshotIndex = 0;
+protected $screenshotIndex = 1;
     protected $tester;
 private $tabJS;
 
