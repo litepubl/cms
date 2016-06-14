@@ -10,8 +10,8 @@ $ulogin = new Ulogin($i);
 $comment = new Comment($i);
 $data = $comment->load('comment');
 $plugin = new Plugin($i);
-//$plugin->install('ulogin');
-//$plugin->logout();
+$plugin->install('ulogin');
+$plugin->logout();
 
 $i->wantTo('Send comment as authorized user');
 $i->openPage('/');
@@ -23,17 +23,19 @@ $ulogin->click();
 $i->screenshot('20ulogin.22dialog');
 $ulogin->auth();
 $ulogin->waitForcloseDialog();
-$comment->send($data->comment . time());
+$text = $data->comment . time();
+$comment->send($text);
 $i->wantTo('Check comment sent');
-$i->see($data->comment2);
+$i->waitForText($text, 6);
 
 $i->wantTo('test ulogin without dialog box');
 $ulogin->logout();
 $i->openPage('/admin/login/');
 $ulogin->click();
-$ulogin->auth();
-sleep(3);
-$i->savehtml('logged');
+//dont need to wait auth because mailru remember prev auth
+//$ulogin->auth();
+//$i->savehtml('logged');
+$i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
 $ulogin->logout();
 
 

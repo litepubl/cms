@@ -216,7 +216,7 @@
 
   }); //class
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.authdialog = new litepubl.Authdialog();
   });
 

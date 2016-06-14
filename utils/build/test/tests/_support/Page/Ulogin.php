@@ -36,19 +36,20 @@ public function click(string $name = 'mailru')
 {
 $i = $this->tester;
 $i->wantTo("click $name button");
-$i->waitForElement("[data-uloginbutton=$name]", 3);
-$i->waitForJS('return litepubl.authdialog.ulogin.status == \'ready\';', 3);
-codecept_debug($i->executeJs("return \$('[data-uloginbutton=$name]').length;"));
+codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
+//$i->waitForJS('return litepubl.authdialog.ulogin.status == \'ready\';', 8);
+$i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 8);
+codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
 $i->executeJs("\$('[data-uloginbutton=$name]').click();");
 codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-$i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 3);
+$i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 5);
 }
 
 public function waitForcloseDialog()
 {
 $i = $this->tester;
 $i->wantTo('Close auth dialog');
-$i->waitForJS('return !litepubl.authdialog.dialog;', 3);
+$i->waitForJS('return !litepubl.authdialog.dialog;', 5);
 }
 
 public function auth(string $name = 'mailru')

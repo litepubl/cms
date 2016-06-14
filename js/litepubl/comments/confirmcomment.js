@@ -6,10 +6,10 @@
 * @version 6.15
 **/
 
-(function($, document, window) {
+(function($, litepubl) {
   'use strict';
 
-  window.litepubl.class_confirmcomment = Class.extend({
+  litepubl.class_confirmcomment = Class.extend({
 
     init: function() {
       //ctrl+enter
@@ -148,8 +148,8 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     if (ltoptions.theme.comments.form.length) litepubl.confirmcomment = new litepubl.class_confirmcomment();
   });
 
-}(jQuery, document, window));
+}(jQuery, litepubl));

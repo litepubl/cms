@@ -263,7 +263,7 @@
         var names = ['approve', 'hold', 'del', 'edit'];
       } else {
         if (!comtheme.canedit && !comtheme.candelete) return;
-        var nanes = [];
+        var names = [];
         if (comtheme.canedit) names.push('edit');
         if (comtheme.candelete) names.push('del');
       }
