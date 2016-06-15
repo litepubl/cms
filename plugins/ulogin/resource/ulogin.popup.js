@@ -73,12 +73,12 @@
       var self = this;
       this.ready(function() {
         self.status = 'script';
-        uLogin.customInit(id);
-        $('[data-uloginbutton]', '#' + id).attr('role', 'button');
-
         uLogin.setStateListener(id, 'ready', function() {
           self.status = 'ready';
         });
+
+        uLogin.customInit(id);
+        $('[data-uloginbutton]', '#' + id).attr('role', 'button');
 
         uLogin.setStateListener(id, 'open', function() {
           self.status = 'open';

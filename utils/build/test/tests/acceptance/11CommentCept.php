@@ -4,7 +4,8 @@ use Page\Comment;
 
 $i = new AcceptanceTester($scenario);
 $i->maximizeWindow();
-$comment = new Comment($i);
+$comment = new Comment($i, '11comment');
+$comment->logout();
 $data = $comment->load('comment');
 
 $i->wantTo('Click post on home page');
@@ -15,15 +16,16 @@ $posturl = $i->grabFromCurrentUrl();
 $i->wantTo('Send anonimouse comment');
 $comment->send($data->comment . time());
 $i->wantTo('Confirm comment');
-$i->screenShot('11confirm');
-
+$i->waitForText($data->human, 3);
+$comment->screenShot('confirm');
 $i->click($data->human);
 $i->checkError();
 
 $i->wantTo('Send empty comment');
 $comment->send('');
-$i->screenShot('11error');
 $i->see($data->error);
+$comment->screenShot('emptyerror');
+
 $i->wantTo('Close error dialog');
 $i->click('Ok');
 

@@ -1,1 +1,1 @@
-codecept run -g failed
+codecept.bat run -g failed --steps --html --debug>bresult.txt

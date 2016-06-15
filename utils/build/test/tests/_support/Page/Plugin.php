@@ -14,6 +14,7 @@ $i->wantTo("Install plugin $name");
 $i->checkOption("input[name=$name]");
 $i->click($this->updateButton);
 $i->checkError();
+$i->seeCheckboxIsChecked("input[name=$name]");
 }
 
 public function uninstall(string $name)
@@ -24,6 +25,7 @@ $i->wantTo("Uninstall plugin $name");
 $i->UncheckOption("input[name=$name]");
 $i->click($this->updateButton);
 $i->checkError();
+$i->dontSeeCheckboxIsChecked("input[name=$name]");
 }
 
 }

@@ -13,9 +13,9 @@ public function send(string $comment)
 $i = $this->tester;
 //$i->fillField($this->email, $email);
 $i->fillField($this->comment, $comment);
+$this->screenshot('send');
 $i->click($this->submit);
 $i->checkError();
-return $this;
 }
 
 }

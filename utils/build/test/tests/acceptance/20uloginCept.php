@@ -6,8 +6,7 @@ use page\Comment;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test ulogin plugin');
-return;
-$ulogin = new Ulogin($i, '20.ulogin');
+$ulogin = new Ulogin($i, '20ulogin');
 $comment = new Comment($i);
 $data = $comment->load('comment');
 $plugin = new Plugin($i);
@@ -44,7 +43,6 @@ $ulogin->click();
 //$i->savehtml('logged');
 $i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
 $ulogin->logout();
-
 
 $plugin->uninstall('ulogin');
 $ulogin->screenshot('uninstall');

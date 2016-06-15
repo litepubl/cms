@@ -38,7 +38,11 @@ public function login()
 {
 $i = $this->tester;
 $login = Login::i($i);
+$cur = $i->grabFromCurrentUrl();
+codecept_debug($cur);
+if (strpos($cur, $login->url) !== 0) {
 $i->openPage($login->url);
+}
 $login->login();
 return $this;
 }
