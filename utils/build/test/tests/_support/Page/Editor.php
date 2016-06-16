@@ -10,11 +10,8 @@ public $category = 'input[name=category-1]';
 public $calendar = '#calendar-posted';
 public $postbookmark = '.post-bookmark';
 public $idpost = 'input[name=id]';
-public $upload = null;
- //'#file-input';
-public $uploadJS;
 
-public function fillTitleContent($title, $content)
+public function fillTitleContent(string $title, string $content)
 {
 $i = $this->tester;
 $i->fillField($this->title, $title);
@@ -23,28 +20,11 @@ $i->fillField($this->content, $content);
 
 public function upload($filename)
 {
-if (!$this->uploadJS) {
-$this->uploadJS = file_get_contents(__DIR__ . '/js/upload.js');
-}
-
-$i = $this->tester;
-if (!$this->upload) {
-$this->upload = '#tempfile-input';
-$i->executeJs(
-'$(\'<input type="file" id="tempfile-input" />\').appendTo(\'body\');'
-);
-} else {
-$i->executeJs('$(\'#tempfile-input\').removeClass(\'hidden\');');
-}
-
-$i->attachFile($this->upload, $filename);
-$i->checkError();
-$r = $i->executeJs($this->uploadJS);
+parent::upload($filename);
+$r = $this->js('upload.js');
 if ($r) {
 codecept_debug(var_export($r, true));
 }
-
-return $this;
 }
 
 public function submit()

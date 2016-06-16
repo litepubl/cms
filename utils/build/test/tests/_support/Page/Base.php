@@ -11,7 +11,7 @@ public $updateButton = '#submitbutton-update';
 public $screenshotName = '00base';
 protected $screenshotIndex = 1;
     protected $tester;
-private $tabJS;
+protected $cacheFiles = [];
 
     public function __construct(\AcceptanceTester $I, string $screenshotName = '')
     {
@@ -73,11 +73,7 @@ public function clickTab(string $tab)
 {
 $i = $this->tester;
 if (!$i->executeJS('return "flagLoaded" in litepubl.tabs;')) {
-if (!$this->tabJS) {
-$this->tabJS = file_get_contents(__DIR__ . '/js/tabs.js');
-}
-
-$i->appendJS($this->tabJS);
+$i->appendJS($this->getFile(__DIR__ . '/js/tabs.js'));
 }
 
 $i->click($tab);
@@ -90,4 +86,26 @@ public function screenshot(string $subname)
 $this->tester->screenshot(sprintf('%s.%02d%s', $this->screenshotName, $this->screenshotIndex++, $subname));
 }
 
+public function getFile(string $filename)
+{
+if (!isset($this->cacheFiles[$filename])) {
+$this->cacheFiles[$filename] = file_get_contents($filename);
+}
+
+return $this->cacheFiles[$filename];
+}
+
+public function js(string $filename)
+{
+return $this->tester->executeJs($this->getFileName(__DIR__ . '/js/' . $filename));
+}
+
+public function upload(string $filename)
+{
+$i = $this->tester;
+$selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
+$i->attachFile($selector  , $filename);
+$i->checkError();
     }
+
+}
