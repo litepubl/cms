@@ -30,6 +30,6 @@ function HeaderInstall($self)
 
 function HeaderUninstall($self)
 {
-    Menus::i()->deleteurl('/admin/views/bootstrapheader/');
+    Menus::i()->deleteUrl('/admin/views/bootstrapheader/');
 }
 

@@ -88,7 +88,10 @@ class Header extends \litepubl\admin\Menu
 
             $merger = Css::i();
             $merger->lock();
-            if ($name == 'logo') $merger->deletefile('default', '/themes/default/css/logo.min.css');
+            if ($name == 'logo') {
+$merger->deleteFile('default', '/themes/default/css/logo.min.css');
+}
+
             $merger->add('default', "/files/js/$name.css");
             $merger->unlock();
 
@@ -102,14 +105,7 @@ class Header extends \litepubl\admin\Menu
             );
         }
 
-        $js = Str::toJson($result);
-        $response->body = $js;
-        $response->setJson();
-        $response->cache = false;
-        $response->headers['Connection'] = 'close';
-        $response->headers['Content-Length'] = strlen($js);
-        $response->headers['Date'] = date('r');
+        $response->setJson(Str::toJson($result));
     }
 
 }
-
