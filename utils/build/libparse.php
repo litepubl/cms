@@ -20,7 +20,7 @@ $filecount++;
 $s = trim(file_get_contents( $filename));
 $s = str_replace("\r\n", "\n", $s);
 $s = str_replace("\r", "\n", $s);
-$s = str_replace('2014', '2015', $s);
+$s = str_replace('2014', '2016', $s);
 $s = replace_copyright($s);
 
     //$s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
@@ -35,26 +35,11 @@ $s = substr($s, 0, strlen($s) - strlen('//class'));
 //$s = libReplace($s);
 //$s = afterFix($s);
 //$s = afterFix2($s);
+
 $s = sortUse($s);
-}
 
 if (strend($filename, '.install.php')) {
 $s = str_replace('$this', '$self', $s);
-}
-
-if (strend($filename, 'php')) {
-if ($hastrait = strpos($s, 'trait ')) {
-$s = str_replace("\ntrait ", "\nclass ", $s);
-}
-
-        $oBeautify->setInputString($s);
-        $oBeautify->process();
-$s = $oBeautify->get();
-$s = trim($s);
-$s .= "\n\n";
-
-if ($hastrait) {
-$s = str_replace("\nclass ", "\ntrait ", $s);
 }
 } else if (strend($filename, '.less')) {
 $Lines = explode("\n", $s);
@@ -68,7 +53,7 @@ $open = $open - substr_count($Line, '}');
 if ($open < 0) {
 echo substr($filename, strlen(dirname(dirname(__file__))));
 echo "\n$i\n$Line<br>\n";
-$s .= $Line. "\r\n";
+$s .= $Line. "\n";
 } else {
 $s .= str_repeat(' ', $open * 2).$Line. "\n";
 }
