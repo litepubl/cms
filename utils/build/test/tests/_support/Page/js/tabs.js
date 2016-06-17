@@ -5,15 +5,24 @@ $(function() {
 var tabs = litepubl.tabs;
 if (!("flagLoaded" in tabs)) {
 // to use in codecept: $I->waitForJS('return litepubl.tabs.flagLoaded');
-tabs.flagLoaded = true;
+tabs.flagLoaded = false;
+tabs.ajax = false;
 
 $(document)
 .on('loaded' + tabs.namespace, function() {
 tabs.flagLoaded = true;
+tabs.ajax = false;
 })
 .on('beforeLoad' + tabs.namespace, function() {
 tabs.flagLoaded = false;
+tabs.ajax = true;
+})
+.on('activated' + tabs.namespace, function() {
+if (!tabs.ajax) {
+tabs.flagLoaded = true;
+}
 });
+
 }
 });
 

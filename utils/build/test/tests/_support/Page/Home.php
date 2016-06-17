@@ -4,6 +4,7 @@ namespace Page;
 class Home extends Base
 {
     public  $url = '/admin/options/home/';
+public $imageTab = '#tab-1';
 public $image = '#text-image';
 public $smallimage = '#text-smallimage';
 
@@ -15,7 +16,7 @@ if ($r) {
 codecept_debug(var_export($r, true));
 }
 
-$i->waitForJs($this->getFile(__DIR__ . '/js/home.wait.js', 3);
+$this->tester->waitForJs($this->getFile(__DIR__ . '/js/home.wait.js'), 3);
 }
 
 }

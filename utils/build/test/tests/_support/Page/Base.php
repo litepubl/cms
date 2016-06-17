@@ -76,12 +76,17 @@ $i->checkError();
 public function clickTab(string $tab)
 {
 $i = $this->tester;
-if (!$i->executeJS('return "flagLoaded" in litepubl.tabs;')) {
+if ($i->executeJS('return "flagLoaded" in litepubl.tabs;')) {
+$i->executeJs('litepubl.tabs.flagLoaded = false;');
+} else {
 $i->appendJS($this->getFile(__DIR__ . '/js/tabs.js'));
 }
 
 $i->click($tab);
-$i->waitForJS('return litepubl.tabs.flagLoaded');
+
+codecept_debug(var_export($i->executeJs('return litepubl.tabs.flagLoaded'), true));
+codecept_debug(var_export($i->executeJs('return litepubl.tabs.ajax'), true));
+$i->waitForJS('return litepubl.tabs.flagLoaded', 3);
 //$i->checkError();
 }
 
@@ -101,7 +106,7 @@ return $this->cacheFiles[$filename];
 
 public function js(string $filename)
 {
-return $this->tester->executeJs($this->getFileName(__DIR__ . '/js/' . $filename));
+return $this->tester->executeJs($this->getFile(__DIR__ . '/js/' . $filename));
 }
 
 public function upload(string $filename)
