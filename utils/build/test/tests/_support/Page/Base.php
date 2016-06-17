@@ -117,4 +117,18 @@ $i->attachFile($selector  , $filename);
 $i->checkError();
     }
 
+public function waitForOpenDialog()
+{
+$this->tester->wantto('Wait open dialog');
+$this->js('dialog.js');
+$this->tester->waitForJs('return litepubl.dialogOpened;', 4);
+}
+
+public function waitForCloseDialog()
+{
+$this->tester->wantto('Wait close dialog');
+$this->js('dialog.js');
+$this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
+}
+
 }

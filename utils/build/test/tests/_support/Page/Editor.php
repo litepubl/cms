@@ -10,6 +10,7 @@ public $category = 'input[name=category-1]';
 public $calendar = '#calendar-posted';
 public $postbookmark = '.post-bookmark';
 public $idpost = 'input[name=id]';
+public $datePicker = '.ui-datepicker';
 
 public function fillTitleContent(string $title, string $content)
 {
@@ -18,7 +19,7 @@ $i->fillField($this->title, $title);
 $i->fillField($this->content, $content);
 }
 
-public function upload($filename)
+public function upload(string $filename)
 {
 parent::upload($filename);
 $r = $this->js('upload.js');

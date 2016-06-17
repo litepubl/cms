@@ -4,7 +4,6 @@ del tests\_output\debug\*.* /f /q
 @rem codecept.bat run acceptance  03PasswordCept.php --steps --html --debug>bresult.txt
 @rem codecept.bat run acceptance  07AddCategoryCept.php --steps --html --debug>bresult.txt
 @rem codecept.bat run acceptance 05AdminCept.php --steps --html --debug>bresult.txt
-@rem codecept.bat run acceptance 06EditorCept.php --steps --html --debug>bresult.txt
+codecept.bat run acceptance 06EditorCept.php --steps --html --debug>bresult.txt
 @rem codecept.bat run api 01rssCept.php --steps --html --debug>bresult.txt
 @rem codecept.bat run acceptance 20uloginCept.php --steps --html --debug>bresult.txt
-codecept.bat run acceptance 09homeCept.php --steps --html --debug>bresult.txt
