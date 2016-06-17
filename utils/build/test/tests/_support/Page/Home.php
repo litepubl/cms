@@ -7,13 +7,15 @@ class Home extends Base
 public $image = '#text-image';
 public $smallimage = '#text-smallimage';
 
-public function setimage(string $filename)
+public function uploadImage(string $filename)
 {
 $this->upload($filename);
-$r = $this->js('upload.home.js');
+$r = $this->js('home.upload.js');
 if ($r) {
 codecept_debug(var_export($r, true));
 }
+
+$i->waitForJs($this->getFile(__DIR__ . '/js/home.wait.js', 3);
 }
 
 }

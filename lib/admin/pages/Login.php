@@ -214,7 +214,7 @@ class Login extends Form
             return 0;
         }
 
-        Ssession::start('reguser-' . md5($app->options->hash($email)));
+        Session::start('reguser-' . md5($app->options->hash($email)));
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($password != $_SESSION['password'])) {
             if (isset($_SESSION['email'])) {
                 session_write_close();

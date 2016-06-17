@@ -16,4 +16,6 @@ $i->openPage('/');
 $home->screenshot('noimage');
 $i->wantTo('Upload image');
 $home->open();
-$home->setimage('img1.jpg');
+$home->uploadImage('img1.jpg');
+
+$home->submit();

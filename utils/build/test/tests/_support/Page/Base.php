@@ -65,8 +65,12 @@ $this->login();
 $i->openPage($url);
 $i->seeCurrentUrlEquals($url);
 }
+}
 
-return $this;
+public function submit(){
+$i = $this->tester;
+$i->click($this->updateButton);
+$i->checkError();
 }
 
 public function clickTab(string $tab)

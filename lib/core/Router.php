@@ -87,7 +87,7 @@ class Router extends Items
 
         $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
         if (($srcurl != $url) && ($result = $this->query($url))) {
-            if (($this->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
+            if (($context->request->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
                 $response->redir($result['url']);
             }
 
