@@ -6,10 +6,10 @@ use page\Posts;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test wikiwords plugin');
-$plugin = new Plugin($i);
+$plugin = new Plugin($i, '20wikiwords');
 $plugin->install('wikiwords');
 
-$editor = new Editor($i);
+$editor = new Editor($i, '20wikiwords');
 $editor->open();
 $i->wantTo('Create post with declared wiki word');
 $i->checkOption($editor->category);
@@ -19,9 +19,11 @@ $editor->fillTitleContent(
 );
 
 $editor->submit();
+
+$i->wantTo('Get id post #1');
 $id1 = $editor->getPostId();
 $holderlink = $editor->getPostLink();
-$i->screenShot('20.wikiwords.01declare');
+$editor->screenShot('declare');
 
 $i->openPage($editor->url);
 $i->wantTo('Create post with use wiki word');
@@ -32,19 +34,23 @@ $editor->fillTitleContent(
 );
 
 $editor->submit();
-$i->screenShot('20.wikiwords.02use');
+$editor->screenShot('use');
+
+$i->wantTo('Get id post #2');
 $id2 = $editor->getPostId();
 
 $i->wantTo('Check used word');
 $i->amOnUrl($editor->getPostLink());
 $i->checkError();
-$i->screenShot('20.wikiwords.03used');
+$editor->screenShot('used');
 $i->click('.wiki-link');
 $i->checkError();
 $i->assertEquals($holderlink, $i->getAbsoluteUrl(), 'Wiki word linked');
-$i->screenShot('20.wikiwords.04declared');
+$editor->screenShot('declared');
 
+$i->wantTo('Delete new posts');
 $posts = new Posts($i);
 $posts->screenShotName = '20.wikiwords.05';
 $posts->delete($id1, $id2);
+
 $plugin->uninstall('wikiwords');

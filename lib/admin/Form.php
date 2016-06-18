@@ -89,7 +89,7 @@ class Form
     public function getDelete(string $table): string
     {
         $this->body = $table;
-        $this->body.= $this->hidden('delete', 'delete');
+        $this->body.= $this->hidden('action', 'delete');
         $this->submit = 'delete';
 
         return $this->get();

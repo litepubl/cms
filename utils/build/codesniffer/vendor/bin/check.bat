@@ -1,1 +1,0 @@
-phpcbf  AuthorRights.php --report-file=report.txt
