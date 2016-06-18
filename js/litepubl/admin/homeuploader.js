@@ -14,7 +14,7 @@
     filereader: false,
     jq: false,
     idinput: "#file-imgupload, #dropzone",
-status: 'init',
+    status: 'init',
     helpstatus: false,
 
     init: function() {
@@ -34,7 +34,7 @@ status: 'init',
     },
 
     setstatus: function(name) {
-this.status = name;
+      this.status = name;
       this.helpstatus.children().addClass("hide");
       this.helpstatus.find("#img-" + name).removeClass("hide");
     },
