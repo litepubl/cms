@@ -80,7 +80,9 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
                 $result.= "<li><a href=\"$siteurl{$item['url']}\" title=\"{$item['title']}\">{$item['title']}</a>$pages</li>";
             }
 
-            if ($count > $perpage) break;
+            if ($count > $perpage) {
+                break;
+            }
         }
         $result.= '</ul>';
         //    $result .=$theme->getpages('/sitemap.htm',  $this->getApp()->context->request->page, ceil($posts->archivescount / $perpage));
@@ -105,12 +107,16 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         $exists = true;
         for ($i = 1; $i <= $this->countfiles; $i++) {
             $result.= "<sitemap><loc>$url.$i.xml.gz</loc>      <lastmod>$lastmod</lastmod></sitemap>";
-            if ($exists) $exists = file_exists($this->getApp()->paths->files . "$i.xml.gz");
+            if ($exists) {
+                $exists = file_exists($this->getApp()->paths->files . "$i.xml.gz");
+            }
         }
         $this->callevent('onindex', array(&$result
         ));
         $result.= '</sitemapindex>';
-        if (!$exists) $this->createfiles();
+        if (!$exists) {
+            $this->createfiles();
+        }
         return $result;
     }
 
@@ -200,6 +206,4 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
     {
         gzwrite($this->fd, '</urlset>');
     }
-
 }
-

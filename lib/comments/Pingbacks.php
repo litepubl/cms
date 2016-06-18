@@ -165,6 +165,4 @@ class Pingbacks extends \litepubl\core\Items
         }
         return str_replace('$pingback', $result, $theme->parse($theme->templates['content.post.templatecomments.pingbacks']));
     }
-
 }
-

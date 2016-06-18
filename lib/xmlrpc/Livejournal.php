@@ -100,7 +100,6 @@ class Livejournal extends Common
             if ($posts->itemExists($id)) {
                 return $this->xerror(403, 'Post not found');
             }
-
         }
         $post = Post::i($id);
         $post->content = $struct['event'];
@@ -139,7 +138,6 @@ class Livejournal extends Common
             if (isset($props['statusvis'])) {
                 $post->status = $props['statusvis'] == 'S' ? 'draft' : 'published';
             }
-
         }
         /* not supported
         if (isset($struct['usejournal'])) {
@@ -190,4 +188,3 @@ class Livejournal extends Common
     }
     */
 }
-

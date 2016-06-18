@@ -33,7 +33,9 @@ class StaticPages extends \litepubl\admin\Menu
         $admin = $this->admintheme;
         $lang = Lang::i('staticpages');
         $id = $this->idget();
-        if (!$pages->itemExists($id)) $id = 0;
+        if (!$pages->itemExists($id)) {
+            $id = 0;
+        }
         $args = new Args();
         $args->id = $id;
         $args->adminurl = $this->adminurl;
@@ -96,6 +98,4 @@ class StaticPages extends \litepubl\admin\Menu
 
         return $this->admintheme->success(Lang::admin('staticpages')->success);
     }
-
 }
-

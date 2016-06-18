@@ -43,7 +43,7 @@ class Mailer
             return $mailer->mail($fromname, $fromemail, $toname, $toemail, $subj, $body);
         }
 
-        return static ::send(static ::CreateEmail($fromname, $fromemail) , static ::CreateEmail($toname, $toemail) , $subj, $body);
+        return static ::send(static ::CreateEmail($fromname, $fromemail), static ::CreateEmail($toname, $toemail), $subj, $body);
     }
 
     public static function CreateEmail($name, $email)
@@ -143,11 +143,9 @@ class Mailer
         $body = $textpart . "\n\n" . $attachpart . "\n\n";
         $options = static ::getAppInstance()->options;
         if (Config::$debug) {
-            return file_put_contents(static ::getAppInstance()->paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l') , "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
+            return file_put_contents(static ::getAppInstance()->paths->data . 'logs' . DIRECTORY_SEPARATOR . date('H-i-s.d.m.Y.\e\m\l'), "To: $to\nSubject: $subj\nFrom: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver $options->version\n\n" . $body);
         }
 
         return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . static ::getAppInstance()->options->version);
     }
-
 }
-

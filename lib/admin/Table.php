@@ -72,7 +72,7 @@ class Table
             $s = array_shift($item);
             if (is_string($s)) {
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $s);
-            } else if (is_callable($s)) {
+            } elseif (is_callable($s)) {
                 $name = '$callback' . $index;
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
@@ -107,7 +107,7 @@ class Table
 
     public function td(string $colclass, string $content): string
     {
-        return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass) , $content);
+        return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass), $content);
     }
 
     public function getAdmintheme(): Admin
@@ -162,10 +162,10 @@ class Table
 
     public function setOwner(Items $owner)
     {
-        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks), array(
             $this,
             'itemsCallback'
-        ) , $owner);
+        ), $owner);
     }
 
     public function posts_callback(Table $self)
@@ -179,10 +179,10 @@ class Table
     {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
-        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks), array(
             $this,
             'posts_callback'
-        ) , false);
+        ), false);
     }
 
     public function props(array $props): string
@@ -211,7 +211,9 @@ class Table
 
             if (is_array($v)) {
                 foreach ($v as $kv => $vv) {
-                    if ($k2 = $lang->__get($kv)) $kv = $k2;
+                    if ($k2 = $lang->__get($kv)) {
+                        $kv = $k2;
+                    }
                     $args->name = $kv;
                     $args->value = $vv;
                     $body.= $admintheme->parseArg($this->body, $args);
@@ -250,10 +252,10 @@ class Table
         $admintheme = $this->getadmintheme();
 
         foreach ($inputs as $name => $type) {
-            if (($name === false) || ($type === false)) { {
+            if (($name === false) || ($type === false)) {
+                {
                     continue;
                 }
-
             }
 
             switch ($type) {
@@ -341,7 +343,7 @@ class Table
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
-            return Lang::date(strtotime($date) , 'd F Y');
+            return Lang::date(strtotime($date), 'd F Y');
         }
     }
 
@@ -350,9 +352,7 @@ class Table
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
-            return Lang::date(strtotime($date) , 'd F Y H:i');
+            return Lang::date(strtotime($date), 'd F Y H:i');
         }
     }
-
 }
-

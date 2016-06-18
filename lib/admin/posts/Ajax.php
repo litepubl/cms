@@ -141,13 +141,13 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                     'reg' => $lang->reg,
                     'guest' => $lang->guest,
                     'comuser' => $lang->comuser
-                ) , $post->comstatus);
+                ), $post->comstatus);
 
                 $args->pingenabled = $post->pingenabled;
                 $args->status = $theme->comboItems(array(
                     'published' => $lang->published,
                     'draft' => $lang->draft
-                ) , $post->status);
+                ), $post->status);
 
                 $args->perms = GetPerm::combo($post->idperm);
                 $args->password = $post->password;
@@ -158,7 +158,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
       [combo=status]
       $perms
       [password=password]
-' . $admin->help($lang->notepassword) , $args);
+' . $admin->help($lang->notepassword), $args);
                 break;
 
 
@@ -200,9 +200,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $args->raw = $text;
-Lang::admin('editor');
+        Lang::admin('editor');
         return $admintheme->parseArg($admintheme->templates['posteditor.text'], $args);
     }
-
 }
-

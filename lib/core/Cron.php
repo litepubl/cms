@@ -42,7 +42,6 @@ class Cron extends Events implements ResponsiveInterface
             if (is_dir($result)) {
                 return $result;
             }
-
         }
         return $this->getApp()->paths->data;
     }
@@ -64,14 +63,15 @@ class Cron extends Events implements ResponsiveInterface
                     $this->getApp()->router->close_connection();
                 }
 
-                if (ob_get_level()) ob_end_flush();
+                if (ob_get_level()) {
+                    ob_end_flush();
+                }
                 flush();
 
                 $this->sendexceptions();
                 $this->log("started loop");
                 $this->execute();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
             flock($fh, LOCK_UN);
@@ -85,7 +85,9 @@ class Cron extends Events implements ResponsiveInterface
 
     public function run()
     {
-        if (ob_get_level()) ob_end_flush();
+        if (ob_get_level()) {
+            ob_end_flush();
+        }
         flush();
 
         if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
@@ -93,8 +95,7 @@ class Cron extends Events implements ResponsiveInterface
 
             try {
                 $this->execute();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
 
@@ -117,29 +118,25 @@ class Cron extends Events implements ResponsiveInterface
                 if (function_exists($func)) {
                     try {
                         $func($arg);
-                    }
-                    catch(\Exception $e) {
+                    } catch (\Exception $e) {
                         $this->getApp()->logException($e);
                     }
                 } else {
                     $this->db->iddelete($id); {
                         continue;
                     }
-
                 }
             } elseif (class_exists($class)) {
                 try {
                     $obj = static ::iGet($class);
                     $obj->$func($arg);
-                }
-                catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->getApp()->logException($e);
                 }
             } else {
                 $this->db->iddelete($id); {
                     continue;
                 }
-
             }
             if ($type == 'single') {
                 $this->db->iddelete($id);
@@ -151,7 +148,9 @@ class Cron extends Events implements ResponsiveInterface
 
     public function add($type, $class, $func, $arg = null)
     {
-        if (!preg_match('/^single|hour|day|week$/', $type)) $this->error("Unknown cron type $type");
+        if (!preg_match('/^single|hour|day|week$/', $type)) {
+            $this->error("Unknown cron type $type");
+        }
         if ($this->disableadd) {
             return false;
         }
@@ -234,7 +233,7 @@ class Cron extends Events implements ResponsiveInterface
         static ::$pinged = true;
 
         register_shutdown_function(array(
-            static ::i() ,
+        static ::i() ,
             'ping'
         ));
     }
@@ -281,9 +280,6 @@ class Cron extends Events implements ResponsiveInterface
             if (Config::$debug) {
                 $this->getApp()->getLogger()->info($s);
             }
-
         }
     }
-
 }
-

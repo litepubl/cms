@@ -67,6 +67,4 @@ class Notfound404 extends \litepubl\core\Events implements \litepubl\view\ViewIn
 
         Mailer::sendtoadmin($subject, $body, true);
     }
-
 }
-

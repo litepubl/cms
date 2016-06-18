@@ -19,20 +19,20 @@ function BbootstrapInstall($self)
 {
     $js = Js::i();
     $js->lock();
-    $js->externalfunc(get_class($js) , '_switch', array(
-        $js->externalfunc(get_class($js) , '_bootstrap_files', false) ,
-        $js->externalfunc(get_class($js) , '_pretty_files', false)
+    $js->externalfunc(get_class($js), '_switch', array(
+        $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
+        $js->externalfunc(get_class($js), '_pretty_files', false)
     ));
 
-    $js->externalfunc(get_class($js) , '_bootstrap_admin', true);
-    $js->externalfunc(get_class($js) , '_ui_admin', false);
+    $js->externalfunc(get_class($js), '_bootstrap_admin', true);
+    $js->externalfunc(get_class($js), '_ui_admin', false);
 
-    $js_switch = $js->getExternalFuncName(get_class($js) , '_switch');
+    $js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    $js_switch($css, array() , $css->externalfunc(get_class($css) , '_pretty_files', false));
-    $js_switch($css, array() , $css->externalfunc(get_class($css) , '_deprecated_files', false));
-    $js_switch($css, $css->externalfunc(get_class($css) , '_bootstrap_files', false) , array());
+    $js_switch($css, array() , $css->externalfunc(get_class($css), '_pretty_files', false));
+    $js_switch($css, array() , $css->externalfunc(get_class($css), '_deprecated_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css), '_bootstrap_files', false) , array());
 
     //default installed plugins
     $plugins = Plugins::i();
@@ -50,24 +50,23 @@ function BootstrapUninstall($self)
 {
     $js = Js::i();
     $js->lock();
-    $js->externalfunc(get_class($js) , '_switch', array(
-        $js->externalfunc(get_class($js) , '_pretty_files', false) ,
-        $js->externalfunc(get_class($js) , '_bootstrap_files', false) ,
+    $js->externalfunc(get_class($js), '_switch', array(
+        $js->externalfunc(get_class($js), '_pretty_files', false) ,
+        $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
     ));
 
-    $js->externalfunc(get_class($js) , '_bootstrap_admin', false);
+    $js->externalfunc(get_class($js), '_bootstrap_admin', false);
 
-    $js->externalfunc(get_class($js) , '_ui_admin', true);
+    $js->externalfunc(get_class($js), '_ui_admin', true);
     $js->unlock();
 
-    $js_switch = $js->getExternalFuncName(get_class($js) , '_switch');
+    $js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    $js_switch($css, $css->externalfunc(get_class($css) , '_pretty_files', false) , array());
-    $js_switch($css, $css->externalfunc(get_class($css) , '_deprecated_files', false) , array());
-    $js_switch($css, array() , $css->externalfunc(get_class($css) , '_bootstrap_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css), '_pretty_files', false) , array());
+    $js_switch($css, $css->externalfunc(get_class($css), '_deprecated_files', false) , array());
+    $js_switch($css, array() , $css->externalfunc(get_class($css), '_bootstrap_files', false));
     $css->unlock();
 
     Base::clearcache();
 }
-

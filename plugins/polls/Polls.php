@@ -75,8 +75,8 @@ class Polls extends \litepubl\core\Items
         }
 
         if (Config::$debug) {
-$this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
-}
+            $this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
+        }
 
         $item = $this->getItem($id);
 
@@ -132,14 +132,14 @@ $this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->use
         $iduser = $this->getApp()->options->user;
         if (!$iduser) {
             $result = $this->err('notauth');
-        } else if (!$this->itemExists($idpoll)) {
+        } elseif (!$this->itemExists($idpoll)) {
             $result = $this->err('notfound');
-        } else if ('closed' == $this->getvalue($idpoll, 'status')) {
+        } elseif ('closed' == $this->getvalue($idpoll, 'status')) {
             $result = $this->err('closed');
-        } else if ($this->hasvote($idpoll, $iduser)) {
+        } elseif ($this->hasvote($idpoll, $iduser)) {
             $result = $this->err('voted');
         } else {
-            $vote = min(max(1, (int)$vote) , $this->getvalue($idpoll, 'best'));
+            $vote = min(max(1, (int)$vote), $this->getvalue($idpoll, 'best'));
             $this->addvote($idpoll, $iduser, (int)$vote);
             $item = $this->getitem($idpoll);
 
@@ -252,6 +252,4 @@ where idpoll = $id group by vote order by vote asc"));
             }
         }
     }
-
 }
-

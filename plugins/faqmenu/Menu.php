@@ -19,6 +19,4 @@ class Menu extends \litepubl\pages\Menu
         $filter = new Filter();
         $this->data['content'] = $filter->convert($s);
     }
-
 }
-

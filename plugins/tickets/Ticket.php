@@ -91,6 +91,4 @@ class Ticket extends \litepubl\post\Post
 
         $this->comments->add($this->id, Tickets::i()->idcomauthor, $content, 'approved', '');
     }
-
 }
-

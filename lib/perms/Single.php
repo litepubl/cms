@@ -26,7 +26,7 @@ class Single extends Perm
     public function setResponse(Response $response, $obj)
     {
         if (isset($obj->password) && ($p = $obj->password)) {
-            $response->body.= sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this) , $this->id, static ::encryptpassword($p));
+            $response->body.= sprintf('<?php if (!%s::auth(%d, \'%s\')) return; ?>', get_class($this), $this->id, static ::encryptpassword($p));
         }
     }
 
@@ -65,7 +65,7 @@ class Single extends Perm
         $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-        setcookie(static ::getcookiename() , $cookie, $expired, $this->getApp()->site->subdir . '/', false);
+        setcookie(static ::getcookiename(), $cookie, $expired, $this->getApp()->site->subdir . '/', false);
         $this->checked = true;
         return true;
     }
@@ -100,7 +100,7 @@ class Single extends Perm
         $this->password = $p;
         $page = Page::i();
         $page->perm = $this;
-        $context = new Context(new Request() , new Response());
+        $context = new Context(new Request(), new Response());
         $page->request($context);
         if ($this->checked) {
             return true;
@@ -126,6 +126,4 @@ class Single extends Perm
 
         return false;
     }
-
 }
-

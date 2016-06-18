@@ -27,13 +27,13 @@ function PluginInstall($self)
     $about = Plugins::getabout($name);
     $self->lock();
     $self->title = $about['widget_title'];
-Google::i()->install();
-Facebook::i()->install();
-Twitter::i()->install();
-MailRu::i()->install();
-Yandex::i()->install();
-VKontakte::i()->install();
-Odnoklassniki::i()->install();
+    Google::i()->install();
+    Facebook::i()->install();
+    Twitter::i()->install();
+    MailRu::i()->install();
+    Yandex::i()->install();
+    VKontakte::i()->install();
+    Odnoklassniki::i()->install();
     $self->unlock();
 
     Users::i()->deleted = tregserviceuser::i()->delete;
@@ -51,31 +51,30 @@ Odnoklassniki::i()->install();
     Form::i()->oncomuser = $self->oncomuser;
     $self->getApp()->cache->clear();
 
-Parser::i()->addTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
-$vars = AutoVars::i();
-$vars->items['regservices'] = get_class($self);
-$vars->save();
+    Parser::i()->addTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
+    $vars = AutoVars::i();
+    $vars->items['regservices'] = get_class($self);
+    $vars->save();
 }
 
 function PluginUninstall($self)
 {
-Parser::i()->removeTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
-AutoVars::i()->delete('regservices');
+    Parser::i()->removeTags('plugins/regservices/resource/theme.txt', 'plugins/regservices/resource/theme.ini');
+    AutoVars::i()->delete('regservices');
     $name = basename(dirname(__file__));
     Form::i()->unbind($self);
     $self->getApp()->router->unbind($self);
 
-Google::i()->install();
-Facebook::i()->install();
-Twitter::i()->install();
-MailRu::i()->install();
-Yandex::i()->install();
-VKontakte::i()->install();
-Odnoklassniki::i()->install();
+    Google::i()->install();
+    Facebook::i()->install();
+    Twitter::i()->install();
+    MailRu::i()->install();
+    Yandex::i()->install();
+    VKontakte::i()->install();
+    Odnoklassniki::i()->install();
 
     Filer::delete($self->getApp()->paths->data . 'regservices', true, true);
 
     Users::i()->unbind('tregserviceuser');
     DBManager::i()->deletetable('regservices');
 }
-

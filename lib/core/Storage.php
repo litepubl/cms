@@ -50,7 +50,7 @@ class Storage
 
     public function save(Data $obj)
     {
-        return $this->saveFile($this->getfilename($obj) , $this->serialize($obj->data));
+        return $this->saveFile($this->getfilename($obj), $this->serialize($obj->data));
     }
 
     public function saveData($filename, array $data)
@@ -65,8 +65,7 @@ class Storage
                 $obj->data = $data + $obj->data;
                 return true;
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->getApp()->logException($e);
         }
 
@@ -135,6 +134,4 @@ class Storage
     {
         $this->getApp()->options->trace($mesg);
     }
-
 }
-

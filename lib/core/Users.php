@@ -102,12 +102,11 @@ class Users extends Items
             if ($email == $item['email']) {
                 return $id;
             }
-
         }
 
         if ($item = $this->db->findItem('email = ' . Str::quote($email))) {
             $id = (int)$item['id'];
-$item['idgroups'] = str::toIntArray($item['idgroups']);
+            $item['idgroups'] = str::toIntArray($item['idgroups']);
             $this->items[$id] = $item;
             return $id;
         }
@@ -137,21 +136,21 @@ $item['idgroups'] = str::toIntArray($item['idgroups']);
 
     public function auth(string $email, string $password): int
     {
-        return $this->authPassword($this->emailExists($email) , $password);
+        return $this->authPassword($this->emailExists($email), $password);
     }
 
     public function authPassword(int $id, string $password): int
     {
         if ($id && $password) {
-        $item = $this->getItem($id);
-        if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
-            if ($item['status'] == 'wait') {
-$this->approve($id);
-}
+            $item = $this->getItem($id);
+            if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
+                if ($item['status'] == 'wait') {
+                    $this->approve($id);
+                }
 
-            return $id;
+                return $id;
+            }
         }
-}
 
         return 0;
     }
@@ -172,7 +171,6 @@ $this->approve($id);
             if (strtotime($item['expired']) > time()) {
                 return $id;
             }
-
         }
         return false;
     }
@@ -200,7 +198,9 @@ $this->approve($id);
 
     public function setCookie(int $id, string $cookie, int $expired)
     {
-        if ($cookie) $cookie = $this->getApp()->options->hash($cookie);
+        if ($cookie) {
+            $cookie = $this->getApp()->options->hash($cookie);
+        }
         $expired = Str::sqlDate($expired);
         if (isset($this->items[$id])) {
             $this->items[$id]['cookie'] = $cookie;
@@ -213,6 +213,4 @@ $this->approve($id);
             'expired' => $expired
         ));
     }
-
 }
-

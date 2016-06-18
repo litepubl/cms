@@ -38,21 +38,23 @@ class Widget extends \litepubl\widget\Widget
     {
         if (!defined('_SAPE_USER')) {
             define('_SAPE_USER', $this->user);
-include_once(__DIR__ . '/sape.php');
+            include_once(__DIR__ . '/sape.php');
             $o['charset'] = 'UTF-8';
             $o['multi_site'] = true;
-            if ($this->force) $o['force_show_code'] = $this->force;
+            if ($this->force) {
+                $o['force_show_code'] = $this->force;
+            }
             $this->sape = new \SAPE_client($o);
         }
     }
 
-public function getValid(): bool
-{
-$app = $this->getApp();
-return $this->user
-&& $app->context->response->status == 200
- && !$app->context->request->isAdminPanel;
-}
+    public function getValid(): bool
+    {
+        $app = $this->getApp();
+        return $this->user
+        && $app->context->response->status == 200
+         && !$app->context->request->isAdminPanel;
+    }
 
     public function getWidget(int $id, int $sidebar): string
     {
@@ -84,7 +86,9 @@ return $this->user
             return '';
         }
 
-        if (!isset($this->sape)) $this->createsape();
+        if (!isset($this->sape)) {
+            $this->createsape();
+        }
         return $this->sape->return_links($this->counts[$id]);
     }
 
@@ -94,7 +98,9 @@ return $this->user
         $widgets = $this->gettWidgets();
 
         foreach ($this->counts as $id => $count) {
-            if (!isset($widgets->items[$id])) unset($this->counts[$id]);
+            if (!isset($widgets->items[$id])) {
+                unset($this->counts[$id]);
+            }
         }
 
         $this->save();
@@ -107,5 +113,4 @@ return $this->user
         $this->save();
         return $id;
     }
-
 }

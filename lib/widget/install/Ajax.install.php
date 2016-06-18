@@ -24,4 +24,3 @@ function AjaxUninstall($self)
 {
     litepubl::$app->router->unbind($self);
 }
-

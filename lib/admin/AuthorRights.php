@@ -19,6 +19,4 @@ class AuthorRights extends \litepubl\core\Events
         $this->addevents('changeposts', 'canupload', 'candeletefile');
         $this->basename = 'authorrights';
     }
-
 }
-

@@ -79,7 +79,9 @@ class UserGroups extends Items
         foreach ($this->items as $id => $group) {
             $names = explode(',', $group['name']);
             foreach ($names as $name) {
-                if ($name = trim($name)) $groupnames[$name] = $id;
+                if ($name = trim($name)) {
+                    $groupnames[$name] = $id;
+                }
             }
             $parentgroups[$id] = $group['parents'];
         }
@@ -133,6 +135,4 @@ class UserGroups extends Items
         }
         return $this->defaulthome;
     }
-
 }
-

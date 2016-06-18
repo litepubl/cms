@@ -70,7 +70,7 @@ class Tags extends \litepubl\admin\Menu
         if ($item) {
             $args->add($item);
             $args->parent = $this->theme->comboItems($parents, $item['parent']);
-            $args->order = $this->theme->comboItems(array_combine(range(0, 9) , range(1, 10)) , $item['customorder']);
+            $args->order = $this->theme->comboItems(array_combine(range(0, 9), range(1, 10)), $item['customorder']);
 
             $tabs = $this->newTabs();
             $tabs->add($lang->title, '
@@ -84,7 +84,7 @@ class Tags extends \litepubl\admin\Menu
             $tabs->ajax('SEO', "$ajax=seo");
 
             $form = new Form($args);
-            $result.= $admin->form($tabs->get() , $args);
+            $result.= $admin->form($tabs->get(), $args);
         }
 
         //table
@@ -94,7 +94,7 @@ class Tags extends \litepubl\admin\Menu
         if ($tags->dbversion) {
             $iditems = $tags->db->idselect("id > 0 order by parent asc, title asc limit $from, $perpage");
         } else {
-            $iditems = array_slice(array_keys($tags->items) , $from, $perpage);
+            $iditems = array_slice(array_keys($tags->items), $from, $perpage);
         }
 
         $items = array();
@@ -142,8 +142,12 @@ class Tags extends \litepubl\admin\Menu
         $item['idschema'] = (int)$idschema;
         $item['includechilds'] = isset($includechilds);
         $item['includeparents'] = isset($includeparents);
-        if (isset($idperm)) $item['idperm'] = (int)$idperm;
-        if (isset($icon)) $item['icon'] = (int)$icon;
+        if (isset($idperm)) {
+            $item['idperm'] = (int)$idperm;
+        }
+        if (isset($icon)) {
+            $item['icon'] = (int)$icon;
+        }
         return $item;
     }
 
@@ -160,24 +164,38 @@ class Tags extends \litepubl\admin\Menu
         $id = $this->idget();
         if ($id == 0) {
             $id = $tags->add((int)$parent, $title);
-            if (isset($order)) $tags->setvalue($id, 'customorder', (int)$order);
-            if (isset($url)) $tags->edit($id, $title, $url);
+            if (isset($order)) {
+                $tags->setvalue($id, 'customorder', (int)$order);
+            }
+            if (isset($url)) {
+                $tags->edit($id, $title, $url);
+            }
             if (isset($idschema)) {
                 $item = $tags->getitem($id);
                 $item = $this->set_view($item);
                 $tags->items[$id] = $item;
                 $item['id'] = $id;
                 unset($item['url']);
-                if ($tags->dbversion) $tags->db->updateassoc($item);
+                if ($tags->dbversion) {
+                    $tags->db->updateassoc($item);
+                }
             }
         } else {
             $item = $tags->getitem($id);
             $item['title'] = $title;
-            if (isset($parent)) $item['parent'] = (int)$parent;
-            if (isset($order)) $item['customorder'] = (int)$order;
-            if (isset($idschema)) $item = $this->set_view($item);
+            if (isset($parent)) {
+                $item['parent'] = (int)$parent;
+            }
+            if (isset($order)) {
+                $item['customorder'] = (int)$order;
+            }
+            if (isset($idschema)) {
+                $item = $this->set_view($item);
+            }
             $tags->items[$id] = $item;
-            if (!empty($url) && ($url != $item['url'])) $tags->edit($id, $title, $url);
+            if (!empty($url) && ($url != $item['url'])) {
+                $tags->edit($id, $title, $url);
+            }
             $tags->items[$id] = $item;
             unset($item['url']);
             $tags->db->updateassoc($item);
@@ -202,6 +220,4 @@ class Tags extends \litepubl\admin\Menu
         $_GET['id'] = $_POST['id'] = $id;
         return $this->admintheme->success(sprintf($this->lang->success, $title));
     }
-
 }
-

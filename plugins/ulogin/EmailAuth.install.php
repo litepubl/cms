@@ -22,9 +22,9 @@ function EmailAuthInstall($self)
 
     $json = Json::i();
     $json->lock();
-    $json->addevent('email_login', get_class($self) , 'email_login');
-    $json->addevent('email_reg', get_class($self) , 'email_reg');
-    $json->addevent('email_lostpass', get_class($self) , 'email_lostpass');
+    $json->addevent('email_login', get_class($self), 'email_login');
+    $json->addevent('email_reg', get_class($self), 'email_reg');
+    $json->addevent('email_lostpass', get_class($self), 'email_lostpass');
     $json->unlock();
 }
 
@@ -37,4 +37,3 @@ function emailAuthUninstall($self)
 
     Json::i()->unbind($self);
 }
-

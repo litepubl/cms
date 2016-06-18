@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\postcontent;
 
-
 class Admin extends \litepubl\admin\Panel
 {
 
@@ -35,6 +34,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->unlock();
         return '';
     }
-
 }
-

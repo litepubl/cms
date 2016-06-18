@@ -16,9 +16,9 @@ class LogException
     public static function getLog(\Throwable $e): string
     {
                 $result= sprintf('#0 %d %s ', $e->getLine(), $e->getFile());
-$result .= "\n";
+        $result .= "\n";
         $result .= static ::getTraceLog($e->getTrace());
-return $result;
+        return $result;
     }
 
     public static function trace(): string
@@ -90,6 +90,4 @@ return $result;
                 return gettype($v);
         }
     }
-
 }
-

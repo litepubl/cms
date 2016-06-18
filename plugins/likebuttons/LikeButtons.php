@@ -30,6 +30,4 @@ class LikeButtons extends \litepubl\core\Plugin
             Js::i()->addtext('default', 'facebook_appid', ";ltoptions.facebook_appid='$appid';");
         }
     }
-
 }
-

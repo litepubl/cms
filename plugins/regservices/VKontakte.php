@@ -36,10 +36,10 @@ class VKontakte extends Service
     //handle callback
     public function request(Context $context)
     {
-parent::request($context);
+        parent::request($context);
 
-if ($context->response->status != 200) {
-return;
+        if ($context->response->status != 200) {
+                return;
         }
 
         $code = $_REQUEST['code'];
@@ -60,11 +60,11 @@ return;
                     'uid' => $info->uid,
                     'name' => $info->first_name . ' ' . $info->last_name,
                     'website' => 'http://vk.com/id' . $info->uid
-                ) , $info);
+                ), $info);
             }
         }
 
-$context->response->forbidden();
+        $context->response->forbidden();
     }
 
     protected function getAdminInfo(Lang $lang): array
@@ -75,6 +75,4 @@ $context->response->forbidden();
             'client_secret' => $lang->vk_secret
         );
     }
-
 }
-

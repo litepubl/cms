@@ -17,7 +17,7 @@ function PluginInstall($self)
     $rss = Rss::i();
     $rss->beforepost = $self->beforePost;
 
-$self->getApp()->cache->clear();
+    $self->getApp()->cache->clear();
 }
 
 function PluginUninstall($self)
@@ -25,6 +25,5 @@ function PluginUninstall($self)
     $rss = Rss::i();
     $rss->unbind($self);
 
-$self->getApp()->cache->clear();
+    $self->getApp()->cache->clear();
 }
-

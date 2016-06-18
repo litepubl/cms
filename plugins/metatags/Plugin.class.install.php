@@ -17,9 +17,9 @@ use litepubl\view\Parser;
 
 function PluginInstall($self)
 {
-$vars = AutoVars::i();
-$vars->items['metatags'] = get_class($self);
-$vars->save();
+    $vars = AutoVars::i();
+    $vars->items['metatags'] = get_class($self);
+    $vars->save();
 
     $t = MainView::i();
     $t->heads = strtr($t->heads, array(
@@ -44,8 +44,7 @@ function PluginUninstall($self)
     Parser::i()->unbind($self);
     Base::clearCache();
 
-$vars = AutoVars::i();
-unset($vars->items['metatags']);
-$vars->save();
+    $vars = AutoVars::i();
+    unset($vars->items['metatags']);
+    $vars->save();
 }
-

@@ -143,7 +143,7 @@ class Admin extends Base
 
     public function form(string $tml, Args $args): string
     {
-        return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
+        return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']), $args);
     }
 
     public function getTable(string $head, string $body, string $footer = ''): string
@@ -169,7 +169,7 @@ class Admin extends Base
     public function getIcon(string $name, $screenreader = false): string
     {
         return str_replace('$name', $name, $this->templates['icon'])
- . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
+        . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
     public function getSection(string $title, string $content): string
@@ -275,7 +275,7 @@ class Admin extends Base
             call_user_func_array($this->onfileperm, array(
                 $args
             ));
-        } else if ($this->getApp()->options->show_file_perm) {
+        } elseif ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
@@ -310,6 +310,4 @@ class Admin extends Base
 
         return $result;
     }
-
 }
-

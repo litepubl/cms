@@ -113,7 +113,9 @@ class Form
             'id',
             'class'
         ) as $k) {
-            if ($v = $this->$k) $attr.= sprintf(' %s="%s"', $k, $v);
+            if ($v = $this->$k) {
+                $attr.= sprintf(' %s="%s"', $k, $v);
+            }
         }
 
         $theme = Theme::i();
@@ -142,7 +144,7 @@ class Form
 
     public function get(): string
     {
-        return $this->getAdminTheme()->parseArg($this->getTml() , $this->args);
+        return $this->getAdminTheme()->parseArg($this->getTml(), $this->args);
     }
 
     public function getButtons(): string
@@ -161,6 +163,4 @@ class Form
 
         return $result;
     }
-
 }
-

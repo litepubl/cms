@@ -83,13 +83,13 @@ class Backup extends Login
             }
         }
 
-return $result;
+        return $result;
     }
 
     public function processForm()
     {
         $admin = $this->admintheme;
-$lang = Lang::admin('service');
+        $lang = Lang::admin('service');
         if (!isset($_POST['sqlbackup'])) {
             if (!$this->checkBackuper()) {
                 return $admin->getErr($lang->erroraccount);
@@ -104,7 +104,7 @@ $lang = Lang::admin('service');
             }
 
             if (strpos($_FILES['filename']['name'], '.sql')) {
-                $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]) , $_FILES["filename"]["name"]);
+                $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]), $_FILES["filename"]["name"]);
             } else {
                 $url = $this->getApp()->site->url;
                 $dbconfig = $this->getApp()->options->dbconfig;
@@ -126,7 +126,7 @@ $lang = Lang::admin('service');
             exit();
         } elseif (isset($downloadpartial)) {
             $filename = str_replace('.', '-', $this->getApp()->site->domain) . date('-Y-m-d') . $backuper->getfiletype();
-            $content = $backuper->getpartial(isset($plugins) , isset($theme) , isset($lib));
+            $content = $backuper->getpartial(isset($plugins), isset($theme), isset($lib));
             $this->sendfile($content, $filename);
         } elseif (isset($fullbackup)) {
             $filename = str_replace('.', '-', $this->getApp()->site->domain) . date('-Y-m-d') . $backuper->getfiletype();
@@ -226,6 +226,4 @@ $lang = Lang::admin('service');
             )
         ));
     }
-
 }
-

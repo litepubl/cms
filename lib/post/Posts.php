@@ -76,7 +76,7 @@ class Posts extends \litepubl\core\Items
             return $items;
         }
 
-        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , 'limit ' . count($newitems));
+        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)), 'limit ' . count($newitems));
 
         return array_merge($newitems, array_intersect($loaded, $items));
     }
@@ -92,7 +92,7 @@ class Posts extends \litepubl\core\Items
         foreach ($items as $a) {
             $post = Post::newPost($a['class']);
             $post->setAssoc($a);
-$post->afterLoad();
+            $post->afterLoad();
             $result[] = $post->id;
 
             $f = $post->files;
@@ -119,16 +119,16 @@ $post->afterLoad();
         if ($this->childTable) {
             $childTable = $db->prefix . $this->childTable;
             return $this->setAssoc($db->res2items($db->query(
-"select $db->posts.*, $childTable.*, $db->urlmap.url as url
+                "select $db->posts.*, $childTable.*, $db->urlmap.url as url
       from $db->posts, $childTable, $db->urlmap
       where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit"
-)));
+            )));
         }
 
         $items = $db->res2items($db->query(
-"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+            "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $where and  $db->urlmap.id  = $db->posts.idurl $limit"
-));
+        ));
 
         if (!count($items)) {
             return array();
@@ -138,7 +138,7 @@ $post->afterLoad();
         foreach ($items as $id => $item) {
             if (empty($item['class'])) {
                 $items[$id]['class'] = static ::POSTCLASS;
-            } else if ($item['class'] != static ::POSTCLASS) {
+            } elseif ($item['class'] != static ::POSTCLASS) {
                 $subclasses[$item['class']][] = $id;
             }
         }
@@ -182,7 +182,7 @@ $post->afterLoad();
         $post->title = trim($post->title);
         $post->modified = time();
         $post->revision = $this->revision;
-        $post->class = str_replace('\\', '-', ltrim(get_class($post) , '\\'));
+        $post->class = str_replace('\\', '-', ltrim(get_class($post), '\\'));
         if (($post->status == 'published') && ($post->posted > time())) {
             $post->status = 'future';
         } elseif (($post->status == 'future') && ($post->posted <= time())) {
@@ -278,7 +278,7 @@ $post->afterLoad();
     {
         $this->PublishFuture();
         $this->UpdateArchives();
-        Cron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
+        Cron::i()->add('single', get_class($this), 'dosinglecron', $post->id);
     }
 
     public function UpdateArchives()
@@ -393,6 +393,4 @@ $post->afterLoad();
             $count
         ));
     }
-
 }
-

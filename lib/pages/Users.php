@@ -83,8 +83,12 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
     public function select(string $where, string $limit): array
     {
-        if (!$this->dbversion) $this->error('Select method must be called ffrom database version');
-        if ($where) $where.= ' and ';
+        if (!$this->dbversion) {
+            $this->error('Select method must be called ffrom database version');
+        }
+        if ($where) {
+            $where.= ' and ';
+        }
         $db = $this->getApp()->db;
         $table = $this->thistable;
         $res = $db->query("select $table.*, $db->urlmap.url as url from $table, $db->urlmap
@@ -115,7 +119,9 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
             $item = $users->getitem($id);
             $website = $item['website'];
-            if (!strpos($website, '.')) $website = $this->getApp()->site->url . $this->getApp()->site->home;
+            if (!strpos($website, '.')) {
+                $website = $this->getApp()->site->url . $this->getApp()->site->home;
+            }
             if (!Str::begin($website, 'http')) {
                 $website = 'http://' . $website;
             }
@@ -216,8 +222,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $item['url'] = '';
         $linkitem = CoreUsers::i()->getitem($item['id']) + $item;
         $linkgen = LinkGenerator::i();
-        $item['url'] = $linkgen->addurl(new \ArrayObject($linkitem, \ArrayObject::ARRAY_AS_PROPS) , 'user');
-        $item['idurl'] = $this->getApp()->router->add($item['url'], get_class($this) , $item['id']);
+        $item['url'] = $linkgen->addurl(new \ArrayObject($linkitem, \ArrayObject::ARRAY_AS_PROPS), 'user');
+        $item['idurl'] = $this->getApp()->router->add($item['url'], get_class($this), $item['id']);
         return $item;
     }
 
@@ -239,7 +245,9 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
         if ($this->createpage) {
             $users = CoreUsers::i();
-            if ('approved' == $users->getvalue($id, 'status')) $item = $this->addurl($item);
+            if ('approved' == $users->getvalue($id, 'status')) {
+                $item = $this->addurl($item);
+            }
         }
         $this->items[$id] = $item;
         unset($item['url']);
@@ -257,7 +265,9 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
 
         $idurl = $this->getvalue($id, 'idurl');
-        if ($idurl > 0) $this->getApp()->router->deleteitem($idurl);
+        if ($idurl > 0) {
+            $this->getApp()->router->deleteitem($idurl);
+        }
         return parent::delete($id);
     }
 
@@ -271,13 +281,15 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $url = isset($values['url']) ? $values['url'] : '';
         unset($values['url'], $values['idurl'], $values['id']);
         foreach ($item as $k => $v) {
-            if (isset($values[$k])) $item[$k] = $values[$k];
+            if (isset($values[$k])) {
+                $item[$k] = $values[$k];
+            }
         }
         $item['id'] = $id;
         $item['content'] = Filter::i()->filter($item['rawcontent']);
         if ($url && ($url != $item['url'])) {
             if ($item['idurl'] == 0) {
-                $item['idurl'] = $this->getApp()->router->add($url, get_class($this) , $id);
+                $item['idurl'] = $this->getApp()->router->add($url, get_class($this), $id);
             } else {
                 $this->getApp()->router->addredir($item['url'], $url);
                 $this->getApp()->router->setidurl($item['idurl'], $url);
@@ -289,6 +301,4 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         unset($item['url']);
         $this->db->updateassoc($item);
     }
-
 }
-

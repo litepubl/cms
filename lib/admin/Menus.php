@@ -107,7 +107,9 @@ class Menus extends \litepubl\pages\Menus
             $result = array();
             $options = $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
-                if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
+                if ($options->hasgroup($this->items[$iditem]['group'])) {
+                    $result[] = $iditem;
+                }
             }
             return $result;
         }
@@ -141,6 +143,4 @@ class Menus extends \litepubl\pages\Menus
 
         return $this->onexclude($id);
     }
-
 }
-

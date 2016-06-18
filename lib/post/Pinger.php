@@ -94,10 +94,14 @@ class Pinger extends \litepubl\core\Events
 
             $this->ping($link, $posturl);
             $pinged[] = $link;
-            if ((microtime(true) - $m) > 120) break;
+            if ((microtime(true) - $m) > 120) {
+                break;
+            }
         }
 
-        if (count($pinged)) $meta->pinged = serialize($pinged);
+        if (count($pinged)) {
+            $meta->pinged = serialize($pinged);
+        }
     }
 
     private function getLinks(tpost $post)
@@ -142,7 +146,6 @@ class Pinger extends \litepubl\core\Events
             if ($client->query('pingback.ping', $posturl, $link) || (isset($client->error->code) && 48 == $client->error->code)) {
                 return true;
             }
-
         }
         return false;
     }
@@ -157,10 +160,11 @@ class Pinger extends \litepubl\core\Events
         $x_pingback_str = 'x-pingback: ';
         $pingback_href_original_pos = 27;
 
-        extract(parse_url($url) , EXTR_SKIP);
+        extract(parse_url($url), EXTR_SKIP);
 
-        if (!isset($host)) // Not an URL. This should never happen.
-        return false;
+        if (!isset($host)) { // Not an URL. This should never happen.
+            return false;
+        }
 
         $path = (!isset($path)) ? '/' : $path;
         $path.= (isset($query)) ? '?' . $query : '';
@@ -168,8 +172,9 @@ class Pinger extends \litepubl\core\Events
 
         // Try to connect to the server at $host
         $fp = @fsockopen($host, $port, $errno, $errstr, 2);
-        if (!$fp) // Couldn't open a connection to $host
-        return false;
+        if (!$fp) { // Couldn't open a connection to $host
+            return false;
+        }
 
         // Send the GET request
         $version = $this->getApp()->options->version;
@@ -179,24 +184,27 @@ class Pinger extends \litepubl\core\Events
         // Let's check for an X-Pingback header first
         while (!feof($fp)) {
             $line = fgets($fp, 512);
-            if (trim($line) == '') break;
+            if (trim($line) == '') {
+                break;
+            }
 
             $headers.= trim($line) . "\n";
-            $x_pingback_header_offset = strpos(strtolower($headers) , $x_pingback_str);
+            $x_pingback_header_offset = strpos(strtolower($headers), $x_pingback_str);
             if ($x_pingback_header_offset) {
                 // We got it!
                 preg_match('#x-pingback: (.+)#is', $headers, $matches);
                 $pingback_server_url = trim($matches[1]);
                 return $pingback_server_url;
             }
-            if (strpos(strtolower($headers) , 'content-type: ')) {
+            if (strpos(strtolower($headers), 'content-type: ')) {
                 preg_match('#content-type: (.+)#is', $headers, $matches);
                 $content_type = trim($matches[1]);
             }
         }
 
-        if (preg_match('#(image|audio|video|model)/#is', $content_type)) // Not an (x)html, sgml, or xml page, no use going further
-        return false;
+        if (preg_match('#(image|audio|video|model)/#is', $content_type)) { // Not an (x)html, sgml, or xml page, no use going further
+            return false;
+        }
 
         while (!feof($fp)) {
             $line = fgets($fp, 1024);
@@ -212,8 +220,9 @@ class Pinger extends \litepubl\core\Events
                 $pingback_server_url_len = $pingback_href_end - $pingback_href_start;
                 $pingback_server_url = substr($contents, $pingback_href_start, $pingback_server_url_len);
                 // We may find rel="pingback" but an incomplete pingback URL
-                if ($pingback_server_url_len > 0) // We got it!
-                return $pingback_server_url;
+                if ($pingback_server_url_len > 0) { // We got it!
+                    return $pingback_server_url;
+                }
             }
             $byte_count+= strlen($line);
             if ($byte_count > $timeout_bytes) {
@@ -243,15 +252,17 @@ class Pinger extends \litepubl\core\Events
             $client->server = $bits['host'];
             $client->port = isset($bits['port']) ? $bits['port'] : 80;
             $client->path = isset($bits['path']) ? $bits['path'] : '/';
-            if (!$client->path) $client->path = '/';
+            if (!$client->path) {
+                $client->path = '/';
+            }
 
             if (!$client->query('weblogUpdates.extendedPing', $this->getApp()->site->name, $home, $url, $this->getApp()->site->url . '/rss.xml')) {
                 $client->query('weblogUpdates.ping', $this->getApp()->site->name, $url);
             }
 
-            if ((microtime(true) - $m) > 180) break;
+            if ((microtime(true) - $m) > 180) {
+                break;
+            }
         }
     }
-
 }
-

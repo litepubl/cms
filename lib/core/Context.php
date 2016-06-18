@@ -31,7 +31,7 @@ class Context
             return (int)$this->itemRoute['arg'];
         }
 
-        throw new PropException(get_class($this) , $name);
+        throw new PropException(get_class($this), $name);
     }
 
     public function checkAttack()
@@ -45,6 +45,4 @@ class Context
 
         return false;
     }
-
 }
-

@@ -12,12 +12,11 @@ namespace litepubl\pages;
 
 function ManifestInstall($self)
 {
-    $self->getApp()->router->add('/wlwmanifest.xml', get_class($self) , 'manifest');
-    $self->getApp()->router->add('/rsd.xml', get_class($self) , 'rsd');
+    $self->getApp()->router->add('/wlwmanifest.xml', get_class($self), 'manifest');
+    $self->getApp()->router->add('/rsd.xml', get_class($self), 'rsd');
 }
 
 function ManifestUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

@@ -73,6 +73,4 @@ class SingleItems extends Items
 
         return $result;
     }
-
 }
-

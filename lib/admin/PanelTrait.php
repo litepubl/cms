@@ -47,6 +47,4 @@ trait PanelTrait
         $filename = $reflector->getFileName();
         return PluginItems::getLangAbout($filename);
     }
-
 }
-

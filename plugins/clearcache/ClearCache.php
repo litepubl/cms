@@ -32,6 +32,4 @@ class ClearCache extends \litepubl\core\Plugin
         }
         $schemes->save();
     }
-
 }
-

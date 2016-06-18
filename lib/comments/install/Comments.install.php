@@ -26,4 +26,3 @@ function CommentsUninstall($self)
 {
     Posts::unsub($self);
 }
-

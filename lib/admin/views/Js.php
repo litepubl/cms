@@ -32,15 +32,15 @@ class Js extends \litepubl\admin\Menu
         $args->formtitle = $this->title;
         foreach ($merger->items as $section => $items) {
             $tab = $this->newTabs();
-            $tab->add($lang->files, $theme->getInput('editor', $section . '_files', $admin->quote(implode("\n", $items['files'])) , $lang->files));
+            $tab->add($lang->files, $theme->getInput('editor', $section . '_files', $admin->quote(implode("\n", $items['files'])), $lang->files));
             foreach ($items['texts'] as $key => $text) {
-                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $admin->quote($text) , $key));
+                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $admin->quote($text), $key));
             }
 
             $tabs->add($section, $tab->get());
         }
 
-        return $admin->form($tabs->get() , $args);
+        return $admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -58,6 +58,4 @@ class Js extends \litepubl\admin\Menu
         }
         $merger->unlock();
     }
-
 }
-

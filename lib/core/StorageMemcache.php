@@ -45,6 +45,4 @@ class StorageMemcache extends Storage
         parent::delete($filename);
         $this->memcache->delete($filename);
     }
-
 }
-

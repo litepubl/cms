@@ -37,7 +37,7 @@ class Admin extends \litepubl\admin\widget\Widget
         }
 
         $args->formtitle = $lang->formtitle;
-        return $this->admin->form($this->admin->getcats($tags) , $args);
+        return $this->admin->form($this->admin->getcats($tags), $args);
     }
 
     public function processForm()
@@ -76,6 +76,4 @@ class Admin extends \litepubl\admin\widget\Widget
         $widget->unlock();
         $this->getApp()->cache->clear();
     }
-
 }
-

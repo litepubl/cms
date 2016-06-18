@@ -86,7 +86,7 @@ class Home extends SingleMenu
 
     public function getTitle(): string
     {
-return '';
+        return '';
     }
 
     public function getBefore(): string
@@ -179,19 +179,25 @@ return '';
         $ci = $this->getApp()->db->prefix . 'categoriesitems';
         if ($this->showmidle && $this->midlecat) {
             $ex = $this->getmidleposts();
-            if (count($ex)) $result.= sprintf('%s.id not in (%s) ', $p, implode(',', $ex));
+            if (count($ex)) {
+                $result.= sprintf('%s.id not in (%s) ', $p, implode(',', $ex));
+            }
         }
 
         $include = $this->data['includecats'];
         $exclude = $this->data['excludecats'];
 
         if (count($include) > 0) {
-            if ($result) $result.= ' and ';
+            if ($result) {
+                $result.= ' and ';
+            }
             $result.= sprintf('%s.item  in (%s)', $ci, implode(',', $include));
         }
 
         if (count($exclude) > 0) {
-            if ($result) $result.= ' and ';
+            if ($result) {
+                $result.= ' and ';
+            }
             $result.= sprintf('%s.item  not in (%s)', $ci, implode(',', $exclude));
         }
 
@@ -212,7 +218,9 @@ return '';
             $res = $db->query("select count(DISTINCT $p.id) as count from $p, $ci
       where    $where and $p.id = $ci.post and $p.status = 'published'");
 
-            if ($r = $res->fetch_assoc()) $this->data['archcount'] = (int)$r['count'];
+            if ($r = $res->fetch_assoc()) {
+                $this->data['archcount'] = (int)$r['count'];
+            }
         } else {
             $this->data['archcount'] = Posts::i()->archivescount;
         }
@@ -242,7 +250,9 @@ return '';
     where    $ci.item = $this->midlecat and $p.id = $ci.post and $p.status = 'published'
     order by  $p.posted desc limit " . $this->getApp()->options->perpage));
 
-        if (count($this->midleposts)) $posts->loaditems($this->midleposts);
+        if (count($this->midleposts)) {
+            $posts->loaditems($this->midleposts);
+        }
         return $this->midleposts;
     }
 
@@ -278,6 +288,4 @@ return '';
 
         return $result;
     }
-
 }
-

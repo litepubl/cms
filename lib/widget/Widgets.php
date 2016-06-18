@@ -142,7 +142,7 @@ class Widgets extends \litepubl\core\Items
             $this->deleted($id);
         }
 
-return true;
+        return true;
     }
 
     public function class2id(string $class): int
@@ -180,7 +180,7 @@ return true;
 
     public function getSidebarIndex(ViewInterface $view, int $sidebar): string
     {
-        $items = new \ArrayObject($this->getWidgets($view, $sidebar) , \ArrayObject::ARRAY_AS_PROPS);
+        $items = new \ArrayObject($this->getWidgets($view, $sidebar), \ArrayObject::ARRAY_AS_PROPS);
         if ($view instanceof WidgetsInterface) {
             $view->getWidgets($items, $sidebar);
         }
@@ -247,7 +247,9 @@ return true;
         foreach ($this->classes as $class => $items) {
             if ($view instanceof $class) {
                 foreach ($items as $item) {
-                    if ($sidebar == $item['sidebar']) $result[] = $item;
+                    if ($sidebar == $item['sidebar']) {
+                        $result[] = $item;
+                    }
                 }
             }
         }
@@ -266,7 +268,9 @@ return true;
             for ($i = count($items) - 1; $i >= 0; $i--) {
                 $id = $items[$i]['id'];
                 foreach ($subitems as $subitem) {
-                    if ($id == $subitem['id']) Arr::delete($items, $i);
+                    if ($id == $subitem['id']) {
+                        Arr::delete($items, $i);
+                    }
                 }
             }
         }
@@ -287,8 +291,8 @@ return true;
     protected function getSidebarContent(\ArrayObject $sidebarItems, int $sidebar, bool $disableajax): string
     {
         $result = '';
-$view = new View();
-$cache = Cache::i();
+        $view = new View();
+        $cache = Cache::i();
 
         //for call event  getwidget
         $str = new Str();
@@ -300,66 +304,66 @@ $cache = Cache::i();
                 continue;
             }
 
-$item = $this->items[$id];
+            $item = $this->items[$id];
                 $ajax = $sidebarItem['ajax'];
             if ($disableajax || !$ajax) {
                 $ajax = 'disabled';
-} elseif ($ajax === true) {
-$ajax = 'ajax';
+            } elseif ($ajax === true) {
+                        $ajax = 'ajax';
             }
 
-switch ($ajax) {
-case 'disabled':
-                switch ($item['cache']) {
-                    case 'cache':
-                        $content = $cache->getWidget($id, $sidebar);
-                        break;
+            switch ($ajax) {
+                case 'disabled':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $content = $cache->getWidget($id, $sidebar);
+                            break;
 
 
-                    case 'nocache':
-                        $widget = $this->getWidget($id);
-                        $content = $widget->getWidget($id, $sidebar);
-                        break;
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $content = $widget->getWidget($id, $sidebar);
+                            break;
 
 
-                    case 'include':
-                        $content = $view->getInclude($id, $sidebar, $item);
-                        break;
+                        case 'include':
+                            $content = $view->getInclude($id, $sidebar, $item);
+                            break;
 
 
-                    case 'code':
-                        $content = $view->getCode($id, $sidebar);
-                        break;
+                        case 'code':
+                            $content = $view->getCode($id, $sidebar);
+                            break;
 
-default:
-throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
-                }
-break;
+                        default:
+                            throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
+                    }
+                    break;
 
-case 'inline':
-switch ($item['cache']) {
-case 'cache':
-$widgetBody = $cache->getContent($id, $sidebar);
-                        $content = $view->getInline($id, $sidebar, $item, $widgetBody);
-break;
+                case 'inline':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $widgetBody = $cache->getContent($id, $sidebar);
+                                        $content = $view->getInline($id, $sidebar, $item, $widgetBody);
+                            break;
 
-case 'nocache':
-$widget = $this->getWidget($id);
-$widgetBody = $widget->getcontent($id, $sidebar);
-                        $content = $view->getInline($id, $sidebar, $item, $widgetBody );
-break;
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $widgetBody = $widget->getcontent($id, $sidebar);
+                                        $content = $view->getInline($id, $sidebar, $item, $widgetBody);
+                            break;
 
-default:
+                        default:
+                                        $content = $view->getAjax($id, $sidebar, $item);
+                    }
+                    break;
+
+                case 'ajax':
                         $content = $view->getAjax($id, $sidebar, $item);
-}
-                        break;
+                    break;
 
-case 'ajax':
-                $content = $view->getAjax($id, $sidebar, $item);
-break;
-
-default:
-throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
+                default:
+                    throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
             $str->value = $content;
@@ -377,7 +381,6 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             if ($class == $item['class']) {
                 return $id;
             }
-
         }
         return 0;
     }
@@ -444,6 +447,4 @@ throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
 
         return false;
     }
-
 }
-

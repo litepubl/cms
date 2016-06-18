@@ -59,7 +59,7 @@ class Editor extends \litepubl\admin\Menu
             $args->id = 0;
             $args->title = '';
             $args->parent = $this->theme->comboItems($parents, 0);
-            $args->order = $this->theme->comboItems(range(0, 10) , 0);
+            $args->order = $this->theme->comboItems(range(0, 10), 0);
             $status = 'published';
         } else {
             if (!$menus->itemExists($id)) {
@@ -70,14 +70,14 @@ class Editor extends \litepubl\admin\Menu
             $args->id = $id;
             $args->title = $menuitem->getownerprop('title');
             $args->parent = $this->theme->comboItems($parents, $menuitem->parent);
-            $args->order = $this->theme->comboItems(range(0, 10) , $menuitem->order);
+            $args->order = $this->theme->comboItems(range(0, 10), $menuitem->order);
             $status = $menuitem->status;
         }
 
         $args->status = $this->theme->comboItems(array(
             'draft' => $lang->draft,
             'published' => $lang->published
-        ) , $status);
+        ), $status);
 
         if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof FakeMenu))) {
             $args->url = $id == 0 ? '' : $menuitem->url;
@@ -138,7 +138,9 @@ class Editor extends \litepubl\admin\Menu
             $menuitem->content = $raw;
         }
 
-        if (isset($idschema)) $menuitem->idschema = $idschema;
+        if (isset($idschema)) {
+            $menuitem->idschema = $idschema;
+        }
         if (isset($url)) {
             $menuitem->url = $url;
             if (!isset($type) || ($type != 'fake')) {
@@ -157,6 +159,4 @@ class Editor extends \litepubl\admin\Menu
         $admin = $this->admintheme;
         return $admin->success(sprintf($this->lang->success, $admin->link($menuitem->url, $menuitem->title)));
     }
-
 }
-

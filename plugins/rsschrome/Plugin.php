@@ -13,4 +13,3 @@ namespace litepubl\plugins\rsschrome;
 class Plugin extends \litepubl\core\Plugin
 {
 }
-

@@ -21,4 +21,3 @@ function BlackIPUninstall($self)
 {
     Manager::i()->unbind($self);
 }
-

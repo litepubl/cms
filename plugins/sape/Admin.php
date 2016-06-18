@@ -10,8 +10,8 @@
 
 namespace litepubl\plugins\sape;
 
-
 use litepubl\admin\Form;
+
 class Admin extends \litepubl\admin\widget\Widget
 {
 
@@ -24,40 +24,41 @@ class Admin extends \litepubl\admin\widget\Widget
     public function getContent(): string
     {
         $result = '';
-$form = '';
+        $form = '';
         $widget = $this->widget;
-$lang = $this->getLangAbout();
+        $lang = $this->getLangAbout();
         $args = $this->args;
 
         if ($widget->id != 0) {
             $args->maxcount = $widget->counts[$widget->id];
             $form = parent::getForm();
-$forrm .= '[text=maxcount]';
+            $forrm .= '[text=maxcount]';
         }
 
         $args->user = $widget->user;
         $args->force = $widget->force;
-$args->sapeoptions = 1;
-$args->formtitle = $lang->formtitle;
+        $args->sapeoptions = 1;
+        $args->formtitle = $lang->formtitle;
 
-$form .= '
+        $form .= '
 [text=user]
 [checkbox=force]
 [hidden=sapeoptions]
 ';
 
-$result .= $this->admin->form($form, $args);
-$addform = new Form($args);
-$addform->title = $lang->addtitle;
-$addform->submit = 'addwidget';
+        $result .= $this->admin->form($form, $args);
+        $addform = new Form($args);
+        $addform->title = $lang->addtitle;
+        $addform->submit = 'addwidget';
 
-$result .= $addform->get();
-return $result;    }
+        $result .= $addform->get();
+        return $result;
+    }
 
     protected function doProcessForm()
     {
         extract($_POST, EXTR_SKIP);
-$widget = $this->widget;
+        $widget = $this->widget;
         if (isset($addwidget)) {
             $widget->add();
         } elseif (isset($sapeoptions)) {
@@ -67,6 +68,4 @@ $widget = $this->widget;
             $widget->counts[$widget->id] = (int)$maxcount;
         }
     }
-
 }
-

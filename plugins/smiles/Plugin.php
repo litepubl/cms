@@ -18,10 +18,8 @@ class Plugin extends \litepubl\core\Plugin
         $content = strtr($content, array(
             ':)' => $this->smile,
             ';)' => $this->smile,
-':(' => $this->sad,
-';(' => $this->sad,
-));
+        ':(' => $this->sad,
+        ';(' => $this->sad,
+        ));
     }
-
 }
-

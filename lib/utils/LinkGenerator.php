@@ -58,7 +58,9 @@ class LinkGenerator extends \litepubl\core\Events
         }
 
         $result = $this->clean($result);
-        if ($uniq) $result = $this->MakeUnique($result);
+        if ($uniq) {
+            $result = $this->MakeUnique($result);
+        }
         return $result;
     }
 
@@ -71,13 +73,15 @@ class LinkGenerator extends \litepubl\core\Events
             foreach ($match as $item) {
                 $tag = $item[1];
                 if (method_exists($this, $tag)) {
-                    $result = str_replace("[$tag]", $this->$tag() , $result);
+                    $result = str_replace("[$tag]", $this->$tag(), $result);
                 }
             }
         }
 
         $result = $this->clean($result);
-        if ($uniq) $result = $this->MakeUnique($result);
+        if ($uniq) {
+            $result = $this->MakeUnique($result);
+        }
         return $result;
     }
 
@@ -90,7 +94,9 @@ class LinkGenerator extends \litepubl\core\Events
             return rawurlencode($s);
         }
 
-        if ($this->getApp()->options->language != 'en') $s = $this->translit($s);
+        if ($this->getApp()->options->language != 'en') {
+            $s = $this->translit($s);
+        }
         return strtolower($s);
     }
 
@@ -121,8 +127,12 @@ class LinkGenerator extends \litepubl\core\Events
         $result = trim($filename, "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         //bug with rus encode
         //$result = basename($filename);
-        if ($i = strrpos($result, '/')) $result = substr($result, $i + 1);
-        if ($i = strrpos($result, '\\')) $result = substr($result, $i + 1);
+        if ($i = strrpos($result, '/')) {
+            $result = substr($result, $i + 1);
+        }
+        if ($i = strrpos($result, '\\')) {
+            $result = substr($result, $i + 1);
+        }
         $result = $this->encode($result);
         $result = $this->clean($result);
         return trim($result, '/');
@@ -163,7 +173,7 @@ class LinkGenerator extends \litepubl\core\Events
 
     public function monthname()
     {
-        return Lang::date($this->getdate() , '%F');
+        return Lang::date($this->getdate(), '%F');
     }
 
     public function MakeUnique($url)
@@ -206,13 +216,15 @@ class LinkGenerator extends \litepubl\core\Events
             return $this->createlink($obj, $schema, true);
         }
 
-        $url = trim(strip_tags($obj->url) , "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
+        $url = trim(strip_tags($obj->url), "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         if ($url == '') {
             return $this->createlink($obj, $schema, true);
         }
 
         $result = '/' . $this->encode($url);
-        if (Str::end($obj->url, '/')) $result.= '/';
+        if (Str::end($obj->url, '/')) {
+            $result.= '/';
+        }
         $result = $this->clean($result);
         $result = $this->MakeUnique($result);
         return $result;
@@ -234,20 +246,20 @@ class LinkGenerator extends \litepubl\core\Events
             if ($oldurl == $obj->url) {
                 return;
             }
-
         }
 
-        $url = trim(strip_tags($obj->url) , "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
+        $url = trim(strip_tags($obj->url), "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
         if ($url == '') {
             $obj->url = $this->createlink($obj, $schema, false);
             if ($oldurl == $obj->url) {
                 return;
             }
-
         }
 
         $url = '/' . $url;
-        if (Str::end($obj->url, '/')) $url.= '/';
+        if (Str::end($obj->url, '/')) {
+            $url.= '/';
+        }
         if ($oldurl == $url) {
             $obj->url = $oldurl;
             return;
@@ -270,6 +282,4 @@ class LinkGenerator extends \litepubl\core\Events
         $this->getApp()->router->setidurl($obj->idurl, $obj->url);
         $this->getApp()->router->addredir($oldurl, $obj->url);
     }
-
 }
-

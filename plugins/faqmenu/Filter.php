@@ -27,7 +27,7 @@ class Filter
         $content = str_replace(array(
             "\r\n",
             "\r"
-        ) , "\n", trim($content));
+        ), "\n", trim($content));
 
         $lines = explode("\n", $content);
         $q = array();
@@ -65,6 +65,4 @@ class Filter
 
         return str_replace('$items', $result, $this->templateItems);
     }
-
 }
-

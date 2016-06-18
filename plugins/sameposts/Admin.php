@@ -13,11 +13,11 @@ namespace litepubl\plugins\sameposts;
 class Admin extends \litepubl\admin\widget\Order
 {
 
-public function __construct()
+    public function __construct()
     {
         parent::__construct();
-$this->widget = Widget::i();
-$this->widget->id = $this->widget->getWidgets()->find($this->widget);
+        $this->widget = Widget::i();
+        $this->widget->id = $this->widget->getWidgets()->find($this->widget);
     }
 
     protected function getForm()
@@ -34,6 +34,4 @@ $this->widget->id = $this->widget->getWidgets()->find($this->widget);
         $this->widget->postsChanged();
         return parent::doProcessForm();
     }
-
 }
-

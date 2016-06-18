@@ -16,9 +16,9 @@ use litepubl\view\AutoVars;
 
 function PluginInstall($self)
 {
-$vars = AutoVars::i();
-$vars->items['singlecat'] = get_class($self);
-$vars->save();
+    $vars = AutoVars::i();
+    $vars->items['singlecat'] = get_class($self);
+    $vars->save();
 
     Parser::i()->parsed = $self->themeparsed;
     Base::clearCache();
@@ -29,8 +29,7 @@ function PluginUninstall($self)
     Parser::i()->unbind($self);
     Base::clearCache();
 
-$vars = AutoVars::i();
-unset($vars->items['singlecat']);
-$vars->save();
+    $vars = AutoVars::i();
+    unset($vars->items['singlecat']);
+    $vars->save();
 }
-

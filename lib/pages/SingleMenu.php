@@ -20,6 +20,4 @@ class SingleMenu extends Menu
             $this->loaddata($id);
         }
     }
-
 }
-

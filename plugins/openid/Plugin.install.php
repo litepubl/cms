@@ -16,7 +16,7 @@ use litepubl\view\MainView;
 
 function PluginInstall($self)
 {
-    $self->getApp()->router->add($self->url, get_class($self) , null, 'get');
+    $self->getApp()->router->add($self->url, get_class($self), null, 'get');
 
     $template = MainView::i();
     $template->addtohead($self->get_head());
@@ -36,4 +36,3 @@ function PluginUninstall($self)
 
     $self->getApp()->cache->clear();
 }
-

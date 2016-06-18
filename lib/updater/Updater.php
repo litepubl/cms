@@ -70,12 +70,16 @@ class Updater extends \litepubl\core\Events
     public function run($ver)
     {
         $ver = (string)$ver;
-        if (strlen($ver) == 3) $ver.= '0';
-        if (strlen($ver) == 1) $ver.= '.00';
+        if (strlen($ver) == 3) {
+            $ver.= '0';
+        }
+        if (strlen($ver) == 1) {
+            $ver.= '.00';
+        }
         $filename = $this->getApp()->paths->lib . "update/update.$ver.php";
 
         if (file_exists($filename)) {
-            require_once ($filename);
+            require_once($filename);
             $this->log("$filename is required file", 'update');
             $func = 'update' . str_replace('.', '', $ver);
 
@@ -83,7 +87,7 @@ class Updater extends \litepubl\core\Events
                 $func();
                 $this->log("$func is called", 'update');
                 $this->getApp()->poolStorage->commit();
-            } else if (function_exists('litepubl\\' . $func)) {
+            } elseif (function_exists('litepubl\\' . $func)) {
                 call_user_func_array('litepubl\\' . $func, array());
                 $this->log("$func is called", 'update');
                 $this->getApp()->poolStorage->commit();
@@ -101,8 +105,12 @@ class Updater extends \litepubl\core\Events
         $v = $app->options->version + 0.01;
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
-            if (strlen($ver) == 3) $ver.= '0';
-            if (strlen($ver) == 1) $ver.= '.00';
+            if (strlen($ver) == 3) {
+                $ver.= '0';
+            }
+            if (strlen($ver) == 1) {
+                $ver.= '.00';
+            }
             $this->log("$v selected to update", 'update');
             $this->run($v);
             $app->options->version = $ver;
@@ -125,7 +133,9 @@ class Updater extends \litepubl\core\Events
     public function autoUpdate($protecttimeout = true)
     {
         if ($protecttimeout) {
-            if (ob_get_level()) @ob_end_clean();
+            if (ob_get_level()) {
+                @ob_end_clean();
+            }
             Header('Cache-Control: no-cache, must-revalidate');
             Header('Pragma: no-cache');
             echo "\n";
@@ -159,7 +169,9 @@ class Updater extends \litepubl\core\Events
             return 'Already updated';
         }
 
-        if (($ver == 0) || ($ver > $latest)) $ver = $latest;
+        if (($ver == 0) || ($ver > $latest)) {
+            $ver = $latest;
+        }
         if ($this->download($ver)) {
             $this->result = $lang->successdownload;
             $this->update();
@@ -236,7 +248,7 @@ class Updater extends \litepubl\core\Events
         $cmd[] = sprintf('tar -xf %s%s -p --overwrite', $this->getApp()->paths->backup, $filename);
         $cmd[] = 'rm ' . $this->getApp()->paths->backup . $filename;
         //Str::dump(implode("\n", $cmd));
-        exec(implode("\n", $cmd) , $r);
+        exec(implode("\n", $cmd), $r);
         if ($s = implode("\n", $r)) {
             return $s;
         }
@@ -244,6 +256,4 @@ class Updater extends \litepubl\core\Events
         $this->onupdated();
         return true;
     }
-
 }
-

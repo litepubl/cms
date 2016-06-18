@@ -32,7 +32,7 @@ class Plugin extends \litepubl\post\Posts
         $post->updateFiltered();
         $id = parent::add($post);
         $this->createPoll($id);
-return $id;
+        return $id;
     }
 
     public function edit(Post $post)
@@ -40,6 +40,4 @@ return $id;
         $post->updateFiltered();
         return parent::edit($post);
     }
-
 }
-

@@ -109,6 +109,4 @@ class Widget extends \litepubl\widget\Widget
         $view = new View();
         return $view->getPosts($items, $sidebar, '');
     }
-
 }
-

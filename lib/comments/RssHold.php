@@ -92,12 +92,12 @@ class RssHold extends \litepubl\core\Events implements \litepubl\core\Responsive
         $lang = Lang::admin('comments');
 
         foreach ($recent as $item) {
-            if ($item['website']) $item['website'] = sprintf('<a href="%1$s">%1$s</a>', $item['website']);
+            if ($item['website']) {
+                $item['website'] = sprintf('<a href="%1$s">%1$s</a>', $item['website']);
+            }
             $comment->exchangeArray($item);
             $comment->content = $theme->parse($tml);
             $rss->AddRSSComment($comment, $title . $comment->title);
         }
     }
-
 }
-

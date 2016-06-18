@@ -66,7 +66,6 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
 
                 default:
                     ////ignore
-                    
             }
 
             switch ($self->breadpos) {
@@ -92,7 +91,6 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
 
                 default:
                     ////ignore
-                    
             }
 
             if ($self->similarpos == 'after') {
@@ -100,17 +98,16 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
             }
 
             $theme->templates[$k] = str_replace('$post.catlinks', $replace, $v);
+        }
     }
-}
 
-if (Parser::i()->replacelang) {
-    $lang = Lang::i('catbread');
-    foreach (array(
+    if (Parser::i()->replacelang) {
+        $lang = Lang::i('catbread');
+        foreach (array(
         'catbread.items.childs',
         'catbread.similar',
-    ) as $name) {
-        $theme->templates[$name] = $theme->replacelang($theme->templates[$name], $lang);
+        ) as $name) {
+            $theme->templates[$name] = $theme->replacelang($theme->templates[$name], $lang);
+        }
     }
 }
-}
-

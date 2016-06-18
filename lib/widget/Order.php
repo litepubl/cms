@@ -33,14 +33,12 @@ class Order extends Widget
 
         $order = $this->order;
         if (($order < 0) || ($order >= count($items))) {
-$order = count($items);
-}
+            $order = count($items);
+        }
 
         Arr::insert($items, array(
             'id' => $this->id,
             'ajax' => $this->ajax
-        ) , $order);
+        ), $order);
     }
-
 }
-

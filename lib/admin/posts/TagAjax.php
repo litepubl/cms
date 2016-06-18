@@ -123,6 +123,4 @@ class TagAjax extends Ajax
         }
         return $result;
     }
-
 }
-

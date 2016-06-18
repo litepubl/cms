@@ -65,7 +65,9 @@ class Oauth
             $keys = array_merge($keys, $query);
         }
 
-        if (!isset($keys['oauth_key'])) $keys['oauth_key'] = $this->key;
+        if (!isset($keys['oauth_key'])) {
+            $keys['oauth_key'] = $this->key;
+        }
         $keys['oauth_version'] = '1.0';
         $keys['oauth_nonce'] = md5('_oauth_rand_' . microtime() . mt_rand());
         $keys['oauth_timestamp'] = time();
@@ -80,7 +82,7 @@ class Oauth
         return $this->normalize_url($url) . '?' . $this->getparams($this->getsign($keys, $url, $method));
     }
 
-    public function getData(array $keys, $url, $params = array() , $method = 'GET')
+    public function getData(array $keys, $url, $params = array(), $method = 'GET')
     {
         $url = $this->get_url($keys, $url, $params, $method);
         if ($method == 'POST') {
@@ -106,7 +108,7 @@ class Oauth
         }
 
         $raw = implode('&', $sig);
-        return base64_encode($this->hmac_sha1($raw, $key, TRUE));
+        return base64_encode($this->hmac_sha1($raw, $key, true));
     }
 
     private function normalize_url($url)
@@ -121,7 +123,9 @@ class Oauth
 
     private function get_signable($params)
     {
-        if (isset($params['oauth_signature'])) unset($params['oauth_signature']);
+        if (isset($params['oauth_signature'])) {
+            unset($params['oauth_signature']);
+        }
         ksort($params);
         $total = array();
         foreach ($params as $k => $v) {
@@ -150,7 +154,7 @@ class Oauth
         return implode(', ', $result);
     }
 
-    private function hmac_sha1($data, $key, $raw = TRUE)
+    private function hmac_sha1($data, $key, $raw = true)
     {
         if (strlen($key) > 64) {
             $key = pack('H40', sha1($key));
@@ -160,8 +164,8 @@ class Oauth
             $key = str_pad($key, 64, chr(0));
         }
 
-        $_ipad = (substr($key, 0, 64) ^ str_repeat(chr(0x36) , 64));
-        $_opad = (substr($key, 0, 64) ^ str_repeat(chr(0x5C) , 64));
+        $_ipad = (substr($key, 0, 64) ^ str_repeat(chr(0x36), 64));
+        $_opad = (substr($key, 0, 64) ^ str_repeat(chr(0x5C), 64));
 
         $hex = sha1($_opad . pack('H40', sha1($_ipad . $data)));
         if (!$raw) {
@@ -182,7 +186,6 @@ class Oauth
             if ($this->settokens($bits['oauth_token'], $bits['oauth_token_secret'])) {
                 return $bits;
             }
-
         }
         return false;
     }
@@ -208,7 +211,6 @@ class Oauth
             if ($this->settokens($bits['oauth_token'], $bits['oauth_token_secret'])) {
                 return $bits;
             }
-
         }
         return false;
     }
@@ -216,17 +218,17 @@ class Oauth
     private function dorequest($url, $method = 'GET', $postdata = null)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Expect:'
         )); // Get around error 417
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
+        curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
 
         if ($method == 'POST') {
-            curl_setopt($ch, CURLOPT_POST, TRUE);
+            curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
         }
 
@@ -259,7 +261,7 @@ class Oauth
 
     public function get_authorize_url()
     {
-        return $this->urllist['authorize'] . sprintf('?oauth_token=%s&&oauth_callback=%s', rawurlencode($this->token) , rawurlencode($this->urllist['callback']));
+        return $this->urllist['authorize'] . sprintf('?oauth_token=%s&&oauth_callback=%s', rawurlencode($this->token), rawurlencode($this->urllist['callback']));
     }
 
     public function getAccessToken($oauth_verifier)
@@ -277,7 +279,7 @@ class Oauth
     {
         $a = array();
         foreach ($post as $k => $v) {
-            $a[] = sprintf('%s=%s', rawurlencode($k) , rawurlencode($v));
+            $a[] = sprintf('%s=%s', rawurlencode($k), rawurlencode($v));
         }
         $postdata = implode('&', $a);
 
@@ -295,13 +297,13 @@ class Oauth
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
         $this->response = curl_exec($ch);
@@ -320,6 +322,4 @@ class Oauth
         $keys['oauth_token'] = $this->token;
         return http::get($this->get_url($keys, $url));
     }
-
 }
-

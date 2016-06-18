@@ -48,7 +48,7 @@ class Backuper extends \litepubl\core\Events
 
     public function newTar()
     {
-        require_once ($this->getApp()->paths->lib . 'include/tar.class.php');
+        require_once($this->getApp()->paths->lib . 'include/tar.class.php');
         return new \tar;
     }
 
@@ -238,11 +238,15 @@ class Backuper extends \litepubl\core\Events
                         continue;
                     }
 
-                    $this->addfile($filename, $filer->getfile($filename) , $item['mode']);
-                    if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
+                    $this->addfile($filename, $filer->getfile($filename), $item['mode']);
+                    if (!$hasindex) {
+                        $hasindex = ($name == 'index.php') || ($name == 'index.htm');
+                    }
                 }
             }
-            if (!$hasindex) $this->addfile($path . 'index.htm', '', $filer->chmod_file);
+            if (!$hasindex) {
+                $this->addfile($path . 'index.htm', '', $filer->chmod_file);
+            }
         }
     }
 
@@ -275,11 +279,15 @@ class Backuper extends \litepubl\core\Events
                         continue;
                     }
 
-                    $this->addfile($dir . $name, file_get_contents($filename) , $item['mode']);
-                    if (!$hasindex) $hasindex = ($name == 'index.php') || ($name == 'index.htm');
+                    $this->addfile($dir . $name, file_get_contents($filename), $item['mode']);
+                    if (!$hasindex) {
+                        $hasindex = ($name == 'index.php') || ($name == 'index.htm');
+                    }
                 }
             }
-            if (!$hasindex) $this->addfile($dir . 'index.htm', '', $filer->chmod_file);
+            if (!$hasindex) {
+                $this->addfile($dir . 'index.htm', '', $filer->chmod_file);
+            }
         }
     }
 
@@ -293,7 +301,7 @@ class Backuper extends \litepubl\core\Events
                     continue;
                 }
 
-                $this->addfile($name, $filer->getfile($name) , $item['mode']);
+                $this->addfile($name, $filer->getfile($name), $item['mode']);
             }
         }
     }
@@ -308,10 +316,14 @@ class Backuper extends \litepubl\core\Events
         //if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
         if (!($this->__filer instanceof Local)) {
             $dir = str_replace('\\', '/', $dir);
-            if ('/' != DIRECTORY_SEPARATOR) $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
+            if ('/' != DIRECTORY_SEPARATOR) {
+                $dir = str_replace(DIRECTORY_SEPARATOR, '/', $dir);
+            }
             $dir = rtrim($dir, '/');
             $root = rtrim($this->ftproot, '/');
-            if (Str::begin($dir, $root)) $dir = substr($dir, strlen($root));
+            if (Str::begin($dir, $root)) {
+                $dir = substr($dir, strlen($root));
+            }
             $this->filer->chdir($dir);
         } else {
             $this->filer->chdir($dir);
@@ -321,8 +333,12 @@ class Backuper extends \litepubl\core\Events
     public function setDir($dir)
     {
         $dir = trim($dir, '/');
-        if ($i = strpos($dir, '/')) $dir = substr($dir, 0, $i);
-        if (!isset($this->getApp()->paths->$dir)) $this->error(sprintf('Unknown "%s" folder', $dir));
+        if ($i = strpos($dir, '/')) {
+            $dir = substr($dir, 0, $i);
+        }
+        if (!isset($this->getApp()->paths->$dir)) {
+            $this->error(sprintf('Unknown "%s" folder', $dir));
+        }
         $this->chdir(dirname(rtrim($this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
     }
 
@@ -330,7 +346,7 @@ class Backuper extends \litepubl\core\Events
     {
         set_time_limit(300);
         $this->createarchive();
-        $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+        $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
@@ -376,7 +392,7 @@ class Backuper extends \litepubl\core\Events
     {
         set_time_limit(300);
         $this->createarchive();
-        $this->addfile('dump.sql', $this->getdump() , $this->filer->chmod_file);
+        $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
@@ -415,7 +431,6 @@ class Backuper extends \litepubl\core\Events
     public function uploaddump($s, $filename)
     {
         if (Str::end($filename, '.zip')) {
-
             $tempfile = $this->getTempName();
             file_put_contents($tempfile, $s);
             @chmod($tempfile, 0666);
@@ -501,7 +516,7 @@ class Backuper extends \litepubl\core\Events
             return true;
         }
 
-        $dir = rtrim(dirname($filename) , '/');
+        $dir = rtrim(dirname($filename), '/');
         $this->setdir($dir);
         if (!isset($this->existingfolders[$dir])) {
             $this->filer->forcedir($dir);
@@ -553,7 +568,7 @@ class Backuper extends \litepubl\core\Events
                         $path_root = $this->get_path_root($item['name']);
                     }
 
-                    $name = $path_root ? ltrim(substr(ltrim($item['name'], '/') , strlen($path_root)) , '/') : $item['name'];
+                    $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
                     if (!$this->uploadfile($name, $item['file'], $item['mode'])) {
                         return $this->errorwrite($name);
                     }
@@ -589,7 +604,7 @@ class Backuper extends \litepubl\core\Events
                             $path_root = $this->get_path_root($filename);
                         }
 
-                        $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+                        $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
                         if (!$this->uploadfile($filename, $s, $mode)) {
                             $this->zip->close();
                             unlink($tempfile);
@@ -631,7 +646,7 @@ class Backuper extends \litepubl\core\Events
     public function uploadtar($filename)
     {
         if (file_exists($filename)) {
-            return $this->upload(file_get_contents($filename) , 'tar');
+            return $this->upload(file_get_contents($filename), 'tar');
         }
 
         return false;
@@ -666,7 +681,7 @@ class Backuper extends \litepubl\core\Events
                     $path_root = $this->get_path_root($filename);
                 }
 
-                $filename = $path_root ? ltrim(substr(ltrim($filename, '/') , strlen($path_root)) , '/') : $filename;
+                $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
                 if (!$this->uploadfile($filename, $s, $mode)) {
                     $zip->close();
                     return $this->errorwrite($filename);
@@ -799,7 +814,7 @@ class Backuper extends \litepubl\core\Events
     public function getShellfilename()
     {
         $filename = $this->getfilename('.tar.gz');
-        return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')) , strrpos($filename, DIRECTORY_SEPARATOR) + 1);
+        return substr(substr($filename, 0, strlen($filename) - strlen('.tar.gz')), strrpos($filename, DIRECTORY_SEPARATOR) + 1);
     }
 
     public function createshellbackup()
@@ -807,14 +822,14 @@ class Backuper extends \litepubl\core\Events
         $dbconfig = $this->getApp()->options->dbconfig;
         $cmd = array();
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
-        $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
+        $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])), $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql', $filename);
         $cmd[] = 'rm dump.sql';
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";
         $cmd[] = "chmod 0666 $filename.tar.gz";
-        exec(implode("\n", $cmd) , $r);
+        exec(implode("\n", $cmd), $r);
         //echo implode("\n", $r);
         return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
@@ -824,14 +839,14 @@ class Backuper extends \litepubl\core\Events
         $dbconfig = $this->getApp()->options->dbconfig;
         $cmd = array();
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
-        $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])) , $dbconfig['dbname']);
+        $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])), $dbconfig['dbname']);
         $filename = $this->getshellfilename();
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../storage/data/* dump.sql ../../lib/* ../../plugins/* ../../themes/* ../../js/* ../../index.php "../../.htaccess"', $filename);
         $cmd[] = 'rm dump.sql';
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";
         $cmd[] = "chmod 0666 $filename.tar.gz";
-        exec(implode("\n", $cmd) , $r);
+        exec(implode("\n", $cmd), $r);
         //echo implode("\n", $r);
         return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
@@ -845,7 +860,7 @@ class Backuper extends \litepubl\core\Events
         $cmd[] = "gzip $filename.tar";
         $cmd[] = "rm $filename.tar";
         $cmd[] = "chmod 0666 $filename.tar.gz";
-        exec(implode("\n", $cmd) , $r);
+        exec(implode("\n", $cmd), $r);
         //echo implode("\n", $r);
         return $this->getApp()->paths->backup . $filename . '.tar.gz';
     }
@@ -889,6 +904,4 @@ class Backuper extends \litepubl\core\Events
 
         return false;
     }
-
 }
-

@@ -32,6 +32,4 @@ class RegUser extends \litepubl\core\Items
     {
         return $this->db->findId('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
-
 }
-

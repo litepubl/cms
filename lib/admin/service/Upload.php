@@ -23,7 +23,7 @@ class Upload extends Login
         $lang = Lang::admin('service');
         $args = $this->newArgs();
 
-        $args->url = str_replace('$mysite', rawurlencode($this->getApp()->site->url) , $this->getparam('url', ''));
+        $args->url = str_replace('$mysite', rawurlencode($this->getApp()->site->url), $this->getparam('url', ''));
         $lang = Lang::admin();
         $form = $this->newForm();
         $form->title = $lang->uploaditem;
@@ -72,6 +72,4 @@ class Upload extends Login
             return $admin->h($backuper->result);
         }
     }
-
 }
-

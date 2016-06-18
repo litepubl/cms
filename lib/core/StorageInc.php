@@ -41,7 +41,7 @@ class StorageInc extends Storage
     public function loadData($filename)
     {
         if (\file_exists($filename . $this->getExt())) {
-            return include ($filename . $this->getExt());
+            return include($filename . $this->getExt());
         }
 
         return false;
@@ -51,6 +51,4 @@ class StorageInc extends Storage
     {
         $this->error('Call loadfile');
     }
-
 }
-

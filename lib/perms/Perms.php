@@ -66,6 +66,4 @@ class Perms extends \litepubl\core\Items
 
         return parent::delete($id);
     }
-
 }
-

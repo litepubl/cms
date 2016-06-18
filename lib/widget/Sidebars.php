@@ -146,7 +146,9 @@ class Sidebars extends \litepubl\core\Data
             if (($oldsidebar != $newsidebar) || ($oldorder != $neworder)) {
                 $item = $items[$oldsidebar][$oldorder];
                 Arr::delete($items[$oldsidebar], $oldorder);
-                if (($neworder < 0) || ($neworder > count($items[$newsidebar]))) $neworder = count($items[$newsidebar]);
+                if (($neworder < 0) || ($neworder > count($items[$newsidebar]))) {
+                    $neworder = count($items[$newsidebar]);
+                }
                 Arr::insert($items[$newsidebar], $item, $neworder);
             }
         }
@@ -157,7 +159,9 @@ class Sidebars extends \litepubl\core\Data
         $widgets = Widgets::i();
         foreach ($widgets->classes as $classname => & $items) {
             foreach ($items as $i => $item) {
-                if (!isset($widgets->items[$item['id']])) unset($items[$i]);
+                if (!isset($widgets->items[$item['id']])) {
+                    unset($items[$i]);
+                }
             }
         }
 
@@ -178,6 +182,4 @@ class Sidebars extends \litepubl\core\Data
         }
         $schemes->save();
     }
-
 }
-

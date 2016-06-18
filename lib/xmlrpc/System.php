@@ -34,7 +34,6 @@ class System extends Common
             } else {
                 return new IXR_Error(-32601, "server error. requested signature of $name method does not exist.");
             }
-
         }
 
         switch ($name) {
@@ -124,6 +123,4 @@ class System extends Common
     {
         return $number1 + $number2;
     }
-
 }
-

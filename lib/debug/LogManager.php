@@ -58,14 +58,14 @@ class LogManager
     {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
         $log.= LogException::getLog($e);
-        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
         $this->logger->alert($log);
     }
 
     public function getTrace()
     {
         $log = LogException::trace();
-        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
         return $log;
     }
 
@@ -102,6 +102,4 @@ class LogManager
         $log.= "\n";
         Filer::append(static ::getAppInstance()->paths->data . 'logs/filer.log', $log);
     }
-
 }
-

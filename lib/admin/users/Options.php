@@ -40,7 +40,7 @@ class Options extends \litepubl\admin\Menu
         return $admin->form('[checkbox=createpage]
     [text=linkschema]
     [text=defaulthome]
-' . $admin->h($lang->defaults) . GetPerm::groups($groups->defaults) , $args);
+' . $admin->h($lang->defaults) . GetPerm::groups($groups->defaults), $args);
     }
 
     public function processForm()
@@ -58,6 +58,4 @@ class Options extends \litepubl\admin\Menu
         $linkgen->data['user'] = $_POST['linkschema'];
         $linkgen->save();
     }
-
 }
-

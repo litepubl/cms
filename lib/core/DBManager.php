@@ -32,13 +32,14 @@ class DBManager
         return call_user_func_array(array(
             $this->getApp()->db,
             $name
-        ) , $arg);
+        ), $arg);
     }
 
     public function createTable($name, $struct)
     {
-        if (!$this->engine) $this->engine = 'MyISAM'; //InnoDB
-        $this->deletetable($name);
+        if (!$this->engine) {
+            $this->engine = 'MyISAM'; //InnoDB
+        }        $this->deletetable($name);
         return $this->exec("create table $this->prefix$name
     ($struct)
     ENGINE=$this->engine
@@ -49,7 +50,9 @@ class DBManager
     public function deleteTable($name)
     {
         //$this->exec("DROP TABLE IF EXISTS $this->prefix$name");
-        if ($this->table_exists($name)) $this->exec("DROP TABLE $this->prefix$name");
+        if ($this->table_exists($name)) {
+            $this->exec("DROP TABLE $this->prefix$name");
+        }
     }
 
     public function deleteAllTables()
@@ -225,7 +228,7 @@ class DBManager
         if ($list = $this->GetDatabaseList()) {
             return in_array($name, $list);
         }
-        return FALSE;
+        return false;
     }
 
     public function getTables()
@@ -258,7 +261,7 @@ class DBManager
         $prefix = strtolower($this->getApp()->options->dbconfig['prefix']);
         $tables = $this->gettables();
         foreach ($tables as $table) {
-            if (Str::begin(strtolower($table) , $prefix)) {
+            if (Str::begin(strtolower($table), $prefix)) {
                 $this->exec("LOCK TABLES `$table` WRITE");
                 $this->exec("OPTIMIZE TABLE $table");
                 $this->exec("UNLOCK TABLES");
@@ -310,7 +313,9 @@ class DBManager
                     }
                 }
 
-                if ($sql) $result.= "INSERT INTO `$name` VALUES " . $sql . ";\n";
+                if ($sql) {
+                    $result.= "INSERT INTO `$name` VALUES " . $sql . ";\n";
+                }
                 $result.= "/*!40000 ALTER TABLE `$name` ENABLE KEYS */;\nUNLOCK TABLES;\n\n";
             }
             return $result;
@@ -338,8 +343,12 @@ class DBManager
         }
 
         $s = substr($dump, $i);
-        if (!$this->iscomment($s)) $sql.= $s;
-        if ($sql != '') $this->getApp()->db->exec($sql);
+        if (!$this->iscomment($s)) {
+            $sql.= $s;
+        }
+        if ($sql != '') {
+            $this->getApp()->db->exec($sql);
+        }
     }
 
     private function iscomment(&$s)
@@ -359,6 +368,4 @@ class DBManager
         }
         return false;
     }
-
 }
-

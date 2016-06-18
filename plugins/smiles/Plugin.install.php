@@ -17,11 +17,11 @@ use litepubl\core\Plugins;
 
 function PluginInstall($self)
 {
-$admin = Admin::admin();
-$about = Plugins::getAbout(basename(__DIR__));
-$self->data['smile'] = $admin->getIcon('smile-o', $about['smile']);
-$self->data['sad'] = $admin->getIcon('frown-o', $about['sad']);
-$self->save();
+    $admin = Admin::admin();
+    $about = Plugins::getAbout(basename(__DIR__));
+    $self->data['smile'] = $admin->getIcon('smile-o', $about['smile']);
+    $self->data['sad'] = $admin->getIcon('frown-o', $about['sad']);
+    $self->save();
 
     $filter = Filter::i();
     $filter->lock();
@@ -37,4 +37,3 @@ function PluginUninstall($self)
     Filter::i()->unbind($self);
     Posts::i()->addRevision();
 }
-

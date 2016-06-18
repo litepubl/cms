@@ -77,6 +77,4 @@ class Admin extends \litepubl\admin\widget\Widget
 
         $widget->unlock();
     }
-
 }
-

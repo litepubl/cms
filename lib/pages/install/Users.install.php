@@ -31,7 +31,7 @@ function UsersInstall($self)
     $linkgen->data['user'] = '/user/[name].htm';
     $linkgen->save();
 
-    $self->getApp()->router->add('/users.htm', get_class($self) , 'url', 'get');
+    $self->getApp()->router->add('/users.htm', get_class($self), 'url', 'get');
 
     $robots = RobotsTxt::i();
     $robots->AddDisallow('/users.htm');
@@ -41,4 +41,3 @@ function UsersUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

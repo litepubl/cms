@@ -14,7 +14,7 @@ use litepubl\view\Js;
 
 class Plugin extends \litepubl\core\Plugin
 {
-public $jsfile = 'files/js/googleanalitic.js';
+    public $jsfile = 'files/js/googleanalitic.js';
 
     protected function create()
     {
@@ -34,5 +34,4 @@ public $jsfile = 'files/js/googleanalitic.js';
         $js = Js::i();
         $js->deleteFile('default', $this->jsfile);
     }
-
 }

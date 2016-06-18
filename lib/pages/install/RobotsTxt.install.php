@@ -13,7 +13,7 @@ namespace litepubl\pages;
 function RobotsTxtInstall($self)
 {
     $self->lock();
-    $self->idurl = $self->getApp()->router->add('/robots.txt', get_class($self) , null);
+    $self->idurl = $self->getApp()->router->add('/robots.txt', get_class($self), null);
 
     $self->add("#" . $self->getApp()->site->url . "/");
     $self->add('User-agent: *');
@@ -31,4 +31,3 @@ function RobotsTxtUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

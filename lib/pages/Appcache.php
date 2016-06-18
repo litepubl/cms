@@ -45,7 +45,7 @@ class Appcache extends \litepubl\core\Items
         $this->items = explode("\n", trim(str_replace(array(
             "\r\n",
             "\r"
-        ) , "\n", $value)));
+        ), "\n", $value)));
         $this->save();
     }
 
@@ -56,6 +56,4 @@ class Appcache extends \litepubl\core\Items
         $response->body = "CACHE MANIFEST\r\n";
         $response->body.= Theme::i()->parse($this->text);
     }
-
 }
-

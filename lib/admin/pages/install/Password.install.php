@@ -19,4 +19,3 @@ function PasswordUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

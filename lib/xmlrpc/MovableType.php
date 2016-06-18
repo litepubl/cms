@@ -147,6 +147,4 @@ class MovableType extends Common
         $posts->edit($post);
         return true;
     }
-
 }
-

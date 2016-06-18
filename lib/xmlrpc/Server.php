@@ -28,7 +28,7 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
     public function request(Context $context)
     {
         $this->getmethods();
-        require_once (__DIR__ . '/IXR.php');
+        require_once(__DIR__ . '/IXR.php');
         $this->parser = new Parser();
         $this->parser->owner = $this;
         $this->parser->IXR_Server($this->items);
@@ -62,10 +62,9 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
             return call_user_func_array(array(
                 $obj,
                 $func
-            ) , $args);
-        }
-        catch(\Exception $e) {
-            return new IXR_Error($e->getCode() , $e->getMessage());
+            ), $args);
+        } catch (\Exception $e) {
+            return new IXR_Error($e->getCode(), $e->getMessage());
         }
     }
 
@@ -87,6 +86,4 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         }
         $this->save();
     }
-
 }
-

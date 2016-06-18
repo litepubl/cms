@@ -65,6 +65,4 @@ trait ViewTrait
     {
         return $this;
     }
-
 }
-

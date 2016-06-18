@@ -9,7 +9,7 @@ class Admin extends \litepubl\admin\Panel
 
     public function getContent(): string
     {
-$plugin = Plugin::i();
+        $plugin = Plugin::i();
         $lang = $this->getLangAbout();
         $args = $this->args;
         $args->formtitle = $lang->formtitle;
@@ -23,7 +23,7 @@ $plugin = Plugin::i();
 
     public function processForm()
     {
-$plugin = Plugin::i();
+        $plugin = Plugin::i();
         $plugin->user = trim($_POST['user']);
         $plugin->se = $_POST['se'];
         $plugin->save();
@@ -34,15 +34,14 @@ $plugin = Plugin::i();
         } else {
             $s = file_get_contents(__DIR__ . '/googleanalitic.js');
             $s = sprintf($s, $plugin->user, $plugin->se);
-$filename = $this->getApp()->paths->home . $plugin->jsfile;
-file_plufile_put_contents($filename, $s);
-@chmod($filename, 0666);
+            $filename = $this->getApp()->paths->home . $plugin->jsfile;
+            file_plufile_put_contents($filename, $s);
+            @chmod($filename, 0666);
 
-$js->lock();
+            $js->lock();
             $js->add('default', $plugin->jsfile);
-$js->unlock();
+            $js->unlock();
         }
 
     }
-
 }

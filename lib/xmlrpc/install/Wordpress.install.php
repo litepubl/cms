@@ -25,4 +25,3 @@ function WordpressInstall($self)
 
     $caller->unlock();
 }
-

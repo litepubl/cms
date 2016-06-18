@@ -37,7 +37,7 @@ class ThemeParser extends \litepubl\admin\Menu
         $tabs->add($lang->admin, '[editor=admintagfiles] [editor=adminthemefiles]');
 
         $args->formtitle = $lang->options;
-        return $this->admintheme->form($tabs->get() , $args);
+        return $this->admintheme->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -54,6 +54,4 @@ class ThemeParser extends \litepubl\admin\Menu
 
         Base::clearcache();
     }
-
 }
-

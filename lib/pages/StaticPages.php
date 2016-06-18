@@ -42,7 +42,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
 
     public function getHead(): string
     {
-return '';
+        return '';
     }
 
     public function getKeywords(): string
@@ -86,7 +86,7 @@ return '';
         $linkgen = LinkGenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
         $this->items[++$this->autoid] = array(
-            'idurl' => $this->getApp()->router->add($url, get_class($this) , $this->autoid) ,
+            'idurl' => $this->getApp()->router->add($url, get_class($this), $this->autoid) ,
             'url' => $url,
             'title' => $title,
             'filtered' => $filter->filter($content) ,
@@ -126,6 +126,4 @@ return '';
         $this->getApp()->router->deleteitem($this->items[$id]['idurl']);
         parent::delete($id);
     }
-
 }
-

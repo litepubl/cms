@@ -17,6 +17,4 @@ trait CacheStorageTrait
     {
         return $this->getApp()->cache;
     }
-
 }
-

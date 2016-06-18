@@ -67,7 +67,7 @@ class Users extends \litepubl\admin\Menu
 ');
 
                     $args->password = '';
-                    $result.= $admin->form($tabs->get() , $args);
+                    $result.= $admin->form($tabs->get(), $args);
                 }
                 break;
 
@@ -86,7 +86,7 @@ class Users extends \litepubl\admin\Menu
                 $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
                 $tabs->add($lang->groups, GetPerm::groups(array()));
 
-                $result.= $admin->form($tabs->get() , $args);
+                $result.= $admin->form($tabs->get(), $args);
         }
 
         $args->search = '';
@@ -119,7 +119,9 @@ class Users extends \litepubl\admin\Menu
         }
 
         $items = $users->select($where, " order by id desc limit $from, $perpage");
-        if (!$items) $items = array();
+        if (!$items) {
+            $items = array();
+        }
 
         $tb = $this->newTable();
         $tb->args->adminurl = $this->adminurl;
@@ -138,12 +140,12 @@ class Users extends \litepubl\admin\Menu
 
             array(
                 $lang->comments,
-                sprintf('<a href="%s">%s</a>', Link::url('/admin/comments/', 'iduser=$id') , $lang->comments)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/comments/', 'iduser=$id'), $lang->comments)
             ) ,
 
             array(
                 $lang->page,
-                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/pages/', 'id=$id') , $lang->page)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/pages/', 'id=$id'), $lang->page)
             ) ,
         ));
 
@@ -151,7 +153,7 @@ class Users extends \litepubl\admin\Menu
         $form->title = $lang->userstable;
         $result.= $form->getdelete($tb->build($items));
 
-        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage) , $params);
+        $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage), $params);
 
         $form = new Form($args);
         $form->method = 'get';
@@ -208,6 +210,4 @@ class Users extends \litepubl\admin\Menu
                 break;
         }
     }
-
 }
-

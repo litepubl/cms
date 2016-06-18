@@ -13,8 +13,8 @@ namespace litepubl\widget;
 use ArrayObject;
 use litepubl\core\Str;
 
-interface WidgetsInterface {
+interface WidgetsInterface
+{
     public function getWidgets(ArrayObject $items, int $sidebar);
     public function getSidebar(Str $str, int $sidebar);
 }
-

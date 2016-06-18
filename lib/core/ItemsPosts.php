@@ -72,7 +72,9 @@ class ItemsPosts extends Items
         $add = array_diff($items, $old);
         $delete = array_diff($old, $items);
 
-        if (count($delete)) $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+        if (count($delete)) {
+            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+        }
         if (count($add)) {
             $vals = array();
             foreach ($add as $iditem) {
@@ -109,6 +111,4 @@ class ItemsPosts extends Items
             $db->setvalue($idpost, $propname, implode(', ', $items));
         }
     }
-
 }
-

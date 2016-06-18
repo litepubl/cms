@@ -30,9 +30,9 @@ class Plugin extends \litepubl\core\Plugin
     public function getList()
     {
         $context = $this->getApp()->context;
-if (!$context) {
-return false;
-}
+        if (!$context) {
+                return false;
+        }
 
         if ($context->view instanceof CatView) {
             $list = $context->view->getIdPosts($context->id);
@@ -71,12 +71,12 @@ return false;
             foreach ($list as $id) {
                 $post = Post::i($id);
                 $result.= $post->title . ' ';
-                if (strlen($result) > 250) break;
+                if (strlen($result) > 250) {
+                    break;
+                }
             }
             return $result;
         }
         return MainView::i()->getdescription();
     }
-
 }
-

@@ -13,7 +13,7 @@ namespace litepubl\plugins\oldestposts;
 class Admin extends \litepubl\admin\widget\Order
 {
 
-public function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->widget = Oldestposts::i();
@@ -30,6 +30,4 @@ public function __construct()
         $this->widget->maxcount = (int)$_POST['maxcount'];
         return parent::doProcessForm();
     }
-
 }
-

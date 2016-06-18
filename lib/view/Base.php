@@ -32,7 +32,7 @@ class Base extends \litepubl\core\Events
 
     public static function getTheme($name)
     {
-        return static ::getByName(get_called_class() , $name);
+        return static ::getByName(get_called_class(), $name);
     }
 
     public static function getByName($classname, $name)
@@ -119,10 +119,14 @@ class Base extends \litepubl\core\Events
 
     public function reg($exp)
     {
-        if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
+        if (!strpos($exp, '\.')) {
+            $exp = str_replace('.', '\.', $exp);
+        }
         $result = array();
         foreach ($this->templates as $name => $val) {
-            if (preg_match($exp, $name)) $result[$name] = $val;
+            if (preg_match($exp, $name)) {
+                $result[$name] = $val;
+            }
         }
         return $result;
     }
@@ -183,8 +187,7 @@ class Base extends \litepubl\core\Events
 
         try {
             return $var->{$prop};
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->getApp()->logException($e);
         }
         return '';
@@ -197,13 +200,14 @@ class Base extends \litepubl\core\Events
         }
 
         $s = strtr((string)$s, Args::getDefaultArgs());
-        if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
+        if (isset($this->templates['content.admin.tableclass'])) {
+            $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
+        }
         array_push($this->parsing, $s);
         try {
             $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
-            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', [$this, 'parsecallback'] , $s);
-        }
-        catch(\Exception $e) {
+            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', [$this, 'parsecallback'], $s);
+        } catch (\Exception $e) {
             $result = '';
             $this->getApp()->logException($e);
         }
@@ -270,6 +274,4 @@ class Base extends \litepubl\core\Events
             '>' => '&gt;',
         ));
     }
-
 }
-

@@ -15,4 +15,3 @@ function PluginsInstall($self)
     @mkdir($self->getApp()->paths->data . 'plugins', 0777);
     @chmod($self->getApp()->paths->data . 'plugins', 0777);
 }
-

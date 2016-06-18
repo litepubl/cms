@@ -31,6 +31,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->exitems = $this->admin->processCategories();
         $plugin->save();
     }
-
 }
-

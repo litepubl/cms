@@ -40,9 +40,7 @@ class ExtraContact extends \litepubl\core\Plugin implements \litepubl\admin\Admi
     public function processForm()
     {
         $contact = Contacts::i('tcontactform');
-        $contact->data['extra'] = parse_ini_string(trim($_POST['items']) , false);
+        $contact->data['extra'] = parse_ini_string(trim($_POST['items']), false);
         $contact->save();
     }
-
 }
-

@@ -78,6 +78,4 @@ class Editor extends \litepubl\admin\posts\Editor
         $post->authorname = $authorname;
         $post->authorurl = $authorurl;
     }
-
 }
-

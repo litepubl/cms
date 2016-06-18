@@ -53,6 +53,4 @@ class Depended extends Widget
         parent::save();
         Widgets::i()->save();
     }
-
 }
-

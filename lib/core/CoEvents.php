@@ -22,13 +22,13 @@ class CoEvents extends Events
             if (is_array($args[0])) {
                 $this->callbacks = array_shift($args);
                 $this->trigger_callback('construct');
-            } else if (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof Data)) {
+            } elseif (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof Data)) {
                 $this->setowner($owner);
             }
         }
 
         if (is_array($this->eventnames)) {
-            array_splice($this->eventnames, count($this->eventnames) , 0, $args);
+            array_splice($this->eventnames, count($this->eventnames), 0, $args);
         } else {
             $this->eventnames = $args;
         }
@@ -110,8 +110,6 @@ class CoEvents extends Events
     public function inject_events()
     {
         $a = func_get_args();
-        array_splice($this->eventnames, count($this->eventnames) , 0, $a);
+        array_splice($this->eventnames, count($this->eventnames), 0, $a);
     }
-
 }
-

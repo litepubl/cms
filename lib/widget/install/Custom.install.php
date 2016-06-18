@@ -15,4 +15,3 @@ function CustomInstall($self)
     $widgets = Widgets::i();
     $widgets->deleted = $self->widgetDeleted;
 }
-

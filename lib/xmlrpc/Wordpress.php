@@ -21,7 +21,9 @@ class Wordpress extends MetaWeblog
 
     private function menutostruct($id)
     {
-        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) {
+            $id = substr($id, strlen('menu_'));
+        }
         $id = (int)$id;
         $menus = Menus::i();
         if (!$menus->itemExists($id)) {
@@ -105,7 +107,9 @@ class Wordpress extends MetaWeblog
     public function wp_deletePage($blogid, $username, $password, $id)
     {
         $this->auth($username, $password, 'editor');
-        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) {
+            $id = substr($id, strlen('menu_'));
+        }
         $id = (int)$id;
         $menus = Menus::i();
         if (!$menus->itemExists($id)) {
@@ -154,6 +158,4 @@ class Wordpress extends MetaWeblog
         }
         return $result;
     }
-
 }
-

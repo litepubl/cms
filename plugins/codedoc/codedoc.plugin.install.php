@@ -18,7 +18,9 @@ use litepubl\view\LangMerger;
 
 function tcodedocpluginInstall($self)
 {
-    if (!dbversion) die("Ticket  system only for database version");
+    if (!dbversion) {
+        die("Ticket  system only for database version");
+    }
     $name = basename(dirname(__file__));
     $language = $self->getApp()->options->language;
     $about = Plugins::getabout($name);
@@ -56,7 +58,9 @@ function tcodedocpluginInstall($self)
     $filter->seteventorder('beforecontent', $self, 0);
 
     $plugins = Plugins::i();
-    if (!isset($plugins->items['wikiwords'])) $plugins->add('wikiwords');
+    if (!isset($plugins->items['wikiwords'])) {
+        $plugins->add('wikiwords');
+    }
 
     $filter->beforecontent = $self->afterfilter;
     $filter->unlock();
@@ -88,4 +92,3 @@ function tcodedocpluginUninstall($self)
     $manager = DBManager::i();
     $manager->deletetable('codedoc');
 }
-

@@ -61,7 +61,7 @@ class Pool extends Data
 
     public function savemodified($idpool)
     {
-        $this->getApp()->cache->set($this->getFilename($idpool) , $this->pool[$idpool]);
+        $this->getApp()->cache->set($this->getFilename($idpool), $this->pool[$idpool]);
     }
 
     public function getIdpool($id)
@@ -92,6 +92,4 @@ class Pool extends Data
         $this->pool[$idpool][$id] = $item;
         $this->savepool($idpool);
     }
-
 }
-

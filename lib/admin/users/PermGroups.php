@@ -30,6 +30,4 @@ class PermGroups extends Perm
         $this->perm->groups = array_unique($this->admin->check2array('idgroup-'));
         parent::processForm();
     }
-
 }
-

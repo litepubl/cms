@@ -20,7 +20,7 @@ class DateFilter
     {
         if (is_numeric($date)) {
             $date = (int)$date;
-        } else if ($date == '0000-00-00 00:00:00') {
+        } elseif ($date == '0000-00-00 00:00:00') {
             $date = 0;
         } elseif ($date == '0000-00-00') {
             $date = 0;
@@ -70,6 +70,4 @@ class DateFilter
 
         return $result;
     }
-
 }
-

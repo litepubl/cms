@@ -36,7 +36,7 @@ class ErrorPages
         }
 
         $instance = Notfound404::i();
-        $context = new Context(new Request('', '') , new Response());
+        $context = new Context(new Request('', ''), new Response());
         $context->model = $instance;
         $context->view = $instance;
         $instance->request($context);
@@ -59,7 +59,7 @@ class ErrorPages
         }
 
         $instance = Forbidden::i();
-        $context = new Context(new Request('', '') , new Response());
+        $context = new Context(new Request('', ''), new Response());
         $context->model = $instance;
         $instance->request($context);
         MainView::i()->render($context);
@@ -81,6 +81,4 @@ class ErrorPages
 
         return Lang::get('login', 'confirmxxxattack') . sprintf(' <a href="%1$s">%1$s</a>', $url);
     }
-
 }
-

@@ -53,13 +53,15 @@ class Admin extends \litepubl\admin\Menu
         $from = $this->getfrom($perpage, $count);
         if ($count > 0) {
             $items = $downloaditems->select("status <> 'deleted' $where", " order by posted desc limit $from, $perpage");
-            if (!$items) $items = array();
+            if (!$items) {
+                $items = array();
+            }
         } else {
             $items = array();
         }
 
         $form = $this->newForm(new Args());
-        $form->body = $admintheme->getcount($from, $from + count($items) , $count);
+        $form->body = $admintheme->getcount($from, $from + count($items), $count);
         $tb = $this->newTable();
         $tb->setPosts(array(
             array(
@@ -136,6 +138,4 @@ class Admin extends \litepubl\admin\Menu
             }
         }
     }
-
 }
-

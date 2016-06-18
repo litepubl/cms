@@ -32,7 +32,9 @@ class Widgets extends \litepubl\admin\Menu
         $parser = Parser::i();
         $about = $parser->getabout($schema->theme->name);
         foreach ($result as $key => $value) {
-            if (isset($about["sidebar$key"])) $result[$key] = $about["sidebar$key"];
+            if (isset($about["sidebar$key"])) {
+                $result[$key] = $about["sidebar$key"];
+            }
         }
 
         return $result;
@@ -86,14 +88,14 @@ class Widgets extends \litepubl\admin\Menu
             $orders = range(1, count($sidebar));
             foreach ($sidebar as $j => $sb_item) {
                 $id = $sb_item['id'];
-$ajax = $sb_item['ajax'];
-if ($ajax === true) {
-$ajax = 'ajax';
-}
+                $ajax = $sb_item['ajax'];
+                if ($ajax === true) {
+                                $ajax = 'ajax';
+                }
 
-if (!$ajax) {
-$ajax = 'disabled';
-}
+                if (!$ajax) {
+                                $ajax = 'disabled';
+                }
 
                 $w_item = $widgets->getItem($id);
 
@@ -102,25 +104,27 @@ $ajax = 'disabled';
                     'title' => $w_item['title'],
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
                     'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
-                    'ajaxbuttons' => str_replace('$button', 
-strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
+                    'ajaxbuttons' => str_replace(
+                        '$button',
+                        strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'disabled',
                         '$title' => $lang->noajax
-                    ))
+                        ))
 
- . strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
+                        . strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
-                    ))
+                        ))
 
- . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
+                        . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'inline',
                         '$title' => $lang->inline
-                    )) : ''),
- $admintheme->templates['radiogroup'])
+                        )) : ''),
+                        $admintheme->templates['radiogroup']
+                    )
                 );
             }
         }
@@ -228,7 +232,7 @@ strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
                     $schema->customsidebar = false;
                 } else {
                     $sidebars = Sidebars::i($idschema);
-                    $newItems = array_fill(0, count($sidebars->items) , []);
+                    $newItems = array_fill(0, count($sidebars->items), []);
 
                     foreach ($sidebars->items as $i => $items) {
                         foreach ($items as $j => $item) {
@@ -289,6 +293,4 @@ strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
 
         $schema->save();
     }
-
 }
-

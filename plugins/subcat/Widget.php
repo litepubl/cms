@@ -108,8 +108,6 @@ class Widget extends \litepubl\widget\Widget
             'item' => $view->getItem($item['template'], $sidebar) ,
             'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
             'subitems' => $item['showsubitems'] ? $view->getTml($sidebar, $item['template'], 'subitems') : '',
-        ) , $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']);
+        ), $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']);
     }
-
 }
-

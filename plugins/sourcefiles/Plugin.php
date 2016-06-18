@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\sourcefiles;
 
-
 use litepubl\core\Context;
 use litepubl\utils\Filer;
 use litepubl\view\Schema;
@@ -65,17 +64,19 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
 
     public function request(Context $context)
     {
-$response = $context->response;
+        $response = $context->response;
         $url = substr($context->request->url, strlen($this->url));
         $url = trim($url, '/');
-        if (!$url) $url = '.';
+        if (!$url) {
+            $url = '.';
+        }
 
         if (!($this->item = $this->loadItem($this->getFilename($url)))) {
             while ($url && $url != '.') {
                 $url = dirname($url);
                 if ($url == '.') {
                     return $response->redir($this->url);
-                } else if (file_exists($this->getfilename($url))) {
+                } elseif (file_exists($this->getfilename($url))) {
                     return $response->redir($this->url . $url . '/');
                 }
             }
@@ -110,12 +111,12 @@ $response = $context->response;
 
     public function getKeywords(): string
     {
-return '';
+        return '';
     }
 
     public function getDescription(): string
     {
-return '';
+        return '';
     }
 
     public function getHead(): string
@@ -124,7 +125,7 @@ return '';
             return sprintf('<style type="text/css">%s</style>', $this->item['style']);
         }
 
-return '';
+        return '';
     }
 
     public function getCont(): string
@@ -145,12 +146,11 @@ return '';
     {
         if (!isset($this->geshi)) {
             define('GESHI_ROOT', dirname(__file__) . '/');
-            require (dirname(__file__) . '/geshi.php');
+            require(dirname(__file__) . '/geshi.php');
             $this->geshi = new \GeSHi();
             $this->geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
             $this->geshi->enable_classes();
             //$this->geshi->enable_keyword_links(false);
-            
         }
     }
 
@@ -218,7 +218,7 @@ return '';
                 $root = $list[0];
             }
 
-            $filename = ltrim(substr(ltrim($filename, '/') , strlen($root)) , '/');
+            $filename = ltrim(substr(ltrim($filename, '/'), strlen($root)), '/');
             $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
             $content = trim($zip->getFromIndex($i));
             if (!$content) {
@@ -238,7 +238,7 @@ return '';
             $item['type'] = 'file';
             $item['filename'] = $filename;
 
-            $this->saveitem($this->getfilename($filename) , $item);
+            $this->saveitem($this->getfilename($filename), $item);
         }
 
         $zip->close();
@@ -249,7 +249,9 @@ return '';
             $list = explode('/', $dirname);
             $dir = '';
             foreach ($list as $name) {
-                if ($dir) $dir.= '/';
+                if ($dir) {
+                    $dir.= '/';
+                }
                 $dir.= $name;
                 if (!isset($dirlist[$dir])) {
                     $dirlist[$dir] = array();
@@ -287,7 +289,7 @@ return '';
                 $list.= sprintf($tml, $basedir . $filename, $filename);
             }
 
-            $this->saveitem($this->getfilename($dir) , array(
+            $this->saveitem($this->getfilename($dir), array(
                 'type' => 'dir',
                 'filename' => $dir == '.' ? $root : $dir,
                 'content' => sprintf($tml_list, $list) ,
@@ -295,6 +297,4 @@ return '';
             ));
         }
     }
-
 }
-

@@ -45,7 +45,9 @@ class Comments extends \litepubl\core\Items
 
     public function add($idpost, $idauthor, $content, $status, $ip)
     {
-        if ($idauthor == 0) $this->error('Author id = 0');
+        if ($idauthor == 0) {
+            $this->error('Author id = 0');
+        }
         $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
 
@@ -120,7 +122,9 @@ class Comments extends \litepubl\core\Items
             'approved',
             'hold',
             'spam'
-        ))) return false;
+        ))) {
+            return false;
+        }
         if (!$this->itemExists($id)) {
             return false;
         }
@@ -130,7 +134,9 @@ class Comments extends \litepubl\core\Items
             $this->setvalue($id, 'status', $status);
             $this->onstatus($id, $old, $status);
             $this->changed($id);
-            if (($old == 'hold') && ($status == 'approved')) $this->onapproved($id);
+            if (($old == 'hold') && ($status == 'approved')) {
+                $this->onapproved($id);
+            }
             return true;
         }
         return false;
@@ -278,6 +284,4 @@ class Comments extends \litepubl\core\Items
         $args->comment = $result;
         return $theme->parseArg($tml, $args);
     }
-
 }
-

@@ -62,7 +62,7 @@ class Controller
 
         $response->send();
         if ($this->cache && $response->cache) {
-            $this->getApp()->cache->savePhp($this->getCacheFileName($context) , $response->getString());
+            $this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
         }
     }
 
@@ -98,7 +98,7 @@ class Controller
             switch ($context->itemRoute['type']) {
                 case 'usernormal':
                 case 'userget':
-                    return sprintf('%s-%d%s', md5($context->request->url) , $this->getApp()->options->user, $ext);
+                    return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
 
                 default:
                     return md5($context->request->url) . $ext;
@@ -140,7 +140,7 @@ class Controller
                 $errorPages = new ErrorPages();
                 $content = $errorPages->notfound();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                    $cache->savePhp($this->getCacheFileName($context), $content);
                 }
                 break;
 
@@ -149,7 +149,7 @@ class Controller
                 $errorPages = new ErrorPages();
                 $content = $errorPages->forbidden();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                    $cache->savePhp($this->getCacheFileName($context), $content);
                 }
                 break;
 
@@ -157,10 +157,8 @@ class Controller
             default:
                 $response->send();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $response->getString());
+                    $cache->savePhp($this->getCacheFileName($context), $response->getString());
                 }
         }
     }
-
 }
-

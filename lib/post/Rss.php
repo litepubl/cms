@@ -103,7 +103,7 @@ header('Location: $this->feedburnercomments');
                     $perm->setResponse($response, $tags);
                 }
 
-        $this->domrss->CreateRoot($this->getApp()->site->url . $context->request->url, $tags->getValue($id, 'title'));
+                $this->domrss->CreateRoot($this->getApp()->site->url . $context->request->url, $tags->getValue($id, 'title'));
                 $this->getTagRss($tags, $id);
                 break;
 
@@ -307,6 +307,4 @@ header('Location: $this->feedburnercomments');
             $this->getApp()->cache->clear();
         }
     }
-
 }
-

@@ -100,9 +100,9 @@ class Events extends Data
             return true;
         }
 
-$eventName = strtolower($name);
-        if (in_array($eventName , $this->eventnames)) {
-            $this->addEvent($eventName , $value[0], $value[1]);
+        $eventName = strtolower($name);
+        if (in_array($eventName, $this->eventnames)) {
+            $this->addEvent($eventName, $value[0], $value[1]);
             return true;
         }
         $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
@@ -115,9 +115,9 @@ $eventName = strtolower($name);
 
     public function __call($name, $params)
     {
-$eventName = strtolower($name);
-        if (in_array($eventName , $this->eventnames)) {
-            return $this->callEvent($eventName , $params);
+        $eventName = strtolower($name);
+        if (in_array($eventName, $this->eventnames)) {
+            return $this->callEvent($eventName, $params);
         }
 
         return parent::__call($name, $params);
@@ -131,9 +131,9 @@ $eventName = strtolower($name);
     protected function addEvents()
     {
         $a = func_get_args();
-foreach ($a as $name) {
-$this->eventnames[] = strtolower($name);
-}
+        foreach ($a as $name) {
+                $this->eventnames[] = strtolower($name);
+        }
     }
 
     public function callEvent($name, $params)
@@ -149,7 +149,7 @@ $this->eventnames[] = strtolower($name);
 
             if (is_string($class) && class_exists($class)) {
                 $call = array(
-                    static ::iGet($class) ,
+                static ::iGet($class) ,
                     isset($item[1]) ? $item[1] : $item['func']
                 );
             } elseif (is_object($class)) {
@@ -164,8 +164,7 @@ $this->eventnames[] = strtolower($name);
             if ($call) {
                 try {
                     $result = call_user_func_array($call, $params);
-                }
-                catch(CancelEvent $e) {
+                } catch (CancelEvent $e) {
                     return $e->result;
                 }
 
@@ -173,7 +172,6 @@ $this->eventnames[] = strtolower($name);
                 if (isset($item[2]) && $item[2]) {
                     array_splice($this->events[$name], $i, 1);
                 }
-
             } else {
                 //class not found and delete event handler
                 array_splice($this->events[$name], $i, 1);
@@ -218,10 +216,9 @@ $this->eventnames[] = strtolower($name);
 
         //check if event already added
         foreach ($this->events[$name] as $event) {
-            if (isset($event[0]) && strtolower($event[0]) == strtolower($class ) && strtolower($event[1]) == strtolower($func)) {
+            if (isset($event[0]) && strtolower($event[0]) == strtolower($class) && strtolower($event[1]) == strtolower($func)) {
                 return false;
                 //backward compability
-                
             } elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
                 return false;
             }
@@ -348,6 +345,4 @@ $this->eventnames[] = strtolower($name);
             $this->save();
         }
     }
-
 }
-

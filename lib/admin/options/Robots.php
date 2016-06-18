@@ -29,7 +29,7 @@ class Robots extends \litepubl\admin\Menu
         $tabs = $this->newTabs($this->admintheme);
         $tabs->add('robots.txt', '[editor=robots]');
         $tabs->add('manifest.appcache', '[editor=appcache]');
-        return $admin->form($tabs->get() , $args);
+        return $admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -42,6 +42,4 @@ class Robots extends \litepubl\admin\Menu
         $appcache->text = $_POST['appcache'];
         $appcache->save();
     }
-
 }
-

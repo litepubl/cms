@@ -47,7 +47,9 @@ class Plugins extends Menu
             $name = $_GET['plugin'];
             if (in_array($name, $this->names)) {
                 if ($admin = $this->getadminplugin($name)) {
-                    if (method_exists($admin, 'gethead')) $result.= $admin->gethead();
+                    if (method_exists($admin, 'gethead')) {
+                        $result.= $admin->gethead();
+                    }
                 }
             }
         }
@@ -129,8 +131,7 @@ class Plugins extends Menu
             $plugins = PluginItems::i();
             try {
                 $plugins->update($list);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
             $result = $this->theme->h(Lang::i()->updated);
@@ -163,6 +164,4 @@ class Plugins extends Menu
 
         return static ::iGet($class);
     }
-
 }
-

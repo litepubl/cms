@@ -49,12 +49,12 @@ class Widget extends \litepubl\widget\Widget
 
     public function getContent(int $id, int $sidebar): string
     {
-$app = $this->getApp();
+        $app = $this->getApp();
         if (!isset($app->context)
-|| $app->context->request->isAdminPanel
-|| ($app->context->response->status != 200)
-|| Str::begin($app->context->request->url, '/croncron.php')
-|| ($app->context->response->headers['Content-type'] != 'text/html;charset=utf-8')) {
+        || $app->context->request->isAdminPanel
+        || ($app->context->response->status != 200)
+        || Str::begin($app->context->request->url, '/croncron.php')
+        || ($app->context->response->headers['Content-type'] != 'text/html;charset=utf-8')) {
             return '';
         }
 
@@ -86,6 +86,4 @@ $app = $this->getApp();
 
         return $this->getView()->getContent($links, $this->template, $sidebar);
     }
-
 }
-

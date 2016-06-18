@@ -28,6 +28,4 @@ trait ItemOwnerTrait
     {
         return $this->owner->save();
     }
-
 }
-

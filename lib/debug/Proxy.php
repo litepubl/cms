@@ -64,7 +64,7 @@ class Proxy
         $r = call_user_func_array(array(
             $this->obj,
             $name
-        ) , $args);
+        ), $args);
         $this->addstat(" call $name", microtime(true) - $m);
         return $r;
     }
@@ -101,6 +101,4 @@ class Proxy
         $total = $total * 1000;
         echo "total $total\n";
     }
-
 }
-

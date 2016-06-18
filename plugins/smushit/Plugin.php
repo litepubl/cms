@@ -51,12 +51,12 @@ class Plugin extends \litepubl\core\Plugin
             }
 
             $dest = urldecode($json->dest);
-            if (!Str::begin($dest, 'http')) $dest = 'http://www.smushit.com/' . $dest;
+            if (!Str::begin($dest, 'http')) {
+                $dest = 'http://www.smushit.com/' . $dest;
+            }
             if ($content = Http::get($dest)) {
                 return $files->setContent($id, $content);
             }
         }
     }
-
 }
-

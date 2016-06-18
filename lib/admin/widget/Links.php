@@ -17,8 +17,8 @@ class Links extends Widget
     protected function getForm()
     {
         $this->args->redir = $this->widget->redir;
-        return parent::getForm() 
-. '[checkbox=redir]';
+        return parent::getForm()
+        . '[checkbox=redir]';
     }
 
     public function getContent(): string
@@ -108,6 +108,4 @@ class Links extends Widget
         $widget->unlock();
         return $this->admin->success($this->lang->updated);
     }
-
 }
-

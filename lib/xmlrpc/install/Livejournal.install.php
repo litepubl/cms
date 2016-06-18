@@ -23,4 +23,3 @@ function LivejournalInstall($self)
     //$caller->add('LJ.XMLRPC.checkfriends', 'checkfriends', get_class($self));
     $caller->unlock();
 }
-

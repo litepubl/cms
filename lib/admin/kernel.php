@@ -2,7 +2,8 @@
 //AdminInterface.php
 namespace litepubl\admin;
 
-interface AdminInterface {
+interface AdminInterface
+{
     public function getContent();
     public function processForm();
 }
@@ -19,7 +20,6 @@ class AuthorRights extends \litepubl\core\Events
         $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
         $this->basename = 'authorrights';
     }
-
 }
 
 //DateFilter.php
@@ -35,7 +35,7 @@ class DateFilter
     {
         if (is_numeric($date)) {
             $date = (int)$date;
-        } else if ($date == '0000-00-00 00:00:00') {
+        } elseif ($date == '0000-00-00 00:00:00') {
             $date = 0;
         } elseif ($date == '0000-00-00') {
             $date = 0;
@@ -85,7 +85,6 @@ class DateFilter
 
         return $result;
     }
-
 }
 
 //Factory.php
@@ -182,7 +181,6 @@ trait Factory
         $args->confirm = $lang->confirmdelete;
         return $admin->parseArg($admin->templates['confirmform'], $args);
     }
-
 }
 
 //Form.php
@@ -291,7 +289,9 @@ class Form
             'id',
             'class'
         ) as $k) {
-            if ($v = $this->$k) $attr.= sprintf(' %s="%s"', $k, $v);
+            if ($v = $this->$k) {
+                $attr.= sprintf(' %s="%s"', $k, $v);
+            }
         }
 
         $theme = Theme::i();
@@ -320,7 +320,7 @@ class Form
 
     public function get()
     {
-        return $this->getadmintheme()->parseArg($this->gettml() , $this->args);
+        return $this->getadmintheme()->parseArg($this->gettml(), $this->args);
     }
 
     public function getButtons()
@@ -339,7 +339,6 @@ class Form
 
         return $result;
     }
-
 }
 
 //GetPerm.php
@@ -401,7 +400,6 @@ class GetPerm
 
         return $ulist->getresult();
     }
-
 }
 
 //GetSchema.php
@@ -453,7 +451,6 @@ class GetSchema
 
         return $result;
     }
-
 }
 
 //Link.php
@@ -516,7 +513,6 @@ class Link
 
         return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
     }
-
 }
 
 //Menu.php
@@ -674,7 +670,6 @@ class Menu extends \litepubl\pages\Menu
     {
         return Lang::i($this->name);
     }
-
 }
 
 //Menus.php
@@ -777,7 +772,9 @@ class Menus extends \litepubl\pages\Menus
             $result = array();
             $options = $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
-                if ($options->hasgroup($this->items[$iditem]['group'])) $result[] = $iditem;
+                if ($options->hasgroup($this->items[$iditem]['group'])) {
+                    $result[] = $iditem;
+                }
             }
             return $result;
         }
@@ -811,7 +808,6 @@ class Menus extends \litepubl\pages\Menus
 
         return $this->onexclude($id);
     }
-
 }
 
 //Panel.php
@@ -835,7 +831,6 @@ class Panel implements AdminInterface
     public function processForm()
     {
     }
-
 }
 
 //PanelTrait.php
@@ -878,7 +873,6 @@ trait PanelTrait
         $filename = $reflector->getFileName();
         return PluginItems::getLangAbout($filename);
     }
-
 }
 
 //Params.php
@@ -911,7 +905,6 @@ trait Params
     {
         return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
     }
-
 }
 
 //Table.php
@@ -978,7 +971,7 @@ class Table
             $s = array_shift($item);
             if (is_string($s)) {
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $s);
-            } else if (is_callable($s)) {
+            } elseif (is_callable($s)) {
                 $name = '$callback' . $index;
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
@@ -1013,7 +1006,7 @@ class Table
 
     public function td($colclass, $content)
     {
-        return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass) , $content);
+        return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass), $content);
     }
 
     public function getAdmintheme()
@@ -1068,10 +1061,10 @@ class Table
 
     public function setOwner(titems $owner)
     {
-        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks), array(
             $this,
             'titems_callback'
-        ) , $owner);
+        ), $owner);
     }
 
     public function posts_callback(Table $self)
@@ -1085,10 +1078,10 @@ class Table
     {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
-        $this->addCallback('$tempcallback' . count($this->callbacks) , array(
+        $this->addCallback('$tempcallback' . count($this->callbacks), array(
             $this,
             'posts_callback'
-        ) , false);
+        ), false);
     }
 
     public function props(array $props)
@@ -1117,7 +1110,9 @@ class Table
 
             if (is_array($v)) {
                 foreach ($v as $kv => $vv) {
-                    if ($k2 = $lang->__get($kv)) $kv = $k2;
+                    if ($k2 = $lang->__get($kv)) {
+                        $kv = $k2;
+                    }
                     $args->name = $kv;
                     $args->value = $vv;
                     $body.= $admintheme->parseArg($this->body, $args);
@@ -1156,10 +1151,10 @@ class Table
         $admintheme = $this->getadmintheme();
 
         foreach ($inputs as $name => $type) {
-            if (($name === false) || ($type === false)) { {
+            if (($name === false) || ($type === false)) {
+                {
                     continue;
                 }
-
             }
 
             switch ($type) {
@@ -1247,7 +1242,7 @@ class Table
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
-            return Lang::date(strtotime($date) , 'd F Y');
+            return Lang::date(strtotime($date), 'd F Y');
         }
     }
 
@@ -1256,10 +1251,9 @@ class Table
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
         } else {
-            return Lang::date(strtotime($date) , 'd F Y H:i');
+            return Lang::date(strtotime($date), 'd F Y H:i');
         }
     }
-
 }
 
 //Tabs.php
@@ -1333,7 +1327,6 @@ class Tabs
             '$content' => $content,
         ));
     }
-
 }
 
 //UList.php
@@ -1426,6 +1419,4 @@ class UList
         $result = $this->get($props);
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
-
 }
-

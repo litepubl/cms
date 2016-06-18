@@ -132,7 +132,7 @@ class Menu extends \litepubl\pages\Menu
 
     public function getCont(): string
     {
-$app = $this->getApp();
+        $app = $this->getApp();
         if ($app->options->admincache) {
             $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
             $filename = 'adminmenu.' . $app->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
@@ -157,6 +157,4 @@ $app = $this->getApp();
     {
         return Lang::i($this->name);
     }
-
 }
-

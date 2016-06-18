@@ -42,7 +42,7 @@ class Head extends \litepubl\admin\Menu
         $tabs->add($lang->posteditor, '[checkbox=show_file_perm] [checkbox=ajaxvisual] [text=visual]');
 
         $args->formtitle = $lang->headstitle;
-        return $admin->form($tabs->get() , $args);
+        return $admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -63,6 +63,4 @@ class Head extends \litepubl\admin\Menu
 
         $this->getApp()->options->show_file_perm = isset($_POST['show_file_perm']);
     }
-
 }
-

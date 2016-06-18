@@ -61,9 +61,8 @@ class App
         if ($this->installed) {
             $this->db = DB::i();
         } else {
-            require ($this->paths->lib . 'install/install.php');
+            require($this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
-            
         }
     }
 
@@ -77,7 +76,7 @@ class App
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
             $this->storage = new $classname();
-        } else if ($this->memcache) {
+        } elseif ($this->memcache) {
             $this->storage = new StorageMemcache();
         } else {
             $this->storage = new Storage();
@@ -120,7 +119,7 @@ class App
         }
 
         try {
-            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']) , new Response());
+            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
 
             $this->context = $context;
 
@@ -145,7 +144,8 @@ class App
                 if ($this->onClose->getCount()) {
                     ignore_user_abort(true);
                     $context->response->closeConnection();
-                    while (@ob_end_flush());
+                    while (@ob_end_flush()) {
+                    }
                     flush();
 
                     if (function_exists('fastcgi_finish_request')) {
@@ -155,13 +155,13 @@ class App
                     //prevent any output
                     ob_start();
                 } else {
-                    while (@ob_end_flush());
+                    while (@ob_end_flush()) {
+                    }
                 }
             }
 
             $this->onClose->fire();
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->logException($e);
         }
     }
@@ -173,8 +173,7 @@ class App
             if (!config::$ignoreRequest) {
                 $this->process();
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->logException($e);
         }
 
@@ -224,7 +223,6 @@ class App
         header('Location: ' . $url);
         exit();
     }
-
 }
 
 //AppTrait.php
@@ -242,7 +240,6 @@ trait AppTrait
     {
         return static ::getAppInstance();
     }
-
 }
 
 //Arr.php
@@ -311,7 +308,7 @@ class Arr
 
     public static function reIndex(array & $a)
     {
-        array_splice($a, count($a) , 0, array());
+        array_splice($a, count($a), 0, array());
     }
 
     public static function append(array & $a, $index, $value)
@@ -322,7 +319,6 @@ class Arr
 
         $a[$index] = $value;
     }
-
 }
 
 //BaseCache.php
@@ -394,7 +390,6 @@ class BaseCache
     {
         $this->delete(md5($url) . '.php');
     }
-
 }
 
 //CacheFile.php
@@ -468,7 +463,7 @@ class CacheFile extends BaseCache
     public function clearDir($dir)
     {
         if ($h = @opendir($path)) {
-            while (FALSE !== ($filename = @readdir($h))) {
+            while (false !== ($filename = @readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
                     continue;
                 }
@@ -500,7 +495,6 @@ class CacheFile extends BaseCache
 
         return false;
     }
-
 }
 
 //CacheMemcache.php
@@ -570,7 +564,6 @@ class CacheMemcache extends BaseCache
 
         return $this->items[$filename] = $this->getString($filename);
     }
-
 }
 
 //CacheStorageTrait.php
@@ -583,7 +576,6 @@ trait CacheStorageTrait
     {
         return $this->getApp()->cache;
     }
-
 }
 
 //Callback.php
@@ -639,13 +631,11 @@ class Callback
                 }
 
                 call_user_func_array($c, $a);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 litepubl::$app->logException($e);
             }
         }
     }
-
 }
 
 //CancelEvent.php
@@ -710,7 +700,7 @@ class Classes extends Items
         spl_autoload_register(array(
             $this,
             'autoload'
-        ) , true, true);
+        ), true, true);
     }
 
     public function getInstance($class)
@@ -865,7 +855,7 @@ class Classes extends Items
         }
 
         if (!count($this->classmap)) {
-            $this->classmap = include ($this->getApp()->paths->lib . 'update/classmap.php');
+            $this->classmap = include($this->getApp()->paths->lib . 'update/classmap.php');
         }
         $classname = $this->baseclass($classname);
         if (isset($this->classmap[$classname])) {
@@ -937,7 +927,7 @@ class Classes extends Items
         }
     }
 
-    public function include ($filename)
+    public function include($filename)
     {
         //if (is_dir($filename)) $this->error($filename);
         require_once $filename;
@@ -1088,7 +1078,7 @@ class Classes extends Items
                 unset($this->kernel[$oldclass]);
             }
 
-            $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
+            $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
             $this->save();
             $this->onrename($oldclass, $newclass);
         }
@@ -1102,7 +1092,7 @@ class Classes extends Items
     }
     public function loadComposer($classToAutoLoad)
     {
-        require_once ($this->getApp()->paths->home . 'vendor/autoload.php');
+        require_once($this->getApp()->paths->home . 'vendor/autoload.php');
         if ($classToAutoLoad && ($a = spl_autoload_functions())) {
             $compclass = 'Composer\Autoload\ClassLoader';
             foreach ($a as $item) {
@@ -1112,7 +1102,6 @@ class Classes extends Items
             }
         }
     }
-
 }
 
 //CoEvents.php
@@ -1130,13 +1119,13 @@ class CoEvents extends Events
             if (is_array($args[0])) {
                 $this->callbacks = array_shift($args);
                 $this->trigger_callback('construct');
-            } else if (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof Data)) {
+            } elseif (($owner = array_shift($args)) && is_object($owner) && ($owner instanceof Data)) {
                 $this->setowner($owner);
             }
         }
 
         if (is_array($this->eventnames)) {
-            array_splice($this->eventnames, count($this->eventnames) , 0, $args);
+            array_splice($this->eventnames, count($this->eventnames), 0, $args);
         } else {
             $this->eventnames = $args;
         }
@@ -1218,9 +1207,8 @@ class CoEvents extends Events
     public function inject_events()
     {
         $a = func_get_args();
-        array_splice($this->eventnames, count($this->eventnames) , 0, $a);
+        array_splice($this->eventnames, count($this->eventnames), 0, $a);
     }
-
 }
 
 //Context.php
@@ -1247,7 +1235,7 @@ class Context
             return (int)$this->itemRoute['arg'];
         }
 
-        throw new PropException(get_class($this) , $name);
+        throw new PropException(get_class($this), $name);
     }
 
     public function checkAttack()
@@ -1261,7 +1249,6 @@ class Context
 
         return false;
     }
-
 }
 
 //Controller.php
@@ -1319,7 +1306,7 @@ class Controller
 
         $response->send();
         if ($this->cache && $response->cache) {
-            $this->getApp()->cache->savePhp($this->getCacheFileName($context) , $response->getString());
+            $this->getApp()->cache->savePhp($this->getCacheFileName($context), $response->getString());
         }
     }
 
@@ -1355,7 +1342,7 @@ class Controller
             switch ($context->itemRoute['type']) {
                 case 'usernormal':
                 case 'userget':
-                    return sprintf('%s-%d%s', md5($context->request->url) , $this->getApp()->options->user, $ext);
+                    return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
 
                 default:
                     return md5($context->request->url) . $ext;
@@ -1397,7 +1384,7 @@ class Controller
                 $errorPages = new ErrorPages();
                 $content = $errorPages->notfound();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                    $cache->savePhp($this->getCacheFileName($context), $content);
                 }
                 break;
 
@@ -1406,7 +1393,7 @@ class Controller
                 $errorPages = new ErrorPages();
                 $content = $errorPages->forbidden();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $content);
+                    $cache->savePhp($this->getCacheFileName($context), $content);
                 }
                 break;
 
@@ -1414,11 +1401,10 @@ class Controller
             default:
                 $response->send();
                 if ($this->cache && $response->cache) {
-                    $cache->savePhp($this->getCacheFileName($context) , $response->getString());
+                    $cache->savePhp($this->getCacheFileName($context), $response->getString());
                 }
         }
     }
-
 }
 
 //Cron.php
@@ -1457,7 +1443,6 @@ class Cron extends Events implements ResponsiveInterface
             if (is_dir($result)) {
                 return $result;
             }
-
         }
         return $this->getApp()->paths->data;
     }
@@ -1478,14 +1463,15 @@ class Cron extends Events implements ResponsiveInterface
                     $this->getApp()->router->close_connection();
                 }
 
-                if (ob_get_level()) ob_end_flush();
+                if (ob_get_level()) {
+                    ob_end_flush();
+                }
                 flush();
 
                 $this->sendexceptions();
                 $this->log("started loop");
                 $this->execute();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
             flock($fh, LOCK_UN);
@@ -1499,7 +1485,9 @@ class Cron extends Events implements ResponsiveInterface
 
     public function run()
     {
-        if (ob_get_level()) ob_end_flush();
+        if (ob_get_level()) {
+            ob_end_flush();
+        }
         flush();
 
         if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
@@ -1507,8 +1495,7 @@ class Cron extends Events implements ResponsiveInterface
 
             try {
                 $this->execute();
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
 
@@ -1531,29 +1518,25 @@ class Cron extends Events implements ResponsiveInterface
                 if (function_exists($func)) {
                     try {
                         $func($arg);
-                    }
-                    catch(\Exception $e) {
+                    } catch (\Exception $e) {
                         $this->getApp()->logException($e);
                     }
                 } else {
                     $this->db->iddelete($id); {
                         continue;
                     }
-
                 }
             } elseif (class_exists($class)) {
                 try {
                     $obj = static ::iGet($class);
                     $obj->$func($arg);
-                }
-                catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $this->getApp()->logException($e);
                 }
             } else {
                 $this->db->iddelete($id); {
                     continue;
                 }
-
             }
             if ($type == 'single') {
                 $this->db->iddelete($id);
@@ -1565,7 +1548,9 @@ class Cron extends Events implements ResponsiveInterface
 
     public function add($type, $class, $func, $arg = null)
     {
-        if (!preg_match('/^single|hour|day|week$/', $type)) $this->error("Unknown cron type $type");
+        if (!preg_match('/^single|hour|day|week$/', $type)) {
+            $this->error("Unknown cron type $type");
+        }
         if ($this->disableadd) {
             return false;
         }
@@ -1648,7 +1633,7 @@ class Cron extends Events implements ResponsiveInterface
         static ::$pinged = true;
 
         register_shutdown_function(array(
-            static ::i() ,
+        static ::i() ,
             'ping'
         ));
     }
@@ -1695,10 +1680,8 @@ class Cron extends Events implements ResponsiveInterface
             if (Config::$debug) {
                 $this->getApp()->getLogger()->info($s);
             }
-
         }
     }
-
 }
 
 //Data.php
@@ -1770,7 +1753,7 @@ class Data
                 }
             }
 
-            throw new PropException(get_class($this) , $name);
+            throw new PropException(get_class($this), $name);
         }
     }
 
@@ -1800,7 +1783,7 @@ class Data
             return call_user_func_array(array(
                 $this,
                 strtolower($name)
-            ) , $params);
+            ), $params);
         }
 
         foreach ($this->coinstances as $coinstance) {
@@ -1808,7 +1791,7 @@ class Data
                 return call_user_func_array(array(
                     $coinstance,
                     $name
-                ) , $params);
+                ), $params);
             }
         }
 
@@ -1893,7 +1876,7 @@ class Data
             }
         }
 
-        include_once ($file);
+        include_once($file);
 
         $fnc = $class . $func;
         if (function_exists($fnc)) {
@@ -2009,7 +1992,7 @@ class Data
 
         $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         $pad = $block - (strlen($s) % $block);
-        $s.= str_repeat(chr($pad) , $pad);
+        $s.= str_repeat(chr($pad), $pad);
         return mcrypt_encrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
     }
 
@@ -2025,7 +2008,6 @@ class Data
         $pad = ord($s[$len - 1]);
         return substr($s, 0, $len - $pad);
     }
-
 }
 
 //DB.php
@@ -2196,7 +2178,9 @@ class DB
 
     public function select($where)
     {
-        if ($where != '') $where = 'where ' . $where;
+        if ($where != '') {
+            $where = 'where ' . $where;
+        }
         return $this->query("SELECT * FROM $this->prefix$this->table $where");
     }
 
@@ -2228,7 +2212,7 @@ class DB
     public function assoc2update(array $a)
     {
         $list = array();
-        foreach ($a As $name => $value) {
+        foreach ($a as $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
                 $list[] = sprintf('%s = %s ', $name, $value); {
@@ -2246,12 +2230,12 @@ class DB
     {
         $id = $a[$index];
         unset($a[$index]);
-        return $this->update($this->assoc2update($a) , "$index = '$id' limit 1");
+        return $this->update($this->assoc2update($a), "$index = '$id' limit 1");
     }
 
     public function setValues($id, array $values)
     {
-        return $this->update($this->assoc2update($values) , "id = '$id' limit 1");
+        return $this->update($this->assoc2update($values), "id = '$id' limit 1");
     }
 
     public function insertRow($row)
@@ -2301,13 +2285,15 @@ class DB
             }
         }
 
-        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)) , implode(', ', $vals));
+        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)), implode(', ', $vals));
     }
 
     public function getCount($where = '')
     {
         $sql = "SELECT COUNT(*) as count FROM $this->prefix$this->table";
-        if ($where) $sql.= ' where ' . $where;
+        if ($where) {
+            $sql.= ' where ' . $where;
+        }
         if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
             return (int)$r['count'];
         }
@@ -2401,7 +2387,7 @@ class DB
 
     public function setValue($id, $name, $value)
     {
-        return $this->update("$name = " . $this->quote($value) , "id = $id");
+        return $this->update("$name = " . $this->quote($value), "id = $id");
     }
 
     public function getValues($names, $where)
@@ -2516,7 +2502,7 @@ class ErrorPages
         }
 
         $instance = Notfound404::i();
-        $context = new Context(new Request('', '') , new Response());
+        $context = new Context(new Request('', ''), new Response());
         $context->model = $instance;
         $context->view = $instance;
         $instance->request($context);
@@ -2539,7 +2525,7 @@ class ErrorPages
         }
 
         $instance = Forbidden::i();
-        $context = new Context(new Request('', '') , new Response());
+        $context = new Context(new Request('', ''), new Response());
         $context->model = $instance;
         $instance->request($context);
         MainView::i()->render($context);
@@ -2561,7 +2547,6 @@ class ErrorPages
 
         return Lang::get('login', 'confirmxxxattack') . sprintf(' <a href="%1$s">%1$s</a>', $url);
     }
-
 }
 
 //Events.php
@@ -2686,7 +2671,7 @@ class Events extends Data
     protected function addEvents()
     {
         $a = func_get_args();
-        array_splice($this->eventnames, count($this->eventnames) , 0, $a);
+        array_splice($this->eventnames, count($this->eventnames), 0, $a);
     }
 
     public function callEvent($name, $params)
@@ -2702,7 +2687,7 @@ class Events extends Data
 
             if (is_string($class) && class_exists($class)) {
                 $call = array(
-                    static ::iGet($class) ,
+                static ::iGet($class) ,
                     isset($item[1]) ? $item[1] : $item['func']
                 );
             } elseif (is_object($class)) {
@@ -2717,8 +2702,7 @@ class Events extends Data
             if ($call) {
                 try {
                     $result = call_user_func_array($call, $params);
-                }
-                catch(CancelEvent $e) {
+                } catch (CancelEvent $e) {
                     return $e->result;
                 }
 
@@ -2726,7 +2710,6 @@ class Events extends Data
                 if (isset($item[2]) && $item[2]) {
                     array_splice($this->events[$name], $i, 1);
                 }
-
             } else {
                 //class not found and delete event handler
                 array_splice($this->events[$name], $i, 1);
@@ -2774,7 +2757,6 @@ class Events extends Data
             if (isset($event[0]) && $event[0] == $class && $event[1] == $func) {
                 return false;
                 //backward compability
-                
             } elseif (isset($event['class']) && $event['class'] == $class && $event['func'] == $func) {
                 return false;
             }
@@ -2901,7 +2883,6 @@ class Events extends Data
             $this->save();
         }
     }
-
 }
 
 //Getter.php
@@ -2932,7 +2913,6 @@ class Getter
             $value
         ));
     }
-
 }
 
 //Item.php
@@ -2944,7 +2924,7 @@ class Item extends Data
 
     public static function i($id = 0)
     {
-        return static ::itemInstance(get_called_class() , (int)$id);
+        return static ::itemInstance(get_called_class(), (int)$id);
     }
 
     public static function itemInstance($class, $id = 0)
@@ -3041,7 +3021,6 @@ class Item extends Data
 
         return false;
     }
-
 }
 
 //ItemOwnerTrait.php
@@ -3065,7 +3044,6 @@ trait ItemOwnerTrait
     {
         return $this->owner->save();
     }
-
 }
 
 //Items.php
@@ -3194,7 +3172,7 @@ class Items extends Events
     {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
-            $this->db->update("$name = " . Str::quote($value) , "$this->idprop = $id");
+            $this->db->update("$name = " . Str::quote($value), "$this->idprop = $id");
         }
     }
 
@@ -3207,8 +3185,7 @@ class Items extends Events
         if ($this->dbversion) {
             try {
                 return $this->getitem($id);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return false;
             }
         }
@@ -3259,7 +3236,6 @@ class Items extends Events
         }
         return false;
     }
-
 }
 
 //ItemsPosts.php
@@ -3327,7 +3303,9 @@ class ItemsPosts extends Items
         $add = array_diff($items, $old);
         $delete = array_diff($old, $items);
 
-        if (count($delete)) $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+        if (count($delete)) {
+            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+        }
         if (count($add)) {
             $vals = array();
             foreach ($add as $iditem) {
@@ -3364,7 +3342,6 @@ class ItemsPosts extends Items
             $db->setvalue($idpost, $propname, implode(', ', $items));
         }
     }
-
 }
 
 //MemvarMemcache.php
@@ -3415,7 +3392,6 @@ class MemvarMemcache extends CacheMemcache
         unset($this->data[$name]);
         $this->delete($name);
     }
-
 }
 
 //MemvarMysql.php
@@ -3584,11 +3560,9 @@ class MemvarMysql
         $db = $this->getdb();
         try {
             $db->query("truncate table $db->prefix$this->table");
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
-
 }
 
 //Memvars.php
@@ -3651,7 +3625,9 @@ class Options extends Events
         parent::afterload();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
-        if (!defined('dbversion')) define('dbversion', true);
+        if (!defined('dbversion')) {
+            define('dbversion', true);
+        }
     }
 
     public function __set($name, $value)
@@ -3668,7 +3644,9 @@ class Options extends Events
 
         if (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
-            if ($name == 'solt') $this->data['emptyhash'] = $this->hash('');
+            if ($name == 'solt') {
+                $this->data['emptyhash'] = $this->hash('');
+            }
             $this->save();
             $this->dochanged($name, $value);
         }
@@ -3730,10 +3708,16 @@ class Options extends Events
 
     public function authCookies($iduser, $password)
     {
-        if (!$iduser || !$password) return false;
+        if (!$iduser || !$password) {
+            return false;
+        }
         $password = $this->hash($password);
-        if ($password == $this->emptyhash) return false;
-        if (!$this->finduser($iduser, $password)) return false;
+        if ($password == $this->emptyhash) {
+            return false;
+        }
+        if (!$this->finduser($iduser, $password)) {
+            return false;
+        }
 
         $this->_user = $iduser;
         $this->updategroup();
@@ -3742,18 +3726,23 @@ class Options extends Events
 
     public function findUser($iduser, $cookie)
     {
-        if ($iduser == 1) return $this->compare_cookie($cookie);
-        if (!$this->usersenabled) return false;
+        if ($iduser == 1) {
+            return $this->compare_cookie($cookie);
+        }
+        if (!$this->usersenabled) {
+            return false;
+        }
 
         $users = Users::i();
         try {
             $item = $users->getitem($iduser);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
-        if ('hold' == $item['status']) return false;
+        if ('hold' == $item['status']) {
+            return false;
+        }
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
 
@@ -3764,27 +3753,45 @@ class Options extends Events
 
     public function emailExists($email)
     {
-        if (!$email) return false;
-        if (!$this->authenabled) return false;
-        if ($email == $this->email) return 1;
-        if (!$this->usersenabled) return false;
+        if (!$email) {
+            return false;
+        }
+        if (!$this->authenabled) {
+            return false;
+        }
+        if ($email == $this->email) {
+            return 1;
+        }
+        if (!$this->usersenabled) {
+            return false;
+        }
         return Users::i()->emailexists($email);
     }
 
     public function auth($email, $password)
     {
-        if (!$this->authenabled) return false;
-        if (!$email && !$password) return $this->authcookie();
-        return $this->authpassword($this->emailexists($email) , $password);
+        if (!$this->authenabled) {
+            return false;
+        }
+        if (!$email && !$password) {
+            return $this->authcookie();
+        }
+        return $this->authpassword($this->emailexists($email), $password);
     }
 
     public function authPassword($iduser, $password)
     {
-        if (!$iduser) return false;
+        if (!$iduser) {
+            return false;
+        }
         if ($iduser == 1) {
-            if ($this->data['password'] != $this->hash($password)) return false;
+            if ($this->data['password'] != $this->hash($password)) {
+                return false;
+            }
         } else {
-            if (!Users::i()->authpassword($iduser, $password)) return false;
+            if (!Users::i()->authpassword($iduser, $password)) {
+                return false;
+            }
         }
 
         $this->_user = $iduser;
@@ -3865,7 +3872,7 @@ class Options extends Events
 
         if ($this->_user == 1) {
             $this->save_cookie($cookie, $expired);
-        } else if ($this->_user) {
+        } elseif ($this->_user) {
             Users::i()->setcookie($this->_user, $cookie, $expired);
         }
     }
@@ -3900,31 +3907,46 @@ class Options extends Events
     public function inGroup($groupname)
     {
         //admin has all rights
-        if ($this->user == 1) return true;
-        if (in_array($this->groupnames['admin'], $this->idgroups)) return true;
-        if (!$groupname) return true;
+        if ($this->user == 1) {
+            return true;
+        }
+        if (in_array($this->groupnames['admin'], $this->idgroups)) {
+            return true;
+        }
+        if (!$groupname) {
+            return true;
+        }
         $groupname = trim($groupname);
-        if ($groupname == 'admin') return false;
-        if (!isset($this->groupnames[$groupname])) $this->error(sprintf('The "%s" group not found', $groupname));
+        if ($groupname == 'admin') {
+            return false;
+        }
+        if (!isset($this->groupnames[$groupname])) {
+            $this->error(sprintf('The "%s" group not found', $groupname));
+        }
         $idgroup = $this->groupnames[$groupname];
         return in_array($idgroup, $this->idgroups);
     }
 
     public function inGroups(array $idgroups)
     {
-        if ($this->ingroup('admin')) return true;
+        if ($this->ingroup('admin')) {
+            return true;
+        }
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
     public function hasGroup($groupname)
     {
-        if ($this->ingroup($groupname)) return true;
+        if ($this->ingroup($groupname)) {
+            return true;
+        }
         // if group is children of user groups
         $idgroup = $this->groupnames[$groupname];
-        if (!isset($this->parentgroups[$idgroup])) return false;
+        if (!isset($this->parentgroups[$idgroup])) {
+            return false;
+        }
         return count(array_intersect($this->idgroups, $this->parentgroups[$idgroup]));
     }
-
 }
 
 //Paths.php
@@ -3981,7 +4003,6 @@ class Plugin extends Events
 
         $this->getApp()->classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
     }
-
 }
 
 //Pool.php
@@ -4038,7 +4059,7 @@ class Pool extends Data
 
     public function savemodified($idpool)
     {
-        $this->getApp()->router->cache->set($this->getfilename($idpool) , $this->pool[$idpool]);
+        $this->getApp()->router->cache->set($this->getfilename($idpool), $this->pool[$idpool]);
     }
 
     public function getIdpool($id)
@@ -4069,7 +4090,6 @@ class Pool extends Data
         $this->pool[$idpool][$id] = $item;
         $this->savepool($idpool);
     }
-
 }
 
 //PoolStorage.php
@@ -4169,7 +4189,6 @@ class PoolStorage
     {
         return count($this->data);
     }
-
 }
 
 //PoolStorageTrait.php
@@ -4182,7 +4201,6 @@ trait PoolStorageTrait
     {
         return $this->getApp()->poolStorage;
     }
-
 }
 
 //PropException.php
@@ -4198,7 +4216,7 @@ class PropException extends \UnexpectedValueException
         $this->className = $className;
         $this->propName = $propName;
 
-        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className) , 404);
+        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className), 404);
     }
 }
 
@@ -4319,7 +4337,6 @@ class Request
     {
         return $this->getApp()->options->xxxcheck && $this->isXXX();
     }
-
 }
 
 //Response.php
@@ -4353,7 +4370,7 @@ class Response
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
         } else {
-            throw new PropException(get_class($this) , $name);
+            throw new PropException(get_class($this), $name);
         }
     }
 
@@ -4380,7 +4397,7 @@ class Response
             $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
         }
 
-        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]) , true, $this->status);
+        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
 
         $this->setCacheHeaders($this->cacheHeader);
         if (isset($this->headers['Date'])) {
@@ -4478,13 +4495,13 @@ class Response
     {
         return $this->phrases[$this->status];
     }
-
 }
 
 //ResponsiveInterface.php
 namespace litepubl\core;
 
-interface ResponsiveInterface {
+interface ResponsiveInterface
+{
     public function request(Context $context);
 }
 
@@ -4602,7 +4619,7 @@ class Router extends Items
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
-        } else if ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
+        } elseif ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
             $this->items[$item['id']] = $item;
             return $item;
         }
@@ -4792,7 +4809,6 @@ class Router extends Items
     {
         $this->getApp()->cache->clear();
     }
-
 }
 
 //Singleton.php
@@ -4836,9 +4852,9 @@ class Site extends Events
             if (is_array($prop)) {
                 list($classname, $method) = $prop;
                 return call_user_func_array(array(
-                    static ::iGet($classname) ,
+                static ::iGet($classname) ,
                     $method
-                ) , array(
+                ), array(
                     $name
                 ));
             }
@@ -4859,7 +4875,9 @@ class Site extends Events
             $this->addevent($name, $value['class'], $value['func']);
         } elseif (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
-            if (is_string($prop)) $this->getApp()->options->{$prop} = $value;
+            if (is_string($prop)) {
+                $this->getApp()->options->{$prop} = $value;
+            }
         } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
             $this->save();
@@ -4910,7 +4928,9 @@ class Site extends Events
     public function getUserlink()
     {
         if ($id = $this->getApp()->options->user) {
-            if (!isset($this->users)) $this->users = array();
+            if (!isset($this->users)) {
+                $this->users = array();
+            }
             if (isset($this->users[$id])) {
                 return $this->users[$id];
             }
@@ -4921,7 +4941,7 @@ class Site extends Events
             } else {
                 $page = $this->getdb('userpage')->getitem($id);
                 if ((int)$page['idurl']) {
-                    $result = sprintf('<a href="%s%s">%s</a>', $this->url, $this->getApp()->router->getvalue($page['idurl'], 'url') , $item['name']);
+                    $result = sprintf('<a href="%s%s">%s</a>', $this->url, $this->getApp()->router->getvalue($page['idurl'], 'url'), $item['name']);
                 } else {
                     $result = $item['name'];
                 }
@@ -4936,7 +4956,6 @@ class Site extends Events
     {
         return '<?php echo  litepubl::$app->site->getuserlink(); ?>';
     }
-
 }
 
 //Storage.php
@@ -4982,7 +5001,7 @@ class Storage
 
     public function save(Data $obj)
     {
-        return $this->saveFile($this->getfilename($obj) , $this->serialize($obj->data));
+        return $this->saveFile($this->getfilename($obj), $this->serialize($obj->data));
     }
 
     public function saveData($filename, array $data)
@@ -4997,8 +5016,7 @@ class Storage
                 $obj->data = $data + $obj->data;
                 return true;
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->getApp()->logException($e);
         }
 
@@ -5067,7 +5085,6 @@ class Storage
     {
         $this->getApp()->options->trace($mesg);
     }
-
 }
 
 //StorageInc.php
@@ -5104,7 +5121,7 @@ class StorageInc extends Storage
     public function loadData($filename)
     {
         if (\file_exists($filename . $this->getExt())) {
-            return include ($filename . $this->getExt());
+            return include($filename . $this->getExt());
         }
 
         return false;
@@ -5114,7 +5131,6 @@ class StorageInc extends Storage
     {
         $this->error('Call loadfile');
     }
-
 }
 
 //StorageMemcache.php
@@ -5155,7 +5171,6 @@ class StorageMemcache extends Storage
         parent::delete($filename);
         $this->memcache->delete($filename);
     }
-
 }
 
 //Str.php
@@ -5163,7 +5178,7 @@ namespace litepubl\core;
 
 use litepubl\Config;
 
-Class Str
+class Str
 {
     public $value;
 
@@ -5213,7 +5228,7 @@ Class Str
 
     public static function baseMd5($s)
     {
-        return trim(base64_encode(md5($s, true)) , '=');
+        return trim(base64_encode(md5($s, true)), '=');
     }
 
     public static function begin($s, $begin)
@@ -5229,7 +5244,6 @@ Class Str
             if (strncmp($s, $begin, strlen($begin)) == 0) {
                 return true;
             }
-
         }
         return false;
     }
@@ -5288,7 +5302,6 @@ Class Str
         var_dump($v);
         echo "</pre>\n";
     }
-
 }
 
 //TempProps.php
@@ -5315,7 +5328,6 @@ class TempProps extends \ArrayObject
 
         $this->owner = null;
     }
-
 }
 
 //Users.php
@@ -5412,7 +5424,6 @@ class Users extends Items
             if ($email == $item['email']) {
                 return $id;
             }
-
         }
 
         if ($item = $this->db->finditem('email = ' . Str::quote($email))) {
@@ -5446,7 +5457,7 @@ class Users extends Items
 
     public function auth($email, $password)
     {
-        return $this->authpassword($this->emailexists($email) , $password);
+        return $this->authpassword($this->emailexists($email), $password);
     }
 
     public function authpassword($id, $password)
@@ -5457,7 +5468,9 @@ class Users extends Items
 
         $item = $this->getitem($id);
         if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
-            if ($item['status'] == 'wait') $this->approve($id);
+            if ($item['status'] == 'wait') {
+                $this->approve($id);
+            }
             return $id;
         }
         return false;
@@ -5480,7 +5493,6 @@ class Users extends Items
             if (strtotime($item['expired']) > time()) {
                 return $id;
             }
-
         }
         return false;
     }
@@ -5508,7 +5520,9 @@ class Users extends Items
 
     public function setCookie($id, $cookie, $expired)
     {
-        if ($cookie) $cookie = $this->getApp()->options->hash($cookie);
+        if ($cookie) {
+            $cookie = $this->getApp()->options->hash($cookie);
+        }
         $expired = Str::sqlDate($expired);
         if (isset($this->items[$id])) {
             $this->items[$id]['cookie'] = $cookie;
@@ -5521,7 +5535,6 @@ class Users extends Items
             'expired' => $expired
         ));
     }
-
 }
 
 //vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
@@ -7353,7 +7366,9 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                function ($m) { return utf8_encode($m[0]); },
+                function ($m) {
+                    return utf8_encode($m[0]);
+                },
                 $data
             );
             $data = str_replace(
@@ -7763,14 +7778,14 @@ class LogManager
     {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
         $log.= LogException::getLog($e);
-        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
         $this->logger->alert($log);
     }
 
     public function getTrace()
     {
         $log = LogException::trace();
-        $log = str_replace(dirname(dirname(__DIR__)) , '', $log);
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
         return $log;
     }
 
@@ -7807,7 +7822,6 @@ class LogManager
         $log.= "\n";
         Filer::append(static ::getAppInstance()->paths->data . 'logs/filer.log', $log);
     }
-
 }
 
 //lib/debug/RuntimeHandler.php
@@ -7843,7 +7857,6 @@ class RuntimeHandler extends AbstractProcessingHandler
     {
         $this->log[] = $record;
     }
-
 }
 
 //lib/debug/EmptyFormatter.php
@@ -7943,7 +7956,6 @@ class LogException
                 return gettype($v);
         }
     }
-
 }
 
 //litepubl.php
@@ -7970,8 +7982,6 @@ class litepubl
 
         static ::$app->run();
     }
-
 }
 
 litepubl::init();
-

@@ -24,6 +24,4 @@ class Password extends Perm
         $this->perm->password = $_POST['password'];
         parent::processForm();
     }
-
 }
-

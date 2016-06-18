@@ -41,6 +41,4 @@ class Rss extends \litepubl\admin\Menu
         $rss->template = trim($_POST['template']);
         $rss->save();
     }
-
 }
-

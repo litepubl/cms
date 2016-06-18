@@ -23,6 +23,4 @@ class MaxCount extends Widget
     {
         $this->widget->maxcount = (int)$_POST['maxcount'];
     }
-
 }
-

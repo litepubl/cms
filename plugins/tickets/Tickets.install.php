@@ -46,8 +46,8 @@ function TicketsInstall($self)
     $filter->phpcode = true;
     $filter->save();
 
-$app = $self->getApp();
-$app->options->parsepost = false;
+    $app = $self->getApp();
+    $app->options->parsepost = false;
 
     $manager = DBManager::i();
     $manager->CreateTable($self->childTable, file_get_contents($dir . 'ticket.sql'));
@@ -61,14 +61,14 @@ $app->options->parsepost = false;
     //install polls if its needed
     $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) {
-$plugins->add('polls');
-}
+        $plugins->add('polls');
+    }
 
     $app->options->reguser = true;
     $secure = Secure::i();
     $secure ->usersEnabled = true;
 
-$ns = __NAMESPACE__ . '\\';
+    $ns = __NAMESPACE__ . '\\';
     $adminmenus = AdminMenus::i();
     $adminmenus->lock();
 
@@ -105,14 +105,14 @@ $ns = __NAMESPACE__ . '\\';
     $groups->items[$app->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();
 
-$app->cache->clear();
+    $app->cache->clear();
 }
 
 function TicketsUninstall($self)
 {
     Posts::unsub($self);
 
-$app = $self->getApp();
+    $app = $self->getApp();
     $adminmenus = AdminMenus::i();
     $adminmenus->lock();
     $adminmenus->deletetree($adminmenus->url2id('/admin/tickets/'));
@@ -133,6 +133,5 @@ $app = $self->getApp();
 
     LangMerger::i()->deletePlugin(Plugins::getname(__file__));
 
-$app->cache->clear();
+    $app->cache->clear();
 }
-

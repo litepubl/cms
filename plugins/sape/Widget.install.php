@@ -14,4 +14,3 @@ function WidgetInstall($self)
 {
     $self->add();
 }
-

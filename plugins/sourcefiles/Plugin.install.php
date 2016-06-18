@@ -14,9 +14,11 @@ use litepubl\utils\Filer;
 
 function PluginInstall($self)
 {
-    $self->getApp()->router->add($self->url, get_class($self) , '', 'begin');
+    $self->getApp()->router->add($self->url, get_class($self), '', 'begin');
 
-    if (!@is_dir($self->dir)) @mkdir($self->dir, 0777);
+    if (!@is_dir($self->dir)) {
+        @mkdir($self->dir, 0777);
+    }
     @chmod($self->dir, 0777);
 }
 
@@ -43,4 +45,3 @@ function get_ignore_source()
         'js/flowplayer'
     );
 }
-

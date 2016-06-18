@@ -27,17 +27,17 @@ trait EmptyViewTrait
 
     public function getHead(): string
     {
-return '';
+        return '';
     }
 
     public function getKeywords(): string
     {
-return '';
+        return '';
     }
 
     public function getDescription(): string
     {
-return '';
+        return '';
     }
 
     public function getIdSchema(): int
@@ -62,6 +62,4 @@ return '';
     {
         return $this;
     }
-
 }
-

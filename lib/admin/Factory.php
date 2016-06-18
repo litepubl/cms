@@ -101,6 +101,4 @@ trait Factory
         $args->confirm = $lang->confirmdelete;
         return $admin->parseArg($admin->templates['confirmform'], $args);
     }
-
 }
-

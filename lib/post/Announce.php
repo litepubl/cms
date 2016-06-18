@@ -118,6 +118,4 @@ class Announce
 
         return $result;
     }
-
 }
-

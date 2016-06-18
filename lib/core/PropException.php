@@ -20,7 +20,6 @@ class PropException extends \UnexpectedValueException
         $this->className = $className;
         $this->propName = $propName;
 
-        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className) , 404);
+        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className), 404);
     }
 }
-

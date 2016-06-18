@@ -94,8 +94,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
                 $trust = $comments->db->getcount("author = $idauthor and status = 'approved' limit " . ($this->trustlevel + 1));
                 $users->setvalue($idauthor, 'trust', $trust);
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
 
         $this->onchanged($id);
@@ -193,6 +192,4 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
 
         return $response->redir($url);
     }
-
 }
-

@@ -55,12 +55,14 @@ class MediaParser extends \litepubl\core\Events
 
     public function addlocal($filename)
     {
-        return $this->upload(basename($filename) , file_get_contents($filename) , '', '', '', false);
+        return $this->upload(basename($filename), file_get_contents($filename), '', '', '', false);
     }
 
     public function upload($filename, $content, $title, $description, $keywords, $overwrite)
     {
-        if ($title == '') $title = $filename;
+        if ($title == '') {
+            $title = $filename;
+        }
         $filename = static ::linkgen($filename);
         $tempfilename = $this->doupload($filename, $content);
         return $this->addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite);
@@ -73,8 +75,12 @@ class MediaParser extends \litepubl\core\Events
 
     public function uploadfile($filename, $tempfilename, $title, $description, $keywords, $overwrite)
     {
-        if ($title == '') $title = $filename;
-        if ($description == '') $description = $title;
+        if ($title == '') {
+            $title = $filename;
+        }
+        if ($description == '') {
+            $description = $title;
+        }
         $filename = static ::linkgen($filename);
         $parts = pathinfo($filename);
         $newtemp = $this->gettempname($parts);
@@ -117,7 +123,9 @@ class MediaParser extends \litepubl\core\Events
         $filename = static ::linkgen($filename);
         $tempfilename = $this->doupload($filename, $content, $overwrite);
         $info = $this->getinfo($tempfilename);
-        if ($info['media'] != 'image') $this->error('Invalid icon file format ' . $info['media']);
+        if ($info['media'] != 'image') {
+            $this->error('Invalid icon file format ' . $info['media']);
+        }
         $info['media'] = 'icon';
         $info['filename'] = $this->movetofolder($filename, $tempfilename, 'icon', $overwrite);
         $item = $info + array(
@@ -132,7 +140,9 @@ class MediaParser extends \litepubl\core\Events
     public function addicon($filename)
     {
         $info = $this->getinfo($filename);
-        if ($info['media'] != 'image') $this->error('Invalid icon file format ' . $info['media']);
+        if ($info['media'] != 'image') {
+            $this->error('Invalid icon file format ' . $info['media']);
+        }
         $info['media'] = 'icon';
         $item = $info + array(
             'filename' => $filename,
@@ -160,7 +170,9 @@ class MediaParser extends \litepubl\core\Events
     {
         $parts = pathinfo($filename);
         $result = $parts['filename'] . $ext;
-        if (!empty($parts['dirname']) && ($parts['dirname'] != '.')) $result = $parts['dirname'] . DIRECTORY_SEPARATOR . $result;
+        if (!empty($parts['dirname']) && ($parts['dirname'] != '.')) {
+            $result = $parts['dirname'] . DIRECTORY_SEPARATOR . $result;
+        }
         return $result;
     }
 
@@ -188,7 +200,6 @@ class MediaParser extends \litepubl\core\Events
             if (!$files->exists($subdir . $filename) && !file_exists($dir . $filename)) {
                 return $filename;
             }
-
         }
         return $filename;
     }
@@ -222,7 +233,6 @@ class MediaParser extends \litepubl\core\Events
             if ($result = $this->data[$media]) {
                 return $result;
             }
-
         }
         return $media;
     }
@@ -252,7 +262,9 @@ class MediaParser extends \litepubl\core\Events
 
     public function add(array $file)
     {
-        if (!isset($file['filename']) || !isset($file['tempfilename'])) $this->error('No file name');
+        if (!isset($file['filename']) || !isset($file['tempfilename'])) {
+            $this->error('No file name');
+        }
 
         $files = Files::i();
         $hash = $files->gethash($this->getApp()->paths->files . $file['tempfilename']);
@@ -263,7 +275,7 @@ class MediaParser extends \litepubl\core\Events
 
         $item = $this->getinfo($file['tempfilename']);
         $item = array_merge($item, array(
-            'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']) , isset($file['overwrite']) ? $file['overwrite'] : false) ,
+            'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']), isset($file['overwrite']) ? $file['overwrite'] : false) ,
             'title' => isset($file['title']) ? $file['title'] : $filename,
             'description' => isset($file['description']) ? $file['description'] : '',
             'keywords' => isset($file['keywords']) ? $file['keywords'] : ''
@@ -281,7 +293,9 @@ class MediaParser extends \litepubl\core\Events
             $maxheight = isset($file['maxheight']) ? $file['maxheight'] : $this->maxheight;
 
             $resize = $this->alwaysresize && ($maxwidth > 0) && ($maxheight > 0);
-            if (!$resize) $resize = ($item['width'] > $maxwidth) || ($item['height'] > $maxheight);
+            if (!$resize) {
+                $resize = ($item['width'] > $maxwidth) || ($item['height'] > $maxheight);
+            }
             $enablepreview = isset($file['enablepreview']) ? $file['enablepreview'] : (isset($file['ispreview']) ? $file['ispreview'] : $this->previewmode != 'none');
             $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
 
@@ -329,7 +343,7 @@ class MediaParser extends \litepubl\core\Events
         }
 
         $id = $files->additem($item);
-        IF ($hash != $files->getvalue($id, 'hash')) {
+        if ($hash != $files->getvalue($id, 'hash')) {
             $files->getdb('imghashes')->insert(array(
                 'id' => $id,
                 'hash' => $hash
@@ -344,7 +358,9 @@ class MediaParser extends \litepubl\core\Events
 
         if ($midle) {
             $midle['parent'] = $id;
-            if ($preview) $midle['preview'] = $idpreview;
+            if ($preview) {
+                $midle['preview'] = $idpreview;
+            }
             $idmidle = $files->additem($midle);
             $files->setvalue($id, 'midle', $idmidle);
         }
@@ -373,14 +389,16 @@ class MediaParser extends \litepubl\core\Events
     //$filename must be specefied before such as  thumb/img004893.jpg
     public function uploadthumb($filename, &$content)
     {
-        $hash = trim(base64_encode(md5($content, true)) , '=');
+        $hash = trim(base64_encode(md5($content, true)), '=');
         $files = Files::i();
         if (($id = $files->indexof('hash', $hash)) || ($id = $files->getdb('imghashes')->findid('hash = ' . Str::quote($hash)))) {
             return $id;
         }
 
         if ($image = imagecreatefromstring($content)) {
-            if (!Str::begin($filename, $this->getApp()->paths->files)) $filename = $this->getApp()->paths->files . ltrim($filename, '\/');
+            if (!Str::begin($filename, $this->getApp()->paths->files)) {
+                $filename = $this->getApp()->paths->files . ltrim($filename, '\/');
+            }
             $destfilename = static ::replace_ext($filename, '.jpg');
             $destfilename = static ::makeunique($destfilename);
             if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
@@ -391,7 +409,7 @@ class MediaParser extends \litepubl\core\Events
                 $item['height'] = $size['height'];
 
                 $id = $files->additem($item);
-                IF ($hash != $files->getvalue($id, 'hash')) {
+                if ($hash != $files->getvalue($id, 'hash')) {
                     $files->getdb('imghashes')->insert(array(
                         'id' => $id,
                         'hash' => $hash
@@ -446,7 +464,9 @@ class MediaParser extends \litepubl\core\Events
                 'f4p' => 'video/mp4',
             );
 
-            if (isset($mime[$ext])) $result['mime'] = $mime[$ext];
+            if (isset($mime[$ext])) {
+                $result['mime'] = $mime[$ext];
+            }
             $result['media'] = 'video';
             return $result;
         }
@@ -483,9 +503,9 @@ class MediaParser extends \litepubl\core\Events
             $result['media'] = 'flash';
             $result['mime'] = 'application/x-shockwave-flash';
 
-            require_once ($this->getApp()->paths->libinclude . 'getid3.php');
-            require_once ($this->getApp()->paths->libinclude . 'getid3.lib.php');
-            require_once ($this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
+            require_once($this->getApp()->paths->libinclude . 'getid3.php');
+            require_once($this->getApp()->paths->libinclude . 'getid3.lib.php');
+            require_once($this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
 
             $getID3 = new \getID3;
             $getID3->option_md5_data = true;
@@ -586,8 +606,12 @@ class MediaParser extends \litepubl\core\Events
 
         $sourcex = imagesx($source);
         $sourcey = imagesy($source);
-        if (!$x) $x = $y;
-        if (!$y) $y = $x;
+        if (!$x) {
+            $x = $y;
+        }
+        if (!$y) {
+            $y = $x;
+        }
         if (($x >= $sourcex) && ($y >= $sourcey)) {
             return false;
         }
@@ -677,7 +701,7 @@ class MediaParser extends \litepubl\core\Events
         $ratio = $sourcex / $sourcey;
         if (!$y) {
             $y = $x / $ratio;
-        } else if ($x / $y > $ratio) {
+        } elseif ($x / $y > $ratio) {
             $x = $y * $ratio;
         } else {
             $y = $x / $ratio;
@@ -740,6 +764,4 @@ class MediaParser extends \litepubl\core\Events
     {
         return 0;
     }
-
 }
-

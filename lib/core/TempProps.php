@@ -31,6 +31,4 @@ class TempProps extends \ArrayObject
 
         $this->owner = null;
     }
-
 }
-

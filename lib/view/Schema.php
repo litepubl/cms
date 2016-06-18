@@ -35,7 +35,7 @@ class Schema extends \litepubl\core\Item
 
     public static function newItem($id)
     {
-        return static ::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
+        return static ::getAppInstance()->classes->newItem(static ::getinstancename(), get_called_class(), $id);
     }
 
     public static function getInstancename()
@@ -121,7 +121,9 @@ class Schema extends \litepubl\core\Item
             return false;
         }
 
-        if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
+        if (Str::begin($name, 'admin')) {
+            $this->error('The theme name cant begin with admin keyword');
+        }
         if (!Theme::exists($name)) {
             return $this->error(sprintf('Theme %s not exists', $name));
         }
@@ -138,7 +140,9 @@ class Schema extends \litepubl\core\Item
     public function setAdminname($name)
     {
         if ($name != $this->adminname) {
-            if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+            if (!Str::begin($name, 'admin')) {
+                $this->error('Admin theme name dont start with admin keyword');
+            }
             if (!Admin::exists($name)) {
                 return $this->error(sprintf('Admin theme %s not exists', $name));
             }
@@ -160,7 +164,7 @@ class Schema extends \litepubl\core\Item
             $this->originalCustom = $this->themeInstance->templates['custom'];
 
             //aray_equal
-            if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']) , array_keys($this->originalCustom)))) {
+            if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']), array_keys($this->originalCustom)))) {
                 $this->themeInstance->templates['custom'] = $this->data['custom'];
             } else {
                 $this->data['custom'] = $this->originalCustom;
@@ -207,6 +211,4 @@ class Schema extends \litepubl\core\Item
             $this->save();
         }
     }
-
 }
-

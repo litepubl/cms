@@ -46,6 +46,4 @@ class Forbidden extends \litepubl\core\Events implements \litepubl\view\ViewInte
         $lang = Lang::i('default');
         return $theme->simple($theme->h($lang->forbidden));
     }
-
 }
-

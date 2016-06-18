@@ -27,6 +27,4 @@ class Plugin extends Events
 
         $this->getApp()->classes->add($ns . '\\' . $classname, $dir . '/' . $filename);
     }
-
 }
-

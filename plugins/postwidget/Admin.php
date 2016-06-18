@@ -15,11 +15,11 @@ use litepubl\widget\Widgets;
 class Admin extends \litepubl\admin\widget\Custom
 {
 
-public function __construct()
-{
-parent::__construct();
-$this->widget = Widget::i();
-}
+    public function __construct()
+    {
+        parent::__construct();
+        $this->widget = Widget::i();
+    }
 
     public function getContent(): string
     {
@@ -45,7 +45,7 @@ $this->widget = Widget::i();
         $cats = $this->admin->getCats($item['cats']);
         $args->add($item);
         $args->widgettitle = $item['title'];
-        $args->template = $this->theme->comboItems(static ::gettemplates() , $item['template']);
+        $args->template = $this->theme->comboItems(static ::gettemplates(), $item['template']);
         $args->formtitle = $item['title'] == '' ? $this->lang->widget : $item['title'];
         $result = $this->admin->form('
     [text=widgettitle]
@@ -54,9 +54,9 @@ $this->widget = Widget::i();
     [hidden=idwidget]
     [hidden=mode]
 ' . $this->admin->h($lang->cats)
- . $cats, $args);
+        . $cats, $args);
 
-$result .= $this->getTableWidgets();
+        $result .= $this->getTableWidgets();
         return $result;
     }
 
@@ -73,7 +73,9 @@ $result .= $this->getTableWidgets();
 
                 case 'edit':
                     $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
-                    if ($id == 0) $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                    if ($id == 0) {
+                        $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                    }
                     $item = $widget->items[$id];
                     $item['title'] = $widgettitle;
                     $item['content'] = $content;
@@ -86,11 +88,9 @@ $result .= $this->getTableWidgets();
                     $widgets->items[$id]['title'] = $widgettitle;
                     $widgets->save();
                     break;
-                }
+            }
         } else {
             $this->deleteWidgets($widget);
         }
     }
-
 }
-

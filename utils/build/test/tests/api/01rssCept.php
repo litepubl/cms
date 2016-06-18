@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Page\Rss;
 use Codeception\Util\Xml as XmlUtils;
@@ -21,4 +21,3 @@ $i->seeResponseIsXml();
 
 $i->sendGET($rss->tags);
 $i->seeResponseIsXml();
-

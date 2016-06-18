@@ -32,8 +32,8 @@ function includeDir($dir)
     $list->close();
 }
 
-spl_autoload_register(function ($class)
-{
+spl_autoload_register(function ($class) {
+
     //echo "$class<br>";
     $class = trim($class, '\\');
     $class = substr($class, strpos($class, '\\') + 1);
@@ -44,9 +44,8 @@ spl_autoload_register(function ($class)
 });
 
 //include (dirname(dirname(__DIR__ )). '/index.debug.php');
-include (__DIR__ . '/Config.php');
-include (__DIR__ . '/kernel.php');
+include(__DIR__ . '/Config.php');
+include(__DIR__ . '/kernel.php');
 
 includeDir(dirname(__DIR__));
 includeDir(dirname(dirname(__DIR__)) . '/plugins');
-

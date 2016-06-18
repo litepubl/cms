@@ -33,13 +33,13 @@ class Session
         session_set_save_handler($truefunc, $truefunc, array(
             $this,
             'read'
-        ) , array(
+        ), array(
             $this,
             'write'
-        ) , array(
+        ), array(
             $this,
             'destroy'
-        ) , $truefunc);
+        ), $truefunc);
     }
 
     public function truefunc()
@@ -81,7 +81,6 @@ class Session
                 static ::$instance = new static ($app->memcache, $app->controller ? $app->controller->host : Config::$host);
             } else {
                 //ini_set('session.gc_probability', 1);
-                
             }
         }
 
@@ -105,6 +104,4 @@ class Session
             return false;
         }
     }
-
 }
-

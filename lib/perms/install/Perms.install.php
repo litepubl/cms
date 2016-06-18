@@ -39,4 +39,3 @@ function PermsInstall($self)
 function PermsUninstall($self)
 {
 }
-

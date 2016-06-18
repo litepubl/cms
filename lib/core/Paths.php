@@ -40,4 +40,3 @@ class Paths
         $this->js = $this->home . 'js' . DIRECTORY_SEPARATOR;
     }
 }
-

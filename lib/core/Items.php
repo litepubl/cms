@@ -76,7 +76,7 @@ class Items extends Events
     }
 
     public function res2items($res)
-{
+    {
         if (!$res) {
             return array();
         }
@@ -133,7 +133,7 @@ class Items extends Events
     {
         $this->items[$id][$name] = $value;
         if ($this->dbversion) {
-            $this->db->update("$name = " . Str::quote($value) , "$this->idprop = $id");
+            $this->db->update("$name = " . Str::quote($value), "$this->idprop = $id");
         }
     }
 
@@ -146,8 +146,7 @@ class Items extends Events
         if ($this->dbversion) {
             try {
                 return $this->getitem($id);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 return false;
             }
         }
@@ -199,6 +198,4 @@ class Items extends Events
 
         return false;
     }
-
 }
-

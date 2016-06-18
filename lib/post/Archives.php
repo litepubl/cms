@@ -76,7 +76,7 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
             if (is_int($j)) {
                 array_splice($old, $j, 1);
             } else {
-                $this->items[$date]['idurl'] = $this->getApp()->router->Add($item['url'], get_class($this) , $date);
+                $this->items[$date]['idurl'] = $this->getApp()->router->Add($item['url'], get_class($this), $date);
             }
         }
         foreach ($old as $url) {
@@ -149,11 +149,9 @@ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
 
     public function getSitemap($from, $count)
     {
-        return $this->externalfunc(get_class($this) , 'GetSitemap', array(
+        return $this->externalfunc(get_class($this), 'GetSitemap', array(
             $from,
             $count
         ));
     }
-
 }
-

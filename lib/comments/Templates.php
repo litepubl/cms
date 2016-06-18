@@ -124,7 +124,7 @@ class Templates extends \litepubl\core\Events
         $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
         //insert back url
-        $result = str_replace('backurl=', 'backurl=' . urlencode($this->view->context->request->url) , $result);
+        $result = str_replace('backurl=', 'backurl=' . urlencode($this->view->context->request->url), $result);
 
         return $theme->parse($result);
     }
@@ -146,6 +146,4 @@ class Templates extends \litepubl\core\Events
         $theme = Theme::i();
         return $theme->parseArg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
-
 }
-

@@ -70,6 +70,4 @@ class Admincatbread extends \litepubl\admin\Panel
         Base::clearcache();
         return '';
     }
-
 }
-

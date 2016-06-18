@@ -91,7 +91,7 @@ class Plugin extends \litepubl\core\Plugin
         $categories->loadAll();
         $this->tree = $this->getSubTree(0);
 
-        $this->exitems = array_intersect(array_keys($categories->items) , $this->exitems);
+        $this->exitems = array_intersect(array_keys($categories->items), $this->exitems);
         $this->save();
     }
 
@@ -114,6 +114,4 @@ class Plugin extends \litepubl\core\Plugin
         }
         return $result;
     }
-
 }
-

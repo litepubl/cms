@@ -39,9 +39,6 @@ class BlackIP extends \litepubl\core\Plugin
             if (false !== strpos($content, $word)) {
                 return $this->wordstatus;
             }
-
         }
     }
-
 }
-

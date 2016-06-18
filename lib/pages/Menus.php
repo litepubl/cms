@@ -49,7 +49,9 @@ class Menus extends \litepubl\core\Items
 
         //fix null fields
         foreach ($item->get_owner_props() as $prop) {
-            if (!isset($item->data[$prop])) $item->data[$prop] = '';
+            if (!isset($item->data[$prop])) {
+                $item->data[$prop] = '';
+            }
         }
 
         if ($item instanceof Home) {
@@ -82,8 +84,10 @@ class Menus extends \litepubl\core\Items
         }
 
         $item->id = $id;
-        $item->idurl = $this->getApp()->router->Add($item->url, get_class($item) , $item->id);
-        if ($item->status != 'draft') $item->status = 'published';
+        $item->idurl = $this->getApp()->router->Add($item->url, get_class($item), $item->id);
+        if ($item->status != 'draft') {
+            $item->status = 'published';
+        }
         $this->lock();
         $this->sort();
         $item->save();
@@ -116,9 +120,13 @@ class Menus extends \litepubl\core\Items
 
         //fix null fields
         foreach ($menu->get_owner_props() as $prop) {
-            if (!isset($menu->data[$prop])) $menu->data[$prop] = '';
+            if (!isset($menu->data[$prop])) {
+                $menu->data[$prop] = '';
+            }
             $item[$prop] = $menu->$prop;
-            if (array_key_exists($prop, $menu->data)) unset($menu->data[$prop]);
+            if (array_key_exists($prop, $menu->data)) {
+                unset($menu->data[$prop]);
+            }
         }
 
         $menu->id = $this->autoid;
@@ -225,7 +233,6 @@ class Menus extends \litepubl\core\Items
             if ($url == $item['url']) {
                 return $id;
             }
-
         }
         return false;
     }
@@ -423,7 +430,6 @@ class Menus extends \litepubl\core\Items
             if ($class == $item['class']) {
                 return $id;
             }
-
         }
         return false;
     }
@@ -446,6 +452,4 @@ class Menus extends \litepubl\core\Items
 
         $this->save();
     }
-
 }
-

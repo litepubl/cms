@@ -16,7 +16,7 @@ use litepubl\pages\RobotsTxt;
 function CounterInstall($self)
 {
     $cron = Cron::i();
-    $cron->add('hour', get_class($self) , 'updatestat');
+    $cron->add('hour', get_class($self), 'updatestat');
 
     $self->getApp()->router->addget('/downloaditem.htm', get_class($self));
 
@@ -31,4 +31,3 @@ function CounterUninstall($self)
 
     $self->getApp()->router->unbind($self);
 }
-

@@ -55,6 +55,4 @@ class MemvarMemcache extends CacheMemcache
         unset($this->data[$name]);
         $this->delete($name);
     }
-
 }
-

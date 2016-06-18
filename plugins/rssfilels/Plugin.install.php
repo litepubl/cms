@@ -27,4 +27,3 @@ function PluginUninstall($self)
 
     $self->getApp()->cache->clear();
 }
-

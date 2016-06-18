@@ -38,9 +38,7 @@ class Cats extends Common
     {
         parent::save();
         if (!$this->locked) {
-CacheWidgets::i()->removeWidget(CatsWidget::i());
+            CacheWidgets::i()->removeWidget(CatsWidget::i());
         }
     }
-
 }
-

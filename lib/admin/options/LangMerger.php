@@ -28,9 +28,9 @@ class LangMerger extends \litepubl\admin\Menu
 
         foreach ($merger->items as $section => $items) {
             $tab = $this->newTabs();
-            $tab->add($lang->files, $theme->getinput('editor', $section . '_files', $theme->quote(implode("\n", $items['files'])) , $lang->files));
+            $tab->add($lang->files, $theme->getinput('editor', $section . '_files', $theme->quote(implode("\n", $items['files'])), $lang->files));
             foreach ($items['texts'] as $key => $text) {
-                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $theme->quote($text) , $key));
+                $tab->add($key, $theme->getinput('editor', $section . '_text_' . $key, $theme->quote($text), $key));
             }
 
             $tabs->add($section, $tab->get());
@@ -39,13 +39,13 @@ class LangMerger extends \litepubl\admin\Menu
         $args->formtitle = $lang->optionslocal;
         $args->dateformat = $this->getApp()->options->dateformat;
         $dirs = Filer::getdir($this->getApp()->paths->languages);
-        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs) , $this->getApp()->options->language);
+        $args->language = $this->theme->comboItems(array_combine($dirs, $dirs), $this->getApp()->options->language);
         $zones = timezone_identifiers_list();
-        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones) , $this->getApp()->options->timezone);
+        $args->timezone = $this->theme->comboItems(array_combine($zones, $zones), $this->getApp()->options->timezone);
 
         return $this->admintheme->form('[text=dateformat]
     [combo=language]
-    [combo=timezone]' . $tabs->get() , $args);
+    [combo=timezone]' . $tabs->get(), $args);
     }
 
     public function processForm()
@@ -73,6 +73,4 @@ class LangMerger extends \litepubl\admin\Menu
 
         $merger->unlock();
     }
-
 }
-

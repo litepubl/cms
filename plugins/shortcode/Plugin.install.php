@@ -25,4 +25,3 @@ function PluginUninstall($self)
 {
     Filter::i()->unbind($self);
 }
-

@@ -95,13 +95,12 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         try {
             $result = $this->callevent($args['method'], $a);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             if (Config::$debug) {
                 $this->getApp()->logException($e);
             }
 
-            return $this->jsonError($response, $id, $e->getCode() , $e->getMessage());
+            return $this->jsonError($response, $id, $e->getCode(), $e->getMessage());
         }
 
         $this->callevent('aftercall', array(&$result,
@@ -121,8 +120,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                     $slave_result = $this->callevent($params['slave']['method'], array(
                         $params['slave']['params']
                     ));
-                }
-                catch(\Exception $e) {
+                } catch (\Exception $e) {
                     $slave_result = array(
                         'error' => array(
                             'message' => $e->getMessage() ,
@@ -157,7 +155,9 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             )
         );
 
-        if ($id) $result['id'] = $id;
+        if ($id) {
+            $result['id'] = $id;
+        }
         return $this->json($response, $result);
     }
 
@@ -178,6 +178,4 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $this->save();
         }
     }
-
 }
-

@@ -32,4 +32,3 @@ function HeaderUninstall($self)
 {
     Menus::i()->deleteUrl('/admin/views/bootstrapheader/');
 }
-

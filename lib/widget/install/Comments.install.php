@@ -21,4 +21,3 @@ function CommentsUninstall($self)
 {
     ComItems::i()->unbind($self);
 }
-

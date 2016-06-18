@@ -34,7 +34,7 @@ class Home extends \litepubl\admin\Menu
         $args->smallimage = $home->smallimage;
         $args->parsetags = $home->parsetags;
         $args->showmidle = $home->showmidle;
-        $args->midlecat = Editor::getCombocategories(array() , $home->midlecat);
+        $args->midlecat = Editor::getCombocategories(array(), $home->midlecat);
         $args->showposts = $home->showposts;
         $args->invertorder = $home->getSchema()->invertorder;
         $args->showpagenator = $home->showpagenator;
@@ -59,15 +59,17 @@ class Home extends \litepubl\admin\Menu
     [text=smallimage]
     [upload=imgupload]
     '
-. $admin->templates['home']);
+        . $admin->templates['home']);
 
         $tabs->add($lang->includecats, $admin->h($lang->includehome) . $admin->getcats($home->includecats));
         $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));
 
         $args->formtitle = $lang->homeform;
         return $admin->form(
-$admin->h($admin->link('/admin/menu/edit/{$site.q}id=$idhome', $lang->hometext))
-. $tabs->get() , $args);
+            $admin->h($admin->link('/admin/menu/edit/{$site.q}id=$idhome', $lang->hometext))
+            . $tabs->get(),
+            $args
+        );
     }
 
     public function processForm()
@@ -147,7 +149,7 @@ $admin->h($admin->link('/admin/menu/edit/{$site.q}id=$idhome', $lang->hometext))
                     if (imagesx($image) > $maxwidth) {
                         @unlink($filename);
                         MediaParser::createthumb($image, $filename, $maxwidth, $maxheight, 80, 'max');
-                    } else if (filesize($filename) > 1024 * 1024 * 800) {
+                    } elseif (filesize($filename) > 1024 * 1024 * 800) {
                         //no resize just save in low quality
                         @unlink($filename);
                         imagejpeg($image, $filename, 80);
@@ -179,4 +181,3 @@ $admin->h($admin->link('/admin/menu/edit/{$site.q}id=$idhome', $lang->hometext))
         $response->setJson($js);
     }
 }
-

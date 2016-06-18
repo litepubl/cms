@@ -51,7 +51,7 @@ class Twitter extends Service
     //handle callback
     public function request(Context $context)
     {
-$response = $context->response;
+        $response = $context->response;
         $response->cache = false;
 
         if (empty($_GET['oauth_token'])) {
@@ -76,12 +76,12 @@ $response = $context->response;
                     'uid' => $info->id,
                     'name' => $info->name,
                     'website' => 'http://twitter.com/account/redirect_by_id?id=' . $info->id_str
-                ) , $info);
+                ), $info);
             }
         }
 
-$response->forbidden();
-}
+        $response->forbidden();
+    }
 
     protected function getAdminInfo(Lang $lang): array
     {
@@ -91,6 +91,4 @@ $response->forbidden();
             'client_secret' => 'Consumer secret'
         );
     }
-
 }
-

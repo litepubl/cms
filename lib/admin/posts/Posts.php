@@ -36,10 +36,10 @@ class Posts extends \litepubl\admin\Menu
             'setdraft',
             'publish'
         ))) {
-            return $this->doaction(PostItems::i() , $_GET['action']);
+            return $this->doaction(PostItems::i(), $_GET['action']);
         }
 
-        return $this->gettable(PostItems::i() , $where = "status <> 'deleted' ");
+        return $this->gettable(PostItems::i(), $where = "status <> 'deleted' ");
     }
 
     public function doaction($posts, $action)
@@ -95,16 +95,20 @@ class Posts extends \litepubl\admin\Menu
     public function getTable($posts, $where)
     {
         $perpage = 20;
-        if ($this->isauthor) $where.= ' and author = ' . $this->getApp()->options->user;
+        if ($this->isauthor) {
+            $where.= ' and author = ' . $this->getApp()->options->user;
+        }
         $count = $posts->db->getcount($where);
         $from = $this->getfrom($perpage, $count);
         $items = $posts->select($where, " order by posted desc limit $from, $perpage");
-        if (!$items) $items = array();
+        if (!$items) {
+            $items = array();
+        }
 
         $admintheme = $this->admintheme;
         $lang = Lang::admin();
         $form = $this->newForm();
-        $form->body = $admintheme->getcount($from, $from + count($items) , $count);
+        $form->body = $admintheme->getcount($from, $from + count($items), $count);
 
         $tb = $this->newTable();
         $tb->setposts(array(
@@ -179,6 +183,4 @@ class Posts extends \litepubl\admin\Menu
         }
         $posts->unlock();
     }
-
 }
-

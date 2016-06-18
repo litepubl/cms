@@ -120,7 +120,7 @@ class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
         $name[0] = strtoupper($name[0]);
 
         $old = $this->litepublResponse->headers[$name];
-        $value = array_merge(explode(',', $old) , explode(',', $value));
+        $value = array_merge(explode(',', $old), explode(',', $value));
 
         $new = clone $this;
         $new->headers[$header] = implode(',', $value);
@@ -129,14 +129,13 @@ class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
 
     protected function validateValue($value)
     {
-        if (!is_array($value) || !array_reduce($value, function ($result, $v)
-        {
+        if (!is_array($value) || !array_reduce($value, function ($result, $v) {
+        
             if (!is_string($v)) {
                 return false;
             }
             return $result;
-        }
-        , true)) {
+        }, true)) {
             throw new \InvalidArgumentException('Invalid header value; must be a string or array of strings');
         }
 
@@ -174,6 +173,4 @@ class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
         $new->litepublResponse->body = $body->getContents();
         return $new;
     }
-
 }
-

@@ -30,17 +30,17 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getHead(): string
     {
-return '';
+        return '';
     }
 
     public function getKeywords(): string
     {
-return '';
+        return '';
     }
 
     public function getDescription(): string
     {
-return '';
+        return '';
     }
 
     public function getIdSchema(): int
@@ -93,7 +93,7 @@ return '';
         }
 
         $result = $this->createForm();
-        $this->getApp()->cache->setString($this->getbasename() , $result);
+        $this->getApp()->cache->setString($this->getbasename(), $result);
         return $result;
     }
 
@@ -101,5 +101,4 @@ return '';
     {
         return '';
     }
-
 }

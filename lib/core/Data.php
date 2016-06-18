@@ -83,7 +83,7 @@ class Data
                 }
             }
 
-            throw new PropException(get_class($this) , $name);
+            throw new PropException(get_class($this), $name);
         }
     }
 
@@ -113,7 +113,7 @@ class Data
             return call_user_func_array(array(
                 $this,
                 strtolower($name)
-            ) , $params);
+            ), $params);
         }
 
         foreach ($this->coinstances as $coinstance) {
@@ -121,7 +121,7 @@ class Data
                 return call_user_func_array(array(
                     $coinstance,
                     $name
-                ) , $params);
+                ), $params);
             }
         }
 
@@ -206,7 +206,7 @@ class Data
             }
         }
 
-        include_once ($file);
+        include_once($file);
 
         $fnc = $class . $func;
         if (function_exists($fnc)) {
@@ -258,17 +258,17 @@ class Data
 
     public function afterLoad()
     {
-$this->coInstanceCall('afterLoad', []);
+        $this->coInstanceCall('afterLoad', []);
     }
 
     public function coInstanceCall(string $method, array $args)
-{
+    {
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, $method)) {
-call_user_func_array([$coinstance, $method], $args);
+                call_user_func_array([$coinstance, $method], $args);
             }
         }
-}
+    }
 
     public function lock()
     {
@@ -327,7 +327,7 @@ call_user_func_array([$coinstance, $method], $args);
 
         $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
         $pad = $block - (strlen($s) % $block);
-        $s.= str_repeat(chr($pad) , $pad);
+        $s.= str_repeat(chr($pad), $pad);
         return mcrypt_encrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
     }
 
@@ -343,6 +343,4 @@ call_user_func_array([$coinstance, $method], $args);
         $pad = ord($s[$len - 1]);
         return substr($s, 0, $len - $pad);
     }
-
 }
-

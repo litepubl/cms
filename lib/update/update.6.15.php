@@ -16,6 +16,7 @@ use litepubl\core\litepubl
 function update615()
 {
     $cl = litepubl::$app->classes;
+
     unset($cl->data['factories']);
     unset($cl->data['classes']);
     $cl->kernel = [];
@@ -26,7 +27,7 @@ function update615()
     unset($cl->items['tautoform']);
     unset($cl->items['adminitems']);
 
-    $a = include (__DIR__ . '/classmap.php');
+    $a = include(__DIR__ . '/classmap.php');
     foreach ($a as $oldclass => $newclass) {
         unset($cl->items[$oldclass]);
         unset($cl->kernel[$oldclass]);
@@ -39,7 +40,7 @@ function update615()
     foreach (['tadminservice' => 'litepubl\admin\Service',
 
     ] as $oldclass => $newclass) {
-        $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
+        $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
         $m->renameClass($oldclass, $newclass);
         $admin->renameClass($oldclass, $newclass);
     }
@@ -63,4 +64,3 @@ function update615()
     unset($app->site->data['video_height']);
 
 }
-

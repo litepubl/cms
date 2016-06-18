@@ -38,4 +38,3 @@ function ArchivesGetSitemap($self, $from, $count)
     }
     return $result;
 }
-

@@ -31,7 +31,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     public static function i($id = 0)
     {
         $class = $id == 0 ? get_called_class() : static ::getowner()->items[$id]['class'];
-        return static ::iteminstance(get_called_class() , $id);
+        return static ::iteminstance(get_called_class(), $id);
     }
 
     public static function iteminstance($class, $id = 0)
@@ -63,7 +63,6 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             if (($single->id == 0) && ($id > 0)) {
                 return $single->loaddata($id);
             }
-
         }
         return $single;
     }
@@ -148,7 +147,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         $id = $this->data['id'];
         if ($id == 0) {
             return $this->data[$name];
-        } else if (isset($this->getowner()->items[$id])) {
+        } elseif (isset($this->getowner()->items[$id])) {
             return $this->getowner()->items[$id][$name];
         } else {
             $this->error(sprintf('%s property not found in %d items', $id, $name));
@@ -278,6 +277,4 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             $this->data['content'] = $filter->filter($s);
         }
     }
-
 }
-

@@ -23,6 +23,4 @@ class ShowCount extends Widget
     {
         $this->widget->showcount = isset($_POST['showcount']);
     }
-
 }
-

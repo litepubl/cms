@@ -13,11 +13,10 @@ namespace litepubl\admin\pages;
 function LoginInstall($self)
 {
     $self->getApp()->router->addget('/admin/login/', get_class($self));
-    $self->getApp()->router->add('/admin/logout/', get_class($self) , 'out', 'get');
+    $self->getApp()->router->add('/admin/logout/', get_class($self), 'out', 'get');
 }
 
 function LoginUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

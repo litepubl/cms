@@ -14,4 +14,3 @@ function WidgetUninstall($self)
 {
     Widgets::i()->deleteclass(get_class($self));
 }
-

@@ -70,6 +70,4 @@ class Archives extends Widget
 
         return $view->getContent($result, 'archives', $sidebar);
     }
-
 }
-

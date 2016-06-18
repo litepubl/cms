@@ -53,7 +53,6 @@ class Password extends Form
         Session::start('password-restore-' . md5($this->getApp()->options->hash($email)));
 
         if (!isset($_SESSION['email']) || ($email != $_SESSION['email']) || ($confirm != $_SESSION['confirm'])) {
-
             if (Session::expired(15) || !isset($_SESSION['email'])) {
                 session_destroy();
             }
@@ -100,8 +99,7 @@ class Password extends Form
     {
         try {
             $this->restore($_POST['email']);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->admintheme->geterr($e->getMessage());
         }
 
@@ -163,6 +161,4 @@ class Password extends Form
         Mailer::sendmail($this->getApp()->site->name, $this->getApp()->options->fromemail, $name, $email, $subject, $body);
         return true;
     }
-
 }
-

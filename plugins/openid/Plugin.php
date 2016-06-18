@@ -49,7 +49,9 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         parent::afterload();
         $time = time();
         foreach ($this->keys as $handle => $item) {
-            if ($item['expired'] < $time) unset($this->keys[$handle]);
+            if ($item['expired'] < $time) {
+                unset($this->keys[$handle]);
+            }
         }
     }
 
@@ -67,10 +69,10 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
     public function request(Context $context)
     {
-$response = $context->response;
-$response->cache = false;
-$props = new TempProps($this);
-$props->response = $response;
+        $response = $context->response;
+        $response->cache = false;
+        $props = new TempProps($this);
+        $props->response = $response;
 
         if (isset($_POST['submit']) && isset($_POST['assoc_handle'])) {
             $h = $_POST['assoc_handle'];
@@ -98,45 +100,45 @@ $props->response = $response;
 
         if (!isset($_REQUEST['openid_mode'])) {
             $response->body = $this->nomode();
-return;
+            return;
         }
 
         switch ($_REQUEST['openid_mode']) {
             case 'associate':
                 $result = $this->associate();
-break;
+                break;
 
             case 'cancel':
                 $result = $this->cancel();
-break;
+                break;
 
             case 'checkid_immediate':
                 $result = $this->checkid_immediate();
-break;
+                break;
 
             case 'checkid_setup':
                 $result = $this->checkid_setup();
-break;
+                break;
 
             case 'check_authentication':
                 $result = $this->check_authentication();
-break;
+                break;
 
             case 'error':
                 $result = $this->DoError();
-break;
+                break;
 
             case 'id_res':
                 $result = $this->id_res();
-break;
+                break;
 
             default:
                 $result = $this->nomode();
         }
 
-if ($response->status == 200) {
-$response->body = $result;
-}
+        if ($response->status == 200) {
+                $response->body = $result;
+        }
     }
 
     private function nomode()
@@ -173,20 +175,20 @@ $response->body = $result;
 
     private function error400($key)
     {
-$this->response->status = 400;
-$this->response->body = Simple::html($this->GetMessage($key, 'badrequest'));
+        $this->response->status = 400;
+        $this->response->body = Simple::html($this->GetMessage($key, 'badrequest'));
     }
 
     private function error500($key)
     {
-$this->response->status = 500;
-$this->response->body = Simple::html($this->GetMessage($key, 'internalerror'));
+        $this->response->status = 500;
+        $this->response->body = Simple::html($this->GetMessage($key, 'internalerror'));
     }
 
     private function error_post($key)
     {
-$this->response->request->status = 400;
-$this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequest'));
+        $this->response->request->status = 400;
+        $this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequest'));
     }
 
     private function redir($url)
@@ -222,7 +224,9 @@ $this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequ
     private function append_openid($array)
     {
         $r = array();
-        foreach ($array as $key => $value) $r["openid.$key"] = $value;
+        foreach ($array as $key => $value) {
+            $r["openid.$key"] = $value;
+        }
         return $r;
     }
 
@@ -264,7 +268,7 @@ $this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequ
                 $remote_key = long(base64_decode($dh_consumer_public));
                 $ss = bmpowmod($remote_key, $private_key, $dh_modulus);
                 $keys['dh_server_public'] = base64_encode(bin($public_key));
-                $keys['enc_mac_key'] = base64_encode(x_or(sha1(bin($ss)) , $shared_secret));
+                $keys['enc_mac_key'] = base64_encode(x_or(sha1(bin($ss)), $shared_secret));
                 break;
 
 
@@ -277,8 +281,10 @@ $this->response->body = Simple::html('error:' . $this->GetMessage($key, 'badrequ
 
     private function GetResult($keys)
     {
-$this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
-        foreach ($keys as $key => $value) $result.= "$key:$value\n";
+        $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
+        foreach ($keys as $key => $value) {
+            $result.= "$key:$value\n";
+        }
         return $result;
     }
 
@@ -418,7 +424,6 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
             if (!$this->urldescends($return_to, $trust_root)) {
                 return $this->error500('Invalidtrust');
             }
-
         }
 
         $assoc_handle = !empty($_REQUEST['openid_assoc_handle']) ? $_REQUEST['openid_assoc_handle'] : null;
@@ -427,9 +432,9 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
         //join  fields
         $sreg_required.= ',' . $sreg_optional;
 
-            if (!$this->getApp()->options->user) {
-                return $this->response->redir('/admin/login/');
-            }
+        if (!$this->getApp()->options->user) {
+            return $this->response->redir('/admin/login/');
+        }
 
         if ($this->getApp()->options->group != 'admin') {
             return $this->response->forbidden();
@@ -474,7 +479,6 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
                         return $this->redir($cancel_url);
                 }
             }
-
         }
 
         $keys = array(
@@ -486,7 +490,9 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
         if (!($shared_secret = $this->GetSecret($assoc_handle))) {
             if ($assoc_handle != null) {
                 $keys['invalidate_handle'] = $assoc_handle;
-                if (isset($this->keys[$assoc_handle])) unset($this->keys[$assoc_handle]);
+                if (isset($this->keys[$assoc_handle])) {
+                    unset($this->keys[$assoc_handle]);
+                }
             }
             $this->NewKeys($assoc_handle, $shared_secret, $lifetime);
         }
@@ -499,11 +505,15 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
             }
 
             $skey = 'sreg.' . $key;
-            if ($value = $this->GetReg($key)) $keys[$skey] = $value;
+            if ($value = $this->GetReg($key)) {
+                $keys[$skey] = $value;
+            }
         }
 
         $tokens = '';
-        foreach ($keys as $key => $value) $tokens.= "$key:$value\n";
+        foreach ($keys as $key => $value) {
+            $tokens.= "$key:$value\n";
+        }
 
         $keys['signed'] = implode(',', array_keys($keys));
         $keys['sig'] = base64_encode(hmac($shared_secret, $tokens));
@@ -573,8 +583,12 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
                 return false;
             }
 
-            if (!array_key_exists('port', $parts[$name])) $parts[$name]['port'] = (strtolower($parts[$name]['scheme']) == 'https') ? 443 : 80;
-            if (!array_key_exists('path', $parts[$name])) $parts[$name]['path'] = '/';
+            if (!array_key_exists('port', $parts[$name])) {
+                $parts[$name]['port'] = (strtolower($parts[$name]['scheme']) == 'https') ? 443 : 80;
+            }
+            if (!array_key_exists('path', $parts[$name])) {
+                $parts[$name]['path'] = '/';
+            }
         }
 
         // port and scheme must match
@@ -586,7 +600,7 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
         $cr_host = strtolower(strrev($parts['child']['host']));
         $pr_host = strtolower(strrev($parts['parent']['host']));
         $break = str_diff_at($cr_host, $pr_host);
-        if ($break >= 0 && ($pr_host[$break] != '*' || substr_count(substr($pr_host, 0, $break) , '.') < 2)) {
+        if ($break >= 0 && ($pr_host[$break] != '*' || substr_count(substr($pr_host, 0, $break), '.') < 2)) {
             return false;
         }
 
@@ -598,6 +612,4 @@ $this->response->headers['Content-Type'] = 'text/plain; charset=utf-8';
 
         return true;
     }
-
 }
-

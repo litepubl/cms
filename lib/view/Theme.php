@@ -151,34 +151,44 @@ class Theme extends Base
                 if ($from - $perpage - 1 < $perpage) {
                     $items[] = $perpage;
                 } else {
-                    array_splice($items, count($items) , 0, range($perpage, $from - 1, $perpage));
+                    array_splice($items, count($items), 0, range($perpage, $from - 1, $perpage));
                 }
             }
-            array_splice($items, count($items) , 0, range($from, $to));
+            array_splice($items, count($items), 0, range($from, $to));
         }
 
         if ($to < $count) {
             $from2 = (int)($perpage * ceil(($to + 1) / $perpage));
             if ($from2 + $perpage >= $count) {
-                if ($from2 < $count) $items[] = $from2;
+                if ($from2 < $count) {
+                    $items[] = $from2;
+                }
             } else {
-                array_splice($items, count($items) , 0, range($from2, $count, $perpage));
+                array_splice($items, count($items), 0, range($from2, $count, $perpage));
             }
-            if ($items[count($items) - 1] != $count) $items[] = $count;
+            if ($items[count($items) - 1] != $count) {
+                $items[] = $count;
+            }
         }
 
         $currenttml = $this->templates['content.navi.current'];
         $tml = $this->templates['content.navi.link'];
-        if (!Str::begin($url, 'http')) $url = $this->getApp()->site->url . $url;
+        if (!Str::begin($url, 'http')) {
+            $url = $this->getApp()->site->url . $url;
+        }
         $pageurl = rtrim($url, '/') . '/page/';
-        if ($params) $params = $this->getApp()->site->q . $params;
+        if ($params) {
+            $params = $this->getApp()->site->q . $params;
+        }
 
         $a = array();
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
             $i = $page - 1;
             $args->page = $i;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
             $a[] = $this->parseArg($tml_prev, $args);
         }
@@ -186,16 +196,20 @@ class Theme extends Base
         foreach ($items as $i) {
             $args->page = $i;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
-            $a[] = $this->parseArg(($i == $page ? $currenttml : $tml) , $args);
+            $a[] = $this->parseArg(($i == $page ? $currenttml : $tml), $args);
         }
 
         if (($page < $count) && ($tml_next = trim($this->templates['content.navi.next']))) {
             $i = $page + 1;
             $args->page = $i;
             $link = $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
             $a[] = $this->parseArg($tml_next, $args);
         }
@@ -254,7 +268,7 @@ class Theme extends Base
     {
         $result = '';
         foreach ($items as $index => $title) {
-            $result.= $this->getRadio($name, $index, static ::quote($title) , $index == $selected);
+            $result.= $this->getRadio($name, $index, static ::quote($title), $index == $selected);
         }
 
         return $result;
@@ -269,6 +283,4 @@ class Theme extends Base
 
         return $result;
     }
-
 }
-

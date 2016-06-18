@@ -35,34 +35,36 @@ function PluginInstall($self)
     $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->childTables[] = 'downloaditems';
-    $optimizer->addevent('postsdeleted', get_class($self) , 'postsdeleted');
+    $optimizer->addevent('postsdeleted', get_class($self), 'postsdeleted');
     $optimizer->unlock();
 
     LangMerger::i()->addPlugin(basename(__DIR__));
 
-Lang::usefile('install');
-$lang = Lang::i('installdownloaditems');
+    Lang::usefile('install');
+    $lang = Lang::i('installdownloaditems');
 
     $tags = Tags::i();
-$idparent = $tags->add(0, $lang->downloads);
-$tags->setValue($idparent, 'includechilds', '1');
+    $idparent = $tags->add(0, $lang->downloads);
+    $tags->setValue($idparent, 'includechilds', '1');
 
-$idplugin = $tags->add($idparent, $lang->plugintag);
-$idtheme = $tags->add($idparent, $lang->themetag);
-$tags->setValue($idplugin, 'includechilds', '1');
-$tags->setValue($idtheme, 'includechilds', '1');
+    $idplugin = $tags->add($idparent, $lang->plugintag);
+    $idtheme = $tags->add($idparent, $lang->themetag);
+    $tags->setValue($idplugin, 'includechilds', '1');
+    $tags->setValue($idtheme, 'includechilds', '1');
 
-$app = $self->getApp();
+    $app = $self->getApp();
     $app->options->downloaditem_themetag = $idtheme;
     $app->options->downloaditem_plugintag = $idplugin;
 
     $base = basename(dirname(__file__));
     $plugins = Plugins::i();
-    if (!isset($plugins->items['polls'])) $plugins->add('polls');
-Counter::i()->install();
+    if (!isset($plugins->items['polls'])) {
+        $plugins->add('polls');
+    }
+    Counter::i()->install();
 
-Lang::usefile('admin');
-$lang->addSearch('downloaditem', 'downloaditems');
+    Lang::usefile('admin');
+    $lang->addSearch('downloaditem', 'downloaditems');
 
     $adminmenus = AdminMenus::i();
     $adminmenus->lock();
@@ -86,14 +88,14 @@ $lang->addSearch('downloaditem', 'downloaditems');
     $menus = Menus::i();
     $menus->lock();
 
-$tags->loadAll();
-$item = $tags->getItem($idparent);
+    $tags->loadAll();
+    $item = $tags->getItem($idparent);
     $menu = new FakeMenu();
     $menu->url = $item['url'];
     $menu->title = $item['title'];
     $id = $menus->addFakeMenu($menu);
 
-$item = $tags->getItem($idplugin);
+    $item = $tags->getItem($idplugin);
         $menu = new FakeMenu();
         $menu->parent = $id;
         $menu->url = $item['url'];
@@ -102,7 +104,7 @@ $item = $tags->getItem($idplugin);
         $menus->addFakeMenu($menu);
 
 
-$item = $tags->getItem($idtheme);
+    $item = $tags->getItem($idtheme);
         $menu = new FakeMenu();
         $menu->parent = $id;
         $menu->url = $item['url'];
@@ -125,16 +127,16 @@ $item = $tags->getItem($idtheme);
 function PluginUninstall($self)
 {
     //die("Warning! You can lost all downloaditems!");
-$app = $self->getApp();
+    $app = $self->getApp();
     Posts::unsub($self);
 
     $adminmenus = AdminMenus::i();
     $adminmenus->deleteTree($adminmenus->url2id('/admin/downloaditems/'));
 
-$tags = Tags::i();
-$tags->loadAll();
-$item = $tags->getItem($app->options->downloaditem_plugintag);
-$item = $tags->getItem($item['parent']);
+    $tags = Tags::i();
+    $tags->loadAll();
+    $item = $tags->getItem($app->options->downloaditem_plugintag);
+    $item = $tags->getItem($item['parent']);
     $menus = Menus::i();
     $menus->deleteTree($menus->url2id($item['url']));
 
@@ -142,7 +144,7 @@ $item = $tags->getItem($item['parent']);
     $parser->removeTags('plugins/downloaditem/resource/theme.txt', 'plugins/downloaditem/resource/theme.ini');
     Base::clearCache();
 
-Counter::i()->uninstall();
+    Counter::i()->uninstall();
 
     $merger = LangMerger::i();
     $merger->deleteplugin(Plugins::getname(__file__));

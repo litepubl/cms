@@ -118,6 +118,4 @@ class Content extends \litepubl\core\Data
     {
         return $this->getvalue($id, 'head');
     }
-
 }
-

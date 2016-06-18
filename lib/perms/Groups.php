@@ -55,6 +55,4 @@ return ->forbidden();
         }
         return $this->author && isset($obj->author) && ($obj->author > 1) && ($this->getApp()->options->user == $obj->author);
     }
-
 }
-

@@ -35,10 +35,8 @@ class CommonTags extends Widget
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
             'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''
-        ) , 0, $this->sortname, $this->maxcount, $this->showcount);
+        ), 0, $this->sortname, $this->maxcount, $this->showcount);
 
         return str_replace('$parent', 0, $view->getContent($items, $this->template, $sidebar));
     }
-
 }
-

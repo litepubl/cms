@@ -28,7 +28,9 @@ class Lang
             static ::$self->loadfile('default');
         }
 
-        if ($section != '') static ::$self->section = $section;
+        if ($section != '') {
+            static ::$self->section = $section;
+        }
         return static ::$self;
     }
 
@@ -69,7 +71,6 @@ class Lang
             if (isset($this->ini[$section][$name])) {
                 return $this->ini[$section][$name];
             }
-
         }
         return '';
     }
@@ -84,7 +85,6 @@ class Lang
             if (isset($this->ini[$section][$name])) {
                 return true;
             }
-
         }
 
         return false;
@@ -92,7 +92,7 @@ class Lang
 
     public function __call($name, $args)
     {
-        return strtr($this->__get($name) , $args->data);
+        return strtr($this->__get($name), $args->data);
     }
 
     public function addsearch()
@@ -103,8 +103,10 @@ class Lang
     public function joinsearch(array $a)
     {
         foreach ($a as $sect) {
-            $sect = trim(trim($sect) , "\"',;:.");
-            if (!in_array($sect, $this->searchsect)) $this->searchsect[] = $sect;
+            $sect = trim(trim($sect), "\"',;:.");
+            if (!in_array($sect, $this->searchsect)) {
+                $this->searchsect[] = $sect;
+            }
         }
     }
 
@@ -113,15 +115,19 @@ class Lang
         $a = array_reverse(func_get_args());
         foreach ($a as $sect) {
             $i = array_search($sect, $this->searchsect);
-            if ($i !== false) array_splice($this->searchsect, $i, 1);
+            if ($i !== false) {
+                array_splice($this->searchsect, $i, 1);
+            }
             array_unshift($this->searchsect, $sect);
         }
     }
 
     public static function date($date, $format = '')
     {
-        if (empty($format)) $format = static ::i()->getdateformat();
-        return static ::i()->translate(date($format, $date) , 'datetime');
+        if (empty($format)) {
+            $format = static ::i()->getdateformat();
+        }
+        return static ::i()->translate(date($format, $date), 'datetime');
     }
 
     public function getDateformat()
@@ -137,8 +143,12 @@ class Lang
 
     public function check($name)
     {
-        if ($name == '') $name = 'default';
-        if (!in_array($name, $this->loaded)) $this->loadfile($name);
+        if ($name == '') {
+            $name = 'default';
+        }
+        if (!in_array($name, $this->loaded)) {
+            $this->loadfile($name);
+        }
     }
 
     public function loadfile($name)
@@ -169,9 +179,7 @@ class Lang
 
     public static function clearcache()
     {
-        \litepubl\utils\Filer::delete(static ::getcachedir() , false, false);
+        \litepubl\utils\Filer::delete(static ::getcachedir(), false, false);
         static ::i()->loaded = array();
     }
-
 }
-

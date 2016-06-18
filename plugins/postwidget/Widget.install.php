@@ -27,4 +27,3 @@ function WidgetUninstall($self)
     $widgets = Widgets::i();
     $widgets->unbind($self);
 }
-

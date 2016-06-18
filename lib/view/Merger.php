@@ -218,7 +218,9 @@ class Merger extends \litepubl\core\Items
     public function readFile($filename)
     {
         $result = file_get_contents($filename);
-        if ($result === false) $this->error(sprintf('Error read %s file', $filename));
+        if ($result === false) {
+            $this->error(sprintf('Error read %s file', $filename));
+        }
         return $result;
     }
 
@@ -251,9 +253,8 @@ class Merger extends \litepubl\core\Items
                 if (file_exists($filename)) {
                     $s.= $this->readfile($filename);
                     $s.= "\n"; //prevent comments
-                    
                 } else {
-                    trigger_error(sprintf('The file "%s" not exists', $filename) , E_USER_WARNING);
+                    trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);
                 }
             }
 
@@ -271,6 +272,4 @@ class Merger extends \litepubl\core\Items
             @unlink($old);
         }
     }
-
 }
-

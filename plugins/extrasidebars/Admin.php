@@ -21,23 +21,23 @@ class Admin extends \litepubl\admin\Panel
     public function getContent(): string
     {
         $plugin = ExtraSidebars::i();
-$ul = new UList($this->admin);
-$themes = '';
-$tml = str_replace(
-'$value',
- $this->admin->templates['checkbox.label'],
- $this->admin->templates['list.value']
-);
+        $ul = new UList($this->admin);
+        $themes = '';
+        $tml = str_replace(
+            '$value',
+            $this->admin->templates['checkbox.label'],
+            $this->admin->templates['list.value']
+        );
 
-$dirnames = Filer::getDir($this->getApp()->paths->themes);
-foreach ($dirnames as $name) {
-$themes .= strtr($tml, array(
-'$name' => 'theme',
-'$id' => $name,
-'$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
-'$title' => $name,
-));
-}
+        $dirnames = Filer::getDir($this->getApp()->paths->themes);
+        foreach ($dirnames as $name) {
+                $themes .= strtr($tml, array(
+                '$name' => 'theme',
+                '$id' => $name,
+                '$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
+                '$title' => $name,
+                ));
+        }
 
         $args = $this->args;
         $lang = $this->getLangAbout();
@@ -45,12 +45,14 @@ $themes .= strtr($tml, array(
         $args->beforepost = $plugin->beforepost;
         $args->afterpost = $plugin->afterpost;
 
-        return $this->admin->form('
+        return $this->admin->form(
+            '
 [checkbox=beforepost]
  [checkbox=afterpost]
 '
- . $this->admin->getSection($lang->themes, $ul->ul($themes)),
-$args);
+            . $this->admin->getSection($lang->themes, $ul->ul($themes)),
+            $args
+        );
     }
 
     public function processForm()
@@ -62,6 +64,4 @@ $args);
         $plugin->save();
         Base::clearCache();
     }
-
 }
-

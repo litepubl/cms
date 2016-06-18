@@ -84,6 +84,4 @@ class Ajax extends \litepubl\admin\posts\Ajax
         }
         return $result;
     }
-
 }
-

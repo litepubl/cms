@@ -58,4 +58,3 @@ function Css_bootstrap_files($self)
         '/themes/default/css/logo.min.css'
     );
 }
-

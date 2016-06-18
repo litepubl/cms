@@ -27,4 +27,3 @@ function PluginUninstall($self)
     unset($self->getApp()->classes->remap['tregserviceuser']);
     $self->getApp()->classes->save();
 }
-

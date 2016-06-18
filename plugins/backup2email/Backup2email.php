@@ -29,8 +29,6 @@ class Backup2email extends \litepubl\core\Plugin
 
         $ini = parse_ini_file(__DIR__ . '/about.ini');
 
-        Mailer::SendAttachmentToAdmin("[backup] $filename", $ini['body'], basename($filename) , file_get_contents($filename));
+        Mailer::SendAttachmentToAdmin("[backup] $filename", $ini['body'], basename($filename), file_get_contents($filename));
     }
-
 }
-

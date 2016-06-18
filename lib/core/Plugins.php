@@ -81,14 +81,14 @@ class Plugins extends Items
         $about = static ::getabout($name);
         $dir = $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
         if (file_exists($dir . $about['filename'])) {
-            require_once ($dir . $about['filename']);
+            require_once($dir . $about['filename']);
         } else {
             $this->error(sprintf('File plugins/%s/%s not found', $name, $about['filename']));
         }
 
         if ($about['adminfilename']) {
             if (file_exists($dir . $about['adminfilename'])) {
-                require_once ($dir . $about['adminfilename']);
+                require_once($dir . $about['adminfilename']);
             } else {
                 $this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
             }
@@ -185,7 +185,9 @@ class Plugins extends Items
     public function deleteclass($class)
     {
         foreach ($this->items as $name => $item) {
-            if ($item['class'] == $class) $this->Delete($name);
+            if ($item['class'] == $class) {
+                $this->Delete($name);
+            }
         }
     }
 
@@ -197,7 +199,7 @@ class Plugins extends Items
     public function update(array $list)
     {
         $add = array_diff($list, array_keys($this->items));
-        $delete = array_diff(array_keys($this->items) , $list);
+        $delete = array_diff(array_keys($this->items), $list);
         $delete = array_intersect($delete, Filer::getdir($this->getApp()->paths->plugins));
 
         $this->lock();
@@ -222,7 +224,7 @@ class Plugins extends Items
 
     public function deleteplugins($list)
     {
-        $names = array_intersect(array_keys($this->items) , $list);
+        $names = array_intersect(array_keys($this->items), $list);
         foreach ($names as $name) {
             $this->Delete($name);
         }
@@ -242,6 +244,4 @@ class Plugins extends Items
             file_put_contents($dir . $filename, base64_decode($content));
         }
     }
-
 }
-

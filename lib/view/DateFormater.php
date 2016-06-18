@@ -21,8 +21,6 @@ class DateFormater
 
     public function __get($name)
     {
-        return Lang::translate(date($name, $this->date) , 'datetime');
+        return Lang::translate(date($name, $this->date), 'datetime');
     }
-
 }
-

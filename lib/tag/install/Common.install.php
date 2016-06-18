@@ -27,7 +27,7 @@ function CommonInstall($self)
     $posts->deleted = $self->postdeleted;
     $posts->unlock();
 
-    $self->getApp()->router->add("/$self->PermalinkIndex/", get_class($self) , 0);
+    $self->getApp()->router->add("/$self->PermalinkIndex/", get_class($self), 0);
 
     $manager = $self->db->man;
     $dir = dirname(__file__) . '/sql/';
@@ -62,4 +62,3 @@ function CommonGetsitemap($self, $from, $count)
 
     return $result;
 }
-

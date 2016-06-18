@@ -25,4 +25,3 @@ function ClearCacheUninstall($self)
     $parser = Parser::i();
     $parser->unbind($self);
 }
-

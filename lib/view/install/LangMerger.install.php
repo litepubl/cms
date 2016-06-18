@@ -13,7 +13,9 @@ namespace litepubl\view;
 function LangMergerInstall($self)
 {
     $dir = $self->getApp()->paths->data . 'languages';
-    if (!is_dir($dir)) @mkdir($dir, 0777);
+    if (!is_dir($dir)) {
+        @mkdir($dir, 0777);
+    }
     @chmod($dir, 0777);
 
     $lang = $self->getApp()->options->language;
@@ -40,4 +42,3 @@ function LangMergerInstall($self)
     $self->getApp()->options->timezone = lang::get('installation', 'timezone');
     date_default_timezone_set(lang::get('installation', 'timezone'));
 }
-

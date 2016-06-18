@@ -175,7 +175,7 @@ class Schemes extends \litepubl\admin\Menu
                     'excerpt' => $lang->postexcerpt,
                     'card' => $lang->postcard,
                     'lite' => $lang->postlite
-                ) , $itemview['postanounce']);
+                ), $itemview['postanounce']);
 
                 $args->menu = $this->theme->comboItems($menuitems, strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
 
@@ -196,7 +196,7 @@ class Schemes extends \litepubl\admin\Menu
                 $result.= $admin->help($lang->help);
 
                 $args->formtitle = $lang->edit;
-                $result.= $admin->form($tabs->get() , $args);
+                $result.= $admin->form($tabs->get(), $args);
                 break;
 
 
@@ -286,6 +286,4 @@ class Schemes extends \litepubl\admin\Menu
 
         Base::clearCache();
     }
-
 }
-

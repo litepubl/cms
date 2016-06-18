@@ -17,4 +17,3 @@ function OldestpostsInstall($self)
     $widgets = Widgets::i();
     $widgets->addclass($self, '\litepubl\post\Post');
 }
-

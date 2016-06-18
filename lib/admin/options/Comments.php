@@ -33,7 +33,7 @@ class Comments extends \litepubl\admin\Menu
             'reg' => $lang->reg,
             'guest' => $lang->guest,
             'comuser' => $lang->comuser
-        ) , $options->comstatus);
+        ), $options->comstatus);
 
         $args->filterstatus = $cm->filterstatus;
         $args->commentsapproved = $cm->defstatus == 'approved';
@@ -114,7 +114,7 @@ class Comments extends \litepubl\admin\Menu
         $tabs->add($lang->blackemail, '[editor=locklist]');
 
         $args->formtitle = $lang->title;
-        return $this->admintheme->form($tabs->get() , $args);
+        return $this->admintheme->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -160,6 +160,4 @@ class Comments extends \litepubl\admin\Menu
         $rss->template = $rsstemplate;
         $rss->save();
     }
-
 }
-

@@ -15,4 +15,3 @@ function PingbackInstall($self)
     $Caller = Server::i();
     $Caller->Add('pingback.ping', 'ping', get_class($self));
 }
-

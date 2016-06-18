@@ -17,7 +17,9 @@ class Admin extends \litepubl\admin\Panel
     {
         $plugin = Plugin::i();
         $dir = dirname(__file__) . DIRECTORY_SEPARATOR;
-        if ($plugin->template == '') $plugin->template = file_get_contents($dir . 'livejournalposter.tml');
+        if ($plugin->template == '') {
+            $plugin->template = file_get_contents($dir . 'livejournalposter.tml');
+        }
         $lang = $this->getLangAbout();
         $args = $this->args;
         $args->host = $plugin->host;
@@ -25,14 +27,14 @@ class Admin extends \litepubl\admin\Panel
         $args->password = $plugin->password;
         $args->community = $plugin->community;
         $args->template = $plugin->template;
-        $args->privacy  = 
-$plugin->privacy = $privacy;
+        $args->privacy  =
+        $plugin->privacy = $privacy;
 
         $args->public = 'public' == $plugin->privacy;
         $args->private = 'private' == $plugin->privacy;
         $args->friends = 'friends' == $plugin->privacy;
 
-$args->formtitle = $lang->name;
+        $args->formtitle = $lang->name;
         return $this->admin->form('
 [text=host]
  [text=login]
@@ -62,6 +64,4 @@ $args->formtitle = $lang->name;
         $plugin->unlock();
         return '';
     }
-
 }
-

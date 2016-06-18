@@ -24,4 +24,3 @@ function WidgetUninstall($self)
 {
     $self->tags->unbind($self);
 }
-

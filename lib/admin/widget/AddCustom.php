@@ -26,6 +26,4 @@ class AddCustom extends \litepubl\admin\Menu
         $widget = CustomWidget::i();
         return $widget->admin->processForm();
     }
-
 }
-

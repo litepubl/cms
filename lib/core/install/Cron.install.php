@@ -15,7 +15,7 @@ function CronInstall($self)
     $manager = $self->db->man;
     $manager->CreateTable('cron', file_get_contents(dirname(__file__) . '/sql/cron.sql'));
 
-    $self->getApp()->router->add('/croncron.htm', get_class($self) , null, 'get');
+    $self->getApp()->router->add('/croncron.htm', get_class($self), null, 'get');
 
     $self->password = Str::md5Uniq();
     $self->addnightly('litepubl\core\Router', 'updatefilter', null);
@@ -27,4 +27,3 @@ function CronUninstall($self)
 {
     Router::unsub($self);
 }
-

@@ -52,7 +52,7 @@ class Authors extends \litepubl\admin\Menu
         $res = $db->query("select * from $users->thistable where status = 'comuser' order by id desc limit $from, $perpage");
         $items = $db->res2assoc($res);
 
-        $result.= $admin->getcount($from, $from + count($items) , $total);
+        $result.= $admin->getcount($from, $from + count($items), $total);
         $adminurl = $this->adminurl;
         $editurl = Link::url('/admin/users/?id');
         $tb = $this->newTable();
@@ -104,6 +104,4 @@ class Authors extends \litepubl\admin\Menu
         $users->setvalue($uid, 'status', 'hold');
         return true;
     }
-
 }
-

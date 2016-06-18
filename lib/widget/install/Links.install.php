@@ -23,7 +23,7 @@ function LinksInstall($self)
     $lang = Lang::i('installation');
     $self->add($lang->homeurl, $lang->homedescription, $lang->homename);
 
-    $self->getApp()->router->add($self->redirlink, get_class($self) , null, 'get');
+    $self->getApp()->router->add($self->redirlink, get_class($self), null, 'get');
 
     $robots = RobotsTxt::i();
     $robots->AddDisallow($self->redirlink);
@@ -38,4 +38,3 @@ function LinksUninstall($self)
 
     $self->getApp()->router->unbind($self);
 }
-

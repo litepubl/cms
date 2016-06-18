@@ -16,10 +16,10 @@ use litepubl\widget\Meta;
 
 function SitemapInstall($self)
 {
-    Cron::i()->addnightly(get_class($self) , 'Cron', null);
+    Cron::i()->addnightly(get_class($self), 'Cron', null);
 
-    $self->getApp()->router->add('/sitemap.xml', get_class($self) , 'xml');
-    $self->getApp()->router->add('/sitemap.htm', get_class($self) , null);
+    $self->getApp()->router->add('/sitemap.xml', get_class($self), 'xml');
+    $self->getApp()->router->add('/sitemap.htm', get_class($self), null);
 
     $robots = RobotsTxt::i();
     array_splice($robots->items, 1, 0, "Sitemap: " . $self->getApp()->site->url . "/sitemap.xml");
@@ -39,4 +39,3 @@ function SitemapUninstall($self)
     $meta = Meta::i();
     $meta->delete('sitemap');
 }
-

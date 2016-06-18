@@ -14,7 +14,9 @@ use litepubl\view\Filter;
 
 function TtidyInstall($self)
 {
-    if (!class_exists('tidy')) die('PHP tidy extension is required');
+    if (!class_exists('tidy')) {
+        die('PHP tidy extension is required');
+    }
     $filter = Filter::i();
     $filter->lock();
     $filter->onaftersimple = $self->filter;
@@ -27,4 +29,3 @@ function TidyUninstall($self)
     $filter = Filter::i();
     $filter->unbind($self);
 }
-

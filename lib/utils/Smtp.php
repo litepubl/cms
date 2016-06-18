@@ -72,6 +72,4 @@ class Smtp extends \litepubl\core\Events
             $this->smtp = false;
         }
     }
-
 }
-

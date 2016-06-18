@@ -32,6 +32,4 @@ class Plugin extends \litepubl\core\Items
             }
         }
     }
-
 }
-

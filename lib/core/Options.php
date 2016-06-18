@@ -44,7 +44,9 @@ class Options extends Events
         parent::afterload();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
-        if (!defined('dbversion')) define('dbversion', true);
+        if (!defined('dbversion')) {
+            define('dbversion', true);
+        }
     }
 
     public function __set($name, $value)
@@ -61,7 +63,9 @@ class Options extends Events
 
         if (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
-            if ($name == 'solt') $this->data['emptyhash'] = $this->hash('');
+            if ($name == 'solt') {
+                $this->data['emptyhash'] = $this->hash('');
+            }
             $this->save();
             $this->dochanged($name, $value);
         }
@@ -123,10 +127,16 @@ class Options extends Events
 
     public function authCookies($iduser, $password)
     {
-        if (!$iduser || !$password) return false;
+        if (!$iduser || !$password) {
+            return false;
+        }
         $password = $this->hash($password);
-        if ($password == $this->emptyhash) return false;
-        if (!$this->finduser($iduser, $password)) return false;
+        if ($password == $this->emptyhash) {
+            return false;
+        }
+        if (!$this->finduser($iduser, $password)) {
+            return false;
+        }
 
         $this->_user = $iduser;
         $this->updategroup();
@@ -135,18 +145,23 @@ class Options extends Events
 
     public function findUser($iduser, $cookie)
     {
-        if ($iduser == 1) return $this->compare_cookie($cookie);
-        if (!$this->usersenabled) return false;
+        if ($iduser == 1) {
+            return $this->compare_cookie($cookie);
+        }
+        if (!$this->usersenabled) {
+            return false;
+        }
 
         $users = Users::i();
         try {
             $item = $users->getItem($iduser);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
 
-        if ('hold' == $item['status']) return false;
+        if ('hold' == $item['status']) {
+            return false;
+        }
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
 
@@ -157,27 +172,45 @@ class Options extends Events
 
     public function emailExists($email)
     {
-        if (!$email) return false;
-        if (!$this->authenabled) return false;
-        if ($email == $this->email) return 1;
-        if (!$this->usersenabled) return false;
+        if (!$email) {
+            return false;
+        }
+        if (!$this->authenabled) {
+            return false;
+        }
+        if ($email == $this->email) {
+            return 1;
+        }
+        if (!$this->usersenabled) {
+            return false;
+        }
         return Users::i()->emailExists($email);
     }
 
     public function auth($email, $password)
     {
-        if (!$this->authenabled) return false;
-        if (!$email && !$password) return $this->authcookie();
-        return $this->authpassword($this->emailexists($email) , $password);
+        if (!$this->authenabled) {
+            return false;
+        }
+        if (!$email && !$password) {
+            return $this->authcookie();
+        }
+        return $this->authpassword($this->emailexists($email), $password);
     }
 
     public function authPassword($iduser, $password)
     {
-        if (!$iduser) return false;
+        if (!$iduser) {
+            return false;
+        }
         if ($iduser == 1) {
-            if ($this->data['password'] != $this->hash($password)) return false;
+            if ($this->data['password'] != $this->hash($password)) {
+                return false;
+            }
         } else {
-            if (!Users::i()->authPassword($iduser, $password)) return false;
+            if (!Users::i()->authPassword($iduser, $password)) {
+                return false;
+            }
         }
 
         $this->_user = $iduser;
@@ -256,7 +289,7 @@ class Options extends Events
 
         if ($this->_user == 1) {
             $this->save_cookie($cookie, $expired);
-        } else if ($this->_user) {
+        } elseif ($this->_user) {
             Users::i()->setCookie($this->_user, $cookie, $expired);
         }
     }
@@ -291,30 +324,44 @@ class Options extends Events
     public function inGroup($groupname)
     {
         //admin has all rights
-        if ($this->user == 1) return true;
-        if (in_array($this->groupnames['admin'], $this->idgroups)) return true;
-        if (!$groupname) return true;
+        if ($this->user == 1) {
+            return true;
+        }
+        if (in_array($this->groupnames['admin'], $this->idgroups)) {
+            return true;
+        }
+        if (!$groupname) {
+            return true;
+        }
         $groupname = trim($groupname);
-        if ($groupname == 'admin') return false;
-        if (!isset($this->groupnames[$groupname])) $this->error(sprintf('The "%s" group not found', $groupname));
+        if ($groupname == 'admin') {
+            return false;
+        }
+        if (!isset($this->groupnames[$groupname])) {
+            $this->error(sprintf('The "%s" group not found', $groupname));
+        }
         $idgroup = $this->groupnames[$groupname];
         return in_array($idgroup, $this->idgroups);
     }
 
     public function inGroups(array $idgroups)
     {
-        if ($this->ingroup('admin')) return true;
+        if ($this->ingroup('admin')) {
+            return true;
+        }
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
     public function hasGroup($groupname)
     {
-        if ($this->ingroup($groupname)) return true;
+        if ($this->ingroup($groupname)) {
+            return true;
+        }
         // if group is children of user groups
         $idgroup = $this->groupnames[$groupname];
-        if (!isset($this->parentgroups[$idgroup])) return false;
+        if (!isset($this->parentgroups[$idgroup])) {
+            return false;
+        }
         return count(array_intersect($this->idgroups, $this->parentgroups[$idgroup]));
     }
-
 }
-

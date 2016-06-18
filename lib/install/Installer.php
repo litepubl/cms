@@ -117,17 +117,17 @@ class Installer
             case 'json':
                 $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                 header('Content-Type: text/javascript; charset=utf-8');
-                BREAK;
+                break;
 
 
             case 'serialized':
                 $s = serialize($result);
                 header('Content-Type: text/plain; charset=utf-8');
-                BREAK;
+                break;
 
 
             case 'xmlrpc':
-                include ($this->app->paths->lib . 'xmlrpc/IXR.php');
+                include($this->app->paths->lib . 'xmlrpc/IXR.php');
                 $r = new \litepubl\xmlrpc\IXR_Value($result);
                 $s = '<?xml version="1.0" encoding="utf-8" ?>
       <methodResponse><params><param><value>' . $r->getXml() . '</value></param></params></methodResponse>';
@@ -184,7 +184,7 @@ class Installer
 
         $options = Options::i();
         $options->lock();
-        require_once (dirname(__DIR__) . '/core/install/Options.install.php');
+        require_once(dirname(__DIR__) . '/core/install/Options.install.php');
         $password = core\installOptions($email, $language);
         $this->installClasses();
         $options->unlock();
@@ -262,7 +262,9 @@ class Installer
         $this->app->site->description = $description;
         $this->app->options->fromemail = 'litepublisher@' . $_SERVER['SERVER_NAME'];
         $this->CheckApache($rewrite);
-        if ($this->app->site->q == '&') $this->app->site->data['url'].= '/index.php?url=';
+        if ($this->app->site->q == '&') {
+            $this->app->site->data['url'].= '/index.php?url=';
+        }
         $this->app->options->unlock();
     }
 
@@ -356,7 +358,7 @@ class Installer
         $dbprefix = strtolower(str_replace(array(
             '.',
             '-'
-        ) , '', $domain)) . '_';
+        ), '', $domain)) . '_';
 
         $langcode = $this->language;
 
@@ -460,7 +462,7 @@ class Installer
 
     private function loadLang()
     {
-        include_once ($this->app->paths->lib . 'view/install/Lang.install.php');
+        include_once($this->app->paths->lib . 'view/install/Lang.install.php');
         \litepubl\view\LangPreinstall($this->language);
     }
 
@@ -477,7 +479,6 @@ class Installer
                 if ($this->langexists($result)) {
                     return $result;
                 }
-
             }
         }
 
@@ -495,8 +496,8 @@ class Installer
         @Header('Cache-Control: no-cache, must-revalidate');
         @Header('Pragma: no-cache');
         echo $html;
-        if (ob_get_level()) ob_end_flush();
+        if (ob_get_level()) {
+            ob_end_flush();
+        }
     }
-
 }
-

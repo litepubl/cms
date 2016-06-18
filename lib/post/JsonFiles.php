@@ -195,6 +195,4 @@ class JsonFiles extends \litepubl\core\Events
 
         return $result;
     }
-
 }
-

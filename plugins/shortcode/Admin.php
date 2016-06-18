@@ -36,6 +36,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->items = parse_ini_string($_POST['codes'], false);
         $plugin->save();
     }
-
 }
-

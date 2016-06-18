@@ -13,16 +13,16 @@ namespace litepubl\plugins\markdown;
 use litepubl\view\Filter;
 
 function PluginInstall($self)
-    {
+{
         $filter = Filter::i();
         $filter->lock();
         $filter->onsimplefilter = $self->filter;
         $filter->oncomment = $self->filter;
         $filter->unlock();
-    }
+}
 
 function PluginUninstall($self)
-    {
+{
         $filter = Filter::i();
         $filter->unbind($self);
-    }
+}

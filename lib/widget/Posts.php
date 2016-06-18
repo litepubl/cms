@@ -36,6 +36,4 @@ class Posts extends Widget
         $list = $posts->getpage(0, 1, $this->maxcount, false);
         return $this->getView()->getPosts($list, $sidebar, '');
     }
-
 }
-

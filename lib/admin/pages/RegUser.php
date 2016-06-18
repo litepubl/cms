@@ -26,8 +26,8 @@ class RegUser extends Form
 {
     private $regstatus;
     private $backurl;
-private $trusted;
-public $blackhost;
+    private $trusted;
+    public $blackhost;
 
     protected function create()
     {
@@ -36,8 +36,8 @@ public $blackhost;
         $this->addevents('oncontent');
         $this->section = 'users';
         $this->regstatus = false;
-$this->trusted = ['mail.ru', 'yandex.ru', 'gmail.com'];
-$this->addMap('blackhost', []);
+        $this->trusted = ['mail.ru', 'yandex.ru', 'gmail.com'];
+        $this->addMap('blackhost', []);
     }
 
     public function getTitle(): string
@@ -108,8 +108,12 @@ $this->addMap('blackhost', []);
             switch ($this->regstatus) {
                 case 'ok':
                     $backurl = $this->backurl;
-                    if (!$backurl) $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
-                    if (!Str::begin($backurl, 'http')) $backurl = $this->getApp()->site->url . $backurl;
+                    if (!$backurl) {
+                        $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
+                    }
+                    if (!Str::begin($backurl, 'http')) {
+                        $backurl = $this->getApp()->site->url . $backurl;
+                    }
                     return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
                 case 'mail':
@@ -117,21 +121,21 @@ $this->addMap('blackhost', []);
 
                 case 'error':
                     $result.= $theme->h($lang->invalidregdata);
-                }
             }
+        }
 
             $args = new Args();
             $args->email = isset($_POST['email']) ? $_POST['email'] : '';
             $args->name = isset($_POST['name']) ? $_POST['name'] : '';
             $args->action = $this->getApp()->site->url . '/admin/reguser/' . (!empty($_GET['backurl']) ? '?backurl=' : '');
-            $result.= $theme->parseArg($this->getform() , $args);
+            $result.= $theme->parseArg($this->getform(), $args);
 
-            if (!empty($_GET['backurl'])) {
-                //normalize
-                $result = str_replace('&amp;backurl=', '&backurl=', $result);
-                $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']) , $result);
-                $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])) , $result);
-            }
+        if (!empty($_GET['backurl'])) {
+            //normalize
+            $result = str_replace('&amp;backurl=', '&backurl=', $result);
+            $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']), $result);
+            $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])), $result);
+        }
 
             $this->callevent('oncontent', array(&$result
             ));
@@ -159,9 +163,10 @@ $this->addMap('blackhost', []);
     {
         $this->regstatus = 'error';
         try {
-            if ($this->reguser($_POST['email'], $_POST['name'])) $this->regstatus = 'mail';
-        }
-        catch(\Exception $e) {
+            if ($this->reguser($_POST['email'], $_POST['name'])) {
+                $this->regstatus = 'mail';
+            }
+        } catch (\Exception $e) {
             return sprintf('<h4 class="red">%s</h4>', $e->getMessage());
         }
     }
@@ -173,7 +178,7 @@ $this->addMap('blackhost', []);
             return $this->error(Lang::get('comment', 'invalidemail'));
         }
 
-$host = substr($email, strpos($email, '@') + 1);
+        $host = substr($email, strpos($email, '@') + 1);
         if (!strpos($host, '.') || in_array($host, $this->blackhost)) {
             return $this->error(Lang::get('comment', 'invalidemail'));
         }
@@ -185,17 +190,17 @@ $host = substr($email, strpos($email, '@') + 1);
             }
         }
 
-if (!in_array($host, $this->trusted)) {
-//host already validated but wi want to protect
-$host = $users->db->mysqli->real_escape_string($host);
-if (!$users->db->findId("email like '%@$host'")) {
-if (!$this->hostExists($host)) {
-$this->blackhost[] = $host;
-$this->save();
-            return $this->error(Lang::get('comment', 'invalidemail'));
-}
-}
-}
+        if (!in_array($host, $this->trusted)) {
+                //host already validated but wi want to protect
+                $host = $users->db->mysqli->real_escape_string($host);
+            if (!$users->db->findId("email like '%@$host'")) {
+                if (!$this->hostExists($host)) {
+                    $this->blackhost[] = $host;
+                    $this->save();
+                        return $this->error(Lang::get('comment', 'invalidemail'));
+                }
+            }
+        }
 
         Session::start('reguser-' . md5($this->getApp()->options->hash($email)));
         $_SESSION['email'] = $email;
@@ -226,14 +231,12 @@ $this->save();
         return true;
     }
 
-public function hostExists(string $host): bool
-{
-    if ($records = dns_get_record($host, \DNS_ANY)) {
-      return count($records);
+    public function hostExists(string $host): bool
+    {
+        if ($records = dns_get_record($host, \DNS_ANY)) {
+            return count($records);
+        }
+
+        return false;
     }
-
-    return false;
 }
-
-}
-

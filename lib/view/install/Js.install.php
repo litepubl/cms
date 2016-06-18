@@ -61,7 +61,7 @@ function JsInstall($self)
     }
 
     //Js_switch($self, Js_pretty_files(), array());
-    Js_switch($self, Js_bootstrap_files() , array());
+    Js_switch($self, Js_bootstrap_files(), array());
 
     $self->add($section, "/lib/languages/$language/default.min.js");
 
@@ -230,7 +230,6 @@ function Js_ui_admin($js, $add = true)
     }
 
     if ($add) {
-        Arr::move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']) , 0);
+        Arr::move($js->items['posteditor']['files'], array_search($items['posteditor'][0], $js->items['posteditor']['files']), 0);
     }
 }
-

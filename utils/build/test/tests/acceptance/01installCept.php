@@ -5,8 +5,8 @@ use Page\Installed;
 use test\config;
 
 if (config::exists('admin')) {
-codecept_debug('Install skiped');
-return;
+    codecept_debug('Install skiped');
+    return;
 }
 
 $i = new AcceptanceTester($scenario);

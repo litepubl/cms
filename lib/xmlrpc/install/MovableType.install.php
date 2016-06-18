@@ -26,4 +26,3 @@ function MovableTypeInstall($self)
 
     $caller->unlock();
 }
-

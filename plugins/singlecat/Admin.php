@@ -39,6 +39,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->tmlitems = $_POST['tmlitems'];
         $plugin->save();
     }
-
 }
-

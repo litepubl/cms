@@ -59,9 +59,11 @@ class Action extends \litepubl\core\Items
 
     private function doaction($name, $args)
     {
-        if (!is_array($args)) $args = array(
+        if (!is_array($args)) {
+            $args = array(
             0 => $args
-        );
+            );
+        }
         $class = $this->items[$name]['class'];
         $func = $this->items[$name]['func'];
         if (empty($class)) {
@@ -73,11 +75,9 @@ class Action extends \litepubl\core\Items
             //return $func($arg);
             try {
                 return call_user_func_array($func, $args);
+            } catch (\Exception $e) {
+                return new IXR_Error($e->getCode(), $e->getMessage());
             }
-            catch(\Exception $e) {
-                return new IXR_Error($e->getCode() , $e->getMessage());
-            }
-
         } else {
             if (!class_exists($class)) {
                 unset($this->items[$name]);
@@ -90,10 +90,9 @@ class Action extends \litepubl\core\Items
                 return call_user_func_array(array(
                     $obj,
                     $func
-                ) , $args);
-            }
-            catch(\Exception $e) {
-                return new IXR_Error($e->getCode() , $e->getMessage());
+                ), $args);
+            } catch (\Exception $e) {
+                return new IXR_Error($e->getCode(), $e->getMessage());
             }
         }
     }
@@ -131,7 +130,9 @@ class Action extends \litepubl\core\Items
         $this->lock();
         $expired = time() - $this->getApp()->options->expiredcache;
         foreach ($this->actions as $id => $item) {
-            if ($item['date'] < $expired) unset($this->actions[$id]);
+            if ($item['date'] < $expired) {
+                unset($this->actions[$id]);
+            }
         }
         $this->unlock();
     }
@@ -148,10 +149,10 @@ class Action extends \litepubl\core\Items
     public function deleteclass($class)
     {
         foreach ($this->items as $id => $item) {
-            if ($class == $item['class']) unset($this->items[$id]);
+            if ($class == $item['class']) {
+                unset($this->items[$id]);
+            }
         }
         $this->save();
     }
-
 }
-

@@ -30,7 +30,7 @@ class Files extends \litepubl\admin\Menu
             'max' => $lang->maxsize,
             'min' => $lang->minsize,
             'none' => $lang->disablepreview,
-        ) , $parser->previewmode);
+        ), $parser->previewmode);
 
         $args->maxwidth = $parser->maxwidth;
         $args->maxheight = $parser->maxheight;
@@ -61,7 +61,7 @@ class Files extends \litepubl\admin\Menu
       [text=quality_snapshot]
 ') . $admin->getSection($lang->extfile, '[text=audioext]
       [text=videoext]
-      ') , $args);
+      '), $args);
     }
 
     public function processForm()
@@ -87,6 +87,4 @@ class Files extends \litepubl\admin\Menu
         $parser->videoext = trim($videoext);
         $parser->save();
     }
-
 }
-

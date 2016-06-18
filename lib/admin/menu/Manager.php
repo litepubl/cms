@@ -28,7 +28,7 @@ class Manager extends \litepubl\admin\Menu
             'setdraft',
             'publish'
         ))) {
-            $result.= $this->doaction($this->idget() , $_GET['action']);
+            $result.= $this->doaction($this->idget(), $_GET['action']);
         }
 
         $menus = Menus::i();
@@ -37,8 +37,8 @@ class Manager extends \litepubl\admin\Menu
         $result.= $this->tableItems($menus->items, array(
             array(
                 $lang->menutitle,
-                function (Table $tb) use ($menus)
-                {
+                function (Table $tb) use ($menus) {
+                
                     return $menus->getlink($tb->item['id']);
                 }
             ) ,
@@ -52,8 +52,8 @@ class Manager extends \litepubl\admin\Menu
             array(
                 'center',
                 $lang->parent,
-                function (Table $tb) use ($menus)
-                {
+                function (Table $tb) use ($menus) {
+                
                     return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
                 }
             ) ,
@@ -102,6 +102,4 @@ class Manager extends \litepubl\admin\Menu
 
         return '';
     }
-
 }
-

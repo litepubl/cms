@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Page\RegUser;
 use Page\Password;

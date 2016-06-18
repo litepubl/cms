@@ -48,8 +48,7 @@ function installOptions($email, $language)
 
     try {
         $app->db = new DB();
-    }
-    catch(\Exception $e) {
+    } catch (\Exception $e) {
         die($e->GetMessage());
     }
 
@@ -108,4 +107,3 @@ function installOptions($email, $language)
     $options->unlock();
     return $password;
 }
-

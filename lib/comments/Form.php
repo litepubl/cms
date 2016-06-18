@@ -38,7 +38,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     public function request(Context $context)
     {
         $response = $context->response;
-$response->cache = false;
+        $response->cache = false;
 
         if ($this->getApp()->options->commentsdisabled) {
             $response->status = 404;
@@ -127,7 +127,9 @@ $response->cache = false;
 
         unset($values['submitbutton']);
 
-        if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
+        if (!$confirmed) {
+            $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
+        }
         if ($app->options->ingroups($cm->idgroups)) {
             if (!$confirmed && $cm->confirmlogged) {
                 return $this->request_confirm($values, $shortpost);
@@ -226,7 +228,9 @@ $response->cache = false;
         }
 
         $url = $app->router->getvalue($shortpost['idurl'], 'url');
-        if (($c > 1) && !$app->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+        if (($c > 1) && !$app->options->comments_invert_order) {
+            $url = rtrim($url, '/') . "/page/$c/";
+        }
 
         $app->cache->clearUrl($url);
         return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : array());
@@ -252,7 +256,9 @@ $response->cache = false;
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
 
         $confirmid = Str::md5Uniq();
-        if ($sess = Session::start(md5($confirmid))) $sess->lifetime = 900;
+        if ($sess = Session::start(md5($confirmid))) {
+            $sess->lifetime = 900;
+        }
         $_SESSION['confirmid'] = $confirmid;
         $_SESSION['values'] = $values;
         session_write_close();
@@ -351,6 +357,4 @@ $response->cache = false;
 
         return $this->context->response->redir($link);
     }
-
 }
-

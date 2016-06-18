@@ -18,4 +18,3 @@ trait SchemaTrait
         return Schema::getSchema($this);
     }
 }
-

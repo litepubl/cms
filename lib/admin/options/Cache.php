@@ -65,6 +65,4 @@ class Cache extends \litepubl\admin\Menu
             $options->unlock();
         }
     }
-
 }
-

@@ -126,7 +126,9 @@ class Thumbnails extends \litepubl\admin\Menu
         ));
 
         if ($idpreview) {
-            if ($item['preview'] > 0) $files->delete($item['preview']);
+            if ($item['preview'] > 0) {
+                $files->delete($item['preview']);
+            }
             $files->setvalue($id, 'preview', $idpreview);
             $files->setvalue($idpreview, 'parent', $id);
             if ($item['idperm'] > 0) {
@@ -136,6 +138,4 @@ class Thumbnails extends \litepubl\admin\Menu
             return $admin->success($lang->success);
         }
     }
-
 }
-

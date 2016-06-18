@@ -35,18 +35,18 @@ class Response
         405 => 'Method Not Allowed',
         500 => 'Internal Server Error',
         503 => 'Service Unavailable',
-];
+    ];
 
     public function __construct()
     {
         $this->body = '';
         $this->cacheFile = true;
-$this->cacheHeader = true;
+        $this->cacheHeader = true;
         $this->protocol = '1.1';
         $this->status = 200;
         $this->headers = [
-'Content-type' => 'text/html;charset=utf-8',
- 'Last-Modified' => date('r') ,
+        'Content-type' => 'text/html;charset=utf-8',
+        'Last-Modified' => date('r') ,
         //'X-Pingback' => $this->getApp()->site->url . '/rpc.xml',
         ];
     }
@@ -56,23 +56,23 @@ $this->cacheHeader = true;
         if (method_exists($this, $get = 'get' . $name)) {
             return $this->$get();
         } else {
-            throw new PropException(get_class($this) , $name);
+            throw new PropException(get_class($this), $name);
         }
-}
+    }
 
     public function __set($name, $value)
     {
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
         } else {
-            throw new PropException(get_class($this) , $name);
+            throw new PropException(get_class($this), $name);
         }
     }
 
     public function getCache(): bool
     {
-return $this->cacheFile;
-}
+        return $this->cacheFile;
+    }
 
     public function setCache(bool $cache)
     {
@@ -97,7 +97,7 @@ return $this->cacheFile;
             $this->getApp()->getLogger()->warning(sprintf('Phrase for status %s not exists', $this->status));
         }
 
-        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]) , true, $this->status);
+        header(sprintf('HTTP/%s %s %s', $this->protocol, $this->status, $this->phrases[$this->status]), true, $this->status);
 
         $this->setCacheHeaders($this->cacheHeader);
         if (isset($this->headers['Date'])) {
@@ -119,7 +119,7 @@ return $this->cacheFile;
         } elseif (is_callable($this->body)) {
             call_user_func_array($this->body, [$this]);
 //free resource in callable
-$this->body = null;
+            $this->body = null;
         }
     }
 
@@ -197,6 +197,4 @@ $this->body = null;
     {
         return $this->phrases[$this->status];
     }
-
 }
-

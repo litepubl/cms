@@ -24,4 +24,3 @@ function ActionUninstall($self)
     $caller = Server::i();
     $caller->deleteclass(get_class($self));
 }
-

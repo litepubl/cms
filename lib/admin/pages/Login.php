@@ -192,9 +192,9 @@ class Login extends Form
 
         $result = str_replace('&amp;backurl=', '&backurl=', $result);
         if (!empty($_GET['backurl'])) {
-            $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']) , $result);
+            $result = str_replace('backurl=', 'backurl=' . urlencode($_GET['backurl']), $result);
             //support ulogin
-            $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])) , $result);
+            $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])), $result);
         } else {
             $result = str_replace('&backurl=', '', $result);
             $result = str_replace('backurl=', '', $result);
@@ -260,10 +260,10 @@ class Login extends Form
             return 1;
         } else {
             $users = Users::i();
-            if ($id = $users->emailexists($email)) $users->changepassword($id, $password);
+            if ($id = $users->emailexists($email)) {
+                $users->changepassword($id, $password);
+            }
             return $id;
         }
     }
-
 }
-

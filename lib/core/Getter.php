@@ -35,6 +35,4 @@ class Getter
             $value
         ));
     }
-
 }
-

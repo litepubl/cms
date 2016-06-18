@@ -86,7 +86,7 @@ class Files extends \litepubl\admin\Menu
                     $args->description = Filter::unescape($item['description']);
                     $args->keywords = Filter::unescape($item['keywords']);
                     $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : '') , $args);
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : ''), $args);
                     break;
             }
         }
@@ -99,7 +99,9 @@ class Files extends \litepubl\admin\Menu
         $count = $files->db->getcount($sql);
         $from = $this->getfrom($perpage, $count);
         $list = $files->select($sql, " order by posted desc limit $from, $perpage");
-        if (!$list) $list = array();
+        if (!$list) {
+            $list = array();
+        }
         $result.= $admintheme->getcount($count, $from, $from + count($list));
 
         $args->adminurl = $this->adminurl;
@@ -165,7 +167,9 @@ class Files extends \litepubl\admin\Menu
                     return $admintheme->geterr($lang->errordownloadurl);
                 }
                 $filename = basename(trim($_POST['downloadurl'], '/'));
-                if ($filename == '') $filename = 'noname.txt';
+                if ($filename == '') {
+                    $filename = 'noname.txt';
+                }
                 if ($isauthor && ($r = AuthorRights::i()->canupload())) {
                     return $r;
                 }
@@ -195,6 +199,4 @@ class Files extends \litepubl\admin\Menu
 
         return '';
     }
-
 }
-

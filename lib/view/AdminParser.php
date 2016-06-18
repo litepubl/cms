@@ -31,15 +31,13 @@ class AdminParser extends BaseParser
 
     public function getFileList(string $name): array
     {
-if ($name == 'admin') {
-$result = parent::getFileList($name);
-} else {
-        $about = $this->getAbout($name);
-        $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
-}
+        if ($name == 'admin') {
+                $result = parent::getFileList($name);
+        } else {
+                $about = $this->getAbout($name);
+                $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
+        }
 
-return $result;
+        return $result;
+    }
 }
-
-}
-

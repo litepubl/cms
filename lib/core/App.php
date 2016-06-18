@@ -69,9 +69,8 @@ class App
         if ($this->installed) {
             $this->db = DB::i();
         } else {
-            require ($this->paths->lib . 'install/install.php');
+            require($this->paths->lib . 'install/install.php');
             //exit() in lib/install/install.php
-            
         }
     }
 
@@ -85,7 +84,7 @@ class App
         if (isset(config::$classes['storage']) && class_exists(config::$classes['storage'])) {
             $classname = config::$classes['storage'];
             $this->storage = new $classname();
-        } else if ($this->memcache) {
+        } elseif ($this->memcache) {
             $this->storage = new StorageMemcache();
         } else {
             $this->storage = new Storage();
@@ -128,7 +127,7 @@ class App
         }
 
         try {
-            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']) , new Response());
+            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
 
             $this->context = $context;
 
@@ -153,7 +152,8 @@ class App
                 if ($this->onClose->getCount()) {
                     ignore_user_abort(true);
                     $context->response->closeConnection();
-                    while (@ob_end_flush());
+                    while (@ob_end_flush()) {
+                    }
                     flush();
 
                     if (function_exists('fastcgi_finish_request')) {
@@ -163,13 +163,13 @@ class App
                     //prevent any output
                     ob_start();
                 } else {
-                    while (@ob_end_flush());
+                    while (@ob_end_flush()) {
+                    }
                 }
             }
 
             $this->onClose->fire();
-        }
-        catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logException($e);
         }
     }
@@ -181,8 +181,7 @@ class App
             if (!config::$ignoreRequest) {
                 $this->process();
             }
-        }
-        catch(\Throwable  $e) {
+        } catch (\Throwable  $e) {
             $this->logException($e);
         }
 
@@ -232,6 +231,4 @@ class App
         header('Location: ' . $url);
         exit();
     }
-
 }
-

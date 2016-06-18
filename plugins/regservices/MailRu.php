@@ -46,10 +46,10 @@ class MailRu extends Service
 
     public function request(Context $context)
     {
-parent::request($context);
+        parent::request($context);
 
-if ($context->response->status != 200) {
-return;
+        if ($context->response->status != 200) {
+                return;
         }
 
         $code = $_REQUEST['code'];
@@ -83,11 +83,11 @@ return;
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->nick,
                     'website' => isset($info->link) ? $info->link : ''
-                ) , $info);
+                ), $info);
             }
         }
 
-$context->response->forbidden();
+        $context->response->forbidden();
     }
 
     protected function getAdminInfo(Lang $lang): array
@@ -98,6 +98,4 @@ $context->response->forbidden();
             'client_secret' => $lang->mailru_secret
         );
     }
-
 }
-

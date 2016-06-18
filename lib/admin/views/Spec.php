@@ -53,14 +53,14 @@ class Spec extends \litepubl\admin\Menu
             }
 
             if (isset($obj->data['head'])) {
-                $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data['head']) , $lang->head);
+                $inputs.= $theme->getinput('editor', "head-$classname", $theme->quote($obj->data['head']), $lang->head);
             }
 
             $tabs->add($lang->{$name}, $inputs);
         }
 
         $args->formtitle = $lang->defaults;
-        $result.= $this->admintheme->form($tabs->get() , $args);
+        $result.= $this->admintheme->form($tabs->get(), $args);
         return $result;
     }
 
@@ -71,12 +71,16 @@ class Spec extends \litepubl\admin\Menu
             $obj->lock();
             $classname = str_replace('\\', '-', $classname);
             $obj->setidschema($_POST["idschema-$classname"]);
-            if (isset($obj->data['keywords'])) $obj->keywords = $_POST["keywords-$classname"];
-            if (isset($obj->data['description '])) $obj->description = $_POST["description-$classname"];
-            if (isset($obj->data['head'])) $obj->head = $_POST["head-$classname"];
+            if (isset($obj->data['keywords'])) {
+                $obj->keywords = $_POST["keywords-$classname"];
+            }
+            if (isset($obj->data['description '])) {
+                $obj->description = $_POST["description-$classname"];
+            }
+            if (isset($obj->data['head'])) {
+                $obj->head = $_POST["head-$classname"];
+            }
             $obj->unlock();
         }
     }
-
 }
-

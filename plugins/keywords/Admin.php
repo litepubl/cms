@@ -24,7 +24,7 @@ class Admin extends \litepubl\admin\widget\Widget
     {
         $datadir = $this->getApp()->paths->data . 'keywords' . DIRECTORY_SEPARATOR;
         $selfdir = __DIR__ . DIRECTORY_SEPARATOR;
-$admin = $this->admin;
+        $admin = $this->admin;
         $lang = $this->getLangAbout();
         $args = $this->args;
         if (isset($_GET['filename'])) {
@@ -67,19 +67,19 @@ $admin = $this->admin;
         $from = 100 * ($page - 1);
         $filelist = Filer::getFiles($datadir);
         sort($filelist);
-$count = count($filelist);
+        $count = count($filelist);
         $pages = ceil($count / 100);
         $filelist = array_slice($filelist, $from, 100, true);
-$form = new Form($this->args);
-$form->class = 'header-left';
-$form->body = $admin->getCount($from, $from + count($filelist), $count);
+        $form = new Form($this->args);
+        $form->class = 'header-left';
+        $form->body = $admin->getCount($from, $from + count($filelist), $count);
 
-$tml =strtr($admin->templates['checkbox.name'], [
-'$name' => '$filename',
-'$checked'=> '',
-]);
+        $tml =strtr($admin->templates['checkbox.name'], [
+        '$name' => '$filename',
+        '$checked'=> '',
+        ]);
 
-$tml .= Link::parse('href=/admin/plugins/?plugin=keywords&filename=$filename, text=' . $lang->edit);
+        $tml .= Link::parse('href=/admin/plugins/?plugin=keywords&filename=$filename, text=' . $lang->edit);
 
 
         foreach ($filelist as $filename) {
@@ -87,15 +87,15 @@ $tml .= Link::parse('href=/admin/plugins/?plugin=keywords&filename=$filename, te
                 continue;
             }
 
-$form->body .= $admin->getSection(
-str_replace('$filename', $filename, $tml),
-sprintf('<ul>%s</ul>', file_get_contents($datadir . $filename))
-);
+            $form->body .= $admin->getSection(
+                str_replace('$filename', $filename, $tml),
+                sprintf('<ul>%s</ul>', file_get_contents($datadir . $filename))
+            );
         }
 
         $links = $this->getLinkPages($page, $pages);
         $result.= $links;
-$form->submit = 'delete';
+        $form->submit = 'delete';
         $result.= $form->get();
         $result.= $links;
         return $result;
@@ -167,9 +167,9 @@ $form->submit = 'delete';
 
         foreach ($_POST as $filename => $value) {
             $filename = str_replace('_', '.', $filename);
-            if (preg_match('/^\d+?\.\d+?\.php$/', $filename)) unlink($datadir . $filename);
+            if (preg_match('/^\d+?\.\d+?\.php$/', $filename)) {
+                unlink($datadir . $filename);
+            }
         }
     }
-
 }
-

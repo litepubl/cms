@@ -19,4 +19,3 @@ function RegUserUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

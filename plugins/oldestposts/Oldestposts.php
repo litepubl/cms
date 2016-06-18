@@ -51,6 +51,4 @@ class Oldestposts extends \litepubl\widget\Depended
         $view = new View();
         return $view->getPosts($items, $sidebar, '');
     }
-
 }
-

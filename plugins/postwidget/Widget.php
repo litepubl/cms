@@ -16,7 +16,7 @@ use litepubl\widget\Widgets;
 
 class Widget extends \litepubl\widget\Depended
 {
-const POSTCLASS = 'litepubl\post\Post';
+    const POSTCLASS = 'litepubl\post\Post';
     public $items;
 
     protected function create()
@@ -110,6 +110,4 @@ const POSTCLASS = 'litepubl\post\Post';
 
         return '';
     }
-
 }
-

@@ -120,7 +120,7 @@ class Subscribers extends Form
             )
         ));
 
-        return $admin->form('[checkbox=default_subscribe]' . $tb->build($items) , $args);
+        return $admin->form('[checkbox=default_subscribe]' . $tb->build($items), $args);
     }
 
     public function processForm()
@@ -136,6 +136,4 @@ class Subscribers extends Form
 
         return $this->admin->h(Lang::admin()->unsubscribed);
     }
-
 }
-

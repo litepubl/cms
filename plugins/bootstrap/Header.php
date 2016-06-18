@@ -89,8 +89,8 @@ class Header extends \litepubl\admin\Menu
             $merger = Css::i();
             $merger->lock();
             if ($name == 'logo') {
-$merger->deleteFile('default', '/themes/default/css/logo.min.css');
-}
+                $merger->deleteFile('default', '/themes/default/css/logo.min.css');
+            }
 
             $merger->add('default', "/files/js/$name.css");
             $merger->unlock();
@@ -107,5 +107,4 @@ $merger->deleteFile('default', '/themes/default/css/logo.min.css');
 
         $response->setJson(Str::toJson($result));
     }
-
 }

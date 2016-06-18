@@ -26,4 +26,3 @@ function TopTextuninstall($self)
     $filter = Filter::i();
     $filter->unbind($self);
 }
-

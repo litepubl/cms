@@ -39,4 +39,3 @@ function UsersUninstall($self)
     //delete table
     
 }
-

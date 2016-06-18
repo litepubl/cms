@@ -22,7 +22,7 @@ class Options extends \litepubl\admin\Menu
         $args = new Args();
         $args->formtitle = $lang->admincats;
         $tickets = Tickets::i();
-        return $this->admintheme->form($this->admintheme->getcats($tickets->cats) , $args);
+        return $this->admintheme->form($this->admintheme->getcats($tickets->cats), $args);
     }
 
     public function processForm()
@@ -31,6 +31,4 @@ class Options extends \litepubl\admin\Menu
         $tickets->cats = $this->admintheme->processcategories();
         $tickets->save();
     }
-
 }
-

@@ -20,4 +20,3 @@ function ThemeInstall($self)
     $self->name = 'default';
     $self->parsetheme();
 }
-

@@ -71,6 +71,4 @@ class View extends \litepubl\admin\Menu
         $themeparser->replacelang = isset($replacelang);
         $themeparser->save();
     }
-
 }
-

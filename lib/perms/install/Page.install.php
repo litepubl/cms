@@ -23,4 +23,3 @@ function PageUninstall($self)
 {
     $self->getApp()->router->umbind($self);
 }
-

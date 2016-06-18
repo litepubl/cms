@@ -19,6 +19,4 @@ class FilesItems extends \litepubl\core\ItemsPosts
         $this->basename = 'fileitems';
         $this->table = 'filesitemsposts';
     }
-
 }
-

@@ -28,7 +28,7 @@ class Password extends Perm
     public function setResponse(Response $response, $obj)
     {
         if ($this->password) {
-            $response->body.= sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this) , $this->id);
+            $response->body.= sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this), $this->id);
         }
         return '';
     }
@@ -69,7 +69,7 @@ class Password extends Perm
         $cookie = $solt . '.' . $hash;
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
 
-        setcookie($this->getcookiename() , $cookie, $expired, $this->getApp()->site->subdir . '/', false);
+        setcookie($this->getcookiename(), $cookie, $expired, $this->getApp()->site->subdir . '/', false);
         return true;
     }
 
@@ -104,6 +104,4 @@ class Password extends Perm
         $url.= "idperm=$this->id&backurl=" . urlencode($this->getApp()->router->url);
         $this->getApp()->redirExit($url);
     }
-
 }
-

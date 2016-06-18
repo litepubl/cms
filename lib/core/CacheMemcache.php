@@ -19,7 +19,7 @@ class CacheMemcache extends BaseCache
 
     public function __construct(\Memcache $memcache, int $lifetime, int $prefix)
     {
-parent::__construct();
+        parent::__construct();
         $this->memcache = $memcache;
         $this->lifetime = $lifetime;
         $this->prefix = $prefix . ':cache:';
@@ -42,7 +42,7 @@ parent::__construct();
     {
         $this->revision++;
         $this->memcache->set($this->prefix . $this->revisionKey, "$this->revision", false, $this->lifetime);
-parent::clear();
+        parent::clear();
     }
 
     public function setString(string $filename, string $str)
@@ -74,6 +74,4 @@ parent::clear();
 
         return $this->items[$filename] = $this->getString($filename);
     }
-
 }
-

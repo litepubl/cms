@@ -54,6 +54,4 @@ class Common extends \litepubl\core\Events
     {
         return new IXR_Error($code, $msg);
     }
-
 }
-

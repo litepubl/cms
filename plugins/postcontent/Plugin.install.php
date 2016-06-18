@@ -25,4 +25,3 @@ function PluginUninstall($self)
 {
     Posts::unsub($self);
 }
-

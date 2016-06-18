@@ -30,6 +30,4 @@ class Meta extends Widget
             $widget->items[$name]['enabled'] = isset($_POST[$name]);
         }
     }
-
 }
-

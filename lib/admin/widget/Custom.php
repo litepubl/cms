@@ -62,7 +62,7 @@ class Custom extends Widget
 
         $args->idwidget = $id;
         $args->text = $item['content'];
-        $args->template = $this->theme->comboItems($this->getTemplates() , $item['template']);
+        $args->template = $this->theme->comboItems($this->getTemplates(), $item['template']);
 
         $form.= '
 [editor=text]
@@ -71,12 +71,12 @@ class Custom extends Widget
     [hidden=idwidget]';
 
         $result = $this->admin->form($form, $args);
-$result .= $this->getTableWidgets();
+        $result .= $this->getTableWidgets();
         return $result;
-}
+    }
 
-protected function getTableWidgets()
-{
+    protected function getTableWidgets()
+    {
         $lang = $this->lang;
         $tb = $this->newTable();
         $tb->setStruct(array(
@@ -89,7 +89,7 @@ protected function getTableWidgets()
 
         $form = $this->newForm($this->args);
         $form->title = $lang->widgets;
-return $form->getDelete($tb->build($this->widget->items));
+        return $form->getDelete($tb->build($this->widget->items));
     }
 
     public function processForm()
@@ -105,10 +105,12 @@ return $form->getDelete($tb->build($this->widget->items));
 
                 case 'edit':
                     $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
-                    if ($id == 0) $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                    if ($id == 0) {
+                        $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                    }
                     $widget->edit($id, $title, $text, $template);
                     break;
-                }
+            }
         } elseif (isset($_POST['delete'])) {
             $this->deleteWidgets($widget);
         }
@@ -127,6 +129,4 @@ return $form->getDelete($tb->build($this->widget->items));
         $widget->unlock();
         $widgets->unlock();
     }
-
 }
-

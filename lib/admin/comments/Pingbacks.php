@@ -78,21 +78,21 @@ class Pingbacks extends \litepubl\admin\Menu
         $lang = Lang::i();
         $args = new Args();
         $form = $this->newForm($args);
-        $form->body = $admin->getcount($from, $from + count($items) , $total);
+        $form->body = $admin->getcount($from, $from + count($items), $total);
         $tb = $this->newTable();
         $tb->setStruct(array(
             $tb->checkbox('id') ,
             array(
                 $lang->date,
-                function (Table $t)
-                {
+                function (Table $t) {
+                
                     return $t->date($t->item['posted']);
                 }
             ) ,
             array(
                 $lang->status,
-                function (Table $t)
-                {
+                function (Table $t) {
+                
                     return Lang::get('commentstatus', $t->item['status']);
                 }
             ) ,
@@ -147,7 +147,7 @@ class Pingbacks extends \litepubl\admin\Menu
         $pingbacks = PingItems::i();
         if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'edit') {
             extract($_POST, EXTR_SKIP);
-            $pingbacks->edit($this->idget() , $title, $url);
+            $pingbacks->edit($this->idget(), $title, $url);
         } else {
             $status = isset($_POST['approve']) ? 'approve' : (isset($_POST['hold']) ? 'hold' : 'delete');
             foreach ($_POST as $k => $id) {
@@ -166,6 +166,4 @@ class Pingbacks extends \litepubl\admin\Menu
 
         return $this->admintheme->success($this->lang->successmoderated);
     }
-
 }
-

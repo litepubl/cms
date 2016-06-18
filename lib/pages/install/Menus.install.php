@@ -44,4 +44,3 @@ function MenusGetsitemap($self, $from, $count)
     }
     return $result;
 }
-

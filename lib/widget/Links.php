@@ -118,6 +118,4 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
 
         $response->redir($this->items[$id]['url']);
     }
-
 }
-

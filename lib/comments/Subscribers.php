@@ -55,7 +55,9 @@ class Subscribers extends \litepubl\core\ItemsPosts
             return;
         }
 
-        if ($subscribed) $this->add($pid, $uid);
+        if ($subscribed) {
+            $this->add($pid, $uid);
+        }
     }
 
     public function setEnabled($value)
@@ -139,7 +141,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         }
 
         if ($this->getApp()->options->mailer == 'smtp') {
-            Cron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
+            Cron::i()->add('single', get_class($this), 'cronsendmail', (int)$id);
         } else {
             $this->cronsendmail($id);
         }
@@ -150,8 +152,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $comments = Comments::i();
         try {
             $item = $comments->getitem($id);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return;
         }
 
@@ -220,6 +221,4 @@ class Subscribers extends \litepubl\core\ItemsPosts
             Mailer::sendlist($list);
         }
     }
-
 }
-

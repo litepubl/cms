@@ -47,11 +47,13 @@ namespace litepubl\xmlrpc;
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * modification, are permitted provided that the following conditions are met:
  */
-use insource and binaryforms, with or without
+use insource and binaryforms;
+use with or without
 
 class IXR_Value
 {
     var $data;
+
     var $type;
 
     function __construct($data, $type = false)
@@ -223,7 +225,7 @@ class IXR_Message
     {
         // first remove the XML declaration
         // merged from WP #10698 - this method avoids the RAM usage of preg_replace on very large messages
-        $header = preg_replace('/<\?xml.*?\?' . '>/', '', substr($this->message, 0, 100) , 1);
+        $header = preg_replace('/<\?xml.*?\?' . '>/', '', substr($this->message, 0, 100), 1);
         $this->message = substr_replace($this->message, $header, 0, 100);
         if (trim($this->message) == '') {
             return false;
@@ -490,7 +492,7 @@ EOD;
                 if (!method_exists($method[0], $method[1])) {
                     return new IXR_Error(-32601, 'server error. requested object method "' . $method[1] . '" does not exist.');
                 }
-            } else if (!function_exists($method)) {
+            } elseif (!function_exists($method)) {
                 return new IXR_Error(-32601, 'server error. requested function "' . $method . '" does not exist.');
             }
 
@@ -748,7 +750,6 @@ class IXR_Client
                 // merged from WP #12559 - remove trim
                 $contents.= $line;
                 //litepublisher collect headers
-                
             } else {
                 $this->ResponseHeaders.= $line;
             }
@@ -950,17 +951,17 @@ class IXR_IntrospectionServer extends IXR_Server
         $this->addCallback('system.methodSignature', 'this:methodSignature', array(
             'array',
             'string'
-        ) , 'Returns an array describing the return type and required parameters of a method');
+        ), 'Returns an array describing the return type and required parameters of a method');
         $this->addCallback('system.getCapabilities', 'this:getCapabilities', array(
             'struct'
-        ) , 'Returns a struct describing the XML-RPC specifications supported by this server');
+        ), 'Returns a struct describing the XML-RPC specifications supported by this server');
         $this->addCallback('system.listMethods', 'this:listMethods', array(
             'array'
-        ) , 'Returns an array of available methods on this server');
+        ), 'Returns an array of available methods on this server');
         $this->addCallback('system.methodHelp', 'this:methodHelp', array(
             'string',
             'string'
-        ) , 'Returns a documentation string for the specified method');
+        ), 'Returns a documentation string for the specified method');
     }
 
     function addCallback($method, $callback, $args, $help)
@@ -1389,7 +1390,7 @@ class IXR_ClassServer extends IXR_Server
 
     function IXR_ClassServer($delim = '.', $wait = false)
     {
-        $this->IXR_Server(array() , false, $wait);
+        $this->IXR_Server(array(), false, $wait);
         $this->_delimiter = $delim;
         $this->_objects = array();
     }
@@ -1463,4 +1464,3 @@ class IXR_ClassServer extends IXR_Server
         return $result;
     }
 }
-

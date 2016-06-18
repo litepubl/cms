@@ -34,4 +34,3 @@ function CommentsInstall($self)
     $caller->add('wp.getCommentStatusList', '	', get_class($self));
     $caller->unlock();
 }
-

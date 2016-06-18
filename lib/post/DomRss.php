@@ -90,6 +90,4 @@ class DomRss extends \domDocument
         $s = $this->saveXML();
         return substr($s, strpos($s, '?>') + 2);
     }
-
 }
-

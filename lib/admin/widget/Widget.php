@@ -30,7 +30,7 @@ class Widget extends \litepubl\admin\Panel
             return $this->$get();
         }
 
-        throw new PropException(get_class($this) , $name);
+        throw new PropException(get_class($this), $name);
     }
 
     protected function getAdminurl()
@@ -68,6 +68,4 @@ class Widget extends \litepubl\admin\Panel
     protected function doProcessForm()
     {
     }
-
 }
-

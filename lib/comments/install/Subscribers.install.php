@@ -40,4 +40,3 @@ function SubscribersUninstall($self)
     Users::i()->unbind($self);
     Posts::i()->unbind($self);
 }
-

@@ -23,6 +23,4 @@ class Js extends Merger
     {
         return $this->addText($section, $key, 'window.lang = window.lang || {};' . sprintf('lang.%s = %s;', $section, json_encode($lang)));
     }
-
 }
-

@@ -47,7 +47,9 @@ class Ftp extends Remote
             return false;
         }
 
-        if (empty($this->port)) $this->port = 21;
+        if (empty($this->port)) {
+            $this->port = 21;
+        }
 
         $this->handle = $this->ssl && function_exists('ftp_ssl_connect') ? @ftp_ssl_connect($this->host, $this->port, $this->timeout) : @ftp_connect($this->host, $this->port, $this->timeout);
 
@@ -81,7 +83,9 @@ class Ftp extends Remote
             if (@ftp_fget($this->handle, $temp, $filename, FTP_BINARY, $resumepos)) {
                 fseek($temp, 0);
                 $result = '';
-                while (!feof($temp)) $result.= fread($temp, 8192);
+                while (!feof($temp)) {
+                    $result.= fread($temp, 8192);
+                }
                 return $result;
             }
         }
@@ -245,7 +249,12 @@ class Ftp extends Remote
         );
         $attarray = preg_split('//', $mode);
 
-        for ($i = 0; $i < count($attarray); $i++) if ($key = array_search($attarray[$i], $legal)) $realmode.= $legal[$key];
+        for ($i = 0; $i < count($attarray);
+        $i++) {
+            if ($key = array_search($attarray[$i], $legal)) {
+                $realmode.= $legal[$key];
+            }
+        }
 
         $mode = str_pad($realmode, 9, '-');
         $trans = array(
@@ -266,7 +275,9 @@ class Ftp extends Remote
     private function parselisting($line)
     {
         static $is_windows;
-        if (is_null($is_windows)) $is_windows = strpos(strtolower(ftp_systype($this->handle)) , 'win') !== false;
+        if (is_null($is_windows)) {
+            $is_windows = strpos(strtolower(ftp_systype($this->handle)), 'win') !== false;
+        }
         if ($is_windows && preg_match("/([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d) +([0-9]\x7b2\x7d):([0-9]\x7b2\x7d)(AM|PM) +([0-9]+|<DIR>) +(.+)/", $line, $lucifer)) {
             $b = array();
             if ($lucifer[3] < 70) {
@@ -275,19 +286,21 @@ class Ftp extends Remote
                 $lucifer[3]+= 1900;
             } // 4digit year fix
             $b['isdir'] = ($lucifer[7] == "<DIR>");
-            if ($b['isdir']) $b['type'] = 'd';
-            else $b['type'] = 'f';
+            if ($b['isdir']) {
+                $b['type'] = 'd';
+            } else {
+                $b['type'] = 'f';
+            }
             $b['size'] = $lucifer[7];
             $b['month'] = $lucifer[1];
             $b['day'] = $lucifer[2];
             $b['year'] = $lucifer[3];
             $b['hour'] = $lucifer[4];
             $b['minute'] = $lucifer[5];
-            $b['time'] = @mktime($lucifer[4] + (strcasecmp($lucifer[6], "PM") == 0 ? 12 : 0) , $lucifer[5], 0, $lucifer[1], $lucifer[2], $lucifer[3]);
+            $b['time'] = @mktime($lucifer[4] + (strcasecmp($lucifer[6], "PM") == 0 ? 12 : 0), $lucifer[5], 0, $lucifer[1], $lucifer[2], $lucifer[3]);
             $b['am/pm'] = $lucifer[6];
             $b['name'] = $lucifer[8];
-        } else if (!$is_windows && $lucifer = preg_split("/[ ]/", $line, 9, PREG_SPLIT_NO_EMPTY)) {
-
+        } elseif (!$is_windows && $lucifer = preg_split("/[ ]/", $line, 9, PREG_SPLIT_NO_EMPTY)) {
             $lcount = count($lucifer);
             if ($lcount < 8) {
                 return '';
@@ -300,9 +313,13 @@ class Ftp extends Remote
             $b['islink'] = $lucifer[0] {
                 0
             } === "l";
-            if ($b['isdir']) $b['type'] = 'd';
-            elseif ($b['islink']) $b['type'] = 'l';
-            else $b['type'] = 'f';
+            if ($b['isdir']) {
+                $b['type'] = 'd';
+            } elseif ($b['islink']) {
+                $b['type'] = 'l';
+            } else {
+                $b['type'] = 'f';
+            }
             $b['perms'] = $lucifer[0];
             $b['number'] = $lucifer[1];
             $b['owner'] = $lucifer[2];
@@ -335,7 +352,9 @@ class Ftp extends Remote
 
     public function getDir($path)
     {
-        if ($this->is_file($path)) $path = dirname($path) . '/';
+        if ($this->is_file($path)) {
+            $path = dirname($path) . '/';
+        }
         if (false == ($list = ftp_rawlist($this->handle, '-a ' . $path, false))) {
             return false;
         }
@@ -353,7 +372,9 @@ class Ftp extends Remote
             }
 
             $a['mode'] = octdec($this->perm2mode($a['perms']));
-            if (!isset($a['isdir'])) $a['isdir'] = $a['type'] == 'd';
+            if (!isset($a['isdir'])) {
+                $a['isdir'] = $a['type'] == 'd';
+            }
             $result[$name] = $a;
         }
         unset($list);
@@ -363,6 +384,4 @@ class Ftp extends Remote
 
         return $result;
     }
-
 }
-

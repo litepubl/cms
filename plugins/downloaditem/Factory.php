@@ -22,5 +22,4 @@ class Factory extends \litepubl\post\Factory
     {
         return View::i();
     }
-
 }

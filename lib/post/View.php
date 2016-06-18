@@ -471,7 +471,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return '';
         }
 
-        $result = strtr($theme->parse($theme->templates['content.post.prevnext']) , array(
+        $result = strtr($theme->parse($theme->templates['content.post.prevnext']), array(
             '$prev' => $prev,
             '$next' => $next
         ));
@@ -566,7 +566,9 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $tag = '<!--more-->';
         if ($i = strpos($content, $tag)) {
             $content = substr($content, $i + strlen($tag));
-            if (!Str::begin($content, '<p>')) $content = '<p>' . $content;
+            if (!Str::begin($content, '<p>')) {
+                $content = '<p>' . $content;
+            }
             return $content;
         }
         return '';
@@ -658,9 +660,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', $this->getApp()->site->url, $pages->url, $pages->name);
         }
     }
-
 }
 {
 
 }
-

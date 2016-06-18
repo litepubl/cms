@@ -31,7 +31,9 @@ class Comment extends \litepubl\core\Data
         parent::__construct();
         $this->table = 'comments';
         $id = (int)$id;
-        if ($id > 0) $this->setid($id);
+        if ($id > 0) {
+            $this->setid($id);
+        }
     }
 
     public function setId($id)
@@ -75,7 +77,9 @@ class Comment extends \litepubl\core\Data
         if ($manager->redir) {
             return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, $this->getApp()->site->url, $this->getApp()->site->q, $this->author, $name);
         } else {
-            if (!Str::begin($website, 'http://')) $website = 'http://' . $website;
+            if (!Str::begin($website, 'http://')) {
+                $website = 'http://' . $website;
+            }
             return sprintf('<a class="url fn" %s href="%s" itemprop="url">%s</a>', $rel, $website, $name);
         }
     }
@@ -183,6 +187,4 @@ class Comment extends \litepubl\core\Data
             return '';
         }
     }
-
 }
-

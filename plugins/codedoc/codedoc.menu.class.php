@@ -61,6 +61,4 @@ class tcodedocmenu extends tmenu
         $result.= '</ul>';
         return $result;
     }
-
 }
-

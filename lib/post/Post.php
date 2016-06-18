@@ -16,7 +16,7 @@ use litepubl\view\Filter;
 use litepubl\core\Callback;
 
 /**
- * This is the post base class 
+ * This is the post base class
  *
  * @property int $id
  * @property int $idschema
@@ -90,13 +90,13 @@ class Post extends \litepubl\core\Item
         if ($id = (int)$id) {
             if (isset(static ::$instances['post'][$id])) {
                 $result = static ::$instances['post'][$id];
-            } else if ($result = static ::loadPost($id)) {
+            } elseif ($result = static ::loadPost($id)) {
                 // nothing: set $instances in afterLoad method
             } else {
                 $result = null;
             }
         } else {
-            $result = parent::itemInstance(get_called_class() , $id);
+            $result = parent::itemInstance(get_called_class(), $id);
         }
 
         return $result;
@@ -111,10 +111,10 @@ class Post extends \litepubl\core\Item
             if ($table = $self->getChildTable()) {
                 $items = static ::selectChildItems($table, [$id]);
                 $self->childData = $items[$id];
-unset($self->childData['id']);
+                unset($self->childData['id']);
             }
 
-$self->afterLoad();
+            $self->afterLoad();
             return $self;
         }
 
@@ -127,14 +127,15 @@ $self->afterLoad();
         $table = static ::getChildTable();
         if ($table) {
             return $db->selectAssoc(
-"select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+                "select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
  from $db->posts, $db->prefix$table, $db->urlmap
-    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
+    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1"
+            );
         } else {
             return $db->selectAssoc(
-"select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+                "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1"
-);
+            );
         }
     }
 
@@ -164,10 +165,10 @@ $self->afterLoad();
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
-static::getappinstance()->getlogmanager()->trace($list);
+        static::getappinstance()->getlogmanager()->trace($list);
         return $db->res2items($db->query(
-"select $childTable.* from $childTable where id in ($list) limit $count"
-));
+            "select $childTable.* from $childTable where id in ($list) limit $count"
+        ));
     }
 
     protected function create()
@@ -212,20 +213,20 @@ static::getappinstance()->getlogmanager()->trace($list);
 
         $this->rawData = [];
         $this->childData = [];
-$this->cacheData = [
-'posted' => 0,
-'categories' => [],
-'tags' => [],
-'files' => [],
+        $this->cacheData = [
+        'posted' => 0,
+        'categories' => [],
+        'tags' => [],
+        'files' => [],
             'url' => '',
-'created' => 0,
+        'created' => 0,
             'modified' => 0,
                                     'pages' => [],
-];
+        ];
 
 
         $this->factory = $this->getfactory();
-$this->factory->createCoInstances($this);
+        $this->factory->createCoInstances($this);
     }
 
     public function getFactory()
@@ -292,14 +293,14 @@ $this->factory->createCoInstances($this);
 
     public function load()
     {
-return true;
-}
+        return true;
+    }
 
-public function afterLoad()
-{
-static::$instances['post'][$this->id] = $this;
-parent::afterLoad();
-}
+    public function afterLoad()
+    {
+        static::$instances['post'][$this->id] = $this;
+        parent::afterLoad();
+    }
 
     public function setAssoc(array $a)
     {
@@ -331,8 +332,8 @@ parent::afterLoad();
     protected function saveToDB()
     {
         if (!$this->id) {
-return $this->add();
-}
+            return $this->add();
+        }
 
             $this->db->updateAssoc($this->data);
 
@@ -390,7 +391,7 @@ return $this->add();
 
     public function createUrl()
     {
-        return $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
+        return $this->getApp()->router->add($this->url, get_class($this), (int)$this->id);
     }
 
     public function onId()
@@ -795,4 +796,3 @@ return $this->add();
         Filter::i()->filterpost($this, $s);
     }
 }
-

@@ -19,4 +19,3 @@ function AjaxUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

@@ -29,4 +29,3 @@ function ExtraSidebarsUninstall($self)
     Parser::i()->unbind($self);
     Base::clearCache();
 }
-

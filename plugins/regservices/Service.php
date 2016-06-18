@@ -51,8 +51,10 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
 
     public function install()
     {
-        if ($this->url) $this->getApp()->router->addget($this->url, get_class($this));
-Plugin::i()->add($this);
+        if ($this->url) {
+            $this->getApp()->router->addget($this->url, get_class($this));
+        }
+        Plugin::i()->add($this);
     }
 
     public function uninstall()
@@ -70,7 +72,7 @@ Plugin::i()->add($this);
     //handle callback
     public function request(Context $context)
     {
-$response = $context->response;
+        $response = $context->response;
         $response->cache = false;
 
         if (empty($_REQUEST['code'])) {
@@ -121,15 +123,19 @@ $response = $context->response;
         $a = $this->getadminInfo($admin->lang);
         $result = $admin->admin->help(sprintf($admin->lang->reg, $a['regurl'], $this->getApp()->site->url . $this->url));
             $theme = $admin->theme;
-        $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id) , $a['client_id']);
-        $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret) , $a['client_secret']);
+        $result.= $theme->getInput('text', "client_id_$this->name", $theme->quote($this->client_id), $a['client_id']);
+        $result.= $theme->getInput('text', "client_secret_$this->name", $theme->quote($this->client_secret), $a['client_secret']);
         return $result;
     }
 
     public function processForm()
     {
-        if (isset($_POST["client_id_$this->name"])) $this->client_id = $_POST["client_id_$this->name"];
-        if (isset($_POST["client_secret_$this->name"])) $this->client_secret = $_POST["client_secret_$this->name"];
+        if (isset($_POST["client_id_$this->name"])) {
+            $this->client_id = $_POST["client_id_$this->name"];
+        }
+        if (isset($_POST["client_secret_$this->name"])) {
+            $this->client_secret = $_POST["client_secret_$this->name"];
+        }
         $this->save();
     }
 
@@ -137,12 +143,14 @@ $response = $context->response;
     {
         $users = Users::i();
         $reguser = RegUser::i();
-$response = $context->response;
+        $response = $context->response;
 
         if (!empty($item['email'])) {
             if ($id = $users->emailExists($item['email'])) {
                 $user = $users->getItem($id);
-                if ($user['status'] == 'comuser') $users->approve($id);
+                if ($user['status'] == 'comuser') {
+                    $users->approve($id);
+                }
             } elseif ($this->getApp()->options->reguser) {
                 $id = $users->add(array(
                     'email' => $item['email'],
@@ -152,7 +160,9 @@ $response = $context->response;
 
                 if (isset($item['uid'])) {
                     $uid = $item['uid'];
-                    if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
+                    if (strlen($uid) >= 22) {
+                        $uid = Str::baseMd5($uid);
+                    }
                     $reguser->add($id, $this->name, $uid);
                 }
             } else {
@@ -162,7 +172,9 @@ $response = $context->response;
         } else {
             $uid = !empty($item['uid']) ? $item['uid'] : (!empty($item['website']) ? $item['website'] : '');
             if ($uid) {
-                if (strlen($uid) >= 22) $uid = Str::baseMd5($uid);
+                if (strlen($uid) >= 22) {
+                    $uid = Str::baseMd5($uid);
+                }
                 if ($id = $reguser->find($this->name, $uid)) {
                     //nothing
                 } elseif ($this->getApp()->options->reguser) {
@@ -175,7 +187,7 @@ $response = $context->response;
                     $reguser->add($id, $this->name, $uid);
                 } else {
                     //registration disabled
-                return $response->forbidden();
+                    return $response->forbidden();
                 }
             } else {
                 //nothing found and hasnt email or uid
@@ -186,10 +198,12 @@ $response = $context->response;
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
         $options = $this->getApp()->options;
-$options->user = $id;
+        $options->user = $id;
         $options->updateGroup();
         $options->setCookies($cookie, $expired);
-        if ($options->inGroup('admin')) setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
+        if ($options->inGroup('admin')) {
+            setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
+        }
 
         setcookie('litepubl_regservice', $this->name, $expired, $this->getApp()->site->subdir . '/', false);
 
@@ -208,5 +222,4 @@ $options->user = $id;
 
         return $response->redir($backurl);
     }
-
 }

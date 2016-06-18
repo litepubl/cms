@@ -29,17 +29,17 @@ class ExtraSidebars extends \litepubl\core\Plugin
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             if ($this->beforepost) {
-$s.= '<!--$template.sidebar-->';
-}
+                $s.= '<!--$template.sidebar-->';
+            }
 
             if ($this->afterpost) {
-$s.= '<!--$template.sidebar-->';
-}
+                $s.= '<!--$template.sidebar-->';
+            }
 
             $count = substr_count($s, '$template.sidebar');
             while (count($theme->templates['sidebars']) < $count) {
-$theme->templates['sidebars'][] = $theme->templates['sidebars'][0];
-}
+                $theme->templates['sidebars'][] = $theme->templates['sidebars'][0];
+            }
         }
     }
 
@@ -58,14 +58,12 @@ $theme->templates['sidebars'][] = $theme->templates['sidebars'][0];
             $theme->templates['extrasidebars'] = $sidebar;
             $post = & $theme->templates['content.post'];
             if ($this->beforepost) {
-$post = str_replace('$post.content', $tag . $sidebar++ . '$post.content', $post);
-}
+                $post = str_replace('$post.content', $tag . $sidebar++ . '$post.content', $post);
+            }
 
             if ($this->afterpost) {
-$post = str_replace('$post.content', '$post.content ' . $tag . $sidebar++, $post);
-}
+                $post = str_replace('$post.content', '$post.content ' . $tag . $sidebar++, $post);
+            }
         }
     }
-
 }
-

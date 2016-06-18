@@ -40,6 +40,4 @@ class Admin extends \litepubl\admin\Panel
         $openid->trusted = explode("\n", trim($trusted));
         $openid->save();
     }
-
 }
-

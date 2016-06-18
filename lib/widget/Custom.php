@@ -101,6 +101,4 @@ class Custom extends Widget
             $this->save();
         }
     }
-
 }
-

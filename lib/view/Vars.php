@@ -46,6 +46,4 @@ class Vars
     {
         unset(Base::$vars[$name]);
     }
-
 }
-

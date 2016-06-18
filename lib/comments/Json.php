@@ -38,7 +38,7 @@ class Json extends \litepubl\core\Events
                     return false;
                 }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
                     return false;
                 }
 
@@ -49,7 +49,7 @@ class Json extends \litepubl\core\Events
                     return false;
                 }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
                     return false;
                 }
 
@@ -199,11 +199,9 @@ class Json extends \litepubl\core\Events
 
         $theme = Theme::context();
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
-        $mesg = str_replace('$site.liveuser', $this->getApp()->site->getuserlink() , $mesg);
+        $mesg = str_replace('$site.liveuser', $this->getApp()->site->getuserlink(), $mesg);
 
         $lang = Lang::i('comment');
         return $theme->parse($mesg);
     }
-
 }
-

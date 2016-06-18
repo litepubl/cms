@@ -51,7 +51,7 @@ class Redir extends \litepubl\admin\Menu
         }
 
         $adminurl = Link::url($this->url, 'from');
-$table = $this->tableItems($items, array(
+        $table = $this->tableItems($items, array(
             array(
                 'center',
                 '+',
@@ -72,7 +72,7 @@ $table = $this->tableItems($items, array(
             )
         ));
 
-$form = $this->newForm($args);
+        $form = $this->newForm($args);
         $result.= $form->getDelete($table);
         return $result;
     }
@@ -89,15 +89,15 @@ $form = $this->newForm($args);
             case 'delete':
                 foreach ($_POST as $id => $value) {
                     if (Str::begin($id, 'checkbox_')) {
-                        if (isset($redir->items[$value])) unset($redir->items[$value]);
+                        if (isset($redir->items[$value])) {
+                            unset($redir->items[$value]);
+                        }
                     }
                 }
                 break;
-            }
+        }
 
             $redir->save();
             return '';
     }
-
 }
-

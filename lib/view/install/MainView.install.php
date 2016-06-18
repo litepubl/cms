@@ -46,4 +46,3 @@ function MainViewInstall($self)
     $lang = Lang::i('installation');
     $self->footer = "$lang->poweredby $lang->copyright";
 }
-

@@ -198,4 +198,3 @@ class Blogger extends Common
         return true;
     }
 }
-

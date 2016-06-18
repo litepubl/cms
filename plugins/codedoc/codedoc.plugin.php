@@ -43,4 +43,3 @@ class tcodedocplugin extends \litepubl\core\Plugin
         $this->getApp()->db->delete("id = $id");
     }
 }
-

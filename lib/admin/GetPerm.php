@@ -66,6 +66,4 @@ class GetPerm
 
         return $ulist->getresult();
     }
-
 }
-

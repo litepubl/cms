@@ -78,6 +78,4 @@ class Tabs
             '$content' => $content,
         ));
     }
-
 }
-

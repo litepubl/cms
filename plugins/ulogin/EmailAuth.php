@@ -57,13 +57,12 @@ class EmailAuth extends \litepubl\core\Plugin
                 'message' => Lang::admin('users')->regdisabled,
                 'code' => 403,
             )
-        );
-}
+            );
+        }
 
         try {
             return RegUser::i()->regUser($args['email'], $args['name']);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return array(
                 'error' => array(
                     'message' => $e->getMessage() ,
@@ -77,8 +76,7 @@ class EmailAuth extends \litepubl\core\Plugin
     {
         try {
             return Password::i()->restore($args['email']);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return array(
                 'error' => array(
                     'message' => $e->getMessage() ,
@@ -87,6 +85,4 @@ class EmailAuth extends \litepubl\core\Plugin
             );
         }
     }
-
 }
-

@@ -23,7 +23,9 @@ class Comment extends \litepubl\core\Data
         parent::__construct();
         $this->table = 'comments';
         $id = (int)$id;
-        if ($id > 0) $this->setid($id);
+        if ($id > 0) {
+            $this->setid($id);
+        }
     }
 
     public function setId($id)
@@ -67,7 +69,9 @@ class Comment extends \litepubl\core\Data
         if ($manager->redir) {
             return sprintf('<a %s href="%s/comusers.htm%sid=%d">%s</a>', $rel, $this->getApp()->site->url, $this->getApp()->site->q, $this->author, $name);
         } else {
-            if (!Str::begin($website, 'http://')) $website = 'http://' . $website;
+            if (!Str::begin($website, 'http://')) {
+                $website = 'http://' . $website;
+            }
             return sprintf('<a class="url fn" %s href="%s" itemprop="url">%s</a>', $rel, $website, $name);
         }
     }
@@ -175,7 +179,6 @@ class Comment extends \litepubl\core\Data
             return '';
         }
     }
-
 }
 
 //Comments.php
@@ -216,7 +219,9 @@ class Comments extends \litepubl\core\Items
 
     public function add($idpost, $idauthor, $content, $status, $ip)
     {
-        if ($idauthor == 0) $this->error('Author id = 0');
+        if ($idauthor == 0) {
+            $this->error('Author id = 0');
+        }
         $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
 
@@ -291,7 +296,9 @@ class Comments extends \litepubl\core\Items
             'approved',
             'hold',
             'spam'
-        ))) return false;
+        ))) {
+            return false;
+        }
         if (!$this->itemExists($id)) {
             return false;
         }
@@ -301,7 +308,9 @@ class Comments extends \litepubl\core\Items
             $this->setvalue($id, 'status', $status);
             $this->onstatus($id, $old, $status);
             $this->changed($id);
-            if (($old == 'hold') && ($status == 'approved')) $this->onapproved($id);
+            if (($old == 'hold') && ($status == 'approved')) {
+                $this->onapproved($id);
+            }
             return true;
         }
         return false;
@@ -449,7 +458,6 @@ class Comments extends \litepubl\core\Items
         $args->comment = $result;
         return $theme->parseArg($tml, $args);
     }
-
 }
 
 //Form.php
@@ -572,7 +580,9 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         unset($values['submitbutton']);
 
-        if (!$confirmed) $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
+        if (!$confirmed) {
+            $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
+        }
         if ($app->options->ingroups($cm->idgroups)) {
             if (!$confirmed && $cm->confirmlogged) {
                 return $this->request_confirm($values, $shortpost);
@@ -671,7 +681,9 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $url = $app->router->getvalue($shortpost['idurl'], 'url');
-        if (($c > 1) && !$app->options->comments_invert_order) $url = rtrim($url, '/') . "/page/$c/";
+        if (($c > 1) && !$app->options->comments_invert_order) {
+            $url = rtrim($url, '/') . "/page/$c/";
+        }
 
         $app->cache->clearUrl($url);
         return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : array());
@@ -697,7 +709,9 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
 
         $confirmid = Str::md5Uniq();
-        if ($sess = Session::start(md5($confirmid))) $sess->lifetime = 900;
+        if ($sess = Session::start(md5($confirmid))) {
+            $sess->lifetime = 900;
+        }
         $_SESSION['confirmid'] = $confirmid;
         $_SESSION['values'] = $values;
         session_write_close();
@@ -796,7 +810,6 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         return $this->context->response->redir($link);
     }
-
 }
 
 //Json.php
@@ -830,7 +843,7 @@ class Json extends \litepubl\core\Events
                     return false;
                 }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
                     return false;
                 }
 
@@ -841,7 +854,7 @@ class Json extends \litepubl\core\Events
                     return false;
                 }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post') , 'comstatus')) {
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
                     return false;
                 }
 
@@ -991,12 +1004,11 @@ class Json extends \litepubl\core\Events
 
         $theme = Theme::context();
         $mesg = $theme->templates['content.post.templatecomments.form.mesg.logged'];
-        $mesg = str_replace('$site.liveuser', $this->getApp()->site->getuserlink() , $mesg);
+        $mesg = str_replace('$site.liveuser', $this->getApp()->site->getuserlink(), $mesg);
 
         $lang = Lang::i('comment');
         return $theme->parse($mesg);
     }
-
 }
 
 //Manager.php
@@ -1086,8 +1098,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
                 $trust = $comments->db->getcount("author = $idauthor and status = 'approved' limit " . ($this->trustlevel + 1));
                 $users->setvalue($idauthor, 'trust', $trust);
             }
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
 
         $this->onchanged($id);
@@ -1185,7 +1196,6 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
 
         return $response->redir($url);
     }
-
 }
 
 //Pool.php
@@ -1227,7 +1237,6 @@ class Pool extends \litepubl\core\Pool
     {
         return sprintf($tml, $this->getlangcount($this->get($idpost)));
     }
-
 }
 
 //Subscribers.php
@@ -1278,7 +1287,9 @@ class Subscribers extends \litepubl\core\ItemsPosts
             return;
         }
 
-        if ($subscribed) $this->add($pid, $uid);
+        if ($subscribed) {
+            $this->add($pid, $uid);
+        }
     }
 
     public function setEnabled($value)
@@ -1362,7 +1373,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         }
 
         if ($this->getApp()->options->mailer == 'smtp') {
-            Cron::i()->add('single', get_class($this) , 'cronsendmail', (int)$id);
+            Cron::i()->add('single', get_class($this), 'cronsendmail', (int)$id);
         } else {
             $this->cronsendmail($id);
         }
@@ -1373,8 +1384,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $comments = Comments::i();
         try {
             $item = $comments->getitem($id);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             return;
         }
 
@@ -1443,7 +1453,6 @@ class Subscribers extends \litepubl\core\ItemsPosts
             Mailer::sendlist($list);
         }
     }
-
 }
 
 //Templates.php
@@ -1563,7 +1572,7 @@ class Templates extends \litepubl\core\Events
         $result = str_replace('&backurl=', '&amp;backurl=', $result);
 
         //insert back url
-        $result = str_replace('backurl=', 'backurl=' . urlencode($this->view->context->request->url) , $result);
+        $result = str_replace('backurl=', 'backurl=' . urlencode($this->view->context->request->url), $result);
 
         return $theme->parse($result);
     }
@@ -1585,6 +1594,4 @@ class Templates extends \litepubl\core\Events
         $theme = Theme::i();
         return $theme->parseArg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
-
 }
-

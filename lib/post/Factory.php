@@ -94,8 +94,7 @@ class Factory
 *        }
 */
 
-public function createCoInstances(Post $post)
-{
-}
-
+    public function createCoInstances(Post $post)
+    {
+    }
 }

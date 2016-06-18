@@ -49,7 +49,7 @@ class Group extends \litepubl\admin\Menu
             }
         }
 
-        $result.= $admin->form($theme->getinput('combo', 'themeschema', $theme->comboItems($list, $schema->themename) , $lang->themename) . '<input type="hidden" name="action" value="themes" />', $args);
+        $result.= $admin->form($theme->getinput('combo', 'themeschema', $theme->comboItems($list, $schema->themename), $lang->themename) . '<input type="hidden" name="action" value="themes" />', $args);
 
         return $result;
     }
@@ -88,6 +88,4 @@ class Group extends \litepubl\admin\Menu
                 break;
         }
     }
-
 }
-

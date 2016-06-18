@@ -43,7 +43,7 @@ class Groups extends \litepubl\admin\Menu
       [text=name]
       [text=home]
       [hidden=action]
-' . $admin->h($lang->parentgroups) . GetPerm::groups(array()) , $args);
+' . $admin->h($lang->parentgroups) . GetPerm::groups(array()), $args);
                 break;
 
 
@@ -59,7 +59,7 @@ class Groups extends \litepubl\admin\Menu
       [text=home]
       [hidden=id]
       [hidden=action]
-' . $admin->h($lang->parentgroups) . GetPerm::groups($groups->items[$id]['parents']) , $args);
+' . $admin->h($lang->parentgroups) . GetPerm::groups($groups->items[$id]['parents']), $args);
                 break;
 
 
@@ -76,7 +76,7 @@ class Groups extends \litepubl\admin\Menu
             ) ,
             array(
                 $lang->users,
-                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/?idgroup=$id') , $lang->users)
+                sprintf('<a href="%s">%s</a>', Link::url('/admin/users/?idgroup=$id'), $lang->users)
             ) ,
             $tb->action('delete', $adminurl)
         ));
@@ -118,6 +118,4 @@ class Groups extends \litepubl\admin\Menu
                 break;
         }
     }
-
 }
-

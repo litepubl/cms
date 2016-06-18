@@ -19,23 +19,20 @@ class Plugin extends \litepubl\core\Plugin
     {
         $post = Post::i($id);
         if (count($post->files) > 0) {
-$view = $post->getView();
+            $view = $post->getView();
             $theme = $view->theme;
             $image = $theme->templates['content.post.filelist.image'];
             $theme->templates['content.post.filelist.image'] = str_replace(
-'href="$link"',
-
-//photoSwipe template hash
-'href="$post.link#gid=$post.id&pid=$typeindex"',
-
-//old prettyPhoto template
- //'href="$post.link#!prettyPhoto[gallery-$post.id]/$typeindex/"',
- $image);
+                'href="$link"',
+                //photoSwipe template hash
+                'href="$post.link#gid=$post.id&pid=$typeindex"',
+                //old prettyPhoto template
+                //'href="$post.link#!prettyPhoto[gallery-$post.id]/$typeindex/"',
+                $image
+            );
 
             $content.= $view->filelist;
             $theme->templates['content.post.filelist.image'] = $image;
         }
     }
-
 }
-

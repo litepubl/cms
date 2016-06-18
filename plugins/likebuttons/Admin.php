@@ -26,6 +26,4 @@ class Admin extends \litepubl\admin\Panel
     {
         LikeButtons::i()->facebook_appid = $_POST['facebookapp'];
     }
-
 }
-

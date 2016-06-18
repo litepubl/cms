@@ -33,7 +33,7 @@ class Node
         $textnode = $node->ownerDocument->createTextNode($value);
         $result->appendChild($textnode);
         $node->appendChild($result);
-        Return $result;
+        return $result;
     }
 
     public static function addcdata($node, $name, $value)
@@ -42,13 +42,15 @@ class Node
         $textnode = $node->ownerDocument->createCDATASection($value);
         $result->appendChild($textnode);
         $node->appendChild($result);
-        Return $result;
+        return $result;
     }
 
     public static function copy($node)
     {
         $result = $node->ownerDocument->createElement($node->nodeName);
-        foreach ($node->attributes as $value) $result->setAttribute($value->nodeName, $value->value);
+        foreach ($node->attributes as $value) {
+            $result->setAttribute($value->nodeName, $value->value);
+        }
         if (!$node->childNodes) {
             return $result;
         }
@@ -63,6 +65,4 @@ class Node
 
         return $result;
     }
-
 }
-

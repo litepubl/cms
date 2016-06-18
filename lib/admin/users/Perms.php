@@ -26,7 +26,9 @@ class Perms extends \litepubl\admin\Menu
         $admin = $this->admintheme;
         $lang = Lang::i('perms');
         $args = new Args();
-        if (!($action = $this->action)) $action = 'perms';
+        if (!($action = $this->action)) {
+            $action = 'perms';
+        }
         switch ($action) {
             case 'perms':
                 $tb = $this->newTable();
@@ -91,7 +93,9 @@ class Perms extends \litepubl\admin\Menu
     public function processForm()
     {
         $perms = PermItems::i();
-        if (!($action = $this->action)) $action = 'perms';
+        if (!($action = $this->action)) {
+            $action = 'perms';
+        }
         switch ($action) {
             case 'perms':
                 $perms->lock();
@@ -126,6 +130,4 @@ class Perms extends \litepubl\admin\Menu
                 }
         }
     }
-
 }
-

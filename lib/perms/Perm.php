@@ -64,6 +64,4 @@ class Perm extends \litepubl\core\Item
     {
         return true;
     }
-
 }
-

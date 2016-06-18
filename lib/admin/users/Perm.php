@@ -38,6 +38,4 @@ class Perm extends \litepubl\admin\Panel
 
         $this->perm->save();
     }
-
 }
-

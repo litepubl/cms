@@ -21,7 +21,7 @@ class Cache extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->modified = false;
-$this->getApp()->cache->onClear->on($this, 'onClearCache');
+        $this->getApp()->cache->onClear->on($this, 'onClearCache');
     }
 
     public function getBasename(): string
@@ -45,7 +45,7 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
     {
         if ($this->modified) {
             $this->modified = false;
-            $this->getApp()->cache->set($this->getbasename() , $this->data);
+            $this->getApp()->cache->set($this->getbasename(), $this->data);
         }
     }
 
@@ -103,7 +103,7 @@ $this->getApp()->cache->onClear->on($this, 'onClearCache');
     {
         switch ($cacheType) {
             case 'cache':
-$this->delete($id);
+                $this->delete($id);
                 break;
 
 
@@ -119,8 +119,8 @@ $this->delete($id);
         $widgets = Widgets::i();
         foreach ($widgets->items as $id => $item) {
             if ($widget instanceof $item['class']) {
-$this->remove($id, $widget->cache);
-}
+                $this->remove($id, $widget->cache);
+            }
         }
     }
 
@@ -130,19 +130,18 @@ $this->remove($id, $widget->cache);
         return sprintf('widget.%s.%d.php', $theme->name, $id);
     }
 
-public function getInclude(int $id, int $sidebar): string
-{
-$filename = $this->getIncludeFilename($id);
-$appCache = $this->getApp()->cache;
-if ($result = $appCache->getString($filename)) {
-return $result;
-}
+    public function getInclude(int $id, int $sidebar): string
+    {
+        $filename = $this->getIncludeFilename($id);
+        $appCache = $this->getApp()->cache;
+        if ($result = $appCache->getString($filename)) {
+            return $result;
+        }
 
             $widget = Widgets::i()->getWidget($id);
             $result = $widget->getContent($id, $sidebar);
 
-$appCache->setString($filename, $result);
-return $result;
-}
-
+        $appCache->setString($filename, $result);
+        return $result;
+    }
 }

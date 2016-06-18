@@ -59,4 +59,3 @@ function ManagerUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

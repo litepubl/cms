@@ -15,10 +15,10 @@ use litepubl\widget\Meta as MetaWidget;
 
 function RssFilesInstall($self)
 {
-    $self->getApp()->router->add('/rss/multimedia.xml', get_class($self) , '');
-    $self->getApp()->router->add('/rss/images.xml', get_class($self) , 'image');
-    $self->getApp()->router->add('/rss/audio.xml', get_class($self) , 'audio');
-    $self->getApp()->router->add('/rss/video.xml', get_class($self) , 'video');
+    $self->getApp()->router->add('/rss/multimedia.xml', get_class($self), '');
+    $self->getApp()->router->add('/rss/images.xml', get_class($self), 'image');
+    $self->getApp()->router->add('/rss/audio.xml', get_class($self), 'audio');
+    $self->getApp()->router->add('/rss/video.xml', get_class($self), 'video');
 
     $files = Files::i();
     $files->changed = $self->filesChanged;
@@ -37,4 +37,3 @@ function RssFilesUninstall($self)
     $meta = MetaWidget::i();
     $meta->delete('media');
 }
-

@@ -29,6 +29,4 @@ class Factory
     {
         return Post::i($id);
     }
-
 }
-

@@ -13,4 +13,3 @@ namespace litepubl\plugins\bootstrap;
 class Bootstrap extends \litepubl\core\Plugin
 {
 }
-

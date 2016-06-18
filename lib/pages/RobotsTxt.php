@@ -55,6 +55,4 @@ class RobotsTxt extends \litepubl\core\Items implements \litepubl\core\Responsiv
         $response->headers['Content-Type'] = 'text/plain';
         $response->body = $this->text;
     }
-
 }
-

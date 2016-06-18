@@ -17,6 +17,4 @@ trait PoolStorageTrait
     {
         return $this->getApp()->poolStorage;
     }
-
 }
-

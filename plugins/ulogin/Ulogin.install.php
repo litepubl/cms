@@ -40,26 +40,26 @@ function UloginInstall($self)
         'foursquare',
         'tumblr',
         'googleplus',
-'uid',
-'instagram',
-'wargaming',
+    'uid',
+    'instagram',
+    'wargaming',
     );
 
     $man = DBManager::i();
-    $man->createTable($self->table, str_replace('$names', implode("', '", $self->data['nets']) , file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
+    $man->createTable($self->table, str_replace('$names', implode("', '", $self->data['nets']), file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));
     if (!$man->columnExists('users', 'phone')) {
-$man->alter('users', "add phone bigint not null default '0' after status");
-}
+        $man->alter('users', "add phone bigint not null default '0' after status");
+    }
 
     Users::i()->deleted = $self->userDeleted;
     $self->getApp()->router->unbind($self);
     $self->getApp()->router->addGet($self->url, get_class($self));
-Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
+    Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();
     $js->lock();
     $js->add('default', '/plugins/ulogin/resource/ulogin.popup.min.js');
-EmailAuth::i()->install();
+    EmailAuth::i()->install();
 
     $js->add('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->add('default', '/plugins/ulogin/resource/authdialog.min.js');
@@ -67,8 +67,8 @@ EmailAuth::i()->install();
 
     $json = Json::i();
     $json->lock();
-    $json->addevent('ulogin_auth', get_class($self) , 'ulogin_auth');
-    $json->addevent('check_logged', get_class($self) , 'check_logged');
+    $json->addevent('ulogin_auth', get_class($self), 'ulogin_auth');
+    $json->addevent('check_logged', get_class($self), 'check_logged');
     $json->unlock();
 }
 
@@ -79,10 +79,10 @@ function UloginUninstall($self)
     $man = DBManager::i();
     $man->deleteTable($self->table);
     if ($man->columnExists('users', 'phone')) {
-$man->alter('users', "drop phone");
-}
+        $man->alter('users', "drop phone");
+    }
 
-Parser::i()->removeTags('plugins/ulogin/resource/theme.txt', false);
+    Parser::i()->removeTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();
     $js->lock();
@@ -90,9 +90,8 @@ Parser::i()->removeTags('plugins/ulogin/resource/theme.txt', false);
     $js->deletefile('default', '/plugins/ulogin/resource/' . $self->getApp()->options->language . '.authdialog.min.js');
     $js->deletefile('default', '/plugins/ulogin/resource/authdialog.min.js');
 
-EmailAuth::i()->uninstall();
+    EmailAuth::i()->uninstall();
     $js->unlock();
 
     Json::i()->unbind($self);
 }
-

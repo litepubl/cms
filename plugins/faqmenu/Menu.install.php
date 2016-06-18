@@ -31,4 +31,3 @@ function MenuUninstall($self)
     }
     $menus->unlock();
 }
-

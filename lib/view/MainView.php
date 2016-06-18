@@ -196,7 +196,7 @@ class MainView extends \litepubl\core\Events
         $app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , $app->options->group ? $app->options->group : 'nobody');
+        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass), $app->options->group ? $app->options->group : 'nobody');
 
         if ($result = $app->cache->getString($filename)) {
             return $result;
@@ -285,8 +285,6 @@ class MainView extends \litepubl\core\Events
             return '';
         }
 
-        return sprintf(Lang::get('default', 'pagetitle') , $page);
+        return sprintf(Lang::get('default', 'pagetitle'), $page);
     }
-
 }
-

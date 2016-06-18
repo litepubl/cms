@@ -119,8 +119,8 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
         }
 
         foreach ($external as $src => $dst) {
-            $content = str_replace(sprintf('"%s"', $src) , sprintf('"%s"', $dst) , $content);
-            $content = str_replace(sprintf("'%s'", $src) , sprintf("'%s'", $dst) , $content);
+            $content = str_replace(sprintf('"%s"', $src), sprintf('"%s"', $dst), $content);
+            $content = str_replace(sprintf("'%s'", $src), sprintf("'%s'", $dst), $content);
         }
     }
 
@@ -134,6 +134,4 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
 
         return false;
     }
-
 }
-

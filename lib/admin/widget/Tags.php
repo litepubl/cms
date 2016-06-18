@@ -39,6 +39,4 @@ class Tags extends Widget
         $this->widget->showsubitems = isset($showsubitems);
         $this->widget->sortname = $sort;
     }
-
 }
-

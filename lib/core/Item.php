@@ -16,7 +16,7 @@ class Item extends Data
 
     public static function i($id = 0)
     {
-        return static ::itemInstance(get_called_class() , (int)$id);
+        return static ::itemInstance(get_called_class(), (int)$id);
     }
 
     public static function itemInstance($class, $id = 0)
@@ -113,6 +113,4 @@ class Item extends Data
 
         return false;
     }
-
 }
-

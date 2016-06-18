@@ -25,4 +25,3 @@ function PingbacksUninstall($self)
 {
     Posts::unsub($self);
 }
-

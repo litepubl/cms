@@ -12,11 +12,10 @@ namespace litepubl\admin\pages;
 
 function BoardInstall($self)
 {
-    $self->getApp()->router->add('/admin/', get_class($self) , null, 'normal');
+    $self->getApp()->router->add('/admin/', get_class($self), null, 'normal');
 }
 
 function BoardUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

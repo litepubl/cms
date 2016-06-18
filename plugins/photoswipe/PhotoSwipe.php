@@ -57,6 +57,4 @@ class PhotoSwipe extends \litepubl\core\Plugin
         $css->deletefile('default', "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
         $css->unlock();
     }
-
 }
-

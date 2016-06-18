@@ -173,10 +173,7 @@ class MemvarMysql
         $db = $this->getdb();
         try {
             $db->query("truncate table $db->prefix$this->table");
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
         }
     }
-
 }
-

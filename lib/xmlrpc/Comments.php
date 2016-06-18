@@ -266,6 +266,4 @@ class Comments extends Common
             'spam' => 'Spam',
         );
     }
-
 }
-

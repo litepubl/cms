@@ -76,7 +76,7 @@ class Pages extends \litepubl\admin\Menu
     [checkbox=authorpost_subscribe]
     ');
 
-        return $admin->form($tabs->get() , $args);
+        return $admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -147,6 +147,4 @@ class Pages extends \litepubl\admin\Menu
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;
     }
-
 }
-

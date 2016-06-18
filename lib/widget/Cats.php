@@ -32,6 +32,4 @@ class Cats extends CommonTags
     {
         return Owner::i();
     }
-
 }
-

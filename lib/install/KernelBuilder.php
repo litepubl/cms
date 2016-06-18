@@ -107,6 +107,4 @@ class KernelBuilder
         $s.= "\n\n";
         return $s;
     }
-
 }
-

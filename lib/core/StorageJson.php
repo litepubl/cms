@@ -39,6 +39,4 @@ class StorageJson extends Storage
     {
         return $str;
     }
-
 }
-

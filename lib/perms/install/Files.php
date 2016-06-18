@@ -24,4 +24,3 @@ function FilesInstall($self)
     file_put_contents($file, 'Deny from all');
     @chmod($file, 0666);
 }
-

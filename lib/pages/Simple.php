@@ -35,7 +35,7 @@ class Simple extends \litepubl\core\Events implements \litepubl\view\ViewInterfa
 
     public function gettitle(): string
     {
-return '';
+        return '';
     }
 
     public function getCont(): string
@@ -60,12 +60,10 @@ return '';
 
     public function render()
     {
-        $context = new Context(new Request('', '') , new Response());
+        $context = new Context(new Request('', ''), new Response());
 
         $context->model = $this;
         MainView::i()->render($context);
         return $context->response->body;
     }
-
 }
-

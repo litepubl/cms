@@ -19,6 +19,4 @@ class Css extends Js
     {
         return \litepubl\view\Css::i();
     }
-
 }
-

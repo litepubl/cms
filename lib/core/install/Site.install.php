@@ -48,4 +48,3 @@ function getrequestdir()
 
     return rtrim($_SERVER['REQUEST_URI'], '/');
 }
-

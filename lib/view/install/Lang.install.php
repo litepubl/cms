@@ -44,4 +44,3 @@ function preloadlanguage($lang, $language)
     }
     date_default_timezone_set(lang::get('installation', 'timezone'));
 }
-

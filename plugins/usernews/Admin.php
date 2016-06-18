@@ -64,6 +64,4 @@ class Admin extends \litepubl\admin\Panel
 
         $plugin->save();
     }
-
 }
-

@@ -80,10 +80,10 @@ class Wiki extends \litepubl\core\Items
         } elseif ($c == 1) {
             $post = Post::i($items[0]);
             $result = strtr($theme->templates['wiki.link'], [
-'$id' => $id,
- '$word' => $word,
- '$post.link' => $post->link,
-]);
+            '$id' => $id,
+            '$word' => $word,
+            '$post.link' => $post->link,
+            ]);
         } else {
             $links = '';
             $posts = Posts::i();
@@ -91,21 +91,21 @@ class Wiki extends \litepubl\core\Items
             foreach ($items as $idpost) {
                 $post = Post::i($idpost);
                 $links.= strtr($theme->templates['wiki.links.item'], [
-'$id' => $id,
- '$word' => $word,
- '$post.link' => $post->link,
- '$post.title' => $post->title, 
-]);
+                '$id' => $id,
+                '$word' => $word,
+                '$post.link' => $post->link,
+                '$post.title' => $post->title,
+                ]);
             }
 
             $result = strtr($theme->templates['wiki.links'], [
-'$id' => $id,
- '$word' => $word,
- '$item' => $links,
- ]);
+            '$id' => $id,
+            '$word' => $word,
+            '$item' => $links,
+            ]);
         }
 
-$result = str_replace(["\n", "\r"], ' ', $result);
+        $result = str_replace(["\n", "\r"], ' ', $result);
         $this->links[$word] = $result;
         return $result;
     }
@@ -244,13 +244,11 @@ $result = str_replace(["\n", "\r"], ' ', $result);
                 $word = $item[1];
                 if ($id = $this->add($word, 0)) {
                     $result[] = $id;
-                    $content = str_replace($item[0], $this->getLink($id) , $content);
+                    $content = str_replace($item[0], $this->getLink($id), $content);
                 }
             }
         }
 
         return $result;
     }
-
 }
-

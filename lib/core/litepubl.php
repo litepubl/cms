@@ -31,8 +31,6 @@ class litepubl
 
         static ::$app->run();
     }
-
 }
 
 litepubl::init();
-

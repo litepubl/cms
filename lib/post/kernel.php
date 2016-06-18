@@ -110,7 +110,6 @@ class Announce
 
         return $result;
     }
-
 }
 
 //Factory.php
@@ -191,7 +190,6 @@ class Factory
     {
         return View::i();
     }
-
 }
 
 //Files.php
@@ -226,7 +224,7 @@ class Files extends \litepubl\core\Items
     {
         $items = array_diff($items, array_keys($this->items));
         if (count($items)) {
-            $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))', implode(',', $items)) , '');
+            $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))', implode(',', $items)), '');
         }
     }
 
@@ -253,7 +251,7 @@ class Files extends \litepubl\core\Items
 
     public function getHash($filename)
     {
-        return trim(base64_encode(md5_file($filename, true)) , '=');
+        return trim(base64_encode(md5_file($filename, true)), '=');
     }
 
     public function additem(array $item)
@@ -271,7 +269,9 @@ class Files extends \litepubl\core\Items
             'description',
             'keywords'
         ) as $prop) {
-            if (!isset($item[$prop])) $item[$prop] = '';
+            if (!isset($item[$prop])) {
+                $item[$prop] = '';
+            }
         }
         return $this->insert($item);
     }
@@ -517,7 +517,7 @@ class Files extends \litepubl\core\Items
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getjson($id);
 
-                $preview = new \ArrayObject($this->getitem($idpreview) , \ArrayObject::ARRAY_AS_PROPS);
+                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
                 $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
@@ -553,7 +553,6 @@ class Files extends \litepubl\core\Items
             'preview' => $item['preview'],
         ));
     }
-
 }
 
 //FilesItems.php
@@ -568,7 +567,6 @@ class FilesItems extends \litepubl\core\ItemsPosts
         $this->basename = 'fileitems';
         $this->table = 'filesitemsposts';
     }
-
 }
 
 //Meta.php
@@ -676,7 +674,6 @@ class Meta extends \litepubl\core\Item
             if (!count($items)) {
                 return;
             }
-
         } else {
             static ::$instances['postmeta'] = array();
         }
@@ -697,7 +694,6 @@ class Meta extends \litepubl\core\Item
 
         return $items;
     }
-
 }
 
 //Post.php
@@ -724,13 +720,13 @@ class Post extends \litepubl\core\Item
         if ($id = (int)$id) {
             if (isset(static ::$instances['post'][$id])) {
                 $result = static ::$instances['post'][$id];
-            } else if ($result = static ::loadPost($id)) {
+            } elseif ($result = static ::loadPost($id)) {
                 static ::$instances['post'][$id] = $result;
             } else {
                 $result = null;
             }
         } else {
-            $result = parent::itemInstance(get_called_class() , $id);
+            $result = parent::itemInstance(get_called_class(), $id);
         }
 
         return $result;
@@ -743,7 +739,7 @@ class Post extends \litepubl\core\Item
             $self->setAssoc($a);
 
             if (get_class($self) != get_called_class()) {
-                $items = static ::selectChildItems($self->getChildTable() , [$id]);
+                $items = static ::selectChildItems($self->getChildTable(), [$id]);
                 $self->setAssoc($items[0]);
             }
 
@@ -1031,7 +1027,7 @@ class Post extends \litepubl\core\Item
 
     public function createUrl()
     {
-        return $this->getApp()->router->add($this->url, get_class($this) , (int)$this->id);
+        return $this->getApp()->router->add($this->url, get_class($this), (int)$this->id);
     }
 
     public function onId()
@@ -1506,7 +1502,7 @@ class Posts extends \litepubl\core\Items
             return $items;
         }
 
-        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)) , '');
+        $newitems = $this->select(sprintf('%s.id in (%s)', $this->thistable, implode(',', $newitems)), '');
         return array_merge($newitems, array_intersect($loaded, $items));
     }
 
@@ -1562,7 +1558,7 @@ class Posts extends \litepubl\core\Items
         foreach ($items as $id => $item) {
             if (empty($item['class'])) {
                 $items[$id]['class'] = static ::POSTCLASS;
-            } else if ($item['class'] != static ::POSTCLASS) {
+            } elseif ($item['class'] != static ::POSTCLASS) {
                 $subclasses[$item['class']][] = $id;
             }
         }
@@ -1606,7 +1602,7 @@ class Posts extends \litepubl\core\Items
         $post->title = trim($post->title);
         $post->modified = time();
         $post->revision = $this->revision;
-        $post->class = str_replace('\\', '-', ltrim(get_class($post) , '\\'));
+        $post->class = str_replace('\\', '-', ltrim(get_class($post), '\\'));
         if (($post->status == 'published') && ($post->posted > time())) {
             $post->status = 'future';
         } elseif (($post->status == 'future') && ($post->posted <= time())) {
@@ -1702,7 +1698,7 @@ class Posts extends \litepubl\core\Items
     {
         $this->PublishFuture();
         $this->UpdateArchives();
-        Cron::i()->add('single', get_class($this) , 'dosinglecron', $post->id);
+        Cron::i()->add('single', get_class($this), 'dosinglecron', $post->id);
     }
 
     public function UpdateArchives()
@@ -1828,7 +1824,6 @@ class Posts extends \litepubl\core\Items
             $count
         ));
     }
-
 }
 
 //View.php
@@ -2294,7 +2289,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return '';
         }
 
-        $result = strtr($theme->parse($theme->templates['content.post.prevnext']) , array(
+        $result = strtr($theme->parse($theme->templates['content.post.prevnext']), array(
             '$prev' => $prev,
             '$next' => $next
         ));
@@ -2389,7 +2384,9 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $tag = '<!--more-->';
         if ($i = strpos($content, $tag)) {
             $content = substr($content, $i + strlen($tag));
-            if (!Str::begin($content, '<p>')) $content = '<p>' . $content;
+            if (!Str::begin($content, '<p>')) {
+                $content = '<p>' . $content;
+            }
             return $content;
         }
         return '';
@@ -2481,9 +2478,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', $this->getApp()->site->url, $pages->url, $pages->name);
         }
     }
-
 }
 {
 
 }
-

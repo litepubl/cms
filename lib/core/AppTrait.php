@@ -22,6 +22,4 @@ trait AppTrait
     {
         return static ::getAppInstance();
     }
-
 }
-

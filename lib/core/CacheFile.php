@@ -17,7 +17,7 @@ class CacheFile extends BaseCache
 
     public function __construct(string $dir, int $lifetime, int $timeOffset)
     {
-parent::__construct();
+        parent::__construct();
         $this->dir = $dir;
         $this->timeOffset = $timeOffset;
         $this->lifetime = $lifetime - $timeOffset;
@@ -72,13 +72,13 @@ parent::__construct();
     public function clear()
     {
         $this->clearDir($path = $this->getdir());
-parent::clear();
+        parent::clear();
     }
 
     public function clearDir(string $dir)
     {
         if ($h = @opendir($path)) {
-            while (FALSE !== ($filename = @readdir($h))) {
+            while (false !== ($filename = @readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
                     continue;
                 }
@@ -110,6 +110,4 @@ parent::clear();
 
         return false;
     }
-
 }
-

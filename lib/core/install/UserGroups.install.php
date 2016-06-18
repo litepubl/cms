@@ -33,4 +33,3 @@ function UserGroupsInstall($self)
 
     $self->unlock();
 }
-

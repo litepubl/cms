@@ -28,6 +28,4 @@ class Panel implements AdminInterface
     public function processForm()
     {
     }
-
 }
-

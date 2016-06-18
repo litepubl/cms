@@ -91,6 +91,4 @@ class Manifest extends \litepubl\core\Events implements \litepubl\core\Responsiv
 
         return $s;
     }
-
 }
-

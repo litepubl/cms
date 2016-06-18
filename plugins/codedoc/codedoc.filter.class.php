@@ -45,12 +45,12 @@ class tcodedocfilter extends titems
         $s = str_replace(array(
             "\r\n",
             "\r"
-        ) , "\n", $s);
+        ), "\n", $s);
         // prevent tcontentfilter replace code tag
         $s = preg_replace_callback('/<code>(.*?)<\/code>/ims', array(
             $this,
             'callback_replace_code'
-        ) , $s);
+        ), $s);
         //$s =preg_replace'/<code>(.*?)<\/code>/ims', '<div class="tempcode">$1</div>', $s);
         $s = strtr($s, array(
             '->' => '-&gt;',
@@ -68,7 +68,7 @@ class tcodedocfilter extends titems
 
     public function callback_replace_code($m)
     {
-        $s = strtr(htmlspecialchars($m[1]) , array(
+        $s = strtr(htmlspecialchars($m[1]), array(
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;',
@@ -99,7 +99,7 @@ class tcodedocfilter extends titems
     public function html($key, Args $args)
     {
         $theme = Theme::instance();
-        $s = strtr(Lang::get('htmlcodedoc', $key) , array(
+        $s = strtr(Lang::get('htmlcodedoc', $key), array(
             '$tableclass' => $theme->templates['content.admin.tableclass'],
             "'" => '"',
         ));
@@ -129,7 +129,9 @@ class tcodedocfilter extends titems
 
     public function skip(array & $a)
     {
-        while ((count($a) > 0) && (trim($a[0]) == '')) array_splice($a, 0, 1);
+        while ((count($a) > 0) && (trim($a[0]) == '')) {
+            array_splice($a, 0, 1);
+        }
     }
 
     public function replace_props($s)
@@ -200,7 +202,6 @@ class tcodedocfilter extends titems
             $post->title = sprintf($typedoc == 'interface' ? $lang->interfacetitle : $lang->classtitle, $class);
             $post->url = "/doc/$class";
             //LinkGenerator::i()->addurl($post, 'codedoc');
-            
         }
 
         $parts = array(
@@ -265,8 +266,12 @@ class tcodedocfilter extends titems
             $tablehead.= $this->html('tablehead', $args);
             $result.= $this->html('items', $args);
             foreach ($items as $name => $item) {
-                if (!isset($item['type'])) $item['type'] = 'void';
-                if (!isset($item['access'])) $item['access'] = 'public';
+                if (!isset($item['type'])) {
+                    $item['type'] = 'void';
+                }
+                if (!isset($item['access'])) {
+                    $item['access'] = 'public';
+                }
                 $args->add($item['headers']);
                 $args->name = $name;
                 $args->body = $contentfilter->filter($item['body']);
@@ -275,7 +280,9 @@ class tcodedocfilter extends titems
                 $rows[$i++].= $this->html('itemtoc', $args);
                 $result.= $this->html('item', $args);
             }
-            while ($i < $maxcount) $rows[$i++].= '<td></td>';
+            while ($i < $maxcount) {
+                $rows[$i++].= '<td></td>';
+            }
         }
 
         $args->tablehead = $tablehead;
@@ -302,7 +309,9 @@ class tcodedocfilter extends titems
 
     public function getChilds($parent)
     {
-        IF ($parent == '') return '';
+        if ($parent == '') {
+            return '';
+        }
         $items = $this->db->res2items($this->db->query(sprintf('select id, class from %s where parentclass = %s order by class', $this->thistable, Str::quote($parent))));
         if (count($items) == 0) {
             return '';
@@ -325,6 +334,4 @@ class tcodedocfilter extends titems
 
         return preg_replace('/\w\w*+/', '[[$0]]', $doc[$name]);
     }
-
 }
-

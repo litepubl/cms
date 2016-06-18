@@ -112,7 +112,6 @@ class Meta extends \litepubl\core\Item
             if (!count($items)) {
                 return;
             }
-
         } else {
             static ::$instances['postmeta'] = array();
         }
@@ -133,6 +132,4 @@ class Meta extends \litepubl\core\Item
 
         return $items;
     }
-
 }
-

@@ -15,7 +15,7 @@ use litepubl\core\Cron;
 function Backup2emailInstall($self)
 {
     $cron = Cron::i();
-    $self->idcron = $cron->add('week', get_class($self) , 'send', null);
+    $self->idcron = $cron->add('week', get_class($self), 'send', null);
     $self->save();
 }
 
@@ -23,4 +23,3 @@ function Backup2emailUninstall($self)
 {
     Cron::i()->deleteclass($self);
 }
-

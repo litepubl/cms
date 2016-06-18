@@ -16,7 +16,7 @@ use litepubl\post\Posts;
 
 class Widget extends \litepubl\widget\Depended
 {
-const POSTCLASS = 'litepubl\post\Post';
+    const POSTCLASS = 'litepubl\post\Post';
 
     protected function create()
     {
@@ -67,7 +67,7 @@ const POSTCLASS = 'litepubl\post\Post';
         }
 
         arsort($same);
-        return array_slice(array_keys($same) , 0, $this->maxcount);
+        return array_slice(array_keys($same), 0, $this->maxcount);
     }
 
     public function getSame(int $id): array
@@ -87,7 +87,7 @@ const POSTCLASS = 'litepubl\post\Post';
 
     public function getContent(int $id, int $sidebar): string
     {
-        $post = $this->getWidgets()->findContext(static::POSTCLASS );
+        $post = $this->getWidgets()->findContext(static::POSTCLASS);
         $list = $this->getSame($post->id);
         if (count($list) == 0) {
             return '';
@@ -97,6 +97,4 @@ const POSTCLASS = 'litepubl\post\Post';
         $posts->loadItems($list);
         return $this->view->getPosts($list, $sidebar, '');
     }
-
 }
-

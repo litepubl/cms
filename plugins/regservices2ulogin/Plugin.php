@@ -42,6 +42,4 @@ class Plugin extends \litepubl\core\Items
     {
         return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
-
 }
-

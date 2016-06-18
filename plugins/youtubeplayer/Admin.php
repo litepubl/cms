@@ -30,6 +30,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->template = $_POST['template'];
         $plugin->save();
     }
-
 }
-

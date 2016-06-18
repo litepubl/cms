@@ -175,7 +175,9 @@ class DB
 
     public function select($where)
     {
-        if ($where != '') $where = 'where ' . $where;
+        if ($where != '') {
+            $where = 'where ' . $where;
+        }
         return $this->query("SELECT * FROM $this->prefix$this->table $where");
     }
 
@@ -207,7 +209,7 @@ class DB
     public function assoc2update(array $a)
     {
         $list = array();
-        foreach ($a As $name => $value) {
+        foreach ($a as $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
                 $list[] = sprintf('%s = %s ', $name, $value); {
@@ -225,12 +227,12 @@ class DB
     {
         $id = $a[$index];
         unset($a[$index]);
-        return $this->update($this->assoc2update($a) , "$index = '$id' limit 1");
+        return $this->update($this->assoc2update($a), "$index = '$id' limit 1");
     }
 
     public function setValues($id, array $values)
     {
-        return $this->update($this->assoc2update($values) , "id = '$id' limit 1");
+        return $this->update($this->assoc2update($values), "id = '$id' limit 1");
     }
 
     public function insertRow($row)
@@ -280,13 +282,15 @@ class DB
             }
         }
 
-        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)) , implode(', ', $vals));
+        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)), implode(', ', $vals));
     }
 
     public function getCount($where = '')
     {
         $sql = "SELECT COUNT(*) as count FROM $this->prefix$this->table";
-        if ($where) $sql.= ' where ' . $where;
+        if ($where) {
+            $sql.= ' where ' . $where;
+        }
         if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
             return (int)$r['count'];
         }
@@ -380,7 +384,7 @@ class DB
 
     public function setValue($id, $name, $value)
     {
-        return $this->update("$name = " . $this->quote($value) , "id = $id");
+        return $this->update("$name = " . $this->quote($value), "id = $id");
     }
 
     public function getValues($names, $where)
@@ -465,4 +469,3 @@ class DB
         $this->mysqli->query("set sql_mode = '$v'");
     }
 }
-

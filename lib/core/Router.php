@@ -121,7 +121,7 @@ class Router extends Items
         if ($item = $this->findfilter($url)) {
             $this->items[$item['id']] = $item;
             return $item;
-        } else if ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
+        } elseif ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
             $this->items[$item['id']] = $item;
             return $item;
         }
@@ -311,6 +311,4 @@ class Router extends Items
     {
         $this->getApp()->cache->clear();
     }
-
 }
-

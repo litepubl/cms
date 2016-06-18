@@ -56,6 +56,4 @@ class Login extends \litepubl\admin\Menu
 
         return $backuper->connect($host, $login, $password);
     }
-
 }
-

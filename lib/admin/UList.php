@@ -97,6 +97,4 @@ class UList
         $result = $this->get($props);
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
-
 }
-

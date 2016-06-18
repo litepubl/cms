@@ -88,7 +88,7 @@ class Editor extends \litepubl\admin\Menu
         $post = $this->getVarPost($post);
         $args = new Args();
         $this->getArgsTab($post, $args);
-        return $this->admintheme->parseArg($this->getTabsTemplate() , $args);
+        return $this->admintheme->parseArg($this->getTabsTemplate(), $args);
     }
 
     public function getTabsTemplate()
@@ -306,6 +306,4 @@ class Editor extends \litepubl\admin\Menu
         $this->afterProcess($post);
         return $admintheme->success($lang->success);
     }
-
 }
-

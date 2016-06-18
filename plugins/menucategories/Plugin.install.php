@@ -24,9 +24,8 @@ function PluginInstall($self)
 
 function PluginUninstall($self)
 {
-    Schemes::replaceMenu(get_class($self) , 'litepubl\pages\Menus');
+    Schemes::replaceMenu(get_class($self), 'litepubl\pages\Menus');
 
     $categories = Cats::i();
     $categories->unbind($self);
 }
-

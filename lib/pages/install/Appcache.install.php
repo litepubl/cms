@@ -14,7 +14,7 @@ function AppcacheInstall($self)
 {
     $self->lock();
     $self->getApp()->router->unbind($self);
-    $self->idurl = $self->getApp()->router->add($self->url, get_class($self) , null);
+    $self->idurl = $self->getApp()->router->add($self->url, get_class($self), null);
 
     $self->add('$template.jsmerger_default');
     $self->add('$template.cssmerger_default');
@@ -25,4 +25,3 @@ function AppcacheUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

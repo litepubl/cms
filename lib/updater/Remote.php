@@ -129,7 +129,9 @@ class Remote
 
     public function mkdir($path, $chmod)
     {
-        if (!$chmod) $chmod = $this->chmod_dir;
+        if (!$chmod) {
+            $chmod = $this->chmod_dir;
+        }
         $chmod = $this->getmode($chmod);
         $this->chmod($path, $chmod);
         return true;
@@ -218,6 +220,4 @@ class Remote
 
         return $root;
     }
-
 }
-

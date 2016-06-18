@@ -15,31 +15,37 @@ use litepubl\core\litepubl;
 class Filer
 {
 
-   public static function delete($path, $subdirs, $rmdir = false)
+    public static function delete($path, $subdirs, $rmdir = false)
     {
         $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
         if ($h = @opendir($path)) {
-            while (FALSE !== ($filename = readdir($h))) {
+            while (false !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
                     continue;
                 }
 
                 $file = $path . $filename;
                 if (is_dir($file)) {
-                    if ($subdirs) static ::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
+                    if ($subdirs) {
+                        static ::delete($file . DIRECTORY_SEPARATOR, $subdirs, $rmdir);
+                    }
                 } else {
                     static ::_delete($file);
                 }
             }
             closedir($h);
         }
-        if ($rmdir && is_dir($path)) rmdir($path);
+        if ($rmdir && is_dir($path)) {
+            rmdir($path);
+        }
     }
 
     public static function deleteMask($mask)
     {
         if ($list = glob($mask)) {
-            foreach ($list as $filename) static ::_delete($filename);
+            foreach ($list as $filename) {
+                static ::_delete($filename);
+            }
         }
     }
 
@@ -47,12 +53,14 @@ class Filer
     {
         $result = array();
         if ($h = opendir($path)) {
-            while (FALSE !== ($filename = readdir($h))) {
+            while (false !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
                     continue;
                 }
 
-                if (!is_dir($path . $filename)) $result[] = $filename;
+                if (!is_dir($path . $filename)) {
+                    $result[] = $filename;
+                }
             }
             closedir($h);
         }
@@ -63,7 +71,7 @@ class Filer
     {
         $result = array();
         if ($fp = opendir($dir)) {
-            while (FALSE !== ($file = readdir($fp))) {
+            while (false !== ($file = readdir($fp))) {
                 if (is_dir($dir . $file) && ($file != '.') && ($file != '..') && ($file != '.svn')) {
                     $result[] = $file;
                 }
@@ -74,14 +82,18 @@ class Filer
 
     public static function forceDir($dir)
     {
-        $dir = rtrim(str_replace('\\', '/', $dir) , '/');
+        $dir = rtrim(str_replace('\\', '/', $dir), '/');
         if (is_dir($dir)) {
             return true;
         }
 
-        $up = rtrim(dirname($dir) , '/');
-        if (($up != '') || ($up != '.')) static ::forcedir($up);
-        if (!is_dir($dir)) mkdir($dir, 0777);
+        $up = rtrim(dirname($dir), '/');
+        if (($up != '') || ($up != '.')) {
+            static ::forcedir($up);
+        }
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777);
+        }
         chmod($dir, 0777);
         return is_dir($dir);
     }
@@ -119,6 +131,4 @@ class Filer
             \unlink($filename);
         }
     }
-
 }
-

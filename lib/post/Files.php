@@ -39,7 +39,7 @@ class Files extends \litepubl\core\Items
     {
         $items = array_diff($items, array_keys($this->items));
         if (count($items)) {
-            $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))', implode(',', $items)) , '');
+            $this->select(sprintf('(id in (%1$s)) or (parent in (%1$s))', implode(',', $items)), '');
         }
     }
 
@@ -66,7 +66,7 @@ class Files extends \litepubl\core\Items
 
     public function getHash($filename)
     {
-        return trim(base64_encode(md5_file($filename, true)) , '=');
+        return trim(base64_encode(md5_file($filename, true)), '=');
     }
 
     public function additem(array $item)
@@ -84,7 +84,9 @@ class Files extends \litepubl\core\Items
             'description',
             'keywords'
         ) as $prop) {
-            if (!isset($item[$prop])) $item[$prop] = '';
+            if (!isset($item[$prop])) {
+                $item[$prop] = '';
+            }
         }
         return $this->insert($item);
     }
@@ -330,7 +332,7 @@ class Files extends \litepubl\core\Items
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getjson($id);
 
-                $preview = new \ArrayObject($this->getitem($idpreview) , \ArrayObject::ARRAY_AS_PROPS);
+                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
                 $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
@@ -366,6 +368,4 @@ class Files extends \litepubl\core\Items
             'preview' => $item['preview'],
         ));
     }
-
 }
-

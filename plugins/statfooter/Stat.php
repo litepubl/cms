@@ -39,6 +39,4 @@ class Stat extends \litepubl\core\Plugin
         $template->footer = str_replace($footer, '', $template->footer);
         $template->save();
     }
-
 }
-

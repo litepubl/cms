@@ -56,6 +56,4 @@ class GetSchema
 
         return $result;
     }
-
 }
-

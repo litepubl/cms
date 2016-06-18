@@ -35,15 +35,15 @@ class Parser extends BaseParser
 
     public function getFileList(string $name): array
     {
-if ($name == 'default') {
-$result = parent::getFileList($name);
-} else {
-        $about = $this->getAbout($name);
-        $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
-}
+        if ($name == 'default') {
+                $result = parent::getFileList($name);
+        } else {
+                $about = $this->getAbout($name);
+                $result = [$this->getApp()->paths->themes . $name . '/' . $about['file']];
+        }
 
-return $result;
-}
+        return $result;
+    }
 
     public function doReplaceLang(Base $theme)
     {
@@ -174,8 +174,12 @@ return $result;
             return 'index';
         }
 
-        if (Str::begin($name, '$template.')) $name = substr($name, strlen('$template.'));
-        if ($name == '$template') $name = '';
+        if (Str::begin($name, '$template.')) {
+            $name = substr($name, strlen('$template.'));
+        }
+        if ($name == '$template') {
+            $name = '';
+        }
 
         foreach ($this->paths as $path => $info) {
             if (Str::begin($path, $name)) {
@@ -212,7 +216,9 @@ return $result;
             return;
         }
 
-        if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) $this->error("The '$path' is not a widget path");
+        if (!preg_match('/^sidebar(\d?)\.(\w\w*+)(\.\w\w*+)*$/', $path, $m)) {
+            $this->error("The '$path' is not a widget path");
+        }
         $widgetname = $m[2];
         //backward compability deprecated submenu
         if ($widgetname == 'submenu') {
@@ -254,7 +260,9 @@ return $result;
             ) as $name) {
                 $sidebar[$widgetname . $name] = isset($sidebar['widget' . $name]) ? $sidebar['widget' . $name] : '';
             }
-            if ($widgetname == 'meta') $sidebar['meta.classes'] = '';
+            if ($widgetname == 'meta') {
+                $sidebar['meta.classes'] = '';
+            }
         }
 
         $sidebar[$widgetname . $path] = $value;
@@ -267,7 +275,9 @@ return $result;
             return;
         }
 
-        if (($names[0] != '$custom') && ($names[0] != 'custom')) $this->error("The '$path' path is not a custom path");
+        if (($names[0] != '$custom') && ($names[0] != 'custom')) {
+            $this->error("The '$path' path is not a custom path");
+        }
         $name = $names[1];
         switch (count($names)) {
             case 2:
@@ -286,12 +296,14 @@ return $result;
 
                 if ($tag == 'values') {
                     $value = explode(',', $value);
-                    foreach ($value as $i => $v) $value[$i] = trim($v);
+                    foreach ($value as $i => $v) {
+                        $value[$i] = trim($v);
+                    }
                 }
 
                 $admin[$name][$tag] = $value;
                 return;
-            }
+        }
     }
 
     public function afterparse($theme)
@@ -301,7 +313,9 @@ return $result;
         $templates = & $this->theme->templates;
         $templates['menu.hover'] = isset($templates['menu.hover']) ? ($templates['menu.hover'] == 'true' ? 'true' : ($templates['menu.hover'] == 'bootstrap' ? 'bootstrap' : 'false')) : 'true';
 
-        if (!isset($templates['content.post.templatecomments'])) $templates['content.post.templatecomments'] = '';
+        if (!isset($templates['content.post.templatecomments'])) {
+            $templates['content.post.templatecomments'] = '';
+        }
         if (!isset($templates['content.post.templatecomments.confirmform'])) {
             echo implode('<br>', array_keys($templates));
             $this->error('template "content.post.templatecomments.confirmform" not exists');
@@ -373,7 +387,9 @@ return $result;
                     '.subcount',
                     '.subitems'
                 ) as $name) {
-                    if (empty($sidebar[$widgetname . $name])) $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
+                    if (empty($sidebar[$widgetname . $name])) {
+                        $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
+                    }
                 }
 
                 if (in_array($widgetname, array(
@@ -383,9 +399,10 @@ return $result;
                     'archives'
                 ))) {
                     $v = $sidebar[$widgetname . '.item'];
-                    if (!strpos($v, '$subcount')) $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
+                    if (!strpos($v, '$subcount')) {
+                        $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
+                    }
                 }
-
             }
 
             if (is_string($sidebar['meta.classes'])) {
@@ -400,14 +417,18 @@ return $result;
             'content.excerpts.excerpt.catlinks.divider',
             'content.post.catlinks.divider'
         ) as $k) {
-            if (substr($templates[$k], -1) != ' ') $templates[$k].= ' ';
+            if (substr($templates[$k], -1) != ' ') {
+                $templates[$k].= ' ';
+            }
         }
 
         $templates['content.post.templatecomments.confirmform'] = str_replace('$lang.formhead', '$lang.checkspam', $templates['content.post.templatecomments.confirmform']);
 
         $form = 'content.post.templatecomments.form';
         $templates[$form] = trim(str_replace('<script type="text/javascript" src="$site.files$template.jsmerger_comments"></script>', '', $templates[$form]));
-        if (!strpos($templates[$form], '$mesg')) $templates[$form] = '<div id="before-commentform">$mesg</div>' . $templates[$form];
+        if (!strpos($templates[$form], '$mesg')) {
+            $templates[$form] = '<div id="before-commentform">$mesg</div>' . $templates[$form];
+        }
 
         $regform = 'content.post.templatecomments.regform';
         if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
@@ -447,7 +468,9 @@ return $result;
             if ($i = strpos($class, '=')) {
                 $classname = trim(substr($class, 0, $i));
                 $value = trim(substr($class, $i + 1));
-                if ($value != '') $result[$classname] = sprintf('class="%s"', $value);
+                if ($value != '') {
+                    $result[$classname] = sprintf('class="%s"', $value);
+                }
             }
         }
         return $result;
@@ -498,6 +521,4 @@ return $result;
             'meta'
         );
     }
-
 }
-

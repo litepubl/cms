@@ -67,6 +67,4 @@ class Links extends \litepubl\admin\Menu
 
         $linkgen->save();
     }
-
 }
-

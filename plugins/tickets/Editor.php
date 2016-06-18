@@ -41,7 +41,6 @@ class Editor extends \litepubl\admin\posts\Editor
             if (($this->getApp()->options->group == 'ticket') && ($this->getApp()->options->user != $ticket->author)) {
                 return 403;
             }
-
         }
     }
 
@@ -117,7 +116,7 @@ class Editor extends \litepubl\admin\posts\Editor
         $args->raw = $post->rawcontent;
         $args->code = $post->code;
 
-        return $admintheme->parseArg($tabs->get() , $args);
+        return $admintheme->parseArg($tabs->get(), $args);
     }
 
     public function newPost()
@@ -179,6 +178,4 @@ class Editor extends \litepubl\admin\posts\Editor
         $ticket->content = Filter::quote(htmlspecialchars($raw));
         $ticket->code = $code;
     }
-
 }
-

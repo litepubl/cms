@@ -66,5 +66,4 @@ class Download extends \litepubl\post\Post
 
         $this->tags = $items;
     }
-
 }

@@ -56,7 +56,7 @@ class Comments extends Widget
 
     public function changed()
     {
-Cache::i()->removeWidget($this);
+        Cache::i()->removeWidget($this);
     }
 
     public function getRecent(int $count, string $status = 'approved'): array
@@ -79,13 +79,11 @@ Cache::i()->removeWidget($this);
             foreach ($result as $i => $item) {
                 $page = ceil($item['commentscount'] / $this->getApp()->options->commentsperpage);
                 if ($page > 1) {
-$result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
-}
+                    $result[$i]['posturl'] = rtrim($item['posturl'], '/') . "/page/$page/";
+                }
             }
         }
 
         return $result;
     }
-
 }
-

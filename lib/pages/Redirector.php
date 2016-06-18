@@ -64,11 +64,10 @@ class Redirector extends \litepubl\core\Items
             if ($this->getApp()->router->urlexists($url)) {
                 return $url;
             }
-
         }
 
         //fix php warnings e.g. function.preg-split
-        if (($i = strrpos($url, '/')) && Str::begin(substr($url, $i) , '/function.')) {
+        if (($i = strrpos($url, '/')) && Str::begin(substr($url, $i), '/function.')) {
             return substr($url, 0, $i + 1);
         }
 
@@ -96,6 +95,4 @@ class Redirector extends \litepubl\core\Items
 
         return false;
     }
-
 }
-

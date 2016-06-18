@@ -54,4 +54,3 @@ function WikiUninstall($self)
 
     Parser::i()->removeTags('plugins/wikiwords/resource/theme.txt', 'plugins/wikiwords/resource/theme.ini');
 }
-

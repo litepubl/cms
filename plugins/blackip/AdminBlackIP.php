@@ -32,7 +32,7 @@ class AdminBlackIP extends \litepubl\admin\Panel
         $tabs->add('IP', '[combo=ipstatus] [editor=ip]');
 
         $args->formtitle = $lang->formtitle;
-        return $this->admin->form($tabs->get() , $args);
+        return $this->admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -43,17 +43,15 @@ class AdminBlackIP extends \litepubl\admin\Panel
         $ip = str_replace(array(
             "\r\n",
             "\r"
-        ) , "\n", $_POST['ip']);
+        ), "\n", $_POST['ip']);
         $ip = str_replace("\n\n", "\n", $ip);
         $plugin->ip = explode("\n", trim($ip));
         $words = str_replace(array(
             "\r\n",
             "\r"
-        ) , "\n", $_POST['words']);
+        ), "\n", $_POST['words']);
         $words = str_replace("\n\n", "\n", $words);
         $plugin->words = explode("\n", trim($words));
         $plugin->save();
     }
-
 }
-

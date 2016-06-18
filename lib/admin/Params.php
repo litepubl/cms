@@ -37,6 +37,4 @@ trait Params
     {
         return isset($_REQUEST['confirm']) && ($_REQUEST['confirm'] == 1);
     }
-
 }
-

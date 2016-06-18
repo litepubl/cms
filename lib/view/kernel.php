@@ -112,12 +112,11 @@ class Args
         array_unshift($params, $this);
 
         foreach ($this->callbacks as $tag => $callback) {
-            $s = str_replace($tag, call_user_func_array($callback, $params) , $s);
+            $s = str_replace($tag, call_user_func_array($callback, $params), $s);
         }
 
         return $s;
     }
-
 }
 
 //AutoVars.php
@@ -148,7 +147,6 @@ class AutoVars extends \litepubl\core\Items
 
         return false;
     }
-
 }
 
 //Base.php
@@ -176,7 +174,7 @@ class Base extends \litepubl\core\Events
 
     public static function getTheme($name)
     {
-        return static ::getByName(get_called_class() , $name);
+        return static ::getByName(get_called_class(), $name);
     }
 
     public static function getByName($classname, $name)
@@ -263,10 +261,14 @@ class Base extends \litepubl\core\Events
 
     public function reg($exp)
     {
-        if (!strpos($exp, '\.')) $exp = str_replace('.', '\.', $exp);
+        if (!strpos($exp, '\.')) {
+            $exp = str_replace('.', '\.', $exp);
+        }
         $result = array();
         foreach ($this->templates as $name => $val) {
-            if (preg_match($exp, $name)) $result[$name] = $val;
+            if (preg_match($exp, $name)) {
+                $result[$name] = $val;
+            }
         }
         return $result;
     }
@@ -327,8 +329,7 @@ class Base extends \litepubl\core\Events
 
         try {
             return $var->{$prop};
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->getApp()->logException($e);
         }
         return '';
@@ -341,16 +342,17 @@ class Base extends \litepubl\core\Events
         }
 
         $s = strtr((string)$s, Args::getDefaultArgs());
-        if (isset($this->templates['content.admin.tableclass'])) $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
+        if (isset($this->templates['content.admin.tableclass'])) {
+            $s = str_replace('$tableclass', $this->templates['content.admin.tableclass'], $s);
+        }
         array_push($this->parsing, $s);
         try {
             $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
             $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', array(
                 $this,
                 'parsecallback'
-            ) , $s);
-        }
-        catch(\Exception $e) {
+            ), $s);
+        } catch (\Exception $e) {
             $result = '';
             $this->getApp()->logException($e);
         }
@@ -417,7 +419,6 @@ class Base extends \litepubl\core\Events
             '>' => '&gt;',
         ));
     }
-
 }
 
 //DateFormater.php
@@ -434,9 +435,8 @@ class DateFormater
 
     public function __get($name)
     {
-        return Lang::translate(date($name, $this->date) , 'datetime');
+        return Lang::translate(date($name, $this->date), 'datetime');
     }
-
 }
 
 //EmptyClass.php
@@ -502,7 +502,6 @@ trait EmptyViewTrait
     {
         return $this;
     }
-
 }
 
 //Lang.php
@@ -526,7 +525,9 @@ class Lang
             static ::$self->loadfile('default');
         }
 
-        if ($section != '') static ::$self->section = $section;
+        if ($section != '') {
+            static ::$self->section = $section;
+        }
         return static ::$self;
     }
 
@@ -567,7 +568,6 @@ class Lang
             if (isset($this->ini[$section][$name])) {
                 return $this->ini[$section][$name];
             }
-
         }
         return '';
     }
@@ -582,7 +582,6 @@ class Lang
             if (isset($this->ini[$section][$name])) {
                 return true;
             }
-
         }
 
         return false;
@@ -590,7 +589,7 @@ class Lang
 
     public function __call($name, $args)
     {
-        return strtr($this->__get($name) , $args->data);
+        return strtr($this->__get($name), $args->data);
     }
 
     public function addsearch()
@@ -601,8 +600,10 @@ class Lang
     public function joinsearch(array $a)
     {
         foreach ($a as $sect) {
-            $sect = trim(trim($sect) , "\"',;:.");
-            if (!in_array($sect, $this->searchsect)) $this->searchsect[] = $sect;
+            $sect = trim(trim($sect), "\"',;:.");
+            if (!in_array($sect, $this->searchsect)) {
+                $this->searchsect[] = $sect;
+            }
         }
     }
 
@@ -611,15 +612,19 @@ class Lang
         $a = array_reverse(func_get_args());
         foreach ($a as $sect) {
             $i = array_search($sect, $this->searchsect);
-            if ($i !== false) array_splice($this->searchsect, $i, 1);
+            if ($i !== false) {
+                array_splice($this->searchsect, $i, 1);
+            }
             array_unshift($this->searchsect, $sect);
         }
     }
 
     public static function date($date, $format = '')
     {
-        if (empty($format)) $format = static ::i()->getdateformat();
-        return static ::i()->translate(date($format, $date) , 'datetime');
+        if (empty($format)) {
+            $format = static ::i()->getdateformat();
+        }
+        return static ::i()->translate(date($format, $date), 'datetime');
     }
 
     public function getDateformat()
@@ -635,8 +640,12 @@ class Lang
 
     public function check($name)
     {
-        if ($name == '') $name = 'default';
-        if (!in_array($name, $this->loaded)) $this->loadfile($name);
+        if ($name == '') {
+            $name = 'default';
+        }
+        if (!in_array($name, $this->loaded)) {
+            $this->loadfile($name);
+        }
     }
 
     public function loadfile($name)
@@ -667,10 +676,9 @@ class Lang
 
     public static function clearcache()
     {
-        \litepubl\utils\Filer::delete(static ::getcachedir() , false, false);
+        \litepubl\utils\Filer::delete(static ::getcachedir(), false, false);
         static ::i()->loaded = array();
     }
-
 }
 
 //MainView.php
@@ -862,7 +870,7 @@ class MainView extends \litepubl\core\Events
         $app = $this->getApp();
         $schema = $this->schema;
         $menuclass = $schema->menuclass;
-        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass) , $app->options->group ? $app->options->group : 'nobody');
+        $filename = $schema->theme->name . sprintf('.%s.%s.php', str_replace('\\', '-', $menuclass), $app->options->group ? $app->options->group : 'nobody');
 
         if ($result = $app->cache->getString($filename)) {
             return $result;
@@ -951,9 +959,8 @@ class MainView extends \litepubl\core\Events
             return '';
         }
 
-        return sprintf(Lang::get('default', 'pagetitle') , $page);
+        return sprintf(Lang::get('default', 'pagetitle'), $page);
     }
-
 }
 
 //Schema.php
@@ -984,7 +991,7 @@ class Schema extends \litepubl\core\Item
 
     public static function newItem($id)
     {
-        return static ::getAppInstance()->classes->newItem(static ::getinstancename() , get_called_class() , $id);
+        return static ::getAppInstance()->classes->newItem(static ::getinstancename(), get_called_class(), $id);
     }
 
     public static function getInstancename()
@@ -1070,7 +1077,9 @@ class Schema extends \litepubl\core\Item
             return false;
         }
 
-        if (Str::begin($name, 'admin')) $this->error('The theme name cant begin with admin keyword');
+        if (Str::begin($name, 'admin')) {
+            $this->error('The theme name cant begin with admin keyword');
+        }
         if (!Theme::exists($name)) {
             return $this->error(sprintf('Theme %s not exists', $name));
         }
@@ -1087,7 +1096,9 @@ class Schema extends \litepubl\core\Item
     public function setAdminname($name)
     {
         if ($name != $this->adminname) {
-            if (!Str::begin($name, 'admin')) $this->error('Admin theme name dont start with admin keyword');
+            if (!Str::begin($name, 'admin')) {
+                $this->error('Admin theme name dont start with admin keyword');
+            }
             if (!Admin::exists($name)) {
                 return $this->error(sprintf('Admin theme %s not exists', $name));
             }
@@ -1109,7 +1120,7 @@ class Schema extends \litepubl\core\Item
             $this->originalCustom = $this->themeInstance->templates['custom'];
 
             //aray_equal
-            if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']) , array_keys($this->originalCustom)))) {
+            if ((count($this->data['custom']) == count($this->originalCustom)) && !count(array_diff(array_keys($this->data['custom']), array_keys($this->originalCustom)))) {
                 $this->themeInstance->templates['custom'] = $this->data['custom'];
             } else {
                 $this->data['custom'] = $this->originalCustom;
@@ -1156,7 +1167,6 @@ class Schema extends \litepubl\core\Item
             $this->save();
         }
     }
-
 }
 
 //SchemaTrait.php
@@ -1272,7 +1282,6 @@ class Schemes extends \litepubl\core\Items
             $this->save();
         }
     }
-
 }
 
 //Theme.php
@@ -1419,34 +1428,44 @@ class Theme extends Base
                 if ($from - $perpage - 1 < $perpage) {
                     $items[] = $perpage;
                 } else {
-                    array_splice($items, count($items) , 0, range($perpage, $from - 1, $perpage));
+                    array_splice($items, count($items), 0, range($perpage, $from - 1, $perpage));
                 }
             }
-            array_splice($items, count($items) , 0, range($from, $to));
+            array_splice($items, count($items), 0, range($from, $to));
         }
 
         if ($to < $count) {
             $from2 = (int)($perpage * ceil(($to + 1) / $perpage));
             if ($from2 + $perpage >= $count) {
-                if ($from2 < $count) $items[] = $from2;
+                if ($from2 < $count) {
+                    $items[] = $from2;
+                }
             } else {
-                array_splice($items, count($items) , 0, range($from2, $count, $perpage));
+                array_splice($items, count($items), 0, range($from2, $count, $perpage));
             }
-            if ($items[count($items) - 1] != $count) $items[] = $count;
+            if ($items[count($items) - 1] != $count) {
+                $items[] = $count;
+            }
         }
 
         $currenttml = $this->templates['content.navi.current'];
         $tml = $this->templates['content.navi.link'];
-        if (!Str::begin($url, 'http')) $url = $this->getApp()->site->url . $url;
+        if (!Str::begin($url, 'http')) {
+            $url = $this->getApp()->site->url . $url;
+        }
         $pageurl = rtrim($url, '/') . '/page/';
-        if ($params) $params = $this->getApp()->site->q . $params;
+        if ($params) {
+            $params = $this->getApp()->site->q . $params;
+        }
 
         $a = array();
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
             $i = $page - 1;
             $args->page = $i;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
             $a[] = $this->parseArg($tml_prev, $args);
         }
@@ -1454,16 +1473,20 @@ class Theme extends Base
         foreach ($items as $i) {
             $args->page = $i;
             $link = $i == 1 ? $url : $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
-            $a[] = $this->parseArg(($i == $page ? $currenttml : $tml) , $args);
+            $a[] = $this->parseArg(($i == $page ? $currenttml : $tml), $args);
         }
 
         if (($page < $count) && ($tml_next = trim($this->templates['content.navi.next']))) {
             $i = $page + 1;
             $args->page = $i;
             $link = $pageurl . $i . '/';
-            if ($params) $link.= $params;
+            if ($params) {
+                $link.= $params;
+            }
             $args->link = $link;
             $a[] = $this->parseArg($tml_next, $args);
         }
@@ -1522,7 +1545,7 @@ class Theme extends Base
     {
         $result = '';
         foreach ($items as $index => $title) {
-            $result.= $this->getradio($name, $index, static ::quote($title) , $index == $selected);
+            $result.= $this->getradio($name, $index, static ::quote($title), $index == $selected);
         }
         return $result;
     }
@@ -1536,7 +1559,6 @@ class Theme extends Base
 
         return $result;
     }
-
 }
 
 //Vars.php
@@ -1578,13 +1600,13 @@ class Vars
     {
         unset(Base::$vars[$name]);
     }
-
 }
 
 //ViewInterface.php
 namespace litepubl\view;
 
-interface ViewInterface extends \litepubl\core\ResponsiveInterface {
+interface ViewInterface extends \litepubl\core\ResponsiveInterface
+{
     public function getTitle();
     public function getKeywords();
     public function getDescription();
@@ -1652,7 +1674,6 @@ trait ViewTrait
     {
         return $this;
     }
-
 }
 
 //Admin.php
@@ -1791,7 +1812,7 @@ class Admin extends Base
 
     public function form($tml, Args $args)
     {
-        return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']) , $args);
+        return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']), $args);
     }
 
     public function getTable($head, $body, $footer = '')
@@ -1922,7 +1943,7 @@ class Admin extends Base
             call_user_func_array($this->onfileperm, array(
                 $args
             ));
-        } else if ($this->getApp()->options->show_file_perm) {
+        } elseif ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
 
@@ -1957,6 +1978,4 @@ class Admin extends Base
 
         return $result;
     }
-
 }
-

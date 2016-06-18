@@ -32,7 +32,6 @@ class Cats extends Common
             CatsWidget::i()->expire();
         }
     }
-
 }
 
 //Common.php
@@ -202,7 +201,7 @@ class Common extends \litepubl\core\Items
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
-        $idurl = $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
+        $idurl = $this->getApp()->router->add($url, get_class($this), $id, $this->urltype);
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
@@ -428,7 +427,6 @@ class Common extends \litepubl\core\Items
         $posts->loadItems($result);
         return $result;
     }
-
 }
 
 //Content.php
@@ -542,7 +540,6 @@ class Content extends \litepubl\core\Data
     {
         return $this->getvalue($id, 'head');
     }
-
 }
 
 //Factory.php
@@ -567,7 +564,6 @@ class Factory
     {
         return Post::i($id);
     }
-
 }
 
 //Tags.php
@@ -601,7 +597,6 @@ class Tags extends Common
             TagsWidget::i()->expire();
         }
     }
-
 }
 
 //View.php
@@ -684,8 +679,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         if ($this->id = (int)$context->itemRoute['arg']) {
             try {
                 $item = $this->tags->getItem($this->id);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $context->response->status = 404;
                 return;
             }
@@ -833,7 +827,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
             'subitems' => '<ul>$item</ul>'
-        ) , 0, 'count', 0, 0, false));
+        ), 0, 'count', 0, 0, false));
     }
 
     public function getIdPosts($id)
@@ -850,6 +844,4 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $this->cachedIdPosts[$id] = $result;
         return $result;
     }
-
 }
-

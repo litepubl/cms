@@ -38,6 +38,4 @@ class Notfound404 extends \litepubl\admin\Menu
         $page404->text = trim($_POST['text']);
         $page404->save();
     }
-
 }
-

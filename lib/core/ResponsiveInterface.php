@@ -10,7 +10,7 @@
 
 namespace litepubl\core;
 
-interface ResponsiveInterface {
+interface ResponsiveInterface
+{
     public function request(Context $context);
 }
-

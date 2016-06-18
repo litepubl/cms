@@ -61,6 +61,4 @@ class Options extends \litepubl\admin\Menu
         MainView::i()->footer = $footer;
         return '';
     }
-
 }
-

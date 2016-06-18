@@ -33,10 +33,10 @@ class DbOptimizer extends Events
 */
 
         $deleted = $db->res2id($db->query(
-"select $db->prefix$table.id FROM $db->prefix$table
+            "select $db->prefix$table.id FROM $db->prefix$table
     LEFT JOIN $db->posts ON $db->prefix$table.id = $db->posts.id
     WHERE $db->posts.id IS NULL"
-));
+        ));
 
         if (count($deleted)) {
             $db->table = $table;
@@ -67,27 +67,27 @@ class DbOptimizer extends Events
             ) as $table) {
                 $db->table = $table;
                 $db->delete($deleted);
-$this->garbagePosts($table);
+                $this->garbagePosts($table);
             }
 
             foreach ($this->childTables as $table) {
                 $db->table = $table;
                 $db->delete($deleted);
-$this->garbagePosts($table);
+                $this->garbagePosts($table);
             }
         }
 
         //comments
-$items = $db->res2id($db->query(
-"select $db->comments.id FROM $db->comments
+        $items = $db->res2id($db->query(
+            "select $db->comments.id FROM $db->comments
     LEFT JOIN $db->posts ON $db->comments.post = $db->posts.id
     WHERE $db->posts.id IS NULL"
-));
+        ));
 
-if (count($items)) {
-$db->query("update $db->comments set $db->comments.status = 'deleted' where $db->comments.id in ("
- . implode(',', $items) . ')');
-}
+        if (count($items)) {
+                $db->query("update $db->comments set $db->comments.status = 'deleted' where $db->comments.id in ("
+                 . implode(',', $items) . ')');
+        }
 
         $db->table = 'comments';
         $items = $db->idSelect("status = 'deleted'");
@@ -99,10 +99,10 @@ $db->query("update $db->comments set $db->comments.status = 'deleted' where $db-
         }
 
         $items = $db->res2id($db->query(
-"select $db->users.id FROM $db->users
+            "select $db->users.id FROM $db->users
     LEFT JOIN $db->comments ON $db->users.id=$db->comments.author
     WHERE $db->users.status = 'comuser' and $db->comments.author IS NULL"
-));
+        ));
 
         if (count($items)) {
             $db->table = 'users';
@@ -110,10 +110,10 @@ $db->query("update $db->comments set $db->comments.status = 'deleted' where $db-
         }
 
         $items = $db->res2id($db->query(
-"select $db->subscribers.post FROM $db->subscribers
+            "select $db->subscribers.post FROM $db->subscribers
     LEFT JOIN $db->posts ON $db->subscribers.post = $db->posts.id
     WHERE $db->posts.id IS NULL"
-));
+        ));
 
         if (count($items)) {
             $db->table = 'subscribers';
@@ -121,10 +121,10 @@ $db->query("update $db->comments set $db->comments.status = 'deleted' where $db-
         }
 
         $items = $db->res2id($db->query(
-"select $db->subscribers.item FROM $db->subscribers
+            "select $db->subscribers.item FROM $db->subscribers
     LEFT JOIN $db->users ON $db->subscribers.item = $db->users.id
     WHERE $db->users.id IS NULL"
-));
+        ));
 
         if (count($items)) {
             $db->table = 'subscribers';
@@ -140,6 +140,4 @@ $db->query("update $db->comments set $db->comments.status = 'deleted' where $db-
         $man = DBManager::i();
         $man->optimize();
     }
-
 }
-

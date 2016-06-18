@@ -23,4 +23,3 @@ function FilesitemsUninstall($self)
 {
     Posts::unsub($self);
 }
-

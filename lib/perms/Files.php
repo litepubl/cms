@@ -44,14 +44,16 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
                 $path = $this->getApp()->paths->files;
                 if ($idperm) {
                     rename($path . $item['filename'], $path . 'private/' . $filename);
-                    $this->getApp()->router->add('/files/' . $item['filename'], get_class($this) , $id);
+                    $this->getApp()->router->add('/files/' . $item['filename'], get_class($this), $id);
                 } else {
                     $this->getApp()->router->delete('/files/' . $item['filename']);
                     rename($path . 'private/' . $filename, $path . $item['filename']);
                 }
             }
 
-            if ($item['preview'] > 0) $this->setperm($item['preview'], $idperm);
+            if ($item['preview'] > 0) {
+                $this->setperm($item['preview'], $idperm);
+            }
         }
     }
 
@@ -83,7 +85,7 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
 
         $perm = Perm::i($item['idperm']);
         $perm->getResponse($response, $this);
-        $response->body = sprintf('<?php %s::sendfile(%s); ?>', get_class($this) , var_export($item, true));
+        $response->body = sprintf('<?php %s::sendfile(%s); ?>', get_class($this), var_export($item, true));
     }
 
     public static function sendfile(array $item)
@@ -107,8 +109,8 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
             list($range) = explode(',', $ranges, 2);
             list($from, $end) = explode('-', $range, 2);
 
-            $end = empty($end) ? $item['size'] - 1 : min(abs((int)$end) , $item['size'] - 1);
-            $from = empty($from) || ($end < abs((int)$from)) ? 0 : max(abs((int)$from) , 0);
+            $end = empty($end) ? $item['size'] - 1 : min(abs((int)$end), $item['size'] - 1);
+            $from = empty($from) || ($end < abs((int)$from)) ? 0 : max(abs((int)$from), 0);
 
             header('HTTP/1.1 206 Partial Content', true, 206);
             header("Content-Range: bytes $from-$end/" . $item['size']);
@@ -149,6 +151,4 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
 
         exit();
     }
-
 }
-

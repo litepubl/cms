@@ -40,6 +40,4 @@ class RuntimeHandler extends AbstractProcessingHandler
     {
         $this->log[] = $record;
     }
-
 }
-

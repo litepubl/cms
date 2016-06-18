@@ -19,4 +19,3 @@ function SubscribersUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

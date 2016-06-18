@@ -29,7 +29,7 @@ function PollsInstall($self)
     $manager->createtable($self->table, file_get_contents($res . 'polls.sql'));
     $manager->createTable(polls::votes, file_get_contents($res . 'votes.sql'));
 
-    Json::i()->addevent('polls_sendvote', get_class($self) , 'polls_sendvote');
+    Json::i()->addevent('polls_sendvote', get_class($self), 'polls_sendvote');
 
     $js = Js::i();
     $js->lock();
@@ -49,7 +49,7 @@ function PollsInstall($self)
     $parser->addtags('plugins/polls/resource/theme.txt', 'plugins/polls/resource/themetags.ini');
 
     LangMerger::i()->addplugin($name);
-    Cron::i()->addnightly(get_class($self) , 'optimize', null);
+    Cron::i()->addnightly(get_class($self), 'optimize', null);
     Posts::i()->deleted = $self->postdeleted;
 }
 
@@ -83,4 +83,3 @@ function PollsUninstall($self)
     Cron::i()->deleteclass(get_class($self));
     Posts::i()->unbind($self);
 }
-

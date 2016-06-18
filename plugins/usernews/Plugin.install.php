@@ -20,19 +20,19 @@ use litepubl\admin\Menus;
 
 function PluginInstall($self)
 {
-$plugins= Plugins::i();
+    $plugins= Plugins::i();
     if (!isset($plugins->items['ulogin'])) {
-$plugins->add('ulogin');
-}
+        $plugins->add('ulogin');
+    }
 
     LangMerger::i()->addPlugin(basename(__DIR__));
-$lang = Lang::admin('usernews');
+    $lang = Lang::admin('usernews');
     $filter = Filter::i();
     $filter->phpcode = true;
     $filter->save();
 
     $app = $self->getApp();
-$app->options->parsepost = false;
+    $app->options->parsepost = false;
     $app->options->reguser = true;
 
     $groups = UserGroups::i();
@@ -48,10 +48,10 @@ $app->options->parsepost = false;
     $rights->candeletefile = $self->canDeleteFile;
     $rights->unlock();
 
-$menus = Menus::i();
-$menus->lock();
-$menus->addItem([
-'parent' => $menus->url2id('/admin/posts/'),
+    $menus = Menus::i();
+    $menus->lock();
+    $menus->addItem([
+    'parent' => $menus->url2id('/admin/posts/'),
             'url' => '/admin/posts/usernews/',
             'title' => $lang->createnews,
             'name' => 'usernews',
@@ -59,16 +59,15 @@ $menus->addItem([
             'group' => 'author',
         ]);
 
-$id = $menus->url2id('/admin/posts/editor/');
-$menus->items[$id]['group'] = 'editor';
-$menus->unlock();
+    $id = $menus->url2id('/admin/posts/editor/');
+    $menus->items[$id]['group'] = 'editor';
+    $menus->unlock();
 }
 
 function PluginUninstall($self)
 {
     AuthorRights::i()->unbind($self);
     LangMerger::i()->deletePlugin(basename(dirname(__file__)));
-$menus = Menus::i();
-$menus->deleteUrl('/admin/posts/usernews/');
+    $menus = Menus::i();
+    $menus->deleteUrl('/admin/posts/usernews/');
 }
-

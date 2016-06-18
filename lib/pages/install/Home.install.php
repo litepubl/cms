@@ -32,7 +32,7 @@ function HomeInstall($self)
     $self->unlock();
     $menus->unlock();
 
-    Posts::i()->addevent('changed', get_class($self) , 'postschanged');
+    Posts::i()->addevent('changed', get_class($self), 'postschanged');
 }
 
 function HomeUninstall($self)
@@ -46,4 +46,3 @@ function HomeUninstall($self)
     $menus->sort();
     $menus->unlock();
 }
-

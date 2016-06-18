@@ -36,10 +36,10 @@ class Yandex extends Service
     //handle callback
     public function request(Context $context)
     {
-parent::request($context);
+        parent::request($context);
 
-if ($context->response->status != 200) {
-return;
+        if ($context->response->status != 200) {
+                return;
         }
 
         $code = $_REQUEST['code'];
@@ -59,11 +59,11 @@ return;
                     'uid' => $info->id,
                     'email' => isset($info->default_email) ? $info->default_email : $info->emails[0],
                     'name' => isset($info->real_name) ? $info->real_name : $info->display_name,
-                ) , $info);
+                ), $info);
             }
         }
 
-$context->response->forbidden();
+        $context->response->forbidden();
     }
 
     protected function getAdminInfo(Lang $lang): array
@@ -74,6 +74,4 @@ $context->response->forbidden();
             'client_secret' => $lang->yandex_secret
         );
     }
-
 }
-

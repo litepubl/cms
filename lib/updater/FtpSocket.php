@@ -17,7 +17,9 @@ class FtpSocket extends Remote
     public function __construct()
     {
         parent::__construct();
-        if (empty($this->port)) $this->port = 21;
+        if (empty($this->port)) {
+            $this->port = 21;
+        }
         $this->timeout = 240;
     }
 
@@ -35,7 +37,7 @@ class FtpSocket extends Remote
             return false;
         }
 
-        require_once ($this->getApp()->paths->libinclude . 'class-ftp.php');
+        require_once($this->getApp()->paths->libinclude . 'class-ftp.php');
         $this->ftp = new \ftp();
 
         $this->ftp->setTimeout($this->timeout);
@@ -60,7 +62,9 @@ class FtpSocket extends Remote
             $this->ftp->SetType(FTP_BINARY);
             if ($this->ftp->fget($temp, $file)) {
                 fseek($temp, 0); //Skip back to the start of the file being written to
-                while (!feof($temp)) $result.= fread($temp, 8192);
+                while (!feof($temp)) {
+                    $result.= fread($temp, 8192);
+                }
             }
             fclose($temp);
             return $result;
@@ -195,7 +199,9 @@ class FtpSocket extends Remote
 
     public function getDir($path)
     {
-        if ($this->is_file($path)) $path = dirname($path) . '/';
+        if ($this->is_file($path)) {
+            $path = dirname($path) . '/';
+        }
         if (($list = $this->ftp->dirlist($path)) === false) {
             return false;
         }
@@ -208,11 +214,11 @@ class FtpSocket extends Remote
             }
 
             $a['mode'] = octdec($this->perm2mode($a['perms']));
-            if (!isset($a['isdir'])) $a['isdir'] = $a['type'] == 'd';
+            if (!isset($a['isdir'])) {
+                $a['isdir'] = $a['type'] == 'd';
+            }
             $result[$name] = $a;
         }
         return $result;
     }
-
 }
-

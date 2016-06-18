@@ -23,4 +23,3 @@ class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
         return '';
     }
 }
-

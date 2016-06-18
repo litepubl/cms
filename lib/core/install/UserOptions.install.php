@@ -29,4 +29,3 @@ function UserOptionsUninstall($self)
 {
     DBManager::i()->deletetable($self->table);
 }
-

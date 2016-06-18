@@ -39,8 +39,8 @@ class Admin extends \litepubl\admin\Menu
             }
 
             $result.= $admintheme->h($item['name']);
-            $result.= $theme->getinput('combo', "mainsidebar-$id", $this->theme->comboItems($mainsidebars, $item['custom']['mainsidebar']) , $lang->mainsidebar);
-            $result.= $theme->getinput('combo', "cssfile-$id", $this->theme->comboItems($lang->ini['subthemes'], $item['custom']['cssfile']) , $lang->cssfile);
+            $result.= $theme->getinput('combo', "mainsidebar-$id", $this->theme->comboItems($mainsidebars, $item['custom']['mainsidebar']), $lang->mainsidebar);
+            $result.= $theme->getinput('combo', "cssfile-$id", $this->theme->comboItems($lang->ini['subthemes'], $item['custom']['cssfile']), $lang->cssfile);
             $result.= '<hr>';
         }
 
@@ -61,17 +61,19 @@ class Admin extends \litepubl\admin\Menu
             if (!in_array($sidebar, array(
                 'left',
                 'right'
-            ))) $sidebar = 'left';
+            ))) {
+                $sidebar = 'left';
+            }
             $schemes->items[$id]['custom']['mainsidebar'] = $sidebar;
 
             $cssfile = $_POST["cssfile-$id"];
-            if (!isset($lang->ini['subthemes'][$cssfile])) $cssfile = 'default';
+            if (!isset($lang->ini['subthemes'][$cssfile])) {
+                $cssfile = 'default';
+            }
             $schemes->items[$id]['custom']['cssfile'] = $cssfile;
         }
 
         $schemes->save();
         Base::clearcache();
     }
-
 }
-

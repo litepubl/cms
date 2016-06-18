@@ -38,6 +38,4 @@ class Tags extends Common
             TagsWidget::i()->expire();
         }
     }
-
 }
-

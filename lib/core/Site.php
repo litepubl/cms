@@ -36,9 +36,9 @@ class Site extends Events
             if (is_array($prop)) {
                 list($classname, $method) = $prop;
                 return call_user_func_array(array(
-                    static ::iGet($classname) ,
+                static ::iGet($classname) ,
                     $method
-                ) , array(
+                ), array(
                     $name
                 ));
             }
@@ -59,7 +59,9 @@ class Site extends Events
             $this->addevent($name, $value['class'], $value['func']);
         } elseif (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
-            if (is_string($prop)) $this->getApp()->options->{$prop} = $value;
+            if (is_string($prop)) {
+                $this->getApp()->options->{$prop} = $value;
+            }
         } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
             $this->save();
@@ -110,7 +112,9 @@ class Site extends Events
     public function getUserlink()
     {
         if ($id = $this->getApp()->options->user) {
-            if (!isset($this->users)) $this->users = array();
+            if (!isset($this->users)) {
+                $this->users = array();
+            }
             if (isset($this->users[$id])) {
                 return $this->users[$id];
             }
@@ -121,7 +125,7 @@ class Site extends Events
             } else {
                 $page = $this->getdb('userpage')->getitem($id);
                 if ((int)$page['idurl']) {
-                    $result = sprintf('<a href="%s%s">%s</a>', $this->url, $this->getApp()->router->getvalue($page['idurl'], 'url') , $item['name']);
+                    $result = sprintf('<a href="%s%s">%s</a>', $this->url, $this->getApp()->router->getvalue($page['idurl'], 'url'), $item['name']);
                 } else {
                     $result = $item['name'];
                 }
@@ -136,6 +140,4 @@ class Site extends Events
     {
         return '<?php echo  litepubl::$app->site->getuserlink(); ?>';
     }
-
 }
-

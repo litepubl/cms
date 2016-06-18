@@ -73,7 +73,7 @@ class Arr
 
     public static function reIndex(array & $a)
     {
-        array_splice($a, count($a) , 0, array());
+        array_splice($a, count($a), 0, array());
     }
 
     public static function append(array & $a, $index, $value)
@@ -84,6 +84,4 @@ class Arr
 
         $a[$index] = $value;
     }
-
 }
-

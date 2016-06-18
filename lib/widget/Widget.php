@@ -17,7 +17,7 @@ use litepubl\view\Vars;
 class Widget extends \litepubl\core\Events
 {
     public $id;
-public $cache;
+    public $cache;
     public $template;
     protected $adminclass;
     protected $adminInstance;
@@ -54,14 +54,14 @@ public $cache;
     }
 
     public function getWidgets(): Widgets
-{
-return Widgets::i();
-}
+    {
+        return Widgets::i();
+    }
 
-public function getView()
-{
-return new View();
-}
+    public function getView()
+    {
+        return new View();
+    }
 
     public function getWidget(int $id, int $sidebar): string
     {
@@ -71,8 +71,7 @@ return new View();
         try {
             $title = $this->getTitle($id);
             $content = $this->getContent($id, $sidebar);
-        }
-        catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->getApp()->logException($e);
             return '';
         }
@@ -88,8 +87,8 @@ return new View();
     public function getTitle(int $id): string
     {
         if (!isset($id)) {
-$this->error('no id');
-}
+            $this->error('no id');
+        }
 
         $widgets = Widgets::i();
         if (isset($widgets->items[$id])) {
@@ -126,5 +125,4 @@ $this->error('no id');
 
         return 0;
     }
-
 }

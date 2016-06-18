@@ -33,7 +33,7 @@ class Keywords extends \litepubl\core\Plugin
 
     public function parseRef(Context $context)
     {
-$url = $context->request->url;
+        $url = $context->request->url;
         if (Str::begin($url, '/admin/') || Str::begin($url, '/croncron.php')) {
             return;
         }
@@ -100,7 +100,6 @@ $url = $context->request->url;
             if (false !== strpos($keywords, $k)) {
                 return;
             }
-
         }
 
         if ($this->inblack($keywords)) {
@@ -116,7 +115,6 @@ $url = $context->request->url;
             if ($keywords == $item['text']) {
                 return;
             }
-
         }
         $widget->links[] = array(
             'url' => 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
@@ -152,10 +150,7 @@ $url = $context->request->url;
             if (false !== strpos($s, $word)) {
                 return true;
             }
-
         }
         return false;
     }
-
 }
-

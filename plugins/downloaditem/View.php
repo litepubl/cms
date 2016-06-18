@@ -42,7 +42,6 @@ class View extends \litepubl\post\View
 
     public function getDownloadCount()
     {
-        return sprintf(Lang::get('downloaditem', 'downloaded') , $this->downloads);
+        return sprintf(Lang::get('downloaditem', 'downloaded'), $this->downloads);
     }
-
 }

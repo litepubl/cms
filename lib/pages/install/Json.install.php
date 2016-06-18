@@ -19,4 +19,3 @@ function JsonUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

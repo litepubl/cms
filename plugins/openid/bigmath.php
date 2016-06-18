@@ -28,7 +28,10 @@ function random($max)
     }
 
     $r = '';
-    for ($i = 1; $i < strlen($max) - 1; $i++) $r.= mt_rand(0, 9);
+    for ($i = 1; $i < strlen($max) - 1;
+    $i++) {
+        $r.= mt_rand(0, 9);
+    }
     $r.= mt_rand(1, 9);
     return $r;
 }
@@ -39,12 +42,11 @@ function str_diff_at($a, $b)
         return -1;
     }
 
-    $n = min(strlen($a) , strlen($b));
+    $n = min(strlen($a), strlen($b));
     for ($i = 0; $i < $n; $i++) {
         if ($a[$i] != $b[$i]) {
             return $i;
         }
-
     }
     return $n;
 }
@@ -52,7 +54,10 @@ function str_diff_at($a, $b)
 function x_or($a, $b)
 {
     $r = '';
-    for ($i = 0; $i < strlen($b); $i++) $r.= $a[$i] ^ $b[$i];
+    for ($i = 0; $i < strlen($b);
+    $i++) {
+        $r.= $a[$i] ^ $b[$i];
+    }
     return $r;
 }
 
@@ -93,7 +98,9 @@ function bmadd($l, $r)
         $v = (string)$d . $v;
     }
 
-    if ($carry > 0) $v = "1" . $v;
+    if ($carry > 0) {
+        $v = "1" . $v;
+    }
     return $v;
 }
 
@@ -133,7 +140,9 @@ function bmdiv($l, $r, $z = 0)
     $v = '0';
 
     while (true) {
-        if (bmcomp($l, $r) < 0) break;
+        if (bmcomp($l, $r) < 0) {
+            break;
+        }
 
         $delta = strlen($l) - strlen($r);
         if ($delta >= 1) {
@@ -143,13 +152,11 @@ function bmdiv($l, $r, $z = 0)
             if (strcmp($l, $r2) >= 0) {
                 $v = bmadd($v, "1" . $zeroes);
                 $l = bmsub($l, $r2);
-
             } else {
                 $zeroes = str_repeat("0", $delta - 1);
                 $v = bmadd($v, "1" . $zeroes);
                 $l = bmsub($l, $r . $zeroes);
             }
-
         } else {
             $l = bmsub($l, $r);
             $v = bmadd($v, "1");
@@ -190,7 +197,9 @@ function bmmul($l, $r)
             }
             $p = (string)$pd . $p;
         }
-        if ($carry > 0) $p = (string)$carry . $p;
+        if ($carry > 0) {
+            $p = (string)$carry . $p;
+        }
         $p = $p . $z;
         $z.= "0";
         $v = bmadd($v, $p);
@@ -243,25 +252,27 @@ function bmpowmod($value, $exponent, $mod)
     $r = '';
     while ($exponent != '0') {
         $t = bmmod($exponent, '4096');
-        $r = substr("000000000000" . decbin(intval($t)) , -12) . $r;
+        $r = substr("000000000000" . decbin(intval($t)), -12) . $r;
         $exponent = bmdiv($exponent, '4096');
     }
 
     $r = preg_replace("!^0+!", "", $r);
 
-    if ($r == '') $r = '0';
+    if ($r == '') {
+        $r = '0';
+    }
     $value = bmmod($value, $mod);
     $erb = strrev($r);
     $q = '1';
     $a[0] = $value;
 
     for ($i = 1; $i < strlen($erb); $i++) {
-        $a[$i] = bmmod(bmmul($a[$i - 1], $a[$i - 1]) , $mod);
+        $a[$i] = bmmod(bmmul($a[$i - 1], $a[$i - 1]), $mod);
     }
 
     for ($i = 0; $i < strlen($erb); $i++) {
         if ($erb[$i] == "1") {
-            $q = bmmod(bmmul($q, $a[$i]) , $mod);
+            $q = bmmod(bmmul($q, $a[$i]), $mod);
         }
     }
 
@@ -327,10 +338,14 @@ function bin($n)
         $n = bmdiv($n, bmpow(2, 8));
     }
 
-    if ($bytes && ($bytes[0] > 127)) array_unshift($bytes, 0);
+    if ($bytes && ($bytes[0] > 127)) {
+        array_unshift($bytes, 0);
+    }
 
     $b = '';
-    foreach ($bytes as $byte) $b.= pack('C', $byte);
+    foreach ($bytes as $byte) {
+        $b.= pack('C', $byte);
+    }
 
     return $b;
 }
@@ -338,10 +353,12 @@ function bin($n)
 function hmac($key, $data)
 {
     $blocksize = 64;
-    if (strlen($key) > $blocksize) $key = sha1($key, true);
+    if (strlen($key) > $blocksize) {
+        $key = sha1($key, true);
+    }
     $key = str_pad($key, $blocksize, chr(0x00));
-    $ipad = str_repeat(chr(0x36) , $blocksize);
-    $opad = str_repeat(chr(0x5c) , $blocksize);
+    $ipad = str_repeat(chr(0x36), $blocksize);
+    $opad = str_repeat(chr(0x5c), $blocksize);
     $h1 = sha1(($key ^ $ipad) . $data, true);
     $hmac = sha1(($key ^ $opad) . $h1, true);
     return $hmac;
@@ -350,7 +367,9 @@ function hmac($key, $data)
 function new_secret()
 {
     $r = '';
-    for ($i = 0; $i < 20; $i++) $r.= chr(mt_rand(0, 255));
+    for ($i = 0; $i < 20;
+    $i++) {
+        $r.= chr(mt_rand(0, 255));
+    }
     return $r;
 }
-

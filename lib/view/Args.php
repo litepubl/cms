@@ -120,11 +120,9 @@ class Args
         array_unshift($params, $this);
 
         foreach ($this->callbacks as $tag => $callback) {
-            $s = str_replace($tag, call_user_func_array($callback, $params) , $s);
+            $s = str_replace($tag, call_user_func_array($callback, $params), $s);
         }
 
         return $s;
     }
-
 }
-

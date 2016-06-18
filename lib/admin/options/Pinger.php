@@ -38,6 +38,4 @@ class Pinger extends \litepubl\admin\Menu
         $pinger->services = trim($_POST['services']);
         $pinger->save();
     }
-
 }
-

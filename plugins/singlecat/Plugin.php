@@ -54,7 +54,7 @@ class Plugin extends \litepubl\core\Plugin
         $table = $this->getApp()->db->prefix . 'categoriesitems';
         $order = $this->invertorder ? 'asc' : 'desc';
         $posts = Posts::i();
-$annnounce= new Anounce();
+        $annnounce= new Anounce();
         $result = $announce->getLinks("$posts->thistable.id in
     (select  $table.post from $table where $table.item = $idcat)
     and $posts->thistable.id != $post->id
@@ -62,6 +62,4 @@ $annnounce= new Anounce();
 
         return str_replace('$items', $result, $this->tmlitems);
     }
-
 }
-

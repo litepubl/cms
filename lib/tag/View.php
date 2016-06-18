@@ -87,8 +87,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         if ($this->id = (int)$context->itemRoute['arg']) {
             try {
                 $item = $this->tags->getItem($this->id);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $context->response->status = 404;
                 return;
             }
@@ -129,7 +128,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return $theme->parse($result);
         }
 
-return '';
+        return '';
     }
 
     public function getKeywords(): string
@@ -143,7 +142,7 @@ return '';
             return $result;
         }
 
-return '';
+        return '';
     }
 
     public function getDescription(): string
@@ -157,7 +156,7 @@ return '';
             return $result;
         }
 
-return '';
+        return '';
     }
 
     public function getIdschema(): int
@@ -242,7 +241,7 @@ return '';
             'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
             'subcount' => '<strong>($itemscount)</strong>',
             'subitems' => '<ul>$item</ul>'
-        ) , 0, 'count', 0, 0, false));
+        ), 0, 'count', 0, 0, false));
     }
 
     public function getIdPosts($id)
@@ -259,6 +258,4 @@ return '';
         $this->cachedIdPosts[$id] = $result;
         return $result;
     }
-
 }
-

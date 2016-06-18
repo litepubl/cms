@@ -27,7 +27,7 @@ function PostsInstall($self)
     $manager->CreateTable($self->rawtable, file_get_contents($dir . 'raw.sql'));
 
     $Cron = Cron::i();
-    $Cron->add('hour', get_class($self) , 'HourCron');
+    $Cron->add('hour', get_class($self), 'HourCron');
 }
 
 function PostsUninstall($self)
@@ -65,4 +65,3 @@ function PostsGetsitemap($self, $from, $count)
     }
     return $result;
 }
-

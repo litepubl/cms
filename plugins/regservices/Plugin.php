@@ -37,52 +37,54 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
     }
 
     public function getWidget(): string
-{
-$cache = $this->getApp()->cache;
-$filename = 'regservices.' . Theme::i()->name;
-if ($result = $cache->getString($filename)) {
-return $result;
-}
+    {
+        $cache = $this->getApp()->cache;
+        $filename = 'regservices.' . Theme::i()->name;
+        if ($result = $cache->getString($filename)) {
+                return $result;
+        }
 
-$result = $this->renderWidget();
-$cache->setString($filename, $result);
-return $result;
-}
+        $result = $this->renderWidget();
+        $cache->setString($filename, $result);
+        return $result;
+    }
 
     public function renderWidget(): string
     {
-$theme = Theme::i();
-$tml = $theme->templates['regservices.button'];
+        $theme = Theme::i();
+        $tml = $theme->templates['regservices.button'];
         $url = $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
         $buttons = '';
         foreach ($this->items as $name => $classname) {
             $service = static ::iGet($classname);
             if ($service->valid()) {
                 $buttons .= strtr($tml, array(
-'$url' => $url,
-'$name' => $name,
-'$icon' => $service->icon,
-'$title' => $service->title,
-'&' => '&amp;',
-));
+                '$url' => $url,
+                '$name' => $name,
+                '$icon' => $service->icon,
+                '$title' => $service->title,
+                '&' => '&amp;',
+                ));
             }
         }
 
-return strtr($theme->templates['regservices'], [
-'$title' => $this->title,
-'$button' => $buttons
-]);
+        return strtr($theme->templates['regservices'], [
+        '$title' => $this->title,
+        '$button' => $buttons
+        ]);
     }
 
     public function request(Context $context)
     {
-$response = $context->response;
+        $response = $context->response;
         $response->cache = false;
 
         // hook for clien disabled cookies
         if (!isset($_GET['cookietest'])) {
             $backurl = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
-            if ($backurl) setcookie('backurl', $backurl, time() + 8 * 3600, $this->getApp()->site->subdir . '/', false);
+            if ($backurl) {
+                setcookie('backurl', $backurl, time() + 8 * 3600, $this->getApp()->site->subdir . '/', false);
+            }
             setcookie('litepubl_cookie_test', 'test', time() + 8000, $this->getApp()->site->subdir . '/', false);
             return $response->redir($context->request->url . '&cookietest=true');
         }
@@ -108,7 +110,7 @@ $response = $context->response;
             return $response->forbidden();
         }
 
-$response->redir($url);
+        $response->redir($url);
     }
 
     public function oncomuser(array $values, $comfirmed)
@@ -163,6 +165,4 @@ $response->redir($url);
             ini_get('session.name') => $service->session_id
         ));
     }
-
 }
-

@@ -20,4 +20,3 @@ function MetaInstall($self)
 function MetaUninstall($self)
 {
 }
-

@@ -41,7 +41,9 @@ class Admin extends \litepubl\admin\Menu
 
         if ($count > 0) {
             $items = $tickets->select("status <> 'deleted' $where", " order by posted desc limit $from, $perpage");
-            if (!$items) $items = array();
+            if (!$items) {
+                $items = array();
+            }
         } else {
             $items = array();
         }
@@ -50,7 +52,7 @@ class Admin extends \litepubl\admin\Menu
         $lang = Lang::admin('tickets');
         $lang->addsearch('ticket', 'tickets');
         $result.= $admintheme->h($admintheme->link('/admin/tickets/editor/', $lang->editortitle));
-        $result.= $admintheme->getCount($from, $from + count($items) , $count);
+        $result.= $admintheme->getCount($from, $from + count($items), $count);
 
         $tb = $this->newTable();
         $tb->setPosts(array(
@@ -82,8 +84,8 @@ class Admin extends \litepubl\admin\Menu
 
             array(
                 $lang->state,
-                function (Table $t)
-                {
+                function (Table $t) {
+                
                     return Lang::i()->__get(Ticket::i($t->id)->state);
                 }
             ) ,
@@ -141,6 +143,4 @@ class Admin extends \litepubl\admin\Menu
             }
         }
     }
-
 }
-

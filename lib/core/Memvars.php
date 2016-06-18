@@ -29,4 +29,3 @@ class Memvars
         return static ::$vars;
     }
 }
-

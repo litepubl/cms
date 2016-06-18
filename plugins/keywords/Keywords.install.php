@@ -16,7 +16,7 @@ function KeywordsInstall($self)
     @chmod($self->getApp()->paths->data . 'keywords', 0777);
 
     $widget = Widget::i();
-$widget->addToSidebar(1);
+    $widget->addToSidebar(1);
 
     $router = $self->getApp()->router;
     $router->lock();
@@ -29,5 +29,5 @@ function KeywordsUninstall($self)
 {
     $self->getApp()->router->unbind($self);
     $widget = Widget::i();
-$widget->uninstall();
+    $widget->uninstall();
 }

@@ -76,6 +76,4 @@ class Mail extends \litepubl\admin\Menu
         $smtp->port = (int)$port;
         $smtp->unlock();
     }
-
 }
-

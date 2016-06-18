@@ -51,14 +51,14 @@ class Plugin extends \litepubl\core\Plugin
         if (!$client->query('LJ.XMLRPC.getchallenge')) {
             if (Config::$debug) {
                 $this->getApp()->getLogger()->warning('live journal: error challenge');
+            }
+            return false;
         }
-        return false;
-    }
 
-    $response = $client->getResponse();
-    $challenge = $response['challenge'];
+        $response = $client->getResponse();
+        $challenge = $response['challenge'];
 
-    $args = array(
+        $args = array(
         'username' => $this->login,
         'auth_method' => 'challenge',
         'auth_challenge' => $challenge,
@@ -76,46 +76,46 @@ class Plugin extends \litepubl\core\Plugin
             'opt_preformatted' => true,
             'taglist' => $post->tagnames
         )
-    );
+        );
 
-    switch ($this->privacy) {
-        case "public":
-            $args['security'] = "public";
-            break;
-
-
-        case "private":
-            $args['security'] = "private";
-            break;
+        switch ($this->privacy) {
+            case "public":
+                $args['security'] = "public";
+                break;
 
 
-        case "friends":
-            $args['security'] = "usemask";
-            $args['allowmask'] = 1;
-    }
+            case "private":
+                $args['security'] = "private";
+                break;
 
-    if ($this->community != '') $args['usejournal'] = $this->community;
 
-    if (isset($meta->ljid)) {
-        $method = 'LJ.XMLRPC.editevent';
-        $args['itemid'] = $meta->ljid;
-    } else {
-        $method = 'LJ.XMLRPC.postevent';
-    }
-
-    if (!$client->query($method, $args)) {
-        if (Config::$debug) {
-            $this->getApp()->getLogger()->warning('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+            case "friends":
+                $args['security'] = "usemask";
+                $args['allowmask'] = 1;
         }
-        return false;
+
+        if ($this->community != '') {
+            $args['usejournal'] = $this->community;
+        }
+
+        if (isset($meta->ljid)) {
+            $method = 'LJ.XMLRPC.editevent';
+            $args['itemid'] = $meta->ljid;
+        } else {
+            $method = 'LJ.XMLRPC.postevent';
+        }
+
+        if (!$client->query($method, $args)) {
+            if (Config::$debug) {
+                $this->getApp()->getLogger()->warning('Something went wrong - ' . $client->getErrorCode() . ' : ' . $client->getErrorMessage());
+            }
+            return false;
+        }
+
+        if (!isset($meta->ljid)) {
+            $response = $client->getResponse();
+            $meta->ljid = $response['itemid'];
+        }
+        return $meta->ljid;
     }
-
-    if (!isset($meta->ljid)) {
-        $response = $client->getResponse();
-        $meta->ljid = $response['itemid'];
-    }
-    return $meta->ljid;
 }
-
-}
-

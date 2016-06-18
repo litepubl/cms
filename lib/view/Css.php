@@ -50,7 +50,7 @@ class Css extends Merger
             $result = preg_replace_callback('/\s*url\s*\(\s*[\'"]?(.*?)[\'"]?\s*\)/i', array(
                 $this,
                 'replaceurl'
-            ) , $result);
+            ), $result);
             //delete comments
             $result = preg_replace('/\/\*.*?\*\//ims', '', $result);
             return $result;
@@ -89,6 +89,4 @@ class Css extends Merger
             $template->deletefromhead(sprintf('<link type="text/css" href="$site.files%s" rel="stylesheet" />', $filename));
         }
     }
-
 }
-

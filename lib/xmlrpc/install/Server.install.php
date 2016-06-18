@@ -12,12 +12,11 @@ namespace litepubl\xmlrpc;
 
 function ServerInstall($self)
 {
-    $self->getApp()->router->add('/rpc.xml', get_class($self) , null);
-    $self->getApp()->router->add('/xmlrpc.php', get_class($self) , null);
+    $self->getApp()->router->add('/rpc.xml', get_class($self), null);
+    $self->getApp()->router->add('/xmlrpc.php', get_class($self), null);
 }
 
 function ServerUninstall($self)
 {
     $self->getApp()->router->unbind($self);
 }
-

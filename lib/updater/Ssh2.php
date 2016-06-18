@@ -31,7 +31,9 @@ class Ssh2 extends Remote
             return false;
         }
 
-        if (empty($this->port)) $this->port = 22;
+        if (empty($this->port)) {
+            $this->port = 22;
+        }
         $this->handle = empty($this->key) ? @ssh2_connect($this->host, $this->port) : @ssh2_connect($this->host, $this->port, $this->hostkey);
 
         if ($this->handle) {
@@ -78,18 +80,18 @@ class Ssh2 extends Remote
 
     public function putcontent($filename, $content)
     {
-        return file_put_contents($this->getfilename($filename) , $content) !== false;
+        return file_put_contents($this->getfilename($filename), $content) !== false;
     }
 
     public function upload($localfile, $filename)
     {
-        return file_put_contents($this->getfilename($filename) , file_get_contents($localfile)) !== false;
+        return file_put_contents($this->getfilename($filename), file_get_contents($localfile)) !== false;
     }
 
     public function pwd()
     {
         if ($result = $this->run('pwd')) {
-            return rtrim(rtrim($result) , '/') . '/';
+            return rtrim(rtrim($result), '/') . '/';
         }
 
         return false;
@@ -106,7 +108,9 @@ class Ssh2 extends Remote
             return false;
         }
 
-        if ($recursive && $this->is_dir($filename)) $cmd.= ' -R';
+        if ($recursive && $this->is_dir($filename)) {
+            $cmd.= ' -R';
+        }
         return $this->runbool(sprintf('%s %o %s', $cmd, $mode, escapeshellarg($filename)));
     }
 
@@ -209,14 +213,18 @@ class Ssh2 extends Remote
     public function mkdir($path, $chmod)
     {
         $path = rtrim($path, '/');
-        if (!$chmod) $chmod = $this->chmod_dir;
+        if (!$chmod) {
+            $chmod = $this->chmod_dir;
+        }
         $chmod = $this->getmode($chmod);
         return ssh2_sftp_mkdir($this->sftp, $path, $chmod, true);
     }
 
     public function getDir($path)
     {
-        if ($this->is_file($path)) $path = dirname($path);
+        if ($this->is_file($path)) {
+            $path = dirname($path);
+        }
         if (!$this->is_dir($path)) {
             return false;
         }
@@ -240,6 +248,4 @@ class Ssh2 extends Remote
         }
         return false;
     }
-
 }
-

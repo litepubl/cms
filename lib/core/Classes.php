@@ -55,7 +55,7 @@ class Classes extends Items
         spl_autoload_register(array(
             $this,
             'autoload'
-        ) , true, true);
+        ), true, true);
     }
 
     public function getInstance(string $class)
@@ -210,7 +210,7 @@ class Classes extends Items
         }
 
         if (!count($this->classmap)) {
-            $this->classmap = include ($this->getApp()->paths->lib . 'update/classmap.php');
+            $this->classmap = include($this->getApp()->paths->lib . 'update/classmap.php');
         }
         $classname = $this->baseclass($classname);
         if (isset($this->classmap[$classname])) {
@@ -282,7 +282,7 @@ class Classes extends Items
         }
     }
 
-    public function include (string $filename)
+    public function include(string $filename)
     {
         //if (is_dir($filename)) $this->error($filename);
         require_once $filename;
@@ -433,7 +433,7 @@ class Classes extends Items
                 unset($this->kernel[$oldclass]);
             }
 
-            $this->getApp()->router->db->update('class =' . Str::quote($newclass) , 'class = ' . Str::quote($oldclass));
+            $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
             $this->save();
             $this->onrename($oldclass, $newclass);
         }
@@ -447,7 +447,7 @@ class Classes extends Items
     }
     public function loadComposer($classToAutoLoad)
     {
-        require_once ($this->getApp()->paths->home . 'vendor/autoload.php');
+        require_once($this->getApp()->paths->home . 'vendor/autoload.php');
         if ($classToAutoLoad && ($a = spl_autoload_functions())) {
             $compclass = 'Composer\Autoload\ClassLoader';
             foreach ($a as $item) {
@@ -457,6 +457,4 @@ class Classes extends Items
             }
         }
     }
-
 }
-

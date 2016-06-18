@@ -27,7 +27,7 @@ class Admin extends \litepubl\admin\Panel
             $tabs->add($service->title, $service->gettab($this));
         }
 
-        return $this->admin->form($tabs->get() , $args);
+        return $this->admin->form($tabs->get(), $args);
     }
 
     public function processForm()
@@ -43,6 +43,4 @@ class Admin extends \litepubl\admin\Panel
         $plugin->unlock();
         return '';
     }
-
 }
-

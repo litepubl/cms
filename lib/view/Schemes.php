@@ -108,6 +108,4 @@ class Schemes extends \litepubl\core\Items
             $this->save();
         }
     }
-
 }
-

@@ -43,4 +43,3 @@ function AdminUninstall($self)
     Header::i()->uninstall();
     $admin->unlock();
 }
-

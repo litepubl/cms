@@ -33,7 +33,7 @@ class View extends \litepubl\post\View
         $args->assignto = $this->assigntoname;
         $args->author = $this->authorlink;
 
-$vars = new Vars();
+        $vars = new Vars();
         $vars->ticket = $this;
         $theme = $this->theme;
         $tml = file_get_contents(__DIR__ . '/resource/ticket.tml');
@@ -51,5 +51,4 @@ $vars = new Vars();
     {
         return $this->getUserName($this->assignto, true);
     }
-
 }

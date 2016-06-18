@@ -92,6 +92,4 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
         }
 
     }
-
 }
-

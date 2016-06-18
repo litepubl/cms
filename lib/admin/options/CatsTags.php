@@ -51,6 +51,4 @@ class CatsTags extends \litepubl\admin\Menu
         $tags->includechilds = isset($childtags);
         $tags->save();
     }
-
 }
-

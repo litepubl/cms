@@ -34,4 +34,3 @@ function LikeButtonsUninstall($self)
     $js->deletetext('default', 'facebook_appid');
     $js->unlock();
 }
-

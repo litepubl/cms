@@ -35,6 +35,4 @@ class Parser extends IXR_Server
     echo'$head';
     ?>" . $xml;
     }
-
 }
-

@@ -144,6 +144,4 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
             $this->getApp()->cache->clear();
         }
     }
-
 }
-

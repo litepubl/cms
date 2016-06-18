@@ -12,7 +12,7 @@ namespace litepubl\core;
 
 use litepubl\Config;
 
-Class Str
+class Str
 {
     public $value;
 
@@ -62,7 +62,7 @@ Class Str
 
     public static function baseMd5($s)
     {
-        return trim(base64_encode(md5($s, true)) , '=');
+        return trim(base64_encode(md5($s, true)), '=');
     }
 
     public static function begin($s, $begin)
@@ -78,7 +78,6 @@ Class Str
             if (strncmp($s, $begin, strlen($begin)) == 0) {
                 return true;
             }
-
         }
         return false;
     }
@@ -137,6 +136,4 @@ Class Str
         var_dump($v);
         echo "</pre>\n";
     }
-
 }
-

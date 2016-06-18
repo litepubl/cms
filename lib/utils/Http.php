@@ -34,7 +34,9 @@ class Http
                 @stream_set_timeout($fp, static ::$timeout);
 
                 $result = '';
-                while ($remote_read = fread($fp, 4096)) $result.= $remote_read;
+                while ($remote_read = fread($fp, 4096)) {
+                    $result.= $remote_read;
+                }
                 fclose($fp);
                 return $result;
             }
@@ -45,9 +47,11 @@ class Http
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, static ::$timeout);
             curl_setopt($ch, CURLOPT_TIMEOUT, static ::$timeout);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-            if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            if (is_array($headers) && count($headers)) {
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            }
             /*
             curl_setopt($ch, CURLOPT_VERBOSE , true);
             curl_setopt($ch, CURLOPT_STDERR, fopen( $this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
@@ -75,13 +79,15 @@ class Http
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, static ::$timeout);
         curl_setopt($ch, CURLOPT_TIMEOUT, static ::$timeout);
-        if (is_array($headers) && count($headers)) curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_POST, TRUE);
+        if (is_array($headers) && count($headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
 
         curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -100,7 +106,9 @@ class Http
         if (in_array($code, array(
             '200',
             '201'
-        ))) return $response;
+        ))) {
+            return $response;
+        }
         return false;
     }
 
@@ -139,6 +147,4 @@ class Http
         curl_close($ch);
         return substr($result, strpos($result, "\r\n\r\n") + 4);
     }
-
 }
-

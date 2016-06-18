@@ -80,6 +80,4 @@ class UserOptions extends Items
             array_splice($this->defitems, $i, 1);
         }
     }
-
 }
-

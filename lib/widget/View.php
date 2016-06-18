@@ -55,7 +55,7 @@ class View
         $args->sidebar = $sidebar;
         $args->title = $title;
         $args->items = $body;
-        return $this->theme->parseArg($this->getTml($sidebar, $template, '') , $args);
+        return $this->theme->parseArg($this->getTml($sidebar, $template, ''), $args);
     }
 
     public function getItem($name, $index)
@@ -107,7 +107,7 @@ class View
         return $this->getWidget($id, $sidebar, $title, $content, $item['template']);
     }
 
-    public function getInline(int $id, int $sidebar,  array $item, string $content): string
+    public function getInline(int $id, int $sidebar, array $item, string $content): string
     {
         $title = $this->getAjaxTitle($id, $sidebar, $item['title'], 'inlinewidget');
         $content = sprintf('<!--%s-->', $content);
@@ -116,10 +116,14 @@ class View
 
     public function getInclude(int $id, int $sidebar, array $item): string
     {
-$content = sprintf('<?php echo %s\Cache::i()->getInclude(%d, %d); ?>', __NAMESPACE__, $id, $sidebar);
-        return $this->getWidget($id, $sidebar, $item['title'],
- $content,
- $item['template']);
+        $content = sprintf('<?php echo %s\Cache::i()->getInclude(%d, %d); ?>', __NAMESPACE__, $id, $sidebar);
+        return $this->getWidget(
+            $id,
+            $sidebar,
+            $item['title'],
+            $content,
+            $item['template']
+        );
     }
 
     public function getCode(int $id, int $sidebar, array $item): string
@@ -131,6 +135,4 @@ $content = sprintf('<?php echo %s\Cache::i()->getInclude(%d, %d); ?>', __NAMESPA
     echo \$widget->getWidget($id, $sidebar);
     ?>\n";
     }
-
 }
-

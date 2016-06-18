@@ -34,6 +34,4 @@ class Tags extends CommonTags
     {
         return Owner::i();
     }
-
 }
-

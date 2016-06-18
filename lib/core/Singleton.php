@@ -18,4 +18,3 @@ trait Singleton
         return litepubl::$app->classes->getInstance(get_called_class());
     }
 }
-

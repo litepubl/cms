@@ -29,6 +29,4 @@ class Plugin extends \litepubl\core\Plugin
     {
         $content.= $this->after;
     }
-
 }
-

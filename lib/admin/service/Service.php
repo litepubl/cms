@@ -77,6 +77,4 @@ class Service extends Login
     {
         return $this->doupdate($_POST);
     }
-
 }
-

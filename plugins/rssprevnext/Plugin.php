@@ -20,6 +20,4 @@ class Plugin extends \litepubl\core\Plugin
         $post = Post::i($id);
         $content.= $post->getView()->prevnext;
     }
-
 }
-

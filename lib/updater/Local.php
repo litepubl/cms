@@ -92,7 +92,7 @@ class Local extends Remote
 
     public function getChmod($file)
     {
-        return substr(decoct(@fileperms($file)) , 3);
+        return substr(decoct(@fileperms($file)), 3);
     }
 
     public function group($file)
@@ -175,7 +175,9 @@ class Local extends Remote
 
     public function mkdir($path, $chmod)
     {
-        if (!$chmod) $chmod = $this->chmod_dir;
+        if (!$chmod) {
+            $chmod = $this->chmod_dir;
+        }
         $chmod = $this->getmode($chmod);
         if (!@mkdir($path, $chmod)) {
             return false;
@@ -187,7 +189,9 @@ class Local extends Remote
 
     public function getDir($path)
     {
-        if ($this->is_file($path)) $path = dirname($path);
+        if ($this->is_file($path)) {
+            $path = dirname($path);
+        }
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         $path = rtrim($path, DIRECTORY_SEPARATOR);
         if ($dir = @dir($path)) {
@@ -218,6 +222,4 @@ class Local extends Remote
             $this->mkdir($dir, $this->chmod_dir);
         }
     }
-
 }
-

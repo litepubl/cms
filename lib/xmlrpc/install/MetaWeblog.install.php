@@ -32,4 +32,3 @@ function MetaWeblogInstall($self)
 
     $caller->unlock();
 }
-

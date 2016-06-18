@@ -29,6 +29,4 @@ class Plugin extends \litepubl\core\Plugin
         Js::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.js");
         Css::i()->deletefile('default', "plugins/$plugindir/resource/nautilus.min.css");
     }
-
 }
-

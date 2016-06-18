@@ -27,8 +27,8 @@ class TopText extends \litepubl\core\Plugin
 
     public function afterContent(Post $post)
     {
-        if ($this->text) $post->filtered = $this->text . $post->filtered;
+        if ($this->text) {
+            $post->filtered = $this->text . $post->filtered;
+        }
     }
-
 }
-

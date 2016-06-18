@@ -79,6 +79,4 @@ class Meta extends Widget
 
         return $view->getContent($result, 'meta', $sidebar);
     }
-
 }
-

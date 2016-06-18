@@ -60,12 +60,9 @@ class Callback
                 }
 
                 call_user_func_array($c, $a);
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 litepubl::$app->logException($e);
             }
         }
     }
-
 }
-

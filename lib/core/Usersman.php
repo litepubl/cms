@@ -99,7 +99,9 @@ class Usersman extends Data
         $pages = $users->pates;
         if (isset($values['status']) && ('approved' == $values['status']) && ($item['status'] != $values['status'])) {
             if ($pages->itemExists($id)) {
-                if ($pages->createpage) $pages->addpage($id);
+                if ($pages->createpage) {
+                    $pages->addpage($id);
+                }
             } else {
                 $pages->add($id);
             }
@@ -133,7 +135,9 @@ class Usersman extends Data
     {
         $result = array();
         foreach ($a as $val) {
-            if ($id = $this->cleangroup($val)) $result[] = $id;
+            if ($id = $this->cleangroup($val)) {
+                $result[] = $id;
+            }
         }
 
         return array_unique($result);
@@ -141,7 +145,9 @@ class Usersman extends Data
 
     public function cleangroup($v)
     {
-        if (is_string($v)) $v = trim($v);
+        if (is_string($v)) {
+            $v = trim($v);
+        }
         if (is_numeric($v)) {
             $id = (int)$v;
             if (UserGroups::i()->itemExists($id)) {
@@ -152,6 +158,4 @@ class Usersman extends Data
         }
         return false;
     }
-
 }
-

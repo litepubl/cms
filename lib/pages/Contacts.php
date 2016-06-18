@@ -28,11 +28,11 @@ class Contacts extends SingleMenu
     }
 
     public function request(Context $context)
-{
-$context->response->cache = false;
+    {
+        $context->response->cache = false;
 
-parent::request($context);
-}
+        parent::request($context);
+    }
     public function processForm()
     {
         if (!isset($_POST['contactvalue'])) {
@@ -71,8 +71,6 @@ parent::request($context);
 
     public function update()
     {
-        $this->externalFunc(get_class($self) , 'Update', null);
+        $this->externalFunc(get_class($self), 'Update', null);
     }
-
 }
-

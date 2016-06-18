@@ -49,10 +49,8 @@ class Tidy extends \litepubl\core\Plugin
         );
 
         $tidy = new \tidy;
-        $tidy->parseString($this->gethtml($content) , $config, 'utf8');
+        $tidy->parseString($this->gethtml($content), $config, 'utf8');
         $tidy->cleanRepair();
         $content = $this->getbody((string)$tidy);
     }
-
 }
-

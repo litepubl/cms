@@ -23,4 +23,3 @@ function RedirectorInstall($self)
     $self->add('/wp-login.php', '/admin/login/');
     $self->unlock();
 }
-

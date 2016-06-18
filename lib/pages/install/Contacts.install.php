@@ -55,4 +55,3 @@ function ContactsUpdate($self)
 
     $self->unlock();
 }
-

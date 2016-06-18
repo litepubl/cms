@@ -124,6 +124,4 @@ class Page extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         '[submit=update]' => $theme->getsubmit($lang->send) , ]);
     }
-
 }
-

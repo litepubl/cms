@@ -33,7 +33,7 @@ function ExternalLinksInstall($self)
     $filter->unlock();
 
     $cron = Cron::i();
-    $cron->add('hour', get_class($self) , 'updatestat');
+    $cron->add('hour', get_class($self), 'updatestat');
 
     $self->getApp()->router->addget('/externallink.htm', get_class($self));
 
@@ -56,4 +56,3 @@ function ExternalLinksUninstall($self)
     $manager->deletetable($self->table);
     Posts::i()->addRevision();
 }
-

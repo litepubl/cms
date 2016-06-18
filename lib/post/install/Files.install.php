@@ -28,4 +28,3 @@ function FilesUninstall($self)
 {
     Posts::unsub($self);
 }
-

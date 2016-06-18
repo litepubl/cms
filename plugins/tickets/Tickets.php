@@ -70,7 +70,7 @@ class Tickets extends \litepubl\post\Posts
 
     private function notify(Ticket $ticket)
     {
-$vars = new Vars;
+        $vars = new Vars;
         $vars->ticket = $ticket->getView();
         $args = new Args();
         $args->adminurl = $this->getApp()->site->url . '/admin/tickets/editor/' . $this->getApp()->site->q . 'id=' . $ticket->id;
@@ -101,6 +101,4 @@ $vars = new Vars;
         }
         return false;
     }
-
 }
-

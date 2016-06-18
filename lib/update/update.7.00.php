@@ -24,11 +24,11 @@ function update700()
     $css = Css::i();
     $css->deletestyle("/plugins/regservices/regservices.min.css");
 
-if (count(litepubl::$app->classes->items)) {
-include (__DIR__ . '/updateEvents.php');
-updateEvents();
+    if (count(litepubl::$app->classes->items)) {
+        include(__DIR__ . '/updateEvents.php');
+        updateEvents();
 
-include (__DIR__ . '/updatePlugins.php');
-updatePlugins();
-}
+        include(__DIR__ . '/updatePlugins.php');
+        updatePlugins();
+    }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use Page\Login;
 use test\config;

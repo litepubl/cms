@@ -16,7 +16,7 @@ class Migrate
 
     public function __construct()
     {
-        $this->classmap = include (__DIR__ . '/classmap.php');
+        $this->classmap = include(__DIR__ . '/classmap.php');
     }
 
     public function file($filename)
@@ -43,7 +43,9 @@ class Migrate
         $ns = substr($new, $i);
         $class = substr($new, $i + 1);
         $s = str_replace($old, $class, $s);
-        if (strpos($s, "namespace $ns;")) return $s;
+        if (strpos($s, "namespace $ns;")) {
+            return $s;
+        }
 
         $uns = "if (strpos($s, $uns)) return $s;
 use $new;";
@@ -85,13 +87,10 @@ use $new;";
                     echo basename($dir);
                     echo "/$name\n$old\n";
                     //exit();
-                    
                 }
             }
         }
 
         $list->close();
     }
-
 }
-

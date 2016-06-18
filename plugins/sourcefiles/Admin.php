@@ -43,6 +43,4 @@ class Admin extends \litepubl\admin\Panel
             return sprintf('<h4>Processed  by %f seconds</h4>', round(microtime(true) - $m, 2));
         }
     }
-
 }
-

@@ -67,6 +67,4 @@ class Link
 
         return sprintf('<a href="%s"%s>%s</a>', $a['href'], $attr, $a['text']);
     }
-
 }
-

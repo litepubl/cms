@@ -20,4 +20,3 @@ class CancelEvent extends \Exception
         parent::__construct('', 0);
     }
 }
-

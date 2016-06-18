@@ -18,20 +18,23 @@ class Plugin extends \litepubl\core\Plugin
     {
         parent::create();
         $this->data['deletep'] = false;
-include_once(__DIR__ . '/MarkdownInterface.php');
-include_once(__DIR__ . '/Markdown.php');
+        include_once(__DIR__ . '/MarkdownInterface.php');
+        include_once(__DIR__ . '/Markdown.php');
         $this->parser = new \Michelf\Markdown();
     }
 
     public function filter(&$content)
     {
-        if ($this->deletep) $content = str_replace('_', '&#95;', $content);
+        if ($this->deletep) {
+            $content = str_replace('_', '&#95;', $content);
+        }
         $content = $this->parser->transform($content);
-        if ($this->deletep) $content = strtr($content, array(
+        if ($this->deletep) {
+            $content = strtr($content, array(
             '<p>' => '',
             '</p>' => '',
             '&#95;' => '_'
-        ));
+            ));
+        }
     }
-
 }

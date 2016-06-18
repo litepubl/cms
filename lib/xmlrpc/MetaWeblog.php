@@ -153,7 +153,9 @@ class MetaWeblog extends Common
 
         if (isset($struct["wp_page_parent_id"])) {
             $parent = $struct["wp_page_parent_id"];
-            if (Str::begin($parent, 'menu_')) $parent = substr($parent, strlen('menu_'));
+            if (Str::begin($parent, 'menu_')) {
+                $parent = substr($parent, strlen('menu_'));
+            }
             $menu->parent = (int)$parent;
         }
 
@@ -176,7 +178,9 @@ class MetaWeblog extends Common
         }
 
         $excerpt = isset($struct['mt_excerpt']) ? trim($struct['mt_excerpt']) : '';
-        if ($excerpt != '') $post->excerpt = $excerpt;
+        if ($excerpt != '') {
+            $post->excerpt = $excerpt;
+        }
 
         if (isset($struct['categories']) && is_array($struct['categories'])) {
             $post->catnames = $struct['categories'];
@@ -227,7 +231,9 @@ class MetaWeblog extends Common
     public function wp_editPage($blogid, $id, $username, $password, $struct, $publish)
     {
         $this->auth($username, $password, 'editor');
-        if (Str::begin($id, 'menu_')) $id = substr($id, strlen('menu_'));
+        if (Str::begin($id, 'menu_')) {
+            $id = substr($id, strlen('menu_'));
+        }
         $id = (int)$id;
         $menus = Menus::i();
         if (!$menus->itemExists($id)) {
@@ -411,6 +417,4 @@ class MetaWeblog extends Common
             'type' => $item['mime']
         );
     }
-
 }
-

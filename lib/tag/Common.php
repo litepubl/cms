@@ -174,7 +174,7 @@ class Common extends \litepubl\core\Items
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
-        $idurl = $this->getApp()->router->add($url, get_class($this) , $id, $this->urltype);
+        $idurl = $this->getApp()->router->add($url, get_class($this), $id, $this->urltype);
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
@@ -400,6 +400,4 @@ class Common extends \litepubl\core\Items
         $posts->loadItems($result);
         return $result;
     }
-
 }
-

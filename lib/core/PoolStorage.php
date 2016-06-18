@@ -104,6 +104,4 @@ class PoolStorage
     {
         return count($this->data);
     }
-
 }
-

@@ -31,7 +31,7 @@ class Board extends \litepubl\core\Events implements \litepubl\view\ViewInterfac
     public function request(Context $context)
     {
         $response = $context->response;
-$response->cache = false;
+        $response->cache = false;
         if ($context->checkAttack()) {
             return;
         }
@@ -89,6 +89,4 @@ $response->cache = false;
         $editor = Editor::i();
         return $editor->getexternal();
     }
-
 }
-

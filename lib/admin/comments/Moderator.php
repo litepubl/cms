@@ -197,7 +197,9 @@ class Moderator extends \litepubl\admin\Menu
         // get total count
         $status = $kind == 'hold' ? 'hold' : 'approved';
         $where = "$comments->thistable.status = '$status'";
-        if ($this->iduser) $where.= " and $comments->thistable.author = $this->iduser";
+        if ($this->iduser) {
+            $where.= " and $comments->thistable.author = $this->iduser";
+        }
         $total = $comments->db->getcount($where);
         $from = $this->getfrom($perpage, $total);
         $list = $comments->select($where, "order by $comments->thistable.posted desc limit $from, $perpage");
@@ -205,7 +207,7 @@ class Moderator extends \litepubl\admin\Menu
         $admin = $this->admintheme;
         $lang = Lang::admin('comments');
         $form = $this->newForm();
-        $form->title = sprintf($lang->itemscount, $from, $from + count($list) , $total);
+        $form->title = sprintf($lang->itemscount, $from, $from + count($list), $total);
 
         $comment = new Comment(0);
         $vars = new Vars();
@@ -215,7 +217,7 @@ class Moderator extends \litepubl\admin\Menu
         $Table->addcallback('$excerpt', array(
             $this,
             'get_excerpt'
-        ) , $comment);
+        ), $comment);
         $Table->args->adminurl = $this->adminurl;
 
         $Table->setStruct(array(
@@ -279,7 +281,7 @@ class Moderator extends \litepubl\admin\Menu
         $result = $form->get();
 
         $theme = $this->theme;
-        $result.= $theme->getPages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage) , ($this->iduser ? "iduser=$this->iduser" : ''));
+        $result.= $theme->getPages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage), ($this->iduser ? "iduser=$this->iduser" : ''));
         return $result;
     }
 
@@ -310,7 +312,7 @@ class Moderator extends \litepubl\admin\Menu
 
                     $item = $comments->getitem($this->idget());
                     $post = Post::i((int)$item['post']);
-                    $this->manager->reply($this->idget() , $_POST['content']);
+                    $this->manager->reply($this->idget(), $_POST['content']);
                     return $this->getApp()->context->response->redir($post->lastcommenturl);
                     break;
 
@@ -320,7 +322,7 @@ class Moderator extends \litepubl\admin\Menu
                         return $this->admintheme->geterr($this->lang->forbidden);
                     }
 
-                    $comments->edit($this->idget() , $_POST['content']);
+                    $comments->edit($this->idget(), $_POST['content']);
                     return $this->admintheme->success($this->lang->successmoderated);
                     break;
             }
@@ -338,9 +340,13 @@ class Moderator extends \litepubl\admin\Menu
             }
 
             if ($status == 'delete') {
-                if ($this->can($id, 'delete')) $comments->delete($id);
+                if ($this->can($id, 'delete')) {
+                    $comments->delete($id);
+                }
             } else {
-                if ($this->moder) $comments->setstatus($id, $status);
+                if ($this->moder) {
+                    $comments->setstatus($id, $status);
+                }
             }
         }
 
@@ -362,6 +368,4 @@ class Moderator extends \litepubl\admin\Menu
             unset($a);
         }
     }
-
 }
-

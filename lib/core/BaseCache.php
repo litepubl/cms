@@ -14,12 +14,12 @@ abstract class BaseCache
 {
     protected $items = [];
     protected $lifetime = 3600;
-public $onClear;
+    public $onClear;
 
-public function __construct()
-{
-$this->onClear = new Callback();
-}
+    public function __construct()
+    {
+        $this->onClear = new Callback();
+    }
 
     abstract public function getString(string $filename): string;
     abstract public function setString(string $filename, string $str);
@@ -73,16 +73,14 @@ $this->onClear = new Callback();
         $this->lifetime = $value;
     }
 
-public function clear()
-{
+    public function clear()
+    {
         $this->items = [];
-$this->onClear->fire();
-}
+        $this->onClear->fire();
+    }
 
     public function clearUrl(string $url)
     {
         $this->delete(md5($url) . '.php');
     }
-
 }
-

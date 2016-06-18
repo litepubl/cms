@@ -33,4 +33,3 @@ function PluginUninstall($self)
     $js->deletefile($section, "/plugins/$name/resource/rss-chrome.min.js");
     $js->unlock();
 }
-

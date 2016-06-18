@@ -54,7 +54,7 @@ class BaseParser extends \litepubl\core\Events
     public function getFileList(string $name): array
     {
         $result = array();
-$paths = $this->getApp()->paths;
+        $paths = $this->getApp()->paths;
         $about = $this->getAbout($name);
         $result[] = $paths->themes . $name . '/' . $about['file'];
 
@@ -66,9 +66,9 @@ $paths = $this->getApp()->paths;
 
             if (file_exists($paths->home . $filename)) {
                 $result[] = $paths->home . $filename;
-            } else if (file_exists($paths->themes . $filename)) {
+            } elseif (file_exists($paths->themes . $filename)) {
                 $result[] = $paths->themes . $filename;
-            } else if (file_exists($paths->plugins . $filename)) {
+            } elseif (file_exists($paths->plugins . $filename)) {
                 $result[] = $paths->plugins . $filename;
             }
         }
@@ -85,7 +85,7 @@ $paths = $this->getApp()->paths;
 
         $theme->lock();
         if ($parentname = $this->getParentName($theme->name)) {
-            $parent_theme = Base::getByName(get_class($theme) , $parentname);
+            $parent_theme = Base::getByName(get_class($theme), $parentname);
             $theme->templates = $parent_theme->templates;
             $theme->parent = $parent_theme->name;
         }
@@ -165,7 +165,7 @@ $paths = $this->getApp()->paths;
             "\r\n",
             "\r",
             "\n\n"
-        ) , "\n", $s);
+        ), "\n", $s);
 
         //strip coments
         $s = preg_replace('/\s*\/\*.*?\*\/\s*/sm', "\n", $s);
@@ -195,11 +195,15 @@ $paths = $this->getApp()->paths;
 
     public function getAbout(string $name): array
     {
-        if (!isset($this->abouts)) $this->abouts = array();
+        if (!isset($this->abouts)) {
+            $this->abouts = array();
+        }
         if (!isset($this->abouts[$name])) {
             $filename = $this->getApp()->paths->themes . $name . DIRECTORY_SEPARATOR . 'about.ini';
             if (file_exists($filename) && ($about = parse_ini_file($filename, true))) {
-                if (empty($about['about']['type'])) $about['about']['type'] = 'litepublisher3';
+                if (empty($about['about']['type'])) {
+                    $about['about']['type'] = 'litepublisher3';
+                }
                 //join languages
                 if (isset($about[$this->getApp()->options->language])) {
                     $about['about'] = $about[$this->getApp()->options->language] + $about['about'];
@@ -261,7 +265,9 @@ $paths = $this->getApp()->paths;
 
         while (substr_count($sub, $a) > substr_count($sub, $b)) {
             $i = strpos($s, $b, $i + 1);
-            if ($i === false) die(" The '$b' not found in\n$s");
+            if ($i === false) {
+                die(" The '$b' not found in\n$s");
+            }
             $sub = substr($s, 0, $i);
         }
 
@@ -286,7 +292,7 @@ $paths = $this->getApp()->paths;
             $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(
                 $this,
                 'callback_replace_php'
-            ) , $s);
+            ), $s);
         }
 
         while ($s) {
@@ -339,7 +345,7 @@ $paths = $this->getApp()->paths;
             $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(
                 $this,
                 'callback_replace_php'
-            ) , $s);
+            ), $s);
         }
 
         while ($s && preg_match('/(\$\w*+(\.\w\w*+)?)\s*=\s*(\[|\{|\()/i', $s, $m)) {
@@ -373,7 +379,7 @@ $paths = $this->getApp()->paths;
             $s = preg_replace_callback('/\<\&\#63;.*?\&\#63;\>/ims', array(
                 $this,
                 'callback_restore_php'
-            ) , $s);
+            ), $s);
         }
 
         $this->setvalue($parent, $s);
@@ -381,7 +387,9 @@ $paths = $this->getApp()->paths;
 
     protected function preparetag($name)
     {
-        if (Str::begin($name, '$template.')) $name = substr($name, strlen('$template.'));
+        if (Str::begin($name, '$template.')) {
+            $name = substr($name, strlen('$template.'));
+        }
         return $name;
     }
 
@@ -424,7 +432,7 @@ $paths = $this->getApp()->paths;
             foreach ($theme->templates as $k => $v) {
                 if (is_string($v)) {
                     $theme->templates[$k] = $this->remove_spaces($v);
-                } else if (is_array($v)) {
+                } elseif (is_array($v)) {
                     foreach ($v as $vk => $vv) {
                         if (is_string($vv)) {
                             $v[$vk] = $this->remove_spaces($vv);
@@ -451,7 +459,7 @@ $paths = $this->getApp()->paths;
             "\n",
             "\t",
             "\x00"
-        ) , ' ', $s);
+        ), ' ', $s);
         $s = preg_replace('/[ ]{2,}/ms', ' ', $s);
         return str_replace('> <', '><', $s);
     }
@@ -459,7 +467,7 @@ $paths = $this->getApp()->paths;
     public function loadPaths(): array
     {
         $result = array();
-$paths = $this->getApp()->paths;
+        $paths = $this->getApp()->paths;
         foreach ($this->tagfiles as $filename) {
             $filename = $paths->home . trim($filename, '/');
             if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
@@ -502,6 +510,4 @@ $paths = $this->getApp()->paths;
         $this->save();
         Base::clearcache();
     }
-
 }
-

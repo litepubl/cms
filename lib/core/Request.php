@@ -124,6 +124,4 @@ class Request
     {
         return $this->getApp()->options->xxxcheck && $this->isXXX();
     }
-
 }
-

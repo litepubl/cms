@@ -21,7 +21,7 @@ function WidgetInstall($self)
     PRIMARY KEY(id) ');
 
     $widgets = $self->getWidgets();
-    $widgets->addClass($self, $self::POSTCLASS );
+    $widgets->addClass($self, $self::POSTCLASS);
 
     $posts = Posts::i();
     $posts->changed = $self->postsChanged;

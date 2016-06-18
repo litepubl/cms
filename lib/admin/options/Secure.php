@@ -51,7 +51,7 @@ class Secure extends \litepubl\admin\Menu
             'ftpsocket' => 'ftpsocket',
             //'ssh2' => 'ssh2'
             
-        ) , $backuper->filertype);
+        ), $backuper->filertype);
 
         $args->formtitle = $lang->securehead;
         $result = $this->admintheme->form('
@@ -160,7 +160,7 @@ class Secure extends \litepubl\admin\Menu
                 $menus->createitem($id, 'perms', 'admin', 'litepubl\admin\users\Perms');
                 //$menus->createitem($id, 'search', 'admin', 'litepubl\admin\users\Users');
 
-                $menus->createitem($menus->url2id('/admin/posts/') , 'authorpage', 'author', 'litepubl\admin\users\Pages');
+                $menus->createitem($menus->url2id('/admin/posts/'), 'authorpage', 'author', 'litepubl\admin\users\Pages');
             }
         } else {
             $menus->deletetree($menus->url2id('/admin/users/'));
@@ -168,6 +168,4 @@ class Secure extends \litepubl\admin\Menu
         }
         $menus->unlock();
     }
-
 }
-
