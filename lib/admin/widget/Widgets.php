@@ -112,7 +112,7 @@ class Widgets extends \litepubl\admin\Menu
                         '$title' => $lang->noajax
                         ))
 
-                        . strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
+                        . strtr($ajax == 'ajax' ? $tml_active : $tml_btn, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
