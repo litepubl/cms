@@ -15,6 +15,7 @@ function (\StdClass $std) use ($map) {
     $result = false;
 
     if (isset($std->data['events']) && count($std->data['events'])) {
+            $result = true;
         foreach ($std->data['events'] as $name => $events) {
             foreach ($events as $i => $event) {
                 if (isset($event['class'])) {
@@ -34,9 +35,8 @@ function (\StdClass $std) use ($map) {
             unset($std->data['events'][$name]);
             $name = strtolower($name);
             $std->data['events'][$name] = $events;
-            //echo "$name\n";
-            $result = true;
         }
+}
 
             if (isset($std->data['items']) && count($std->data['items'])) {
         foreach ($std->data['items'] as $id => $item) {
