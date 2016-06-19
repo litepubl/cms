@@ -12,7 +12,6 @@ namespace litepubl\plugins\keywords;
 
 use litepubl\core\Plugins;
 use litepubl\core\Str;
-use litepubl\view\Theme;
 
 class Widget extends \litepubl\widget\Widget
 {

@@ -11,7 +11,6 @@
 namespace litepubl\view;
 
 use litepubl\core\Arr;
-use litepubl\core\Str;
 
 function JsInstall($self)
 {

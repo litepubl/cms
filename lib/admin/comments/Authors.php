@@ -12,7 +12,6 @@ namespace litepubl\admin\comments;
 
 use litepubl\admin\Link;
 use litepubl\comments\Comments as CommentItems;
-use litepubl\comments\Subscribers;
 use litepubl\core\Users;
 use litepubl\view\Args;
 

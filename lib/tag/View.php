@@ -16,7 +16,6 @@ use litepubl\post\Announce;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
-use litepubl\view\Schemes;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 

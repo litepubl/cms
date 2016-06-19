@@ -11,7 +11,6 @@
 namespace litepubl\plugins\regservices;
 
 use litepubl\comments\Form;
-use litepubl\admin\pages\Form as LoginForms;
 use litepubl\view\Theme;
 use litepubl\core\Context;
 

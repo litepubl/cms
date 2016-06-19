@@ -14,7 +14,6 @@ use litepubl\core\Arr;
 use litepubl\core\ItemsPosts;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
-use litepubl\view\Schema;
 use litepubl\view\Schemes;
 
 class Common extends \litepubl\core\Items

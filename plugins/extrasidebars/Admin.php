@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\extrasidebars;
 
-use litepubl\admin\AdminInterface;
 use litepubl\view\Base;
 use litepubl\admin\UList;
 use litepubl\utils\Filer;

@@ -18,7 +18,6 @@ use litepubl\pages\Menus;
 use litepubl\post\MediaParser;
 use litepubl\view\Args;
 use litepubl\view\Lang;
-use litepubl\view\Parser;
 
 class Home extends \litepubl\admin\Menu
 {

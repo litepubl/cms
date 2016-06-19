@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\tickets;
 
-use litepubl\Config;
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
 use litepubl\utils\LinkGenerator;

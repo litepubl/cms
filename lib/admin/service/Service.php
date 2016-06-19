@@ -11,7 +11,6 @@
 namespace litepubl\admin\service;
 
 use litepubl\comments\Manager;
-use litepubl\core\Data;
 use litepubl\post\Posts;
 use litepubl\updater\Updater;
 use litepubl\view\Args;

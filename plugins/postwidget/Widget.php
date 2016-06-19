@@ -11,7 +11,6 @@
 namespace litepubl\plugins\postwidget;
 
 use litepubl\core\Arr;
-use litepubl\view\Theme;
 use litepubl\widget\Widgets;
 
 class Widget extends \litepubl\widget\Depended

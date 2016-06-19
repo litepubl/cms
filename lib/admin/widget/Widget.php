@@ -12,7 +12,6 @@ namespace litepubl\admin\widget;
 
 use litepubl\admin\Link;
 use litepubl\core\PropException;
-use litepubl\widgets\Widgets as WidgetItems;
 
 class Widget extends \litepubl\admin\Panel
 {

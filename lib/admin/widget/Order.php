@@ -11,7 +11,6 @@
 namespace litepubl\admin\widget;
 
 use litepubl\view\Schema;
-use litepubl\view\Schemes;
 
 class Order extends Widget
 {

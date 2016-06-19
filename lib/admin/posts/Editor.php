@@ -11,7 +11,6 @@
 namespace litepubl\admin\posts;
 
 use litepubl\admin\DateFilter;
-use litepubl\core\DB;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\Posts as PostItems;

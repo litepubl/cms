@@ -94,6 +94,7 @@ public function request(Context $context)
     }
 
         return $context->response->forbidden();
+}
 
     protected function getAdminInfo(Lang $lang): array
     {

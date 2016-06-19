@@ -11,7 +11,7 @@
 namespace litepubl\update;
 
 use litepubl\core\Str;
-use litepubl\core\litepubl
+use litepubl\core\litepubl;
 
 function update615()
 {

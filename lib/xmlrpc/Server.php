@@ -10,7 +10,6 @@
 
 namespace litepubl\xmlrpc;
 
-use litepubl\Config;
 use litepubl\core\Context;
 
 class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface

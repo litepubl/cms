@@ -38,8 +38,9 @@ class Plugin extends \litepubl\core\Items
         $this->added($id, $service);
     }
 
-    public function find($string service, string $uid)
+    public function find(string $service, string $uid)
     {
         return $this->db->findid('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
+    
 }

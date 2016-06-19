@@ -10,7 +10,6 @@
 
 namespace litepubl\xmlrpc;
 
-use litepubl\comments\Pingbacks as PingbackItems;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\tag\Cats;

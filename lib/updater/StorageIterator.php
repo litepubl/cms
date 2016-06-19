@@ -50,7 +50,7 @@ class StorageIterator
                     $sub = new \StdClass();
                     foreach ($std->data as $name => $data) {
                         $sub->data = $data;
-                        call_user_func_array($this->callback, [$sub]]);
+                        call_user_func_array($this->callback, [$sub]);
                         $std->data[$name] = $sub->data;
                     }
 

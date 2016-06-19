@@ -13,7 +13,6 @@ namespace litepubl\admin\pages;
 use litepubl\core\Context;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
-use litepubl\view\Schemes;
 use litepubl\view\Theme;
 use litepubl\view\Admin;
 

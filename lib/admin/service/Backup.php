@@ -16,6 +16,7 @@ use litepubl\updater\Backuper;
 use litepubl\utils\Filer;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\core\Data;
 
 class Backup extends Login
 {

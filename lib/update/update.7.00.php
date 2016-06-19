@@ -10,13 +10,9 @@
 
 namespace litepubl\update;
 
-use litepubl\core\Str;
 use litepubl\core\litepubl;
-use litepubl\view\Js;
 use litepubl\view\Css;
-use litepubl\view\Parser;
 use litepubl\core\Plugins;
-use litepubl\core\DBManager;
 
 function update700()
 {

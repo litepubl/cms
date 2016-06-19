@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\oldestposts;
 
-use litepubl\core\Str;
 use litepubl\post\Posts;
 use litepubl\view\Lang;
 use litepubl\widget\View;

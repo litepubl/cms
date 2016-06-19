@@ -11,7 +11,6 @@
 namespace litepubl\widget;
 
 use litepubl\view\Schema;
-use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 class Widget extends \litepubl\core\Events

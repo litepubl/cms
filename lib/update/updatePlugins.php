@@ -10,19 +10,16 @@
 
 namespace litepubl\update;
 
-use litepubl\core\Str;
 use litepubl\core\litepubl;
 use litepubl\core\litepubl;
 use litepubl\core\Plugins;
 use litepubl\view\Js;
 use litepubl\view\AutoVars;
-use litepubl\view\Css;
 use litepubl\view\Parser;
 use litepubl\core\DBManager;
 use litepubl\pages\Menus;
 use litepubl\pages\FakeMenu;
 use litepubl\tag\Tags;
-use litepubl\pages\Redirect;
 
 function updatePlugins()
 {

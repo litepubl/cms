@@ -10,7 +10,6 @@
 
 namespace litepubl\plugins\usernews;
 
-use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\post\Post;
 use litepubl\post\Posts;
