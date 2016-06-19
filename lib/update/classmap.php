@@ -8,8 +8,6 @@
  *
  */
 
-use litepubl\admin\AdminInterface;
-
 return array(
     'tdata' => 'litepubl\core\Data',
     'tevents' => 'litepubl\core\Events',
@@ -311,8 +309,8 @@ return array(
 'ttwitterregservice' => 'litepubl\plugins\regservices\Twitter',
 'todnoklassnikiservice' => 'litepubl\plugins\regservices\Odnoklassniki',
 'tmailruregservice' =>'litepubl\plugins\regservices\MailRu',
-'tgoogleregservice' => litepubl\plugins\regservices\Google',
-'tfacebookregservice' => litepubl\plugins\regservices\Facebook',
+'tgoogleregservice' => 'litepubl\plugins\regservices\Google',
+    'tfacebookregservice' => 'litepubl\plugins\regservices\Facebook',
 
 'treguser' => 'litepubl\plugins\regservices2ulogin\Plugin',
 'tlivejournalposter' => 'litepubl\plugins\livejournalposter\Plugin',
@@ -324,9 +322,6 @@ return array(
 'tadmindownloaditems' => 'litepubl\plugins\downloaditem\Admin',
 'tdownloaditemeditor' => 'litepubl\plugins\downloaditem\Editor',
 
-
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
-'tusernews' => 'litepubl\plugins\usernews\Plugin',
-
-
+'tusernews' => 'litepubl\plugins\usernews\Plugin',    
 );

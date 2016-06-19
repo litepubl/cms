@@ -81,14 +81,14 @@ class Widgets extends \litepubl\admin\Menu
 
         //items for table builder
         $items = array();
-        $tml_btn = $admintheme->templates['radiogroup.button'];
-        $tml_active = $admintheme->templates['radiogroup.active'];
+        $tmlButton = $admintheme->templates['radiogroup.button'];
+        $tmlActiveButton = $admintheme->templates['radiogroup.active'];
 
         foreach ($schema->sidebars as $i => $sidebar) {
             $orders = range(1, count($sidebar));
-            foreach ($sidebar as $j => $sb_item) {
-                $id = $sb_item['id'];
-                $ajax = $sb_item['ajax'];
+            foreach ($sidebar as $j => $sidebarItem) {
+                $id = $sidebarItem['id'];
+                $ajax = $sidebarItem['ajax'];
                 if ($ajax === true) {
                                 $ajax = 'ajax';
                 }
@@ -97,28 +97,28 @@ class Widgets extends \litepubl\admin\Menu
                                 $ajax = 'disabled';
                 }
 
-                $w_item = $widgets->getItem($id);
+                $widgetItem = $widgets->getItem($id);
 
                 $items[] = array(
                     'id' => $id,
-                    'title' => $w_item['title'],
+                    'title' => $widgetItem['title'],
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
                     'ordercombo' => $this->getCombobox("order-$id", $orders, $j) ,
                     'ajaxbuttons' => str_replace(
                         '$button',
-                        strtr($ajax == 'disabled' ? $tml_active : $tml_btn, array(
+                        strtr($ajax == 'disabled' ? $tmlActiveButton : $tmlButton, array(
                         '$name' => "ajax-$id",
                         '$value' => 'disabled',
                         '$title' => $lang->noajax
                         ))
 
-                        . strtr($ajax == 'ajax' ? $tml_active : $tml_btn, array(
+                        . strtr($ajax == 'ajax' ? $tmlActiveButton : $tmlButton, array(
                         '$name' => "ajax-$id",
                         '$value' => 'ajax',
                         '$title' => $lang->ajax
                         ))
 
-                        . (($w_item['cache'] == 'cache') || ($w_item['cache'] == 'nocache') ? strtr($ajax == 'inline' ? $tml_active : $tml_btn, array(
+                        . (($widgetItem['cache'] == 'cache') || ($widgetItem['cache'] == 'nocache') ? strtr($ajax == 'inline' ? $tmlActiveButton : $tmlButton, array(
                         '$name' => "ajax-$id",
                         '$value' => 'inline',
                         '$title' => $lang->inline

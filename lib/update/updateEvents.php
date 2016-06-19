@@ -9,7 +9,7 @@ function updateEvents()
 {
 $map = include(__DIR__ . '/classmap.php');
 
-$iterator = new StorageIterator::(
+$iterator = new StorageIterator(
 litepubl::$app->storage,
 function (\StdClass $std) use ($map) {
     $result = false;
@@ -35,12 +35,10 @@ function (\StdClass $std) use ($map) {
             $name = strtolower($name);
             $std->data['events'][$name] = $events;
             //echo "$name\n";
+            $result = true;
         }
 
-        $result = true;
-    }
-
-    if (isset($std->data['items']) && count($std->data['items'])) {
+            if (isset($std->data['items']) && count($std->data['items'])) {
         foreach ($std->data['items'] as $id => $item) {
             if (isset($item['class']) && isset($map[$item['class']])) {
                 $item['class'] = $map[$item['class']];
@@ -51,6 +49,7 @@ function (\StdClass $std) use ($map) {
                 }
             }
         }
+            }
 
         return $result;
     });
