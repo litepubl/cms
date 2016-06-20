@@ -117,7 +117,7 @@ class Meta extends \litepubl\core\Item
         }
 
         $instances = & static ::$instances['postmeta'];
-        $db = $this->getApp()->db;
+        $db = static::getAppInstance()->db;
         $db->table = 'postsmeta';
         $res = $db->select(sprintf('id in (%s)', implode(',', $items)));
         while ($row = $db->fetchassoc($res)) {

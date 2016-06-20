@@ -88,7 +88,6 @@ class MediaParser extends \litepubl\core\Events
             return $this->error('Error access to uploaded file');
         }
 
-        //return $this->addfile($filename, $newtemp, $title, $description, $keywords, $overwrite);
         return $this->add(array(
             'filename' => $filename,
             'tempfilename' => $newtemp,
@@ -104,7 +103,7 @@ class MediaParser extends \litepubl\core\Events
         $filename = static ::linkgen($filename);
         $filename = static ::create_filename($filename, $subdir, false);
         $sep = $subdir == '' ? '' : $subdir . DIRECTORY_SEPARATOR;
-        if (!move_uploaded_file($tempfilename, $this->getApp()->paths->files . $sep . $filename)) {
+        if (!move_uploaded_file($tempfilename, static::getAppInstance()->paths->files . $sep . $filename)) {
             return false;
         }
 
@@ -273,10 +272,10 @@ class MediaParser extends \litepubl\core\Events
             return $id;
         }
 
-        $item = $this->getinfo($file['tempfilename']);
+        $item = $this->getInfo($file['tempfilename']);
         $item = array_merge($item, array(
             'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']), isset($file['overwrite']) ? $file['overwrite'] : false) ,
-            'title' => isset($file['title']) ? $file['title'] : $filename,
+            'title' => isset($file['title']) ? $file['title'] : $file['filename'],
             'description' => isset($file['description']) ? $file['description'] : '',
             'keywords' => isset($file['keywords']) ? $file['keywords'] : ''
         ));
@@ -404,7 +403,8 @@ class MediaParser extends \litepubl\core\Events
             if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
                 $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen($this->getApp()->paths->files))));
                 $item['media'] = 'image';
-                $item['mime'] = 'image/jpeg'; //jpeg always for thumbnails
+ //jpeg always for thumbnails
+                $item['mime'] = 'image/jpeg';
                 $item['width'] = $size['width'];
                 $item['height'] = $size['height'];
 
@@ -511,7 +511,6 @@ class MediaParser extends \litepubl\core\Events
             $getID3->option_md5_data = true;
             $getID3->option_md5_data_source = true;
             $getID3->encoding = 'UTF-8';
-            //$info = $getID3->analyze($realfile);
             $getID3->openfile($realfile);
             $swf = new \getid3_swf($getID3);
             $swf->analyze();
@@ -754,7 +753,6 @@ class MediaParser extends \litepubl\core\Events
         'channels'  => @$info['audio']['channels'],
         'duration'  => @$info['playtime_seconds'],
         );
-        //$result['tags']            = @$info['tags'];
         //$result['comments']        = @$info['comments'];
         return $result;
         */
