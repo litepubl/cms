@@ -7,7 +7,6 @@
  * @version 6.15
  *
  */
-
 namespace litepubl\core;
 
 class DBManager
@@ -16,6 +15,7 @@ class DBManager
     use Singleton;
 
     public $engine;
+
     private $max_allowed_packet;
 
     public function __get($name)
@@ -23,7 +23,7 @@ class DBManager
         if ($name == 'db') {
             return $this->getApp()->db;
         }
-
+        
         return $this->getApp()->db->$name;
     }
 
@@ -37,9 +37,10 @@ class DBManager
 
     public function createTable($name, $struct)
     {
-        if (!$this->engine) {
-            $this->engine = 'MyISAM'; //InnoDB
-        }        $this->deletetable($name);
+        if (! $this->engine) {
+            $this->engine = 'MyISAM'; // InnoDB
+        }
+        $this->deletetable($name);
         return $this->exec("create table $this->prefix$name
     ($struct)
     ENGINE=$this->engine
@@ -94,11 +95,11 @@ class DBManager
                 foreach ($result as $i => $v) {
                     $result[$i] = trim($v, ' \'"');
                 }
-
+                
                 return $result;
             }
         }
-
+        
         return false;
     }
 
@@ -115,9 +116,9 @@ class DBManager
 
     public function addEnum($table, $column, $value)
     {
-        if ($values = $this->getenum($table, $column)) && !in_array($value, $values)) {
-                $values[] = $value;
-                $this->setenum($table, $column, $values);
+        if (($values = $this->getenum($table, $column)) && ! in_array($value, $values)) {
+            $values[] = $value;
+            $this->setenum($table, $column, $values);
         }
     }
 
@@ -129,11 +130,11 @@ class DBManager
             if (false === $i) {
                 return;
             }
-
+            
             array_splice($values, $i, 1);
             $default = $values[0];
             $this->exec("update $this->prefix$table set $column = '$default' where $column = '$value'");
-
+            
             $items = $this->quoteArray($values);
             $tmp = $column . '_tmp';
             $this->exec("alter table $this->prefix$table add $tmp enum($items)");
@@ -150,26 +151,26 @@ class DBManager
         if (($oldvalue != $newvalue) && ($values = $this->getenum($table, $column))) {
             $oldvalue = trim($oldvalue, ' \'"');
             $newvalue = trim($newvalue, ' \'"');
-
+            
             $i = array_search($oldvalue, $values);
             if (false !== $i) {
                 $values[$i] = $newvalue;
                 $items = $this->quoteArray($values);
                 $default = Str::quote($values[0]);
-
+                
                 $tmp = $column . '_tmp';
                 $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
-                //exclude changed
+                // exclude changed
                 unset($values[$i]);
                 foreach ($values as $value) {
                     $value = Str::quote($value);
                     $this->exec("update $this->prefix$table set $tmp = $value where $column  = $value");
                 }
-
+                
                 $oldvalue = Str::quote($oldvalue);
                 $newvalue = Str::quote($newvalue);
                 $this->exec("update $this->prefix$table set $tmp = $newvalue where $column  = $oldvalue");
-
+                
                 $this->exec("alter table $this->prefix$table drop $column");
                 $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
             }
@@ -181,7 +182,7 @@ class DBManager
         foreach ($values as $i => $value) {
             $values[$i] = Str::quote(trim($value, ' \'"'));
         }
-
+        
         return implode(', ', $values);
     }
 
@@ -248,7 +249,7 @@ class DBManager
         if ($this->dbexists($name)) {
             return false;
         }
-
+        
         return $this->exec("CREATE DATABASE $name");
     }
 
@@ -270,18 +271,18 @@ class DBManager
         $options = $this->getApp()->options;
         $v = $this->fetchassoc($this->query("show variables like 'max_allowed_packet'"));
         $this->max_allowed_packet = floor($v['Value'] * 0.8);
-
+        
         $result = "-- Lite Publisher dump $options->version\n";
-        $result.= "-- Datetime: " . date('Y-m-d H:i:s') . "\n";
-        $result.= "-- Host: {$options->dbconfig['host']}\n";
-        $result.= "-- Database: {$options->dbconfig['dbname']}\n\n";
-        $result.= "/*!40101 SET NAMES utf8 */;\n\n";
-
+        $result .= "-- Datetime: " . date('Y-m-d H:i:s') . "\n";
+        $result .= "-- Host: {$options->dbconfig['host']}\n";
+        $result .= "-- Database: {$options->dbconfig['dbname']}\n\n";
+        $result .= "/*!40101 SET NAMES utf8 */;\n\n";
+        
         $tables = $this->gettables();
         foreach ($tables as $table) {
-            $result.= $this->exporttable($table);
+            $result .= $this->exporttable($table);
         }
-        $result.= "\n-- Lite Publisher dump end\n";
+        $result .= "\n-- Lite Publisher dump end\n";
         return $result;
     }
 
@@ -291,27 +292,27 @@ class DBManager
             $result = "DROP TABLE IF EXISTS `$name`;\n$row[1];\n\n";
             $res = $this->query("select * from `$name`");
             if ($this->countof($res) > 0) {
-                $result.= "LOCK TABLES `$name` WRITE;\n/*!40000 ALTER TABLE `$name` DISABLE KEYS */;\n";
+                $result .= "LOCK TABLES `$name` WRITE;\n/*!40000 ALTER TABLE `$name` DISABLE KEYS */;\n";
                 $sql = '';
                 while ($row = $this->fetchnum($res)) {
                     $values = array();
                     foreach ($row as $v) {
                         $values[] = is_null($v) ? 'NULL' : $this->quote($v);
                     }
-                    $sql.= $sql ? ',(' : '(';
-                    $sql.= implode(', ', $values);
-                    $sql.= ')';
-
+                    $sql .= $sql ? ',(' : '(';
+                    $sql .= implode(', ', $values);
+                    $sql .= ')';
+                    
                     if (strlen($sql) > $this->max_allowed_packet) {
-                        $result.= "INSERT INTO `$name` VALUES " . $sql . ";\n";
+                        $result .= "INSERT INTO `$name` VALUES " . $sql . ";\n";
                         $sql = '';
                     }
                 }
-
+                
                 if ($sql) {
-                    $result.= "INSERT INTO `$name` VALUES " . $sql . ";\n";
+                    $result .= "INSERT INTO `$name` VALUES " . $sql . ";\n";
                 }
-                $result.= "/*!40000 ALTER TABLE `$name` ENABLE KEYS */;\nUNLOCK TABLES;\n\n";
+                $result .= "/*!40000 ALTER TABLE `$name` ENABLE KEYS */;\nUNLOCK TABLES;\n\n";
             }
             return $result;
         }
@@ -327,19 +328,19 @@ class DBManager
             if ($this->iscomment($s)) {
                 continue;
             }
-
-            $sql.= $s . "\n";
+            
+            $sql .= $s . "\n";
             if ($s[strlen($s) - 1] != ';') {
                 continue;
             }
-
+            
             $this->getApp()->db->exec($sql);
             $sql = '';
         }
-
+        
         $s = substr($dump, $i);
-        if (!$this->iscomment($s)) {
-            $sql.= $s;
+        if (! $this->iscomment($s)) {
+            $sql .= $s;
         }
         if ($sql != '') {
             $this->getApp()->db->exec($sql);
@@ -351,16 +352,19 @@ class DBManager
         if (strlen($s) <= 2) {
             return true;
         }
-
+        
         $c2 = $s{1};
         switch ($s{0}) {
             case '/':
                 return $c2 == '*';
+            
             case '-':
                 return $c2 == '-';
+            
             case '#':
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 }
