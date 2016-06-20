@@ -34,9 +34,11 @@ class Css extends Merger
             $url = substr($url, 0, $i);
         }
 
+ // else must be absolute url
         if ($realfile = realpath($url)) {
             $url = substr($realfile, strlen($this->getApp()->paths->home));
-        } // else must be absolute url
+        }
+
         $url = str_replace(DIRECTORY_SEPARATOR, '/', $url);
         $url = $this->getApp()->site->files . '/' . ltrim($url, '/');
         $url = substr($url, strpos($url, '/', 9));
@@ -47,13 +49,9 @@ class Css extends Merger
     {
         if ($result = parent::readfile($filename)) {
             chdir(dirname($filename));
-            $result = preg_replace_callback('/\s*url\s*\(\s*[\'"]?(.*?)[\'"]?\s*\)/i', array(
-                $this,
-                'replaceurl'
-            ), $result);
+            $result = preg_replace_callback('/\s*url\s*\(\s*[\'"]?(.*?)[\'"]?\s*\)/i', [$this, 'replaceurl'], $result);
             //delete comments
-            $result = preg_replace('/\/\*.*?\*\//ims', '', $result);
-            return $result;
+return preg_replace('/\/\*.*?\*\//ims', '', $result);
         }
     }
 

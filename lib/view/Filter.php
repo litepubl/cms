@@ -128,8 +128,8 @@ class Filter extends \litepubl\core\Events
             '&#39;',
             '&#36;'
         ), $description);
-        $description = str_replace('  ', ' ', $description);
-        return $description;
+
+return str_replace('  ', ' ', $description);
     }
 
     public function extract_pages(Post $post, $s)

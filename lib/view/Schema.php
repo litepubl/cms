@@ -52,7 +52,8 @@ class Schema extends \litepubl\core\Item
 
         $schemes = Schemes::i();
         if (!$schemes->itemExists($id)) {
-            $id = 1; //default, wich always exists
+ //1 default, wich always exists
+            $id = 1;
             $instance->setIdSchema($id);
         }
 

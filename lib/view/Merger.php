@@ -49,14 +49,11 @@ class Merger extends \litepubl\core\Items
         }
 
         $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
-        $filename = '/' . ltrim($filename, '/');
-        return $filename;
+return '/' . ltrim($filename, '/');
     }
 
     public function add($section, $filename)
     {
-        //$this->getApp()->getLogger()->debug($filename);
-        // $this->getApp()->getLogManager()->trace();
         if (!($filename = $this->normfilename($filename))) {
             return false;
         }
@@ -103,26 +100,19 @@ class Merger extends \litepubl\core\Items
         $this->save();
     }
 
-    public function replaceFile($section, $src, $dst)
+    public function replaceFile(string $section, string $src, string $dst): bool
     {
-        if (!isset($this->items[$section])) {
-            return false;
-        }
-
-        if (!($src = $this->normfilename($src))) {
-            return false;
-        }
-
-        if (!($dst = $this->normfilename($dst))) {
-            return false;
-        }
-
-        if (false === ($i = array_search($src, $this->items[$section]['files']))) {
-            return false;
-        }
-
+        if (isset($this->items[$section])
+&& ($src = $this->normFilename($src))
+&& ($dst = $this->normFilename($dst))
+&& (false !== ($i = array_search($src, $this->items[$section]['files'])))
+) {
         $this->items[$section]['files'][$i] = $dst;
         $this->save();
+return true;
+}
+
+return false;
     }
 
     public function after($section, $src, $dst)
@@ -252,7 +242,8 @@ class Merger extends \litepubl\core\Items
                 $filename = $home . str_replace('/', DIRECTORY_SEPARATOR, $filename);
                 if (file_exists($filename)) {
                     $s.= $this->readfile($filename);
-                    $s.= "\n"; //prevent comments
+ //prevent comments
+                    $s.= "\n";
                 } else {
                     trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);
                 }

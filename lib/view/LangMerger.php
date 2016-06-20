@@ -34,7 +34,7 @@ class LangMerger extends Merger
             $this->items[$name] = array(
                 'files' => array() ,
                 'texts' => array(
-                    $key => $items
+                    $section => $items
                 )
             );
         } elseif (!isset($this->items[$name]['texts'][$section])) {
