@@ -7,7 +7,6 @@
  * @version 6.15
  *
  */
-
 namespace litepubl\pages;
 
 use litepubl\core\Context;
@@ -42,10 +41,11 @@ use litepubl\view\Admin;
  * @property-read Theme $theme
  * @property-read Admin $adminTheme
  */
-
 class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
+
     public $formresult;
+
     public static $ownerprops = array(
         'title',
         'url',
@@ -57,36 +57,32 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public static function i($id = 0)
     {
-        $class = $id == 0 ? get_called_class() : static ::getowner()->items[$id]['class'];
-        return static ::iteminstance(get_called_class(), $id);
+        $class = $id == 0 ? get_called_class() : static::getowner()->items[$id]['class'];
+        return static::itemInstance($class, $id);
     }
 
     public static function iteminstance($class, $id = 0)
     {
-        $single = static ::iGet($class);
-        if ($single->id == $id) {
+        $single = static::iGet($class);
+        if (($single->id == $id) || (($id == 0) && ($single->id > 0))) {
             return $single;
         }
-
-        if (($id == 0) && ($single->id > 0)) {
-            return $single;
-        }
-
+        
         if (($single->id == 0) && ($id > 0)) {
             return $single->loaddata($id);
         }
-
+        
         return parent::iteminstance($class, $id);
     }
 
     public static function singleInstance($class)
     {
-        $single = static ::iGet($class);
+        $single = static::iGet($class);
         if ($id = $single->get_owner()->class2id($class)) {
             if ($single->id == $id) {
                 return $single;
             }
-
+            
             if (($single->id == 0) && ($id > 0)) {
                 return $single->loaddata($id);
             }
@@ -106,7 +102,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public function get_owner()
     {
-        return static ::getowner();
+        return static::getowner();
     }
 
     protected function create()
@@ -115,7 +111,8 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         $this->formresult = '';
         $this->data = array(
             'id' => 0,
-            'author' => 0, //not supported
+            // not supported
+            'author' => 0,
             'content' => '',
             'rawcontent' => '',
             'keywords' => '',
@@ -123,7 +120,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             'head' => '',
             'password' => '',
             'idschema' => 1,
-            //owner props
+            // owner props
             'title' => '',
             'url' => '',
             'idurl' => 0,
@@ -143,25 +140,25 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         if ($name == 'content') {
             return $this->formresult . $this->getcontent();
         }
-
+        
         if ($name == 'id') {
             return $this->data['id'];
         }
-
+        
         if (method_exists($this, $get = 'get' . $name)) {
             return $this->$get();
         }
-
+        
         if ($this->is_owner_prop($name)) {
             return $this->getownerprop($name);
         }
-
+        
         return parent::__get($name);
     }
 
     public function get_owner_props()
     {
-        return static ::$ownerprops;
+        return static::$ownerprops;
     }
 
     public function is_owner_prop($name)
@@ -199,7 +196,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         if ($this->is_owner_prop($name)) {
             return true;
         }
-
+        
         return parent::__isset($name);
     }
 
@@ -217,11 +214,11 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     {
         return $this->schema->admintheme;
     }
-
-    //ViewInterface
+    
+    // ViewInterface
     public function request(Context $context)
     {
-        if (!$this->loadItem($context->itemRoute['arg']) || ($this->status == 'draft')) {
+        if (! $this->loadItem($context->itemRoute['arg']) || ($this->status == 'draft')) {
             $context->response->status = 404;
         } else {
             $this->doProcessForm();
@@ -231,7 +228,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     protected function doProcessForm()
     {
         if (isset($_POST) && count($_POST)) {
-            $this->formresult.= $this->processForm();
+            $this->formresult .= $this->processForm();
         }
     }
 
@@ -287,17 +284,18 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     {
         $result = $this->data['content'];
         $this->owner->callevent('oncontent', array(
-            $this, &$result
+            $this,
+            &$result
         ));
         return $result;
     }
 
     public function setContent(string $s)
     {
-        if (!is_string($s)) {
+        if (! is_string($s)) {
             $this->error('Error! Page content must be string');
         }
-
+        
         if ($s != $this->rawcontent) {
             $this->rawcontent = $s;
             $filter = Filter::i();
