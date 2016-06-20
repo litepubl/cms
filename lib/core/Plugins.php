@@ -234,7 +234,7 @@ class Plugins extends Items
     {
         if (!@file_exists($this->getApp()->paths->plugins . $name)) {
             if (!@mkdir($this->getApp()->paths->plugins . $name, 0777)) {
-                return $this->Error("Cantcreate $namefolderinplugins");
+                return $this->Error("Cantcreate $name folder inplugins");
             }
 
             @chmod($this->getApp()->paths->plugins . $name, 0777);

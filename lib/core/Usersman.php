@@ -79,8 +79,7 @@ class Usersman extends Data
 
 
                 case 'idgroups':
-                    $groups = UserGroups::i();
-                    $item['idgroups'] = $this->cleangroups($values['idgroups']);
+                    $item['idgroups'] = $this->cleanGroups($values['idgroups']);
                     break;
 
 

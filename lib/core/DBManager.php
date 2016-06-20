@@ -49,8 +49,7 @@ class DBManager
 
     public function deleteTable($name)
     {
-        //$this->exec("DROP TABLE IF EXISTS $this->prefix$name");
-        if ($this->table_exists($name)) {
+        if ($this->tableExists($name)) {
             $this->exec("DROP TABLE $this->prefix$name");
         }
     }
@@ -116,11 +115,9 @@ class DBManager
 
     public function addEnum($table, $column, $value)
     {
-        if ($values = $this->getenum($table, $column)) {
-            if (!in_array($value, $values)) {
+        if ($values = $this->getenum($table, $column)) && !in_array($value, $values)) {
                 $values[] = $value;
                 $this->setenum($table, $column, $values);
-            }
         }
     }
 
@@ -162,7 +159,6 @@ class DBManager
 
                 $tmp = $column . '_tmp';
                 $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
-                //$this->exec("update $this->prefix$table set $tmp = $column + 0");
                 //exclude changed
                 unset($values[$i]);
                 foreach ($values as $value) {
@@ -239,7 +235,7 @@ class DBManager
         return false;
     }
 
-    public function table_exists($name)
+    public function tableExists($name)
     {
         if ($list = $this->gettables()) {
             return in_array($this->prefix . $name, $list);
@@ -279,7 +275,6 @@ class DBManager
         $result.= "-- Datetime: " . date('Y-m-d H:i:s') . "\n";
         $result.= "-- Host: {$options->dbconfig['host']}\n";
         $result.= "-- Database: {$options->dbconfig['dbname']}\n\n";
-        //$result .= "/*!40030 SET max_allowed_packet=$this->max_allowed_packet */;\n\n";
         $result.= "/*!40101 SET NAMES utf8 */;\n\n";
 
         $tables = $this->gettables();

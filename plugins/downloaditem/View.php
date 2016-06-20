@@ -11,7 +11,6 @@
 namespace litepubl\plugins\downloaditem;
 
 use litepubl\plugins\polls\Polls;
-use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;

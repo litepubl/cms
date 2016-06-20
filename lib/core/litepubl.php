@@ -24,7 +24,7 @@ class litepubl
 
         if (isset(config::$classes['app']) && class_exists(config::$classes['app'])) {
             $className = config::$classes['app'];
-            static ::$app = new className();
+            static ::$app = new $className();
         } else {
             static ::$app = new App();
         }

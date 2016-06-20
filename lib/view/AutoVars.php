@@ -18,6 +18,7 @@ class AutoVars extends \litepubl\core\Items
 
     public function create()
     {
+$this->dbversion = false;
         parent::create();
         $this->basename = 'autovars';
         $this->defaults = [
@@ -46,4 +47,11 @@ class AutoVars extends \litepubl\core\Items
 
         return false;
     }
+
+public function add(string $name, string $class)
+{
+$this->items[$name] = $class;
+$this->save();
+}
+
 }

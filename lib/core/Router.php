@@ -253,7 +253,7 @@ class Router extends Items
 
     public function deleteItem($id)
     {
-        if ($item = $this->db->getitem($id)) {
+        if ($this->db->getitem($id)) {
             $this->db->idDelete($id);
             $this->deleted($id);
         }

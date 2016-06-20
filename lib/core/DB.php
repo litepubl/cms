@@ -67,7 +67,6 @@ class DB
         }
 
         $this->mysqli->set_charset('utf8');
-        //$this->query('SET NAMES utf8');
         if (Config::$enableZeroDatetime) {
             $this->enableZeroDatetime();
         }

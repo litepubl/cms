@@ -13,7 +13,6 @@ namespace litepubl\view;
 use litepubl\core\Str;
 use litepubl\pages\Users as UserPages;
 use litepubl\post\Post;
-use litepubl\post\Posts;
 
 class Theme extends Base
 {

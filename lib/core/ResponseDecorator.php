@@ -123,7 +123,7 @@ class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
         $value = array_merge(explode(',', $old), explode(',', $value));
 
         $new = clone $this;
-        $new->headers[$header] = implode(',', $value);
+        $new->headers[$name] = implode(',', $value);
         return $new;
     }
 

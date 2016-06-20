@@ -84,7 +84,7 @@ class Options extends Events
         }
     }
 
-    public function delete($name)
+    public function delete(string $name)
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
@@ -92,7 +92,7 @@ class Options extends Events
         }
     }
 
-    public function getAdminFlag()
+    public function getAdminFlag(): bool
     {
         if (is_null($this->adminFlagChecked)) {
             return $this->adminFlagChecked = $this->authenabled && isset($_COOKIE['litepubl_user_flag']) && ($_COOKIE['litepubl_user_flag'] == 'true');
@@ -101,12 +101,12 @@ class Options extends Events
         return $this->adminFlagChecked;
     }
 
-    public function setAdminFlag($val)
+    public function setAdminFlag(bool $val)
     {
         $this->adminFlagChecked = $val;
     }
 
-    public function getuser()
+    public function getuser(): int
     {
         if (is_null($this->_user)) {
             $this->_user = $this->authenabled ? $this->authcookie() : false;
@@ -115,7 +115,7 @@ class Options extends Events
         return $this->_user;
     }
 
-    public function setuser($id)
+    public function setUser(int $id)
     {
         $this->_user = $id;
     }
@@ -125,42 +125,38 @@ class Options extends Events
         return $this->authcookies(isset($_COOKIE['litepubl_user_id']) ? (int)$_COOKIE['litepubl_user_id'] : 0, isset($_COOKIE['litepubl_user']) ? (string)$_COOKIE['litepubl_user'] : '');
     }
 
-    public function authCookies($iduser, $password)
+    public function authCookies(int $iduser, string $password): int
     {
-        if (!$iduser || !$password) {
-            return false;
-        }
+        if ($iduser && $password) {
         $password = $this->hash($password);
-        if ($password == $this->emptyhash) {
-            return false;
-        }
-        if (!$this->finduser($iduser, $password)) {
-            return false;
-        }
-
+        if (($password != $this->emptyhash) && $this->findUser($iduser, $password)) {
         $this->_user = $iduser;
         $this->updategroup();
         return $iduser;
+}
+}
+
+return 0;
     }
 
-    public function findUser($iduser, $cookie)
+    public function findUser(int $iduser, string $cookie): bool
     {
         if ($iduser == 1) {
             return $this->compare_cookie($cookie);
         }
         if (!$this->usersenabled) {
-            return false;
+            return 0;
         }
 
         $users = Users::i();
         try {
             $item = $users->getItem($iduser);
         } catch (\Exception $e) {
-            return false;
+            return 0;
         }
 
         if ('hold' == $item['status']) {
-            return false;
+            return 0;
         }
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
@@ -170,52 +166,53 @@ class Options extends Events
         return !empty($this->cookiehash) && ($this->cookiehash == $cookie) && ($this->cookieexpired > time());
     }
 
-    public function emailExists($email)
+    public function emailExists(string $email): int
     {
-        if (!$email) {
-            return false;
-        }
-        if (!$this->authenabled) {
-            return false;
-        }
+        if ($email && $this->authenabled) {
         if ($email == $this->email) {
             return 1;
         }
-        if (!$this->usersenabled) {
-            return false;
-        }
+
+        if ($this->usersenabled) {
         return Users::i()->emailExists($email);
+}
+}
+
+return 0;
     }
 
-    public function auth($email, $password)
+    public function auth(string $email, string $password): int
     {
         if (!$this->authenabled) {
-            return false;
+            return 0;
         }
+
         if (!$email && !$password) {
             return $this->authcookie();
         }
+
         return $this->authpassword($this->emailexists($email), $password);
     }
 
-    public function authPassword($iduser, $password)
+    public function authPassword(int $iduser, string $password): int
     {
-        if (!$iduser) {
-            return false;
-        }
+        if ($iduser) {
         if ($iduser == 1) {
             if ($this->data['password'] != $this->hash($password)) {
-                return false;
+                return 0;
             }
         } else {
             if (!Users::i()->authPassword($iduser, $password)) {
-                return false;
+                return 0;
             }
         }
 
         $this->_user = $iduser;
-        $this->updategroup();
+        $this->updateGroup();
         return $iduser;
+}
+
+return 0;
     }
 
     public function updateGroup()

@@ -31,18 +31,17 @@ class Cron extends Events implements ResponsiveInterface
         $this->table = 'cron';
     }
 
-    protected function getUrl()
+    protected function getUrl(): string
     {
         return sprintf('/croncron.htm%scronpass=%s', $this->getApp()->site->q, urlencode($this->password));
     }
 
-    public function getLockpath()
+    public function getLockpath(): string
     {
-        if ($result = $this->path) {
-            if (is_dir($result)) {
+        if (($result = $this->path) && is_dir($result)) {
                 return $result;
             }
-        }
+
         return $this->getApp()->paths->data;
     }
 
@@ -146,16 +145,17 @@ class Cron extends Events implements ResponsiveInterface
         }
     }
 
-    public function add($type, $class, $func, $arg = null)
+    public function add(string $type, string $class, string $func, $arg = null): int
     {
         if (!preg_match('/^single|hour|day|week$/', $type)) {
             $this->error("Unknown cron type $type");
         }
+
         if ($this->disableadd) {
-            return false;
+            return 0;
         }
 
-        $id = $this->doadd($type, $class, $func, $arg);
+        $id = $this->doAdd($type, $class, $func, $arg);
 
         if (($type == 'single') && !$this->disableping && !static ::$pinged) {
             if (Config::$debug) {
@@ -171,7 +171,7 @@ class Cron extends Events implements ResponsiveInterface
         return $id;
     }
 
-    protected function doadd($type, $class, $func, $arg)
+    protected function doAdd(string $type, string $class, string $func, $arg): int
     {
         $id = $this->db->add(array(
             'date' => Str::sqlDate() ,
@@ -185,7 +185,7 @@ class Cron extends Events implements ResponsiveInterface
         return $id;
     }
 
-    public function addnightly($class, $func, $arg)
+    public function addNightly(string $class, string $func, $arg): int
     {
         $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
@@ -198,7 +198,7 @@ class Cron extends Events implements ResponsiveInterface
         return $id;
     }
 
-    public function addweekly($class, $func, $arg)
+    public function addWeekly(string $class,string $func, $arg): int
     {
         $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
@@ -218,13 +218,13 @@ class Cron extends Events implements ResponsiveInterface
         $this->deleted($id);
     }
 
-    public function deleteclass($c)
+    public function deleteClass($c)
     {
         $class = static ::get_class_name($c);
         $this->db->delete("class = '$class'");
     }
 
-    public static function pingonshutdown()
+    public static function pingOnShutdown()
     {
         if (static ::$pinged) {
             return;
@@ -244,9 +244,8 @@ class Cron extends Events implements ResponsiveInterface
         $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
     }
 
-    private function pinghost($host, $path)
+    private function pingHost(string $host, string $path)
     {
-        //$this->log("pinged host $host$path");
         if ($this->socket = @fsockopen($host, 80, $errno, $errstr, 0.10)) {
             fputs($this->socket, "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n");
             //0.01 sec
@@ -254,7 +253,7 @@ class Cron extends Events implements ResponsiveInterface
         }
     }
 
-    public function sendexceptions()
+    public function sendExceptions()
     {
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
         if (!file_exists($filename)) {
@@ -277,9 +276,7 @@ class Cron extends Events implements ResponsiveInterface
         echo date('r') . "\n$s\n\n";
         flush();
         if (Config::$debug) {
-            if (Config::$debug) {
                 $this->getApp()->getLogger()->info($s);
-            }
         }
     }
 }

@@ -34,6 +34,7 @@ class View
         if (!$tml) {
             $tml = $this->getItem('posts', $sidebar);
         }
+
         $vars = new Vars();
         foreach ($items as $id) {
             $vars->post = Post::i($id)->getView();
