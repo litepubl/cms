@@ -13,7 +13,7 @@ namespace litepubl\core;
 /**
  * This is the base class to storage data
  *
- * @property App $app
+ * @property-read App $app
  * @property-read Storage $storage
  * @property-read DB $db
  * @property-read string $thisTable
@@ -35,12 +35,12 @@ class Data
         return static ::iGet(get_called_class());
     }
 
-    public static function iGet($class)
+    public static function iGet(string $class)
     {
         return static ::getAppInstance()->classes->getInstance($class);
     }
 
-    public static function getAppInstance()
+    public static function getAppInstance(): App
     {
         return litepubl::$app;
     }
@@ -158,7 +158,7 @@ class Data
         return $this->basename;
     }
 
-    public function getApp()
+    public function getApp(): App
     {
         return static ::getAppInstance();
     }

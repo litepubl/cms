@@ -11,6 +11,19 @@
 namespace litepubl\core;
 
 use litepubl\Config;
+/**
+ * This is the class to storage web site url and safe public properties
+ *
+ * @property string $url
+ * @property string $files
+ * @property string $subdir
+ * @property string $q
+ * @property-read string $domain
+ * @property string $language
+ * @property string $version
+ * @property string $userlink
+ * @property string $liveUser
+ */
 
 class Site extends Events
 {
@@ -69,7 +82,7 @@ class Site extends Events
         return true;
     }
 
-    public function getUrl()
+    public function getUrl(): string
     {
         if ($this->fixedurl) {
             return $this->data['url'];
@@ -78,7 +91,7 @@ class Site extends Events
         return 'http://' . $this->getApp()->context->request->host;
     }
 
-    public function getFiles()
+    public function getFiles(): string
     {
         if ($this->fixedurl) {
             return $this->data['files'];
@@ -87,7 +100,7 @@ class Site extends Events
         return 'http://' . $this->getApp()->context->request->host;
     }
 
-    public function setUrl($url)
+    public function setUrl(string $url)
     {
         $url = rtrim($url, '/');
         $this->data['url'] = $url;
@@ -99,7 +112,7 @@ class Site extends Events
         $this->save();
     }
 
-    public function getDomain()
+    public function getDomain(): string
     {
         if (Config::$host) {
             return Config::$host;
@@ -109,12 +122,13 @@ class Site extends Events
         }
     }
 
-    public function getUserlink()
+    public function getUserlink(): string
     {
         if ($id = $this->getApp()->options->user) {
             if (!isset($this->users)) {
                 $this->users = array();
             }
+
             if (isset($this->users[$id])) {
                 return $this->users[$id];
             }
@@ -136,8 +150,8 @@ class Site extends Events
         return '';
     }
 
-    public function getLiveuser()
+    public function getLiveUser(): string
     {
-        return '<?php echo  litepubl::$app->site->getuserlink(); ?>';
+        return '<?php echo  litepubl::$app->site->getUserLink(); ?>';
     }
 }

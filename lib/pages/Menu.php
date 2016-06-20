@@ -16,6 +16,33 @@ use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\Admin;
 
+/**
+ * This is the base menu class
+ *
+ * @property int $id
+ * @property int $author
+ * @property string $content
+ * @property string $rawcontent
+ * @property string $keywords
+ * @property string $description
+ * @property string $head
+ * @property string $password
+ * @property int $idschema
+ * @property string $title
+ * @property string $url
+ * @property int $idurl
+ * @property int $parent
+ * @property int $order
+ * @property string $status
+ * @property string $status
+ * @property-read string $instanceName
+ * @property-read string $link
+ * @property-read string $cont
+ * @property-read Schema $schema
+ * @property-read Theme $theme
+ * @property-read Admin $adminTheme
+ */
+
 class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
     public $formresult;
@@ -52,7 +79,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return parent::iteminstance($class, $id);
     }
 
-    public static function singleinstance($class)
+    public static function singleInstance($class)
     {
         $single = static ::iGet($class);
         if ($id = $single->get_owner()->class2id($class)) {
@@ -142,7 +169,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
         return in_array($name, $this->get_owner_props());
     }
 
-    public function getOwnerprop($name)
+    public function getOwnerProp($name)
     {
         $id = $this->data['id'];
         if ($id == 0) {

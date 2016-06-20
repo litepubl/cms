@@ -12,6 +12,48 @@ namespace litepubl\core;
 
 use litepubl\Config;
 
+/**
+ * This is the class to storage common options
+ *
+ * @property int $user
+ * @property string $email
+ * @property string $password
+ * @property string $solt
+ * @property bool $authenabled
+ * @property bool $usersenabled 
+ * @property bool $reguser
+ * @property bool $xxxcheck
+ * @property string $cookiehash
+ * @property int $cookieexpired
+ * @property bool $securecookie
+ * @property string $version
+ * @property string $language
+ * @property string $dateformat
+ * @property string $timezone
+ * @property string $mailer
+ * @property string $fromemail
+ * @property array $dbconfig
+ * @property bool $cache
+ * @property int $expiredcache
+ * @property bool $admincache
+ * @property bool $ob_cache
+ * @property int $filetime_offset
+ * @property int $perpage
+ * @property int $commentsperpage
+ * @property bool $commentpages
+ * @property bool $comments_invert_order
+ * @property bool $commentsdisabled
+ * @property string $comstatus
+ * @property bool $commentspool
+ * @property bool $pingenabled
+ * @property bool $echoexception
+ * @property bool $parsepost
+ * @property bool $hidefilesonpage
+ * @property bool $show_draft_post
+ * @property bool $show_file_perm
+ * @property int $crontime
+ */
+
 class Options extends Events
 {
     use PoolStorageTrait;
