@@ -14,17 +14,17 @@ class Storage
 {
     use AppTrait;
 
-    public function getExt()
+    public function getExt(): string
     {
         return '.php';
     }
 
-    public function serialize(array $data)
+    public function serialize(array $data): string
     {
         return \serialize($data);
     }
 
-    public function unserialize($str)
+    public function unserialize(string $str)
     {
         if ($str) {
             return \unserialize($str);
@@ -33,35 +33,35 @@ class Storage
         return false;
     }
 
-    public function before($str)
+    public function before(string $str): string
     {
         return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
     }
 
-    public function after($str)
+    public function after(string $str): string
     {
         return \str_replace('**//*/', '*/', \substr($str, 9, \strlen($str) - 9 - 6));
     }
 
-    public function getFilename(Data $obj)
+    public function getFilename(Data $obj): string
     {
-        return $this->getApp()->paths->data . $obj->getbasename();
+        return $this->getApp()->paths->data . $obj->getBaseName();
     }
 
-    public function save(Data $obj)
+    public function save(Data $obj): bool
     {
-        return $this->saveFile($this->getfilename($obj), $this->serialize($obj->data));
+        return $this->saveFile($this->getFileName($obj), $this->serialize($obj->data));
     }
 
-    public function saveData($filename, array $data)
+    public function saveData(string $filename, array $data): bool
     {
         return $this->saveFile($filename, $this->serialize($data));
     }
 
-    public function load(Data $obj)
+    public function load(Data $obj): bool
     {
         try {
-            if ($data = $this->loadData($this->getfilename($obj))) {
+            if ($data = $this->loadData($this->getFileName($obj))) {
                 $obj->data = $data + $obj->data;
                 return true;
             }
@@ -72,7 +72,7 @@ class Storage
         return false;
     }
 
-    public function loadData($filename)
+    public function loadData(string $filename)
     {
         if ($s = $this->loadFile($filename)) {
             return $this->unserialize($s);
@@ -81,7 +81,7 @@ class Storage
         return false;
     }
 
-    public function loadFile($filename)
+    public function loadFile(string $filename)
     {
         if (\file_exists($filename . $this->getExt()) && ($s = \file_get_contents($filename . $this->getExt()))) {
             return $this->after($s);
@@ -90,7 +90,7 @@ class Storage
         return false;
     }
 
-    public function saveFile($filename, $content)
+    public function saveFile(string $filename, string $content): bool
     {
         $tmp = $filename . '.tmp' . $this->getExt();
         if (false === \file_put_contents($tmp, $this->before($content))) {
@@ -116,13 +116,13 @@ class Storage
         return true;
     }
 
-    public function remove($filename)
+    public function remove(string $filename)
     {
         $this->delete($filename . $this->getExt());
         $this->delete($filename . '.bak' . $this->getExt());
     }
 
-    public function delete($filename)
+    public function delete(string $filename)
     {
         if (\file_exists($filename) && !\unlink($filename)) {
             \chmod($filename, 0666);
@@ -130,8 +130,8 @@ class Storage
         }
     }
 
-    public function error($mesg)
+    public function error(string $mesg)
     {
-        $this->getApp()->options->trace($mesg);
+        $this->getApp()->getLogManager()->trace($mesg);
     }
 }

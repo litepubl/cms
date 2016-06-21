@@ -20,7 +20,7 @@ class StorageMemcache extends Storage
         $this->memcache = $this->getApp()->memcache;
     }
 
-    public function loadFile($filename)
+    public function loadFile(string $filename)
     {
         if ($s = $this->memcache->get($filename)) {
             return $s;
@@ -34,13 +34,13 @@ class StorageMemcache extends Storage
         return false;
     }
 
-    public function saveFile($filename, $content)
+    public function saveFile(string $filename, string $content): bool
     {
         $this->memcache->set($filename, $content, false, 3600);
         return parent::saveFile($filename, $content);
     }
 
-    public function delete($filename)
+    public function delete(string $filename)
     {
         parent::delete($filename);
         $this->memcache->delete($filename);

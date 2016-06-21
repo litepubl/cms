@@ -66,12 +66,12 @@ class LogManager
     {
         $log = LogException::trace();
         $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-        return $log;
+        return "\n" . $log;
     }
 
-    public function trace()
+    public function trace(string $mesg = '')
     {
-        $this->logger->info($this->getTrace());
+        $this->logger->info($mesg . $this->getTrace());
     }
 
     public function getHtml()
