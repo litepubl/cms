@@ -114,11 +114,11 @@ class Sidebars extends \litepubl\core\Data
         }
     }
 
-    public function move($id, $index, $neworder)
+    public function move(int $id, int $index, int $newOrder)
     {
         if ($old = $this->indexof($id, $index)) {
-            if ($old != $newindex) {
-                Arr::move($this->items[$index], $old, $neworder);
+            if ($old != $newOrder) {
+                Arr::move($this->items[$index], $old, $newOrder);
                 $this->save();
             }
         }

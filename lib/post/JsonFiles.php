@@ -74,7 +74,7 @@ class JsonFiles extends \litepubl\core\Events
         }
 
         if ($this->getApp()->options->show_file_perm) {
-            $theme = Theme::getTheme('default');
+Theme::getTheme('default');
             $result['fileperm'] = GetPerm::combo(0, 'idperm_upload');
         }
 
@@ -136,17 +136,16 @@ class JsonFiles extends \litepubl\core\Events
         );
     }
 
-    public function canupload()
+    public function canUpload(): bool
     {
-        if (!$this->getApp()->options->hasgroup('author')) {
-            return false;
+$options = $this->getApp()->options;
+        if ($options->hasGroup('author')
+&& !(in_array($options->groupnames['author'], $options->idgroups)
+ || !AuthorRights::i()->canUpload())) {
+            return true;
         }
 
-        if (in_array($this->getApp()->options->groupnames['author'], $this->getApp()->options->idgroups) && ($err = AuthorRights::i()->canupload())) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     public function files_upload(array $args)

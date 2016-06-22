@@ -20,7 +20,6 @@ class Login extends \litepubl\admin\Menu
     public function getLoginform()
     {
         $backuper = Backuper::i();
-        //$backuper->filertype = 'ftp';
         if ($backuper->filertype == 'file') {
             return '';
         }

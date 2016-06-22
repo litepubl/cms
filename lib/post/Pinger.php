@@ -158,7 +158,6 @@ class Pinger extends \litepubl\core\Events
         $pingback_str_dquote = 'rel="pingback"';
         $pingback_str_squote = 'rel=\'pingback\'';
         $x_pingback_str = 'x-pingback: ';
-        $pingback_href_original_pos = 27;
 
         extract(parse_url($url), EXTR_SKIP);
 
@@ -177,7 +176,7 @@ class Pinger extends \litepubl\core\Events
         }
 
         // Send the GET request
-        $version = $this->getApp()->options->version;
+        $version = static::getAppInstance()->options->version;
         $request = "GET $path HTTP/1.1\r\nHost: $host\r\nUser-Agent: Lite Publisher/$version\r\n\r\n";
         fputs($fp, $request);
 

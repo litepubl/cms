@@ -21,7 +21,7 @@ class GetSchema
 
     public static function form($url)
     {
-        $lang = Lang::admin();
+Lang::admin();
         $args = new Args();
         $id = !empty($_GET['idschema']) ? (int)$_GET['idschema'] : (!empty($_POST['idschema']) ? (int)$_POST['idschema'] : 0);
         $args->idschema = static ::items($id);

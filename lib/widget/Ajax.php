@@ -39,10 +39,8 @@ class Ajax implements \litepubl\core\ResponsiveInterface
         }
 
         try {
-            $theme = Theme::getTheme($themename);
-
+Theme::getTheme($themename);
             $widgets->onFindContextCallback = function ($class) use ($idurl) {
-            
                 if (($item = litepubl::$app->router->getItem($idurl)) && is_a($class, $item['class'], true)) {
                     if (is_a($item['class'], 'litepubl\core\Item', true)) {
                         return ($item['class']) ::i($item['arg']);

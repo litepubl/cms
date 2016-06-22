@@ -27,7 +27,7 @@ class Meta extends Widget
     protected function doProcessForm()
     {
         foreach ($this->widget->items as $name => $item) {
-            $widget->items[$name]['enabled'] = isset($_POST[$name]);
+            $this->widget->items[$name]['enabled'] = isset($_POST[$name]);
         }
     }
 }

@@ -13,9 +13,14 @@ namespace litepubl\tag;
 use litepubl\widget\Cats as CatsWidget;
 use litepubl\widget\Cache as CacheWidgets;
 
+/**
+ * This is the categories class
+ *
+ * @property int $defaultid
+ */
+
 class Cats extends Common
 {
-    //public  $defaultid;
     protected function create()
     {
         parent::create();
