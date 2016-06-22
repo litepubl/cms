@@ -1,23 +1,23 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   6.15
  */
 
 namespace litepubl\core;
 
 class StorageInc extends Storage
 {
-private $opcacheEnabled;
+    private $opcacheEnabled;
 
-public function __construct()
-{
-$this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_api');
-}
+    public function __construct()
+    {
+        $this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_api');
+    }
 
     public function getExt(): string
     {
@@ -47,7 +47,7 @@ $this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_
     public function loadData(string $filename)
     {
         if (\file_exists($filename . $this->getExt())) {
-            return include($filename . $this->getExt());
+            return include $filename . $this->getExt();
         }
 
         return false;
@@ -59,15 +59,15 @@ $this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_
     }
 
     public function saveFile(string $filename, string $content): bool
-{
-if (parent::saveFile($filename, $content)) {
-if ($this->opcacheEnabled) {
-opcache_compile_file($filename . $this->getExt());
-}
+    {
+        if (parent::saveFile($filename, $content)) {
+            if ($this->opcacheEnabled) {
+                opcache_compile_file($filename . $this->getExt());
+            }
 
-return true;
-}
+                return true;
+        }
 
-return false;
-}
+        return false;
+    }
 }
