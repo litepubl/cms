@@ -18,7 +18,6 @@ use litepubl\core\Callback;
 /**
  * This is the post base class
  *
- * @property int $id
  * @property int $idschema
  * @property int $idurl
  * @property int $parent

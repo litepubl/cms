@@ -10,6 +10,12 @@
 
 namespace litepubl\core;
 
+/**
+ * This is the base class to represent single item in collection
+ *
+ * @property int $id
+ */
+
 class Item extends Data
 {
     public static $instances;

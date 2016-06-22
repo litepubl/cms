@@ -18,7 +18,6 @@ use litepubl\view\Admin;
 /**
  * This is the base menu class
  *
- * @property int $id
  * @property int $author
  * @property string $content
  * @property string $rawcontent
