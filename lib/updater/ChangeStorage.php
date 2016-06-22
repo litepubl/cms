@@ -16,15 +16,6 @@ class ChangeStorage
         $this->dest = $dest;
     }
 
-    public function switch(string $dir)
-    {
-    $dir = rtrim($dir, '/\\');
-    $temp= dirname($dir) . '/temp' . time();
-    $this->copy($dir, $temp);
-    //rename($dir, $dir . '-old');
-    //rename($temp, $dir);
-    }
-
     public function copy(string $from, string $to)
     {
         if (!is_dir($to)) {
@@ -41,35 +32,38 @@ class ChangeStorage
             if (is_dir($from . '/' . $filename)) {
                 $this->copy($from . '/' . $filename, $to . '/' . $filename);
             } else {
-                $this->convert($from . '/' . $filename, $to . '/' . $filename);
+                $this->convert($from, $to, $filename);
             }
         }
 
         $list->close();
     }
 
-    public function convert($sourcefile, $destfile)
+    public function convert(string $sourcedir, string $destdir, string $filename)
     {
-        if (!strpos($sourcefile, '.bak.')) {
-            if ($data = $this->source->loadData(basename($sourcefile, $this->source->getExt()))) {
-                $this->dest->saveData(basename($destfile, $this->source->getExt()), $data);
+        if (!strpos($filename, '.bak.')) {
+$base = basename($filename, $this->source->getExt());
+            if ($data = $this->source->loadData($sourcedir . '/' . $base)) {
+                $this->dest->saveData($destdir . '/' . $base, $data);
             }
         }
     }
 
-    public static function run()
+    public static function run(string $dirname)
     {
         include(dirname(__DIR__) . '/core/AppTrait.php');
         include(dirname(__DIR__) . '/core/Storage.php');
         include(dirname(__DIR__) . '/core/StorageInc.php');
 
         $self = new static(
-         new StorageInc(),
-        new Storage()
+        new Storage(),
+         new StorageInc()
         );
 
-        $self->switch(dirname(dirname(__DIR__)) . '/storage/data');
+$dir = dirname(dirname(__DIR__)) . '/storage/';
+    $temp= 'temp' . time();
+    $self->copy($dir . $dirname, $dir . $temp);
     }
 }
 
-ChangeStorage::run();
+ChangeStorage::run('data-6.14');
