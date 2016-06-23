@@ -9,11 +9,13 @@ class ChangeStorage
 {
     private $source;
     private $dest;
+    private $callback;
 
-    public function __construct(Storage $source, Storage$dest)
+    public function __construct(Storage $source, Storage$dest, $callback = null)
     {
         $this->source = $source;
         $this->dest = $dest;
+$this->callback = $callback;
     }
 
     public function copy(string $from, string $to)
@@ -44,26 +46,52 @@ class ChangeStorage
         if (!strpos($filename, '.bak.')) {
 $base = basename($filename, $this->source->getExt());
             if ($data = $this->source->loadData($sourcedir . '/' . $base)) {
+if ($this->callback) {
+if ($base == 'storage') {
+$data = $this->iterateCallback($data);
                 $this->dest->saveData($destdir . '/' . $base, $data);
+} else {
+$std = new \StdClass();
+$std->data = $data;
+call_user_func_array($this->callback, [$std]);
+                $this->dest->saveData($destdir . '/' . $base, $std->data);
+}
+} else {
+                $this->dest->saveData($destdir . '/' . $base, $data);
+}
             }
         }
     }
 
-    public static function run(string $dirname)
+public function iterateCallback(array $data): array
+{
+                    $std = new \StdClass();
+                    foreach ($data as $name => $subdata) {
+                        $std->data = $subdata;
+                        call_user_func_array($this->callback, [$std]);
+                        $data[$name] = $std->data;
+                    }
+
+return $data;
+}
+
+    public static function create($callback = null)
     {
         include(dirname(__DIR__) . '/core/AppTrait.php');
         include(dirname(__DIR__) . '/core/Storage.php');
         include(dirname(__DIR__) . '/core/StorageInc.php');
 
-        $self = new static(
+return new static(
         new Storage(),
-         new StorageInc()
+         new StorageInc(),
+$callback
         );
-
-$dir = dirname(dirname(__DIR__)) . '/storage/';
-    $temp= 'temp' . time();
-    $self->copy($dir . $dirname, $dir . $temp);
-    }
 }
 
-ChangeStorage::run('data-6.14');
+    public function run(string $dirname)
+{
+$dir = dirname(dirname(__DIR__)) . '/storage/';
+    $temp= 'temp' . time();
+    $this->copy($dir . $dirname, $dir . $temp);
+    }
+}

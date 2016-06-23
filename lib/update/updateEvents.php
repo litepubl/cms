@@ -7,11 +7,19 @@ use litepubl\core\litepubl;
 
 function updateEvents()
 {
-$map = include(__DIR__ . '/classmap.php');
-
 $iterator = new StorageIterator(
 litepubl::$app->storage,
-function (\StdClass $std) use ($map) {
+getUpdateEvents()
+);
+
+    $iterator->dir(litepubl::$app->paths->data);
+}
+
+function getUpdateEvents()
+{
+$map = include(__DIR__ . '/classmap.php');
+
+return function (\StdClass $std) use ($map) {
     $result = false;
 
     if (isset($std->data['events']) && count($std->data['events'])) {
@@ -27,6 +35,11 @@ function (\StdClass $std) use ($map) {
                 $class = $event[0];
                 if (isset($map[$class])) {
                     $event[0] = $map[$class];
+} elseif ($j = strrpos($class, '\\')) {
+$class=substr($class, $j + 1);
+                if (isset($map[$class])) {
+                    $event[0] = $map[$class];
+}
                 }
 
                 $events[$i] = $event;
@@ -52,7 +65,5 @@ function (\StdClass $std) use ($map) {
             }
 
         return $result;
-    });
-
-    $iterator->dir(litepubl::$app->paths->data);
+    };
 }

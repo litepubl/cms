@@ -87,7 +87,7 @@ class App
         } elseif ($this->memcache) {
             $this->storage = new StorageMemcache();
         } else {
-            $this->storage = new Storage();
+            $this->storage = new StorageInc();
         }
 
         $this->poolStorage = new PoolStorage();

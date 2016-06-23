@@ -1,3 +1,4 @@
+stor
 <?php
 /**
  * Lite Publisher CMS
@@ -60,7 +61,7 @@ class Config
     //replacement classes on startup
     public static $classes = [
     //'app' => '\litepubl\core\App',
-    //'storage' => '\litepubl\core\Storage',
+    //'storage' => '\litepubl\core\StorageInc',
     //'cache' => '\litepubl\core\CacheFile,
     //'logmanager' => '\litepubl\debug\LogManager',
     ];
