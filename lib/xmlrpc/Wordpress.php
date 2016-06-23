@@ -124,7 +124,7 @@ class Wordpress extends MetaWeblog
     {
         $this->auth($username, $password, 'editor');
         $categories = Cats::i();
-        return (int)$categories->add($struct["name"], $category["slug"]);
+        return (int) $categories->add($struct["name"], $struct["slug"]);
     }
 
     public function deleteCategory($blogid, $username, $password, $id)

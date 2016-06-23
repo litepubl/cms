@@ -121,7 +121,7 @@ class Files extends \litepubl\core\Events implements \litepubl\core\ResponsiveIn
     private static function send(array $item, $from, $end)
     {
         $filename = basename($item['filename']);
-        $realfile = $this->getApp()->paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
+        $realfile = static::getAppInstance()->paths->files . 'private' . DIRECTORY_SEPARATOR . $filename;
 
         header('Cache-Control: private');
         header('Content-type: ' . $item['mime']);

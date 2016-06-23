@@ -68,7 +68,7 @@ class AboutParser
             //trim unicode sign
             $about_ini = substr($about_ini, strpos($about_ini, '['));
             $about = parse_ini_string($about_ini, true);
-            if (isset($about[$this->getApp()->options->language])) {
+            if (isset($about[static::getAppInstance()->options->language])) {
                 $about['about'] = $about[$this->getApp()->options->language] + $about['about'];
             }
             return $about['about'];

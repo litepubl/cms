@@ -23,28 +23,30 @@ class Common extends \litepubl\core\Events
 
     public static function auth($email, $password, $group)
     {
-        if ($this->getApp()->options->auth($email, $password)) {
-            if ($this->getApp()->options->hasgroup($group)) {
+$options = static::getAppInstance()->options;
+        if ($options->auth($email, $password)
+&& $options->hasGroup($group)) {
                 return true;
             }
-        }
+
         throw new Exception('Bad login/pass combination.', 403);
     }
 
-    public static function canedit($email, $password, $idpost)
+    public static function canEdit($email, $password, $idpost)
     {
-        if ($this->getApp()->options->auth($email, $password)) {
-            if ($this->getApp()->options->hasgroup('editor')) {
+$options = static::getAppInstance()->options;
+        if ($options->auth($email, $password)) {
+            if ($options->hasGroup('editor')) {
                 return true;
             }
 
-            if ($this->getApp()->options->hasgroup('author')) {
+            if ($options->hasgroup('author')) {
                 if ($idpost == 0) {
                     return true;
                 }
 
                 $post = Post::i($idpost);
-                return $post->author == $this->getApp()->options->user;
+                return $post->author == $options->user;
             }
         }
         throw new Exception('Bad login/pass combination.', 403);

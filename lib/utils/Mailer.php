@@ -18,9 +18,8 @@ class Mailer
 
     private static $hold;
 
-    protected static function send($from, $to, $subj, $body)
+    protected static function send(string $from, string $to, string $subj, string $body)
     {
-        $options = static ::getAppInstance()->options;
         $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
         $date = date('r');
         if (Config::$debug) {

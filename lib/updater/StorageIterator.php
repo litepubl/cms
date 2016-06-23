@@ -31,7 +31,7 @@ class StorageIterator
             if (is_dir($dir . $filename)) {
                 $this->dir($dir . $filename . '/');
             } else {
-                $this->process($dir . $filename, $to . '/' . $filename);
+                $this->process($dir . $filename);
             }
         }
 

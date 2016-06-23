@@ -39,7 +39,7 @@ class Comment extends \litepubl\core\Data
     public function setId($id)
     {
         $comments = Comments::i();
-        $this->data = $comments->getitem($id);
+        $this->data = $comments->getItem($id);
         if (!isset($this->data['name'])) {
             $this->data = $this->data + Users::i()->getitem($this->data['author']);
         }

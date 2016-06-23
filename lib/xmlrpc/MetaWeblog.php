@@ -405,7 +405,7 @@ class MetaWeblog extends Common
         $id = $parser->upload($filename, $struct['bits'], '', '', '', $overwrite);
 
         if (!$id) {
-            return $this->xerror(500, "Could not write file $name");
+            return $this->xerror(500, "Could not write file $filename");
         }
 
         $files = Files::i();

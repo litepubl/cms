@@ -175,7 +175,7 @@ class Updater extends \litepubl\core\Events
         if ($this->download($ver)) {
             $this->result = $lang->successdownload;
             $this->update();
-            $result.= $lang->successupdated;
+            $this->result.= $lang->successupdated;
             return true;
         }
         return false;

@@ -28,7 +28,7 @@ class Remote
 
     public static function i()
     {
-        return $this->getApp()->classes->getinstance(get_called_class());
+        return static::getAppInstance()->classes->getinstance(get_called_class());
     }
 
     public function __construct()

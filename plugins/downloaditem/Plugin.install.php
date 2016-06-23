@@ -56,7 +56,6 @@ function PluginInstall($self)
     $app->options->downloaditem_themetag = $idtheme;
     $app->options->downloaditem_plugintag = $idplugin;
 
-    $base = basename(dirname(__file__));
     $plugins = Plugins::i();
     if (!isset($plugins->items['polls'])) {
         $plugins->add('polls');

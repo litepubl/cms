@@ -10,8 +10,12 @@
 
 namespace litepubl\utils;
 
+use litepubl\Config;
+
 class Http
 {
+use \litepubl\core\AppTrait;
+
     public static $timeout = 20;
 
     public static function get($url, $headers = false)
@@ -52,10 +56,10 @@ class Http
             if (is_array($headers) && count($headers)) {
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             }
-            /*
-            curl_setopt($ch, CURLOPT_VERBOSE , true);
-            curl_setopt($ch, CURLOPT_STDERR, fopen( $this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
-            */
+
+if (Config::$debug) {
+static::setLog($ch);
+}
 
             if (!ini_get('open_basedir') && !ini_get('safe_mode')) {
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -87,11 +91,13 @@ class Http
         if (is_array($headers) && count($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
+
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
 
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
-        curl_setopt($ch, CURLOPT_STDERR, fopen($this->getApp()->paths->data . 'logs/curl.txt', 'w+'));
+if (config::$debug) {
+static::setLog($ch);
+}
 
         return $ch;
     }
@@ -147,4 +153,10 @@ class Http
         curl_close($ch);
         return substr($result, strpos($result, "\r\n\r\n") + 4);
     }
+
+public static function setLog($ch)
+{
+            curl_setopt($ch, CURLOPT_VERBOSE , true);
+            curl_setopt($ch, CURLOPT_STDERR, fopen(static::getAppInstance()->paths->data . 'logs/curl.txt', 'w+'));
+}
 }

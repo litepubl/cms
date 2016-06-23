@@ -69,7 +69,7 @@ class Backuper extends \litepubl\core\Events
 
     public static function getPrefered()
     {
-        $datafile = $this->getApp()->paths->data . 'storage' . $this->getApp()->storage->ext;
+        $datafile = static::getAppInstance()->paths->data . 'storage' . static::getAppInstance()->storage->ext;
         if (file_exists($datafile)) {
             $dataowner = fileowner($datafile);
             $libowner = fileowner(__DIR__);

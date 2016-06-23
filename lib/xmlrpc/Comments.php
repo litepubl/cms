@@ -148,7 +148,7 @@ class Comments extends Common
         return array(
             "date_created_gmt" => new IXR_Date($comment->posted - $this->getApp()->options->gmt) ,
             "user_id" => $data['author'],
-            "comment_id" => $id,
+            "comment_id" => $data['id'],
             "parent" => $data['parent'],
             "status" => $data['status'] == 'approved' ? 'approve' : $data['status'],
             "content" => $data['content'],

@@ -41,17 +41,17 @@ class Single extends Perm
 
     public static function encryptpassword($p)
     {
-        return md5($this->getApp()->router->item['id'] . Config::$secret . $p . $this->getApp()->options->solt);
+        return md5(static::getAppInstance()->context->itemRoute['id'] . Config::$secret . $p . static::getAppInstance()->options->solt);
     }
 
     public static function hash($password, $solt)
     {
-        return md5($solt . Config::$secret . $password . $this->getApp()->options->solt);
+        return md5($solt . Config::$secret . $password . static::getAppInstance()->options->solt);
     }
 
     public static function getCookiename()
     {
-        return 'singlepwd_' . $this->getApp()->router->item['id'];
+        return 'singlepwd_' . static::getAppInstance()->router->item['id'];
     }
 
     public function checkPassword($p)
@@ -72,7 +72,7 @@ class Single extends Perm
 
     public static function authcookie($password)
     {
-        if ($this->getApp()->options->group == 'admin') {
+        if (static::getAppInstance()->options->group == 'admin') {
             return true;
         }
 
@@ -106,7 +106,7 @@ class Single extends Perm
             return true;
         }
 
-        switch ($result) {
+        switch ($context->response->status) {
             case 404:
                 $errorPages = new ErrorPages();
                 $errorPages->notfound();

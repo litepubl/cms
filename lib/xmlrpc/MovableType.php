@@ -121,7 +121,7 @@ class MovableType extends Common
 
         $result = array();
         $pingbacks = PingbacksItems::i($id);
-        $items = $tpingbacks->db->getitems("post = $id and status = 'approved' order by posted");
+        $items = $pingbacks->db->getItems("post = $id and status = 'approved' order by posted");
         foreach ($items as $item) {
             $result[] = array(
                 'pingIP' => $item['ip'],
