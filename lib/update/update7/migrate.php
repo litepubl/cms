@@ -60,16 +60,29 @@ $url = $item['url'];
 if (isset($map[$url])) {
 $item['class'] = $map[$url];
 $menus['items][$id] = $item;
+static::$db->setValue($item['idurl'], 'class', $item['class']);
 }
 }
 
 static::save('adminmenu', $menus);
 }
 
-function migrate7()
+public static function updateClasses()
+{
+$data = static::load(storage');
+$cl = &$data['classes'];
+$cl['namespaces'] = [];
+$cl['items'] = [];
+unset($cl['factories'], $cl['classes'], $cl['interfaces']);
+
+static::save(storage', $data);
+}
+
+public static function migrate()
 {
 static::updateJs();
 static::updateMenus();
+static::updateClasses();
 }
 
 }
