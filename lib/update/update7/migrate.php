@@ -77,6 +77,9 @@ $cl['namespaces'] = [];
 $cl['items'] = [];
 unset($cl['factories'], $cl['classes'], $cl['interfaces']);
 static::save('storage', $data);
+
+    $xmlrpc = TXMLRPC::i();
+    $xmlrpc->deleteclass('twidgets');
 }
 
 public static function updatePlugins()
@@ -91,6 +94,28 @@ public static function updatePlugins()
     }
     
 static::save('plugins/index', $plugins);
+}
+
+public static function updateTables()
+{
+$db = static::$db;
+    $man = dbmanager::i();
+
+    foreach (['posts', 'userpage', 'categories', 'tags', ] as $table) {
+        if ($man->columnExists($table, 'idview')) {
+            $man->alter($table, "change idview idschema int unsigned NOT NULL default '1'");
+        }
+    }
+
+$map = include(__DIR__ . '/classmap.php');
+$db->table = 'urlmap';
+foreach ($map as $old => $new) {
+$new = $db->quote($new);
+$db->update("class = $new", "class = '$old' or clas = 'litepubl\\\\$old'");
+}
+
+
+
 }
 
 public static function run()
@@ -108,6 +133,7 @@ static::updateJs();
 static::updateMenus();
 static::updateClasses();
 static::updatePlugins();
+static::updateTables();
 }
 
 }
