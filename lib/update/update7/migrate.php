@@ -2,6 +2,8 @@
 
 namespace litepubl\update;
 
+use litepubl\updater\ChangeStorage;
+
 class migrate
 {
 public static $dir = 'data';
@@ -49,8 +51,8 @@ static::save('cssmerger', $css);
 public static function updateMenus()
 {
 $map = [];
-$new = include(__DIR__ . '/adminmenu.php');
-foreach ($new as $item) {
+$new = include(__DIR__ . '/adminmenu.inc.php');
+foreach ($new['items'] as $item) {
 $map[$item['url']] = $item['class'];
 }
 
@@ -59,8 +61,8 @@ foreach ($menus['items'] as $id => $item) {
 $url = $item['url'];
 if (isset($map[$url])) {
 $item['class'] = $map[$url];
-$menus['items][$id] = $item;
-static::$db->setValue($item['idurl'], 'class', $item['class']);
+$menus['items'][$id] = $item;
+//static::$db->setValue($item['idurl'], 'class', $item['class']);
 }
 }
 
@@ -69,20 +71,43 @@ static::save('adminmenu', $menus);
 
 public static function updateClasses()
 {
-$data = static::load(storage');
+$data = static::load('storage');
 $cl = &$data['classes'];
 $cl['namespaces'] = [];
 $cl['items'] = [];
 unset($cl['factories'], $cl['classes'], $cl['interfaces']);
-
-static::save(storage', $data);
+static::save('storage', $data);
 }
 
-public static function migrate()
+public static function updatePlugins()
 {
+    $map = include (__DIR__ . '/pluginsmap.php');
+    $plugins = static::load('plugins/index');
+    foreach ($plugins['items'] as $name => $item) {
+        if (isset($map[$name])) {
+            unset($plugins['items'][$name]);
+            $plugins['items'][$map[$name]] = $item;
+        }
+    }
+    
+static::save('plugins/index', $plugins);
+}
+
+public static function run()
+{
+require (__DIR__ . '/eventUpdater.php');
+require (dirname(dirname(__DIR__)) . '/updater/ChangeStorage.php');
+
+eventUpdater::$map = include(__DIR__ . '/classmap.php');
+$changer = ChangeStorage::create(eventUpdater::getCallback());
+$dir = $changer->run('data-6.14');
+
+static::$storage = $changer->dest;
+static::$dir = dirname(dirname(dirname(__DIR__))) . '/storage/' . $dir . '/';
 static::updateJs();
 static::updateMenus();
 static::updateClasses();
+static::updatePlugins();
 }
 
 }

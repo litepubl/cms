@@ -75,7 +75,7 @@ class eventUpdater
 
     public static function getCallback(): array
     {
-        return [static::class, 'updateEvents']
+        return [static::class, 'updateEvents'];
     }
 
     public static function updateStorage()

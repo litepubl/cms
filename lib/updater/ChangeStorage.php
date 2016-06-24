@@ -7,8 +7,8 @@ use litepubl\core\StorageInc;
 
 class ChangeStorage
 {
-    private $source;
-    private $dest;
+    public $source;
+    public $dest;
     private $callback;
 
     public function __construct(Storage $source, Storage$dest, $callback = null)
@@ -93,5 +93,6 @@ $callback
 $dir = dirname(dirname(__DIR__)) . '/storage/';
     $temp= 'temp' . time();
     $this->copy($dir . $dirname, $dir . $temp);
+return $temp;
     }
 }

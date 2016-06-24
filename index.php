@@ -1,4 +1,3 @@
-stor
 <?php
 /**
  * Lite Publisher CMS

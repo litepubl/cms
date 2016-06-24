@@ -21,17 +21,7 @@ use litepubl\tag\Tags;
 
 function updatePlugins()
 {
-    $map = include (__DIR__ . '/pluginsmap.php');
-    $plugins = Plugins::i();
-    foreach ($plugins->items as $name => $item) {
-        if (isset($map[$name])) {
-            unset($plugins->items[$name]);
-            $plugins->items[$map[$name]] = $item;
-        }
-    }
-    
-    $plugins->save();
-    
+    $plugins = Plugins::i();    
     if (isset($plugins->items['wiki'])) {
         $vars = AutoVars::i();
         $vars->items['wiki'] = 'litepubl\plugins\wikiwords\Wiki';
