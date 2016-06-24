@@ -3,11 +3,13 @@
 namespace litepubl\update;
 
 use litepubl\updater\ChangeStorage;
+use litepubl\core\DBManager;
 
 class migrate
 {
 public static $dir = 'data';
 public static $storage;
+public static $db;
 
 public static function load(string $name): array
 {
@@ -17,6 +19,15 @@ return static::$storage->loadData(static::$dir . $name);
 public static function save(string $name, array $data)
 {
 return static::$storage->saveData(static::$dir . $name, $data);
+}
+
+public static function getDB()
+{
+if (class_exists('litepubl\core\DB', false)) {
+return \litepubl\core\DB::i();
+
+} else {
+}
 }
 
 public static function updateJs()
@@ -114,8 +125,10 @@ $new = $db->quote($new);
 $db->update("class = $new", "class = '$old' or clas = 'litepubl\\\\$old'");
 }
 
+$man->renameEnum('posts', 'class', 'tpost', 'litepubl-post-Post');
+$man->renameEnum('posts', 'class', 'litepubl-tpost', 'litepubl-post-Post');
 
-
+//$man->renameEnum('posts', 'class', 'product', 'litepubl-product');
 }
 
 public static function run()
@@ -129,6 +142,8 @@ $dir = $changer->run('data-6.14');
 
 static::$storage = $changer->dest;
 static::$dir = dirname(dirname(dirname(__DIR__))) . '/storage/' . $dir . '/';
+static::$db = static::getDB();
+
 static::updateJs();
 static::updateMenus();
 static::updateClasses();
