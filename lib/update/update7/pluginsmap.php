@@ -19,6 +19,4 @@ return [
 'rss-filelist' => 'rssfiles',
 'rss-prev-next' => 'rssprevnext',
 'regservices-ulogin' => 'regservices2ulogin',
-
-
  ];

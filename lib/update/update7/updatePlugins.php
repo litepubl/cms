@@ -11,7 +11,6 @@
 namespace litepubl\update;
 
 use litepubl\core\litepubl;
-use litepubl\core\litepubl;
 use litepubl\core\Plugins;
 use litepubl\view\Js;
 use litepubl\view\AutoVars;
