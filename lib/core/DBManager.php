@@ -29,10 +29,7 @@ class DBManager
 
     public function __call($name, $arg)
     {
-        return call_user_func_array(array(
-            $this->getApp()->db,
-            $name
-        ), $arg);
+        return call_user_func_array([$this->getApp()->db, $name], $arg);
     }
 
     public function createTable($name, $struct)

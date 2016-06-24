@@ -3,7 +3,6 @@
 namespace litepubl\update;
 
 use litepubl\updater\ChangeStorage;
-use litepubl\core\DBManager;
 
 class migrate
 {
@@ -25,8 +24,13 @@ public static function getDB()
 {
 if (class_exists('litepubl\core\DB', false)) {
 return \litepubl\core\DB::i();
-
+} elseif (class_exists('tdatabase', false)) {
+return \tdatabase::i();
+} elseif (class_exists('litepubl\tdatabase', false)) {
+return \litepubl\tdatabase::i();
 } else {
+include_once(dirname(dirname(__DIR__)) . '/core/DB.php');
+return \litepubl\core\DB::i();
 }
 }
 
@@ -110,7 +114,8 @@ static::save('plugins/index', $plugins);
 public static function updateTables()
 {
 $db = static::$db;
-    $man = dbmanager::i();
+include_once(__DIR__ . '/minidb.php');
+    $man = new minidb($db);
 
     foreach (['posts', 'userpage', 'categories', 'tags', ] as $table) {
         if ($man->columnExists($table, 'idview')) {
