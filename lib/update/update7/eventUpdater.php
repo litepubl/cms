@@ -2,9 +2,18 @@
 
 namespace litepubl\update;
 
-class replacer
+class eventUpdater
 {
 public static $map;
+
+public static function getMap(): array
+{
+if (!static::$map) {
+static::$map = include(__DIR__ . '/classmap.php');
+}
+
+return static::$map;
+}
 
 public static function get(string $class)
 {
@@ -22,7 +31,7 @@ return static::$map[$class];
 return false;
 }
 
-public static function replace(\StdClass $std)
+public static function updateEvents(\StdClass $std)
   {
     $result = false;
 
@@ -63,5 +72,21 @@ public static function replace(\StdClass $std)
 
         return $result;
     }
+
+public static function getCallback(): array
+{
+return [static::class, 'updateEvents']
+}
+
+public static function updateStorage()
+{
+$iterator = new StorageIterator(
+litepubl::$app->storage,
+static::getCallback()
+);
+
+    $iterator->dir(litepubl::$app->paths->data);
+}
+
 
 }

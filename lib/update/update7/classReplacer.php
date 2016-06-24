@@ -10,7 +10,7 @@
 
 namespace litepubl\update;
 
-class Migrate
+class classReplacer
 {
     public $classmap;
 
@@ -26,7 +26,7 @@ class Migrate
         ffile_put_contents($filename, $s);
     }
 
-    public function replace($s)
+    public function regexpReplace($s)
     {
         foreach ($this->classmap as $old => $new) {
             if (preg_match("/\\b$old\\b/im", $s, $m)) {
@@ -93,4 +93,63 @@ use $new;";
 
         $list->close();
     }
+
+public function replace(string $s): string
+{
+$result = '';
+$uses = [];
+
+$a = token_get_all($s);
+foreach ($a as $i => $t) {
+if (count($t) > 1) {
+if ($t[0] == \T_STRING) {
+$v = $t[1];
+if (isset($this->map[$v])) {
+$v = $this->map[$v];
+$uses[] = $v;
+$v = substr($v, strrpos($v, '\\') + 1);
+}
+
+$result .= $v;
+} else {
+$result .= $t[1];
+}
+} else {
+$result .= $t;
+}
+}
+
+if (count($uses) {
+$result = $this->insertuse($result, $uses);
+}
+
+return $result;
+}
+
+public function insertUse(string $s, array $uses)
+{
+$uses = array_unique($uses);
+foreach ($uses as $class) {
+$use = "use $class;";
+if (strpos($s, $use)) {
+continue;
+}
+
+$ns = substr($class, 0, strrpos($class, '\\'));
+if (strpos($s, "namespace $ns;")) {
+continue;
+}
+
+$i = strpos($s, "\n\n", strpos($s, 'namespace '));
+if (!$i) {
+echo "Cant insert $use<br>";
+return$s;
+}
+
+$s = substr($s, 0, $i) . "\n" . $use . substr($s, $i);
+}
+
+return $s;
+}
+
 }

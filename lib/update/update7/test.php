@@ -4,9 +4,9 @@ namespace litepubl\update;
 
 use litepubl\updater\ChangeStorage;
 
-require (__DIR__ . '/updateEvents.php');
+require (__DIR__ . '/eventUpdater.php');
 require (dirname(__DIR__) . '/updater/ChangeStorage.php');
-require_once (__DIR__ . '/replacer.php');
-replacer::$map = include(__DIR__ . '/classmap.php');
-$changer = ChangeStorage::create([replacer::class, 'replace']);
+
+eventUpdater::$map = include(__DIR__ . '/classmap.php');
+$changer = ChangeStorage::create(eventUpdater::getCallback());
 $changer->run('data-6.14');
