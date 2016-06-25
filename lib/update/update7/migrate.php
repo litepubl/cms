@@ -147,7 +147,7 @@ $map = include(__DIR__ . '/classmap.php');
 $db->table = 'urlmap';
 foreach ($map as $old => $new) {
 $new = $db->quote($new);
-$db->update("class = $new", "class = '$old' or clas = 'litepubl\\\\$old'");
+$db->update("class = $new", "class = '$old' or class = 'litepubl\\\\$old'");
 }
 
 $man->renameEnum('posts', 'class', 'tpost', 'litepubl-post-Post');
