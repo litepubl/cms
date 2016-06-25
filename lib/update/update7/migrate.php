@@ -167,6 +167,34 @@ static::save('xmlrpc', $xmlrpc);
         // $man->renameEnum('posts', 'class', 'product', 'litepubl-product');
     }
 
+    public static function uploadIndex()
+{
+if (class_exists('\tbackuper', false)) {
+$backuper = \tbackuper::i();
+} elseif (class_exists('\litepubl\tbackuper', false)) {
+$backuper = \litepubl\tbackuper::i();
+} elseif (class_exists('\litepubl\updater\Backuper', false)) {
+$backuper = \litepubl\updater\Backuper::i();
+} else {
+return;
+}
+                $path_checked = false;
+                $path_root = false;
+
+                foreach ($backuper->tar->files as $item) {
+                    if (!$path_checked) {
+                        $path_checked = true;
+                        $path_root = $backuper->get_path_root($item['name']);
+                    }
+
+                    $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
+if ($name == 'index.php') {
+$backuper->uploadFile($name, $item['file'], $item['mode']);
+break;
+                    }
+}
+}
+
     public static function run()
     {
         require (__DIR__ . '/eventUpdater.php');
@@ -186,5 +214,6 @@ static::save('xmlrpc', $xmlrpc);
 static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
+static::uploadIndex();
     }
 }

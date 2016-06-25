@@ -569,7 +569,7 @@ class Backuper extends \litepubl\core\Events
                     }
 
                     $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
-                    if (!$this->uploadfile($name, $item['file'], $item['mode'])) {
+                    if (!$this->uploadFile($name, $item['file'], $item['mode'])) {
                         return $this->errorwrite($name);
                     }
                 }
