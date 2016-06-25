@@ -29,27 +29,30 @@ return \tdatabase::i();
 } elseif (class_exists('litepubl\tdatabase', false)) {
 return \litepubl\tdatabase::i();
 } else {
-include_once(__DIR__ . '/db.php');
-$db = new db();
-    public function getConfig()
-    {
-        if (config::$db) {
-            return config::$db;
-        }
-
-        $options = $this->getApp()->options;
-        if (isset($options->dbconfig)) {
-            $result = $options->dbconfig;
+$data = static::load('storage');
+$config = $data['options']['dbconfig'];
             //decrypt db password
-            $result['password'] = $options->dbpassword;
-            return $result;
-        }
+            $config['password'] = static::decrypt($config['password'], $data['options']['solt'] . '8r7j7hbt8iik//pt7hUy5/e/7FQvVBoh7/Zt8sCg8+ibVBUt7rQ');
 
-        return false;
-    }
+include_once(__DIR__ . '/minidb.php');
+$db = new minidb();
+$db->setconfig($config);
 return $db;
 }
 }
+
+    public static function decrypt($s, $key)
+    {
+        $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
+        if (strlen($key) > $maxkey) {
+            $key = substr($key, $maxkey);
+        }
+
+        $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
+        $len = strlen($s);
+        $pad = ord($s[$len - 1]);
+        return substr($s, 0, $len - $pad);
+    }
 
 public static function updateJs()
 {
@@ -110,8 +113,8 @@ $cl['items'] = [];
 unset($cl['factories'], $cl['classes'], $cl['interfaces']);
 static::save('storage', $data);
 
-    $xmlrpc = TXMLRPC::i();
-    $xmlrpc->deleteclass('twidgets');
+    //$xmlrpc = TXMLRPC::i();
+    //$xmlrpc->deleteclass('twidgets');
 }
 
 public static function updatePlugins()
@@ -131,8 +134,8 @@ static::save('plugins/index', $plugins);
 public static function updateTables()
 {
 $db = static::$db;
-include_once(__DIR__ . '/minidb.php');
-    $man = new minidb($db);
+include_once(__DIR__ . '/miniman.php');
+    $man = new miniman($db);
 
     foreach (['posts', 'userpage', 'categories', 'tags', ] as $table) {
         if ($man->columnExists($table, 'idview')) {

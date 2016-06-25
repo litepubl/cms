@@ -1,130 +1,416 @@
 <?php
+/**
+ * Lite Publisher CMS
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link https://github.com/litepubl\cms
+ * @version 6.15
+ *
+ */
 
 namespace litepubl\update;
 
 class minidb
 {
-public $db;
+    public $mysqli;
+    public $result;
+    public $sql;
+    public $dbname;
+    public $table;
+    public $prefix;
+    public $history;
 
-public function __construct($db)
-{
-$this->db = $db;
+    public function __construct()
+    {
+        $this->sql = '';
+        $this->table = '';
+        $this->history = array();
 }
 
+    public function setConfig($dbconfig)
+    {
+        if (!$dbconfig) {
+            return false;
+        }
+
+        $this->dbname = $dbconfig['dbname'];
+        $this->prefix = $dbconfig['prefix'];
+
+        $this->mysqli = new \mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
+
+        if (mysqli_connect_error()) {
+            throw new \Exception('Error connect to database');
+        }
+
+        $this->mysqli->set_charset('utf8');
+
+        /* lost performance
+        $timezone = date('Z') / 3600;
+        if ($timezone > 0) $timezone = "+$timezone";
+        $this->query("SET time_zone = '$timezone:00'");
+        */
+    }
     public function __get($name)
     {
-        return $this->db->$name;
+        if ($name == 'man') {
+            return DBManager::i();
+        }
+
+        return $this->prefix . $name;
     }
 
-    public function __call($name, $arg)
+    public function exec($sql)
     {
-        return call_user_func_array([$this->db, $name], $arg);
+        return $this->query($sql);
     }
 
-    public function alter($table, $arg)
+    public function query($sql)
     {
-        return $this->exec("alter table $this->prefix$table $arg");
-    }
-    public function getEnum($table, $column)
-    {
-        if ($res = $this->query("describe $this->prefix$table $column")) {
-            $r = $this->fetchassoc($res);
-            $s = $r['Type'];
-            if (preg_match('/enum\((.*?)\)/i', $s, $m)) {
-                $values = $m[1];
-                $result = explode(',', $values);
-                foreach ($result as $i => $v) {
-                    $result[$i] = trim($v, ' \'"');
-                }
-                
-                return $result;
+        $this->sql = $sql;
+        if (is_object($this->result)) {
+            $this->result->close();
+        }
+
+        $this->result = $this->mysqli->query($sql);
+        if ($this->result == false) {
+throw new \Exception($this->mysqli->error);
+        } elseif (Config::$debug) {
+            $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+            if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
+trigger_error($sql, $r->fetch_assoc(), E_USER_WARNING);
             }
         }
-        
+
+        return $this->result;
+    }
+
+    public function performance()
+    {
+        $result = '';
+        $total = 0.0;
+        $max = 0.0;
+        foreach ($this->history as $i => $item) {
+            $result.= "$i: {$item['time']}\n{$item['sql']}\n\n";
+            $total+= $item['time'];
+            if ($max < $item['time']) {
+                $maxsql = $item['sql'];
+                $max = $item['time'];
+            }
+        }
+        $result.= "maximum $max\n$maxsql\n";
+        $result.= sprintf("%s total time\n%d querries\n\n", $total, count($this->history));
+        return $result;
+    }
+
+    public function quote($s)
+    {
+        return sprintf('\'%s\'', $this->mysqli->real_escape_string($s));
+    }
+
+    public function escape($s)
+    {
+        return $this->mysqli->real_escape_string($s);
+    }
+
+    public function setTable($table)
+    {
+        $this->table = $table;
+        return $this;
+    }
+
+    public function select($where)
+    {
+        if ($where != '') {
+            $where = 'where ' . $where;
+        }
+        return $this->query("SELECT * FROM $this->prefix$this->table $where");
+    }
+
+    public function idSelect($where)
+    {
+        return $this->res2id($this->query("select id from $this->prefix$this->table where $where"));
+    }
+
+    public function selectAssoc($sql)
+    {
+        return $this->query($sql)->fetch_assoc();
+    }
+
+    public function getAssoc($where)
+    {
+        return $this->select($where)->fetch_assoc();
+    }
+
+    public function update($values, $where)
+    {
+        return $this->query("update $this->prefix$this->table set $values   where $where");
+    }
+
+    public function idUpdate($id, $values)
+    {
+        return $this->update($values, "id = $id");
+    }
+
+    public function assoc2update(array $a)
+    {
+        $list = array();
+        foreach ($a as $name => $value) {
+            if (is_bool($value)) {
+                $value = $value ? '1' : '0';
+                $list[] = sprintf('%s = %s ', $name, $value); {
+                    continue;
+                }
+            }
+
+            $list[] = sprintf('%s = %s', $name, $this->quote($value));
+        }
+
+        return implode(', ', $list);
+    }
+
+    public function updateAssoc(array $a, $index = 'id')
+    {
+        $id = $a[$index];
+        unset($a[$index]);
+        return $this->update($this->assoc2update($a), "$index = '$id' limit 1");
+    }
+
+    public function setValues($id, array $values)
+    {
+        return $this->update($this->assoc2update($values), "id = '$id' limit 1");
+    }
+
+    public function insertRow($row)
+    {
+        return $this->query(sprintf('INSERT INTO %s%s %s', $this->prefix, $this->table, $row));
+    }
+
+    public function insertAssoc(array $a)
+    {
+        unset($a['id']);
+        return $this->add($a);
+    }
+
+    public function addUpdate(array $a)
+    {
+        if ($this->idexists($a['id'])) {
+            $this->updateAssoc($a);
+        } else {
+            return $this->add($a);
+        }
+    }
+
+    public function add(array $a)
+    {
+        $this->insertRow($this->assocToRow($a));
+        if ($id = $this->mysqli->insert_id) {
+            return $id;
+        }
+
+        $r = $this->query('select last_insert_id() from ' . $this->prefix . $this->table)->fetch_row();
+        return (int)$r[0];
+    }
+
+    public function insert(array $a)
+    {
+        $this->insertRow($this->assocToRow($a));
+    }
+
+    public function assocToRow(array $a)
+    {
+        $vals = array();
+        foreach ($a as $val) {
+            if (is_bool($val)) {
+                $vals[] = $val ? '1' : '0';
+            } else {
+                $vals[] = $this->quote($val);
+            }
+        }
+
+        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)), implode(', ', $vals));
+    }
+
+    public function getCount($where = '')
+    {
+        $sql = "SELECT COUNT(*) as count FROM $this->prefix$this->table";
+        if ($where) {
+            $sql.= ' where ' . $where;
+        }
+        if (($res = $this->query($sql)) && ($r = $res->fetch_assoc())) {
+            return (int)$r['count'];
+        }
         return false;
     }
 
-    public function setEnum($table, $column, array $enum)
+    public function delete($where)
     {
-        $items = $this->quoteArray($enum);
-        $default = $this->db->quote($enum[0]);
-        $tmp = $column . '_tmp';
-        $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
-        $this->exec("update $this->prefix$table set $tmp = $column + 0");
-        $this->exec("alter table $this->prefix$table drop $column");
-        $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
+        return $this->query("delete from $this->prefix$this->table where $where");
     }
 
-    public function addEnum($table, $column, $value)
+    public function idDelete($id)
     {
-        if (($values = $this->getenum($table, $column)) && ! in_array($value, $values)) {
-            $values[] = $value;
-            $this->setenum($table, $column, $values);
+        return $this->query("delete from $this->prefix$this->table where id = $id");
+    }
+
+    public function deleteItems(array $items)
+    {
+        return $this->delete('id in (' . implode(', ', $items) . ')');
+    }
+
+    public function idExists($id)
+    {
+        if ($r = $this->query("select id  from $this->prefix$this->table where id = $id limit 1")) {
+            return $r && $r->fetch_assoc();
         }
+
+        return false;
     }
 
-    public function deleteEnum($table, $column, $value)
+    public function exists($where)
     {
-        if ($values = $this->getenum($table, $column)) {
-            $value = trim($value, ' \'"');
-            $i = array_search($value, $values);
-            if (false === $i) {
-                return;
+        return $this->query("select *  from $this->prefix$this->table where $where limit 1")->num_rows;
+    }
+
+    public function getList(array $list)
+    {
+        return $this->res2assoc($this->select(sprintf('id in (%s)', implode(',', $list))));
+    }
+
+    public function getItems($where)
+    {
+        return $this->res2assoc($this->select($where));
+    }
+
+    public function getItem($id, $propname = 'id')
+    {
+        if ($r = $this->query("select * from $this->prefix$this->table where $propname = $id limit 1")) {
+            return $r->fetch_assoc();
+        }
+
+        return false;
+    }
+
+    public function findItem($where)
+    {
+        return $this->query("select * from $this->prefix$this->table where $where limit 1")->fetch_assoc();
+    }
+
+    public function findId($where)
+    {
+        return $this->findprop('id', $where);
+    }
+
+    public function findProp($propname, $where)
+    {
+        if ($r = $this->query("select $propname from $this->prefix$this->table where $where limit 1")->fetch_assoc()) {
+            return $r[$propname];
+        }
+
+        return false;
+    }
+
+    public function getVal($table, $id, $name)
+    {
+        if ($r = $this->query("select $name from $this->prefix$table where id = $id limit 1")->fetch_assoc()) {
+            return $r[$name];
+        }
+
+        return false;
+    }
+
+    public function getValue($id, $name)
+    {
+        if ($r = $this->query("select $name from $this->prefix$this->table where id = $id limit 1")->fetch_assoc()) {
+            return $r[$name];
+        }
+
+        return false;
+    }
+
+    public function setValue($id, $name, $value)
+    {
+        return $this->update("$name = " . $this->quote($value), "id = $id");
+    }
+
+    public function getValues($names, $where)
+    {
+        $result = array();
+        $res = $this->query("select $names from $this->prefix$this->table where $where");
+        if (is_object($res)) {
+            while ($r = $res->fetch_row()) {
+                $result[$r[0]] = $r[1];
             }
-            
-            array_splice($values, $i, 1);
-            $default = $values[0];
-            $this->exec("update $this->prefix$table set $column = '$default' where $column = '$value'");
-            
-            $items = $this->quoteArray($values);
-            $tmp = $column . '_tmp';
-            $this->exec("alter table $this->prefix$table add $tmp enum($items)");
-            foreach ($values as $name) {
-                $this->exec("update $this->prefix$table set $tmp = '$name' where $column = '$name'");
+        }
+        return $result;
+    }
+
+    public function res2array($res)
+    {
+        $result = array();
+        if (is_object($res)) {
+            while ($row = $res->fetch_row()) {
+                $result[] = $row;
             }
-            $this->exec("alter table $this->prefix$table drop $column");
-            $this->exec("alter table $this->prefix$table change $tmp $column enum($items)");
+            return $result;
         }
     }
 
-    public function renameEnum($table, $column, $oldvalue, $newvalue)
+    public function res2id($res)
     {
-        if (($oldvalue != $newvalue) && ($values = $this->getenum($table, $column))) {
-            $oldvalue = trim($oldvalue, ' \'"');
-            $newvalue = trim($newvalue, ' \'"');
-            
-            $i = array_search($oldvalue, $values);
-            if (false !== $i) {
-                $values[$i] = $newvalue;
-                $items = $this->quoteArray($values);
-                $default = $this->db->quote($values[0]);
-                
-                $tmp = $column . '_tmp';
-                $this->exec("alter table $this->prefix$table add $tmp enum($items) default $default");
-                // exclude changed
-                unset($values[$i]);
-                foreach ($values as $value) {
-                    $value = $this->db->quote($value);
-                    $this->exec("update $this->prefix$table set $tmp = $value where $column  = $value");
-                }
-                
-                $oldvalue = $this->db->quote($oldvalue);
-                $newvalue = $this->db->quote($newvalue);
-                $this->exec("update $this->prefix$table set $tmp = $newvalue where $column  = $oldvalue");
-                
-                $this->exec("alter table $this->prefix$table drop $column");
-                $this->exec("alter table $this->prefix$table change $tmp $column enum($items) default $default");
+        $result = array();
+        if (is_object($res)) {
+            while ($row = $res->fetch_row()) {
+                $result[] = $row[0];
             }
         }
+        return $result;
     }
 
-    public function quoteArray(array $values)
+    public function res2assoc($res)
     {
-        foreach ($values as $i => $value) {
-            $values[$i] = $this->db->quote(trim($value, ' \'"'));
+        $result = array();
+        if (is_object($res)) {
+            while ($r = $res->fetch_assoc()) {
+                $result[] = $r;
+            }
         }
-        
-        return implode(', ', $values);
+        return $result;
     }
 
+    public function res2items($res)
+    {
+        $result = array();
+        if (is_object($res)) {
+            while ($r = $res->fetch_assoc()) {
+                $result[(int)$r['id']] = $r;
+            }
+        }
+        return $result;
+    }
+
+    public function fetchassoc($res)
+    {
+        return is_object($res) ? $res->fetch_assoc() : false;
+    }
+
+    public function fetchnum($res)
+    {
+        return is_object($res) ? $res->fetch_row() : false;
+    }
+
+    public function countof($res)
+    {
+        return is_object($res) ? $res->num_rows : 0;
+    }
+
+    public function enableZeroDatetime()
+    {
+        //use mysqli to prevent strange warnings
+        $v = $this->fetchassoc($this->mysqli->query('show variables like \'sql_mode\''));
+        $a = explode(',', $v['Value']);
+        $ex = ['NO_ZERO_IN_DATE', 'NO_ZERO_DATE'];
+        $a = array_diff($a, $ex);
+        $v = implode(',', $a);
+        $this->mysqli->query("set sql_mode = '$v'");
+    }
 }
