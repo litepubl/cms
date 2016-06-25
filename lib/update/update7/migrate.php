@@ -29,8 +29,25 @@ return \tdatabase::i();
 } elseif (class_exists('litepubl\tdatabase', false)) {
 return \litepubl\tdatabase::i();
 } else {
-include_once(dirname(dirname(__DIR__)) . '/core/DB.php');
-return \litepubl\core\DB::i();
+include_once(__DIR__ . '/db.php');
+$db = new db();
+    public function getConfig()
+    {
+        if (config::$db) {
+            return config::$db;
+        }
+
+        $options = $this->getApp()->options;
+        if (isset($options->dbconfig)) {
+            $result = $options->dbconfig;
+            //decrypt db password
+            $result['password'] = $options->dbpassword;
+            return $result;
+        }
+
+        return false;
+    }
+return $db;
 }
 }
 
