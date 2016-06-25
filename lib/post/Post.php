@@ -7,7 +7,6 @@
  * @version 6.15
  *
  */
-
 namespace litepubl\post;
 
 use litepubl\core\Arr;
@@ -23,10 +22,10 @@ use litepubl\core\Callback;
  * @property int $parent
  * @property int $author
  * @property int $revision
- * @property  int $icon
- * @property  int $idperm
+ * @property int $icon
+ * @property int $idperm
  * @property string $class
- * @property  int $posted timestamp
+ * @property int $posted timestamp
  * @property string $title
  * @property string $title2
  * @property string $filtered
@@ -37,7 +36,7 @@ use litepubl\core\Callback;
  * @property string $rawhead
  * @property string $moretitle
  * @property array $categories
-             * @property array $tags
+ * @property array $tags
  * @property array $files
  * @property string $status enum
  * @property string $comstatus enum
@@ -66,30 +65,38 @@ use litepubl\core\Callback;
  * @property-read int $idCat first category ID
  * @property-read bool $hasPages true if has content or comments pages
  * @property-read int $pagesCount index from 1
- * @property-read int $countPages  maximum of content or comments pages
+ * @property-read int $countPages maximum of content or comments pages
  * @property-read int commentPages
  * @property-read string lastCommentUrl
  * @property-read string schemaLink to generate new url
  */
-
 class Post extends \litepubl\core\Item
 {
+
     protected $childTable;
+
     protected $rawTable;
+
     protected $pagesTable;
+
     protected $childData;
+
     protected $cacheData;
+
     protected $rawData;
+
     protected $factory;
+
     private $metaInstance;
+
     private $onIdCallback;
 
     public static function i($id = 0)
     {
-        if ($id = (int)$id) {
-            if (isset(static ::$instances['post'][$id])) {
-                $result = static ::$instances['post'][$id];
-            } elseif ($result = static ::loadPost($id)) {
+        if ($id = (int) $id) {
+            if (isset(static::$instances['post'][$id])) {
+                $result = static::$instances['post'][$id];
+            } elseif ($result = static::loadPost($id)) {
                 // nothing: set $instances in afterLoad method
             } else {
                 $result = null;
@@ -97,44 +104,42 @@ class Post extends \litepubl\core\Item
         } else {
             $result = parent::itemInstance(get_called_class(), $id);
         }
-
+        
         return $result;
     }
 
     public static function loadPost(int $id)
     {
-        if ($a = static ::loadAssoc($id)) {
-            $self = static ::newPost($a['class']);
+        if ($a = static::loadAssoc($id)) {
+            $self = static::newPost($a['class']);
             $self->setAssoc($a);
-
+            
             if ($table = $self->getChildTable()) {
-                $items = static ::selectChildItems($table, [$id]);
+                $items = static::selectChildItems($table, [
+                    $id
+                ]);
                 $self->childData = $items[$id];
                 unset($self->childData['id']);
             }
-
+            
             $self->afterLoad();
             return $self;
         }
-
+        
         return false;
     }
 
     public static function loadAssoc(int $id)
     {
-        $db = static ::getAppInstance()->db;
-        $table = static ::getChildTable();
+        $db = static::getAppInstance()->db;
+        $table = static::getChildTable();
         if ($table) {
-            return $db->selectAssoc(
-                "select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+            return $db->selectAssoc("select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
  from $db->posts, $db->prefix$table, $db->urlmap
-    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1"
-            );
+    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
         } else {
-            return $db->selectAssoc(
-                "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
-    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1"
-            );
+            return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
         }
     }
 
@@ -156,18 +161,16 @@ class Post extends \litepubl\core\Item
 
     public static function selectChildItems(string $table, array $items): array
     {
-        if (!$table || !count($items)) {
+        if (! $table || ! count($items)) {
             return array();
         }
-
-        $db = static ::getAppInstance()->db;
+        
+        $db = static::getAppInstance()->db;
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
         static::getappinstance()->getlogmanager()->trace($list);
-        return $db->res2items($db->query(
-            "select $childTable.* from $childTable where id in ($list) limit $count"
-        ));
+        return $db->res2items($db->query("select $childTable.* from $childTable where id in ($list) limit $count"));
     }
 
     protected function create()
@@ -175,8 +178,8 @@ class Post extends \litepubl\core\Item
         $this->table = 'posts';
         $this->rawTable = 'rawposts';
         $this->pagesTable = 'pages';
-        $this->childTable = static ::getChildTable();
-
+        $this->childTable = static::getChildTable();
+        
         $options = $this->getApp()->options;
         $this->data = array(
             'id' => 0,
@@ -187,8 +190,8 @@ class Post extends \litepubl\core\Item
             'revision' => 0,
             'icon' => 0,
             'idperm' => 0,
-            'class' => str_replace('\\', '-', get_class($this)) ,
-            'posted' => static ::ZERODATE,
+            'class' => str_replace('\\', '-', get_class($this)),
+            'posted' => static::ZERODATE,
             'title' => '',
             'title2' => '',
             'filtered' => '',
@@ -207,23 +210,22 @@ class Post extends \litepubl\core\Item
             'password' => '',
             'commentscount' => 0,
             'pingbackscount' => 0,
-            'pagescount' => 0,
+            'pagescount' => 0
         );
-
+        
         $this->rawData = [];
         $this->childData = [];
         $this->cacheData = [
-        'posted' => 0,
-        'categories' => [],
-        'tags' => [],
-        'files' => [],
+            'posted' => 0,
+            'categories' => [],
+            'tags' => [],
+            'files' => [],
             'url' => '',
-        'created' => 0,
+            'created' => 0,
             'modified' => 0,
-                                    'pages' => [],
+            'pages' => []
         ];
-
-
+        
         $this->factory = $this->getfactory();
         $this->factory->createCoInstances($this);
     }
@@ -243,7 +245,7 @@ class Post extends \litepubl\core\Item
     public function __get($name)
     {
         if ($name == 'id') {
-            $result = (int)$this->data['id'];
+            $result = (int) $this->data['id'];
         } elseif (method_exists($this, $get = 'get' . $name)) {
             $result = $this->$get();
         } elseif (array_key_exists($name, $this->cacheData)) {
@@ -260,7 +262,7 @@ class Post extends \litepubl\core\Item
         } else {
             $result = parent::__get($name);
         }
-
+        
         return $result;
     }
 
@@ -281,7 +283,7 @@ class Post extends \litepubl\core\Item
         } else {
             return parent::__set($name, $value);
         }
-
+        
         return true;
     }
 
@@ -322,23 +324,23 @@ class Post extends \litepubl\core\Item
         if ($this->lockcount > 0) {
             return;
         }
-
+        
         $this->saveToDB();
-
-            $this->coInstanceCall('save', []);
+        
+        $this->coInstanceCall('save', []);
     }
 
     protected function saveToDB()
     {
-        if (!$this->id) {
+        if (! $this->id) {
             return $this->add();
         }
-
-            $this->db->updateAssoc($this->data);
-
-            $this->modified = time();
-            $this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
-
+        
+        $this->db->updateAssoc($this->data);
+        
+        $this->modified = time();
+        $this->getDB($this->rawTable)->setValues($this->id, $this->rawData);
+        
         if ($this->childTable) {
             $this->getDB($this->childTable)->setValues($this->id, $this->childData);
         }
@@ -349,48 +351,48 @@ class Post extends \litepubl\core\Item
         $a = $this->data;
         unset($a['id']);
         $id = $this->db->add($a);
-
+        
         $rawData = $this->prepareRawData();
         $rawData['id'] = $id;
         $this->getDB($this->rawTable)->insert($rawData);
-
+        
         $this->setId($id);
         $this->savePages();
-
+        
         if ($this->childTable) {
             $childData = $this->childData;
             $childData['id'] = $id;
             $this->getDB($this->childTable)->insert($childData);
         }
-
+        
         $this->idurl = $this->createUrl();
         $this->db->setValue($id, 'idurl', $this->idurl);
-
-            $this->coInstanceCall('add', []);
+        
+        $this->coInstanceCall('add', []);
         $this->onId();
         return $id;
     }
 
     protected function prepareRawData()
     {
-        if (!$this->created) {
+        if (! $this->created) {
             $this->created = time();
         }
-
-        if (!$this->modified) {
+        
+        if (! $this->modified) {
             $this->modified = time();
         }
-
-        if (!isset($this->rawData['rawcontent'])) {
+        
+        if (! isset($this->rawData['rawcontent'])) {
             $this->rawData['rawcontent'] = '';
         }
-
+        
         return $this->rawData;
     }
 
     public function createUrl()
     {
-        return $this->getApp()->router->add($this->url, get_class($this), (int)$this->id);
+        return $this->getApp()->router->add($this->url, get_class($this), (int) $this->id);
     }
 
     public function onId()
@@ -399,7 +401,7 @@ class Post extends \litepubl\core\Item
             $this->onIdCallback->fire();
             $this->onIdCallback = null;
         }
-
+        
         if (isset($this->metaInstance)) {
             $this->metaInstance->id = $this->id;
             $this->metaInstance->save();
@@ -408,21 +410,21 @@ class Post extends \litepubl\core\Item
 
     public function setOnId($callback)
     {
-        if (!$this->onIdCallback) {
+        if (! $this->onIdCallback) {
             $this->onIdCallback = new Callback();
         }
-
+        
         $this->onIdCallback->add($callback);
     }
 
     public function free()
     {
-            $this->coInstanceCall('free', []);
-
+        $this->coInstanceCall('free', []);
+        
         if (isset($this->metaInstance)) {
             $this->metaInstance->free();
         }
-
+        
         parent::free();
     }
 
@@ -438,14 +440,14 @@ class Post extends \litepubl\core\Item
 
     public function getMeta()
     {
-        if (!isset($this->metaInstance)) {
+        if (! isset($this->metaInstance)) {
             $this->metaInstance = $this->factory->getmeta($this->id);
         }
-
+        
         return $this->metaInstance;
     }
-
-    //props
+    
+    // props
     protected function setDataProp($name, $value, $sql)
     {
         $this->cacheData[$name] = $value;
@@ -468,8 +470,8 @@ class Post extends \litepubl\core\Item
     {
         $this->setDataProp($name, $value, $value ? '1' : '0');
     }
-
-    //cache props
+    
+    // cache props
     protected function getArrProp($name)
     {
         if ($s = $this->data[$name]) {
@@ -511,7 +513,7 @@ class Post extends \litepubl\core\Item
 
     protected function getCachePosted()
     {
-        return $this->data['posted'] == static ::ZERODATE ? 0 : strtotime($this->data['posted']);
+        return $this->data['posted'] == static::ZERODATE ? 0 : strtotime($this->data['posted']);
     }
 
     public function setPosted($timestamp)
@@ -522,7 +524,7 @@ class Post extends \litepubl\core\Item
 
     protected function getCacheModified()
     {
-        return !isset($this->rawData['modified']) || $this->rawData['modified'] == static ::ZERODATE ? 0 : strtotime($this->rawData['modified']);
+        return ! isset($this->rawData['modified']) || $this->rawData['modified'] == static::ZERODATE ? 0 : strtotime($this->rawData['modified']);
     }
 
     public function setModified($timestamp)
@@ -533,7 +535,7 @@ class Post extends \litepubl\core\Item
 
     protected function getCacheCreated()
     {
-        return !isset($this->rawData['created']) || $this->rawData['created'] == static ::ZERODATE ? 0 : strtotime($this->rawData['created']);
+        return ! isset($this->rawData['created']) || $this->rawData['created'] == static::ZERODATE ? 0 : strtotime($this->rawData['created']);
     }
 
     public function setCreated($timestamp)
@@ -589,7 +591,7 @@ class Post extends \litepubl\core\Item
             $tags = $this->factory->tags;
             return implode(', ', $tags->getnames($this->tags));
         }
-
+        
         return '';
     }
 
@@ -605,7 +607,7 @@ class Post extends \litepubl\core\Item
             $categories = $this->factory->categories;
             return implode(', ', $categories->getnames($this->categories));
         }
-
+        
         return '';
     }
 
@@ -613,14 +615,14 @@ class Post extends \litepubl\core\Item
     {
         $categories = $this->factory->categories;
         $catItems = $categories->createnames($names);
-
-        if (!count($catItems)) {
+        
+        if (! count($catItems)) {
             $defaultid = $categories->defaultid;
             if ($defaultid > 0) {
                 $catItems[] = $defaultid;
             }
         }
-
+        
         $this->categories = $catItems;
     }
 
@@ -629,7 +631,7 @@ class Post extends \litepubl\core\Item
         if ($idcat = $this->getidcat()) {
             return $this->factory->categories->getName($idcat);
         }
-
+        
         return '';
     }
 
@@ -638,13 +640,13 @@ class Post extends \litepubl\core\Item
         if (($cats = $this->categories) && count($cats)) {
             return $cats[0];
         }
-
+        
         return 0;
     }
 
     public function checkRevision()
     {
-        $this->updateRevision((int)$this->factory->posts->revision);
+        $this->updateRevision((int) $this->factory->posts->revision);
     }
 
     public function updateRevision($value)
@@ -652,7 +654,7 @@ class Post extends \litepubl\core\Item
         if ($value != $this->revision) {
             $this->updateFiltered();
             $posts = $this->factory->posts;
-            $this->revision = (int)$posts->revision;
+            $this->revision = (int) $posts->revision;
             if ($this->id > 0) {
                 $this->save();
             }
@@ -674,11 +676,11 @@ class Post extends \litepubl\core\Item
         if (isset($this->rawData['rawcontent'])) {
             return $this->rawData['rawcontent'];
         }
-
-        if (!$this->id) {
+        
+        if (! $this->id) {
             return '';
         }
-
+        
         $this->rawData = $this->getDB($this->rawTable)->getItem($this->id);
         unset($this->rawData['id']);
         return $this->rawData['rawcontent'];
@@ -689,14 +691,14 @@ class Post extends \litepubl\core\Item
         if (isset($this->cacheData['pages'][$i])) {
             return $this->cacheData['pages'][$i];
         }
-
+        
         if ($this->id > 0) {
             if ($r = $this->getdb($this->pagesTable)->getAssoc("(id = $this->id) and (page = $i) limit 1")) {
                 $s = $r['content'];
             } else {
                 $s = false;
             }
-
+            
             $this->cacheData['pages'][$i] = $s;
             return $s;
         }
@@ -733,7 +735,7 @@ class Post extends \litepubl\core\Item
                 $db->insert(array(
                     'id' => $this->id,
                     'page' => $index,
-                    'content' => $content,
+                    'content' => $content
                 ));
             }
         }
@@ -757,10 +759,10 @@ class Post extends \litepubl\core\Item
     public function getCommentPages()
     {
         $options = $this->getApp()->options;
-        if (!$options->commentpages || ($this->commentscount <= $options->commentsperpage)) {
+        if (! $options->commentpages || ($this->commentscount <= $options->commentsperpage)) {
             return 1;
         }
-
+        
         return ceil($this->commentscount / $options->commentsperpage);
     }
 
@@ -768,10 +770,10 @@ class Post extends \litepubl\core\Item
     {
         $c = $this->commentpages;
         $url = $this->url;
-        if (($c > 1) && !$this->getApp()->options->comments_invert_order) {
+        if (($c > 1) && ! $this->getApp()->options->comments_invert_order) {
             $url = rtrim($url, '/') . "/page/$c/";
         }
-
+        
         return $url;
     }
 
@@ -787,10 +789,10 @@ class Post extends \litepubl\core\Item
 
     public function setContent($s)
     {
-        if (!is_string($s)) {
+        if (! is_string($s)) {
             $this->error('Error! Post content must be string');
         }
-
+        
         $this->rawcontent = $s;
         Filter::i()->filterpost($this, $s);
     }

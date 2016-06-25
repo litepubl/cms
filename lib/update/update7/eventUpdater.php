@@ -3,7 +3,6 @@ namespace litepubl\update;
 
 class eventUpdater
 {
-
     public static $map;
 
     public static function getMap(): array
@@ -61,10 +60,10 @@ class eventUpdater
         if (isset($std->data['items']) && count($std->data['items'])) {
             foreach ($std->data['items'] as $id => $item) {
                 if (isset($item['class']) && ($class = static::get($item['class']))) {
-                    $item['class'] = $class;
+$std->data['items'][$id]['class'] = $class;
                     $result = true;
                 } elseif (isset($item['classname']) && ($class = static::get($item['classname']))) {
-                    $item['classname'] = $class;
+$std->data['items'][$id]['classname'] = $class;
                     $result = true;
                 }
             }

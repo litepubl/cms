@@ -118,12 +118,12 @@ use $new;";
                 $result .= $t;
             }
         }
-
-if (count($uses) {
-$result = $this->insertuse($result, $uses);
-}
-
-return $result;
+        
+        if (count($uses)) {
+            $result = $this->insertuse($result, $uses);
+        }
+        
+        return $result;
     }
 
     public function insertUse(string $s, array $uses)
