@@ -313,7 +313,7 @@ class Backuper extends \litepubl\core\Events
         }
 
         $this->lastdir = $dir;
-        //if (($this->filertype == 'ftp') || ($this->filertype == 'socket')) {
+
         if (!($this->__filer instanceof Local)) {
             $dir = str_replace('\\', '/', $dir);
             if ('/' != DIRECTORY_SEPARATOR) {
@@ -324,6 +324,7 @@ class Backuper extends \litepubl\core\Events
             if (Str::begin($dir, $root)) {
                 $dir = substr($dir, strlen($root));
             }
+
             $this->filer->chdir($dir);
         } else {
             $this->filer->chdir($dir);
@@ -336,9 +337,11 @@ class Backuper extends \litepubl\core\Events
         if ($i = strpos($dir, '/')) {
             $dir = substr($dir, 0, $i);
         }
+
         if (!isset($this->getApp()->paths->$dir)) {
             $this->error(sprintf('Unknown "%s" folder', $dir));
         }
+
         $this->chdir(dirname(rtrim($this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
     }
 
