@@ -65,7 +65,11 @@ class migrate
         $js = static::load('jsmerger');
         foreach ($js['items'] as $section => $items) {
             foreach ($items['files'] as $i => $filename) {
+if (ltrim($filename, '/') == 'js/litepubl/bootstrap/popover.post.min.js') {
+                unset($items['files'][$i]);
+} else {
                 $items['files'][$i] = strtr($filename, $replace);
+}
             }
             
             $js[$section] = $items;
@@ -196,7 +200,7 @@ $backuper = \litepubl\tbackuper::i();
 } elseif (class_exists('\litepubl\updater\Backuper', false)) {
 $backuper = \litepubl\updater\Backuper::i();
 } else {
-trigger_error('Backuper instance not found', E_USER_WARNING);
+echo "Backuper instance not found\n";
 return false;
 }
 
