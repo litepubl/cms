@@ -1,30 +1,26 @@
 <?php
-/**
- * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
- *
- */
-
-namespace litepubl\update;
-
-use litepubl\core\litepubl;
-use litepubl\view\Css;
-use litepubl\core\Plugins;
-
-function update700()
+namespace 
 {
-    litepubl::$app->site->jquery_version = '1.12.4';
-    $css = Css::i();
-    $css->deletestyle("/plugins/regservices/regservices.min.css");
-
-    if (count(litepubl::$app->classes->items)) {
-        include(__DIR__ . '/updateEvents.php');
-        updateEvents();
-
-        include(__DIR__ . '/updatePlugins.php');
-        updatePlugins();
+    function update700()
+    {
+\litepubl\update\update700();
     }
+}
+
+namespace litepubl
+{
+    function update700()
+    {
+\litepubl\update\update700();
+    }
+}
+
+namespace litepubl\update
+{
+    function update700()
+    {
+        //litepubl::$app->site->jquery_version = '1.12.4';
+require (__DIR__ . '/update7/migrate.php');
+migrate::run();
+}
 }

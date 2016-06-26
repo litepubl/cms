@@ -75,7 +75,11 @@ class migrate
         $css = static::load('cssmerger');
         foreach ($css['items'] as $section => $items) {
             foreach ($items['files'] as $i => $filename) {
+if (ltrim($filename, '/') == 'plugins/regservices/regservices.min.css') {
+unset($items['files'][$i]);
+} else {
                 $items['files'][$i] = strtr($filename, $replace);
+}
             }
             
             $css[$section] = $items;
@@ -105,15 +109,30 @@ static::$db->table = 'urlmap';
         static::save('adminmenu', $menus);
     }
 
-    public static function updateClasses()
+    public static function updateClasses(array $data): array
     {
-        $data = static::load('storage');
         $cl = &$data['classes'];
         $cl['namespaces'] = [];
         $cl['items'] = [];
         unset($cl['factories'], $cl['classes'], $cl['interfaces']);
-        static::save('storage', $data);
+return $data;
         }
+
+    public static function updateOptions(array $data): array
+{
+$data['options']['version'] = '7.00';
+$data['site']['jquery_version'] = '1.12.4';
+if (empty($data['site']['author'])) {
+    $data['site']['author'] = 'Admin';
+}
+
+    unset($data['site']['video_width']);
+    unset($data['site']['video_height']);
+
+return $data;
+}
+
+
 
     public static function updateXmlrpc()
 {
@@ -200,7 +219,12 @@ $backuper->filer->putcontent('index.php', $content);
         
         static::updateJs();
         static::updateMenus();
-        static::updateClasses();
+
+        $storage = static::load('storage');
+        $storage= static::updateClasses($storage);
+$storage = static::updateOptions($storage);
+                static::save('storage', $storage);
+
 static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();

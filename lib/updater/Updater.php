@@ -73,24 +73,23 @@ class Updater extends \litepubl\core\Events
         if (strlen($ver) == 3) {
             $ver.= '0';
         }
+
         if (strlen($ver) == 1) {
             $ver.= '.00';
         }
-        $filename = $this->getApp()->paths->lib . "update/update.$ver.php";
+
+$app = $this->getApp();
+        $filename = $app->paths->lib . "update/update.$ver.php";
 
         if (file_exists($filename)) {
             require_once($filename);
             $this->log("$filename is required file", 'update');
             $func = 'update' . str_replace('.', '', $ver);
 
-            if (function_exists($func)) {
-                $func();
+if (function_exists('litepubl\update\\' . $func)) {
+                call_user_func_array('litepubl\update\\' . $func, []);
                 $this->log("$func is called", 'update');
-                $this->getApp()->poolStorage->commit();
-            } elseif (function_exists('litepubl\\' . $func)) {
-                call_user_func_array('litepubl\\' . $func, array());
-                $this->log("$func is called", 'update');
-                $this->getApp()->poolStorage->commit();
+                $app->poolStorage->commit();
             }
         }
     }
