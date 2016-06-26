@@ -114,6 +114,7 @@ static::$db->table = 'urlmap';
         $cl = &$data['classes'];
         $cl['namespaces'] = [];
         $cl['items'] = [];
+        $cl['kernel'] = [];
         unset($cl['factories'], $cl['classes'], $cl['interfaces']);
 return $data;
         }
@@ -204,6 +205,13 @@ $content = file_get_contents('https://raw.githubusercontent.com/litepubl/cms/mas
 $backuper->filer->putcontent('index.php', $content);
 }
 
+    public static function renameDataFolder()
+{
+$storageDir = dirname(dirname(dirname(__DIR__))) . '/storage/';
+rename($storageDir . 'data', $storageDir . 'data-old' . time());
+rename(rtrim(static::$dir, '/'), $storageDir . 'data');
+}
+
     public static function run()
     {
         require (__DIR__ . '/eventUpdater.php');
@@ -229,5 +237,8 @@ static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
 static::uploadIndex();
+
+register_shutdown_function([static::class, 'renameDataFolder']);
     }
+
 }
