@@ -266,7 +266,8 @@ class DBManager
     public function export()
     {
         $options = $this->getApp()->options;
-        $v = $this->fetchassoc($this->query("show variables like 'max_allowed_packet'"));
+//use mysqli  to prevent strange warning
+        $v = $this->fetchassoc($this->mysqli->query("show variables like 'max_allowed_packet'"));
         $this->max_allowed_packet = floor($v['Value'] * 0.8);
         
         $result = "-- Lite Publisher dump $options->version\n";
