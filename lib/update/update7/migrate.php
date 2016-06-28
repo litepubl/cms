@@ -204,7 +204,8 @@ echo "Backuper instance not found\n";
 return false;
 }
 
-$content = file_get_contents('https://raw.githubusercontent.com/litepubl/cms/master/index.php');
+//$content = file_get_contents('https://raw.githubusercontent.com/litepubl/cms/master/index.php');
+$content = file_get_contents('D:\OpenServer\domains\cms.cms\index.php');
         $backuper->chdir(dirname(dirname(dirname(__DIR__))));
 $backuper->filer->putcontent('index.php', $content);
 }
