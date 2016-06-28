@@ -132,5 +132,51 @@ $this->db = $db;
         return $this->query("SHOW COLUMNS FROM $this->prefix$table LIKE '$column'")->num_rows;
     }
 
+    public function getTables()
+    {
+        if ($res = $this->query(sprintf("show tables from %s like '%s%%'", $this->dbname, $this->prefix))) {
+            return $this->res2id($res);
+        }
+        return false;
+    }
+
+    public function export()
+    {
+    $result = '';
+        $tables = $this->gettables();
+        foreach ($tables as $table) {
+            $result .= $this->exporttable($table);
+        }
+
+        return $result;
+    }
+
+    public function exportTable($name)
+    {
+        if ($row = $this->fetchnum($this->query("show create table `$name`"))) {
+            $result = "DROP TABLE IF EXISTS `$name`;\n$row[1];\n\n";
+            $res = $this->query("select * from `$name`");
+            if ($this->countof($res) > 0) {
+                $result .= "LOCK TABLES `$name` WRITE;\n/*!40000 ALTER TABLE `$name` DISABLE KEYS */;\n";
+                $sql = '';
+                while ($row = $this->fetchnum($res)) {
+                    $values = array();
+                    foreach ($row as $v) {
+                        $values[] = is_null($v) ? 'NULL' : $this->quote($v);
+                    }
+                    $sql .= $sql ? ',(' : '(';
+                    $sql .= implode(', ', $values);
+                    $sql .= ')';
+                    
+                }
+                
+                if ($sql) {
+                    $result .= "INSERT INTO `$name` VALUES " . $sql . ";\n";
+                }
+                $result .= "/*!40000 ALTER TABLE `$name` ENABLE KEYS */;\nUNLOCK TABLES;\n\n";
+            }
+            return $result;
+        }
+    }
 
 }

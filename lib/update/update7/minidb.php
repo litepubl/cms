@@ -75,7 +75,7 @@ class minidb
         if ($this->result == false) {
 throw new \Exception($this->mysqli->error . "\n" . $sql);
         } else {
-            $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
+            //$this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
 trigger_error($sql .  "\n" . $r->fetch_assoc(), E_USER_WARNING);
             }

@@ -20,8 +20,9 @@ class DB
     public $mysqli;
     public $result;
     public $sql;
-    public $dbname;
     public $table;
+public $host;
+    public $dbname;
     public $prefix;
     public $history;
 
@@ -57,6 +58,7 @@ class DB
             return false;
         }
 
+        $this->host = $dbconfig['host'];
         $this->dbname = $dbconfig['dbname'];
         $this->prefix = $dbconfig['prefix'];
 

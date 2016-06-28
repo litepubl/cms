@@ -164,7 +164,6 @@ static::save('xmlrpc', $xmlrpc);
     public static function updateTables()
     {
         $db = static::$db;
-        include_once (__DIR__ . '/miniman.php');
         $man = new miniman($db);
         
         foreach ([
@@ -220,15 +219,19 @@ rename(rtrim(static::$dir, '/'), $storageDir . 'data');
     public static function run()
     {
         require (__DIR__ . '/eventUpdater.php');
+        require (__DIR__ . '/backuper.php');
+        include_once (__DIR__ . '/miniman.php');
         require (dirname(dirname(__DIR__)) . '/updater/ChangeStorage.php');
-        
+
         eventUpdater::$map = include (__DIR__ . '/classmap.php');
         $changer = ChangeStorage::create(eventUpdater::getCallback());
-        $dir = $changer->run('data');
-        
-        static::$storage = $changer->dest;
+        $dir = $changer->run('data-6.14');
         static::$dir = dirname(dirname(dirname(__DIR__))) . '/storage/' . $dir . '/';
+        static::$storage = $changer->dest;
         static::$db = static::getDB();
+$man = new miniman(static::$db);
+backuper::create($man->export());
+        
         
         static::updateJs();
         static::updateMenus();
@@ -241,7 +244,7 @@ $storage = static::updateOptions($storage);
 static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
-static::uploadIndex();
+//static::uploadIndex();
 
 register_shutdown_function([static::class, 'renameDataFolder']);
     }

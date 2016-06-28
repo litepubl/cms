@@ -54,7 +54,7 @@ class DBManager
 
     public function deleteAllTables()
     {
-        $list = $this->res2array($this->query("show tables from " . $this->getApp()->options->dbconfig['dbname']));
+        $list = $this->res2array($this->query("show tables from " . $this->dbname));
         foreach ($list as $row) {
             $this->exec("DROP TABLE IF EXISTS " . $row[0]);
         }
@@ -227,7 +227,7 @@ class DBManager
 
     public function getTables()
     {
-        if ($res = $this->query(sprintf("show tables from %s like '%s%%'", $this->getApp()->options->dbconfig['dbname'], $this->getApp()->options->dbconfig['prefix']))) {
+        if ($res = $this->query(sprintf("show tables from %s like '%s%%'", $this->dbname, $this->prefix))) {
             return $this->res2id($res);
         }
         return false;
@@ -252,7 +252,7 @@ class DBManager
 
     public function optimize()
     {
-        $prefix = strtolower($this->getApp()->options->dbconfig['prefix']);
+        $prefix = strtolower($this->prefix);
         $tables = $this->gettables();
         foreach ($tables as $table) {
             if (Str::begin(strtolower($table), $prefix)) {
@@ -265,15 +265,14 @@ class DBManager
 
     public function export()
     {
-        $options = $this->getApp()->options;
 //use mysqli  to prevent strange warning
         $v = $this->fetchassoc($this->mysqli->query("show variables like 'max_allowed_packet'"));
         $this->max_allowed_packet = floor($v['Value'] * 0.8);
         
-        $result = "-- Lite Publisher dump $options->version\n";
+        $result = "-- Lite Publisher dump\n";
         $result .= "-- Datetime: " . date('Y-m-d H:i:s') . "\n";
-        $result .= "-- Host: {$options->dbconfig['host']}\n";
-        $result .= "-- Database: {$options->dbconfig['dbname']}\n\n";
+        $result .= "-- Host: $this->host\n";
+        $result .= "-- Database: $this->dbname\n\n";
         $result .= "/*!40101 SET NAMES utf8 */;\n\n";
         
         $tables = $this->gettables();
@@ -284,7 +283,7 @@ class DBManager
         return $result;
     }
 
-    public function exporttable($name)
+    public function exportTable($name)
     {
         if ($row = $this->fetchnum($this->query("show create table `$name`"))) {
             $result = "DROP TABLE IF EXISTS `$name`;\n$row[1];\n\n";
