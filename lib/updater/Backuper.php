@@ -306,7 +306,7 @@ class Backuper extends \litepubl\core\Events
         }
     }
 
-    public function chdir($dir)
+    public function chDir($dir)
     {
         if ($dir === $this->lastdir) {
             return;
@@ -338,11 +338,12 @@ class Backuper extends \litepubl\core\Events
             $dir = substr($dir, 0, $i);
         }
 
-        if (!isset($this->getApp()->paths->$dir)) {
-            $this->error(sprintf('Unknown "%s" folder', $dir));
-        }
-
-        $this->chdir(dirname(rtrim($this->getApp()->paths->$dir, DIRECTORY_SEPARATOR)));
+$paths = $this->getApp()->paths;
+        if (isset($paths->$dir)) {
+        $this->chDir(dirname(rtrim($paths->$dir, DIRECTORY_SEPARATOR)));
+} else {
+        $this->chdir('/');
+}
     }
 
     public function getPartial($plugins, $theme, $lib)
@@ -472,7 +473,7 @@ class Backuper extends \litepubl\core\Events
         return $this->setdump($s);
     }
 
-    private function writedata($filename, $content, $mode)
+    private function writeData($filename, $content, $mode)
     {
         if (Str::end($filename, '/.htaccess')) {
             return true;
@@ -513,20 +514,20 @@ class Backuper extends \litepubl\core\Events
         //spec rule for storage folder
         if (Str::begin($filename, 'storage/')) {
             if (Str::begin($filename, 'storage/data/')) {
-                return $this->writedata($filename, $content, $mode);
+                return $this->writeData($filename, $content, $mode);
             }
 
             return true;
         }
 
         $dir = rtrim(dirname($filename), '/');
-        $this->setdir($dir);
+        $this->setDir($dir);
         if (!isset($this->existingfolders[$dir])) {
-            $this->filer->forcedir($dir);
+            $this->filer->forceDir($dir);
             $this->existingfolders[$dir] = true;
         }
 
-        if ($this->filer->putcontent($filename, $content) === false) {
+        if ($this->filer->putContent($filename, $content) === false) {
             return false;
         }
 
