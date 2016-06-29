@@ -61,7 +61,7 @@ class migrate
         foreach ($map as $old => $new) {
             $replace["/$old/"] = "/$new/";
         }
-        
+
         $js = static::load('jsmerger');
         foreach ($js['items'] as $section => $items) {
             foreach ($items['files'] as $i => $filename) {
@@ -89,6 +89,18 @@ unset($items['files'][$i]);
             $css[$section] = $items;
         }
         static::save('cssmerger', $css);
+
+        $lm = static::load('localmerger');
+        foreach ($lm['items'] as $section => $items) {
+            foreach ($items['files'] as $i => $filename) {
+                $items['files'][$i] = strtr($filename, $replace);
+}
+            }
+            
+            $lm[$section] = $items;
+        }
+
+        static::save('localmerger', $lm);
     }
 
     public static function updateMenus()
@@ -98,11 +110,21 @@ unset($items['files'][$i]);
         foreach ($new['items'] as $item) {
             $map[$item['url']] = $item['class'];
         }
+
+$mapUrl = [
+'/admin/views/addview/' => '/admin/views/addschema/',
+];
         
         $menus = static::load('adminmenu');
 static::$db->table = 'urlmap';
         foreach ($menus['items'] as $id => $item) {
             $url = $item['url'];
+if (isset($mapUrl[$url])) {
+$url = $mapUrl[$url];
+$item['url'] = $url;
+static::$db->setValue($item['idurl'], 'url', $url);
+}
+
             if (isset($map[$url])) {
                 $item['class'] = $map[$url];
                 $menus['items'][$id] = $item;
@@ -120,6 +142,13 @@ static::$db->table = 'urlmap';
         $cl['items'] = [];
         $cl['kernel'] = [];
         unset($cl['factories'], $cl['classes'], $cl['interfaces']);
+
+$widgets = $data['widgets'];
+if (isset($widgets['classes']['tpost'])) {
+$widgets['classes']['litepubl\post\Post'] = $widgets['classes']['tpost'];
+unset($widgets['classes']['tpost']);
+}
+$data['widgets'] = $widgets;
 return $data;
         }
 
@@ -233,7 +262,7 @@ rename(rtrim(static::$dir, '/'), $storageDir . 'data');
 public static function clearTheme()
 {
 $dir = dirname(dirname(dirname(__DIR__))) . '/storage/data/'; 
-foreach ('themes', 'languages', 'logs') as $subdir) {
+foreach (['themes', 'languages', 'logs'] as $subdir) {
 $list = dir($dir . $subdir);
 while ($filename = $list->read()) {
 if ($filename != '.' && $filename != '..') {
@@ -275,8 +304,9 @@ static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
 //static::uploadIndex();
+static::renameDataFolder();
 
-register_shutdown_function([static::class, 'renameDataFolder']);
+echo 'migrate completed';
     }
 
 }

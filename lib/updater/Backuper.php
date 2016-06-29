@@ -344,6 +344,7 @@ $paths = $this->getApp()->paths;
 } else {
         $this->chDir('/');
         $this->chDir(rtrim($paths->home, DIRECTORY_SEPARATOR));
+}
     }
 
     public function getPartial($plugins, $theme, $lib)
