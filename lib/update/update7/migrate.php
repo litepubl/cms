@@ -116,7 +116,7 @@ static::$db->table = 'urlmap';
     public static function updateClasses(array $data): array
     {
         $cl = &$data['classes'];
-        $cl['namespaces'] = [];
+        $cl['namespaces'] = ['litepubl' => 'lib'];
         $cl['items'] = [];
         $cl['kernel'] = [];
         unset($cl['factories'], $cl['classes'], $cl['interfaces']);
@@ -137,7 +137,20 @@ if (empty($data['site']['author'])) {
 return $data;
 }
 
+    public static function updateSchemes(array $data): array
+{
+$items = &$data['views']['items'];
+$a = [
+'tmenus' => 'litepubl\pages\Menus',
+'tadminmenus' => 'litepubl\admin\Menus',
+];
 
+foreach ($items as $id => $item) {
+$items[$id]['menuclass'] = $a[$item['menuclass']];
+}
+
+return $data;
+}
 
     public static function updateXmlrpc()
 {
@@ -238,6 +251,7 @@ backuper::create($man->export());
         $storage = static::load('storage');
         $storage= static::updateClasses($storage);
 $storage = static::updateOptions($storage);
+$storage = static::updateSchemes($storage);
                 static::save('storage', $storage);
 
 static::updateXmlrpc();
