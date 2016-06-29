@@ -129,7 +129,7 @@ return array(
     'tlinkswidget' => 'litepubl\widget\Links',
     'tmetawidget' => 'litepubl\widget\Meta',
     'torderwidget' => 'litepubl\widget\Order',
-    'tpostswidget' => 'litepubl\wdiget\Posts',
+    'tpostswidget' => 'litepubl\widget\Posts',
     'tclasswidget' => 'litepubl\widget\Depended',
     'tsidebars' => 'litepubl\widget\Sidebars',
 

@@ -225,15 +225,14 @@ rename(rtrim(static::$dir, '/'), $storageDir . 'data');
 
         eventUpdater::$map = include (__DIR__ . '/classmap.php');
         $changer = ChangeStorage::create(eventUpdater::getCallback());
-        $dir = $changer->run('data-6.14');
+        $dir = $changer->run('data');
         static::$dir = dirname(dirname(dirname(__DIR__))) . '/storage/' . $dir . '/';
         static::$storage = $changer->dest;
         static::$db = static::getDB();
 $man = new miniman(static::$db);
 backuper::create($man->export());
         
-        
-        static::updateJs();
+                static::updateJs();
         static::updateMenus();
 
         $storage = static::load('storage');
