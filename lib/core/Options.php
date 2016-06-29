@@ -62,10 +62,9 @@ class Options extends Events
     public $parentgroups;
     public $group;
     public $idgroups;
-    protected $_user;
+    protected $idUser;
     protected $adminFlagChecked;
     public $gmt;
-    public $errorlog;
 
     protected function create()
     {
@@ -74,7 +73,6 @@ class Options extends Events
         $this->addevents('changed', 'perpagechanged');
         unset($this->cache);
         $this->gmt = 0;
-        $this->errorlog = '';
         $this->group = '';
         $this->idgroups = array();
         $this->addmap('groupnames', array());
@@ -148,18 +146,23 @@ class Options extends Events
         $this->adminFlagChecked = $val;
     }
 
-    public function getuser(): int
+    public function resetUser()
+{
+$this->idUser = null;
+}
+
+    public function getUser(): int
     {
-        if (is_null($this->_user)) {
-            $this->_user = $this->authenabled ? $this->authcookie() : false;
+        if (is_null($this->idUser)) {
+            $this->idUser = $this->authenabled ? $this->authcookie() : false;
         }
 
-        return $this->_user;
+        return $this->idUser;
     }
 
     public function setUser(int $id)
     {
-        $this->_user = $id;
+        $this->idUser = $id;
     }
 
     public function authCookie()
@@ -172,7 +175,7 @@ class Options extends Events
         if ($iduser && $password) {
         $password = $this->hash($password);
         if (($password != $this->emptyhash) && $this->findUser($iduser, $password)) {
-        $this->_user = $iduser;
+        $this->idUser = $iduser;
         $this->updategroup();
         return $iduser;
 }
@@ -249,7 +252,7 @@ return 0;
             }
         }
 
-        $this->_user = $iduser;
+        $this->idUser = $iduser;
         $this->updateGroup();
         return $iduser;
 }
@@ -259,11 +262,11 @@ return 0;
 
     public function updateGroup()
     {
-        if ($this->_user == 1) {
+        if ($this->idUser == 1) {
             $this->group = 'admin';
             $this->idgroups = [1];
         } else {
-            $user = Users::i()->getItem($this->_user);
+            $user = Users::i()->getItem($this->idUser);
             $this->idgroups = $user['idgroups'];
             $this->group = count($this->idgroups) ? UserGroups::i()->items[$this->idgroups[0]]['name'] : '';
         }
@@ -322,14 +325,14 @@ return 0;
 
     public function setcookies($cookie, $expired)
     {
-        $this->setcookie('litepubl_user_id', $cookie ? $this->_user : '', $expired);
+        $this->setcookie('litepubl_user_id', $cookie ? $this->idUser : '', $expired);
         $this->setcookie('litepubl_user', $cookie, $expired);
         $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
 
-        if ($this->_user == 1) {
+        if ($this->idUser == 1) {
             $this->save_cookie($cookie, $expired);
-        } elseif ($this->_user) {
-            Users::i()->setCookie($this->_user, $cookie, $expired);
+        } elseif ($this->idUser) {
+            Users::i()->setCookie($this->idUser, $cookie, $expired);
         }
     }
 

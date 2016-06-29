@@ -104,7 +104,7 @@ class Pinger extends \litepubl\core\Events
         }
     }
 
-    private function getLinks(tpost $post)
+    private function getLinks(Post $post)
     {
         $posturl = $post->link;
         $result = array();

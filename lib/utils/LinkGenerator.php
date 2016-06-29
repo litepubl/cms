@@ -205,7 +205,7 @@ class LinkGenerator extends \litepubl\core\Events
         return "/some-wrong" . time();
     }
 
-    // $obj is tpost or tmenu
+    // $obj is Post or Menu
     public function addurl($obj, $schema)
     {
         if (!isset($obj->url)) {

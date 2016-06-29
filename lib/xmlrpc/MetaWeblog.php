@@ -25,7 +25,7 @@ use litepubl\view\Parser;
 class MetaWeblog extends Common
 {
 
-    protected function MWSetPingCommentStatus(array & $Struct, tpost $post)
+    protected function MWSetPingCommentStatus(array & $Struct, Post $post)
     {
         if (isset($struct["mt_allow_comments"])) {
             if (!is_numeric($struct["mt_allow_comments"])) {
@@ -166,7 +166,7 @@ class MetaWeblog extends Common
     }
     /* <item> in RSS 2.0, providing a rich variety of item-level metadata, with well-understood applications.
      The three basic elements are title, link and description.  */
-    public function setPost(array & $struct, tpost $post)
+    public function setPost(array & $struct, Post $post)
     {
         $post->title = $struct['title'];
         $more = isset($struct['mt_text_more']) ? trim($struct['mt_text_more']) : '';
@@ -345,7 +345,7 @@ class MetaWeblog extends Common
         return $this->GetStruct($post);
     }
 
-    private function GetStruct(tpost $post)
+    private function GetStruct(Post $post)
     {
         $categories = Cats::i();
         return array(

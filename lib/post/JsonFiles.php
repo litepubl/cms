@@ -159,7 +159,7 @@ $options = $this->getApp()->options;
         }
 
         //psevdo logout
-        $this->getApp()->options->user = null;
+        $this->getApp()->options->resetUser();
         if (!$this->canupload()) {
             return $this->forbidden();
         }

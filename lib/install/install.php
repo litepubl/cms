@@ -32,9 +32,4 @@ require_once(__DIR__ . '/Installer.php');
 $installer = new Installer();
 $installer->run();
 litepubl::$app->poolStorage->commit();
-
-if (!empty(litepubl::$app->options->errorlog)) {
-    echo litepubl::$app->options->errorlog;
-}
-
 exit();

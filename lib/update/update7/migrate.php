@@ -126,6 +126,7 @@ return $data;
     public static function updateOptions(array $data): array
 {
 $data['options']['version'] = '7.00';
+$data['options']['xxxcheck'] = false;
 $data['site']['jquery_version'] = '1.12.4';
 if (empty($data['site']['author'])) {
     $data['site']['author'] = 'Admin';
@@ -229,6 +230,21 @@ rename($storageDir . 'data', $storageDir . 'data-old' . time());
 rename(rtrim(static::$dir, '/'), $storageDir . 'data');
 }
 
+public static function clearTheme()
+{
+$dir = dirname(dirname(dirname(__DIR__))) . '/storage/data/'; 
+foreach ('themes', 'languages', 'logs') as $subdir) {
+$list = dir($dir . $subdir);
+while ($filename = $list->read()) {
+if ($filename != '.' && $filename != '..') {
+unlink($dir . $subdir . '/' . $filename);
+}
+}
+
+$list->close();
+}
+}
+
     public static function run()
     {
         require (__DIR__ . '/eventUpdater.php');
@@ -236,6 +252,7 @@ rename(rtrim(static::$dir, '/'), $storageDir . 'data');
         include_once (__DIR__ . '/miniman.php');
         require (dirname(dirname(__DIR__)) . '/updater/ChangeStorage.php');
 
+static::clearTheme();
         eventUpdater::$map = include (__DIR__ . '/classmap.php');
         $changer = ChangeStorage::create(eventUpdater::getCallback());
         $dir = $changer->run('data');

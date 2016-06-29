@@ -63,7 +63,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         $count = 0;
         $from = ($this->getApp()->context->request->page - 1) * $perpage;
         $siteurl = $this->getApp()->site->url;
-        $classes = $this->getApp()->context->request->page == 1 ? $this->classes : 'tposts';
+        $classes = $this->getApp()->context->request->page == 1 ? $this->classes : 'litepubl\post\Posts';
         foreach ($classes as $class) {
             $instance = static ::iGet($class);
             $links = $instance->getsitemap($from, $perpage - $count);
