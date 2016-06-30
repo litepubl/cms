@@ -145,6 +145,7 @@ public $host;
         $result = '';
         $total = 0.0;
         $max = 0.0;
+                $maxsql = '';
         foreach ($this->history as $i => $item) {
             $result.= "$i: {$item['time']}\n{$item['sql']}\n\n";
             $total+= $item['time'];
