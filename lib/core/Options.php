@@ -154,7 +154,7 @@ $this->idUser = null;
     public function getUser(): int
     {
         if (is_null($this->idUser)) {
-            $this->idUser = $this->authenabled ? $this->authcookie() : false;
+            $this->idUser = $this->authenabled ? $this->authCookie() : 0;
         }
 
         return $this->idUser;
@@ -396,7 +396,7 @@ return 0;
 
     public function hasGroup($groupname)
     {
-        if ($this->ingroup($groupname)) {
+        if ($this->inGroup($groupname)) {
             return true;
         }
         // if group is children of user groups

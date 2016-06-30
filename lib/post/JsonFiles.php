@@ -139,9 +139,10 @@ Theme::getTheme('default');
     public function canUpload(): bool
     {
 $options = $this->getApp()->options;
+
         if ($options->hasGroup('author')
-&& !(in_array($options->groupnames['author'], $options->idgroups)
- || !AuthorRights::i()->canUpload())) {
+&& !in_array($options->groupnames['author'], $options->idgroups)
+ || !AuthorRights::i()->canUpload()) {
             return true;
         }
 
@@ -160,7 +161,8 @@ $options = $this->getApp()->options;
 
         //psevdo logout
         $this->getApp()->options->resetUser();
-        if (!$this->canupload()) {
+
+        if (!$this->canUpload()) {
             return $this->forbidden();
         }
 
