@@ -25,7 +25,7 @@ class Admin extends Base
 
     public function submit()
     {
-        $this->tester->executeJs('$("form:last").submit();');
+        $this->tester->executeJs('$(function(){$("form:last").submit();});');
     }
 
     public function getLinks($name)
