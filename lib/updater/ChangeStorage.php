@@ -77,9 +77,9 @@ return $data;
 
     public static function create($callback = null)
     {
-        include(dirname(__DIR__) . '/core/AppTrait.php');
-        include(dirname(__DIR__) . '/core/Storage.php');
-        include(dirname(__DIR__) . '/core/StorageInc.php');
+        require_once (dirname(__DIR__) . '/core/AppTrait.php');
+        require_once (dirname(__DIR__) . '/core/Storage.php');
+        require_once (dirname(__DIR__) . '/core/StorageInc.php');
 
 return new static(
         new Storage(),

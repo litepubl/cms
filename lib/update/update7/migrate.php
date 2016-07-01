@@ -2,6 +2,7 @@
 namespace litepubl\update;
 
 use litepubl\updater\ChangeStorage;
+use litepubl\Config;
 
 class migrate
 {
@@ -72,10 +73,10 @@ if (ltrim($filename, '/') == 'js/litepubl/bootstrap/popover.post.min.js') {
 }
             }
             
-            $js[$section] = $items;
+            $js['items'][$section] = $items;
         }
         static::save('jsmerger', $js);
-        
+
         $css = static::load('cssmerger');
         foreach ($css['items'] as $section => $items) {
             foreach ($items['files'] as $i => $filename) {
@@ -86,7 +87,7 @@ unset($items['files'][$i]);
 }
             }
             
-            $css[$section] = $items;
+            $css['items'][$section] = $items;
         }
         static::save('cssmerger', $css);
 
@@ -95,9 +96,8 @@ unset($items['files'][$i]);
             foreach ($items['files'] as $i => $filename) {
                 $items['files'][$i] = strtr($filename, $replace);
 }
-            }
             
-            $lm[$section] = $items;
+            $lm['items'][$section] = $items;
         }
 
         static::save('localmerger', $lm);
@@ -274,16 +274,33 @@ $list->close();
 }
 }
 
+public static function saveJs()
+{
+define('litepubl_mode', 'config');
+include_once(dirname(dirname(dirname(__DIR__))) . '/index.php');
+Config::$debug = true;
+Config::$useKernel = false;
+Config::$ignoreRequest = true;
+require_once (dirname(dirname(__DIR__)) . '/debug/kernel.php');
+\litepubl\view\Js::i()->save();
+\litepubl\view\Css::i()->save();
+}
+
     public static function run()
     {
-        require (__DIR__ . '/eventUpdater.php');
-        require (__DIR__ . '/backuper.php');
-        include_once (__DIR__ . '/miniman.php');
-        require (dirname(dirname(__DIR__)) . '/updater/ChangeStorage.php');
+        require_once (__DIR__ . '/eventUpdater.php');
+        require_once (__DIR__ . '/backuper.php');
+        require_once (__DIR__ . '/miniman.php');
+        require_once (dirname(dirname(__DIR__)) . '/updater/ChangeStorage.php');
 
 static::clearTheme();
         eventUpdater::$map = include (__DIR__ . '/classmap.php');
         $changer = ChangeStorage::create(eventUpdater::getCallback());
+if (false) {
+static::saveJs();
+echo 'ok';
+return;
+}
         $dir = $changer->run('data');
         static::$dir = dirname(dirname(dirname(__DIR__))) . '/storage/' . $dir . '/';
         static::$storage = $changer->dest;
@@ -305,7 +322,8 @@ static::updateXmlrpc();
         static::updateTables();
 //static::uploadIndex();
 static::renameDataFolder();
-
+echo 'data migrated<br>';
+static::saveJs();
 echo 'migrate completed';
     }
 
