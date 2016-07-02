@@ -13,6 +13,10 @@
 
 namespace litepubl\core;
 
+use litepubl\Config;
+
+/**
+ * This is the class to storage base tags in templates
  *
  * @property string $files
  * @property string $language
@@ -23,10 +27,7 @@ namespace litepubl\core;
  * @property string $userlink
  * @property string $version
  * @property-read string $domain
- * This is the class to storage web site url and safe public properties
  */
-/**
-use litepubl\Config;
 
 class Site extends Events
 {

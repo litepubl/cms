@@ -44,6 +44,7 @@ use litepubl\view\Theme;
  * @property-read Theme $theme
  * @property-read Admin $adminTheme
  */
+
 class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 {
 

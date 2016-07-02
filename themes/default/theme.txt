@@ -158,19 +158,21 @@ $template.head = [
     ]
     
     $home = [
-        <script type="text/javascript">
-            if (location.pathname == "/") {
-                $(document).ready(function() {
-                    $("#site-description").homeimage({
-                        image: "$home.image",
-                        small: "$home.smallimage",
-                        breakpoint: 768,
-                        addclass: "home-image"
-                    });
+<script type="text/javascript">
+    (function($, window) {
+        if (location.pathname == "/") {
+            $(function() {
+                $("#site-description").homeimage({
+                    image: "$home.image",
+                    small: "$home.smallimage",
+                    breakpoint: 768,
+                    addclass: "home-image"
                 });
-            }
-        </script>
-    ]
+            });
+        }
+    })(jQuery, window);
+</script>
+]
 ]
 
 /*
