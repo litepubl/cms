@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\livejournalposter;
 
 use litepubl\Config;
-use litepubl\view\Theme;
 use litepubl\post\Post;
+use litepubl\view\Theme;
 use litepubl\xmlrpc\IXR_Client;
 
 class Plugin extends \litepubl\core\Plugin
@@ -79,19 +82,19 @@ class Plugin extends \litepubl\core\Plugin
         );
 
         switch ($this->privacy) {
-            case "public":
-                $args['security'] = "public";
-                break;
+        case "public":
+            $args['security'] = "public";
+            break;
 
 
-            case "private":
-                $args['security'] = "private";
-                break;
+        case "private":
+            $args['security'] = "private";
+            break;
 
 
-            case "friends":
-                $args['security'] = "usemask";
-                $args['allowmask'] = 1;
+        case "friends":
+            $args['security'] = "usemask";
+            $args['allowmask'] = 1;
         }
 
         if ($this->community != '') {

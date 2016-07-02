@@ -1,21 +1,24 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\admin\users;
 
+use litepubl\admin\GetPerm;
 use litepubl\core\UserGroups;
 use litepubl\pages\Users as UserPages;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Args;
 use litepubl\view\Lang;
-use litepubl\admin\GetPerm;
 
 class Options extends \litepubl\admin\Menu
 {
@@ -37,10 +40,12 @@ class Options extends \litepubl\admin\Menu
         $groups = UserGroups::i();
         $args->defaulthome = $groups->defaulthome;
 
-        return $admin->form('[checkbox=createpage]
+        return $admin->form(
+            '[checkbox=createpage]
     [text=linkschema]
     [text=defaulthome]
-' . $admin->h($lang->defaults) . GetPerm::groups($groups->defaults), $args);
+' . $admin->h($lang->defaults) . GetPerm::groups($groups->defaults), $args
+        );
     }
 
     public function processForm()

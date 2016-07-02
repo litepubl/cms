@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -118,17 +121,23 @@ class Posts extends \litepubl\core\Items
         $db = $this->getApp()->db;
         if ($this->childTable) {
             $childTable = $db->prefix . $this->childTable;
-            return $this->setAssoc($db->res2items($db->query(
-                "select $db->posts.*, $childTable.*, $db->urlmap.url as url
+            return $this->setAssoc(
+                $db->res2items(
+                    $db->query(
+                        "select $db->posts.*, $childTable.*, $db->urlmap.url as url
       from $db->posts, $childTable, $db->urlmap
       where $where and  $db->posts.id = $childTable.id and $db->urlmap.id  = $db->posts.idurl $limit"
-            )));
+                    )
+                )
+            );
         }
 
-        $items = $db->res2items($db->query(
-            "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+        $items = $db->res2items(
+            $db->query(
+                "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
     where $where and  $db->urlmap.id  = $db->posts.idurl $limit"
-        ));
+            )
+        );
 
         if (!count($items)) {
             return array();
@@ -167,8 +176,10 @@ class Posts extends \litepubl\core\Items
 
         $db = $this->getApp()->db;
         $childTable = $db->prefix . $this->childTable;
-        $res = $db->query("SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
-    where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where");
+        $res = $db->query(
+            "SELECT COUNT($db->posts.id) as count FROM $db->posts, $childTable
+    where $db->posts.status <> 'deleted' and $childTable.id = $db->posts.id $where"
+        );
 
         if ($res && ($r = $db->fetchassoc($res))) {
             return $r['count'];
@@ -360,37 +371,47 @@ class Posts extends \litepubl\core\Items
     //fix call reference
     public function beforecontent($post, &$result)
     {
-        $this->callevent('beforecontent', array(
+        $this->callevent(
+            'beforecontent', array(
             $post, &$result
-        ));
+            )
+        );
     }
 
     public function aftercontent($post, &$result)
     {
-        $this->callevent('aftercontent', array(
+        $this->callevent(
+            'aftercontent', array(
             $post, &$result
-        ));
+            )
+        );
     }
 
     public function beforeexcerpt($post, &$result)
     {
-        $this->callevent('beforeexcerpt', array(
+        $this->callevent(
+            'beforeexcerpt', array(
             $post, &$result
-        ));
+            )
+        );
     }
 
     public function afterexcerpt($post, &$result)
     {
-        $this->callevent('afterexcerpt', array(
+        $this->callevent(
+            'afterexcerpt', array(
             $post, &$result
-        ));
+            )
+        );
     }
 
     public function getSitemap($from, $count)
     {
-        return $this->externalfunc(__class__, 'Getsitemap', array(
+        return $this->externalfunc(
+            __class__, 'Getsitemap', array(
             $from,
             $count
-        ));
+            )
+        );
     }
 }

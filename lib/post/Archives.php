@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -47,8 +50,10 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
         //sort archive by months
         $linkgen = LinkGenerator::i();
         $db = $this->db;
-        $res = $db->query("SELECT YEAR(posted) AS 'year', MONTH(posted) AS 'month', count(id) as 'count' FROM  $db->posts
-    where status = 'published' GROUP BY YEAR(posted), MONTH(posted) ORDER BY posted DESC ");
+        $res = $db->query(
+            "SELECT YEAR(posted) AS 'year', MONTH(posted) AS 'month', count(id) as 'count' FROM  $db->posts
+    where status = 'published' GROUP BY YEAR(posted), MONTH(posted) ORDER BY posted DESC "
+        );
 
         while ($r = $db->fetchassoc($res)) {
             $this->date = mktime(0, 0, 0, $r['month'], 1, $r['year']);
@@ -142,16 +147,20 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
 
         $item = $this->items[$this->date];
         $order = Schema::getSchema($this)->invertorder ? 'asc' : 'desc';
-        return $this->_idposts = $this->getdb('posts')->idselect("status = 'published' and
+        return $this->_idposts = $this->getdb('posts')->idselect(
+            "status = 'published' and
 year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
-    ORDER BY posted $order");
+    ORDER BY posted $order"
+        );
     }
 
     public function getSitemap($from, $count)
     {
-        return $this->externalfunc(get_class($this), 'GetSitemap', array(
+        return $this->externalfunc(
+            get_class($this), 'GetSitemap', array(
             $from,
             $count
-        ));
+            )
+        );
     }
 }

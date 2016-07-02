@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\perms;
 
@@ -120,8 +123,10 @@ class Page extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $theme = $this->getSchema()->theme;
         $lang = Lang::i('perms');
 
-        return strtr($theme->templates['content.admin.form'], ['$formtitle' => $lang->pwdaccess, '$items' => $theme->getinput('password', 'password', '', $lang->password) . $theme->getinput('checkbox', 'remember', '$remember', $lang->remember) . $theme->getinput('hidden', 'antispam', '$antispam') ,
+        return strtr(
+            $theme->templates['content.admin.form'], ['$formtitle' => $lang->pwdaccess, '$items' => $theme->getinput('password', 'password', '', $lang->password) . $theme->getinput('checkbox', 'remember', '$remember', $lang->remember) . $theme->getinput('hidden', 'antispam', '$antispam') ,
 
-        '[submit=update]' => $theme->getsubmit($lang->send) , ]);
+            '[submit=update]' => $theme->getsubmit($lang->send) , ]
+        );
     }
 }

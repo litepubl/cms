@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\comments;
 
@@ -65,14 +68,16 @@ class Comments extends \litepubl\core\Items
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
-        $this->getdb($this->rawtable)->add(array(
+        $this->getdb($this->rawtable)->add(
+            array(
             'id' => $id,
             'created' => Str::sqlDate() ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         $this->added($id);
         $this->changed($id);
@@ -87,12 +92,14 @@ class Comments extends \litepubl\core\Items
 
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
-        $this->getdb($this->rawtable)->updateassoc(array(
+        $this->getdb($this->rawtable)->updateassoc(
+            array(
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         if (isset($this->items[$id])) {
             $this->items[$id]['content'] = $filtered;
@@ -118,11 +125,13 @@ class Comments extends \litepubl\core\Items
 
     public function setStatus($id, $status)
     {
-        if (!in_array($status, array(
+        if (!in_array(
+            $status, array(
             'approved',
             'hold',
             'spam'
-        ))) {
+            )
+        )) {
             return false;
         }
         if (!$this->itemExists($id)) {
@@ -166,8 +175,10 @@ class Comments extends \litepubl\core\Items
         $table = $this->thistable;
         $db = $this->getApp()->db;
         $authors = $db->users;
-        $res = $db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
-    where $where $authors.id = $table.author $limit");
+        $res = $db->query(
+            "select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    where $where $authors.id = $table.author $limit"
+        );
 
         return $this->res2items($res);
     }
@@ -199,14 +210,16 @@ class Comments extends \litepubl\core\Items
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
-        $this->getdb($this->rawtable)->add(array(
+        $this->getdb($this->rawtable)->add(
+            array(
             'id' => $id,
             'created' => Str::sqlDate($posted) ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         return $id;
     }
@@ -254,9 +267,11 @@ class Comments extends \litepubl\core\Items
         $vars->comment = $comment;
         $lang = Lang::i('comment');
 
-        $tml = strtr($theme->templates['content.post.templatecomments.comments.comment'], array(
+        $tml = strtr(
+            $theme->templates['content.post.templatecomments.comments.comment'], array(
             '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
-        ));
+            )
+        );
 
         $index = $from;
         $class1 = $theme->templates['content.post.templatecomments.comments.comment.class1'];

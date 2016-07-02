@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\wikiwords;
 
@@ -19,9 +22,11 @@ use litepubl\view\Parser;
 function WikiInstall($self)
 {
     $manager = DBManager::i();
-    $manager->createTable($self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
+    $manager->createTable(
+        $self->table, "  `id` int(10) unsigned NOT NULL auto_increment,
     `word` text NOT NULL,
-    PRIMARY KEY  (`id`)");
+    PRIMARY KEY  (`id`)"
+    );
 
     $manager->createTable($self->itemsposts->table, file_get_contents($self->getApp()->paths->lib . 'core/install/sql/ItemsPosts.sql'));
 

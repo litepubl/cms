@@ -1,27 +1,30 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\tickets;
 
+use litepubl\admin\Menus as AdminMenus;
+use litepubl\admin\options\Secure;
 use litepubl\core\DBManager;
+use litepubl\core\DBOptimizer;
 use litepubl\core\Plugins;
+use litepubl\core\UserGroups;
+use litepubl\core\Users;
+use litepubl\post\Posts;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
-use litepubl\core\Users;
-use litepubl\core\UserGroups;
-use litepubl\admin\Menus as AdminMenus;
-use litepubl\post\Posts;
-use litepubl\admin\options\Secure;
-use litepubl\core\DBOptimizer;
 
 function TicketsInstall($self)
 {
@@ -31,12 +34,14 @@ function TicketsInstall($self)
     $lang->addSearch('ticket', 'tickets');
 
     $self->data['cats'] = array();
-    $self->data['idcomauthor'] = Users::i()->add(array(
+    $self->data['idcomauthor'] = Users::i()->add(
+        array(
         'email' => '',
         'name' => Lang::get('ticket', 'comname') ,
         'status' => 'approved',
         'idgroups' => 'commentator'
-    ));
+        )
+    );
 
     $self->save();
 

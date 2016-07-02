@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -85,8 +88,12 @@ class Announce
     {
         $theme = $this->theme;
         $db = $theme->getApp()->db;
-        $items = $db->res2assoc($db->query("select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
-    where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"));
+        $items = $db->res2assoc(
+            $db->query(
+                "select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
+    where $t.status = 'published' and $where and $db->urlmap.id  = $t.idurl"
+            )
+        );
 
         if (!count($items)) {
             return '';

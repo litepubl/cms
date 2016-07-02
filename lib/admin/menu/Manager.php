@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\menu;
 
@@ -23,18 +26,21 @@ class Manager extends \litepubl\admin\Menu
     public function getContent(): string
     {
         $result = '';
-        if (isset($_GET['action']) && in_array($_GET['action'], array(
+        if (isset($_GET['action']) && in_array(
+            $_GET['action'], array(
             'delete',
             'setdraft',
             'publish'
-        ))) {
+            )
+        )) {
             $result.= $this->doaction($this->idget(), $_GET['action']);
         }
 
         $menus = Menus::i();
         $lang = Lang::admin();
         $editurl = Link::url("{$this->url}edit/?id");
-        $result.= $this->tableItems($menus->items, array(
+        $result.= $this->tableItems(
+            $menus->items, array(
             array(
                 $lang->menutitle,
                 function (Table $tb) use ($menus) {
@@ -69,7 +75,8 @@ class Manager extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
             ) ,
-        ));
+            )
+        );
 
         return $result;
     }
@@ -86,18 +93,18 @@ class Manager extends \litepubl\admin\Menu
         $lang = $this->lang;
         $menuitem = Menu::i($id);
         switch ($action) {
-            case 'delete':
-                return $this->confirmDeleteItem($menus);
+        case 'delete':
+            return $this->confirmDeleteItem($menus);
 
-            case 'setdraft':
-                $menuitem->status = 'draft';
-                $menus->edit($menuitem);
-                return $admin->success($lang->confirmedsetdraft);
+        case 'setdraft':
+            $menuitem->status = 'draft';
+            $menus->edit($menuitem);
+            return $admin->success($lang->confirmedsetdraft);
 
-            case 'publish':
-                $menuitem->status = 'published';
-                $menus->edit($menuitem);
-                return $admin->success($lang->confirmedpublish);
+        case 'publish':
+            $menuitem->status = 'published';
+            $menus->edit($menuitem);
+            return $admin->success($lang->confirmedpublish);
         }
 
         return '';

@@ -3,7 +3,7 @@ BASEURL=http://dest/build/index.php
 [InternetShortcut]
 URL=http://cms.cms/utils/build/reparse.php
 IDList=
-IconFile=http://cms/favicon.ico
+IconFile=http://cms.cms/favicon.ico
 IconIndex=1
 HotKey=0
 [{000214A0-0000-0000-C000-000000000046}]

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\utils;
 
@@ -21,14 +24,16 @@ class LinkGenerator extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'linkgenerator';
-        $this->data = array_merge($this->data, array(
+        $this->data = array_merge(
+            $this->data, array(
             'post' => '/[title].htm',
             'menu' => '/[title].htm',
             'tag' => '/tag/[title].htm',
             'category' => '/category/[title].htm',
             'archive' => '/[year]/[month].htm',
             'file' => '/[media]/[filename]/',
-        ));
+            )
+        );
         $this->data['urlencode'] = false;
         $this->addevents('onencode');
     }
@@ -88,8 +93,10 @@ class LinkGenerator extends \litepubl\core\Events
     public function encode($s)
     {
         $s = trim($s, "\n\r\t \x0B\0,.;?!/\\<>():;-\"'");
-        $this->callevent('onencode', array(&$s
-        ));
+        $this->callevent(
+            'onencode', array(&$s
+            )
+        );
         if ($this->urlencode) {
             return rawurlencode($s);
         }

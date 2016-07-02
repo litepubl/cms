@@ -1,19 +1,22 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\tickets;
 
 use litepubl\admin\Link;
+use litepubl\admin\Table;
 use litepubl\view\Args;
 use litepubl\view\Lang;
-use litepubl\admin\Table;
 
 class Admin extends \litepubl\admin\Menu
 {
@@ -26,14 +29,14 @@ class Admin extends \litepubl\admin\Menu
         $where = $this->getApp()->options->group == 'ticket' ? ' and author = ' . $this->getApp()->options->user : '';
 
         switch ($this->name) {
-            case 'opened':
-                $where.= " and state = 'opened' ";
-                break;
+        case 'opened':
+            $where.= " and state = 'opened' ";
+            break;
 
 
-            case 'fixed':
-                $where.= " and state = 'fixed' ";
-                break;
+        case 'fixed':
+            $where.= " and state = 'fixed' ";
+            break;
         }
 
         $count = $tickets->getchildscount($where);
@@ -55,7 +58,8 @@ class Admin extends \litepubl\admin\Menu
         $result.= $admintheme->getCount($from, $from + count($items), $count);
 
         $tb = $this->newTable();
-        $tb->setPosts(array(
+        $tb->setPosts(
+            array(
             array(
                 'right',
                 $lang->date,
@@ -95,7 +99,8 @@ class Admin extends \litepubl\admin\Menu
                 '<a href="' . Link::url('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
             ) ,
 
-        ));
+            )
+        );
 
         $table = $tb->build($items);
 

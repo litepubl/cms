@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -30,13 +33,15 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         $this->addevents('onindex');
         $this->data['date'] = time();
         $this->data['countfiles'] = 1;
-        $this->addmap('classes', array(
+        $this->addmap(
+            'classes', array(
             'litepubl\pages\Menus',
             'litepubl\post\Posts',
             'litepubl\tag\Cats',
             'litepubl\tag\Tags',
             'litepubl\post\Archives'
-        ));
+            )
+        );
     }
 
     public function add($url, $prio)
@@ -111,8 +116,10 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
                 $exists = file_exists($this->getApp()->paths->files . "$i.xml.gz");
             }
         }
-        $this->callevent('onindex', array(&$result
-        ));
+        $this->callevent(
+            'onindex', array(&$result
+            )
+        );
         $result.= '</sitemapindex>';
         if (!$exists) {
             $this->createfiles();

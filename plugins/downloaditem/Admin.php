@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\downloaditem;
 
@@ -34,19 +37,19 @@ class Admin extends \litepubl\admin\Menu
         $where = $this->getApp()->options->group == 'downloaditem' ? ' and author = ' . $this->getApp()->options->user : '';
 
         switch ($this->name) {
-            case 'addurl':
-                $args->formtitle = $lang->addurl;
-                $args->url = $this->getparam('url', '');
-                return $admintheme->form('[text=url]', $args);
+        case 'addurl':
+            $args->formtitle = $lang->addurl;
+            $args->url = $this->getparam('url', '');
+            return $admintheme->form('[text=url]', $args);
 
-            case 'theme':
-                $where.= " and type = 'theme' ";
-                break;
+        case 'theme':
+            $where.= " and type = 'theme' ";
+            break;
 
 
-            case 'plugin':
-                $where.= " and type = 'plugin' ";
-                break;
+        case 'plugin':
+            $where.= " and type = 'plugin' ";
+            break;
         }
 
         $count = $downloaditems->getchildscount($where);
@@ -63,7 +66,8 @@ class Admin extends \litepubl\admin\Menu
         $form = $this->newForm(new Args());
         $form->body = $admintheme->getcount($from, $from + count($items), $count);
         $tb = $this->newTable();
-        $tb->setPosts(array(
+        $tb->setPosts(
+            array(
             array(
                 'right',
                 $lang->downloads,
@@ -90,12 +94,15 @@ class Admin extends \litepubl\admin\Menu
                 $lang->edit,
                 '<a href="' . $editurl . '=$post.id">' . $lang->edit . '</a>'
             ) ,
-        ));
+            )
+        );
 
         $form->body.= $tb->build($items);
-        $form->body.= $form->centergroup('[button=publish]
+        $form->body.= $form->centergroup(
+            '[button=publish]
     [button=setdraft]
-    [button=delete]');
+    [button=delete]'
+        );
 
         $form->submit = false;
         $result.= $form->get();

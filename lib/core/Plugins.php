@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -81,14 +84,14 @@ class Plugins extends Items
         $about = static ::getabout($name);
         $dir = $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
         if (file_exists($dir . $about['filename'])) {
-            require_once($dir . $about['filename']);
+            include_once $dir . $about['filename'];
         } else {
             $this->error(sprintf('File plugins/%s/%s not found', $name, $about['filename']));
         }
 
         if ($about['adminfilename']) {
             if (file_exists($dir . $about['adminfilename'])) {
-                require_once($dir . $about['adminfilename']);
+                include_once $dir . $about['adminfilename'];
             } else {
                 $this->error(sprintf('File plugins/%s/%s not found', $name, $about['adminfilename']));
             }

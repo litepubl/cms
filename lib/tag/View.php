@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\tag;
 
@@ -236,11 +239,15 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getCont_all()
     {
-        return sprintf('<ul>%s</ul>', $this->getSorted(array(
-            'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
-            'subcount' => '<strong>($itemscount)</strong>',
-            'subitems' => '<ul>$item</ul>'
-        ), 0, 'count', 0, 0, false));
+        return sprintf(
+            '<ul>%s</ul>', $this->getSorted(
+                array(
+                'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+                'subcount' => '<strong>($itemscount)</strong>',
+                'subitems' => '<ul>$item</ul>'
+                ), 0, 'count', 0, 0, false
+            )
+        );
     }
 
     public function getIdPosts($id)

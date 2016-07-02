@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\posts;
 
@@ -31,11 +34,13 @@ class Posts extends \litepubl\admin\Menu
 
     public function getContent(): string
     {
-        if (isset($_GET['action']) && in_array($_GET['action'], array(
+        if (isset($_GET['action']) && in_array(
+            $_GET['action'], array(
             'delete',
             'setdraft',
             'publish'
-        ))) {
+            )
+        )) {
             return $this->doaction(PostItems::i(), $_GET['action']);
         }
 
@@ -69,24 +74,24 @@ class Posts extends \litepubl\admin\Menu
         }
 
         switch ($_GET['action']) {
-            case 'delete':
-                $posts->delete($id);
-                $result = $admintheme->h($lang->confirmeddelete);
-                break;
+        case 'delete':
+            $posts->delete($id);
+            $result = $admintheme->h($lang->confirmeddelete);
+            break;
 
 
-            case 'setdraft':
-                $post->status = 'draft';
-                $posts->edit($post);
-                $result = $admintheme->h($lang->confirmedsetdraft);
-                break;
+        case 'setdraft':
+            $post->status = 'draft';
+            $posts->edit($post);
+            $result = $admintheme->h($lang->confirmedsetdraft);
+            break;
 
 
-            case 'publish':
-                $post->status = 'published';
-                $posts->edit($post);
-                $result = $admintheme->h($lang->confirmedpublish);
-                break;
+        case 'publish':
+            $post->status = 'published';
+            $posts->edit($post);
+            $result = $admintheme->h($lang->confirmedpublish);
+            break;
         }
 
         return $result;
@@ -111,7 +116,8 @@ class Posts extends \litepubl\admin\Menu
         $form->body = $admintheme->getcount($from, $from + count($items), $count);
 
         $tb = $this->newTable();
-        $tb->setposts(array(
+        $tb->setposts(
+            array(
             array(
                 'center',
                 $lang->date,
@@ -137,12 +143,15 @@ class Posts extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"
             ) ,
-        ));
+            )
+        );
 
         $form->body.= $tb->build($items);
-        $form->body.= $form->centergroup('[button=publish]
+        $form->body.= $form->centergroup(
+            '[button=publish]
     [button=setdraft]
-    [button=delete]');
+    [button=delete]'
+        );
 
         $form->submit = false;
         $result = $form->get();

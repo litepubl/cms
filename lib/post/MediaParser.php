@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -88,14 +91,16 @@ class MediaParser extends \litepubl\core\Events
             return $this->error('Error access to uploaded file');
         }
 
-        return $this->add(array(
+        return $this->add(
+            array(
             'filename' => $filename,
             'tempfilename' => $newtemp,
             'title' => $title,
             'description' => $description,
             'keywords' => $keywords,
             'overwrite' => $overwrite
-        ));
+            )
+        );
     }
 
     public static function move_uploaded($filename, $tempfilename, $subdir)
@@ -249,14 +254,16 @@ class MediaParser extends \litepubl\core\Events
 
     public function addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite)
     {
-        return $this->add(array(
+        return $this->add(
+            array(
             'filename' => $filename,
             'tempfilename' => $tempfilename,
             'title' => $title,
             'description' => $description,
             'keywords' => $keywords,
             'overwrite' => $overwrite
-        ));
+            )
+        );
     }
 
     public function add(array $file)
@@ -273,20 +280,24 @@ class MediaParser extends \litepubl\core\Events
         }
 
         $item = $this->getInfo($file['tempfilename']);
-        $item = array_merge($item, array(
+        $item = array_merge(
+            $item, array(
             'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']), isset($file['overwrite']) ? $file['overwrite'] : false) ,
             'title' => isset($file['title']) ? $file['title'] : $file['filename'],
             'description' => isset($file['description']) ? $file['description'] : '',
             'keywords' => isset($file['keywords']) ? $file['keywords'] : ''
-        ));
+            )
+        );
 
         $preview = false;
         $midle = false;
         if ($item['media'] == 'image') {
             $srcfilename = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
-            $this->callevent('onbefore', array(&$item,
+            $this->callevent(
+                'onbefore', array(&$item,
                 $srcfilename
-            ));
+                )
+            );
 
             $maxwidth = isset($file['maxwidth']) ? $file['maxwidth'] : $this->maxwidth;
             $maxheight = isset($file['maxheight']) ? $file['maxheight'] : $this->maxheight;
@@ -343,10 +354,12 @@ class MediaParser extends \litepubl\core\Events
 
         $id = $files->additem($item);
         if ($hash != $files->getvalue($id, 'hash')) {
-            $files->getdb('imghashes')->insert(array(
+            $files->getdb('imghashes')->insert(
+                array(
                 'id' => $id,
                 'hash' => $hash
-            ));
+                )
+            );
         }
 
         if ($preview) {
@@ -378,11 +391,13 @@ class MediaParser extends \litepubl\core\Events
         $filename = $linkgen->filterfilename($filename);
         $tempfilename = $this->doupload($filename, $content);
 
-        return $this->add(array(
+        return $this->add(
+            array(
             'filename' => $filename,
             'tempfilename' => $tempfilename,
             'enabledpreview' => false
-        ));
+            )
+        );
     }
 
     //$filename must be specefied before such as  thumb/img004893.jpg
@@ -403,17 +418,19 @@ class MediaParser extends \litepubl\core\Events
             if ($size = static ::createthumb($image, $destfilename, $this->previewwidth, $this->previewheight, $this->quality_snapshot, $this->previewmode)) {
                 $item = $this->getdefaultvalues(str_replace(DIRECTORY_SEPARATOR, '/', substr($destfilename, strlen($this->getApp()->paths->files))));
                 $item['media'] = 'image';
- //jpeg always for thumbnails
+                //jpeg always for thumbnails
                 $item['mime'] = 'image/jpeg';
                 $item['width'] = $size['width'];
                 $item['height'] = $size['height'];
 
                 $id = $files->additem($item);
                 if ($hash != $files->getvalue($id, 'hash')) {
-                    $files->getdb('imghashes')->insert(array(
+                    $files->getdb('imghashes')->insert(
+                        array(
                         'id' => $id,
                         'hash' => $hash
-                    ));
+                        )
+                    );
                 }
 
                 $this->added($id);
@@ -503,9 +520,9 @@ class MediaParser extends \litepubl\core\Events
             $result['media'] = 'flash';
             $result['mime'] = 'application/x-shockwave-flash';
 
-            require_once($this->getApp()->paths->libinclude . 'getid3.php');
-            require_once($this->getApp()->paths->libinclude . 'getid3.lib.php');
-            require_once($this->getApp()->paths->libinclude . 'module.audio-video.swf.php');
+            include_once $this->getApp()->paths->libinclude . 'getid3.php';
+            include_once $this->getApp()->paths->libinclude . 'getid3.lib.php';
+            include_once $this->getApp()->paths->libinclude . 'module.audio-video.swf.php';
 
             $getID3 = new \getID3;
             $getID3->option_md5_data = true;
@@ -543,14 +560,14 @@ class MediaParser extends \litepubl\core\Events
         }
 
         switch ($info[2]) {
-            case 1:
-                return @imagecreatefromgif($srcfilename);
+        case 1:
+            return @imagecreatefromgif($srcfilename);
 
-            case 2:
-                return @imagecreatefromjpeg($srcfilename);
+        case 2:
+            return @imagecreatefromjpeg($srcfilename);
 
-            case 3:
-                return @imagecreatefrompng($srcfilename);
+        case 3:
+            return @imagecreatefrompng($srcfilename);
                 /*
                 4 IMAGETYPE_SWF
                 5 IMAGETYPE_PSD
@@ -564,11 +581,11 @@ class MediaParser extends \litepubl\core\Events
                 13 IMAGETYPE_SWC
                 14 IMAGETYPE_IFF
                 */
-            case 15:
-                return @imagecreatefromwbmp($srcfilename);
+        case 15:
+            return @imagecreatefromwbmp($srcfilename);
 
-            case 16:
-                return @imagecreatefromxbm($srcfilename);
+        case 16:
+            return @imagecreatefromxbm($srcfilename);
         }
         return false;
     }
@@ -616,30 +633,30 @@ class MediaParser extends \litepubl\core\Events
         }
 
         switch ($mode) {
-            case 'fixed':
-                $ratio = $x / $y;
-                //clip source size
-                if ($sourcex / $sourcey > $ratio) {
-                    $sourcex = (int)round($sourcey * $ratio);
-                } else {
-                    $sourcey = (int)round($sourcex / $ratio);
-                }
-                break;
+        case 'fixed':
+            $ratio = $x / $y;
+            //clip source size
+            if ($sourcex / $sourcey > $ratio) {
+                $sourcex = (int)round($sourcey * $ratio);
+            } else {
+                $sourcey = (int)round($sourcex / $ratio);
+            }
+            break;
 
 
-            case 'max':
-            case 'min':
-                $ratio = $sourcex / $sourcey;
-                if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
-                    $x = (int)round($y * $ratio);
-                } else {
-                    $y = (int)round($x / $ratio);
-                }
-                break;
+        case 'max':
+        case 'min':
+            $ratio = $sourcex / $sourcey;
+            if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
+                $x = (int)round($y * $ratio);
+            } else {
+                $y = (int)round($x / $ratio);
+            }
+            break;
 
 
-            default:
-                throw new \Exception("Unknow thumbnail options $mode");
+        default:
+            throw new \Exception("Unknow thumbnail options $mode");
         }
 
         $dest = imagecreatetruecolor($x, $y);

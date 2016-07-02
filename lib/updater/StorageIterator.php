@@ -1,4 +1,15 @@
 <?php
+/**
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
 
 namespace litepubl\updater;
 
@@ -66,9 +77,9 @@ class StorageIterator
 
     public static function run($callback)
     {
-        include_once(dirname(__DIR__) . '/core/AppTrait.php');
-        include_once(dirname(__DIR__) . '/core/Storage.php');
-        include_once(dirname(__DIR__) . '/core/StorageInc.php');
+        include_once dirname(__DIR__) . '/core/AppTrait.php';
+        include_once dirname(__DIR__) . '/core/Storage.php';
+        include_once dirname(__DIR__) . '/core/StorageInc.php';
 
         $self = new static(
         new StorageInc(),

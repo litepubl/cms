@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\metatags;
 
@@ -22,10 +25,12 @@ function PluginInstall($self)
     $vars->save();
 
     $t = MainView::i();
-    $t->heads = strtr($t->heads, array(
+    $t->heads = strtr(
+        $t->heads, array(
         '$template.keywords' => '$metatags.keywords',
         '$template.description' => '$metatags.description',
-    ));
+        )
+    );
     $t->save();
 
     Parser::i()->parsed = $self->themeParsed;
@@ -35,10 +40,12 @@ function PluginInstall($self)
 function PluginUninstall($self)
 {
     $t = MainView::i();
-    $t->heads = strtr($t->heads, array(
+    $t->heads = strtr(
+        $t->heads, array(
         '$metatags.keywords' => '$template.keywords',
         '$metatags.description' => '$template.description'
-    ));
+        )
+    );
     $t->save();
 
     Parser::i()->unbind($self);

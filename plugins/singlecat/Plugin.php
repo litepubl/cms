@@ -1,19 +1,22 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\singlecat;
 
-use litepubl\view\Theme;
+use litepubl\post\Announce;
 use litepubl\post\Post;
 use litepubl\post\Posts;
-use litepubl\post\Announce;
+use litepubl\view\Theme;
 
 class Plugin extends \litepubl\core\Plugin
 {
@@ -55,10 +58,12 @@ class Plugin extends \litepubl\core\Plugin
         $order = $this->invertorder ? 'asc' : 'desc';
         $posts = Posts::i();
         $annnounce= new Anounce();
-        $result = $announce->getLinks("$posts->thistable.id in
+        $result = $announce->getLinks(
+            "$posts->thistable.id in
     (select  $table.post from $table where $table.item = $idcat)
     and $posts->thistable.id != $post->id
-    order by $posts->thistable.posted  $order limit $this->maxcount", $this->tml);
+    order by $posts->thistable.posted  $order limit $this->maxcount", $this->tml
+        );
 
         return str_replace('$items', $result, $this->tmlitems);
     }

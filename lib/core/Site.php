@@ -1,29 +1,32 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
-use litepubl\Config;
-/**
- * This is the class to storage web site url and safe public properties
  *
- * @property string $url
  * @property string $files
- * @property string $subdir
- * @property string $q
- * @property-read string $domain
  * @property string $language
- * @property string $version
- * @property string $userlink
  * @property string $liveUser
+ * @property string $q
+ * @property string $subdir
+ * @property string $url
+ * @property string $userlink
+ * @property string $version
+ * @property-read string $domain
+ * This is the class to storage web site url and safe public properties
  */
+/**
+use litepubl\Config;
 
 class Site extends Events
 {

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -25,10 +28,12 @@ class Pinger extends \litepubl\admin\Menu
 
         $lang = Lang::admin('options');
         $args->formtitle = $lang->optionsping;
-        return $this->admintheme->form('
+        return $this->admintheme->form(
+            '
 [checkbox=enabled]
 [editor=services]
-', $args);
+', $args
+        );
     }
 
     public function processForm()

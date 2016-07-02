@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\widget;
 
@@ -62,7 +65,9 @@ class Comments extends Widget
     public function getRecent(int $count, string $status = 'approved'): array
     {
         $db = $this->getApp()->db;
-        $result = $db->res2assoc($db->query("select $db->comments.*,
+        $result = $db->res2assoc(
+            $db->query(
+                "select $db->comments.*,
     $db->users.name as name, $db->users.email as email, $db->users.website as url,
     $db->posts.title as title, $db->posts.commentscount as commentscount,
     $db->urlmap.url as posturl
@@ -73,7 +78,9 @@ class Comments extends Widget
     $db->urlmap.id = $db->posts.idurl and
     $db->posts.status = 'published' and
     $db->posts.idperm = 0
-    order by $db->comments.posted desc limit $count"));
+    order by $db->comments.posted desc limit $count"
+            )
+        );
 
         if ($this->getApp()->options->commentpages && !$this->getApp()->options->comments_invert_order) {
             foreach ($result as $i => $item) {

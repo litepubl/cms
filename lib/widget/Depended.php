@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\widget;
 
@@ -16,11 +19,13 @@ class Depended extends Widget
 
     private function isValue(string $name): bool
     {
-        return in_array($name, array(
+        return in_array(
+            $name, array(
             'ajax',
             'order',
             'sidebar'
-        ));
+            )
+        );
     }
 
     public function __get($name)

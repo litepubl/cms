@@ -1,10 +1,15 @@
 <?php
 /**
-* Lite Publisher
-* Copyright (C) 2010, 2012 Vladimir Yushko http://litepublisher.com/
-* Dual licensed under the MIT (mit.txt)
-* and GPL (gpl.txt) licenses.
-**/
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
 
 namespace litepubl\plugins\markdown;
 

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -44,17 +47,20 @@ class Secure extends \litepubl\admin\Menu
 
         $args->useshell = Updater::i()->useshell;
         $backuper = Backuper::i();
-        $args->filertype = $this->theme->comboItems(array(
+        $args->filertype = $this->theme->comboItems(
+            array(
             'auto' => 'auto',
             'file' => 'file',
             'ftp' => 'ftp',
             'ftpsocket' => 'ftpsocket',
             //'ssh2' => 'ssh2'
             
-        ), $backuper->filertype);
+            ), $backuper->filertype
+        );
 
         $args->formtitle = $lang->securehead;
-        $result = $this->admintheme->form('
+        $result = $this->admintheme->form(
+            '
       [checkbox=echoexception]
       [checkbox=xxxcheck]
       [checkbox=usersenabled]
@@ -66,7 +72,8 @@ class Secure extends \litepubl\admin\Menu
       [checkbox=show_draft_post]
       [combo=filertype]
       [checkbox=useshell]
-      ', $args);
+      ', $args
+        );
 
         $form = new Form($args);
         $form->title = $lang->changepassword;

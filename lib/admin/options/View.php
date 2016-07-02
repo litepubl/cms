@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -37,7 +40,8 @@ class View extends \litepubl\admin\Menu
 
         $lang = Lang::admin('options');
         $args->formtitle = $lang->viewoptions;
-        return $this->admintheme->form('
+        return $this->admintheme->form(
+            '
       [text=perpage]
       [checkbox=usefilter]
       [checkbox=automore]
@@ -46,7 +50,8 @@ class View extends \litepubl\admin\Menu
       [checkbox=commentautolinks]
       [checkbox=hidefilesonpage]
       [checkbox=replacelang]
-      ', $args);
+      ', $args
+        );
     }
 
     public function processForm()

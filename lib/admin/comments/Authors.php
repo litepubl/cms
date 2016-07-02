@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\comments;
 
@@ -55,7 +58,8 @@ class Authors extends \litepubl\admin\Menu
         $adminurl = $this->adminurl;
         $editurl = Link::url('/admin/users/?id');
         $tb = $this->newTable();
-        $tb->setStruct(array(
+        $tb->setStruct(
+            array(
             array(
                 $lang->author,
                 '$name'
@@ -80,7 +84,8 @@ class Authors extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"
             )
-        ));
+            )
+        );
 
         $result.= $tb->build($items);
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($total / $perpage));

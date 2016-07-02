@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -28,12 +31,14 @@ class Comments extends \litepubl\admin\Menu
         $lang = Lang::admin('commentmanager');
         $args = new Args();
         $tabs = $this->newTabs($this->admintheme);
-        $args->comstatus = $this->theme->comboItems(array(
+        $args->comstatus = $this->theme->comboItems(
+            array(
             'closed' => $lang->closed,
             'reg' => $lang->reg,
             'guest' => $lang->guest,
             'comuser' => $lang->comuser
-        ), $options->comstatus);
+            ), $options->comstatus
+        );
 
         $args->filterstatus = $cm->filterstatus;
         $args->commentsapproved = $cm->defstatus == 'approved';
@@ -41,14 +46,16 @@ class Comments extends \litepubl\admin\Menu
         $args->commentsdisabled = $options->commentsdisabled;
         $args->pingenabled = $options->pingenabled;
 
-        $tabs->add($lang->options, '
+        $tabs->add(
+            $lang->options, '
     [combo=comstatus]
     [checkbox=filterstatus]
     [checkbox=commentsapproved]
     [checkbox=checkduplicate]
     [checkbox=commentsdisabled]
     [checkbox=pingenabled]
-    ');
+    '
+        );
 
         $args->commentpages = $options->commentpages;
         $args->commentsperpage = $options->commentsperpage;
@@ -57,24 +64,28 @@ class Comments extends \litepubl\admin\Menu
         $args->redir = $cm->redir;
         $args->nofollow = $cm->nofollow;
 
-        $tabs->add($lang->templates, '
+        $tabs->add(
+            $lang->templates, '
     [checkbox=commentpages]
     [text=commentsperpage]
     [checkbox=comments_invert_order]
     [checkbox=hidelink]
     [checkbox=redir]
     [checkbox=nofollow]
-    ');
+    '
+        );
 
         $rss = RssHold::i();
         $args->rsscount = $rss->count;
         $args->rsstemplate = $rss->template;
 
-        $tabs->add($lang->holdrss, '
+        $tabs->add(
+            $lang->holdrss, '
     <h4><a href="$site.url/rss/holdcomments.xml">$lang.holdrss</a></h4>
     [text=rsscount]
     [editor=rsstemplate]
-    ');
+    '
+        );
 
         $args->canedit = $cm->canedit;
         $args->candelete = $cm->candelete;
@@ -83,14 +94,16 @@ class Comments extends \litepubl\admin\Menu
         $args->confirmcomuser = $cm->confirmcomuser;
         $args->confirmemail = $cm->confirmemail;
 
-        $tabs->add($lang->perms, '
+        $tabs->add(
+            $lang->perms, '
     [checkbox=canedit]
     [checkbox=candelete]
     [checkbox=confirmlogged]
     [checkbox=confirmguest]
     [checkbox=confirmcomuser]
     [checkbox=confirmemail]
-    ');
+    '
+        );
 
         $args->sendnotification = $cm->sendnotification;
         $args->comuser_subscribe = $cm->comuser_subscribe;
@@ -103,13 +116,15 @@ class Comments extends \litepubl\admin\Menu
         $args->locklist = $subscribe->locklist;
         $args->subscribe_enabled = $subscribe->enabled;
 
-        $tabs->add($lang->subscribe, '
+        $tabs->add(
+            $lang->subscribe, '
     [checkbox=sendnotification]
     [checkbox=defaultsubscribe]
     [checkbox=subscribe_enabled]
     [checkbox=authorpost_subscribe]
     [checkbox=comuser_subscribe]
-    ');
+    '
+        );
 
         $tabs->add($lang->blackemail, '[editor=locklist]');
 

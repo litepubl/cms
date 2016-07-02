@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -227,40 +230,48 @@ class Theme extends Base
 
     public function getButton($title)
     {
-        return strtr($this->templates['content.admin.button'], array(
+        return strtr(
+            $this->templates['content.admin.button'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-        ));
+            )
+        );
     }
 
     public function getSubmit($title)
     {
-        return strtr($this->templates['content.admin.submit'], array(
+        return strtr(
+            $this->templates['content.admin.submit'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-        ));
+            )
+        );
     }
 
     public function getInput($type, $name, $value, $title)
     {
-        return strtr($this->templates['content.admin.' . $type], array(
+        return strtr(
+            $this->templates['content.admin.' . $type], array(
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $value
-        ));
+            )
+        );
     }
 
     public function getRadio($name, $value, $title, $checked)
     {
-        return strtr($this->templates['content.admin.radioitem'], array(
+        return strtr(
+            $this->templates['content.admin.radioitem'], array(
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $title,
             '$index' => $value,
             '$checked' => $checked ? 'checked="checked"' : '',
-        ));
+            )
+        );
     }
 
     public function getRadioItems($name, array $items, $selected)

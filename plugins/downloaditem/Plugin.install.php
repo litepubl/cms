@@ -1,29 +1,32 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\downloaditem;
 
+use litepubl\admin\Menus as AdminMenus;
 use litepubl\core\DBManager;
+use litepubl\core\DBOptimizer;
 use litepubl\core\Plugins;
+use litepubl\pages\FakeMenu;
+use litepubl\pages\Menus;
+use litepubl\post\Posts;
+use litepubl\tag\Tags;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Base;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
 use litepubl\view\Parser;
 use litepubl\view\Theme;
-use litepubl\tag\Tags;
-use litepubl\pages\Menus;
-use litepubl\pages\FakeMenu;
-use litepubl\admin\Menus as AdminMenus;
-use litepubl\core\DBOptimizer;
-use litepubl\post\Posts;
 
 function PluginInstall($self)
 {
@@ -98,7 +101,7 @@ function PluginInstall($self)
         $menu = new FakeMenu();
         $menu->parent = $id;
         $menu->url = $item['url'];
-//sprintf('/downloads/%ss.htm', $type);
+    //sprintf('/downloads/%ss.htm', $type);
         $menu->title = $item['title'];
         $menus->addFakeMenu($menu);
 
@@ -107,7 +110,7 @@ function PluginInstall($self)
         $menu = new FakeMenu();
         $menu->parent = $id;
         $menu->url = $item['url'];
-//sprintf('/downloads/%ss.htm', $type);
+    //sprintf('/downloads/%ss.htm', $type);
         $menu->title = $item['title'];
         $menus->addFakeMenu($menu);
 

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -30,16 +33,18 @@ class Session
             $this,
             'truefunc'
         );
-        session_set_save_handler($truefunc, $truefunc, array(
+        session_set_save_handler(
+            $truefunc, $truefunc, array(
             $this,
             'read'
-        ), array(
+            ), array(
             $this,
             'write'
-        ), array(
+            ), array(
             $this,
             'destroy'
-        ), $truefunc);
+            ), $truefunc
+        );
     }
 
     public function truefunc()

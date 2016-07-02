@@ -1,38 +1,42 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
+
 namespace litepubl\pages;
 
 use litepubl\core\Context;
+use litepubl\view\Admin;
 use litepubl\view\Filter;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
-use litepubl\view\Admin;
 
 /**
  * This is the base menu class
  *
- * @property int $author
- * @property string $content
- * @property string $rawcontent
- * @property string $keywords
- * @property string $description
- * @property string $head
- * @property string $password
- * @property int $idschema
- * @property string $title
- * @property string $url
- * @property int $idurl
- * @property int $parent
- * @property int $order
- * @property string $status
- * @property string $status
+ * @property      int $author
+ * @property      string $content
+ * @property      string $rawcontent
+ * @property      string $keywords
+ * @property      string $description
+ * @property      string $head
+ * @property      string $password
+ * @property      int $idschema
+ * @property      string $title
+ * @property      string $url
+ * @property      int $idurl
+ * @property      int $parent
+ * @property      int $order
+ * @property      string $status
+ * @property      string $status
  * @property-read string $instanceName
  * @property-read string $link
  * @property-read string $cont
@@ -282,10 +286,12 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     public function getContent(): string
     {
         $result = $this->data['content'];
-        $this->owner->callevent('oncontent', array(
+        $this->owner->callevent(
+            'oncontent', array(
             $this,
             &$result
-        ));
+            )
+        );
         return $result;
     }
 

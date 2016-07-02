@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\downloaditem;
 
-use litepubl\view\Lang;
-use litepubl\view\Args;
 use litepubl\post\Post;
+use litepubl\view\Args;
+use litepubl\view\Lang;
 
 class Editor extends \litepubl\admin\posts\Editor
 {
@@ -32,7 +35,8 @@ class Editor extends \litepubl\admin\posts\Editor
     public function getTabstemplate()
     {
         $admintheme = $this->admintheme;
-        return strtr($admintheme->templates['tabs'], array(
+        return strtr(
+            $admintheme->templates['tabs'], array(
             '$id' => 'tabs',
             '$tab' => '[tab=downloaditem]' . $admintheme->templates['posteditor.tabs.tabs'],
             '$panel' => '[tabpanel=downloaditem{
@@ -42,7 +46,8 @@ class Editor extends \litepubl\admin\posts\Editor
 [text=authorname]
 [text=version]
 }]' . $admintheme->templates['posteditor.tabs.panels'],
-        ));
+            )
+        );
     }
 
     public function getArgstab(Post $post, Args $args)

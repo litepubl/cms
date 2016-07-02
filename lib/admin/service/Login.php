@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\service;
 
@@ -32,11 +35,13 @@ class Login extends \litepubl\admin\Menu
         $args->host = $this->getparam('host', '');
         $args->login = $this->getparam('login', '');
         $args->password = $this->getparam('pasword', '');
-        return $result . $admin->parseArg('
+        return $result . $admin->parseArg(
+            '
 [text=host]
  [text=login]
  [password=password]
-', $args);
+', $args
+        );
     }
 
     public function checkbackuper()

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\comments;
 
@@ -34,26 +37,26 @@ class Pingbacks extends \litepubl\admin\Menu
             }
 
             switch ($action) {
-                case 'delete':
-                    $result.= $this->confirmDeleteItem($pingbacks);
-                    break;
+            case 'delete':
+                $result.= $this->confirmDeleteItem($pingbacks);
+                break;
 
 
-                case 'hold':
-                    $pingbacks->setstatus($id, false);
-                    $result.= $admin->success($lang->successmoderated);
-                    break;
+            case 'hold':
+                $pingbacks->setstatus($id, false);
+                $result.= $admin->success($lang->successmoderated);
+                break;
 
 
-                case 'approve':
-                    $pingbacks->setstatus($id, true);
-                    $result.= $admin->success($lang->successmoderated);
-                    break;
+            case 'approve':
+                $pingbacks->setstatus($id, true);
+                $result.= $admin->success($lang->successmoderated);
+                break;
 
 
-                case 'edit':
-                    $result.= $this->editPingback($id);
-                    break;
+            case 'edit':
+                $result.= $this->editPingback($id);
+                break;
             }
         }
         $result.= $this->getPingList();
@@ -69,10 +72,14 @@ class Pingbacks extends \litepubl\admin\Menu
         $from = $this->getfrom($perpage, $total);
         $db = $pingbacks->db;
         $t = $pingbacks->thistable;
-        $items = $db->res2assoc($db->query("select $t.*, $db->posts.title as posttitle, $db->urlmap.url as posturl
+        $items = $db->res2assoc(
+            $db->query(
+                "select $t.*, $db->posts.title as posttitle, $db->urlmap.url as posturl
     from $t, $db->posts, $db->urlmap
     where $t.status <> 'deleted' and $db->posts.id = $t.post and $db->urlmap.id = $db->posts.idurl
-    order by $t.posted desc limit $from, $perpage"));
+    order by $t.posted desc limit $from, $perpage"
+            )
+        );
 
         $admin = $this->admintheme;
         $lang = Lang::i();
@@ -80,7 +87,8 @@ class Pingbacks extends \litepubl\admin\Menu
         $form = $this->newForm($args);
         $form->body = $admin->getcount($from, $from + count($items), $total);
         $tb = $this->newTable();
-        $tb->setStruct(array(
+        $tb->setStruct(
+            array(
             $tb->checkbox('id') ,
             array(
                 $lang->date,
@@ -117,7 +125,8 @@ class Pingbacks extends \litepubl\admin\Menu
                 $lang->edit,
                 "<a href='$this->adminurl=\$id&action=edit'>$lang->edit</a>"
             ) ,
-        ));
+            )
+        );
 
         $form->items.= $tb->build($items);
 
@@ -136,10 +145,12 @@ class Pingbacks extends \litepubl\admin\Menu
         $args = new Args();
         $args->add($pingbacks->getitem($id));
         $args->formtitle = Lang::i()->edit;
-        return $this->admintheme->form('
+        return $this->admintheme->form(
+            '
     [text=title]
     [text=url]
-    ', $args);
+    ', $args
+        );
     }
 
     public function processForm()

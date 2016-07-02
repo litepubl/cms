@@ -1,15 +1,26 @@
 <?php
+/**
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
 
 namespace litepubl\update;
 
 class miniman
 {
-public $db;
+    public $db;
 
-public function __construct($db)
-{
-$this->db = $db;
-}
+    public function __construct($db)
+    {
+        $this->db = $db;
+    }
 
     public function __get($name)
     {
@@ -142,7 +153,7 @@ $this->db = $db;
 
     public function export()
     {
-    $result = '';
+        $result = '';
         $tables = $this->gettables();
         foreach ($tables as $table) {
             $result .= $this->exporttable($table);

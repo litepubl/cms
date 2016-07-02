@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\bootstrap;
 
@@ -19,10 +22,12 @@ function BbootstrapInstall($self)
 {
     $js = Js::i();
     $js->lock();
-    $js->externalfunc(get_class($js), '_switch', array(
+    $js->externalfunc(
+        get_class($js), '_switch', array(
         $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
         $js->externalfunc(get_class($js), '_pretty_files', false)
-    ));
+        )
+    );
 
     $js->externalfunc(get_class($js), '_bootstrap_admin', true);
     $js->externalfunc(get_class($js), '_ui_admin', false);
@@ -50,10 +55,12 @@ function BootstrapUninstall($self)
 {
     $js = Js::i();
     $js->lock();
-    $js->externalfunc(get_class($js), '_switch', array(
+    $js->externalfunc(
+        get_class($js), '_switch', array(
         $js->externalfunc(get_class($js), '_pretty_files', false) ,
         $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
-    ));
+        )
+    );
 
     $js->externalfunc(get_class($js), '_bootstrap_admin', false);
 

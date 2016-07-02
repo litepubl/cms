@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -36,7 +39,8 @@ class Mail extends \litepubl\admin\Menu
         $args->port = $smtp->port;
 
         $args->formtitle = $lang->mailoptions;
-        return $this->admintheme->form('
+        return $this->admintheme->form(
+            '
       [text=adminemail]
       [text=fromemail]
       [text=subscribeemail]
@@ -45,7 +49,8 @@ class Mail extends \litepubl\admin\Menu
       [text=smtplogin]
       [password=password]
       [text=port]
-      ', $args);
+      ', $args
+        );
     }
 
     public function processForm()

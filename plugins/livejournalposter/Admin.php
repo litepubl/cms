@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\livejournalposter;
 
@@ -35,7 +38,8 @@ class Admin extends \litepubl\admin\Panel
         $args->friends = 'friends' == $plugin->privacy;
 
         $args->formtitle = $lang->name;
-        return $this->admin->form('
+        return $this->admin->form(
+            '
 [text=host]
  [text=login]
  [password=password]
@@ -47,7 +51,8 @@ class Admin extends \litepubl\admin\Panel
     </p>
     
     [editor=template]
-', $args);
+', $args
+        );
     }
 
     public function processForm()

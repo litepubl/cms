@@ -1,100 +1,107 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\regservices;
 
+use litepubl\admin\Panel;
 use litepubl\core\Context;
 use litepubl\utils\Http;
 use litepubl\view\Lang;
-use litepubl\admin\Panel;
 
 class Odnoklassniki extends Service
 {
 
-protected function create()
-{
-    parent::create();
-    $this->data['public_key'] = '';
-    $this->data['name'] = 'odnoklassniki';
-    $this->data['title'] = 'odnoklassniki.ru';
-    $this->data['icon'] = 'odnoklassniki';
-    $this->data['url'] = '/odnoklassniki-oauth2callback.php';
-}
+    protected function create()
+    {
+        parent::create();
+        $this->data['public_key'] = '';
+        $this->data['name'] = 'odnoklassniki';
+        $this->data['title'] = 'odnoklassniki.ru';
+        $this->data['icon'] = 'odnoklassniki';
+        $this->data['url'] = '/odnoklassniki-oauth2callback.php';
+    }
 
-public function getAuthUrl(): string
-{
-    $url = 'http://www.odnoklassniki.ru/oauth/authorize?';
-    $url.= 'response_type=code';
-    $url.= '&redirect_uri=' . urlencode($this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $this->newstate());
-    $url.= '&client_id=' . $this->client_id;
-    return $url;
-}
+    public function getAuthUrl(): string
+    {
+        $url = 'http://www.odnoklassniki.ru/oauth/authorize?';
+        $url.= 'response_type=code';
+        $url.= '&redirect_uri=' . urlencode($this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $this->newstate());
+        $url.= '&client_id=' . $this->client_id;
+        return $url;
+    }
 
     //handle callback
-public function sign(array $request_params, $secret_key)
-{
-    ksort($request_params);
-    $params = '';
-    foreach ($request_params as $key => $value) {
-        $params.= "$key=$value";
-    }
-    return md5($params . $secret_key);
-}
-
-public function request(Context $context)
-{
-    parent::request($context);
-
-    if ($context->response->status != 200) {
-        return;
+    public function sign(array $request_params, $secret_key)
+    {
+        ksort($request_params);
+        $params = '';
+        foreach ($request_params as $key => $value) {
+            $params.= "$key=$value";
+        }
+        return md5($params . $secret_key);
     }
 
-    $code = $_REQUEST['code'];
-    $resp = Http::post('http://api.odnoklassniki.ru/oauth/token.do', array(
-    'grant_type' => 'authorization_code',
-    'code' => $code,
-    'client_id' => $this->client_id,
-    'client_secret' => $this->client_secret,
-    'redirect_uri' => $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $_GET['state'],
-    ));
+    public function request(Context $context)
+    {
+        parent::request($context);
 
-    if ($resp) {
-        $tokens = json_decode($resp);
-        if (isset($tokens->error)) {
-            return $context->response->forbidden();
+        if ($context->response->status != 200) {
+            return;
         }
 
-        $params = array(
+        $code = $_REQUEST['code'];
+        $resp = Http::post(
+            'http://api.odnoklassniki.ru/oauth/token.do', array(
+            'grant_type' => 'authorization_code',
+            'code' => $code,
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'redirect_uri' => $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $_GET['state'],
+            )
+        );
+
+        if ($resp) {
+            $tokens = json_decode($resp);
+            if (isset($tokens->error)) {
+                return $context->response->forbidden();
+            }
+
+            $params = array(
             'application_key' => $this->public_key,
             'client_id' => $this->client_id,
             'method' => 'users.getCurrentUser',
             'format' => 'JSON',
-        );
+            );
 
-        $params['sig'] = strtolower($this->sign($params, md5($tokens->access_token . $this->client_secret)));
-        $params['access_token'] = $tokens->access_token;
+            $params['sig'] = strtolower($this->sign($params, md5($tokens->access_token . $this->client_secret)));
+            $params['access_token'] = $tokens->access_token;
 
-        if ($r = http::post('http://api.odnoklassniki.ru/fb.do', $params)) {
-            $js = json_decode($r);
-            if (!isset($js->error)) {
-                return $this->addUser($context, array(
-                    'uid' => $js->uid,
-                    'name' => $js->name,
-                    'website' => isset($js->link) ? $js->link : ''
-                ), $js);
+            if ($r = http::post('http://api.odnoklassniki.ru/fb.do', $params)) {
+                $js = json_decode($r);
+                if (!isset($js->error)) {
+                    return $this->addUser(
+                        $context, array(
+                        'uid' => $js->uid,
+                        'name' => $js->name,
+                        'website' => isset($js->link) ? $js->link : ''
+                        ), $js
+                    );
+                }
             }
         }
-    }
 
         return $context->response->forbidden();
-}
+    }
 
     protected function getAdminInfo(Lang $lang): array
     {

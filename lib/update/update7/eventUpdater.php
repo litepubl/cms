@@ -1,4 +1,16 @@
 <?php
+/**
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
+
 namespace litepubl\update;
 
 class eventUpdater
@@ -8,7 +20,7 @@ class eventUpdater
     public static function getMap(): array
     {
         if (! static::$map) {
-            static::$map = include (__DIR__ . '/classmap.php');
+            static::$map = include __DIR__ . '/classmap.php';
         }
         
         return static::$map;
@@ -60,10 +72,10 @@ class eventUpdater
         if (isset($std->data['items']) && count($std->data['items'])) {
             foreach ($std->data['items'] as $id => $item) {
                 if (isset($item['class']) && ($class = static::get($item['class']))) {
-$std->data['items'][$id]['class'] = $class;
+                    $std->data['items'][$id]['class'] = $class;
                     $result = true;
                 } elseif (isset($item['classname']) && ($class = static::get($item['classname']))) {
-$std->data['items'][$id]['classname'] = $class;
+                    $std->data['items'][$id]['classname'] = $class;
                     $result = true;
                 }
             }

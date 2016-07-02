@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -42,7 +45,8 @@ class Home extends \litepubl\admin\Menu
         $menus = Menus::i();
         $args->homemenu = $menus->home;
 
-        $tabs->add($lang->options, '
+        $tabs->add(
+            $lang->options, '
     [checkbox=homemenu]
     [checkbox=showmidle]
     [combo=midlecat]
@@ -50,15 +54,18 @@ class Home extends \litepubl\admin\Menu
     [checkbox=invertorder]
     [checkbox=showpagenator]
     [checkbox=parsetags]
-    ');
+    '
+        );
 
         $lang->addsearch('editor');
-        $tabs->add($lang->images, '
+        $tabs->add(
+            $lang->images, '
     [text=image]
     [text=smallimage]
     [upload=imgupload]
     '
-        . $admin->templates['home']);
+            . $admin->templates['home']
+        );
 
         $tabs->add($lang->includecats, $admin->h($lang->includehome) . $admin->getcats($home->includecats));
         $tabs->add($lang->excludecats, $admin->h($lang->excludehome) . str_replace('category-', 'exclude_category-', $admin->getcats($home->excludecats)));

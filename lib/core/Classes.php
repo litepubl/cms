@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -52,10 +55,12 @@ class Classes extends Items
         $this->loaded = [];
         $this->composerLoaded = false;
 
-        spl_autoload_register(array(
+        spl_autoload_register(
+            array(
             $this,
             'autoload'
-        ), true, true);
+            ), true, true
+        );
     }
 
     public function getInstance(string $class)
@@ -90,10 +95,12 @@ class Classes extends Items
             $class = $this->remap[$class];
         }
 
-        $this->callevent('onnewitem', array(
+        $this->callevent(
+            'onnewitem', array(
             $name, &$class,
             $id
-        ));
+            )
+        );
 
         return new $class();
     }
@@ -210,7 +217,7 @@ class Classes extends Items
         }
 
         if (!count($this->classmap)) {
-            $this->classmap = include($this->getApp()->paths->lib . 'update/classmap.php');
+            $this->classmap = include $this->getApp()->paths->lib . 'update/classmap.php';
         }
         $classname = $this->baseclass($classname);
         if (isset($this->classmap[$classname])) {
@@ -285,7 +292,7 @@ class Classes extends Items
     public function include(string $filename)
     {
         //if (is_dir($filename)) $this->error($filename);
-        require_once $filename;
+        include_once $filename;
     }
 
     public function include_file(string $filename)
@@ -447,7 +454,7 @@ class Classes extends Items
     }
     public function loadComposer($classToAutoLoad)
     {
-        require_once($this->getApp()->paths->home . 'vendor/autoload.php');
+        include_once $this->getApp()->paths->home . 'vendor/autoload.php';
         if ($classToAutoLoad && ($a = spl_autoload_functions())) {
             $compclass = 'Composer\Autoload\ClassLoader';
             foreach ($a as $item) {

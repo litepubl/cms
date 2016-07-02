@@ -1,26 +1,29 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\openid;
 
 use litepubl\Config;
+use litepubl\admin\Form;
 use litepubl\core\Context;
 use litepubl\core\Str;
+use litepubl\core\TempProps;
+use litepubl\pages\Simple;
+use litepubl\view\Admin;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\MainView;
 use litepubl\view\Theme;
-use litepubl\core\TempProps;
-use litepubl\pages\Simple;
-use litepubl\view\Admin;
-use litepubl\admin\Form;
 
 class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
@@ -104,36 +107,36 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         }
 
         switch ($_REQUEST['openid_mode']) {
-            case 'associate':
-                $result = $this->associate();
-                break;
+        case 'associate':
+            $result = $this->associate();
+            break;
 
-            case 'cancel':
-                $result = $this->cancel();
-                break;
+        case 'cancel':
+            $result = $this->cancel();
+            break;
 
-            case 'checkid_immediate':
-                $result = $this->checkid_immediate();
-                break;
+        case 'checkid_immediate':
+            $result = $this->checkid_immediate();
+            break;
 
-            case 'checkid_setup':
-                $result = $this->checkid_setup();
-                break;
+        case 'checkid_setup':
+            $result = $this->checkid_setup();
+            break;
 
-            case 'check_authentication':
-                $result = $this->check_authentication();
-                break;
+        case 'check_authentication':
+            $result = $this->check_authentication();
+            break;
 
-            case 'error':
-                $result = $this->DoError();
-                break;
+        case 'error':
+            $result = $this->DoError();
+            break;
 
-            case 'id_res':
-                $result = $this->id_res();
-                break;
+        case 'id_res':
+            $result = $this->id_res();
+            break;
 
-            default:
-                $result = $this->nomode();
+        default:
+            $result = $this->nomode();
         }
 
         if ($response->status == 200) {
@@ -144,10 +147,12 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     private function nomode()
     {
         $result = Simple::html(Lang::get('openidserver', 'nomode'));
-        $js = MainView::i()->getready('var s = window.location.toString();
+        $js = MainView::i()->getready(
+            'var s = window.location.toString();
     if (-1 == s.indexof("?")) {
       window.location = ltoptions.url + "/";
-    }');
+    }'
+        );
 
         $result = str_replace('</head>', $js . '</head>', $result);
         return $result;
@@ -207,11 +212,13 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
     private function error_get($url, $key)
     {
-        return $this->RedirKeys($url, array(
+        return $this->RedirKeys(
+            $url, array(
             '
     mode' => 'error',
             'error' => $this->GetMessage($key, 'badrequest')
-        ));
+            )
+        );
     }
 
     private function RedirKeys($url, $keys)
@@ -260,20 +267,20 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         );
 
         switch ($session_type) {
-            case 'DH-SHA1':
-                $keys['session_type'] = $session_type;
-                // Compute the Diffie-Hellman stuff
-                $private_key = random($dh_modulus);
-                $public_key = bmpowmod($dh_gen, $private_key, $dh_modulus);
-                $remote_key = long(base64_decode($dh_consumer_public));
-                $ss = bmpowmod($remote_key, $private_key, $dh_modulus);
-                $keys['dh_server_public'] = base64_encode(bin($public_key));
-                $keys['enc_mac_key'] = base64_encode(x_or(sha1(bin($ss)), $shared_secret));
-                break;
+        case 'DH-SHA1':
+            $keys['session_type'] = $session_type;
+            // Compute the Diffie-Hellman stuff
+            $private_key = random($dh_modulus);
+            $public_key = bmpowmod($dh_gen, $private_key, $dh_modulus);
+            $remote_key = long(base64_decode($dh_consumer_public));
+            $ss = bmpowmod($remote_key, $private_key, $dh_modulus);
+            $keys['dh_server_public'] = base64_encode(bin($public_key));
+            $keys['enc_mac_key'] = base64_encode(x_or(sha1(bin($ss)), $shared_secret));
+            break;
 
 
-            default:
-                $keys['mac_key'] = base64_encode($shared_secret);
+        default:
+            $keys['mac_key'] = base64_encode($shared_secret);
         }
 
         return $this->GetResult($keys);
@@ -465,18 +472,18 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 return Simple::html(Theme::i()->parseArg($result, $args));
             } else {
                 switch ($_POST['accept']) {
-                    case 'yes':
-                        break;
+                case 'yes':
+                    break;
 
 
-                    case 'yesall':
-                        $this->trusted[] = $trust_root;
-                        $this->save();
-                        break;
+                case 'yesall':
+                    $this->trusted[] = $trust_root;
+                    $this->save();
+                    break;
 
 
-                    default:
-                        return $this->redir($cancel_url);
+                default:
+                    return $this->redir($cancel_url);
                 }
             }
         }
@@ -524,23 +531,23 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     {
         $profile = tprofile::i();
         switch ($key) {
-            case 'nickname':
-            case 'fullname':
-                return $profile->nick;
+        case 'nickname':
+        case 'fullname':
+            return $profile->nick;
 
-            case 'email':
-                return $profile->mbox;
-            case 'gender':
-                return $profile->gender;
+        case 'email':
+            return $profile->mbox;
+        case 'gender':
+            return $profile->gender;
 
-            case 'country':
-                return $profile->country;
+        case 'country':
+            return $profile->country;
 
-            case 'dob':
-                return $profile->dateOfBirth;
+        case 'dob':
+            return $profile->dateOfBirth;
 
-            default:
-                return false;
+        default:
+            return false;
         }
     }
 

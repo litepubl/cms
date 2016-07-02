@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -74,7 +77,7 @@ class JsonFiles extends \litepubl\core\Events
         }
 
         if ($this->getApp()->options->show_file_perm) {
-Theme::getTheme('default');
+            Theme::getTheme('default');
             $result['fileperm'] = GetPerm::combo(0, 'idperm_upload');
         }
 
@@ -126,8 +129,10 @@ Theme::getTheme('default');
         $item['description'] = Filter::escape(Filter::unescape($args['description']));
         $item['keywords'] = Filter::escape(Filter::unescape($args['keywords']));
 
-        $this->callevent('onprops', array(&$item
-        ));
+        $this->callevent(
+            'onprops', array(&$item
+            )
+        );
 
         $item = $files->escape($item);
         $files->db->updateassoc($item);
@@ -138,11 +143,12 @@ Theme::getTheme('default');
 
     public function canUpload(): bool
     {
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
 
         if ($options->hasGroup('author')
-&& !in_array($options->groupnames['author'], $options->idgroups)
- || !AuthorRights::i()->canUpload()) {
+            && !in_array($options->groupnames['author'], $options->idgroups)
+            || !AuthorRights::i()->canUpload()
+        ) {
             return true;
         }
 

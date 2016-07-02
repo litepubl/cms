@@ -1,4 +1,15 @@
 <?php
+/**
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
 
 namespace litepubl\updater;
 
@@ -15,7 +26,7 @@ class ChangeStorage
     {
         $this->source = $source;
         $this->dest = $dest;
-$this->callback = $callback;
+        $this->callback = $callback;
     }
 
     public function copy(string $from, string $to)
@@ -44,55 +55,55 @@ $this->callback = $callback;
     public function convert(string $sourcedir, string $destdir, string $filename)
     {
         if (!strpos($filename, '.bak.')) {
-$base = basename($filename, $this->source->getExt());
+            $base = basename($filename, $this->source->getExt());
             if ($data = $this->source->loadData($sourcedir . '/' . $base)) {
-if ($this->callback) {
-if ($base == 'storage') {
-$data = $this->iterateCallback($data);
-                $this->dest->saveData($destdir . '/' . $base, $data);
-} else {
-$std = new \StdClass();
-$std->data = $data;
-call_user_func_array($this->callback, [$std]);
-                $this->dest->saveData($destdir . '/' . $base, $std->data);
-}
-} else {
-                $this->dest->saveData($destdir . '/' . $base, $data);
-}
+                if ($this->callback) {
+                    if ($base == 'storage') {
+                        $data = $this->iterateCallback($data);
+                        $this->dest->saveData($destdir . '/' . $base, $data);
+                    } else {
+                        $std = new \StdClass();
+                        $std->data = $data;
+                        call_user_func_array($this->callback, [$std]);
+                        $this->dest->saveData($destdir . '/' . $base, $std->data);
+                    }
+                } else {
+                                $this->dest->saveData($destdir . '/' . $base, $data);
+                }
             }
         }
     }
 
-public function iterateCallback(array $data): array
-{
+    public function iterateCallback(array $data): array
+    {
                     $std = new \StdClass();
-                    foreach ($data as $name => $subdata) {
-                        $std->data = $subdata;
-                        call_user_func_array($this->callback, [$std]);
-                        $data[$name] = $std->data;
-                    }
+        foreach ($data as $name => $subdata) {
+            $std->data = $subdata;
+            call_user_func_array($this->callback, [$std]);
+            $data[$name] = $std->data;
+        }
 
-return $data;
-}
+        return $data;
+    }
 
     public static function create($callback = null)
     {
-        require_once (dirname(__DIR__) . '/core/AppTrait.php');
-        require_once (dirname(__DIR__) . '/core/Storage.php');
-        require_once (dirname(__DIR__) . '/core/StorageInc.php');
+        include_once dirname(__DIR__) . '/core/AppTrait.php';
+        include_once dirname(__DIR__) . '/core/Storage.php';
+        include_once dirname(__DIR__) . '/core/StorageInc.php';
 
-return new static(
+        return new static(
         new Storage(),
          new StorageInc(),
-$callback
+        $callback
         );
-}
+    }
 
     public function run(string $dirname)
-{
-$dir = dirname(dirname(__DIR__)) . '/storage/';
-    $temp= 'temp' . time();
-    $this->copy($dir . $dirname, $dir . $temp);
-return $temp;
+    {
+        $dir = dirname(dirname(__DIR__)) . '/storage/';
+        $temp= 'temp' . time();
+        $this->copy($dir . $dirname, $dir . $temp);
+        return $temp;
     }
 }

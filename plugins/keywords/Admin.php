@@ -1,21 +1,24 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl;
 
-use litepubl\core\Str;
-use litepubl\widget\Widgets;
-use litepubl\utils\Filer;
-use litepubl\view\Lang;
 use litepubl\admin\Form;
 use litepubl\admin\Link;
+use litepubl\core\Str;
+use litepubl\utils\Filer;
+use litepubl\view\Lang;
+use litepubl\widget\Widgets;
 
 class Admin extends \litepubl\admin\widget\Widget
 {
@@ -36,9 +39,11 @@ class Admin extends \litepubl\admin\widget\Widget
             $args->filename = $filename;
             $args->content = file_get_contents($datadir . $filename);
             $args->formtitle = $lang->edithead;
-            return $admin->form('
+            return $admin->form(
+                '
 [editor=content]
-', $args);
+', $args
+            );
         }
 
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -54,14 +59,16 @@ class Admin extends \litepubl\admin\widget\Widget
             $args->title = $widget->gettitle($idwidget);
             $args->blackwords = $admin->quote(implode("\n", tkeywordsplugin::i()->blackwords));
             $args->formtitle = $lang->name;
-            $result.= $admin->form('
+            $result.= $admin->form(
+                '
 [text=title]
       [text=count]
       [checkbox=trace]
       [checkbox=notify]
       [editor=blackwords]
       [hidden=optionsform]
-', $args);
+', $args
+            );
         }
 
         $from = 100 * ($page - 1);
@@ -74,10 +81,12 @@ class Admin extends \litepubl\admin\widget\Widget
         $form->class = 'header-left';
         $form->body = $admin->getCount($from, $from + count($filelist), $count);
 
-        $tml =strtr($admin->templates['checkbox.name'], [
-        '$name' => '$filename',
-        '$checked'=> '',
-        ]);
+        $tml =strtr(
+            $admin->templates['checkbox.name'], [
+            '$name' => '$filename',
+            '$checked'=> '',
+            ]
+        );
 
         $tml .= Link::parse('href=/admin/plugins/?plugin=keywords&filename=$filename, text=' . $lang->edit);
 

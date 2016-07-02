@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -46,9 +49,11 @@ class Arr
 
     public static function insert(array & $a, $item, $index)
     {
-        array_splice($a, $index, 0, array(
+        array_splice(
+            $a, $index, 0, array(
             $item
-        ));
+            )
+        );
     }
 
     public static function move(array & $a, $oldindex, $newindex)
@@ -60,9 +65,11 @@ class Arr
 
         $item = $a[$oldindex];
         array_splice($a, $oldindex, 1);
-        array_splice($a, $newindex, 0, array(
+        array_splice(
+            $a, $newindex, 0, array(
             $item
-        ));
+            )
+        );
     }
 
     public static function toEnum($v, array $a)

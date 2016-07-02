@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\install;
 
@@ -114,30 +117,30 @@ class Installer
         );
 
         switch ($this->resulttype) {
-            case 'json':
-                $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-                header('Content-Type: text/javascript; charset=utf-8');
-                break;
+        case 'json':
+            $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            header('Content-Type: text/javascript; charset=utf-8');
+            break;
 
 
-            case 'serialized':
-                $s = serialize($result);
-                header('Content-Type: text/plain; charset=utf-8');
-                break;
+        case 'serialized':
+            $s = serialize($result);
+            header('Content-Type: text/plain; charset=utf-8');
+            break;
 
 
-            case 'xmlrpc':
-                include($this->app->paths->lib . 'xmlrpc/IXR.php');
-                $r = new \litepubl\xmlrpc\IXR_Value($result);
-                $s = '<?xml version="1.0" encoding="utf-8" ?>
+        case 'xmlrpc':
+            include $this->app->paths->lib . 'xmlrpc/IXR.php';
+            $r = new \litepubl\xmlrpc\IXR_Value($result);
+            $s = '<?xml version="1.0" encoding="utf-8" ?>
       <methodResponse><params><param><value>' . $r->getXml() . '</value></param></params></methodResponse>';
 
-                header('Content-Type: text/xml; charset=utf-8');
-                break;
+            header('Content-Type: text/xml; charset=utf-8');
+            break;
 
 
-            default:
-                die('Unknown remote method');
+        default:
+            die('Unknown remote method');
         }
 
         header('Connection: close');
@@ -184,7 +187,7 @@ class Installer
 
         $options = Options::i();
         $options->lock();
-        require_once(dirname(__DIR__) . '/core/install/Options.install.php');
+        include_once dirname(__DIR__) . '/core/install/Options.install.php';
         $password = core\installOptions($email, $language);
         $this->installClasses();
         $options->unlock();
@@ -355,10 +358,14 @@ class Installer
             $domain = $m[2];
         }
 
-        $dbprefix = strtolower(str_replace(array(
-            '.',
-            '-'
-        ), '', $domain)) . '_';
+        $dbprefix = strtolower(
+            str_replace(
+                array(
+                '.',
+                '-'
+                ), '', $domain
+            )
+        ) . '_';
 
         $langcode = $this->language;
 
@@ -405,12 +412,14 @@ class Installer
 
         $cm = Manager::i();
         $users = Users::i();
-        $cm->idguest = $users->add(array(
+        $cm->idguest = $users->add(
+            array(
             'email' => '',
             'name' => Lang::get('default', 'guest') ,
             'status' => 'hold',
             'idgroups' => 'commentator'
-        ));
+            )
+        );
 
         $cm->save();
         $users->setvalue($cm->idguest, 'status', 'approved');
@@ -462,7 +471,7 @@ class Installer
 
     private function loadLang()
     {
-        include_once($this->app->paths->lib . 'view/install/Lang.install.php');
+        include_once $this->app->paths->lib . 'view/install/Lang.install.php';
         \litepubl\view\LangPreinstall($this->language);
     }
 

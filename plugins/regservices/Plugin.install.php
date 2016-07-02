@@ -1,22 +1,25 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\regservices;
 
+use litepubl\comments\Form;
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
 use litepubl\core\Users;
-use litepubl\comments\Form;
 use litepubl\utils\Filer;
-use litepubl\view\Parser;
 use litepubl\view\AutoVars;
+use litepubl\view\Parser;
 
 function PluginInstall($self)
 {
@@ -39,13 +42,15 @@ function PluginInstall($self)
     Users::i()->deleted = tregserviceuser::i()->delete;
 
     $names = implode("', '", array_keys($self->items));
-    DBManager::i()->createtable('regservices', "id int unsigned NOT NULL default 0,
+    DBManager::i()->createtable(
+        'regservices', "id int unsigned NOT NULL default 0,
     service enum('$names') default 'google',
     uid varchar(22) NOT NULL default '',
     
     key `id` (`id`),
     KEY (`service`, `uid`)
-    ");
+    "
+    );
 
     $self->getApp()->router->addget($self->url, get_class($self));
     Form::i()->oncomuser = $self->oncomuser;

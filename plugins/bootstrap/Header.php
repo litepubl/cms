@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\bootstrap;
 
@@ -28,11 +31,13 @@ class Header extends \litepubl\admin\Menu
             'logo'
         ) as $name) {
             $css = file_get_contents(__DIR__ . "/resource/css.$name.tml");
-            $css = strtr($css, array(
+            $css = strtr(
+                $css, array(
                 "\n" => '',
                 "\r" => '',
                 "'" => '"'
-            ));
+                )
+            );
 
             $result.= "<script type=\"text/javascript\">litepubl.tml.$name = '$css';</script>";
         }

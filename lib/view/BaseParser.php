@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -123,7 +126,8 @@ class BaseParser extends \litepubl\core\Events
 
     public function callback_replace_php(array $m)
     {
-        return strtr($m[0], array(
+        return strtr(
+            $m[0], array(
             '$' => '&#36;',
             '?' => '&#63;',
             '(' => '&#40;',
@@ -132,12 +136,14 @@ class BaseParser extends \litepubl\core\Events
             ']' => '&#93;',
             '{' => '&#123;',
             '}' => '&#125;'
-        ));
+            )
+        );
     }
 
     public function callback_restore_php($m)
     {
-        return strtr($m[0], array(
+        return strtr(
+            $m[0], array(
             '&#36;' => '$',
             '&#63;' => '?',
             '&#40;' => '(',
@@ -146,7 +152,8 @@ class BaseParser extends \litepubl\core\Events
             '&#93;' => ']',
             '&#123;' => '{',
             '&#125;' => '}'
-        ));
+            )
+        );
     }
 
     public function getFile($filename)
@@ -161,11 +168,13 @@ class BaseParser extends \litepubl\core\Events
         }
 
         $s = Str::trimUtf($s);
-        $s = str_replace(array(
+        $s = str_replace(
+            array(
             "\r\n",
             "\r",
             "\n\n"
-        ), "\n", $s);
+            ), "\n", $s
+        );
 
         //strip coments
         $s = preg_replace('/\s*\/\*.*?\*\/\s*/sm', "\n", $s);
@@ -282,17 +291,21 @@ class BaseParser extends \litepubl\core\Events
         }
 
         $s = trim($s);
-        $this->callevent('beforeparse', array(
+        $this->callevent(
+            'beforeparse', array(
             $theme, &$s
-        ));
+            )
+        );
 
         if ($this->removephp) {
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
-            $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(
+            $s = preg_replace_callback(
+                '/\<\?(.*?)\?\>/ims', array(
                 $this,
                 'callback_replace_php'
-            ), $s);
+                ), $s
+            );
         }
 
         while ($s) {
@@ -342,10 +355,12 @@ class BaseParser extends \litepubl\core\Events
         if ($this->removephp) {
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
-            $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(
+            $s = preg_replace_callback(
+                '/\<\?(.*?)\?\>/ims', array(
                 $this,
                 'callback_replace_php'
-            ), $s);
+                ), $s
+            );
         }
 
         while ($s && preg_match('/(\$\w*+(\.\w\w*+)?)\s*=\s*(\[|\{|\()/i', $s, $m)) {
@@ -376,10 +391,12 @@ class BaseParser extends \litepubl\core\Events
 
         $s = trim($s);
         if (!$this->removephp) {
-            $s = preg_replace_callback('/\<\&\#63;.*?\&\#63;\>/ims', array(
+            $s = preg_replace_callback(
+                '/\<\&\#63;.*?\&\#63;\>/ims', array(
                 $this,
                 'callback_restore_php'
-            ), $s);
+                ), $s
+            );
         }
 
         $this->setvalue($parent, $s);
@@ -455,11 +472,13 @@ class BaseParser extends \litepubl\core\Events
 
     public function remove_spaces($s)
     {
-        $s = str_replace(array(
+        $s = str_replace(
+            array(
             "\n",
             "\t",
             "\x00"
-        ), ' ', $s);
+            ), ' ', $s
+        );
         $s = preg_replace('/[ ]{2,}/ms', ' ', $s);
         return str_replace('> <', '><', $s);
     }
@@ -480,8 +499,10 @@ class BaseParser extends \litepubl\core\Events
         }
 
         $result = $result + $this->extrapaths;
-        $this->callevent('ongetpaths', array(&$result
-        ));
+        $this->callevent(
+            'ongetpaths', array(&$result
+            )
+        );
         return $result;
     }
 

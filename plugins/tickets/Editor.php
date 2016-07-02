@@ -1,19 +1,22 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\tickets;
 
+use litepubl\post\Post;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
-use litepubl\post\Post;
 
 class Editor extends \litepubl\admin\posts\Editor
 {
@@ -46,11 +49,13 @@ class Editor extends \litepubl\admin\posts\Editor
 
     public function getTabsTemplate()
     {
-        return strtr($this->admintheme->templates['tabs'], array(
+        return strtr(
+            $this->admintheme->templates['tabs'], array(
             '$id' => 'tabs',
             '$tab' => '[tab=ticket] [ajaxtab=tags]',
             '$panel' => '[tabpanel=ticket] [tabpanel=tags]'
-        ));
+            )
+        );
     }
 
     public function getArgstab(Post $ticket, Args $args)
@@ -94,13 +99,15 @@ class Editor extends \litepubl\admin\posts\Editor
 
         $tb = $this->newTable($this->admintheme);
         $tb->args = $args;
-        $args->ticket = $tb->inputs(array(
+        $args->ticket = $tb->inputs(
+            array(
             'category' => 'combo',
             'state' => 'combo',
             'prio' => 'combo',
             'version' => 'text',
             'os' => 'text',
-        ));
+            )
+        );
     }
 
     public function getText($post = null)

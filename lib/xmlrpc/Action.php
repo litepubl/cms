@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\xmlrpc;
 
@@ -87,10 +90,12 @@ class Action extends \litepubl\core\Items
             $obj = static ::iGet($class);
             //return $obj->$func($arg);
             try {
-                return call_user_func_array(array(
+                return call_user_func_array(
+                    array(
                     $obj,
                     $func
-                ), $args);
+                    ), $args
+                );
             } catch (\Exception $e) {
                 return new IXR_Error($e->getCode(), $e->getMessage());
             }

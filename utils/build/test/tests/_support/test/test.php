@@ -2,8 +2,8 @@
 
 namespace test;
 
-include 'config.php';
-include 'Utils.php';
+require 'config.php';
+require 'Utils.php';
 
 config::init();
 $s = Utils::getSingleFile(config::$home . '/storage/data/logs/');

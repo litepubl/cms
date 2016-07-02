@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\debug;
 
@@ -61,10 +64,12 @@ class Proxy
     {
         //echo get_class($this->obj), " call $name<br>";
         $m = microtime(true);
-        $r = call_user_func_array(array(
+        $r = call_user_func_array(
+            array(
             $this->obj,
             $name
-        ), $args);
+            ), $args
+        );
         $this->addstat(" call $name", microtime(true) - $m);
         return $r;
     }

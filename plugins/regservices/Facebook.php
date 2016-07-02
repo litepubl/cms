@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\regservices;
 
@@ -43,12 +46,16 @@ class Facebook extends Service
         }
 
         $code = $_REQUEST['code'];
-        $resp = Http::get('https://graph.facebook.com/oauth/access_token?' . http_build_query(array(
-            'code' => $code,
-            'client_id' => $this->client_id,
-            'client_secret' => $this->client_secret,
-            'redirect_uri' => $this->getApp()->site->url . $this->url,
-        )));
+        $resp = Http::get(
+            'https://graph.facebook.com/oauth/access_token?' . http_build_query(
+                array(
+                'code' => $code,
+                'client_id' => $this->client_id,
+                'client_secret' => $this->client_secret,
+                'redirect_uri' => $this->getApp()->site->url . $this->url,
+                )
+            )
+        );
 
         if ($resp) {
             $params = null;
@@ -56,13 +63,15 @@ class Facebook extends Service
 
             if ($r = Http::get('https://graph.facebook.com/me?access_token=' . $params['access_token'])) {
                 $info = json_decode($r);
-                return $this->addUser($context, array(
+                return $this->addUser(
+                    $context, array(
                     'service' => $this->name,
                     'uid' => isset($info->id) ? $info->id : '',
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->name,
                     'website' => isset($info->link) ? $info->link : ''
-                ), $info);
+                    ), $info
+                );
             }
         }
 

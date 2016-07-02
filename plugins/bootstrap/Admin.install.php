@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\bootstrap;
 
@@ -21,14 +24,16 @@ function AdminInstall($self)
 
     $admin = Menus::i();
     $admin->lock();
-    $admin->additem(array(
+    $admin->additem(
+        array(
         'parent' => $admin->url2id('/admin/views/') ,
         'url' => '/admin/views/bootstraptheme/',
         'title' => $about['name'],
         'name' => 'bootstraptheme',
         'class' => get_class($self) ,
         'group' => 'admin'
-    ));
+        )
+    );
 
     Header::i()->install();
     $admin->unlock();

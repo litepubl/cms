@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\subcat;
 
@@ -24,12 +27,14 @@ class Admin extends \litepubl\admin\widget\Widget
             $args->sort = $this->theme->comboItems($lang->ini['sortnametags'], $widget->items[$id]['sortname']);
             $args->idwidget = $id;
             $args->formtitle = $widget->getTitle($id);
-            return $this->admin->form('
+            return $this->admin->form(
+                '
       [combo=sort]
       [checkbox=showsubitems]
       [checkbox=showcount]
       [text=maxcount]
-      [hidden=idwidget]', $args);
+      [hidden=idwidget]', $args
+            );
         }
         $tags = array();
         foreach ($widget->items as $id => $item) {

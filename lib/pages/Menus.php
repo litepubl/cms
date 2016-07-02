@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -355,9 +358,11 @@ class Menus extends \litepubl\core\Items
     public function getMenu($hover, $current)
     {
         $result = '';
-        $this->callevent('onbeforemenu', array(&$result, &$hover,
+        $this->callevent(
+            'onbeforemenu', array(&$result, &$hover,
             $current
-        ));
+            )
+        );
         if (count($this->tree) > 0) {
             $theme = Theme::i();
             $args = new Args();
@@ -377,13 +382,17 @@ class Menus extends \litepubl\core\Items
                 }
             }
 
-            $this->callevent('onitems', array(&$items
-            ));
+            $this->callevent(
+                'onitems', array(&$items
+                )
+            );
             $args->item = $items;
             $result = $theme->parseArg($theme->templates['menu'], $args);
         }
-        $this->callevent('onmenu', array(&$result
-        ));
+        $this->callevent(
+            'onmenu', array(&$result
+            )
+        );
         return $result;
     }
 
@@ -413,9 +422,11 @@ class Menus extends \litepubl\core\Items
                 $submenu = str_replace('$items', $submenu, $tml_submenu);
             }
 
-            $this->callevent('onsubitems', array(
+            $this->callevent(
+                'onsubitems', array(
                 $id, &$submenu
-            ));
+                )
+            );
             $args->submenu = $submenu;
             $tml = $current == $id ? $tml_current : ($submenu ? $tml_item : $tml_single);
             $result.= $theme->parseArg($tml, $args);
@@ -436,10 +447,12 @@ class Menus extends \litepubl\core\Items
 
     public function getSitemap(int $from, int $count)
     {
-        return $this->externalfunc(__class__, 'Getsitemap', array(
+        return $this->externalfunc(
+            __class__, 'Getsitemap', array(
             $from,
             $count
-        ));
+            )
+        );
     }
 
     public function classRenamed(string $oldclass, string $newclass)

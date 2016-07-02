@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -62,14 +65,14 @@ class Parser extends BaseParser
     {
         $about = $this->getAbout($name);
         switch ($about['type']) {
-            case 'litepublisher3':
-            case 'litepublisher':
-                $this->error('Litepublisher not supported old themes');
-                break;
+        case 'litepublisher3':
+        case 'litepublisher':
+            $this->error('Litepublisher not supported old themes');
+            break;
 
 
-            default:
-                return true;
+        default:
+            return true;
         }
     }
 
@@ -91,7 +94,8 @@ class Parser extends BaseParser
     {
         if ($s = parent::getfile($filename)) {
             //fix some old tags
-            $s = strtr($s, array(
+            $s = strtr(
+                $s, array(
                 '$options.url$url' => '$link',
                 '$post.categorieslinks' => '$post.catlinks',
                 '$post.tagslinks' => '$post.taglinks',
@@ -102,7 +106,8 @@ class Parser extends BaseParser
                 '$template.sitebar' => '$template.sidebar',
                 '<!--sitebar-->' => '<!--sidebar-->',
                 '<!--/sitebar-->' => '<!--/sidebar-->'
-            ));
+                )
+            );
         }
 
         return $s;
@@ -145,16 +150,16 @@ class Parser extends BaseParser
     {
         $this->parsedtags[] = $name;
         switch ($name) {
-            case 'content.menu':
-                //fix old ver
-                $this->theme->templates['content.author'] = str_replace('menu', 'author', $value);
-                break;
+        case 'content.menu':
+            //fix old ver
+            $this->theme->templates['content.author'] = str_replace('menu', 'author', $value);
+            break;
 
 
-            case 'menu.item':
-                $this->theme->templates['menu.single'] = $value;
-                $this->theme->templates['menu.current'] = $value;
-                break;
+        case 'menu.item':
+            $this->theme->templates['menu.single'] = $value;
+            $this->theme->templates['menu.current'] = $value;
+            break;
         }
 
         $this->theme->templates[$name] = $value;
@@ -280,29 +285,29 @@ class Parser extends BaseParser
         }
         $name = $names[1];
         switch (count($names)) {
-            case 2:
-                $this->theme->templates['custom'][$name] = $value;
-                return;
+        case 2:
+            $this->theme->templates['custom'][$name] = $value;
+            return;
 
-            case 3:
-                return;
+        case 3:
+            return;
 
-            case 4:
-                $tag = $names[3];
-                $admin = & $this->theme->templates['customadmin'];
-                if (!isset($admin[$name])) {
-                    $admin[$name] = array();
+        case 4:
+            $tag = $names[3];
+            $admin = & $this->theme->templates['customadmin'];
+            if (!isset($admin[$name])) {
+                $admin[$name] = array();
+            }
+
+            if ($tag == 'values') {
+                $value = explode(',', $value);
+                foreach ($value as $i => $v) {
+                    $value[$i] = trim($v);
                 }
+            }
 
-                if ($tag == 'values') {
-                    $value = explode(',', $value);
-                    foreach ($value as $i => $v) {
-                        $value[$i] = trim($v);
-                    }
-                }
-
-                $admin[$name][$tag] = $value;
-                return;
+            $admin[$name][$tag] = $value;
+            return;
         }
     }
 
@@ -392,12 +397,14 @@ class Parser extends BaseParser
                     }
                 }
 
-                if (in_array($widgetname, array(
+                if (in_array(
+                    $widgetname, array(
                     'widget',
                     'categories',
                     'tags',
                     'archives'
-                ))) {
+                    )
+                )) {
                     $v = $sidebar[$widgetname . '.item'];
                     if (!strpos($v, '$subcount')) {
                         $sidebar[$widgetname . '.item'] = str_replace('$subitems', '$subcount$subitems', $v);
@@ -432,11 +439,13 @@ class Parser extends BaseParser
 
         $regform = 'content.post.templatecomments.regform';
         if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
-            $editor = strtr($templates['content.admin.editor'], array(
+            $editor = strtr(
+                $templates['content.admin.editor'], array(
                 '$lang.$name' => $this->replacelang ? Lang::i('comment')->content : '$lang.content',
                 '$name' => 'content',
                 '$value' => ''
-            ));
+                )
+            );
 
             $templates[$regform] = '								<div id="before-commentform">$mesg</div>
       <h4 id="respond">$lang.leavereply</h4>
@@ -483,26 +492,26 @@ class Parser extends BaseParser
         }
 
         switch ($path) {
-            case '.items':
-                return '.items';
+        case '.items':
+            return '.items';
 
-            case '.items.item':
-            case '.item':
-                return '.item';
+        case '.items.item':
+        case '.item':
+            return '.item';
 
-            case '.items.item.subcount':
-            case '.item.subcount':
-            case '.subcount':
-                return '.subcount';
+        case '.items.item.subcount':
+        case '.item.subcount':
+        case '.subcount':
+            return '.subcount';
 
-            case '.items.item.subitems':
-            case '.item.subitems':
-            case '.subitems':
-                return '.subitems';
+        case '.items.item.subitems':
+        case '.item.subitems':
+        case '.subitems':
+            return '.subitems';
 
-            case '.classes':
-            case '.items.classes':
-                return '.classes';
+        case '.classes':
+        case '.items.classes':
+            return '.classes';
         }
 
         return false;

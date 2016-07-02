@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -18,7 +21,7 @@ class AutoVars extends \litepubl\core\Items
 
     public function create()
     {
-$this->dbversion = false;
+        $this->dbversion = false;
         parent::create();
         $this->basename = 'autovars';
         $this->defaults = [
@@ -48,10 +51,10 @@ $this->dbversion = false;
         return false;
     }
 
-public function add(string $name, string $class)
-{
-$this->items[$name] = $class;
-$this->save();
-}
+    public function add(string $name, string $class)
+    {
+        $this->items[$name] = $class;
+        $this->save();
+    }
 
 }

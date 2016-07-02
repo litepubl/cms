@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\update;
 
@@ -25,7 +28,7 @@ class minidb
         $this->sql = '';
         $this->table = '';
         $this->history = array();
-}
+    }
 
     public function setConfig($dbconfig)
     {
@@ -73,11 +76,11 @@ class minidb
 
         $this->result = $this->mysqli->query($sql);
         if ($this->result == false) {
-throw new \Exception($this->mysqli->error . "\n" . $sql);
+            throw new \Exception($this->mysqli->error . "\n" . $sql);
         } else {
             //$this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
-trigger_error($sql .  "\n" . $r->fetch_assoc(), E_USER_WARNING);
+                trigger_error($sql .  "\n" . $r->fetch_assoc(), E_USER_WARNING);
             }
         }
 

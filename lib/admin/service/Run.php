@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\service;
 
@@ -22,9 +25,11 @@ class Run extends \litepubl\admin\Menu
         $lang = Lang::admin('service');
         $args->formtitle = $lang->runhead;
         $args->content = isset($_POST['content']) ? $_POST['content'] : '';
-        return $this->admintheme->form('
+        return $this->admintheme->form(
+            '
 [editor=content]
-', $args);
+', $args
+        );
     }
 
     public function processForm()

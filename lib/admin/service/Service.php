@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\service;
 
@@ -27,11 +30,13 @@ class Service extends Login
         $result = $admin->h($lang->info);
         $result.= $this->doupdate($_GET);
         $tb = $this->newTable();
-        $result.= $tb->props(array(
+        $result.= $tb->props(
+            array(
             'postscount' => Posts::i()->count,
             'commentscount' => Manager::i()->count,
             'version' => $this->getApp()->site->version
-        ));
+            )
+        );
 
         $updater = Updater::i();
         $islatest = $updater->islatest();

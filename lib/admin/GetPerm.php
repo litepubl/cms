@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin;
 
@@ -26,11 +29,13 @@ class GetPerm
         $section = $lang->section;
         $lang->section = 'perms';
         $theme = Theme::i();
-        $result = strtr($theme->templates['content.admin.combo'], array(
+        $result = strtr(
+            $theme->templates['content.admin.combo'], array(
             '$lang.$name' => $lang->perm,
             '$name' => $name,
             '$value' => static ::items($idperm)
-        ));
+            )
+        );
 
         $lang->section = $section;
         return $result;

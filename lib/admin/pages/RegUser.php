@@ -1,15 +1,19 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\admin\pages;
 
+use litepubl\admin\Form as AdminForm;
 use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\core\Str;
@@ -20,7 +24,6 @@ use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
-use litepubl\admin\Form as AdminForm;
 
 class RegUser extends Form
 {
@@ -74,11 +77,13 @@ class RegUser extends Form
 
             $this->backurl = $_SESSION['backurl'];
             $users = Users::i();
-            $id = $users->add(array(
+            $id = $users->add(
+                array(
                 'password' => $_SESSION['password'],
                 'name' => $_SESSION['name'],
                 'email' => $_SESSION['email']
-            ));
+                )
+            );
 
             session_destroy();
             if ($id) {
@@ -106,21 +111,21 @@ class RegUser extends Form
 
         if ($this->regstatus) {
             switch ($this->regstatus) {
-                case 'ok':
-                    $backurl = $this->backurl;
-                    if (!$backurl) {
-                        $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
-                    }
-                    if (!Str::begin($backurl, 'http')) {
-                        $backurl = $this->getApp()->site->url . $backurl;
-                    }
-                    return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
+            case 'ok':
+                $backurl = $this->backurl;
+                if (!$backurl) {
+                    $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
+                }
+                if (!Str::begin($backurl, 'http')) {
+                    $backurl = $this->getApp()->site->url . $backurl;
+                }
+                return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
-                case 'mail':
-                    return $theme->h($lang->waitconfirm);
+            case 'mail':
+                return $theme->h($lang->waitconfirm);
 
-                case 'error':
-                    $result.= $theme->h($lang->invalidregdata);
+            case 'error':
+                $result.= $theme->h($lang->invalidregdata);
             }
         }
 
@@ -137,8 +142,10 @@ class RegUser extends Form
             $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])), $result);
         }
 
-            $this->callevent('oncontent', array(&$result
-            ));
+            $this->callevent(
+                'oncontent', array(&$result
+                )
+            );
             return $result;
     }
 

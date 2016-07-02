@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -43,9 +46,11 @@ class LangMerger extends \litepubl\admin\Menu
         $zones = timezone_identifiers_list();
         $args->timezone = $this->theme->comboItems(array_combine($zones, $zones), $this->getApp()->options->timezone);
 
-        return $this->admintheme->form('[text=dateformat]
+        return $this->admintheme->form(
+            '[text=dateformat]
     [combo=language]
-    [combo=timezone]' . $tabs->get(), $args);
+    [combo=timezone]' . $tabs->get(), $args
+        );
     }
 
     public function processForm()

@@ -4,7 +4,7 @@ namespace litepubl\admin;
 
 interface AdminInterface
 {
-    public function getContent();
+    public function getContent(): string;
     public function processForm();
 }
 
@@ -17,7 +17,7 @@ class AuthorRights extends \litepubl\core\Events
     protected function create()
     {
         parent::create();
-        $this->addevents('gethead', 'getposteditor', 'editpost', 'changeposts', 'canupload', 'candeletefile');
+        $this->addevents('changeposts', 'canupload', 'candeletefile');
         $this->basename = 'authorrights';
     }
 }
@@ -227,45 +227,45 @@ class Form
         $this->target = '';
     }
 
-    public function line($content)
+    public function line(string $content): string
     {
-        return str_replace('$content', $content, $this->getadmintheme()->templates['inline']);
+        return str_replace('$content', $content, $this->getAdminTheme()->templates['inline']);
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         return Admin::i();
     }
 
-    public function __set($k, $v)
+    public function __set(string $k, $v)
     {
         switch ($k) {
-            case 'upload':
-                if ($v) {
-                    $this->enctype = 'multipart/form-data';
-                    $this->submit = 'upload';
-                } else {
-                    $this->enctype = '';
-                    $this->submit = 'update';
-                }
-                break;
+        case 'upload':
+            if ($v) {
+                $this->enctype = 'multipart/form-data';
+                $this->submit = 'upload';
+            } else {
+                $this->enctype = '';
+                $this->submit = 'update';
+            }
+            break;
         }
     }
 
-    public function centergroup($buttons)
+    public function centerGroup(string $buttons): string
     {
-        return str_replace('$buttons', $buttons, $this->getadmintheme()->templates['centergroup']);
+        return str_replace('$buttons', $buttons, $this->getAdminTheme()->templates['centergroup']);
     }
 
-    public function hidden($name, $value)
+    public function hidden(string $name, string $value): string
     {
         return sprintf('<input type="hidden" name="%s" value="%s" />', $name, $value);
     }
 
-    public function getDelete($table)
+    public function getDelete(string $table): string
     {
         $this->body = $table;
-        $this->body.= $this->hidden('delete', 'delete');
+        $this->body.= $this->hidden('action', 'delete');
         $this->submit = 'delete';
 
         return $this->get();
@@ -276,7 +276,7 @@ class Form
         return $this->get();
     }
 
-    public function getTml()
+    public function getTml(): string
     {
         $admin = $this->getadmintheme();
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
@@ -300,30 +300,32 @@ class Form
 
         if ($this->inline) {
             if ($this->submit) {
-                $body.= $theme->getinput('button', $this->submit, '', $lang->__get($this->submit));
+                $body.= $theme->getInput('button', $this->submit, '', $lang->__get($this->submit));
             }
 
             $body = $this->line($body);
         } else {
             if ($this->submit) {
-                $body.= $theme->getinput('submit', $this->submit, '', $lang->__get($this->submit));
+                $body.= $theme->getInput('submit', $this->submit, '', $lang->__get($this->submit));
             }
         }
 
-        return strtr($admin->templates['form'], array(
+        return strtr(
+            $admin->templates['form'], array(
             '$title' => $title,
             '$before' => $this->before,
             '$attr' => $attr,
             '$body' => $body,
-        ));
+            )
+        );
     }
 
-    public function get()
+    public function get(): string
     {
-        return $this->getadmintheme()->parseArg($this->gettml(), $this->args);
+        return $this->getAdminTheme()->parseArg($this->getTml(), $this->args);
     }
 
-    public function getButtons()
+    public function getButtons(): string
     {
         $result = '';
         $theme = Theme::i();
@@ -331,10 +333,12 @@ class Form
 
         $a = func_get_args();
         foreach ($a as $name) {
-            $result.= strtr($theme->templates['content.admin.button'], array(
+            $result.= strtr(
+                $theme->templates['content.admin.button'], array(
                 '$lang.$name' => $lang->__get($name) ,
                 '$name' => $name,
-            ));
+                )
+            );
         }
 
         return $result;
@@ -360,11 +364,13 @@ class GetPerm
         $section = $lang->section;
         $lang->section = 'perms';
         $theme = Theme::i();
-        $result = strtr($theme->templates['content.admin.combo'], array(
+        $result = strtr(
+            $theme->templates['content.admin.combo'], array(
             '$lang.$name' => $lang->perm,
             '$name' => $name,
             '$value' => static ::items($idperm)
-        ));
+            )
+        );
 
         $lang->section = $section;
         return $result;
@@ -416,7 +422,7 @@ class GetSchema
 
     public static function form($url)
     {
-        $lang = Lang::admin();
+        Lang::admin();
         $args = new Args();
         $id = !empty($_GET['idschema']) ? (int)$_GET['idschema'] : (!empty($_POST['idschema']) ? (int)$_POST['idschema'] : 0);
         $args->idschema = static ::items($id);
@@ -434,11 +440,13 @@ class GetSchema
         $lang = Lang::admin();
         $lang->addsearch('views');
         $theme = Theme::i();
-        return strtr($theme->templates['content.admin.combo'], array(
+        return strtr(
+            $theme->templates['content.admin.combo'], array(
             '$lang.$name' => $lang->schema,
             '$name' => $name,
             '$value' => static ::items($idschema)
-        ));
+            )
+        );
     }
 
     public static function items($idschema)
@@ -549,12 +557,6 @@ class Menu extends \litepubl\pages\Menu
         return Menus::i();
     }
 
-    protected function create()
-    {
-        parent::create();
-        $this->cache = false;
-    }
-
     public function get_owner_props()
     {
         return static ::$adminownerprops;
@@ -570,12 +572,12 @@ class Menu extends \litepubl\pages\Menu
         return true;
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return Menus::i()->heads;
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return Schemes::i()->defaults['admin'];
     }
@@ -644,29 +646,30 @@ class Menu extends \litepubl\pages\Menu
         return parent::doProcessForm();
     }
 
-    public function getCont()
+    public function getCont(): string
     {
-        if ($this->getApp()->options->admincache) {
+        $app = $this->getApp();
+        if ($app->options->admincache) {
             $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-            $filename = 'adminmenu.' . $this->getApp()->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
-            if ($result = $this->getApp()->router->cache->get($filename)) {
+            $filename = 'adminmenu.' . $app->options->user . '.' . md5($_SERVER['REQUEST_URI'] . '&id=' . $id) . '.php';
+            if ($result = $app->cache->getString($filename)) {
                 return $result;
             }
 
             $result = parent::getcont();
-            $this->getApp()->router->cache->set($filename, $result);
+            $app->cache->setString($filename, $result);
             return $result;
         } else {
-            return parent::getcont();
+            return parent::getCont();
         }
     }
 
-    public function getAdminurl()
+    public function getAdminurl(): string
     {
         return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
     }
 
-    public function getLang()
+    public function getLang(): Lang
     {
         return Lang::i($this->name);
     }
@@ -699,7 +702,7 @@ class Menus extends \litepubl\pages\Menus
         }
     }
 
-    public function getDir()
+    public function getDir(): string
     {
         return $this->getApp()->paths->data . 'adminmenus' . DIRECTORY_SEPARATOR;
     }
@@ -729,30 +732,32 @@ class Menus extends \litepubl\pages\Menus
         return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
     }
 
-    public function createitem($parent, $name, $group, $class)
+    public function createItem(int $parent, string $name, string $group, string $class): int
     {
-        $title = $this->getadmintitle($name);
-        $url = $this->createurl($parent, $name);
-        return $this->additem(array(
+        $title = $this->getAdminTitle($name);
+        $url = $this->createUrl($parent, $name);
+        return $this->addItem(
+            array(
             'parent' => $parent,
             'url' => $url,
             'title' => $title,
             'name' => $name,
             'class' => $class,
             'group' => $group
-        ));
+            )
+        );
     }
 
-    public function additem(array $item)
+    public function addItem(array $item): int
     {
         if (empty($item['group'])) {
             $groups = UserGroups::i();
             $item['group'] = $groups->items[$groups->defaults[0]]['name'];
         }
-        return parent::additem($item);
+        return parent::addItem($item);
     }
 
-    public function addfakemenu(StdMenu $menu)
+    public function addFakeMenu(StdMenu $menu): int
     {
         $this->lock();
         $id = parent::addfakemenu($menu);
@@ -766,7 +771,7 @@ class Menus extends \litepubl\pages\Menus
         return $id;
     }
 
-    public function getChilds($id)
+    public function getChilds(int $id): array
     {
         if ($id == 0) {
             $result = array();
@@ -800,9 +805,9 @@ class Menus extends \litepubl\pages\Menus
         return array_keys($tree);
     }
 
-    public function exclude($id)
+    public function exclude(int $id): bool
     {
-        if (!$this->getApp()->options->hasgroup($this->items[$id]['group'])) {
+        if (!$this->getApp()->options->hasGroup($this->items[$id]['group'])) {
             return true;
         }
 
@@ -815,16 +820,16 @@ namespace litepubl\admin;
 
 class Panel implements AdminInterface
 {
-    use PanelTrait;
-    use \litepubl\core\AppTrait;
+            use PanelTrait;
     use Params;
+    use \litepubl\core\AppTrait;
 
     public function __construct()
     {
         $this->createInstances($this->getSchema());
     }
 
-    public function getContent()
+    public function getContent(): string
     {
     }
 
@@ -910,6 +915,7 @@ trait Params
 //Table.php
 namespace litepubl\admin;
 
+use litepubl\core\Items;
 use litepubl\post\Post;
 use litepubl\view\Admin;
 use litepubl\view\Args;
@@ -932,7 +938,7 @@ class Table
     public $admintheme;
     public $callbacks;
 
-    public static function fromitems(array $items, array $struct)
+    public static function fromitems(array $items, array $struct): string
     {
         $classname = __class__;
         $self = new $classname();
@@ -988,7 +994,7 @@ class Table
         $this->body.= '</tr>';
     }
 
-    public function addCallback($varname, $callback, $param = null)
+    public function addCallback(string $varname, $callback, $param = null)
     {
         $this->callbacks[$varname] = array(
             'callback' => $callback,
@@ -999,17 +1005,17 @@ class Table
         );
     }
 
-    public function addfooter($footer)
+    public function addFooter(string $footer)
     {
         $this->footer = sprintf('<tfoot><tr>%s</tr></tfoot>', $footer);
     }
 
-    public function td($colclass, $content)
+    public function td(string $colclass, string $content): string
     {
         return sprintf('<td class="%s">%s</td>', static ::getcolclass($colclass), $content);
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         if (!$this->admintheme) {
             $this->admintheme = Admin::i();
@@ -1018,7 +1024,7 @@ class Table
         return $this->admintheme;
     }
 
-    public function build(array $items)
+    public function build(array $items): string
     {
         $body = '';
 
@@ -1029,7 +1035,7 @@ class Table
         return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
     }
 
-    public function parseitem($id, $item)
+    public function parseItem($id, $item)
     {
         $args = $this->args;
 
@@ -1053,18 +1059,20 @@ class Table
     }
 
     //predefined callbacks
-    public function titems_callback(Table $self, titems $owner)
+    public function itemsCallback(Table $self, Items $owner)
     {
-        $self->item = $owner->getitem($self->id);
+        $self->item = $owner->getItem($self->id);
         $self->args->add($self->item);
     }
 
-    public function setOwner(titems $owner)
+    public function setOwner(Items $owner)
     {
-        $this->addCallback('$tempcallback' . count($this->callbacks), array(
+        $this->addCallback(
+            '$tempcallback' . count($this->callbacks), array(
             $this,
-            'titems_callback'
-        ), $owner);
+            'itemsCallback'
+            ), $owner
+        );
     }
 
     public function posts_callback(Table $self)
@@ -1078,16 +1086,19 @@ class Table
     {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
-        $this->addCallback('$tempcallback' . count($this->callbacks), array(
+        $this->addCallback(
+            '$tempcallback' . count($this->callbacks), array(
             $this,
             'posts_callback'
-        ), false);
+            ), false
+        );
     }
 
-    public function props(array $props)
+    public function props(array $props): string
     {
         $lang = Lang::i();
-        $this->setStruct(array(
+        $this->setStruct(
+            array(
             array(
                 $lang->name,
                 '$name'
@@ -1097,7 +1108,8 @@ class Table
                 $lang->property,
                 '$value'
             )
-        ));
+            )
+        );
 
         $body = '';
         $args = $this->args;
@@ -1128,13 +1140,14 @@ class Table
             }
         }
 
-        return $admintheme->gettable($this->head, $body);
+        return $admintheme->getTable($this->head, $body);
     }
 
-    public function inputs(array $inputs)
+    public function inputs(array $inputs): string
     {
         $lang = Lang::i();
-        $this->setStruct(array(
+        $this->setStruct(
+            array(
             array(
                 $lang->name,
                 '<label for="$name-input">$title</label>'
@@ -1144,7 +1157,8 @@ class Table
                 $lang->property,
                 '$input'
             )
-        ));
+            )
+        );
 
         $body = '';
         $args = $this->args;
@@ -1158,18 +1172,18 @@ class Table
             }
 
             switch ($type) {
-                case 'combo':
-                    $input = '<select name="$name" id="$name-input">$value</select>';
-                    break;
+            case 'combo':
+                $input = '<select name="$name" id="$name-input">$value</select>';
+                break;
 
 
-                case 'text':
-                    $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
-                    break;
+            case 'text':
+                $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+                break;
 
 
-                default:
-                    $this->error('Unknown input type ' . $type);
+            default:
+                $this->error('Unknown input type ' . $type);
             }
 
             $args->name = $name;
@@ -1179,10 +1193,10 @@ class Table
             $body.= $admintheme->parseArg($this->body, $args);
         }
 
-        return $admintheme->gettable($this->head, $body);
+        return $admintheme->getTable($this->head, $body);
     }
 
-    public function action($action, $adminurl)
+    public function action(string $action, string $adminurl): array
     {
         $title = Lang::i()->__get($action);
 
@@ -1192,7 +1206,7 @@ class Table
         );
     }
 
-    public function checkbox($name)
+    public function checkbox(string $name): array
     {
         $admin = $this->getadmintheme();
 
@@ -1203,7 +1217,7 @@ class Table
         );
     }
 
-    public function namecheck()
+    public function nameCheck(): array
     {
         $admin = Admin::i();
 
@@ -1214,7 +1228,7 @@ class Table
         );
     }
 
-    public static function getColclass($s)
+    public static function getColclass($s): string
     {
         //most case
         if (!$s || $s == 'left') {
@@ -1237,7 +1251,7 @@ class Table
         return implode(' ', $list);
     }
 
-    public function date($date)
+    public function date($date): string
     {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
@@ -1246,7 +1260,7 @@ class Table
         }
     }
 
-    public function datetime($date)
+    public function datetime($date): string
     {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
@@ -1287,11 +1301,13 @@ class Tabs
 
     public function get()
     {
-        return strtr($this->getadmintheme()->templates['tabs'], array(
+        return strtr(
+            $this->getadmintheme()->templates['tabs'], array(
             '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
             '$tab' => implode("\n", $this->tabs) ,
             '$panel' => implode("\n", $this->panels) ,
-        ));
+            )
+        );
     }
 
     public function add($title, $content)
@@ -1313,19 +1329,23 @@ class Tabs
 
     public function getTab($id, $url, $title)
     {
-        return strtr($this->getadmintheme()->templates['tabs.tab'], array(
+        return strtr(
+            $this->getadmintheme()->templates['tabs.tab'], array(
             '$id' => $id,
             '$title' => $title,
             '$url' => $url,
-        ));
+            )
+        );
     }
 
     public function getPanel($id, $content)
     {
-        return strtr($this->getadmintheme()->templates['tabs.panel'], array(
+        return strtr(
+            $this->getadmintheme()->templates['tabs.panel'], array(
             '$id' => $id,
             '$content' => $content,
-        ));
+            )
+        );
     }
 }
 
@@ -1361,19 +1381,23 @@ class UList
 
     public function li($name, $value)
     {
-        return strtr(is_int($name) ? $this->value : $this->item, array(
+        return strtr(
+            is_int($name) ? $this->value : $this->item, array(
             '$name' => $name,
             '$value' => $value,
             '$site.url' => $this->getApp()->site->url,
-        ));
+            )
+        );
     }
 
     public function link($url, $title)
     {
-        return strtr($this->link, array(
+        return strtr(
+            $this->link, array(
             '$name' => $url,
             '$value' => $title,
-        ));
+            )
+        );
     }
 
     public function ul($items)
@@ -1420,3 +1444,4 @@ class UList
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
 }
+

@@ -17,19 +17,23 @@ class Ulogin extends Base
 
     public function getwindows()
     {
-        $this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
-             $this->winhandles=$webdriver->getWindowHandles();
-             $webdriver->switchTo()->window($this->winhandles[1]);
-            //$this->tester->savehtml($i);
-        });
+        $this->tester->executeInSelenium(
+            function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
+                $this->winhandles=$webdriver->getWindowHandles();
+                $webdriver->switchTo()->window($this->winhandles[1]);
+                //$this->tester->savehtml($i);
+            }
+        );
     }
 
     public function setWindow(int $index)
     {
-        $this->tester->executeInSelenium(function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($index) {
+        $this->tester->executeInSelenium(
+            function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($index) {
 
-             $webdriver->switchTo()->window($this->winhandles[$index]);
-        });
+                $webdriver->switchTo()->window($this->winhandles[$index]);
+            }
+        );
     }
 
     public function click(string $name = 'mailru')
@@ -60,16 +64,16 @@ class Ulogin extends Base
         //$i->maximizeWindow();
 
         switch ($name) {
-            case 'mailru':
-                $this->mailruAuth();
-                break;
+        case 'mailru':
+            $this->mailruAuth();
+            break;
 
-            case 'yandex':
-                $this->yandexAuth();
-                break;
+        case 'yandex':
+            $this->yandexAuth();
+            break;
 
-            default:
-                throw new \RuntimeException('Unknown net');
+        default:
+            throw new \RuntimeException('Unknown net');
         }
 
         $i->wantTo('Switch to back window');

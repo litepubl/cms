@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\xmlrpc;
 
@@ -23,18 +26,19 @@ class Common extends \litepubl\core\Events
 
     public static function auth($email, $password, $group)
     {
-$options = static::getAppInstance()->options;
+        $options = static::getAppInstance()->options;
         if ($options->auth($email, $password)
-&& $options->hasGroup($group)) {
+            && $options->hasGroup($group)
+        ) {
                 return true;
-            }
+        }
 
         throw new Exception('Bad login/pass combination.', 403);
     }
 
     public static function canEdit($email, $password, $idpost)
     {
-$options = static::getAppInstance()->options;
+        $options = static::getAppInstance()->options;
         if ($options->auth($email, $password)) {
             if ($options->hasGroup('editor')) {
                 return true;

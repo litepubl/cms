@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\comments;
 
@@ -138,50 +141,50 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $iduser = $app->options->user;
         } else {
             switch ($shortpost['comstatus']) {
-                case 'reg':
-                    return $this->getErrorContent($lang->reg);
+            case 'reg':
+                return $this->getErrorContent($lang->reg);
 
-                case 'guest':
-                    if (!$confirmed && $cm->confirmguest) {
-                        return $this->request_confirm($values, $shortpost);
+            case 'guest':
+                if (!$confirmed && $cm->confirmguest) {
+                    return $this->request_confirm($values, $shortpost);
+                }
+
+                $iduser = $cm->idguest;
+                break;
+
+
+            case 'comuser':
+                //hook in regservices social plugin
+                if ($r = $this->oncomuser($values, $confirmed)) {
+                    return $r;
+                }
+
+                if (!$confirmed && $cm->confirmcomuser) {
+                    return $this->request_confirm($values, $shortpost);
+                }
+
+                if ($err = $this->processcomuser($values)) {
+                    return $err;
+                }
+
+                $users = Users::i();
+                if ($iduser = $users->emailexists($values['email'])) {
+                    if ('comuser' != $users->getvalue($iduser, 'status')) {
+                        return $this->getErrorContent($lang->emailregistered);
                     }
+                } else {
+                    $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
+                }
 
-                    $iduser = $cm->idguest;
-                    break;
-
-
-                case 'comuser':
-                    //hook in regservices social plugin
-                    if ($r = $this->oncomuser($values, $confirmed)) {
-                        return $r;
-                    }
-
-                    if (!$confirmed && $cm->confirmcomuser) {
-                        return $this->request_confirm($values, $shortpost);
-                    }
-
-                    if ($err = $this->processcomuser($values)) {
-                        return $err;
-                    }
-
-                    $users = Users::i();
-                    if ($iduser = $users->emailexists($values['email'])) {
-                        if ('comuser' != $users->getvalue($iduser, 'status')) {
-                            return $this->getErrorContent($lang->emailregistered);
-                        }
-                    } else {
-                        $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
-                    }
-
-                    $cookies = array();
-                    foreach (array(
-                        'name',
-                        'email',
-                        'url'
-                    ) as $field) {
-                        $cookies["comuser_$field"] = $values[$field];
-                    }
-                    break;
+                $cookies = array();
+                foreach (array(
+                'name',
+                'email',
+                'url'
+                ) as $field) {
+                    $cookies["comuser_$field"] = $values[$field];
+                }
+                break;
             }
         }
 
@@ -200,23 +203,23 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         //subscribe by email
         switch ($user['status']) {
-            case 'approved':
-                if ($user['email'] != '') {
-                    // subscribe if its first comment
-                    if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
-                        if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
-                            Subscribers::i()->update($shortpost['id'], $iduser, true);
-                        }
+        case 'approved':
+            if ($user['email'] != '') {
+                // subscribe if its first comment
+                if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
+                    if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
+                        Subscribers::i()->update($shortpost['id'], $iduser, true);
                     }
                 }
-                break;
+            }
+            break;
 
 
-            case 'comuser':
-                if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
-                    Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
-                }
-                break;
+        case 'comuser':
+            if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
+                Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
+            }
+            break;
         }
 
         //$post->lastcommenturl;

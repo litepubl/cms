@@ -28,7 +28,7 @@ foreach ($list as $url) {
 
 $list = $admin->getMenu();
 foreach ($list as $j => $url) {
-//codecept_debug($url);
+    //codecept_debug($url);
     $i->wantTo("Test page $url");
     $i->amOnUrl($url);
     $i->checkError();

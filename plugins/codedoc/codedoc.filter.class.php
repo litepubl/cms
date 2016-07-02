@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl;
 
@@ -42,20 +45,26 @@ class tcodedocfilter extends titems
         $lang = Lang::i('codedoc');
 
         //prepare content
-        $s = str_replace(array(
+        $s = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", $s);
+            ), "\n", $s
+        );
         // prevent tcontentfilter replace code tag
-        $s = preg_replace_callback('/<code>(.*?)<\/code>/ims', array(
+        $s = preg_replace_callback(
+            '/<code>(.*?)<\/code>/ims', array(
             $this,
             'callback_replace_code'
-        ), $s);
+            ), $s
+        );
         //$s =preg_replace'/<code>(.*?)<\/code>/ims', '<div class="tempcode">$1</div>', $s);
-        $s = strtr($s, array(
+        $s = strtr(
+            $s, array(
             '->' => '-&gt;',
             '$' => '&#36;'
-        ));
+            )
+        );
 
         $s = trim($s);
         $s = $this->replace_props($s);
@@ -68,12 +77,14 @@ class tcodedocfilter extends titems
 
     public function callback_replace_code($m)
     {
-        $s = strtr(htmlspecialchars($m[1]), array(
+        $s = strtr(
+            htmlspecialchars($m[1]), array(
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;',
             '  ' => '&nbsp;&nbsp;'
-        ));
+            )
+        );
 
         //double space for prevent auto_p
         $s = str_replace("\n", '<br  />', $s);
@@ -99,10 +110,12 @@ class tcodedocfilter extends titems
     public function html($key, Args $args)
     {
         $theme = Theme::instance();
-        $s = strtr(Lang::get('htmlcodedoc', $key), array(
+        $s = strtr(
+            Lang::get('htmlcodedoc', $key), array(
             '$tableclass' => $theme->templates['content.admin.tableclass'],
             "'" => '"',
-        ));
+            )
+        );
 
         return $theme->parseArg($s, $args);
 

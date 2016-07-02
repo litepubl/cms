@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -25,12 +28,14 @@ class Files extends \litepubl\admin\Menu
         $parser = MediaParser::i();
         $args->previewwidth = $parser->previewwidth;
         $args->previewheight = $parser->previewheight;
-        $args->previewmode = $this->theme->getRadioItems('previewmode', array(
+        $args->previewmode = $this->theme->getRadioItems(
+            'previewmode', array(
             'fixed' => $lang->fixedsize,
             'max' => $lang->maxsize,
             'min' => $lang->minsize,
             'none' => $lang->disablepreview,
-        ), $parser->previewmode);
+            ), $parser->previewmode
+        );
 
         $args->maxwidth = $parser->maxwidth;
         $args->maxheight = $parser->maxheight;
@@ -47,7 +52,9 @@ class Files extends \litepubl\admin\Menu
         $args->videoext = $parser->videoext;
 
         $args->formtitle = $lang->files;
-        return $admin->form($admin->getSection($lang->imagesize, '[checkbox=alwaysresize]
+        return $admin->form(
+            $admin->getSection(
+                $lang->imagesize, '[checkbox=alwaysresize]
       [text=maxwidth]
       [text=maxheight]
       [text=quality_original]
@@ -55,13 +62,19 @@ class Files extends \litepubl\admin\Menu
       [checkbox=enablemidle]
       [text=midlewidth]
       [text=midleheight]
-') . $admin->getSection($lang->previewoptions, '$previewmode
+'
+            ) . $admin->getSection(
+                $lang->previewoptions, '$previewmode
       [text=previewwidth]
       [text=previewheight]
       [text=quality_snapshot]
-') . $admin->getSection($lang->extfile, '[text=audioext]
+'
+            ) . $admin->getSection(
+                $lang->extfile, '[text=audioext]
       [text=videoext]
-      '), $args);
+      '
+            ), $args
+        );
     }
 
     public function processForm()

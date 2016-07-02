@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\pages;
 
@@ -143,7 +146,7 @@ class Login extends Form
     {
         $theme = $this->theme;
         $result = $theme->parse($theme->templates['content.login']);
-//str::dump($result);
+        //str::dump($result);
         $args = new Args();
 
         if ($this->getApp()->options->usersenabled && $this->getApp()->options->reguser) {
@@ -202,8 +205,10 @@ class Login extends Form
             $result = str_replace('%3Fbackurl%3D', '', $result);
         }
 
-        $this->callevent('oncontent', array(&$result
-        ));
+        $this->callevent(
+            'oncontent', array(&$result
+            )
+        );
         return $result;
     }
 
@@ -225,11 +230,13 @@ class Login extends Form
         }
 
         $users = Users::i();
-        $id = $users->add(array(
+        $id = $users->add(
+            array(
             'password' => $password,
             'name' => $_SESSION['name'],
             'email' => $email
-        ));
+            )
+        );
 
         session_destroy();
 

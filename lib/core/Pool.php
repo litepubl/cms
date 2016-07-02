@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -29,9 +32,11 @@ class Pool extends Data
     public function getItem($id)
     {
         if (isset($this->ongetitem)) {
-            return call_user_func_array($this->ongetitem, array(
+            return call_user_func_array(
+                $this->ongetitem, array(
                 $id
-            ));
+                )
+            );
         }
 
         $this->error('Call abstract method getitem in class' . get_class($this));

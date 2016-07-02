@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\posts;
 
@@ -61,7 +64,8 @@ class StaticPages extends \litepubl\admin\Menu
             $result.= $this->editform($args);
         }
 
-        $result.= Table::fromitems($pages->items, array(
+        $result.= Table::fromitems(
+            $pages->items, array(
             array(
                 $lang->title,
                 '<a href="$site.url$url">$title</a>'
@@ -76,7 +80,8 @@ class StaticPages extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a href='$this->adminurl=\$id&action=delete'>$lang->delete</a>"
             ) ,
-        ));
+            )
+        );
 
         return $result;
     }

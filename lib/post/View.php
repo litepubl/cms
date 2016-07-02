@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -16,8 +19,8 @@ use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\MainView;
-use litepubl\view\Theme;
 use litepubl\view\Schema;
+use litepubl\view\Theme;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -49,32 +52,32 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $result = $this->$get();
         } else {
             switch ($name) {
-                case 'catlinks':
-                    $result = $this->get_taglinks('categories', false);
-                    break;
+            case 'catlinks':
+                $result = $this->get_taglinks('categories', false);
+                break;
 
 
-                case 'taglinks':
-                    $result = $this->get_taglinks('tags', false);
-                    break;
+            case 'taglinks':
+                $result = $this->get_taglinks('tags', false);
+                break;
 
 
-                case 'excerptcatlinks':
-                    $result = $this->get_taglinks('categories', true);
-                    break;
+            case 'excerptcatlinks':
+                $result = $this->get_taglinks('categories', true);
+                break;
 
 
-                case 'excerpttaglinks':
-                    $result = $this->get_taglinks('tags', true);
-                    break;
+            case 'excerpttaglinks':
+                $result = $this->get_taglinks('tags', true);
+                break;
 
 
-                default:
-                    if (isset($this->post->$name)) {
-                        $result = $this->post->$name;
-                    } else {
-                        $result = parent::__get($name);
-                    }
+            default:
+                if (isset($this->post->$name)) {
+                    $result = $this->post->$name;
+                } else {
+                    $result = parent::__get($name);
+                }
             }
         }
 
@@ -254,10 +257,12 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);
         $result = $theme->parseArg($theme->templates[$tmlpath], $args);
-        $this->factory->posts->callevent('ontags', array(
+        $this->factory->posts->callevent(
+            'ontags', array(
             $tags,
             $excerpt, &$result
-        ));
+            )
+        );
         return $result;
     }
 
@@ -352,9 +357,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = $theme->parse($result);
-        $this->factory->posts->callevent('onhead', array(
+        $this->factory->posts->callevent(
+            'onhead', array(
             $this, &$result
-        ));
+            )
+        );
 
         return $result;
     }
@@ -362,9 +369,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function getAnhead(): string
     {
         $result = '';
-        $this->factory->posts->callevent('onanhead', array(
+        $this->factory->posts->callevent(
+            'onanhead', array(
             $this, &$result
-        ));
+            )
+        );
         return $result;
     }
 
@@ -471,10 +480,12 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             return '';
         }
 
-        $result = strtr($theme->parse($theme->templates['content.post.prevnext']), array(
+        $result = strtr(
+            $theme->parse($theme->templates['content.post.prevnext']), array(
             '$prev' => $prev,
             '$next' => $next
-        ));
+            )
+        );
         unset(Theme::$vars['prevpost'], Theme::$vars['nextpost']);
         return $result;
     }
@@ -498,14 +509,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
-            case 0:
-                return $l[0];
+        case 0:
+            return $l[0];
 
-            case 1:
-                return $l[1];
+        case 1:
+            return $l[1];
 
-            default:
-                return sprintf($l[2], $this->commentscount);
+        default:
+            return sprintf($l[2], $this->commentscount);
         }
     }
 

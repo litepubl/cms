@@ -35,5 +35,5 @@ foreach (array(
 'Str.php',
 'litepubl.php',
 ) as $filename) {
-    require_once($dir . $filename);
+    include_once $dir . $filename;
 }

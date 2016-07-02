@@ -1,21 +1,24 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\admin;
 
+use litepubl\core\Items;
 use litepubl\post\Post;
 use litepubl\view\Admin;
 use litepubl\view\Args;
 use litepubl\view\Base;
 use litepubl\view\Lang;
-use litepubl\core\Items;
 
 class Table
 {
@@ -162,10 +165,12 @@ class Table
 
     public function setOwner(Items $owner)
     {
-        $this->addCallback('$tempcallback' . count($this->callbacks), array(
+        $this->addCallback(
+            '$tempcallback' . count($this->callbacks), array(
             $this,
             'itemsCallback'
-        ), $owner);
+            ), $owner
+        );
     }
 
     public function posts_callback(Table $self)
@@ -179,16 +184,19 @@ class Table
     {
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
-        $this->addCallback('$tempcallback' . count($this->callbacks), array(
+        $this->addCallback(
+            '$tempcallback' . count($this->callbacks), array(
             $this,
             'posts_callback'
-        ), false);
+            ), false
+        );
     }
 
     public function props(array $props): string
     {
         $lang = Lang::i();
-        $this->setStruct(array(
+        $this->setStruct(
+            array(
             array(
                 $lang->name,
                 '$name'
@@ -198,7 +206,8 @@ class Table
                 $lang->property,
                 '$value'
             )
-        ));
+            )
+        );
 
         $body = '';
         $args = $this->args;
@@ -235,7 +244,8 @@ class Table
     public function inputs(array $inputs): string
     {
         $lang = Lang::i();
-        $this->setStruct(array(
+        $this->setStruct(
+            array(
             array(
                 $lang->name,
                 '<label for="$name-input">$title</label>'
@@ -245,7 +255,8 @@ class Table
                 $lang->property,
                 '$input'
             )
-        ));
+            )
+        );
 
         $body = '';
         $args = $this->args;
@@ -259,18 +270,18 @@ class Table
             }
 
             switch ($type) {
-                case 'combo':
-                    $input = '<select name="$name" id="$name-input">$value</select>';
-                    break;
+            case 'combo':
+                $input = '<select name="$name" id="$name-input">$value</select>';
+                break;
 
 
-                case 'text':
-                    $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
-                    break;
+            case 'text':
+                $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+                break;
 
 
-                default:
-                    $this->error('Unknown input type ' . $type);
+            default:
+                $this->error('Unknown input type ' . $type);
             }
 
             $args->name = $name;

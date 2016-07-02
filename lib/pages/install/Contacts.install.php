@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -38,7 +41,7 @@ function ContactsUpdate($self)
     Lang::usefile('install');
     $lang = Lang::i('contactform');
     $admin = Admin::admin();
-$theme = Theme::getTheme('default');
+    $theme = Theme::getTheme('default');
 
     $self->subject = $lang->subject;
     $self->success = $admin->success($lang->success);
@@ -49,11 +52,13 @@ $theme = Theme::getTheme('default');
     $args->content = '';
     $args->contactvalue = '_contactform<?php echo strtotime (\'+1 hour\'); ?>';
     $args->formtitle = $lang->contactform;
-    $self->content = '[html]' . $admin->form('
+    $self->content = '[html]' . $admin->form(
+        '
 [email=email]
 [editor=content]
 [hidden=contactvalue]
-', $args);
+', $args
+    );
 
     $self->unlock();
 }

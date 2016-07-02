@@ -1,23 +1,26 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\tickets;
 
+use litepubl\admin\Menus;
+use litepubl\plugins\polls\Polls;
 use litepubl\post\Post;
+use litepubl\utils\Mailer;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
-use litepubl\utils\Mailer;
-use litepubl\admin\Menus;
-use litepubl\plugins\polls\Polls;
 
 class Tickets extends \litepubl\post\Posts
 {

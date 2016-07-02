@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\tag;
 
@@ -73,8 +76,10 @@ class Common extends \litepubl\core\Items
         $db = $this->db;
         $t = $this->thistable;
         $u = $db->urlmap;
-        $res = $db->query("select $t.*, $u.url from $t, $u
-    where $where $u.id = $t.idurl $limit");
+        $res = $db->query(
+            "select $t.*, $u.url from $t, $u
+    where $where $u.id = $t.idurl $limit"
+        );
 
         return $this->res2items($res);
     }
@@ -124,8 +129,12 @@ class Common extends \litepubl\core\Items
         $itemprop = $this->itemsposts->itemprop;
         $postprop = $this->itemsposts->postprop;
         $poststable = $db->posts;
-        $list = $db->res2assoc($db->query("select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
-    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"));
+        $list = $db->res2assoc(
+            $db->query(
+                "select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
+    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"
+            )
+        );
 
         $db->table = $this->table;
         foreach ($list as $item) {
@@ -190,10 +199,12 @@ class Common extends \litepubl\core\Items
         }
 
         $item['title'] = $title;
-        $this->db->updateAssoc(array(
+        $this->db->updateAssoc(
+            array(
             'id' => $id,
             'title' => $title
-        ));
+            )
+        );
 
         $app = $this->getApp();
         $linkgen = LinkGenerator::i();
@@ -295,12 +306,14 @@ class Common extends \litepubl\core\Items
             $sortname = 'itemscount';
         }
 
-        if (!in_array($sortname, array(
+        if (!in_array(
+            $sortname, array(
             'title',
             'itemscount',
             'customorder',
             'id'
-        ))) {
+            )
+        )) {
             $sortname = 'title';
         }
 
@@ -346,9 +359,13 @@ class Common extends \litepubl\core\Items
             $tags = " = $id";
         }
 
-        $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
+        $result = $this->db->res2id(
+            $this->db->query(
+                "select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'
-    order by $p.posted $order limit $from, $perpage"));
+    order by $p.posted $order limit $from, $perpage"
+            )
+        );
 
         $result = array_unique($result);
         $posts->loadItems($result);
@@ -380,10 +397,12 @@ class Common extends \litepubl\core\Items
 
     public function getSitemap(int $from, int $count)
     {
-        return $this->externalfunc(__class__, 'Getsitemap', array(
+        return $this->externalfunc(
+            __class__, 'Getsitemap', array(
             $from,
             $count
-        ));
+            )
+        );
     }
 
     public function getSortedPosts(int $id, int $count, bool $invert): array
@@ -392,9 +411,13 @@ class Common extends \litepubl\core\Items
         $posts = $this->factory->posts;
         $p = $posts->thistable;
         $order = $invert ? 'asc' : 'desc';
-        $result = $this->db->res2id($this->db->query("select $p.id as id, $ti.post as post from $p, $ti
+        $result = $this->db->res2id(
+            $this->db->query(
+                "select $p.id as id, $ti.post as post from $p, $ti
     where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
-    order by $p.posted $order limit 0, $count"));
+    order by $p.posted $order limit 0, $count"
+            )
+        );
 
         $posts->loadItems($result);
         return $result;

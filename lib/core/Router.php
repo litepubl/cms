@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -133,25 +136,25 @@ class Router extends Items
     {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
-                case 'begin':
-                    if (Str::begin($url, $item['url'])) {
-                        return $item;
-                    }
-                    break;
+            case 'begin':
+                if (Str::begin($url, $item['url'])) {
+                    return $item;
+                }
+                break;
 
 
-                case 'end':
-                    if (Str::end($url, $item['url'])) {
-                        return $item;
-                    }
-                    break;
+            case 'end':
+                if (Str::end($url, $item['url'])) {
+                    return $item;
+                }
+                break;
 
 
-                case 'regexp':
-                    if (preg_match($item['url'], $url)) {
-                        return $item;
-                    }
-                    break;
+            case 'regexp':
+                if (preg_match($item['url'], $url)) {
+                    return $item;
+                }
+                break;
             }
         }
 
@@ -179,7 +182,8 @@ class Router extends Items
             $this->error('Empty class name of adding url');
         }
 
-        if (!in_array($type, array(
+        if (!in_array(
+            $type, array(
             'normal',
             'get',
             'usernormal',
@@ -187,7 +191,8 @@ class Router extends Items
             'begin',
             'end',
             'regexp'
-        ))) {
+            )
+        )) {
             $this->error(sprintf('Invalid url type %s', $type));
         }
 
@@ -205,11 +210,13 @@ class Router extends Items
         $item['id'] = $this->db->add($item);
         $this->items[$item['id']] = $item;
 
-        if (in_array($type, array(
+        if (in_array(
+            $type, array(
             'begin',
             'end',
             'regexp'
-        ))) {
+            )
+        )) {
             $this->prefilter[] = $item;
             $this->save();
         }

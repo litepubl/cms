@@ -1,24 +1,27 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\regservices;
 
-use litepubl\core\Str;
-use litepubl\core\UserGroups;
-use litepubl\view\Filter;
+use litepubl\admin\Panel;
+use litepubl\comments\Form;
 use litepubl\core\Context;
 use litepubl\core\Session;
-use litepubl\view\Lang;
-use litepubl\admin\Panel;
+use litepubl\core\Str;
+use litepubl\core\UserGroups;
 use litepubl\core\Users;
-use litepubl\comments\Form;
+use litepubl\view\Filter;
+use litepubl\view\Lang;
 
 class Service extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
@@ -152,11 +155,13 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
                     $users->approve($id);
                 }
             } elseif ($this->getApp()->options->reguser) {
-                $id = $users->add(array(
+                $id = $users->add(
+                    array(
                     'email' => $item['email'],
                     'name' => $item['name'],
                     'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
-                ));
+                    )
+                );
 
                 if (isset($item['uid'])) {
                     $uid = $item['uid'];
@@ -178,11 +183,13 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
                 if ($id = $reguser->find($this->name, $uid)) {
                     //nothing
                 } elseif ($this->getApp()->options->reguser) {
-                    $id = $users->add(array(
+                    $id = $users->add(
+                        array(
                         'email' => '',
                         'name' => $item['name'],
                         'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
-                    ));
+                        )
+                    );
                     $users->approve($id);
                     $reguser->add($id, $this->name, $uid);
                 } else {

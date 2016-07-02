@@ -1,22 +1,25 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\ulogin;
 
+use litepubl\core\Context;
 use litepubl\core\DBManager;
 use litepubl\core\Str;
-use litepubl\view\Filter;
-use litepubl\core\Users;
 use litepubl\core\UserGroups;
-use litepubl\core\Context;
+use litepubl\core\Users;
 use litepubl\utils\Http;
+use litepubl\view\Filter;
 
 class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
@@ -42,11 +45,13 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             DBManager::i()->addEnum($this->table, 'service', $service);
         }
 
-        $this->db->insert(array(
+        $this->db->insert(
+            array(
             'id' => $id,
             'service' => $service,
             'uid' => $uid
-        ));
+            )
+        );
 
         $this->added($id, $service);
         return $id;
@@ -153,11 +158,13 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 }
             } elseif ($this->getApp()->options->reguser) {
                 $newreg = true;
-                $id = $users->add(array(
+                $id = $users->add(
+                    array(
                     'email' => $info['email'],
                     'name' => $name,
                     'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
-                ));
+                    )
+                );
 
                 if ($phone) {
                     $users->db->setValue($id, 'phone', $phone);
@@ -175,11 +182,13 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                     //nothing
                 } elseif ($this->getApp()->options->reguser) {
                     $newreg = true;
-                    $id = $users->add(array(
+                    $id = $users->add(
+                        array(
                         'email' => '',
                         'name' => $name,
                         'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
-                    ));
+                        )
+                    );
                     $users->approve($id);
                     if ($phone) {
                         $users->db->setvalue($id, 'phone', $phone);
@@ -247,16 +256,20 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
     public static function filterPhone($phone)
     {
-        $phone = trim(str_replace(array(
-            ' ',
-            '+',
-            '=',
-            '-',
-            '_',
-            '(',
-            ')',
-            '.'
-        ), '', trim($phone)));
+        $phone = trim(
+            str_replace(
+                array(
+                ' ',
+                '+',
+                '=',
+                '-',
+                '_',
+                '(',
+                ')',
+                '.'
+                ), '', trim($phone)
+            )
+        );
         if (strlen($phone) && ($phone[0] == '9')) {
             $phone = '7' . $phone;
         }

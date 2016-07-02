@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\widget;
 
@@ -43,15 +46,18 @@ class Links extends Widget
         $args->linktitle = isset($item['title']) ? $item['title'] : (isset($item['linktitle']) ? $item['linktitle'] : '');
         $lang = $this->lang;
         $args->formtitle = $lang->editlink;
-        $result.= $this->admin->form('
+        $result.= $this->admin->form(
+            '
     [text=url]
     [text=text]
     [text=linktitle]
-    [hidden=mode]', $args);
+    [hidden=mode]', $args
+        );
 
         $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
         $tb = $this->newTable($this->admin);
-        $tb->setStruct(array(
+        $tb->setStruct(
+            array(
             $tb->checkbox('checklink') ,
             array(
                 $lang->url,
@@ -69,7 +75,8 @@ class Links extends Widget
                 $lang->edit,
                 "<a href='$adminurl=\$id'>$lang->edit</a>"
             ) ,
-        ));
+            )
+        );
 
         $form = $this->newForm($args);
         $form->title = $lang->widgets;
@@ -91,14 +98,14 @@ class Links extends Widget
         } elseif (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
             switch ($mode) {
-                case 'add':
-                    $_GET['idlink'] = $widget->add($url, $linktitle, $text);
-                    break;
+            case 'add':
+                $_GET['idlink'] = $widget->add($url, $linktitle, $text);
+                break;
 
 
-                case 'edit':
-                    $widget->edit((int)$_GET['idlink'], $url, $linktitle, $text);
-                    break;
+            case 'edit':
+                $widget->edit((int)$_GET['idlink'], $url, $linktitle, $text);
+                break;
             }
         } else {
             extract($_POST, EXTR_SKIP);

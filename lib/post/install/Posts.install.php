@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\post;
 
@@ -51,10 +54,12 @@ function PostsGetsitemap($self, $from, $count)
 
     $db = $self->db;
     $now = Str::sqlDate();
-    $res = $db->query("select $db->posts.title, $db->posts.pagescount, $db->posts.commentscount, $db->urlmap.url
+    $res = $db->query(
+        "select $db->posts.title, $db->posts.pagescount, $db->posts.commentscount, $db->urlmap.url
   from $db->posts, $db->urlmap
   where $db->posts.status = 'published' and $db->posts.posted < '$now' and $db->urlmap.id = $db->posts.idurl
-  order by $db->posts.posted desc limit $from, $count");
+  order by $db->posts.posted desc limit $from, $count"
+    );
     while ($item = $db->fetchassoc($res)) {
         $comments = $commentpages ? ceil($item['commentscount'] / $commentsperpage) : 1;
         $result[] = array(

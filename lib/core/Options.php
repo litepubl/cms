@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -147,9 +150,9 @@ class Options extends Events
     }
 
     public function resetUser()
-{
-$this->idUser = null;
-}
+    {
+        $this->idUser = null;
+    }
 
     public function getUser(): int
     {
@@ -173,15 +176,15 @@ $this->idUser = null;
     public function authCookies(int $iduser, string $password): int
     {
         if ($iduser && $password) {
-        $password = $this->hash($password);
-        if (($password != $this->emptyhash) && $this->findUser($iduser, $password)) {
-        $this->idUser = $iduser;
-        $this->updategroup();
-        return $iduser;
-}
-}
+            $password = $this->hash($password);
+            if (($password != $this->emptyhash) && $this->findUser($iduser, $password)) {
+                $this->idUser = $iduser;
+                $this->updategroup();
+                return $iduser;
+            }
+        }
 
-return 0;
+        return 0;
     }
 
     public function findUser(int $iduser, string $cookie): bool
@@ -214,16 +217,16 @@ return 0;
     public function emailExists(string $email): int
     {
         if ($email && $this->authenabled) {
-        if ($email == $this->email) {
-            return 1;
+            if ($email == $this->email) {
+                return 1;
+            }
+
+            if ($this->usersenabled) {
+                return Users::i()->emailExists($email);
+            }
         }
 
-        if ($this->usersenabled) {
-        return Users::i()->emailExists($email);
-}
-}
-
-return 0;
+        return 0;
     }
 
     public function auth(string $email, string $password): int
@@ -242,22 +245,22 @@ return 0;
     public function authPassword(int $iduser, string $password): int
     {
         if ($iduser) {
-        if ($iduser == 1) {
-            if ($this->data['password'] != $this->hash($password)) {
-                return 0;
+            if ($iduser == 1) {
+                if ($this->data['password'] != $this->hash($password)) {
+                    return 0;
+                }
+            } else {
+                if (!Users::i()->authPassword($iduser, $password)) {
+                    return 0;
+                }
             }
-        } else {
-            if (!Users::i()->authPassword($iduser, $password)) {
-                return 0;
-            }
+
+            $this->idUser = $iduser;
+            $this->updateGroup();
+            return $iduser;
         }
 
-        $this->idUser = $iduser;
-        $this->updateGroup();
-        return $iduser;
-}
-
-return 0;
+        return 0;
     }
 
     public function updateGroup()

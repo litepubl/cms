@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\sameposts;
 
-use litepubl\view\Lang;
 use litepubl\post\Post;
 use litepubl\post\Posts;
+use litepubl\view\Lang;
 
 class Widget extends \litepubl\widget\Depended
 {
@@ -77,10 +80,12 @@ class Widget extends \litepubl\widget\Depended
             return $items == '' ? array() : explode(',', $items);
         } else {
             $result = $this->findSame($id);
-            $this->db->add(array(
+            $this->db->add(
+                array(
                 'id' => $id,
                 'items' => implode(',', $result)
-            ));
+                )
+            );
             return $result;
         }
     }

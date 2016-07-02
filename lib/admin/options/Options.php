@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -34,7 +37,8 @@ class Options extends \litepubl\admin\Menu
         $args->footer = $template->footer;
 
         $args->formtitle = $lang->options;
-        return $admin->form('
+        return $admin->form(
+            '
       [checkbox=fixedurl]
       [checkbox=redirdom]
       [text=url]
@@ -43,7 +47,8 @@ class Options extends \litepubl\admin\Menu
       [text=keywords]
       [text=author]
       [editor=footer]
-      ', $args);
+      ', $args
+        );
     }
 
     public function processForm()

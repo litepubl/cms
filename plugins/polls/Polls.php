@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\polls;
 
@@ -32,7 +35,8 @@ class Polls extends \litepubl\core\Items
     public function add(string $template, int $idobject, string $typeobject): int
     {
         $best = $template == 'stars' ? 5 : 2;
-        return $this->addItem(array(
+        return $this->addItem(
+            array(
             'idobject' => (int)$idobject,
             'typeobject' => $typeobject,
             'votes' => 0,
@@ -41,7 +45,8 @@ class Polls extends \litepubl\core\Items
             'created' => Str::sqlDate() ,
             'status' => 'opened',
             'template' => $template,
-        ));
+            )
+        );
     }
 
     public function setStatus(int $id, string $status)
@@ -161,15 +166,21 @@ class Polls extends \litepubl\core\Items
     public function addVote(int $id, int $iduser, int $vote)
     {
         $db = $this->getdb(static ::votes);
-        $db->insert(array(
+        $db->insert(
+            array(
             'idpoll' => (int)$id,
             'iduser' => (int)$iduser,
             'vote' => (int)$vote,
-        ));
+            )
+        );
 
         $t = $db->prefix . static ::votes;
-        $statitems = $db->res2assoc($db->query("select count(idpoll) as count, vote from $t
-where idpoll = $id group by vote order by vote asc"));
+        $statitems = $db->res2assoc(
+            $db->query(
+                "select count(idpoll) as count, vote from $t
+where idpoll = $id group by vote order by vote asc"
+            )
+        );
 
         //it impossible but maybe strange
         if (!count($statitems)) {
@@ -197,11 +208,13 @@ where idpoll = $id group by vote order by vote asc"));
     {
         $item = $this->getitem($id);
         $best = (int)$item['best'];
-        $this->getdb(static ::votes)->insert(array(
+        $this->getdb(static ::votes)->insert(
+            array(
             'idpoll' => (int)$id,
             'iduser' => 1,
             'vote' => $best,
-        ));
+            )
+        );
 
         $item['votes'] = mt_rand(7, 167);
         $item['rate'] = mt_rand(($best - 1) * 10, $best * 10) / 10;

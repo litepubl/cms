@@ -1,66 +1,70 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
+
 namespace litepubl\post;
 
 use litepubl\core\Arr;
+use litepubl\core\Callback;
 use litepubl\core\Str;
 use litepubl\view\Filter;
-use litepubl\core\Callback;
 
 /**
  * This is the post base class
  *
- * @property int $idschema
- * @property int $idurl
- * @property int $parent
- * @property int $author
- * @property int $revision
- * @property int $icon
- * @property int $idperm
- * @property string $class
- * @property int $posted timestamp
- * @property string $title
- * @property string $title2
- * @property string $filtered
- * @property string $excerpt
- * @property string $rss
- * @property string $keywords
- * @property string $description
- * @property string $rawhead
- * @property string $moretitle
- * @property array $categories
- * @property array $tags
- * @property array $files
- * @property string $status enum
- * @property string $comstatus enum
- * @property int $pingenabled bool
- * @property string $password
- * @property int $commentscount
- * @property int $pingbackscount
- * @property int $pagescount
- * @property string $url
- * @property int $created timestamp
- * @property int $modified timestamp
- * @property array $pages
- * @property string $rawcontent
+ * @property      int $idschema
+ * @property      int $idurl
+ * @property      int $parent
+ * @property      int $author
+ * @property      int $revision
+ * @property      int $icon
+ * @property      int $idperm
+ * @property      string $class
+ * @property      int $posted timestamp
+ * @property      string $title
+ * @property      string $title2
+ * @property      string $filtered
+ * @property      string $excerpt
+ * @property      string $rss
+ * @property      string $keywords
+ * @property      string $description
+ * @property      string $rawhead
+ * @property      string $moretitle
+ * @property      array $categories
+ * @property      array $tags
+ * @property      array $files
+ * @property      string $status enum
+ * @property      string $comstatus enum
+ * @property      int $pingenabled bool
+ * @property      string $password
+ * @property      int $commentscount
+ * @property      int $pingbackscount
+ * @property      int $pagescount
+ * @property      string $url
+ * @property      int $created timestamp
+ * @property      int $modified timestamp
+ * @property      array $pages
+ * @property      string $rawcontent
  * @property-read string $instanceName
  * @property-read string $childTable
  * @property-read Factory $factory
  * @property-read View $view
  * @property-read Meta $meta
- * @property string $link absolute url
+ * @property      string $link absolute url
  * @property-read string isoDate
- * @property string pubDate
+ * @property      string pubDate
  * @property-read string sqlDate
- * @property string $tagNames tags title separated by ,
- * @property string $catNames categories title separated by ,
+ * @property      string $tagNames tags title separated by ,
+ * @property      string $catNames categories title separated by ,
  * @property-read string $category first category title
  * @property-read int $idCat first category ID
  * @property-read bool $hasPages true if has content or comments pages
@@ -115,9 +119,11 @@ class Post extends \litepubl\core\Item
             $self->setAssoc($a);
             
             if ($table = $self->getChildTable()) {
-                $items = static::selectChildItems($table, [
+                $items = static::selectChildItems(
+                    $table, [
                     $id
-                ]);
+                    ]
+                );
                 $self->childData = $items[$id];
                 unset($self->childData['id']);
             }
@@ -134,12 +140,16 @@ class Post extends \litepubl\core\Item
         $db = static::getAppInstance()->db;
         $table = static::getChildTable();
         if ($table) {
-            return $db->selectAssoc("select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
+            return $db->selectAssoc(
+                "select $db->posts.*, $db->prefix$table.*, $db->urlmap.url as url 
  from $db->posts, $db->prefix$table, $db->urlmap
-    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1");
+    where $db->posts.id = $id and $db->prefix$table.id = $id and $db->urlmap.id  = $db->posts.idurl limit 1"
+            );
         } else {
-            return $db->selectAssoc("select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
-    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1");
+            return $db->selectAssoc(
+                "select $db->posts.*, $db->urlmap.url as url  from $db->posts, $db->urlmap
+    where $db->posts.id = $id and  $db->urlmap.id  = $db->posts.idurl limit 1"
+            );
         }
     }
 
@@ -710,11 +720,13 @@ class Post extends \litepubl\core\Item
         $this->cacheData['pages'][] = $s;
         $this->data['pagescount'] = count($this->cacheData['pages']);
         if ($this->id > 0) {
-            $this->getdb($this->pagesTable)->insert(array(
+            $this->getdb($this->pagesTable)->insert(
+                array(
                 'id' => $this->id,
                 'page' => $this->data['pagescount'] - 1,
                 'content' => $s
-            ));
+                )
+            );
         }
     }
 
@@ -732,11 +744,13 @@ class Post extends \litepubl\core\Item
         if (isset($this->cacheData['pages'])) {
             $db = $this->getDB($this->pagesTable);
             foreach ($this->cacheData['pages'] as $index => $content) {
-                $db->insert(array(
+                $db->insert(
+                    array(
                     'id' => $this->id,
                     'page' => $index,
                     'content' => $content
-                ));
+                    )
+                );
             }
         }
     }

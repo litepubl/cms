@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -91,8 +94,10 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         }
         $db = $this->getApp()->db;
         $table = $this->thistable;
-        $res = $db->query("select $table.*, $db->urlmap.url as url from $table, $db->urlmap
-    where $where $db->urlmap.id  = $table.idurl $limit");
+        $res = $db->query(
+            "select $table.*, $db->urlmap.url as url from $table, $db->urlmap
+    where $where $db->urlmap.id  = $table.idurl $limit"
+        );
         return $this->res2items($res);
     }
 

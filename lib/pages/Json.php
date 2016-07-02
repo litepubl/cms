@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -103,9 +106,11 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return $this->jsonError($response, $id, $e->getCode(), $e->getMessage());
         }
 
-        $this->callevent('aftercall', array(&$result,
+        $this->callevent(
+            'aftercall', array(&$result,
             $args
-        ));
+            )
+        );
 
         $resp = array(
             'jsonrpc' => '2.0'
@@ -117,9 +122,11 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $resp['result'] = $result;
             if (isset($params['slave']) && is_array($params['slave'])) {
                 try {
-                    $slave_result = $this->callevent($params['slave']['method'], array(
+                    $slave_result = $this->callevent(
+                        $params['slave']['method'], array(
                         $params['slave']['params']
-                    ));
+                        )
+                    );
                 } catch (\Exception $e) {
                     $slave_result = array(
                         'error' => array(

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\posts;
 
@@ -93,11 +96,13 @@ class Editor extends \litepubl\admin\Menu
     public function getTabsTemplate()
     {
         $admintheme = $this->admintheme;
-        return strtr($admintheme->templates['tabs'], array(
+        return strtr(
+            $admintheme->templates['tabs'], array(
             '$id' => 'tabs',
             '$tab' => $admintheme->templates['posteditor.tabs.tabs'],
             '$panel' => $admintheme->templates['posteditor.tabs.panels'],
-        ));
+            )
+        );
     }
 
     public function getArgsTab(Post $post, Args $args)

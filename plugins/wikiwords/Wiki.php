@@ -1,19 +1,22 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\wikiwords;
 
+use litepubl\core\ItemsPosts;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\Posts;
-use litepubl\core\ItemsPosts;
 use litepubl\view\Theme;
 
 class Wiki extends \litepubl\core\Items
@@ -79,30 +82,36 @@ class Wiki extends \litepubl\core\Items
             $result = str_replace('$word', $word, $theme->templates['wiki.word']);
         } elseif ($c == 1) {
             $post = Post::i($items[0]);
-            $result = strtr($theme->templates['wiki.link'], [
-            '$id' => $id,
-            '$word' => $word,
-            '$post.link' => $post->link,
-            ]);
+            $result = strtr(
+                $theme->templates['wiki.link'], [
+                '$id' => $id,
+                '$word' => $word,
+                '$post.link' => $post->link,
+                ]
+            );
         } else {
             $links = '';
             $posts = Posts::i();
             $posts->loadItems($items);
             foreach ($items as $idpost) {
                 $post = Post::i($idpost);
-                $links.= strtr($theme->templates['wiki.links.item'], [
-                '$id' => $id,
-                '$word' => $word,
-                '$post.link' => $post->link,
-                '$post.title' => $post->title,
-                ]);
+                $links.= strtr(
+                    $theme->templates['wiki.links.item'], [
+                    '$id' => $id,
+                    '$word' => $word,
+                    '$post.link' => $post->link,
+                    '$post.title' => $post->title,
+                    ]
+                );
             }
 
-            $result = strtr($theme->templates['wiki.links'], [
-            '$id' => $id,
-            '$word' => $word,
-            '$item' => $links,
-            ]);
+            $result = strtr(
+                $theme->templates['wiki.links'], [
+                '$id' => $id,
+                '$word' => $word,
+                '$item' => $links,
+                ]
+            );
         }
 
         $result = str_replace(["\n", "\r"], ' ', $result);
@@ -122,9 +131,11 @@ class Wiki extends \litepubl\core\Items
         } else {
             $id = $this->indexOf('word', $word);
             if (!$id) {
-                $id = $this->addItem(array(
+                $id = $this->addItem(
+                    array(
                     'word' => $word
-                ));
+                    )
+                );
 
                 $this->words[$word] = $id;
             }

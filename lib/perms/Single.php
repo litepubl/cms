@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\perms;
 
@@ -107,21 +110,21 @@ class Single extends Perm
         }
 
         switch ($context->response->status) {
-            case 404:
-                $errorPages = new ErrorPages();
-                $errorPages->notfound();
-                break;
+        case 404:
+            $errorPages = new ErrorPages();
+            $errorPages->notfound();
+            break;
 
 
-            case 403:
-                $errorPages = new ErrorPages();
-                $errorPages->forbidden();
-                break;
+        case 403:
+            $errorPages = new ErrorPages();
+            $errorPages->forbidden();
+            break;
 
 
-            default:
-                MainView::i()->render($context);
-                $context->response->send();
+        default:
+            MainView::i()->render($context);
+            $context->response->send();
         }
 
         return false;

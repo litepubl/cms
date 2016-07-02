@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\comments;
 
@@ -31,14 +34,14 @@ class Pool extends \litepubl\core\Pool
     {
         $l = Lang::i()->ini['comment'];
         switch ($count) {
-            case 0:
-                return $l[0];
+        case 0:
+            return $l[0];
 
-            case 1:
-                return $l[1];
+        case 1:
+            return $l[1];
 
-            default:
-                return sprintf($l[2], count);
+        default:
+            return sprintf($l[2], count);
         }
     }
 

@@ -130,9 +130,21 @@ class AutoVars extends \litepubl\core\Items
 
     public function create()
     {
+        $this->dbversion = false;
         parent::create();
         $this->basename = 'autovars';
-        $this->defaults = ['post' => '\litepubl\post\Post', 'files' => '\litepubl\post\Files', 'archives' => '\litepubl\post\Archives', 'categories' => '\litepubl\tag\Cats', 'cats' => '\litepubl\tag\Cats', 'tags' => '\litepubl\tag\Tags', 'home' => '\litepubl\pages\Home', 'template' => '\litepubl\view\MainView', 'comments' => '\litepubl\comments\Comments', 'menu' => '\litepubl\pages\Menu', ];
+        $this->defaults = [
+        'post' => '\litepubl\post\Post',
+        'files' => '\litepubl\post\Files',
+        'archives' => '\litepubl\post\Archives',
+        'categories' => '\litepubl\tag\Cats',
+        'cats' => '\litepubl\tag\Cats',
+        'tags' => '\litepubl\tag\Tags',
+        'home' => '\litepubl\pages\Home',
+        'template' => 'litepubl\view\MainView',
+        'comments' => 'litepubl\comments\Comments',
+        'menu' => 'litepubl\pages\Menu',
+        ];
     }
 
     public function get($name)
@@ -147,6 +159,13 @@ class AutoVars extends \litepubl\core\Items
 
         return false;
     }
+
+    public function add(string $name, string $class)
+    {
+        $this->items[$name] = $class;
+        $this->save();
+    }
+
 }
 
 //Base.php
@@ -217,7 +236,7 @@ class Base extends \litepubl\core\Events
         return 'themes/' . $this->name;
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return BaseParser::i();
     }
@@ -276,28 +295,28 @@ class Base extends \litepubl\core\Events
     protected function getVar($name)
     {
         switch ($name) {
-            case 'site':
-                return $this->getApp()->site;
+        case 'site':
+            return $this->getApp()->site;
 
-            case 'lang':
-                return lang::i();
+        case 'lang':
+            return lang::i();
 
-            case 'post':
-                if ($context = $this->getApp()->context) {
-                    if (isset($context->view) and $context->view instanceof PostView) {
-                        return $context->view;
-                    } elseif (isset($context->model) && $context->model instanceof Post) {
-                        return $context->model->getView();
-                    }
+        case 'post':
+            if ($context = $this->getApp()->context) {
+                if (isset($context->view) and $context->view instanceof PostView) {
+                    return $context->view;
+                } elseif (isset($context->model) && $context->model instanceof Post) {
+                    return $context->model->getView();
                 }
-                break;
+            }
+            break;
 
 
-            case 'author':
-                return static ::get_author();
+        case 'author':
+            return static ::get_author();
 
-            case 'metapost':
-                return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
+        case 'metapost':
+            return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
         $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
@@ -335,7 +354,7 @@ class Base extends \litepubl\core\Events
         return '';
     }
 
-    public function parse($s)
+    public function parse(string $s): string
     {
         if (!$s) {
             return '';
@@ -348,10 +367,7 @@ class Base extends \litepubl\core\Events
         array_push($this->parsing, $s);
         try {
             $s = preg_replace('/%%([a-zA-Z0-9]*+)_(\w\w*+)%%/', '\$$1.$2', $s);
-            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', array(
-                $this,
-                'parsecallback'
-            ), $s);
+            $result = preg_replace_callback('/\$([a-zA-Z]\w*+)\.(\w\w*+)/', [$this, 'parsecallback'], $s);
         } catch (\Exception $e) {
             $result = '';
             $this->getApp()->logException($e);
@@ -360,7 +376,7 @@ class Base extends \litepubl\core\Events
         return $result;
     }
 
-    public function parseArg($s, Args $args)
+    public function parseArg(string $s, Args $args): string
     {
         $s = $this->parse($s);
         $s = $args->callback($s);
@@ -408,7 +424,8 @@ class Base extends \litepubl\core\Events
 
     public static function quote($s)
     {
-        return strtr($s, array(
+        return strtr(
+            $s, array(
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -417,7 +434,8 @@ class Base extends \litepubl\core\Events
             '_' => '&#95;',
             '<' => '&lt;',
             '>' => '&gt;',
-        ));
+            )
+        );
     }
 }
 
@@ -468,24 +486,27 @@ trait EmptyViewTrait
     {
     }
 
-    public function getHead()
+    public function getHead(): string
     {
+        return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
+        return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
+        return '';
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->IdSchema) {
             $this->data['idschema'] = $id;
@@ -493,12 +514,12 @@ trait EmptyViewTrait
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getView()
+    public function getView(): ViewInterface
     {
         return $this;
     }
@@ -1008,7 +1029,8 @@ class Schema extends \litepubl\core\Item
 
         $schemes = Schemes::i();
         if (!$schemes->itemExists($id)) {
-            $id = 1; //default, wich always exists
+            //1 default, wich always exists
+            $id = 1;
             $instance->setIdSchema($id);
         }
 
@@ -1327,7 +1349,7 @@ class Theme extends Base
         return $this->templates['index'];
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return Parser::i();
     }
@@ -1504,48 +1526,57 @@ class Theme extends Base
 
     public function getButton($title)
     {
-        return strtr($this->templates['content.admin.button'], array(
+        return strtr(
+            $this->templates['content.admin.button'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-        ));
+            )
+        );
     }
 
     public function getSubmit($title)
     {
-        return strtr($this->templates['content.admin.submit'], array(
+        return strtr(
+            $this->templates['content.admin.submit'], array(
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-        ));
+            )
+        );
     }
 
     public function getInput($type, $name, $value, $title)
     {
-        return strtr($this->templates['content.admin.' . $type], array(
+        return strtr(
+            $this->templates['content.admin.' . $type], array(
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $value
-        ));
+            )
+        );
     }
 
     public function getRadio($name, $value, $title, $checked)
     {
-        return strtr($this->templates['content.admin.radioitem'], array(
+        return strtr(
+            $this->templates['content.admin.radioitem'], array(
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $title,
             '$index' => $value,
             '$checked' => $checked ? 'checked="checked"' : '',
-        ));
+            )
+        );
     }
 
     public function getRadioItems($name, array $items, $selected)
     {
         $result = '';
         foreach ($items as $index => $title) {
-            $result.= $this->getradio($name, $index, static ::quote($title), $index == $selected);
+            $result.= $this->getRadio($name, $index, static ::quote($title), $index == $selected);
         }
+
         return $result;
     }
 
@@ -1606,13 +1637,13 @@ namespace litepubl\view;
 
 interface ViewInterface extends \litepubl\core\ResponsiveInterface
 {
-    public function getTitle();
-    public function getKeywords();
-    public function getDescription();
-    public function getHead();
-    public function getCont();
-    public function getIdSchema();
-    public function setIdSchema($id);
+    public function getTitle(): string;
+    public function getKeywords(): string;
+    public function getDescription(): string;
+    public function getHead(): string;
+    public function getCont(): string;
+    public function getIdSchema(): int;
+    public function setIdSchema(int $id);
 }
 
 //ViewTrait.php
@@ -1636,27 +1667,27 @@ trait ViewTrait
     {
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         return $this->data['head'];
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         return $this->data['keywords'];
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->data['description'];
     }
 
-    public function getIdSchema()
+    public function getIdSchema(): int
     {
         return $this->data['idschema'];
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->data['idschema']) {
             $this->data['idschema'] = $id;
@@ -1664,12 +1695,12 @@ trait ViewTrait
         }
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return Schema::getSchema($this);
     }
 
-    public function getView()
+    public function getView(): ViewInterface
     {
         return $this;
     }
@@ -1703,27 +1734,29 @@ class Admin extends Base
         return $result;
     }
 
-    public static function admin()
+    public static function admin(): Admin
     {
         return Schema::i(Schemes::i()->defaults['admin'])->admintheme;
     }
 
-    public function getParser()
+    public function getParser(): BaseParser
     {
         return AdminParser::i();
     }
 
-    public function shortcode($s, Args $args)
+    public function shortCode(string $s, Args $args): string
     {
         $result = trim($s);
         //replace [tabpanel=name{content}]
         if (preg_match_all('/\[tabpanel=(\w*+)\{(.*?)\}\]/ims', $result, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $name = $item[1];
-                $replace = strtr($this->templates['tabs.panel'], array(
+                $replace = strtr(
+                    $this->templates['tabs.panel'], array(
                     '$id' => $name,
                     '$content' => trim($item[2]) ,
-                ));
+                    )
+                );
 
                 $result = str_replace($item[0], $replace, $result);
             }
@@ -1739,59 +1772,69 @@ class Admin extends Base
                 $varname = '$' . $name;
 
                 switch ($type) {
-                    case 'editor':
-                    case 'text':
-                    case 'email':
-                    case 'password':
-                        if (isset($args->data[$varname])) {
-                            $args->data[$varname] = static ::quote($args->data[$varname]);
-                        } else {
-                            $args->data[$varname] = '';
-                        }
+                case 'editor':
+                case 'text':
+                case 'email':
+                case 'password':
+                    if (isset($args->data[$varname])) {
+                        $args->data[$varname] = static ::quote($args->data[$varname]);
+                    } else {
+                        $args->data[$varname] = '';
+                    }
 
-                        $replace = strtr($theme->templates["content.admin.$type"], array(
-                            '$name' => $name,
-                            '$value' => $varname
-                        ));
-                        break;
-
-
-                    case 'calendar':
-                        $replace = $this->getcalendar($name, $args->data[$varname]);
-                        break;
+                    $replace = strtr(
+                        $theme->templates["content.admin.$type"], array(
+                        '$name' => $name,
+                        '$value' => $varname
+                        )
+                    );
+                    break;
 
 
-                    case 'tab':
-                        $replace = strtr($this->templates['tabs.tab'], array(
-                            '$id' => $name,
-                            '$title' => $lang->__get($name) ,
-                            '$url' => '',
-                        ));
-                        break;
+                case 'calendar':
+                    $replace = $this->getcalendar($name, $args->data[$varname]);
+                    break;
 
 
-                    case 'ajaxtab':
-                        $replace = strtr($this->templates['tabs.tab'], array(
-                            '$id' => $name,
-                            '$title' => $lang->__get($name) ,
-                            '$url' => "\$ajax=$name",
-                        ));
-                        break;
+                case 'tab':
+                    $replace = strtr(
+                        $this->templates['tabs.tab'], array(
+                        '$id' => $name,
+                        '$title' => $lang->__get($name) ,
+                        '$url' => '',
+                        )
+                    );
+                    break;
 
 
-                    case 'tabpanel':
-                        $replace = strtr($this->templates['tabs.panel'], array(
-                            '$id' => $name,
-                            '$content' => isset($args->data[$varname]) ? $varname : '',
-                        ));
-                        break;
+                case 'ajaxtab':
+                    $replace = strtr(
+                        $this->templates['tabs.tab'], array(
+                        '$id' => $name,
+                        '$title' => $lang->__get($name) ,
+                        '$url' => "\$ajax=$name",
+                        )
+                    );
+                    break;
 
 
-                    default:
-                        $replace = strtr($theme->templates["content.admin.$type"], array(
-                            '$name' => $name,
-                            '$value' => $varname
-                        ));
+                case 'tabpanel':
+                    $replace = strtr(
+                        $this->templates['tabs.panel'], array(
+                        '$id' => $name,
+                        '$content' => isset($args->data[$varname]) ? $varname : '',
+                        )
+                    );
+                    break;
+
+
+                default:
+                    $replace = strtr(
+                        $theme->templates["content.admin.$type"], array(
+                        '$name' => $name,
+                        '$value' => $varname
+                        )
+                    );
                 }
 
                 $result = str_replace($item[0], $replace, $result);
@@ -1801,7 +1844,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function parseArg($s, Args $args)
+    public function parseArg(string $s, Args $args): string
     {
         $result = $this->shortcode($s, $args);
         $result = strtr($result, $args->data);
@@ -1809,58 +1852,65 @@ class Admin extends Base
         return $this->parse($result);
     }
 
-    public function form($tml, Args $args)
+    public function form(string $tml, Args $args): string
     {
         return $this->parseArg(str_replace('$items', $tml, Theme::i()->templates['content.admin.form']), $args);
     }
 
-    public function getTable($head, $body, $footer = '')
+    public function getTable(string $head, string $body, string $footer = ''): string
     {
-        return strtr($this->templates['table'], array(
+        return strtr(
+            $this->templates['table'], array(
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
             '$body' => $body,
             '$footer' => $footer,
-        ));
+            )
+        );
     }
 
-    public function success($text)
+    public function success(string $text): string
     {
         return str_replace('$text', $text, $this->templates['success']);
     }
 
-    public function getCount($from, $to, $count)
+    public function getCount(int $from, int $to, int $count): string
     {
         return $this->h(sprintf(Lang::i()->itemscount, $from, $to, $count));
     }
 
-    public function getIcon($name, $screenreader = false)
+    public function getIcon(string $name, $screenreader = false): string
     {
-        return str_replace('$name', $name, $this->templates['icon']) . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
+        return str_replace('$name', $name, $this->templates['icon'])
+        . ($screenreader ? str_replace('$text', $screenreader, $this->templates['screenreader']) : '');
     }
 
-    public function getSection($title, $content)
+    public function getSection(string $title, string $content): string
     {
-        return strtr($this->templates['section'], array(
+        return strtr(
+            $this->templates['section'], array(
             '$title' => $title,
             '$content' => $content
-        ));
+            )
+        );
     }
 
-    public function getErr($content)
+    public function getErr(string $content): string
     {
-        return strtr($this->templates['error'], array(
+        return strtr(
+            $this->templates['error'], array(
             '$title' => Lang::get('default', 'error') ,
             '$content' => $content
-        ));
+            )
+        );
     }
 
-    public function help($content)
+    public function help(string $content): string
     {
         return str_replace('$content', $content, $this->templates['help']);
     }
 
-    public function getCalendar($name, $date)
+    public function getCalendar(string $name, $date): string
     {
         $date = datefilter::timestamp($date);
 
@@ -1880,7 +1930,7 @@ class Admin extends Base
         return $this->parseArg($this->templates['calendar'], $args);
     }
 
-    public function getDaterange($from, $to)
+    public function getDaterange($from, $to): string
     {
         $from = datefilter::timestamp($from);
         $to = datefilter::timestamp($to);
@@ -1893,16 +1943,16 @@ class Admin extends Base
         return $this->parseArg($this->templates['daterange'], $args);
     }
 
-    public function getCats(array $items)
+    public function getCats(array $items): string
     {
         Lang::i()->addsearch('editor');
         $result = $this->parse($this->templates['posteditor.categories.head']);
         Cats::i()->loadall();
-        $result.= $this->getsubcats(0, $items);
+        $result.= $this->getSubCats(0, $items);
         return $result;
     }
 
-    protected function getSubcats($parent, array $items, $exclude = false)
+    protected function getSubCats(int $parent, array $items, $exclude = false): string
     {
         $result = '';
         $args = new Args();
@@ -1913,7 +1963,7 @@ class Admin extends Base
                 $args->add($item);
                 $args->checked = in_array($item['id'], $items);
                 $args->subcount = '';
-                $args->subitems = $this->getsubcats($id, $items, $exclude);
+                $args->subitems = $this->getSubCats($id, $items, $exclude);
                 $result.= $this->parseArg($tml, $args);
             }
         }
@@ -1925,7 +1975,7 @@ class Admin extends Base
         return $result;
     }
 
-    public function processcategories()
+    public function processCategories(): array
     {
         $result = $this->check2array('category-');
         Arr::clean($result);
@@ -1933,15 +1983,17 @@ class Admin extends Base
         return $result;
     }
 
-    public function getFilelist(array $list)
+    public function getFilelist(array $list): string
     {
         $args = new Args();
         $args->fileperm = '';
 
         if (is_callable($this->onfileperm)) {
-            call_user_func_array($this->onfileperm, array(
+            call_user_func_array(
+                $this->onfileperm, array(
                 $args
-            ));
+                )
+            );
         } elseif ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
@@ -1966,7 +2018,7 @@ class Admin extends Base
         return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
-    public function check2array($prefix)
+    public function check2array(string $prefix): array
     {
         $result = array();
         foreach ($_POST as $key => $value) {
@@ -1978,3 +2030,4 @@ class Admin extends Base
         return $result;
     }
 }
+

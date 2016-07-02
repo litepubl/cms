@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\sourcefiles;
 
@@ -146,7 +149,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
     {
         if (!isset($this->geshi)) {
             define('GESHI_ROOT', dirname(__file__) . '/');
-            require(dirname(__file__) . '/geshi.php');
+            include dirname(__file__) . '/geshi.php';
             $this->geshi = new \GeSHi();
             $this->geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
             $this->geshi->enable_classes();
@@ -165,28 +168,28 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
         }
         */
         switch ($ext) {
-            case 'tml':
-                $lang = 'html5';
-                break;
+        case 'tml':
+            $lang = 'html5';
+            break;
 
 
-            case 'less':
-                $lang = 'css';
-                break;
+        case 'less':
+            $lang = 'css';
+            break;
 
 
-            case 'js':
-                $lang = 'jquery';
-                break;
+        case 'js':
+            $lang = 'jquery';
+            break;
 
 
-            case 'json':
-                $lang = 'javascript';
-                break;
+        case 'json':
+            $lang = 'javascript';
+            break;
 
 
-            default:
-                $lang = $this->geshi->get_language_name_from_extension($ext);
+        default:
+            $lang = $this->geshi->get_language_name_from_extension($ext);
         }
 
         $this->geshi->set_language($lang);
@@ -289,12 +292,14 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
                 $list.= sprintf($tml, $basedir . $filename, $filename);
             }
 
-            $this->saveitem($this->getfilename($dir), array(
+            $this->saveitem(
+                $this->getfilename($dir), array(
                 'type' => 'dir',
                 'filename' => $dir == '.' ? $root : $dir,
                 'content' => sprintf($tml_list, $list) ,
                 'style' => '',
-            ));
+                )
+            );
         }
     }
 }

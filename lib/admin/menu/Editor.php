@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\menu;
 
@@ -74,32 +77,38 @@ class Editor extends \litepubl\admin\Menu
             $status = $menuitem->status;
         }
 
-        $args->status = $this->theme->comboItems(array(
+        $args->status = $this->theme->comboItems(
+            array(
             'draft' => $lang->draft,
             'published' => $lang->published
-        ), $status);
+            ), $status
+        );
 
         if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof FakeMenu))) {
             $args->url = $id == 0 ? '' : $menuitem->url;
             $args->type = 'fake';
             $args->formtitle = $lang->faketitle;
-            return $admin->form('[text=title]
+            return $admin->form(
+                '[text=title]
         [text=url]
         [combo=parent]
         [combo=order]
         [combo=status]
         [hidden=type]
-        [hidden=id]', $args);
+        [hidden=id]', $args
+            );
         }
 
         $tabs = $this->newTabs();
-        $tabs->add($lang->title, '
+        $tabs->add(
+            $lang->title, '
       [text=title]
       [combo=parent]
       [combo=order]
       [combo=status]
       [hidden=id]
-      ');
+      '
+        );
 
         $ajaxurl = Link::url("/admin/ajaxmenueditor.htm?id=$id&get");
         $tabs->ajax($lang->view, "$ajaxurl=view");

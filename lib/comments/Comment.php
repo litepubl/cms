@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\comments;
 
@@ -52,12 +55,14 @@ class Comment extends \litepubl\core\Data
         extract($this->data, EXTR_SKIP);
         $this->db->UpdateAssoc(compact('id', 'post', 'author', 'parent', 'posted', 'status', 'content'));
 
-        $this->getdb($this->rawtable)->UpdateAssoc(array(
+        $this->getdb($this->rawtable)->UpdateAssoc(
+            array(
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $rawcontent,
             'hash' => Str::baseMd5($rawcontent)
-        ));
+            )
+        );
     }
 
     public function getAuthorlink()

@@ -2,11 +2,17 @@
 //Cats.php
 namespace litepubl\tag;
 
+use litepubl\widget\Cache as CacheWidgets;
 use litepubl\widget\Cats as CatsWidget;
+
+/**
+ * This is the categories class
+ *
+ * @property int $defaultid
+ */
 
 class Cats extends Common
 {
-    //public  $defaultid;
     protected function create()
     {
         parent::create();
@@ -29,7 +35,7 @@ class Cats extends Common
     {
         parent::save();
         if (!$this->locked) {
-            CatsWidget::i()->expire();
+            CacheWidgets::i()->removeWidget(CatsWidget::i());
         }
     }
 }
@@ -41,7 +47,6 @@ use litepubl\core\Arr;
 use litepubl\core\ItemsPosts;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
-use litepubl\view\Schema;
 use litepubl\view\Schemes;
 
 class Common extends \litepubl\core\Items
@@ -92,7 +97,7 @@ class Common extends \litepubl\core\Items
         return parent::loadAll();
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if ($where) {
             $where.= ' and ';
@@ -101,25 +106,27 @@ class Common extends \litepubl\core\Items
         $db = $this->db;
         $t = $this->thistable;
         $u = $db->urlmap;
-        $res = $db->query("select $t.*, $u.url from $t, $u
-    where $where $u.id = $t.idurl $limit");
+        $res = $db->query(
+            "select $t.*, $u.url from $t, $u
+    where $where $u.id = $t.idurl $limit"
+        );
 
         return $this->res2items($res);
     }
 
-    public function getUrl($id)
+    public function getUrl(int $id): string
     {
         $item = $this->getItem($id);
         return $item['url'];
     }
 
-    public function getName($id)
+    public function getName(int $id): string
     {
         $item = $this->getItem($id);
         return $item['title'];
     }
 
-    public function postEdited($idpost)
+    public function postEdited(int $idpost)
     {
         $post = $this->factory->getPost((int)$idpost);
         $items = $post->{$this->postpropname};
@@ -132,7 +139,7 @@ class Common extends \litepubl\core\Items
         $this->updateCount($changed);
     }
 
-    public function postDeleted($idpost)
+    public function postDeleted(int $idpost)
     {
         $changed = $this->itemsposts->deletePost($idpost);
         $this->updateCount($changed);
@@ -152,8 +159,12 @@ class Common extends \litepubl\core\Items
         $itemprop = $this->itemsposts->itemprop;
         $postprop = $this->itemsposts->postprop;
         $poststable = $db->posts;
-        $list = $db->res2assoc($db->query("select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
-    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"));
+        $list = $db->res2assoc(
+            $db->query(
+                "select $itemstable.$itemprop as id, count($itemstable.$itemprop)as itemscount from $itemstable, $poststable
+    where $itemstable.$itemprop in ($items)  and $itemstable.$postprop = $poststable.id and $poststable.status = 'published' group by $itemstable.$itemprop"
+            )
+        );
 
         $db->table = $this->table;
         foreach ($list as $item) {
@@ -161,12 +172,12 @@ class Common extends \litepubl\core\Items
         }
     }
 
-    public function getUrlType()
+    public function getUrlType(): string
     {
         return 'normal';
     }
 
-    public function add($parent, $title)
+    public function add(int $parent, string $title): int
     {
         $title = trim($title);
         if (empty($title)) {
@@ -182,7 +193,7 @@ class Common extends \litepubl\core\Items
             $parent = 0;
         }
 
-        $url = LinkGenerator::i()->createurl($title, $this->PermalinkIndex, true);
+        $url = LinkGenerator::i()->createUrl($title, $this->PermalinkIndex, true);
         $schemes = Schemes::i();
         $idschema = isset($schemes->defaults[$this->PermalinkIndex]) ? $schemes->defaults[$this->PermalinkIndex] : 1;
 
@@ -210,7 +221,7 @@ class Common extends \litepubl\core\Items
         return $id;
     }
 
-    public function edit($id, $title, $url)
+    public function edit(int $id, string $title, string $url)
     {
         $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['url'] == $url)) {
@@ -218,17 +229,19 @@ class Common extends \litepubl\core\Items
         }
 
         $item['title'] = $title;
-        $this->db->updateAssoc(array(
+        $this->db->updateAssoc(
+            array(
             'id' => $id,
             'title' => $title
-        ));
+            )
+        );
 
         $app = $this->getApp();
         $linkgen = LinkGenerator::i();
         $url = trim($url);
         // try rebuild url
-        if ($url == '') {
-            $url = $linkgen->createurl($title, $this->PermalinkIndex, false);
+        if (!$url) {
+            $url = $linkgen->createUrl($title, $this->PermalinkIndex, false);
         }
 
         if ($item['url'] != $url) {
@@ -281,7 +294,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getNames(array $list)
+    public function getNames(array $list): array
     {
         $this->loadItems($list);
         $result = array();
@@ -296,7 +309,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getLinks(array $list)
+    public function getLinks(array $list): array
     {
         if (!count($list)) {
             return array();
@@ -316,19 +329,21 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getSorted($parent, $sortname, $count)
+    public function getSorted(int $parent, string $sortname, int $count): array
     {
         $count = (int)$count;
         if ($sortname == 'count') {
             $sortname = 'itemscount';
         }
 
-        if (!in_array($sortname, array(
+        if (!in_array(
+            $sortname, array(
             'title',
             'itemscount',
             'customorder',
             'id'
-        ))) {
+            )
+        )) {
             $sortname = 'title';
         }
 
@@ -341,7 +356,7 @@ class Common extends \litepubl\core\Items
         return $this->select($parent == - 1 ? '' : "$this->thistable.parent = $parent", $limit);
     }
 
-    public function getIdPosts($id, $from, $perpage, $invertOrder)
+    public function getIdPosts(int $id, int $from, int $perpage, bool $invertOrder): array
     {
         $item = $this->getItem($id);
         $includeparents = (int)$item['includeparents'];
@@ -374,16 +389,20 @@ class Common extends \litepubl\core\Items
             $tags = " = $id";
         }
 
-        $result = $this->db->res2id($this->db->query("select $ti.$postprop as $postprop, $p.id as id from $ti, $p
+        $result = $this->db->res2id(
+            $this->db->query(
+                "select $ti.$postprop as $postprop, $p.id as id from $ti, $p
     where    $ti.$itemprop $tags and $p.id = $ti.$postprop and $p.status = 'published'
-    order by $p.posted $order limit $from, $perpage"));
+    order by $p.posted $order limit $from, $perpage"
+            )
+        );
 
         $result = array_unique($result);
         $posts->loadItems($result);
         return $result;
     }
 
-    public function getParents($id)
+    public function getParents(int $id): array
     {
         $result = array();
         while ($id = (int)$this->items[$id]['parent']) {
@@ -394,7 +413,7 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getChilds($parent)
+    public function getChilds(int $parent): array
     {
         $result = array();
         foreach ($this->items as $id => $item) {
@@ -406,23 +425,29 @@ class Common extends \litepubl\core\Items
         return $result;
     }
 
-    public function getSitemap($from, $count)
+    public function getSitemap(int $from, int $count)
     {
-        return $this->externalfunc(__class__, 'Getsitemap', array(
+        return $this->externalfunc(
+            __class__, 'Getsitemap', array(
             $from,
             $count
-        ));
+            )
+        );
     }
 
-    public function getSortedPosts($id, $count, $invert)
+    public function getSortedPosts(int $id, int $count, bool $invert): array
     {
         $ti = $this->itemsposts->thistable;
         $posts = $this->factory->posts;
         $p = $posts->thistable;
         $order = $invert ? 'asc' : 'desc';
-        $result = $this->db->res2id($this->db->query("select $p.id as id, $ti.post as post from $p, $ti
+        $result = $this->db->res2id(
+            $this->db->query(
+                "select $p.id as id, $ti.post as post from $p, $ti
     where    $ti.item = $id and $p.id = $ti.post and $p.status = 'published'
-    order by $p.posted $order limit 0, $count"));
+    order by $p.posted $order limit 0, $count"
+            )
+        );
 
         $posts->loadItems($result);
         return $result;
@@ -608,7 +633,6 @@ use litepubl\post\Announce;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
-use litepubl\view\Schemes;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
@@ -696,7 +720,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $this->context = $context;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         if ($this->id) {
             return $this->getValue('title');
@@ -705,7 +729,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return Lang::i()->categories;
     }
 
-    public function getHead()
+    public function getHead(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'head');
@@ -719,9 +743,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $theme->parse($result);
         }
+
+        return '';
     }
 
-    public function getKeywords()
+    public function getKeywords(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getValue($this->id, 'keywords');
@@ -731,9 +757,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $result;
         }
+
+        return '';
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         if ($this->id) {
             $result = $this->tags->contents->getvalue($this->id, 'description');
@@ -743,9 +771,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             return $result;
         }
+
+        return '';
     }
 
-    public function getIdschema()
+    public function getIdschema(): int
     {
         if ($this->id) {
             return $this->getValue('idschema');
@@ -754,14 +784,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return 1;
     }
 
-    public function setIdSchema($id)
+    public function setIdSchema(int $id)
     {
         if ($id != $this->idschema) {
             $this->tags->setValue($this->id, 'idschema', $id);
         }
     }
 
-    public function getIdPerm()
+    public function getIdPerm(): int
     {
         if ($this->id) {
             $item = $this->tags->getItem($this->id);
@@ -794,7 +824,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return '';
     }
 
-    public function getCont()
+    public function getCont(): string
     {
         $result = new Str('');
         $this->onbeforecontent($result);
@@ -823,11 +853,15 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getCont_all()
     {
-        return sprintf('<ul>%s</ul>', $this->getSorted(array(
-            'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
-            'subcount' => '<strong>($itemscount)</strong>',
-            'subitems' => '<ul>$item</ul>'
-        ), 0, 'count', 0, 0, false));
+        return sprintf(
+            '<ul>%s</ul>', $this->getSorted(
+                array(
+                'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+                'subcount' => '<strong>($itemscount)</strong>',
+                'subitems' => '<ul>$item</ul>'
+                ), 0, 'count', 0, 0, false
+            )
+        );
     }
 
     public function getIdPosts($id)
@@ -845,3 +879,4 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 }
+

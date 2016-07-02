@@ -3,7 +3,7 @@ use litepubl\utils\Filer as tfiler;
 set_time_limit(120);
 
 function ParseFile($filename) {
-global $linescount, $filecount, $oBeautify;
+global $linescount, $filecount;
 //ignore files
 if (in_array(basename($filename), array(
 'default-skin.css',
@@ -12,6 +12,9 @@ if (in_array(basename($filename), array(
 'photoswipe.css',
 'photoswipe.js',
 'photoswipe-ui-default.js',
+'Markdown.php',
+'MarkdownInterface.php',
+'sape.php',
 ))) {
 return;
 }
@@ -152,16 +155,9 @@ function parseplugins($rootdir) {
 $dir = $rootdir . 'plugins' . DIRECTORY_SEPARATOR;
 $list = tfiler::getdir($dir);
 foreach ($list as $name) {
-if ($name == 'markdown' || $name == 'sape') continue;
 parsedir($dir . $name . DIRECTORY_SEPARATOR);
 parsejs($dir . $name . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR);
 }
-
-ParseFile($dir . 'markdown' . DIRECTORY_SEPARATOR . 'markdown.plugin.class.php');
-//sape plugin
-ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'sape.plugin.php');
-ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'sape.plugin.install.php');
-ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'admin.sape.plugin.php');
 }
 
 function replace_copyright($s, $type) {
@@ -177,7 +173,7 @@ $s = ltrim(substr($s, strpos($s, '*/') + 2));
 if ($type == 'php') {
 $s = "<?php\n" . $copyright . "\n\n" . $s;
 } elseif ($type == 'js') {
-$s = str_replace('@license  ', ' license  ', $copyright) . "\n\n" . $s;
+$s = str_replace('@', ' ', $copyright) . "\n\n" . $s;
 } else {
 $s = $copyright . "\n\n" . $s;
 }
@@ -202,18 +198,6 @@ $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
 require($rootdir . 'lib/utils/Filer.php');
 require (__DIR__ . '/libreplace.php');
 $m = microtime(true);
-require (dirname(__file__) . '/PHP_Beautifier/Beautifier.php');
-        $oBeautify = new PHP_Beautifier();
-$oBeautify->setIndentNumber(4);
-$oBeautify->setNewLine("\n");
-        $oBeautify->addFilter('ArrayNested');
-        $oBeautify->addFilter('Pear',array(
-'add_header'=>'php',
-'newline_class'=>true,
- 'newline_function'=>true,
-));
-        $oBeautify->addFilter('KeepEmptyLines');
-//echo round(microtime(true) - $m, 2), ' = load beauty<br>';
 
 switch (@$_GET['dir']) {
 case 'plugins':

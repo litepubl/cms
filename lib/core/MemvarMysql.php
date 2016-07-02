@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -158,14 +161,16 @@ class MemvarMysql
     public function createTable()
     {
         $db = $this->getdb();
-        $db->mysqli->query("create table if not exists $db->prefix$this->table (
+        $db->mysqli->query(
+            "create table if not exists $db->prefix$this->table (
     name varchar(32) not null,
     value varchar(255),
     key (name)
     )
     ENGINE=MEMORY
     DEFAULT CHARSET=utf8
-    COLLATE = utf8_general_ci");
+    COLLATE = utf8_general_ci"
+        );
     }
 
     public function clear()

@@ -1,17 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
+
 namespace litepubl\core;
 
 class DBManager
 {
-    use AppTrait;
+        use AppTrait;
     use Singleton;
 
     public $engine;
@@ -38,11 +42,13 @@ class DBManager
             $this->engine = 'MyISAM'; // InnoDB
         }
         $this->deletetable($name);
-        return $this->exec("create table $this->prefix$name
+        return $this->exec(
+            "create table $this->prefix$name
     ($struct)
     ENGINE=$this->engine
     DEFAULT CHARSET=utf8
-    COLLATE = utf8_general_ci");
+    COLLATE = utf8_general_ci"
+        );
     }
 
     public function deleteTable($name)
@@ -265,7 +271,7 @@ class DBManager
 
     public function export()
     {
-//use mysqli  to prevent strange warning
+        //use mysqli  to prevent strange warning
         $v = $this->fetchassoc($this->mysqli->query("show variables like 'max_allowed_packet'"));
         $this->max_allowed_packet = floor($v['Value'] * 0.8);
         
@@ -352,16 +358,16 @@ class DBManager
         
         $c2 = $s{1};
         switch ($s{0}) {
-            case '/':
-                return $c2 == '*';
+        case '/':
+            return $c2 == '*';
             
-            case '-':
-                return $c2 == '-';
+        case '-':
+            return $c2 == '-';
             
-            case '#':
-                return true;
-            default:
-                return false;
+        case '#':
+            return true;
+        default:
+            return false;
         }
     }
 }

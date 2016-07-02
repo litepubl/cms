@@ -31,7 +31,7 @@ class Comment extends \litepubl\core\Data
     public function setId($id)
     {
         $comments = Comments::i();
-        $this->data = $comments->getitem($id);
+        $this->data = $comments->getItem($id);
         if (!isset($this->data['name'])) {
             $this->data = $this->data + Users::i()->getitem($this->data['author']);
         }
@@ -44,12 +44,14 @@ class Comment extends \litepubl\core\Data
         extract($this->data, EXTR_SKIP);
         $this->db->UpdateAssoc(compact('id', 'post', 'author', 'parent', 'posted', 'status', 'content'));
 
-        $this->getdb($this->rawtable)->UpdateAssoc(array(
+        $this->getdb($this->rawtable)->UpdateAssoc(
+            array(
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $rawcontent,
             'hash' => Str::baseMd5($rawcontent)
-        ));
+            )
+        );
     }
 
     public function getAuthorlink()
@@ -239,14 +241,16 @@ class Comments extends \litepubl\core\Items
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
-        $this->getdb($this->rawtable)->add(array(
+        $this->getdb($this->rawtable)->add(
+            array(
             'id' => $id,
             'created' => Str::sqlDate() ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         $this->added($id);
         $this->changed($id);
@@ -261,12 +265,14 @@ class Comments extends \litepubl\core\Items
 
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
-        $this->getdb($this->rawtable)->updateassoc(array(
+        $this->getdb($this->rawtable)->updateassoc(
+            array(
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         if (isset($this->items[$id])) {
             $this->items[$id]['content'] = $filtered;
@@ -292,11 +298,13 @@ class Comments extends \litepubl\core\Items
 
     public function setStatus($id, $status)
     {
-        if (!in_array($status, array(
+        if (!in_array(
+            $status, array(
             'approved',
             'hold',
             'spam'
-        ))) {
+            )
+        )) {
             return false;
         }
         if (!$this->itemExists($id)) {
@@ -331,7 +339,7 @@ class Comments extends \litepubl\core\Items
         return $this->db->getcount($where);
     }
 
-    public function select($where, $limit)
+    public function select(string $where, string $limit): array
     {
         if ($where) {
             $where.= ' and ';
@@ -340,8 +348,10 @@ class Comments extends \litepubl\core\Items
         $table = $this->thistable;
         $db = $this->getApp()->db;
         $authors = $db->users;
-        $res = $db->query("select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
-    where $where $authors.id = $table.author $limit");
+        $res = $db->query(
+            "select $table.*, $authors.name, $authors.email, $authors.website, $authors.trust from $table, $authors
+    where $where $authors.id = $table.author $limit"
+        );
 
         return $this->res2items($res);
     }
@@ -373,14 +383,16 @@ class Comments extends \litepubl\core\Items
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
-        $this->getdb($this->rawtable)->add(array(
+        $this->getdb($this->rawtable)->add(
+            array(
             'id' => $id,
             'created' => Str::sqlDate($posted) ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-        ));
+            )
+        );
 
         return $id;
     }
@@ -428,9 +440,11 @@ class Comments extends \litepubl\core\Items
         $vars->comment = $comment;
         $lang = Lang::i('comment');
 
-        $tml = strtr($theme->templates['content.post.templatecomments.comments.comment'], array(
+        $tml = strtr(
+            $theme->templates['content.post.templatecomments.comments.comment'], array(
             '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
-        ));
+            )
+        );
 
         $index = $from;
         $class1 = $theme->templates['content.post.templatecomments.comments.comment.class1'];
@@ -485,13 +499,13 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     {
         parent::create();
         $this->basename = 'commentform';
-        $this->cache = false;
         $this->addevents('oncomuser');
     }
 
     public function request(Context $context)
     {
         $response = $context->response;
+        $response->cache = false;
 
         if ($this->getApp()->options->commentsdisabled) {
             $response->status = 404;
@@ -591,50 +605,50 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $iduser = $app->options->user;
         } else {
             switch ($shortpost['comstatus']) {
-                case 'reg':
-                    return $this->getErrorContent($lang->reg);
+            case 'reg':
+                return $this->getErrorContent($lang->reg);
 
-                case 'guest':
-                    if (!$confirmed && $cm->confirmguest) {
-                        return $this->request_confirm($values, $shortpost);
+            case 'guest':
+                if (!$confirmed && $cm->confirmguest) {
+                    return $this->request_confirm($values, $shortpost);
+                }
+
+                $iduser = $cm->idguest;
+                break;
+
+
+            case 'comuser':
+                //hook in regservices social plugin
+                if ($r = $this->oncomuser($values, $confirmed)) {
+                    return $r;
+                }
+
+                if (!$confirmed && $cm->confirmcomuser) {
+                    return $this->request_confirm($values, $shortpost);
+                }
+
+                if ($err = $this->processcomuser($values)) {
+                    return $err;
+                }
+
+                $users = Users::i();
+                if ($iduser = $users->emailexists($values['email'])) {
+                    if ('comuser' != $users->getvalue($iduser, 'status')) {
+                        return $this->getErrorContent($lang->emailregistered);
                     }
+                } else {
+                    $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
+                }
 
-                    $iduser = $cm->idguest;
-                    break;
-
-
-                case 'comuser':
-                    //hook in regservices social plugin
-                    if ($r = $this->oncomuser($values, $confirmed)) {
-                        return $r;
-                    }
-
-                    if (!$confirmed && $cm->confirmcomuser) {
-                        return $this->request_confirm($values, $shortpost);
-                    }
-
-                    if ($err = $this->processcomuser($values)) {
-                        return $err;
-                    }
-
-                    $users = Users::i();
-                    if ($iduser = $users->emailexists($values['email'])) {
-                        if ('comuser' != $users->getvalue($iduser, 'status')) {
-                            return $this->getErrorContent($lang->emailregistered);
-                        }
-                    } else {
-                        $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
-                    }
-
-                    $cookies = array();
-                    foreach (array(
-                        'name',
-                        'email',
-                        'url'
-                    ) as $field) {
-                        $cookies["comuser_$field"] = $values[$field];
-                    }
-                    break;
+                $cookies = array();
+                foreach (array(
+                'name',
+                'email',
+                'url'
+                ) as $field) {
+                    $cookies["comuser_$field"] = $values[$field];
+                }
+                break;
             }
         }
 
@@ -653,23 +667,23 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         //subscribe by email
         switch ($user['status']) {
-            case 'approved':
-                if ($user['email'] != '') {
-                    // subscribe if its first comment
-                    if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
-                        if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
-                            Subscribers::i()->update($shortpost['id'], $iduser, true);
-                        }
+        case 'approved':
+            if ($user['email'] != '') {
+                // subscribe if its first comment
+                if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
+                    if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
+                        Subscribers::i()->update($shortpost['id'], $iduser, true);
                     }
                 }
-                break;
+            }
+            break;
 
 
-            case 'comuser':
-                if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
-                    Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
-                }
-                break;
+        case 'comuser':
+            if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
+                Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
+            }
+            break;
         }
 
         //$post->lastcommenturl;
@@ -838,27 +852,27 @@ class Json extends \litepubl\core\Events
 
         $cm = Manager::i();
         switch ($action) {
-            case 'edit':
-                if (!$cm->canedit) {
-                    return false;
-                }
+        case 'edit':
+            if (!$cm->canedit) {
+                return false;
+            }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
-                    return false;
-                }
+            if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
+                return false;
+            }
 
-                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
+            return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
 
-            case 'delete':
-                if (!$cm->candelete) {
-                    return false;
-                }
+        case 'delete':
+            if (!$cm->candelete) {
+                return false;
+            }
 
-                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
-                    return false;
-                }
+            if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
+                return false;
+            }
 
-                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
+            return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
         }
 
         return false;
@@ -1045,13 +1059,15 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     public function addcomuser($name, $email, $website, $ip)
     {
         $users = Users::i();
-        $id = $users->add(array(
+        $id = $users->add(
+            array(
             'email' => strtolower(trim($email)) ,
             'name' => $name,
             'website' => Filter::clean_website($website) ,
             'status' => 'comuser',
             'idgroups' => 'commentator'
-        ));
+            )
+        );
 
         if ($id) {
             $this->comuseradded($id);
@@ -1222,14 +1238,14 @@ class Pool extends \litepubl\core\Pool
     {
         $l = Lang::i()->ini['comment'];
         switch ($count) {
-            case 0:
-                return $l[0];
+        case 0:
+            return $l[0];
 
-            case 1:
-                return $l[1];
+        case 1:
+            return $l[1];
 
-            default:
-                return sprintf($l[2], count);
+        default:
+            return sprintf($l[2], count);
         }
     }
 
@@ -1474,7 +1490,7 @@ class Templates extends \litepubl\core\Events
         $this->basename = 'comments.templates';
     }
 
-    public function getComments(PostView $view)
+    public function getComments(PostView $view): string
     {
         $result = '';
         $idpost = (int)$view->id;
@@ -1518,41 +1534,41 @@ class Templates extends \litepubl\core\Events
         $args->mesg = $mesg;
 
         $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-        $result.= $this->getjs(($view->idperm == 0) && $cm->confirmlogged, 'logged');
+        $result.= $this->getJS(($view->idperm == 0) && $cm->confirmlogged, 'logged');
 
         $result.= '<?php } else { ?>';
 
         switch ($view->comstatus) {
-            case 'reg':
-                $args->mesg = $this->getmesg('reqlogin', $this->getApp()->options->reguser ? 'regaccount' : false);
-                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-                break;
+        case 'reg':
+            $args->mesg = $this->getmesg('reqlogin', $this->getApp()->options->reguser ? 'regaccount' : false);
+            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
+            break;
 
 
-            case 'guest':
-                $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
-                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmguest, 'guest');
-                break;
+        case 'guest':
+            $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
+            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
+            $result.= $this->getJS(($view->idperm == 0) && $cm->confirmguest, 'guest');
+            break;
 
 
-            case 'comuser':
-                $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
+        case 'comuser':
+            $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
 
-                foreach (array(
-                    'name',
-                    'email',
-                    'url'
-                ) as $field) {
-                    $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
-                }
+            foreach (array(
+            'name',
+            'email',
+            'url'
+            ) as $field) {
+                $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
+            }
 
-                $args->subscribe = false;
-                $args->content = '';
+            $args->subscribe = false;
+            $args->content = '';
 
-                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
-                $result.= $this->getjs(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
-                break;
+            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
+            $result.= $this->getJS(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
+            break;
         }
 
         $result.= '<?php } ?>';
@@ -1560,7 +1576,7 @@ class Templates extends \litepubl\core\Events
         return $result;
     }
 
-    public function getMesg($k1, $k2)
+    public function getMesg(string $k1, string $k2): string
     {
         $theme = Theme::i();
         $result = $theme->templates['content.post.templatecomments.form.mesg.' . $k1];
@@ -1577,7 +1593,7 @@ class Templates extends \litepubl\core\Events
         return $theme->parse($result);
     }
 
-    public function getJs($confirmcomment, $authstatus)
+    public function getJS(bool $confirmcomment, string $authstatus): string
     {
         $cm = Manager::i();
         $params = array(
@@ -1595,3 +1611,4 @@ class Templates extends \litepubl\core\Events
         return $theme->parseArg($theme->templates['content.post.templatecomments.form.js'], $args);
     }
 }
+

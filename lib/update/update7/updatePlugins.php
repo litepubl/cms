@@ -1,23 +1,27 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
+
 namespace litepubl\update;
 
-use litepubl\core\litepubl;
-use litepubl\core\Plugins;
-use litepubl\view\Js;
-use litepubl\view\AutoVars;
-use litepubl\view\Parser;
 use litepubl\core\DBManager;
-use litepubl\pages\Menus;
+use litepubl\core\Plugins;
+use litepubl\core\litepubl;
 use litepubl\pages\FakeMenu;
+use litepubl\pages\Menus;
 use litepubl\tag\Tags;
+use litepubl\view\AutoVars;
+use litepubl\view\Js;
+use litepubl\view\Parser;
 
 function updatePlugins()
 {

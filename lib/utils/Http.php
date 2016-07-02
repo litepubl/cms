@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\utils;
 
@@ -14,7 +17,7 @@ use litepubl\Config;
 
 class Http
 {
-use \litepubl\core\AppTrait;
+    use \litepubl\core\AppTrait;
 
     public static $timeout = 20;
 
@@ -25,10 +28,12 @@ use \litepubl\core\AppTrait;
             return false;
         }
 
-        if (!isset($parsed['scheme']) || !in_array($parsed['scheme'], array(
+        if (!isset($parsed['scheme']) || !in_array(
+            $parsed['scheme'], array(
             'http',
             'https'
-        ))) {
+            )
+        )) {
             $url = 'http://' . $url;
             $parsed['scheme'] = 'http';
         }
@@ -57,9 +62,9 @@ use \litepubl\core\AppTrait;
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
             }
 
-if (Config::$debug) {
-static::setLog($ch);
-}
+            if (Config::$debug) {
+                        static::setLog($ch);
+            }
 
             if (!ini_get('open_basedir') && !ini_get('safe_mode')) {
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -95,9 +100,9 @@ static::setLog($ch);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, is_array($post) ? http_build_query($post) : $post);
 
-if (config::$debug) {
-static::setLog($ch);
-}
+        if (config::$debug) {
+                static::setLog($ch);
+        }
 
         return $ch;
     }
@@ -109,10 +114,12 @@ static::setLog($ch);
         //$respheaders = curl_getinfo($ch);
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        if (in_array($code, array(
+        if (in_array(
+            $code, array(
             '200',
             '201'
-        ))) {
+            )
+        )) {
             return $response;
         }
         return false;
@@ -154,9 +161,9 @@ static::setLog($ch);
         return substr($result, strpos($result, "\r\n\r\n") + 4);
     }
 
-public static function setLog($ch)
-{
-            curl_setopt($ch, CURLOPT_VERBOSE , true);
+    public static function setLog($ch)
+    {
+            curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_STDERR, fopen(static::getAppInstance()->paths->data . 'logs/curl.txt', 'w+'));
-}
+    }
 }

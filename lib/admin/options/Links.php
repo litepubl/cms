@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -31,13 +34,15 @@ class Links extends \litepubl\admin\Menu
         $args->archive = $linkgen->archive;
 
         $args->formtitle = $lang->schemalinks;
-        return $admin->form($admin->help($lang->taglinks) . '[checkbox=urlencode]
+        return $admin->form(
+            $admin->help($lang->taglinks) . '[checkbox=urlencode]
       [text=post]
       [text=menu]
       [text=category]
       [text=tag]
       [text=archive]
-      ', $args);
+      ', $args
+        );
     }
 
     public function processForm()

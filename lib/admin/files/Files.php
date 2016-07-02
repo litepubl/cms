@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\files;
 
@@ -34,13 +37,15 @@ class Files extends \litepubl\admin\Menu
         $lang = $this->lang;
         $args = new Args();
         if (!isset($_GET['action'])) {
-            $args->add(array(
+            $args->add(
+                array(
                 'uploadmode' => 'file',
                 'downloadurl' => '',
                 'title' => '',
                 'description' => '',
                 'keywords' => ''
-            ));
+                )
+            );
 
             $form = new Form($args);
             $form->upload = true;
@@ -64,30 +69,30 @@ class Files extends \litepubl\admin\Menu
             }
 
             switch ($_GET['action']) {
-                case 'delete':
-                    if ($this->confirmed) {
-                        if (('author' == $this->getApp()->options->group) && ($r = AuthorRights::i()->candeletefile($id))) {
-                            return $r;
-                        }
-
-                        $files->delete($id);
-                        $result.= $admintheme->success($lang->deleted);
-                    } else {
-                        $item = $files->getitem($id);
-                        return $this->confirmDelete($id, sprintf($lang->confirm, $item['filename']));
+            case 'delete':
+                if ($this->confirmed) {
+                    if (('author' == $this->getApp()->options->group) && ($r = AuthorRights::i()->candeletefile($id))) {
+                        return $r;
                     }
-                    break;
 
-
-                case 'edit':
+                    $files->delete($id);
+                    $result.= $admintheme->success($lang->deleted);
+                } else {
                     $item = $files->getitem($id);
-                    $args->add($item);
-                    $args->title = Filter::unescape($item['title']);
-                    $args->description = Filter::unescape($item['description']);
-                    $args->keywords = Filter::unescape($item['keywords']);
-                    $args->formtitle = $this->lang->editfile;
-                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : ''), $args);
-                    break;
+                    return $this->confirmDelete($id, sprintf($lang->confirm, $item['filename']));
+                }
+                break;
+
+
+            case 'edit':
+                $item = $files->getitem($id);
+                $args->add($item);
+                $args->title = Filter::unescape($item['title']);
+                $args->description = Filter::unescape($item['description']);
+                $args->keywords = Filter::unescape($item['keywords']);
+                $args->formtitle = $this->lang->editfile;
+                $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : ''), $args);
+                break;
             }
         }
 
@@ -105,7 +110,8 @@ class Files extends \litepubl\admin\Menu
         $result.= $admintheme->getcount($count, $from, $from + count($list));
 
         $args->adminurl = $this->adminurl;
-        $result.= $this->tableItems($files->items, array(
+        $result.= $this->tableItems(
+            $files->items, array(
             array(
                 'right',
                 'ID',
@@ -132,7 +138,8 @@ class Files extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a href=\"$this->adminurl=\$id&action=delete\" class=\"confirm-delete-link\">$lang->delete</a>"
             )
-        ));
+            )
+        );
 
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;

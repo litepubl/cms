@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin;
 
@@ -68,14 +71,16 @@ class Menus extends \litepubl\pages\Menus
     {
         $title = $this->getAdminTitle($name);
         $url = $this->createUrl($parent, $name);
-        return $this->addItem(array(
+        return $this->addItem(
+            array(
             'parent' => $parent,
             'url' => $url,
             'title' => $title,
             'name' => $name,
             'class' => $class,
             'group' => $group
-        ));
+            )
+        );
     }
 
     public function addItem(array $item): int

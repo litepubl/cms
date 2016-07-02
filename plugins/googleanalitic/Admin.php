@@ -1,4 +1,15 @@
 <?php
+/**
+* 
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+ *
+ */
+
 
 namespace litepubl\plugins\googleanalitic;
 
@@ -15,10 +26,12 @@ class Admin extends \litepubl\admin\Panel
         $args->formtitle = $lang->formtitle;
         $args->user = $plugin->user;
         $args->se = $plugin->se;
-        return $this->admin->form('
+        return $this->admin->form(
+            '
 [text=user]
     [editor=se]
-', $args);
+', $args
+        );
     }
 
     public function processForm()

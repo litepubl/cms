@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -49,7 +52,7 @@ class Merger extends \litepubl\core\Items
         }
 
         $filename = str_replace(DIRECTORY_SEPARATOR, '/', $filename);
-return '/' . ltrim($filename, '/');
+        return '/' . ltrim($filename, '/');
     }
 
     public function add($section, $filename)
@@ -103,16 +106,16 @@ return '/' . ltrim($filename, '/');
     public function replaceFile(string $section, string $src, string $dst): bool
     {
         if (isset($this->items[$section])
-&& ($src = $this->normFilename($src))
-&& ($dst = $this->normFilename($dst))
-&& (false !== ($i = array_search($src, $this->items[$section]['files'])))
-) {
-        $this->items[$section]['files'][$i] = $dst;
-        $this->save();
-return true;
-}
+            && ($src = $this->normFilename($src))
+            && ($dst = $this->normFilename($dst))
+            && (false !== ($i = array_search($src, $this->items[$section]['files'])))
+        ) {
+            $this->items[$section]['files'][$i] = $dst;
+            $this->save();
+            return true;
+        }
 
-return false;
+        return false;
     }
 
     public function after($section, $src, $dst)
@@ -138,9 +141,11 @@ return false;
             $this->items[$section]['files'][] = $dst;
         } else {
             //insert after
-            array_splice($this->items[$section]['files'], $i + 1, 0, array(
+            array_splice(
+                $this->items[$section]['files'], $i + 1, 0, array(
                 $dst
-            ));
+                )
+            );
         }
         $this->save();
     }
@@ -242,7 +247,7 @@ return false;
                 $filename = $home . str_replace('/', DIRECTORY_SEPARATOR, $filename);
                 if (file_exists($filename)) {
                     $s.= $this->readfile($filename);
- //prevent comments
+                    //prevent comments
                     $s.= "\n";
                 } else {
                     trigger_error(sprintf('The file "%s" not exists', $filename), E_USER_WARNING);

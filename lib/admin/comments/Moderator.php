@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\comments;
 
@@ -43,11 +46,11 @@ class Moderator extends \litepubl\admin\Menu
 
         $cm = Manager::i();
         switch ($action) {
-            case 'edit':
-                return $cm->canedit;
+        case 'edit':
+            return $cm->canedit;
 
-            case 'delete':
-                return $cm->candelete;
+        case 'delete':
+            return $cm->candelete;
         }
         return false;
     }
@@ -67,56 +70,56 @@ class Moderator extends \litepubl\admin\Menu
             }
 
             switch ($action) {
-                case 'delete':
-                    if (!$this->can($id, 'delete')) {
-                        return $admin->geterr($lang->forbidden);
-                    }
+            case 'delete':
+                if (!$this->can($id, 'delete')) {
+                    return $admin->geterr($lang->forbidden);
+                }
 
-                    if (!$this->confirmed) {
-                        return $this->confirmDelete($id);
-                    }
+                if (!$this->confirmed) {
+                    return $this->confirmDelete($id);
+                }
 
-                    $comments->delete($id);
-                    $result.= $admin->success($lang->successmoderated);
-                    break;
-
-
-                case 'hold':
-                    if (!$this->moder) {
-                        return $admin->geterr($lang->forbidden);
-                    }
-
-                    $comments->setstatus($id, 'hold');
-                    $result.= $this->moderated($id);
-                    break;
+                $comments->delete($id);
+                $result.= $admin->success($lang->successmoderated);
+                break;
 
 
-                case 'approve':
-                    if (!$this->moder) {
-                        return $admin->geterr($lang->forbidden);
-                    }
+            case 'hold':
+                if (!$this->moder) {
+                    return $admin->geterr($lang->forbidden);
+                }
 
-                    $comments->setstatus($id, 'approved');
-                    $result.= $this->moderated($id);
-                    break;
-
-
-                case 'edit':
-                    if (!$this->can($id, 'edit')) {
-                        return $admin->geterr($lang->forbidden);
-                    }
-
-                    $result.= $this->editcomment($id);
-                    break;
+                $comments->setstatus($id, 'hold');
+                $result.= $this->moderated($id);
+                break;
 
 
-                case 'reply':
-                    if (!$this->can($id, 'edit')) {
-                        return $admin->geterr($lang->forbidden);
-                    }
+            case 'approve':
+                if (!$this->moder) {
+                    return $admin->geterr($lang->forbidden);
+                }
 
-                    $result.= $this->reply($id);
-                    break;
+                $comments->setstatus($id, 'approved');
+                $result.= $this->moderated($id);
+                break;
+
+
+            case 'edit':
+                if (!$this->can($id, 'edit')) {
+                    return $admin->geterr($lang->forbidden);
+                }
+
+                $result.= $this->editcomment($id);
+                break;
+
+
+            case 'reply':
+                if (!$this->can($id, 'edit')) {
+                    return $admin->geterr($lang->forbidden);
+                }
+
+                $result.= $this->reply($id);
+                break;
             }
         }
 
@@ -129,25 +132,29 @@ class Moderator extends \litepubl\admin\Menu
         $admin = $this->admintheme;
         $lang = Lang::admin();
         $tb = $this->newTable();
-        $result = $tb->props(array(
+        $result = $tb->props(
+            array(
             'commentonpost' => "<a href=\"$comment->url\">$comment->posttitle</a>",
             'author' => $comment->name,
             'E-Mail' => $comment->email,
             'IP' => $comment->ip,
             'website' => $comment->website ? "<a href=\"$comment->website\">$comment->website</a>" : '',
             'status' => $comment->localstatus,
-        ));
+            )
+        );
 
         $result.= $admin->help($lang->content);
         $result.= $admin->help($comment->content);
         $adminurl = $this->adminurl . "=$comment->id&action";
-        $result.= $admin->help("
+        $result.= $admin->help(
+            "
     $lang->cando:
     <a href='$adminurl=reply'>$lang->reply</a>,
     <a href='$adminurl=approve'>$lang->approve</a>,
     <a class'confirm-delete-link' href='$adminurl=delete'>$lang->delete</a>,
     <a href='$adminurl=hold'>$lang->hold</a>.
-");
+"
+        );
 
         return $result;
     }
@@ -171,10 +178,12 @@ class Moderator extends \litepubl\admin\Menu
         $args->formtitle = Lang::i()->replyform;
         $result = $this->getinfo($comment);
         $args->content = '';
-        $result.= $this->admintheme->form('
+        $result.= $this->admintheme->form(
+            '
     [editor=content]
     [hidden=pid]
-    ', $args);
+    ', $args
+        );
         return $result;
     }
 
@@ -214,13 +223,16 @@ class Moderator extends \litepubl\admin\Menu
         $vars->comment = $comment;
 
         $Table = $this->newTable();
-        $Table->addcallback('$excerpt', array(
+        $Table->addcallback(
+            '$excerpt', array(
             $this,
             'get_excerpt'
-        ), $comment);
+            ), $comment
+        );
         $Table->args->adminurl = $this->adminurl;
 
-        $Table->setStruct(array(
+        $Table->setStruct(
+            array(
             $Table->checkbox('id') ,
 
             array(
@@ -272,7 +284,8 @@ class Moderator extends \litepubl\admin\Menu
                 $lang->edit,
                 '<a href="$adminurl=$comment.id&action=edit">$lang.edit</a>',
             ) ,
-        ));
+            )
+        );
 
         $form->before = $this->admintheme->templates['tablecols'];
         $form->body = $Table->build($list);
@@ -305,25 +318,25 @@ class Moderator extends \litepubl\admin\Menu
         $comments = Comments::i();
         if (isset($_REQUEST['action'])) {
             switch ($_REQUEST['action']) {
-                case 'reply':
-                    if (!$this->moder) {
-                        return $this->admintheme->geterr($this->lang->forbidden);
-                    }
+            case 'reply':
+                if (!$this->moder) {
+                    return $this->admintheme->geterr($this->lang->forbidden);
+                }
 
-                    $item = $comments->getitem($this->idget());
-                    $post = Post::i((int)$item['post']);
-                    $this->manager->reply($this->idget(), $_POST['content']);
-                    return $this->getApp()->context->response->redir($post->lastcommenturl);
+                $item = $comments->getitem($this->idget());
+                $post = Post::i((int)$item['post']);
+                $this->manager->reply($this->idget(), $_POST['content']);
+                return $this->getApp()->context->response->redir($post->lastcommenturl);
                     break;
 
 
-                case 'edit':
-                    if (!$this->can($id, 'edit')) {
-                        return $this->admintheme->geterr($this->lang->forbidden);
-                    }
+            case 'edit':
+                if (!$this->can($id, 'edit')) {
+                    return $this->admintheme->geterr($this->lang->forbidden);
+                }
 
-                    $comments->edit($this->idget(), $_POST['content']);
-                    return $this->admintheme->success($this->lang->successmoderated);
+                $comments->edit($this->idget(), $_POST['content']);
+                return $this->admintheme->success($this->lang->successmoderated);
                     break;
             }
         }

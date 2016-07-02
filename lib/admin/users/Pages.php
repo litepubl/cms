@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\users;
 
@@ -71,10 +74,12 @@ class Pages extends \litepubl\admin\Menu
         $opt = UserOptions::i()->getitem($id);
         $args->subscribe = $opt['subscribe'] == 'enabled';
         $args->authorpost_subscribe = $opt['authorpost_subscribe'] == 'enabled';
-        $tabs->add($lang->options, '
+        $tabs->add(
+            $lang->options, '
     [checkbox=subscribe]
     [checkbox=authorpost_subscribe]
-    ');
+    '
+        );
 
         return $admin->form($tabs->get(), $args);
     }
@@ -102,10 +107,12 @@ class Pages extends \litepubl\admin\Menu
         $pages = UserPages::i();
         $pages->edit($id, $item);
 
-        UserItems::i()->edit($id, array(
+        UserItems::i()->edit(
+            $id, array(
             'name' => $name,
             'website' => Filter::clean_website($website) ,
-        ));
+            )
+        );
 
         $useroptions = UserOptions::i();
         $useroptions->setvalue($id, 'subscribe', isset($subscribe) ? 'enabled' : 'disabled');
@@ -121,11 +128,15 @@ class Pages extends \litepubl\admin\Menu
         $from = $this->getfrom($perpage, $count);
         $p = $pages->thistable;
         $u = $users->thistable;
-        $items = $users->res2items($users->db->query("
+        $items = $users->res2items(
+            $users->db->query(
+                "
     select $u.*  from $u
     left join $p on $u.id = $p.id
     where not $p.id is null
-    order by $u.id desc limit $from, $perpage"));
+    order by $u.id desc limit $from, $perpage"
+            )
+        );
 
         $admin = $this->admintheme;
         $lang = Lang::admin('users');
@@ -135,12 +146,14 @@ class Pages extends \litepubl\admin\Menu
 
         $tb = $this->newTable();
         $tb->setowner($users);
-        $tb->setStruct(array(
+        $tb->setStruct(
+            array(
             array(
                 $lang->edit,
                 sprintf('<a href="%s=$id">$name</a>', $this->adminurl)
             )
-        ));
+            )
+        );
 
         $result.= $tb->build($items);
 

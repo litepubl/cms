@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\options;
 
@@ -34,11 +37,13 @@ class Redir extends \litepubl\admin\Menu
         }
         $args->action = 'edit';
         $args->formtitle = $lang->edit;
-        $result = $this->admintheme->form('
+        $result = $this->admintheme->form(
+            '
 [text=from]
  [text=to]
  [hidden=action]
-', $args);
+', $args
+        );
 
         $id = 1;
         $items = array();
@@ -51,7 +56,8 @@ class Redir extends \litepubl\admin\Menu
         }
 
         $adminurl = Link::url($this->url, 'from');
-        $table = $this->tableItems($items, array(
+        $table = $this->tableItems(
+            $items, array(
             array(
                 'center',
                 '+',
@@ -70,7 +76,8 @@ class Redir extends \litepubl\admin\Menu
                 $lang->edit,
                 "<a href=\"$adminurl=\$from\">$lang->edit</a>"
             )
-        ));
+            )
+        );
 
         $form = $this->newForm($args);
         $result.= $form->getDelete($table);
@@ -81,20 +88,20 @@ class Redir extends \litepubl\admin\Menu
     {
         $redir = Redir::i();
         switch ($_POST['action']) {
-            case 'edit':
-                $redir->items[$_POST['from']] = $_POST['to'];
-                break;
+        case 'edit':
+            $redir->items[$_POST['from']] = $_POST['to'];
+            break;
 
 
-            case 'delete':
-                foreach ($_POST as $id => $value) {
-                    if (Str::begin($id, 'checkbox_')) {
-                        if (isset($redir->items[$value])) {
-                            unset($redir->items[$value]);
-                        }
+        case 'delete':
+            foreach ($_POST as $id => $value) {
+                if (Str::begin($id, 'checkbox_')) {
+                    if (isset($redir->items[$value])) {
+                        unset($redir->items[$value]);
                     }
                 }
-                break;
+            }
+            break;
         }
 
             $redir->save();

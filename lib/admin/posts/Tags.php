@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\posts;
 
@@ -73,11 +76,13 @@ class Tags extends \litepubl\admin\Menu
             $args->order = $this->theme->comboItems(array_combine(range(0, 9), range(1, 10)), $item['customorder']);
 
             $tabs = $this->newTabs();
-            $tabs->add($lang->title, '
+            $tabs->add(
+                $lang->title, '
       [text=title]
       [combo=parent]
       [combo=order]
-      [hidden=id]' . $admin->help($lang->ordernote));
+      [hidden=id]' . $admin->help($lang->ordernote)
+            );
 
             $tabs->ajax($lang->text, "$ajax=text");
             $tabs->ajax($lang->view, "$ajax=view");
@@ -104,7 +109,8 @@ class Tags extends \litepubl\admin\Menu
             $items[] = $item;
         }
 
-        $result.= Table::fromitems($items, array(
+        $result.= Table::fromitems(
+            $items, array(
             array(
                 'right',
                 $lang->count2,
@@ -130,7 +136,8 @@ class Tags extends \litepubl\admin\Menu
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
             )
-        ));
+            )
+        );
 
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));
         return $result;

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\sameposts;
 
@@ -16,9 +19,11 @@ use litepubl\post\Posts;
 function WidgetInstall($self)
 {
     $manager = DBManager::i();
-    $manager->createTable($self->table, 'id int UNSIGNED NOT NULL default 0,
+    $manager->createTable(
+        $self->table, 'id int UNSIGNED NOT NULL default 0,
     items text NOT NULL,
-    PRIMARY KEY(id) ');
+    PRIMARY KEY(id) '
+    );
 
     $widgets = $self->getWidgets();
     $widgets->addClass($self, $self::POSTCLASS);

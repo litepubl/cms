@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\photoswipeThumbnail;
 
@@ -70,11 +73,15 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
         $db = $files->db;
         $t = $files->thistable;
 
-        $items = $db->res2assoc($db->query("
+        $items = $db->res2assoc(
+            $db->query(
+                "
     select  files.id as id, files.filename as filename, thumbs.id as idthumb, thumbs.filename as filenamethumb
     from $t  files, $t thumbs
     where files.preview > 0 and thumbs.id = files.preview
-    "));
+    "
+            )
+        );
 
         foreach ($items as $i => $item) {
             $srcfilename = $this->getApp()->paths->files . $item['filename'];
@@ -83,11 +90,13 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
             if ($size = MediaParser::createthumb($image, $destfilename, $parser->previewwidth, $parser->previewheight, $parser->quality_snapshot, $parser->previewmode)) {
                 imagedestroy($image);
 
-                $db->updateassoc(array(
+                $db->updateassoc(
+                    array(
                     'id' => $item['idthumb'],
                     'width' => $size['width'],
                     'height' => $size['height']
-                ));
+                    )
+                );
             }
         }
 

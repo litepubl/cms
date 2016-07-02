@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
 
+
 namespace litepubl\plugins\extrasidebars;
 
-use litepubl\view\Base;
 use litepubl\admin\UList;
 use litepubl\utils\Filer;
+use litepubl\view\Base;
 
 class Admin extends \litepubl\admin\Panel
 {
@@ -30,12 +33,14 @@ class Admin extends \litepubl\admin\Panel
 
         $dirnames = Filer::getDir($this->getApp()->paths->themes);
         foreach ($dirnames as $name) {
-                $themes .= strtr($tml, array(
-                '$name' => 'theme',
-                '$id' => $name,
-                '$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
-                '$title' => $name,
-                ));
+                $themes .= strtr(
+                    $tml, array(
+                    '$name' => 'theme',
+                    '$id' => $name,
+                    '$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
+                    '$title' => $name,
+                    )
+                );
         }
 
         $args = $this->args;

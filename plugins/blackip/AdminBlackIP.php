@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\blackip;
 
@@ -40,16 +43,20 @@ class AdminBlackIP extends \litepubl\admin\Panel
         $plugin = BlackIP::i();
         $plugin->ipstatus = $_POST['ipstatus'];
         $plugin->wordstatus = $_POST['wordstatus'];
-        $ip = str_replace(array(
+        $ip = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", $_POST['ip']);
+            ), "\n", $_POST['ip']
+        );
         $ip = str_replace("\n\n", "\n", $ip);
         $plugin->ip = explode("\n", trim($ip));
-        $words = str_replace(array(
+        $words = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", $_POST['words']);
+            ), "\n", $_POST['words']
+        );
         $words = str_replace("\n\n", "\n", $words);
         $plugin->words = explode("\n", trim($words));
         $plugin->save();

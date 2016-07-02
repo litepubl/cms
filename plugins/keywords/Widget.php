@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\keywords;
 
@@ -50,10 +53,11 @@ class Widget extends \litepubl\widget\Widget
     {
         $app = $this->getApp();
         if (!isset($app->context)
-        || $app->context->request->isAdminPanel
-        || ($app->context->response->status != 200)
-        || Str::begin($app->context->request->url, '/croncron.php')
-        || ($app->context->response->headers['Content-type'] != 'text/html;charset=utf-8')) {
+            || $app->context->request->isAdminPanel
+            || ($app->context->response->status != 200)
+            || Str::begin($app->context->request->url, '/croncron.php')
+            || ($app->context->response->headers['Content-type'] != 'text/html;charset=utf-8')
+        ) {
             return '';
         }
 

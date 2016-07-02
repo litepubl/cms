@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -34,7 +37,7 @@ class Css extends Merger
             $url = substr($url, 0, $i);
         }
 
- // else must be absolute url
+        // else must be absolute url
         if ($realfile = realpath($url)) {
             $url = substr($realfile, strlen($this->getApp()->paths->home));
         }
@@ -51,7 +54,7 @@ class Css extends Merger
             chdir(dirname($filename));
             $result = preg_replace_callback('/\s*url\s*\(\s*[\'"]?(.*?)[\'"]?\s*\)/i', [$this, 'replaceurl'], $result);
             //delete comments
-return preg_replace('/\/\*.*?\*\//ims', '', $result);
+            return preg_replace('/\/\*.*?\*\//ims', '', $result);
         }
     }
 

@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\admin\widget;
 
@@ -79,13 +82,15 @@ class Custom extends Widget
     {
         $lang = $this->lang;
         $tb = $this->newTable();
-        $tb->setStruct(array(
+        $tb->setStruct(
+            array(
             $tb->checkbox('widgetcheck') ,
             array(
                 $lang->widgettitle,
                 "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"
             ) ,
-        ));
+            )
+        );
 
         $form = $this->newForm($this->args);
         $form->title = $lang->widgets;
@@ -98,18 +103,18 @@ class Custom extends Widget
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
             switch ($mode) {
-                case 'add':
-                    $_GET['idwidget'] = $widget->add($idschema, $title, $text, $template);
-                    break;
+            case 'add':
+                $_GET['idwidget'] = $widget->add($idschema, $title, $text, $template);
+                break;
 
 
-                case 'edit':
-                    $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
-                    if ($id == 0) {
-                        $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
-                    }
-                    $widget->edit($id, $title, $text, $template);
-                    break;
+            case 'edit':
+                $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
+                if ($id == 0) {
+                    $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                }
+                $widget->edit($id, $title, $text, $template);
+                break;
             }
         } elseif (isset($_POST['delete'])) {
             $this->deleteWidgets($widget);

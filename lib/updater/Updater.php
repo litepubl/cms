@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\updater;
 
@@ -78,15 +81,15 @@ class Updater extends \litepubl\core\Events
             $ver.= '.00';
         }
 
-$app = $this->getApp();
+        $app = $this->getApp();
         $filename = $app->paths->lib . "update/update.$ver.php";
 
         if (file_exists($filename)) {
-            require_once($filename);
+            include_once $filename;
             $this->log("$filename is required file", 'update');
             $func = 'update' . str_replace('.', '', $ver);
 
-if (function_exists('litepubl\update\\' . $func)) {
+            if (function_exists('litepubl\update\\' . $func)) {
                 call_user_func_array('litepubl\update\\' . $func, []);
                 $this->log("$func is called", 'update');
                 $app->poolStorage->commit();
@@ -203,9 +206,9 @@ if (function_exists('litepubl\update\\' . $func)) {
             return $this->releases;
         }
 
-        if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version)) ||
-
-        ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))) {
+        if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version)) 
+            || ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
+        ) {
             $this->releases = Str::toArray($s);
             return $this->releases;
         }

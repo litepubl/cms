@@ -1,19 +1,22 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\regservices;
 
 use litepubl\core\Context;
+use litepubl\core\Session;
 use litepubl\utils\Http;
 use litepubl\view\Lang;
-use litepubl\core\Session;
 
 class Twitter extends Service
 {
@@ -72,11 +75,13 @@ class Twitter extends Service
         if ($tokens = $oauth->getAccessToken($_REQUEST['oauth_verifier'])) {
             if ($r = $oauth->get_data('https://api.twitter.com/1/account/verify_credentials.json')) {
                 $info = json_decode($r);
-                return $this->addUser($context, array(
+                return $this->addUser(
+                    $context, array(
                     'uid' => $info->id,
                     'name' => $info->name,
                     'website' => 'http://twitter.com/account/redirect_by_id?id=' . $info->id_str
-                ), $info);
+                    ), $info
+                );
             }
         }
 

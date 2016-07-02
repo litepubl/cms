@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\widget;
 
@@ -39,7 +42,7 @@ class Ajax implements \litepubl\core\ResponsiveInterface
         }
 
         try {
-Theme::getTheme($themename);
+            Theme::getTheme($themename);
             $widgets->onFindContextCallback = function ($class) use ($idurl) {
                 if (($item = litepubl::$app->router->getItem($idurl)) && is_a($class, $item['class'], true)) {
                     if (is_a($item['class'], 'litepubl\core\Item', true)) {

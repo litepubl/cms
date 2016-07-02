@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\pages;
 
@@ -155,9 +158,13 @@ class Home extends SingleMenu
         $ci = $this->getApp()->db->prefix . 'categoriesitems';
 
         if ($where = $this->getwhere()) {
-            $result = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.item as item from $p, $ci
+            $result = $posts->db->res2id(
+                $posts->db->query(
+                    "select $p.id as id, $ci.item as item from $p, $ci
       where    $where and $p.id = $ci.post and $p.status = 'published'
-      order by  $p.posted $order limit $from, $perpage"));
+      order by  $p.posted $order limit $from, $perpage"
+                )
+            );
 
             $result = array_unique($result);
             $posts->loaditems($result);
@@ -166,8 +173,10 @@ class Home extends SingleMenu
             $result = $posts->getpage(0, $this->page, $perpage, $schema->invertorder);
         }
 
-        $this->callevent('ongetitems', array(&$result
-        ));
+        $this->callevent(
+            'ongetitems', array(&$result
+            )
+        );
         $this->cacheposts = $result;
         return $result;
     }
@@ -215,8 +224,10 @@ class Home extends SingleMenu
             $p = $this->getApp()->db->prefix . 'posts';
             $ci = $this->getApp()->db->prefix . 'categoriesitems';
 
-            $res = $db->query("select count(DISTINCT $p.id) as count from $p, $ci
-      where    $where and $p.id = $ci.post and $p.status = 'published'");
+            $res = $db->query(
+                "select count(DISTINCT $p.id) as count from $p, $ci
+      where    $where and $p.id = $ci.post and $p.status = 'published'"
+            );
 
             if ($r = $res->fetch_assoc()) {
                 $this->data['archcount'] = (int)$r['count'];
@@ -246,9 +257,13 @@ class Home extends SingleMenu
         $posts = Posts::i();
         $p = $posts->thistable;
         $ci = $this->getApp()->db->prefix . 'categoriesitems';
-        $this->midleposts = $posts->db->res2id($posts->db->query("select $p.id as id, $ci.post as post from $p, $ci
+        $this->midleposts = $posts->db->res2id(
+            $posts->db->query(
+                "select $p.id as id, $ci.post as post from $p, $ci
     where    $ci.item = $this->midlecat and $p.id = $ci.post and $p.status = 'published'
-    order by  $p.posted desc limit " . $this->getApp()->options->perpage));
+    order by  $p.posted desc limit " . $this->getApp()->options->perpage
+            )
+        );
 
         if (count($this->midleposts)) {
             $posts->loaditems($this->midleposts);

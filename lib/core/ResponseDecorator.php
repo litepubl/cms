@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -129,13 +132,15 @@ class ResponseDecorator implements \Psr\Http\Message\ResponseInterface
 
     protected function validateValue($value)
     {
-        if (!is_array($value) || !array_reduce($value, function ($result, $v) {
+        if (!is_array($value) || !array_reduce(
+            $value, function ($result, $v) {
         
-            if (!is_string($v)) {
-                return false;
-            }
-            return $result;
-        }, true)) {
+                if (!is_string($v)) {
+                    return false;
+                }
+                return $result;
+            }, true
+        )) {
             throw new \InvalidArgumentException('Invalid header value; must be a string or array of strings');
         }
 

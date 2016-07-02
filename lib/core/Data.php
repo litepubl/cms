@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\core;
 
@@ -110,18 +113,22 @@ class Data
     public function __call($name, $params)
     {
         if (method_exists($this, strtolower($name))) {
-            return call_user_func_array(array(
+            return call_user_func_array(
+                array(
                 $this,
                 strtolower($name)
-            ), $params);
+                ), $params
+            );
         }
 
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) {
-                return call_user_func_array(array(
+                return call_user_func_array(
+                    array(
                     $coinstance,
                     $name
-                ), $params);
+                    ), $params
+                );
             }
         }
 
@@ -206,7 +213,7 @@ class Data
             }
         }
 
-        include_once($file);
+        include_once $file;
 
         $fnc = (is_object($class) ? get_class($class) : (string) $class) . $func;
         if (function_exists($fnc)) {

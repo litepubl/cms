@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\regservices;
 
 use litepubl\comments\Form;
-use litepubl\view\Theme;
 use litepubl\core\Context;
+use litepubl\view\Theme;
 
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
@@ -57,20 +60,24 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         foreach ($this->items as $name => $classname) {
             $service = static ::iGet($classname);
             if ($service->valid()) {
-                $buttons .= strtr($tml, array(
-                '$url' => $url,
-                '$name' => $name,
-                '$icon' => $service->icon,
-                '$title' => $service->title,
-                '&' => '&amp;',
-                ));
+                $buttons .= strtr(
+                    $tml, array(
+                    '$url' => $url,
+                    '$name' => $name,
+                    '$icon' => $service->icon,
+                    '$title' => $service->title,
+                    '&' => '&amp;',
+                    )
+                );
             }
         }
 
-        return strtr($theme->templates['regservices'], [
-        '$title' => $this->title,
-        '$button' => $buttons
-        ]);
+        return strtr(
+            $theme->templates['regservices'], [
+            '$title' => $this->title,
+            '$button' => $buttons
+            ]
+        );
     }
 
     public function request(Context $context)
@@ -123,26 +130,26 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         $email = strtolower(trim($values['email']));
         $host = substr($email, strpos($email, '@') + 1);
         switch ($host) {
-            case 'gmail.com':
-                $name = 'google';
-                break;
+        case 'gmail.com':
+            $name = 'google';
+            break;
 
 
-            case 'yandex.ru':
-                $name = 'yandex';
-                break;
+        case 'yandex.ru':
+            $name = 'yandex';
+            break;
 
 
-            case 'mail.ru':
-            case 'inbox.ru':
-            case 'list.ru':
-            case 'bk.ru':
-                $name = 'mailru';
-                break;
+        case 'mail.ru':
+        case 'inbox.ru':
+        case 'list.ru':
+        case 'bk.ru':
+            $name = 'mailru';
+            break;
 
 
-            default:
-                return false;
+        default:
+            return false;
         }
 
         if (!isset($this->items[$name])) {
@@ -160,8 +167,10 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
             return false;
         }
 
-        return $form->sendResult($url, array(
+        return $form->sendResult(
+            $url, array(
             ini_get('session.name') => $service->session_id
-        ));
+            )
+        );
     }
 }

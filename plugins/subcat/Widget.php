@@ -1,18 +1,21 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\subcat;
 
 use litepubl\tag\Cats;
-use litepubl\widget\Widgets;
 use litepubl\widget\Sidebars;
+use litepubl\widget\Widgets;
 
 class Widget extends \litepubl\widget\Widget
 {
@@ -104,10 +107,12 @@ class Widget extends \litepubl\widget\Widget
 
         $item = $this->items[$id];
         $view = $this->getView();
-        return $this->tags->getView()->getSorted(array(
+        return $this->tags->getView()->getSorted(
+            array(
             'item' => $view->getItem($item['template'], $sidebar) ,
             'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
             'subitems' => $item['showsubitems'] ? $view->getTml($sidebar, $item['template'], 'subitems') : '',
-        ), $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']);
+            ), $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']
+        );
     }
 }

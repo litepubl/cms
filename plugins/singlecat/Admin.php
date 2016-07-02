@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\singlecat;
 
@@ -23,11 +26,13 @@ class Admin extends \litepubl\admin\Panel
         $args->tml = $plugin->tml;
         $args->tmlitems = $plugin->tmlitems;
         $args->formtitle = $lang->formtitle;
-        return $this->admin->form('
+        return $this->admin->form(
+            '
  [checkbox=invertorder]
     [text=maxcount]
     [editor=tml]
-    [editor=tmlitems]', $args);
+    [editor=tmlitems]', $args
+        );
     }
 
     public function processForm()

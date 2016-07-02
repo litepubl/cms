@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\view;
 
@@ -32,16 +35,22 @@ class Filter extends \litepubl\core\Events
     public function filtercomment($content)
     {
         $result = trim($content);
-        $result = str_replace(array(
+        $result = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", $result);
+            ), "\n", $result
+        );
         $result = static ::quote(htmlspecialchars($result));
 
-        if ($this->callevent('oncomment', array(&$result
-        ))) {
-            $this->callevent('onaftercomment', array(&$result
-            ));
+        if ($this->callevent(
+            'oncomment', array(&$result
+            )
+        )) {
+            $this->callevent(
+                'onaftercomment', array(&$result
+                )
+            );
             return $result;
         }
 
@@ -60,17 +69,21 @@ class Filter extends \litepubl\core\Events
             }
             $result = trim($result);
         }
-        $this->callevent('onaftercomment', array(&$result
-        ));
+        $this->callevent(
+            'onaftercomment', array(&$result
+            )
+        );
         return $result;
     }
 
     public function filterpost(Post $post, $s)
     {
         $cancel = false;
-        $this->callevent('beforecontent', array(
+        $this->callevent(
+            'beforecontent', array(
             $post, &$s, &$cancel
-        ));
+            )
+        );
         if ($cancel) {
             return $this->aftercontent($post);
         }
@@ -113,23 +126,25 @@ class Filter extends \litepubl\core\Events
             $description = $theme->parse($description);
         }
         $description = static ::gettitle($description);
-        $description = str_replace(array(
+        $description = str_replace(
+            array(
             "\r",
             "\n",
             '  ',
             '"',
             "'",
             '$'
-        ), array(
+            ), array(
             ' ',
             ' ',
             ' ',
             '&quot;',
             '&#39;',
             '&#36;'
-        ), $description);
+            ), $description
+        );
 
-return str_replace('  ', ' ', $description);
+        return str_replace('  ', ' ', $description);
     }
 
     public function extract_pages(Post $post, $s)
@@ -170,16 +185,22 @@ return str_replace('  ', ' ', $description);
 
     public function filter($content)
     {
-        if ($this->callevent('beforefilter', array(&$content
-        ))) {
-            $this->callevent('afterfilter', array(&$content
-            ));
+        if ($this->callevent(
+            'beforefilter', array(&$content
+            )
+        )) {
+            $this->callevent(
+                'afterfilter', array(&$content
+                )
+            );
             return $content;
         }
-        $result = str_replace(array(
+        $result = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", trim($content));
+            ), "\n", trim($content)
+        );
         if ($this->usefilter) {
             if (strpos($result, '[html]') !== false) {
                 $result = $this->splitfilter($result);
@@ -187,8 +208,10 @@ return str_replace('  ', ' ', $description);
                 $result = $this->simplefilter($result);
             }
         }
-        $this->callevent('afterfilter', array(&$result
-        ));
+        $this->callevent(
+            'afterfilter', array(&$result
+            )
+        );
         return $result;
     }
 
@@ -199,15 +222,19 @@ return str_replace('  ', ' ', $description);
             return '';
         }
 
-        $this->callevent('onsimplefilter', array(&$s
-        ));
+        $this->callevent(
+            'onsimplefilter', array(&$s
+            )
+        );
         if ($this->autolinks) {
             $s = static ::createlinks($s);
         }
         $s = $this->replacecode($s);
         $s = static ::auto_p($s);
-        $this->callevent('onaftersimple', array(&$s
-        ));
+        $this->callevent(
+            'onaftersimple', array(&$s
+            )
+        );
         return $s;
     }
 
@@ -236,30 +263,38 @@ return str_replace('  ', ' ', $description);
 
     public function replacecode($s)
     {
-        $s = preg_replace_callback('/<code>(.*?)<\/code>/ims', array(
+        $s = preg_replace_callback(
+            '/<code>(.*?)<\/code>/ims', array(
             $this,
             'callback_replace_code'
-        ), $s);
+            ), $s
+        );
         if ($this->phpcode) {
-            $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(&$this,
+            $s = preg_replace_callback(
+                '/\<\?(.*?)\?\>/ims', array(&$this,
                 'callback_replace_php'
-            ), $s);
+                ), $s
+            );
         } else {
-            $s = preg_replace_callback('/\<\?(.*?)\?\>/ims', array(&$this,
+            $s = preg_replace_callback(
+                '/\<\?(.*?)\?\>/ims', array(&$this,
                 'callback_fix_php'
-            ), $s);
+                ), $s
+            );
         }
         return $s;
     }
 
     public static function replace_code($s)
     {
-        $s = strtr(htmlspecialchars($s), array(
+        $s = strtr(
+            htmlspecialchars($s), array(
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;',
             '  ' => '&nbsp;&nbsp;'
-        ));
+            )
+        );
         //double space for prevent auto_p
         $s = str_replace("\n", '<br  />', $s);
         return sprintf('<code>%s</code>', $s);
@@ -304,19 +339,22 @@ return str_replace('  ', ' ', $description);
 
     public static function quote($s)
     {
-        return strtr($s, array(
+        return strtr(
+            $s, array(
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
             '$' => '&#36;',
             '%' => '&#37;',
             '_' => '&#95;'
-        ));
+            )
+        );
     }
 
     public static function escape($s)
     {
-        return strtr(trim(strip_tags($s)), array(
+        return strtr(
+            trim(strip_tags($s)), array(
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -325,12 +363,14 @@ return str_replace('  ', ' ', $description);
             '_' => '&#95;',
             '<' => '&lt;',
             '>' => '&gt;',
-        ));
+            )
+        );
     }
 
     public static function unescape($s)
     {
-        return strtr($s, array(
+        return strtr(
+            $s, array(
             '&quot;' => '"',
             '&#039;' => "'",
             '&#092;' => '\\',
@@ -339,7 +379,8 @@ return str_replace('  ', ' ', $description);
             '&#95;' => '_',
             '&lt;' => '<',
             '&gt;' => '>'
-        ));
+            )
+        );
     }
 
     public static function remove_scripts($s)
@@ -405,24 +446,30 @@ return str_replace('  ', ' ', $description);
         }
 
         // Standardize newlines
-        $str = str_replace(array(
+        $str = str_replace(
+            array(
             "\r\n",
             "\r"
-        ), "\n", $str);
+            ), "\n", $str
+        );
 
         //remove br
-        $str = str_replace(array(
+        $str = str_replace(
+            array(
             "</br>\n",
             "<br />\N",
             "<br>\n",
             "<br/>\n"
-        ), "\n", $str);
-        $str = str_replace(array(
+            ), "\n", $str
+        );
+        $str = str_replace(
+            array(
             '</br>',
             '<br />',
             '<br>',
             '<br/>'
-        ), "\n", $str);
+            ), "\n", $str
+        );
 
         // Trim whitespace on each line
         $str = preg_replace('~^[ \t]+~m', '', $str);
@@ -494,20 +541,26 @@ return str_replace('  ', ' ', $description);
     public static function createlinks($s)
     {
         $s = ' ' . $s;
-        $s = preg_replace_callback('#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is', array(
+        $s = preg_replace_callback(
+            '#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is', array(
             __class__,
             '_make_url_clickable_cb'
-        ), $s);
+            ), $s
+        );
 
-        $s = preg_replace_callback('#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', array(
+        $s = preg_replace_callback(
+            '#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', array(
             __class__,
             '_make_web_ftp_clickable_cb'
-        ), $s);
+            ), $s
+        );
 
-        $s = preg_replace_callback('#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', array(
+        $s = preg_replace_callback(
+            '#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', array(
             __class__,
             '_make_email_clickable_cb'
-        ), $s);
+            ), $s
+        );
 
         $s = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $s);
 
@@ -533,13 +586,15 @@ return str_replace('  ', ' ', $description);
             return $matches[0];
         }
 
-        if (in_array(substr($dest, -1), array(
+        if (in_array(
+            substr($dest, -1), array(
             '.',
             ',',
             ';',
             ':',
             ')'
-        )) === true) {
+            )
+        ) === true) {
             $ret = substr($dest, -1);
             $dest = substr($dest, 0, strlen($dest) - 1);
         }

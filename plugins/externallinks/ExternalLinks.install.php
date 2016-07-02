@@ -1,12 +1,15 @@
 <?php
 /**
+* 
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  *
  */
+
 
 namespace litepubl\plugins\externallinks;
 
@@ -19,12 +22,14 @@ use litepubl\view\Filter;
 function ExternalLinksInstall($self)
 {
     $manager = DBManager::i();
-    $manager->createtable($self->table, 'id int UNSIGNED NOT NULL auto_increment,
+    $manager->createtable(
+        $self->table, 'id int UNSIGNED NOT NULL auto_increment,
     clicked int UNSIGNED NOT NULL default 0,
     url varchar(255)not null,
     PRIMARY KEY(id),
     key url (url)
-    ');
+    '
+    );
 
     $filter = Filter::i();
     $filter->lock();
