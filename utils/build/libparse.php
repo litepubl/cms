@@ -21,13 +21,14 @@ $s = trim(file_get_contents( $filename));
 $s = str_replace("\r\n", "\n", $s);
 $s = str_replace("\r", "\n", $s);
 $s = str_replace('2014', '2016', $s);
-$s = replace_copyright($s);
 
     //$s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
 //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
 //}, $s);
 
 if (strend($filename, '.php')) {
+$s = replace_copyright($s, 'php');
+
 if (strend($s, '//class')) {
 $s = substr($s, 0, strlen($s) - strlen('//class'));
 }
@@ -41,7 +42,10 @@ $s = sortUse($s);
 if (strend($filename, '.install.php')) {
 $s = str_replace('$this', '$self', $s);
 }
+} else if (strend($filename, '.js')) {
+$s = replace_copyright($s, 'js');
 } else if (strend($filename, '.less')) {
+$s = replace_copyright($s, 'less');
 $Lines = explode("\n", $s);
 $s = '';
 $linescount += count($Lines);
@@ -62,6 +66,8 @@ $open = $open + substr_count($Line, "{") ;
 }
 
 $s = trim($s);
+} else {
+$s = replace_copyright($s, 'unknown');
 }
 
 $linescount += substr_count($s, "\n");
@@ -158,9 +164,9 @@ ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'sape.plugin.install.php');
 ParseFile($dir . 'sape' . DIRECTORY_SEPARATOR . 'admin.sape.plugin.php');
 }
 
-function replace_copyright($s) {
+function replace_copyright($s, $type) {
 global $copyright;
-if ($php = strbegin($s, '<?php')) {
+if ($type == 'php') {
 $s = ltrim(substr($s, 5));
 }
 
@@ -168,13 +174,14 @@ if (strbegin($s, '/*')) {
 $s = ltrim(substr($s, strpos($s, '*/') + 2));
 }
 
-
-if ($php) {
-//$s = libReplace($s);
+if ($type == 'php') {
+$s = "<?php\n" . $copyright . "\n\n" . $s;
+} elseif ($type == 'js') {
+$s = str_replace('@license  ', ' license  ', $copyright) . "\n\n" . $s;
+} else {
+$s = $copyright . "\n\n" . $s;
 }
 
-
-$s = ($php ? "<?php\n" : '') . $copyright . "\n\n" . $s;
 return $s;
 }
 
