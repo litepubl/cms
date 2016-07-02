@@ -15,6 +15,8 @@ if (in_array(basename($filename), array(
 'Markdown.php',
 'MarkdownInterface.php',
 'sape.php',
+'IXR.php',
+
 ))) {
 return;
 }

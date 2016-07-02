@@ -15,7 +15,6 @@ namespace litepubl\install;
 
 use litepubl\Config;
 use litepubl\core\Litepubl;
-use litepubl\core\Options;
 use litepubl\utils\Filer;
 
 //echo "<pre>\n";
