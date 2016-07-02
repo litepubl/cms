@@ -1,14 +1,4 @@
 <?php
-/**
- * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
- *
- */
-
-
 // @codingStandardsIgnoreFile
 namespace litepubl\xmlrpc;
 
@@ -18,38 +8,38 @@ namespace litepubl\xmlrpc;
  * Copyright (c) 2010, Incutio Ltd.
  * All rights reserved.
  *
- * Redistribution and  *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- *
- *
- *    documentation and/or other materials provided with the distribution.
- *    may be used to endorse or promote products derived from this software
- *    notice, this list of conditions and the following disclaimer in the
- *    this list of conditions and the following disclaimer.
- *    without specific prior written permission.
- *  - Neither the name of Incutio Ltd. nor the names of its contributors
- *  - Redistributions in binary form must reproduce the above copyright
  *  - Redistributions of source code must retain the above copyright notice,
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * @author     Simon Willison
- * @copyright  Incutio Ltd 2010 (http://www.incutio.com)
- * @link       http://scripts.incutio.com/xmlrpc/ Site/manual
- * @package IXR
- * @since 1.5
- * @version    1.7.4 7th September 2010
+ *    this list of conditions and the following disclaimer.
+ *  - Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *  - Neither the name of Incutio Ltd. nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
  * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * modification, are permitted provided that the following conditions are met:
+ *
+ * @package IXR
+ * @since 1.5
+ *
+ * @copyright  Incutio Ltd 2010 (http://www.incutio.com)
+ * @version    1.7.4 7th September 2010
+ * @author     Simon Willison
+ * @link       http://scripts.incutio.com/xmlrpc/ Site/manual
  */
-use in source and binary forms, with or without
 
 
 class IXR_Value
