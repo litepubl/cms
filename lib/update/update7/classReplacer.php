@@ -1,11 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 6.15
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   6.15
  */
 namespace litepubl\update;
 
@@ -16,7 +16,7 @@ class classReplacer
 
     public function __construct()
     {
-        $this->classmap = include (__DIR__ . '/classmap.php');
+        $this->classmap = include __DIR__ . '/classmap.php';
     }
 
     public function file($filename)
@@ -48,7 +48,8 @@ class classReplacer
         }
         
         $uns = "use $new;";
-if (strpos($s, $uns)) return $s;
+        if (strpos($s, $uns)) { return $s; 
+        }
         
         $i = strpos($s, "\n\n", strpos($s, 'namespace '));
         if (! $i) {

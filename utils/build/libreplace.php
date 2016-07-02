@@ -111,19 +111,18 @@ function sortUse($s) {
 $i = strpos($s, 'namespace ');
 if (!$i) return $s;
 
-$j = strpos($s, "\n", $i);
-if ($s[$j + 1] != "\n") {
-$s = substr($s, 0, $j) . "\n" . substr($s, $j);
+$i = strpos($s, ';', $i) + 1;
+$s2 = ltrim(substr($s, $i));
+if ('use ' != substr($s2, 0, 4)) {
+return $s;
 }
 
-$i = strpos($s, 'use ');
-if (!$i) return $s;
-$j = strpos($s, "\n\n", $i);
+$j = strpos($s2, "\n\n");
 if (!$j) return $s;
-
-$sort = explode("\n", substr($s, $i, $j - $i));
+$sort = explode("\n", trim(substr($s2, 0, $j)));
 sort($sort);
-return substr($s, 0, $i) . implode("\n", $sort) . substr($s, $j);
+
+return substr($s, 0, $i) . "\n\n" . implode("\n", $sort) . "\n\n" . ltrim(substr($s2, $j));
 }
 
 function replaceIfReturn($str) {
