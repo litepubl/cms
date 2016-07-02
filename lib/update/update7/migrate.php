@@ -285,6 +285,9 @@ require_once (dirname(dirname(__DIR__)) . '/debug/kernel.php');
 \litepubl\view\Js::i()->save();
 \litepubl\view\Css::i()->save();
 \litepubl\core\litepubl::$app->poolStorage->commit();
+$contact = \litepubl\pages\Contacts::i();
+$contact->externalFunc($contact, 'update', null);
+
 \litepubl\core\litepubl::$app->cache->clear();
 }
 

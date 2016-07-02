@@ -16,6 +16,6 @@ class Home extends Base
             codecept_debug(var_export($r, true));
         }
 
-        $this->tester->waitForJs($this->getFile(__DIR__ . '/js/home.wait.js'), 3);
+        $this->tester->waitForJs($this->getFile(__DIR__ . '/js/home.wait.js'), 7);
     }
 }

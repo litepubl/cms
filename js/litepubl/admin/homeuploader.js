@@ -40,7 +40,12 @@
     },
 
     setprogress: function(current, total) {
-      var value = Math.ceil((current / total) * 100);
+      if (current && total) {
+        var value = Math.ceil((current / total) * 100);
+      } else {
+        var value = 0;
+      }
+
       this.helpstatus.find("#img-percent").text(value + '%');
     },
 

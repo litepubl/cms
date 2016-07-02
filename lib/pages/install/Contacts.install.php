@@ -13,6 +13,7 @@ namespace litepubl\pages;
 use litepubl\view\Admin;
 use litepubl\view\Args;
 use litepubl\view\Lang;
+use litepubl\view\Theme;
 
 function ContactsInstall($self)
 {
@@ -37,6 +38,7 @@ function ContactsUpdate($self)
     Lang::usefile('install');
     $lang = Lang::i('contactform');
     $admin = Admin::admin();
+$theme = Theme::getTheme('default');
 
     $self->subject = $lang->subject;
     $self->success = $admin->success($lang->success);

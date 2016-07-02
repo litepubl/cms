@@ -208,7 +208,7 @@ class Data
 
         include_once($file);
 
-        $fnc = $class . $func;
+        $fnc = (is_object($class) ? get_class($class) : (string) $class) . $func;
         if (function_exists($fnc)) {
             return $fnc;
         }
