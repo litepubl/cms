@@ -1455,7 +1455,7 @@ class Cron extends Events implements ResponsiveInterface
     {
         if (($result = $this->path) && is_dir($result)) {
                 return $result;
-        }
+            }
 
         return $this->getApp()->paths->data;
     }
@@ -1588,15 +1588,13 @@ class Cron extends Events implements ResponsiveInterface
 
     protected function doAdd(string $type, string $class, string $func, $arg): int
     {
-        $id = $this->db->add(
-            array(
+        $id = $this->db->add(array(
             'date' => Str::sqlDate() ,
             'type' => $type,
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-            )
-        );
+        ));
 
         $this->added($id);
         return $id;
@@ -1604,30 +1602,26 @@ class Cron extends Events implements ResponsiveInterface
 
     public function addNightly(string $class, string $func, $arg): int
     {
-        $id = $this->db->add(
-            array(
+        $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'day',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-            )
-        );
+        ));
         $this->added($id);
         return $id;
     }
 
     public function addWeekly(string $class,string $func, $arg): int
     {
-        $id = $this->db->add(
-            array(
+        $id = $this->db->add(array(
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'week',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-            )
-        );
+        ));
 
         $this->added($id);
         return $id;
@@ -1653,12 +1647,10 @@ class Cron extends Events implements ResponsiveInterface
 
         static ::$pinged = true;
 
-        register_shutdown_function(
-            array(
-            static ::i() ,
+        register_shutdown_function(array(
+        static ::i() ,
             'ping'
-            )
-        );
+        ));
     }
 
     public function ping()
@@ -4966,6 +4958,10 @@ trait Singleton
 //Site.php
 namespace litepubl\core;
 
+use litepubl\Config;
+
+/**
+ * This is the class to storage base tags in templates
  *
  * @property string $files
  * @property string $language
@@ -4976,10 +4972,7 @@ namespace litepubl\core;
  * @property string $userlink
  * @property string $version
  * @property-read string $domain
- * This is the class to storage web site url and safe public properties
  */
-/**
-use litepubl\Config;
 
 class Site extends Events
 {
@@ -5140,8 +5133,7 @@ class Storage
 
     public function before(string $str): string
     {
-        return \sprintf('<?php /* %s 
-*/ ?>', \str_replace('*/', '**//*/', $str));
+        return \sprintf('<?php /* %s */ ?>', \str_replace('*/', '**//*/', $str));
     }
 
     public function after(string $str): string
@@ -5560,10 +5552,12 @@ class Users extends Items
         $db = $this->getdb($this->grouptable);
         $db->delete("iduser = $id");
         foreach ($idgroups as $idgroup) {
-            $db->add(array(
+            $db->add(
+                array(
                 'iduser' => $id,
                 'idgroup' => $idgroup
-            ));
+                )
+            );
         }
     }
 
@@ -5704,11 +5698,13 @@ class Users extends Items
             $this->items[$id]['expired'] = $expired;
         }
 
-        $this->db->updateassoc(array(
+        $this->db->updateassoc(
+            array(
             'id' => $id,
             'cookie' => $cookie,
             'expired' => $expired
-        ));
+            )
+        );
     }
 }
 
@@ -7819,346 +7815,346 @@ class HtmlFormatter extends NormalizerFormatter
         }
 
         return "<tr style=\"padding: 4px;spacing: 0;text-align: left;\">\n<th style=\"background: #cccccc\" width=\"100px\">$th:</th>\n<td style=\"padding: 4px;spacing: 0;text-align: left;background: #eeeeee\">".$td."</td>\n</tr>";
-        }
+    }
 
-        /**
+    /**
      * Create a HTML h1 tag
      *
      * @param  string $title Text to be in the h1
      * @param  int    $level Error level
      * @return string
      */
-        private function addTitle($title, $level)
-        {
-            $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
+    private function addTitle($title, $level)
+    {
+        $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 
-            return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
-        }
+        return '<h1 style="background: '.$this->logLevels[$level].';color: #ffffff;padding: 5px;" class="monolog-output">'.$title.'</h1>';
+    }
 
-        /**
+    /**
      * Formats a log record.
      *
      * @param  array $record A record to format
      * @return mixed The formatted record
      */
-        public function format(array $record)
-        {
-            $output = $this->addTitle($record['level_name'], $record['level']);
-            $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
+    public function format(array $record)
+    {
+        $output = $this->addTitle($record['level_name'], $record['level']);
+        $output .= '<table cellspacing="1" width="100%" class="monolog-output">';
 
-            $output .= $this->addRow('Message', (string) $record['message']);
-            $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
-            $output .= $this->addRow('Channel', $record['channel']);
-            if ($record['context']) {
-                $embeddedTable = '<table cellspacing="1" width="100%">';
-                foreach ($record['context'] as $key => $value) {
-                    $embeddedTable .= $this->addRow($key, $this->convertToString($value));
-                }
-                $embeddedTable .= '</table>';
-                $output .= $this->addRow('Context', $embeddedTable, false);
+        $output .= $this->addRow('Message', (string) $record['message']);
+        $output .= $this->addRow('Time', $record['datetime']->format($this->dateFormat));
+        $output .= $this->addRow('Channel', $record['channel']);
+        if ($record['context']) {
+            $embeddedTable = '<table cellspacing="1" width="100%">';
+            foreach ($record['context'] as $key => $value) {
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
             }
-            if ($record['extra']) {
-                $embeddedTable = '<table cellspacing="1" width="100%">';
-                foreach ($record['extra'] as $key => $value) {
-                    $embeddedTable .= $this->addRow($key, $this->convertToString($value));
-                }
-                $embeddedTable .= '</table>';
-                $output .= $this->addRow('Extra', $embeddedTable, false);
+            $embeddedTable .= '</table>';
+            $output .= $this->addRow('Context', $embeddedTable, false);
+        }
+        if ($record['extra']) {
+            $embeddedTable = '<table cellspacing="1" width="100%">';
+            foreach ($record['extra'] as $key => $value) {
+                $embeddedTable .= $this->addRow($key, $this->convertToString($value));
             }
-
-            return $output.'</table>';
+            $embeddedTable .= '</table>';
+            $output .= $this->addRow('Extra', $embeddedTable, false);
         }
 
-        /**
+        return $output.'</table>';
+    }
+
+    /**
      * Formats a set of log records.
      *
      * @param  array $records A set of records to format
      * @return mixed The formatted set of records
      */
-        public function formatBatch(array $records)
-        {
-            $message = '';
-            foreach ($records as $record) {
-                $message .= $this->format($record);
-            }
-
-            return $message;
+    public function formatBatch(array $records)
+    {
+        $message = '';
+        foreach ($records as $record) {
+            $message .= $this->format($record);
         }
 
-        protected function convertToString($data)
-        {
-            if (null === $data || is_scalar($data)) {
-                return (string) $data;
-            }
+        return $message;
+    }
 
-            $data = $this->normalize($data);
-            if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-                return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-            }
-
-            return str_replace('\\/', '/', json_encode($data));
-        }
+    protected function convertToString($data)
+    {
+        if (null === $data || is_scalar($data)) {
+            return (string) $data;
         }
 
-        //lib/debug/LogManager.php
-        namespace litepubl\debug;
+        $data = $this->normalize($data);
+        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
 
-        use Monolog\ErrorHandler;
-        use Monolog\Formatter\HtmlFormatter;
-        use Monolog\Formatter\LineFormatter;
-        use Monolog\Handler\NativeMailerHandler;
-        use Monolog\Handler\StreamHandler;
-        use Monolog\Logger;
-        use litepubl\Config;
-        use litepubl\utils\Filer;
+        return str_replace('\\/', '/', json_encode($data));
+    }
+}
 
-        class LogManager
+//lib/debug/LogManager.php
+namespace litepubl\debug;
+
+use Monolog\ErrorHandler;
+use Monolog\Formatter\HtmlFormatter;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\NativeMailerHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use litepubl\Config;
+use litepubl\utils\Filer;
+
+class LogManager
 {
-            use \litepubl\core\AppTrait;
-            const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
-            public $logger;
-            public $runtime;
+    use \litepubl\core\AppTrait;
+    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+    public $logger;
+    public $runtime;
 
-            public function __construct()
-            {
-                $logger = new logger('general');
-                $this->logger = $logger;
+    public function __construct()
+    {
+        $logger = new logger('general');
+        $this->logger = $logger;
 
-                $app = $this->getApp();
-                if (!Config::$debug) {
-                    $handler = new ErrorHandler($logger);
-                    $handler->registerErrorHandler([], false);
-                    //$handler->registerExceptionHandler();
-                    $handler->registerFatalHandler();
-                }
-
-                $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-                $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
-                $logger->pushHandler($handler);
-
-                $this->runtime = new RuntimeHandler(Logger::WARNING);
-                $this->runtime->setFormatter(new EmptyFormatter());
-                $logger->pushHandler($this->runtime);
-
-                if (!Config::$debug && $app->installed) {
-                    $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING);
-                    $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
-                    $logger->pushHandler($handler);
-                }
-            }
-
-            public function logException(\Throwable $e)
-            {
-                $log = "Caught exception:\n" . $e->getMessage() . "\n";
-                $log.= LogException::getLog($e);
-                $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-                $this->logger->alert($log);
-            }
-
-            public function getTrace()
-            {
-                $log = LogException::trace();
-                $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-                return "\n" . $log;
-            }
-
-            public function trace(string $mesg = '')
-            {
-                $this->logger->info($mesg . $this->getTrace());
-            }
-
-            public function getHtml()
-            {
-                if (count($this->runtime->log)) {
-                    $formatter = new HtmlFormatter();
-                    $result = $formatter->formatBatch($this->runtime->log);
-                    //clear current log
-                    $this->runtime->log = [];
-                    return $result;
-                }
-
-                return '';
-            }
-
-            public static function old($mesg)
-            {
-                $log = date('r') . "\n";
-                if (isset($_SERVER['REQUEST_URI'])) {
-                    $log.= $_SERVER['REQUEST_URI'] . "\n";
-                }
-
-                if (!is_string($s)) {
-                    $s = var_export($s, true);
-                }
-
-                $log.= $s;
-                $log.= "\n";
-                Filer::append(static ::getAppInstance()->paths->data . 'logs/filer.log', $log);
-            }
+        $app = $this->getApp();
+        if (!Config::$debug) {
+            $handler = new ErrorHandler($logger);
+            $handler->registerErrorHandler([], false);
+            //$handler->registerExceptionHandler();
+            $handler->registerFatalHandler();
         }
 
-        //lib/debug/RuntimeHandler.php
-        namespace litepubl\debug;
+        $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
+        $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+        $logger->pushHandler($handler);
 
-        use Monolog\Handler\AbstractProcessingHandler;
-        use Monolog\Logger;
+        $this->runtime = new RuntimeHandler(Logger::WARNING);
+        $this->runtime->setFormatter(new EmptyFormatter());
+        $logger->pushHandler($this->runtime);
 
-        /**
+        if (!Config::$debug && $app->installed) {
+            $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING);
+            $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+            $logger->pushHandler($handler);
+        }
+    }
+
+    public function logException(\Throwable $e)
+    {
+        $log = "Caught exception:\n" . $e->getMessage() . "\n";
+        $log.= LogException::getLog($e);
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
+        $this->logger->alert($log);
+    }
+
+    public function getTrace()
+    {
+        $log = LogException::trace();
+        $log = str_replace(dirname(dirname(__DIR__)), '', $log);
+        return "\n" . $log;
+    }
+
+    public function trace(string $mesg = '')
+    {
+        $this->logger->info($mesg . $this->getTrace());
+    }
+
+    public function getHtml()
+    {
+        if (count($this->runtime->log)) {
+            $formatter = new HtmlFormatter();
+            $result = $formatter->formatBatch($this->runtime->log);
+            //clear current log
+            $this->runtime->log = [];
+            return $result;
+        }
+
+        return '';
+    }
+
+    public static function old($mesg)
+    {
+        $log = date('r') . "\n";
+        if (isset($_SERVER['REQUEST_URI'])) {
+            $log.= $_SERVER['REQUEST_URI'] . "\n";
+        }
+
+        if (!is_string($s)) {
+            $s = var_export($s, true);
+        }
+
+        $log.= $s;
+        $log.= "\n";
+        Filer::append(static ::getAppInstance()->paths->data . 'logs/filer.log', $log);
+    }
+}
+
+//lib/debug/RuntimeHandler.php
+namespace litepubl\debug;
+
+use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Logger;
+
+/**
  * Description of runtimeHandler
  *
  * @author Sinisa Culic  <sinisaculic@gmail.com>
  */
 
-        class RuntimeHandler extends AbstractProcessingHandler
+class RuntimeHandler extends AbstractProcessingHandler
 {
-            public $log;
+    public $log;
 
-            /**
+    /**
      * @param integer $level  The minimum logging level at which this handler will be triggered
      * @param Boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
-            public function __construct($level = Logger::DEBUG, $bubble = true)
-            {
-                parent::__construct($level, $bubble);
-                $this->log = [];
-            }
+    public function __construct($level = Logger::DEBUG, $bubble = true)
+    {
+        parent::__construct($level, $bubble);
+        $this->log = [];
+    }
 
-            /**
+    /**
      * {@inheritdoc}
      */
-            protected function write(array $record)
-            {
-                $this->log[] = $record;
-            }
-        }
+    protected function write(array $record)
+    {
+        $this->log[] = $record;
+    }
+}
 
-        //lib/debug/EmptyFormatter.php
-        namespace litepubl\debug;
+//lib/debug/EmptyFormatter.php
+namespace litepubl\debug;
 
-        class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
+class EmptyFormatter implements \Monolog\Formatter\FormatterInterface
 {
 
-            public function format(array $record)
-            {
-                return '';
-            }
+    public function format(array $record)
+    {
+        return '';
+    }
 
-            public function formatBatch(array $records)
-            {
-                return '';
-            }
-        }
+    public function formatBatch(array $records)
+    {
+        return '';
+    }
+}
 
-        //lib/debug/LogException.php
-        namespace litepubl\debug;
+//lib/debug/LogException.php
+namespace litepubl\debug;
 
-        class LogException
+class LogException
 {
 
-            public static function getLog(\Throwable $e): string
-            {
+    public static function getLog(\Throwable $e): string
+    {
                 $result= sprintf('#0 %d %s ', $e->getLine(), $e->getFile());
-                $result .= "\n";
-                $result .= static ::getTraceLog($e->getTrace());
-                return $result;
+        $result .= "\n";
+        $result .= static ::getTraceLog($e->getTrace());
+        return $result;
+    }
+
+    public static function trace(): string
+    {
+        return static ::getTraceLog(debug_backtrace());
+    }
+
+    public static function getTraceLog(array $trace): string
+    {
+        $result = '';
+        foreach ($trace as $i => $item) {
+            if (isset($item['line'])) {
+                $result.= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
             }
 
-            public static function trace(): string
-            {
-                return static ::getTraceLog(debug_backtrace());
+            if (isset($item['class'])) {
+                $result.= $item['class'] . $item['type'] . $item['function'];
+            } else {
+                $result.= $item['function'] . '()';
             }
 
-            public static function getTraceLog(array $trace): string
-            {
-                $result = '';
-                foreach ($trace as $i => $item) {
-                    if (isset($item['line'])) {
-                        $result.= sprintf('#%d %d %s ', $i, $item['line'], $item['file']);
-                    }
-
-                    if (isset($item['class'])) {
-                        $result.= $item['class'] . $item['type'] . $item['function'];
-                    } else {
-                        $result.= $item['function'] . '()';
-                    }
-
-                    if (isset($item['args']) && count($item['args'])) {
-                        $result.= "\n";
-                        $args = array();
-                        foreach ($item['args'] as $arg) {
-                            $args[] = static ::dump($arg);
-                        }
-
-                        $result.= implode(', ', $args);
-                    }
-
-                    $result.= "\n";
+            if (isset($item['args']) && count($item['args'])) {
+                $result.= "\n";
+                $args = array();
+                foreach ($item['args'] as $arg) {
+                    $args[] = static ::dump($arg);
                 }
 
-                return $result;
+                $result.= implode(', ', $args);
             }
 
-            public static function dump(&$v)
-            {
-                switch (gettype($v)) {
-                case 'string':
-                    if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-                        $v = substr($v, 0, $i);
-                    }
-
-                    return sprintf('\'%s\'', $v);
-
-                case 'object':
-                    return get_class($v);
-
-                case 'boolean':
-                    return $v ? 'true' : 'false';
-
-                case 'integer':
-                case 'double':
-                case 'float':
-                    return $v;
-
-                case 'array':
-                    $result = '';
-                    foreach ($v as $k => $item) {
-                        $s = static ::dump($item);
-                        $result.= "$k = $s;\n";
-                    }
-
-                    return "[\n$result]\n";
-
-                default:
-                    return gettype($v);
-                }
-            }
+            $result.= "\n";
         }
 
-        //litepubl.php
-        namespace litepubl\core;
+        return $result;
+    }
 
-        use litepubl\config;
+    public static function dump(&$v)
+    {
+        switch (gettype($v)) {
+        case 'string':
+            if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+                $v = substr($v, 0, $i);
+            }
 
-        class litepubl
+            return sprintf('\'%s\'', $v);
+
+        case 'object':
+            return get_class($v);
+
+        case 'boolean':
+            return $v ? 'true' : 'false';
+
+        case 'integer':
+        case 'double':
+        case 'float':
+            return $v;
+
+        case 'array':
+            $result = '';
+            foreach ($v as $k => $item) {
+                $s = static ::dump($item);
+                $result.= "$k = $s;\n";
+            }
+
+            return "[\n$result]\n";
+
+        default:
+            return gettype($v);
+        }
+    }
+}
+
+//litepubl.php
+namespace litepubl\core;
+
+use litepubl\config;
+
+class litepubl
 {
-            public static $app;
+    public static $app;
 
-            public static function init()
-            {
-                if (\version_compare(\PHP_VERSION, '7.0', '<')) {
-                    die('Lite Publisher requires PHP 7.0 or later. You are using PHP ' . \PHP_VERSION);
-                }
-
-                if (isset(config::$classes['app']) && class_exists(config::$classes['app'])) {
-                    $className = config::$classes['app'];
-                    static ::$app = new $className();
-                } else {
-                    static ::$app = new App();
-                }
-
-                static ::$app->run();
-            }
+    public static function init()
+    {
+        if (\version_compare(\PHP_VERSION, '7.0', '<')) {
+            die('Lite Publisher requires PHP 7.0 or later. You are using PHP ' . \PHP_VERSION);
         }
 
-        litepubl::init();
+        if (isset(config::$classes['app']) && class_exists(config::$classes['app'])) {
+            $className = config::$classes['app'];
+            static ::$app = new $className();
+        } else {
+            static ::$app = new App();
+        }
+
+        static ::$app->run();
+    }
+}
+
+litepubl::init();
 

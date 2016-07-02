@@ -42,11 +42,13 @@ $s = substr($s, 0, strlen($s) - strlen('//class'));
 //$s = afterFix($s);
 //$s = afterFix2($s);
 
-$s = sortUse($s);
+//$s = sortUse($s);
 
 if (strend($filename, '.install.php')) {
 $s = str_replace('$this', '$self', $s);
 }
+
+$s .= "\n";
 } else if (strend($filename, '.js')) {
 $s = replace_copyright($s, 'js');
 } else if (strend($filename, '.less')) {
