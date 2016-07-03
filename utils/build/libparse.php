@@ -220,6 +220,7 @@ function parseLibDirs($dir)
 $linescount = 0;
 $filecount = 0;
 $copyright = file_get_contents(dirname(__file__) . '/copyright.txt');
+$copyright = str_replace("\r\n", "\n", $copyright);
 $rootdir = dirname(dirname(dirname(__file__))) . DIRECTORY_SEPARATOR ;
 $dir = $rootdir . 'lib' . DIRECTORY_SEPARATOR;
 require $rootdir . 'lib/utils/Filer.php';
