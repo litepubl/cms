@@ -11,7 +11,7 @@
 
 namespace litepubl\tag;
 
-use litepubl\widget\Cache as CacheWidgets;
+use litepubl\widget\Cache;
 use litepubl\widget\Cats as CatsWidget;
 
 /**
@@ -44,7 +44,7 @@ class Cats extends Common
     {
         parent::save();
         if (!$this->locked) {
-            CacheWidgets::i()->removeWidget(CatsWidget::i());
+            Cache::i()->removeWidget(CatsWidget::i());
         }
     }
 }
