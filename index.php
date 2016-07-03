@@ -73,8 +73,8 @@ class Config
     public static $extra = [];
 }
 
-if (!defined('litepubl_mode') || (litepubl_mode != 'config')) {
-    if (defined('litepubl_mode') && (litepubl_mode == 'ignoreReqest')) {
+if (!defined('litepubl\mode') || (\litepubl\mode != 'config')) {
+    if (defined('litepubl\mode') && (\litepubl\mode == 'ignoreReqest')) {
         Config::$ignoreRequest = true;
     }
 

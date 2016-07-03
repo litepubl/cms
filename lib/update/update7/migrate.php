@@ -286,7 +286,7 @@ class migrate
 
     public static function saveJs()
     {
-        define('litepubl_mode', 'config');
+        define('litepubl\mode', 'config');
         include_once dirname(dirname(dirname(__DIR__))) . '/index.php';
         Config::$debug = true;
         Config::$useKernel = false;

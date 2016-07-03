@@ -16,9 +16,10 @@ use litepubl\core\Litepubl;
 use litepubl\utils\Filer;
 
 //echo "<pre>\n";
-if (!defined('litepublisher_mode')) {
-    define('litepublisher_mode', 'install');
+if (!defined('litepubl\mode')) {
+    define('litepubl\mode', 'install');
 }
+
 /*
 if (false && Config::$debug) {
   require_once(dirname(__DIR__) . '/utils/Filer.php');
