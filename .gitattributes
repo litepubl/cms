@@ -107,6 +107,7 @@ lib/ztoto.txt export-ignore
 lib/ztodo.txt export-ignore
 vendor/composer.bat export-ignore
 vendor/composer.json export-ignore
+vendor/composer.lock export-ignore
 
 #ignore not updated plugins
 plugins/imgresize* export-ignore
