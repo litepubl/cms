@@ -109,7 +109,13 @@ class Base
     public function getFile(string $filename)
     {
         if (!isset($this->cacheFiles[$filename])) {
-            $this->cacheFiles[$filename] = file_get_contents($filename);
+//remove copright
+$s = file_get_contents($filename);
+if ((substr($s, 0, 2) == '/*') && ($i = strpos($s, '*/'))) {
+$s = trim(substr($s, $i + 2));
+}
+
+            $this->cacheFiles[$filename] = $s;
         }
 
         return $this->cacheFiles[$filename];
