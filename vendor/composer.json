@@ -1,6 +1,6 @@
 {
     "config": {
-        "vendor-dir": "~"
+        "vendor-dir": "."
     },
 
     "require": {

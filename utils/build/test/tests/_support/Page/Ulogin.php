@@ -40,7 +40,6 @@ class Ulogin extends Base
     {
         $this->tester->executeInSelenium(
             function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($index) {
-
                 $webdriver->switchTo()->window($this->winhandles[$index]);
             }
         );
@@ -51,11 +50,12 @@ class Ulogin extends Base
         $i = $this->tester;
         $i->wantTo("click $name button");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-        //$i->waitForJS('return litepubl.authdialog.ulogin.status == \'ready\';', 8);
         $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 8);
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
+$i->wantTo('Click social network button');
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
+$i->wantTo('Wait to open window');
         $i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 5);
     }
 
@@ -101,8 +101,7 @@ class Ulogin extends Base
         $i->fillField($this->mailruPassword, $data->password);
         //$i->savehtml('form');
         $i->wantTo('Auth app');
-        //$i->click($this->mailruSubmit);
-        $i->executeJS(file_get_contents(__DIR__ . '/js/mailruSubmit.js'));
+        $i->executeJS($this->getFile(__DIR__ . '/js/mailruSubmit.js'));
     }
 
     public function yandexAuth()
