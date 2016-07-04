@@ -1,11 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  */
 
 
@@ -109,11 +109,11 @@ class Base
     public function getFile(string $filename)
     {
         if (!isset($this->cacheFiles[$filename])) {
-//remove copright
-$s = file_get_contents($filename);
-if ((substr($s, 0, 2) == '/*') && ($i = strpos($s, '*/'))) {
-$s = trim(substr($s, $i + 2));
-}
+            //remove copright
+            $s = file_get_contents($filename);
+            if ((substr($s, 0, 2) == '/*') && ($i = strpos($s, '*/'))) {
+                        $s = trim(substr($s, $i + 2));
+            }
 
             $this->cacheFiles[$filename] = $s;
         }

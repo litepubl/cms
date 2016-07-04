@@ -1,11 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  */
 
 
@@ -52,10 +52,10 @@ class Ulogin extends Base
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 8);
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-$i->wantTo('Click social network button');
+        $i->wantTo('Click social network button');
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-$i->wantTo('Wait to open window');
+        $i->wantTo('Wait to open window');
         $i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 5);
     }
 
