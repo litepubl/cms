@@ -64,6 +64,8 @@ $i->wantTo('Wait to open window');
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
         $i->waitForJS('return !litepubl.authdialog.dialog;', 5);
+        $i->wantTo('Check user logged');
+        $i->waitForJS('return litepubl.getuser().id;', 5);
     }
 
     public function auth(string $name = 'mailru')

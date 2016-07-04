@@ -59,7 +59,7 @@ class Templates extends \litepubl\core\Events
         $cm = Manager::i();
 
         // if user can see hold comments
-        $result.= sprintf('<?php if (litepubl::$app->options->ingroups([%s])) { ?>', implode(',', $cm->idgroups));
+        $result.= sprintf('<?php if (litepubl::$app->options->user && litepubl::$app->options->inGroups([%s])) { ?>', implode(',', $cm->idgroups));
 
         $holdmesg = '<?php if ($ismoder = litepubl::$app->options->ingroup(\'moderator\')) { ?>' . $theme->templates['content.post.templatecomments.form.mesg.loadhold'] .
         //hide template hold comments in html comment

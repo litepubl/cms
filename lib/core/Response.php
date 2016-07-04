@@ -131,13 +131,14 @@ class Response
 
     public function __tostring()
     {
-        $headers = sprintf('header(\'HTTP/%s %d %s\', true, %d);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status);
+$phrase =  $this->phrases[$this->status];
+        $result = "<?php\nheader('HTTP/$this->protocol $this->status $phrase', true, $this->status);\n";
 
         foreach ($this->headers as $k => $v) {
-            $headers.= sprintf('header(\'%s: %s\');', $k, $v);
+            $result .= "header('$k: $v');\n";
         }
 
-        $result = sprintf('<?php %s ?>', $headers);
+        $result .= '?>';
         if ($this->body) {
             $result.= $this->body;
         }

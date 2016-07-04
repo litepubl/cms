@@ -154,6 +154,7 @@ class Options extends Events
 
     public function getUser(): int
     {
+var_dump($this->idUser );
         if (is_null($this->idUser)) {
             $this->idUser = $this->authenabled ? $this->authCookie() : 0;
         }
@@ -387,7 +388,7 @@ class Options extends Events
         return in_array($idgroup, $this->idgroups);
     }
 
-    public function inGroups(array $idgroups)
+    public function inGroups(array $idgroups): bool
     {
         if ($this->ingroup('admin')) {
             return true;
@@ -395,7 +396,7 @@ class Options extends Events
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
-    public function hasGroup($groupname)
+    public function hasGroup(string $groupname): bool
     {
         if ($this->inGroup($groupname)) {
             return true;

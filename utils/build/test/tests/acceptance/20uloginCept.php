@@ -34,6 +34,7 @@ $ulogin->click();
 $ulogin->screenshot('dialog');
 $ulogin->auth();
 $ulogin->waitForcloseDialog();
+$i->reloadPage();
 $text = $data->comment . time();
 $i->fillField($comment->comment, $text);
 $ulogin->screenshot('comment');

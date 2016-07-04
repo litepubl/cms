@@ -41,3 +41,5 @@
 'uid',
 'instagram',
 'wargaming',
+
+из optionsудалить crontime
