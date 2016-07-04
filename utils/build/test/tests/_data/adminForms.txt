@@ -6,6 +6,6 @@ views/?idschema=1
 views/?idschema=2
 comments/?id=1
 comments/?id=1&action=reply
-widgets/?idwidget=1
-widgets/?idschema=3
+views/widgets/?idwidget=1
+views/widgets/?idschema=3
 plugins/?plugin=bootstrap

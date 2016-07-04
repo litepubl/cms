@@ -64,6 +64,7 @@ class Simple extends \litepubl\core\Events implements \litepubl\view\ViewInterfa
         $context = new Context(new Request('', ''), new Response());
 
         $context->model = $this;
+        $context->view = $this;
         MainView::i()->render($context);
         return $context->response->body;
     }
