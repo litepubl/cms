@@ -52,21 +52,16 @@ class GetPerm
 
     public static function groups(array $idgroups)
     {
+$result = '';
         $groups = UserGroups::i();
-        $admin = Admin::admin();
-        $tml = $admin->templates['checkbox.label'];
-        $ulist = new UList($admin);
-        $ulist->value = $ulist->link;
+$theme = Theme::context();
 
-        $args = new Args();
         foreach ($groups->items as $id => $item) {
-            $args->add($item);
-            $args->id = $id;
-            $args->name = 'idgroup';
-            $args->checked = in_array($id, $idgroups);
-            $ulist->add(0, strtr($tml, $args->data));
+$checked = in_array($id, $idgroups) ? 'checked="checked"' : '';
+$result .= $theme->getInput('checkbox', "idgroup-$id", "value=\"$id\" $checked", $item['title']);
+
         }
 
-        return $ulist->getresult();
+        return $result;
     }
 }

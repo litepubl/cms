@@ -15,7 +15,7 @@ use Page\Login;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
-$reguser = new RegUser($i);
+$reguser = new RegUser($i, '04reguser');
 //to grab confirm link and test restore password of new user
 $password = new Password($i);
 
@@ -23,7 +23,14 @@ $i->wantTo('Enable user registration');
 $reguser->open($reguser->optionsUrl);
 $i->checkOption($reguser->enabled);
 $i->checkOption($reguser->reguser);
-$i->screenshot('04.01options');
+$reguser->screenshot('options');
+$i->click($reguser->updateButton);
+$i->checkError();
+
+$i->wantTo('Add commentator to default group');
+$i->openPage($reguser->groupsUrl);
+$i->checkOption($reguser->cmtCheckbox);
+$reguser->screenshot('groups');
 $i->click($reguser->updateButton);
 $i->checkError();
 

@@ -11,7 +11,7 @@ $js = json_decode(file_get_contents(__DIR__ . '/tests/_data/admin.json'));
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$template.title</title>
+    <title>Login</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">

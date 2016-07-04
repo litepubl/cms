@@ -15,8 +15,10 @@ class RegUser extends Base
 {
     public $url = '/admin/reguser/';
     public $optionsUrl = '/admin/options/secure/';
+    public $groupsUrl= '/admin/users/options/';
     public $enabled = 'input[name=usersenabled]';
     public $reguser = 'input[name=reguser]';
+    public $cmtCheckbox= 'input[name=idgroup-5]';
 
     public $email = '[name=email]';
     public $name = '[name=name]';
