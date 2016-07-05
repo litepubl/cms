@@ -42,4 +42,3 @@
 'wargaming',
 
 èç optionsóäàëèòü crontime
-Warning: The file js/litepublisher/css/form.inline.min.css not exists 
