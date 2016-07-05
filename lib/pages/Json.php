@@ -142,12 +142,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $resp['id'] = $id;
         }
 
-        return $this->json($response, $resp);
-    }
-
-    public function json(Response $response, $result)
-    {
-        $response->setJson(Str::toJson($result));
+        return $response->setJson(Str::toJson($resp));
     }
 
     public function jsonError(Response $response, $id, $code, $message)
@@ -163,7 +158,8 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         if ($id) {
             $result['id'] = $id;
         }
-        return $this->json($response, $result);
+
+        $response->setJson(Str::toJson($result));
     }
 
     public function addevent($name, $class, $func, $once = false)

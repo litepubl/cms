@@ -55,6 +55,7 @@ function UloginInstall($self)
     Users::i()->deleted = $self->userDeleted;
     $self->getApp()->router->unbind($self);
     $self->getApp()->router->addGet($self->url, get_class($self));
+$self->getapp()->options->reguser = true;
     Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();

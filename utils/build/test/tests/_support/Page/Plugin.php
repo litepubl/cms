@@ -21,9 +21,11 @@ class Plugin extends Base
         $this->open();
         $i = $this->tester;
         $i->wantTo("Install plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
         $i->checkOption("input[name=$name]");
         $i->click($this->updateButton);
         $i->checkError();
+        $i->waitForElement("input[name=$name]", 10);
         $i->seeCheckboxIsChecked("input[name=$name]");
     }
 
@@ -32,9 +34,11 @@ class Plugin extends Base
         $this->open();
         $i = $this->tester;
         $i->wantTo("Uninstall plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
         $i->UncheckOption("input[name=$name]");
         $i->click($this->updateButton);
         $i->checkError();
+        $i->waitForElement("input[name=$name]", 10);
         $i->dontSeeCheckboxIsChecked("input[name=$name]");
     }
 }
