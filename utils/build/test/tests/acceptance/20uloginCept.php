@@ -19,19 +19,15 @@ $ulogin = new Ulogin($i, '20ulogin');
 $comment = new Comment($i);
 $data = $comment->load('comment');
 $plugin = new Plugin($i);
-//$plugin->install('ulogin');
+$plugin->install('ulogin');
 $ulogin->screenshot('install');
-//$plugin->logout();
+$plugin->logout();
 
 $i->wantTo('Send comment as authorized user');
 $i->openPage('/');
 $i->wantTo('Open first post');
 $i->click($comment->postlink);
-//sleep(20);
-//codecept_debug(var_export($i->executeJs('return litepubl.authdialog;'), true));
-codecept_debug(date('i:s'));
 $i->waitForJs('return (\'litepubl\' in window) && (\'authdialog\' in window.litepubl);', 7);
-codecept_debug(date('i:s'));
 $i->wantTo('Open auth dialog');
 $ulogin->screenshot('post');
 $i->click($data->login);
@@ -55,7 +51,6 @@ $ulogin->screenshot('login');
 $ulogin->click();
 //dont need to wait auth because mailru remember prev auth
 //$ulogin->auth();
-//$i->savehtml('logged');
 $i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
 $ulogin->logout();
 
