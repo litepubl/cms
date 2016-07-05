@@ -122,7 +122,11 @@ class DB
             $this->logError($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
-            if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
+            if (
+$this->mysqli->warning_count
+ && ($r = $this->mysqli->query('SHOW WARNINGS'))
+&& $r->num_rows
+) {
                 $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
         }

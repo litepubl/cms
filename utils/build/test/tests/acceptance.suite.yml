@@ -12,6 +12,7 @@ modules:
         - WebDriver :
             url: 'http://cms.cms'
             browser: phantomjs 
+            wait: 4
             debug: true
             capabilities:
                         webStorageEnabled: true

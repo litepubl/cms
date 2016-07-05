@@ -50,7 +50,7 @@ class Ulogin extends Base
         $i = $this->tester;
         $i->wantTo("click $name button");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-        $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 8);
+        $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 7);
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->wantTo('Click social network button');
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
@@ -63,9 +63,12 @@ class Ulogin extends Base
     {
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
+codecept_debug(date('i:s'));
         $i->waitForJS('return !litepubl.authdialog.dialog;', 5);
+codecept_debug(date('i:s'));
         $i->wantTo('Check user logged');
-        $i->waitForJS('return litepubl.getuser().id;', 5);
+        $i->waitForJS('return litepubl.getuser().id;', 15);
+codecept_debug(date('i:s'));
     }
 
     public function auth(string $name = 'mailru')

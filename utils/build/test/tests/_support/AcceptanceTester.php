@@ -28,11 +28,12 @@ class AcceptanceTester extends \Codeception\Actor
 public function checkError()
 {
 $this->wantTo('Check errors');
-$this->dontSee('exception');
-$this->dontSee('warning');
-$this->dontSee('Parse error');
-$this->dontSee('Fatal error');
-$this->dontSee('Notice: Undefined');
+$text = htmlspecialchars_decode($this->getVisibleText());
+foreach (['exception', 'warning', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
+if (strpos($text, $err) !== false) {
+return $this->assertTrue(false, $err);
+}
+}
 }
 
 public function openPage(string $url)

@@ -65,7 +65,7 @@ SWFUpload is (c) 2006-2007 Lars Huring, Olov Nilzйn and Mammon Media and is rel
 
 PhotoSwipe Copyright (c) 2015 Dmitry Semenov (http://photoswipe.com) licensed under MIT license
 
-prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) http://creativecommons.org/licenses/by/2.5/
+prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) released the GPLv2 (http://www.gnu.org/licenses/gpl-2.0.html) or Creative Commons 2.5 license (http://creativecommons.org/licenses/by/2.5/).
 
 FileReader.js Copyright 2012 Brian Grinstead - MIT License.
 

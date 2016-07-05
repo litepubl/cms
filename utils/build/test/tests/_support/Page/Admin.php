@@ -36,10 +36,9 @@ class Admin extends Base
     public function submit()
     {
         $i = $this->tester;
-$i->executeJs('litepubl.testready = true;');
 $i->executeJs('$(function(){$("form:last").submit();});');
-$i->waitForJs('return litepubl && !litepubl.testready;', 10);
-//usleep(200000);
+//sleep(2);
+//codecept_debug(date('i:s'));
     }
 
     public function getLinks($name)

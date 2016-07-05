@@ -50,7 +50,6 @@ http://example.com/admin/passwordrecover/
 
 Included products and licenses
 
-
 Bootstrap. Code copyright 2011-2015 Twitter, Inc. Code released under the MIT license (https://github.com/twbs/bootstrap/blob/master/LICENSE).
 
 Bootswatch. Copyright 2014 Thomas Park. Code released under the MIT License.
@@ -71,7 +70,7 @@ SWFUpload is (c) 2006-2007 Lars Huring, Olov Nilzén and Mammon Media and is rele
 
 PhotoSwipe Copyright (c) 2015 Dmitry Semenov (http://photoswipe.com) licensed under MIT license
 
-prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) http://creativecommons.org/licenses/by/2.5/
+prettyPhoto Copyright by Stephane Caron (http://www.no-margin-for-errors.com) released the GPLv2 (http://www.gnu.org/licenses/gpl-2.0.html) or Creative Commons 2.5 license (http://creativecommons.org/licenses/by/2.5/).
 
 FileReader.js Copyright 2012 Brian Grinstead - MIT License.
 
