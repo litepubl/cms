@@ -66,7 +66,11 @@ class migrate
 
     public static function updateJs()
     {
-        $replace = [];
+        $replace = [
+'js/litepublisher/css/form.inline.min.css ' =>
+'js/litepubl/common/css/form.inline.min.css'
+];
+
         $map = include __DIR__ . '/pluginsmap.php';
         foreach ($map as $old => $new) {
             $replace["/$old/"] = "/$new/";

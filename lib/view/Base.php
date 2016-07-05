@@ -138,7 +138,7 @@ class Base extends \litepubl\core\Events
             return $this->getApp()->site;
 
         case 'lang':
-            return lang::i();
+            return Lang::i();
 
         case 'post':
             if ($context = $this->getApp()->context) {
