@@ -2152,7 +2152,11 @@ class DB
             $this->logError($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
-            if ($this->mysqli->warning_count && ($r = $this->mysqli->query('SHOW WARNINGS'))) {
+            if (
+$this->mysqli->warning_count
+ && ($r = $this->mysqli->query('SHOW WARNINGS'))
+&& $r->num_rows
+) {
                 $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
         }
@@ -4019,15 +4023,16 @@ class Options extends Events
         return in_array($idgroup, $this->idgroups);
     }
 
-    public function inGroups(array $idgroups)
+    public function inGroups(array $idgroups): bool
     {
-        if ($this->ingroup('admin')) {
+        if ($this->inGroup('admin')) {
             return true;
         }
+
         return count(array_intersect($this->idgroups, $idgroups));
     }
 
-    public function hasGroup($groupname)
+    public function hasGroup(string $groupname): bool
     {
         if ($this->inGroup($groupname)) {
             return true;
@@ -4556,13 +4561,14 @@ class Response
 
     public function __tostring()
     {
-        $headers = sprintf('header(\'HTTP/%s %d %s\', true, %d);', $this->protocol, $this->status, $this->phrases[$this->status], $this->status);
+$phrase =  $this->phrases[$this->status];
+        $result = "<?php\nheader('HTTP/$this->protocol $this->status $phrase', true, $this->status);\n";
 
         foreach ($this->headers as $k => $v) {
-            $headers.= sprintf('header(\'%s: %s\');', $k, $v);
+            $result .= "header('$k: $v');\n";
         }
 
-        $result = sprintf('<?php %s ?>', $headers);
+        $result .= '?>';
         if ($this->body) {
             $result.= $this->body;
         }
@@ -5878,6 +5884,8 @@ abstract class AbstractHandler implements HandlerInterface
             $this->close();
         } catch (\Exception $e) {
             // do nothing
+        } catch (\Throwable $e) {
+            // do nothing
         }
     }
 
@@ -6848,12 +6856,22 @@ class StreamHandler extends AbstractProcessingHandler
     }
 
     /**
+     * Return the stream URL if it was configured with a URL and not an active resource
+     *
+     * @return string|null
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function write(array $record)
     {
         if (!is_resource($this->stream)) {
-            if (!$this->url) {
+            if (null === $this->url || '' === $this->url) {
                 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
             }
             $this->createDir();
@@ -7401,6 +7419,9 @@ class NormalizerFormatter implements FormatterInterface
         foreach ($trace as $frame) {
             if (isset($frame['file'])) {
                 $data['trace'][] = $frame['file'].':'.$frame['line'];
+            } elseif (isset($frame['function']) && $frame['function'] === '{closure}') {
+                // We should again normalize the frames, because it might contain invalid items
+                $data['trace'][] = $frame['function'];
             } else {
                 // We should again normalize the frames, because it might contain invalid items
                 $data['trace'][] = $this->toJson($this->normalize($frame), true);
@@ -7455,7 +7476,7 @@ class NormalizerFormatter implements FormatterInterface
      * Handle a json_encode failure.
      *
      * If the failure is due to invalid string encoding, try to clean the
-     * input and encode again. If the second encoding iattempt fails, the
+     * input and encode again. If the second encoding attempt fails, the
      * inital error is not encoding related or the input can't be cleaned then
      * raise a descriptive exception.
      *
@@ -7807,7 +7828,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  bool   $escapeTd false if td content must not be html escaped
      * @return string
      */
-    private function addRow($th, $td = ' ', $escapeTd = true)
+    protected function addRow($th, $td = ' ', $escapeTd = true)
     {
         $th = htmlspecialchars($th, ENT_NOQUOTES, 'UTF-8');
         if ($escapeTd) {
@@ -7824,7 +7845,7 @@ class HtmlFormatter extends NormalizerFormatter
      * @param  int    $level Error level
      * @return string
      */
-    private function addTitle($title, $level)
+    protected function addTitle($title, $level)
     {
         $title = htmlspecialchars($title, ENT_NOQUOTES, 'UTF-8');
 

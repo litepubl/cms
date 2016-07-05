@@ -7,7 +7,6 @@
  *
  */
 
-
 (function($, document, ltoptions) {
   'use strict';
 

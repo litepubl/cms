@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 namespace Page;
 
 class Ulogin extends Base
@@ -63,12 +62,12 @@ class Ulogin extends Base
     {
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
-codecept_debug(date('i:s'));
+        codecept_debug(date('i:s'));
         $i->waitForJS('return !litepubl.authdialog.dialog;', 5);
-codecept_debug(date('i:s'));
+        codecept_debug(date('i:s'));
         $i->wantTo('Check user logged');
         $i->waitForJS('return litepubl.getuser().id;', 15);
-codecept_debug(date('i:s'));
+        codecept_debug(date('i:s'));
     }
 
     public function auth(string $name = 'mailru')

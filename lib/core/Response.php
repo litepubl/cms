@@ -1,13 +1,12 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  */
-
 
 namespace litepubl\core;
 
@@ -131,7 +130,7 @@ class Response
 
     public function __tostring()
     {
-$phrase =  $this->phrases[$this->status];
+        $phrase =  $this->phrases[$this->status];
         $result = "<?php\nheader('HTTP/$this->protocol $this->status $phrase', true, $this->status);\n";
 
         foreach ($this->headers as $k => $v) {

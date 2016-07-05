@@ -7,7 +7,6 @@
  *
  */
 
-
 try {
 var input = $('#tempfile-input');
 input.addClass('hidden');

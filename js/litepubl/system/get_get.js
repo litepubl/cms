@@ -7,7 +7,6 @@
  *
  */
 
-
 (function(window) {
   'use strict';
   window.get_get = function(name, url) {

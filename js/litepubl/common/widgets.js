@@ -7,7 +7,6 @@
  *
  */
 
-
 function widget_load(node, id, sidebar) {
   $(node).attr("onclick", "");
   var comment = $(node).findcomment(id);

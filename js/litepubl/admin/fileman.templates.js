@@ -7,7 +7,6 @@
  *
  */
 
-
 (function(window) {
   window.litepubl.tml.fileman = {
     item: '<div class="file-item" data-idfile="%%id%%">' +

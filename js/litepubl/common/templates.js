@@ -7,7 +7,6 @@
  *
  */
 
-
 (function($, litepubl) {
   $.extend(litepubl.tml, {
     text: '<div class="form-group"><label for="text-%%name%%">%%title%%</label>' +

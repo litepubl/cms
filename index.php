@@ -8,7 +8,6 @@
  *
  */
 
-
 namespace litepubl;
 
 class Config

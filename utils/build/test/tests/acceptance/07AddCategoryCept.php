@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Cats;
 
 $i = new AcceptanceTester($scenario);

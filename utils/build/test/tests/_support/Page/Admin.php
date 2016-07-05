@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 namespace Page;
 
 use test\config;
@@ -36,9 +35,9 @@ class Admin extends Base
     public function submit()
     {
         $i = $this->tester;
-$i->executeJs('$(function(){$("form:last").submit();});');
-//sleep(2);
-//codecept_debug(date('i:s'));
+        $i->executeJs('$(function(){$("form:last").submit();});');
+        //sleep(2);
+        //codecept_debug(date('i:s'));
     }
 
     public function getLinks($name)

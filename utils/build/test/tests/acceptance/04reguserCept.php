@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\RegUser;
 use Page\Password;
 use Page\Login;

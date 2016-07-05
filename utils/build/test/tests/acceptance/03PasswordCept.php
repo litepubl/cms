@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Password;
 use Page\Login;
 use test\config;

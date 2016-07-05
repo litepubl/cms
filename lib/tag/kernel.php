@@ -2,7 +2,7 @@
 //Cats.php
 namespace litepubl\tag;
 
-use litepubl\widget\Cache as CacheWidgets;
+use litepubl\widget\Cache;
 use litepubl\widget\Cats as CatsWidget;
 
 /**
@@ -35,7 +35,7 @@ class Cats extends Common
     {
         parent::save();
         if (!$this->locked) {
-            CacheWidgets::i()->removeWidget(CatsWidget::i());
+            Cache::i()->removeWidget(CatsWidget::i());
         }
     }
 }
@@ -595,14 +595,10 @@ class Factory
 namespace litepubl\tag;
 
 use litepubl\widget\Tags as TagsWidget;
+use litepubl\widget\Cache;
 
 class Tags extends Common
 {
-
-    public static function i()
-    {
-        return static ::iGet(__class__);
-    }
 
     protected function create()
     {
@@ -619,7 +615,7 @@ class Tags extends Common
     {
         parent::save();
         if (!$this->locked) {
-            TagsWidget::i()->expire();
+Cache::i()->removeWidget(TagsWidget::i());
         }
     }
 }

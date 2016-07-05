@@ -1,13 +1,12 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  */
-
 
 namespace litepubl\plugins\ulogin;
 
@@ -55,7 +54,7 @@ function UloginInstall($self)
     Users::i()->deleted = $self->userDeleted;
     $self->getApp()->router->unbind($self);
     $self->getApp()->router->addGet($self->url, get_class($self));
-$self->getapp()->options->reguser = true;
+    $self->getapp()->options->reguser = true;
     Parser::i()->addTags('plugins/ulogin/resource/theme.txt', false);
 
     $js = Js::i();

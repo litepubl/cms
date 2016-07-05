@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Install;
 use Page\Installed;
 use test\config;

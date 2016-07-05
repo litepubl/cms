@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Rss;
 use Codeception\Util\Xml as XmlUtils;
 

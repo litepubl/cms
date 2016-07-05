@@ -7,7 +7,6 @@
  *
  */
 
-
 ;
 (function($, document, window) {
   if (typeof(chrome) !== 'undefined') {

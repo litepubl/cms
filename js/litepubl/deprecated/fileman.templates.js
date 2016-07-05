@@ -7,7 +7,6 @@
  *
  */
 
-
 (function(window) {
 
   var tml = window.litepubl.tml.fileman;

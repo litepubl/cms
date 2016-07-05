@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Comment;
 
 $i = new AcceptanceTester($scenario);

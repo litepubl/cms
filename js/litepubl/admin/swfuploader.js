@@ -7,7 +7,6 @@
  *
  */
 
-
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
   $('#progressbar').progressbar({
     value: 0

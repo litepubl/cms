@@ -7,7 +7,6 @@
  *
  */
 
-
 (function($, document) {
   'use strict';
   /* function exported from Bootstrap Accessibility Plugin, v1.04 */

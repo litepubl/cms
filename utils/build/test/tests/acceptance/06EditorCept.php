@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Editor;
 use test\config;
 

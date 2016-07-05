@@ -1,13 +1,12 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
  *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
  */
-
 
 namespace litepubl\core;
 
@@ -122,11 +121,10 @@ class DB
             $this->logError($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
-            if (
-$this->mysqli->warning_count
- && ($r = $this->mysqli->query('SHOW WARNINGS'))
-&& $r->num_rows
-) {
+            if ($this->mysqli->warning_count
+                && ($r = $this->mysqli->query('SHOW WARNINGS'))
+                && $r->num_rows
+            ) {
                 $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
         }

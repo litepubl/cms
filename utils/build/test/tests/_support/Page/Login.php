@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 namespace Page;
 
 class Login extends Base

@@ -7,7 +7,6 @@
  *
  */
 
-
 var selector  = '#tempfile-input';
 var input = $(selector );
 if (input.length) {

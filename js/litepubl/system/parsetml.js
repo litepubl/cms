@@ -7,7 +7,6 @@
  *
  */
 
-
 (function($) {
   $.parsetml = $.simpletml = function(tml, view) {
     tml = tml.replace(/[%\u007b]{2}(\w*)\.(\w*)[%\u007d]{2}/gim, function(str, obj, prop, offset, src) {

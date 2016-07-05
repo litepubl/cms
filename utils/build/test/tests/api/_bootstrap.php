@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 // Here you can initialize variables that will be available to your tests
 
 use Codeception\Util\Autoload;

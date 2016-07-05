@@ -7,7 +7,6 @@
  *
  */
 
-
 (function(window) {
   window.lang.photoswipe = {
     close: "Закрыть (Esc)",

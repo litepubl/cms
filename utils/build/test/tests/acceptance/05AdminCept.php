@@ -8,7 +8,6 @@
  * @version   7.00
  */
 
-
 use Page\Admin;
 
 $i = new AcceptanceTester($scenario);

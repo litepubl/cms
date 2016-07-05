@@ -7,7 +7,6 @@
  *
  */
 
-
 (function($, litepubl, window) {
   'use strict';
   litepubl.FlashUploader = Class.extend({

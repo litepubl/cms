@@ -7,7 +7,6 @@
  *
  */
 
-
 (function(window, litepubl) {
   'use strict';
 

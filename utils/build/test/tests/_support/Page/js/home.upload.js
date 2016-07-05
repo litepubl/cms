@@ -7,7 +7,6 @@
  *
  */
 
-
 try {
 var input = $('#tempfile-input');
 litepubl.homeuploader.status = 'wait';
