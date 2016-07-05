@@ -2152,11 +2152,10 @@ class DB
             $this->logError($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
-            if (
-$this->mysqli->warning_count
- && ($r = $this->mysqli->query('SHOW WARNINGS'))
-&& $r->num_rows
-) {
+            if ($this->mysqli->warning_count
+                && ($r = $this->mysqli->query('SHOW WARNINGS'))
+                && $r->num_rows
+            ) {
                 $this->getApp()->getLogger()->warning($sql, $r->fetch_assoc());
             }
         }
@@ -3411,13 +3410,12 @@ class MemvarMemcache extends CacheMemcache
         $this->data = array();
     }
 
-    public function getRevision()
+    public function getRevision(): int
     {
         //nothing, just to override parent method
-        
     }
 
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }
@@ -3468,12 +3466,12 @@ class MemvarMysql
         $this->lifetime = 10800;
     }
 
-    public function getDb()
+    public function getDb(): DB
     {
         return $this->getApp()->db;
     }
 
-    public function getName($name)
+    public function getName(string $name): string
     {
         if (strlen($name) > 32) {
             return md5($name);
@@ -3492,7 +3490,7 @@ class MemvarMysql
         return $this->get($name);
     }
 
-    public function get($name)
+    public function get(string $name)
     {
         $result = false;
         if (!$this->checked) {
@@ -3541,12 +3539,12 @@ class MemvarMysql
         $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
 
-    public function serialize($data)
+    public function serialize($data): string
     {
         return serialize($data);
     }
 
-    public function unserialize(&$data)
+    public function unserialize(string $data)
     {
         return unserialize($data);
     }
@@ -4561,7 +4559,7 @@ class Response
 
     public function __tostring()
     {
-$phrase =  $this->phrases[$this->status];
+        $phrase =  $this->phrases[$this->status];
         $result = "<?php\nheader('HTTP/$this->protocol $this->status $phrase', true, $this->status);\n";
 
         foreach ($this->headers as $k => $v) {

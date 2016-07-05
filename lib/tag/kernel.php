@@ -615,7 +615,7 @@ class Tags extends Common
     {
         parent::save();
         if (!$this->locked) {
-Cache::i()->removeWidget(TagsWidget::i());
+            Cache::i()->removeWidget(TagsWidget::i());
         }
     }
 }

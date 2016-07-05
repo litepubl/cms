@@ -1,11 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @link https://github.com/litepubl\cms
+ * @version 7.00
+ *
  */
 
 namespace litepubl\core;
@@ -20,13 +20,12 @@ class MemvarMemcache extends CacheMemcache
         $this->data = array();
     }
 
-    public function getRevision()
+    public function getRevision(): int
     {
         //nothing, just to override parent method
-        
     }
 
-    public function getPrefix()
+    public function getPrefix(): string
     {
         return $this->prefix;
     }

@@ -1,11 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @link https://github.com/litepubl\cms
+ * @version 7.00
+ *
  */
 
 namespace litepubl\core;
@@ -27,12 +27,12 @@ class MemvarMysql
         $this->lifetime = 10800;
     }
 
-    public function getDb()
+    public function getDb(): DB
     {
         return $this->getApp()->db;
     }
 
-    public function getName($name)
+    public function getName(string $name): string
     {
         if (strlen($name) > 32) {
             return md5($name);
@@ -51,7 +51,7 @@ class MemvarMysql
         return $this->get($name);
     }
 
-    public function get($name)
+    public function get(string $name)
     {
         $result = false;
         if (!$this->checked) {
@@ -100,12 +100,12 @@ class MemvarMysql
         $db->query("delete from $db->prefix$this->table where name = '$name' limit 1");
     }
 
-    public function serialize($data)
+    public function serialize($data): string
     {
         return serialize($data);
     }
 
-    public function unserialize(&$data)
+    public function unserialize(string $data)
     {
         return unserialize($data);
     }

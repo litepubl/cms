@@ -78,8 +78,8 @@ if (!defined('litepubl\mode') || (\litepubl\mode != 'config')) {
     }
 
     if (Config::$debug || !Config::$useKernel) {
-        require (__DIR__ . '/lib/debug/kernel.php');
+        include __DIR__ . '/lib/debug/kernel.php';
     } else {
-        require (__DIR__ . '/lib/core/kernel.php');
+        include __DIR__ . '/lib/core/kernel.php';
     }
 }

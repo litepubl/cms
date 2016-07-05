@@ -389,13 +389,13 @@ class GetPerm
 
     public static function groups(array $idgroups)
     {
-$result = '';
+        $result = '';
         $groups = UserGroups::i();
-$theme = Theme::context();
+        $theme = Theme::context();
 
         foreach ($groups->items as $id => $item) {
-$checked = in_array($id, $idgroups) ? 'checked="checked"' : '';
-$result .= $theme->getInput('checkbox', "idgroup-$id", "value=\"$id\" $checked", $item['title']);
+            $checked = in_array($id, $idgroups) ? 'checked="checked"' : '';
+            $result .= $theme->getInput('checkbox', "idgroup-$id", "value=\"$id\" $checked", $item['title']);
 
         }
 
