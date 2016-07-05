@@ -140,9 +140,13 @@ class migrate
 
             if (isset($map[$url])) {
                 $item['class'] = $map[$url];
-                $menus['items'][$id] = $item;
                  static::$db->setValue($item['idurl'], 'class', $item['class']);
             }
+
+if (!$item['group']) {
+$item['group'] = 'commentator';
+}
+                $menus['items'][$id] = $item;
         }
         
         static::save('adminmenu', $menus);

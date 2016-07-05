@@ -203,8 +203,8 @@ class Updater extends \litepubl\core\Events
             return $this->releases;
         }
 
-        if (($s = http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version)) 
-            || ($s = http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
+        if (($s = Http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version)) 
+            || ($s = Http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
         ) {
             $this->releases = Str::toArray($s);
             return $this->releases;
@@ -223,7 +223,7 @@ class Updater extends \litepubl\core\Events
             return false;
         }
 
-        if (!(($s = http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version")) || ($s = http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz")) || ($s = http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))) {
+        if (!(($s = Http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version")) || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz")) || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))) {
             $this->result = $lang->errordownload;
             return false;
         }

@@ -53,7 +53,7 @@ class Upload extends Login
                 return '';
             }
 
-            if (!($s = http::get($url))) {
+            if (!($s = Http::get($url))) {
                 return $admin->geterr($lang->errordownload);
             }
 

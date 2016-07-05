@@ -11,7 +11,7 @@
 namespace litepubl\view;
 
 use litepubl\admin\GetPerm;
-use litepubl\admin\datefilter;
+use litepubl\admin\DateFilter;
 use litepubl\core\Arr;
 use litepubl\core\Str;
 use litepubl\post\Files;
@@ -213,7 +213,7 @@ class Admin extends Base
 
     public function getCalendar(string $name, $date): string
     {
-        $date = datefilter::timestamp($date);
+        $date = DateFilter::timestamp($date);
 
         $args = new Args();
         $args->name = $name;
@@ -221,8 +221,8 @@ class Admin extends Base
         $args->format = DateFilter::$format;
 
         if ($date) {
-            $args->date = date(datefilter::$format, $date);
-            $args->time = date(datefilter::$timeformat, $date);
+            $args->date = date(DateFilter::$format, $date);
+            $args->time = date(DateFilter::$timeformat, $date);
         } else {
             $args->date = '';
             $args->time = '';
@@ -233,13 +233,13 @@ class Admin extends Base
 
     public function getDaterange($from, $to): string
     {
-        $from = datefilter::timestamp($from);
-        $to = datefilter::timestamp($to);
+        $from = DateFilter::timestamp($from);
+        $to = DateFilter::timestamp($to);
 
         $args = new Args();
-        $args->from = $from ? date(datefilter::$format, $from) : '';
-        $args->to = $to ? date(datefilter::$format, $to) : '';
-        $args->format = datefilter::$format;
+        $args->from = $from ? date(DateFilter::$format, $from) : '';
+        $args->to = $to ? date(DateFilter::$format, $to) : '';
+        $args->format = DateFilter::$format;
 
         return $this->parseArg($this->templates['daterange'], $args);
     }
