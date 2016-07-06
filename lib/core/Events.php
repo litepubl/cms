@@ -106,7 +106,7 @@ class Events extends Data
             throw new PropException(get_class($this), $name);
     }
 
-    public function method_exists($name)
+    public function method_exists(string $name): bool
     {
         return in_array($name, $this->eventnames);
     }
@@ -134,51 +134,46 @@ class Events extends Data
         }
     }
 
-    public function callEvent($name, $params)
+    public function callEvent(string $name, array $params)
     {
+$name = strtolower($name);
         if (!isset($this->events[$name])) {
             return '';
         }
 
-        $result = '';
-        foreach ($this->events[$name] as $i => $item) {
-            //backward compability
-            $class = isset($item[0]) ? $item[0] : (isset($item['class']) ? $item['class'] : '');
+$event = new Event($this, $name);
+$event->setParams($params);
+$this->trigger($event);
+$this->triggerOnce($event);
+}
 
-            if (is_string($class) && class_exists($class)) {
-                $call = array(
-                static ::iGet($class) ,
-                    isset($item[1]) ? $item[1] : $item['func']
-                );
-            } elseif (is_object($class)) {
-                $call = array(
-                    $class,
-                    isset($item[1]) ? $item[1] : $item['func']
-                );
-            } else {
-                $call = false;
-            }
+protected functiontrigger(Event $event)
+{
+$result = '';
+$app = $this->getApp();
+$eventName = $event->getName();
 
-            if ($call) {
+        foreach ($this->events[$eventName] as $i => $item) {
+if ($event->isPropagationStopped()) {
+break;
+}
+
+if (class_exists($item[0])) {
                 try {
-                    $result = call_user_func_array($call, $params);
-                } catch (CancelEvent $e) {
-                    return $e->result;
+                $callback = [$app->classes->getInstance($item[0]), $item[1]);
+                    $result = call_user_func_array($callback, $event);
+        } catch (\Throwable $e) {
+            $app->logException($e);
                 }
+} else {
+unset($this->events[$eventName][$i]);
+if (!count($this->events[$eventName)) {
+unset($this->events[$eventName]);
+}
 
-                // 2 index = once
-                if (isset($item[2]) && $item[2]) {
-                    array_splice($this->events[$name], $i, 1);
-                }
-            } else {
-                //class not found and delete event handler
-                array_splice($this->events[$name], $i, 1);
-                if (!count($this->events[$name])) {
-                    unset($this->events[$name]);
-                }
-
-                $this->save();
-            }
+$this->save();
+$app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), $item);
+}
         }
 
         return $result;

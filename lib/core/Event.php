@@ -8,6 +8,7 @@ protected $name;
 protected $target;
 protected $stopped;
 protected $params;
+public $result;
 
 public function __construct($target, string $name)
 {
@@ -15,6 +16,29 @@ $this->target = $target;
 $this->name = $name;
 $this->stopped = false;
 $this->params = [];
+$this->result = '';
+}
+
+public function __get($name)
+{
+        if (method_exists($this, $get = 'get' . $name)) {
+            return $this->$get();
+        } elseif (array_key_exists($name, $this->params)) {
+            return $this->params[$name];
+        } else {
+            throw new PropException(get_class($this), $name);
+}
+}
+
+    public function __set($name, $value)
+    {
+        if (method_exists($this, $set = 'set' . $name)) {
+            $this->$set($value);
+        } elseif (key_exists($name, $this->params)) {
+            $this->params[$name] = $value;
+        } else {
+            throw new PropException(get_class($this), $name);
+}
 }
 
     public function getName(): string
@@ -91,7 +115,7 @@ $this->stopped = $flag;
 return $this->stopped;
 }
 
-    public function trigger(array $callbacks)
+}
 {
 
 }
