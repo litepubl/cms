@@ -12,6 +12,7 @@ namespace litepubl\admin\service;
 
 use litepubl\core\Str;
 use litepubl\updater\Backuper;
+use litepubl\utils\Http;
 use litepubl\view\Lang;
 
 class Upload extends Login
@@ -25,7 +26,7 @@ class Upload extends Login
 
         $args->url = str_replace('$mysite', rawurlencode($this->getApp()->site->url), $this->getparam('url', ''));
         $lang = Lang::admin();
-        $form = $this->newForm();
+        $form = $this->newForm($args);
         $form->title = $lang->uploaditem;
         $form->upload = true;
         $form->body = '[text=url]
