@@ -5,6 +5,7 @@ calendar = [
 
         <div class="form-group">
             <label for="text-$name">$lang.date</label>
+            /* type="date" dosent work in chrome */
             <input type="text" name="$name" class="form-control date-edit tooltip-toggle" id="text-$name" value="$date" title="$lang.tipdate" data-format="$format" />
         </div>
 

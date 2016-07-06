@@ -1,12 +1,11 @@
 <?php
 /**
  * Lite Publisher CMS
- * @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link https://github.com/litepubl\cms
- * @version 7.00
- *
- */
+ * @link      https://github.com/litepubl\cms
+ * @version   7.00
+  */
 
 namespace litepubl\update;
 
@@ -143,9 +142,9 @@ class migrate
                  static::$db->setValue($item['idurl'], 'class', $item['class']);
             }
 
-if (!$item['group']) {
-$item['group'] = 'commentator';
-}
+            if (!$item['group']) {
+                        $item['group'] = 'commentator';
+            }
                 $menus['items'][$id] = $item;
         }
         
@@ -201,14 +200,14 @@ $item['group'] = 'commentator';
 
     public static function updateSitemap()
     {
-$map = include __DIR__ . '/classmap.php';
+        $map = include __DIR__ . '/classmap.php';
          $sitemap = static::load('sitemap');
-foreach ($sitemap['classes'] as $i = > $old) {
-$sitemap['classes'] = $map[$old];
-}
+        foreach ($sitemap['classes'] as $i = > $old) {
+                $sitemap['classes'] = $map[$old];
+        }
 
-static::save('sitemap', $sitemap);
-}
+        static::save('sitemap', $sitemap);
+    }
 
     public static function updateXmlrpc()
     {
@@ -352,7 +351,7 @@ static::save('sitemap', $sitemap);
         $storage = static::updateSchemes($storage);
                 static::save('storage', $storage);
 
-static::updateSitemap();
+        static::updateSitemap();
         static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
