@@ -199,6 +199,17 @@ $item['group'] = 'commentator';
         return $data;
     }
 
+    public static function updateSitemap()
+    {
+$map = include __DIR__ . '/classmap.php';
+         $sitemap = static::load('sitemap');
+foreach ($sitemap['classes'] as $i = > $old) {
+$sitemap['classes'] = $map[$old];
+}
+
+static::save('sitemap', $sitemap);
+}
+
     public static function updateXmlrpc()
     {
          $xmlrpc = static::load('xmlrpc');
@@ -341,6 +352,7 @@ $item['group'] = 'commentator';
         $storage = static::updateSchemes($storage);
                 static::save('storage', $storage);
 
+static::updateSitemap();
         static::updateXmlrpc();
         static::updatePlugins();
         static::updateTables();
