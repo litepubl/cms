@@ -116,7 +116,3 @@ return $this->stopped;
 }
 
 }
-{
-
-}
-}

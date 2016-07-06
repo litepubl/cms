@@ -203,8 +203,10 @@ class migrate
     {
         $map = include __DIR__ . '/classmap.php';
          $sitemap = static::load('sitemap');
-        foreach ($sitemap['classes'] as $i = > $old) {
-                $sitemap['classes'] = $map[$old];
+        foreach ($sitemap['classes'] as $i => $old) {
+            if (isset($map[$old])) {
+                $sitemap['classes'][$i] = $map[$old];
+            }
         }
 
         static::save('sitemap', $sitemap);

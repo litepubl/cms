@@ -13,7 +13,6 @@ namespace litepubl\admin;
 use litepubl\core\UserGroups;
 use litepubl\perms\Perms;
 use litepubl\view\Admin;
-use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 

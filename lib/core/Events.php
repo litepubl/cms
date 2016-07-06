@@ -147,7 +147,7 @@ $this->trigger($event);
 $this->triggerOnce($event);
 }
 
-protected functiontrigger(Event $event)
+protected function trigger(Event $event)
 {
 $result = '';
 $app = $this->getApp();
@@ -160,14 +160,14 @@ break;
 
 if (class_exists($item[0])) {
                 try {
-                $callback = [$app->classes->getInstance($item[0]), $item[1]);
+                $callback = [$app->classes->getInstance($item[0]), $item[1]];
                     $result = call_user_func_array($callback, $event);
         } catch (\Throwable $e) {
             $app->logException($e);
                 }
 } else {
 unset($this->events[$eventName][$i]);
-if (!count($this->events[$eventName)) {
+if (!count($this->events[$eventName])) {
 unset($this->events[$eventName]);
 }
 
