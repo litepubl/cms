@@ -53,7 +53,7 @@ class Events extends Data
 
     public function afterLoad()
     {
-        $this->assignmap();
+        $this->assignMap();
 
         foreach ($this->coclasses as $coclass) {
             $this->coinstances[] = static ::iGet($coclass);
@@ -62,7 +62,7 @@ class Events extends Data
         parent::afterload();
     }
 
-    protected function addMap($name, $value)
+    protected function addMap(string $name, $value)
     {
         $this->map[$name] = $name;
         $this->data[$name] = $value;
@@ -77,7 +77,7 @@ class Events extends Data
         }
     }
 
-    public function eventExists($name)
+    public function eventExists(string $name): bool
     {
         return in_array($name, $this->eventnames);
     }
@@ -85,10 +85,7 @@ class Events extends Data
     public function __get($name)
     {
         if (method_exists($this, $name)) {
-            return array(
-                get_class($this) ,
-                $name
-            );
+            return [get_class($this) ,                 $name];
         }
 
         return parent::__get($name);
@@ -105,7 +102,8 @@ class Events extends Data
             $this->addEvent($eventName, $value[0], $value[1]);
             return true;
         }
-        $this->error(sprintf('Unknown property %s in class %s', $name, get_class($this)));
+
+            throw new PropException(get_class($this), $name);
     }
 
     public function method_exists($name)
