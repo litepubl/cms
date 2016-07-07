@@ -134,6 +134,11 @@ class Events extends Data
         }
     }
 
+public function newEvent(string $name): Event
+{
+return new Event($this, $name);
+}
+
     public function callEvent(string $name, array $params)
     {
 $name = strtolower($name);
@@ -141,7 +146,7 @@ $name = strtolower($name);
             return '';
         }
 
-$event = new Event($this, $name);
+$event = $this->newEvent($name);
 $event->setParams($params);
 $this->trigger($event);
 $this->triggerOnce($event);
@@ -161,7 +166,12 @@ break;
 if (class_exists($item[0])) {
                 try {
                 $callback = [$app->classes->getInstance($item[0]), $item[1]];
-                    $result = call_user_func_array($callback, $event);
+call_user_func_array($callback, $event);
+if ($event->once) {
+$event->once = false;
+unset($this->events[$eventName][$i]);
+$this->save();
+}
         } catch (\Throwable $e) {
             $app->logException($e);
                 }
@@ -177,11 +187,6 @@ $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s
         }
 
         return $result;
-    }
-
-    public static function cancelEvent($result)
-    {
-        throw new CancelEvent($result);
     }
 
     public function setEvent($name, $params)

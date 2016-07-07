@@ -261,8 +261,8 @@ function afterFix2($s)
         'setvalue(' => 'setValue',
         'getdb(' => 'getDB(',
         '$this->view->admintheme' => '$this->admintheme',
-        'http:get' => 'Http::get',
-        'http:post' => 'Http::post',
+        'http::get' => 'Http::get',
+        'http::post' => 'Http::post',
         'column_exists' => 'columnExists',
         ]
     );

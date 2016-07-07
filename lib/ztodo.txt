@@ -42,3 +42,5 @@
 'wargaming',
 
 из optionsудалить crontime
+удалить (вначале проверить) CacheStorageTrait.php
+не забыть включить новые events в kernel

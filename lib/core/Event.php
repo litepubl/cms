@@ -9,6 +9,7 @@ protected $target;
 protected $stopped;
 protected $params;
 public $result;
+public $once;
 
 public function __construct($target, string $name)
 {
@@ -17,6 +18,7 @@ $this->name = $name;
 $this->stopped = false;
 $this->params = [];
 $this->result = '';
+$this->once = false;
 }
 
 public function __get($name)
