@@ -12,6 +12,8 @@ namespace litepubl\core;
 
 class Events extends Data
 {
+use EventsTrait;
+
     protected $events;
     protected $eventnames;
     protected $map;
@@ -149,10 +151,10 @@ $name = strtolower($name);
 $event = $this->newEvent($name);
 $event->setParams($params);
 $this->trigger($event);
-$this->triggerOnce($event);
+$this->triggerCallback($event);
 }
 
-protected function trigger(Event $event)
+public function trigger(Event $event)
 {
 $result = '';
 $app = $this->getApp();

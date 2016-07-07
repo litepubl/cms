@@ -106,7 +106,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         if ($this->sendnotification) {
             $this->getApp()->onClose(function($event) use ($id) {
-$this->send_mail'($id);
+$this->send_mail($id);
 $event->once = true;
 });
         }

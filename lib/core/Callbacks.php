@@ -17,7 +17,7 @@ trait Callbacks
     public function addCallback(string $eventName, callable $callback, int $priority = 500): int
     {
 if (!isset($this->callbacks[$eventName])) {
-$this->callbacks[$eventName[$priority] = $callback;
+$this->callbacks[$eventName][$priority] = $callback;
 } else {
 Arr::append($this->callbacks[$eventName], $priority, $callback);
 }
@@ -30,7 +30,7 @@ return true;
 if (isset($this->callbacks[$event])) {
 foreach ($this->callbacks[$event] as $i => $item) {
 if ($item == $callback) {
-unset($this->callbacks[$event][$i];
+unset($this->callbacks[$event][$i]);
 return true;
 }
 }
@@ -84,4 +84,5 @@ unset($this->callbacks[$eventName][$i]);
             }
         }
     }
+}
 }
