@@ -15,6 +15,8 @@ use litepubl\debug\LogManager;
 
 class App
 {
+use Callbacks;
+
     public $cache;
     public $classes;
     public $controller;
@@ -231,4 +233,13 @@ class App
         header('Location: ' . $url);
         exit();
     }
+
+    /**
+     * To compability with Callbacks trait
+     */
+
+public function getApp(): App
+{
+return $this;
+}
 }

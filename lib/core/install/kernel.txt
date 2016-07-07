@@ -9,7 +9,7 @@
 !UserOptions.php
 !Usersman.php
 
-#logger
+#monolog
 vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
 vendor/monolog/monolog/src/Monolog/Logger.php
@@ -28,7 +28,6 @@ lib/debug/LogManager.php
 lib/debug/RuntimeHandler.php
 lib/debug/EmptyFormatter.php
 lib/debug/LogException.php
-
 
 #final
 litepubl.php

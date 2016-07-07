@@ -166,7 +166,7 @@ break;
 if (class_exists($item[0])) {
                 try {
                 $callback = [$app->classes->getInstance($item[0]), $item[1]];
-call_user_func_array($callback, $event);
+call_user_func_array($callback, [$event]);
 if ($event->once) {
 $event->once = false;
 unset($this->events[$eventName][$i]);

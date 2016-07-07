@@ -80,12 +80,13 @@ class Arr
         array_splice($a, count($a), 0, array());
     }
 
-    public static function append(array & $a, $index, $value)
+    public static function append(array & $a, int $index, $value): int
     {
         while (array_key_exists($index, $a)) {
             $index++;
         }
 
         $a[$index] = $value;
+return $index;
     }
 }
