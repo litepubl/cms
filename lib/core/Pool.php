@@ -56,7 +56,10 @@ class Pool extends Data
     public function savepool($idpool)
     {
         if (!isset($this->modified[$idpool])) {
-            $this->getApp()->onClose->on($this, 'saveModified', $idpool);
+            $this->getApp()->onClose(function(Event $event) use($idpool) {
+$this->saveModified($idpool);
+$event->once = true;
+});
             $this->modified[$idpool] = true;
         }
     }

@@ -26,7 +26,6 @@ use Callbacks;
     public $logManager;
     public $memcache;
     public $microtime;
-    public $onClose;
     public $options;
     public $paths;
     public $poolStorage;
@@ -66,7 +65,6 @@ use Callbacks;
         $this->router = Router::i();
         $this->controller = new Controller();
         $this->createCache();
-        $this->onClose = new Callback();
 
         if ($this->installed) {
             $this->db = DB::i();
@@ -151,7 +149,7 @@ use Callbacks;
             $this->showErrors();
 
             if ($obEnabled) {
-                if ($this->onClose->getCount()) {
+                if ($this->getCallbacksCount('onclose')) {
                     ignore_user_abort(true);
                     $context->response->closeConnection();
                     while (@ob_end_flush()) {
@@ -170,7 +168,7 @@ use Callbacks;
                 }
             }
 
-            $this->onClose->fire();
+            $this->triggerCallback('onclose');
         } catch (\Throwable $e) {
             $this->logException($e);
         }
@@ -241,5 +239,10 @@ use Callbacks;
 public function getApp(): App
 {
 return $this;
+}
+
+public function onClose(callable $callback)
+{
+$this->addCallback('onclose', $callback);
 }
 }

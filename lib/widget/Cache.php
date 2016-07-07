@@ -53,7 +53,7 @@ class Cache extends \litepubl\core\Items
     {
         if (!$this->modified) {
             $this->modified = true;
-            $this->getApp()->onClose->on($this, 'commit');
+            $this->getApp()->onClose([$this, 'commit']);
         }
     }
 

@@ -54,10 +54,20 @@ public function getCallbacksCount(string $event): int
 return isset($this->callbacks[$event]) ? count($this->callbacks[$event]) : 0;
 }
 
-    public function triggerCallback(Event $event, $$argv = array(
+    public function triggerCallback($event, $params = array())
     {
+if (is_object($event)) {
 $eventName = $event->getName();
+} else {
+$eventName = $event;
+}
+
 if (isset($this->callbacks[$eventName])) {
+if (is_string($event)) {
+$event = new Event($this, $eventName);
+$event->setParams($params);
+}
+
 foreach ($this->callbacks[$eventName] as $i => $callback) {
 if ($event->isPropagationStopped()) {
 break;
