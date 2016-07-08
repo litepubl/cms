@@ -21,7 +21,7 @@ class Cache extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->modified = false;
-        $this->getApp()->cache->onClear->on($this, 'onClearCache');
+        $this->getApp()->cache->onClear([$this, 'onClearCache']);
     }
 
     public function getBasename(): string

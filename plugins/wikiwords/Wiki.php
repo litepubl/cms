@@ -234,8 +234,11 @@ class Wiki extends \litepubl\core\Items
                     $result[] = $id;
                     if ($post->id == 0) {
                         $this->fix[$id] = $post;
-                        $post->onId = [$this, 'fixpost', $post];
+                        $post->onId(function($event) {
+$this->fixPost($event->getTarget());
+});
                     }
+
                     $content = str_replace($item[0], "<span class=\"wiki\" id=\"wikiword-$id\">$word</span>", $content);
                 }
             }

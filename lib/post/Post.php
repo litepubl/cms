@@ -11,7 +11,6 @@
 namespace litepubl\post;
 
 use litepubl\core\Arr;
-use litepubl\core\Callback;
 use litepubl\core\Str;
 use litepubl\view\Filter;
 
@@ -71,26 +70,19 @@ use litepubl\view\Filter;
  * @property-read string lastCommentUrl
  * @property-read string schemaLink to generate new url
  */
+
 class Post extends \litepubl\core\Item
 {
+use \litepubl\core\Callbacks;
 
     protected $childTable;
-
     protected $rawTable;
-
     protected $pagesTable;
-
     protected $childData;
-
     protected $cacheData;
-
     protected $rawData;
-
     protected $factory;
-
     private $metaInstance;
-
-    private $onIdCallback;
 
     public static function i($id = 0)
     {
@@ -376,7 +368,7 @@ class Post extends \litepubl\core\Item
         $this->db->setValue($id, 'idurl', $this->idurl);
         
         $this->coInstanceCall('add', []);
-        $this->onId();
+$this->triggerOnId();
         return $id;
     }
 
@@ -402,26 +394,20 @@ class Post extends \litepubl\core\Item
         return $this->getApp()->router->add($this->url, get_class($this), (int) $this->id);
     }
 
-    public function onId()
+    public function onId(callable $callback)
     {
-        if ($this->onIdCallback) {
-            $this->onIdCallback->fire();
-            $this->onIdCallback = null;
-        }
-        
+$this->addCallback('onid', $callback);
+}
+
+protected function triggerOnId()
+{
+        $this->triggerCallback('onid');
+$this->clearCallbacks('onid');
+
         if (isset($this->metaInstance)) {
             $this->metaInstance->id = $this->id;
             $this->metaInstance->save();
         }
-    }
-
-    public function setOnId($callback)
-    {
-        if (! $this->onIdCallback) {
-            $this->onIdCallback = new Callback();
-        }
-        
-        $this->onIdCallback->add($callback);
     }
 
     public function free()

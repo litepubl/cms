@@ -12,14 +12,15 @@ namespace litepubl\core;
 
 abstract class BaseCache
 {
+use Callbacks;
+
     protected $items = [];
     protected $lifetime = 3600;
-    public $onClear;
 
-    public function __construct()
-    {
-        $this->onClear = new Callback();
-    }
+    public function onClear(callable $callback)
+{
+$this->addCallback('onclear', $callback);
+}
 
     abstract public function getString(string $filename): string;
     abstract public function setString(string $filename, string $str);
@@ -76,7 +77,7 @@ abstract class BaseCache
     public function clear()
     {
         $this->items = [];
-        $this->onClear->fire();
+        $this->triggerCallback('onClear');
     }
 
     public function clearUrl(string $url)
