@@ -43,4 +43,4 @@
 
 из optionsудалить crontime
 удалить (вначале проверить) CacheStorageTrait.php
-не забыть включить новые events в kernel
+выделить отдельный класс datamap из events
