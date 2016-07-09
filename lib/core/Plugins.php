@@ -17,19 +17,44 @@ class Plugins extends Items
 {
     public static $abouts;
     public $deprecated;
+public $paths;
+private $dirNames;
 
     protected function create()
     {
         $this->dbversion = false;
         parent::create();
-        $this->basename = 'plugins' . DIRECTORY_SEPARATOR . 'index';
-        $this->deprecated = array(
-            'ajaxcommentform',
-            'fileprops'
-        );
+        $this->basename = 'plugins/index';
+        $this->deprecated = [];
+$this->addMap('paths', []);
     }
 
-    public static function getAbout($name)
+public function __get($name)
+{
+if (isset($this->paths[$name])) {
+return $this->paths[$name]
+} elseif (isset($this->items[$name] && isset($this->items[$name]['path'])) {
+return $this->items[$name]['path'];
+} else {
+return parent::__get($name);
+}
+}
+
+public function __set($name, $value)
+{
+if (isset($this->paths[$name])) {
+$this->paths[$name] = $value;
+} elseif (isset($this->items[$name]) && isset($this->items[$name]['path'])) {
+$this->items[$name]['path'] = $value;
+} else {
+return parent::__set($name, $value);
+}
+
+$this->save();
+return true;
+}
+
+    public static function getAbout(string $name): array
     {
         if (!isset(static ::$abouts[$name])) {
             if (!isset(static ::$abouts)) {
@@ -42,7 +67,7 @@ class Plugins extends Items
         return static ::$abouts[$name];
     }
 
-    public static function localAbout($dir)
+    public static function localAbout(string $dir): array
     {
         $filename = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'about.ini';
         $about = parse_ini_file($filename, true);
@@ -244,4 +269,46 @@ class Plugins extends Items
             file_put_contents($dir . $filename, base64_decode($content));
         }
     }
+
+public function readPaths(): array
+{
+$paths = [];
+$dir = $this->getapp()->paths->plugins;
+$list = dir($dir);
+while($filename = $list->read()) {
+if (substr($filename, -4) == '.ini') {
+$ini = parse_ini_file($dir . $filename, false);
+$paths = $ini + $paths;
+}
+}
+
+$list->close();
+
+if ($paths != $this->paths) {
+$this->paths = $paths;
+$this->save();
+}
+
+return $paths;
+}
+
+public function getDirNames(): array
+{
+if (!$this->dirNames) {
+$app = $this->getApp();
+        $this->dirNames = Filer::getDir($app->paths->plugins);
+        sort($this->dirNames);
+
+$paths = $this->readPaths();
+foreach ($paths as $path) {
+if ($list = Filer::getDir($app->paths->home . $path)) {
+sort($list);
+$this->dirNames = array_merge($this->dirNames, $list);
+}
+}
+}
+
+return $this->dirNames;
+}
+
 }
