@@ -12,68 +12,23 @@ namespace litepubl\update;
 
 class classReplacer
 {
-
-    public $classmap;
+    public $map;
 
     public function __construct()
     {
-        $this->classmap = include __DIR__ . '/classmap.php';
+        $this->map = include __DIR__ . '/classmap.php';
     }
 
-    public function file($filename)
+    public function file(string $filename)
     {
+if (substr($filename, -4) == '.php') {
         $s = file_get_contents($filename);
         $s = $this->replace($s);
-        ffile_put_contents($filename, $s);
+        file_put_contents($filename, $s);
+}
     }
 
-    public function regexpReplace($s)
-    {
-        foreach ($this->classmap as $old => $new) {
-            if (preg_match("/\\b$old\\b/im", $s, $m)) {
-                $s = $this->replaceClass($s, $old, $new);
-            }
-        }
-        
-        return $s;
-    }
-
-    public function replaceClass($s, $old, $new)
-    {
-        $i = strrpos($new, '\\');
-        $ns = substr($new, $i);
-        $class = substr($new, $i + 1);
-        $s = str_replace($old, $class, $s);
-        if (strpos($s, "namespace $ns;")) {
-            return $s;
-        }
-        
-        $uns = "use $new;";
-        if (strpos($s, $uns)) { return $s; 
-        }
-        
-        $i = strpos($s, "\n\n", strpos($s, 'namespace '));
-        if (! $i) {
-            echo "Cant insert $uns<br>";
-            return $s;
-        }
-        
-        $s = substr($s, 0, $i) . "\n" . $uns . substr($s, $i);
-        return $s;
-    }
-
-    public function find($s)
-    {
-        foreach ($this->classmap as $old => $new) {
-            if (preg_match("/\\b$old::/im", $s, $m)) {
-                return $old;
-            }
-        }
-        
-        return false;
-    }
-
-    public function findFile($dir)
+    public function dir($dir)
     {
         $list = dir($dir);
         while ($name = $list->read()) {
@@ -83,13 +38,9 @@ class classReplacer
             
             $filename = $dir . '/' . $name;
             if (is_dir($filename)) {
-                $this->findFile($filename);
+                $this->dir($filename);
             } else {
-                if ($old = $this->find(file_get_contents($filename))) {
-                    echo basename($dir);
-                    echo "/$name\n$old\n";
-                    // exit();
-                }
+$this->file($filename);
             }
         }
         

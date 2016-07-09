@@ -16,21 +16,13 @@ use litepubl\view\Lang;
 
 class Plugins extends Menu
 {
-    private $names;
-
-    protected function create()
-    {
-        parent::create();
-        $this->names = Filer::getdir($this->getApp()->paths->plugins);
-        sort($this->names);
-    }
 
     public function getPluginsmenu()
     {
         $result = '';
         $link = Link::url($this->url, 'plugin=');
         $plugins = PluginItems::i();
-        foreach ($this->names as $name) {
+        foreach ($plugins->getDirNames() as $name) {
             $about = PluginItems::getabout($name);
             if (isset($plugins->items[$name]) && !empty($about['adminclassname'])) {
                 $result.= sprintf('<li><a href="%s%s">%s</a></li>', $link, $name, $about['name']);
@@ -45,8 +37,9 @@ class Plugins extends Menu
         $result = parent::gethead();
         if (!empty($_GET['plugin'])) {
             $name = $_GET['plugin'];
-            if (in_array($name, $this->names)) {
-                if ($admin = $this->getadminplugin($name)) {
+$plugins = PluginItems::i();
+            if (in_array($name, $plugins->getDirNames())) {
+                if ($admin = $this->getAdminPlugin($name)) {
                     if (method_exists($admin, 'gethead')) {
                         $result.= $admin->gethead();
                     }
@@ -91,7 +84,7 @@ class Plugins extends Menu
 
             $body = '';
             $args = $tb->args;
-            foreach ($this->names as $name) {
+            foreach ($plugins->getDirNames() as $name) {
                 if (in_array($name, $plugins->deprecated)) {
                     continue;
                 }
@@ -113,7 +106,7 @@ class Plugins extends Menu
             $result.= $form->gettml();
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $this->names)) {
+            if (!in_array($name, $plugins->getDirNames())) {
                 return $this->notfound;
             }
 
@@ -139,7 +132,7 @@ class Plugins extends Menu
             $result = $this->theme->h(Lang::i()->updated);
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $this->names)) {
+            if (!in_array($name, $plugins->getDirNames())) {
                 return $this->notfound;
             }
 
