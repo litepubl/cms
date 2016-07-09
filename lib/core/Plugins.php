@@ -78,7 +78,7 @@ return true;
         return $about['about'];
     }
 
-    public static function getName($filename)
+    public static function getName(string $filename): string
     {
         return basename(dirname($filename));
     }
@@ -158,7 +158,7 @@ return true;
         return $name;
     }
 
-    public function has($name)
+    public function has(string $name): bool
     {
         return isset($this->items[$name]);
     }
@@ -247,7 +247,7 @@ return true;
         }
     }
 
-    public function deleteplugins($list)
+    public function deletePlugins($list)
     {
         $names = array_intersect(array_keys($this->items), $list);
         foreach ($names as $name) {
@@ -276,7 +276,13 @@ $paths = [];
 $dir = $this->getapp()->paths->plugins;
 $list = dir($dir);
 while($filename = $list->read()) {
-if (substr($filename, -4) == '.ini') {
+if ($filename == '.' || $filename == '..') {
+continue;
+}
+
+if (is_dir($dir . $filename)) {
+$this->dirNames[$filename] = 'default';
+} elseif (substr($filename, -4) == '.ini') {
 $ini = parse_ini_file($dir . $filename, false);
 $paths = $ini + $paths;
 }
@@ -295,20 +301,37 @@ return $paths;
 public function getDirNames(): array
 {
 if (!$this->dirNames) {
-$app = $this->getApp();
-        $this->dirNames = Filer::getDir($app->paths->plugins);
-        sort($this->dirNames);
-
+        $this->dirNames = [];
 $paths = $this->readPaths();
+        ksort($this->dirNames);
+
+$app = $this->getApp();
 foreach ($paths as $path) {
-if ($list = Filer::getDir($app->paths->home . $path)) {
-sort($list);
-$this->dirNames = array_merge($this->dirNames, $list);
+if (is_dir($app->paths->home . $path)) {
+$dir = $app->paths->home . $path;
+$list = dir($dir);
+while ($filename = $list->read()) {
+if ($filename == '.' || $filename == '..') {
+continue;
+}
+
+if (is_dir($dir . /' . $filename)) {
+$this->dirNames[$filename] = $dir;
+}
+}
+
+$list->close();
 }
 }
 }
 
 return $this->dirNames;
+}
+
+public function exists(string $name): bool
+{
+$list = $this->getDirList();
+return isset($list[$name]);
 }
 
 }
