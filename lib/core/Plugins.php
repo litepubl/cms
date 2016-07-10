@@ -314,7 +314,7 @@ if ($filename == '.' || $filename == '..') {
 continue;
 }
 
-if (is_dir($dir . /' . $filename)) {
+if (is_dir($dir . '/' . $filename)) {
 $dirNames[$filename] = $path;
 }
 }
@@ -350,7 +350,7 @@ return $pluginsDir . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
 }
 }
 
-$this->error(sprintf('Plugin dir not found for %s', $name);
+$this->error(sprintf('Plugin dir not found for %s', $name));
 }
 
 }

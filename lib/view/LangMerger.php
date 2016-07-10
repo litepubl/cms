@@ -10,6 +10,8 @@
 
 namespace litepubl\view;
 
+use litepubl\core\Plugins;
+
 class LangMerger extends Merger
 {
 
@@ -46,14 +48,15 @@ class LangMerger extends Merger
         return count($this->items[$name]['texts']) - 1;
     }
 
-    public function getRealfilename($filename)
+    public function getRealFilename(string $filename): string
     {
         $filename = ltrim($filename, '/');
-        $name = substr($filename, 0, strpos($filename, '/'));
-        if (isset($this->getApp()->paths->$name)) {
-            return $this->getApp()->paths->$name . str_replace('/', DIRECTORY_SEPARATOR, substr($filename, strlen($name) + 1));
-        }
-        return $this->getApp()->paths->home . str_replace('/', DIRECTORY_SEPARATOR, $filename);
+
+$theme = Theme::i();
+$vars = new Vars();
+$vars->plugins = Plugins::i();
+$filename = $theme->parse($filename);
+        return $this->getApp()->paths->home . $filename;
     }
 
     public function merge()
@@ -73,7 +76,7 @@ class LangMerger extends Merger
         }
         $ini = array();
         foreach ($this->items[$name]['files'] as $filename) {
-            $realfilename = $this->getrealfilename($filename);
+            $realfilename = $this->getRealFilename($filename);
             if (!file_exists($realfilename)) {
                 continue;
             }

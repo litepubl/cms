@@ -9,6 +9,7 @@ foreach (array(
 //'debugproxy.class.php');
 'Data.php',
 'AppTrait.php',
+'Callbacks.php',
 'Storage.php',
 'StorageInc.php',
 //'storagejson.php',
@@ -19,9 +20,9 @@ foreach (array(
 'BaseCache.php',
 'CacheFile.php',
 'CacheMemcache.php',
-   
+'Event.php',
+'EventsTrait.php',   
 'Events.php',
-
 'Items.php',
 'PoolStorageTrait.php',
 'Item.php',

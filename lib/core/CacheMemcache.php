@@ -19,7 +19,6 @@ class CacheMemcache extends BaseCache
 
     public function __construct(\Memcache $memcache, int $lifetime, int $prefix)
     {
-        parent::__construct();
         $this->memcache = $memcache;
         $this->lifetime = $lifetime;
         $this->prefix = $prefix . ':cache:';

@@ -50,7 +50,7 @@ use Callbacks;
         return in_array($name, $this->eventnames);
     }
 
-    public function method_exists(string $name): bool
+    public function method_exists($name)
     {
         return in_array($name, $this->eventnames);
     }

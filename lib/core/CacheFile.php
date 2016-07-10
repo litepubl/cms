@@ -17,7 +17,6 @@ class CacheFile extends BaseCache
 
     public function __construct(string $dir, int $lifetime, int $timeOffset)
     {
-        parent::__construct();
         $this->dir = $dir;
         $this->timeOffset = $timeOffset;
         $this->lifetime = $lifetime - $timeOffset;

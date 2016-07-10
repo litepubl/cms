@@ -13,6 +13,7 @@ namespace litepubl\view;
 use litepubl\Config;
 use litepubl\core\Arr;
 use litepubl\core\Str;
+use litepubl\core\Plugins;
 
 class BaseParser extends \litepubl\core\Events
 {
@@ -58,19 +59,17 @@ class BaseParser extends \litepubl\core\Events
         $about = $this->getAbout($name);
         $result[] = $paths->themes . $name . '/' . $about['file'];
 
+$base = new Base();
+$vars = new Vars();
+$vars->plugins = Plugins::i();
         foreach ($this->themefiles as $filename) {
             $filename = ltrim($filename, '/');
             if (!$filename) {
                 continue;
             }
 
-            if (file_exists($paths->home . $filename)) {
+$filename = $base->parse($filename);
                 $result[] = $paths->home . $filename;
-            } elseif (file_exists($paths->themes . $filename)) {
-                $result[] = $paths->themes . $filename;
-            } elseif (file_exists($paths->plugins . $filename)) {
-                $result[] = $paths->plugins . $filename;
-            }
         }
 
         return $result;
@@ -94,7 +93,6 @@ class BaseParser extends \litepubl\core\Events
         $about = $this->getAbout($theme->name);
 
         $filelist = $this->getFileList($theme->name);
-
         foreach ($filelist as $filename) {
             if ($s = $this->getfile($filename)) {
                 $s = $this->replace_about($s, $about);
