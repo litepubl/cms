@@ -12,6 +12,7 @@ namespace litepubl\view;
 
 use litepubl\core\Arr;
 use litepubl\core\Str;
+use litepubl\core\Plugins;
 
 class Merger extends \litepubl\core\Items
 {
@@ -234,8 +235,11 @@ class Merger extends \litepubl\core\Items
     {
         $home = rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         $theme = Theme::i();
+$vars = new Vars();
+$vars->plugins = Plugins::i();
         $template = MainView::i();
         $template->data[$this->basename] = $this->revision;
+
 
         foreach ($this->items as $section => $items) {
             $s = '';

@@ -22,7 +22,7 @@ class Plugins extends Menu
         $result = '';
         $link = Link::url($this->url, 'plugin=');
         $plugins = PluginItems::i();
-        foreach ($plugins->getDirNames() as $name) {
+        foreach ($plugins->getDirNames() as $name => $dir) {
             $about = PluginItems::getabout($name);
             if (isset($plugins->items[$name]) && !empty($about['adminclassname'])) {
                 $result.= sprintf('<li><a href="%s%s">%s</a></li>', $link, $name, $about['name']);
@@ -38,7 +38,7 @@ class Plugins extends Menu
         if (!empty($_GET['plugin'])) {
             $name = $_GET['plugin'];
 $plugins = PluginItems::i();
-            if (in_array($name, $plugins->getDirNames())) {
+            if ($plugins->exists($name)) {
                 if ($admin = $this->getAdminPlugin($name)) {
                     if (method_exists($admin, 'gethead')) {
                         $result.= $admin->gethead();
@@ -84,12 +84,12 @@ $plugins = PluginItems::i();
 
             $body = '';
             $args = $tb->args;
-            foreach ($plugins->getDirNames() as $name) {
+            foreach ($plugins->getDirNames() as $name => $dir) {
                 if (in_array($name, $plugins->deprecated)) {
                     continue;
                 }
 
-                $about = PluginItems::getabout($name);
+                $about = PluginItems::getAbout($name);
                 $args->add($about);
                 $args->name = $name;
                 $args->checked = isset($plugins->items[$name]);
@@ -106,7 +106,7 @@ $plugins = PluginItems::i();
             $result.= $form->gettml();
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $plugins->getDirNames())) {
+            if (!$plugins->exists($name)) {
                 return $this->notfound;
             }
 
@@ -132,11 +132,11 @@ $plugins = PluginItems::i();
             $result = $this->theme->h(Lang::i()->updated);
         } else {
             $name = $_GET['plugin'];
-            if (!in_array($name, $plugins->getDirNames())) {
+            if (!$plugins->exists($name)) {
                 return $this->notfound;
             }
 
-            if ($admin = $this->getadminplugin($name)) {
+            if ($admin = $this->getAdminPlugin($name)) {
                 $result = $admin->processForm();
             }
         }
@@ -145,9 +145,9 @@ $plugins = PluginItems::i();
         return $result;
     }
 
-    private function getAdminplugin(string $name)
+    private function getAdminPlugin(string $name)
     {
-        $about = PluginItems::getabout($name);
+        $about = PluginItems::getAbout($name);
         if (empty($about['adminclassname'])) {
             return false;
         }

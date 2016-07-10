@@ -44,3 +44,4 @@
 из optionsудалить crontime
 удалить (вначале проверить) CacheStorageTrait.php
 выделить отдельный класс datamap из events
+добавить jdoc для javascript closoure

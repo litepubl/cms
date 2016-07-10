@@ -238,7 +238,7 @@ class Base extends \litepubl\core\Events
         return $s;
     }
 
-    public static function parsevar($name, $var, $s)
+    public static function parseVar($name, $var, $s)
     {
         static ::$vars[$name] = $var;
         return static ::i()->parse($s);

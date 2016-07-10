@@ -15,7 +15,7 @@ use litepubl\view\Lang;
 
 class Plugins extends Items
 {
-    public static $abouts;
+    public static $abouts = [];
     public $deprecated;
 public $paths;
 private $dirNames;
@@ -31,10 +31,15 @@ $this->addMap('paths', []);
 
 public function __get($name)
 {
-if (isset($this->paths[$name])) {
-return $this->paths[$name]
-} elseif (isset($this->items[$name] && isset($this->items[$name]['path'])) {
-return $this->items[$name]['path'];
+if (isset($this->items[$name])) {
+$section = $this->items[$name]['path'] ?? '';
+if (isset($this->paths[$section])) {
+return trim($this->paths[$section], '\/') . '/' . $name;
+} else {
+return $name;
+}
+} elseif (isset($this->paths[$name])) {
+return $this->paths[$name];
 } else {
 return parent::__get($name);
 }
@@ -42,10 +47,10 @@ return parent::__get($name);
 
 public function __set($name, $value)
 {
-if (isset($this->paths[$name])) {
-$this->paths[$name] = $value;
-} elseif (isset($this->items[$name]) && isset($this->items[$name]['path'])) {
+if (isset($this->items[$name])) {
 $this->items[$name]['path'] = $value;
+} elseif (isset($this->paths[$name])) {
+$this->paths[$name] = $value;
 } else {
 return parent::__set($name, $value);
 }
@@ -57,11 +62,15 @@ return true;
     public static function getAbout(string $name): array
     {
         if (!isset(static ::$abouts[$name])) {
-            if (!isset(static ::$abouts)) {
-                static ::$abouts = array();
-            }
+$pluginsDir = static ::getAppInstance()->paths->plugins;
+if (is_dir($pluginsDir . $name)) {
+$dir = $pluginsDir . $name;
+} else {
+$self = static::i();
+$dir = $self->getPluginDir($name);
+}
 
-            static ::$abouts[$name] = static ::localabout(static ::getAppInstance()->paths->plugins . $name);
+            static ::$abouts[$name] = static ::localAbout($dir);
         }
 
         return static ::$abouts[$name];
@@ -69,7 +78,7 @@ return true;
 
     public static function localAbout(string $dir): array
     {
-        $filename = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'about.ini';
+        $filename = rtrim($dir, '\/') . '/about.ini';
         $about = parse_ini_file($filename, true);
         if (isset($about[static ::getAppInstance()->options->language])) {
             $about['about'] = $about[static ::getAppInstance()->options->language] + $about['about'];
@@ -281,7 +290,7 @@ continue;
 }
 
 if (is_dir($dir . $filename)) {
-$this->dirNames[$filename] = 'default';
+$this->dirNames[$filename] = $dir;
 } elseif (substr($filename, -4) == '.ini') {
 $ini = parse_ini_file($dir . $filename, false);
 $paths = $ini + $paths;
@@ -305,10 +314,12 @@ if (!$this->dirNames) {
 $paths = $this->readPaths();
         ksort($this->dirNames);
 
-$app = $this->getApp();
+$pluginsDir = $this->getApp()->paths->plugins;
 foreach ($paths as $path) {
-if (is_dir($app->paths->home . $path)) {
-$dir = $app->paths->home . $path;
+$path = trim($path, '\/');
+if (is_dir($pluginsDir . $path)) {
+$dirNames = [];
+$dir = $pluginsDir . $path;
 $list = dir($dir);
 while ($filename = $list->read()) {
 if ($filename == '.' || $filename == '..') {
@@ -316,11 +327,14 @@ continue;
 }
 
 if (is_dir($dir . /' . $filename)) {
-$this->dirNames[$filename] = $dir;
+$dirNames[$filename] = $dir . '/' . $filename . '/';
 }
 }
 
 $list->close();
+
+ksort($dirNames);
+$this->dirNames = $dirNames + $this->dirNames;
 }
 }
 }
@@ -332,6 +346,17 @@ public function exists(string $name): bool
 {
 $list = $this->getDirList();
 return isset($list[$name]);
+}
+
+public function getPluginDir(string $name): string
+{
+if ($this->dirNames && isset($this->dirNames[$name])) {
+return $this->dirNames[$name];
+} elseif (isset($this->items[$name])) {
+return $this->getApp()->paths->plugins . $this->__get($name);
+} else {
+$list = $this->getDirNames();
+return $list[$name];
 }
 
 }
