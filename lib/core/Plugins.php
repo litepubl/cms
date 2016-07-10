@@ -92,28 +92,32 @@ $dir = $self->getPluginDir($name);
         return basename(dirname($filename));
     }
 
-    public static function getLangAbout($filename)
+    public static function getLangAbout($filename): Lang
     {
-        return static ::getNameLang(static ::getName($filename));
-    }
+$dir = dirname($filename);
+$name = basename($dir);
+if (!isset(static::$abouts[$name])) {
+        $about = static ::localAbout($dir);
+static::$abouts[$name] = $about;
+}
 
-    public static function getNamelang($name)
-    {
-        $about = static ::getAbout($name);
+$about = static::$abouts[$name];
         $lang = Lang::admin();
         $lang->ini[$name] = $about;
         $lang->section = $name;
         return $lang;
     }
 
-    public function add($name)
+    public function add(string $name)
     {
-        if (!@is_dir($this->getApp()->paths->plugins . $name)) {
-            return false;
-        }
+$dirNames = $this->getDirNames();
+if (!isset($dirNames[$name])) {
+return false;
+}
 
-        $about = static ::getabout($name);
-        $dir = $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR;
+$dir = $this->getPluginDir($name) . DIRECTORY_SEPARATOR;
+        $about = static ::getAbout($name);
+
         if (file_exists($dir . $about['filename'])) {
             include_once $dir . $about['filename'];
         } else {
@@ -128,38 +132,22 @@ $dir = $self->getPluginDir($name);
             }
         }
 
+        $classname = trim($about['classname']);
+        if (!strrpos($classname, '\\')) {
+$this->error('Plugin class must have namespace');
+}
+
         $classes = $this->getApp()->classes;
         $classes->lock();
         $this->lock();
-        $classname = trim($about['classname']);
-        if ($i = strrpos($classname, '\\')) {
             $this->items[$name] = array(
-                'namespace' => substr($classname, 0, $i) ,
+'path' => $dirNames[$name],
             );
 
             $classes->installClass($classname);
             if ($about['adminclassname']) {
                 $classes->installClass($about['adminclassname']);
             }
-        } else {
-            $this->items[$name] = array(
-                'namespace' => false,
-            );
-
-            if (!class_exists($classname, false)) {
-                $classname = 'litepubl\\' . $classname;
-            }
-
-            $classes->Add($classname, sprintf('plugins/%s/%s', $name, $about['filename']));
-
-            if ($adminclass = $about['adminclassname']) {
-                if (!class_exists($adminclass, false)) {
-                    $adminclass = 'litepubl\\' . $adminclass;
-                }
-
-                $classes->Add($adminclass, sprintf('plugins/%s/%s', $name, $about['adminfilename']));
-            }
-        }
 
         $this->unlock();
         $classes->unlock();
@@ -290,7 +278,7 @@ continue;
 }
 
 if (is_dir($dir . $filename)) {
-$this->dirNames[$filename] = $dir;
+$this->dirNames[$filename] = '';
 } elseif (substr($filename, -4) == '.ini') {
 $ini = parse_ini_file($dir . $filename, false);
 $paths = $ini + $paths;
@@ -327,7 +315,7 @@ continue;
 }
 
 if (is_dir($dir . /' . $filename)) {
-$dirNames[$filename] = $dir . '/' . $filename . '/';
+$dirNames[$filename] = $path;
 }
 }
 
@@ -350,13 +338,19 @@ return isset($list[$name]);
 
 public function getPluginDir(string $name): string
 {
-if ($this->dirNames && isset($this->dirNames[$name])) {
-return $this->dirNames[$name];
-} elseif (isset($this->items[$name])) {
-return $this->getApp()->paths->plugins . $this->__get($name);
+$pluginsDir = $this->getApp()->paths->plugins;
+if (isset($this->items[$name])) {
+return $pluginsDir . $this->__get($name);
+} elseif (is_dir($pluginsDir . $name)) {
+return $pluginsDir . $name;
 } else {
-$list = $this->getDirNames();
-return $list[$name];
+$dirNames = $this->getDirNames();
+if (isset($this->paths[$dirNames[$name]])) {
+return $pluginsDir . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
+}
+}
+
+$this->error(sprintf('Plugin dir not found for %s', $name);
 }
 
 }
