@@ -32,7 +32,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     {
         parent::create();
         $this->basename = 'commentform';
-        $this->addevents('oncomuser');
+        $this->addEvents('oncomuser');
     }
 
     public function request(Context $context)

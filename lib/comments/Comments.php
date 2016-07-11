@@ -10,6 +10,7 @@
 
 namespace litepubl\comments;
 
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
@@ -17,6 +18,19 @@ use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
+
+/**
+ * Comment items
+ *
+ * @property-write callable $edited
+ * @property-write callable $onStatus
+ * @property-write callable $changed
+ * @property-write callable $onApproved
+ * @method array edited(array $params)
+ * @method array onStatus(array $params)
+ * @method array changed(array $params)
+ * @method array onApproved(array $params)
+ */
 
 class Comments extends \litepubl\core\Items
 {
@@ -39,7 +53,7 @@ class Comments extends \litepubl\core\Items
         $this->table = 'comments';
         $this->rawtable = 'rawcomments';
         $this->basename = 'comments';
-        $this->addevents('edited', 'onstatus', 'changed', 'onapproved');
+        $this->addEvents('edited', 'onstatus', 'changed', 'onapproved');
         $this->pid = 0;
     }
 
@@ -76,8 +90,8 @@ class Comments extends \litepubl\core\Items
             )
         );
 
-        $this->added($id);
-        $this->changed($id);
+        $this->added(['id' => $id]);
+        $this->changed(['id' => $id]);
         return $id;
     }
 
@@ -103,8 +117,8 @@ class Comments extends \litepubl\core\Items
             $this->items[$id]['rawcontent'] = $content;
         }
 
-        $this->edited($id);
-        $this->changed($id);
+        $this->edited(['id' => $id]);
+        $this->changed(['id' => $id]);
         return true;
     }
 
@@ -115,8 +129,8 @@ class Comments extends \litepubl\core\Items
         }
 
         $this->db->setvalue($id, 'status', 'deleted');
-        $this->deleted($id);
-        $this->changed($id);
+        $this->deleted(['id' => $id]);
+        $this->changed(['id' => $id]);
         return true;
     }
 
@@ -135,22 +149,27 @@ class Comments extends \litepubl\core\Items
             return false;
         }
 
-        $old = $this->getvalue($id, 'status');
+        $old = $this->getValue($id, 'status');
         if ($old != $status) {
-            $this->setvalue($id, 'status', $status);
-            $this->onstatus($id, $old, $status);
-            $this->changed($id);
+            $this->setValue($id, 'status', $status);
+ $this->onstatus([
+'id' => $id
+'old' => $old,
+'status' =>  $status
+]);
+
+            $this->changed(['id' => $id]);
             if (($old == 'hold') && ($status == 'approved')) {
-                $this->onapproved($id);
+                $this->onapproved(['id' => $id]);
             }
             return true;
         }
         return false;
     }
 
-    public function postDeleted($idpost)
+    public function postDeleted(Event $event)
     {
-        $this->db->update("status = 'deleted'", "post = $idpost");
+        $this->db->update("status = 'deleted'", "post = $event->id");
     }
 
     public function getComment($id)
