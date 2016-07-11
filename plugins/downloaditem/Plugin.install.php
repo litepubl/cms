@@ -35,7 +35,6 @@ function PluginInstall($self)
     $optimizer = DBOptimizer::i();
     $optimizer->lock();
     $optimizer->childTables[] = 'downloaditems';
-    $optimizer->addevent('postsdeleted', get_class($self), 'postsdeleted');
     $optimizer->unlock();
 
     LangMerger::i()->addPlugin(basename(__DIR__));

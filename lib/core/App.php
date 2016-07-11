@@ -143,7 +143,7 @@ use Callbacks;
             if (!$this->controller->cached($context)) {
                 $this->router->request($context);
                 $this->controller->request($context);
-                $this->router->afterrequest($context);
+                $this->router->afterRequest(['context' => $context]);
             }
 
             $this->showErrors();

@@ -10,6 +10,12 @@
 
 namespace litepubl\core;
 
+/**
+ * Class to nightly optimize database
+ *
+ * @method array postsDeleted() postsDeleted(array $params) trigger when real posts removed from database
+ */
+
 class DbOptimizer extends Events
 {
     public $childTables;
@@ -54,7 +60,7 @@ class DbOptimizer extends Events
 
         $items = $db->idSelect("status = 'deleted'");
         if (count($items)) {
-            $this->postsdeleted($items);
+            $this->postsdeleted(['items' => $items]);
             $deleted = sprintf('id in (%s)', implode(',', $items));
             $db->exec(
                 "delete from $db->urlmap where id in

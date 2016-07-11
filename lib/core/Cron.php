@@ -14,7 +14,7 @@ use litepubl\Config;
 use litepubl\utils\Mailer;
 
 /**
- * Class to runregular tasks
+ * Class to run regular tasks
  *
  * @method array added() added(array $params) trigger when new task added
  * @method array deleted() deleted(array $params) trigger when task has been deleted

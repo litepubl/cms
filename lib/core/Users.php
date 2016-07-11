@@ -10,6 +10,12 @@
 
 namespace litepubl\core;
 
+/**
+ * Class to manage users
+ *
+ * @method array beforeDelete() beforeDelete(array $params) triggered when user need to delete
+ */
+
 class Users extends Items
 {
     public $grouptable;
@@ -21,7 +27,7 @@ class Users extends Items
         $this->basename = 'users';
         $this->table = 'users';
         $this->grouptable = 'usergroup';
-        $this->addevents('beforedelete');
+        $this->addEvents('beforedelete');
     }
 
     public function res2items($res)
@@ -78,7 +84,7 @@ class Users extends Items
             return;
         }
 
-        $this->beforedelete($id);
+        $this->beforedelete(['id' => $id]);
         $this->getdb($this->grouptable)->delete('iduser = ' . (int)$id);
         $this->pages->delete($id);
         $this->getdb('comments')->update("status = 'deleted'", "author = $id");

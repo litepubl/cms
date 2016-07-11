@@ -52,6 +52,7 @@ use litepubl\Config;
  * @property bool $show_draft_post
  * @property bool $show_file_perm
  * @property int $crontime
+ * @method array changed() changed(array $params) triggered when option changed
  */
 
 class Options extends Events
@@ -70,7 +71,7 @@ class Options extends Events
     {
         parent::create();
         $this->basename = 'options';
-        $this->addevents('changed', 'perpagechanged');
+        $this->addEvents('changed');
         unset($this->cache);
         $this->gmt = 0;
         $this->group = '';
@@ -107,21 +108,10 @@ class Options extends Events
                 $this->data['emptyhash'] = $this->hash('');
             }
             $this->save();
-            $this->dochanged($name, $value);
+            $this->changed(['name' => $name, 'value' => $value]);
+            $this->getApp()->cache->clear();
         }
         return true;
-    }
-
-    private function doChanged($name, $value)
-    {
-        if ($name == 'perpage') {
-            $this->perpagechanged();
-            $this->getApp()->cache->clear();
-        } elseif ($name == 'cache') {
-            $this->getApp()->cache->clear();
-        } else {
-            $this->changed($name, $value);
-        }
     }
 
     public function delete(string $name)

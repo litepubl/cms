@@ -10,6 +10,13 @@
 
 namespace litepubl\core;
 
+/**
+ * Container class to keep items
+ *
+ * @method array added() added(array $params) triggered when new item has been added
+ * @method array deleted() deleted(array $params) triggered when item has been deleted
+ */
+
 class Items extends Events
 {
     public $items;
@@ -20,7 +27,7 @@ class Items extends Events
     protected function create()
     {
         parent::create();
-        $this->addevents('added', 'deleted');
+        $this->addEvents('added', 'deleted');
         $this->idprop = 'id';
         if ($this->dbversion) {
             $this->items = array();
@@ -176,7 +183,7 @@ class Items extends Events
             $this->save();
         }
 
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -192,7 +199,7 @@ class Items extends Events
                 $this->save();
             }
 
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
             return true;
         }
 

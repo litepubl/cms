@@ -15,6 +15,14 @@ use litepubl\core\Arr;
 use litepubl\core\Str;
 use litepubl\core\Plugins;
 
+/**
+ * Common class for theme parsing
+ *
+ * @method array onGetPaths() onGetPaths(array $params) triggered when tags required before parse
+ * @method array beforeParse() beforeParse(array $params) triggered before parse text
+ * @method array parsed() parsed(array $params) triggered after pase
+ */
+
 class BaseParser extends \litepubl\core\Events
 {
     public $theme;
@@ -30,7 +38,7 @@ class BaseParser extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'baseparser';
-        $this->addevents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
+        $this->addEvents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
         $this->addmap('tagfiles', array());
         $this->addmap('themefiles', array());
         $this->addmap('extrapaths', array());
@@ -104,7 +112,8 @@ $filename = $base->parse($filename);
         if ($this->replacelang) {
             $this->doreplacelang($theme);
         }
-        $this->parsed($theme);
+
+        $this->parsed(['theme' => $theme]);
         $theme->unlock();
         return true;
     }
@@ -278,7 +287,7 @@ $filename = $base->parse($filename);
         return $i;
     }
 
-    public function parsetags(Base $theme, $s)
+    public function parseTags(Base $theme, $s)
     {
         $this->theme = $theme;
         if (!$this->paths || !count($this->paths)) {
@@ -286,12 +295,12 @@ $filename = $base->parse($filename);
         }
 
         $s = trim($s);
-        $this->callevent(
-            'beforeparse', array(
-            $theme, &$s
-            )
-        );
+        $info = $this->beforeparse([
+            'theme' => $theme,
+'text' => $s,
+            ]);
 
+$s = $info['text'];
         if ($this->removephp) {
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
@@ -494,11 +503,8 @@ $filename = $base->parse($filename);
         }
 
         $result = $result + $this->extrapaths;
-        $this->callevent(
-            'ongetpaths', array(&$result
-            )
-        );
-        return $result;
+        $info = $this->ongetpaths(['paths' => $result]);
+        return $info['paths'];
     }
 
     public function addtags($filetheme, $filetags)

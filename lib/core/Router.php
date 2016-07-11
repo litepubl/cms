@@ -12,6 +12,13 @@ namespace litepubl\core;
 
 use litepubl\pages\Redirector;
 
+/**
+ * One of main class which find url in database
+ *
+ * @method array beforeRequest() beforeRequest(array $params) triggered before make request
+ * @method array afterRequest() afterRequest(array $params) triggered when request has been made
+ */
+
 class Router extends Items
 {
     public $prefilter;
@@ -22,7 +29,7 @@ class Router extends Items
         parent::create();
         $this->table = 'urlmap';
         $this->basename = 'urlmap';
-        $this->addevents('beforerequest', 'afterrequest', 'onclearcache');
+        $this->addEvents('beforerequest', 'afterrequest');
         $this->data['disabledcron'] = false;
         $this->data['redirdom'] = false;
         $this->addmap('prefilter', array());
@@ -39,7 +46,7 @@ class Router extends Items
             }
         }
 
-        $this->beforerequest($context);
+        $this->beforeRequest(['context' => $context]);
         $context->itemRoute = $this->queryItem($context);
     }
 

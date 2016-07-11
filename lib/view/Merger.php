@@ -23,7 +23,7 @@ class Merger extends \litepubl\core\Items
         parent::create();
         $this->basename = 'merger';
         $this->data['revision'] = 0;
-        $this->addevents('onsave');
+        $this->addEvents('onsave');
     }
 
     public function save()
