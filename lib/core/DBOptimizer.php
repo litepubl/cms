@@ -13,6 +13,7 @@ namespace litepubl\core;
 /**
  * Class to nightly optimize database
  *
+ * @property-write callable $postsDeleted
  * @method array postsDeleted() postsDeleted(array $params) trigger when real posts removed from database
  */
 

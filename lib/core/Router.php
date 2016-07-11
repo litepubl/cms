@@ -15,6 +15,8 @@ use litepubl\pages\Redirector;
 /**
  * One of main class which find url in database
  *
+ * @property-write callable $beforeRequest
+ * @property-write callable $afterRequest
  * @method array beforeRequest() beforeRequest(array $params) triggered before make request
  * @method array afterRequest() afterRequest(array $params) triggered when request has been made
  */

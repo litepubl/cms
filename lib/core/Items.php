@@ -13,6 +13,8 @@ namespace litepubl\core;
 /**
  * Container class to keep items
  *
+ * @property-write callable $added
+ * @property-write callable $deleted
  * @method array added() added(array $params) triggered when new item has been added
  * @method array deleted() deleted(array $params) triggered when item has been deleted
  */

@@ -16,6 +16,30 @@ use litepubl\core\Str;
 use litepubl\perms\Perm;
 use litepubl\widget\Widgets;
 
+/**
+ * Base class for page render
+ *
+ * @property string $heads
+ * @property string $footer
+ * @property string $js
+ * @property string $jsready
+ * @property string $jsload
+ * @property-write callable $beforeContent
+ * @property-write callable $afterContent
+ * @property-write callable $onHead
+ * @property-write callable $onBody
+ * @property-write callable $onRequest
+ * @property-write callable $onTitle
+ * @property-write callable $onGetMenu
+ * @method array beforeContent() beforeContent(array $params)
+ * @method array afterContent() afterContent(array $params)
+ * @method array onHead() onHead(array $params)
+ * @method array onBody() onBody(array $params)
+ * @method array onRequest() onRequest(array $params)
+ * @method array onTitle() onTitle(array $params)
+ * @method array onGetMenu() onGetMenu(array $params)
+ */
+
 class MainView extends \litepubl\core\Events
 {
     use \litepubl\core\PoolStorageTrait;
@@ -38,7 +62,7 @@ class MainView extends \litepubl\core\Events
         $app->classes->instances[get_class($this) ] = $this;
         parent::create();
         $this->basename = 'template';
-        $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
+        $this->addEvents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
         $this->path = $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url = $app->site->files . '/themes/default';
         $this->ltoptions = array(
@@ -113,12 +137,12 @@ class MainView extends \litepubl\core\Events
         }
 
         $context->response->body.= $theme->render($context->view);
-        $this->onbody($this);
+        $this->onbody([]);
         if ($this->extrabody) {
             $context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
         }
 
-        $this->onrequest($this);
+        $this->onrequest([]);
 
         $this->context = null;
         $this->view = null;
@@ -144,20 +168,21 @@ class MainView extends \litepubl\core\Events
         return Widgets::i()->getSidebar($this->view);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
-        $title = new str($this->view->gettitle());
-        if ($this->ontitle($title)) {
-            return $title->value;
+        $title = $this->view->gettitle();
+$a =        $this->ontitle(['title' => $title, 'return' => false]);
+if ($a['return']) {
+            return $a['title'];
         } else {
-            return $this->parsetitle($title, $this->schema->theme->templates['title']);
+            return $this->parsetitle($a['title'], $this->schema->theme->templates['title']);
         }
     }
 
-    public function parsetitle(Str $title, $tml)
+    public function parseTitle(string $title, string $tml): string
     {
         $args = new Args();
-        $args->title = $title->value;
+        $args->title = $title;
         $result = $this->schema->theme->parseArg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
@@ -189,8 +214,9 @@ class MainView extends \litepubl\core\Events
 
     public function getMenu()
     {
-        if ($r = $this->ongetmenu()) {
-            return $r;
+$r = $this->ongetmenu(['menu' => '', 'return' => false]);
+if ($r['return']) {
+            return $r['menu'];
         }
 
         $app = $this->getApp();
@@ -256,18 +282,16 @@ class MainView extends \litepubl\core\Events
         $result.= $this->extrahead;
         $result = $this->schema->theme->parse($result);
 
-        $s = new Str($result);
-        $this->onhead($s);
-        return $s->value;
+        $a = $this->onhead(['head' => $result]);
+        return $a['head'];
     }
 
     public function getContent()
     {
-        $result = new Str('');
-        $this->beforecontent($result);
-        $result->value.= $this->view->getCont();
-        $this->aftercontent($result);
-        return $result->value;
+        $result = $this->beforecontent(['content' => $result]);
+        $result['content'] .= $this->view->getCont();
+        $result = $this->aftercontent($result);
+        return $result['content'];
     }
 
     protected function setFooter($s)

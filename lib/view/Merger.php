@@ -14,6 +14,13 @@ use litepubl\core\Arr;
 use litepubl\core\Str;
 use litepubl\core\Plugins;
 
+/**
+ * Common class for join files
+ *
+ * @property-write callable $onSave
+ * @method array onsave() onSave(array $params)
+ */
+
 class Merger extends \litepubl\core\Items
 {
 
@@ -35,7 +42,7 @@ class Merger extends \litepubl\core\Items
         $this->data['revision']++;
         parent::save();
         $this->merge();
-        $this->onsave();
+        $this->onsave([]);
     }
 
     public function normFilename($filename)

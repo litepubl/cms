@@ -14,6 +14,7 @@ use litepubl\post\Announce;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class Plugin extends \litepubl\core\Plugin
 {
@@ -27,8 +28,9 @@ class Plugin extends \litepubl\core\Plugin
         $this->data['tmlitems'] = '<ul>$items</ul>';
     }
 
-    public function themeParsed(Theme $theme)
+    public function themeParsed(Event $event)
     {
+$theme = $event->theme;
         $tag = '$singlecat.content';
         if (!strpos($theme->templates['content.post'], $tag)) {
             $theme->templates['content.post'] = str_replace('$post.content', '$post.content ' . $tag, $theme->templates['content.post']);

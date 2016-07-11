@@ -135,7 +135,7 @@ class Schema extends \litepubl\core\Item
         $this->data['custom'] = $this->originalCustom;
         $this->save();
 
-        static ::getowner()->themechanged($this);
+        static ::getOwner()->themechanged(['schema' => $this]);
     }
 
     public function setAdminname($name)

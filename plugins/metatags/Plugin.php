@@ -15,12 +15,14 @@ use litepubl\post\Posts;
 use litepubl\tag\View as CatView;
 use litepubl\view\MainView;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class Plugin extends \litepubl\core\Plugin
 {
 
-    public function themeParsed(Theme $theme)
+    public function themeParsed(Event $event)
     {
+$theme = $event->theme;
         $theme->templates['index'] = strtr(
             $theme->templates['index'], array(
             '$template.keywords' => '$metatags.keywords',

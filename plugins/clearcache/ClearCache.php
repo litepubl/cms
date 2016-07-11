@@ -12,6 +12,7 @@ namespace litepubl\plugins\clearcache;
 
 use litepubl\view\Schemes;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class ClearCache extends \litepubl\core\Plugin
 {
@@ -21,8 +22,9 @@ class ClearCache extends \litepubl\core\Plugin
         Theme::clearCache();
     }
 
-    public function parsed(Theme $theme)
+    public function parsed(Event $event)
     {
+$theme = $event->theme;
         $name = $theme->name;
         $schemes = Schemes::i();
         foreach ($schemes->items as & $itemview) {

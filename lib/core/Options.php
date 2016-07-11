@@ -52,6 +52,7 @@ use litepubl\Config;
  * @property bool $show_draft_post
  * @property bool $show_file_perm
  * @property int $crontime
+ * @property-write callable $changed
  * @method array changed() changed(array $params) triggered when option changed
  */
 

@@ -12,6 +12,13 @@ namespace litepubl\view;
 
 use litepubl\core\Arr;
 
+/**
+ * Common class for join files
+ *
+ * @property-write callable $themeChanged
+ * @method array themeChanged() themeChanged(array $params)
+ */
+
 class Schemes extends \litepubl\core\Items
 {
     use \litepubl\core\PoolStorageTrait;
@@ -23,7 +30,7 @@ class Schemes extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'views';
-        $this->addevents('themechanged');
+        $this->addEvents('themechanged');
         $this->addmap('defaults', array());
     }
 

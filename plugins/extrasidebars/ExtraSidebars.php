@@ -11,6 +11,7 @@
 namespace litepubl\plugins\extrasidebars;
 
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class ExtraSidebars extends \litepubl\core\Plugin
 {
@@ -43,8 +44,9 @@ class ExtraSidebars extends \litepubl\core\Plugin
         }
     }
 
-    public function themeParsed(Theme $theme)
+    public function themeParsed(Event $event)
     {
+$theme = $event->theme;
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             $s = str_replace('<!--$template.sidebar-->', '', $s);

@@ -16,6 +16,7 @@ use litepubl\tag\Cats;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class Catbread extends \litepubl\core\Plugin
 {
@@ -216,8 +217,8 @@ class Catbread extends \litepubl\core\Plugin
         return $theme->parseArg($theme->templates['catbread'], $args);
     }
 
-    public function themeParsed(Theme $theme)
+    public function themeParsed(Event $event)
     {
-        $this->externalfunc(get_class($this), 'Themeparsed', $theme);
+        $this->externalfunc(get_class($this), 'Themeparsed', $event->theme);
     }
 }
