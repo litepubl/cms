@@ -92,22 +92,22 @@ public function newEvent(string $name): Event
 return new Event($this, $name);
 }
 
-    public function callEvent(string $name, array $params)
+    public function callEvent(string $name, array $params): array
     {
 $name = strtolower($name);
-        if (!isset($this->events[$name])) {
-            return '';
+        if (!$this->getEventCount($name) && !$this->getCallbacksCount($name)) {
+            return $params;
         }
 
 $event = $this->newEvent($name);
 $event->setParams($params);
-$this->trigger($event);
 $this->triggerCallback($event);
+$this->trigger($event);
+return $event->getParams();
 }
 
 public function trigger(Event $event)
 {
-$result = '';
 $app = $this->getApp();
 $eventName = $event->getName();
 
@@ -139,7 +139,6 @@ $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s
 }
         }
 
-        return $result;
     }
 
     public function setEvent($name, $params)

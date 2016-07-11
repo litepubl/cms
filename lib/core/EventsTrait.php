@@ -34,7 +34,7 @@ use Callbacks;
     {
         $eventName = strtolower($name);
         if (in_array($eventName, $this->eventnames)) {
-            return $this->callEvent($eventName, $params);
+            return $this->callEvent($eventName, $params[0]);
         }
 
         return parent::__call($name, $params);
@@ -54,5 +54,30 @@ use Callbacks;
     {
         return in_array($name, $this->eventnames);
     }
+
+protected function reIndexEvents()
+{
+foreach ($this->data['events'] as $name => $events) {
+ksort($events);
+$sorted = []
+$newIndex = 0;
+foreach ($events as $i => $item) {
+if (floor($i / 10) == floor($newIndex / 10)) {
+$newIndex++;
+} else {
+$newIndex  = floor($i / 10) * 10;
+}
+
+$sorted[$newIndex] = $item;
+}
+
+$this->data['events'][$name] = $sorted;
+}
+}
+
+public function getEventCount(string $name): int
+{
+return isset($this->data['events'][$name]) ? count($this->:data['events'][$name]) : 0;
+}
 
 }

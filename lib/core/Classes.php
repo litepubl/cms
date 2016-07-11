@@ -12,6 +12,13 @@ namespace litepubl\core;
 
 use litepubl\Config;
 
+/**
+ * Class to manage autoload and keep singletons
+ *
+ * @method array onnewitem() onnewitem(array $params) trigger when new item create
+ * @method array onrename() onrename(array $params) trigger when class renamed
+ */
+
 class Classes extends Items
 {
     use PoolStorageTrait;
@@ -92,14 +99,13 @@ class Classes extends Items
             $class = $this->remap[$class];
         }
 
-        $this->callevent(
-            'onnewitem', array(
-            $name, &$class,
-            $id
-            )
-        );
+        $info = $this->onnewitem([
+            'name' => $name,
+'class' => $class,
+            'id' => $id,
+            ]);
 
-        return new $class();
+        return new {$info['class']}();
     }
 
     public function add($class, $filename, $deprecatedPath = false)
@@ -439,7 +445,11 @@ class Classes extends Items
 
             $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
             $this->save();
-            $this->onrename($oldclass, $newclass);
+
+            $this->onrename([
+'oldclass' => $oldclass,
+'newclass' =>  $newclass,
+]);
         }
     }
 

@@ -14,6 +14,7 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Args;
 use litepubl\view\Schemes;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class Menus extends \litepubl\core\Items
 {
@@ -263,14 +264,20 @@ class Menus extends \litepubl\core\Items
         return 0;
     }
 
-    public function renameClass(string $oldclass, string $newclass)
+    public function renameClass(Event $event)
     {
+$changed = false;
         foreach ($this->items as $id => $item) {
-            if ($oldcalss == $item['class']) {
-                $this->items[$id]['class'] = $newclass;
+            if ($event->oldclass == $item['class']) {
+                $this->items[$id]['class'] = $event->newclass;
+$changed = true;
             }
         }
     }
+
+if ($changed) {
+$this->save();
+}
 
     public function sort()
     {

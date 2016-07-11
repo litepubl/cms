@@ -13,6 +13,13 @@ namespace litepubl\core;
 use litepubl\Config;
 use litepubl\utils\Mailer;
 
+/**
+ * Class to runregular tasks
+ *
+ * @method array added() added(array $params) trigger when new task added
+ * @method array deleted() deleted(array $params) trigger when task has been deleted
+ */
+
 class Cron extends Events implements ResponsiveInterface
 {
     public static $pinged = false;
@@ -23,7 +30,7 @@ class Cron extends Events implements ResponsiveInterface
     {
         parent::create();
         $this->basename = 'cron';
-        $this->addevents('added', 'deleted');
+        $this->addEvents('added', 'deleted');
         $this->data['password'] = '';
         $this->data['path'] = '';
         $this->data['disableping'] = false;
@@ -181,7 +188,7 @@ class Cron extends Events implements ResponsiveInterface
             'arg' => serialize($arg)
         ));
 
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -194,7 +201,7 @@ class Cron extends Events implements ResponsiveInterface
             'func' => $func,
             'arg' => serialize($arg)
         ));
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -208,14 +215,14 @@ class Cron extends Events implements ResponsiveInterface
             'arg' => serialize($arg)
         ));
 
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
     public function delete($id)
     {
         $this->db->iddelete($id);
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
     }
 
     public function deleteClass($c)

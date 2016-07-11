@@ -87,6 +87,7 @@ class Arr
         }
 
         $a[$index] = $value;
+ksort($a);
 return $index;
     }
 }
