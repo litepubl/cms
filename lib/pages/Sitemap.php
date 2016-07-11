@@ -19,7 +19,7 @@ use litepubl\view\Lang;
  * @property int $date
  * @property int $countfiles
  * @property-write callable $onIndex
- * @method array onIndex() onIndex(array $params) triggered when new item has been added
+ * @method array onIndex(array $params) triggered when new item has been added
  */
 
 class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterface

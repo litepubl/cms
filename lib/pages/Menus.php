@@ -16,6 +16,27 @@ use litepubl\view\Schemes;
 use litepubl\view\Theme;
 use litepubl\core\Event;
 
+/**
+ * Holds menu items
+ *
+ * @property int $idhome
+ * @property bool $home
+ * @property-write callable $edited
+ * @property-write callable $onProcessForm
+ * @property-write callable $onBeforeMenu
+ * @property-write callable $onMenu
+ * @property-write callable $onItems
+ * @property-write callable $onSubItems
+ * @property-write callable $onContent
+ * @method array edited(array $params)
+ * @method array onProcessForm(array $params)
+ * @method array onBeforeMenu(array $params)
+ * @method array onMenu(array $params)
+ * @method array onItems(array $params)
+ * @method array onSubItems(array $params)
+ * @method array onContent(array $params)
+ */
+
 class Menus extends \litepubl\core\Items
 {
     public $tree;
@@ -23,7 +44,7 @@ class Menus extends \litepubl\core\Items
     protected function create()
     {
         parent::create();
-        $this->addevents('edited', 'onprocessForm', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
+        $this->addEvents('edited', 'onprocessform', 'onbeforemenu', 'onmenu', 'onitems', 'onsubitems', 'oncontent');
 
         $this->dbversion = false;
         $this->basename = 'menus' . DIRECTORY_SEPARATOR . 'index';
@@ -93,7 +114,7 @@ class Menus extends \litepubl\core\Items
         $this->sort();
         $item->save();
         $this->unlock();
-        $this->added($id);
+        $this->added(['id' => $id]);
         $this->getApp()->cache->clear();
         return $id;
     }
@@ -134,7 +155,7 @@ class Menus extends \litepubl\core\Items
         $this->items[$this->autoid] = $item;
         $this->lock();
         $this->sort();
-        $this->added($this->autoid);
+        $this->added(['id' => $this->autoid]);
         $this->unlock();
         $this->getApp()->cache->clear();
         return $this->autoid;
@@ -170,7 +191,7 @@ class Menus extends \litepubl\core\Items
         $this->sort();
         $item->save();
         $this->unlock();
-        $this->edited($item->id);
+        $this->edited(['id' => $item->id]);
         $this->getApp()->cache->clear();
     }
 
@@ -195,7 +216,7 @@ class Menus extends \litepubl\core\Items
         unset($this->items[$id]);
         $this->sort();
         $this->unlock();
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
         $this->getApp()->storage->remove($this->dir . $id);
         $this->getApp()->cache->clear();
         return true;
@@ -248,7 +269,7 @@ class Menus extends \litepubl\core\Items
         unset($this->items[$id]);
         $this->sort();
         $this->unlock();
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
         $this->getApp()->cache->clear();
         return true;
     }
@@ -361,17 +382,16 @@ $this->save();
 
     public function getMenu($hover, $current)
     {
-        $result = '';
-        $this->callevent(
-            'onbeforemenu', array(&$result, &$hover,
-            $current
-            )
-        );
+        $r = $this->onBeforeMenu([
+'hover' => $hover,
+            'current' => $current,
+]);
+
         if (count($this->tree) > 0) {
             $theme = Theme::i();
             $args = new Args();
-            if ($hover) {
-                $items = $this->getsubmenu($this->tree, $current, $hover === 'bootstrap');
+            if ($r['hover']) {
+                $items = $this->getSubMenu($this->tree, $r['current'], $r['hover '] === 'bootstrap');
             } else {
                 $items = '';
                 $tml = $theme->templates['menu.item'];
@@ -382,22 +402,17 @@ $this->save();
                     }
 
                     $args->add($this->items[$id]);
-                    $items.= $current == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
+                    $items.= $r['current'] == $id ? $theme->parseArg($theme->templates['menu.current'], $args) : $theme->parseArg($tml, $args);
                 }
             }
 
-            $this->callevent(
-                'onitems', array(&$items
-                )
-            );
-            $args->item = $items;
+            $r = $this->onItems(['items' => $items]);
+            $args->item = $r['items'];
             $result = $theme->parseArg($theme->templates['menu'], $args);
         }
-        $this->callevent(
-            'onmenu', array(&$result
-            )
-        );
-        return $result;
+
+        $r = $this->onMenu['content' => $result]);
+        return $r['content'];
     }
 
     private function getSubmenu(&$tree, $current, $bootstrap)
@@ -422,16 +437,13 @@ $this->save();
                     $args->submenu = '';
                     $submenu = $theme->parseArg($tml_single, $args);
                 }
+
                 $submenu.= $this->getsubmenu($items, $current, $bootstrap);
                 $submenu = str_replace('$items', $submenu, $tml_submenu);
             }
 
-            $this->callevent(
-                'onsubitems', array(
-                $id, &$submenu
-                )
-            );
-            $args->submenu = $submenu;
+            $r = $this->onSubItems(['id' => $id, 'submenu' => $submenu]);
+            $args->submenu = $r['submenu'];
             $tml = $current == $id ? $tml_current : ($submenu ? $tml_item : $tml_single);
             $result.= $theme->parseArg($tml, $args);
         }

@@ -18,7 +18,7 @@ use litepubl\core\Plugins;
  * Common class for join files
  *
  * @property-write callable $onSave
- * @method array onsave() onSave(array $params)
+ * @method array onsave(array $params)
  */
 
 class Merger extends \litepubl\core\Items

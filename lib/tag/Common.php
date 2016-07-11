@@ -23,7 +23,7 @@ use litepubl\view\Schemes;
  * @property bool $includechilds
  * @property bool $includeparents
  * @property-write callable $changed
- * @method array changed() changed(array $params) triggered when new item has been added
+ * @method array changed(array $params) triggered when new item has been added
  */
 
 class Common extends \litepubl\core\Items

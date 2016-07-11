@@ -21,9 +21,9 @@ use litepubl\core\Plugins;
  * @property-write callable $onGetPaths
  * @property-write callable $beforeParse
  * @property-write callable $parsed
- * @method array onGetPaths() onGetPaths(array $params) triggered when tags required before parse
- * @method array beforeParse() beforeParse(array $params) triggered before parse text
- * @method array parsed() parsed(array $params) triggered after pase
+ * @method array onGetPaths(array $params) triggered when tags required before parse
+ * @method array beforeParse(array $params) triggered before parse text
+ * @method array parsed(array $params) triggered after parse
  */
 
 class BaseParser extends \litepubl\core\Events

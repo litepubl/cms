@@ -15,6 +15,15 @@ use litepubl\core\Str;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
 
+/**
+ * Integrated class for archives and filers
+ *
+ * @property string $ftproot
+ * @property string $filertype
+ * @property-write callable $onUploaded
+ * @method array onUploaded(array $params) triggered when new item has been added
+ */
+
 class Backuper extends \litepubl\core\Events
 {
     public $archtype;
@@ -30,14 +39,14 @@ class Backuper extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'backuper';
-        $this->addevents('onuploaded');
+        $this->addEvents('onuploaded');
         $this->data['ftproot'] = '';
+        $this->data['filertype'] = 'ftp';
         $this->__filer = false;
         $this->tar = false;
         $this->zip = false;
         $this->archtype = 'zip';
         $this->lastdir = '';
-        $this->data['filertype'] = 'ftp';
     }
 
     public function __destruct()
@@ -579,7 +588,7 @@ class Backuper extends \litepubl\core\Events
                 }
             }
 
-            $this->onuploaded($this);
+            $this->onuploaded([]);
             $this->tar = false;
             break;
 
@@ -618,7 +627,7 @@ class Backuper extends \litepubl\core\Events
                 }
             }
 
-            $this->onuploaded($this);
+            $this->onuploaded([]);
             $this->zip->close();
             $this->zip = false;
             unlink($tempfile);
@@ -695,7 +704,7 @@ class Backuper extends \litepubl\core\Events
         }
 
         $zip->close();
-        $this->onuploaded($this);
+        $this->onuploaded([]);
         $this->existingfolders = false;
         if ($this->hasdata) {
             $this->renamedata();

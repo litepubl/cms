@@ -24,8 +24,8 @@ use litepubl\view\Vars;
  *
  * @property-write callable $onContent
  * @property-write callable $onBeforeContent
- * @method array onContent() onContent(array $params) triggered when new item has been added
- * @method array onBeforeContent() onBeforeContent(array $params) triggered when item has been deleted
+ * @method array onContent(array $params) triggered when new item has been added
+ * @method array onBeforeContent(array $params) triggered when item has been deleted
  */
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface

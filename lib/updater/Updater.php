@@ -16,6 +16,14 @@ use litepubl\utils\http;
 use litepubl\view\Lang;
 use litepubl\widget\Sidebars;
 
+/**
+ * Download and update latest version
+ *
+ * @property bool $useshell
+ * @property-write callable $onUpdated
+ * @method array onUpdated(array $params) triggered when new item has been added
+ */
+
 class Updater extends \litepubl\core\Events
 {
     private $releases;
@@ -233,7 +241,7 @@ class Updater extends \litepubl\core\Events
             return false;
         }
 
-        $this->onupdated();
+        $this->onupdated([]);
         return true;
     }
 
@@ -252,7 +260,7 @@ class Updater extends \litepubl\core\Events
             return $s;
         }
 
-        $this->onupdated();
+        $this->onupdated([]);
         return true;
     }
 }

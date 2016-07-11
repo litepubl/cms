@@ -17,8 +17,8 @@ use litepubl\pages\Redirector;
  *
  * @property-write callable $beforeRequest
  * @property-write callable $afterRequest
- * @method array beforeRequest() beforeRequest(array $params) triggered before make request
- * @method array afterRequest() afterRequest(array $params) triggered when request has been made
+ * @method array beforeRequest(array $params) triggered before make request
+ * @method array afterRequest(array $params) triggered when request has been made
  */
 
 class Router extends Items

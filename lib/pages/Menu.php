@@ -235,7 +235,8 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public function processForm()
     {
-        return $this->owner->onprocessForm($this->id);
+        $r = $this->owner->onprocessForm(['id' => $this->id, 'content' => '']);
+return $r['content'];
     }
 
     public function getHead(): string
@@ -283,14 +284,8 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public function getContent(): string
     {
-        $result = $this->data['content'];
-        $this->owner->callevent(
-            'oncontent', array(
-            $this,
-            &$result
-            )
-        );
-        return $result;
+        $r = $this->owner->oncontent(['menu' => $this, 'content' => $this->data['content']]);
+        return $r['content'];
     }
 
     public function setContent(string $s)

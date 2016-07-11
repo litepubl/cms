@@ -16,7 +16,7 @@ use litepubl\core\Arr;
  * Common class for join files
  *
  * @property-write callable $themeChanged
- * @method array themeChanged() themeChanged(array $params)
+ * @method array themeChanged(array $params)
  */
 
 class Schemes extends \litepubl\core\Items

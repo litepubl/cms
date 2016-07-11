@@ -18,8 +18,8 @@ use litepubl\utils\Mailer;
  *
  * @property-write callable $added
  * @property-write callable $deleted
- * @method array added() added(array $params) trigger when new task added
- * @method array deleted() deleted(array $params) trigger when task has been deleted
+ * @method array added(array $params) trigger when new task added
+ * @method array deleted(array $params) trigger when task has been deleted
  */
 
 class Cron extends Events implements ResponsiveInterface

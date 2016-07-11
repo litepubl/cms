@@ -17,8 +17,8 @@ use litepubl\Config;
  *
  * @property-write callable $onNewItem
  * @property-write callable $onRename
- * @method array onNewItem() onNewItem(array $params) trigger when new item create
- * @method array onRename() onRename(array $params) trigger when class renamed
+ * @method array onNewItem(array $params) trigger when new item create
+ * @method array onRename(array $params) trigger when class renamed
  */
 
 class Classes extends Items

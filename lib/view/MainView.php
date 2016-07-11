@@ -31,13 +31,13 @@ use litepubl\widget\Widgets;
  * @property-write callable $onRequest
  * @property-write callable $onTitle
  * @property-write callable $onGetMenu
- * @method array beforeContent() beforeContent(array $params)
- * @method array afterContent() afterContent(array $params)
- * @method array onHead() onHead(array $params)
- * @method array onBody() onBody(array $params)
- * @method array onRequest() onRequest(array $params)
- * @method array onTitle() onTitle(array $params)
- * @method array onGetMenu() onGetMenu(array $params)
+ * @method array beforeContent(array $params)
+ * @method array afterContent(array $params)
+ * @method array onHead(array $params)
+ * @method array onBody(array $params)
+ * @method array onRequest(array $params)
+ * @method array onTitle(array $params)
+ * @method array onGetMenu(array $params)
  */
 
 class MainView extends \litepubl\core\Events

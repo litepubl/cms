@@ -23,10 +23,10 @@ use litepubl\view\ViewInterface;
  * @property-write callable $onAdminLogged
  * @property-write callable $onAdminPanel
  * @property-write callable $onSidebar
- * @method array onWidget() onWidget(array $params)
- * @method array onAdminLogged() onAdminLogged(array $params)
- * @method array onAdminPanel() onAdminPanel(array $params)
- * @method array onSidebar() onSidebar(array $params)
+ * @method array onWidget(array $params)
+ * @method array onAdminLogged(array $params)
+ * @method array onAdminPanel(array $params)
+ * @method array onSidebar(array $params)
  */
 
 class Widgets extends \litepubl\core\Items
