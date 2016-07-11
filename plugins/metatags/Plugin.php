@@ -65,7 +65,7 @@ $theme = $event->theme;
             return trim($result, ', ');
         }
 
-        return MainView::i()->getkeywords();
+        return MainView::i()->getKeywords();
     }
 
     public function getDescription()
@@ -81,6 +81,6 @@ $theme = $event->theme;
             }
             return $result;
         }
-        return MainView::i()->getdescription();
+        return MainView::i()->getDescription();
     }
 }
