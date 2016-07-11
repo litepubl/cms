@@ -16,6 +16,19 @@ use litepubl\core\Str;
 use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 
+/**
+ * Central class to manage widgets
+ *
+ * @property-write callable $onWidget
+ * @property-write callable $onAdminLogged
+ * @property-write callable $onAdminPanel
+ * @property-write callable $onSidebar
+ * @method array onWidget() onWidget(array $params)
+ * @method array onAdminLogged() onAdminLogged(array $params)
+ * @method array onAdminPanel() onAdminPanel(array $params)
+ * @method array onSidebar() onSidebar(array $params)
+ */
+
 class Widgets extends \litepubl\core\Items
 {
     use \litepubl\core\PoolStorageTrait;
@@ -29,7 +42,7 @@ class Widgets extends \litepubl\core\Items
     {
         $this->dbversion = false;
         parent::create();
-        $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
+        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
         $this->addMap('classes', array());
@@ -189,25 +202,25 @@ class Widgets extends \litepubl\core\Items
             $view->getWidgets($items, $sidebar);
         }
 
+$a = ['items' => $items, 'sidebar' => $sidebar];
         $app = $this->getApp();
         if ($app->options->adminFlag && $app->options->group == 'admin') {
-            $this->onadminlogged($items, $sidebar);
+            $a = $this->onadminlogged($a);
         }
 
         if (isset($app->context) && $app->context->request->isAdminPanel) {
-            $this->onadminpanel($items, $sidebar);
+            $a = $this->onadminpanel($a);
         }
 
         $schema = Schema::getSchema($view);
-        $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
-
-        $str = new Str($result);
+        $content = $this->getSidebarContent($a['items'], $sidebar, !$schema->customsidebar && $schema->disableajax);
+$r = ['content' => $content, 'sidebar' => $sidebar];
         if ($view instanceof WidgetsInterface) {
-            $view->getSidebar($str, $sidebar);
+            $r = $view->getSidebar($r);
         }
 
-        $this->onsidebar($str, $sidebar);
-        return $str->value;
+        $r = $this->onsidebar($r);
+        return $r['content'];
     }
 
     private function getWidgets(ViewInterface $view, int $sidebar): array
@@ -370,9 +383,8 @@ class Widgets extends \litepubl\core\Items
                 throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
-            $str->value = $content;
-            $this->onwidget($id, $str);
-            $result.= $str->value;
+            $r = $this->onwidget(['id' => $id, 'content' => $content]);
+            $result.= $r['content'];
         }
 
         return $result;
