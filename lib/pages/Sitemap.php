@@ -13,6 +13,15 @@ namespace litepubl\pages;
 use litepubl\core\Context;
 use litepubl\view\Lang;
 
+/**
+ * Generate sitemap.xml and html
+ *
+ * @property int $date
+ * @property int $countfiles
+ * @property-write callable $onIndex
+ * @method array onIndex() onIndex(array $params) triggered when new item has been added
+ */
+
 class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
     use \litepubl\view\EmptyViewTrait;
@@ -27,7 +36,7 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
     {
         parent::create();
         $this->basename = 'sitemap';
-        $this->addevents('onindex');
+        $this->addEvents('onindex');
         $this->data['date'] = time();
         $this->data['countfiles'] = 1;
         $this->addmap(
@@ -113,15 +122,14 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
                 $exists = file_exists($this->getApp()->paths->files . "$i.xml.gz");
             }
         }
-        $this->callevent(
-            'onindex', array(&$result
-            )
-        );
-        $result.= '</sitemapindex>';
+
+        $r = $this->onindex(['index' => $result]);
+        $r['index'] .= '</sitemapindex>';
         if (!$exists) {
             $this->createfiles();
         }
-        return $result;
+
+        return $r['index'];
     }
 
     public function createfiles()

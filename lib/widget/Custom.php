@@ -10,6 +10,15 @@
 
 namespace litepubl\widget;
 
+/**
+ * Widgets with editable content
+ *
+ * @property-write callable $added
+ * @property-write callable $deleted
+ * @method array added() added(array $params) triggered when new item has been added
+ * @method array deleted() deleted(array $params) triggered when item has been deleted
+ */
+
 class Custom extends Widget
 {
     public $items;
@@ -19,8 +28,8 @@ class Custom extends Widget
         parent::create();
         $this->basename = 'widgets.custom';
         $this->adminclass = '\litepubl\admin\widget\Custom';
-        $this->addmap('items', array());
-        $this->addevents('added', 'deleted');
+        $this->addMap('items', array());
+        $this->addEvents('added', 'deleted');
     }
 
     public function getWidget(int $id, int $sidebar): string
@@ -62,7 +71,7 @@ class Custom extends Widget
         $sidebars->add($id);
         $widgets->unlock();
         $this->save();
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -90,7 +99,7 @@ class Custom extends Widget
 
             $widgets = Widgets::i();
             $widgets->delete($id);
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
         }
     }
 

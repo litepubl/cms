@@ -11,10 +11,20 @@
 namespace litepubl\tag;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
 use litepubl\core\ItemsPosts;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
 use litepubl\view\Schemes;
+
+/**
+ * Parent class of categories and tags
+ *
+ * @property bool $includechilds
+ * @property bool $includeparents
+ * @property-write callable $changed
+ * @method array changed() changed(array $params) triggered when new item has been added
+ */
 
 class Common extends \litepubl\core\Items
 {
@@ -30,7 +40,7 @@ class Common extends \litepubl\core\Items
     {
         $this->dbversion = true;
         parent::create();
-        $this->addevents('changed', 'onbeforecontent', 'oncontent');
+        $this->addEvents('changed');
         $this->data['includechilds'] = false;
         $this->data['includeparents'] = false;
         $this->PermalinkIndex = 'category';
@@ -106,9 +116,9 @@ class Common extends \litepubl\core\Items
         $this->updateCount($changed);
     }
 
-    public function postDeleted(int $idpost)
+    public function postDeleted(Event $event)
     {
-        $changed = $this->itemsposts->deletePost($idpost);
+        $changed = $this->itemsposts->deletePost($event->id);
         $this->updateCount($changed);
     }
 
@@ -183,7 +193,7 @@ class Common extends \litepubl\core\Items
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
-        $this->changed();
+        $this->changed([]);
         $this->getApp()->cache->clear();
         return $id;
     }
@@ -222,7 +232,7 @@ class Common extends \litepubl\core\Items
 
         $this->items[$id] = $item;
         $this->save();
-        $this->changed();
+        $this->changed([]);
         $app->cache->clear();
     }
 
@@ -238,7 +248,7 @@ class Common extends \litepubl\core\Items
             $this->itemsposts->updatePosts($list, $this->postpropname);
         }
 
-        $this->changed();
+        $this->changed([]);
         $this->getApp()->cache->clear();
     }
 

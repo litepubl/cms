@@ -19,6 +19,15 @@ use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
+/**
+ * View of categories and tags
+ *
+ * @property-write callable $onContent
+ * @property-write callable $onBeforeContent
+ * @method array onContent() onContent(array $params) triggered when new item has been added
+ * @method array onBeforeContent() onBeforeContent(array $params) triggered when item has been deleted
+ */
+
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
     public $id;
@@ -209,11 +218,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getCont(): string
     {
-        $result = new Str('');
-        $this->onbeforecontent($result);
+        $result = $this->onbeforecontent(['content' => '']);
 
         if (!$this->id) {
-            $result->value.= $this->getcont_all();
+            $result['content'] .= $this->getcont_all();
         } else {
             $schema = Schema::getSchema($this);
             $theme = $schema->theme;
@@ -221,17 +229,17 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             if ($this->getContent()) {
                 $vars = new Vars();
                 $vars->menu = $this;
-                $result->value.= $theme->parse($theme->templates['content.menu']);
+                $result['content'] .= $theme->parse($theme->templates['content.menu']);
             }
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
             $announce = new Announce($theme);
-            $result->value.= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $result['content'] .= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
         }
 
-        $this->oncontent($result);
-        return $result->value;
+        $result = $this->oncontent($result);
+        return $result['content'];
     }
 
     public function getCont_all()

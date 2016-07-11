@@ -13,6 +13,13 @@ namespace litepubl\pages;
 use litepubl\core\Str;
 use litepubl\view\MainView;
 
+/**
+ * Holds rederects
+ *
+ * @property-write callable $onGet
+ * @method array onGet() onGet(array $params) triggered when new item has been added
+ */
+
 class Redirector extends \litepubl\core\Items
 {
 
@@ -21,7 +28,7 @@ class Redirector extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'redirector';
-        $this->addevents('onget');
+        $this->addEvents('onget');
     }
 
     public function add($from, $to)
@@ -89,9 +96,10 @@ class Redirector extends \litepubl\core\Items
             }
         }
 
-        if ($url = $this->onget($url)) {
-            return $url;
-        }
+$a = $this->onget(['url' => $url]);
+if ($url != $a['url']) {
+return $a['url'];
+}
 
         return false;
     }

@@ -15,6 +15,15 @@ use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
+/**
+ * Links widget
+ *
+ * @property-write callable $added
+ * @property-write callable $deleted
+ * @method array added() added(array $params) triggered when new item has been added
+ * @method array deleted() deleted(array $params) triggered when item has been deleted
+ */
+
 class Links extends Widget implements \litepubl\core\ResponsiveInterface
 {
     public $items;
@@ -78,7 +87,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         );
 
         $this->save();
-        $this->added($this->autoid);
+        $this->added(['id' => $this->autoid]);
         return $this->autoid;
     }
 
@@ -102,6 +111,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
+$this->deleted['id' => $id]);
             $this->getApp()->cache->clear();
         }
     }
