@@ -22,6 +22,13 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
+/**
+ * User regestration page
+ *
+ * @property-write callable $onContent
+ * @method array onContent(array $params) triggered when new item has been added
+ */
+
 class RegUser extends Form
 {
     private $regstatus;
@@ -139,11 +146,8 @@ class RegUser extends Form
             $result = str_replace('backurl%3D', 'backurl%3D' . urlencode(urlencode($_GET['backurl'])), $result);
         }
 
-            $this->callevent(
-                'oncontent', array(&$result
-                )
-            );
-            return $result;
+        $r = $this->onContent(['content' => $result]);
+        return $r['content'];
     }
 
     public function createForm(): string

@@ -20,6 +20,13 @@ use litepubl\core\Users;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
+/**
+ * Login page
+ *
+ * @property-write callable $onContent
+ * @method array onContent(array $params) triggered when new item has been added
+ */
+
 class Login extends Form
 {
 
@@ -27,7 +34,7 @@ class Login extends Form
     {
         parent::create();
         $this->basename = 'admin.loginform';
-        $this->addevents('oncontent');
+        $this->addEvents('oncontent');
     }
 
     public function auth(Context $context)
@@ -202,11 +209,8 @@ class Login extends Form
             $result = str_replace('%3Fbackurl%3D', '', $result);
         }
 
-        $this->callevent(
-            'oncontent', array(&$result
-            )
-        );
-        return $result;
+        $r = $this->onContent(['content' => $result]);
+        return $r['content'];
     }
 
     public static function confirm_reg(string $email, string $password): int

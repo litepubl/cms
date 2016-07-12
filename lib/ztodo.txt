@@ -46,5 +46,5 @@
 выделить отдельный класс datamap из events
 добавить jdoc для javascript closoure
 на отдаленное будущее перевести высзовы крона на event
-удалить из router onClearCache
-удалить из options perpagechanged
+
+не забыть про события authorRights - поправить везде вызовы

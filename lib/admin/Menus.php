@@ -14,6 +14,14 @@ use litepubl\core\UserGroups;
 use litepubl\pages\Menu as StdMenu;
 use litepubl\view\Lang;
 
+/**
+ * Admin menu items
+ *
+ * @property string $heads
+ * @property-write callable $onExclude
+ * @method array onExclude(array $params) triggered when new item has been added
+ */
+
 class Menus extends \litepubl\pages\Menus
 {
 
@@ -21,7 +29,7 @@ class Menus extends \litepubl\pages\Menus
     {
         parent::create();
         $this->basename = 'adminmenu';
-        $this->addevents('onexclude');
+        $this->addEvents('onexclude');
         $this->data['heads'] = '';
     }
 
@@ -143,6 +151,7 @@ class Menus extends \litepubl\pages\Menus
             return true;
         }
 
-        return $this->onexclude($id);
+        $r = $this->onExclude(['id' => $id, 'exclude' => false]);
+return $r['exclude'];
     }
 }
