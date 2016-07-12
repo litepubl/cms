@@ -13,6 +13,34 @@ namespace litepubl\post;
 use litepubl\core\Str;
 use litepubl\utils\LinkGenerator;
 
+/**
+ * Manage uploaded images
+ *
+ * @property string $previewmode
+ * @property int $previewwidth
+ * @property int $previewheight
+ * @property int $maxwidth
+ * @property int $maxheight
+ * @property bool $enablemidle
+ * @property int $midlewidth
+ * @property int $midleheight
+ * @property int $quality_snapshot
+ * @property int $quality_original
+ * @property bool $alwaysresize
+ * @property string $audioext
+ * @property string $videoext
+ * @property-write callable $added
+ * @property-write callable $onBefore
+ * @property-write callable $onResize
+ * @property-write callable $noResize
+ * @property-write callable $onImage
+ * @method array added(array $params)
+ * @method array onBefore(array $params)
+ * @method array onResize(array $params)
+ * @method array noResize(array $params)
+ * @method array onImage(array $params)
+ */
+
 class MediaParser extends \litepubl\core\Events
 {
 
@@ -20,7 +48,7 @@ class MediaParser extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'mediaparser';
-        $this->addevents('added', 'onbefore', 'onresize', 'noresize', 'onimage');
+        $this->addEvents('added', 'onbefore', 'onresize', 'noresize', 'onimage');
         $this->data['previewmode'] = 'fixed';
         $this->data['previewwidth'] = 120;
         $this->data['previewheight'] = 120;
@@ -290,11 +318,8 @@ class MediaParser extends \litepubl\core\Events
         $midle = false;
         if ($item['media'] == 'image') {
             $srcfilename = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
-            $this->callevent(
-                'onbefore', array(&$item,
-                $srcfilename
-                )
-            );
+            $r = $this->onBefore(['item' => $item, 'filename' => $srcfilename]);
+$item = $r['item'];
 
             $maxwidth = isset($file['maxwidth']) ? $file['maxwidth'] : $this->maxwidth;
             $maxheight = isset($file['maxheight']) ? $file['maxheight'] : $this->maxheight;
@@ -307,7 +332,7 @@ class MediaParser extends \litepubl\core\Events
             $enablemidle = isset($file['enablemidle']) ? $file['enablemidle'] : $this->enablemidle;
 
             if (($resize || $enablepreview || $enablemidle) && ($image = static ::readimage($srcfilename))) {
-                $this->onimage($image);
+                $this->onImage(['image' => $image]);
 
                 if ($enablepreview && ($preview = $this->getsnapshot($srcfilename, $image))) {
                     $preview['title'] = $file['title'];
@@ -342,7 +367,7 @@ class MediaParser extends \litepubl\core\Events
                         @chmod($fixfilename, 0666);
                     }
                 } else {
-                    $this->noresize($image, $srcfilename);
+                    $this->noResize(['image' => $image, 'filename' => $srcfilename)];
                 }
 
                 imagedestroy($image);
@@ -374,7 +399,7 @@ class MediaParser extends \litepubl\core\Events
             $files->setvalue($id, 'midle', $idmidle);
         }
 
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -430,7 +455,7 @@ class MediaParser extends \litepubl\core\Events
                     );
                 }
 
-                $this->added($id);
+                $this->added(['id' => $id]);
                 return $id;
             }
         }
@@ -725,7 +750,7 @@ class MediaParser extends \litepubl\core\Events
 
         $dest = imagecreatetruecolor($x, $y);
         imagecopyresampled($dest, $image, 0, 0, 0, 0, $x, $y, $sourcex, $sourcey);
-        $this->onresize($dest);
+        $this->onResize(['image' => $dest]);
 
         imagejpeg($dest, $filename, $this->quality_original);
         imagedestroy($dest);
