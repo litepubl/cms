@@ -18,13 +18,26 @@ use litepubl\core\Users;
 use litepubl\utils\Http;
 use litepubl\view\Filter;
 
+/**
+ * ULogin plugin
+ *
+ * @property string $url
+ * @property array $nets
+ * @property-write callable $added
+ * @property-write callable $onAdd
+ * @property-write callable $onPhone
+ * @method array added(array $params)
+ * @method array onAdd(array $params)
+ * @method array onPhone(array $params)
+ */
+
 class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
 
     protected function create()
     {
         parent::create();
-        $this->addevents('added', 'onadd', 'onphone');
+        $this->addEvents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
         $this->data['url'] = '/admin/ulogin.php';
         $this->data['nets'] = array();
@@ -50,7 +63,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             )
         );
 
-        $this->added($id, $service);
+        $this->added(['id' => $id, 'service' => $service]);
         return $id;
     }
 
@@ -105,8 +118,9 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         }
 
         if (!(int)Users::i()->db->getValue((int) $cookies['id'], 'phone')) {
-            if ($url = $this->onphone($backurl)) {
-                return $response->redir($url);
+$r = $this->onPhone(['backurl' => $backurl, 'redir' => false]);
+            if ($r['redir']) {
+                return $response->redir($r['redir']);
             }
         }
 
@@ -212,7 +226,11 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         }
 
         setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
-        $this->onadd($id, $info, $newreg);
+        $this->onAdd([
+'id' => $id,
+'info' =>  $info,
+'newreg' =>  $newreg
+]);
 
         return array(
             'id' => $id,

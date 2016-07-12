@@ -12,6 +12,24 @@ namespace litepubl\xmlrpc;
 
 use litepubl\core\Context;
 
+/**
+ * XML-RPC server
+ *
+ * @property-write callable $onGet
+ * @method array onGet(array $params)
+ */
+
+/**
+ * JSON-RPC server
+ *
+ * @property-write callable $getMethods
+ * @property-write callable $beforeCall
+ * @property-write callable $afterCall
+ * @method array getMethods(array $params)
+ * @method array beforeCall(array $params)
+ * @method array afterCall(array $params)
+ */
+
 class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
 {
     public $parser;
@@ -26,7 +44,7 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
 
     public function request(Context $context)
     {
-        $this->getmethods();
+        $this->getMethods([]);
         include_once __DIR__ . '/IXR.php';
         $this->parser = new Parser();
         $this->parser->owner = $this;
@@ -37,16 +55,13 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         $response->setXml();
         $response->body.= $this->parser->XMLResult;
 
-        $this->aftercall();
+        $this->afterCall([]);
     }
 
     public function call($method, $args)
     {
-        $this->callevent(
-            'beforecall', array(
-            $method, &$args
-            )
-        );
+        $r = $this->beforeCall(['method' => $method, 'args' => $args]);
+$method = $r['method'];
         if (!isset($this->items[$method])) {
             return new IXR_Error(-32601, "server error. requested method $method does not exist.");
         }
@@ -60,12 +75,7 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
 
         $obj = static ::iGet($class);
         try {
-            return call_user_func_array(
-                array(
-                $obj,
-                $func
-                ), $args
-            );
+            return call_user_func_array([$obj, $func], $r['args']);
         } catch (\Exception $e) {
             return new IXR_Error($e->getCode(), $e->getMessage());
         }

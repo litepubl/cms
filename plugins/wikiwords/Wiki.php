@@ -27,7 +27,6 @@ class Wiki extends \litepubl\core\Items
     {
         $this->dbversion = true;
         parent::create();
-        $this->addevents('edited');
         $this->table = 'wikiwords';
         $this->itemsposts = new ItemsPosts();
         $this->itemsposts->table = $this->table . 'items';

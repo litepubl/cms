@@ -20,6 +20,13 @@ use litepubl\core\Users;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 
+/**
+ * Social network login plugin
+ *
+ * @property-write callable $onAdd
+ * @method array onAdd(array $params)
+ */
+
 class Service extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
 {
     public $sessdata;
@@ -211,7 +218,7 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
 
         setcookie('litepubl_regservice', $this->name, $expired, $this->getApp()->site->subdir . '/', false);
 
-        $this->onadd($id, $rawdata);
+        $this->onAdd(['id' => $id, 'rawdata' => $rawdata]);
 
         if (isset($this->sessdata['comuser'])) {
             return Form::i()->processForm($this->sessdata['comuser'], true);

@@ -15,6 +15,7 @@ use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
+use litepubl\core\Event;
 
 class Polls extends \litepubl\core\Items
 {
@@ -24,7 +25,6 @@ class Polls extends \litepubl\core\Items
     {
         $this->dbversion = true;
         parent::create();
-        $this->addevents('edited');
         $this->basename = 'polls';
         $this->table = 'polls';
     }
@@ -240,25 +240,24 @@ where idpoll = $id group by vote order by vote asc"
         }
     }
 
-    public function postDeleted(int $idpost)
+    public function postDeleted(Event $event)
     {
-        $this->objectDeleted($idpost, 'post');
+        $this->objectDeleted($event->id, 'post');
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
-        if (preg_match_all('/\[poll\=(\d*?)\]/', $content, $m, PREG_SET_ORDER)) {
-            $polls = tpolls::i();
+        if (preg_match_all('/\[poll\=(\d*?)\]/', $event->content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $id = (int)$item[1];
-                if ($polls->itemExists($id)) {
-                    $html = $polls->gethtml($id);
+                if ($this->itemExists($id)) {
+                    $html = $this->getPoll($id);
                     $html = '[html]' . $html . '[/html]';
                 } else {
                     $html = '';
                 }
 
-                $content = str_replace($item[0], $html, $content);
+                $event->content = str_replace($item[0], $html, $event->content);
             }
         }
     }
