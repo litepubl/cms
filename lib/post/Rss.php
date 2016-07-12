@@ -21,6 +21,21 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\widget\Comments as CommentWidget;
 
+/**
+ * RSS posts
+ *
+ * @property string $feedburner
+ * @property string $feedburnercomments
+ * @property string $template
+ * @property int $idpostcomments
+ * @property-write callable $beforePost
+ * @property-write callable $afterPost
+ * @property-write callable $onPostItem
+ * @method array beforePost(array $params)
+ * @method array afterPost(array $params)
+ * @method array onPostItem(array $params)
+ */
+
 class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $domrss;
@@ -32,7 +47,7 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
     {
         parent::create();
         $this->basename = 'rss';
-        $this->addevents('beforepost', 'afterpost', 'onpostitem');
+        $this->addEvents('beforepost', 'afterpost', 'onpostitem');
         $this->data['feedburner'] = '';
         $this->data['feedburnercomments'] = '';
         $this->data['template'] = '';
@@ -251,24 +266,17 @@ header('Location: $this->feedburnercomments');
             Node::addcdata($item, 'category', $name);
         }
 
-        $content = '';
-        $this->callevent(
-            'beforepost', array(
-            $post->id, &$content
-            )
-        );
-        if ($this->template == '') {
-            $content.= $post->view->replaceMore($post->rss, true);
+        $r = $this->beforePost(['id' => $post->id, 'content' => $content]);
+
+        if (!$this->template) {
+            $r['content'] .= $post->view->replaceMore($post->rss, true);
         } else {
-            $content.= Theme::parsevar('post', $post, $this->template);
+            $r['content'] .= Theme::parsevar('post', $post, $this->template);
         }
-        $this->callevent(
-            'afterpost', array(
-            $post->id, &$content
-            )
-        );
-        Node::addcdata($item, 'content:encoded', $content);
-        Node::addcdata($item, 'description', strip_tags($content));
+
+        $r = $this->afterPost($r);
+        Node::addcdata($item, 'content:encoded', $r['content']);
+        Node::addcdata($item, 'description', strip_tags($r['content']));
         Node::addvalue($item, 'wfw:commentRss', $post->view->rsscomments);
 
         if (count($post->files) > 0) {
@@ -284,7 +292,7 @@ header('Location: $this->feedburnercomments');
         }
 
         $post->view->onRssItem($item);
-        $this->onpostitem($item, $post);
+        $this->onPostItem(['item' => $item,  'post' => $post]);
         return $item;
     }
 

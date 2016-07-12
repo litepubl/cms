@@ -12,6 +12,16 @@ namespace litepubl\post;
 
 use litepubl\core\Context;
 
+/**
+ * RSS files
+ *
+ * @property string $feedburner
+ * @property-write callable $onRoot
+ * @property-write callable $onItem
+ * @method array onRoot(array $params)
+ * @method array onItem(array $params)
+ */
+
 class RssFiles extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $domrss;
@@ -20,7 +30,7 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
     {
         parent::create();
         $this->basename = 'rssmultimedia';
-        $this->addevents('onroot', 'onitem');
+        $this->addEvents('onroot', 'onitem');
         $this->data['feedburner'] = '';
     }
 
@@ -48,7 +58,7 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
         $response->setXml();
         $this->domrss = new DomRss();
         $this->domrss->CreateRootMultimedia($this->getApp()->site->url . $this->getApp()->router->url, 'media');
-        $this->onroot($this->domrss);
+        $this->onRoot(['dom' => $this->domrss]);
 
         $list = $this->getrecent($arg, $this->getApp()->options->perpage);
         foreach ($list as $id) {
@@ -123,7 +133,7 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
                 Node::attr($thumbnail, 'width', $preview['width']);
             }
         }
-        $this->onitem($item, $file);
+        $this->onItem(['item' => $item, 'file' => $file]);
     }
 
     public static function hashtomd5($hash)

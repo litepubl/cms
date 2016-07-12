@@ -36,7 +36,7 @@ function ParseFile($filename)
 
     if (strend($filename, '.php')) {
         $s = replace_copyright($s, 'php');
-
+$s = str_replace(' triggered when new item has been added', '', $s);
         if (strend($s, '//class')) {
             $s = substr($s, 0, strlen($s) - strlen('//class'));
         }

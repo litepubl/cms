@@ -17,7 +17,7 @@ use litepubl\view\MainView;
  * Holds rederects
  *
  * @property-write callable $onGet
- * @method array onGet(array $params) triggered when new item has been added
+ * @method array onGet(array $params)
  */
 
 class Redirector extends \litepubl\core\Items

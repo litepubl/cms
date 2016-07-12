@@ -16,6 +16,19 @@ use litepubl\view\Filter;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
+/**
+ * Manage uploaded files
+ *
+ * @property-write callable $changed
+ * @property-write callable $edited
+ * @property-write callable $onGetFilelist
+ * @property-write callable $onlist
+ * @method array changed(array $params) triggered when new item has been added
+ * @method array edited(array $params) triggered when new item has been added
+ * @method array onGetFilelist(array $params) triggered when new item has been added
+ * @method array onlist(array $params) triggered when new item has been added
+ */
+
 class Files extends \litepubl\core\Items
 {
     public $cachetml;
@@ -96,8 +109,8 @@ class Files extends \litepubl\core\Items
         $item = $this->escape($item);
         $id = $this->db->add($item);
         $this->items[$id] = $item;
-        $this->changed();
-        $this->added($id);
+        $this->changed([]);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -126,8 +139,8 @@ class Files extends \litepubl\core\Items
         $item = $this->escape($item);
         $this->items[$id] = $item;
         $this->db->updateassoc($item);
-        $this->changed();
-        $this->edited($id);
+        $this->changed([]);
+        $this->edited(['id' => $id]);
         return true;
     }
 
@@ -160,7 +173,8 @@ class Files extends \litepubl\core\Items
         }
 
         $this->getdb('imghashes')->delete("id = $id");
-        $this->changed();
+        $this->changed([]);
+$this->deleted(['id' => $id]);
         return true;
     }
 
@@ -192,8 +206,9 @@ class Files extends \litepubl\core\Items
 
     public function getFilelist(array $list, $excerpt)
     {
-        if ($result = $this->ongetfilelist($list, $excerpt)) {
-            return $result;
+$r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false])) {
+        if ($r['result']) {
+            return $r['result'];
         }
 
         if (count($list) == 0) {
@@ -231,7 +246,7 @@ class Files extends \litepubl\core\Items
             return '';
         }
 
-        $this->onlist($list);
+        $this->onlist(['list' => $list]);
         $result = '';
         $this->preload($list);
 

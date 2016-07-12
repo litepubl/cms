@@ -16,9 +16,9 @@ namespace litepubl\admin;
  * @property-write callable $changePosts
  * @property-write callable $canUpload
  * @property-write callable $canDeleteFile
- * @method array changePosts(array $params) triggered when new item has been added
- * @method array canUpload(array $params) triggered when new item has been added
- * @method array canDeleteFile(array $params) triggered when new item has been added
+ * @method array changePosts(array $params)
+ * @method array canUpload(array $params)
+ * @method array canDeleteFile(array $params)
  */
 
 class AuthorRights extends \litepubl\core\Events

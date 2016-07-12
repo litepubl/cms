@@ -19,7 +19,7 @@ use litepubl\view\Lang;
  *
  * @property string $heads
  * @property-write callable $onExclude
- * @method array onExclude(array $params) triggered when new item has been added
+ * @method array onExclude(array $params)
  */
 
 class Menus extends \litepubl\pages\Menus

@@ -16,13 +16,22 @@ use litepubl\view\Filter;
 use litepubl\view\Parser;
 use litepubl\view\Theme;
 
+/**
+ * JSON-RPC methods to upload files
+ *
+ * @property-write callable $uploaded
+ * @property-write callable $onProps
+ * @method array uploaded(array $params)
+ * @method array onProps(array $params)
+ */
+
 class JsonFiles extends \litepubl\core\Events
 {
 
     protected function create()
     {
         parent::create();
-        $this->addevents('uploaded', 'onprops');
+        $this->addEvents('uploaded', 'onprops');
     }
 
     public function auth($idpost)
@@ -126,12 +135,8 @@ class JsonFiles extends \litepubl\core\Events
         $item['description'] = Filter::escape(Filter::unescape($args['description']));
         $item['keywords'] = Filter::escape(Filter::unescape($args['keywords']));
 
-        $this->callevent(
-            'onprops', array(&$item
-            )
-        );
-
-        $item = $files->escape($item);
+        $r = $this->onProps(['item' => $item]);
+        $item = $files->escape($r['item']);
         $files->db->updateassoc($item);
         return array(
             'item' => $item
@@ -178,7 +183,7 @@ class JsonFiles extends \litepubl\core\Events
             }
         }
 
-        $this->uploaded($id);
+        $this->uploaded(['id' => $id]);
 
         $files = Files::i();
         $item = $files->db->getitem($id);
