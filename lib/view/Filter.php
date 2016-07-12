@@ -13,6 +13,23 @@ namespace litepubl\view;
 use litepubl\core\Str;
 use litepubl\post\Post;
 
+/**
+ * Main class to filter, format text, html content
+ *
+ * @property-write callable $onComment
+ * @property-write callable $onAfterComment
+ * @property-write callable $beforeContent
+ * @property-write callable $afterContent
+ * @property-write callable $beforeFilter
+ * @property-write callable $afterFilter
+ * @method array onComment(array $params)
+ * @method array onAfterComment(array $params)
+ * @method array beforeContent(array $params)
+ * @method array afterContent(array $params)
+ * @method array beforeFilter(array $params)
+ * @method array afterFilter(array $params)
+ */
+
 class Filter extends \litepubl\core\Events
 {
 
@@ -20,7 +37,7 @@ class Filter extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'contentfilter';
-        $this->addevents('oncomment', 'onaftercomment', 'beforecontent', 'aftercontent', 'beforefilter', 'afterfilter', 'onsimplefilter', 'onaftersimple');
+        $this->addEvents('oncomment', 'onaftercomment', 'beforecontent', 'aftercontent', 'beforefilter', 'afterfilter', 'onsimplefilter', 'onaftersimple');
         $this->data['automore'] = true;
         $this->data['automorelength'] = 250;
         $this->data['phpcode'] = true;
@@ -29,7 +46,7 @@ class Filter extends \litepubl\core\Events
         $this->data['commentautolinks'] = true;
     }
 
-    public function filtercomment($content)
+    public function filterComment(string $content): string
     {
         $result = trim($content);
         $result = str_replace(
@@ -40,18 +57,13 @@ class Filter extends \litepubl\core\Events
         );
         $result = static ::quote(htmlspecialchars($result));
 
-        if ($this->callevent(
-            'oncomment', array(&$result
-            )
-        )) {
-            $this->callevent(
-                'onaftercomment', array(&$result
-                )
-            );
-            return $result;
+$r = $this->onComment(['content' => $result, 'cancel' => false]);
+if ($r['cancel']) {
+            $r = $this->onAfterComment($r);
+            return $r['content'];
         }
 
-        $result = static ::simplebbcode($result);
+        $result = static ::simplebbcode($r['content']);
         if ($this->commentautolinks) {
             $result = static ::createlinks($result);
         }
@@ -66,23 +78,22 @@ class Filter extends \litepubl\core\Events
             }
             $result = trim($result);
         }
-        $this->callevent(
-            'onaftercomment', array(&$result
-            )
-        );
-        return $result;
+
+        $r = $this->onAfterComment('content' => $result]);
+        return $r['content'];
     }
 
-    public function filterpost(Post $post, $s)
+    public function filterPost(Post $post, string $s)
     {
-        $cancel = false;
-        $this->callevent(
-            'beforecontent', array(
-            $post, &$s, &$cancel
-            )
-        );
-        if ($cancel) {
-            return $this->aftercontent($post);
+        $r = $this->beforeContent([
+'post' => $post,
+'content' => $s,
+'cancel' => false
+]);
+
+        if ($r['cancel']) {
+$this->afterContent(['post' => $post]);
+return;
         }
 
         $moretag = ' <!--more-->';
@@ -105,7 +116,7 @@ class Filter extends \litepubl\core\Events
         }
 
         $post->description = static ::getpostdescription($post->excerpt);
-        $this->aftercontent($post);
+        $this->afterContent(['post' => $post]);
     }
 
     public function setExcerpt(Post $post, $excerpt, $more)
@@ -180,24 +191,15 @@ class Filter extends \litepubl\core\Events
         return implode('<!--nextpage-->', $result);
     }
 
-    public function filter($content)
+    public function filter(string $content): string
     {
-        if ($this->callevent(
-            'beforefilter', array(&$content
-            )
-        )) {
-            $this->callevent(
-                'afterfilter', array(&$content
-                )
-            );
-            return $content;
+$r = $this->beforeFilter(['content' => $content, 'cancel' => false]);
+if ($r['cancel']) {
+            $r = $this->afterFilter($r);
+            return $r['content'];
         }
-        $result = str_replace(
-            array(
-            "\r\n",
-            "\r"
-            ), "\n", trim($content)
-        );
+
+        $result = str_replace([            "\r\n", "\r"], "\n", trim($r['content']));
         if ($this->usefilter) {
             if (strpos($result, '[html]') !== false) {
                 $result = $this->splitfilter($result);
@@ -205,11 +207,9 @@ class Filter extends \litepubl\core\Events
                 $result = $this->simplefilter($result);
             }
         }
-        $this->callevent(
-            'afterfilter', array(&$result
-            )
-        );
-        return $result;
+
+        $r = $this->afterFilter(['content' => $result]);
+        return $r['content'];
     }
 
     public function simplefilter($s)
