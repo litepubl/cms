@@ -16,18 +16,28 @@ use litepubl\post\Post;
 /**
  * Main class to filter, format text, html content
  *
+ * @property bool $automore
+ * @property int $automorelength
+ * @property bool $phpcode
+ * @property bool $usefilter
+ * @property bool $autolinks
+ * @property bool $commentautolinks
  * @property-write callable $onComment
  * @property-write callable $onAfterComment
  * @property-write callable $beforeContent
  * @property-write callable $afterContent
  * @property-write callable $beforeFilter
  * @property-write callable $afterFilter
+ * @property-write callable $onSimpleFilter
+ * @property-write callable $onAfterSimple
  * @method array onComment(array $params)
  * @method array onAfterComment(array $params)
  * @method array beforeContent(array $params)
  * @method array afterContent(array $params)
  * @method array beforeFilter(array $params)
  * @method array afterFilter(array $params)
+ * @method array onSimpleFilter(array $params)
+ * @method array onAfterSimple(array $params)
  */
 
 class Filter extends \litepubl\core\Events
@@ -49,12 +59,7 @@ class Filter extends \litepubl\core\Events
     public function filterComment(string $content): string
     {
         $result = trim($content);
-        $result = str_replace(
-            array(
-            "\r\n",
-            "\r"
-            ), "\n", $result
-        );
+        $result = str_replace(["\r\n", "\r"], "\n", $result);
         $result = static ::quote(htmlspecialchars($result));
 
 $r = $this->onComment(['content' => $result, 'cancel' => false]);
@@ -134,23 +139,14 @@ return;
             $description = $theme->parse($description);
         }
         $description = static ::gettitle($description);
-        $description = str_replace(
-            array(
-            "\r",
-            "\n",
-            '  ',
-            '"',
-            "'",
-            '$'
-            ), array(
-            ' ',
-            ' ',
-            ' ',
-            '&quot;',
-            '&#39;',
-            '&#36;'
-            ), $description
-        );
+        $description = strtr($description, [
+            "\r" => ' ',
+            "\n" => ' ',
+            '  ' => ' ',
+            '"' => '&quot;',
+            "'" => '&#39;',
+            '$' => '&#36;'
+]);
 
         return str_replace('  ', ' ', $description);
     }
@@ -212,30 +208,26 @@ if ($r['cancel']) {
         return $r['content'];
     }
 
-    public function simplefilter($s)
+    public function simpleFilter(string $s): string
     {
         $s = trim($s);
-        if ($s == '') {
+        if (!$s) {
             return '';
         }
 
-        $this->callevent(
-            'onsimplefilter', array(&$s
-            )
-        );
+        $r = $this->onSimpleFilter['content' => $s]);
+$s = $r['content'];
         if ($this->autolinks) {
             $s = static ::createlinks($s);
         }
         $s = $this->replacecode($s);
         $s = static ::auto_p($s);
-        $this->callevent(
-            'onaftersimple', array(&$s
-            )
-        );
-        return $s;
+
+        $r = $this->onAfterSimple(['content' => $s]);
+        return $r['content'];
     }
 
-    public function splitfilter($s)
+    public function splitFilter($s)
     {
         $result = '';
         $openlen = strlen('[html]');
@@ -261,23 +253,15 @@ if ($r['cancel']) {
     public function replacecode($s)
     {
         $s = preg_replace_callback(
-            '/<code>(.*?)<\/code>/ims', array(
-            $this,
-            'callback_replace_code'
-            ), $s
+            '/<code>(.*?)<\/code>/ims', [$this, 'callback_replace_code'], $s
         );
         if ($this->phpcode) {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', array(&$this,
-                'callback_replace_php'
-                ), $s
-            );
+                '/\<\?(.*?)\?\>/ims', [$this, 'callback_replace_php'], $s);
         } else {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', array(&$this,
-                'callback_fix_php'
-                ), $s
-            );
+                '/\<\?(.*?)\?\>/ims',
+ [$this, 'callback_fix_php'], $s);
         }
         return $s;
     }
