@@ -24,6 +24,13 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 
+/**
+ * Manage comment form data
+ *
+ * @property-write callable $onComuser
+ * @method array onComuser(array $params) triggered when new item has been added
+ */
+
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     public $helper;
@@ -152,8 +159,9 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
             case 'comuser':
                 //hook in regservices social plugin
-                if ($r = $this->oncomuser($values, $confirmed)) {
-                    return $r;
+$r = $this->oncomuser(['values: $values, 'confirmid' => $confirmed, 'result' => false]);
+if ($r['result']) {
+                    return $r['result'];
                 }
 
                 if (!$confirmed && $cm->confirmcomuser) {

@@ -26,7 +26,7 @@ class Files extends \litepubl\core\Items
         parent::create();
         $this->basename = 'files';
         $this->table = 'files';
-        $this->addevents('changed', 'edited', 'ongetfilelist', 'onlist');
+        $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
         $this->cachetml = array();
     }
 

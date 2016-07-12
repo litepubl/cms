@@ -21,6 +21,38 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
+/**
+ * Comment manager included several options and rules
+ *
+ * @property bool $
+ * @property bool $filterstatus
+ * @property bool $checkduplicate
+ * @property string $defstatus
+ * @property bool $sendnotification
+ * @property int $trustlevel
+ * @property bool $hidelink
+ * @property bool $redir
+ * @property bool $nofollow
+ * @property bool $canedit
+ * @property bool $candelete
+ * @property bool $confirmlogged
+ * @property bool $confirmguest
+ * @property bool $confirmcomuser
+ * @property bool $confirmemail
+ * @property bool $comuser_subscribe
+ * @property int $idguest
+ * @property array $idgroups
+ * @property-write callable $onChanged
+ * @property-write callable $comuserAdded
+ * @property-write callable $isSpamer
+ * @property-write callable $onCreateStatus
+ * @method array onChanged(array $params)
+ * @method array comuserAdded(array $params)
+ * @method array isSpamer(array $params)
+ * @method array onComuser(array $params)
+ * @method array onCreateStatus(array $params)
+ */
+
 class Manager extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     use \litepubl\core\PoolStorageTrait;
@@ -29,7 +61,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         parent::create();
         $this->basename = 'commentmanager';
-        $this->addevents('onchanged', 'approved', 'comuseradded', 'is_spamer', 'oncreatestatus');
+        $this->addEvents('onchanged', 'comuseradded', 'isspamer', 'oncreatestatus');
     }
 
     public function getCount()
@@ -52,14 +84,14 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         );
 
         if ($id) {
-            $this->comuseradded($id);
+            $this->comuseradded(['id' => $id]);
         }
         return $id;
     }
 
     public function add($idpost, $idauthor, $content, $ip)
     {
-        $status = $this->createstatus($idpost, $idauthor, $content, $ip);
+        $status = $this->createStatus($idpost, $idauthor, $content, $ip);
         if (!$status) {
             return false;
         }
@@ -99,7 +131,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         } catch (\Exception $e) {
         }
 
-        $this->onchanged($id);
+        $this->onChanged(['id' => $id]);
     }
 
     public function sendMail($id)
@@ -137,15 +169,19 @@ $event->once = true;
         return Mailer::sendtoadmin($subject, $body, false);
     }
 
-    public function createstatus($idpost, $idauthor, $content, $ip)
+    public function createStatus(int $idpost, int $idauthor, string $content, string $ip): string
     {
-        $status = $this->oncreatestatus($idpost, $idauthor, $content, $ip);
-        if (false === $status) {
-            return false;
-        }
+$r = $this->onCreateStatus([
+'idpost' => $idpost,
+'status' => '',
+'idauthor' =>  $idauthor,
+'content' =>  $content,
+'ip' =>  $ip
+]);
 
-        if ($status == 'spam') {
-            return false;
+$status = $r['status'];
+        if ($status === false || $status == 'spam') {
+            return '';
         }
 
         if (($status == 'hold') || ($status == 'approved')) {
@@ -163,9 +199,10 @@ $event->once = true;
         return 'hold';
     }
 
-    public function canadd($idauthor)
+    public function canAdd(int $idauthor): bool
     {
-        return !$this->is_spamer($idauthor);
+$r = $this->isSpamer(['author' => $idauthor, 'spamer' => false]);
+        return $r['spamer'];
     }
 
     public function is_duplicate($idpost, $content)

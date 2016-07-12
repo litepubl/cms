@@ -12,6 +12,7 @@ namespace litepubl\plugins\regservices;
 
 use litepubl\comments\Form;
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\view\Theme;
 
 class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
@@ -116,12 +117,14 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         $response->redir($url);
     }
 
-    public function oncomuser(array $values, $comfirmed)
+    public function oncomuser(Event $event)
     {
+$values = $event->values;
         //ignore $comfirmed, always return redirect
         $form = Form::i();
         if ($err = $form->processComUser($values)) {
-            return $err;
+$values->result = $err;
+            return;
         }
 
         $email = strtolower(trim($values['email']));
@@ -164,7 +167,7 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
             return false;
         }
 
-        return $form->sendResult(
+        $event->result = $form->sendResult(
             $url, array(
             ini_get('session.name') => $service->session_id
             )
