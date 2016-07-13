@@ -22,7 +22,7 @@ function CatbreadInstall($self)
 
     $parser = Parser::i();
     $parser->lock();
-    $parser->parsed = $self->themeparsed;
+    $parser->parsed = $self->themeParsed;
     $parser->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
     Base::clearcache();
