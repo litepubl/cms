@@ -16,7 +16,7 @@ function FilesItemsInstall($self)
     $manager->createtable($self->table, file_get_contents($self->getApp()->paths->lib . 'core/install/sql/ItemsPosts.sql'));
 
     $posts = Posts::i();
-    $posts->deleted = $self->deletepost;
+    $posts->deleted = $self->postDeleted;
 }
 
 function FilesitemsUninstall($self)

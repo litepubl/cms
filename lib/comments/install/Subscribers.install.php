@@ -22,16 +22,16 @@ function SubscribersInstall($self)
     $self->save();
 
     $posts = Posts::i();
-    $posts->added = $self->postadded;
-    $posts->deleted = $self->deletepost;
+    $posts->added = $self->postAdded;
+    $posts->deleted = $self->postDeleted;
 
     $comments = Comments::i();
     $comments->lock();
-    $comments->added = $self->sendmail;
-    $comments->onapproved = $self->sendmail;
+    $comments->added = $self->commentAdded;
+    $comments->onapproved = $self->commentAdded;
     $comments->unlock();
 
-    Users::i()->deleted = $self->deleteitem;
+    Users::i()->deleted = $self->itemDeleted;
 }
 
 function SubscribersUninstall($self)

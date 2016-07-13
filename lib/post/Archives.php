@@ -14,6 +14,7 @@ use litepubl\core\Context;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
+use litepubl\core\Event;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
@@ -39,7 +40,7 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
         return $this->schema->theme->parse($result);
     }
 
-    public function postschanged()
+    public function postschanged(Event $event)
     {
         $posts = Posts::i();
         $this->lock();

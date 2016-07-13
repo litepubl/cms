@@ -18,6 +18,7 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
+use litepubl\core\Event;
 
 class Pingbacks extends \litepubl\core\Items
 {
@@ -128,9 +129,9 @@ class Pingbacks extends \litepubl\core\Items
         $this->updatecount($item['post']);
     }
 
-    public function postdeleted($idpost)
+    public function postDeleted(Event $event)
     {
-        $this->db->delete("post = $idpost");
+        $this->db->delete("post = $event->id");
     }
 
     public function import($url, $title, $posted, $ip, $status)

@@ -11,6 +11,7 @@
 namespace litepubl\post;
 
 use litepubl\core\Str;
+use litepubl\core\Event;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Theme;
@@ -330,9 +331,9 @@ $r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => f
         return $theme->parseArg($tml['container'], $args);
     }
 
-    public function postedited($idpost)
+    public function postEdited(Event $event)
     {
-        $post = Post::i($idpost);
+        $post = Post::i($event->id);
         $this->itemsposts->setitems($idpost, $post->files);
     }
 

@@ -26,7 +26,7 @@ class ItemsPosts extends Items
         $this->itemprop = 'item';
     }
 
-    public function add($idpost, $iditem)
+    public function add(int $idpost, int $iditem)
     {
         $this->db->insert(
             array(
@@ -37,22 +37,22 @@ class ItemsPosts extends Items
         $this->added();
     }
 
-    public function exists($idpost, $iditem)
+    public function exists(int $idpost, int $iditem): bool
     {
         return $this->db->exists("$this->postprop = $idpost and $this->itemprop = $iditem");
     }
 
-    public function remove($idpost, $iditem)
+    public function remove(int $idpost, int $iditem)
     {
         return $this->db->delete("$this->postprop = $idpost and $this->itemprop = $iditem");
     }
 
-    public function delete($idpost)
+    public function delete(int $idpost)
     {
-        return $this->deletepost($idpost);
+        return $this->deletePost($idpost);
     }
 
-    public function deletepost($idpost)
+    public function deletePost(int $idpost)
     {
         $db = $this->db;
         $result = $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
@@ -60,13 +60,13 @@ class ItemsPosts extends Items
         return $result;
     }
 
-    public function deleteitem($iditem)
+    public function deleteItem(int $iditem)
     {
         $this->db->delete("$this->itemprop = $iditem");
         $this->deleted();
     }
 
-    public function setItems($idpost, array $items)
+    public function setItems(int $idpost, array $items)
     {
         Arr::clean($items);
         $db = $this->db;
@@ -88,23 +88,25 @@ class ItemsPosts extends Items
         return array_merge($old, $add);
     }
 
-    public function getItems($idpost)
+    public function getItems($idpost): array
     {
-        return $this->getApp()->db->res2id($this->getApp()->db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+$db = $this->getApp()->db;
+        return $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
     }
 
-    public function getPosts($iditem)
+    public function getPosts(int $iditem): array
     {
-        return $this->getApp()->db->res2id($this->getApp()->db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+$db = $this->getApp()->db;
+        return $db->res2id($db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
     }
 
-    public function getPostscount($ititem)
+    public function getPostscount(int $ititem): int
     {
         $db = $this->getdb($this->tablepost);
         return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
     }
 
-    public function updateposts(array $list, $propname)
+    public function updatePosts(array $list, $propname)
     {
         $db = $this->db;
         foreach ($list as $idpost) {
@@ -113,4 +115,15 @@ class ItemsPosts extends Items
             $db->setvalue($idpost, $propname, implode(', ', $items));
         }
     }
+
+public function postDeleted(Event $event)
+{
+$this->deletePost($event->id);
+}
+
+public function itemDeleted(Event $event)
+{
+$this->deleteItem($event->id);
+}
+
 }

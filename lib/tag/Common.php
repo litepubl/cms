@@ -103,9 +103,9 @@ class Common extends \litepubl\core\Items
         return $item['title'];
     }
 
-    public function postEdited(int $idpost)
+    public function postEdited(Event $event)
     {
-        $post = $this->factory->getPost((int)$idpost);
+        $post = $this->factory->getPost((int)$event->id);
         $items = $post->{$this->postpropname};
         Arr::clean($items);
         if (count($items)) {

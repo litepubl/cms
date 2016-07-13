@@ -22,7 +22,7 @@ function CommonInstall($self)
 
     $posts = Posts::i();
     $posts->lock();
-    $posts->added = $self->postedited;
+    $posts->added = $self->postEdited;
     $posts->edited = $self->postedited;
     $posts->deleted = $self->postdeleted;
     $posts->unlock();

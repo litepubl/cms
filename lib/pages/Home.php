@@ -11,6 +11,7 @@
 namespace litepubl\pages;
 
 use litepubl\core\CoEvents;
+use litepubl\core\Event;
 use litepubl\core\Context;
 use litepubl\post\Announce;
 use litepubl\post\Post;
@@ -210,7 +211,7 @@ class Home extends SingleMenu
         return $result;
     }
 
-    public function postschanged()
+    public function postsChanged(Event $event)
     {
         if (!$this->showposts || !$this->showpagenator) {
             return;

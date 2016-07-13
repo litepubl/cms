@@ -15,7 +15,7 @@ use litepubl\widget\Widgets;
 function ArchivesInstall($self)
 {
     $posts = Posts::i();
-    $posts->changed = $self->postschanged;
+    $posts->changed = $self->postsChanged;
 }
 
 function ArchivesUninstall($self)

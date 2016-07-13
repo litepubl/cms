@@ -22,6 +22,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
+use litepubl\core\Event;
 
 class Subscribers extends \litepubl\core\ItemsPosts
 {
@@ -65,13 +66,14 @@ class Subscribers extends \litepubl\core\ItemsPosts
         if ($this->enabled != $value) {
             $this->data['enabled'] = $value;
             $this->save();
+
             $comments = Comments::i();
             if ($value) {
-                Posts::i()->added = $this->postadded;
+                Posts::i()->added = $this->postAdded;
 
                 $comments->lock();
-                $comments->added = $this->sendmail;
-                $comments->onapproved = $this->sendmail;
+                $comments->added = $this->commentAdded;
+                $comments->onapproved = $this->commentAdded;
                 $comments->unlock();
             } else {
                 $comments->unbind($this);
@@ -80,16 +82,16 @@ class Subscribers extends \litepubl\core\ItemsPosts
         }
     }
 
-    public function postadded($idpost)
+    public function postAdded(Event $event)
     {
-        $post = Post::i($idpost);
+        $post = Post::i($event->id);
         if ($post->author <= 1) {
             return;
         }
 
         $useroptions = UserOptions::i();
-        if ('enabled' == $useroptions->getvalue($post->author, 'authorpost_subscribe')) {
-            $this->add($idpost, $post->author);
+        if ('enabled' == $useroptions->getValue($post->author, 'authorpost_subscribe')) {
+            $this->add($post->id, $post->author);
         }
     }
 
@@ -124,7 +126,12 @@ class Subscribers extends \litepubl\core\ItemsPosts
         }
     }
 
-    public function sendmail($id)
+public function commentAdded(Event $event)
+{
+$this->sendMail($event->id);
+}
+
+    public function sendMail(int $id)
     {
         if (!$this->enabled) {
             return;
