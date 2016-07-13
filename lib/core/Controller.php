@@ -106,7 +106,7 @@ class Controller
         }
     }
 
-    public function url2cacheFile($url)
+    public function url2cacheFile(string $url): string
     {
         return md5($url) . '.php';
     }

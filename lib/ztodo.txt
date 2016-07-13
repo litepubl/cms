@@ -51,3 +51,4 @@ callback in widgets review
 не забыть про события authorRights - поправить везде вызовы
 json переместить события в отдельный массив, то есть разделить события и rpc
 добавить reflectgor для проверки добавленных событий
+не забыть удаление из кеша rsshold Controller::i()->url2cacheFile($this->url);

@@ -15,6 +15,7 @@ use litepubl\core\litepubl;
 use litepubl\view\Css;
 use litepubl\post\Posts;
 use litepubl\post\View;
+litepubl\updaterStorageIterator;
 
 function update701()
 {
@@ -48,4 +49,26 @@ unset($posts->data['events'][$name]);
 
 $posts->save();
 $view->save();
+
+$map = include __DIR__ '/update7/eventmap.php';
+$func= function(\StdClass $std) use($map)
+{
+        $result = false;
+                if (isset($std->data['events']) && count($std->data['events'])) {
+            foreach ($std->data['events'] as $name => $events) {
+                foreach ($events as $i => $event) {
+if (isset($map[$event[0]])
+&& isset($map[$event[0]][$event[1]])) {
+$std->data['events'][$name][$i][1] = $map[$event[0]][$event[1]];
+            $result = true;
+}
+}
+}
+}
+
+return $result;
+}
+
+        $iterator = new StorageIterator(litepubl::$app->storage, $func);
+        $iterator->dir(litepubl::$app->paths->data);
 }

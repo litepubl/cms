@@ -12,6 +12,7 @@ namespace litepubl\comments;
 
 use litepubl\Config;
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\core\Users;
 use litepubl\utils\Mailer;
@@ -110,10 +111,10 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         return $id;
     }
 
-    public function changed($id)
+    public function changed(Event $event)
     {
         $comments = Comments::i();
-        $idpost = $comments->getValue($id, 'post');
+        $idpost = $comments->getValue($event->id, 'post');
         $count = $comments->db->getcount("post = $idpost and status = 'approved'");
         $comments->getDB('posts')->setValue($idpost, 'commentscount', $count);
         if ($this->getApp()->options->commentspool) {
@@ -122,7 +123,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
 
         //update trust
         try {
-            $idauthor = $comments->getvalue($id, 'author');
+            $idauthor = $comments->getvalue($event->id, 'author');
             $users = Users::i();
             if ($this->trustlevel > (int)$users->getvalue($idauthor, 'trust')) {
                 $trust = $comments->db->getcount("author = $idauthor and status = 'approved' limit " . ($this->trustlevel + 1));
@@ -131,10 +132,15 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         } catch (\Exception $e) {
         }
 
-        $this->onChanged(['id' => $id]);
+        $this->onChanged(['id' => $event->id]);
     }
 
-    public function sendMail($id)
+    public function commentAdded(Event $event)
+{
+$this->sendMail($event->id);
+}
+
+    public function sendMail(int $id)
     {
         if ($this->sendnotification) {
             $this->getApp()->onClose(function($event) use ($id) {

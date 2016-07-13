@@ -7,6 +7,10 @@ return [
 'sendmail' => 'commentAdded',
 ],
 
+'litepubl\comments\Manager' => [
+'sendmail' => 'commentAdded',
+],
+
 'litepubl\post\FilesItems' => [
 'deletepost' => 'postDeleted',
 ],

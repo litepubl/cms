@@ -11,6 +11,8 @@
 namespace litepubl\comments;
 
 use litepubl\core\Context;
+use litepubl\core\Controller;
+use litepubl\core\Event;
 use litepubl\post\DomRss;
 use litepubl\post\Rss;
 use litepubl\view\Lang;
@@ -35,18 +37,18 @@ class RssHold extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         if ($this->key != $key) {
             if ($key == '') {
-                $this->getApp()->classes->commentmanager->unbind($self);
+Manager::i()->unbind($self);
             } else {
-                $this->getApp()->classes->commentmanager->changed = $this->commentschanged;
+Manager::i()->changed = $this->commentschanged;
             }
             $this->data['key'] = $key;
             $this->save();
         }
     }
 
-    public function commentschanged($idpost)
+    public function commentschanged(Event $event)
     {
-        $this->getApp()->cache->clearUrl($this->url);
+$this->getApp()->cache->clearUrl($this->url);
     }
 
     public function request(Context $context)

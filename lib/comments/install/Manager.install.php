@@ -48,7 +48,7 @@ function ManagerInstall($self)
     $comments = Comments::i();
     $comments->lock();
     $comments->changed = $self->changed;
-    $comments->added = $self->sendmail;
+    $comments->added = $self->commentAdded;
     $comments->unlock();
 
     $self->getApp()->router->addget('/comusers.htm', get_class($self));

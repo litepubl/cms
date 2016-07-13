@@ -42,8 +42,7 @@ class eventUpdater
     public static function updateEvents(\StdClass $std)
     {
         $result = false;
-        
-        if (isset($std->data['events']) && count($std->data['events'])) {
+                if (isset($std->data['events']) && count($std->data['events'])) {
             $result = true;
             foreach ($std->data['events'] as $name => $events) {
                 foreach ($events as $i => $event) {
@@ -89,7 +88,6 @@ class eventUpdater
     public static function updateStorage()
     {
         $iterator = new StorageIterator(litepubl::$app->storage, static::getCallback());
-        
         $iterator->dir(litepubl::$app->paths->data);
     }
 }
