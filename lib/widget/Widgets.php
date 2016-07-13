@@ -119,7 +119,7 @@ class Widgets extends \litepubl\core\Items
         }
 
         unset($this->items[$id]);
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
         $this->save();
         return true;
     }
@@ -156,7 +156,7 @@ class Widgets extends \litepubl\core\Items
         $this->save();
 
         foreach ($deleted as $id) {
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
         }
 
         return true;

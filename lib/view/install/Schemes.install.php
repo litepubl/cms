@@ -15,7 +15,7 @@ use litepubl\widget\Widgets;
 function SchemesInstall($self)
 {
     $widgets = Widgets::i();
-    $widgets->deleted = $self->widgetdeleted;
+    $widgets->deleted = $self->widgetDeleted;
 
     $self->lock();
     $lang = Lang::admin('names');

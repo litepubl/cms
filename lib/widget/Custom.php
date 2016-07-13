@@ -10,6 +10,8 @@
 
 namespace litepubl\widget;
 
+use litepubl\core\Event;
+
 /**
  * Widgets with editable content
  *
@@ -103,8 +105,9 @@ class Custom extends Widget
         }
     }
 
-    public function widgetDeleted(int $id)
+    public function widgetDeleted(Event $event)
     {
+$id = $event->id;
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();

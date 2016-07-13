@@ -11,6 +11,7 @@
 namespace litepubl\view;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
 
 /**
  * Common class for join files
@@ -97,8 +98,9 @@ class Schemes extends \litepubl\core\Items
         }
     }
 
-    public function widgetdeleted($idwidget)
+    public function widgetDeleted(Event $event)
     {
+$idwidget = $event->id;
         $deleted = false;
         foreach ($this->items as & $schemaitem) {
             unset($sidebar);

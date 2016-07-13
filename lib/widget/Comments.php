@@ -11,6 +11,7 @@
 namespace litepubl\widget;
 
 use litepubl\view\Args;
+use litepubl\core\Event;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 
@@ -54,7 +55,7 @@ class Comments extends Widget
         return $view->getContent($result, 'comments', $sidebar);
     }
 
-    public function changed()
+    public function changed(Event $event)
     {
         Cache::i()->removeWidget($this);
     }

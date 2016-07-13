@@ -11,6 +11,7 @@
 namespace litepubl\post;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 
 /**
  * RSS files
@@ -34,7 +35,7 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
         $this->data['feedburner'] = '';
     }
 
-    public function filesChanged()
+    public function filesChanged(Event $event)
     {
         $app = $this->getApp();
         $list = $app->router->getUrlsOfClass(get_class($this));

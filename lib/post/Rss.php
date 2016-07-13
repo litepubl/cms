@@ -13,6 +13,7 @@ namespace litepubl\post;
 use litepubl\coments\Manager as CommentManager;
 use litepubl\comments\Comments;
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\perm\Perm;
 use litepubl\tag\Cats;
 use litepubl\tag\Common;
@@ -58,7 +59,7 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
         $this->postCommentsUrl = '/comments/';
     }
 
-    public function commentschanged()
+    public function commentschanged(Event $event)
     {
         $cache = $this->getApp()->cache;
         $cache->clearUrl($this->commentsUrl);
