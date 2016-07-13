@@ -19,6 +19,23 @@ use litepubl\view\MainView;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
 
+/**
+ * Post view
+ *
+ * @property-write callable $beforeContent
+ * @property-write callable $afterContent
+ * @property-write callable $beforeExcerpt
+ * @property-write callable $afterExcerpt
+ * @property-write callable $onHead
+ * @property-write callable $onTags
+ * @method array beforeContent(array $params)
+ * @method array afterContent(array $params)
+ * @method array beforeExcerpt(array $params)
+ * @method array afterExcerpt(array $params)
+ * @method array onHead(array $params)
+ * @method array onTags(array $params)
+ */
+
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
     public $post;
@@ -30,6 +47,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     protected function create()
     {
         parent::create();
+        $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead', 'onanhead');
+
         $this->table = 'posts';
     }
 
@@ -254,13 +273,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);
         $result = $theme->parseArg($theme->templates[$tmlpath], $args);
-        $this->factory->posts->callevent(
-            'ontags', array(
-            $tags,
-            $excerpt, &$result
-            )
-        );
-        return $result;
+        $r = $this->onTags(['tags' => $tags, 'excerpt' => $excerpt, 'content' => $result]);
+        return $r['content'];
     }
 
     public function getDate()
@@ -354,13 +368,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = $theme->parse($result);
-        $this->factory->posts->callevent(
-            'onhead', array(
-            $this, &$result
-            )
-        );
-
-        return $result;
+$r = $this->onHead['post' => $this->post, 'content' => $result]);
+        return $r['content'];
     }
 
     public function getAnhead(): string
@@ -541,20 +550,16 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return ($this->comstatus != 'closed') && ((int)$this->commentscount > 0);
     }
 
-    public function getExcerptContent()
+    public function getExcerptContent(): string
     {
-        $posts = $this->factory->posts;
-        if ($this->revision < $posts->revision) {
-            $this->updateRevision($posts->revision);
-        }
-        $result = $this->excerpt;
-        $posts->beforeexcerpt($this, $result);
-        $result = $this->replaceMore($result, true);
+$this->post->checkRevision();
+$r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
+        $result = $this->replaceMore($r['content'], true);
         if ($this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
-        $posts->afterexcerpt($this, $result);
-        return $result;
+        $r = $this->afterExcerpt(['post' => $this->post, 'content' => $result]);
+        return $r['content'];
     }
 
     public function replaceMore(string $content, string $excerpt): string
@@ -600,19 +605,17 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getContent(): string
     {
-        $result = '';
-        $posts = $this->factory->posts;
-        $posts->beforecontent($this, $result);
-        if ($this->revision < $posts->revision) {
-            $this->updateRevision($posts->revision);
-        }
-
+$this->post->checkRevision();
+        $r = $this->beforeContent(['post' => $this->post, 'content' => '']);
+$result = $r['content'];
         $result.= $this->getContentPage($this->page);
+
         if ($this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
-        $posts->aftercontent($this, $result);
-        return $result;
+
+        $r = $this->afterContent(['post' => $this->post, 'content' => $result]);
+        return $r['content'];
     }
 
     //author

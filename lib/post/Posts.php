@@ -15,6 +15,22 @@ use litepubl\core\Str;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Schemes;
 
+/**
+ * Main class to manage posts
+ *
+ * @property int $archivescount
+ * @property int $revision
+ * @property bool $syncmeta
+ * @property-write callable $edited
+ * @property-write callable $changed
+ * @property-write callable $singleCron
+ * @property-write callable $onSelect
+ * @method array edited(array $params)
+ * @method array changed(array $params)
+ * @method array singleCron(array $params)
+ * @method array onselect(array $params)
+ */
+
 class Posts extends \litepubl\core\Items
 {
     const POSTCLASS = __NAMESPACE__ . '/Post';
@@ -36,8 +52,8 @@ class Posts extends \litepubl\core\Items
         $this->childTable = '';
         $this->rawtable = 'rawposts';
         $this->basename = 'posts/index';
-        $this->addevents('edited', 'changed', 'singlecron', 'beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onselect', 'onhead', 'onanhead', 'ontags');
-        $this->data['archivescount'] = 0;
+        $this->addEvents('edited', 'changed', 'singlecron', 'onselect');
+         $this->data['archivescount'] = 0;
         $this->data['revision'] = 0;
         $this->data['syncmeta'] = false;
         $this->addmap('itemcoclasses', array());
@@ -109,7 +125,7 @@ class Posts extends \litepubl\core\Items
             Files::i()->preLoad($fileitems);
         }
 
-        $this->onselect($result);
+        $this->onSelect(['items' => $result]);
         return $result;
     }
 
@@ -227,8 +243,8 @@ class Posts extends \litepubl\core\Items
 
         $this->updated($post);
         $this->coInstanceCall('add', [$post]);
-        $this->added($id);
-        $this->changed();
+        $this->added(['id' => $id]);
+        $this->changed([]);
         $this->getApp()->cache->clear();
         return $id;
     }
@@ -253,8 +269,8 @@ class Posts extends \litepubl\core\Items
         $this->updated($post);
         $this->coInstanceCall('edit', [$post]);
         $this->unlock();
-        $this->edited($post->id);
-        $this->changed();
+        $this->edited(['id' => $post->id]);
+        $this->changed([]);
 
         $this->getApp()->cache->clear();
     }
@@ -276,8 +292,8 @@ class Posts extends \litepubl\core\Items
         $this->UpdateArchives();
         $this->coInstanceCall('delete', [$id]);
         $this->unlock();
-        $this->deleted($id);
-        $this->changed();
+        $this->deleted(['id' => $id]);
+        $this->changed([]);
         $this->getApp()->cache->clear();
         return true;
     }
@@ -294,11 +310,11 @@ class Posts extends \litepubl\core\Items
         $this->archivescount = $this->db->getcount("status = 'published' and posted <= '" . Str::sqlDate() . "'");
     }
 
-    public function dosinglecron($id)
+    public function doSingleCron($id)
     {
         $this->PublishFuture();
         Theme::$vars['post'] = Post::i($id);
-        $this->singlecron($id);
+        $this->singleCron(['id' => $id]);
         unset(Theme::$vars['post']);
     }
 
@@ -347,7 +363,7 @@ class Posts extends \litepubl\core\Items
         return $this->findItems($where, " order by $t.posted $order limit $from, $perpage");
     }
 
-    public function stripDrafts(array $items)
+    public function stripDrafts(array $items): array
     {
         if (count($items) == 0) {
             return array();
@@ -358,48 +374,12 @@ class Posts extends \litepubl\core\Items
         return $this->db->idSelect("$t.status = 'published' and $t.id in ($list)");
     }
 
-    public function addRevision()
+    public function addRevision(): int
     {
         $this->data['revision']++;
         $this->save();
         $this->getApp()->cache->clear();
-    }
-
-    //fix call reference
-    public function beforecontent($post, &$result)
-    {
-        $this->callevent(
-            'beforecontent', array(
-            $post, &$result
-            )
-        );
-    }
-
-    public function aftercontent($post, &$result)
-    {
-        $this->callevent(
-            'aftercontent', array(
-            $post, &$result
-            )
-        );
-    }
-
-    public function beforeexcerpt($post, &$result)
-    {
-        $this->callevent(
-            'beforeexcerpt', array(
-            $post, &$result
-            )
-        );
-    }
-
-    public function afterexcerpt($post, &$result)
-    {
-        $this->callevent(
-            'afterexcerpt', array(
-            $post, &$result
-            )
-        );
+return $this->data['revision'];
     }
 
     public function getSitemap($from, $count)
