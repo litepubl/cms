@@ -10,25 +10,26 @@
 
 namespace litepubl\plugins\toptext;
 
+use litepubl\core\Event;
 use litepubl\post\Post;
 
 class TopText extends \litepubl\core\Plugin
 {
     public $text;
 
-    public function beforeContent(Post $post, &$content, &$cancel)
+    public function beforeContent(Event $event)
     {
         $sign = '[toptext]';
-        if ($i = strpos($content, $sign)) {
-            $this->text = substr($content, 0, $i);
-            $content = substr($content, $i + strlen($sign));
+        if ($i = strpos($event->content, $sign)) {
+            $this->text = substr(event->$content, 0, $i);
+            $event->content = substr($event->content, $i + strlen($sign));
         }
     }
 
-    public function afterContent(Post $post)
+    public function afterContent(Event $event)
     {
         if ($this->text) {
-            $post->filtered = $this->text . $post->filtered;
+            $event->post->filtered = $this->text . $event->post->filtered;
         }
     }
 }

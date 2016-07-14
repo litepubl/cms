@@ -11,6 +11,7 @@
 namespace litepubl\plugins\ulogin;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\DBManager;
 use litepubl\core\Str;
 use litepubl\core\UserGroups;
@@ -72,9 +73,9 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         return $this->db->findId('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
-    public function userDeleted($id)
+    public function userDeleted(Event $event)
     {
-        $this->db->delete("id = $id");
+        $this->db->delete("id = $event->id");
     }
 
     public function request(Context $context)

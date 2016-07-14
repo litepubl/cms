@@ -12,7 +12,7 @@ namespace litepubl\plugins\toptext;
 
 use litepubl\view\Filter;
 
-function TopTextinstall($self)
+function TopTextInstall($self)
 {
     $filter = Filter::i();
     $filter->lock();
@@ -21,7 +21,7 @@ function TopTextinstall($self)
     $filter->unlock();
 }
 
-function TopTextuninstall($self)
+function TopTextUninstall($self)
 {
     $filter = Filter::i();
     $filter->unbind($self);

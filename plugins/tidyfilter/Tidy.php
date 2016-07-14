@@ -10,6 +10,8 @@
 
 namespace litepubl\plugins\tidyfilter;
 
+use litepubl\core\Event;
+
 class Tidy extends \litepubl\core\Plugin
 {
 
@@ -33,7 +35,7 @@ class Tidy extends \litepubl\core\Plugin
         return substr($s, $i, $j - $i);
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
         $config = array(
             'clean' => true,
@@ -51,8 +53,8 @@ class Tidy extends \litepubl\core\Plugin
         );
 
         $tidy = new \tidy;
-        $tidy->parseString($this->gethtml($content), $config, 'utf8');
+        $tidy->parseString($this->gethtml($event->content), $config, 'utf8');
         $tidy->cleanRepair();
-        $content = $this->getbody((string)$tidy);
+        $event->content = $this->getbody((string)$tidy);
     }
 }

@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\wikiwords;
 
+use litepubl\core\Event;
 use litepubl\core\ItemsPosts;
 use litepubl\core\Str;
 use litepubl\post\Post;
@@ -210,20 +211,20 @@ class Wiki extends \litepubl\core\Items
         Posts::i()->addrevision();
     }
 
-    public function postdeleted($idpost)
+    public function postDeleted(Event $event)
     {
-        if (count($this->itemsposts->deletepost($idpost)) > 0) {
+        if (count($this->itemsposts->deletePost($event->id)) > 0) {
             Posts::i()->addRevision();
         }
     }
 
-    public function beforeFilter($post, &$content, &$cancel)
+    public function beforeFilter(Event $event)
     {
-        $this->createWords($post, $content);
-        $this->replaceWords($content);
+        $event->content = $this->createWords($event->post, $event->content);
+        $event->content = $this->replaceWords($event->content);
     }
 
-    public function createWords($post, &$content)
+    public function createWords($post, $content): string
     {
         $result = array();
         if (preg_match_all('/\[wiki\:(.*?)\]/im', $content, $m, PREG_SET_ORDER)) {

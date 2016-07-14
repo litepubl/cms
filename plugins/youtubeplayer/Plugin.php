@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\youtubeplayer;
 
+use litepubl\core\Event;
 use litepubl\view\Filter;
 
 class Plugin extends \litepubl\core\Plugin
@@ -25,25 +26,25 @@ class Plugin extends \litepubl\core\Plugin
         'allowscriptaccess="always" ' . 'allowfullscreen="true" ' . 'width="425" height="350">' . '</embed></object>';
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
         if (preg_match_all(
             "/\[youtube\=http:\/\/([a-zA-Z0-9\-\_]+\.|)youtube\.com\/watch(\?v\=|\/v\/|#!v=)([a-zA-Z0-9\-\_]{11})([^<\s]*)\]/",
             //"/\[youtube\=http:\/\/([a-zA-Z0-9\-\_]+\.|)youtube\.com\/watch(\?v\=|\/v\/)([a-zA-Z0-9\-\_]{11})([^<\s]*)\]/",
-            $content,
+            $event->content,
             $m,
             PREG_SET_ORDER
         )) {
             foreach ($m as $item) {
                 $id = $item[3];
-                $content = str_replace($item[0], str_replace('$id', $id, $this->template), $content);
+                $event->content = str_replace($item[0], str_replace('$id', $id, $this->template), $event->content);
             }
         }
 
-        if (preg_match_all('/http:\/\/youtu\.be\/(\w*+)/', $content, $m, PREG_SET_ORDER)) {
+        if (preg_match_all('/http:\/\/youtu\.be\/(\w*+)/', $event->content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $id = $item[1];
-                $content = str_replace($item[0], str_replace('$id', $id, $this->template), $content);
+                $event->content = str_replace($item[0], str_replace('$id', $id, $this->template), $event->content);
             }
         }
     }
