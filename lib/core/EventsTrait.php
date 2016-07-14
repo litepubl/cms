@@ -59,7 +59,7 @@ protected function reIndexEvents()
 {
 foreach ($this->data['events'] as $name => $events) {
 ksort($events);
-$sorted = []
+$sorted = [];
 $newIndex = 0;
 foreach ($events as $i => $item) {
 if (floor($i / 10) == floor($newIndex / 10)) {
@@ -77,7 +77,7 @@ $this->data['events'][$name] = $sorted;
 
 public function getEventCount(string $name): int
 {
-return isset($this->data['events'][$name]) ? count($this->:data['events'][$name]) : 0;
+return isset($this->data['events'][$name]) ? count($this->data['events'][$name]) : 0;
 }
 
 }

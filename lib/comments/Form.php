@@ -159,7 +159,11 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
             case 'comuser':
                 //hook in regservices social plugin
-$r = $this->oncomuser(['values: $values, 'confirmid' => $confirmed, 'result' => false]);
+$r = $this->oncomuser([
+'values' => $values,
+'confirmid' => $confirmed,
+'result' => false
+]);
 if ($r['result']) {
                     return $r['result'];
                 }

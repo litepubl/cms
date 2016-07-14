@@ -84,7 +84,7 @@ if ($r['cancel']) {
             $result = trim($result);
         }
 
-        $r = $this->onAfterComment('content' => $result]);
+        $r = $this->onAfterComment(['content' => $result]);
         return $r['content'];
     }
 
@@ -215,7 +215,7 @@ if ($r['cancel']) {
             return '';
         }
 
-        $r = $this->onSimpleFilter['content' => $s]);
+        $r = $this->onSimpleFilter(['content' => $s]);
 $s = $r['content'];
         if ($this->autolinks) {
             $s = static ::createlinks($s);

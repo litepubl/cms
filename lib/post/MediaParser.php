@@ -367,7 +367,7 @@ $item = $r['item'];
                         @chmod($fixfilename, 0666);
                     }
                 } else {
-                    $this->noResize(['image' => $image, 'filename' => $srcfilename)];
+                    $this->noResize(['image' => $image, 'filename' => $srcfilename]);
                 }
 
                 imagedestroy($image);

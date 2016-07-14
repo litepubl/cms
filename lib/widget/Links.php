@@ -111,7 +111,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
-$this->deleted['id' => $id]);
+$this->deleted(['id' => $id]);
             $this->getApp()->cache->clear();
         }
     }

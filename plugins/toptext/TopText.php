@@ -21,7 +21,7 @@ class TopText extends \litepubl\core\Plugin
     {
         $sign = '[toptext]';
         if ($i = strpos($event->content, $sign)) {
-            $this->text = substr(event->$content, 0, $i);
+            $this->text = substr($event->content, 0, $i);
             $event->content = substr($event->content, $i + strlen($sign));
         }
     }

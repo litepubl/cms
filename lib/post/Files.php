@@ -207,7 +207,7 @@ $this->deleted(['id' => $id]);
 
     public function getFilelist(array $list, $excerpt)
     {
-$r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false])) {
+$r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false]);
         if ($r['result']) {
             return $r['result'];
         }

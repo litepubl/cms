@@ -368,7 +368,7 @@ $this->basename = 'postview';
         }
 
         $result = $theme->parse($result);
-$r = $this->onHead['post' => $this->post, 'content' => $result]);
+$r = $this->onHead(['post' => $this->post, 'content' => $result]);
         return $r['content'];
     }
 

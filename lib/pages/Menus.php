@@ -294,11 +294,11 @@ $changed = false;
 $changed = true;
             }
         }
-    }
-
+    
 if ($changed) {
 $this->save();
 }
+    }
 
     public function sort()
     {
@@ -342,7 +342,7 @@ $this->save();
         return $result;
     }
 
-    //ищет в дереве список детей, так как они уже отсортированы
+    //пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     public function getChilds(int $id): array
     {
         if ($id == 0) {
@@ -411,7 +411,7 @@ $this->save();
             $result = $theme->parseArg($theme->templates['menu'], $args);
         }
 
-        $r = $this->onMenu['content' => $result]);
+        $r = $this->onMenu(['content' => $result]);
         return $r['content'];
     }
 

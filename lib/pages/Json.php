@@ -101,7 +101,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
         }
 
-        $a = $this->beforeCall('params' => $params]);
+        $a = $this->beforeCall(['params' => $params]);
 $params = $a['params'];
         try {
             $result = $this->callMethod($args['method'], $params);
@@ -194,7 +194,7 @@ return call_user_func_array($callback, [$params]);
 } else {
 $mesg = sprintf('Class "%s" not found for method "%s"', $item[0], $method);
 $this->getApp()->getLogger()->warning($mesg);
-return [error' => [
+return ['error' => [
 'message' => $mesg,
 'code' => 500
 ]];

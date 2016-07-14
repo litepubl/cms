@@ -107,7 +107,7 @@ class Classes extends Items
             'id' => $id,
             ]);
 
-        return new {$info['class']}();
+        return new $info['class']();
     }
 
     public function add($class, $filename, $deprecatedPath = false)

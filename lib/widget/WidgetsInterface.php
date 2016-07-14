@@ -11,7 +11,6 @@
 namespace litepubl\widget;
 
 use ArrayObject;
-use litepubl\core\Str;
 
 interface WidgetsInterface
 {

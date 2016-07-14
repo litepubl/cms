@@ -11,7 +11,6 @@
 namespace litepubl\tag;
 
 use litepubl\core\Context;
-use litepubl\core\Str;
 use litepubl\post\Announce;
 use litepubl\view\Args;
 use litepubl\view\Lang;

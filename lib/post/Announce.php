@@ -24,7 +24,7 @@ class Announce
         $this->theme = $theme ? $theme : Theme::context();
     }
 
-    private function getKey($postanounce)
+    private function getKey(string $postanounce): string
     {
         if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
             return 'excerpt';
@@ -105,7 +105,7 @@ $view = View::i();
         return $result;
     }
 
-    public function getAnHead(array $items)
+    public function getAnHead(array $items): string
     {
         if (!count($items)) {
             return '';

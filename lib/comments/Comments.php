@@ -153,7 +153,7 @@ class Comments extends \litepubl\core\Items
         if ($old != $status) {
             $this->setValue($id, 'status', $status);
  $this->onstatus([
-'id' => $id
+'id' => $id,
 'old' => $old,
 'status' =>  $status
 ]);

@@ -11,7 +11,6 @@
 namespace litepubl\admin;
 
 use litepubl\core\Plugins as PluginItems;
-use litepubl\utils\Filer;
 use litepubl\view\Lang;
 
 class Plugins extends Menu

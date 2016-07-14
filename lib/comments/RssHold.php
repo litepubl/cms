@@ -11,7 +11,6 @@
 namespace litepubl\comments;
 
 use litepubl\core\Context;
-use litepubl\core\Controller;
 use litepubl\core\Event;
 use litepubl\post\DomRss;
 use litepubl\post\Rss;
