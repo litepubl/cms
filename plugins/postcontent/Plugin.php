@@ -10,6 +10,8 @@
 
 namespace litepubl\plugins\postcontent;
 
+use litepubl\core\Event;
+
 class Plugin extends \litepubl\core\Plugin
 {
 
@@ -20,13 +22,13 @@ class Plugin extends \litepubl\core\Plugin
         $this->data['after'] = '';
     }
 
-    public function beforeContent($post, &$content)
+    public function beforeContent(Event $event)
     {
-        $content = $this->before . $content;
+        $event->content = $this->before . $event->content;
     }
 
-    public function aftercontent($post, &$content)
+    public function aftercontent(Event $event)
     {
-        $content.= $this->after;
+        $event->content.= $this->after;
     }
 }

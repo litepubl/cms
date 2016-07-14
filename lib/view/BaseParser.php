@@ -21,9 +21,11 @@ use litepubl\core\Plugins;
  * @property-write callable $onGetPaths
  * @property-write callable $beforeParse
  * @property-write callable $parsed
+ * @property-write callable $onFix
  * @method array onGetPaths(array $params) triggered when tags required before parse
  * @method array beforeParse(array $params) triggered before parse text
  * @method array parsed(array $params) triggered after parse
+ * @method array onFix(array $params) triggered after parse
  */
 
 class BaseParser extends \litepubl\core\Events
@@ -449,7 +451,7 @@ $s = $info['text'];
 
     public function afterparse($theme)
     {
-        $this->onfix($theme);
+        $this->onFix(['theme' => $theme]);
         $this->reuse($this->theme->templates);
 
         if (!Config::$debug && $this->removespaces) {

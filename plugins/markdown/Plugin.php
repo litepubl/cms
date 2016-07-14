@@ -10,6 +10,8 @@
 
 namespace litepubl\plugins\markdown;
 
+use litepubl\core\Event;
+
 class Plugin extends \litepubl\core\Plugin
 {
     public $parser;
@@ -23,20 +25,18 @@ class Plugin extends \litepubl\core\Plugin
         $this->parser = new \Michelf\Markdown();
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
         if ($this->deletep) {
-            $content = str_replace('_', '&#95;', $content);
+            $event->content = str_replace('_', '&#95;', $event->content);
         }
-        $content = $this->parser->transform($content);
+        $event->content = $this->parser->transform($event->content);
         if ($this->deletep) {
-            $content = strtr(
-                $content, array(
+            $event->content = strtr($event->content, array(
                 '<p>' => '',
                 '</p>' => '',
                 '&#95;' => '_'
-                )
-            );
+                )            );
         }
     }
 }

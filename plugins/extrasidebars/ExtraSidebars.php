@@ -25,8 +25,9 @@ class ExtraSidebars extends \litepubl\core\Plugin
         $this->data['afterpost'] = true;
     }
 
-    public function fix(Theme $theme)
+    public function fix(Event $event)
     {
+$theme = $event->theme;
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             if ($this->beforepost) {

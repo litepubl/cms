@@ -10,18 +10,18 @@
 
 namespace litepubl\plugins\postcontent;
 
-use litepubl\post\Posts;
+use litepubl\post\View;
 
 function PluginInstall($self)
 {
-    $posts = Posts::i();
-    $posts->lock();
-    $posts->beforecontent = $self->beforecontent;
-    $posts->aftercontent = $self->aftercontent;
-    $posts->unlock();
+    $view = View::i();
+    $view->lock();
+    $view->beforecontent = $self->beforeContent;
+    $view->aftercontent = $self->afterContent;
+    $view->unlock();
 }
 
 function PluginUninstall($self)
 {
-    Posts::unsub($self);
+    View::unsub($self);
 }

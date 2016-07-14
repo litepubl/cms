@@ -11,6 +11,7 @@
 namespace litepubl\plugins\externallinks;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\Str;
 
 class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
@@ -88,9 +89,9 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
         $response->cacheHeader = false;
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
-        if (!preg_match_all('/<a\s*.*?href\s*=\s*[\'"]([^"\'>]*).*?>(.*?)<\/a>/i', $content, $links)) {
+        if (!preg_match_all('/<a\s*.*?href\s*=\s*[\'"]([^"\'>]*).*?>(.*?)<\/a>/i', $event->content, $links)) {
             return;
         }
 
@@ -119,8 +120,8 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
         }
 
         foreach ($external as $src => $dst) {
-            $content = str_replace(sprintf('"%s"', $src), sprintf('"%s"', $dst), $content);
-            $content = str_replace(sprintf("'%s'", $src), sprintf("'%s'", $dst), $content);
+            $event->content = str_replace(sprintf('"%s"', $src), sprintf('"%s"', $dst), $event->content);
+            $event->content = str_replace(sprintf("'%s'", $src), sprintf("'%s'", $dst), $event->content);
         }
     }
 

@@ -11,6 +11,7 @@
 namespace litepubl\plugins\livejournalposter;
 
 use litepubl\Config;
+use litepubl\core\Event;
 use litepubl\post\Post;
 use litepubl\view\Theme;
 use litepubl\xmlrpc\IXR_Client;
@@ -29,13 +30,13 @@ class Plugin extends \litepubl\core\Plugin
         $this->data['template'] = '';
     }
 
-    public function sendPost($id)
+    public function sendPost(Event $event)
     {
         if ($this->host == '' || $this->login == '') {
             return false;
         }
 
-        $post = Post::i($id);
+        $post = Post::i($event->id);
         Theme::$vars['post'] = $post;
         $theme = Theme::i();
         $content = $theme->parse($this->template);
