@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\subcat;
 
+use litepubl\core\Event;
 use litepubl\tag\Cats;
 use litepubl\widget\Sidebars;
 use litepubl\widget\Widgets;
@@ -70,17 +71,17 @@ class Widget extends \litepubl\widget\Widget
         }
     }
 
-    public function widgetDeleted(int $id)
+    public function widgetDeleted(Event $event)
     {
-        if (isset($this->items[$id])) {
-            unset($this->items[$id]);
+        if (isset($this->items[$event->id])) {
+            unset($this->items[$event->id]);
             $this->save();
         }
     }
 
-    public function tagDeleted(int $idtag)
+    public function tagDeleted(Event $event)
     {
-        if ($idwidget = $this->getIdWidget($idtag)) {
+        if ($idwidget = $this->getIdWidget($event->id)) {
             return $this->delete($idwidget);
         }
     }

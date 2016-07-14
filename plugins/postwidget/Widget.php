@@ -11,6 +11,7 @@
 namespace litepubl\plugins\postwidget;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
 use litepubl\widget\Widgets;
 
 class Widget extends \litepubl\widget\Depended
@@ -57,18 +58,18 @@ class Widget extends \litepubl\widget\Depended
         }
     }
 
-    public function widgetDeleted(int $id)
+    public function widgetDeleted(Event $event)
     {
-        if (isset($this->items[$id])) {
-            unset($this->items[$id]);
+        if (isset($this->items[$event->id])) {
+            unset($this->items[$event->id]);
             $this->save();
         }
     }
 
-    public function tagDeleted(int $idtag)
+    public function tagDeleted(Event $event)
     {
         foreach ($this->items as & $item) {
-            Arr::deleteValue($item['cats'], $idtag);
+            Arr::deleteValue($item['cats'], $event->id);
         }
         $this->save();
     }

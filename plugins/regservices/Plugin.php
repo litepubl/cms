@@ -117,7 +117,7 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         $response->redir($url);
     }
 
-    public function oncomuser(Event $event)
+    public function onComuser(Event $event)
     {
 $values = $event->values;
         //ignore $comfirmed, always return redirect

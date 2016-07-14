@@ -10,6 +10,8 @@
 
 namespace litepubl\plugins\regservices;
 
+use litepubl\core\Event;
+
 class RegUser extends \litepubl\core\Items
 {
 
@@ -42,4 +44,9 @@ class RegUser extends \litepubl\core\Items
     {
         return $this->db->findId('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
+
+public function userDeleted(Event $event)
+{
+$this->delete($event->id);
+}
 }

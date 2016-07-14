@@ -10,6 +10,8 @@
 
 namespace litepubl\plugins\shortcode;
 
+use litepubl\core\Event;
+
 class Plugin extends \litepubl\core\Items
 {
 
@@ -20,14 +22,14 @@ class Plugin extends \litepubl\core\Items
         $this->basename = 'shortcodes';
     }
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
         foreach ($this->items as $code => $tml) {
-            $content = str_replace("[$code]", $tml, $content);
-            if (preg_match_all("/\[$code\=(.*?)\]/", $content, $m, PREG_SET_ORDER)) {
+            $event->content = str_replace("[$code]", $tml, $event->content);
+            if (preg_match_all("/\[$code\=(.*?)\]/", $event->content, $m, PREG_SET_ORDER)) {
                 foreach ($m as $item) {
                     $value = str_replace('$value', $item[1], $tml);
-                    $content = str_replace($item[0], $value, $content);
+                    $event->content = str_replace($item[0], $value, $event->content);
                 }
             }
         }

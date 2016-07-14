@@ -10,14 +10,15 @@
 
 namespace litepubl\plugins\rssprevnext;
 
+use litepubl\core\Event;
 use litepubl\post\Post;
 
 class Plugin extends \litepubl\core\Plugin
 {
 
-    public function beforePost($id, &$content)
+    public function beforePost(Event $event)
     {
-        $post = Post::i($id);
-        $content.= $post->getView()->prevnext;
+        $post = Post::i($event->id);
+        $event->content.= $post->getView()->prevnext;
     }
 }

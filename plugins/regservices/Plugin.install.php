@@ -36,7 +36,7 @@ function PluginInstall($self)
     Odnoklassniki::i()->install();
     $self->unlock();
 
-    Users::i()->deleted = tregserviceuser::i()->delete;
+    Users::i()->deleted = RegUser::i()->userDeleted;
 
     $names = implode("', '", array_keys($self->items));
     DBManager::i()->createtable(

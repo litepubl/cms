@@ -10,14 +10,15 @@
 
 namespace litepubl\plugins\rssfiles;
 
+use litepubl\core\Event;
 use litepubl\post\Post;
 
 class Plugin extends \litepubl\core\Plugin
 {
 
-    public function beforePost(int $id, string &$content)
+    public function beforePost(Event $event)
     {
-        $post = Post::i($id);
+        $post = Post::i($event->id);
         if (count($post->files) > 0) {
             $view = $post->getView();
             $theme = $view->theme;
@@ -31,7 +32,7 @@ class Plugin extends \litepubl\core\Plugin
                 $image
             );
 
-            $content.= $view->filelist;
+            $event->content.= $view->filelist;
             $theme->templates['content.post.filelist.image'] = $image;
         }
     }

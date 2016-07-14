@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\smushit;
 
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\post\Files;
 use litepubl\post\MediaParser;
@@ -30,10 +31,10 @@ class Plugin extends \litepubl\core\Plugin
         $parser->unbind($this);
     }
 
-    public function fileAdded($id)
+    public function fileAdded(Event $event)
     {
         $files = Files::i();
-        $item = $files->getItem($id);
+        $item = $files->getItem($event->id);
         if ('image' != $item['media']) {
             return;
         }

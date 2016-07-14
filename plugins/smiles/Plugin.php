@@ -10,13 +10,14 @@
 
 namespace litepubl\plugins\smiles;
 
+use litepubl\core\Event;
+
 class Plugin extends \litepubl\core\Plugin
 {
 
-    public function filter(&$content)
+    public function filter(Event $event)
     {
-        $content = strtr(
-            $content, array(
+        $event->content = strtr($event->content, array(
             ':)' => $this->smile,
             ';)' => $this->smile,
             ':(' => $this->sad,

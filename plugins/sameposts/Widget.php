@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\sameposts;
 
+use litepubl\core\Event;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\view\Lang;
@@ -34,7 +35,7 @@ class Widget extends \litepubl\widget\Depended
         return Lang::get('default', 'sameposts');
     }
 
-    public function postsChanged()
+    public function postsChanged(Event $event)
     {
         $this->db->exec("truncate $this->thistable");
     }
