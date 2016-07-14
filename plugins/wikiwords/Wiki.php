@@ -116,11 +116,11 @@ class Wiki extends \litepubl\core\Items
         return $result;
     }
 
-    public function add($word, $idpost)
+    public function add(string $word, int $idpost): int
     {
         $word = trim(strip_tags($word));
         if (!$word) {
-            return false;
+            return 0;
         }
 
         if (isset($this->words[$word])) {
@@ -128,12 +128,7 @@ class Wiki extends \litepubl\core\Items
         } else {
             $id = $this->indexOf('word', $word);
             if (!$id) {
-                $id = $this->addItem(
-                    array(
-                    'word' => $word
-                    )
-                );
-
+                $id = $this->addItem(['word' => $word]);
                 $this->words[$word] = $id;
             }
         }
@@ -150,7 +145,7 @@ class Wiki extends \litepubl\core\Items
         return $id;
     }
 
-    public function edit($id, $word)
+    public function edit(int $id, string $word)
     {
         return $this->setValue($id, 'word', $word);
     }
@@ -165,14 +160,14 @@ class Wiki extends \litepubl\core\Items
         return parent::delete($id);
     }
 
-    public function deleteWord($word)
+    public function deleteWord(string $word)
     {
         if ($id = $this->indexof('word', $word)) {
             return $this->delete($id);
         }
     }
 
-    public function getWord($word)
+    public function getWord(string $word): string
     {
         if ($id = $this->add($word, 0)) {
             return '$wikiwords.word_' . $id;
@@ -181,7 +176,7 @@ class Wiki extends \litepubl\core\Items
         return '';
     }
 
-    public function getWordLink($word)
+    public function getWordLink(string $word): string
     {
         $word = trim($word);
         if (isset($this->links[$word])) {
@@ -220,18 +215,16 @@ class Wiki extends \litepubl\core\Items
 
     public function beforeFilter(Event $event)
     {
-        $event->content = $this->createWords($event->post, $event->content);
+        $event->content = $this->createWords($event->content, $event->post);
         $event->content = $this->replaceWords($event->content);
     }
 
-    public function createWords($post, $content): string
+    public function createWords(string $content, Post $post): string
     {
-        $result = array();
         if (preg_match_all('/\[wiki\:(.*?)\]/im', $content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $word = $item[1];
                 if ($id = $this->add($word, $post->id)) {
-                    $result[] = $id;
                     if ($post->id == 0) {
                         $this->fix[$id] = $post;
                         $post->onId(function($event) {
@@ -239,27 +232,26 @@ $this->fixPost($event->getTarget());
 });
                     }
 
-                    $content = str_replace($item[0], "<span class=\"wiki\" id=\"wikiword-$id\">$word</span>", $content);
+            $wikiWord = str_replace('$word', $word, Theme::i()->templates['wiki.word']);
+                    $content = str_replace($item[0], $wikiWord, $content);
                 }
             }
         }
 
-        return $result;
+        return $content;
     }
 
-    public function replaceWords(&$content)
+    public function replaceWords(string $content): string
     {
-        $result = array();
         if (preg_match_all('/\[\[(.*?)\]\]/i', $content, $m, PREG_SET_ORDER)) {
             foreach ($m as $item) {
                 $word = $item[1];
                 if ($id = $this->add($word, 0)) {
-                    $result[] = $id;
                     $content = str_replace($item[0], $this->getLink($id), $content);
                 }
             }
         }
 
-        return $result;
+        return $content;
     }
 }
