@@ -37,7 +37,7 @@ class Announce
         return 'card';
     }
 
-    public function getPosts(array $items, $postanounce)
+    public function getPosts(array $items, string $postanounce): string
     {
         if (!count($items)) {
             return '';
@@ -47,8 +47,8 @@ class Announce
         $keyTemplate = $this->getKey($postanounce);
         Posts::i()->loaditems($items);
         $this->theme->setVar('lang', Lang::i('default'));
+$view = View::i();
         $vars = new Vars();
-        $view = new View();
         $vars->post = $view;
 
         foreach ($items as $id) {

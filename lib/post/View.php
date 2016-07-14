@@ -47,8 +47,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     protected function create()
     {
         parent::create();
+$this->basename = 'postview';
         $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead', 'onanhead');
-
         $this->table = 'posts';
     }
 
