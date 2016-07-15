@@ -78,7 +78,7 @@ class Home extends SingleMenu
         if ($this->showposts) {
             $items = $this->getIdPosts();
             $announce = new Announce($theme);
-            $result.= $announce->getanHead($items);
+            $result.= $announce->getAnHead($items);
         }
 
         Theme::$vars['home'] = $this;
