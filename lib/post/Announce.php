@@ -15,13 +15,17 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
-class Announce
+class Announce extends \litepubl\core\Events
 {
+use \litepubl\core\PoolStorage;
+
     public $theme;
 
-    public function __construct(Theme $theme = null)
+    protected function create()
     {
-        $this->theme = $theme ? $theme : Theme::context();
+        parent::create();
+$this->basename = 'announce';
+        $this->addEvents('beforeexcerpt', 'afterexcerpt', 'onhead');
     }
 
     private function getKey(string $postanounce): string

@@ -14,10 +14,9 @@ use litepubl\comments\Templates;
 use litepubl\core\Context;
 use litepubl\core\Str;
 use litepubl\view\Args;
-use litepubl\view\Lang;
-use litepubl\view\MainView;
-use litepubl\view\Schema;
 use litepubl\view\Theme;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
 
 /**
  * Post view
@@ -38,7 +37,9 @@ use litepubl\view\Theme;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-    public $post;
+use \litepubl\core\PoolStorage;
+
+    ublic $post;
     public $context;
     private $prevPost;
     private $nextPost;
@@ -55,6 +56,7 @@ $this->basename = 'postview';
     public function setPost(Post $post)
     {
         $this->post = $post;
+$this->themeInstance = null;
     }
 
     public function getView()
@@ -149,20 +151,17 @@ $this->basename = 'postview';
         return $this->nextPost;
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
-        if ($this->themeInstance) {
-            $this->themeInstance->setvar('post', $this);
-            return $this->themeInstance;
-        }
+        if (!$this->themeInstance) {
+        $this->themeInstance = $this->post ? Schema::getSchema($this)->theme : Theme::context();
+}
 
-        $mainview = MainView::i();
-        $this->themeInstance = $mainview->schema ? $mainview->schema->theme : Schema::getSchema($this)->theme;
         $this->themeInstance->setvar('post', $this);
         return $this->themeInstance;
     }
 
-    public function parseTml($path)
+    public function parseTml(string $path): string
     {
         $theme = $this->theme;
         return $theme->parse($theme->templates[$path]);

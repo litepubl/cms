@@ -779,7 +779,7 @@ $this->clearCallbacks('onid');
         $this->getApp()->cache->clearUrl($this->url);
     }
 
-    public function getSchemalink()
+    public function getSchemalink(): string
     {
         return 'post';
     }
