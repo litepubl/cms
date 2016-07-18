@@ -10,14 +10,12 @@
 
 namespace litepubl\post;
 
-use litepubl\view\Args;
-use litepubl\view\Lang;
 use litepubl\view\Theme;
-use litepubl\view\Vars;
 
 class Announce extends \litepubl\core\Events
 {
 use \litepubl\core\PoolStorage;
+use \litepubl\view\Factory;
 
     public $theme;
 
@@ -49,16 +47,17 @@ $this->basename = 'announce';
 
         $result = '';
         $keyTemplate = $this->getKey($postanounce);
-        Posts::i()->loaditems($items);
-        $this->theme->setVar('lang', Lang::i('default'));
-$view = View::i();
-        $vars = new Vars();
-        $vars->post = $view;
+        Posts::i()->loadItems($items);
+        $vars = $this->newVars();
+$vars->lang = $this->getLang('default');
 
         foreach ($items as $id) {
             $post = Post::i($id);
-            $view->setPost($post);
+$view = $post->view;
+            $vars->post = $view;
+
             $result.= $view->getContExcerpt($keyTemplate);
+
             // has $author.* tags in tml
             if (isset($vars->author)) {
                 unset($vars->author);
@@ -72,11 +71,11 @@ $view = View::i();
         return $result;
     }
 
-    public function getPostsNavi(array $items, $url, $count, $postanounce, $perpage)
+    public function getPostsNavi(array $items, string $url, int $count, string $postanounce, int $perpage): string
     {
         $result = $this->getPosts($items, $postanounce);
 
-        $app = $this->theme->getApp();
+        $app = $this->getApp();
         if (!$perpage) {
             $perpage = $app->options->perpage;
         }

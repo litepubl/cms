@@ -23,9 +23,9 @@ public function newVars(): Vars
 return new Vars();
 }
 
-    public function getLang(): Lang
+    public function getLang(string $section = ''): Lang
     {
-        return Lang::admin();
+        return Lang::i($section);
     }
 
     public function getSchema(): Schema

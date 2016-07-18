@@ -57,6 +57,13 @@ class Home extends SingleMenu
         return false;
     }
 
+public function getAnnounce(): Announce
+{
+$result = Announce::i();
+$result->schema = $this->schema;
+return $result;
+}
+
     public function request(Context $context)
     {
         if (!$this->showpagenator && ($context->request->page > 1)) {
@@ -77,7 +84,7 @@ class Home extends SingleMenu
 
         if ($this->showposts) {
             $items = $this->getIdPosts();
-            $announce = new Announce($theme);
+            $announce = $this->getAnnounce();
             $result.= $announce->getAnHead($items);
         }
 
@@ -126,8 +133,9 @@ class Home extends SingleMenu
     {
         $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
-        $announce = new Announce($schema->theme);
+        $announce = $this->getAnnounce();
         $result = $announce->getPosts($items, $schema->postanounce);
+
         if ($this->showpagenator) {
             $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
             $result.= $schema->theme->getpages($this->url, $this->page, ceil($this->data['archcount'] / $perpage));

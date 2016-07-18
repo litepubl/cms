@@ -21,7 +21,7 @@ class Lang
     public $section;
     public $searchsect;
 
-    public static function i($section = '')
+    public static function i(string $section = '')
     {
         if (!isset(static ::$self)) {
             static ::$self = static ::getInstance();
