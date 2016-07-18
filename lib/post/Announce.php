@@ -14,6 +14,17 @@ use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
 
+/**
+ * Post announces
+ *
+ * @property-write callable $before
+ * @property-write callable $after
+ * @property-write callable $onHead
+ * @method array before(array $params)
+ * @method array after(array $params)
+ * @method array onHead(array $params)
+ */
+
 class Announce extends \litepubl\core\Events
 {
 use \litepubl\core\PoolStorage;
@@ -22,29 +33,31 @@ use \litepubl\core\PoolStorage;
     {
         parent::create();
 $this->basename = 'announce';
-        $this->addEvents('beforeexcerpt', 'afterexcerpt', 'onhead');
+        $this->addEvents('before', 'after', 'onhead');
     }
 
-    private function getKey(string $postanounce): string
+    public function getHead(array $items): string
     {
-        if (!$postanounce || $postanounce == 'excerpt' || $postanounce == 'default') {
-            return 'excerpt';
-        }
+        $result = '';
+        if (count($items)) {
+        Posts::i()->loadItems($items);
 
-        if ($postanounce === true || $postanounce === 1 || $postanounce == 'lite') {
-            return 'lite';
+        foreach ($items as $id) {
+$post = Post::i($id);
+            $result.= $post->rawhead;
         }
+}
 
-        return 'card';
+$r = $this->onHead(['content' => $result, 'items' => $items]);
+        return $r['content'];
     }
 
     public function getPosts(array $items, Schema $schema): string
     {
-        if (!count($items)) {
-            return '';
-        }
-
-        $result = '';
+$r = $this->before(['content' => '', 'items' => $items, 'schema' => $schema]);
+        $result = $r['content'];
+$items = $r['items'];
+        if (count($items)) {
         Posts::i()->loadItems($items);
 $theme = $schema->theme;
 $tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
@@ -63,31 +76,36 @@ $view->setTheme($theme);
                 unset($vars->author);
             }
         }
+}
 
         if ($tmlContainer = $theme->templates['content.excerpts' . ($schema->postannounce == 'excerpt' ? '' : '.' . $schema->postannounce) ]) {
             $result = str_replace('$excerpt', $result, $this->theme->parse($tmlContainer));
         }
 
-        return $result;
+$r = $this->after(['content' => $result, 'items' => $items, 'schema' => $sechama]);
+        return $r['content'];
     }
 
-    public function getPostsNavi(array $items, string $url, int $count, string $postanounce, int $perpage): string
+    public function getNavi(array $items, Schema $schema, string $url, int $count): string
     {
-        $result = $this->getPosts($items, $postanounce);
+        $result = $this->getPosts($items, $schema);
 
         $app = $this->getApp();
-        if (!$perpage) {
+        if ($schema->perpage) {
+$perpage = $schema->perpage;
+} else 
             $perpage = $app->options->perpage;
         }
 
-        $result.= $this->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
+        $result.= $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
         return $result;
     }
 
-    public function getLinks($where, $tml)
+//used in plugins such as singlecat
+    public function getLinks(string $where, string $tml): string
     {
-        $theme = $this->theme;
-        $db = $theme->getApp()->db;
+        $db = $this->getApp()->db;
+$t = $db->posts;
         $items = $db->res2assoc(
             $db->query(
                 "select $t.id, $t.title, $db->urlmap.url as url  from $t, $db->urlmap
@@ -101,26 +119,10 @@ $view->setTheme($theme);
 
         $result = '';
         $args = new Args();
+$theme = Theme::i();
         foreach ($items as $item) {
             $args->add($item);
             $result.= $theme->parseArg($tml, $args);
-        }
-        return $result;
-    }
-
-    public function getAnHead(array $items): string
-    {
-        if (!count($items)) {
-            return '';
-        }
-
-        Posts::i()->loadItems($items);
-
-        $result = '';
-        $view = new View();
-        foreach ($items as $id) {
-            $view->setPost(Post::i($id));
-            $result.= $view->anhead;
         }
 
         return $result;

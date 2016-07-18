@@ -196,8 +196,8 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $order = $schema->invertorder ? 'asc' : 'desc';
         $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id", "order by $poststable.posted $order limit $from, $perpage");
 
-        $result.= $theme->getposts($items, $schema->postanounce);
-        $result.= $theme->getpages($item['url'], $this->getApp()->context->request->page, ceil($count / $perpage));
+$announce = Announce::i();
+        $result.= $announce->getNavi($items, $schema, $item['url'], $count);
         return $result;
     }
 

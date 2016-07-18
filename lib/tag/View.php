@@ -129,8 +129,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $result.= $theme->templates['head.tags'];
 
             $list = $this->getIdPosts($this->id);
-            $announce = new Announce($theme);
-            $result.= $announce->getAnHead($list);
+            $announce = Announce::i($theme);
+            $result.= $announce->getHead($list);
 
             return $theme->parse($result);
         }
@@ -233,8 +233,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
-            $announce = new Announce($theme);
-            $result['content'] .= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $announce = Announce::i($theme);
+            $result['content'] .= $announce->getNavi($list, $schema, $item['url'], $item['itemscount']);
         }
 
         $result = $this->oncontent($result);

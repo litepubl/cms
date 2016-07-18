@@ -57,13 +57,6 @@ class Home extends SingleMenu
         return false;
     }
 
-public function getAnnounce(): Announce
-{
-$result = Announce::i();
-$result->schema = $this->schema;
-return $result;
-}
-
     public function request(Context $context)
     {
         if (!$this->showpagenator && ($context->request->page > 1)) {
@@ -79,13 +72,14 @@ return $result;
     {
         $result = parent::gethead();
 
-        $theme = Schema::getSchema($this)->theme;
+$schema = Schema::getSchema($this)->theme;
+$theme = $schema->theme;
         $result.= $theme->templates['head.home'];
 
         if ($this->showposts) {
             $items = $this->getIdPosts();
-            $announce = $this->getAnnounce();
-            $result.= $announce->getAnHead($items);
+            $announce = Announce::i();
+            $result.= $announce->getHead($items);
         }
 
         Theme::$vars['home'] = $this;
@@ -133,8 +127,8 @@ return $result;
     {
         $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
-        $announce = $this->getAnnounce();
-        $result = $announce->getPosts($items, $schema->postannounce);
+        $announce = Announce::i();
+        $result = $announce->getPosts($items, $schema);
 
         if ($this->showpagenator) {
             $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;

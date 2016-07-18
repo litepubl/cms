@@ -56,7 +56,7 @@ $theme = $event->theme;
         $table = $this->getApp()->db->prefix . 'categoriesitems';
         $order = $this->invertorder ? 'asc' : 'desc';
         $posts = Posts::i();
-        $annnounce= new Anounce();
+        $annnounce= Anounce::i();
         $result = $announce->getLinks(
             "$posts->thistable.id in
     (select  $table.post from $table where $table.item = $idcat)

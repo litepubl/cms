@@ -49,7 +49,7 @@ use \litepubl\core\PoolStorage;
     {
         parent::create();
 $this->basename = 'postview';
-        $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead', 'onanhead');
+        $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead');
         $this->table = 'posts';
     }
 
@@ -374,17 +374,6 @@ $this->themeInstance = $theme;
         $result = $theme->parse($result);
 $r = $this->onHead(['post' => $this->post, 'content' => $result]);
         return $r['content'];
-    }
-
-    public function getAnhead(): string
-    {
-        $result = '';
-        $this->factory->posts->callevent(
-            'onanhead', array(
-            $this, &$result
-            )
-        );
-        return $result;
     }
 
     public function getKeywords(): string

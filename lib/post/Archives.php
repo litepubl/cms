@@ -111,9 +111,8 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
 
     public function getHead(): string
     {
-        $announce = new Announce($this->schema->theme);
-        $result = $announce->getAnHead($this->getIdPosts());
-        return $result;
+        $announce = Announce::i($this->schema->theme);
+return $announce->getHead($this->getIdPosts());
     }
 
     public function getTitle(): string
@@ -131,8 +130,8 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
         $schema = Schema::getSchema($this);
         $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
         $list = array_slice($items, ($this->getApp()->context->request->page - 1) * $perpage, $perpage);
-        $announce = new Announce($schema->theme);
-        $result = $announce->getposts($list, $schema->postanounce);
+        $announce = Announce::i($schema->theme);
+        $result = $announce->getPosts($list, $schema);
         $result.= $schema->theme->getpages($this->items[$this->date]['url'], $this->getApp()->context->request->page, ceil(count($items) / $perpage));
         return $result;
     }
