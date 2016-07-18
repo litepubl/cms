@@ -173,12 +173,11 @@ class Schemes extends \litepubl\admin\Menu
             }
 
             $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
-            $args->postanounce = $this->theme->comboItems(
-                array(
+            $args->postannounce = $this->theme->comboItems([
                 'excerpt' => $lang->postexcerpt,
                 'card' => $lang->postcard,
                 'lite' => $lang->postlite
-                ), $itemview['postanounce']
+                ], $itemview['postannounce']
             );
 
             $args->menu = $this->theme->comboItems($menuitems, strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
@@ -188,7 +187,7 @@ class Schemes extends \litepubl\admin\Menu
       [combo=themename]
       [combo=adminname]' . ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) . '[checkbox=hovermenu]
       [combo=menu]
-      [combo=postanounce]
+      [combo=postannounce]
       [text=perpage]
       [checkbox=invertorder]
       '
@@ -262,7 +261,7 @@ class Schemes extends \litepubl\admin\Menu
             $schema->adminname = trim($_POST['adminname']);
             $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
             $schema->hovermenu = isset($_POST['hovermenu']);
-            $schema->postanounce = $_POST['postanounce'];
+            $schema->postannounce = $_POST['postannounce'];
             $schema->perpage = (int)$_POST['perpage'];
             $schema->invertorder = isset($_POST['invertorder']);
 

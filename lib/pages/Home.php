@@ -134,7 +134,7 @@ return $result;
         $items = $this->getIdPosts();
         $schema = Schema::getSchema($this);
         $announce = $this->getAnnounce();
-        $result = $announce->getPosts($items, $schema->postanounce);
+        $result = $announce->getPosts($items, $schema->postannounce);
 
         if ($this->showpagenator) {
             $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;

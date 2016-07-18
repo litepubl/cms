@@ -161,6 +161,11 @@ $this->themeInstance = null;
         return $this->themeInstance;
     }
 
+public function setTheme(Theme $theme)
+{
+$this->themeInstance = $theme;
+}
+
     public function parseTml(string $path): string
     {
         $theme = $this->theme;
@@ -411,6 +416,7 @@ $r = $this->onHead(['post' => $this->post, 'content' => $result]);
         }
     }
 
+//to override schema in post, id schema not changed
     public function getFileList()
     {
         if (!count($this->files) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
@@ -444,15 +450,6 @@ $r = $this->onHead(['post' => $this->post, 'content' => $result]);
     public function getCont(): string
     {
         return $this->parsetml('content.post');
-    }
-
-    public function getContExcerpt($tml_name)
-    {
-        Theme::$vars['post'] = $this;
-        //no use self theme because post in other context
-        $theme = Theme::i();
-        $tml_key = $tml_name == 'excerpt' ? 'excerpt' : $tml_name . '.excerpt';
-        return $theme->parse($theme->templates['content.excerpts.' . $tml_key]);
     }
 
     public function getRssLink()
@@ -557,6 +554,7 @@ $r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
         if ($this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
         }
+
         $r = $this->afterExcerpt(['post' => $this->post, 'content' => $result]);
         return $r['content'];
     }

@@ -10,14 +10,13 @@
 
 namespace litepubl\post;
 
-use litepubl\view\Theme;
+use litepubl\view\Vars;
+use litepubl\view\Lang;
+use litepubl\view\Schema;
 
 class Announce extends \litepubl\core\Events
 {
 use \litepubl\core\PoolStorage;
-use \litepubl\view\Factory;
-
-    public $theme;
 
     protected function create()
     {
@@ -39,24 +38,25 @@ $this->basename = 'announce';
         return 'card';
     }
 
-    public function getPosts(array $items, string $postanounce): string
+    public function getPosts(array $items, Schema $schema): string
     {
         if (!count($items)) {
             return '';
         }
 
         $result = '';
-        $keyTemplate = $this->getKey($postanounce);
         Posts::i()->loadItems($items);
-        $vars = $this->newVars();
-$vars->lang = $this->getLang('default');
+$theme = $schema->theme;
+$tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
+        $vars = new Vars();
+$vars->lang = Lang::i('default');
 
         foreach ($items as $id) {
             $post = Post::i($id);
 $view = $post->view;
+$view->setTheme($theme);
             $vars->post = $view;
-
-            $result.= $view->getContExcerpt($keyTemplate);
+            $result.= $theme->parse($tml);
 
             // has $author.* tags in tml
             if (isset($vars->author)) {
@@ -64,8 +64,8 @@ $view = $post->view;
             }
         }
 
-        if ($tml = $this->theme->templates['content.excerpts' . ($keyTemplate == 'excerpt' ? '' : '.' . $keyTemplate) ]) {
-            $result = str_replace('$excerpt', $result, $this->theme->parse($tml));
+        if ($tmlContainer = $theme->templates['content.excerpts' . ($schema->postannounce == 'excerpt' ? '' : '.' . $schema->postannounce) ]) {
+            $result = str_replace('$excerpt', $result, $this->theme->parse($tmlContainer));
         }
 
         return $result;

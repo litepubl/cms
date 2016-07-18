@@ -13,9 +13,10 @@ namespace litepubl\update;
 use litepubl\pages\Sitemap;
 use litepubl\core\litepubl;
 use litepubl\view\Css;
+use litepubl\view\Schemes;
 use litepubl\post\Posts;
 use litepubl\post\View;
-litepubl\updaterStorageIterator;
+use litepubl\updater\StorageIterator;
 
 function update701()
 {
@@ -37,6 +38,20 @@ function update701()
         'js/litepublisher/css/form.inline.min.css ',
         'js/litepubl/common/css/form.inline.min.css'
     );
+
+$schemes = Schemes::i();
+foreach ($schemes->items as $id => $item) {
+if (isset($item['postanounce'])) {
+$item['postannounce'] = $item['postanounce'];
+unset($item['postanounce']);
+if (!in_array($item['postannounce'], ['excerpt'', 'card', 'lite'])) {
+$item['postannounce'] = 'excerpt';
+}
+$schemes->items[$id] = $item;
+}
+}
+
+$schemes->save();
 
 $posts = Posts::i();
 $view = View::i();

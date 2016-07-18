@@ -75,7 +75,7 @@ class Schema extends \litepubl\core\Item
             'customsidebar' => false,
             'disableajax' => false,
             //possible values: default, lite, card
-            'postanounce' => 'excerpt',
+            'postannounce' => 'excerpt',
             'invertorder' => false,
             'perpage' => 0,
 
