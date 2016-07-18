@@ -229,7 +229,7 @@ class Cron extends Events implements ResponsiveInterface
 
     public function deleteClass($c)
     {
-        $class = static ::get_class_name($c);
+        $class = static ::getClassName($c);
         $this->db->delete("class = '$class'");
     }
 

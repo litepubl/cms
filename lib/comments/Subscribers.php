@@ -77,7 +77,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
                 $comments->unlock();
             } else {
                 $comments->unbind($this);
-                Posts::i()->delete_event_class('added', get_class($this));
+                Posts::i()->detach('added', $this->postAdded);
             }
         }
     }

@@ -58,6 +58,9 @@ use Callbacks;
 protected function reIndexEvents()
 {
 foreach ($this->data['events'] as $name => $events) {
+if (!count($events)) {
+unset($this->data['events'][$name]);
+} else {
 ksort($events);
 $sorted = [];
 $newIndex = 0;
@@ -72,6 +75,7 @@ $sorted[$newIndex] = $item;
 }
 
 $this->data['events'][$name] = $sorted;
+}
 }
 }
 
@@ -157,7 +161,7 @@ return $this->addCallback($name, $callback);
 }
 
         if (!isset($this->data['events'][$name])) {
-            $this->data['events'][$name] = [$callable];
+            $this->data['events'][$name] = [500 => $callable];
 $this->save();
         } else {
         //check if event already added
@@ -167,96 +171,44 @@ $this->save();
             }
         }
 
-            $this->data['events'][$name][] = callback;
+            Arr::append($this->data['events'][$name], 500, callback);
             $this->save();
         }
     }
 
-    public function delete_event_class($name, $class)
+    public function detach(string $name, callable $callback): bool
     {
-        if (!isset($this->events[$name])) {
-            return false;
-        }
-
-        $list = & $this->events[$name];
-        $deleted = false;
-        for ($i = count($list) - 1; $i >= 0; $i--) {
-            $event = $list[$i];
-
-            if ((isset($event[0]) && $event[0] == $class) 
-                //backward compability
-                || (isset($event['class']) && $event['class'] == $class)
-            ) {
-                array_splice($list, $i, 1);
-                $deleted = true;
-            }
-        }
-
-        if ($deleted) {
-            if (count($list) == 0) {
-                unset($this->events[$name]);
-            }
-
+$name = strtolower($name);
+$this->deleteCallback($callback);
+        if (isset($this->data['events'][$name])) {
+foreach ($this->data['events'][$name] as $i => $item) {
+if ($item == $callable) {
+unset($this->data['events'][$name][$i];
+$this->reIndexEvents();
             $this->save();
-        }
+return true;
+}
+}
+}
 
-        return $deleted;
-    }
-
-    public function unsubscribeclass($obj)
-    {
-        $this->unbind($obj);
-    }
-
-    public function unsubscribeclassname($class)
-    {
-        $this->unbind($class);
+return false;
     }
 
     public function unbind($c)
     {
-        $class = static ::get_class_name($c);
-        foreach ($this->events as $name => $events) {
-            foreach ($events as $i => $item) {
-                if ((isset($item[0]) && $item[0] == $class) || (isset($item['class']) && $item['class'] == $class)) {
-                    array_splice($this->events[$name], $i, 1);
-                }
+        $class = static ::getClassName($c);
+        foreach ($this->data['events'] as $name => $events) {
+foreach ($events as $i => $item) {
+if ($class == $item[0]) {
+unset($this->data['events'][$name][$i]);
+}
+}
+}
             }
         }
 
+$this->reIndexEvents();
         $this->save();
-    }
-
-    public function setEventorder($eventname, $c, $order)
-    {
-        if (!isset($this->events[$eventname])) {
-            return false;
-        }
-
-        $events = & $this->events[$eventname];
-        $class = static ::get_class_name($c);
-        $count = count($events);
-        if (($order < 0) || ($order >= $count)) {
-            $order = $count - 1;
-        }
-
-        foreach ($events as $i => $event) {
-            if ((isset($event[0]) && $class == $event[0]) || (isset($event['class']) && $class == $event['class'])) {
-                if ($i == $order) {
-                    return true;
-                }
-
-                array_splice($events, $i, 1);
-                array_splice(
-                    $events, $order, 0, array(
-                    0 => $event
-                    )
-                );
-
-                $this->save();
-                return true;
-            }
-        }
     }
 
     private function indexofcoclass($class)

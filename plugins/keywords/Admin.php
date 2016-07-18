@@ -135,7 +135,7 @@ class Admin extends \litepubl\admin\widget\Widget
                 if ($trace) {
                     $this->getApp()->router->afterrequest = $plugin->parseref;
                 } else {
-                    $this->getApp()->router->delete_event_class('afterrequest', get_class($plugin));
+                    $this->getApp()->router->detach('afterrequest', $plugin->parseref);
                 }
             }
 

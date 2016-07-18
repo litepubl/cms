@@ -317,7 +317,7 @@ class Data
         return $this->getApp()->db->prefix . $this->table;
     }
 
-    public static function get_class_name($c)
+    public static function getClassName($c): string
     {
         return is_object($c) ? get_class($c) : trim($c);
     }

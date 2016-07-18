@@ -10,7 +10,6 @@
 
 namespace litepubl\admin\views;
 
-use litepubl\view\Js;
 use litepubl\view\Lang;
 
 class Js extends \litepubl\admin\Menu
