@@ -19,6 +19,7 @@ use litepubl\view\Theme;
 
 class Templates extends \litepubl\core\Events
 {
+use \litepubl\core\CoInstances;
 
     protected function create()
     {

@@ -33,7 +33,7 @@ class Meta extends \litepubl\core\Item
     public function __set($name, $value)
     {
         if ($name == 'id') {
-            return $this->setid($value);
+            return $this->setId($value);
         }
 
         $exists = isset($this->data[$name]);

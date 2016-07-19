@@ -6,6 +6,8 @@ trait EventsTrait
 {
 use Callbacks;
 
+    protected $eventnames = [];
+
 protected function getProp(string $name)
     {
         if (method_exists($this, $name)) {

@@ -108,13 +108,13 @@ class Base extends \litepubl\core\Events
         }
     }
 
-    public function __set($name, $value)
+    protected function setProp(string $name, $value)
     {
         if (array_key_exists($name, $this->templates)) {
             $this->templates[$name] = $value;
-            return;
-        }
-        return parent::__set($name, $value);
+        } else {
+        parent::setProp($name, $value);
+}
     }
 
     public function reg($exp)

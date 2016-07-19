@@ -15,15 +15,10 @@ class Events extends Data
 use EventsTrait;
 
     protected $events;
-    protected $eventnames;
     protected $map;
 
     public function __construct()
     {
-        if (!is_array($this->eventnames)) {
-            $this->eventnames = array();
-        }
-
         if (!is_array($this->map)) {
             $this->map = array();
         }
@@ -38,7 +33,6 @@ use EventsTrait;
     {
         parent::create();
         $this->addmap('events', array());
-        $this->addmap('coclasses', array());
     }
 
     public function assignMap()

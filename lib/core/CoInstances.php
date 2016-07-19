@@ -7,6 +7,15 @@ trait CoInstances
     public $coclasses = [];
     public $coinstances = [];
 
+    protected function createData()
+{
+parent::createData;
+
+if (method_exists($this, 'addMap')) {
+        $this->addMap('coclasses', []);
+}
+}
+
 protected function getProp(string $name)
 {
             foreach ($this->coinstances as $coinstance) {
